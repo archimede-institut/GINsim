@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE targetset 
+ SYSTEM "file:////usr/share/apps/ksgmltools2/docbook/xsl/common/targetdatabase.dtd" [
+<!ENTITY tTutorial SYSTEM "tutorial.db">
+<!ENTITY tUManual SYSTEM "userManual.db">
+<!ENTITY tLFormalism SYSTEM "logicalFormalism.db">
+]>
+<targetset>
+<targetsetinfo>All GINsim doc</targetsetinfo>
+
+<!-- Site map for generating relative paths between documents -->
+<sitemap>
+    <dir name="html">
+      <dir name="tutorial">
+        <document targetdoc="tutorial">&tTutorial;</document>
+      </dir>
+      <dir name="userManual">
+          <document targetdoc="userManual">&tUManual;</document>
+    </dir>
+    </dir>
+</sitemap>
+</targetset>

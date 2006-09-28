@@ -1,0 +1,153 @@
+package fr.univmrs.ibdm.GINsim.gui;
+
+import java.awt.Component;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.EventObject;
+
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+/**
+ * A "better" JTable with some often needed customizations.
+ *  - cell value if deleted on keypress.
+ *  - JButtons can be added and will get clicks (but not keypress?)
+ */
+public class GsJTable extends JTable {
+    private static final long serialVersionUID = 835349911766025807L;
+
+    /** 
+     */
+    public GsJTable() {
+        this(null);
+    }
+
+    /**
+     * @param model
+     */
+    public GsJTable(TableModel model) {
+        super(model);
+        setDefaultEditor(Boolean.class, new BooleanCellEditor());
+
+        TableCellRenderer defaultRenderer;
+        
+        defaultRenderer = getDefaultRenderer(JButton.class);
+        setDefaultRenderer(JButton.class,
+                       new JTableButtonRenderer(defaultRenderer));
+        addMouseListener(new JTableButtonMouseListener(this));
+
+    }
+
+    protected boolean processKeyBinding(KeyStroke ks, KeyEvent e,
+            int condition, boolean pressed) {
+        Component editorComponent = getEditorComponent();
+        if (editorComponent instanceof JTextField && !editorComponent.hasFocus()) {
+            editorComponent.requestFocus();
+            ((JTextField)editorComponent).setText("");
+        }
+        return super.processKeyBinding(ks, e, condition, pressed);
+    }
+}
+
+class BooleanCellEditor extends DefaultCellEditor {
+    private static final long serialVersionUID = -2790803389946873836L;
+
+    protected BooleanCellEditor() {
+        super(new JCheckBox());
+    }
+
+    public boolean shouldSelectCell(EventObject anEvent) {
+        return false;
+    }
+    
+}
+
+class JTableButtonRenderer implements TableCellRenderer {
+    private TableCellRenderer __defaultRenderer;
+
+    /**
+     * @param renderer
+     */
+    public JTableButtonRenderer(TableCellRenderer renderer) {
+      __defaultRenderer = renderer;
+    }
+
+    public Component getTableCellRendererComponent(JTable table, Object value,
+                           boolean isSelected,
+                           boolean hasFocus,
+                           int row, int column)
+    {
+      if(value instanceof Component)
+        return (Component)value;
+      return __defaultRenderer.getTableCellRendererComponent(
+         table, value, isSelected, hasFocus, row, column);
+    }
+  }
+
+  class JTableButtonMouseListener implements MouseListener {
+    private JTable __table;
+
+    private void __forwardEventToButton(MouseEvent e) {
+      TableColumnModel columnModel = __table.getColumnModel();
+      int column = columnModel.getColumnIndexAtX(e.getX());
+      int row    = e.getY() / __table.getRowHeight();
+      Object value;
+      JButton button;
+//      MouseEvent buttonEvent;
+
+      if(row >= __table.getRowCount() || row < 0 ||
+         column >= __table.getColumnCount() || column < 0)
+        return;
+
+      value = __table.getValueAt(row, column);
+
+      if(!(value instanceof JButton))
+        return;
+
+      button = (JButton)value;
+      if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getButton() == MouseEvent.BUTTON1) {
+          button.doClick();
+      }
+      
+//      buttonEvent = SwingUtilities.convertMouseEvent(__table, e, button);
+//      button.dispatchEvent(buttonEvent);
+      // This is necessary so that when a button is pressed and released
+      // it gets rendered properly.  Otherwise, the button may still appear
+      // pressed down when it has been released.
+      __table.repaint();
+    }
+
+    /**
+     * @param table
+     */
+    public JTableButtonMouseListener(JTable table) {
+      __table = table;
+    }
+
+    public void mouseClicked(MouseEvent e) {
+      __forwardEventToButton(e);
+    }
+
+    public void mouseEntered(MouseEvent e) {
+      __forwardEventToButton(e);
+    }
+
+    public void mouseExited(MouseEvent e) {
+      __forwardEventToButton(e);
+    }
+
+    public void mousePressed(MouseEvent e) {
+      __forwardEventToButton(e);
+    }
+
+    public void mouseReleased(MouseEvent e) {
+      __forwardEventToButton(e);
+    }
+  }

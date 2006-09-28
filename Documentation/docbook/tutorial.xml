@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<article><?dbhtml dir="tutorial"?>
+<articleinfo>
+	<title>GINsim tutorial</title>
+</articleinfo>
+
+	<section>
+		<title>Overview</title>
+		<para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions. This short tutorial intends to introduce the main steps enabling the specification of a logical model, its simulation, and the analysis of the state transition graph. The next pages describe the Graphical User Interface, whereas the following page describes the different steps required for the definition of a logical model, as well as for its simulation and for the analysis of the resulting state transition graph. Please see the <olink targetdoc="userManual">GINsim user manual</olink> if you want more precise informations on using GINsim</para>
+
+        <bibliography>
+            <title>References</title>
+        
+            <biblioentry>
+                <title>Qualitative analysis of regulatory graphs: a computational tool based on a discrete formal framework</title>
+                <authorgroup>
+                    <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
+                    <author><firstname>Elisabeth</firstname><surname>Remy</surname></author>
+                    <author><firstname>B</firstname><surname>Mossé</surname></author>
+                    <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
+                </authorgroup>
+                <!-- Lectures Notes in Control and Information Sciences -->
+                <pubdate>2003</pubdate>
+                <volumenum>294</volumenum><pagenums>119-126</pagenums>
+            </biblioentry>
+        
+            <biblioentry>
+                <title>GINsim: a software suite for the qualitative modelling, simulation and analysis of regulatory networks</title>
+                <authorgroup>
+                    <author><firstname>Aitor</firstname><surname>Larrinaga</surname></author>
+                    <author><firstname>Lucas</firstname><surname>Sanchez</surname></author>
+                    <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
+                    <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
+                </authorgroup>
+                <!-- biosystems -->
+                <pubdate>2005</pubdate>
+            </biblioentry>
+        </bibliography>
+    </section>
+
+    <section><?dbhtml filename="ui.html"?>
+	   <title>The UI</title>
+
+	   <section><title>The GINsim main window</title>
+	       <para>When GINsim is launched, its main window opens (see the screenshot below).  This window encompasses a series of panels and menus described hereafter.</para>
+	       <figure id="sc_mainWindow" xreflabel="main window"><title>Main window of GINsim.</title>
+	           <mediaobject><imageobject><imagedata fileref="../figures/mainWindow.png"/></imageobject></mediaobject>
+	       </figure>
+       </section>
+        
+        <section><title>File menu</title>
+        <para>The <emphasis>file</emphasis> menu offers the classical options to open/save a file (in the GINML
+format), to open/close a window, and to exit the application. The <emphasis>Export</emphasis> submenu allows the saving of
+a graph in others formats (currently graphviz, biolayout and SVG). A print option will added soon.</para>
+        <figure id="sc_fileMenu" xreflabel="file menu"><title>The file menu</title><mediaobject><imageobject><imagedata fileref="../figures/fileMenu.png"/></imageobject></mediaobject></figure>
+        <note>Some of the actions proposed in the file menu (create a new graph, open and save) are also available in the toolbar.</note>
+	   </section>
+	   
+	   <section>
+	       <title>Edit menu</title>
+	       <para>The edit menu allows the selection of the main editing options.</para>
+	               <figure id="sc_editMenu" xreflabel="edit menu"><title>The edit menu</title><mediaobject><imageobject><imagedata fileref="../figures/editMenu.png"/></imageobject></mediaobject></figure>
+	        <para>A button bar facilitates the access to different options while editing a graph. Each editing mode (add a node, add an edge) is left once the action has been performed. To lock an editing mode, it suffices to double-click on the corresponding button.</para>
+            <caution>These options are NOT available when visualizing a state transition graph.</caution>
+	   </section>
+	   
+        <section>
+            <title>View menu</title>
+            <para>The View menu allows
+            <itemizedlist>
+            <listitem> to zoom (zoom In or Out);</listitem>
+            <listitem>to divide the window and get two independant windows (one with the graph, the other with the complementary information);</listitem>
+            <listitem>to display the edge names (pairs formed by the source and the target names);</listitem>
+            <listitem>to display/hide the grid and the mini- map.</listitem>
+            </itemizedlist>
+            <figure>
+                <title>View menu</title>
+                <mediaobject><imageobject><imagedata fileref="../figures/viewMenu.png"/></imageobject></mediaobject>
+            </figure>
+        </para>
+        </section>
+	   
+	   <section>
+        	   <title>Action menu</title>
+        	   <para>The Action menu allows to run additional plugins.
+        
+        The functionalities offered depend on whether the main GINsim window contains a regulatory graph or a state transition graph. Two functionalities are accessible whatever the current graph:
+        <itemizedlist>
+        
+              <listitem>The determination of the strongly connected components (SCC) of a graph, defining a new graph composed by these SCC. This graph can be vizualised or saved.</listitem>
+            <listitem>Two basic placement algorithms are proposed:
+                <orderedlist>
+                 <listitem>
+                    The level layout displays the nodes on layers, organised according to their in and out-degrees, where the number of outgoing arcs decreases from the top to the bottom, whereas the number of ingoing arcs follows the inverse order. The inverse level layout displays the nodes with the minimal outdegree on the top;</listitem>
+                 <listitem>The ring layout displays the nodes on concentric circles, the inner circle containing the nodes with the minimal in-degree and maximal outdegree. The inverse ring layout displays the nodes with the maximal in-degree and the maximal out-degree on the inner circles.</listitem>
+                 </orderedlist></listitem>
+         </itemizedlist>
+         </para>
+        <section>
+        <title>Special case of a regulatory graph:</title>
+        <para>The only specific option for regulatory graph is run simulation (described thereafter), which enables the launching of a logical simulation (that is the construction of a state transition graph).
+        </para>
+        </section>
+        <section>
+        <title>Special case of a state transition graph:</title>
+        <para>The current functionalities are:
+        <itemizedlist>
+            <listitem>animate the associate regulatory graph by selecting a path;</listitem>
+            <listitem>search a path between two given states (intermediary can also be specified).</listitem>
+        </itemizedlist>
+        </para>
+        </section>
+   </section>
+	
+	<section>
+	<title>The secondary window</title>
+	<para>
+        Intially attached to the main frame, the secondary windows overlay three panels accessible via three thumbs:
+    <orderedlist>
+   <listitem>Modelling attributes (for a regulatory graph) / Selection attributes (for a state transition graph) associated with a selected node or edge.
+In the case of a regulatory graph, this pannel allows the definition of identifiers, levels, parameters, signs ... of nodes and interactions.
+In the case of a state transition graph, when the selected object is a state, its detailed values are displayed, together with the names of the genes; when the selected object is an edge, the source and the target states are displayed, together with the names of the genes, and the changed value(s) are highlighted.</listitem>
+<listitem>Graphic attributes encompass the geometrical form, color and size of the selected object. Depending on whether a node or an edge is selected, these attributes may differ.</listitem>
+<listitem>Configure graph enable the specification of the name of the graph, the location of the current GINML DTD, URLs, comments, and node order (which can be changed for a regulatory graph). This ordering of the genes is used in the definition of the nodes of the state transition graph (the position i of the vector of a state corresponds to the level of expression of the regulatory node i). This order is also used in the course of the construction of the state transition graph.</listitem> 
+</orderedlist>
+</para>
+<section>
+    <title>Overview of the secondary window for regulatory graphs</title>
+    <section><title>Editing nodes</title>
+    <para>When a node is selected, the Modelling attributes pannel enables the edition of the properties of this node. The pannel encompasses two parts covering:
+    <itemizedlist>
+        <listitem>basic node properties on the left (name, id, base and max values)</listitem>
+         <listitem>advanced properties on the right:
+                    <itemizedlist>
+                    <listitem>parameters,</listitem>
+                    <listitem>annotations of the node (not visible here, similar to annotations on edges).</listitem>
+          </itemizedlist></listitem>
+     </itemizedlist>
+    </para>
+    <figure>
+        <title>Editing a node</title>
+        <mediaobject><imageobject><imagedata fileref="../figures/regulatoryNodePanel.png"/></imageobject></mediaobject>
+    </figure>
+    <note>The notes and parameters buttons switch between editing the annotations and the parameters associated with the node.</note>
+    </section>
+    <section>
+    <title>Editing interactions</title>
+    <para>When an edge is selected, the Modelling attributes pannel enables the edition of the properties of this edge.</para>
+    <para>Note that in regulatory graphs, multi-edges are allowed between two nodes; consequently,  this panel also enables the edition of a multi-edge.
+    <figure>
+        <title>Editing an edge</title>
+        <mediaobject><imageobject><imagedata fileref="../figures/regulatoryEdgePanel.png"/></imageobject></mediaobject>
+    </figure>
+    <orderedlist>
+       <listitem>choose the edited single edge of a multi-edge,</listitem>
+       <listitem>add a new single edge,</listitem>
+       <listitem>delete the selected single edge,</listitem>
+       <listitem>change properties for the selected single edge: range of activation (values of the source node for which this edge is active) and sign,</listitem>
+       <listitem>annotations for this edge (URLs and comments).</listitem>
+    </orderedlist>
+</para>
+    </section>
+</section>    
+<section>
+<title>The mini-map</title>
+<para>
+The secondary window also contains a "bird view" (mini map) of the current graph, quite usefull to have an overview of the graph, choosing the part we want to view, it can also be used to zoom in or out.
+	</para>
+	</section>
+	</section>
+	</section>
+	
+	<section><?dbhtml filename="defRegNetwork.html"?>
+	   <title>Defining a regulatory network model</title>
+	   <para>Let us consider a regulatory graph composed by three nodes (G0,G1,G2): G0 is either an activator or a repressor for G1, depending on its level of expression; G1 can activate G2 and himself; G2 is a repressor for G0. Using the buttons on the top of the main frame, we can enter this regulatory graph in GINsim. This graph can then be saved in the GINML format, for example with the name toy.ginml (note that the conservation of the graphical settings is optional).</para>
+<figure>
+    <title>The toy model</title>
+    <mediaobject><imageobject><imagedata fileref="../figures/toyView.png"/></imageobject></mediaobject>
+</figure>
+<para>
+Next, maximal anf basal levels of expression have to be defined for each gene. The basal level corresponds to situation where no incoming interaction is active. Let us enter the following values:
+    <informaltable>
+      <tgroup cols="3">
+        <colspec colname="c1" colwidth="1cm"/>
+        <colspec colname="c2" colwidth="1.8cm"/>
+        <colspec colname="c3" colwidth="1.8cm"/>
+        <tbody>
+          <row>
+            <entry valign="middle">Gene</entry>
+            <entry valign="middle">max value</entry>
+            <entry valign="middle">base value</entry>
+          </row>
+          <row>
+            <entry valign="middle">G0</entry>
+            <entry valign="middle">2</entry>
+            <entry valign="middle">2</entry>
+          </row>
+          <row>
+            <entry valign="middle">G1</entry>
+            <entry valign="middle">1</entry>
+            <entry valign="middle">0</entry>
+          </row>
+          <row>
+            <entry valign="middle">G2</entry>
+            <entry valign="middle">1</entry>
+            <entry valign="middle">0</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+For each selected gene, these values want to be specified through the modelling attributes panel:
+<figure>
+    <title>Specification of maximal and basal values for G0</title>
+    <mediaobject><imageobject><imagedata fileref="../figures/G0Config.png"/></imageobject></mediaobject>
+</figure>
+The next step consists in defining the intervals associated to each interaction, whenever necessary (per default, the interval is set to [1-maximal value]). It is the case for the two interactions from G0 towards G1. The activation is operating when G0 is at the level 1, whereas the repression is operating when G0 is at the level 2. For the selected edge, these values can be specified through the modelling attributes pannel:
+<figure>
+    <title>Specification of the intervals associated with the interactions outgoing from G0 </title>
+    <mediaobject><imageobject><imagedata fileref="../figures/G0_G2_Config.png"/></imageobject></mediaobject>
+</figure>
+</para>
+
+<section>
+    <title>Editing Logical Parameters</title>
+    <para> When a gene is selected the middle part of the lower pannel enables the definition of the logical parameters</para>
+    <para>Per default, all parameters are considered to be zero, therefore. Consequently, only the non-zero parameters have to be explicitly defined. A parameter is defined by means of a list of incoming interactions, and a value representing the level towards the regulated node tends under the influence of all these incoming interactions.</para>
+    <para>In the case of the gene G1, we can define two non zero parameters as follows</para>
+    <para>Table of the non-zero parameters
+    <figure>
+        <title>Definition of two non zero parameters for G1</title>
+        <mediaobject><imageobject><imagedata fileref="../figures/configuredInteraction.png"/></imageobject></mediaobject>
+    </figure>
+  </para>
+  </section>
+</section>
+	
+	<section><?dbhtml filename="simulation.html"?>
+	   <title>Running a simulation</title>
+	   <para>Once a regulatory model has been defined, a simulation simulation can be launched trough the menu Action, and the option run simulation. This involves the selection of specific options for the construction the state transtion graph, as well as the specification of the initial state(s). In all case, the values of the nodes are increased or decreased by one unit at most.
+        <itemizedlist>
+        <listitem>Supported dynamical assumption:
+        <itemizedlist>
+            <listitem>synchronous: all the node updating calls are executed simultaneously,</listitem>
+           <listitem>asynchronous: only one updating call is executed at each step, but all possible trajectories are generated in the resulting state transition graph.</listitem>
+           <listitem>by priority class: Mixed mode where regulators are grouped in priority class, transitions inside each class happening  either synchronously or asynchronously.</listitem>
+        </itemizedlist>
+        </listitem>
+        <listitem>Two construction strategies are proposed for the state transition graph: depth first or breadth first.</listitem>
+        <listitem>The initial state(s): single of sets of initial states can be defined, including the whole logical space.</listitem>
+        <listitem>The evolution of some nodes to a given value (or range of values) can be restricted in a specific interval (transition blocking): once they reached this range, they are not allowed to leave it.
+</listitem>
+       <listitem>For an asynchronous dynamics, and a depth first search, a limit for the depth can be further specified.</listitem>
+        <listitem>Finally, the construction of the state transition graph can be limited to a maximal number of nodes (states).</listitem>
+</itemizedlist>
+One can find more details on simulation options in the <olink targetdoc="userManual" targetptr="simulation">relevant section</olink> of the <olink targetdoc="userManual">user manual</olink>.
+
+<figure>
+    <title>Pannel giving access to the different options for the simulation (toy model)</title>
+    <mediaobject><imageobject><imagedata fileref="../figures/simulation_config.png"/></imageobject></mediaobject>
+</figure>
+
+At the end of the simulation, the state transition graph is generated. A new dialog window provides a synthesis of the results, including the number of states, the number of stable states... The state transition graph can then be displayed, saved  or exported, or yet further manipulated through the menu perform an action:
+
+<figure>
+    <title>What to do</title>
+    <mediaobject><imageobject><imagedata fileref="../figures/whattodo.png"/></imageobject></mediaobject>
+</figure>
+
+      The following screenshots provides samples of simulation results for the toy model, using different simulation options.
+            <figure>
+                <title>Synchronous versus asynchronous simulation (whole state transition graphs)</title>
+                <mediaobject><imageobject><imagedata fileref="../figures/stg_all.jpg"/></imageobject></mediaobject>
+            </figure>
+           
+            <figure>
+                <title>Limitation of the depth in the case of a depth first construction,</title>
+                <mediaobject><imageobject><imagedata fileref="../figures/stg_depth_limited.jpg"/></imageobject></mediaobject>
+            </figure>
+          
+           <figure>
+                <title>Limitation of the size (depth first and breadth first search construction)</title>
+                <mediaobject><imageobject><imagedata fileref="../figures/stg_size_limited.jpg"/></imageobject></mediaobject>
+            </figure>
+	   </para>
+    </section>
+</article>

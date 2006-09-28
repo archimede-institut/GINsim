@@ -1,0 +1,22 @@
+
+* interactive choice for the gui language (works as a startup option) ?
+* choice of a new dtd path if the dtd specified in the file is not readable => automagically use the local one if network unavaible/notfound...
+* what about associated graph ? how to manage the association between regulatory
+  graph and state transition graph
+* add an order number to the element edge in the dtd, to avoid the restriction 
+  on the format of the ID (for the moment, this id is used for the numbering of 
+  the interactions with the same source and target)  ???
+* implement a plugin export biolayout ==> done
+
+Changes proposed by Aitor:
+* Add gene names to ginml file of state transition graph
+* Does "File" -> "Export as SVG" works? (long ago yes, now it's back)
+* In "Connectivity" menu, is not "Calcul of strong connected components on:" and "Strategy of reduced graph construction" the same? ==> all removed
+* Does "Path search with max length:" in "Connectivity" menu work? (actually clearly NOT, option removed)
+* Add help in HTML (working on it...)
+* Current selection (vertex): Why Id and Node name. (id = uniq, short, name= longer, without constraint)
+* Does "Breadth first search" work?  ==> it didn't, now it should
+* Keep coeherent with the format of the source code (-> like in jgrapht)
+* Control JGraph and JGraphT versions: e.g. jgraph-2-2.jar  ==> probably at release time, updating eclipse build path is easy but I'm lazy
+* Add to user doc, that max. size in plugin reg2dyn works for dfs and bfs. ==> done
+* Add to user doc, that maximum depth works only for dfs.s  ==> in fact in only doesn't work for bfs..., done

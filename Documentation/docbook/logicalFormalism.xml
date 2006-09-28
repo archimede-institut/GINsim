@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<article><?dbhtml dir="logicalFormalism"?>
+<articleinfo>
+	<title>Introduction to the logical formalism</title>
+</articleinfo>
+
+	<section id="overview">
+		<title>Overview</title>
+		<para>This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions.</para>
+		<para><ulink url="http://gin.univ-mrs.fr/GINsim">GINsim</ulink> is a computer tool implementing this formalism, see its <olink targetdoc="tutorial">tutorial</olink> or <olink targetdoc="userManual">user manual</olink> for informations on GINsim.</para>
+
+        <bibliography>
+            <title>References</title>
+        
+            <biblioentry>
+                <title>Qualitative analysis of regulatory graphs: a computational tool based on a discrete formal framework</title>
+                <authorgroup>
+                    <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
+                    <author><firstname>Elisabeth</firstname><surname>Remy</surname></author>
+                    <author><firstname>B</firstname><surname>Mossé</surname></author>
+                    <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
+                </authorgroup>
+                <!-- Lectures Notes in Control and Information Sciences -->
+                <pubdate>2003</pubdate>
+                <volumenum>294</volumenum><pagenums>119-126</pagenums>
+            </biblioentry>
+        
+            <biblioentry>
+                <title>GINsim: a software suite for the qualitative modelling, simulation and analysis of regulatory networks</title>
+                <authorgroup>
+                    <author><firstname>Aitor</firstname><surname>Larrinaga</surname></author>
+                    <author><firstname>Lucas</firstname><surname>Sanchez</surname></author>
+                    <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
+                    <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
+                </authorgroup>
+                <!-- biosystems -->
+                <pubdate>2005</pubdate>
+            </biblioentry>
+        </bibliography>
+    </section>
+
+    <section><?dbhtml filename="background.html"?>
+	   <title>Some background</title>
+        <para>some text here :)</para>
+    </section>
+    
+    <section id="members"><?dbhtml filename="members.html"?>
+    	<title>members</title>
+    	
+	    <section id="nodes">
+    		<title>Nodes</title>
+    		<para>
+    		<emphasis role="strong">Nodes</emphasis> are the main members of a regulatory network.
+    		</para> 
+    	</section>
+    
+	    <section id="interactions">
+	    	<title>Interactions</title>
+	    	<para>
+	    	<emphasis role="strong">Interactions</emphasis> between nodes are represented by edges in the regulatory graph.
+	    	</para>
+	    </section>
+    
+	    <section id="logicalParameters">
+	    	<title>Logical parameters</title>
+	    	<para>The Dynamic behavior of each node is control by <emphasis role="strong">logical parameters</emphasis>. These parameters define the state toward which a node tends for any state of his regulators.</para>
+	    </section>
+    </section>
+    
+    
+    
+    <section id="tips"><?dbhtml filename="tips.html"?>
+    <title>Tips</title>
+    <para>
+        <itemizedlist>
+            <listitem>sur un gros modele, supprimer les intermediaires:
+                <para role="linebreak">(A -&gt; B -&gt; C)   ~= (A -&gt; C)</para></listitem>
+                <listitem>parfois le "meilleur modele" ne ressemble pas trop a la realité:
+                <para role="linebreak">(A -&gt; C avec A + B -&gt; AB) ~=  (A-&gt;C avec B --| C)</para></listitem>
+        </itemizedlist>
+    </para>
+    </section>
+</article>
