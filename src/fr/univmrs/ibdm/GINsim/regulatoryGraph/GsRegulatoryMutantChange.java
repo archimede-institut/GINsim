@@ -66,6 +66,7 @@ class GsRegulatoryMutantChange {
                 cst.next[i] = OmddNode.TERMINALS[0];
             }
         }
+        System.out.println("contrainte ("+min+","+max+"): "+cst);
         return node.merge(cst, OmddNode.CONSTRAINT);
     }
 

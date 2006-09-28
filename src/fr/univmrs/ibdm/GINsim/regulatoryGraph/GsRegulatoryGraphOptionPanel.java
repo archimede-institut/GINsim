@@ -1,8 +1,13 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import fr.univmrs.ibdm.GINsim.global.GsOptions;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphOptionPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
@@ -14,37 +19,68 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
 
 	private static final long serialVersionUID = 4585614812066176148L;
 	private JComboBox comboBox;
+    private JCheckBox extended;
 	
 	/**
 	 * create the save option panel for ginml based graphs
-	 * @param b
+	 * @param t_mode allowed save mode
+     * @param mode selected save mode
 	 */
-	public GsRegulatoryGraphOptionPanel (boolean b) {
-		this.add(getComboBox());
-	    if (b) {
-	        comboBox.setSelectedIndex(2);
-	    } else {
-	        comboBox.setSelectedIndex(0);
-	    }
+	public GsRegulatoryGraphOptionPanel (Object[] t_mode, int mode) {
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.WEST;
+        if (t_mode != null) {
+    		this.add(getComboBox(t_mode, mode), c);
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 1;
+            c.anchor = GridBagConstraints.WEST;
+        }
+        this.add(getExtended(), c);
+        comboBox.setSelectedIndex(mode);
 	}
 	
 	/**
 	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraphOptionPanel#getSaveMode()
 	 */
 	public int getSaveMode() {
-		return getComboBox().getSelectedIndex();
+        if (comboBox != null) {
+            return comboBox.getSelectedIndex();
+        }
+		return 0;
 	}
+    
+    public boolean isExtended() {
+        GsOptions.setOption("extendedSave", extended.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+        return extended.isSelected();
+    }
 
+    private JCheckBox getExtended() {
+        if (extended == null) {
+            extended = new JCheckBox(Translator.getString("STR_extendedSave"));
+            extended.setSelected(GsOptions.getOption("extendedSave", Boolean.FALSE).equals(Boolean.TRUE));
+        }
+        return extended;
+    }
 	
-	private JComboBox getComboBox() {
+	private JComboBox getComboBox(Object[] t, int mode) {
 		if (comboBox == null) {
 			comboBox = new JComboBox();
-			comboBox.addItem(Translator.getString("STR_saveNone"));
-			comboBox.addItem(Translator.getString("STR_savePosition"));
-			comboBox.addItem(Translator.getString("STR_saveComplet"));
-			
-			comboBox.setSelectedIndex(1);
+            for (int i=0 ; i<t.length ; i++) {
+                comboBox.addItem(t[i]);
+            }
+			comboBox.setSelectedIndex(mode);
 		}
 		return comboBox;
 	}
+
+    public String getExtension() {
+        if (extended.isSelected()) {
+            return ".zginml";
+        }
+        return ".ginml";
+    }
 }

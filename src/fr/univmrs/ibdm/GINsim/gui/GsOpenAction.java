@@ -18,6 +18,7 @@ import fr.univmrs.ibdm.GINsim.global.GsOptions;
 import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphOptionPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
 /**
@@ -322,6 +323,9 @@ public class GsOpenAction extends GsBaseAction {
             GsOptions.setOption("currentDirectory", jfc.getCurrentDirectory());
             	String filename = jfc.getSelectedFile().getPath();
             	String extension = autoExtension;
+                if (accessory instanceof GsGraphOptionPanel) {
+                    extension = ((GsGraphOptionPanel)accessory).getExtension();
+                }
             	if (extension != null && ! filename.endsWith(extension)) {
             		filename += extension;
             	}

@@ -28,8 +28,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
 	private short 			baseValue;
 	private short 			maxValue;
-    private short           blockMin = -1;
-    private short           blockMax = -1;
+//    private short           blockMin = -1;
+//    private short           blockMax = -1;
 	private Vector 			v_logicalParameters;
 	
 	private String 			name;
@@ -112,10 +112,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 			    baseValue = maxValue;
 			}
 			if (oldmax > maxValue) {
-                if (blockMax > maxValue) {
-                    s += Translator.getString("STR_block_reset\n");
-                    blockMin = blockMax = -1;
-                }
 				s += graph.applyNewMaxValue(this);
                 for (int i=0 ; i<v_logicalParameters.size() ; i++) {
                     GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(i);
@@ -252,15 +248,11 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
     /**
      * get the DAG representation of logical parameters.
-     * The generated diagramm will include transition blocking. When transition blocking is applied strictly, 
-     * all states out of the selected interval will be replaced by the nearest state in the interval. Otherwise,
-     * evolving outside of the interval will remain allowed.
      * 
      * @param graph
-     * @param strictBlocking strictly apply transition blocking
      * @return an OmddNode representing logical parameters associated to this vertex.
      */
-    public OmddNode getTreeParameters(GsRegulatoryGraph graph, boolean strictBlocking) {
+    public OmddNode getTreeParameters(GsRegulatoryGraph graph) {
         OmddNode root;
         GsLogicalParameter pbaseValue = new GsLogicalParameter(0);
         if (this.baseValue != 0) {
@@ -280,7 +272,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
                 root = root.merge(curNode, OmddNode.OR);
             }
         }
-        return root.applyBlock(blockMin, blockMax, graph.getNodeOrder().indexOf(this), maxValue+1, strictBlocking);
+        return root;
     }
     
 	public String toToolTip() {
@@ -387,53 +379,4 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
             
         }
     }
-
-    /**
-     * @return the value of blockMax (-1 for disabled)
-     */
-    public short getBlockMax() {
-        return blockMax;
-    }
-
-    /**
-     * @param blockMax
-     */
-    public void setBlockMax(short blockMax) {
-        if (blockMax >= -1 && blockMax <= maxValue) {
-            this.blockMax = blockMax;
-            if (blockMin > blockMax || blockMin == -1) {
-                blockMin = blockMax;
-            }
-        }
-    }
-
-    /**
-     * @return the value of blockMin (-1 for disabled)
-     */
-    public short getBlockMin() {
-        return blockMin;
-    }
-
-    /**
-     * @param blockMin
-     */
-    public void setBlockMin(short blockMin) {
-        if (blockMin >= -1 && blockMin <= maxValue) {
-            this.blockMin = blockMin;
-            if (blockMin == -1 || blockMax < blockMin) {
-                blockMax = blockMin;
-            }
-        }
-    }
-    
-//	public boolean equals(Object obj) {
-//		if (obj instanceof GsRegulatoryVertex) {
-//			return ((GsRegulatoryVertex)obj).getId().equals(id);
-//		}
-//		return false;
-//	}
-//	public int hashCode() {
-//		return id.hashCode();
-//	}
-    
 }

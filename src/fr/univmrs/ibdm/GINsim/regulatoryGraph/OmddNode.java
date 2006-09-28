@@ -167,7 +167,7 @@ public class OmddNode {
                         if (other.min == -1 || (value >= other.min && value <= other.max)) {
                             return this;
                         }
-                        if (value < other.min) {
+                        if (value <= other.min) {
                             return TERMINALS[other.min];
                         }
                         return TERMINALS[other.max];
@@ -300,7 +300,7 @@ public class OmddNode {
 //            ret.t_order = t_order;
             ret.next = new OmddNode[other.next.length];
             for (int i=0 ; i<other.next.length ; i++) {
-                ret.next[i] = merge(other.next[i], op, m, t_key);
+                ret.next[i] = this.merge(other.next[i], op, m, t_key);
             }
 //          m.put(key+"_"+other.key, ret);
             return ret;
@@ -493,90 +493,6 @@ public class OmddNode {
         }
     }
 
-    /**
-     * @param blockMin
-     * @param blockMax
-     * @param index 
-     * @param len 
-     * @param strict
-     * @return a modified tree where blocking constraints have been applied
-     */
-    public OmddNode applyBlock(short blockMin, short blockMax, int index, int len, boolean strict) {
-        if (blockMin == -1 || blockMax == -1 || blockMin > blockMax) {
-            return this;
-        }
-        return applyBlock(blockMin, blockMax, index, len, (short)-1, strict);
-    }
-    /**
-     * This is the real method to apply transition blocking constraint.
-     * It is applied by adding to every path in the diagram a test on the
-     * constrained node.
-     * Once the leaf is reached, the leaf is kept or replaced depending on 
-     * the currently selected value for this node
-     * 
-     * @param blockMin
-     * @param blockMax
-     * @param index
-     * @param len
-     * @param curValue
-     * @param strict
-     * @return a modified tree where blocking constraints have been applied
-     */
-    private OmddNode applyBlock(short blockMin, short blockMax, int index, int len, short curValue, boolean strict) {
-        if (next == null) {
-            if (curValue == -1) {
-                OmddNode ret = new OmddNode();
-                ret.level = index;
-                ret.next = new OmddNode[len];
-                for (short i=0 ; i<len ; i++) {
-                    ret.next[i] = this.applyBlock(blockMin, blockMax, index, len, i, strict);
-                }
-                return ret;
-            }
-            if (value >= blockMin && value <= blockMax) {
-                // the target value is in the block interval: all right
-                return this;
-            }
-            if (value < blockMin) {
-                if (!strict && curValue < blockMin) {
-                    return this;
-                }
-                return TERMINALS[blockMin];
-            }
-            // value > blockMax
-            if (!strict && curValue > blockMax) {
-                return this;
-            }
-            return TERMINALS[blockMax];
-        }
-        
-        if (level == index) {
-            OmddNode ret = new OmddNode();
-            ret.level = level;
-            ret.next = new OmddNode[next.length];
-            for (short i=0 ; i<next.length ; i++) {
-                ret.next[i] = next[i].applyBlock(blockMin, blockMax, index, len, i, strict);
-            }
-            return ret;
-        }
-        if (curValue == -1 && level > index) {
-            OmddNode ret = new OmddNode();
-            ret.level = index;
-            ret.next = new OmddNode[len];
-            for (short i=0 ; i<len ; i++) {
-                ret.next[i] = this.applyBlock(blockMin, blockMax, index, len, i, strict);
-            }
-            return ret;
-        }
-        OmddNode ret = new OmddNode();
-        ret.level = level;
-        ret.next = new OmddNode[next.length];
-        for (short i=0 ; i<next.length ; i++) {
-            ret.next[i] = next[i].applyBlock(blockMin, blockMax, index, len, curValue, strict);
-        }
-        return ret;
-    }
-    
     /**
      * test if two diagramms conflict: usefull to store logical parameters as diagramms and detect conflicts
      * 

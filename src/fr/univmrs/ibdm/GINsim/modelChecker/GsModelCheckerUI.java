@@ -131,7 +131,7 @@ public class GsModelCheckerUI extends JPanel {
     }
     
     protected void editMutants() {
-        GsRegulatoryMutants.editMutants(graph);
+        GsRegulatoryMutants.getMutantConfigPanel(graph);
     }
     protected void delTest() {
         model.removeTest(combo_tests.getSelectedIndex());

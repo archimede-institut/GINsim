@@ -90,7 +90,7 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 extension = ".sbml";
                 break;
             case SMV:
-                config = new GsSMVexportConfig(graph.getNodeOrder());
+                config = new GsSMVexportConfig((GsRegulatoryGraph)graph);
                 int ret = JOptionPane.showConfirmDialog(null, config, "Configure SMV export", JOptionPane.OK_CANCEL_OPTION);
                 if (ret == JOptionPane.CANCEL_OPTION) {
                     return;

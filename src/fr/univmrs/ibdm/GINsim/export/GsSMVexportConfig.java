@@ -2,9 +2,15 @@ package fr.univmrs.ibdm.GINsim.export;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -13,6 +19,9 @@ import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
@@ -23,22 +32,26 @@ public class GsSMVexportConfig extends JPanel {
 	private static final long serialVersionUID = -7398674287463858306L;
 	private JTable blockTable;
 
+    GsRegulatoryGraph graph;
+    
     JRadioButton radioSync = null;
     JRadioButton radioAsync = null;
+    JComboBox comboMutant = null;
+    JButton butCfgMutant = null;
     private JScrollPane jsp;
     private GsSMVConfigModel model;
+    private GsMutantModel mutantModel;
     short[] initstates;
     
 	/**
-	 * @param frame
-	 * @param nodeOrder
+	 * @param graph
 	 */
-	public GsSMVexportConfig(Vector nodeOrder) {
-        initstates = new short[nodeOrder.size()];
+	public GsSMVexportConfig(GsRegulatoryGraph graph) {
+        initstates = new short[graph.getNodeOrder().size()];
         for (int i=0 ; i<initstates.length ; i++) {
             initstates[i] = -1;
         }
-        model = new GsSMVConfigModel(nodeOrder, initstates);
+        this.graph = graph;
 		initialize();
 	}
 
@@ -50,12 +63,25 @@ public class GsSMVexportConfig extends JPanel {
         radioAsync = new JRadioButton("asynchronous");
         group.add(radioAsync);
         group.add(radioSync);
+
+        model = new GsSMVConfigModel(graph.getNodeOrder(), initstates);
+        mutantModel = new GsMutantModel(GsRegulatoryMutants.getMutants(graph));
+        comboMutant = new JComboBox(mutantModel);
+        // TODO: add back config mutant button, when blocking is removed
+//        butCfgMutant = new JButton(Translator.getString("STR_configure"));
+//        butCfgMutant.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                GsRegulatoryMutants.editMutants(graph);
+//            }
+//        });
+        
         GridBagConstraints cst = new GridBagConstraints();
         cst.gridx = 0;
-        cst.gridy = 2;
+        cst.gridy = 3;
         cst.weightx = 1;
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
+        cst.gridwidth = 3;
         add(getJsp(), cst);
         
         cst = new GridBagConstraints();
@@ -66,6 +92,14 @@ public class GsSMVexportConfig extends JPanel {
         cst.gridx = 0;
         cst.gridy = 1;
         add(radioAsync, cst);
+        cst = new GridBagConstraints();
+        cst.gridx = 0;
+        cst.gridy = 2;
+        add(comboMutant, cst);
+//        cst = new GridBagConstraints();
+//        cst.gridx = 1;
+//        cst.gridy = 2;
+//        add(butCfgMutant, cst);
         
         radioAsync.setSelected(true);
 	}
@@ -99,6 +133,15 @@ public class GsSMVexportConfig extends JPanel {
      */
     public boolean isSync() {
         return radioSync.isSelected();
+    }
+    /**
+     * @return the selected mutant (can be null)
+     */
+    public GsRegulatoryMutantDef getMutant() {
+        if (mutantModel.getSelectedItem() instanceof GsRegulatoryMutantDef) {
+            return (GsRegulatoryMutantDef)mutantModel.getSelectedItem();
+        }
+        return null;
     }
     /**
      * @return an array giving desired initial states (-1 for no constraint)
@@ -142,7 +185,7 @@ class GsSMVConfigModel extends AbstractTableModel {
      * @see javax.swing.table.TableModel#getColumnCount()
      */
     public int getColumnCount() {
-        return 4;
+        return 2;
     }
 
     /**
@@ -154,10 +197,6 @@ class GsSMVConfigModel extends AbstractTableModel {
             return Translator.getString("STR_node");
         case 1:
             return Translator.getString("STR_initial");
-        case 2:
-            return Translator.getString("STR_min");
-        case 3:
-            return Translator.getString("STR_max");
         }
         return null;
     }
@@ -181,9 +220,7 @@ class GsSMVConfigModel extends AbstractTableModel {
         }
         switch (columnIndex) {
             case 1:
-            case 2:
-            case 3:
-                return true;
+               return true;
         }
         return false;
     }
@@ -201,12 +238,6 @@ class GsSMVConfigModel extends AbstractTableModel {
                 return nodeOrder.get(rowIndex);
             case 1:
                 value = initstates[rowIndex];
-                break;
-            case 2:
-                value = ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).getBlockMin();
-                break;
-            case 3:
-                value = ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).getBlockMax();
                 break;
             default:
                 return null;
@@ -231,12 +262,6 @@ class GsSMVConfigModel extends AbstractTableModel {
                 initstates[rowIndex] = -1;
                 fireTableCellUpdated(rowIndex, 1);
                 break;
-            case 2:
-            case 3:
-                ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMin((short)-1);
-                ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMax((short)-1);
-                fireTableCellUpdated(rowIndex, 2);
-                fireTableCellUpdated(rowIndex, 3);
             }
             return;
         }
@@ -254,12 +279,6 @@ class GsSMVConfigModel extends AbstractTableModel {
                 initstates[rowIndex] = -1;
                 fireTableCellUpdated(rowIndex, 1);
                 break;
-            case 2:
-            case 3:
-                ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMin((short)-1);
-                ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMax((short)-1);
-                fireTableCellUpdated(rowIndex, 2);
-                fireTableCellUpdated(rowIndex, 3);
             }
             return;
         }
@@ -269,12 +288,6 @@ class GsSMVConfigModel extends AbstractTableModel {
         switch (columnIndex) {
             case 1:
                 initstates[rowIndex] = (short)val;
-                break;
-            case 2:
-                ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMin((short)val);
-                break;
-            case 3:
-                ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMax((short)val);
                 break;
         }
         fireTableCellUpdated(rowIndex, 1);
@@ -293,3 +306,48 @@ class GsSMVConfigModel extends AbstractTableModel {
     }
 }
 
+class GsMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
+    private static final long serialVersionUID = 2348678706086666489L;
+    
+    GsRegulatoryMutants listMutants;
+    GsRegulatoryMutantDef mutant = null;
+    
+    GsMutantModel(GsRegulatoryMutants listMutants) {
+        this.listMutants = listMutants;
+    }
+    
+    void setMutantList(GsRegulatoryMutants mutants) {
+            this.listMutants = mutants;
+            fireContentsChanged(this, 0, getSize());
+    }
+
+    public Object getSelectedItem() {
+        if (mutant == null) {
+            return "--";
+        }
+        return mutant;
+    }
+
+    public void setSelectedItem(Object anObject) {
+        super.setSelectedItem(anObject);
+        if (anObject instanceof GsRegulatoryMutantDef) {
+            mutant = (GsRegulatoryMutantDef)anObject;
+        } else {
+            mutant = null;
+        }
+    }
+
+    public Object getElementAt(int index) {
+        if (index == 0 || listMutants == null) {
+            return "--";
+        }
+        return listMutants.getElement(index-1);
+    }
+
+    public int getSize() {
+        if (listMutants == null) {
+            return 1;
+        }
+        return listMutants.getNbElements()+1;
+    }
+}

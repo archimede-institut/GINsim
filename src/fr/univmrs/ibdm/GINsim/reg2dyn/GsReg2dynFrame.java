@@ -728,7 +728,7 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
             buttonConfigMutants = new JButton(Translator.getString("STR_configure"));
             buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    GsRegulatoryMutants.editMutants(paramList.graph);
+                    new JDialog().add(GsRegulatoryMutants.getMutantConfigPanel(paramList.graph));
                     mutantModel.setMutantList(GsRegulatoryMutants.getMutants(paramList.graph));
                 }
             });
@@ -856,5 +856,4 @@ class GsMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
         }
         return listMutants.getNbElements()+1;
     }
-
 }

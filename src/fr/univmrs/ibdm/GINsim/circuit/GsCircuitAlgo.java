@@ -147,7 +147,8 @@ public class GsCircuitAlgo {
         }
         
         // get the context tree
-        OmsddNode node = getContextFromParameters(target.getTreeParameters(graph, true), graph.getNodeOrder().indexOf(source), min, t_circuit, nextmin, nextmax);
+        OmsddNode node = getContextFromParameters(target.getTreeParameters(graph), graph.getNodeOrder().indexOf(source), min, t_circuit, nextmin, nextmax);
+        // FIXME: apply mutant
         node = checkConstraint(node).reduce();
         t_report[ei.index].add(node);
 

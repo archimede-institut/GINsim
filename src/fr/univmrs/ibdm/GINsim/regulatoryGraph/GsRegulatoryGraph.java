@@ -107,13 +107,6 @@ public final class GsRegulatoryGraph extends GsGraph {
         return ret;
     }
 
-    protected String getZipMainEntryName(String filename) {
-        if (filename == null || filename.endsWith(".zginml")) {
-            return "model.ginml";
-        }
-        return null;
-    }
-
     protected void doSave(OutputStream os, int mode, boolean selectedOnly) throws GsException {
     	try {
             GsXMLWriter out = new GsXMLWriter(os, dtdFile);
@@ -404,17 +397,17 @@ public final class GsRegulatoryGraph extends GsGraph {
 		return ffilter;
 	}
 
-	public String getAutoFileExtension() {
-		return ".zginml";
-	}
-	
 	protected JPanel doGetFileChooserPanel() {
 		return getOptionPanel();
 	}
 	
 	private JPanel getOptionPanel() {
 		if (optionPanel == null) {
-			optionPanel = new GsRegulatoryGraphOptionPanel(mainFrame != null);
+
+            Object[] t_mode = { Translator.getString("STR_saveNone"), 
+                    Translator.getString("STR_savePosition"), 
+                    Translator.getString("STR_saveComplet") };
+			optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
 		}
 		return optionPanel;
 	}
@@ -599,7 +592,7 @@ public final class GsRegulatoryGraph extends GsGraph {
     public OmddNode[] getAllTrees() {
         OmddNode[] t_tree = new OmddNode[nodeOrder.size()];
         for (int i=0 ; i<nodeOrder.size() ; i++) {
-            t_tree[i] = ((GsRegulatoryVertex)nodeOrder.get(i)).getTreeParameters(this, false).reduce();
+            t_tree[i] = ((GsRegulatoryVertex)nodeOrder.get(i)).getTreeParameters(this).reduce();
         }
         return t_tree;
     }

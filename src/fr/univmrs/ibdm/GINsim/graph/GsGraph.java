@@ -90,7 +90,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     protected String associatedID = null;
     
     protected boolean annoted = false;
-
+    protected boolean extended = false;
     
     /**
      * @param descriptor
@@ -124,6 +124,12 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      */
     public void setSaveFileName(String saveFileName) {
         this.saveFileName = saveFileName;
+        // TODO: cleaner way to remember if extended or not
+        if (saveFileName.endsWith(".zginml")) {
+            extended = true;
+        } else if (saveFileName.endsWith(".ginml")) {
+            extended = false;
+        }
     }
     /**
      * set the save mode.
@@ -157,15 +163,6 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     abstract protected void doSave(OutputStream os, int mode, boolean selectedOnly) throws GsException;
 
     /**
-     * @param filename name of the file selected to save
-     * @return the name of the main entry when saving into a zip file.
-     * saving in zip will NOT happen if this returns null (default)
-     */
-    protected String getZipMainEntryName(String filename) {
-        return null;
-    }
-    
-    /**
      * 
      * @return a FileFilter for the save dialog (or null)
      */
@@ -186,7 +183,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         if (saveFileName == null) {
             saveAs(false);
         } else {
-            save(false, saveFileName, saveMode);
+            save(false, saveFileName, saveMode, extended);
         }
     }
     
@@ -222,16 +219,18 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     	
     	if (filename != null) {
     		int saveMode = 0;
+            boolean extended = false;
     		if (poption != null && poption instanceof GsGraphOptionPanel ) {
     			saveMode = ((GsGraphOptionPanel)poption).getSaveMode();
+                extended = ((GsGraphOptionPanel)poption).isExtended();
     		}
     		if (selectedOnly) {
-    			save(true, filename, saveMode);
+    			save(true, filename, saveMode, extended);
     		} else {
     			this.saveMode = saveMode;
                 String s_oldfn = saveFileName;
     			saveFileName = filename;
-    			save(false, null, saveMode);
+    			save(false, null, saveMode, extended);
                 if (s_oldfn == null) {
                     GsEnv.renameGraph("[UNSAVED-"+id+"]", saveFileName);
                 } else {
@@ -245,24 +244,19 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @param selectedOnly
      * @param fileName
      * @param saveMode
+     * @param extended 
      * @throws GsException
      */
-    private void save(boolean selectedOnly, String fileName, int saveMode) throws GsException {
-        String szipentry = getZipMainEntryName(fileName);
+    private void save(boolean selectedOnly, String fileName, int saveMode, boolean extended) throws GsException {
         try {
-            if (szipentry == null) {
-                OutputStream os = new FileOutputStream(this.saveFileName);
+            if (!extended) {
+                OutputStream os = new FileOutputStream(fileName != null ? fileName : this.saveFileName);
                 doSave(os, saveMode, selectedOnly);
                 os.close();
             } else {
-                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(this.saveFileName));
-//                zos.putNextEntry(new ZipEntry("MANIFEST"));
-//                zos.write(("Main-file: "+szipentry+"\n").getBytes());
-//                zos.closeEntry();
-                
-                // FIXME: make it be "ginml" for now
-                szipentry = "ginml";
-                zos.putNextEntry(new ZipEntry(szipentry));
+                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName != null ? fileName : this.saveFileName));
+                // FIXME: find a way to choose the name of the main zip entry?
+                zos.putNextEntry(new ZipEntry("ginml"));
                 doSave(zos, saveMode, selectedOnly);
                 zos.closeEntry();
                 // now save associated objects
@@ -298,10 +292,17 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                 }
                 zos.close();
             }
-    		saved = true;
-            if (mainFrame != null) {
-                addNotificationMessage(new GsGraphNotificationMessage(this, "graph saved", GsGraphNotificationMessage.NOTIFICATION_INFO));
-                mainFrame.updateTitle();
+            if (selectedOnly) {
+                if (mainFrame != null) {
+                    addNotificationMessage(new GsGraphNotificationMessage(this, "selection saved", GsGraphNotificationMessage.NOTIFICATION_INFO));
+                }
+            } else {
+                saved = true;
+                this.extended = extended;
+                if (mainFrame != null) {
+                    addNotificationMessage(new GsGraphNotificationMessage(this, "graph saved", GsGraphNotificationMessage.NOTIFICATION_INFO));
+                    mainFrame.updateTitle();
+                }
             }
         } catch (Exception e) {
             if (mainFrame != null) {
@@ -643,10 +644,10 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * override me to return something else than <code>null</code> (ie no automatic extension)
 	 * @return the extension to always add to filenames.
 	 */
-	public String getAutoFileExtension() {
-		return null;
-	}
-	
+    public String getAutoFileExtension() {
+        return null;
+    }
+    
 	/**
 	 * set the mainFrame containing this graph.
 	 * 

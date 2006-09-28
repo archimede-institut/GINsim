@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -46,18 +45,16 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
     /**
      * edit mutants associated with a graph
      * @param graph
+     * @return a panel to configure mutants
      */
-    public static void editMutants(GsRegulatoryGraph graph) {
+    public static JPanel getMutantConfigPanel(GsRegulatoryGraph graph) {
         GsRegulatoryMutants mutants = getMutants(graph);
         if (mutants == null) {
             mutants = new GsRegulatoryMutants(graph);
         }
         MutantPanel mpanel = new MutantPanel();
         mpanel.setEditedObject(mutants, graph.getNodeOrder());
-        JDialog dialog = new JDialog(graph.getGraphManager().getMainFrame(), "Edit mutants");
-        dialog.setContentPane(mpanel);
-        dialog.setSize(500, 300);
-        dialog.setVisible(true);
+        return mpanel;
     }
 
     Vector v_mutant = new Vector();
@@ -230,13 +227,24 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
         return null;
     }
     
+    /**
+     * @param o
+     * @return the index of o, -1 if not found
+     */
     public int indexOf(Object o) {
         return v_mutant.indexOf(o);
     }
-
+    /**
+     * register a new listener for this object
+     * @param listener
+     */
     public void addListener(GsRegulatoryMutantListener listener) {
         v_listeners.add(listener);
     }
+    /**
+     * un-register a listener
+     * @param listener
+     */
     public void removeListener(GsRegulatoryMutantListener listener) {
         v_listeners.remove(listener);
     }

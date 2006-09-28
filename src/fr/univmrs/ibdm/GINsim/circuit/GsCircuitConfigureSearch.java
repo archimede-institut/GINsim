@@ -125,8 +125,6 @@ public class GsCircuitConfigureSearch extends JPanel {
     protected void reset() {
         for (int i=0 ; i<nodeOrder.size() ; i++) {
             GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
-            vertex.setBlockMax((short)-1);
-            vertex.setBlockMin((short)-1);
             config.t_status[i] = 3;
             config.t_constraint[i][0] = 0;
             config.t_constraint[i][1] = vertex.getMaxValue();
@@ -160,7 +158,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
     }
 
     public int getColumnCount() {
-        return 8;
+        return 6;
     }
 
     public String getColumnName(int column) {
@@ -177,10 +175,6 @@ class GsCircuitConfigModel extends DefaultTableModel {
                 return "test min";
             case 5:
                 return "max";
-            case 6:
-                return "block min";
-            case 7:
-                return "max";
         }
         return super.getColumnName(column);
     }
@@ -195,8 +189,6 @@ class GsCircuitConfigModel extends DefaultTableModel {
                 return Boolean.class;
             case 4:
             case 5:
-            case 6:
-            case 7:
                 return Integer.class;
         }
         return super.getColumnClass(columnIndex);
@@ -227,16 +219,6 @@ class GsCircuitConfigModel extends DefaultTableModel {
                     return "";
                 }
                 return ""+t_constraint[row][1];
-            case 6:
-                if (((GsRegulatoryVertex)v_list.get(row)).getBlockMin() == -1) {
-                    return "";
-                }
-                return ""+((GsRegulatoryVertex)v_list.get(row)).getBlockMin();
-            case 7:
-                if (((GsRegulatoryVertex)v_list.get(row)).getBlockMax() == -1) {
-                    return "";
-                }
-                return ""+((GsRegulatoryVertex)v_list.get(row)).getBlockMax();
         }
         return super.getValueAt(row, column);
     }
@@ -274,20 +256,6 @@ class GsCircuitConfigModel extends DefaultTableModel {
             }
             fireTableRowsUpdated(row, row);
             frame.updateStatus(GsCircuitFrame.STATUS_NONE);
-        } else if (column == 6) {
-            if (aValue == null) {
-                ((GsRegulatoryVertex)v_list.get(row)).setBlockMin((short)-1);
-            } else {
-                ((GsRegulatoryVertex)v_list.get(row)).setBlockMin(((Integer)aValue).shortValue());
-            }
-            fireTableRowsUpdated(row, row);
-        } else if (column == 7) {
-            if (aValue == null) {
-                ((GsRegulatoryVertex)v_list.get(row)).setBlockMax((short)-1);
-            } else {
-                ((GsRegulatoryVertex)v_list.get(row)).setBlockMax(((Integer)aValue).shortValue());
-            }
-            fireTableRowsUpdated(row, row);
         }
     }
 }

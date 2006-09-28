@@ -79,7 +79,11 @@ public class GsRegulatoryMutantDef {
         for (int i=0 ; i<v_changes.size() ; i++) {
             GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)v_changes.get(i);
             int index = listGenes.indexOf(change.vertex);
+            System.out.println("apply mutant("+index+"): avant");
+            System.out.println(t_tree[index]);
             t_tree[index] = change.apply(t_tree[index], listGenes);
+            System.out.println("apply mutant: apres");
+            System.out.println(t_tree[index]);
         }
         
     }

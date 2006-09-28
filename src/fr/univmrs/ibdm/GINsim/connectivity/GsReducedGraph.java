@@ -263,7 +263,10 @@ public class GsReducedGraph extends GsGraph {
     
 	private JPanel getOptionPanel() {
 		if (optionPanel == null) {
-			optionPanel = new GsRegulatoryGraphOptionPanel(mainFrame != null);
+            Object[] t_mode = { Translator.getString("STR_saveNone"), 
+                    Translator.getString("STR_savePosition"), 
+                    Translator.getString("STR_saveComplet") };
+            optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
 		}
 		return optionPanel;
 	}

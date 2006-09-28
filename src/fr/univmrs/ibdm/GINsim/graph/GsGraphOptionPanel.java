@@ -10,4 +10,12 @@ public interface GsGraphOptionPanel {
      * @see GsGraph#doSave(String, int, boolean)
      */
 	public int getSaveMode();
+    /**
+     * @return true if associated parameters should also be saved
+     */
+    public boolean isExtended() ;
+    /**
+     * @return the extension for the saved file
+     */
+    public String getExtension();
 }
