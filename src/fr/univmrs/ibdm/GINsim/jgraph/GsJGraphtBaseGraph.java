@@ -258,7 +258,7 @@ public class GsJGraphtBaseGraph extends AbstractGraph implements DirectedGraph {
         }
     }
     
-    private class EdgeSet implements Set {
+    class EdgeSet implements Set {
         private GsJGraphtBaseGraph g;
         
 

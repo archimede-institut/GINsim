@@ -123,4 +123,10 @@ public class GsEventDispatcher implements GraphChangeListener {
             ((GraphChangeListener)graphChangeListeners.get(i)).graphClosed(graph);
         }
     }
+
+	public void updateGraphNotificationMessage(GsGraph graph) {
+        for (int i=graphChangeListeners.size()-1 ; i>=0 ; i--) {
+            ((GraphChangeListener)graphChangeListeners.get(i)).updateGraphNotificationMessage(graph);
+        }
+	}
 }

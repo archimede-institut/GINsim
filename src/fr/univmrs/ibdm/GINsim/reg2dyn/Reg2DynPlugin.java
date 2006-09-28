@@ -1,18 +1,16 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.swing.JFrame;
 
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 
 /**
@@ -22,12 +20,17 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
  */
 public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
 
+    static {
+        if (!GsRegulatoryGraphDescriptor.isObjectManagerRegistred("mutant")) {
+            GsRegulatoryGraphDescriptor.registerObjectManager(new GsMutantListManager());
+        }
+        GsRegulatoryGraphDescriptor.registerObjectManager(new GsSimulationParametersManager());
+    }
+    
     private GsPluggableActionDescriptor[] t_action = null;
 
     public void registerPlugin() {
         GsRegulatoryGraphDescriptor.registerActionProvider(this);
-        Translator
-                .pushBundle("fr.univmrs.ibdm.GINsim.ressources.messagesReg2dyn");
     }
 
     public GsPluggableActionDescriptor[] getT_action(int actionType,
@@ -48,23 +51,24 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
             return;
         }
         if (graph.getNodeOrder().size() < 1) {
+            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, Translator.getString("STR_emptyGraph"), GsGraphNotificationMessage.NOTIFICATION_WARNING));
             return;
         }
 		if (ref == 0) {
-		    Reg2dynFrame theframe = (Reg2dynFrame)graph.getObject("reg2dyn");
-            Map m_params = (Map)graph.getObject("reg2dyn_parameters");
-            if (m_params == null) {
-                m_params = new HashMap();
-                graph.addObject("reg2dyn_parameters", m_params);
-            }
-		    if (theframe == null) {
-		        theframe = new Reg2dynFrame(frame, (GsRegulatoryGraph)graph, m_params);
-		         graph.addObject("reg2dyn", theframe);
-		    } else {
-		        theframe.refreshGraph();
-		    }
+//            Map m_params = (Map)graph.getObject("reg2dyn_parameters");
+//            if (m_params == null) {
+//                m_params = new HashMap();
+//                graph.addObject("reg2dyn_parameters", m_params);
+//            }
+//            new Reg2dynFrame(frame, (GsRegulatoryGraph)graph, m_params).setVisible(true);
             graph.getGraphManager().getMainFrame().getGsAction().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
-	        theframe.setVisible(true);
+
+            GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject("reg2dyn_parameters");
+            if (paramList == null) {
+                paramList = new GsSimulationParameterList(graph);
+                graph.addObject("reg2dyn_parameters", paramList);
+            }
+            new GsReg2dynFrame(frame, paramList).setVisible(true);
 		}
 	}
 }

@@ -132,7 +132,7 @@ public final class GsDynamicParser extends GsXMLHelper {
 			    break; // POS_EDGE_VS
             case POS_OUT:
                 if (qName.equals("graph")) {
-                    graph.setSaveFileName(graph.getSaveFileName(), vslevel);
+                    graph.setSaveMode(vslevel);
                 }
                 break;
         }

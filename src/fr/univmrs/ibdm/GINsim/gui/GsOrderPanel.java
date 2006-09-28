@@ -10,6 +10,7 @@ import javax.swing.event.ListDataListener;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 
 /**
@@ -181,16 +182,27 @@ public class GsOrderPanel extends JPanel implements GsGraphListener {
 		}
 		orderList.setSelectedIndices(index);
     }
-    public void edgeAdded() {
+    public GsGraphEventCascade edgeAdded(Object data) {
+        return null;
+
 	}
-	public void edgeRemoved() {
+	public GsGraphEventCascade edgeRemoved(Object data) {
+        return null;
 	}
-	public void vertexAdded() {
+	public GsGraphEventCascade vertexAdded(Object data) {
 		((GsListModel)orderList.getModel()).fireModelChange();
+        return null;
 	}
-	public void vertexRemoved() {
+	public GsGraphEventCascade vertexRemoved(Object data) {
 		((GsListModel)orderList.getModel()).fireModelChange();
+        return null;
 	}
+    public GsGraphEventCascade vertexUpdated(Object data) {
+        return null;
+    }
+    public GsGraphEventCascade edgeUpdated(Object data) {
+        return null;
+    }
 }
 
 

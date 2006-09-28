@@ -148,7 +148,7 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
         defaultstyle = selectedIndex;
     }
     
-    private class EdgeVSdata {
+    class EdgeVSdata {
         protected Color color;
         protected float size;
         protected int end;

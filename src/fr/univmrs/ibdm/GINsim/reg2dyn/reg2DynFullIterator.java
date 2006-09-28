@@ -18,11 +18,9 @@ public final class reg2DynFullIterator {
 	long nbStates;
 	long statenumber;
 	long progressStep;
-	Reg2dynFrame frame;
 
-	protected reg2DynFullIterator(Vector nodeOrder, Reg2dynFrame frame) {
+	protected reg2DynFullIterator(Vector nodeOrder) {
 		this.nodeOrder = nodeOrder;
-		this.frame = frame;
 		nbGenes = nodeOrder.size();
 		if (nbGenes < 1) {
 			goon = false;

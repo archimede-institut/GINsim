@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
@@ -36,7 +37,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 	private JPanel jPanel2 = null;
 	private GsInteractionPanel gsInteractionPanel = null;
 	private GsAnnotationPanel gsAnnotationPanel = null;
-	CardLayout card = null;  //  @jve:decl-index=0:visual-constraint="715,206"
+	CardLayout card = null;
 	
 	private GsVertexMinMaxSpinModel minmax = null;
 	
@@ -58,84 +59,108 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 	private void initialize() {
         minmax = new GsVertexMinMaxSpinModel();
         
-        GridBagConstraints gridBagConstraints29 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints28 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints27 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints25 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints24 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints23 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints22 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints21 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints20 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints19 = new GridBagConstraints();
-        GridBagConstraints gridBagConstraints18 = new GridBagConstraints();
         this.setLayout(new GridBagLayout());
-        gridBagConstraints18.gridx = 0;
-        gridBagConstraints18.gridy = 2;
-        gridBagConstraints19.gridx = 1;
-        gridBagConstraints19.gridy = 2;
-        gridBagConstraints19.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints20.gridx = 0;
-        gridBagConstraints20.gridy = 0;
-        gridBagConstraints21.gridx = 0;
-        gridBagConstraints21.gridy = 1;
-        gridBagConstraints21.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints22.gridx = 0;
-        gridBagConstraints22.gridy = 3;
-        gridBagConstraints23.gridx = 0;
-        gridBagConstraints23.gridy = 4;
-        gridBagConstraints24.gridx = 1;
-        gridBagConstraints24.gridy = 3;
-        gridBagConstraints25.gridx = 1;
-        gridBagConstraints25.gridy = 4;
-        gridBagConstraints27.gridx = 0;
-        gridBagConstraints27.gridy = 5;
-        gridBagConstraints28.gridx = 1;
-        gridBagConstraints28.gridy = 5;
-        gridBagConstraints29.gridx = 3;
-        gridBagConstraints29.gridy = 0;
-		jLabel3 = new JLabel(Translator.getString("STR_id"));
-		jLabel2 = new JLabel(Translator.getString("STR_name"));
-		jLabel1 = new JLabel(Translator.getString("STR_base"));
-		jLabel = new JLabel(Translator.getString("STR_max"));
-		gridBagConstraints29.gridheight = 8;
-		gridBagConstraints29.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints29.gridwidth = 2;
-		gridBagConstraints29.weightx = 1;
-		gridBagConstraints29.weighty = 1;
-		this.add(getF_id(), gridBagConstraints19);
-		this.setPreferredSize(new java.awt.Dimension(636,60));
+        GridBagConstraints c;
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 1;
+        c.gridwidth = 2;
+        jLabel2 = new JLabel(Translator.getString("STR_name"));
+        this.add(jLabel2, c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 1;
+        jLabel3 = new JLabel(Translator.getString("STR_id"));
+        this.add(jLabel3, c);
+
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 1;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        this.add(getF_name(), c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 1;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        this.add(getF_id(), c);
+
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 1;
+        jLabel = new JLabel(Translator.getString("STR_max"));
+        this.add(jLabel, c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 1;
+        this.add(getF_max(), c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 3;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 1;
+        jLabel1 = new JLabel(Translator.getString("STR_base"));
+        this.add(jLabel1, c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 3;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 1;
+        this.add(getF_base(), c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 4;
+        c.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 2;
+        this.add(getJButton1(), c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 4;
+        c.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 2;
+        this.add(getB_interaction(), c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 3;
+        c.gridy = 0;
+        c.gridheight = 8;
+        c.fill = java.awt.GridBagConstraints.BOTH;
+        c.insets = new Insets(0, 10, 0, 0);
+        c.gridwidth = 2;
+        c.weightx = 1;
+        c.weighty = 5;
+        this.add(getJPanel2(), c);
+
+        this.setPreferredSize(new java.awt.Dimension(636,60));
 		this.setSize(636, 60);
-		gridBagConstraints18.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints18.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints20.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints20.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints20.gridwidth = 2;
-		gridBagConstraints22.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints22.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints23.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints23.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints27.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints27.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints28.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints28.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints25.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints25.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints24.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints24.fill = java.awt.GridBagConstraints.BOTH;
-		gridBagConstraints21.anchor = java.awt.GridBagConstraints.WEST;
-		gridBagConstraints21.gridwidth = 2;
-		gridBagConstraints19.anchor = java.awt.GridBagConstraints.WEST;
-		this.add(jLabel2, gridBagConstraints20);
-		this.add(jLabel, gridBagConstraints22);
-		this.add(jLabel1, gridBagConstraints23);
-		this.add(getF_max(), gridBagConstraints24);
-		this.add(getF_base(), gridBagConstraints25);
-		this.add(getB_interaction(), gridBagConstraints28);
-		this.add(getJButton1(), gridBagConstraints27);
-		this.add(getF_name(), gridBagConstraints21);
-		this.add(jLabel3, gridBagConstraints18);
-		this.add(getJPanel2(), gridBagConstraints29);
+        
 		getBgroup();
 		card.show(jPanel2, getGsInteractionPanel().getName());
 	}

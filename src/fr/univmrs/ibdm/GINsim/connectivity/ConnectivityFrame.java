@@ -7,7 +7,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.global.GsProgressListener;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
@@ -33,7 +32,7 @@ public class ConnectivityFrame extends JDialog implements GsProgressListener {
 	public ConnectivityFrame(JFrame frame, GsGraph graph) {
 		super(frame);
 		this.frame = frame;
-		if (graph == null) GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "no graph"), frame);
+		if (graph == null) GsEnv.error("no graph", frame);
 		this.graph = graph;
 		initialize();
 	}

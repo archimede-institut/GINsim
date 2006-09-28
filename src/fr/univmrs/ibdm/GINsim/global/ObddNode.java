@@ -87,6 +87,7 @@ public class ObddNode {
             }
         }
         
+        // FIXME  cache previous results :)
         if (key != null && other.key != null) {
             Object o = m.get(key+"_"+other.key);
             if (o != null) {
@@ -276,6 +277,7 @@ public class ObddNode {
                 this.key = ""+t_key[0]++;
                 m.put(tempKey, this.key);
                 m.put(this.key, this);
+            } else {
             }
         }
         return key;

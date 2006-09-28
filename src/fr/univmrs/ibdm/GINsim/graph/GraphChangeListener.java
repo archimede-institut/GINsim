@@ -22,4 +22,9 @@ public interface GraphChangeListener {
 	 * @param graph
 	 */
 	public void graphClosed(GsGraph graph);
+	
+	/**
+	 * @param graph
+	 */
+	public void updateGraphNotificationMessage(GsGraph graph);
 }

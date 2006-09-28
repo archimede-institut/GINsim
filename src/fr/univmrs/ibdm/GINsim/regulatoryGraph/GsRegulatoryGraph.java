@@ -2,6 +2,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +42,10 @@ public final class GsRegulatoryGraph extends GsGraph {
     
     private static GsGraph copiedGraph = null;
     
-	
+    static {
+        GsRegulatoryGraphDescriptor.registerObjectManager(new GsMutantListManager());
+    }
+
     /**
      */
     public GsRegulatoryGraph() {
@@ -49,7 +53,6 @@ public final class GsRegulatoryGraph extends GsGraph {
     }
 
     /**
-     * 
      * @param savefilename
      */
     public GsRegulatoryGraph(String savefilename) {
@@ -104,9 +107,16 @@ public final class GsRegulatoryGraph extends GsGraph {
         return ret;
     }
 
-    protected void doSave(String fileName, int mode, boolean selectedOnly) throws GsException {
+    protected String getZipMainEntryName(String filename) {
+        if (filename == null || filename.endsWith(".zginml")) {
+            return "model.ginml";
+        }
+        return null;
+    }
+
+    protected void doSave(OutputStream os, int mode, boolean selectedOnly) throws GsException {
     	try {
-            GsXMLWriter out = new GsXMLWriter(fileName, dtdFile);
+            GsXMLWriter out = new GsXMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"regulatory\"");
@@ -119,7 +129,6 @@ public final class GsRegulatoryGraph extends GsGraph {
             }
 	  		out.write("\t</graph>\n");
 	  		out.write("</gxl>\n");
-			out.close();
         } catch (IOException e) {
             throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_unableToSave")+": "+ e.getMessage());
         }
@@ -276,6 +285,7 @@ public final class GsRegulatoryGraph extends GsGraph {
        GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)obj).getUserObject();
        edge.getTarget().removeEdgeFromInteraction(edge);
        graphManager.removeEdge(edge.getSource(), edge.getTarget());
+       fireGraphChange(CHANGE_EDGEREMOVED, obj);
     }
 
     public void removeVertex(Object obj) {
@@ -285,6 +295,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         }
         graphManager.removeVertex(obj);
         nodeOrder.remove(obj);
+        fireGraphChange(CHANGE_VERTEXREMOVED, obj);
     }
 
     /**
@@ -302,7 +313,7 @@ public final class GsRegulatoryGraph extends GsGraph {
             vertex.setName(name);
         }
         vertex.setMaxValue(max, this);
-        vertex.setBaseValue(base);
+        vertex.setBaseValue(base, this);
         if (graphManager.addVertex(vertex)) {
         		nodeOrder.add(vertex);
         }
@@ -369,25 +380,32 @@ public final class GsRegulatoryGraph extends GsGraph {
 
 	/**
 	 * @param vertex
+     * @return a warning string if necessary
 	 */
-	public void applyNewMaxValue(GsRegulatoryVertex vertex) {
+	public String applyNewMaxValue(GsRegulatoryVertex vertex) {
+        String s = "";
 		Iterator it = graphManager.getOutgoingEdges(vertex).iterator();
 		while (it.hasNext()) {
 			Object next = it.next();
 			GsRegulatoryMultiEdge me;
 			me = (GsRegulatoryMultiEdge)((GsDirectedEdge)next).getUserObject();
 			me.applyNewMaxValue(vertex);
+            // FIXME: add warning when updating
+            // populate "s" or better way (tm) ?
+            // a clean way would take undo into account
+            // do it later...
 		}
+        return s;
 	}
 
 	protected FileFilter doGetFileFilter() {
 		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
+		ffilter.setExtensionList(new String[] {"zginml", "ginml"}, "(z)ginml files");
 		return ffilter;
 	}
 
 	public String getAutoFileExtension() {
-		return ".ginml";
+		return ".zginml";
 	}
 	
 	protected JPanel doGetFileChooserPanel() {
@@ -425,9 +443,12 @@ public final class GsRegulatoryGraph extends GsGraph {
 	public Vector getSpecificExport() {
 		return GsRegulatoryGraphDescriptor.getExport();
 	}
-	public Vector getSpecificAction() {
-		return GsRegulatoryGraphDescriptor.getAction();
-	}
+    public Vector getSpecificAction() {
+        return GsRegulatoryGraphDescriptor.getAction();
+    }
+    public Vector getSpecificObjectManager() {
+        return GsRegulatoryGraphDescriptor.getObjectManager();
+    }
 
     protected GsGraph getCopiedGraph() {
         return copiedGraph;
@@ -577,29 +598,8 @@ public final class GsRegulatoryGraph extends GsGraph {
      */
     public OmddNode[] getAllTrees() {
         OmddNode[] t_tree = new OmddNode[nodeOrder.size()];
-        GsLogicalParameter baseValue = new GsLogicalParameter(0);
         for (int i=0 ; i<nodeOrder.size() ; i++) {
-            GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
-            Vector vi = vertex.getInteractions();
-            OmddNode root;
-            if (vertex.getBaseValue() != 0) {
-                baseValue.setValue(vertex.getBaseValue());
-                root = baseValue.buildTree(this, vertex);
-                if (root == null) {
-                    root = OmddNode.TERMINALS[vertex.getBaseValue()];
-                }
-            } else {
-                root = OmddNode.TERMINALS[0];
-            }
-            OmddNode curNode;
-            for (int j=0 ; j<vi.size() ; j++) {
-                GsLogicalParameter gsi = (GsLogicalParameter)vi.get(j);
-                curNode = gsi.buildTree(this, vertex);
-                if (curNode != null) {
-                    root = root.merge(curNode, OmddNode.OR);
-                }
-            }
-            t_tree[i] = root.reduce();
+            t_tree[i] = ((GsRegulatoryVertex)nodeOrder.get(i)).getTreeParameters(this, false).reduce();
         }
         return t_tree;
     }

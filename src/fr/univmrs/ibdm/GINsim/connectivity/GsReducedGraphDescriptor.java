@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
@@ -21,6 +22,7 @@ public class GsReducedGraphDescriptor implements GsGraphDescriptor {
     private static Vector v_layout = null;
     private static Vector v_export = null;
     private static Vector v_action = null;
+    private static Vector v_OManager = null;
 
     private static GsGraphDescriptor instance = null;
     
@@ -101,6 +103,21 @@ public class GsReducedGraphDescriptor implements GsGraphDescriptor {
 	public static Vector getAction() {
 		return v_action;
 	}
+    /**
+     * @param manager
+     */
+    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
+        if (v_OManager == null) {
+            v_OManager = new Vector();
+        }
+        v_OManager.add(manager);
+    }
+    /**
+     * @return associates object managers
+     */
+    public static Vector getObjectManager() {
+        return v_OManager;
+    }
 
 	public ImageIcon getGraphIcon(int mode) {
 		return null;

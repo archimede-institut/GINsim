@@ -2,64 +2,42 @@ package fr.univmrs.ibdm.GINsim.gui;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.Vector;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
 /**
  * modified listCellRenderer: highlight some rows.
  */
-public class GsListCellRenderer extends DefaultListCellRenderer {
+public class GsListCellRenderer extends DefaultTreeCellRenderer {
     private static final long serialVersionUID = 296160062672716600L;
     
-    private Vector v_in;
-    private boolean[] t_in;
-    private Color defaultColor;
-    private Color highlightColor;
-    
     /**
-     * @param v_in
+     * Empty constructor if you add GsColorable Objects to your list
      */
-    public GsListCellRenderer(Vector v_in) {
-        this(null, v_in, Color.WHITE, Color.RED);
-    }
-    
-    /**
-     * @param t_in
-     */
-    public GsListCellRenderer(boolean[] t_in) {
-        this(t_in, null, Color.WHITE, Color.RED);
-    }
-    
-    /**
-     * @param t_in
-     * @param v_in
-     * @param defaultColor 
-     * @param highlightColor 
-     */
-    public GsListCellRenderer(boolean[] t_in, Vector v_in, Color defaultColor, Color highlightColor) {
+    public GsListCellRenderer() {
         super();
-        this.t_in = t_in;
-        this.v_in = v_in;
-        this.defaultColor = defaultColor;
-        this.highlightColor = highlightColor;
     }
 
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        Component cmp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        cmp.setBackground(defaultColor);
-        if( list != null) {
-            if (t_in != null) {
-                if (!t_in[index]) {
-                    cmp.setBackground( highlightColor );
-                }
-            } else {
-                if (v_in.get(index) == Boolean.FALSE) {
-                    cmp.setBackground( highlightColor );
-                }
-            }
-        }
-        return cmp;
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+      Component cmp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+      if (value instanceof GsColorable) {
+          cmp.setBackground(((GsColorable)value).getColor());
+          return cmp;
+      }
+      cmp.setBackground(Color.BLUE);
+      return cmp;
     }
+    
+    
+    
+//    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//        Component cmp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+//        if (value instanceof GsColorable) {
+//            cmp.setBackground(((GsColorable)value).getColor());
+//            return cmp;
+//        }
+//        cmp.setBackground(Color.BLUE);
+//        return cmp;
+//    }
 }

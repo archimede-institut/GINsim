@@ -113,6 +113,8 @@ public class GsAnnotationPanel extends GsParameterPanel implements TableModelLis
 	private JTextArea getJTextArea() {
 		if (jTextArea == null) {
 			jTextArea = new JTextArea();
+            jTextArea.setLineWrap(true);
+            jTextArea.setWrapStyleWord(true);
 			jTextArea.addFocusListener(new java.awt.event.FocusAdapter() { 
 				public void focusLost(java.awt.event.FocusEvent e) {
 				    applyComment();

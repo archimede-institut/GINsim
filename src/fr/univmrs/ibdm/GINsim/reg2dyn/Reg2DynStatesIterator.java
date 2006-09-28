@@ -1,6 +1,9 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import java.util.Map;
 import java.util.Vector;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
  * this iterator generates some initial states
@@ -12,12 +15,29 @@ public final class Reg2DynStatesIterator {
 	int[] using;
 	int nbGenes;
 	Vector nodeOrder;
-	Vector[] line;
+	int[][] line;
 	boolean goon;
 
-	protected Reg2DynStatesIterator(Vector nodeOrder, Vector[] line) {
+	protected Reg2DynStatesIterator(Vector nodeOrder, Map m_line) {
 		this.nodeOrder = nodeOrder;
-		this.line = line;
+        
+		line = new int[nodeOrder.size()][];
+		for (int i=0 ; i<nodeOrder.size() ; i++) {
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+			Vector v_val = (Vector)m_line.get(vertex);
+			if (v_val == null || v_val.size() == 0) {
+				line[i] = new int[vertex.getMaxValue()+1];
+				for (int j=0 ; j<line[i].length ; j++) {
+					line[i][j] = j;
+				}
+			} else {
+				line[i] = new int[v_val.size()];
+				for (int j=0 ; j<line[i].length ; j++) {
+					line[i][j] = ((Integer)v_val.get(j)).intValue();
+				}
+			}
+		}
+        
 		nbGenes = nodeOrder.size();
 		if (nbGenes < 1 | line.length != nbGenes) {
 			goon = false;
@@ -29,7 +49,7 @@ public final class Reg2DynStatesIterator {
 		using = new int[nbGenes];
 		for(int i=0 ; i<nbGenes ; i++){
 		    // initialize all genes on their first value
-		    state[i] = ((Integer)line[i].get(0)).intValue();
+		    state[i] = line[i][0];
 		}
 	}
 	
@@ -59,12 +79,12 @@ public final class Reg2DynStatesIterator {
 		goon = false;
 		for (int i=0 ; i<nbGenes ; i++) {
 				
-			if (using[i] < line[i].size()-1) {
+			if (using[i] < line[i].length-1) {
 				using[i]++;
-				state[i] = ((Integer)line[i].get(using[i])).intValue();
+				state[i] = line[i][using[i]];
 				for (int j=0 ; j<i ; j++) {
 					using[j] = 0;
-                    state[j] = ((Integer)line[j].get(using[j])).intValue();
+                    state[j] = line[j][using[j]];
 				}
 				goon = true;
 				break;

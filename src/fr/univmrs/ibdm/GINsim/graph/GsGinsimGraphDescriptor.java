@@ -1,13 +1,18 @@
 package fr.univmrs.ibdm.GINsim.graph;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
@@ -53,10 +58,9 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 	public FileFilter getFileFilter() {
 		if (ffilter == null) {
 			ffilter = new GsFileFilter();
-			ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
+			ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
 		}
 		return ffilter;
-
 	}
 
 	/**
@@ -128,8 +132,50 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
         return instance;
     }
     public GsGraph open(Map map, File file) {
-        GsGinmlParser parser = new GsGinmlParser();
-        return parser.parse(file, map);
-    }
+        try {
+            ZipFile f = new ZipFile(file);
+            try {
+                GsGinmlParser parser = new GsGinmlParser();
+                GsGraph graph = parser.parse(f.getInputStream(f.getEntry("ginml")), map);
+                Vector v_omanager = graph.getObjectManager();
+                if (v_omanager != null) {
+                    for (int i=0 ; i<v_omanager.size() ; i++) {
+                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
+                        ZipEntry ze = f.getEntry(manager.getObjectName());
+                        if (ze != null) {
+                            manager.doOpen(f.getInputStream(ze), graph);
+                        }
+                    }
+                }
+                v_omanager = graph.getSpecificObjectManager();
+                if (v_omanager != null) {
+                    for (int i=0 ; i<v_omanager.size() ; i++) {
+                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
+                        ZipEntry ze = f.getEntry(manager.getObjectName());
+                        if (ze != null) {
+                            manager.doOpen(f.getInputStream(ze), graph);
+                        }
+                    }
+                }
+                graph.setSaveFileName(file.getAbsolutePath());
+                return graph; 
+            } catch (Exception e) {
+                System.out.println("error opening");
+                e.printStackTrace();
+                return null;
+            }
+        } catch (Exception e) {// opening as zip failed, try the old method instead
+        }
 
+        // not a zip file
+        GsGinmlParser parser = new GsGinmlParser();
+        try {
+            GsGraph graph = parser.parse(new FileInputStream(file), map);
+            graph.setSaveFileName(file.getAbsolutePath());
+            return graph;
+        } catch (FileNotFoundException e) {
+            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+            return null;
+        }
+    }
 }

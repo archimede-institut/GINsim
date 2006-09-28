@@ -1,53 +1,79 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 
 /**
  * remember, save and restore a simulation parameter.
  */
-public class GsSimulationParameters {
+public class GsSimulationParameters implements GsXMLize {
 
-    String name;
+    String name = "new parameter";
+    Vector nodeOrder;
+    
     int mode;
-    boolean pclass_fine;
-    int[][] pclass = null;
-    int[][] block = null;
-    Vector initStates = null;
-    String[] genes;
-    int[] tailleGenes;
+
+    Vector v_class;
+    Map m_elt;
+    
     int maxdepth;
     int maxnodes;
+    
+    GsRegulatoryMutantDef mutant;
 
+    Vector initStates = null;
     
     /**
-     * clone the object
+     * empty constructor for everyday use.
+     * @param nodeOrder
      */
-    public Object clone() {
-        GsSimulationParameters other = new GsSimulationParameters();
-        other.name = ""+name;
-        other.mode = mode;
-        if (block != null) {
-            other.block = new int[block.length][2];
-            for (int i=0 ; i<block.length ; i++) {
-                other.block[i][0] = block[i][0];
-                other.block[i][1] = block[i][1];
-            }
-        }
-        if (pclass != null) {
-            other.pclass = new int[pclass.length][];
-            for (int i=0 ; i<pclass.length ; i++) {
-                int[] cl = pclass[i];
-                int[] c_cl = new int[cl.length];
-                for (int j=0 ; j<cl.length ;j++) {
-                    c_cl[j] = cl[j];
-                }
-            }
-        }
-        return other;
+    public GsSimulationParameters(Vector nodeOrder) {
+        this.nodeOrder = nodeOrder;
     }
     
     public String toString() {
         return name;
+    }
+    
+    /**
+     * get priority class.
+     * 
+     * @return a vector listing all priority classes.
+     * 
+     * see also <code>getMelt</code> to get association between nodes and classes
+     */
+    public Vector getVclass() {
+        if (v_class == null) {
+            v_class = new Vector();
+        }
+        if (v_class.size() == 0) {
+            GsReg2dynPriorityClass lastClass = new GsReg2dynPriorityClass();
+            v_class.add(lastClass);
+            for (int i=0 ; i<nodeOrder.size() ; i++) {
+                getMelt().put(nodeOrder.get(i), lastClass);
+            }
+        }
+
+        return v_class;
+    }
+    /**
+     * 
+     * @return a map giving associations between nodes (the keys) and priority classes
+     * use <code>getVclass</code> to get the list of priority classes
+     */
+    public Map getMelt() {
+        if (m_elt == null) {
+            m_elt = new HashMap();
+        }
+        return m_elt;
     }
     
     /**
@@ -66,6 +92,7 @@ public class GsSimulationParameters {
                 break;
             case Simulation.SEARCH_BYPRIORITYCLASS:
                 s = "by priority class\n";
+                int[][] pclass = getPclass();
                 for (int i=0 ; i<pclass.length ; i++) {
                     int[] cl = pclass[i];
                     s += "   "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
@@ -73,7 +100,7 @@ public class GsSimulationParameters {
                         if (j>2) {
                             s += ", ";
                         }
-                        s += genes[cl[j]]+(cl[j+1]==0?"":(cl[j+1]==1?"+":"-"));
+                        s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":(cl[j+1]==1?"+":"-"));
                     }
                     s += "\n";
                 }
@@ -89,25 +116,19 @@ public class GsSimulationParameters {
         } else {
             s += "initial states:\n";
             for (int i=0 ; i<initStates.size() ; i++) {
-                Vector[] vstate = (Vector[])initStates.get(i);
-                for (int j=0 ; j<vstate.length ; j++) {
-                    s += "  "+Reg2dynTableModel.getNiceValue(vstate[j], tailleGenes[j]);
+                Map m_init = (Map)initStates.get(i);
+                for (int j=0 ; j<nodeOrder.size() ; j++) {
+                    GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
+                    s += "  "+Reg2dynTableModel.showValue((Vector)m_init.get(vertex), vertex.getMaxValue());
                 }
                 s += "\n";
             }
         }
         
-        if (block != null && block[0] != null) {
-            String s_block = "";
-            for (int i=0 ; i<block[0].length ; i++) {
-                if (block[0][i] != -1) {
-                    s_block += "   "+genes[i]+": ["+block[0][i]+" ; "+block[1][i]+"]";
-                }
-            }
-            if (!s_block.equals("")) {
-                s += "\ntransition blocked:\n"+s_block;
-            }
+        if (mutant != null) {
+            s += "\nMutant:\n"+mutant.toString();
         }
+        
         if (maxdepth != 0) {
             s += "max depth: "+maxdepth+"\n";
         }
@@ -115,5 +136,159 @@ public class GsSimulationParameters {
             s += "max nodes: "+maxnodes+"\n";
         }
         return s;
+    }
+    
+	public void toXML(GsXMLWriter out, Object param, int xmlmode) throws IOException {
+		out.openTag("parameter");
+		out.addAttr("name", name);
+		out.addAttr("mode", Simulation.MODE_NAMES[mode]);
+		out.addAttr("maxdepth", ""+maxdepth);
+		out.addAttr("maxnodes", ""+maxnodes);
+		
+		StringBuffer s_tmp;
+		
+		
+		if (mode == Simulation.SEARCH_BYPRIORITYCLASS) {
+			out.openTag("priorityClassList");
+			for (int i=0 ; i< v_class.size(); i++) {
+				out.openTag("class");
+                GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_class.get(i);
+                out.addAttr("name", pc.getName());
+                out.addAttr("rank", ""+pc.rank);
+				s_tmp = new StringBuffer();
+                Iterator it = m_elt.keySet().iterator();
+                while (it.hasNext()) {
+                    Object o = it.next();
+                    Object oc = m_elt.get(o);
+                    if (oc instanceof GsReg2dynPriorityClass) {
+                        if (m_elt.get(o) == pc) {
+                            s_tmp.append(o+" ");
+                        }
+                    } else if (oc instanceof Object[]) {
+                        Object[] t = (Object[])oc;
+                        for (int j=0 ; j<t.length ; j++) {
+                            if (t[j] == pc) {
+                                s_tmp.append(o+","+(j==0 ? "+" : "-")+" ");
+                            }
+                        }
+                    }
+                }
+				out.addAttr("content", s_tmp.toString());
+				out.closeTag();
+			}
+			out.closeTag();
+		}
+		if (initStates != null && initStates.size() > 0) {
+			out.openTag("initstates");
+			Iterator it = initStates.iterator();
+			while(it.hasNext()) {
+				Map m = (Map)it.next();
+				String s = "";
+				Iterator it_line = m.keySet().iterator();
+				while (it_line.hasNext()) {
+					GsRegulatoryVertex vertex = (GsRegulatoryVertex)it_line.next();
+					Vector v_val = (Vector)m.get(vertex);
+					s += vertex.getId();
+					for (int i=0 ; i<v_val.size() ; i++) {
+						s += ";"+((Integer)v_val.get(i)).intValue();
+					}
+					s += " ";
+				}
+				out.openTag("row");
+				out.addAttr("value", s.trim());
+                out.closeTag();
+			}
+			out.closeTag();
+		}
+		if (mutant != null) {
+            out.openTag("mutant");
+            out.addAttr("value", mutant.toString());
+            out.closeTag();
+		}
+		out.closeTag();
+	}
+
+    /**
+     * @return the compiled priority class.
+     * in the form of an int[][]
+     * each int[] represent a priority class: 
+     *  - the very first int is the class' priority
+     *  - the second int is the class' mode (sync or async)
+     *  - and all others are couples: index of vertex in the nodeOrder followed by transition filter.
+     *    the "transition filter" is a bit hacky: add it to your transition (which should be either +1 or -1)
+     *    and if the result is zero (0), then this transition shouldn't be followed.
+     * 
+     * shortly: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
+     */
+    public int[][] getPclass() {
+        
+        Integer zaroo = new Integer(0);
+        Integer one = new Integer(1);
+        Integer minusOne = new Integer(-1);
+        
+        // it is done by browsing twice the list:
+        //   - during the first pass asynchronous classes with the same priority are merged
+        //   - then the real int[][] is created from the merged classes
+        
+        Vector v_vpclass = new Vector();
+        for (int i=0 ; i<v_class.size() ; i++) {
+            GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_class.get(i);
+            Vector v_content;
+            if (pc.getMode() == GsReg2dynPriorityClass.ASYNCHRONOUS) {
+                v_content = new Vector();
+                v_content.add(new Integer(pc.rank));
+                v_content.add(new Integer(pc.getMode()));
+                v_vpclass.add(v_content);
+            } else {
+                v_content = new Vector();
+                v_content.add(new Integer(pc.rank));
+                v_content.add(new Integer(pc.getMode()));
+                v_vpclass.add(v_content);
+            }
+            for (int n=0 ; n<nodeOrder.size() ; n++) {
+                Object k = nodeOrder.get(n);
+                Object target = m_elt.get(k);
+                // if +1 and -1 are separated, target is an Object[]
+                if (target instanceof Object[]) {
+                    Object[] t = (Object[])target;
+                    if (t[0] == pc) {
+                        // to do it right: if both +1 and -1 are in the same class, add the node only once :)
+                        if (t[1] == pc) {
+                            v_content.add(new Integer(n));
+                            v_content.add(zaroo);
+                        } else {
+                            v_content.add(new Integer(n));
+                            v_content.add(one);
+                        }
+                    } else if (t[1] == pc) {
+                        v_content.add(new Integer(n));
+                        v_content.add(minusOne);
+                    }
+                } else { // +1 and -1 aren't separated, always accept every transitions
+                    if (target == pc) {
+                        v_content.add(new Integer(n));
+                        v_content.add(zaroo);
+                    }
+                }
+            }
+        }
+
+        int[][] pclass = new int[v_vpclass.size()][];
+        for (int i=0 ; i<pclass.length ; i++) {
+            Vector v_content = (Vector)v_vpclass.get(i);
+            int[] t = new int[v_content.size()];
+            t[0] = ((Integer)v_content.get(0)).intValue();
+            if (v_content.size() > 1) {
+                t[1] = ((Integer)v_content.get(1)).intValue();
+            } else {
+                // if only one node in the class, async mode is useless!
+                t[1] = GsReg2dynPriorityClass.SYNCHRONOUS;
+            }
+            for (int n=2 ; n<t.length ; n++) {
+                t[n] = ((Integer)v_content.get(n)).intValue();
+            }
+            pclass[i] = t;
+        }
+        return pclass;
     }
 }

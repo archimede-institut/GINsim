@@ -3,9 +3,9 @@ package fr.univmrs.ibdm.GINsim.xml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -92,22 +92,48 @@ abstract public class GsXMLHelper extends DefaultHandler implements EntityResolv
 
     /**
      * start parsing a file.
-     * 
+     * @param file
+     * @param b
+     */
+    public void startParsing(File file, boolean b) {
+        try {
+            startParsing(new FileInputStream(file), b);
+        } catch (FileNotFoundException e) {
+            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+        }
+    }
+
+    /**
+     * start parsing a file.
      * @param file
      */
     public void startParsing(File file) {
+        startParsing(file, true);
+    }
 
-        s_filename = file.getAbsolutePath();
+    /**
+     * @param is
+     */
+    public void startParsing(InputStream is) {
+        startParsing(is, true);
+    }
+    /**
+     * @param is
+     * @param validating 
+     */
+    public void startParsing(InputStream is, boolean validating) {
+
+        //s_filename = file.getAbsolutePath();
 		SAXParserFactory spf = SAXParserFactory.newInstance();
-		spf.setValidating(true);
+		spf.setValidating(validating);
 		try {
 			SAXParser sp = spf.newSAXParser();
 			xr = sp.getXMLReader();
 			xr.setContentHandler(this);
 			xr.setEntityResolver(this);
 			xr.setErrorHandler(this);
-			FileReader r = new FileReader(file);
-			xr.parse(new InputSource(r));
+			//FileReader r = new FileReader(file);
+			xr.parse(new InputSource(new InputStreamReader(is)));
 		} catch (FileNotFoundException e) { 
 		    GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		} catch (IOException e) {
@@ -115,7 +141,10 @@ abstract public class GsXMLHelper extends DefaultHandler implements EntityResolv
 		} catch (ParserConfigurationException e) {
 		    GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		} catch (SAXParseException e) {
-        } catch (SAXException e) {}
+            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+        } catch (SAXException e) {
+            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+        }
     }
 
     /**
@@ -169,6 +198,9 @@ abstract public class GsXMLHelper extends DefaultHandler implements EntityResolv
 	        }
 	        
 			String s = getFallBackDTD();
+            if (s == null || s.length() <= 7) {
+                return null;
+            }
             InputStream stream = ClassLoader.getSystemResourceAsStream(s.substring(7));
             	if ( stream != null) {
            			if (!s.equals(systemId) && !dtdErorExists(systemId)) {

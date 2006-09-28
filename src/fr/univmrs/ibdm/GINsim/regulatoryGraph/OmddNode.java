@@ -23,6 +23,11 @@ public class OmddNode {
     /** cache for the key, should always be null except while reducing */
     String key = null;
     
+    /** constraint: min allowed value */
+    public short min=-1;
+    /** constraint: max allowed value */
+    public short max=-1;
+    
     // create once for all the terminals nodes.
     /** all terminal nodes */
     public static final OmddNode[] TERMINALS;
@@ -31,6 +36,8 @@ public class OmddNode {
     public static final int OR = 0;
     /**  */
     public static final int AND = 1;
+    /**  */
+    public static final int CONSTRAINT = 2;
     
     static {
         TERMINALS = new OmddNode[10];
@@ -84,7 +91,6 @@ public class OmddNode {
         TERMINALS[9].next = null;
         TERMINALS[9].value = 9;
         TERMINALS[9].key = "N";
-        
     }
     
     /**
@@ -102,7 +108,6 @@ public class OmddNode {
             return 0;
         }
         return next[ status[level] ].testStatus(status);
-//        return next[ status[t_order[level]] ].testStatus(status);
     }
     
     /**
@@ -156,12 +161,31 @@ public class OmddNode {
         OmddNode ret;
         if (next == null) {
             switch (op) {
+                case CONSTRAINT:
+                    if (other.next == null) {
+                        // just check that the constraint is verified
+                        if (other.min == -1 || (value >= other.min && value <= other.max)) {
+                            return this;
+                        }
+                        if (value < other.min) {
+                            return TERMINALS[other.min];
+                        }
+                        return TERMINALS[other.max];
+                    }
+                    // the constraint is not yet clear, deploy it
+                    ret = new OmddNode();
+                    ret.level = other.level;
+                    ret.next = new OmddNode[other.next.length];
+                    for (int i=0 ; i<ret.next.length ; i++) {
+                        ret.next[i] = merge(other.next[i], CONSTRAINT, m, t_key);
+                    }
+                    return ret;
                 case OR:
                     switch (value) {
                         case 0:
                             return other;
                         case 1:    
-                        case 2:    // if evereything is fine, 1/-1 should ONLY get merged with 0 => no problem
+                        case 2:    // if everything is fine, 1/-1 should ONLY get merged with 0 => no problem
                         case 3:
                         case 4:
                         case 5:
@@ -198,6 +222,14 @@ public class OmddNode {
         }
         if (other.next == null) {
             switch (op) {
+                case CONSTRAINT:
+                    ret = new OmddNode();
+                    ret.level = level;
+                    ret.next = new OmddNode[next.length];
+                    for (int i=0 ; i<next.length ; i++) {
+                        ret.next[i] = next[i].merge(other, CONSTRAINT, m, t_key);
+                    }
+                    return ret;
                 case OR:
                     switch (other.value) {
                         case 0:
@@ -268,7 +300,7 @@ public class OmddNode {
 //            ret.t_order = t_order;
             ret.next = new OmddNode[other.next.length];
             for (int i=0 ; i<other.next.length ; i++) {
-                ret.next[i] = other.next[i].merge(this, op, m, t_key);
+                ret.next[i] = merge(other.next[i], op, m, t_key);
             }
 //          m.put(key+"_"+other.key, ret);
             return ret;
@@ -448,8 +480,6 @@ public class OmddNode {
     }
     
     /**
-     * 
-     *
      */
     public void cleanKey() {
         // don't clean terminal nodes or already cleaned trees
@@ -461,5 +491,126 @@ public class OmddNode {
             }
             key = null;
         }
+    }
+
+    /**
+     * @param blockMin
+     * @param blockMax
+     * @param index 
+     * @param len 
+     * @param strict
+     * @return a modified tree where blocking constraints have been applied
+     */
+    public OmddNode applyBlock(short blockMin, short blockMax, int index, int len, boolean strict) {
+        if (blockMin == -1 || blockMax == -1 || blockMin > blockMax) {
+            return this;
+        }
+        return applyBlock(blockMin, blockMax, index, len, (short)-1, strict);
+    }
+    /**
+     * This is the real method to apply transition blocking constraint.
+     * It is applied by adding to every path in the diagram a test on the
+     * constrained node.
+     * Once the leaf is reached, the leaf is kept or replaced depending on 
+     * the currently selected value for this node
+     * 
+     * @param blockMin
+     * @param blockMax
+     * @param index
+     * @param len
+     * @param curValue
+     * @param strict
+     * @return a modified tree where blocking constraints have been applied
+     */
+    private OmddNode applyBlock(short blockMin, short blockMax, int index, int len, short curValue, boolean strict) {
+        if (next == null) {
+            if (curValue == -1) {
+                OmddNode ret = new OmddNode();
+                ret.level = index;
+                ret.next = new OmddNode[len];
+                for (short i=0 ; i<len ; i++) {
+                    ret.next[i] = this.applyBlock(blockMin, blockMax, index, len, i, strict);
+                }
+                return ret;
+            }
+            if (value >= blockMin && value <= blockMax) {
+                // the target value is in the block interval: all right
+                return this;
+            }
+            if (value < blockMin) {
+                if (!strict && curValue < blockMin) {
+                    return this;
+                }
+                return TERMINALS[blockMin];
+            }
+            // value > blockMax
+            if (!strict && curValue > blockMax) {
+                return this;
+            }
+            return TERMINALS[blockMax];
+        }
+        
+        if (level == index) {
+            OmddNode ret = new OmddNode();
+            ret.level = level;
+            ret.next = new OmddNode[next.length];
+            for (short i=0 ; i<next.length ; i++) {
+                ret.next[i] = next[i].applyBlock(blockMin, blockMax, index, len, i, strict);
+            }
+            return ret;
+        }
+        if (curValue == -1 && level > index) {
+            OmddNode ret = new OmddNode();
+            ret.level = index;
+            ret.next = new OmddNode[len];
+            for (short i=0 ; i<len ; i++) {
+                ret.next[i] = this.applyBlock(blockMin, blockMax, index, len, i, strict);
+            }
+            return ret;
+        }
+        OmddNode ret = new OmddNode();
+        ret.level = level;
+        ret.next = new OmddNode[next.length];
+        for (short i=0 ; i<next.length ; i++) {
+            ret.next[i] = next[i].applyBlock(blockMin, blockMax, index, len, curValue, strict);
+        }
+        return ret;
+    }
+    
+    /**
+     * test if two diagramms conflict: usefull to store logical parameters as diagramms and detect conflicts
+     * 
+     * @param node
+     * @return true if these diagramm should not be mixed
+     */
+    public boolean conflict (OmddNode node) {
+        if (next == null) {
+            if (value == 0) {
+                return false;
+            }
+            if (node.next == null) {
+                return (node.value == 0 || node.value  == value);
+            }
+            for (int i=0 ; i<node.next.length ; i++) {
+                if (node.next[i].conflict(this)) {
+                    return true;
+                }
+                return false;
+            }
+        }
+        
+        if (node.next == null) {
+            if (node.value == 0) {
+                return false;
+            }
+            for (int i=0 ; i<next.length ; i++) {
+                if (next[i].conflict(node)) {
+                    return true;
+                }
+                return false;
+            }
+        }
+        
+        return false;
     }
 }

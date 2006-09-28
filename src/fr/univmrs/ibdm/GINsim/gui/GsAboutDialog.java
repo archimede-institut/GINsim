@@ -3,7 +3,7 @@ package fr.univmrs.ibdm.GINsim.gui;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
@@ -13,9 +13,11 @@ import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 /**
  * a nice (?) "About dialog" for GINsim
  */
-public class GsAboutDialog extends JDialog implements HyperlinkListener  {
+//public class GsAboutDialog extends AboutDialog  {
+  public class GsAboutDialog extends JFrame implements HyperlinkListener {
 
 	private static final long serialVersionUID = 8297377937071144230L;
+    
 	private String aboutText;
 	private javax.swing.JPanel jContentPane = null;
 
@@ -28,7 +30,7 @@ public class GsAboutDialog extends JDialog implements HyperlinkListener  {
 		super();
 		aboutText="<body background='#33a'>" +
                 "<table><tr><td>" +
-                "GINsim 2.2, develloped by:" +
+                "GINsim 2.3, develloped by:" +
                 "<br>Aurelien NALDI" +
                 "<p>Frederic CORDEIL" +
                 "<br>Thomas MARCQ" +
@@ -41,8 +43,9 @@ public class GsAboutDialog extends JDialog implements HyperlinkListener  {
                 "<img src='"+ImageLoader.getImagePath("gs1.gif")+"'" +
                 "</td></tr></table>"+
                 "</body>";
-		initialize();
-	}
+
+        initialize();
+    }
 	/**
 	 * This method initializes this
 	 * 

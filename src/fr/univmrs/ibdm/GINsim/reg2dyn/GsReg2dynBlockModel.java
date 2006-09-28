@@ -14,8 +14,6 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 864660594916225977L;
 	private Vector nodeOrder;
-	private int[] t_min;
-	private int[] t_max;
 
 	
 	/**
@@ -23,17 +21,15 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
 	 * @param t_min
 	 * @param t_max
 	 */
-	public GsReg2dynBlockModel(Vector nodeOrder, int[] t_min, int[] t_max) {
+	public GsReg2dynBlockModel(Vector nodeOrder) {
 		this.nodeOrder = nodeOrder;
-		this.t_min = t_min;
-		this.t_max = t_max;
 	}
 
 	/**
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
 	public int getRowCount() {
-		return t_min.length;
+		return nodeOrder.size();
 	}
 
 	/**
@@ -72,7 +68,7 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
 	 * @see javax.swing.table.TableModel#isCellEditable(int, int)
 	 */
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (rowIndex > t_min.length) {
+		if (rowIndex > getRowCount()) {
 			return false;
 		}
 		switch (columnIndex) {
@@ -87,7 +83,7 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
 	 * @see javax.swing.table.TableModel#getValueAt(int, int)
 	 */
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (rowIndex > t_min.length) {
+		if (rowIndex > getRowCount()) {
 			return null;
 		}
 		int value = -1;
@@ -95,10 +91,10 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
 			case 0:
 				return nodeOrder.get(rowIndex);
 			case 1:
-				value = t_min[rowIndex];
+				value = ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).getBlockMin();
 				break;
 			case 2:
-				value = t_max[rowIndex];
+				value = ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).getBlockMax();
 				break;
 			default:
 				return null;
@@ -113,14 +109,14 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
 	 * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
 	 */
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		if (rowIndex >= t_min.length || columnIndex < 1 || columnIndex > 2) {
+		if (rowIndex >= getRowCount() || columnIndex < 1 || columnIndex > 2) {
 			return;
 		}
 		
 		if ("".equals(aValue) || "-".equals(aValue)) {
-			t_min[rowIndex] = -1;
-			t_max[rowIndex] = -1;
-			fireTableCellUpdated(rowIndex, 1);
+            ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMin((short)-1);
+            ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMax((short)-1);
+            fireTableCellUpdated(rowIndex, 1);
 			fireTableCellUpdated(rowIndex, 2);
 			return;
 		}
@@ -133,8 +129,8 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
 		}
 		
 		if (val == -1) {
-			t_min[rowIndex] = -1;
-			t_max[rowIndex] = -1;
+            ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMin((short)-1);
+            ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMax((short)-1);
 			fireTableCellUpdated(rowIndex, 1);
 			fireTableCellUpdated(rowIndex, 2);
 			return;
@@ -144,20 +140,14 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
 		}
 		switch (columnIndex) {
 			case 1:
-				t_min[rowIndex] = val;
-				if (t_max[rowIndex] == -1 || t_max[rowIndex] < val) {
-					fireTableCellUpdated(rowIndex, 2);
-					t_max[rowIndex] = val;
-				}
+                ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMin((short)val);
 				break;
 			case 2:
-				t_max[rowIndex] = val;
-				if (t_min[rowIndex] == -1 || t_min[rowIndex] > val) {
-					fireTableCellUpdated(rowIndex, 1);
-					t_min[rowIndex] = val;
-				}
+                ((GsRegulatoryVertex)nodeOrder.get(rowIndex)).setBlockMax((short)val);
 				break;
 		}
+        fireTableCellUpdated(rowIndex, 1);
+        fireTableCellUpdated(rowIndex, 2);
 	}
 	/**
      * refresh the state blocking.
@@ -165,10 +155,8 @@ public class GsReg2dynBlockModel extends AbstractTableModel {
      * @param minBlock
      * @param maxBlock
 	 */
-    public void refresh(Vector nodeOrder, int[] minBlock, int[] maxBlock) {
+    public void refresh(Vector nodeOrder) {
         this.nodeOrder = nodeOrder;
-        this.t_min = minBlock;
-        this.t_max = maxBlock;
         fireTableStructureChanged();
     }
 }

@@ -1,0 +1,70 @@
+package fr.univmrs.ibdm.GINsim.gui;
+
+/**
+ * generic interface for list of objects, a common UI will allow to sho it,
+ * and eventually offer generic services: reordering, adding/removing objects...
+ */
+public interface GsList {
+
+    /**
+     * can elements of this list be reordered interactively ?
+     * @return true if it is reorder-friendly
+     */
+    public boolean canOrder();
+    /**
+     * can elements of this list be edited interactively ?
+     * @return true if one can edit elements
+     */
+    public boolean canEdit();
+    /**
+     * can elements of this list be added interactively ?
+     * @return true if one can add elements
+     */
+    public boolean canAdd();
+    /**
+     * can elements of this list be removed interactively ?
+     * @return true if one can remove elements
+     */
+    public boolean canRemove();
+    
+    /**
+     * @return the size of the list
+     */
+    public int getNbElements();
+    
+    /**
+     * @param i
+     * @return the ith element of the list
+     */
+    public Object getElement(int i);
+    
+    /**
+     * edit an element.
+     * @param i the suggested position
+     * @param o the result of the edit
+     * @return true if the list has changed
+     */
+    public boolean edit(int i, Object o);
+    
+    /**
+     * add an element.
+     * @param i the suggested position
+     * @return the index of the added element, or -1 if none
+     */
+    public int add(int i);
+    
+    /**
+     * add an element.
+     * @param t_index the elements to remove
+     * @return true if the list has changed
+     */
+    public boolean remove(int[] t_index);
+    
+    /**
+     * move an element.
+     * @param src the element to move
+     * @param dst its new position
+     * @return true if the list has changed
+     */
+    public boolean moveElement(int src, int dst);
+}

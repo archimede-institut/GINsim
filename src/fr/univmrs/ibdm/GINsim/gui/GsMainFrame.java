@@ -1,14 +1,22 @@
 package fr.univmrs.ibdm.GINsim.gui;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,6 +30,7 @@ import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.global.GsOptions;
 import fr.univmrs.ibdm.GINsim.graph.GraphChangeListener;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.ibdm.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
@@ -37,7 +46,8 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
     private JDialog secondaryFrame = null;
 	private JPanel jPanel = null;
 	private JSplitPane jSplitPane = null;
-	private JScrollPane graphPanel = null;
+	private JScrollPane graphScrollPane = null;
+	private JPanel graphPanel = null;
 	private JSplitPane jSplitPane1 = null;
 	private JTabbedPane jTabbedPane = null;
 	private JPanel gsGraphMapPanel = null;
@@ -50,6 +60,14 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
     private JPanel emptyPanel = null;
     
     private JPanel graphParameterPanel = null;
+    
+    private JPanel notificationPanel = null;
+    private JLabel notificationMessage = null;
+    private JButton bcloseNotification = null;
+    private JComboBox cNotificationAction = null;
+    private JButton bNotificationAction = null;
+    private JButton bNotificationAction2 = null;
+    private GsGraphNotificationMessage notification = null;
 
     private GsParameterPanel vertexPanel = null;
     private GsParameterPanel edgePanel = null;
@@ -145,10 +163,109 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
 	 */    
 	private JComponent getGraphPanel() {
 		if (graphPanel == null) {
-			graphPanel = new JScrollPane();
+			graphPanel = new JPanel();
+			
+			graphPanel.setLayout(new GridBagLayout());
+			
+			graphScrollPane = new JScrollPane();
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			c.weightx = 1;
+			c.weighty = 1;
+			c.fill = GridBagConstraints.BOTH;
+			graphPanel.add(graphScrollPane, c);
+			
+			c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 1;
+			c.weightx = 1;
+			c.weighty = 0;
+            c.fill = GridBagConstraints.HORIZONTAL;
+			graphPanel.add(getNotificationPanel(), c);
 		}
 		return graphPanel;
 	}
+	
+	private JPanel getNotificationPanel() {
+		if (notificationPanel == null) {
+			notificationPanel = new JPanel();
+			if (graph != null) {
+				notification = graph.getTopMessage();
+			}
+			notificationPanel.setVisible(notification != null);
+			notificationPanel.setLayout(new GridBagLayout());
+			
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			c.weightx = 1;
+			c.weighty = 1;
+            c.insets = new Insets(0,10,0,10);
+			c.anchor = GridBagConstraints.WEST;
+			c.fill = GridBagConstraints.BOTH;
+			notificationMessage = new JLabel("no notification");
+			notificationPanel.add(notificationMessage, c);
+			
+			c = new GridBagConstraints();
+			c.gridx = 2;
+			c.gridy = 0;
+			c.anchor = GridBagConstraints.EAST;
+            bNotificationAction = new JButton();
+            notificationPanel.add(bNotificationAction, c);
+            bNotificationAction.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    notificationAction(0);
+                }
+            });
+            
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 0;
+            c.anchor = GridBagConstraints.EAST;
+            bNotificationAction2 = new JButton();
+            notificationPanel.add(bNotificationAction2, c);
+            bNotificationAction2.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    notificationAction(1);
+                }
+            });
+            cNotificationAction = new JComboBox();
+            notificationPanel.add(cNotificationAction, c);
+			
+			c = new GridBagConstraints();
+			c.gridx = 3;
+			c.gridy = 0;
+            c.insets = new Insets(0,10,0,0);
+			c.anchor = GridBagConstraints.EAST;
+			bcloseNotification = new JButton("close");
+			notificationPanel.add(bcloseNotification, c);
+			bcloseNotification.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					closeNotification();
+				}
+			});
+		}
+		return notificationPanel;
+	}
+	
+	protected void closeNotification() {
+		graph.deleteAllNotificationMessage();
+	}
+	
+	protected void notificationAction(int index) {
+		if (notification != null) {
+            if (index == 0) {
+                if (cNotificationAction.isVisible()) {
+                    notification.performAction(cNotificationAction.getSelectedIndex());
+                    return;
+                }
+            }
+            notification.performAction(index);
+		}
+	}
+	
 	/**
 	 * This method initializes jSplitPane1	
 	 * 	
@@ -217,6 +334,7 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
             close();
             updateTitle();
             gsActions.setDefaults();
+            updateGraphNotificationMessage(graph);
             return;
         }
         // stupid default
@@ -228,13 +346,13 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
         graph = event.getNewGraph();
         jTabbedPane.setTitleAt(0, Translator.getString(graph.getTabLabel()));
         graph.setMainFrame(this);
-        graphPanel.setViewportView(graph.getGraphManager().getGraphPanel());
+        graphScrollPane.setViewportView(graph.getGraphManager().getGraphPanel());
         jPanel1.removeAll();
         jPanel1.add(getEmptyPanel(), "empty");
         edgePanel = graph.getEdgeAttributePanel();
         vertexPanel = graph.getVertexAttributePanel();
         jSplitPane1.remove(gsGraphMapPanel);
-        gsGraphMapPanel = graph.getGraphManager().getGraphMapPanel(graphPanel);
+        gsGraphMapPanel = graph.getGraphManager().getGraphMapPanel(graphScrollPane);
         jSplitPane1.setRightComponent(gsGraphMapPanel);
 
         	if (graphParameterPanel != null) {
@@ -285,6 +403,7 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
             jSplitPane.setDividerLocation(d);
         }
         updateTitle();
+        updateGraphNotificationMessage(graph);
     }
     /**
      * @return an empty jPanel (to be displayed when nothing is selected or when no parameter panel is avaible)
@@ -545,8 +664,9 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
     }
     
     protected void error (GsException e) {
-    		GsEnv.error(e, this);
+        graph.addNotificationMessage(new GsGraphNotificationMessage(graph, e));
     }
+    
     public void graphClosed(GsGraph graph) {
     }
     
@@ -570,4 +690,59 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
             setTitle("GIN-sim");
         }
     }
+	public synchronized void updateGraphNotificationMessage(GsGraph graph) {
+		notification = graph.getTopMessage();
+		if (notification == null) {
+			notificationPanel.setVisible(false);
+		} else {
+            switch (notification.getType()) {
+            case GsGraphNotificationMessage.NOTIFICATION_INFO:
+            case GsGraphNotificationMessage.NOTIFICATION_INFO_LONG:
+                notificationPanel.setBackground(Color.CYAN);
+                break;
+            case GsGraphNotificationMessage.NOTIFICATION_WARNING:
+            case GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG:
+                notificationPanel.setBackground(Color.ORANGE);
+                break;
+            case GsGraphNotificationMessage.NOTIFICATION_ERROR:
+            case GsGraphNotificationMessage.NOTIFICATION_ERROR_LONG:
+                notificationPanel.setBackground(Color.RED);
+                break;
+
+            default:
+                notificationPanel.setBackground(null);
+                break;
+            }
+            
+			notificationPanel.setVisible(true);
+			notificationMessage.setText(notification.toString());
+            String[] t_text = notification.getActionText();
+			if (t_text != null && t_text.length > 0) {
+                bNotificationAction.setVisible(true);
+                if ( t_text.length == 1) {
+                    cNotificationAction.setVisible(false);
+                    bNotificationAction2.setVisible(false);
+                    bNotificationAction.setText(t_text[0]);
+                    bNotificationAction.requestFocusInWindow();
+                } else if ( t_text.length == 2) {
+                    bNotificationAction.setText(t_text[0]);
+                    bNotificationAction2.setText(t_text[1]);
+                    bNotificationAction2.setVisible(true);
+                    cNotificationAction.setVisible(false);
+                    bNotificationAction2.requestFocusInWindow();
+                } else {
+                    cNotificationAction.setVisible(true);
+                    bNotificationAction2.setVisible(false);
+                    bNotificationAction.setText("OK");
+                    cNotificationAction.setModel(new DefaultComboBoxModel(t_text));
+                    cNotificationAction.requestFocusInWindow();
+                }
+			} else {
+                bNotificationAction.setVisible(false);
+                bNotificationAction2.setVisible(false);
+                cNotificationAction.setVisible(false);
+                bcloseNotification.requestFocusInWindow();
+			}
+		}
+	}
    }  //  @jve:decl-index=0:visual-constraint="10,10"

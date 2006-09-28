@@ -26,7 +26,6 @@ public class GsDynamicItemAttributePanel extends GsParameterPanel {
 	
 	public void setEditedObject(Object obj) {
         ((GsDynamicItemModel)getJTable().getModel()).setContent(obj);
-        getJTable().getTableHeader().setReorderingAllowed(false);
 	}
 
 	/**
@@ -48,6 +47,7 @@ public class GsDynamicItemAttributePanel extends GsParameterPanel {
             jTable = new GsJTable(model);
 			jTable.setDefaultRenderer(Object.class, new GsDynamicItemCellRenderer());
 			jTable.setModel(model);
+            jTable.getTableHeader().setReorderingAllowed(false);
 		}
 		return jTable;
 	}

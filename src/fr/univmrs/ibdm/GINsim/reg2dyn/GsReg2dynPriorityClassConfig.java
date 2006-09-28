@@ -1,7 +1,6 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
 import java.awt.Color;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -17,7 +16,6 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
@@ -40,7 +38,6 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
     private static final int DOWN = 1;
     private static final int NONE = 2;
     
-    private JPanel panel;
     private JScrollPane scrollpane;
     private JScrollPane scrollpaneContent;
     private JScrollPane scrollpaneAvaible;
@@ -86,124 +83,113 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
     /**
      * @param frame
      * @param nodeOrder
-     * @param v_class
-     * @param m_elt
+     * @param param
      */
-    public GsReg2dynPriorityClassConfig(Frame frame, Vector nodeOrder, Vector v_class, Map m_elt) {
-        super(frame);
-        this.v_class = v_class;
-        this.m_elt = m_elt;
+    public GsReg2dynPriorityClassConfig(Vector nodeOrder, GsSimulationParameters param) {
+        this.v_class = param.getVclass();
+        this.m_elt = param.getMelt();
         this.v_nodeOrder = nodeOrder;
         initialize();
+        setSize(700, 400);
     }
     
     private void initialize() {
-        setSize(750, 350);
-        setContentPane(getPanel());
-        setVisible(true);
-        table_class.getSelectionModel().setSelectionInterval(0, 0);
-    }
-    
-    private JPanel getPanel() {
-        if (panel == null) {
-            panel = new JPanel();
-            panel.setLayout(new GridBagLayout());
-            
-            GridBagConstraints c_bdel = new GridBagConstraints();
-            GridBagConstraints c_bnew = new GridBagConstraints();
-            GridBagConstraints c_bup = new GridBagConstraints();
-            GridBagConstraints c_bdown = new GridBagConstraints();
-            GridBagConstraints c_binsert = new GridBagConstraints();
-            GridBagConstraints c_bremove = new GridBagConstraints();
-            GridBagConstraints c_bclose = new GridBagConstraints();
-            GridBagConstraints c_bgroup = new GridBagConstraints();
-            GridBagConstraints c_scroll_class = new GridBagConstraints();
-            GridBagConstraints c_scroll_in = new GridBagConstraints();
-            GridBagConstraints c_scroll_av = new GridBagConstraints();
-            GridBagConstraints c_cautoconf = new GridBagConstraints();
-            GridBagConstraints c_classLabel = new GridBagConstraints();
-            GridBagConstraints c_availableLabel = new GridBagConstraints();
-            GridBagConstraints c_contentLabel = new GridBagConstraints();
-            c_bnew.gridx = 1;
-            c_bnew.gridy = 1;
-            c_bdel.gridx = 2;
-            c_bdel.gridy = 1;
-            
-            c_bup.gridx = 1;
-            c_bup.gridy = 3;
-            c_bup.insets.top = 10;
-            c_bdown.gridx = 1;
-            c_bdown.gridy = 4;
-            c_bdown.anchor = GridBagConstraints.NORTH;
-            
-            c_binsert.gridx = 4;
-            c_binsert.gridy = 1;
-            c_bremove.gridx = 4;
-            c_bremove.gridy = 2;
+        setLayout(new GridBagLayout());
+        
+        GridBagConstraints c_bdel = new GridBagConstraints();
+        GridBagConstraints c_bnew = new GridBagConstraints();
+        GridBagConstraints c_bup = new GridBagConstraints();
+        GridBagConstraints c_bdown = new GridBagConstraints();
+        GridBagConstraints c_binsert = new GridBagConstraints();
+        GridBagConstraints c_bremove = new GridBagConstraints();
+        GridBagConstraints c_bclose = new GridBagConstraints();
+        GridBagConstraints c_bgroup = new GridBagConstraints();
+        GridBagConstraints c_scroll_class = new GridBagConstraints();
+        GridBagConstraints c_scroll_in = new GridBagConstraints();
+        GridBagConstraints c_scroll_av = new GridBagConstraints();
+        GridBagConstraints c_cautoconf = new GridBagConstraints();
+        GridBagConstraints c_classLabel = new GridBagConstraints();
+        GridBagConstraints c_availableLabel = new GridBagConstraints();
+        GridBagConstraints c_contentLabel = new GridBagConstraints();
+        c_bnew.gridx = 1;
+        c_bnew.gridy = 1;
+        c_bdel.gridx = 2;
+        c_bdel.gridy = 1;
+        
+        c_bup.gridx = 1;
+        c_bup.gridy = 3;
+        c_bup.insets.top = 10;
+        c_bdown.gridx = 1;
+        c_bdown.gridy = 4;
+        c_bdown.anchor = GridBagConstraints.NORTH;
+        
+        c_binsert.gridx = 4;
+        c_binsert.gridy = 1;
+        c_bremove.gridx = 4;
+        c_bremove.gridy = 2;
 
-            c_bclose.gridx = 5;
-            c_bclose.gridy = 5;
-            c_bclose.anchor = GridBagConstraints.EAST;
-            
-            c_bgroup.gridx = 1;
-            c_bgroup.gridy = 2;
-            c_bgroup.anchor = GridBagConstraints.NORTH;
-            
-            c_classLabel.gridx = 0;
-            c_classLabel.gridy = 0;
-            c_classLabel.weightx = 1;
-            c_classLabel.fill = GridBagConstraints.HORIZONTAL;
-            c_scroll_class.gridx = 0;
-            c_scroll_class.gridy = 1;
-            c_scroll_class.gridheight = 4;
-            c_scroll_class.fill = GridBagConstraints.BOTH;
-            c_scroll_class.weightx = 1;
-            c_scroll_class.weighty = 1;
-            
-            c_cautoconf.gridx = 0;
-            c_cautoconf.gridy = 5;
-            c_cautoconf.gridwidth = 3;
-            c_cautoconf.fill = GridBagConstraints.HORIZONTAL;
-            
-            c_contentLabel.gridx = 3;
-            c_contentLabel.gridy = 0;
-            c_contentLabel.weightx = 1;
-            c_contentLabel.fill = GridBagConstraints.HORIZONTAL;
-            c_scroll_in.gridx = 3;
-            c_scroll_in.gridy = 1;
-            c_scroll_in.gridheight = 4;
-            c_scroll_in.fill = GridBagConstraints.BOTH;
-            c_scroll_in.weightx = 1;
-            c_scroll_in.weighty = 1;
-            
-            c_availableLabel.gridx = 5;
-            c_availableLabel.gridy = 0;
-            c_availableLabel.weightx = 1;
-            c_availableLabel.fill = GridBagConstraints.HORIZONTAL;
-            c_scroll_av.gridx = 5;
-            c_scroll_av.gridy = 1;
-            c_scroll_av.gridheight = 4;
-            c_scroll_av.fill = GridBagConstraints.BOTH;
-            c_scroll_av.weightx = 1;
-            c_scroll_av.weighty = 1;
-            
-            panel.add(new JLabel("class"), c_classLabel);
-            panel.add(new JLabel("Transitions outside the selected class"), c_availableLabel);
-            panel.add(new JLabel("Selected class content"), c_contentLabel);
-            panel.add(getScrollpaneClass(), c_scroll_class);
-            panel.add(getBut_new(), c_bnew);
-            panel.add(getBut_delete(), c_bdel);
-            panel.add(getBut_up(), c_bup);
-            panel.add(getBut_down(), c_bdown);
-            panel.add(getCb_auto(), c_cautoconf);
-            panel.add(getScrollpaneContent(), c_scroll_in);
-            panel.add(getBut_insert(), c_binsert);
-            panel.add(getBut_remove(), c_bremove);
-            panel.add(getScrollpaneAvaible(), c_scroll_av);
-            panel.add(getButClose(), c_bclose);
-            panel.add(getBut_group(), c_bgroup);
-        }
-        return panel;
+        c_bclose.gridx = 5;
+        c_bclose.gridy = 5;
+        c_bclose.anchor = GridBagConstraints.EAST;
+        
+        c_bgroup.gridx = 1;
+        c_bgroup.gridy = 2;
+        c_bgroup.anchor = GridBagConstraints.NORTH;
+        
+        c_classLabel.gridx = 0;
+        c_classLabel.gridy = 0;
+        c_classLabel.weightx = 1;
+        c_classLabel.fill = GridBagConstraints.HORIZONTAL;
+        c_scroll_class.gridx = 0;
+        c_scroll_class.gridy = 1;
+        c_scroll_class.gridheight = 4;
+        c_scroll_class.fill = GridBagConstraints.BOTH;
+        c_scroll_class.weightx = 1;
+        c_scroll_class.weighty = 1;
+        
+        c_cautoconf.gridx = 0;
+        c_cautoconf.gridy = 5;
+	    c_cautoconf.gridwidth = 3;
+        c_cautoconf.fill = GridBagConstraints.HORIZONTAL;
+        
+        
+        c_contentLabel.gridx = 3;
+        c_contentLabel.gridy = 0;
+        c_contentLabel.weightx = 1;
+        c_contentLabel.fill = GridBagConstraints.HORIZONTAL;
+        c_scroll_in.gridx = 3;
+        c_scroll_in.gridy = 1;
+        c_scroll_in.gridheight = 4;
+        c_scroll_in.fill = GridBagConstraints.BOTH;
+        c_scroll_in.weightx = 1;
+        c_scroll_in.weighty = 1;
+        
+        c_availableLabel.gridx = 5;
+        c_availableLabel.gridy = 0;
+        c_availableLabel.weightx = 1;
+        c_availableLabel.fill = GridBagConstraints.HORIZONTAL;
+        c_scroll_av.gridx = 5;
+        c_scroll_av.gridy = 1;
+        c_scroll_av.gridheight = 4;
+        c_scroll_av.fill = GridBagConstraints.BOTH;
+        c_scroll_av.weightx = 1;
+        c_scroll_av.weighty = 1;
+        
+        add(new JLabel("class"), c_classLabel);
+        add(new JLabel("Transitions outside the selected class"), c_availableLabel);
+        add(new JLabel("Selected class content"), c_contentLabel);
+        add(getScrollpaneClass(), c_scroll_class);
+        add(getBut_new(), c_bnew);
+        add(getBut_delete(), c_bdel);
+        add(getBut_up(), c_bup);
+        add(getBut_down(), c_bdown);
+        add(getCb_auto(), c_cautoconf);
+        add(getScrollpaneContent(), c_scroll_in);
+        add(getBut_insert(), c_binsert);
+        add(getBut_remove(), c_bremove);
+        add(getScrollpaneAvaible(), c_scroll_av);
+        add(getButClose(), c_bclose);
+        add(getBut_group(), c_bgroup);
     }
     
     private JButton getBut_delete() {
@@ -302,10 +288,10 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
     	if (table_class == null) {
     		classTableModel = new ClassTableModel(v_class);
     		table_class = new GsJTable(classTableModel);
-    		table_class.getColumn(table_class.getColumnName(0)).setWidth(20);
-    		table_class.getColumn(table_class.getColumnName(1)).setWidth(30);
-    		table_class.getColumn(table_class.getColumnName(0)).setMaxWidth(25);
-    		table_class.getColumn(table_class.getColumnName(1)).setMaxWidth(35);
+            table_class.getColumn(table_class.getColumnName(0)).setMinWidth(30);
+            table_class.getColumn(table_class.getColumnName(1)).setMinWidth(30);
+            table_class.getColumn(table_class.getColumnName(0)).setMaxWidth(30);
+            table_class.getColumn(table_class.getColumnName(1)).setMaxWidth(30);
     		table_class.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
     		    public void valueChanged(ListSelectionEvent e) {
     		        classSelectionChanged();
@@ -399,7 +385,7 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
     
     protected void create() {
         int pos = table_class.getSelectedRow();
-        if (pos <0 || pos >= v_class.size()) {
+        if (pos < 0 || pos >= v_class.size()) {
             pos = 0;
         }
         int priority = ((GsReg2dynPriorityClass)v_class.get(pos)).rank;
@@ -898,5 +884,4 @@ class ClassTableModel extends DefaultTableModel {
         fireTableRowsDeleted(i, i);
         fireTableRowsInserted(j, j);
     }
-
 }

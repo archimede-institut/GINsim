@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -108,9 +109,9 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	/*
 	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
 	 */
-	protected void doSave(String fileName, int mode, boolean selectedOnly) throws GsException {
+	protected void doSave(OutputStream os, int mode, boolean selectedOnly) throws GsException {
         try {
-            GsXMLWriter out = new GsXMLWriter(fileName, dtdFile);
+            GsXMLWriter out = new GsXMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"dynamical\"");
@@ -131,7 +132,6 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
             
 	  		out.write("\t</graph>\n");
 	  		out.write("</gxl>\n");
-			out.close();
         } catch (IOException e) {
             throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_unableToSave")+": "+ e.getMessage());
         }
@@ -323,9 +323,12 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	public Vector getSpecificExport() {
 		return GsDynamicGraphDescriptor.getExport();
 	}
-	public Vector getSpecificAction() {
-		return GsDynamicGraphDescriptor.getAction();
-	}
+    public Vector getSpecificAction() {
+        return GsDynamicGraphDescriptor.getAction();
+    }
+    public Vector getSpecificObjectManager() {
+        return GsDynamicGraphDescriptor.getObjectManager();
+    }
     protected GsGraph getCopiedGraph() {
         return null;
     }

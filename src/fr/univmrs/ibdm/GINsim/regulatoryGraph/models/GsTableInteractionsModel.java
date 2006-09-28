@@ -45,7 +45,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	public GsTableInteractionsModel(GsRegulatoryVertex no) {
 		super();
 		node = no;
-		this.interactions = node.getInteractions();
+		this.interactions = node.getV_logicalParameters();
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 * @see javax.swing.table.TableModel#isCellEditable(int, int)
 	 */
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		//only the first column is editable
+		//only the first column is editable, except on the last line  
 		if (columnIndex == 0 && rowIndex < interactions.size()) {
 		    return true;
 		}
@@ -106,16 +106,18 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		if (interactions == null)
 			return;
-		if (columnIndex == 0 && rowIndex >= 0 && rowIndex < interactions.size()) {
-			//the first column
-			int value = 1;
-			if (aValue instanceof Integer)
-				value = ((Integer) aValue).intValue();
-			if (aValue instanceof String)
-				value = Integer.parseInt((String) aValue);
-			if (value <= node.getMaxValue() && value >= 0)
-				((GsLogicalParameter) interactions.get(rowIndex)).setValue(value);
+        if (columnIndex == 0 && rowIndex >= 0 && rowIndex < interactions.size()) {
+            //the first column
+            int value = 1;
+            if (aValue instanceof Integer)
+                value = ((Integer) aValue).intValue();
+            if (aValue instanceof String)
+                value = Integer.parseInt((String) aValue);
+            if (value <= node.getMaxValue() && value >= 0)
+                ((GsLogicalParameter) interactions.get(rowIndex)).setValue(value);
             fireTableCellUpdated(rowIndex, columnIndex);
+        } else if (rowIndex >= interactions.size() && columnIndex == 0) {
+            // TODO: information message about basal value and how to set up parameters
 		}
 	}
 
@@ -124,7 +126,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 */
 	public String getColumnName(int columnIndex) {
 		if (columnIndex == 0) {
-			return Translator.getString("STR_InteractionValue");
+			return Translator.getString("STR_value");
 		} 
 		return Translator.getString("STR_ActiveInteractionEdgeList");
 	}
@@ -160,7 +162,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	public void setNode(GsRegulatoryVertex no) {
 		node = no;
 		if (node != null)
-			this.interactions = node.getInteractions();
+			this.interactions = node.getV_logicalParameters();
 		else
 			this.interactions = null;
 		fireTableDataChanged();
@@ -195,14 +197,23 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 * @param row
 	 * @param edgeIndex
 	 */
-	public void setActivesEdges(int row, Vector edgeIndex) {
+    public void setActivesEdges(int row, Vector edgeIndex) {
+        setActivesEdges(row, edgeIndex, 1);
+    }
+    /**
+     * Set the active Edge of an interaction
+     * @param row
+     * @param edgeIndex
+     * @param value
+     */
+    public void setActivesEdges(int row, Vector edgeIndex, int value) {
 		if (row >= interactions.size()) {
-			GsLogicalParameter inter = new GsLogicalParameter(1);
+			GsLogicalParameter inter = new GsLogicalParameter(value);
 			inter.setEdges(edgeIndex);
-			if (!node.addInteraction(inter)) {
+			if (!node.addLogicalParameter(inter)) {
 			    return;
             }
-            if (  !inter.activable(graph, node) ) {
+            if (!inter.activable(graph, node) ) {
                 v_ok.add(v_ok.size()-1, Boolean.FALSE);
             } else {
                 v_ok.add(v_ok.size()-1, Boolean.TRUE);

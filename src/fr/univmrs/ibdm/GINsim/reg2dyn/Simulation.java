@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
@@ -32,7 +33,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 public final class Simulation extends Thread implements Runnable{
 	
 	private GsDynamicGraph dynGraph;
-	private Reg2dynFrame frame;
+	private GsReg2dynFrame frame;
 	private boolean goon = true;
     GsVertexAttributesReader vreader;
     GsEdgeAttributesReader ereader;
@@ -41,8 +42,6 @@ public final class Simulation extends Thread implements Runnable{
 	private int maxnodes; 		// limitation of the number of nodes for exploration (all types)
 	private Vector initStates; 
 	private Vector listGenes;
-	private int[] t_min;
-	private int[] t_max;
 	private int length;
 	private boolean ready = false;
 	private int nbgc = 0;	
@@ -52,6 +51,8 @@ public final class Simulation extends Thread implements Runnable{
 	protected static final int SEARCH_ASYNCHRONE_BF = 2;
     protected static final int SEARCH_BYPRIORITYCLASS = 3;
 	
+    protected static final String[] MODE_NAMES = new String[] { "synchrone", "asynchrone_df", "asynchrone_bf", "priorityClass" };
+    
 	private Vector toExplore = new Vector(); // queue for the BFS exploration
 	
 	private int searchMode;
@@ -69,7 +70,7 @@ public final class Simulation extends Thread implements Runnable{
 	 * @param frame
 	 * @param params 
 	 */
-	protected Simulation(GsRegulatoryGraph regGraph, Reg2dynFrame frame, GsSimulationParameters params) {
+	protected Simulation(GsRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
 		this.frame = frame;
 		dynGraph = new GsDynamicGraph(regGraph);
 		dynGraph.setAssociatedGraph(regGraph);
@@ -80,8 +81,6 @@ public final class Simulation extends Thread implements Runnable{
 		length = listGenes.size();
         this.params = params;
         
-        t_min = params.block[0];
-        t_max = params.block[1];
         this.searchMode = params.mode;
         switch (searchMode) {
             case SEARCH_ASYNCHRONE_BF:
@@ -94,11 +93,14 @@ public final class Simulation extends Thread implements Runnable{
         }
         switch (searchMode) {
             case SEARCH_BYPRIORITYCLASS:
-                pclass = params.pclass;
+                pclass = params.getPclass();
                 break;
         }
         
         t_tree = regGraph.getAllTrees();
+        if (params.mutant != null) {
+            params.mutant.apply(t_tree, listGenes);
+        }
         maxdepth = params.maxdepth;
         maxnodes = params.maxnodes;
         if (maxdepth == 0)  {
@@ -116,7 +118,7 @@ public final class Simulation extends Thread implements Runnable{
         if (params.initStates != null) {
             this.initStates = new Vector();
             for (int i=0 ; i<params.initStates.size() ; i++) {
-                Reg2DynStatesIterator iterator = new Reg2DynStatesIterator(listGenes, (Vector[])params.initStates.get(i));
+                Reg2DynStatesIterator iterator = new Reg2DynStatesIterator(listGenes, (Map)params.initStates.get(i));
                 while (iterator.hasNext()) {
                     initStates.add(iterator.next());
                 }
@@ -131,7 +133,7 @@ public final class Simulation extends Thread implements Runnable{
 	 */
 	private void runFullGraph() {
         // the iterator to construct all initial states
-        reg2DynFullIterator iterator = new reg2DynFullIterator(listGenes, frame);
+        reg2DynFullIterator iterator = new reg2DynFullIterator(listGenes);
 		try {
 			//generate all initial states and construct partial graph from all these initial states;
 			while(iterator.hasNext() && ((maxnodes==0) || dynGraph.getGraphManager().getVertexCount()<maxnodes)) {
@@ -160,7 +162,7 @@ public final class Simulation extends Thread implements Runnable{
 				}
 			}
 		} catch (OutOfMemoryError e) {
-            GsEnv.error("out of memory error", null);
+		    GsEnv.error("Out Of Memory", null);
 		    return;
 		}
 	}
@@ -322,15 +324,9 @@ public final class Simulation extends Thread implements Runnable{
 
 		// now see if the node is willing to change it's state
 		if (nextState > curState){
-			//if the new value is greater than the initial one and authorized, it is incremented by one
-			if (t_min[i] == -1 || curState != t_max[i]) {
-				return 1;
-			} 
+		    return 1;
 		} else if (nextState < curState){
-		    //if the new value is lesser than the initial one, it is decremented by one
-			if (t_min[i] == -1 || curState != t_min[i]) {
-				return -1;
-			}
+		    return -1;
 		}
 		return 0;
 	}
@@ -362,7 +358,9 @@ public final class Simulation extends Thread implements Runnable{
 		//stop if the max depth is reached 
 		int nbNode = dynGraph.getGraphManager().getVertexCount();
 		if (nbNode % 100 == 0) {
-		    frame.setProgress(nbNode);
+		    if (frame != null) {
+                frame.setProgress(nbNode);
+            }
 		}
 		if (curdepth >= maxdepth || nbNode >= maxnodes){
 		    curdepth--;
@@ -642,7 +640,6 @@ public final class Simulation extends Thread implements Runnable{
 	 */
 	public void run() {
 		if (!ready) {
-			System.out.println("reg2dyn can't run: not configured");
 			return;
 		}
         
@@ -671,7 +668,7 @@ public final class Simulation extends Thread implements Runnable{
 			if (Runtime.getRuntime().freeMemory() > 40000 ) {
 				System.out.println("out of memory: saved by garbage collector");
 			} else {
-				GsEnv.error("out of memory, I'll stop to prevent loosing everything", null);
+			    GsEnv.error("out of memory, I'll stop to prevent loosing everything", null);
 				ready = false;
 			}
 		}

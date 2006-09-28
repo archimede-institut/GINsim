@@ -166,7 +166,7 @@ public class GsFallbackVertexAttributeReader extends GsVertexAttributesReader {
     }
 
     
-    private class VertexVSdata {
+    class VertexVSdata {
         protected int x, y, w, h;
         protected Color fgcolor;
         protected Color bgcolor;

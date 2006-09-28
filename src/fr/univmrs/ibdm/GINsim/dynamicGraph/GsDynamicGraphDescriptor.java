@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
@@ -25,6 +26,7 @@ public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
     private static GsFileFilter ffilter = null;
 
     private static GsDynamicGraphDescriptor instance = null;
+    private static Vector v_OManager;
     
     public String getGraphType() {
         return "dynamic";
@@ -96,7 +98,6 @@ public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
 	}
 
 	/**
-	 * 
 	 * @param action
 	 */
 	public static void registerActionProvider(GsActionProvider action) {
@@ -111,6 +112,21 @@ public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
 	public static Vector getAction() {
 		return v_action;
 	}
+    /**
+     * @param manager
+     */
+    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
+        if (v_OManager == null) {
+            v_OManager = new Vector();
+        }
+        v_OManager.add(manager);
+    }
+    /**
+     * @return associated object manager
+     */
+    public static Vector getObjectManager() {
+        return v_OManager;
+    }
 
 	public ImageIcon getGraphIcon(int mode) {
 		return null;
@@ -129,5 +145,4 @@ public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
     public GsGraph open(Map map, File file) {
 		return new GsDynamicGraph(map, file);
     }
-
 }

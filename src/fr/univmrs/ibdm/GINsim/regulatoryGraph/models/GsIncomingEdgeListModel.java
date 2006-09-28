@@ -76,7 +76,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 					j += ((GsRegulatoryMultiEdge)de.getUserObject()).getEdgeCount();
 				} else {
 					//return the good data
-					return new GsEdgeIndex(((GsRegulatoryMultiEdge)de.getUserObject()),index-j);
+					return new GsEdgeIndex((GsRegulatoryMultiEdge)de.getUserObject(),index-j);
 				}
 			}
 		}

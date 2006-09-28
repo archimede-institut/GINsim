@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.circuit.OmsddNode;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
@@ -276,6 +277,85 @@ public class GsLogicalParameter implements GsXMLize {
         return root;
     }
 
+    /**
+     * 
+     * @param regGraph
+     * @param node
+     * @param terminalNode
+     * @return a tree corresponding to this logical parameter
+     */
+    public OmsddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, OmsddNode terminalNode) {
+        if (terminalNode == null || terminalNode.next != null) {
+            return terminalNode;
+        }
+        OmsddNode rootNode = terminalNode;
+        OmsddNode curNode;
+        OmsddNode nextNode = null;
+        OmsddNode tmpNode;
+        
+        List incEdges = regGraph.getGraphManager().getIncomingEdges(node);
+        Vector nodeOrder = regGraph.getNodeOrder();
+        for (int i=incEdges.size() ; i>0 ; i--) {
+            GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)incEdges.get(i-1)).getUserObject();
+            GsRegulatoryVertex vertex = me.getSource();
+            int level = (short)nodeOrder.indexOf(vertex);
+            tmpNode = new OmsddNode();
+            curNode = rootNode;
+            if (rootNode == terminalNode || rootNode.level > level ) {
+                nextNode = rootNode;
+                curNode = tmpNode;
+                rootNode = curNode;
+            } else {
+                nextNode = rootNode;
+                while (nextNode.next != null && nextNode.level < level) {
+                    curNode = nextNode;
+                    for (int n=0 ; n<curNode.next.length ; n++) {
+                        nextNode = curNode.next[n];
+                        if (nextNode.next != null || nextNode == terminalNode) {
+                            break;
+                        }
+                    }
+                }
+                for (int n=0 ; n<curNode.next.length ; n++) {
+                    if (curNode.next[n] == nextNode) {
+                        curNode.next[n] = tmpNode;
+                    }
+                }
+            }
+            curNode.level = level;
+            curNode.next = new OmsddNode[vertex.getMaxValue()+1];
+            for (int n=0 ; n<curNode.next.length ; n++) {
+                curNode.next[n] = nextNode;
+            }
+            
+            int nbedges = me.getEdgeCount();
+            tmp_ei.data = me;
+            int m = vertex.getMaxValue();
+            for (int j=0 ; j<nbedges ; j++) {
+                tmp_ei.index = j;
+                int im = me.getMax(j);
+                if (im == -1) {
+                    im = m;
+                }
+                if (!edge_index.contains(tmp_ei)) {
+                    // must be inactive
+                    for (int l=me.getMin(j) ; l<=im ; l++) {
+                        curNode.next[l] = OmsddNode.FALSE;
+                    }
+                } else {
+                    // must be active
+                    for (int l=0 ; l<me.getMin(j) ; l++) {
+                        curNode.next[l] = OmsddNode.FALSE;
+                    }
+                    for (int l=im+1 ; l<=m ; l++) {
+                        curNode.next[l] = OmsddNode.FALSE;
+                    }
+                }
+            }
+        }
+        return rootNode;
+    }
+    
     public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
 		out.write("\t\t\t<parameter idActiveInteractions=\"");
 		out.write(stringEdges() + "\" val=\"" + value + "\"/>\n");
@@ -319,7 +399,7 @@ public class GsLogicalParameter implements GsXMLize {
             }
         }
         if (newEI.size() != 0) {
-            clone.addInteraction(new GsLogicalParameter(newEI, value));
+            clone.addLogicalParameter(new GsLogicalParameter(newEI, value));
         }
     }
     

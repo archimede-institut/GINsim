@@ -56,46 +56,27 @@ public class GsAnnotation implements GsXMLize
 	}
 	
 	public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
-			if (!comment.equals("") || linkList.size()>0)
-			{	
-				out.write("\t\t\t<annotation>\n");
-				out.write(stringLinkList());
-				if (!comment.equals(""))
-				{
-					out.write("\t\t\t\t<comment>");
-					out.writeEsc(comment, false);
-					out.write("</comment>\n");
-				}
-				out.write("\t\t\t</annotation>\n");
+			if (comment.equals("") && linkList.size()==0) {
+			    return;         
+            }
+			out.openTag("annotation");
+            if (linkList.size() > 0) {
+                out.openTag("linklist");
+                for (int i=0 ; i<linkList.size() ; i++) {
+                    out.openTag("link");
+                    out.addAttr("xlink:href", linkList.elementAt(i).toString());
+                    out.closeTag();
+                }
+                out.closeTag();
+            }
+			if (!comment.equals("")) {
+				out.openTag("comment");
+				out.addContent(comment);
+				out.closeTag();
 			}
+            out.closeTag();
 	}
 	
-	/**
-	 * Convert the link list into xml
-	 * @return a string containing xml
-	 */
-	private String stringLinkList() {
-			String sll;
-			int t;
-			
-			sll = "";
-			t = linkList.size();
-			
-			if (t > 0) 
-			{
-				sll = sll + "\t\t\t\t<linklist>\n";
-				for (int i=0 ; i<t ; i++)
-				{
-					sll = sll + "\t\t\t\t\t<link xlink:href=\"" + linkList.elementAt(i)+"\"/>\n";
-				}
-				sll = sll + "\t\t\t\t</linklist>\n";
-			}
-			return sll;
-	}
-	
-	/*
-	 * @see java.lang.Object#clone()
-	 */
 	public Object clone() {
 		GsAnnotation clone = new GsAnnotation();
 		int len = linkList.size();

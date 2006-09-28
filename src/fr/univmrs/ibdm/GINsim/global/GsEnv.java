@@ -12,7 +12,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.xml.sax.ContentHandler;
+
 import fr.univmrs.ibdm.GINsim.aRegGraph.GsARegGraphPlugin;
+import fr.univmrs.ibdm.GINsim.circuit.GsCircuitPlugin;
 import fr.univmrs.ibdm.GINsim.connectivity.ConnectivityPlugin;
 import fr.univmrs.ibdm.GINsim.connectivity.GsReducedGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicAnalyserPlugin;
@@ -20,15 +23,18 @@ import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.export.GsExportPlugin;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.jgraph.layout.GsJgraphLayout;
 import fr.univmrs.ibdm.GINsim.layout.GsLayoutPlugin;
 import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.modelChecker.GsModelCheckerPlugin;
 import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.reg2dyn.Reg2DynPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryParser;
 
 /**
  * This class offers tons of static methods common to all ginsim's parts.
@@ -60,7 +66,6 @@ public class GsEnv {
 		GsEnv.addGraphType(GsRegulatoryGraphDescriptor.getInstance());
 		GsEnv.addGraphType(GsDynamicGraphDescriptor.getInstance());
 		GsEnv.addGraphType(GsReducedGraphDescriptor.getInstance());
-		Translator.pushBundle("fr.univmrs.ibdm.GINsim.ressources.messagesRegulatoryGraph");
 		
 		new ConnectivityPlugin().registerPlugin();
 		new GsLayoutPlugin().registerPlugin();
@@ -68,7 +73,10 @@ public class GsEnv {
 		new Reg2DynPlugin().registerPlugin();
 		new GsExportPlugin().registerPlugin();
 		new GsARegGraphPlugin().registerPlugin();
-		new GsDynamicAnalyserPlugin().registerPlugin();
+        new GsDynamicAnalyserPlugin().registerPlugin();
+        
+        new GsCircuitPlugin().registerPlugin();
+        new GsModelCheckerPlugin().registerPlugin();
 	}
 	
 	/**
@@ -290,13 +298,18 @@ public class GsEnv {
      * @param main
      */
     public static void error(GsException e, JFrame main) {
+        if (main instanceof GsMainFrame) {
+            GsGraph graph = ((GsMainFrame)main).getGraph();
+            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, e));
+            return;
+        }
         int i = -1;
         switch (e.getGravity()) {
             case GsException.GRAVITY_INFO:
             case GsException.GRAVITY_NORMAL:
                 i = JOptionPane.INFORMATION_MESSAGE;
                 break;
-            default:
+        	default:
                 i = JOptionPane.ERROR_MESSAGE;
         }
         JOptionPane.showMessageDialog(main, e.getMessage()+"\n", e.getTitle(),i);
@@ -377,5 +390,23 @@ public class GsEnv {
             GsMainFrame frame = (GsMainFrame)allFrames.get(i);
             frame.getGsAction().updateRecentMenu();
         }
+    }
+
+    /**
+     * get a transient parser for a specific subgraph.
+     * @param role
+     * @param parser
+     * @return the sax content handler
+     */
+    public static ContentHandler getHandlerForRole(String role, GsRegulatoryParser parser) {
+        if ("simulationParameters".equals(role)) {
+            // FIXME: get the transient handler for a role
+            if (false && parser == null) {
+                return null;
+            }
+            ContentHandler h = null;
+            return h;
+        }
+        return null;
     }
 }

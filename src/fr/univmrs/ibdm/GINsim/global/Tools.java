@@ -158,6 +158,7 @@ public class Tools {
 			if (!file.createNewFile()) {
                 throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_error_cantcreate"));
 			}
+            file.delete();
 			return true;
 		} catch (Exception e) {
             throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_error_io"));

@@ -32,7 +32,7 @@ public class GsJgraphLayout implements GsPlugin, GsActionProvider {
 	 */
 	public void registerPlugin() {
 	    // jgraphaddons layouts are disabled
-		// GsGraphManager.registerLayoutProvider(this);
+		// GsGraph.registerLayoutProvider(this);
 	}
 
 	public void runAction (int actionType, int ref, GsGraph graph, JFrame frame) {

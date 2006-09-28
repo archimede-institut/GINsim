@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
@@ -242,28 +243,27 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 		}
 		orderList.setSelectedIndices(index);
     }
-    /*
-	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraphListener#edgeAdded()
-	 */
-	public void edgeAdded() {
+
+    public GsGraphEventCascade edgeAdded(Object data) {
+        return null;
+    }
+	public GsGraphEventCascade edgeRemoved(Object data) {
+        return null;
 	}
-	/*
-	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraphListener#edgeRemoved()
-	 */
-	public void edgeRemoved() {
-	}
-	/*
-	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraphListener#vertexAdded()
-	 */
-	public void vertexAdded() {
+	public GsGraphEventCascade vertexAdded(Object data) {
 		orderModel.fireAllChanged();
+        return null;
 	}
-	/*
-	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraphListener#vertexRemoved()
-	 */
-	public void vertexRemoved() {
+	public GsGraphEventCascade vertexRemoved(Object data) {
 		orderModel.fireAllChanged();
+        return null;
 	}
+    public GsGraphEventCascade vertexUpdated(Object data) {
+        return null;
+    }
+    public GsGraphEventCascade edgeUpdated(Object data) {
+        return null;
+    }
 
 	private JButton getJButtonDefaultDTD() {
 		if (JButtonDefaultDTD == null) {

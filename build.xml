@@ -7,8 +7,8 @@
     <tstamp>
         <format property="CURDATE" pattern="yyyy-MM-dd"/>
     </tstamp>
-	<property name="baseversion" value="2.2"/>
-	<property name="version" value="${baseversion}-beta3" />
+	<property name="baseversion" value="2.3"/>
+	<property name="version" value="${baseversion}_${CURDATE}"/>
 	
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
@@ -56,12 +56,38 @@
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="--stringparam  targets.filename userManual.db --stringparam collect.xref.targets only ginsimdoc.xsl userManual.xml"/>
 	 	</exec>
+	 	<exec dir="${docbookdoc}" executable="xsltproc">
+	 		<arg line="--stringparam  targets.filename logicalFormalism.db --stringparam collect.xref.targets only ginsimdoc.xsl logicalFormalism.xml"/>
+	 	</exec>
 
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="-o ../html/ --stringparam  current.docid tutorial ginsimdoc.xsl tutorial.xml"/>
 	 	</exec>
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="-o ../html/ --stringparam  current.docid userManual ginsimdoc.xsl userManual.xml"/>
+	 	</exec>
+	 	<exec dir="${docbookdoc}" executable="xsltproc">
+	 		<arg line="-o ../html/ --stringparam  current.docid logicalFormalism ginsimdoc.xsl logicalFormalism.xml"/>
+	 	</exec>
+
+	 	<!-- and single-page version  (need to recreate .db files first) -->
+	 	<exec dir="${docbookdoc}" executable="xsltproc">
+	 		<arg line="--stringparam  targets.filename tutorial.db --stringparam collect.xref.targets only ginsimdoc-single.xsl tutorial.xml"/>
+	 	</exec>
+	 	<exec dir="${docbookdoc}" executable="xsltproc">
+	 		<arg line="--stringparam  targets.filename userManual.db --stringparam collect.xref.targets only ginsimdoc-single.xsl userManual.xml"/>
+	 	</exec>
+	 	<exec dir="${docbookdoc}" executable="xsltproc">
+	 		<arg line="--stringparam  targets.filename logicalFormalism.db --stringparam collect.xref.targets only ginsimdoc-single.xsl logicalFormalism.xml"/>
+	 	</exec>
+	 	<exec dir="${docbookdoc}" executable="xsltproc">
+	 		<arg line="-o ../html/tutorial.html --stringparam  current.docid tutorial ginsimdoc-single.xsl tutorial.xml"/>
+	 	</exec>
+	 	<exec dir="${docbookdoc}" executable="xsltproc">
+	 		<arg line="-o ../html/userManual.html --stringparam  current.docid userManual ginsimdoc-single.xsl userManual.xml"/>
+	 	</exec>
+	 	<exec dir="${docbookdoc}" executable="xsltproc">
+	 		<arg line="-o ../html/logicalFormalism.html --stringparam  current.docid logicalFormalism ginsimdoc-single.xsl logicalFormalism.xml"/>
 	 	</exec>
 	 </target>
 	
@@ -102,8 +128,12 @@
     		description="generate the distribution" >
     		<!-- Create the distribution directory -->
 		<mkdir dir="${dist}/lib"/>
+		<mkdir dir="${dist}/data"/>
+		<!--    <mkdir dir="${dist}/doc"/> -->
 	    <mkdir dir="${dist}/plugins"/>
+    		<mkdir dir="${dist}/plugins/data"/>
 	    <copy todir="${dist}/lib"><fileset dir="lib"/></copy>
+   		<copy todir="${dist}/data"><fileset dir="data"/></copy>
 	    <copy todir="${dist}" file="runginsim.bat"/>
 	    <copy todir="${dist}" file="makeclasspath.bat"/>
 	    <copy todir="${dist}" file="runginsim.sh"/>

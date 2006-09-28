@@ -32,12 +32,10 @@ public class GsReg2dynBlockConfig extends JDialog {
 	/**
 	 * @param frame
 	 * @param nodeOrder
-	 * @param minBlock
-	 * @param maxBlock
 	 */
-	public GsReg2dynBlockConfig(JFrame frame, Vector nodeOrder, int[] minBlock, int[] maxBlock) {
+	public GsReg2dynBlockConfig(JFrame frame, Vector nodeOrder) {
 	    super(frame);
-        model = new GsReg2dynBlockModel(nodeOrder, minBlock, maxBlock);
+        model = new GsReg2dynBlockModel(nodeOrder);
 		initialize();
 	}
 
@@ -102,10 +100,8 @@ public class GsReg2dynBlockConfig extends JDialog {
     /**
      * refresh the state blocking.
      * @param nodeOrder
-     * @param minBlock
-     * @param maxBlock
      */
-    public void refresh(Vector nodeOrder, int[] minBlock, int[] maxBlock) {
-        model.refresh(nodeOrder, minBlock, maxBlock);
+    public void refresh(Vector nodeOrder) {
+        model.refresh(nodeOrder);
     }
 }

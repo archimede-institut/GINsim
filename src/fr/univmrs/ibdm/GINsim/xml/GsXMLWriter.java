@@ -1,7 +1,7 @@
 package fr.univmrs.ibdm.GINsim.xml;
 
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Vector;
 
 /**
@@ -9,26 +9,69 @@ import java.util.Vector;
  */
 public class GsXMLWriter {
 
-    private FileWriter out = null;
+    private OutputStream out = null;
     private Vector v_stack = new Vector();
     private boolean inTag;
+    private boolean inContent;
+    private boolean indent;
+    private StringBuffer buf = null;
     
     /**
      * 
-     * @param fileName
+     * @param out
      * @param dtdFile
-     * @throws IOException 
+     * @throws IOException
      */
-    public GsXMLWriter(String fileName, String dtdFile) throws IOException {
-        out = new FileWriter(fileName);
-        out.write("<?xml version=\"1.0\"?>\n");
+    public GsXMLWriter(OutputStream out, String dtdFile) throws IOException {
+        this(out,dtdFile,true);
+    }
+
+    /**
+     * 
+     * @param out
+     * @param dtdFile
+     * @param indent
+     * @throws IOException
+     */
+    public GsXMLWriter(OutputStream out, String dtdFile, boolean indent) throws IOException {
+        this.indent = indent;
+        this.out = out;
+        write("<?xml version=\"1.0\"?>\n");
         if (dtdFile != null) {
-            out.write("<!DOCTYPE gxl SYSTEM \""+dtdFile+"\">\n");
+            write("<!DOCTYPE gxl SYSTEM \""+dtdFile+"\">\n");
         }
+    }
+    /**
+     * ask to store the next calls into a string buffer.
+     * Use <code>getBuffer()</code> to stop it and get the content of the buffer.
+     * @throws IOException
+     */
+    public void toBuffer()  throws IOException {
+        if (inTag) {
+            write(">");
+            if (indent) {
+                write("\n");
+            }
+            inTag = false;
+        }
+        buf = new StringBuffer();
+    }
+
+    /**
+     * If <code>toBuffer</code> has previously been called, stop saving to buffer.
+     * 
+     * @return the content of the buffer.
+     */
+    public String getBuffer() {
+        if (buf == null) {
+            return null;
+        }
+        String s = buf.toString();
+        buf = null;
+        return s;
     }
     
     /**
-     * 
      * @param s
      * @param isAttVal
      * @throws IOException
@@ -39,28 +82,28 @@ public class GsXMLWriter {
         for (int i=0 ; i<ch.length ; i++) {
            switch (ch[i]) {
            case '&':
-               out.write("&amp;");
+               write("&amp;");
                break;
            case '<':
-               out.write("&lt;");
+               write("&lt;");
                break;
            case '>':
-               out.write("&gt;");
+               write("&gt;");
                break;
            case '\"':
                 if (isAttVal) {
-                    out.write("&quot;");
+                    write("&quot;");
                 } else {
-                    out.write('\"');
+                    write('\"');
                 }
                 break;
            default:
                if (ch[i] > '\u007f') {
-                   out.write("&#");
-                   out.write(Integer.toString(ch[i]));
-                   out.write(';');
+                   write("&#");
+                   write(Integer.toString(ch[i]));
+                   write(';');
                } else {
-                   out.write(ch[i]);
+                   write(s.charAt(i));
                }
            }
         }
@@ -71,16 +114,25 @@ public class GsXMLWriter {
      * @throws IOException
      */
     public void write(String s) throws IOException {
-        out.write(s);
+        if (buf != null) {
+            buf.append(s);
+            return;
+        } 
+        out.write(s.getBytes());
     }
     
     /**
+     * @param c
      * @throws IOException
      */
-    public void close() throws IOException {
-        out.close();
+    public void write(char c) throws IOException {
+        if (buf != null) {
+            buf.append(c);
+            return;
+        } 
+        out.write(c);
     }
-
+    
     /**
      * open a tag in the XML output file
      * @param name
@@ -88,12 +140,20 @@ public class GsXMLWriter {
      */
     public void openTag(String name) throws IOException {
     	if (inTag) {
-    		out.write(">");
+    		write(">");
+    		if (indent) {
+    			write("\n");
+    		}
     	}
-        v_stack.add(name);
         inTag = true;
-        out.write("<"+name);
-        
+        if (indent) {
+        	for (int i=0 ; i<v_stack.size() ; i++) {
+        		write("  ");
+        	}
+        }
+        write("<"+name);
+        v_stack.add(name);
+        inContent = false;
     }
 
     /**
@@ -104,12 +164,21 @@ public class GsXMLWriter {
     public void closeTag() throws IOException {
         int l = v_stack.size()-1;
         if (inTag) {
-            out.write("/>");
+            write("/>");
         } else {
-            out.write("</"+v_stack.get(l)+">");
+            if (!inContent && indent) {
+                for (int i=0 ; i<l ; i++) {
+                    write("  ");
+                }
+            }
+            write("</"+v_stack.get(l)+">");
+        }
+        if (indent) {
+        	write("\n");
         }
         v_stack.remove(l);
         inTag = false;
+        inContent = false;
     }
 
     /**
@@ -123,13 +192,13 @@ public class GsXMLWriter {
         if (!inTag) {
             return;
         }
-        out.write(" "+name+"=\"");
+        write(" "+name+"=\"");
         if (value == null) {
         	writeEsc("", true);
         } else {
         	writeEsc(value, true);
         }
-        out.write("\"");
+        write("\"");
     }
     
     /**
@@ -138,10 +207,27 @@ public class GsXMLWriter {
      * @throws IOException 
      */
     public void addContent(String s) throws IOException {
-    	if (inTag) {
-    		out.write(">");
-    		inTag = false;
-    	}
-    	writeEsc(s, false);
+        if (inTag) {
+            write(">");
+            inTag = false;
+        }
+        writeEsc(s, false);
+        inContent = true;
+    }
+    /**
+     * add a "text child", already formated: should _NOT_ be escaped
+     * @param s
+     * @param b if true, then the file might get indented
+     * @throws IOException 
+     */
+    public void addFormatedContent(String s, boolean b) throws IOException {
+        if (inTag) {
+            write(">");
+            inTag = false;
+            if (b && indent) {
+                write("\n");
+            }
+        }
+        write(s);
     }
 }

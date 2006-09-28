@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
@@ -170,7 +171,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 				if (qName.equals("graph")) {
 					placeInteractions();
 					placeNodeOrder();
-                    graph.setSaveFileName(graph.getSaveFileName(), vslevel);
+                    graph.setSaveMode(vslevel);
 				}
                 pos = POS_OUTSIDE;
 				break;
@@ -186,7 +187,11 @@ public final class GsRegulatoryParser extends GsXMLHelper {
             case POS_OUTSIDE:
                 if (qName.equals("graph")) {
                     String role = attributes.getValue("role"); 
-                    if (role != null) { // this is a secondary graph, not supported YET
+                    if (role != null) { // this is a secondary graph, call the approriate handler
+                        ContentHandler h = GsEnv.getHandlerForRole(role, this);
+                        if (h != null) {
+                            xr.setContentHandler( h );
+                        }
                         // this is NOT a normal graph, stop here
                         return;
                     }
@@ -327,7 +332,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     			        gsi.addEdge(ei);
     			    }
     			}
-    			vertex.addInteraction(gsi);
+    			vertex.addLogicalParameter(gsi);
     		}
     }
     
@@ -360,7 +365,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 	    		}
     		}
     		if (!ok || v_order.size() != graph.getGraphManager().getVertexCount()) {
-    			GsEnv.error(new GsException(GsException.GRAVITY_NORMAL, "incoherent nodeOrder, not restoring it"), null);
+    			// error
+    			GsEnv.error("incoherent nodeOrder, not restoring it", null);
     		} else {
     			graph.setNodeOrder(v_order);
     		}

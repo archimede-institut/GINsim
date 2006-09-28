@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
@@ -22,6 +23,7 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
     private static Vector v_layout = null;
     private static Vector v_export = null;
     private static Vector v_action = null;
+    private static Vector v_OManager = null;
     private GsFileFilter ffilter;
     private static GsRegulatoryGraphDescriptor instance = null;
 
@@ -53,7 +55,7 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
 	public FileFilter getFileFilter() {
 		if (ffilter == null) {
 			ffilter = new GsFileFilter();
-			ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
+			ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
 		}
 		return ffilter;
 
@@ -108,7 +110,45 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
 		return v_action;
 	}
 
-	public ImageIcon getGraphIcon(int mode) {
+    /**
+     * @param manager
+     */
+    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
+        if (v_OManager == null) {
+            v_OManager = new Vector();
+        } else {
+            for (int i=0 ; i<v_OManager.size(); i++) {
+                if (((GsGraphAssociatedObjectManager)v_OManager.get(i)).getObjectName().equals(manager.getObjectName())) {
+                    return;
+                }            }
+        }
+        v_OManager.add(manager);
+    }
+
+    /**
+     * 
+     * @param key
+     * @return true if a manager with this name already exists
+     */
+    public static boolean isObjectManagerRegistred(String key) {
+        if (v_OManager == null) {
+            return false;
+        }
+        for (int i=0 ; i<v_OManager.size() ; i++) {
+            if (((GsGraphAssociatedObjectManager)v_OManager.get(i)).getObjectName().equals(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * @return associated specific objects manager
+     */
+    public static Vector getObjectManager() {
+        return v_OManager;
+    }
+
+    public ImageIcon getGraphIcon(int mode) {
 		return null;
 	}
 	
@@ -124,5 +164,4 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
     public GsGraph open(Map map, File file) {
         return new GsRegulatoryGraph(map, file);
     }
-
 }

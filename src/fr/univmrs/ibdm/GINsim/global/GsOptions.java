@@ -2,6 +2,7 @@ package fr.univmrs.ibdm.GINsim.global;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
@@ -156,7 +157,8 @@ public class GsOptions extends DefaultHandler {
             return;
         }
         try {
-            GsXMLWriter out = new GsXMLWriter(optionFile, null); 
+            FileOutputStream fos = new FileOutputStream(optionFile);
+            GsXMLWriter out = new GsXMLWriter(fos, null); 
             out.write("<gsconfig>\n");
             for (int i=0 ; i<v_recent.size() ; i++) {
                 out.openTag("recent");
@@ -174,7 +176,7 @@ public class GsOptions extends DefaultHandler {
                 out.write("   <option key=\""+k+"\" type=\""+t+"\" value=\""+v+"\"/>\n");
             }
             out.write("</gsconfig>\n");
-            out.close();
+            fos.close();
         } catch (Exception e) {}
     }
 

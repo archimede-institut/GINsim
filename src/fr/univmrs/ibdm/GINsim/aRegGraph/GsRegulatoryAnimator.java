@@ -451,5 +451,8 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     public Vector getPath() {
         return path;
     }
+
+	public void updateGraphNotificationMessage(GsGraph graph) {
+	}
 }
 

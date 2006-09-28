@@ -35,6 +35,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	private JScrollPane jScrollPane = null;
 	private JButton jButton = null;
 	private JButton jButton1 = null;
+    private JLabel labelFullName = null;
 	private JLabel jLabel1 = null;
 	private JLabel jLabel2 = null;
 	private JSpinner s_min = null;
@@ -51,7 +52,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		super();
         setMainFrame(main);
         if (main.getGraph() == null) {
-            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "graph null"), main);
+            GsEnv.error("graph null", main);
         }
 		initialize();
 	}
@@ -66,73 +67,85 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	 */
 	private void initialize() {
         minmax = new GsEdgeMinMaxSpinModel(graph, getJList());
-
-        GridBagConstraints gridBagConstraints9 = new GridBagConstraints();
-		jLabel2 = new JLabel();
-		jLabel1 = new JLabel();
-		java.awt.GridBagConstraints consGridBagConstraints4 	= new java.awt.GridBagConstraints();
-		java.awt.GridBagConstraints consGridBagConstraints5 	= new java.awt.GridBagConstraints();
-		java.awt.GridBagConstraints consGridBagConstraints6 	= new java.awt.GridBagConstraints();
-		java.awt.GridBagConstraints consGridBagConstraints7 	= new java.awt.GridBagConstraints();
-		java.awt.GridBagConstraints consGridBagConstraints9 	= new java.awt.GridBagConstraints();
-		GridBagConstraints gridBagConstraints14 = new GridBagConstraints();
-		GridBagConstraints gridBagConstraints15 = new GridBagConstraints();
-		GridBagConstraints gridBagConstraints16 = new GridBagConstraints();
-		consGridBagConstraints4.fill = java.awt.GridBagConstraints.BOTH;
-		consGridBagConstraints4.gridx = 0;
-		consGridBagConstraints4.gridy = 0;
-		consGridBagConstraints4.gridheight = 7;
-		consGridBagConstraints6.gridx = 1;
-		consGridBagConstraints6.gridy = 1;
-		consGridBagConstraints6.fill = java.awt.GridBagConstraints.BOTH;
-		consGridBagConstraints5.gridx = 1;
-		consGridBagConstraints5.gridy = 0;
-		consGridBagConstraints5.fill = java.awt.GridBagConstraints.BOTH;
-		consGridBagConstraints7.gridx = 1;
-		consGridBagConstraints7.gridy = 2;
-		consGridBagConstraints7.fill = java.awt.GridBagConstraints.NONE;
-		consGridBagConstraints9.gridx = 1;
-		consGridBagConstraints9.gridy = 3;
-		consGridBagConstraints9.fill = java.awt.GridBagConstraints.NONE;
         this.setLayout(new GridBagLayout());
         this.setName("edgeAttr");
-
-        jLabel1.setText(Translator.getString("STR_max"));
-        jLabel2.setText(Translator.getString("STR_min"));
         this.setSize(new java.awt.Dimension(426,60));
-        consGridBagConstraints4.gridwidth = 1;
-        gridBagConstraints14.gridx = 2;
-        gridBagConstraints14.gridy = 2;
-        gridBagConstraints14.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints14.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints15.gridx = 2;
-        gridBagConstraints15.gridy = 3;
-        gridBagConstraints15.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints15.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints16.gridx = 2;
-        gridBagConstraints16.gridy = 4;
-        gridBagConstraints16.gridwidth = 1;
-        gridBagConstraints16.fill = java.awt.GridBagConstraints.NONE;
-        gridBagConstraints16.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints16.gridwidth = 1;
-        consGridBagConstraints9.anchor = java.awt.GridBagConstraints.WEST;
-        consGridBagConstraints7.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints9.gridx = 4;
-        gridBagConstraints9.gridy = 0;
-        gridBagConstraints9.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints9.weightx = 1.0D;
-        gridBagConstraints9.weighty = 1.0D;
-        gridBagConstraints9.gridheight = 7;
-        this.add(getJButton(), consGridBagConstraints5);
-        this.add(getJButton1(), consGridBagConstraints6);
-        this.add(getJScrollPane(), consGridBagConstraints4);
-        this.add(jLabel1, consGridBagConstraints9);
-        this.add(jLabel2, consGridBagConstraints7);
-        this.add(getS_min(), gridBagConstraints14);
-        this.add(getS_max(), gridBagConstraints15);
-        this.add(getC_sign(), gridBagConstraints16);
-        this.add(getGsAnnotationPanel(), gridBagConstraints9);
-		
+
+		jLabel1 = new JLabel(Translator.getString("STR_max"));
+        jLabel2 = new JLabel(Translator.getString("STR_min"));
+        labelFullName = new JLabel();
+        
+        GridBagConstraints c = new java.awt.GridBagConstraints();
+        c.fill = java.awt.GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        this.add(labelFullName, c);
+        
+        c = new java.awt.GridBagConstraints();
+        c.fill = java.awt.GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridheight = 7;
+        c.gridwidth = 1;
+        this.add(getJScrollPane(), c);
+        c = new java.awt.GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.fill = java.awt.GridBagConstraints.BOTH;
+        this.add(getJButton(), c);
+
+        c = new java.awt.GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.fill = java.awt.GridBagConstraints.BOTH;
+        this.add(getJButton1(), c);
+
+        c = new java.awt.GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 3;
+		c.fill = java.awt.GridBagConstraints.NONE;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        this.add(jLabel2, c);
+        
+        c = new java.awt.GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 4;
+		c.fill = java.awt.GridBagConstraints.NONE;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        this.add(jLabel1, c);
+        
+        c = new java.awt.GridBagConstraints();
+        c.gridx = 4;
+        c.gridy = 0;
+        c.fill = java.awt.GridBagConstraints.BOTH;
+        c.weightx = 1.0D;
+        c.weighty = 1.0D;
+        c.gridheight = 7;
+        this.add(getGsAnnotationPanel(), c);
+
+        c = new java.awt.GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 3;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.fill = java.awt.GridBagConstraints.BOTH;
+        this.add(getS_min(), c);
+        
+        c = new java.awt.GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 4;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.fill = java.awt.GridBagConstraints.BOTH;
+        this.add(getS_max(), c);
+        
+        c = new java.awt.GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 5;
+        c.gridwidth = 1;
+        c.fill = java.awt.GridBagConstraints.NONE;
+        c.anchor = java.awt.GridBagConstraints.WEST;
+        c.gridwidth = 1;
+        this.add(getC_sign(), c);
 	}
     /**
      * @see fr.univmrs.ibdm.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
@@ -147,6 +160,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
                 ((GsDirectedEdgeListModel)jList.getModel()).setEdge(currentEdge);
                 jList.setSelectedIndex(0);
                 updateSelection();
+                labelFullName.setText(currentEdge.getSource()+" "+Translator.getString("STR_to")+" "+currentEdge.getTarget());
             }
         }
     }

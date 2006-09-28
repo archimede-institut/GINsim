@@ -70,7 +70,7 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
         if (!graph.isEditAllowed()) {
             return new Integer(vertex.getBaseValue());
         }
-        vertex.setBaseValue((short) (vertex.getBaseValue()+1));
+        vertex.setBaseValue((short) (vertex.getBaseValue()+1), graph);
         graph.fireMetaChange();
         m_max.update();
         m_min.update();
@@ -81,7 +81,7 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
         if (!graph.isEditAllowed()) {
             return new Integer(vertex.getBaseValue());
         }
-        vertex.setBaseValue((short) (vertex.getBaseValue()-1));
+        vertex.setBaseValue((short) (vertex.getBaseValue()-1), graph);
         graph.fireMetaChange();
         m_min.update();
         return new Integer(vertex.getBaseValue());
@@ -99,14 +99,14 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
             return;
         }
         if (value instanceof Integer ){
-            vertex.setBaseValue(((Integer)value).shortValue());
+            vertex.setBaseValue(((Integer)value).shortValue(), graph);
             graph.fireMetaChange();
             m_max.update();
             m_min.update();
         }
         if (value instanceof String) {
             try {
-                vertex.setBaseValue((short)Integer.parseInt(value.toString()));
+                vertex.setBaseValue((short)Integer.parseInt(value.toString()), graph);
                 graph.fireMetaChange();
             } catch (NumberFormatException e) {}
             m_max.update();

@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.graph;
 
-import java.io.File;
+import java.io.InputStream;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
@@ -21,15 +21,13 @@ public final class GsGinmlParser extends GsXMLHelper {
     private GsXMLHelper realParser = null;
     
     /**
-     * @param file the file to read.
+     * @param is from where to read
      * @param map
      * @return the new graph
      */
-    public GsGraph  parse(File file, Map map) {
+    public GsGraph  parse(InputStream is, Map map) {
     	this.map = map;
-
-		startParsing(file);
-		
+		startParsing(is);
 		if (realParser == null) {
 		    return null;
 		}

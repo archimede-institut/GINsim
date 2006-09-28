@@ -1,9 +1,13 @@
 package fr.univmrs.ibdm.GINsim.graph;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -24,7 +28,6 @@ import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 /**
  * Base class for specialized graphs, with some common functions.
  * each kind of graph (ie regulatory, dynamic...) must extend it
- * 
  */
 public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /** graphManager used */
@@ -54,15 +57,26 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     private static Vector v_layout = null;
     private static Vector v_export = null;
     private static Vector v_action = null;
+    private static Vector v_OManager = null;
 
+    private Vector v_notification = new Vector();
     private Vector v_blockEdit = null;
     private Vector v_blockClose = null;
     
-    private static final int CHANGE_EDGEADDED = 0;
-    private static final int CHANGE_EDGEREMOVED = 1;
-    private static final int CHANGE_VERTEXADDED = 2;
-    private static final int CHANGE_VERTEXREMOVED = 3;
-    private static final int CHANGE_METADATA = 4;
+    /**  an edged has been added */
+    public static final int CHANGE_EDGEADDED = 0;
+    /**  an edged has been removed */
+    public static final int CHANGE_EDGEREMOVED = 1;
+    /** a vertex has been added  */
+    public static final int CHANGE_VERTEXADDED = 2;
+    /**  a vertex has been removed */
+    public static final int CHANGE_VERTEXREMOVED = 3;
+    /**  an edge has been modified */
+    public static final int CHANGE_EDGEUPDATED = 4;
+    /**  a vertex has been modified */
+    public static final int CHANGE_VERTEXUPDATED = 5;
+    /**  other kind of change */
+    public static final int CHANGE_METADATA = 6;
     
 	protected GsVertexAttributesReader vReader;
 	protected GsEdgeAttributesReader eReader;
@@ -104,13 +118,19 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     }
 
     /**
-     * set the save fileName/mode.
+     * set the save fileName.
      * 
      * @param saveFileName
+     */
+    public void setSaveFileName(String saveFileName) {
+        this.saveFileName = saveFileName;
+    }
+    /**
+     * set the save mode.
+     * 
      * @param saveMode
      */
-    public void setSaveFileName(String saveFileName, int saveMode) {
-        this.saveFileName = saveFileName;
+    public void setSaveMode(int saveMode) {
         this.saveMode = saveMode;
     }
     /**
@@ -129,13 +149,22 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**
      * actually save the graph.
      * 
-     * @param fileName
+     * @param os
      * @param mode
      * @param selectedOnly
      * @throws GsException
      */
-    abstract protected void doSave(String fileName, int mode, boolean selectedOnly) throws GsException;
+    abstract protected void doSave(OutputStream os, int mode, boolean selectedOnly) throws GsException;
 
+    /**
+     * @param filename name of the file selected to save
+     * @return the name of the main entry when saving into a zip file.
+     * saving in zip will NOT happen if this returns null (default)
+     */
+    protected String getZipMainEntryName(String filename) {
+        return null;
+    }
+    
     /**
      * 
      * @return a FileFilter for the save dialog (or null)
@@ -202,7 +231,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     			this.saveMode = saveMode;
                 String s_oldfn = saveFileName;
     			saveFileName = filename;
-    			save(false, null, 0);
+    			save(false, null, saveMode);
                 if (s_oldfn == null) {
                     GsEnv.renameGraph("[UNSAVED-"+id+"]", saveFileName);
                 } else {
@@ -219,14 +248,67 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @throws GsException
      */
     private void save(boolean selectedOnly, String fileName, int saveMode) throws GsException {
-		if (selectedOnly) {
-			doSave(fileName, saveMode, true);
-		} else {
-			doSave(this.saveFileName, this.saveMode, false);
-			saved = true;
-		}
-        if (mainFrame != null) {
-            mainFrame.updateTitle();
+        String szipentry = getZipMainEntryName(fileName);
+        try {
+            if (szipentry == null) {
+                OutputStream os = new FileOutputStream(this.saveFileName);
+                doSave(os, saveMode, selectedOnly);
+                os.close();
+            } else {
+                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(this.saveFileName));
+//                zos.putNextEntry(new ZipEntry("MANIFEST"));
+//                zos.write(("Main-file: "+szipentry+"\n").getBytes());
+//                zos.closeEntry();
+                
+                // FIXME: make it be "ginml" for now
+                szipentry = "ginml";
+                zos.putNextEntry(new ZipEntry(szipentry));
+                doSave(zos, saveMode, selectedOnly);
+                zos.closeEntry();
+                // now save associated objects
+                if (v_OManager != null) {
+                    for (int i=0 ; i<v_OManager.size() ; i++) {
+                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+                        System.out.println("manager here");
+                        if (manager.needSaving(this)) {
+                            zos.putNextEntry(new ZipEntry(manager.getObjectName()));
+                            try {
+                                manager.doSave(zos, this);
+                            } catch (Exception e) {
+                                if (mainFrame != null) {
+                                    addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
+                                } else {
+                                    e.printStackTrace();
+                                }
+                            } finally {
+                                zos.closeEntry();
+                            }
+                        }
+                    }
+                }
+                Vector v_specManager = getSpecificObjectManager();
+                if (v_specManager != null) {
+                    for (int i=0 ; i<v_specManager.size() ; i++) {
+                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
+                        if (manager.needSaving(this)) {
+                            zos.putNextEntry(new ZipEntry(manager.getObjectName()));
+                            manager.doSave(zos, this);
+                        }
+                    }
+                }
+                zos.close();
+            }
+    		saved = true;
+            if (mainFrame != null) {
+                addNotificationMessage(new GsGraphNotificationMessage(this, "graph saved", GsGraphNotificationMessage.NOTIFICATION_INFO));
+                mainFrame.updateTitle();
+            }
+        } catch (Exception e) {
+            if (mainFrame != null) {
+                addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
+            } else {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -253,7 +335,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         Object obj = doInteractiveAddVertex(param);
         if (obj != null) {
             graphManager.placeVertex(obj, x, y);
-            fireGraphChange(CHANGE_VERTEXADDED);
+            fireGraphChange(CHANGE_VERTEXADDED, obj);
         }
         return obj;
     }
@@ -270,7 +352,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
     	Object obj = doInteractiveAddEdge(source, target, param);
     	if (obj != null) {
-    		fireGraphChange(CHANGE_EDGEADDED);
+    		fireGraphChange(CHANGE_EDGEADDED, obj);
     	}
     }
     
@@ -281,7 +363,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      */
     public void removeVertex(Object obj) {
         graphManager.removeVertex(obj);
-        fireGraphChange(CHANGE_VERTEXREMOVED);
+        fireGraphChange(CHANGE_VERTEXREMOVED, obj);
     }
     
     /**
@@ -353,7 +435,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**
      * @param obj
      */
-    abstract public void removeEdge(Object obj) ;
+    abstract public void removeEdge(Object obj);
 
 	/**
 	 * @param layout
@@ -380,6 +462,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		}
 		v_export.add(export);
 	}
+    
 	/**
 	 * @return a list of avaible export filters.
 	 */
@@ -404,7 +487,24 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		return v_action;
 	}
 
-	
+    /**
+     * register a manager to open/save associated objects
+     * 
+     * @param manager 
+     */
+    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
+        if (v_OManager == null) {
+            v_OManager = new Vector();
+        }
+            v_OManager.add(manager);
+    }
+    /**
+     * @return object managers
+     */
+    public Vector getObjectManager() {
+        return v_OManager;
+    }
+    
 	/**
 	 * @return a vector of layout actions for this kind of graph
 	 */
@@ -413,10 +513,14 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 * @return a vector of export actions for this kind of graph.
 	 */
 	abstract public Vector getSpecificExport();
-	/**
-	 * @return a vector of action related to this kind of graph.
-	 */
-	abstract public Vector getSpecificAction();
+    /**
+     * @return a vector of action related to this kind of graph.
+     */
+    abstract public Vector getSpecificAction();
+    /**
+     * @return a vector of action related to this kind of graph.
+     */
+    abstract public Vector getSpecificObjectManager();
 
 	/**
 	 * @return the node order
@@ -442,37 +546,71 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 * the graph has changed, all listeners will be notified.
 	 * it will also be marked as unsaved.
 	 * @param change
+     * @param data
 	 */
-	private void fireGraphChange(int change) {
+	public void fireGraphChange(int change, Object data) {
 		if (saved && !opening) {
 		    saved = false;
 		    if (mainFrame != null) {
 		        mainFrame.updateTitle();
 		    }
 		}
-		
+
+        // TODO: extend this to support undo/redo and more events!
+        Vector v_cascade = new Vector();
 		switch (change) {
 		case CHANGE_EDGEADDED:
 			for (int i=0 ; i<listeners.size() ; i++) {
-				((GsGraphListener)listeners.get(i)).edgeAdded();
+				GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).edgeAdded(data);
+                if (gec != null) {
+                    v_cascade.add(gec);
+                }
 			}
 			break;
 		case CHANGE_EDGEREMOVED:
 			for (int i=0 ; i<listeners.size() ; i++) {
-				((GsGraphListener)listeners.get(i)).edgeRemoved();
+                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).edgeRemoved(data);
+                if (gec != null) {
+                    v_cascade.add(gec);
+                }
 			}
 			break;
 		case CHANGE_VERTEXADDED:
 			for (int i=0 ; i<listeners.size() ; i++) {
-				((GsGraphListener)listeners.get(i)).vertexAdded();
+                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).vertexAdded(data);
+                if (gec != null) {
+                    v_cascade.add(gec);
+                }
 			}
 			break;
-		case CHANGE_VERTEXREMOVED:
-			for (int i=0 ; i<listeners.size() ; i++) {
-				((GsGraphListener)listeners.get(i)).vertexRemoved();
-			}
-			break;
+        case CHANGE_VERTEXREMOVED:
+            for (int i=0 ; i<listeners.size() ; i++) {
+                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).vertexRemoved(data);
+                if (gec != null) {
+                    v_cascade.add(gec);
+                }
+            }
+            break;
+        case CHANGE_VERTEXUPDATED:
+            for (int i=0 ; i<listeners.size() ; i++) {
+                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).vertexUpdated(data);
+                if (gec != null) {
+                    v_cascade.add(gec);
+                }
+            }
+            break;
+        case CHANGE_EDGEUPDATED:
+            for (int i=0 ; i<listeners.size() ; i++) {
+                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).edgeUpdated(data);
+                if (gec != null) {
+                    v_cascade.add(gec);
+                }
+            }
+            break;
 		}
+        if (v_cascade.size() > 0) {
+            addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), v_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
+        }
 	}
 
 	/**
@@ -796,7 +934,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 */
 	public void setDTD(String DTD) {
 		dtdFile = DTD;
-        fireGraphChange(CHANGE_METADATA);
+        fireGraphChange(CHANGE_METADATA, null);
 	}
 
     /**
@@ -891,20 +1029,32 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         regGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
     }
 
-    public void edgeAdded() {
+    public GsGraphEventCascade edgeAdded(Object data) {
         setAssociatedGraph(null);
+        return null;
     }
 
-    public void edgeRemoved() {
+    public GsGraphEventCascade edgeRemoved(Object data) {
         setAssociatedGraph(null);
+        return null;
     }
 
-    public void vertexAdded() {
+    public GsGraphEventCascade vertexAdded(Object data) {
         setAssociatedGraph(null);
+        return null;
     }
 
-    public void vertexRemoved() {
+    public GsGraphEventCascade vertexUpdated(Object data) {
+        return null;
+    }
+
+    public GsGraphEventCascade edgeUpdated(Object data) {
+        return null;
+    }
+
+    public GsGraphEventCascade vertexRemoved(Object data) {
         setAssociatedGraph(null);
+        return null;
     }
 
     public void graphChanged(GsNewGraphEvent event) {
@@ -963,6 +1113,69 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * fire a change in the configuration of the graph (structural changes are handled by graphManager)
      */
     public void fireMetaChange() {
-        fireGraphChange(CHANGE_METADATA);
+        fireGraphChange(CHANGE_METADATA, null);
     }
+    
+	public void updateGraphNotificationMessage(GsGraph graph) {
+        if (graphManager == null) {
+            // can happen when the graph has been closed before the end of the timeout ?
+            return;
+        }
+		graphManager.getEventDispatcher().updateGraphNotificationMessage(this);
+	}
+	
+	/**
+	 * @return the topmost message to display
+	 */
+	public GsGraphNotificationMessage getTopMessage() {
+		if (v_notification == null | v_notification.size() == 0) {
+			return null;
+		}
+		return (GsGraphNotificationMessage)v_notification.get(v_notification.size()-1);
+	}
+	
+	/**
+	 * @param message
+	 */
+	public void deleteNotificationMessage(GsGraphNotificationMessage message) {
+		if (v_notification == null | v_notification.size() == 0) {
+			return;
+		}
+		v_notification.remove(message);
+		updateGraphNotificationMessage(this);
+	}
+	/**
+	 * @param message
+	 */
+	public void deleteAllNotificationMessage(GsGraphNotificationMessage message) {
+		if (v_notification == null | v_notification.size() == 0) {
+			return;
+		}
+		for (int i=v_notification.size()-1 ; i>=0 ; i--) {
+			if (message.equals(v_notification.get(i))) {
+				v_notification.remove(i);
+			}
+		}
+		updateGraphNotificationMessage(this);
+	}
+	/**
+	 * 
+	 */
+	public void deleteAllNotificationMessage() {
+		if (v_notification == null | v_notification.size() == 0) {
+			return;
+		}
+		v_notification.clear();
+		updateGraphNotificationMessage(this);
+	}
+
+	/**
+	 * @param message
+	 */
+	public void addNotificationMessage(GsGraphNotificationMessage message) {
+		if (mainFrame != null) {
+			v_notification.add(message);
+			updateGraphNotificationMessage(this);
+		}
+	}
 }

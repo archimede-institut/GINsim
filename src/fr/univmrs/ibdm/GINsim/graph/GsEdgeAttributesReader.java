@@ -206,7 +206,7 @@ public abstract class GsEdgeAttributesReader {
     
     /**
      * set the edge as dashed.
-     * @param dashArray the dash motif to set
+     * @param dashArray 
      */
     abstract public void setDash(float[] dashArray);
     /**

@@ -251,8 +251,7 @@ public class Translator {
 	 * @param filename
 	 */
 	public static void pushBundle(String filename){
-		ResourceBundle resourcebundle =
-			ResourceBundle.getBundle(filename);
+		ResourceBundle resourcebundle = ResourceBundle.getBundle(filename);
 		bundles.push(resourcebundle);
 		bundleNames.push( filename);
 	}

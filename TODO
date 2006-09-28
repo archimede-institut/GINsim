@@ -1,16 +1,15 @@
 
 * interactive choice for the gui language (works as a startup option) ?
 * choice of a new dtd path if the dtd specified in the file is not readable => automagically use the local one if network unavaible/notfound...
-* what about associated graph ? how to manage the association between regulatory
-  graph and state transition graph
+* what about associated graph ? how to manage the association between regulatory graph and state transition graph
 * add an order number to the element edge in the dtd, to avoid the restriction 
   on the format of the ID (for the moment, this id is used for the numbering of 
   the interactions with the same source and target)  ???
 * implement a plugin export biolayout ==> done
 
 Changes proposed by Aitor:
-* Add gene names to ginml file of state transition graph
-* Does "File" -> "Export as SVG" works? (long ago yes, now it's back)
+* Add gene names to ginml file of state transition graph ==> has always been this way
+* Does "File" -> "Export as SVG" works? ==> fixed since 2.1
 * In "Connectivity" menu, is not "Calcul of strong connected components on:" and "Strategy of reduced graph construction" the same? ==> all removed
 * Does "Path search with max length:" in "Connectivity" menu work? (actually clearly NOT, option removed)
 * Add help in HTML (working on it...)

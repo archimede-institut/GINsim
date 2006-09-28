@@ -314,8 +314,7 @@ public class GsActions  implements GraphChangeListener {
 
 		actionDelete = new GsBaseAction("STR_delete",
 		GsEnv.getIcon("deletemode.gif"),
-		"STR_delete_descr",
-        KeyStroke.getKeyStroke( KeyEvent.VK_DELETE, 0 )) {
+		"STR_delete_descr", null) {
 		    private static final long serialVersionUID = -3283938108975661376L;
 
 		    public void actionPerformed(java.awt.event.ActionEvent e) {    
@@ -795,6 +794,9 @@ public class GsActions  implements GraphChangeListener {
     }
 
     public void graphClosed(GsGraph graph) {
-    } 
+    }
+	public void updateGraphNotificationMessage(GsGraph graph) {
+	}
+
 
 }

@@ -6,12 +6,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.EventObject;
 
+import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -35,12 +41,15 @@ public class GsJTable extends JTable {
     public GsJTable(TableModel model) {
         super(model);
         setDefaultEditor(Boolean.class, new BooleanCellEditor());
+        setDefaultEditor(GsValueList.class, new ValueInListCellEditor());
 
         TableCellRenderer defaultRenderer;
         
         defaultRenderer = getDefaultRenderer(JButton.class);
         setDefaultRenderer(JButton.class,
-                       new JTableButtonRenderer(defaultRenderer));
+                new JTableButtonRenderer(defaultRenderer));
+        setDefaultRenderer(JComponent.class,
+                new JTableButtonRenderer(defaultRenderer));
         addMouseListener(new JTableButtonMouseListener(this));
 
     }
@@ -66,7 +75,30 @@ class BooleanCellEditor extends DefaultCellEditor {
     public boolean shouldSelectCell(EventObject anEvent) {
         return false;
     }
+}
+
+class ValueInListCellEditor extends AbstractCellEditor implements TableCellEditor {
+    private static final long serialVersionUID = -2790803389946873836L;
+
+    GsComboModel model = new GsComboModel();
+    JComboBox combo = new JComboBox(model);
+    GsValueList data;
     
+    public boolean shouldSelectCell(EventObject anEvent) {
+        return false;
+    }
+    
+    public Object getCellEditorValue() {
+        return data;
+    }
+
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        if (value instanceof GsValueList) {
+            model.setData((GsValueList)value);
+            return combo;
+        }
+        return new JLabel("not of the good type!");
+    }
 }
 
 class JTableButtonRenderer implements TableCellRenderer {
@@ -89,9 +121,31 @@ class JTableButtonRenderer implements TableCellRenderer {
       return __defaultRenderer.getTableCellRendererComponent(
          table, value, isSelected, hasFocus, row, column);
     }
-  }
+}
 
-  class JTableButtonMouseListener implements MouseListener {
+//class JTableValueInListRenderer implements TableCellRenderer {
+//    private TableCellRenderer __defaultRenderer;
+//
+//    /**
+//     * @param renderer
+//     */
+//    public JTableValueInListRenderer(TableCellRenderer renderer) {
+//      __defaultRenderer = renderer;
+//    }
+//
+//    public Component getTableCellRendererComponent(JTable table, Object value,
+//                           boolean isSelected,
+//                           boolean hasFocus,
+//                           int row, int column)
+//    {
+//      if(value instanceof GsValueList)
+//        return new JComboBox(new GsComboModel((GsValueList)value));
+//      return __defaultRenderer.getTableCellRendererComponent(
+//         table, value, isSelected, hasFocus, row, column);
+//    }
+//}
+
+class JTableButtonMouseListener implements MouseListener {
     private JTable __table;
 
     private void __forwardEventToButton(MouseEvent e) {
@@ -108,14 +162,12 @@ class JTableButtonRenderer implements TableCellRenderer {
 
       value = __table.getValueAt(row, column);
 
-      if(!(value instanceof JButton))
-        return;
-
-      button = (JButton)value;
-      if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getButton() == MouseEvent.BUTTON1) {
-          button.doClick();
+      if(value instanceof JButton) {
+          button = (JButton)value;
+          if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getButton() == MouseEvent.BUTTON1) {
+              button.doClick();
+          }
       }
-      
 //      buttonEvent = SwingUtilities.convertMouseEvent(__table, e, button);
 //      button.dispatchEvent(buttonEvent);
       // This is necessary so that when a button is pressed and released
@@ -150,4 +202,59 @@ class JTableButtonRenderer implements TableCellRenderer {
     public void mouseReleased(MouseEvent e) {
       __forwardEventToButton(e);
     }
-  }
+}
+
+class GsComboModel extends DefaultComboBoxModel {
+    private static final long serialVersionUID = -8553547226168566527L;
+    
+    GsValueList data;
+
+    GsComboModel() {
+    }
+    
+    GsComboModel(GsValueList data) {
+        this.data = data;
+    }
+    
+    void setData(GsValueList data) {
+        this.data = data;
+        fireContentsChanged(this, 0, getSize());
+    }
+    
+    public Object getElementAt(int index) {
+        if (data == null) {
+            return null;
+        }
+        return data.get(index);
+    }
+
+    public int getIndexOf(Object anObject) {
+        if (data == null) {
+            return -1;
+        }
+        return data.indexOf(anObject);
+    }
+
+    public Object getSelectedItem() {
+        if (data == null) {
+            return null;
+        }
+        int sel = data.getSelectedIndex();
+        sel = (sel == -1) ? 0 : sel;
+        return data.get(data.getSelectedIndex());
+    }
+
+    public int getSize() {
+        if (data == null) {
+            return 0;
+        }
+        return data.size();
+    }
+
+    public void setSelectedItem(Object anObject) {
+        if (data == null) {
+            return;
+        }
+        data.setSelectedIndex(getIndexOf(anObject));
+    }
+}  

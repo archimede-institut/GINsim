@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.connectivity;
 
+import java.io.OutputStream;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -30,7 +31,7 @@ public final class GsTmpGraph extends GsGraph {
 		return null;
 	}
 
-	protected void doSave(String fileName, int mode, boolean selectedOnly)
+	protected void doSave(OutputStream os, int mode, boolean selectedOnly)
 			throws GsException {
 	}
 
@@ -79,6 +80,10 @@ public final class GsTmpGraph extends GsGraph {
 	public Vector getSpecificAction() {
 		return null;
 	}
+    public Vector getSpecificObjectManager() {
+        return null;
+    }
+
     protected GsGraph getCopiedGraph() {
         return null;
     }
@@ -92,4 +97,5 @@ public final class GsTmpGraph extends GsGraph {
     }
     protected void setCopiedGraph(GsGraph graph) {
     }
+
 }

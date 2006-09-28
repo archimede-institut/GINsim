@@ -7,7 +7,6 @@ import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 
 /**
@@ -20,7 +19,6 @@ public class GsARegGraphPlugin implements GsPlugin, GsActionProvider {
     
     public void registerPlugin() {
         GsDynamicGraphDescriptor.registerActionProvider(this);
-		Translator.pushBundle("fr.univmrs.ibdm.GINsim.ressources.messagesARegGraph");
     }
 
     public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {

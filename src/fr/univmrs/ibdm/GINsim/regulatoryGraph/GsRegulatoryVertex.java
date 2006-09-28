@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
@@ -26,7 +28,10 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
 	private short 			baseValue;
 	private short 			maxValue;
-	private Vector 			interactions;
+    private short           blockMin = -1;
+    private short           blockMax = -1;
+	private Vector 			v_logicalParameters;
+	
 	private String 			name;
 	private GsAnnotation	gsa;
 	private String 			id;
@@ -47,7 +52,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		baseValue 		= 0;
 		maxValue 		= 1;
 		gsa				= new GsAnnotation();
-		interactions 	= new Vector();
+		v_logicalParameters 	= new Vector();
 		this.id = id;
 	}
 
@@ -60,7 +65,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		baseValue 		= 0;
 		maxValue 		= 1;
 		gsa				= new GsAnnotation();
-		interactions 	= new Vector();
+		v_logicalParameters 	= new Vector();
 		this.id = "G"+num;
 	}
 
@@ -81,13 +86,15 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	/**
 	 * Sets the base value to the node
 	 * @param i
+     * @param graph
 	 */
-	public void setBaseValue(short i) {
+	public void setBaseValue(short i, GsRegulatoryGraph graph) {
 	    if (i > -1) {
 			baseValue = i;
 			if (baseValue > maxValue) {
 			    maxValue = baseValue;
 			}
+            graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
 	    }
 	}
 
@@ -98,23 +105,32 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 */
 	public void setMaxValue(short max, GsRegulatoryGraph graph) {
 	    if (max>0) {
-	    		short oldmax = maxValue;
+            String s = "";
+    		short oldmax = maxValue;
 			maxValue = max;
 			if (maxValue < baseValue) {
 			    baseValue = maxValue;
 			}
-            if (oldmax != maxValue) {
-                graph.fireMetaChange();
-            }
 			if (oldmax > maxValue) {
-				graph.applyNewMaxValue(this);
-                for (int i=0 ; i<interactions.size() ; i++) {
-                    GsLogicalParameter gsi = (GsLogicalParameter)interactions.get(i);
+                if (blockMax > maxValue) {
+                    s += Translator.getString("STR_block_reset\n");
+                    blockMin = blockMax = -1;
+                }
+				s += graph.applyNewMaxValue(this);
+                for (int i=0 ; i<v_logicalParameters.size() ; i++) {
+                    GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(i);
                     if (gsi.getValue() > maxValue) {
                         gsi.setValue(maxValue);
+                        s += Translator.getString("STR_parameter_value_sup_max\n");
                     }
                 }
 			}
+            if (!"".equals(s)) {
+                graph.addNotificationMessage( new GsGraphNotificationMessage(graph, s.trim(), GsGraphNotificationMessage.NOTIFICATION_WARNING) );
+            }
+            if (oldmax != maxValue) {
+                graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
+            }
 	    }
 	}
 	
@@ -135,18 +151,18 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	/**
 	 * Adds the specified interaction I to the interactions of the node
 	 * @param I
-	 * @return true if the logicalparameter has been added
+	 * @return true if the logical parameter has been added
 	 */
-	public boolean addInteraction (GsLogicalParameter I) {
+	public boolean addLogicalParameter (GsLogicalParameter I) {
 	    if (I.EdgeCount() == 0) {
 	        return false;
 	    }
-		for (int i=0 ; i<interactions.size() ; i++) {
-			if (interactions.get(i).equals(I)) {
+		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
+			if (v_logicalParameters.get(i).equals(I)) {
 				return false;
 			}
 		}
-		interactions.add(I);
+		v_logicalParameters.add(I);
         return true;
 	}
 	
@@ -155,7 +171,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @param I
 	 */ 
 	public void removeInteraction (GsLogicalParameter I) {
-		interactions.remove(I);
+		v_logicalParameters.remove(I);
 	}
 	
 	/**
@@ -166,7 +182,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	public GsLogicalParameter getInteraction(int index) {
 		try
 		{
-			return((GsLogicalParameter)interactions.get(index));
+			return((GsLogicalParameter)v_logicalParameters.get(index));
 		}
 		catch (java.lang.ArrayIndexOutOfBoundsException e) 
 		{
@@ -182,11 +198,11 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @param edges
 	 */
 	public void updateInteraction(int index, Vector edges) {
-	    GsLogicalParameter I = (GsLogicalParameter)interactions.get(index);
+	    GsLogicalParameter I = (GsLogicalParameter)v_logicalParameters.get(index);
 	    Vector oldList = I.getEdges();
 	    I.setEdges(edges);
-		for (int i=0 ; i<interactions.size() ; i++) {
-			if ( i!= index && interactions.get(i).equals(I)) {
+		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
+			if ( i!= index && v_logicalParameters.get(i).equals(I)) {
 			    I.setEdges(oldList);
 				return;
 			}
@@ -198,7 +214,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @return the number of user defined interactions on this node
 	 */
 	public int interactionCount() {
-		return(interactions.size());
+		return(v_logicalParameters.size());
 	}
 
 	/**
@@ -230,10 +246,43 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	/**
 	 * @return the list of all interactions on this gene.
 	 */
-	public Vector getInteractions() {
-		return interactions;
+	public Vector getV_logicalParameters() {
+		return v_logicalParameters;
 	}
 
+    /**
+     * get the DAG representation of logical parameters.
+     * The generated diagramm will include transition blocking. When transition blocking is applied strictly, 
+     * all states out of the selected interval will be replaced by the nearest state in the interval. Otherwise,
+     * evolving outside of the interval will remain allowed.
+     * 
+     * @param graph
+     * @param strictBlocking strictly apply transition blocking
+     * @return an OmddNode representing logical parameters associated to this vertex.
+     */
+    public OmddNode getTreeParameters(GsRegulatoryGraph graph, boolean strictBlocking) {
+        OmddNode root;
+        GsLogicalParameter pbaseValue = new GsLogicalParameter(0);
+        if (this.baseValue != 0) {
+            pbaseValue.setValue(baseValue);
+            root = pbaseValue.buildTree(graph, this);
+            if (root == null) {
+                root = OmddNode.TERMINALS[baseValue];
+            }
+        } else {
+            root = OmddNode.TERMINALS[0];
+        }
+        OmddNode curNode;
+        for (int j=0 ; j<v_logicalParameters.size() ; j++) {
+            GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(j);
+            curNode = gsi.buildTree(graph, this);
+            if (curNode != null) {
+                root = root.merge(curNode, OmddNode.OR);
+            }
+        }
+        return root.applyBlock(blockMin, blockMax, graph.getNodeOrder().indexOf(this), maxValue+1, strictBlocking);
+    }
+    
 	public String toToolTip() {
 		return    S_ID  + id
 				+ S_NAME+ name
@@ -250,8 +299,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 			out.write(" basevalue=\"" + baseValue +"\"");
 			out.write(" maxvalue=\"" + maxValue +"\">\n");
 			
-			for (int i = 0; i < interactions.size(); i++) {
-				((GsLogicalParameter) interactions.elementAt(i)).toXML(out, null, mode);
+			for (int i = 0; i < v_logicalParameters.size(); i++) {
+				((GsLogicalParameter) v_logicalParameters.elementAt(i)).toXML(out, null, mode);
 			}
 			
 			gsa.toXML(out, null, mode);
@@ -280,8 +329,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * Set the interactions vector.
 	 * @param vector
 	 */
-	public void setInteractions(Vector vector) {
-		interactions = vector;
+	public void setV_logicalParameters(Vector vector) {
+		v_logicalParameters = vector;
 	}
 
 	public Object clone() {
@@ -301,10 +350,10 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      * @param index
      */
     public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge, int index) {
-    		for (int i=0 ; i<interactions.size() ; i++) {
-    			GsLogicalParameter interaction = (GsLogicalParameter)interactions.get(i);
+    		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
+    			GsLogicalParameter interaction = (GsLogicalParameter)v_logicalParameters.get(i);
     			if (interaction.removeEdge(multiEdge,index)) {
-                    interactions.remove(i--);
+                    v_logicalParameters.remove(i--);
                 }
     		}
     }
@@ -316,10 +365,10 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      * @param multiEdge
      */
     public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge) {
-		for (int i=0 ; i<interactions.size() ; i++) {
-			GsLogicalParameter interaction = (GsLogicalParameter)interactions.get(i);
+		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
+			GsLogicalParameter interaction = (GsLogicalParameter)v_logicalParameters.get(i);
 			if (interaction.removeEdge(multiEdge)) {
-                interactions.remove(i--);
+                v_logicalParameters.remove(i--);
             }
 		}
     }
@@ -333,10 +382,58 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      */
     public void cleanupInteractionForNewGraph(HashMap copyMap) {
         GsRegulatoryVertex myClone = (GsRegulatoryVertex) copyMap.get(this);
-        for (int i=0 ; i<interactions.size() ; i++) {
-            ((GsLogicalParameter)interactions.get(i)).applyNewGraph(myClone, copyMap);
+        for (int i=0 ; i<v_logicalParameters.size() ; i++) {
+            ((GsLogicalParameter)v_logicalParameters.get(i)).applyNewGraph(myClone, copyMap);
             
         }
     }
+
+    /**
+     * @return the value of blockMax (-1 for disabled)
+     */
+    public short getBlockMax() {
+        return blockMax;
+    }
+
+    /**
+     * @param blockMax
+     */
+    public void setBlockMax(short blockMax) {
+        if (blockMax >= -1 && blockMax <= maxValue) {
+            this.blockMax = blockMax;
+            if (blockMin > blockMax || blockMin == -1) {
+                blockMin = blockMax;
+            }
+        }
+    }
+
+    /**
+     * @return the value of blockMin (-1 for disabled)
+     */
+    public short getBlockMin() {
+        return blockMin;
+    }
+
+    /**
+     * @param blockMin
+     */
+    public void setBlockMin(short blockMin) {
+        if (blockMin >= -1 && blockMin <= maxValue) {
+            this.blockMin = blockMin;
+            if (blockMin == -1 || blockMax < blockMin) {
+                blockMax = blockMin;
+            }
+        }
+    }
+    
+//	public boolean equals(Object obj) {
+//		if (obj instanceof GsRegulatoryVertex) {
+//			return ((GsRegulatoryVertex)obj).getId().equals(id);
+//		}
+//		return false;
+//	}
+//	public int hashCode() {
+//		return id.hashCode();
+//	}
     
 }
