@@ -94,7 +94,8 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
 	 */
 	private void initialize() {
         this.setJMenuBar(gsActions.getMenuBar());
-        this.setSize(800, 600);
+        this.setSize(((Integer)GsOptions.getOption("display.mainFrame.width", new Integer(800))).intValue(),
+        		((Integer)GsOptions.getOption("display.mainFrame.height", new Integer(600))).intValue());
         this.setContentPane(getJPanel());
         
         // doesn't work on mac OSX ?
@@ -489,6 +490,8 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
                 mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
             }
             GsOptions.setOption("display.minimapsize", new Integer(mmapDivLocation));
+            GsOptions.setOption("display.mainFrame.height", new Integer(getHeight()));
+            GsOptions.setOption("display.mainFrame.width", new Integer(getWidth()));
             if (secondaryFrame == null) {
                 GsOptions.setOption("display.dividersize", new Integer(jSplitPane.getHeight()-jSplitPane.getDividerLocation()));
             }

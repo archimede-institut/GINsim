@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -157,7 +158,7 @@ public class GsOptions extends DefaultHandler {
             return;
         }
         try {
-            FileOutputStream fos = new FileOutputStream(optionFile);
+            OutputStreamWriter fos = new OutputStreamWriter(new FileOutputStream(optionFile), "UTF-8");
             GsXMLWriter out = new GsXMLWriter(fos, null); 
             out.write("<gsconfig>\n");
             for (int i=0 ; i<v_recent.size() ; i++) {
