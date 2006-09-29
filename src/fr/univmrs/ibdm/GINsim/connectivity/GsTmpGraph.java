@@ -1,6 +1,5 @@
 package fr.univmrs.ibdm.GINsim.connectivity;
 
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Vector;
 

@@ -2,7 +2,6 @@ package fr.univmrs.ibdm.GINsim.graph;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
