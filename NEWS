@@ -9,11 +9,20 @@ Analysis of the regulatory graph:
 * export the regulatory graph to petri net (INA & PNML)!
    using the tree representation of logical parameters
    each node will be represented by two places
+* export the regulatory graph in SBML
+   currently in SBML level 2, extensions have been proposed to make it more accurate
+* export in smv format, for model-checking by NuSMV
+* a "model checker" plugin has been started, to run several NuSMV tests automatically
 
 Simulation module:
-* save/restore simulation parameters
-    only saving to an external file is done for now
+* the interface to set simulation parameters has been completely redone
+* mutants are now separate objects
+* mutants and simulation parameters are now saved with the graph (in extended mode)
 
+General
+* add "extended" save: save into a ZIP file, allows to save additional files along with the graph
+* the XML save has been cleaned up, more code is now reused and the encoding is well set
+* error and info messages have been added (within a bar, on the bottom of the graph)
 
 ---------------------------------------------------------------------------------------------------------------------
 Version 2.2. 
