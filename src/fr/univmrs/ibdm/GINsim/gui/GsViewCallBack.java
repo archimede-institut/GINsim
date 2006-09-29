@@ -80,7 +80,6 @@ public class GsViewCallBack {
 	protected void displayMiniMap(boolean b) {
 		main.showMiniMap(b);
         GsOptions.setOption("display.minimap", b?Boolean.TRUE:Boolean.FALSE);
-
 	}
 
     /**

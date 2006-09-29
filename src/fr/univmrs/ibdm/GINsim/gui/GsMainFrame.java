@@ -522,8 +522,7 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
 			secondaryFrame.setSize(800,300);
 			secondaryFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 					public void windowClosing(java.awt.event.WindowEvent evt) {
-						divideWindow(false);
-						gsActions.setSelectedDivideCheckBox(false);
+						gsActions.viewcallback.divideWindow(false);
 					}
 				});
 			//show 
@@ -748,4 +747,4 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
 			}
 		}
 	}
-   }  //  @jve:decl-index=0:visual-constraint="10,10"
+   }

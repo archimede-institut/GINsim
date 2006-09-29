@@ -539,7 +539,6 @@ public class GsActions  implements GraphChangeListener {
         
         btt_displayMiniMap.setState(((Boolean)GsOptions.getOption("display.minimap", Boolean.TRUE)).booleanValue());
         actionDisplayMiniMap.actionPerformed(new ActionEvent(btt_displayMiniMap,0, ""));
-        
     }
     
 	private void initToolbar() {
