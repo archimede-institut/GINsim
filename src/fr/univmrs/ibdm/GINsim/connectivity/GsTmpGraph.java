@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.connectivity;
 
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -31,7 +32,7 @@ public final class GsTmpGraph extends GsGraph {
 		return null;
 	}
 
-	protected void doSave(OutputStream os, int mode, boolean selectedOnly)
+	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly)
 			throws GsException {
 	}
 

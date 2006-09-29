@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.graph;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -160,7 +161,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @param selectedOnly
      * @throws GsException
      */
-    abstract protected void doSave(OutputStream os, int mode, boolean selectedOnly) throws GsException;
+    abstract protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException;
 
     /**
      * 
@@ -250,14 +251,14 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     private void save(boolean selectedOnly, String fileName, int saveMode, boolean extended) throws GsException {
         try {
             if (!extended) {
-                OutputStream os = new FileOutputStream(fileName != null ? fileName : this.saveFileName);
+                OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName != null ? fileName : this.saveFileName), "UTF-8");
                 doSave(os, saveMode, selectedOnly);
                 os.close();
             } else {
                 ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName != null ? fileName : this.saveFileName));
                 // FIXME: find a way to choose the name of the main zip entry?
                 zos.putNextEntry(new ZipEntry("ginml"));
-                doSave(zos, saveMode, selectedOnly);
+                doSave(new OutputStreamWriter(zos, "UTF-8"), saveMode, selectedOnly);
                 zos.closeEntry();
                 // now save associated objects
                 if (v_OManager != null) {

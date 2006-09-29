@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.connectivity;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -78,7 +79,7 @@ public class GsReducedGraph extends GsGraph {
 	/*
 	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
 	 */
-	protected void doSave(OutputStream os, int mode, boolean selectedOnly) throws GsException {
+	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
         try {
             GsXMLWriter out = new GsXMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");

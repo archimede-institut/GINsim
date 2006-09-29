@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +110,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	/*
 	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
 	 */
-	protected void doSave(OutputStream os, int mode, boolean selectedOnly) throws GsException {
+	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
         try {
             GsXMLWriter out = new GsXMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");

@@ -2,6 +2,8 @@ package fr.univmrs.ibdm.GINsim.xml;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.text.StringCharacterIterator;
 import java.util.Vector;
 
 /**
@@ -9,7 +11,7 @@ import java.util.Vector;
  */
 public class GsXMLWriter {
 
-    private OutputStream out = null;
+    private OutputStreamWriter out = null;
     private Vector v_stack = new Vector();
     private boolean inTag;
     private boolean inContent;
@@ -22,8 +24,11 @@ public class GsXMLWriter {
      * @param dtdFile
      * @throws IOException
      */
-    public GsXMLWriter(OutputStream out, String dtdFile) throws IOException {
+    public GsXMLWriter(OutputStreamWriter out, String dtdFile) throws IOException {
         this(out,dtdFile,true);
+    }
+    public GsXMLWriter(OutputStream out, String dtdFile) throws IOException {
+        this(new OutputStreamWriter(out, "UTF-8"),dtdFile,true);
     }
 
     /**
@@ -33,10 +38,10 @@ public class GsXMLWriter {
      * @param indent
      * @throws IOException
      */
-    public GsXMLWriter(OutputStream out, String dtdFile, boolean indent) throws IOException {
+    public GsXMLWriter(OutputStreamWriter out, String dtdFile, boolean indent) throws IOException {
         this.indent = indent;
         this.out = out;
-        write("<?xml version=\"1.0\"?>\n");
+        write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         if (dtdFile != null) {
             write("<!DOCTYPE gxl SYSTEM \""+dtdFile+"\">\n");
         }
@@ -78,9 +83,10 @@ public class GsXMLWriter {
      */
     public void writeEsc (String s, boolean isAttVal) throws IOException
     {
-        byte[] ch = s.getBytes();
-        for (int i=0 ; i<ch.length ; i++) {
-           switch (ch[i]) {
+    	StringCharacterIterator iterator = new StringCharacterIterator(s);
+    	char cur = iterator.current();
+    	while (cur != StringCharacterIterator.DONE) {
+           switch (cur) {
            case '&':
                write("&amp;");
                break;
@@ -98,14 +104,9 @@ public class GsXMLWriter {
                 }
                 break;
            default:
-               if (ch[i] > '\u007f') {
-                   write("&#");
-                   write(Integer.toString(ch[i]));
-                   write(';');
-               } else {
-                   write(s.charAt(i));
-               }
+        	   write(cur);
            }
+           cur = iterator.next();
         }
     }
 
@@ -118,7 +119,7 @@ public class GsXMLWriter {
             buf.append(s);
             return;
         } 
-        out.write(s.getBytes());
+        out.write(s);
     }
     
     /**
