@@ -291,4 +291,40 @@ public class GsSimulationParameters implements GsXMLize {
         }
         return pclass;
     }
+    
+    public Object clone() {
+    	GsSimulationParameters newp = new GsSimulationParameters(nodeOrder);
+    	newp.name = name;
+    	newp.mode = mode;
+    	newp.maxdepth = maxdepth;
+    	newp.maxnodes = maxnodes;
+    	newp.mutant = mutant;
+    	
+    	if (v_class != null) {
+    		newp.v_class = new Vector(v_class.size());
+    		for (int i=0 ; i<v_class.size() ; i++) {
+    			newp.v_class.add(((GsReg2dynPriorityClass)v_class.get(i)).clone());
+    		}
+    		newp.m_elt = new HashMap();
+    		Iterator it = m_elt.keySet().iterator();
+    		while (it.hasNext()) {
+    			Object k = it.next();
+    			newp.m_elt.put(k, newp.v_class.get( v_class.indexOf(m_elt.get(k)) ));
+    		}
+    	}
+    	if (initStates != null) {
+    		newp.initStates = new Vector(initStates.size());
+    		for (int i=0 ; i<initStates.size() ; i++) {
+    			Map m = (Map)initStates.get(i);
+    			Map mclone = new HashMap();
+    			newp.initStates.add(mclone);
+    			Iterator it = m.keySet().iterator();
+    			while (it.hasNext()) {
+    				Object k = it.next();
+    				mclone.put(k, m.get(k));
+    			}
+    		}
+    	}
+    	return newp;
+    }
 }

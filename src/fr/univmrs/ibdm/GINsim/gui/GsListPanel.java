@@ -15,6 +15,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
 /**
  * Generic UI to display the content of a list.
@@ -33,6 +34,7 @@ public class GsListPanel extends JPanel {
     JButton b_up;
     JButton b_down;
     JButton b_add;
+    JButton b_copy;
     JButton b_del;
     
     /**
@@ -44,7 +46,7 @@ public class GsListPanel extends JPanel {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
-        c.gridheight = 5;
+        c.gridheight = 6;
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
@@ -52,7 +54,7 @@ public class GsListPanel extends JPanel {
         
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 2;
+        c.gridy = 3;
         b_del = new JButton("X");
         b_del.setForeground(Color.RED);
         b_del.addActionListener(new ActionListener() {
@@ -75,7 +77,18 @@ public class GsListPanel extends JPanel {
         
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 3;
+        c.gridy = 2;
+        b_copy = new JButton(Translator.getString("STR_copy"));
+        b_copy.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                doCopy();
+            }
+        });
+        this.add(b_copy, c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 4;
         b_up = new JButton(GsEnv.getIcon("upArrow.gif"));
         b_up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -86,7 +99,7 @@ public class GsListPanel extends JPanel {
         
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 4;
+        c.gridy = 5;
         b_down = new JButton(GsEnv.getIcon("downArrow.gif"));
         b_down.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -135,6 +148,7 @@ public class GsListPanel extends JPanel {
             b_up.setVisible(false);
             b_down.setVisible(false);
             b_add.setVisible(false);
+            b_copy.setVisible(false);
             b_del.setVisible(false);
             return;
         }
@@ -142,6 +156,7 @@ public class GsListPanel extends JPanel {
         b_up.setVisible(list.canOrder());
         b_down.setVisible(list.canOrder());
         b_add.setVisible(list.canAdd());
+        b_copy.setVisible(list.canCopy());
         b_del.setVisible(list.canRemove());
         if (list.getNbElements() > 0) {
             jl.getSelectionModel().setSelectionInterval(0, 0);
@@ -213,6 +228,16 @@ public class GsListPanel extends JPanel {
             return;
         }
         int n = list.add(jl.getSelectedRow());
+        if (n != -1) {
+            refresh();
+            jl.getSelectionModel().setSelectionInterval(n, n);
+        }
+    }
+    protected void doCopy() {
+        if (list == null) {
+            return;
+        }
+        int n = list.copy(jl.getSelectedRow());
         if (n != -1) {
             refresh();
             jl.getSelectionModel().setSelectionInterval(n, n);

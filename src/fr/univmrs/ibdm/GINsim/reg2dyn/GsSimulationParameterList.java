@@ -165,6 +165,48 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
     	return add(parameter, index);
     }
 
+    public int copy(int index) {
+    	if (index < 0 || index >= v_parameterList.size()) {
+    		return -1;
+    	}
+    	GsSimulationParameters old = (GsSimulationParameters)v_parameterList.get(index);
+        // find an unused name
+        String s = null;
+        boolean[] t = new boolean[getNbElements()];
+        for (int j=0 ; j<t.length ; j++) {
+            t[j] = true;
+        }
+        for (int j=0 ; j<t.length ; j++) {
+            GsSimulationParameters param = (GsSimulationParameters)v_parameterList.get(j);
+            if (param.name.startsWith(old.name+"_")) {
+                try {
+                    int v = Integer.parseInt(param.name.substring(10));
+                    if (v > 0 && v <= t.length) {
+                        t[v-1] = false;
+                    }
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+        for (int j=0 ; j<t.length ; j++) {
+            if (t[j]) {
+                s = old.name+"_"+(j+1);
+                break;
+            }
+        }
+        if (s == null) {
+            s = old.name+"_"+(t.length+1);
+        }
+
+        GsSimulationParameters parameter = (GsSimulationParameters)old.clone();
+        parameter.name = s;
+        index++;
+        if (index<=0 || index>v_parameterList.size()) {
+            index = v_parameterList.size();
+        }
+    	return add(parameter, index);
+    }
+
     public int add(GsSimulationParameters param, int index) {
     	v_parameterList.add(index, param);
     	return v_parameterList.indexOf(param);
@@ -174,6 +216,10 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
     }
     	
     public boolean canAdd() {
+        return true;
+    }
+
+    public boolean canCopy() {
         return true;
     }
 

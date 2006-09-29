@@ -71,6 +71,10 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
         graph.addGraphListener(this);
     }
 
+    public int copy(int index) {
+    	return 0;
+    }
+    
     public int add(int index) {
         if (index < 0 || index>= v_mutant.size()) {
             index = v_mutant.size()-1;
@@ -114,6 +118,9 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
 
     public boolean canAdd() {
         return true;
+    }
+    public boolean canCopy() {
+        return false;
     }
 
     public boolean canOrder() {

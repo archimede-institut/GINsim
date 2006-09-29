@@ -22,6 +22,11 @@ public interface GsList {
      */
     public boolean canAdd();
     /**
+     * can elements of this list be added by copy ?
+     * @return true if one can copy elements
+     */
+    public boolean canCopy();
+    /**
      * can elements of this list be removed interactively ?
      * @return true if one can remove elements
      */
@@ -52,6 +57,13 @@ public interface GsList {
      * @return the index of the added element, or -1 if none
      */
     public int add(int i);
+    
+    /**
+     * add an element, by copying an existing one.
+     * @param i the suggested position
+     * @return the index of the added element, or -1 if none
+     */
+    public int copy(int i);
     
     /**
      * add an element.

@@ -68,4 +68,13 @@ public class GsReg2dynPriorityClass {
     public String getName() {
         return name;
     }
+    
+    public Object clone() {
+    	GsReg2dynPriorityClass clone = new GsReg2dynPriorityClass();
+    	clone.mode = mode;
+    	clone.name = name;
+    	clone.rank = rank;
+    	return clone;
+    }
+    
 }
