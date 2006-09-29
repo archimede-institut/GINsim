@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
@@ -22,7 +23,7 @@ public class GsMutantListManager implements
         parser.startParsing(is, false);
     }
 
-    public void doSave(OutputStream os, GsGraph graph) {
+    public void doSave(OutputStreamWriter os, GsGraph graph) {
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject("mutant");
         Vector nodeOrder = graph.getNodeOrder();
         if (lMutant == null || lMutant.getNbElements() == 0 || nodeOrder == null || nodeOrder.size() == 0) {

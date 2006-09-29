@@ -1,7 +1,7 @@
 package fr.univmrs.ibdm.GINsim.graph;
 
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 /**
  * Implement this interface to save/open objects associated to graph automatically.
@@ -23,7 +23,7 @@ public interface GsGraphAssociatedObjectManager {
      * @param out
      * @param graph
      */
-    public void doSave(OutputStream out, GsGraph graph);
+    public void doSave(OutputStreamWriter out, GsGraph graph);
     /**
      * open associated object.
      * 
