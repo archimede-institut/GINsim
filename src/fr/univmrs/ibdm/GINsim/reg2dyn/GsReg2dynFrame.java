@@ -32,8 +32,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
-import sun.awt.geom.AreaOp.AddOp;
-
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;

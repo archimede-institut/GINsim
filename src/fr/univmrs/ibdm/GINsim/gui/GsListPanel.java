@@ -15,7 +15,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
 /**
  * Generic UI to display the content of a list.
