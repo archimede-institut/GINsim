@@ -13,9 +13,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
@@ -25,12 +25,11 @@ import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
 /**
  * configure priority classes.
   */
-public class GsReg2dynPriorityClassConfig extends JDialog {
+public class GsReg2dynPriorityClassConfig extends JPanel {
 
     private static final long serialVersionUID = -3214357334096594239L;
 
@@ -52,7 +51,6 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
 
     private JButton but_insert;
     private JButton but_remove;
-    private JButton but_close;
     
     private Vector v_class;
     private Vector v_nodeOrder;
@@ -102,7 +100,6 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
         GridBagConstraints c_bdown = new GridBagConstraints();
         GridBagConstraints c_binsert = new GridBagConstraints();
         GridBagConstraints c_bremove = new GridBagConstraints();
-        GridBagConstraints c_bclose = new GridBagConstraints();
         GridBagConstraints c_bgroup = new GridBagConstraints();
         GridBagConstraints c_scroll_class = new GridBagConstraints();
         GridBagConstraints c_scroll_in = new GridBagConstraints();
@@ -128,10 +125,6 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
         c_bremove.gridx = 4;
         c_bremove.gridy = 2;
 
-        c_bclose.gridx = 5;
-        c_bclose.gridy = 5;
-        c_bclose.anchor = GridBagConstraints.EAST;
-        
         c_bgroup.gridx = 1;
         c_bgroup.gridy = 2;
         c_bgroup.anchor = GridBagConstraints.NORTH;
@@ -188,7 +181,6 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
         add(getBut_insert(), c_binsert);
         add(getBut_remove(), c_bremove);
         add(getScrollpaneAvaible(), c_scroll_av);
-        add(getButClose(), c_bclose);
         add(getBut_group(), c_bgroup);
     }
     
@@ -270,18 +262,6 @@ public class GsReg2dynPriorityClassConfig extends JDialog {
             });
         }
         return but_group;
-    }
-
-    private JButton getButClose() {
-        if (but_close == null) {
-            but_close = new JButton(Translator.getString("STR_close"));
-            but_close.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    setVisible(false);
-                }
-            });
-        }
-        return but_close;
     }
 
     private JTable getTableClass() {

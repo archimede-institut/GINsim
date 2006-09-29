@@ -17,7 +17,6 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,10 +32,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
+import sun.awt.geom.AreaOp.AddOp;
+
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
@@ -44,7 +46,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 /**
  * frame to set up the simulation
  */
-public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
+public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListener {
     private static final long serialVersionUID = -4386183125281770860L;
     
     GsSimulationParameterList paramList;
@@ -69,8 +71,6 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
 
     private JTextField textMaxDepth = null;
     private JTextField textMaxNodes = null;
-    private JButton buttonRun = null;
-    private JButton buttonCancel = null;
     private JButton buttonConfigMutants = null;
     private JButton buttonCfgPriorityClass;
     
@@ -87,8 +87,6 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
 
     private JPanel mainPanel;
 
-    private JPanel bottomPanel;
-
     /**
      * @param frame
      * @param paramList
@@ -102,17 +100,13 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
         this.setTitle(Translator.getString("STR_reg2dynRunningTitle"));
         this.addWindowListener(new java.awt.event.WindowAdapter() { 
             public void windowClosing(java.awt.event.WindowEvent e) {
-                close();
+                cancel();
             }
         });
     }
 
     private void initialize() {
         setSize(800, 400);
-        JPanel cpan = new JPanel();
-        setContentPane(cpan);
-        cpan.setLayout(new GridBagLayout());
-        
         JSplitPane spane = new JSplitPane();
         spane.setRightComponent(getMainPanel());
         listPanel = new GsListPanel();
@@ -121,19 +115,12 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
         spane.setLeftComponent(listPanel);
         spane.setDividerLocation(200);
         spane.setDividerSize(3);
-        //listPanel.setAutoHide(1);
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
         c.fill = GridBagConstraints.BOTH;
         c.weightx = c.weighty = 1;
-        cpan.add(spane, c);
-        c = new GridBagConstraints();
-        c.gridx = 1;
-        c.gridy = 2;
-        c.weightx = 1;
-        c.fill = GridBagConstraints.BOTH;
-        cpan.add(getBottomPanel(), c);
+        setMainPanel(spane);
     }
     
     private JPanel getMainPanel() {
@@ -303,46 +290,6 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
         return mainPanel;
     }
     
-    private JPanel getBottomPanel() {
-        if (bottomPanel == null) {
-            bottomPanel = new JPanel();
-            bottomPanel.setLayout(new GridBagLayout());
-            GridBagConstraints c = new GridBagConstraints();
-            c.gridx = 3;
-            c.gridy = 1;
-            c.anchor = GridBagConstraints.EAST;
-            bottomPanel.add(getButtonRun(), c);
-            c = new GridBagConstraints();
-            c.gridx = 2;
-            c.gridy = 1;
-            c.anchor = GridBagConstraints.EAST;
-            bottomPanel.add(getButtonCancel(), c);
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 1;
-            c.weightx = 1;
-            c.anchor = GridBagConstraints.WEST;
-            bottomPanel.add(progressLabel, c);
-        }
-        return bottomPanel;
-    }
-    
-    /**
-     * This method initializes buttonCancel
-     * 
-     * @return javax.swing.JButton
-     */
-    private javax.swing.JButton getButtonCancel() {
-        if(buttonCancel == null) {
-            buttonCancel = new javax.swing.JButton(Translator.getString("STR_cancel"));
-            buttonCancel.addActionListener(new java.awt.event.ActionListener() { 
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    close();
-                }
-            });
-        }
-        return buttonCancel;
-    }
     /**
      * This method initializes tableInitStates
      * 
@@ -423,28 +370,11 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
     }
 
     /**
-     * This method initializes buttonRun
-     * 
-     * @return javax.swing.JButton
-     */
-    private javax.swing.JButton getButtonRun() {
-        if(buttonRun == null) {
-            buttonRun = new javax.swing.JButton(Translator.getString("STR_run"));
-            buttonRun.setActionCommand("run");
-            buttonRun.addActionListener(new java.awt.event.ActionListener() { 
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    runSimulation();
-                }
-            });
-        }
-        return buttonRun;
-    }
-    /**
      * 
      */
-    protected void runSimulation() {
+    protected void run() {
         progressLabel.setText(Translator.getString("STR_wait_msg"));
-        buttonCancel.setText(Translator.getString("STR_abort"));
+        bcancel.setText(Translator.getString("STR_abort"));
 
         // nearly everything should be unenabled
         radioSynchrone.setEnabled(false);
@@ -455,7 +385,7 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
         buttonCfgPriorityClass.setEnabled(false);
 
         tableInitStates.setEnabled(false);
-        buttonRun.setEnabled(false);
+        brun.setEnabled(false);
         buttonConfigMutants.setEnabled(false);
         buttonDelStateRow.setEnabled(false);
         textMaxDepth.setEnabled(false);
@@ -486,13 +416,13 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
         } else {
             GsEnv.whatToDoWithGraph(frame, graph);
         }
-        close();
+        cancel();
     }
 
     /**
      * close the frame, eventually end the simulation first 
      */
-    protected void close() {
+    protected void cancel() {
         if (isrunning) {
             sim.interrupt();    
         }
@@ -500,16 +430,6 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
         setVisible(false);
     }
 
-    /**
-     * set the progress level, to give the user some feedback
-     * @param s
-     */
-    public void setMessage(String s) {
-        if (progressLabel != null) {
-            progressLabel.setText(s);
-        }
-    }
-    
     /**
      * This method initializes radioAsynchrone
      * 
@@ -720,7 +640,9 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
     }
     
     protected void configurePriorityClass() {
-        new GsReg2dynPriorityClassConfig(paramList.graph.getNodeOrder(), currentParameter).setVisible(true);
+        addSecondaryPanel(new GsReg2dynPriorityClassConfig(paramList.graph.getNodeOrder(), currentParameter), "pclass");
+        setVisiblePanel("pclass");
+        
     }
     
     private JButton getButtonConfigMutants() {
@@ -728,8 +650,9 @@ public class GsReg2dynFrame extends JDialog implements ListSelectionListener {
             buttonConfigMutants = new JButton(Translator.getString("STR_configure"));
             buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    new JDialog().add(GsRegulatoryMutants.getMutantConfigPanel(paramList.graph));
+                    addSecondaryPanel(GsRegulatoryMutants.getMutantConfigPanel(paramList.graph), "mutant");
                     mutantModel.setMutantList(GsRegulatoryMutants.getMutants(paramList.graph));
+                    setVisiblePanel("mutant");
                 }
             });
         }
