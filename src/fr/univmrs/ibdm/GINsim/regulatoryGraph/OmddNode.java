@@ -300,7 +300,7 @@ public class OmddNode {
 //            ret.t_order = t_order;
             ret.next = new OmddNode[other.next.length];
             for (int i=0 ; i<other.next.length ; i++) {
-                ret.next[i] = this.merge(other.next[i], op, m, t_key);
+                ret.next[i] = merge(other.next[i], op, m, t_key);
             }
 //          m.put(key+"_"+other.key, ret);
             return ret;
