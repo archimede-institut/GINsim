@@ -28,6 +28,7 @@ abstract public class GsStackDialog extends JDialog {
     CardLayout cards;
     JPanel mainPanel;
     JPanel bottomPanel;
+    Component tmpPanel = null;
     protected JButton brun;
     protected JButton bcancel;
     protected JButton bclose;
@@ -83,8 +84,18 @@ abstract public class GsStackDialog extends JDialog {
     public void addSecondaryPanel(Component panel, String name) {
         mainPanel.add(panel, name);
     }
+
+    public void addTempPanel(Component panel) {
+    	tmpPanel = panel;
+        mainPanel.add(tmpPanel, "_tmp");
+        setVisiblePanel("_tmp");
+    }
     
     public void setVisiblePanel(String name) {
+    	if (!"_tmp".equals(name) && tmpPanel != null) {
+    		mainPanel.remove(tmpPanel);
+    		tmpPanel = null;
+    	}
         if (name == null) {
             // show main panel
             cards.show(mainPanel, s_mainkey);

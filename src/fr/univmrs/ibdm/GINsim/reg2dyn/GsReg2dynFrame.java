@@ -78,8 +78,6 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     private JButton buttonDelStateRow = null;
     private JButton buttonResetStateRow = null;
 
-    JLabel progressLabel = new JLabel();;
-    
     Insets topInset = new Insets(20,0,0,0);
     Insets indentInset = new Insets(0, 30, 0, 0);
 
@@ -371,7 +369,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
      * 
      */
     protected void run() {
-        progressLabel.setText(Translator.getString("STR_wait_msg"));
+        setMessage(Translator.getString("STR_wait_msg"));
         bcancel.setText(Translator.getString("STR_abort"));
 
         // nearly everything should be unenabled
@@ -399,7 +397,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
      */
     public void setProgress(int n) {
         if (isrunning) {
-            progressLabel.setText(""+n);
+            setMessage(""+n);
         }
     }
 
@@ -638,9 +636,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     }
     
     protected void configurePriorityClass() {
-        addSecondaryPanel(new GsReg2dynPriorityClassConfig(paramList.graph.getNodeOrder(), currentParameter), "pclass");
-        setVisiblePanel("pclass");
-        
+        addTempPanel(new GsReg2dynPriorityClassConfig(paramList.graph.getNodeOrder(), currentParameter));
     }
     
     private JButton getButtonConfigMutants() {
@@ -648,9 +644,8 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             buttonConfigMutants = new JButton(Translator.getString("STR_configure"));
             buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
-                    addSecondaryPanel(GsRegulatoryMutants.getMutantConfigPanel(paramList.graph), "mutant");
+                    addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(paramList.graph));
                     mutantModel.setMutantList(GsRegulatoryMutants.getMutants(paramList.graph));
-                    setVisiblePanel("mutant");
                 }
             });
         }
