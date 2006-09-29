@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,6 +30,7 @@ import fr.univmrs.ibdm.GINsim.global.GsProgressListener;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.gui.GsListCellRenderer;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -40,7 +40,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 /**
  * configuration/status frame for circuit search/analyse
  */
-public class GsCircuitFrame extends JDialog implements GsProgressListener {
+public class GsCircuitFrame extends GsStackDialog implements GsProgressListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
 
@@ -60,8 +60,6 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
     private JPanel configDialog = null;
     private JSplitPane splitPane = null;
     private javax.swing.JPanel jContentPane = null;
-    private javax.swing.JButton buttonRun = null;
-    private javax.swing.JButton buttonCancel = null;
     private javax.swing.JLabel labelProgression = null;
     private JScrollPane sp = null;
     private JScrollPane sp2 = null;
@@ -90,12 +88,12 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
      */
     private void initialize() {
         this.setSize(500, 300);
-        this.setContentPane(getJContentPane());
+        this.setMainPanel(getJContentPane());
         this.setTitle(Translator.getString("STR_circuit"));
         this.setVisible(true);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
-                close();
+                cancel();
             }
         });
     }
@@ -104,7 +102,7 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
      * close the circuit search/analyse dialog. stop running algo and close
      * configuration dialog if appropriate.
      */
-    protected void close() {
+    protected void cancel() {
         if (algoC != null && algoC.isAlive()) {
             algoC.cancel();
         }
@@ -123,19 +121,6 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
             jContentPane.setLayout(new GridBagLayout());
 
             GridBagConstraints c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 5;
-            c.anchor = GridBagConstraints.EAST;
-            jContentPane.add(getJButtonRun(), c);
-            
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 5;
-            c.weightx = 1;
-            c.anchor = GridBagConstraints.EAST;
-            jContentPane.add(getJButtonCancel(), c);
-            
-            c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 0;
             c.gridwidth = 3;
@@ -170,35 +155,6 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
             return false;
         }
         return true;
-    }
-
-    /**
-     * This method initializes buttonRun
-     * 
-     * @return buttonRun
-     */
-    private javax.swing.JButton getJButtonRun() {
-        if (buttonRun == null) {
-            buttonRun = new javax.swing.JButton(Translator.getString("STR_run"));
-            buttonRun.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    clicked();
-                }
-            });
-        }
-        return buttonRun;
-    }
-
-    private javax.swing.JButton getJButtonCancel() {
-        if (buttonCancel == null) {
-            buttonCancel = new javax.swing.JButton(Translator.getString("STR_cancel"));
-            buttonCancel.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    close();
-                }
-            });
-        }
-        return buttonCancel;
     }
 
     protected JPanel getConfigPanel() {
@@ -266,7 +222,7 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
         return infoText;
     }
 
-    protected void clicked() {
+    protected void run() {
         switch (status) {
         case STATUS_NONE:
             updateStatus(STATUS_SCC);
@@ -276,7 +232,7 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
             break;
         case STATUS_SCC:
             algoC.cancel();
-            close();
+            cancel();
             break;
         case STATUS_SEARCH_CIRCUIT:
             break;
@@ -287,7 +243,7 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
             runAnalyse();
             break;
         case STATUS_SHOW_RESULT:
-            close();
+            cancel();
             break;
         }
     }
@@ -300,24 +256,24 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
         switch (status) {
         case STATUS_NONE:
             this.status = status;
-            buttonRun.setText(Translator.getString("STR_run"));
+            brun.setText(Translator.getString("STR_run"));
             break;
         case STATUS_SCC:
             this.status = status;
             configDialog.setVisible(false);
             labelProgression.setVisible(true);
-            buttonRun.setText(Translator.getString("STR_cancel"));
+            brun.setText(Translator.getString("STR_cancel"));
             break;
         case STATUS_SEARCH_CIRCUIT:
             break;
         case STATUS_SHOW_CIRCUIT:
             this.status = status;
             setProgressText(v_circuit.size() + " circuit found:");
-            buttonRun.setText(Translator.getString("STR_circuit_analyse"));
+            brun.setText(Translator.getString("STR_circuit_analyse"));
             break;
         case STATUS_SHOW_RESULT:
             this.status = status;
-            buttonRun.setText(Translator.getString("STR_close"));
+            brun.setText(Translator.getString("STR_close"));
             break;
         }
     }
@@ -609,7 +565,7 @@ public class GsCircuitFrame extends JDialog implements GsProgressListener {
         return t_cc;
     }
 
-    private void runAnalyse() {
+    protected void runAnalyse() {
         treemodel.analyse(graph, config);
 
         updateStatus(STATUS_SHOW_RESULT);
