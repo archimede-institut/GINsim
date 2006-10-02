@@ -12,8 +12,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.xml.sax.ContentHandler;
-
 import fr.univmrs.ibdm.GINsim.aRegGraph.GsARegGraphPlugin;
 import fr.univmrs.ibdm.GINsim.circuit.GsCircuitPlugin;
 import fr.univmrs.ibdm.GINsim.connectivity.ConnectivityPlugin;
@@ -34,7 +32,6 @@ import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.reg2dyn.Reg2DynPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryParser;
 
 /**
  * This class offers tons of static methods common to all ginsim's parts.
@@ -390,23 +387,5 @@ public class GsEnv {
             GsMainFrame frame = (GsMainFrame)allFrames.get(i);
             frame.getGsAction().updateRecentMenu();
         }
-    }
-
-    /**
-     * get a transient parser for a specific subgraph.
-     * @param role
-     * @param parser
-     * @return the sax content handler
-     */
-    public static ContentHandler getHandlerForRole(String role, GsRegulatoryParser parser) {
-        if ("simulationParameters".equals(role)) {
-            // FIXME: get the transient handler for a role
-            if (false && parser == null) {
-                return null;
-            }
-            ContentHandler h = null;
-            return h;
-        }
-        return null;
     }
 }

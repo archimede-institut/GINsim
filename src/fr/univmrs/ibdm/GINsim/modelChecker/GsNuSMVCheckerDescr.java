@@ -15,7 +15,6 @@ public class GsNuSMVCheckerDescr implements GsModelCheckerDescr {
 
     public boolean isAvailable() {
         try {
-            // FIXME: dirty test for NuSMV
             Runtime.getRuntime().exec("NuSMV -h");
         } catch (IOException e) {
             return false;

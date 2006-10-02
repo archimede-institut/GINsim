@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
@@ -186,15 +185,6 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         switch(pos) {
             case POS_OUTSIDE:
                 if (qName.equals("graph")) {
-                    String role = attributes.getValue("role"); 
-                    if (role != null) { // this is a secondary graph, call the approriate handler
-                        ContentHandler h = GsEnv.getHandlerForRole(role, this);
-                        if (h != null) {
-                            xr.setContentHandler( h );
-                        }
-                        // this is NOT a normal graph, stop here
-                        return;
-                    }
                     if (!("regulatory".equals(attributes.getValue("class")))) {
                         throw new SAXException("not a regulatory graph");
                     }

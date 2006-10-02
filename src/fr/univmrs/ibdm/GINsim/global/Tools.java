@@ -126,7 +126,6 @@ public class Tools {
 	 */
 	public static void webBrowse(String url) {
 		try {
-			// FIXME: test presence of xdg-open
 			try {
 				Runtime.getRuntime().exec("xdg-open "+url);
 			} catch (Exception e1) {

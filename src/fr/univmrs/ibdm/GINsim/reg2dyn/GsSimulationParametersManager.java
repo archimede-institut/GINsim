@@ -2,7 +2,6 @@ package fr.univmrs.ibdm.GINsim.reg2dyn;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Vector;
 
