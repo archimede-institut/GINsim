@@ -1,6 +1,5 @@
 package fr.univmrs.ibdm.GINsim.modelChecker;
 
-import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
 /**
@@ -25,15 +24,11 @@ public interface GsModelChecker {
     public boolean[] run(GsRegulatoryMutants mutants);
 
     /**
-     * edit the test
-     */
-    public void edit();
-    /**
      * get an object saying if this test should work for a given mutant
      * @param mutant
      * @return
      */
-	public GsValueList getInfo(Object mutant);
+	public Object getInfo(Object mutant);
 	/**
 	 * a mutant has been suppressed, cleanup associated info.
 	 * @param mutant

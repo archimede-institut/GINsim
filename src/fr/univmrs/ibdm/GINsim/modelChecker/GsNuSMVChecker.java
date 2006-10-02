@@ -39,35 +39,43 @@ public class GsNuSMVChecker implements GsModelChecker {
     }
     
     public boolean[] run(GsRegulatoryMutants mutants) {
-        // TODO: really run the test, on a list of mutants!
         boolean[] ret = new boolean[mutants.getNbElements()+1];
         try {
-            Process p = Runtime.getRuntime().exec("NuSMV -h");
-            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            System.out.println("Here is the standard output of the command:\n");
-//            String s;
-//            while ((s = stdInput.readLine()) != null) {
-//                System.out.println(s);
-//            };
-//            
-//            stdInput = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-//            System.out.println("Here is the standard error of the command:\n");
-//            while ((s = stdInput.readLine()) != null) {
-//                System.out.println(s);
-//            };
+        	for (int i=-1 ; i<mutants.getNbElements() ; i++) {
+	            Object m;
+	            if (i==-1) {
+	            	m = "-";
+	            } else {
+	            	 m = mutants.getElement(i);
+	            }
+	            Object o = m_info.get(m);
+	            GsModelCheckerTestResult result = new GsModelCheckerTestResult();
+	            if (o == null) {
+	            	result.expected = 0;
+	            } else if (o instanceof GsValueList) {
+	            	result.expected = ((GsValueList)o).getSelectedIndex();
+	            } else {
+	            	System.out.println("should not come here: result based on previous result");
+	            	result.expected = ((GsModelCheckerTestResult)o).expected;
+	            }
+
+	            Process p = Runtime.getRuntime().exec("NuSMV -h");
+	            BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+	            // TODO: really run a NuSMV test
+	            
+	            result.result = 2;
+	            result.output = "test did _NOT_ really run";
+	            m_info.put(m, result);
+        	}
         } catch (IOException e) {
             return null;
         }
         return ret;
     }
 
-
-    public void edit() {
-        // TODO edit MC test
-    }
-
-	public GsValueList getInfo(Object mutant) {
-		GsValueList o = (GsValueList)m_info.get(mutant);
+	public Object getInfo(Object mutant) {
+		Object o = m_info.get(mutant);
 		if (o == null) {
 			o = new GsValueList(GsModelCheckerPlugin.v_values, 0);
 			m_info.put(mutant, o);

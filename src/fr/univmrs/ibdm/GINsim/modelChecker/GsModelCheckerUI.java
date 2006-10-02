@@ -106,6 +106,7 @@ public class GsModelCheckerUI extends GsStackDialog {
         for (int i=0 ; i<l_tests.getNbElements() ; i++) {
             GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
             checker.run(model.mutants);
+            model.lock();
         }
     }
 
@@ -269,13 +270,19 @@ class modelCheckerTableModel extends DefaultTableModel {
     
     GsRegulatoryMutants mutants;
     modelCheckerList v_check;
+    boolean editable = true;
     
     modelCheckerTableModel(GsRegulatoryGraph graph) {
         mutants = GsRegulatoryMutants.getMutants(graph);
         v_check = (modelCheckerList)graph.getObject("modelChecker");
     }
  
-    public int getColumnCount() {
+    public void lock() {
+    	editable = false;
+    	//fireTableStructureChanged();
+	}
+
+	public int getColumnCount() {
     	if (v_check == null) {
     		return 1;
     	}
@@ -310,7 +317,7 @@ class modelCheckerTableModel extends DefaultTableModel {
     }
 
     public boolean isCellEditable(int row, int column) {
-        return true;
+        return column>0 && editable;
     }
 
     public void setValueAt(Object aValue, int row, int column) {

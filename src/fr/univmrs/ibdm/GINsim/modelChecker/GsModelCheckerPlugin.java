@@ -27,6 +27,9 @@ public class GsModelCheckerPlugin implements GsPlugin, GsActionProvider {
     protected static Vector v_checker = new Vector();
     protected static Vector v_unavailable_checker = new Vector();
     protected static final Vector v_values;
+    protected static final int TEST_NA = 0;
+    protected static final int TEST_YES = 1;
+    protected static final int TEST_NO = 2;
 
     static {
         v_values = new Vector();
