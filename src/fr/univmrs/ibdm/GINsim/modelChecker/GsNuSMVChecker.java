@@ -3,7 +3,10 @@ package fr.univmrs.ibdm.GINsim.modelChecker;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
+import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
@@ -15,6 +18,7 @@ public class GsNuSMVChecker implements GsModelChecker {
     String name;
     String thetest;
     GsRegulatoryGraph graph;
+    Map m_info = new HashMap();
     
     public GsNuSMVChecker(String name, GsRegulatoryGraph graph) {
         this.name = name;
@@ -24,6 +28,10 @@ public class GsNuSMVChecker implements GsModelChecker {
 
     public String getName() {
         return name;
+    }
+    
+    public void setName(String name) {
+        this.name = name;;
     }
     
     public String toString() {
@@ -57,4 +65,16 @@ public class GsNuSMVChecker implements GsModelChecker {
     public void edit() {
         // TODO edit MC test
     }
+
+	public GsValueList getInfo(Object mutant) {
+		GsValueList o = (GsValueList)m_info.get(mutant);
+		if (o == null) {
+			o = new GsValueList(GsModelCheckerPlugin.v_values, 0);
+			m_info.put(mutant, o);
+		}
+		return o;
+	}
+	public void cleanupInfo(Object mutant) {
+		m_info.remove(mutant);
+	}
 }

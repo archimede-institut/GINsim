@@ -34,7 +34,7 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
         GsRegulatoryMutants mutants = GsRegulatoryMutants.getMutants(this.graph);
         mutants.addListener(this);
         if (param == null) {
-        	add(0);
+        	add(0, 0);
         } else {
         	add(param,0);
         }
@@ -127,7 +127,7 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
         return null;
     }
 
-    public int add(int index) {
+    public int add(int index, int type) {
         // find an unused name
         String s = null;
         boolean[] t = new boolean[getNbElements()];
@@ -287,6 +287,10 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
             }
         }
     }
+
+	public Vector getObjectType() {
+		return null;
+	}
 }
 
 class SimulationParameterCascadeUpdate implements GsGraphEventCascade {

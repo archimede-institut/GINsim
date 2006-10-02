@@ -75,7 +75,7 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
     	return 0;
     }
     
-    public int add(int index) {
+    public int add(int index, int type) {
         if (index < 0 || index>= v_mutant.size()) {
             index = v_mutant.size()-1;
         }
@@ -270,6 +270,10 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
         }
         return null;
     }
+
+	public Vector getObjectType() {
+		return null;
+	}
 }
 
 class MutantCascadeUpdate implements GsGraphEventCascade {

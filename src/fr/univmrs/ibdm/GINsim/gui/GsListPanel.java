@@ -227,7 +227,8 @@ public class GsListPanel extends JPanel {
         if (list == null) {
             return;
         }
-        int n = list.add(jl.getSelectedRow());
+        // TODO: deal with several types!
+        int n = list.add(jl.getSelectedRow(), 0);
         if (n != -1) {
             refresh();
             jl.getSelectionModel().setSelectionInterval(n, n);

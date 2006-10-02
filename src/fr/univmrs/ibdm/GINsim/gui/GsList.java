@@ -1,5 +1,7 @@
 package fr.univmrs.ibdm.GINsim.gui;
 
+import java.util.Vector;
+
 /**
  * generic interface for list of objects, a common UI will allow to sho it,
  * and eventually offer generic services: reordering, adding/removing objects...
@@ -44,6 +46,12 @@ public interface GsList {
     public Object getElement(int i);
     
     /**
+     * if this list can deal with object of several types,
+     * @return the list of available types, or null if none.
+     */
+    public Vector getObjectType();
+    
+    /**
      * edit an element.
      * @param i the suggested position
      * @param o the result of the edit
@@ -54,9 +62,10 @@ public interface GsList {
     /**
      * add an element.
      * @param i the suggested position
+     * @param type (index of the object type to add)
      * @return the index of the added element, or -1 if none
      */
-    public int add(int i);
+    public int add(int i, int type);
     
     /**
      * add an element, by copying an existing one.

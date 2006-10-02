@@ -136,6 +136,7 @@ abstract public class GsStackDialog extends JDialog {
         	bclose = new javax.swing.JButton(Translator.getString("STR_close"));
         	bclose.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
+                	refreshMain();
                     setVisiblePanel(null);
                 }
             });
@@ -184,7 +185,12 @@ abstract public class GsStackDialog extends JDialog {
         return bottomPanel;
     }
     
-    abstract protected void run(); 
+    abstract protected void run();
+    /**
+     * called when the main panel takes the focus back
+     */
+    protected void refreshMain() {
+    }
     protected void cancel() {
     	setVisible(false);
     	GsOptions.setOption(s_key+".width", new Integer(getWidth()));

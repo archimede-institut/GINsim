@@ -26,8 +26,14 @@ public class GsModelCheckerPlugin implements GsPlugin, GsActionProvider {
     private GsPluggableActionDescriptor[] t_action = null;
     protected static Vector v_checker = new Vector();
     protected static Vector v_unavailable_checker = new Vector();
+    protected static final Vector v_values;
 
     static {
+        v_values = new Vector();
+        v_values.add("N/A");
+        v_values.add("Yes");
+        v_values.add("No");
+
         // define supported model checkers here
         GsModelCheckerDescr checker = new GsNuSMVCheckerDescr();
         if (checker.isAvailable()) {
