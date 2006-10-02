@@ -116,7 +116,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         c.gridy = 1;
         c.fill = GridBagConstraints.BOTH;
         c.weightx = c.weighty = 1;
-        setMainPanel(spane);
+        setMainPanel(spane, "display.simulation", 800, 400);
     }
     
     private JPanel getMainPanel() {
@@ -423,7 +423,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             sim.interrupt();    
         }
         paramList.graph.removeBlockEdit(this);
-        setVisible(false);
+        super.cancel();
     }
 
     /**

@@ -85,8 +85,7 @@ public class GsModelCheckerPlugin implements GsPlugin, GsActionProvider {
                 graph.addNotificationMessage(new GsGraphNotificationMessage(graph, Translator.getString("STR_no_model_checker"), gaction, frame, GsGraphNotificationMessage.NOTIFICATION_WARNING));
                 return;
             }
-            GsModelCheckerUI ui = new GsModelCheckerUI((GsRegulatoryGraph)graph);
-            JOptionPane.showMessageDialog(null, ui);
+            new GsModelCheckerUI((GsRegulatoryGraph)graph);
 		}
 	}
 

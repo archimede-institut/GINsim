@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
@@ -22,7 +23,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 /**
  * Generic UI to setup/run model checking on model/mutants
  */
-public class GsModelCheckerUI extends JPanel {
+public class GsModelCheckerUI extends GsStackDialog {
     private static final long serialVersionUID = 8241761052780368139L;
 
     JTable table;
@@ -40,8 +41,10 @@ public class GsModelCheckerUI extends JPanel {
      * @param graph
      */
     public GsModelCheckerUI(GsRegulatoryGraph graph) {
+    	super(graph.getGraphManager().getMainFrame());
         this.graph = graph;
         model = new modelCheckerTableModel(graph);
+        JPanel panel = new JPanel();
         
         b_addTest = new JButton("+");
         b_addTest.addActionListener(new ActionListener() {
@@ -72,41 +75,41 @@ public class GsModelCheckerUI extends JPanel {
         table = new GsJTable(model);
         tf_name = new JTextField();
         
-        setLayout(new GridBagLayout());
+        panel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
         c.fill = GridBagConstraints.HORIZONTAL;
-        add(combo_tests, c);
+        panel.add(combo_tests, c);
         c = new GridBagConstraints();
         c.gridx = 2;
         c.gridy = 1;
-        add(b_EditTest, c);
+        panel.add(b_EditTest, c);
         c = new GridBagConstraints();
         c.gridx = 3;
         c.gridy = 1;
-        add(b_DelTest, c);
+        panel.add(b_DelTest, c);
 
         c = new GridBagConstraints();
         c.gridx = 4;
         c.gridy = 1;
-        add(b_EditMutant, c);
+        panel.add(b_EditMutant, c);
 
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
-        add(combo_mchecker, c);
+        panel.add(combo_mchecker, c);
         c = new GridBagConstraints();
         c.gridx = 2;
         c.gridy = 2;
         c.gridwidth = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
-        add(tf_name, c);
+        panel.add(tf_name, c);
         c = new GridBagConstraints();
         c.gridx = 4;
         c.gridy = 2;
-        add(b_addTest, c);
+        panel.add(b_addTest, c);
         
         c = new GridBagConstraints();
         c.gridx = 1;
@@ -117,8 +120,8 @@ public class GsModelCheckerUI extends JPanel {
         c.fill = GridBagConstraints.BOTH;
         JScrollPane sp = new JScrollPane();
         sp.setViewportView(table);
-        add(sp, c);
-        setSize(400, 350);
+        panel.add(sp, c);
+        setMainPanel(panel, "display.mchecker", 450, 300);
     }
     
     protected void addTest() {
@@ -143,6 +146,11 @@ public class GsModelCheckerUI extends JPanel {
             checker.run(model.mutants);
         }
     }
+
+	protected void cancel() {
+		super.cancel();
+		dispose();
+	}
 }
 
 class modelCheckerTableModel extends DefaultTableModel {

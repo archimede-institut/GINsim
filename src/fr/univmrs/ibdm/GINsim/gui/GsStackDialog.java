@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import fr.univmrs.ibdm.GINsim.global.GsOptions;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
 /**
@@ -23,6 +24,7 @@ abstract public class GsStackDialog extends JDialog {
     private static final long serialVersionUID = -6696566567870168910L;
     
     private static final String s_mainkey = "_main";
+    private String s_key;
     
     JLabel messageLabel = new JLabel();
     CardLayout cards;
@@ -55,7 +57,6 @@ abstract public class GsStackDialog extends JDialog {
         c.fill = GridBagConstraints.BOTH;
         contentPane.add(getBottomPanel(), c);
         setContentPane(contentPane);
-        setVisible(true);
     }
     
     /**
@@ -76,9 +77,13 @@ abstract public class GsStackDialog extends JDialog {
         }
     }
     
-    public void setMainPanel(Component panel) {
+    public void setMainPanel(Component panel, String key, int width, int height) {
+    	this.s_key = key;
         mainPanel.add(panel, s_mainkey);
         cards.show(mainPanel, s_mainkey);
+        setSize(((Integer)GsOptions.getOption(key+".width", new Integer(width))).intValue(), 
+        		((Integer)GsOptions.getOption(key+".height", new Integer(height))).intValue());
+        setVisible(true);
     }
     
     public void addSecondaryPanel(Component panel, String name) {
@@ -180,5 +185,9 @@ abstract public class GsStackDialog extends JDialog {
     }
     
     abstract protected void run(); 
-    abstract protected void cancel(); 
+    protected void cancel() {
+    	setVisible(false);
+    	GsOptions.setOption(s_key+".width", new Integer(getWidth()));
+    	GsOptions.setOption(s_key+".height", new Integer(getHeight()));
+    }
 }

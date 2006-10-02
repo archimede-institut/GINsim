@@ -87,8 +87,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
      * 
      */
     private void initialize() {
-        this.setSize(500, 300);
-        this.setMainPanel(getJContentPane());
+        this.setMainPanel(getJContentPane(), "display.circuit", 500, 300);
         this.setTitle(Translator.getString("STR_circuit"));
         this.setVisible(true);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -107,6 +106,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             algoC.cancel();
         }
         graph = null;
+        super.cancel();
         dispose();
     }
 
