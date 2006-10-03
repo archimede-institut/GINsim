@@ -20,6 +20,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsList;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
@@ -103,16 +104,24 @@ public class GsModelCheckerUI extends GsStackDialog {
         addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(graph));
     }
     protected void run() {
+        model.lock();
+        brun.setVisible(false);
+        // TODO: run it in a separate thread ?
         for (int i=0 ; i<l_tests.getNbElements() ; i++) {
             GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
             checker.run(model.mutants);
-            model.lock();
         }
+        model.fireTableDataChanged();
+        bcancel.setText(Translator.getString("STR_close"));
     }
 
 	protected void cancel() {
 		super.cancel();
 		dispose();
+        for (int i=0 ; i<l_tests.getNbElements() ; i++) {
+            GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
+            checker.cleanup();
+        }
 	}
 	
 	protected void refreshMain() {
@@ -227,7 +236,7 @@ class modelCheckerList implements GsList, GsGraphListener, GsRegulatoryMutantLis
 	public void mutantRemoved(Object mutant) {
 		for (int i=0 ; i<v_checker.size() ; i++) {
 			GsModelChecker test = (GsModelChecker)v_checker.get(i);
-			test.cleanupInfo(mutant);
+			test.delMutant(mutant);
 		}
 	}
 

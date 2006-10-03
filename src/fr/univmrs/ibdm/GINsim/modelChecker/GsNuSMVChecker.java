@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
@@ -82,7 +83,17 @@ public class GsNuSMVChecker implements GsModelChecker {
 		}
 		return o;
 	}
-	public void cleanupInfo(Object mutant) {
+	public void delMutant(Object mutant) {
 		m_info.remove(mutant);
+	}
+	public void cleanup() {
+		Iterator it = m_info.keySet().iterator();
+		while (it.hasNext()) {
+			Object k = it.next();
+			Object r = m_info.get(k);
+			if (r instanceof GsModelCheckerTestResult) {
+				m_info.put(k, new GsValueList(GsModelCheckerPlugin.v_values, ((GsModelCheckerTestResult)r).expected));
+			}
+		}
 	}
 }

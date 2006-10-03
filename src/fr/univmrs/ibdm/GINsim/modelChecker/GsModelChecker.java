@@ -33,5 +33,10 @@ public interface GsModelChecker {
 	 * a mutant has been suppressed, cleanup associated info.
 	 * @param mutant
 	 */
-	public void cleanupInfo(Object mutant);
+	public void delMutant(Object mutant);
+	
+	/**
+	 * forget results and restore user-entered expected results
+	 */
+	public void cleanup();
 }
