@@ -1,5 +1,8 @@
 package fr.univmrs.ibdm.GINsim.modelChecker;
 
+import java.awt.Component;
+import java.io.File;
+
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
 /**
@@ -21,7 +24,7 @@ public interface GsModelChecker {
      * @param mutants list of mutants on which to run the test
      * @return the result of the run
      */
-    public boolean[] run(GsRegulatoryMutants mutants);
+    public boolean[] run(GsRegulatoryMutants mutants, File outputDir);
 
     /**
      * get an object saying if this test should work for a given mutant
@@ -39,4 +42,6 @@ public interface GsModelChecker {
 	 * forget results and restore user-entered expected results
 	 */
 	public void cleanup();
+	
+	public Component getEditPanel();
 }

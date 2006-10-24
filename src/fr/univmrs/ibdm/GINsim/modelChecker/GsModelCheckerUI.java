@@ -4,15 +4,21 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import fr.univmrs.ibdm.GINsim.global.TempDir;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
@@ -37,6 +43,9 @@ public class GsModelCheckerUI extends GsStackDialog {
     modelCheckerTableModel model;
     GsRegulatoryGraph graph;
     GsList l_tests;
+    JSplitPane splitTestEdit;
+    GsListPanel panelEditTest;
+    JLabel label = new JLabel(Translator.getString("STR_disabled"));
     
     /**
      * @param graph
@@ -46,7 +55,7 @@ public class GsModelCheckerUI extends GsStackDialog {
         this.graph = graph;
         l_tests = (GsList)graph.getObject("modelChecker");
         if (l_tests == null) {
-        	l_tests = new modelCheckerList();
+        	l_tests = new modelCheckerList(graph);
         	graph.addObject("modelChecker", l_tests);
         }
         model = new modelCheckerTableModel(graph);
@@ -91,26 +100,60 @@ public class GsModelCheckerUI extends GsStackDialog {
     }
     
     protected void editTest() {
-    	JSplitPane split = new JSplitPane();
-    	split.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-    	split.setDividerSize(5);
-    	GsListPanel panel = new GsListPanel();
-    	panel.setList(l_tests);
-    	split.setLeftComponent(panel);
-    	addTempPanel(split);
+    	if (splitTestEdit == null) {
+    		splitTestEdit = new JSplitPane();
+	    	splitTestEdit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+	    	splitTestEdit.setDividerSize(5);
+	    	splitTestEdit.setDividerLocation(100);
+	    	panelEditTest = new GsListPanel();
+    	}
+    	panelEditTest.setList(l_tests);
+    	splitTestEdit.setLeftComponent(panelEditTest);
+    	addTempPanel(splitTestEdit);
+    	
+    	panelEditTest.addSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				updateRightSide();
+			}
+		});
+    	updateRightSide();
+    }
+    
+    protected void updateRightSide() {
+    	// TODO: edit the test
+    	int[] ts = panelEditTest.getSelection();
+    	int location = splitTestEdit.getDividerLocation();
+    	if (ts == null || ts.length != 1) {
+    		splitTestEdit.setRightComponent(label);
+    		splitTestEdit.setDividerLocation(location);
+    		return;
+    	}
+    	GsModelChecker mchecker = (GsModelChecker)l_tests.getElement(ts[0]);
+    	splitTestEdit.setRightComponent(mchecker.getEditPanel());
+		splitTestEdit.setDividerLocation(location);
     }
     
     protected void editMutants() {
         addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(graph));
     }
+    /**
+     * run the tests
+     * TODO: split it from the UI and run in a separate thread
+     */
     protected void run() {
         model.lock();
         brun.setVisible(false);
-        // TODO: run it in a separate thread ?
-        for (int i=0 ; i<l_tests.getNbElements() ; i++) {
-            GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
-            checker.run(model.mutants);
-        }
+        File output;
+		try {
+			output = TempDir.createGeneratedName("GINsim-mcheck", null);
+	        for (int i=0 ; i<l_tests.getNbElements() ; i++) {
+	            GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
+	        	File odir = TempDir.createGeneratedName("test", output);
+	            checker.run(model.mutants, odir);
+	        }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         model.fireTableDataChanged();
         bcancel.setText(Translator.getString("STR_close"));
     }
@@ -133,6 +176,10 @@ class modelCheckerList implements GsList, GsGraphListener, GsRegulatoryMutantLis
 
 	private Vector v_checker = new Vector();
 	private GsRegulatoryGraph graph;
+	
+	protected modelCheckerList(GsRegulatoryGraph graph) {
+		this.graph = graph;
+	}
 	
 	public int add(int i, int type) {
         // find an unused name
