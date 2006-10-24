@@ -270,7 +270,6 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                             zos.putNextEntry(new ZipEntry(manager.getObjectName()));
                             try {
                                 manager.doSave(osw, this);
-                                osw.flush();
                             } catch (Exception e) {
                                 if (mainFrame != null) {
                                     addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
@@ -278,6 +277,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                                     e.printStackTrace();
                                 }
                             } finally {
+                                osw.flush();
                                 zos.closeEntry();
                             }
                         }

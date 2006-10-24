@@ -2,6 +2,7 @@ package fr.univmrs.ibdm.GINsim.modelChecker;
 
 import java.awt.Component;
 import java.io.File;
+import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
@@ -43,5 +44,17 @@ public interface GsModelChecker {
 	 */
 	public void cleanup();
 	
+	/**
+	 * @return a panel to edit the properties of this thing
+	 */
 	public Component getEditPanel();
+	/**
+	 * @return the type of model checker to use
+	 */
+	public String getType();
+	
+	/**
+	 * @return the list of attributes for this test
+	 */
+	public Map getAttrList();
 }

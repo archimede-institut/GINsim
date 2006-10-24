@@ -14,10 +14,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import fr.univmrs.ibdm.GINsim.export.GsSMVExport;
 import fr.univmrs.ibdm.GINsim.export.GsSMVexportConfig;
@@ -46,6 +44,16 @@ public class GsNuSMVChecker implements GsModelChecker {
 		return name;
 	}
 
+	public String getType() {
+		return GsNuSMVCheckerDescr.key;
+	}
+	
+	public Map getAttrList() {
+		Map m = new HashMap();
+		m.put("test", thetest);
+		return m;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 		;

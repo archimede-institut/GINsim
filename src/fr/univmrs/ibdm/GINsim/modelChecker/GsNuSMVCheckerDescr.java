@@ -9,6 +9,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
  */
 public class GsNuSMVCheckerDescr implements GsModelCheckerDescr {
 
+	public final static String key = "NuSMV";
+	
     public String getNonAvailableInfo() {
         return "Can not find NuSMV in your execution path, please install the NuSMV model checker and add it to the path if necessary";
     }
@@ -23,11 +25,11 @@ public class GsNuSMVCheckerDescr implements GsModelCheckerDescr {
     }
 
     public String getName() {
-        return "NuSMV";
+        return key;
     }
     
     public String toString() {
-        return "NuSMV";
+        return "NuSMV model checker plugin";
     }
     
     public GsModelChecker createNew(String name, GsRegulatoryGraph graph) {

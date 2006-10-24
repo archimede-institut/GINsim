@@ -53,10 +53,10 @@ public class GsModelCheckerUI extends GsStackDialog {
     public GsModelCheckerUI(GsRegulatoryGraph graph) {
     	super(graph.getGraphManager().getMainFrame());
         this.graph = graph;
-        l_tests = (GsList)graph.getObject("modelChecker");
+        l_tests = (GsList)graph.getObject(GsModelCheckerAssociatedObjectManager.key);
         if (l_tests == null) {
         	l_tests = new modelCheckerList(graph);
-        	graph.addObject("modelChecker", l_tests);
+        	graph.addObject(GsModelCheckerAssociatedObjectManager.key, l_tests);
         }
         model = new modelCheckerTableModel(graph);
         table = new GsJTable(model);
@@ -330,7 +330,7 @@ class modelCheckerTableModel extends DefaultTableModel {
     
     modelCheckerTableModel(GsRegulatoryGraph graph) {
         mutants = GsRegulatoryMutants.getMutants(graph);
-        v_check = (modelCheckerList)graph.getObject("modelChecker");
+        v_check = (modelCheckerList)graph.getObject(GsModelCheckerAssociatedObjectManager.key);
     }
  
     public void lock() {

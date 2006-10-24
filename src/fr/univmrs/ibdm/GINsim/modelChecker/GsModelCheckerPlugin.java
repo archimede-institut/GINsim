@@ -44,6 +44,9 @@ public class GsModelCheckerPlugin implements GsPlugin, GsActionProvider {
         } else {
             v_unavailable_checker.add(checker);
         }
+        if (v_checker.size() > 0) {
+        	GsRegulatoryGraphDescriptor.registerObjectManager(new GsModelCheckerAssociatedObjectManager());
+        }
     }
     
     public void registerPlugin() {
