@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import fr.univmrs.ibdm.GINsim.export.GsSMVExport;
+import fr.univmrs.ibdm.GINsim.export.GsSMVExportConfigPanel;
 import fr.univmrs.ibdm.GINsim.export.GsSMVexportConfig;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -32,12 +33,14 @@ public class GsNuSMVChecker implements GsModelChecker {
 	String thetest;
 	GsRegulatoryGraph graph;
 	Map m_info = new HashMap();
+	GsSMVexportConfig cfg;
 	
 	static GsNuSMVEditPanel editPanel = null;
 
 	public GsNuSMVChecker(String name, GsRegulatoryGraph graph) {
 		this.name = name;
 		this.graph = graph;
+		this.cfg = new GsSMVexportConfig(graph);
 	}
 
 	public String getName() {
@@ -155,8 +158,11 @@ public class GsNuSMVChecker implements GsModelChecker {
 }
 
 class GsNuSMVEditPanel extends JPanel {
+	private static final long serialVersionUID = -3643437502219103101L;
+	
 	private GsNuSMVChecker checker;
 	private JTextArea area;
+	private GsSMVExportConfigPanel cpanel = new GsSMVExportConfigPanel();
 	
 	protected GsNuSMVEditPanel() {
 		super();
@@ -170,10 +176,16 @@ class GsNuSMVEditPanel extends JPanel {
 			}
 		});
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = c.gridy = 0;
+		c.gridx = 0;
+		c.gridy = 1;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = c.weighty = 1;
 		this.add(area, c);
+
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		this.add(cpanel, c);
 	}
 	
 	protected void apply() {
@@ -190,5 +202,6 @@ class GsNuSMVEditPanel extends JPanel {
 		apply();
 		this.checker = checker;
 		area.setText(checker.thetest);
+		cpanel.setCfg(checker.cfg);
 	}
 }

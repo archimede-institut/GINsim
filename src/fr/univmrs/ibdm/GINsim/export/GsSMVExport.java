@@ -17,7 +17,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
 /**
- * Encode a graph to biolayout format.
+ * Encode a graph to SMV format.
  */
 public class GsSMVExport {
     static transient Hashtable hash;

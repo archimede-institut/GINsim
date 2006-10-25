@@ -91,7 +91,9 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 break;
             case SMV:
                 config = new GsSMVexportConfig((GsRegulatoryGraph)graph);
-                int ret = JOptionPane.showConfirmDialog(null, config, "Configure SMV export", JOptionPane.OK_CANCEL_OPTION);
+                GsSMVExportConfigPanel panel = new GsSMVExportConfigPanel();
+                panel.setCfg(config);
+                int ret = JOptionPane.showConfirmDialog(null, panel, "Configure SMV export", JOptionPane.OK_CANCEL_OPTION);
                 if (ret == JOptionPane.CANCEL_OPTION) {
                     return;
                 }
