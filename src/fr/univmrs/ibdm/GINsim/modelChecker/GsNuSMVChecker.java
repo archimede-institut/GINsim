@@ -1,10 +1,6 @@
 package fr.univmrs.ibdm.GINsim.modelChecker;
 
 import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,9 +9,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 import fr.univmrs.ibdm.GINsim.export.GsSMVExport;
 import fr.univmrs.ibdm.GINsim.export.GsSMVExportConfigPanel;
@@ -30,12 +23,11 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 public class GsNuSMVChecker implements GsModelChecker {
 
 	String name;
-	String thetest;
 	GsRegulatoryGraph graph;
 	Map m_info = new HashMap();
 	GsSMVexportConfig cfg;
 	
-	static GsNuSMVEditPanel editPanel = null;
+	static GsSMVExportConfigPanel editPanel = null;
 
 	public GsNuSMVChecker(String name, GsRegulatoryGraph graph) {
 		this.name = name;
@@ -53,7 +45,9 @@ public class GsNuSMVChecker implements GsModelChecker {
 	
 	public Map getAttrList() {
 		Map m = new HashMap();
-		m.put("test", thetest);
+		m.put("test", cfg.getTest());
+		m.put("mode", (cfg.isSync()?"sync":"async"));
+		// TODO: save init state
 		return m;
 	}
 	
@@ -90,8 +84,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 				} else if (o instanceof GsValueList) {
 					result.expected = ((GsValueList) o).getSelectedIndex();
 				} else {
-					System.out
-							.println("should not come here: result based on previous result");
+					System.out.println("should not come here: result based on previous result");
 					result.expected = ((GsModelCheckerTestResult) o).expected;
 				}
 
@@ -150,58 +143,9 @@ public class GsNuSMVChecker implements GsModelChecker {
 
 	public Component getEditPanel() {
 		if (editPanel == null) {
-			editPanel = new GsNuSMVEditPanel();
+			editPanel = new GsSMVExportConfigPanel(false, true);
 		}
-		editPanel.setChecker(this);
+		editPanel.setCfg(cfg);
 		return editPanel;
-	}
-}
-
-class GsNuSMVEditPanel extends JPanel {
-	private static final long serialVersionUID = -3643437502219103101L;
-	
-	private GsNuSMVChecker checker;
-	private JTextArea area;
-	private GsSMVExportConfigPanel cpanel = new GsSMVExportConfigPanel();
-	
-	protected GsNuSMVEditPanel() {
-		super();
-		setLayout(new GridBagLayout());
-		area = new JTextArea();
-		area.addFocusListener(new FocusListener() {
-			public void focusLost(FocusEvent e) {
-				apply();
-			}
-			public void focusGained(FocusEvent e) {
-			}
-		});
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 1;
-		c.fill = GridBagConstraints.BOTH;
-		c.weightx = c.weighty = 1;
-		this.add(area, c);
-
-		c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		this.add(cpanel, c);
-	}
-	
-	protected void apply() {
-		if (checker == null) {
-			area.setText("");
-			return;
-		}
-		checker.thetest = area.getText();
-		// TODO: check consistency ?
-		area.setText(checker.thetest);
-	}
-	
-	protected void setChecker(GsNuSMVChecker checker) {
-		apply();
-		this.checker = checker;
-		area.setText(checker.thetest);
-		cpanel.setCfg(checker.cfg);
 	}
 }

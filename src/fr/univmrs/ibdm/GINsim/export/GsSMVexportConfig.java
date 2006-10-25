@@ -16,6 +16,8 @@ public class GsSMVexportConfig {
     GsRegulatoryMutantDef mutant;
     int type;
     
+    String thetest = "";
+    
 	/**
 	 * @param graph
 	 */
@@ -25,6 +27,10 @@ public class GsSMVexportConfig {
             initstates[i] = -1;
         }
         this.graph = graph;
+	}
+	
+	public String getTest() {
+		return thetest;
 	}
 	
     /**
@@ -48,4 +54,8 @@ public class GsSMVexportConfig {
     public GsRegulatoryMutantDef getMutant() {
         return mutant;
     }
+
+	public void setTest(String text) {
+		thetest = text;
+	}
 }

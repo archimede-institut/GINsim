@@ -2,6 +2,8 @@ package fr.univmrs.ibdm.GINsim.export;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -12,7 +14,11 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
@@ -31,26 +37,42 @@ public class GsSMVExportConfigPanel extends JPanel {
     JRadioButton radioAsync = null;
     JComboBox comboMutant = null;
     JButton butCfgMutant = null;
+    JTextArea area;
     private JScrollPane jsp;
     private GsSMVConfigModel model;
     private GsMutantModel mutantModel;
+    
+    private boolean mutant;
+    private boolean test;
 
-    public GsSMVExportConfigPanel() {
+    public GsSMVExportConfigPanel(boolean mutant, boolean test) {
+    	this.mutant = mutant;
+    	this.test = test;
     	initialize();
     }
     
     public void setCfg(GsSMVexportConfig cfg) {
+    	applyTest();
     	this.cfg = cfg;
-    	if (cfg != null) {
-    		model = new GsSMVConfigModel(cfg.graph.getNodeOrder(), cfg.initstates);
-    		blockTable.setModel(model);
+    	if (cfg == null) {
+    		return;
+    	}
+		model = new GsSMVConfigModel(cfg.graph.getNodeOrder(), cfg.initstates);
+		blockTable.setModel(model);
+		if (cfg.isSync()) {
+			radioSync.setSelected(true);
+		} else {
+			radioAsync.setSelected(true);
+		}
+		if (mutant) {
     		mutantModel = new GsMutantModel(cfg);
     		comboMutant.setModel(mutantModel);
     		comboMutant.setSelectedItem(cfg.mutant);
-    	} else {
-    		// ??
-    	}
-    }
+		}
+		if (test) {
+			area.setText(cfg.thetest);
+		}
+	}
 	
 	private void initialize() {
 		this.setSize(150, 250);
@@ -61,23 +83,15 @@ public class GsSMVExportConfigPanel extends JPanel {
         group.add(radioAsync);
         group.add(radioSync);
 
-        comboMutant = new JComboBox();
-        // TODO: add back config mutant button, when blocking is removed
-//        butCfgMutant = new JButton(Translator.getString("STR_configure"));
-//        butCfgMutant.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                GsRegulatoryMutants.editMutants(graph);
-//            }
-//        });
-        
         GridBagConstraints cst = new GridBagConstraints();
         cst.gridx = 0;
         cst.gridy = 3;
         cst.weightx = 1;
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
-        cst.gridwidth = 3;
-        add(getJsp(), cst);
+        JSplitPane splitpane = new JSplitPane();
+        add(splitpane, cst);
+        splitpane.setLeftComponent(getJsp());
         
         cst = new GridBagConstraints();
         cst.gridx = 0;
@@ -87,16 +101,62 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.gridx = 0;
         cst.gridy = 1;
         add(radioAsync, cst);
-        cst = new GridBagConstraints();
-        cst.gridx = 0;
-        cst.gridy = 2;
-        add(comboMutant, cst);
-//        cst = new GridBagConstraints();
-//        cst.gridx = 1;
-//        cst.gridy = 2;
-//        add(butCfgMutant, cst);
         
-        radioAsync.setSelected(true);
+        radioSync.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				applyMode();
+			}
+		});
+        
+        if (mutant) {
+	        comboMutant = new JComboBox();
+	        // TODO: add back config mutant button, when blocking is removed
+//	        butCfgMutant = new JButton(Translator.getString("STR_configure"));
+//	        butCfgMutant.addActionListener(new ActionListener() {
+//	            public void actionPerformed(ActionEvent e) {
+//	                GsRegulatoryMutants.editMutants(graph);
+//	            }
+//	        });
+	        cst = new GridBagConstraints();
+	        cst.gridx = 0;
+	        cst.gridy = 2;
+	        add(comboMutant, cst);
+//	        cst = new GridBagConstraints();
+//	        cst.gridx = 1;
+//	        cst.gridy = 2;
+//	        add(butCfgMutant, cst);
+        }
+        if (test) {
+        	area = new JTextArea();
+	        area.addFocusListener(new FocusListener() {
+				public void focusLost(FocusEvent e) {
+					applyTest();
+				}
+				public void focusGained(FocusEvent e) {
+				}
+			});
+	        splitpane.setRightComponent(area);
+        } else {
+        	splitpane.setRightComponent(null);
+        }
+	}
+	
+	protected void applyMode() {
+		if (cfg == null) {
+			return;
+		}
+		if (radioSync.isSelected()) {
+			cfg.type = GsSMVexportConfig.CFG_SYNC;
+		} else {
+			cfg.type = GsSMVexportConfig.CFG_ASYNC;
+		}
+	}
+	
+	protected void applyTest() {
+		if (cfg == null) {
+			return;
+		}
+		cfg.setTest(area.getText());
 	}
 	
 	private JTable getBlockTable() {

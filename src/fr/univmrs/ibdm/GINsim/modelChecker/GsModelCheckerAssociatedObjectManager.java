@@ -29,6 +29,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 		GsRegulatoryMutants mutants = GsRegulatoryMutants.getMutants((GsRegulatoryGraph)graph);
 		try {
 			GsXMLWriter out = new GsXMLWriter(os, null);
+			out.openTag("modelCheckerConfig");
 			out.openTag("testList");
 			for (int i=0 ; i<l_test.getNbElements() ; i++) {
 				GsModelChecker mcheck = (GsModelChecker)l_test.getElement(i);
@@ -43,6 +44,10 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 						Object o = m.get(sk);
 						if (o != null) {
 							out.addAttr(sk, o.toString());
+							out.openTag("config");
+							out.addAttr("name", sk);
+							out.addContent(o.toString());
+							out.closeTag();
 						}
 					}
 				}
@@ -64,6 +69,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 					}
 				}
 			}
+			out.closeTag();
 			out.closeTag();
 		} catch (IOException e) {
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);

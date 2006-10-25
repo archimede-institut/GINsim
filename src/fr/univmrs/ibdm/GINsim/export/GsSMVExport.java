@@ -190,6 +190,12 @@ public class GsSMVExport {
                     out.write(")\n");
                 }
             }
+            // add the test
+            if (config.thetest != null) {
+            	out.write("\n");
+            	out.write(config.thetest);
+            }
+           
             // Close main tags
             out.close();
         } catch (IOException e) {
