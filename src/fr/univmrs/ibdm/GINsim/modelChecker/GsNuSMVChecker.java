@@ -15,6 +15,7 @@ import fr.univmrs.ibdm.GINsim.export.GsSMVExportConfigPanel;
 import fr.univmrs.ibdm.GINsim.export.GsSMVexportConfig;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
 /**
@@ -72,8 +73,11 @@ public class GsNuSMVChecker implements GsModelChecker {
 				}
 				File src = File.createTempFile("mchecker_", ".in", outputDir);
 
-				// TODO: this is ugly
-				GsSMVexportConfig cfg = new GsSMVexportConfig(graph);
+				if (m instanceof GsRegulatoryMutantDef) {
+					cfg.mutant = (GsRegulatoryMutantDef)m;
+				} else {
+					cfg.mutant = null;
+				}
 				GsSMVExport.encode(graph, src.getAbsolutePath(), cfg);
 
 				File output = File.createTempFile("mchecker_", ".out", outputDir);
