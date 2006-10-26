@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -57,7 +58,7 @@ public class GsSMVExportConfigPanel extends JPanel {
     	if (cfg == null) {
     		return;
     	}
-		model = new GsSMVConfigModel(cfg.graph.getNodeOrder(), cfg.initstates);
+		model = new GsSMVConfigModel(cfg.graph.getNodeOrder(), cfg.m_initStates);
 		blockTable.setModel(model);
 		if (cfg.isSync()) {
 			radioSync.setSelected(true);
@@ -201,7 +202,7 @@ class GsSMVConfigModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 864660594916225977L;
     private Vector nodeOrder;
-    short[] initstates;
+    Map m_initstates;
 
     
     /**
@@ -210,9 +211,9 @@ class GsSMVConfigModel extends AbstractTableModel {
      * @param t_max
      * @param initstates
      */
-    public GsSMVConfigModel(Vector nodeOrder, short[] initstates) {
+    public GsSMVConfigModel(Vector nodeOrder, Map m_initstates) {
         this.nodeOrder = nodeOrder;
-        this.initstates = initstates;
+        this.m_initstates = m_initstates;
     }
 
     /**
@@ -273,20 +274,20 @@ class GsSMVConfigModel extends AbstractTableModel {
         if (rowIndex > getRowCount()) {
             return null;
         }
-        int value = -1;
+        Object value = null;
         switch (columnIndex) {
             case 0:
                 return nodeOrder.get(rowIndex);
             case 1:
-                value = initstates[rowIndex];
+                value = m_initstates.get(nodeOrder.get(rowIndex));
                 break;
             default:
                 return null;
         }
-        if (value == -1) {
+        if (value == null) {
             return "";
         }
-        return ""+value;
+        return value.toString();
     }
 
     /**
@@ -300,7 +301,7 @@ class GsSMVConfigModel extends AbstractTableModel {
         if ("".equals(aValue) || "-".equals(aValue)) {
             switch(columnIndex) {
             case 1:
-                initstates[rowIndex] = -1;
+                m_initstates.remove(nodeOrder.get(rowIndex));
                 fireTableCellUpdated(rowIndex, 1);
                 break;
             }
@@ -317,7 +318,7 @@ class GsSMVConfigModel extends AbstractTableModel {
         if (val == -1) {
             switch(columnIndex) {
             case 1:
-                initstates[rowIndex] = -1;
+            	m_initstates.remove(nodeOrder.get(rowIndex));
                 fireTableCellUpdated(rowIndex, 1);
                 break;
             }
@@ -328,7 +329,7 @@ class GsSMVConfigModel extends AbstractTableModel {
         }
         switch (columnIndex) {
             case 1:
-                initstates[rowIndex] = (short)val;
+            	m_initstates.put(nodeOrder.get(rowIndex), new Integer(val));
                 break;
         }
         fireTableCellUpdated(rowIndex, 1);

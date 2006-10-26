@@ -6,6 +6,9 @@ public class GsModelCheckerTestResult {
 	protected String output;
 	
 	public String toString() {
+		if (result == -1) {
+			return "error";
+		}
 		if (expected == result) {
 			return GsModelCheckerPlugin.v_values.get(expected).toString();
 		}

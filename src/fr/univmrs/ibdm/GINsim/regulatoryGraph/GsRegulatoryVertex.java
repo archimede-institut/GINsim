@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
+import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
@@ -28,8 +29,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
 	private short 			baseValue;
 	private short 			maxValue;
-//    private short           blockMin = -1;
-//    private short           blockMax = -1;
 	private Vector 			v_logicalParameters;
 	
 	private String 			name;
@@ -142,7 +141,9 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @param id the new id.
 	 */
 	public void setId(String id) {
-	    this.id = id;
+		if (Tools.isValidId(id)) {
+			this.id = id;
+		}
 	}
 	/**
 	 * Adds the specified interaction I to the interactions of the node

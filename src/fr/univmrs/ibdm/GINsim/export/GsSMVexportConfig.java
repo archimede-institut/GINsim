@@ -1,5 +1,8 @@
 package fr.univmrs.ibdm.GINsim.export;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 
@@ -12,7 +15,7 @@ public class GsSMVexportConfig {
 	public static int CFG_ASYNC = 1;
 	
     GsRegulatoryGraph graph;
-    short[] initstates;
+    Map m_initStates;
     public GsRegulatoryMutantDef mutant;
     public int type;
     
@@ -22,10 +25,7 @@ public class GsSMVexportConfig {
 	 * @param graph
 	 */
 	public GsSMVexportConfig(GsRegulatoryGraph graph) {
-        initstates = new short[graph.getNodeOrder().size()];
-        for (int i=0 ; i<initstates.length ; i++) {
-            initstates[i] = -1;
-        }
+        m_initStates = new HashMap();
         this.graph = graph;
 	}
 	
@@ -44,8 +44,8 @@ public class GsSMVexportConfig {
      * @return an array giving desired initial states (-1 for no constraint)
      * TODO: share this initial state with simulation parameters ?
      */
-    public short[] getInitStates() {
-        return initstates;
+    public Map getInitStates() {
+        return m_initStates;
     }
 
     /**

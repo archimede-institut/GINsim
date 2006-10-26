@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.export.GsSMVExport;
 import fr.univmrs.ibdm.GINsim.export.GsSMVExportConfigPanel;
@@ -17,6 +18,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
  * a model checker using NuSMV
@@ -48,7 +50,14 @@ public class GsNuSMVChecker implements GsModelChecker {
 		Map m = new HashMap();
 		m.put("test", cfg.getTest());
 		m.put("mode", (cfg.isSync()?"sync":"async"));
-		// TODO: save init state
+		String s = "";
+		Map minit = cfg.getInitStates();
+		Iterator it = minit.keySet().iterator();
+		while (it.hasNext()) {
+			Object key = it.next();
+			s += key+":"+minit.get(key)+" ";
+		}
+		m.put("init", s);
 		return m;
 	}
 	
@@ -106,11 +115,25 @@ public class GsNuSMVChecker implements GsModelChecker {
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				}
-				// TODO: really run a NuSMV test
 
-				result.result = 2;
-				result.output = "test did _NOT_ really run";
-				m_info.put(m, result);
+				
+				// TODO: parse the output...
+
+				try {
+					p.waitFor();
+					if (p.exitValue() == 0) {
+						result.result = 2;
+						result.output = "not sure, need to parse the output";
+					} else {
+						result.result = -1;
+						result.output = "NuSMV returned an error code";
+					}
+				} catch (InterruptedException e) {
+					result.result = -1;
+					result.output = "error while analysing the output";
+				} finally {
+					m_info.put(m, result);
+				}
 			}
 		} catch (IOException e) {
 			return null;
@@ -158,5 +181,22 @@ public class GsNuSMVChecker implements GsModelChecker {
 	public void setCfg(Map attr) {
 		cfg.setTest((String)attr.get("test"));
 		cfg.type = "sync".equals(attr.get("mode")) ? GsSMVexportConfig.CFG_SYNC : GsSMVexportConfig.CFG_ASYNC;
+		Map minit = cfg.getInitStates();
+		String[] ts = ((String)attr.get("init")).split(" ");
+		Vector norder = graph.getNodeOrder();
+		for (int i=0 ; i<ts.length ; i++) {
+			String[] tval = ts[i].split(":");
+			if (tval.length == 2) {
+				for (int j=0 ; j<norder.size() ; j++) {
+					GsRegulatoryVertex vertex = (GsRegulatoryVertex)norder.get(j);
+					if (tval[0].equals(vertex.getId())) {
+						short val = (short)Integer.parseInt(tval[1]);
+						if (val >= 0 && val <= vertex.getMaxValue()) {
+							minit.put(vertex, new Integer(val));
+						}
+					}
+				}
+			}
+		}
 	}
 }

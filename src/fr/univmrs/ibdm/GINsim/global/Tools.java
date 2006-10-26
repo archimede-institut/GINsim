@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -226,5 +227,9 @@ public class Tools {
             }
         }
         return -1;
+    }
+    
+    public static boolean isValidId(String id) {
+    	return Pattern.compile("^[a-zA-Z0-9_-]+$").matcher(id).find();
     }
 }
