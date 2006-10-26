@@ -58,7 +58,7 @@ public class GsRegulatoryMutantParser extends GsXMLHelper {
                     return;
                 }
             }
-            mutantList.v_mutant.add(mutant);
+            mutantList.v_data.add(mutant);
         } else if (qName.equals("change")) {
             if (mutant == null) {
                 // TODO: report error: malformed file

@@ -18,7 +18,7 @@ import javax.swing.table.AbstractTableModel;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.gui.GsList;
+import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
@@ -27,7 +27,7 @@ import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.
  */
-public class GsRegulatoryMutants implements GsList, GsGraphListener {
+public class GsRegulatoryMutants extends GsListAbstract implements GsGraphListener {
 
     /**
      * @param graph
@@ -57,7 +57,6 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
         return mpanel;
     }
 
-    Vector v_mutant = new Vector();
     Vector v_listeners = new Vector();
     GsRegulatoryGraph graph;
     
@@ -69,115 +68,12 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
         this.graph = graph;
         graph.addObject("mutant", this);
         graph.addGraphListener(this);
-    }
-
-    public int copy(int index) {
-    	return 0;
-    }
-    
-    public int add(int index, int type) {
-        if (index < 0 || index>= v_mutant.size()) {
-            index = v_mutant.size()-1;
-        }
         
-        // find an unused name
-        String s = null;
-        boolean[] t = new boolean[getNbElements()];
-        for (int j=0 ; j<t.length ; j++) {
-            t[j] = true;
-        }
-        for (int j=0 ; j<t.length ; j++) {
-            GsRegulatoryMutantDef param = (GsRegulatoryMutantDef)v_mutant.get(j);
-            if (param.name.startsWith("mutant ")) {
-                try {
-                    int v = Integer.parseInt(param.name.substring(7));
-                    if (v > 0 && v <= t.length) {
-                        t[v-1] = false;
-                    }
-                } catch (NumberFormatException e) {
-                }
-            }
-        }
-        for (int j=0 ; j<t.length ; j++) {
-            if (t[j]) {
-                s = "mutant "+(j+1);
-                break;
-            }
-        }
-        if (s == null) {
-            s = "mutant "+(t.length+1);
-        }
-        GsRegulatoryMutantDef m = new GsRegulatoryMutantDef();
-        m.name = s;
-        v_mutant.add(index+1, m);
-        for (int j=0 ; j<v_listeners.size() ; j++) {
-            ((GsRegulatoryMutantListener)v_listeners.get(j)).mutantAdded(m);
-        }
-        return index+1;
-    }
-
-    public boolean canAdd() {
-        return true;
-    }
-    public boolean canCopy() {
-        return false;
-    }
-
-    public boolean canOrder() {
-        return true;
-    }
-
-    public boolean canRemove() {
-        return true;
-    }
-
-    public Object getElement(int i) {
-        return v_mutant.get(i);
-    }
-
-    public int getNbElements() {
-        return v_mutant.size();
-    }
-
-    public boolean remove(int[] t_index) {
-        for (int i=t_index.length-1 ; i>-1 ; i--) {
-            GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_mutant.get(t_index[i]);
-            for (int j=0 ; j<v_listeners.size() ; j++) {
-                ((GsRegulatoryMutantListener)v_listeners.get(j)).mutantRemoved(m);
-            }
-            v_mutant.remove(m);
-        }
-        return true;
-    }
-
-    public boolean canEdit() {
-        return true;
-    }
-    
-    public boolean edit(int index, Object o) {
-        GsRegulatoryMutantDef param = (GsRegulatoryMutantDef)v_mutant.get(index);
-        if (param.name.equals(o.toString())) {
-            return false;
-        }
-        for (int j=0 ; j<getNbElements() ; j++) {
-            if (j != index) {
-                GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_mutant.get(j);
-                if (m.name.equals(o.toString())) {
-                    return false;
-                }
-            }
-        }
-        param.name = o.toString();
-        return true;
-    }
-
-    public boolean moveElement(int src, int dst) {
-        if (src<0 || dst<0 || src >= v_mutant.size() || dst>=v_mutant.size()) {
-            return false;
-        }
-        Object o = v_mutant.remove(src);
-        v_mutant.add(dst, o);
-        return true;
+        prefix = "mutant_";
+        canAdd = true;
+        canOrder = true;
+        canRemove = true;
+        canEdit = true;
     }
     
     public GsGraphEventCascade edgeAdded(Object data) {
@@ -191,8 +87,8 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
     }
     public GsGraphEventCascade vertexRemoved(Object data) {
         Vector v = new Vector();
-        for (int i=0 ; i<v_mutant.size() ; i++) {
-            GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_mutant.get(i);
+        for (int i=0 ; i<v_data.size() ; i++) {
+            GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_data.get(i);
             for (int j=0 ; j<m.v_changes.size() ; j++) {
                 GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)m.v_changes.get(j);
                 if (change.vertex == data) {
@@ -208,8 +104,8 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
     }
     public GsGraphEventCascade vertexUpdated(Object data) {
         Vector v = new Vector();
-        for (int i=0 ; i<v_mutant.size() ; i++) {
-            GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_mutant.get(i);
+        for (int i=0 ; i<v_data.size() ; i++) {
+            GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_data.get(i);
             for (int j=0 ; j<m.v_changes.size() ; j++) {
                 GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)m.v_changes.get(j);
                 if (change.vertex == data) {
@@ -239,7 +135,7 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
      * @return the index of o, -1 if not found
      */
     public int indexOf(Object o) {
-        return v_mutant.indexOf(o);
+        return v_data.indexOf(o);
     }
     /**
      * register a new listener for this object
@@ -262,8 +158,8 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
      * @return the correct mutant, or null if none.
      */
     public GsRegulatoryMutantDef get(String value) {
-        for (int i=0 ; i<v_mutant.size() ; i++) {
-            GsRegulatoryMutantDef mdef = (GsRegulatoryMutantDef)v_mutant.get(i);
+        for (int i=0 ; i<v_data.size() ; i++) {
+            GsRegulatoryMutantDef mdef = (GsRegulatoryMutantDef)v_data.get(i);
             if (mdef.name.equals(value)) {
                 return mdef;
             }
@@ -273,6 +169,12 @@ public class GsRegulatoryMutants implements GsList, GsGraphListener {
 
 	public Vector getObjectType() {
 		return null;
+	}
+
+	protected Object doCreate(String name, int type) {
+        GsRegulatoryMutantDef m = new GsRegulatoryMutantDef();
+        m.name = name;
+		return m;
 	}
 }
 

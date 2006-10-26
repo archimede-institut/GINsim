@@ -6,7 +6,7 @@ import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.gui.GsList;
+import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -15,9 +15,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
  * store all simulation parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
-public class GsSimulationParameterList implements GsGraphListener, GsList, GsRegulatoryMutantListener {
+public class GsSimulationParameterList extends GsListAbstract implements GsGraphListener, GsRegulatoryMutantListener {
 
-    Vector v_parameterList = new Vector();
     String s_current;
     GsRegulatoryGraph graph;
 
@@ -30,6 +29,11 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
 
     public GsSimulationParameterList(GsGraph graph, GsSimulationParameters param) {
         this.graph = (GsRegulatoryGraph)graph;
+    	prefix = "parameter_";
+    	canAdd = true;
+    	canEdit = true;
+    	canRemove = true;
+    	canOrder = true;
         graph.addGraphListener(this);
         GsRegulatoryMutants mutants = GsRegulatoryMutants.getMutants(this.graph);
         mutants.addListener(this);
@@ -54,8 +58,8 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
 
     public GsGraphEventCascade vertexAdded(Object data) {
         // if needed, add it to the default priority class!
-        for (int i=0 ; i<v_parameterList.size() ; i++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_parameterList.get(i);
+        for (int i=0 ; i<v_data.size() ; i++) {
+            GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
             if (param.m_elt != null) {
             	param.m_elt.put(data, param.v_class.get(0));
             }
@@ -66,8 +70,8 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
     public GsGraphEventCascade vertexRemoved(Object data) {
         // remove it from priority classes and initial states
     	Vector v = null;
-        for (int i=0 ; i<v_parameterList.size() ; i++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_parameterList.get(i);
+        for (int i=0 ; i<v_data.size() ; i++) {
+            GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
             if (param.initStates != null) {
                 for (int j=0 ; j<param.initStates.size() ; j++) {
                 	Map m = (Map)param.initStates.get(j);
@@ -94,8 +98,8 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
         // remove unavailable values from initial states
         GsRegulatoryVertex vertex = (GsRegulatoryVertex)data;
     	Vector v = null;
-        for (int i=0 ; i<v_parameterList.size() ; i++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_parameterList.get(i);
+        for (int i=0 ; i<v_data.size() ; i++) {
+            GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
             if (param.initStates != null) {
                 for (int j=0 ; j<param.initStates.size() ; j++) {
                 	Map m = (Map)param.initStates.get(j);
@@ -127,49 +131,11 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
         return null;
     }
 
-    public int add(int index, int type) {
-        // find an unused name
-        String s = null;
-        boolean[] t = new boolean[getNbElements()];
-        for (int j=0 ; j<t.length ; j++) {
-            t[j] = true;
-        }
-        for (int j=0 ; j<t.length ; j++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_parameterList.get(j);
-            if (param.name.startsWith("parameter ")) {
-                try {
-                    int v = Integer.parseInt(param.name.substring(10));
-                    if (v > 0 && v <= t.length) {
-                        t[v-1] = false;
-                    }
-                } catch (NumberFormatException e) {
-                }
-            }
-        }
-        for (int j=0 ; j<t.length ; j++) {
-            if (t[j]) {
-                s = "parameter "+(j+1);
-                break;
-            }
-        }
-        if (s == null) {
-            s = "parameter "+(t.length+1);
-        }
-
-        GsSimulationParameters parameter = new GsSimulationParameters(graph.getNodeOrder());
-        parameter.name = s;
-        index++;
-        if (index<=0 || index>v_parameterList.size()) {
-            index = v_parameterList.size();
-        }
-    	return add(parameter, index);
-    }
-
     public int copy(int index) {
-    	if (index < 0 || index >= v_parameterList.size()) {
+    	if (index < 0 || index >= v_data.size()) {
     		return -1;
     	}
-    	GsSimulationParameters old = (GsSimulationParameters)v_parameterList.get(index);
+    	GsSimulationParameters old = (GsSimulationParameters)v_data.get(index);
         // find an unused name
         String s = null;
         boolean[] t = new boolean[getNbElements()];
@@ -177,7 +143,7 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
             t[j] = true;
         }
         for (int j=0 ; j<t.length ; j++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_parameterList.get(j);
+            GsSimulationParameters param = (GsSimulationParameters)v_data.get(j);
             if (param.name.startsWith(old.name+"_")) {
                 try {
                     int v = Integer.parseInt(param.name.substring(10));
@@ -201,87 +167,26 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
         GsSimulationParameters parameter = (GsSimulationParameters)old.clone();
         parameter.name = s;
         index++;
-        if (index<=0 || index>v_parameterList.size()) {
-            index = v_parameterList.size();
+        if (index<=0 || index>v_data.size()) {
+            index = v_data.size();
         }
     	return add(parameter, index);
     }
 
     public int add(GsSimulationParameters param, int index) {
-    	v_parameterList.add(index, param);
-    	return v_parameterList.indexOf(param);
+    	v_data.add(index, param);
+    	return v_data.indexOf(param);
     }
     public int add(GsSimulationParameters param) {
-    	return add(param, v_parameterList.size());
-    }
-    	
-    public boolean canAdd() {
-        return true;
-    }
-
-    public boolean canCopy() {
-        return true;
-    }
-
-    public boolean canEdit() {
-        return true;
-    }
-
-    public boolean canOrder() {
-        return true;
-    }
-
-    public boolean canRemove() {
-        return true;
-    }
-
-    public boolean edit(int i, Object o) {
-        GsSimulationParameters param = (GsSimulationParameters)v_parameterList.get(i);
-        if (param.name.equals(o.toString())) {
-            return false;
-        }
-        for (int j=0 ; j<getNbElements() ; j++) {
-            if (j != i) {
-                GsSimulationParameters p = (GsSimulationParameters)v_parameterList.get(j);
-                if (p.name.equals(o.toString())) {
-                    return false;
-                }
-            }
-        }
-        param.name = o.toString();
-        return true;
-    }
-
-    public Object getElement(int i) {
-        return v_parameterList.get(i);
-    }
-
-    public int getNbElements() {
-        return v_parameterList.size();
-    }
-
-    public boolean moveElement(int src, int dst) {
-        if (src<0 || dst<0 || src >= v_parameterList.size() || dst>=v_parameterList.size()) {
-            return false;
-        }
-        Object o = v_parameterList.remove(src);
-        v_parameterList.add(dst, o);
-        return true;
-    }
-
-    public boolean remove(int[] t_index) {
-        for (int i=t_index.length-1 ; i>-1 ; i--) {
-            v_parameterList.remove(t_index[i]);
-        }
-        return true;
+    	return add(param, v_data.size());
     }
 
     public void mutantAdded(Object mutant) {
     }
 
     public void mutantRemoved(Object mutant) {
-        for (int i=0 ; i< v_parameterList.size() ; i++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_parameterList.get(i);
+        for (int i=0 ; i< v_data.size() ; i++) {
+            GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
             if (param.mutant == mutant) {
                 param.mutant = null;
             }
@@ -290,6 +195,12 @@ public class GsSimulationParameterList implements GsGraphListener, GsList, GsReg
 
 	public Vector getObjectType() {
 		return null;
+	}
+
+	protected Object doCreate(String name, int type) {
+        GsSimulationParameters parameter = new GsSimulationParameters(graph.getNodeOrder());
+        parameter.name = name;
+		return parameter;
 	}
 }
 

@@ -71,7 +71,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 				} else {
 					m = mutants.getElement(i);
 				}
-				File src = File.createTempFile("mchecker_", ".in", outputDir);
+				File src = new File(outputDir, m+".in");
 
 				if (m instanceof GsRegulatoryMutantDef) {
 					cfg.mutant = (GsRegulatoryMutantDef)m;
@@ -80,7 +80,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 				}
 				GsSMVExport.encode(graph, src.getAbsolutePath(), cfg);
 
-				File output = File.createTempFile("mchecker_", ".out", outputDir);
+				File output = new File(outputDir, m+".out");
 				Object o = m_info.get(m);
 				GsModelCheckerTestResult result = new GsModelCheckerTestResult();
 				if (o == null) {
@@ -91,10 +91,8 @@ public class GsNuSMVChecker implements GsModelChecker {
 					System.out.println("should not come here: result based on previous result");
 					result.expected = ((GsModelCheckerTestResult) o).expected;
 				}
-
-				//String[] ts = {"/bin/sh", "-c", "NuSMV " + src.getAbsolutePath()+" > "+output.getAbsolutePath()};
-				Process p = Runtime.getRuntime().exec("NuSMV "+src.getAbsolutePath());
-
+				Process p = Runtime.getRuntime().exec("NuSMV "+"\""+src.getAbsolutePath()+"\"");
+				
 				// get the output into a separate file
 				final InputStream in = p.getInputStream();
 				final OutputStream out = new FileOutputStream(output);

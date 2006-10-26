@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 
 /**
  * store the definition of a mutant
  */
-public class GsRegulatoryMutantDef {
+public class GsRegulatoryMutantDef implements GsNamedObject {
     String name;
     Vector v_changes = new Vector();
     GsAnnotation annotation = new GsAnnotation();
@@ -97,4 +98,12 @@ public class GsRegulatoryMutantDef {
         annotation.toXML(out, null, 0);
         out.closeTag();
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

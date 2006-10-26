@@ -4,23 +4,14 @@ import java.awt.Component;
 import java.io.File;
 import java.util.Map;
 
+import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
 /**
  * Model checker implementations should implement this interface.
  */
-public interface GsModelChecker {
+public interface GsModelChecker extends GsNamedObject {
 
-    /**
-     * @return the name of this test
-     */
-    public String getName();
-    /**
-     * change the name of this test
-     * @param name: the new name
-     */
-    public void setName(String name);
-    
     /**
      * @param mutants list of mutants on which to run the test
      * @return the result of the run

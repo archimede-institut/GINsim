@@ -23,6 +23,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsList;
+import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
@@ -120,7 +121,6 @@ public class GsModelCheckerUI extends GsStackDialog {
     }
     
     protected void updateRightSide() {
-    	// TODO: edit the test
     	int[] ts = panelEditTest.getSelection();
     	int location = splitTestEdit.getDividerLocation();
     	if (ts == null || ts.length != 1) {
@@ -145,10 +145,10 @@ public class GsModelCheckerUI extends GsStackDialog {
         brun.setVisible(false);
         File output;
 		try {
-			output = TempDir.createGeneratedName("GINsim-mcheck", null);
+			output = TempDir.createGeneratedName("GINsim-mcheck_", null);
 	        for (int i=0 ; i<l_tests.getNbElements() ; i++) {
 	            GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
-	        	File odir = TempDir.createGeneratedName("test", output);
+	        	File odir = TempDir.createNamed(checker.getName(), output);
 	            checker.run(model.mutants, odir);
 	        }
 		} catch (IOException e) {
@@ -172,117 +172,28 @@ public class GsModelCheckerUI extends GsStackDialog {
 	}
 }
 
-class modelCheckerList implements GsList, GsGraphListener, GsRegulatoryMutantListener {
+class modelCheckerList extends GsListAbstract implements GsList, GsGraphListener, GsRegulatoryMutantListener {
 
-	private Vector v_checker = new Vector();
 	private GsRegulatoryGraph graph;
 	
 	protected modelCheckerList(GsRegulatoryGraph graph) {
 		this.graph = graph;
-	}
-	
-	public int add(int i, int type) {
-        // find an unused name
-        String s = null;
-        boolean[] t = new boolean[getNbElements()];
-        for (int j=0 ; j<t.length ; j++) {
-            t[j] = true;
-        }
-        for (int j=0 ; j<t.length ; j++) {
-            GsModelChecker test = (GsModelChecker)v_checker.get(j);
-            if (test.getName().startsWith("test ")) {
-                try {
-                    int v = Integer.parseInt(test.getName().substring(5));
-                    if (v > 0 && v <= t.length) {
-                        t[v-1] = false;
-                    }
-                } catch (NumberFormatException e) {
-                }
-            }
-        }
-        for (int j=0 ; j<t.length ; j++) {
-            if (t[j]) {
-                s = "test "+(j+1);
-                break;
-            }
-        }
-        if (s == null) {
-            s = "test "+(t.length+1);
-        }
-
-		Object test = ((GsModelCheckerDescr)GsModelCheckerPlugin.v_checker.get(type)).createNew(s, graph);
-		v_checker.add(test);
-		return v_checker.indexOf(test);
+		prefix = "test_";
+		canAdd = true;
+		canRemove = true;
+		canEdit = true;
 	}
 
-	public boolean canAdd() {
-		return true;
-	}
-
-	public boolean canCopy() {
-		return false;
-	}
-
-	public boolean canEdit() {
-		return true;
-	}
-
-	public boolean canOrder() {
-		return true;
-	}
-
-	public boolean canRemove() {
-		return true;
-	}
-
-	public int copy(int i) {
-		return -1;
-	}
-
-	public boolean edit(int index, Object o) {
-		GsModelChecker test = (GsModelChecker)v_checker.get(index);
-		if (test.getName().equals(o.toString())) {
-			return false;
-		}
-		for (int i=0 ; i<v_checker.size() ; i++) {
-			if (i != index && ((GsModelChecker)v_checker.get(i)).equals(o.toString())) {
-				return false;
-			}
-		}
-		test.setName(o.toString());
-		return true;
-	}
-
-	public Object getElement(int i) {
-		return v_checker.get(i);
-	}
-
-	public int getNbElements() {
-		return v_checker.size();
-	}
-
-    public boolean moveElement(int src, int dst) {
-        if (src<0 || dst<0 || src >= v_checker.size() || dst>=v_checker.size()) {
-            return false;
-        }
-        Object o = v_checker.remove(src);
-        v_checker.add(dst, o);
-        return true;
-    }
-
-	public boolean remove(int[] t_index) {
-		for (int i=t_index.length-1 ; i>-1 ; i--) {
-			v_checker.remove(t_index[i]);
-		}
-		return true;
+	public Object doCreate(String name, int type) {
+		return ((GsModelCheckerDescr)GsModelCheckerPlugin.v_checker.get(type)).createNew(name, graph);
 	}
 
 	public void mutantAdded(Object mutant) {
 	}
 
 	public void mutantRemoved(Object mutant) {
-		for (int i=0 ; i<v_checker.size() ; i++) {
-			GsModelChecker test = (GsModelChecker)v_checker.get(i);
+		for (int i=0 ; i<v_data.size() ; i++) {
+			GsModelChecker test = (GsModelChecker)v_data.get(i);
 			test.delMutant(mutant);
 		}
 	}
@@ -316,7 +227,7 @@ class modelCheckerList implements GsList, GsGraphListener, GsRegulatoryMutantLis
 	}
 	
 	public Object getInfo(int index, Object mutant) {
-		GsModelChecker test = (GsModelChecker)v_checker.get(index);
+		GsModelChecker test = (GsModelChecker)v_data.get(index);
 		return test.getInfo(mutant);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
@@ -14,9 +15,9 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 /**
  * remember, save and restore a simulation parameter.
  */
-public class GsSimulationParameters implements GsXMLize {
+public class GsSimulationParameters implements GsXMLize, GsNamedObject {
 
-    String name = "new parameter";
+    String name = "new_parameter";
     Vector nodeOrder;
     
     int mode;
@@ -327,4 +328,12 @@ public class GsSimulationParameters implements GsXMLize {
     	}
     	return newp;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }
