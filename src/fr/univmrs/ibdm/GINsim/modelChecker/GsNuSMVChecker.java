@@ -35,7 +35,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 		this.graph = graph;
 		this.cfg = new GsSMVexportConfig(graph);
 	}
-
+	
 	public String getName() {
 		return name;
 	}
@@ -151,5 +151,10 @@ public class GsNuSMVChecker implements GsModelChecker {
 		}
 		editPanel.setCfg(cfg);
 		return editPanel;
+	}
+
+	public void setCfg(Map attr) {
+		cfg.setTest((String)attr.get("test"));
+		cfg.type = "sync".equals(attr.get("mode")) ? GsSMVexportConfig.CFG_SYNC : GsSMVexportConfig.CFG_ASYNC;
 	}
 }

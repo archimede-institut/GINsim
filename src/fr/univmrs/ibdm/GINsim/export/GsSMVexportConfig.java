@@ -14,7 +14,7 @@ public class GsSMVexportConfig {
     GsRegulatoryGraph graph;
     short[] initstates;
     public GsRegulatoryMutantDef mutant;
-    int type;
+    public int type;
     
     String thetest = "";
     

@@ -57,4 +57,9 @@ public interface GsModelChecker {
 	 * @return the list of attributes for this test
 	 */
 	public Map getAttrList();
+	/**
+	 * restore the configuration of this test.
+	 * @param m_attr a Map of all settings
+	 */
+	public void setCfg(Map m_attr);
 }

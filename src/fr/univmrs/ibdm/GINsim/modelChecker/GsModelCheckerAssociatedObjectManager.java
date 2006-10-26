@@ -20,8 +20,9 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 	public static String key = "mchecker";
 	
 	public void doOpen(InputStream is, GsGraph graph) {
-		// TODO Auto-generated method stub
-		
+        GsModelCheckerParser parser = new GsModelCheckerParser((GsRegulatoryGraph)graph);
+        parser.startParsing(is, false);
+        graph.addObject(key, parser.getParameters());
 	}
 
 	public void doSave(OutputStreamWriter os, GsGraph graph) {
@@ -43,7 +44,6 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 						String sk = (String)it.next();
 						Object o = m.get(sk);
 						if (o != null) {
-							out.addAttr(sk, o.toString());
 							out.openTag("config");
 							out.addAttr("name", sk);
 							out.addContent(o.toString());
