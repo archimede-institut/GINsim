@@ -7,7 +7,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 
 /**
@@ -27,13 +30,13 @@ public class GsModelCheckerParser extends GsXMLHelper {
     private static final int POS_OUT = 0;
     private static final int POS_TEST = 1;
     
-    
     GsRegulatoryGraph graph;
     int pos = POS_OUT;
     String cfg_name = null;
     GsModelChecker mcheck;
     Map m_attr = new HashMap();
     modelCheckerList l_tests;
+    GsRegulatoryMutants l_mutant;
     
     /**
      * @param graph expected node order
@@ -41,6 +44,7 @@ public class GsModelCheckerParser extends GsXMLHelper {
     public GsModelCheckerParser(GsRegulatoryGraph graph) {
     	this.graph = graph;
     	l_tests = new modelCheckerList(graph);
+    	l_mutant = GsRegulatoryMutants.getMutants(graph);
     }
     
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -66,6 +70,40 @@ public class GsModelCheckerParser extends GsXMLHelper {
             		l_tests.edit(ref, testName);
             		mcheck = (GsModelChecker)l_tests.getElement(ref);
             		m_attr.clear();
+            	} else if ("expected".equals(qName)) {
+            		String s = attributes.getValue("test");
+            		for (int i=0 ; i<l_tests.getNbElements() ; i++) {
+            			GsModelChecker mc = (GsModelChecker)l_tests.getElement(i);
+            			if (s.equals(mc.getName())) {
+            				s = attributes.getValue("mutant");
+            				if (s == null || s.equals("-")) {
+        						GsValueList vl = (GsValueList)mc.getInfo("-");
+        						s = attributes.getValue("value");
+        						if ("Yes".equals(s)) {
+        							vl.setSelectedIndex(1);
+        						} else if ("No".equals(s)) {
+        							vl.setSelectedIndex(2);
+        						} else {
+        							vl.setSelectedIndex(0);
+        						}
+            				} else for (int j=0 ; j<l_mutant.getNbElements() ; j++) {
+            					GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)l_mutant.getElement(j);
+            					if (s.equals(mutant.toString())) {
+            						GsValueList vl = (GsValueList)mc.getInfo(mutant);
+            						s = attributes.getValue("value");
+            						if ("Yes".equals(s)) {
+            							vl.setSelectedIndex(1);
+            						} else if ("No".equals(s)) {
+            							vl.setSelectedIndex(2);
+            						} else {
+            							vl.setSelectedIndex(0);
+            						}
+            						break;
+            					}
+            				}
+            				break;
+            			}
+            		}
             	}
                 break;
             case POS_TEST:

@@ -11,6 +11,7 @@ import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.gui.GsList;
+import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
@@ -57,14 +58,22 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 			out.openTag("ExpectedList");
 			for (int i=0 ; i<l_test.getNbElements() ; i++) {
 				GsModelChecker mcheck = (GsModelChecker)l_test.getElement(i);
+				GsValueList o = (GsValueList)mcheck.getInfo("-");
+				if (o != null) {
+					out.openTag("expected");
+					out.addAttr("test", mcheck.getName());
+					out.addAttr("mutant", "-");
+					out.addAttr("value", (String)o.get(o.getSelectedIndex()));
+					out.closeTag();
+				}
 				for (int j=0 ; j<mutants.getNbElements() ; j++) {
-					String mutant = mutants.getElement(j).toString();
-					Object o = mcheck.getInfo(mutant);
+					Object mutant = mutants.getElement(j);
+					o = (GsValueList)mcheck.getInfo(mutant);
 					if (o != null) {
 						out.openTag("expected");
 						out.addAttr("test", mcheck.getName());
-						out.addAttr("mutant", mutant);
-						out.addAttr("value", o.toString());
+						out.addAttr("mutant", mutant.toString());
+						out.addAttr("value", (String)o.get(o.getSelectedIndex()));
 						out.closeTag();
 					}
 				}

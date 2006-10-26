@@ -129,6 +129,10 @@ public class GsNuSMVChecker implements GsModelChecker {
 		return o;
 	}
 
+	public Map getInfoMap() {
+		return m_info;
+	}
+	
 	public void delMutant(Object mutant) {
 		m_info.remove(mutant);
 	}

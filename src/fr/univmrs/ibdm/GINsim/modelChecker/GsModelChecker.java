@@ -34,6 +34,10 @@ public interface GsModelChecker {
      */
 	public Object getInfo(Object mutant);
 	/**
+	 * @return the map of all (expected) results.
+	 */
+	public Map getInfoMap();
+	/**
 	 * a mutant has been suppressed, cleanup associated info.
 	 * @param mutant
 	 */
