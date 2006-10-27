@@ -90,9 +90,23 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.weightx = 1;
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
-        JSplitPane splitpane = new JSplitPane();
-        add(splitpane, cst);
-        splitpane.setLeftComponent(getJsp());
+        if (test) {
+	        JSplitPane splitpane = new JSplitPane();
+	        add(splitpane, cst);
+	        splitpane.setLeftComponent(getJsp());
+	        
+        	area = new JTextArea();
+	        area.addFocusListener(new FocusListener() {
+				public void focusLost(FocusEvent e) {
+					applyTest();
+				}
+				public void focusGained(FocusEvent e) {
+				}
+			});
+	        splitpane.setRightComponent(area);
+        } else {
+        	add(getJsp(), cst);
+        }
         
         cst = new GridBagConstraints();
         cst.gridx = 0;
@@ -126,19 +140,6 @@ public class GsSMVExportConfigPanel extends JPanel {
 //	        cst.gridx = 1;
 //	        cst.gridy = 2;
 //	        add(butCfgMutant, cst);
-        }
-        if (test) {
-        	area = new JTextArea();
-	        area.addFocusListener(new FocusListener() {
-				public void focusLost(FocusEvent e) {
-					applyTest();
-				}
-				public void focusGained(FocusEvent e) {
-				}
-			});
-	        splitpane.setRightComponent(area);
-        } else {
-        	splitpane.setRightComponent(null);
         }
 	}
 	

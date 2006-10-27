@@ -48,6 +48,8 @@ public class GsModelCheckerUI extends GsStackDialog {
     GsListPanel panelEditTest;
     JLabel label = new JLabel(Translator.getString("STR_disabled"));
     
+    modelCheckerRunner runner = null;
+    
     /**
      * @param graph
      */
@@ -143,22 +145,20 @@ public class GsModelCheckerUI extends GsStackDialog {
     protected void run() {
         model.lock();
         brun.setVisible(false);
-        File output;
-		try {
-			output = TempDir.createGeneratedName("GINsim-mcheck_", null);
-	        for (int i=0 ; i<l_tests.getNbElements() ; i++) {
-	            GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
-	        	File odir = TempDir.createNamed(checker.getName(), output);
-	            checker.run(model.mutants, odir);
-	        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        runner = new modelCheckerRunner(this, l_tests, model.mutants);
+        runner.start();
+    }
+	protected void endRun() {
         model.fireTableDataChanged();
         bcancel.setText(Translator.getString("STR_close"));
-    }
+        runner = null;
+	}
 
 	protected void cancel() {
+		if (runner != null) {
+			runner.interrupt();
+			return;
+		}
 		super.cancel();
 		dispose();
         for (int i=0 ; i<l_tests.getNbElements() ; i++) {
@@ -169,6 +169,43 @@ public class GsModelCheckerUI extends GsStackDialog {
 	
 	protected void refreshMain() {
 		model.fireTableStructureChanged();
+	}
+
+	public void updateResult(GsNuSMVChecker checker, Object m) {
+		model.fireTableDataChanged();
+	}
+}
+
+class modelCheckerRunner extends Thread {
+	private GsModelCheckerUI ui;
+	private GsList l_tests;
+	private GsRegulatoryMutants mutants;
+	
+	protected modelCheckerRunner(GsModelCheckerUI ui, GsList l_tests, GsRegulatoryMutants mutants) {
+		this.mutants = mutants;
+		this.ui = ui;
+		this.l_tests = l_tests;
+	}
+	
+	public void run() {
+        File output;
+		try {
+			output = TempDir.createGeneratedName("GINsim-mcheck_", null);
+	        for (int i=0 ; i<l_tests.getNbElements() ; i++) {
+	            GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
+	        	File odir = TempDir.createNamed(checker.getName(), output);
+	            try {
+					checker.run(mutants, ui, odir);
+				} catch (InterruptedException e) {
+					break;
+				}
+	        }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if (ui != null) {
+			ui.endRun();
+		}
 	}
 }
 

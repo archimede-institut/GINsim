@@ -70,8 +70,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 		return name;
 	}
 
-	public boolean[] run(GsRegulatoryMutants mutants, File outputDir) {
-		boolean[] ret = new boolean[mutants.getNbElements() + 1];
+	public void run(GsRegulatoryMutants mutants, GsModelCheckerUI ui, File outputDir) throws InterruptedException {
 		try {
 			for (int i = -1; i < mutants.getNbElements(); i++) {
 				Object m;
@@ -100,7 +99,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 					System.out.println("should not come here: result based on previous result");
 					result.expected = ((GsModelCheckerTestResult) o).expected;
 				}
-				Process p = Runtime.getRuntime().exec("NuSMV "+"\""+src.getAbsolutePath()+"\"");
+				Process p = Runtime.getRuntime().exec("NuSMV "+src.getAbsolutePath());
 				
 				// get the output into a separate file
 				final InputStream in = p.getInputStream();
@@ -112,33 +111,32 @@ public class GsNuSMVChecker implements GsModelChecker {
 						out.write((char)c);
 					}
 					out.close();
-				} catch (Exception e) {
+				} catch (IOException e) {
 					System.out.println(e.getMessage());
 				}
 
 				
 				// TODO: parse the output...
 
-				try {
-					p.waitFor();
-					if (p.exitValue() == 0) {
-						result.result = 2;
-						result.output = "not sure, need to parse the output";
-					} else {
-						result.result = -1;
-						result.output = "NuSMV returned an error code";
-					}
-				} catch (InterruptedException e) {
+				p.waitFor();
+				int rval = p.exitValue();
+				if (rval == 0) {
+					result.result = 2;
+					result.output = "not sure, need to parse the output";
+				} else {
 					result.result = -1;
-					result.output = "error while analysing the output";
-				} finally {
-					m_info.put(m, result);
+					result.output = "NuSMV returned an error code: "+rval;
+				}
+				m_info.put(m, result);
+				if (ui != null) {
+					ui.updateResult(this, m);
+				} else {
+					System.out.println(result.output);
 				}
 			}
 		} catch (IOException e) {
-			return null;
+			return;
 		}
-		return ret;
 	}
 
 	public Object getInfo(Object mutant) {

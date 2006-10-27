@@ -15,8 +15,9 @@ public interface GsModelChecker extends GsNamedObject {
     /**
      * @param mutants list of mutants on which to run the test
      * @return the result of the run
+     * @throws InterruptedException 
      */
-    public boolean[] run(GsRegulatoryMutants mutants, File outputDir);
+    public void run(GsRegulatoryMutants mutants, GsModelCheckerUI ui, File outputDir) throws InterruptedException;
 
     /**
      * get an object saying if this test should work for a given mutant
