@@ -1,8 +1,11 @@
 package fr.univmrs.ibdm.GINsim.modelChecker;
 
 import java.awt.Component;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -114,15 +117,23 @@ public class GsNuSMVChecker implements GsModelChecker {
 				} catch (IOException e) {
 					System.out.println(e.getMessage());
 				}
-
-				
-				// TODO: parse the output...
-
 				p.waitFor();
+				
 				int rval = p.exitValue();
 				if (rval == 0) {
+					BufferedReader brd = new BufferedReader(new FileReader(output));
+					String line;
 					result.result = 2;
-					result.output = "not sure, need to parse the output";
+					while ((line = brd.readLine()) != null) {
+						if (line.startsWith("-- specification ")) {
+							if (line.endsWith(" is true")) {
+								result.result = 1;
+								break;
+							}
+						}
+					}
+					brd.close();
+					result.output = output.getAbsolutePath();
 				} else {
 					result.result = -1;
 					result.output = "NuSMV returned an error code: "+rval;

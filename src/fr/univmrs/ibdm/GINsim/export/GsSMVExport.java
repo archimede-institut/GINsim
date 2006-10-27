@@ -214,7 +214,11 @@ public class GsSMVExport {
             String s_assign = (sync ? " = " : ".level = ");
             for (int i = 0; i < t_cst.length; i++) {
                 if (t_cst[i] != -1) {
-                    s += "(" + t_names[i] + s_assign + t_cst[i] + ") & ";
+                	if (sync || i != index) {
+                		s += "(" + t_names[i] + s_assign + t_cst[i] + ") & ";
+                	} else {
+                		s += "(level = " + t_cst[i] + ") & ";
+                	}
                 }
             }
             if ("".equals(s)) {
