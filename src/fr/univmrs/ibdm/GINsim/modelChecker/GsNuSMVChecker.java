@@ -3,7 +3,6 @@ package fr.univmrs.ibdm.GINsim.modelChecker;
 import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;

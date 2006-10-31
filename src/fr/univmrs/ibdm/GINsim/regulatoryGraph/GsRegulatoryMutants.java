@@ -310,7 +310,6 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
      */
     public void setEditedObject(GsRegulatoryMutantDef curMutant, Vector v_node_order) {
         this.curMutant = curMutant;
-        // FIXME: better default gene/message
         if (vlist == null) {
             vlist = new GsValueList(v_node_order, -1, "Select a gene...");
         } else {

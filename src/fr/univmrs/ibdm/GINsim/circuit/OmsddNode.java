@@ -441,7 +441,7 @@ public class OmsddNode {
         }
         int cst = t_circuit[level];
         if (cst != 0) {
-            OmsddNode fixedNode = next[cst-1].merge(next [cst], CLEANUP);
+        	OmsddNode fixedNode = next[cst-1].merge(next [cst], CLEANUP);
             return fixedNode.cleanup(t_circuit);
         }
         for (int i=0 ; i<next.length ; i++) {

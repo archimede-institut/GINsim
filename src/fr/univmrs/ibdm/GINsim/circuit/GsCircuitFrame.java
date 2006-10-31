@@ -782,10 +782,10 @@ class GsCircuitDescr {
             for (int i = t_pos.length - 1; i >= 0; i--) {
                 if (t_pos[i] == t_posMax[i]) {
                     t_pos[i] = 0;
-                    t_circuit[ nodeOrder.indexOf(t_me[i].getTargetVertex()) ] = t_me[i].getMin(0);
+                    t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(0);
                 } else {
                     t_pos[i]++;
-                    t_circuit[ nodeOrder.indexOf(t_me[i].getTargetVertex()) ] = t_me[i].getMin(t_pos[i]);
+                    t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(t_pos[i]);
                     goon = true;
                     break;
                 }
