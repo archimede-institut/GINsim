@@ -833,6 +833,7 @@ class GsCircuitTreeModel implements TreeModel {
         Vector v_functionnal = new Vector();
         Vector v_positive = new Vector();
         Vector v_negative = new Vector();
+        Vector v_broken = new Vector();
         for (int i = 0; i < v_circuit.size(); i++) {
             GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).circuit;
             cdescr.check(circuitAlgo, graph.getNodeOrder());
@@ -852,11 +853,19 @@ class GsCircuitTreeModel implements TreeModel {
                     if (cdescr.v_positive.size() > 1) {
                         m_parent.put(cdtree, cdescr.v_positive);
                     }
-                } else if (cdescr.v_negative != null) {
+                } 
+                if (cdescr.v_negative != null) {
                     cdtree = new GsCircuitDescrInTree(cdescr, true, GsCircuitDescr.NEGATIVE);
                     placeCircuit(v_negative, cdtree);
                     if (cdescr.v_negative.size() > 1) {
                         m_parent.put(cdtree, cdescr.v_negative);
+                    }
+                }
+                if (cdescr.v_broken != null) {
+                    cdtree = new GsCircuitDescrInTree(cdescr, true, GsCircuitDescr.BROKEN);
+                    placeCircuit(v_broken, cdtree);
+                    if (cdescr.v_broken.size() > 1) {
+                        m_parent.put(cdtree, cdescr.v_broken);
                     }
                 }
             }
@@ -871,6 +880,10 @@ class GsCircuitTreeModel implements TreeModel {
             if (v_negative.size() > 0) {
                 v_root.add("negative");
                 m_parent.put("negative", v_negative);
+            }
+            if (v_broken.size() > 0) {
+                v_root.add("broken");
+                m_parent.put("broken", v_broken);
             }
         }
         // TODO: add a sorting by context!
