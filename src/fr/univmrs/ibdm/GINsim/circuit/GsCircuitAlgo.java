@@ -73,22 +73,23 @@ public class GsCircuitAlgo {
         }
         if (t_report != null) {
             if (t_report[ei.index] != null) {
-//                Vector v_lr = t_report[ei.index];
-//                
-//                // FIXME: restore test caching ?
-//                for (int i=0 ; i<v_lr.size() ; i++) {
-//                    OmsddNode node = (OmsddNode)v_lr.get(i);
-//                    return node;
-//                }
+                Vector v_lr = t_report[ei.index];
+                for (int i=0 ; i<v_lr.size() ; i++) {
+                	subReport sr = (subReport)v_lr.get(i);
+                	if (sr.min == nextmin && sr.max == nextmax) {
+                		return sr.node;
+                	}
+                }
                 // this edge had previously been tested but for different parameters
+                // the next step will add a relevant test
             } else {
-                // some tests did exist on the same me, but not exactly the right "subedge"
+                // some tests did exist on the same multiedge, but not exactly the right "subedge"
                 t_report[ei.index] = new Vector();
             }
-        } else { // no report existed on this me, create a new one
+        } else { // no report existed on this multiedge, create a new one
             t_report = new Vector[me.getEdgeCount()];
-            m_report.put(me, t_report);
             t_report[ei.index] = new Vector();
+            m_report.put(me, t_report);
         }
         
         GsRegulatoryVertex source = me.getSource();
@@ -148,10 +149,13 @@ public class GsCircuitAlgo {
         
         // get the context tree
         OmsddNode node = getContextFromParameters(target.getTreeParameters(graph), graph.getNodeOrder().indexOf(source), min, t_circuit, nextmin, nextmax);
-        // FIXME: apply mutant
         node = checkConstraint(node).reduce();
-        t_report[ei.index].add(node);
-
+        // cache the result
+        subReport sr = new subReport();
+        sr.min = nextmin;
+        sr.max = nextmax;
+        sr.node = node;
+        t_report[ei.index].add(sr);
         return node;
     }
 
@@ -279,12 +283,12 @@ public class GsCircuitAlgo {
                 case GsCircuitDescr.FALSE:
                     ret[1] = o[1];
                     break;
-                case GsCircuitDescr.BROKEN:
+                case GsCircuitDescr.DUAL:
                     break;
                 case GsCircuitDescr.NEGATIVE:
                 case GsCircuitDescr.POSITIVE:
-                    if (o[1] == GsCircuitDescr.BROKEN || (o[1] != GsCircuitDescr.FALSE && o[1] != ret[1])) {
-                        ret[1] = GsCircuitDescr.BROKEN;
+                    if (o[1] == GsCircuitDescr.DUAL || (o[1] != GsCircuitDescr.FALSE && o[1] != ret[1])) {
+                        ret[1] = GsCircuitDescr.DUAL;
                     }
             }
         }
@@ -313,4 +317,11 @@ public class GsCircuitAlgo {
         }
         return node;
     }
+    
+    private class subReport {
+    	int min;
+    	int max;
+    	OmsddNode node;
+    }
+    
 }

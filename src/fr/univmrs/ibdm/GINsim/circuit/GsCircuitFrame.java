@@ -513,8 +513,8 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
                 case GsCircuitDescr.NEGATIVE:
                     index = ((GsCircuitDescrInTree)cdtree.circuit.v_negative.get(0)).key;
                     break;
-                case GsCircuitDescr.BROKEN:
-                    index = ((GsCircuitDescrInTree)cdtree.circuit.v_broken.get(0)).key;
+                case GsCircuitDescr.DUAL:
+                    index = ((GsCircuitDescrInTree)cdtree.circuit.v_dual.get(0)).key;
                     break;
             }
         } else if (cdtree.key >= cdtree.circuit.t_context.length) {
@@ -622,7 +622,7 @@ class GsCircuitDescr {
     /** GsRegulatoryMultiEdges in this circuit */
     public GsRegulatoryMultiEdge[] t_me;
 
-    protected static final int BROKEN = -1;
+    protected static final int DUAL = -1;
     protected static final int ALL = 0;
     protected static final int FALSE = 0;
     protected static final int POSITIVE = 1;
@@ -637,7 +637,7 @@ class GsCircuitDescr {
     // which sub circuits go in which category ?
     Vector v_positive = null;
     Vector v_negative = null;
-    Vector v_broken = null;
+    Vector v_dual = null;
     Vector v_all = new Vector();
     Vector v_functionnal = null;
     
@@ -653,7 +653,7 @@ class GsCircuitDescr {
      */
     public String sign() {
         switch (sign) {
-        case BROKEN:
+        case DUAL:
             return "%";
         case ALL:
             return ".";
@@ -762,11 +762,11 @@ class GsCircuitDescr {
                     }
                     v_functionnal.add(cdtree);
                     break;
-                case BROKEN:
-                    if (v_broken == null) {
-                        v_broken = new Vector();
+                case DUAL:
+                    if (v_dual == null) {
+                        v_dual = new Vector();
                     }
-                    v_broken.add(cdtree);
+                    v_dual.add(cdtree);
                     if (v_functionnal == null) {
                         v_functionnal = new Vector();
                     }
@@ -793,7 +793,7 @@ class GsCircuitDescr {
             sub++;
         } while (goon);
         
-        return v_positive != null || v_negative != null || v_broken != null;
+        return v_positive != null || v_negative != null || v_dual != null;
     }
 
     protected int getChildCount(int key) {
@@ -833,7 +833,7 @@ class GsCircuitTreeModel implements TreeModel {
         Vector v_functionnal = new Vector();
         Vector v_positive = new Vector();
         Vector v_negative = new Vector();
-        Vector v_broken = new Vector();
+        Vector v_dual = new Vector();
         for (int i = 0; i < v_circuit.size(); i++) {
             GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).circuit;
             cdescr.check(circuitAlgo, graph.getNodeOrder());
@@ -861,11 +861,11 @@ class GsCircuitTreeModel implements TreeModel {
                         m_parent.put(cdtree, cdescr.v_negative);
                     }
                 }
-                if (cdescr.v_broken != null) {
-                    cdtree = new GsCircuitDescrInTree(cdescr, true, GsCircuitDescr.BROKEN);
-                    placeCircuit(v_broken, cdtree);
-                    if (cdescr.v_broken.size() > 1) {
-                        m_parent.put(cdtree, cdescr.v_broken);
+                if (cdescr.v_dual != null) {
+                    cdtree = new GsCircuitDescrInTree(cdescr, true, GsCircuitDescr.DUAL);
+                    placeCircuit(v_dual, cdtree);
+                    if (cdescr.v_dual.size() > 1) {
+                        m_parent.put(cdtree, cdescr.v_dual);
                     }
                 }
             }
@@ -881,9 +881,9 @@ class GsCircuitTreeModel implements TreeModel {
                 v_root.add("negative");
                 m_parent.put("negative", v_negative);
             }
-            if (v_broken.size() > 0) {
-                v_root.add("broken");
-                m_parent.put("broken", v_broken);
+            if (v_dual.size() > 0) {
+                v_root.add("dual");
+                m_parent.put("dual", v_dual);
             }
         }
         // TODO: add a sorting by context!
@@ -989,8 +989,8 @@ class GsCircuitDescrInTree {
                     case GsCircuitDescr.NEGATIVE:
                         s += "  ("+circuit.v_negative.size()+"/"+circuit.t_sub.length+")";
                         break;
-                    case GsCircuitDescr.BROKEN:
-                        s += "  ("+circuit.v_broken.size()+"/"+circuit.t_sub.length+")";
+                    case GsCircuitDescr.DUAL:
+                        s += "  ("+circuit.v_dual.size()+"/"+circuit.t_sub.length+")";
                         break;
                 }
             }

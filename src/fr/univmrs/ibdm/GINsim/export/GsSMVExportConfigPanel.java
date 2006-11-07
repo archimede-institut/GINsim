@@ -96,6 +96,7 @@ public class GsSMVExportConfigPanel extends JPanel {
 	        splitpane.setLeftComponent(getJsp());
 	        
         	area = new JTextArea();
+        	area.setLineWrap(true);
 	        area.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
 					applyTest();
