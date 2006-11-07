@@ -7,7 +7,7 @@
 
 	<section>
 		<title>Overview</title>
-		<para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions. This short tutorial intends to introduce the main steps enabling the specification of a logical model, its simulation, and the analysis of the state transition graph. The next pages describe the Graphical User Interface, whereas the following page describes the different steps required for the definition of a logical model, as well as for its simulation and for the analysis of the resulting state transition graph. Please see the <olink targetdoc="userManual">GINsim user manual</olink> if you want more precise informations on using GINsim</para>
+		<para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions. This short tutorial intends to introduce the main steps enabling the specification of a logical model, its simulation, and the analysis of the state transition graph. The next pages describe the Graphical User Interface, whereas the following ones describe the different steps required for the definition of a logical model, as well as for its simulation and for the analysis of the resulting state transition graph. Please see the <olink targetdoc="userManual">GINsim user manual</olink> if you want more precise informations on using GINsim</para>
 
         <bibliography>
             <title>References</title>
@@ -52,9 +52,7 @@
        </section>
         
         <section><title>File menu</title>
-        <para>The <emphasis>file</emphasis> menu offers the classical options to open/save a file (in the GINML
-format), to open/close a window, and to exit the application. The <emphasis>Export</emphasis> submenu allows the saving of
-a graph in others formats (currently graphviz, biolayout and SVG). A print option will added soon.</para>
+        <para>The <emphasis>file</emphasis> menu offers the classical options to open/save a file (in the GINML format), to open/close a window, and to exit the application. The <emphasis>Export</emphasis> submenu allows the saving of a graph in others formats (currently graphviz, biolayout and SVG). A print option will added soon.</para>
         <figure id="sc_fileMenu" xreflabel="file menu"><title>The file menu</title><mediaobject><imageobject><imagedata fileref="../figures/fileMenu.png"/></imageobject></mediaobject></figure>
         <note>Some of the actions proposed in the file menu (create a new graph, open and save) are also available in the toolbar.</note>
 	   </section>
@@ -64,7 +62,7 @@ a graph in others formats (currently graphviz, biolayout and SVG). A print optio
 	       <para>The edit menu allows the selection of the main editing options.</para>
 	               <figure id="sc_editMenu" xreflabel="edit menu"><title>The edit menu</title><mediaobject><imageobject><imagedata fileref="../figures/editMenu.png"/></imageobject></mediaobject></figure>
 	        <para>A button bar facilitates the access to different options while editing a graph. Each editing mode (add a node, add an edge) is left once the action has been performed. To lock an editing mode, it suffices to double-click on the corresponding button.</para>
-            <caution>These options are NOT available when visualizing a state transition graph.</caution>
+            <caution>These options are <emphasis>not</emphasis> available when visualizing a state transition graph.</caution>
 	   </section>
 	   
         <section>
@@ -74,7 +72,7 @@ a graph in others formats (currently graphviz, biolayout and SVG). A print optio
             <listitem> to zoom (zoom In or Out);</listitem>
             <listitem>to divide the window and get two independant windows (one with the graph, the other with the complementary information);</listitem>
             <listitem>to display the edge names (pairs formed by the source and the target names);</listitem>
-            <listitem>to display/hide the grid and the mini- map.</listitem>
+            <listitem>to display/hide the grid and the mini-map.</listitem>
             </itemizedlist>
             <figure>
                 <title>View menu</title>
@@ -101,8 +99,10 @@ a graph in others formats (currently graphviz, biolayout and SVG). A print optio
          </para>
         <section>
         <title>Special case of a regulatory graph:</title>
-        <para>The only specific option for regulatory graph is run simulation (described thereafter), which enables the launching of a logical simulation (that is the construction of a state transition graph).
-        </para>
+        <orderedlist>
+                 <listitem>Running the simulation is described thereafter. It enables to launch a logical simulation (that is the construction of a state transition graph).</listitem>
+                 <listitem>Other tools are included, that are not presented in this tutorial: analysing circuits in the regulatory graph and launching an (external) model-checker on the model. These tools are documented in the <olink targetdoc="userManual">GINsim user manual</olink>.</listitem>
+        </orderedlist>
         </section>
         <section>
         <title>Special case of a state transition graph:</title>

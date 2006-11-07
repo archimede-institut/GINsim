@@ -75,7 +75,12 @@
         <itemizedlist>
         <listitem><para role="newline"><emphasis>new:</emphasis> create a new graph. This will create a new window unless the current graph is empty.</para></listitem>
         <listitem><para role="newline"><emphasis>open:</emphasis> load a graph from a file. This will create a new window unless the current graph is empty.</para></listitem>
-        <listitem><para role="newline"><emphasis>save:</emphasis> save the current graph, if no save location was previously specified, it will be asked. The <emphasis>save as</emphasis> action allows to select a new save location. The graph is saved in the, XML-based,  <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis role="strong">GINML</emphasis></ulink> format</para></listitem>
+        <listitem><para role="newline"><emphasis>save:</emphasis> save the current graph, if no save location was previously specified, it will be asked. The <emphasis>save as</emphasis> action allows to select a new save location. The graph is saved in the, XML-based,  <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis role="strong">GINML</emphasis></ulink> format. The location selection dialog offers some options:
+        <itemizedlist>
+        	<listitem>level of graphical attributes: it is possible to save only the structure of the graph, ignoring all graphical attributes, or to save only the position of nodes. The default is to save all graphical attributes (position, size, color, shape...).</listitem>
+        	<listitem>extended save: if this option is selected, the resulting file will be a zip file containing the model itself along with additionnal data (simulation parameters, definition of mutants...) that is associated to it. If the option is not selected, the file will be a text file containing only the model.</listitem>
+        </itemizedlist>
+        </para></listitem>
         <listitem><para role="newline"><emphasis>close:</emphasis> close the current graph, if no other window is opened, it will create a new graph in the current one, otherwise it will close it.</para></listitem>
         <listitem><para role="newline"><emphasis>quit:</emphasis> close all graphs and exit the GINsim application.</para></listitem>
         </itemizedlist>
@@ -131,7 +136,7 @@
           Toolbar buttons show the selected edit mode and allow to change it.
         </itemizedlist>
         <tip>Each editing mode (add a node, add an edge) will be leaved once the action has been performed. Double-clicking on the corresponding toolbar button locks the editing mode until another mode is selected.</tip>
-        These options are NOT available when visualizing a state transition graph.
+        These options are <emphasis>not</emphasis> available when visualizing a state transition graph.
       </section>
       <section>
         <title>Selection</title>
@@ -155,7 +160,7 @@
       <para>The View menu allows </para>
       <itemizedlist>
         <listitem>to zoom (zoom In or Out),</listitem>
-        <listitem>to divide the window and get two independant windows (the main one with the graph, the secondary one with the complementar information),</listitem>
+        <listitem>to divide the window and get two independant windows (the main one with the graph, the secondary one with the complementary information),</listitem>
         <listitem>to display the interaction name (in the case of a state transition graph, the name associated to an edge will be the pair of the source and target states), </listitem>
         <listitem>to move vertices to front or to back (making them easier to select),</listitem>
         <listitem>to display or not the grid and the navigation map,</listitem>
@@ -169,6 +174,8 @@
         <listitem><para role="newline">Determination of the <link linkend="scc">strongly connected components (SCC)</link> of a graph, defining a new graph composed by these SCC. You can further visualize this graph or save it.</para></listitem>
         <listitem><para role="newline"><xref linkend="layout"/>.</para></listitem>
         <listitem><para role="newline">The proper <xref linkend="simulation"/> for regulatory graphs.</para></listitem>
+        <listitem><para role="newline">Analysing <xref linkend="circuits"/> for regulatory graphs.</para></listitem>
+        <listitem><para role="newline">Running a <xref linkend="modelChecker"/> for regulatory graphs.</para></listitem>
         <listitem><para role="newline"><link linkend="pathFinder">Path search</link> for state transition graphs.</para></listitem>
         <listitem><para role="newline"><link linkend="animator">Graphical path construction (animation)</link> for state transition graphs.</para></listitem>
       </itemizedlist>
@@ -545,7 +552,14 @@
       <para>Once the simulation is done (or interrupted), the user has to choose what to do with its new graph [see <ulink url="#whattodo" type=""><link linkend="whattodo">above</link></ulink>].</para>
     </section>
   </section>
-  
+
+  <section id="circuits" xreflabel="circuits"><?dbhtml filename="circuits.html"?>
+    <title>Analysing functionnality of circuits</title>
+  </section>  
+
+  <section id="modelChecker" xreflabel="model checker"><?dbhtml filename="modelChecker.html"?>
+    <title>Running a model checker</title>
+  </section>  
   
   <section><?dbhtml filename="analyseDynamicGraph.html"?>
     <title>Analizing the state transition graph</title>
