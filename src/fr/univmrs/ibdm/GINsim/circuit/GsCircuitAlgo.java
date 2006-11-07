@@ -37,6 +37,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  */
 public class GsCircuitAlgo {
 
+	private static final boolean testOutLimit = false;
+	
     private Map m_report = new HashMap();
     private short[][] t_constraint;
     
@@ -68,7 +70,7 @@ public class GsCircuitAlgo {
         me = ei.data;
         // first look for a previous test on this interaction with the same constraints
         Vector[] t_report = (Vector[])m_report.get(me);
-        if (nextmax == -1) {
+        if (!testOutLimit || nextmax == -1) {
             nextmax = me.getTarget().getMaxValue();
         }
         if (t_report != null) {
@@ -214,15 +216,27 @@ public class GsCircuitAlgo {
             if (next.next == null) {
                 // the real end: choose the sign.
                 // activate next edge = positive, desactivate it = negative.
-                if (node.value < nextmin || node.value > nextmax) {
-                    if (next.value >= nextmin && next.value <= nextmax) {
-                        return OmsddNode.POSITIVE;
-                    }
-                    return OmsddNode.FALSE;
-                }
-                if (next.value < nextmin || next.value > nextmax) {
-                    return OmsddNode.NEGATIVE;
-                }
+            	if (testOutLimit) {
+	                if (node.value < nextmin || node.value > nextmax) {
+	                    if (next.value >= nextmin && next.value <= nextmax) {
+	                        return OmsddNode.POSITIVE;
+	                    }
+	                    return OmsddNode.FALSE;
+	                }
+	                if (next.value < nextmin || next.value > nextmax) {
+	                    return OmsddNode.NEGATIVE;
+	                }
+            	} else {
+	                if (node.value < nextmin) {
+	                    if (next.value >= nextmin) {
+	                        return OmsddNode.POSITIVE;
+	                    }
+	                    return OmsddNode.FALSE;
+	                }
+	                if (next.value < nextmin) {
+	                    return OmsddNode.NEGATIVE;
+	                }
+            	}
                 return OmsddNode.FALSE;
             }
         }
