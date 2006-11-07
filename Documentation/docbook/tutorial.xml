@@ -17,7 +17,7 @@
                 <authorgroup>
                     <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
                     <author><firstname>Elisabeth</firstname><surname>Remy</surname></author>
-                    <author><firstname>B</firstname><surname>Mossé</surname></author>
+                    <author><firstname>Brigitte</firstname><surname>Mossé</surname></author>
                     <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
                 </authorgroup>
                 <!-- Lectures Notes in Control and Information Sciences -->
@@ -28,13 +28,15 @@
             <biblioentry>
                 <title>GINsim: a software suite for the qualitative modelling, simulation and analysis of regulatory networks</title>
                 <authorgroup>
-                    <author><firstname>Aitor</firstname><surname>Larrinaga</surname></author>
+                    <author><firstname>Aitor</firstname><surname>Gonzalez Gonzalez</surname></author>
                     <author><firstname>Lucas</firstname><surname>Sanchez</surname></author>
                     <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
                     <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
                 </authorgroup>
-                <!-- biosystems -->
-                <pubdate>2005</pubdate>
+                
+                <publisher>biosystems</publisher>
+                <volumenum>84</volumenum><pagenums>91-100</pagenums>
+                <pubdate>2006</pubdate>
             </biblioentry>
         </bibliography>
     </section>
