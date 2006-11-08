@@ -1,6 +1,5 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -17,6 +16,7 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -1553864043658960569L;
 	private Vector nodeOrder;
     private GsSimulationParameters param = null;
+    private GsInitialStateManager imanager;
 	private int nbCol;
     private GsReg2dynFrame frame;
 	
@@ -26,22 +26,20 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	 * @param nodeOrder
      * @param frame
 	 */	
-	public Reg2dynTableModel(Vector nodeOrder, GsReg2dynFrame frame) {
+	public Reg2dynTableModel(Vector nodeOrder, GsReg2dynFrame frame, GsInitialStateManager imanager) {
 		super();
 		this.nodeOrder = nodeOrder;
         this.frame = frame;
+        this.imanager = imanager;
 		nbCol = nodeOrder.size();
         setValueAt("0", 0, 0);
 	}
 
 	public int getRowCount() {
-        if (param == null ) {
+        if (imanager == null ) {
             return 0;
         }
-        if (param.initStates == null) {
-            return 1;
-        }
-		return param.initStates.size()+1;
+		return imanager.getNbElements()+1;
 	}
 
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -49,6 +47,9 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	}
 
 	public Class getColumnClass(int columnIndex) {
+		if (columnIndex == 0) {
+			return Boolean.class;
+		}
 		return String.class;
 	}
 
@@ -62,8 +63,18 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		Vector element;
 
-		if (param == null || param.initStates == null || rowIndex >= param.initStates.size()) return "";
-        Map m_row = (Map)param.initStates.get(rowIndex);
+		if (columnIndex == 0) {
+			if (param == null || param.m_initState == null || rowIndex >= imanager.getNbElements()) {
+				return Boolean.FALSE;
+			}
+			if (param.m_initState.containsKey(imanager.getElement(rowIndex))) {
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}
+		columnIndex--;
+		if (param == null || imanager == null || rowIndex >= imanager.getNbElements()) return "";
+        Map m_row = ((GsInitialState)imanager.getElement(rowIndex)).m;
         element = (Vector)m_row.get(nodeOrder.get(columnIndex));
         return showValue(element, ((GsRegulatoryVertex)nodeOrder.get(columnIndex)).getMaxValue());
     }
@@ -159,14 +170,25 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         frame.setMessage("");
 		if (param == null || rowIndex > getRowCount() || columnIndex > nbCol) return;
+		if (columnIndex == 0) {
+			if (rowIndex >= imanager.getNbElements()) {
+				return;
+			}
+			if (aValue == Boolean.TRUE) {
+				param.m_initState.put(imanager.getElement(rowIndex), null);
+			} else {
+				param.m_initState.remove(imanager.getElement(rowIndex));
+			}
+			return;
+		}
+		columnIndex--;
 		int maxvalue = ((GsRegulatoryVertex)nodeOrder.get(columnIndex)).getMaxValue();
-		
         if (aValue == null || ((String)aValue).trim().equals("") || ((String)aValue).trim().equals("*")) {
             if (rowIndex >= 0 && rowIndex < getRowCount()-1) {
-                Map m_line = (Map)param.initStates.get(rowIndex);
+                Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
                 m_line.remove(nodeOrder.get(columnIndex));
                 if (m_line.size() == 0) {
-                    param.initStates.remove(m_line);
+                    imanager.remove(new int[] {rowIndex});
                     fireTableStructureChanged();
                 }
             }
@@ -220,32 +242,29 @@ public class Reg2dynTableModel extends AbstractTableModel {
 				}
 			}
             // if on the last line: create a new line
-            Map m_line;
-            if (param.initStates == null) {
-                param.initStates = new Vector();
-            }
             if (rowIndex == getRowCount()-1) {
-                    m_line = new HashMap();
-                    param.initStates.add(m_line);
-                    fireTableRowsInserted(rowIndex, rowIndex);
-            } else {
-                m_line = (Map)param.initStates.get(rowIndex);
+            	imanager.add(rowIndex, 0);
+            	fireTableRowsInserted(rowIndex, rowIndex);
             }
+            Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
             m_line.put(nodeOrder.get(columnIndex),newcell);
-
 			fireTableCellUpdated(rowIndex,columnIndex);
 		} catch (Exception e) {}
 	}
 
 	public String getColumnName(int columnIndex) {
-		if (columnIndex >= nodeOrder.size()) {
+		if (columnIndex > nodeOrder.size()) {
 			return null;
 		}
+		if (columnIndex == 0) {
+			return "use";
+		}
+		columnIndex--;
 		return ((GsRegulatoryVertex)nodeOrder.elementAt(columnIndex)).toString();
 	}
 
 	public int getColumnCount() {
-		return nodeOrder.size();
+		return nodeOrder.size()+1;
 	}
     
 	/**
@@ -253,14 +272,11 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	 *
 	 */
 	public void reset() {
-        if (param == null || param.initStates == null) {
+        if (param == null) {
             return;
         }
-        for (int i=0 ; i<param.initStates.size() ; i++) {
-            ((Map)param.initStates.get(i)).clear();
-        }
-        param.initStates.clear();
-        param.initStates = null;
+        param.m_initState.clear();
+        param.m_initState = null;
 	    fireTableStructureChanged();
 	}
 	
@@ -269,12 +285,12 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	 * @param row the index of the row to delete
 	 */
 	public void deleteRow(int row) {
-        if (param == null || param.initStates == null || row < 0 || row == getRowCount()-1) {
+        if (imanager == null || row < 0 || row == getRowCount()-1) {
             return;
         }
-        Map m = (Map)param.initStates.get(row);
+        Map m = ((GsInitialState)imanager.getElement(row)).m;
         m.clear();
-        param.initStates.remove(m);
+        imanager.remove(new int[] {row});
         fireTableRowsDeleted(row, row);
 	}
 

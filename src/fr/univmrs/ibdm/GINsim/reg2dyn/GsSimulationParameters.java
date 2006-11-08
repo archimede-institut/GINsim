@@ -30,7 +30,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
     
     GsRegulatoryMutantDef mutant;
 
-    Vector initStates = null;
+    Map m_initState = new HashMap();
     
     /**
      * empty constructor for everyday use.
@@ -112,12 +112,15 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
             default:
                 s = "";
         }
-        if (initStates == null) {
+        // FIXME: descr initial states
+        if (m_initState == null || m_initState.size()==0) {
             s += "full graph";
         } else {
             s += "initial states:\n";
-            for (int i=0 ; i<initStates.size() ; i++) {
-                Map m_init = (Map)initStates.get(i);
+            Iterator it = m_initState.keySet().iterator();
+            while (it.hasNext()) {
+            	// FIXME: get REAL initstate
+                Map m_init = ((GsInitialState)it.next()).m;
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
                     s += "  "+Reg2dynTableModel.showValue((Vector)m_init.get(vertex), vertex.getMaxValue());
@@ -179,11 +182,11 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
 			}
 			out.closeTag();
 		}
-		if (initStates != null && initStates.size() > 0) {
+		if (m_initState != null && m_initState.keySet().size() > 0) {
 			out.openTag("initstates");
-			Iterator it = initStates.iterator();
+			Iterator it = m_initState.keySet().iterator();
 			while(it.hasNext()) {
-				Map m = (Map)it.next();
+				Map m = ((GsInitialState)it.next()).m;
 				String s = "";
 				Iterator it_line = m.keySet().iterator();
 				while (it_line.hasNext()) {
@@ -313,17 +316,11 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
     			newp.m_elt.put(k, newp.v_class.get( v_class.indexOf(m_elt.get(k)) ));
     		}
     	}
-    	if (initStates != null) {
-    		newp.initStates = new Vector(initStates.size());
-    		for (int i=0 ; i<initStates.size() ; i++) {
-    			Map m = (Map)initStates.get(i);
-    			Map mclone = new HashMap();
-    			newp.initStates.add(mclone);
-    			Iterator it = m.keySet().iterator();
-    			while (it.hasNext()) {
-    				Object k = it.next();
-    				mclone.put(k, m.get(k));
-    			}
+    	if (m_initState != null) {
+    		newp.m_initState = new HashMap();
+    		Iterator it = m_initState.keySet().iterator();
+    		while (it.hasNext()) {
+    			newp.m_initState.put(it.next(), null);
     		}
     	}
     	return newp;

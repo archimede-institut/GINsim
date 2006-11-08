@@ -295,7 +295,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         if(tableInitStates == null) {
             Vector nodeNames = paramList.graph.getNodeOrder();
             tableInitStates = new GsJTable();
-            model = new Reg2dynTableModel(nodeNames, this);
+            model = new Reg2dynTableModel(nodeNames, this, paramList.imanager);
             tableInitStates.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
             tableInitStates.setModel(model);
             tableInitStates.getTableHeader().setReorderingAllowed(false);

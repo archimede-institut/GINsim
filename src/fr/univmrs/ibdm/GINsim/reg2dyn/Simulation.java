@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import java.util.Map;
+import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
@@ -115,10 +115,11 @@ public final class Simulation extends Thread implements Runnable{
         }
 
         // deploy initial states
-        if (params.initStates != null) {
+        if (params.m_initState != null) {
             this.initStates = new Vector();
-            for (int i=0 ; i<params.initStates.size() ; i++) {
-                Reg2DynStatesIterator iterator = new Reg2DynStatesIterator(listGenes, (Map)params.initStates.get(i));
+            Iterator it = params.m_initState.keySet().iterator();
+            while (it.hasNext()) {
+                Reg2DynStatesIterator iterator = new Reg2DynStatesIterator(listGenes, ((GsInitialState)it.next()).m);
                 while (iterator.hasNext()) {
                     initStates.add(iterator.next());
                 }

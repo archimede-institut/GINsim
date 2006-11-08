@@ -1,6 +1,5 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
@@ -9,7 +8,6 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
  * store all simulation parameters and offer a mean to access them.
@@ -19,6 +17,8 @@ public class GsSimulationParameterList extends GsListAbstract implements GsGraph
 
     String s_current;
     GsRegulatoryGraph graph;
+    GsInitialStateManager imanager;
+    // TODO: use imanager
 
     /**
      * @param graph
@@ -29,6 +29,7 @@ public class GsSimulationParameterList extends GsListAbstract implements GsGraph
 
     public GsSimulationParameterList(GsGraph graph, GsSimulationParameters param) {
         this.graph = (GsRegulatoryGraph)graph;
+        imanager = new GsInitialStateManager(graph);
     	prefix = "parameter_";
     	canAdd = true;
     	canEdit = true;
@@ -69,66 +70,17 @@ public class GsSimulationParameterList extends GsListAbstract implements GsGraph
 
     public GsGraphEventCascade vertexRemoved(Object data) {
         // remove it from priority classes and initial states
-    	Vector v = null;
         for (int i=0 ; i<v_data.size() ; i++) {
             GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
-            if (param.initStates != null) {
-                for (int j=0 ; j<param.initStates.size() ; j++) {
-                	Map m = (Map)param.initStates.get(j);
-                	if (m.containsKey(data)) {
-                		m.remove(data);
-                		if (v == null) {
-                			v = new Vector();
-                		}
-                		v.add(param);
-                	}
-                }
-            }
             if (param.m_elt != null) {
                 param.m_elt.remove(data);
             }
-        }
-        if (v != null) {
-        	return new SimulationParameterCascadeUpdate(v);
         }
         return null;
     }
 
     public GsGraphEventCascade vertexUpdated(Object data) {
-        // remove unavailable values from initial states
-        GsRegulatoryVertex vertex = (GsRegulatoryVertex)data;
-    	Vector v = null;
-        for (int i=0 ; i<v_data.size() ; i++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
-            if (param.initStates != null) {
-                for (int j=0 ; j<param.initStates.size() ; j++) {
-                	Map m = (Map)param.initStates.get(j);
-                    Vector v_val = (Vector)m.get(data);
-                    if (v_val != null) {
-                        for (int k=v_val.size()-1 ; k>-1 ; k--) {
-                            Integer val = (Integer)v_val.get(k);
-                            if (val.intValue() > vertex.getMaxValue()) {
-                                v_val.remove(k);
-                                if (v_val.size() == 0) {
-                                	m.remove(data);
-                                	if (m.isEmpty()) {
-                                		param.initStates.remove(m);
-                                	}
-                                }
-                        		if (v == null) {
-                        			v = new Vector();
-                        		}
-                        		v.add(param);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (v != null) {
-        	return new SimulationParameterCascadeUpdate(v);
-        }
-        return null;
+    	return null;
     }
 
     public int copy(int index) {
@@ -211,7 +163,7 @@ class SimulationParameterCascadeUpdate implements GsGraphEventCascade {
     Vector v;
 
     public String toString() {
-        StringBuffer s = new StringBuffer("updated parameters:");
+        StringBuffer s = new StringBuffer("updated initial states:");
         for (int i=0 ; i<v.size() ; i++) {
             s.append(" ");
             s.append(v.get(i));

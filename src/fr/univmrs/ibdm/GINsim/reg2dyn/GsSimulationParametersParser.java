@@ -83,7 +83,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
             case POS_PARAM:
                 if (qName.equals("initstates")) {
                     pos = POS_INITSTATES;
-                    param.initStates = new Vector();
+                    param.m_initState = new HashMap();
                 } else if (qName.equals("mutant")) {
                     String s = attributes.getValue("value");
                     if (!s.trim().equals("")) {
@@ -198,7 +198,8 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                         }
                     }
                     if (!m_row.isEmpty()) {
-                        param.initStates.add(m_row);
+                    	// FIXME: not REALLY added here!
+                        param.m_initState.put(m_row, null);
                     }
                 }
                 break;
