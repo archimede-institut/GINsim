@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -16,7 +17,7 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -1553864043658960569L;
 	private Vector nodeOrder;
     private GsSimulationParameters param = null;
-    private GsInitialStateManager imanager;
+    private GsInitialStateList imanager;
 	private int nbCol;
     private GsReg2dynFrame frame;
 	
@@ -26,7 +27,7 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	 * @param nodeOrder
      * @param frame
 	 */	
-	public Reg2dynTableModel(Vector nodeOrder, GsReg2dynFrame frame, GsInitialStateManager imanager) {
+	public Reg2dynTableModel(Vector nodeOrder, GsReg2dynFrame frame, GsInitialStateList imanager) {
 		super();
 		this.nodeOrder = nodeOrder;
         this.frame = frame;
@@ -175,9 +176,15 @@ public class Reg2dynTableModel extends AbstractTableModel {
 				return;
 			}
 			if (aValue == Boolean.TRUE) {
+				if (param.m_initState == null) {
+					param.m_initState = new HashMap();
+				}
 				param.m_initState.put(imanager.getElement(rowIndex), null);
 			} else {
-				param.m_initState.remove(imanager.getElement(rowIndex));
+				if (param.m_initState != null) {
+					param.m_initState.remove(imanager.getElement(rowIndex));
+					// set it to null if empty ? probably _not_ a good idea
+				}
 			}
 			return;
 		}
@@ -245,7 +252,7 @@ public class Reg2dynTableModel extends AbstractTableModel {
             if (rowIndex == getRowCount()-1) {
             	imanager.add(rowIndex, 0);
             	fireTableRowsInserted(rowIndex, rowIndex);
-				param.m_initState.put(imanager.getElement(rowIndex), null);
+            	setValueAt(Boolean.TRUE, rowIndex, 0);
             }
             Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
             m_line.put(nodeOrder.get(columnIndex),newcell);
@@ -276,8 +283,10 @@ public class Reg2dynTableModel extends AbstractTableModel {
         if (param == null) {
             return;
         }
-        param.m_initState.clear();
-        param.m_initState = null;
+        if (param.m_initState != null) {
+	        param.m_initState.clear();
+	        param.m_initState = null;
+        }
 	    fireTableStructureChanged();
 	}
 	

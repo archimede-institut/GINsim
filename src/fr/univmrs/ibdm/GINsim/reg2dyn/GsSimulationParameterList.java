@@ -19,7 +19,7 @@ public class GsSimulationParameterList extends GsListAbstract
 
     String s_current;
     GsRegulatoryGraph graph;
-    GsInitialStateManager imanager;
+    GsInitialStateList imanager;
     // TODO: use imanager
 
     /**
@@ -31,7 +31,7 @@ public class GsSimulationParameterList extends GsListAbstract
 
     public GsSimulationParameterList(GsGraph graph, GsSimulationParameters param) {
         this.graph = (GsRegulatoryGraph)graph;
-        imanager = new GsInitialStateManager(graph);
+        imanager = new GsInitialStateList(graph);
         imanager.addListListener(this);
     	prefix = "parameter_";
     	canAdd = true;

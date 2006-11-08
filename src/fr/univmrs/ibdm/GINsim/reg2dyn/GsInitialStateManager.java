@@ -1,103 +1,58 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 
-public class GsInitialStateManager extends GsListAbstract implements GsGraphListener {
+public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 
-	GsRegulatoryGraph graph;
+	public static final String key = "initialState";
 	
     public GsInitialStateManager(GsGraph graph) {
-        this.graph = (GsRegulatoryGraph)graph;
-    	prefix = "initState_";
-    	canAdd = true;
-    	canEdit = true;
-    	canRemove = true;
-    	canOrder = true;
-        graph.addGraphListener(this);
     }
 
-	protected Object doCreate(String name, int type) {
-		GsInitialState i = new GsInitialState();
-		i.setName(name);
-		return i;
-	}
+    public void doOpen(InputStream is, GsGraph graph) {
+    	// FIXME: restore initial states (and adapt other parser to reuse them)
+//        GsSimulationParametersParser parser = new GsSimulationParametersParser((GsRegulatoryGraph)graph);
+//        parser.startParsing(is, false);
+//        graph.addObject("reg2dyn_parameters", parser.getParameters());
+    }
 
-	public Vector getObjectType() {
-		return null;
-	}
-
-
-	public GsGraphEventCascade edgeAdded(Object data) {
-		return null;
-	}
-
-	public GsGraphEventCascade edgeRemoved(Object data) {
-		return null;
-	}
-
-	public GsGraphEventCascade edgeUpdated(Object data) {
-		return null;
-	}
-
-	public GsGraphEventCascade vertexAdded(Object data) {
-		return null;
-	}
-
-	public GsGraphEventCascade vertexRemoved(Object data) {
-        // remove it from initial states
-    	Vector v = null;
-        for (int i=0 ; i<v_data.size() ; i++) {
-        	GsInitialState is = (GsInitialState)v_data.get(i);
-        	if (is.m.containsKey(data)) {
-        		is.m.remove(data);
-        		if (v == null) {
-        			v = new Vector();
-        		}
-        		v.add(is);
+    public void doSave(OutputStreamWriter os, GsGraph graph) {
+        GsInitialStateList list = (GsInitialStateList)graph.getObject(key);
+        Vector nodeOrder = graph.getNodeOrder();
+        if (list == null || list.getNbElements() == 0 || nodeOrder == null || nodeOrder.size() == 0) {
+            return;
+        }
+        try {
+            GsXMLWriter out = new GsXMLWriter(os, null);
+            out.openTag("initialStates");
+            for (int i=0 ; i<list.getNbElements() ; i++) {
+            	GsInitialState is = (GsInitialState)list.getElement(i);
+            	out.openTag("initialState");
+            	out.addAttr("name", is.name);
+            	// FIXME: save initial states
+            	out.closeTag();
             }
+            out.closeTag();
+        } catch (IOException e) {
+            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
         }
-        if (v != null) {
-        	return new SimulationParameterCascadeUpdate(v);
-        }
-        return null;
+    }
+
+	public String getObjectName() {
+		return key;
 	}
 
-	public GsGraphEventCascade vertexUpdated(Object data) {
-        // remove unavailable values from initial states
-        GsRegulatoryVertex vertex = (GsRegulatoryVertex)data;
-    	Vector v = null;
-        for (int i=0 ; i<v_data.size() ; i++) {
-        	GsInitialState is = (GsInitialState)v_data.get(i);
-            Vector v_val = (Vector)is.m.get(data);
-            if (v_val != null) {
-                for (int k=v_val.size()-1 ; k>-1 ; k--) {
-                    Integer val = (Integer)v_val.get(k);
-                    if (val.intValue() > vertex.getMaxValue()) {
-                        v_val.remove(k);
-                        if (v_val.size() == 0) {
-                        	is.m.remove(data);
-                        	if (is.m.isEmpty()) {
-                        		remove(new int[] {i});
-                        	}
-                        }
-                		if (v == null) {
-                			v = new Vector();
-                		}
-                		v.add(is);
-                    }
-                }
-            }
-        }
-        if (v != null) {
-        	return new SimulationParameterCascadeUpdate(v);
-        }
-        return null;
-	}
+    public boolean needSaving(GsGraph graph) {
+        GsInitialStateList list = (GsInitialStateList)graph.getObject(key);
+        return (list != null && list.getNbElements() > 0);
+    }
 }

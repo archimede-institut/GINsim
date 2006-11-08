@@ -186,20 +186,9 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
 			out.openTag("initstates");
 			Iterator it = m_initState.keySet().iterator();
 			while(it.hasNext()) {
-				Map m = ((GsInitialState)it.next()).m;
-				String s = "";
-				Iterator it_line = m.keySet().iterator();
-				while (it_line.hasNext()) {
-					GsRegulatoryVertex vertex = (GsRegulatoryVertex)it_line.next();
-					Vector v_val = (Vector)m.get(vertex);
-					s += vertex.getId();
-					for (int i=0 ; i<v_val.size() ; i++) {
-						s += ";"+((Integer)v_val.get(i)).intValue();
-					}
-					s += " ";
-				}
+				GsInitialState is = (GsInitialState)it.next();
 				out.openTag("row");
-				out.addAttr("value", s.trim());
+				out.addAttr("name", is.name);
                 out.closeTag();
 			}
 			out.closeTag();
