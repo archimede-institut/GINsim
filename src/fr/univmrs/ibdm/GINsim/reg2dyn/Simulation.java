@@ -115,7 +115,7 @@ public final class Simulation extends Thread implements Runnable{
         }
 
         // deploy initial states
-        if (params.m_initState != null) {
+        if (params.m_initState != null && params.m_initState.size() > 0) {
             this.initStates = new Vector();
             Iterator it = params.m_initState.keySet().iterator();
             while (it.hasNext()) {

@@ -12,12 +12,26 @@ abstract public class GsListAbstract implements GsList {
 	protected String prefix = "name_";
 	protected String pattern = "^[a-zA-Z0-9_-]+$";
 
+	protected Vector v_listeners;
+	
 	protected boolean canAdd = false;
 	protected boolean canCopy = false;
 	protected boolean canRemove = false;
 	protected boolean canEdit = false;
 	protected boolean canOrder = false;
 	
+	public void addListListener(GsListListener l) {
+		if (v_listeners == null) {
+			v_listeners = new Vector();
+		}
+		v_listeners.add(l);
+	}
+	public void removeListListener(GsListListener l) {
+		if (v_listeners == null) {
+			return;
+		}
+		v_listeners.remove(l);
+	}
 	
 	public int add(int i, int type) {
 		if (!canAdd) {
@@ -51,9 +65,14 @@ abstract public class GsListAbstract implements GsList {
             s = prefix+(t.length+1);
         }
 
-		Object test = doCreate(s, type);
-		v_data.add(test);
-		return v_data.indexOf(test);
+		Object item = doCreate(s, type);
+		v_data.add(item);
+		if (v_listeners != null) {
+			for (int l=0 ; l<v_listeners.size() ; l++) {
+				((GsListListener)v_listeners.get(l)).ItemAdded(item);
+			}
+		}
+		return v_data.indexOf(item);
 	}
 	
 	protected abstract Object doCreate(String name, int type);
@@ -133,7 +152,13 @@ abstract public class GsListAbstract implements GsList {
 			return false;
 		}
 		for (int i=t_index.length-1 ; i>-1 ; i--) {
+			Object item = v_data.get(t_index[i]);
 			v_data.remove(t_index[i]);
+			if (v_listeners != null) {
+				for (int l=0 ; l<v_listeners.size() ; l++) {
+					((GsListListener)v_listeners.get(l)).itemRemoved(item);
+				}
+			}
 		}
 		return true;
 	}

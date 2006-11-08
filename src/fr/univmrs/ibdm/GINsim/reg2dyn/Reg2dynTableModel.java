@@ -241,10 +241,11 @@ public class Reg2dynTableModel extends AbstractTableModel {
 					min++;
 				}
 			}
-            // if on the last line: create a new line
+            // if on the last line: create a new line an check it
             if (rowIndex == getRowCount()-1) {
             	imanager.add(rowIndex, 0);
             	fireTableRowsInserted(rowIndex, rowIndex);
+				param.m_initState.put(imanager.getElement(rowIndex), null);
             }
             Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
             m_line.put(nodeOrder.get(columnIndex),newcell);
@@ -288,8 +289,6 @@ public class Reg2dynTableModel extends AbstractTableModel {
         if (imanager == null || row < 0 || row == getRowCount()-1) {
             return;
         }
-        Map m = ((GsInitialState)imanager.getElement(row)).m;
-        m.clear();
         imanager.remove(new int[] {row});
         fireTableRowsDeleted(row, row);
 	}

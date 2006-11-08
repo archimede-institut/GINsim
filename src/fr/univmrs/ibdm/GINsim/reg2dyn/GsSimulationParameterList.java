@@ -6,6 +6,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
+import fr.univmrs.ibdm.GINsim.gui.GsListListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
@@ -13,7 +14,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
  * store all simulation parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
-public class GsSimulationParameterList extends GsListAbstract implements GsGraphListener, GsRegulatoryMutantListener {
+public class GsSimulationParameterList extends GsListAbstract 
+	implements GsGraphListener, GsRegulatoryMutantListener, GsListListener {
 
     String s_current;
     GsRegulatoryGraph graph;
@@ -30,6 +32,7 @@ public class GsSimulationParameterList extends GsListAbstract implements GsGraph
     public GsSimulationParameterList(GsGraph graph, GsSimulationParameters param) {
         this.graph = (GsRegulatoryGraph)graph;
         imanager = new GsInitialStateManager(graph);
+        imanager.addListListener(this);
     	prefix = "parameter_";
     	canAdd = true;
     	canEdit = true;
@@ -153,6 +156,18 @@ public class GsSimulationParameterList extends GsListAbstract implements GsGraph
         GsSimulationParameters parameter = new GsSimulationParameters(graph.getNodeOrder());
         parameter.name = name;
 		return parameter;
+	}
+
+	public void ItemAdded(Object item) {
+	}
+
+	public void itemRemoved(Object item) {
+		for (int i=0 ; i<v_data.size() ; i++) {
+			GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
+			if (param.m_initState != null) {
+				param.m_initState.remove(item);
+			}
+		}
 	}
 }
 
