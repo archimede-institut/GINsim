@@ -11,6 +11,7 @@ import java.util.zip.ZipFile;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
+import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
@@ -136,12 +137,25 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
             ZipFile f = new ZipFile(file);
             try {
                 GsGinmlParser parser = new GsGinmlParser();
-                GsGraph graph = parser.parse(f.getInputStream(f.getEntry("ginml")), map);
+                boolean usePrefix = false;
+                ZipEntry ze = f.getEntry("ginml");
+                if (ze==null) {
+                	usePrefix = true;
+                	ze = f.getEntry(GsGraph.zip_prefix+GsRegulatoryGraph.zip_mainEntry);
+                	if (ze == null) {
+                		ze = f.getEntry(GsGraph.zip_prefix+GsDynamicGraph.zip_mainEntry);
+                	}
+                	if (ze == null) {
+                		// TODO: nicer error here
+                		System.out.println("unable to find a known main zip entry");
+                	}
+                }
+                GsGraph graph = parser.parse(f.getInputStream(ze), map);
                 Vector v_omanager = graph.getObjectManager();
                 if (v_omanager != null) {
                     for (int i=0 ; i<v_omanager.size() ; i++) {
                         GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
-                        ZipEntry ze = f.getEntry(manager.getObjectName());
+                        ze = f.getEntry((usePrefix ? GsGraph.zip_prefix:"")+manager.getObjectName());
                         if (ze != null) {
                             Object o = manager.doOpen(f.getInputStream(ze), graph);
                             graph.addObject(manager.getObjectName(), o);
@@ -152,7 +166,7 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                 if (v_omanager != null) {
                     for (int i=0 ; i<v_omanager.size() ; i++) {
                         GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
-                        ZipEntry ze = f.getEntry(manager.getObjectName());
+                        ze = f.getEntry((usePrefix ? GsGraph.zip_prefix:"")+manager.getObjectName());
                         if (ze != null) {
                             Object o = manager.doOpen(f.getInputStream(ze), graph);
                             graph.addObject(manager.getObjectName(), o);

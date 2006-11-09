@@ -42,7 +42,8 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
  */
 public final class GsDynamicGraph extends GsGraph implements GsGraphListener, GraphChangeListener {
 
-    private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
+    public final static String zip_mainEntry = "stateTransitionGraph.ginml";
+	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	private GsRegulatoryGraphOptionPanel optionPanel;
     
     protected Vector v_stables = new Vector();
@@ -63,7 +64,10 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	    }
 	    v_stables.add(s_nodeOrder);
 	}
-	
+    protected String getGraphZipName() {
+    	return zip_mainEntry;
+    }
+
 	/**
 	 */
 	public GsDynamicGraph() {

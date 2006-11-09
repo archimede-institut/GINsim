@@ -78,6 +78,8 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**  other kind of change */
     public static final int CHANGE_METADATA = 6;
     
+    protected static final String zip_prefix = "GINsim-data/";
+    
 	protected GsVertexAttributesReader vReader;
 	protected GsEdgeAttributesReader eReader;
 
@@ -239,6 +241,10 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     		}
     	}
     }
+    
+    protected String getGraphZipName() {
+    	return "ginml";
+    }
     /**
      * 
      * @param selectedOnly
@@ -255,8 +261,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                 os.close();
             } else {
                 ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName != null ? fileName : this.saveFileName));
-                // FIXME: find a way to choose the name of the main zip entry?
-                zos.putNextEntry(new ZipEntry("ginml"));
+                zos.putNextEntry(new ZipEntry(zip_prefix+getGraphZipName()));
                 OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
                 doSave(osw, saveMode, selectedOnly);
                 osw.flush();
@@ -265,9 +270,8 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                 if (v_OManager != null) {
                     for (int i=0 ; i<v_OManager.size() ; i++) {
                         GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
-                        System.out.println("manager here");
                         if (manager.needSaving(this)) {
-                            zos.putNextEntry(new ZipEntry(manager.getObjectName()));
+                            zos.putNextEntry(new ZipEntry(zip_prefix+manager.getObjectName()));
                             try {
                                 manager.doSave(osw, this);
                             } catch (Exception e) {
@@ -288,7 +292,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                     for (int i=0 ; i<v_specManager.size() ; i++) {
                         GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
                         if (manager.needSaving(this)) {
-                            zos.putNextEntry(new ZipEntry(manager.getObjectName()));
+                            zos.putNextEntry(new ZipEntry(zip_prefix+manager.getObjectName()));
                             manager.doSave(osw, this);
                             osw.flush();
                         }

@@ -41,6 +41,7 @@ public final class GsRegulatoryGraph extends GsGraph {
     GsParameterPanel vertexPanel = null;
     
     private static GsGraph copiedGraph = null;
+	public final static String zip_mainEntry = "regulatoryGraph.ginml";
     
     static {
         GsRegulatoryGraphDescriptor.registerObjectManager(new GsMutantListManager());
@@ -52,6 +53,10 @@ public final class GsRegulatoryGraph extends GsGraph {
         this(null);
     }
 
+    protected String getGraphZipName() {
+    	return zip_mainEntry;
+    }
+    
     /**
      * @param savefilename
      */
