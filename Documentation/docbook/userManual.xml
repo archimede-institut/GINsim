@@ -10,7 +10,7 @@
   <section>
     <title>Overview</title>
       <para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions. If you have never used GINsim, the <olink targetdoc="tutorial">GINsim tutorial</olink> may be a better starting point.</para>
-   <para>First, we describe the main functionalities of the tool through its main menu options. Then, we describe the specification of a regulatory graph, the simulation (ie construction of the state transition graph) and the tools available to analyse this state transition graph.</para>
+      <para>First, we describe the main functionalities of the tool through its main menu options. Then, we describe the specification of a regulatory graph, the simulation (ie construction of the state transition graph) and the tools available to analyse this state transition graph.</para>
    
            <bibliography>
             <title>References</title>
@@ -94,13 +94,14 @@
         </itemizedlist>
       </section>
       <section>
-        <title>Generic exports</title>
+        <title>Available export format</title>
         <para>GINsim comes with some generic exports that can be applied to all kinds of graphs. The following export formats are available under the File/export submenu:</para>
         <itemizedlist>
           <listitem><para role="newline"><emphasis><ulink url="http://www.graphviz.org/">Graphviz</ulink>:</emphasis> Graphs can be exported to the dot format used by graphviz graph visualisation software, those tools are particulary suitable for visualising big graphs. This export format exports only the graph structure, visual settings are losts, it is mainly here for big state transition graphs that can not be viewed within GINsim.</para></listitem>
           <listitem><para role="newline"><emphasis><ulink url="http://www.biolayout.org/">Biolayout </ulink>:</emphasis> Graphs can also be exported to the biolayout format. Like in graphviz format, visual settings are losts.</para></listitem>
           <listitem><para role="newline"><emphasis><ulink url="http://www.w3.org/Graphics/SVG/">SVG</ulink>:</emphasis> the Scalable Vector Graphic (SVG) format is an XML-based format for representing vector graphics, it is gaining more and more popularity and many tools are available to view or edit SVG files. This should be a good starting point to integrate your existing GINsim graph into a paper: export your graph as SVG, you will be able to modify it and to export it to virtually any image format.</para></listitem>
         </itemizedlist>
+        <para>In addition to these generic export format, regulatory graphs can be exported into <ulink url="http://www.sbml.org/">SBML</ulink>. <warning>MORE EXPLANATIONS ARE NEEDED</warning></para>
       </section>
     </section>
     

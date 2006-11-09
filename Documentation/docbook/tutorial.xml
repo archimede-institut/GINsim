@@ -7,8 +7,13 @@
 
 	<section>
 		<title>Overview</title>
-		<para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions. This short tutorial intends to introduce the main steps enabling the specification of a logical model, its simulation, and the analysis of the state transition graph. The next pages describe the Graphical User Interface, whereas the following ones describe the different steps required for the definition of a logical model, as well as for its simulation and for the analysis of the resulting state transition graph. Please see the <olink targetdoc="userManual">GINsim user manual</olink> if you want more precise informations on using GINsim</para>
+		<para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions. This short tutorial intends to introduce the main steps enabling the specification of a logical model, its simulation, and the analysis of the state transition graph. 
+		
+		   <para>First, we present the graphical user interface and the main options of the tools. Then, we describe the specification of a regulatory graph, taking as exemple a model of the lysis-lysogeny decision in the phage lambda. The last part of the tutorial presents the simulation of this model (ie the construction of the state transition graph) and some of the available analysis tools. Please see the <olink targetdoc="userManual">GINsim user manual</olink> if you want more precise informations on using GINsim.</para>
 
+<!--		
+		The next pages describe the Graphical User Interface, whereas the following ones describe the different steps required for the definition of a logical model, as well as for its simulation and for the analysis of the resulting state transition graph. Please see the <olink targetdoc="userManual">GINsim user manual</olink> if you want more precise informations on using GINsim</para>
+-->
         <bibliography>
             <title>References</title>
         
@@ -53,6 +58,8 @@
         
         <section><title>File menu</title>
         <para>The <emphasis>file</emphasis> menu offers the classical options to open/save a file (in the GINML format), to open/close a window, and to exit the application. The <emphasis>Export</emphasis> submenu allows the saving of a graph in others formats (currently graphviz, biolayout and SVG).</para>
+                <para>In addition to these generic export format, GINsim allows to export model in the SBML format. Please refer to the relevant part of the user manual for details.</para>
+
         <figure id="sc_fileMenu" xreflabel="file menu"><title>The file menu</title><mediaobject><imageobject><imagedata fileref="../figures/fileMenu.png"/></imageobject></mediaobject></figure>
         <note>Some of the actions proposed in the file menu (create a new graph, open and save) are also available in the toolbar.</note>
 	   </section>
