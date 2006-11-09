@@ -44,7 +44,7 @@ public class GsRegulatoryMutantParser extends GsXMLHelper {
                 // TODO: report error, already listed!!
                 return;
             }
-            mutantList = GsRegulatoryMutants.getMutants(graph);
+            mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
         } else if (qName.equals("mutant")) {
             if (mutantList == null) {
                 // TODO: report error, malformed list

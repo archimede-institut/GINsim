@@ -30,5 +30,10 @@ public interface GsGraphAssociatedObjectManager {
      * @param is
      * @param graph
      */
-    public void doOpen(InputStream is, GsGraph graph);
+    public Object doOpen(InputStream is, GsGraph graph);
+    /**
+     * create the associated object for a graph
+     * @param graph
+     */
+	public Object doCreate(GsGraph graph);
 }

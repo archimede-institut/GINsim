@@ -18,14 +18,16 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 public class GsSimulationParametersManager implements
         GsGraphAssociatedObjectManager {
 
-    public void doOpen(InputStream is, GsGraph graph) {
+	public static final String key = "reg2dyn_parameters";
+	
+    public Object doOpen(InputStream is, GsGraph graph) {
         GsSimulationParametersParser parser = new GsSimulationParametersParser((GsRegulatoryGraph)graph);
         parser.startParsing(is, false);
-        graph.addObject("reg2dyn_parameters", parser.getParameters());
+        return parser.getParameters();
     }
 
     public void doSave(OutputStreamWriter os, GsGraph graph) {
-        GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject("reg2dyn_parameters");
+        GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
         Vector nodeOrder = graph.getNodeOrder();
         if (paramList == null || paramList.getNbElements() == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -49,11 +51,15 @@ public class GsSimulationParametersManager implements
     }
 
     public String getObjectName() {
-        return "reg2dyn_parameters";
+        return key;
     }
 
     public boolean needSaving(GsGraph graph) {
-        GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject("reg2dyn_parameters");
+        GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
         return (paramList != null && paramList.getNbElements() > 0);
     }
+
+	public Object doCreate(GsGraph graph) {
+		return new GsSimulationParameterList(graph);
+	}
 }

@@ -1,13 +1,13 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -34,6 +34,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
     
     
     GsSimulationParameterList paramLists = null;
+    GsInitialStateList initList = null;
     GsRegulatoryGraph graph;
     Vector nodeOrder;
     String[] t_order;
@@ -46,6 +47,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
     public GsSimulationParametersParser(GsRegulatoryGraph graph) {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
+        initList = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
     }
     
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -87,10 +89,11 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                 } else if (qName.equals("mutant")) {
                     String s = attributes.getValue("value");
                     if (!s.trim().equals("")) {
-                        param.mutant = GsRegulatoryMutants.getMutants(graph).get(s);
+                    	GsRegulatoryMutants mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
+                        param.mutant = mutantList.get(s);
                         if (param.mutant == null) {
                             // TODO: report mutant not found
-                            System.out.println("mutant not found "+s+" ("+GsRegulatoryMutants.getMutants(graph).getNbElements()+")");
+                            System.out.println("mutant not found "+s+" ("+mutantList.getNbElements()+")");
                         }
                     }
                 } else if (qName.equals("priorityClassList")) {
@@ -156,50 +159,22 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                 break;
             case POS_INITSTATES:
                 if ("row".equals(qName)) {
-                    String[] t_s = attributes.getValue("value").trim().split(" ");
-                    Map m_row = new HashMap();
-                    for (int i=0 ; i<t_s.length ; i++) {
-                        GsRegulatoryVertex vertex = null;
-                        String[] t_val = t_s[i].split(";");
-                        if (t_val.length > 1) {
-                            for (int j=0 ; j<nodeOrder.size() ; j++) {
-                                if (((GsRegulatoryVertex)nodeOrder.get(j)).getId().equals(t_val[0])) {
-                                    vertex = (GsRegulatoryVertex)nodeOrder.get(j);
-                                    break;
-                                }
-                            }
-                            if (vertex != null) {
-                                Vector v_val = new Vector();
-                                for (int j=1 ; j<t_val.length ; j++) {
-                                    try {
-                                        Integer val = new Integer(t_val[j]);
-                                        if (val.intValue() >= 0 && val.intValue() <= vertex.getMaxValue()) {
-                                            boolean ok = true;
-                                            for (int k=0 ; k<v_val.size() ; k++) {
-                                                if (v_val.get(k).equals(val)) {
-                                                    ok = false;
-                                                    break;
-                                                }
-                                            }
-                                            if (ok) {
-                                                v_val.add(val);
-                                            }
-                                        } else {
-                                            // TODO: report error in file
-                                        }
-                                    } catch (NumberFormatException e) {
-                                        // TODO: report error in file
-                                    }
-                                }
-                                if (!v_val.isEmpty() && v_val.size() <= vertex.getMaxValue()) {
-                                    m_row.put(vertex, v_val);
-                                }
-                            }
-                        }
-                    }
-                    if (!m_row.isEmpty()) {
-                    	// FIXME: not REALLY added here!
-                        param.m_initState.put(m_row, null);
+                    String s = attributes.getValue("name");
+                    if (s == null) {
+                    	// old file, do some cleanup
+                    	int index = initList.add(-1,0);
+                    	GsInitialState istate = (GsInitialState)initList.getElement(index);
+                    	istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
+                    	param.m_initState.put(istate, null);
+                    } else {
+                    	// associate with the existing object
+                    	for (int i=0 ; i<initList.getNbElements() ; i++) {
+                    		GsInitialState istate = (GsInitialState)initList.getElement(i);
+                    		if (istate.name.equals(s)) {
+                            	param.m_initState.put(istate, null);
+                    			break;
+                    		}
+                    	}
                     }
                 }
                 break;

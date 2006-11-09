@@ -15,15 +15,14 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 
 /**
  * main method for the reg2dyn plugin
- * 
- * @author aurelien
  */
 public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
 
     static {
-        if (!GsRegulatoryGraphDescriptor.isObjectManagerRegistred("mutant")) {
+        if (!GsRegulatoryGraphDescriptor.isObjectManagerRegistred(GsMutantListManager.key)) {
             GsRegulatoryGraphDescriptor.registerObjectManager(new GsMutantListManager());
         }
+        GsRegulatoryGraphDescriptor.registerObjectManager(new GsInitialStateManager());
         GsRegulatoryGraphDescriptor.registerObjectManager(new GsSimulationParametersManager());
     }
     
@@ -63,11 +62,7 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
 //            new Reg2dynFrame(frame, (GsRegulatoryGraph)graph, m_params).setVisible(true);
             graph.getGraphManager().getMainFrame().getGsAction().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
 
-            GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject("reg2dyn_parameters");
-            if (paramList == null) {
-                paramList = new GsSimulationParameterList(graph);
-                graph.addObject("reg2dyn_parameters", paramList);
-            }
+            GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
             new GsReg2dynFrame(frame, paramList).setVisible(true);
 		}
 	}

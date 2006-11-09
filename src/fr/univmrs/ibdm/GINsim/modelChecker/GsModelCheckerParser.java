@@ -8,6 +8,7 @@ import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
@@ -44,7 +45,7 @@ public class GsModelCheckerParser extends GsXMLHelper {
     public GsModelCheckerParser(GsRegulatoryGraph graph) {
     	this.graph = graph;
     	l_tests = new modelCheckerList(graph);
-    	l_mutant = GsRegulatoryMutants.getMutants(graph);
+    	l_mutant = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
     }
     
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

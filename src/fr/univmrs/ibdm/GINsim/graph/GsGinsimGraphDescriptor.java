@@ -143,7 +143,8 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                         GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
                         ZipEntry ze = f.getEntry(manager.getObjectName());
                         if (ze != null) {
-                            manager.doOpen(f.getInputStream(ze), graph);
+                            Object o = manager.doOpen(f.getInputStream(ze), graph);
+                            graph.addObject(manager.getObjectName(), o);
                         }
                     }
                 }
@@ -153,7 +154,8 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                         GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
                         ZipEntry ze = f.getEntry(manager.getObjectName());
                         if (ze != null) {
-                            manager.doOpen(f.getInputStream(ze), graph);
+                            Object o = manager.doOpen(f.getInputStream(ze), graph);
+                            graph.addObject(manager.getObjectName(), o);
                         }
                     }
                 }

@@ -38,6 +38,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
@@ -245,7 +246,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             c.fill = GridBagConstraints.HORIZONTAL;
             c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
-            mutantModel = new GsMutantModel(GsRegulatoryMutants.getMutants(paramList.graph));
+            mutantModel = new GsMutantModel((GsRegulatoryMutants)paramList.graph.getObject(GsMutantListManager.key, true));
             panel.add(new JComboBox(mutantModel), c);
             
             // initial state
@@ -645,7 +646,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(paramList.graph));
-                    mutantModel.setMutantList(GsRegulatoryMutants.getMutants(paramList.graph));
+                    mutantModel.setMutantList((GsRegulatoryMutants)paramList.graph.getObject(GsMutantListManager.key, true));
                 }
             });
         }

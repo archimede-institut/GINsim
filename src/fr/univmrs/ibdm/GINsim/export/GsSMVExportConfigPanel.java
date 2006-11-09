@@ -24,6 +24,7 @@ import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -358,7 +359,7 @@ class GsMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
     
     GsMutantModel(GsSMVexportConfig cfg) {
     	this.cfg = cfg;
-        this.listMutants = GsRegulatoryMutants.getMutants(cfg.graph);
+        this.listMutants = (GsRegulatoryMutants)cfg.graph.getObject(GsMutantListManager.key, true);
     }
     
     void setMutantList(GsRegulatoryMutants mutants) {

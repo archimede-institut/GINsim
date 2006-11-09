@@ -30,25 +30,12 @@ import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
 public class GsRegulatoryMutants extends GsListAbstract implements GsGraphListener {
 
     /**
-     * @param graph
-     * @return mutants associated to this graph
-     */
-    public static GsRegulatoryMutants getMutants(GsRegulatoryGraph graph) {
-        GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject("mutant");
-        if (mutants == null) {
-            mutants = new GsRegulatoryMutants(graph);
-            graph.addObject("mutant", mutants);
-        }
-        return mutants;
-    }
-    
-    /**
      * edit mutants associated with a graph
      * @param graph
      * @return a panel to configure mutants
      */
     public static JPanel getMutantConfigPanel(GsRegulatoryGraph graph) {
-        GsRegulatoryMutants mutants = getMutants(graph);
+        GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
         if (mutants == null) {
             mutants = new GsRegulatoryMutants(graph);
         }
@@ -66,7 +53,6 @@ public class GsRegulatoryMutants extends GsListAbstract implements GsGraphListen
      */
     public GsRegulatoryMutants(GsRegulatoryGraph graph) {
         this.graph = graph;
-        graph.addObject("mutant", this);
         graph.addGraphListener(this);
         
         prefix = "mutant_";

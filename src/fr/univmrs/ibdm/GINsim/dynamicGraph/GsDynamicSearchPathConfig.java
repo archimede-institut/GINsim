@@ -69,7 +69,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
         }
         initialize();
         
-        Object o = graph.getObject("reg2dyn_firstState");
+        Object o = graph.getObject("reg2dyn_firstState", false);
         if (o != null && o instanceof int[]) {
             int[] t1 = (int[])o;
             int[] t2 = new int[t1.length];

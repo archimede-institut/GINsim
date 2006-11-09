@@ -12,6 +12,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.gui.GsList;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
@@ -20,15 +21,18 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 
 	public static String key = "mchecker";
 	
-	public void doOpen(InputStream is, GsGraph graph) {
+	public Object doOpen(InputStream is, GsGraph graph) {
         GsModelCheckerParser parser = new GsModelCheckerParser((GsRegulatoryGraph)graph);
         parser.startParsing(is, false);
-        graph.addObject(key, parser.getParameters());
+        return parser.getParameters();
 	}
 
 	public void doSave(OutputStreamWriter os, GsGraph graph) {
-		GsList l_test = (GsList)graph.getObject(key);
-		GsRegulatoryMutants mutants = GsRegulatoryMutants.getMutants((GsRegulatoryGraph)graph);
+		GsList l_test = (GsList)graph.getObject(key, false);
+		if (l_test == null) {
+			return;
+		}
+		GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
 		try {
 			GsXMLWriter out = new GsXMLWriter(os, null);
 			out.openTag("modelCheckerConfig");
@@ -90,11 +94,16 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 	}
 
 	public boolean needSaving(GsGraph graph) {
-		Object o = graph.getObject(key);
+		Object o = graph.getObject(key, false);
 		if (o == null || !(o instanceof GsList) || ((GsList)o).getNbElements() < 1) {
 			return false;
 		}
 		return true;
+	}
+
+	public Object doCreate(GsGraph graph) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

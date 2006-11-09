@@ -17,13 +17,16 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 public class GsMutantListManager implements
         GsGraphAssociatedObjectManager {
 
-    public void doOpen(InputStream is, GsGraph graph) {
+	public static final String key = "mutant";
+	
+    public Object doOpen(InputStream is, GsGraph graph) {
         GsRegulatoryMutantParser parser = new GsRegulatoryMutantParser((GsRegulatoryGraph)graph);
         parser.startParsing(is, false);
+        return parser.getParameters();
     }
 
     public void doSave(OutputStreamWriter os, GsGraph graph) {
-        GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject("mutant");
+        GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject(key, false);
         Vector nodeOrder = graph.getNodeOrder();
         if (lMutant == null || lMutant.getNbElements() == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -46,7 +49,11 @@ public class GsMutantListManager implements
     }
 
     public boolean needSaving(GsGraph graph) {
-        GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject("mutant");
+        GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject("mutant", false);
         return (lMutant != null && lMutant.getNbElements() > 0);
     }
+
+	public Object doCreate(GsGraph graph) {
+		return new GsRegulatoryMutants((GsRegulatoryGraph)graph);
+	}
 }

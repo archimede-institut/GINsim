@@ -509,6 +509,19 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     public Vector getObjectManager() {
         return v_OManager;
     }
+
+    public GsGraphAssociatedObjectManager getObjectManager(Object key) {
+    	if (v_OManager == null) {
+    		return null;
+    	}
+        for (int i=0 ; i<v_OManager.size() ; i++) {
+        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+        	if (manager.getObjectName().equals(key)) {
+        		return manager;
+        	}
+        }
+        return null;
+    }
     
 	/**
 	 * @return a vector of layout actions for this kind of graph
@@ -526,6 +539,24 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @return a vector of action related to this kind of graph.
      */
     abstract public Vector getSpecificObjectManager();
+    /**
+     * @param key
+     * @return the object manager associated with THIS kind of graph and to a given key
+     */
+    public GsGraphAssociatedObjectManager getSpecificObjectManager(Object key) {
+    	Vector v_OManager = GsRegulatoryGraphDescriptor.getObjectManager();
+    	if (v_OManager == null) {
+    		return null;
+    	}
+        for (int i=0 ; i<v_OManager.size() ; i++) {
+        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+        	if (manager.getObjectName().equals(key)) {
+        		return manager;
+        	}
+        }
+        return null;
+    }
+
 
 	/**
 	 * @return the node order
@@ -869,13 +900,29 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * 
      * @see #addObject(Object, Object)
      * @param key
+     * @param create if true, a non-defined object will be created
      * @return the associated object
      */
-    public Object getObject (Object key) {
+    public Object getObject (Object key, boolean create) {
         if (m_objects == null) {
-            return null;
+        	if (create) {
+        		m_objects = new HashMap();
+        	} else {
+        		return null;
+        	}
         }
-        return m_objects.get(key);
+        Object ret = m_objects.get(key);
+        if (create && ret == null) {
+        	GsGraphAssociatedObjectManager manager = getObjectManager(key);
+        	if (manager == null) {
+        		manager = getSpecificObjectManager(key);
+        	}
+        	if (manager != null) {
+        		ret = manager.doCreate(this);
+        		addObject(key, ret);
+        	} 
+        }
+        return ret;
     }
     
     /**

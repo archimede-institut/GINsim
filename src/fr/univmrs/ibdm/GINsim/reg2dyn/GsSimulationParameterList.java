@@ -7,6 +7,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
 import fr.univmrs.ibdm.GINsim.gui.GsListListener;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
@@ -20,7 +21,6 @@ public class GsSimulationParameterList extends GsListAbstract
     String s_current;
     GsRegulatoryGraph graph;
     GsInitialStateList imanager;
-    // TODO: use imanager
 
     /**
      * @param graph
@@ -31,7 +31,7 @@ public class GsSimulationParameterList extends GsListAbstract
 
     public GsSimulationParameterList(GsGraph graph, GsSimulationParameters param) {
         this.graph = (GsRegulatoryGraph)graph;
-        imanager = new GsInitialStateList(graph);
+        imanager = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
         imanager.addListListener(this);
     	prefix = "parameter_";
     	canAdd = true;
@@ -39,7 +39,7 @@ public class GsSimulationParameterList extends GsListAbstract
     	canRemove = true;
     	canOrder = true;
         graph.addGraphListener(this);
-        GsRegulatoryMutants mutants = GsRegulatoryMutants.getMutants(this.graph);
+        GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
         mutants.addListener(this);
         if (param == null) {
         	add(0, 0);

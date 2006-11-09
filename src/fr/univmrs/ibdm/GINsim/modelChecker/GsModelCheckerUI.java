@@ -29,6 +29,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
@@ -56,11 +57,7 @@ public class GsModelCheckerUI extends GsStackDialog {
     public GsModelCheckerUI(GsRegulatoryGraph graph) {
     	super(graph.getGraphManager().getMainFrame());
         this.graph = graph;
-        l_tests = (GsList)graph.getObject(GsModelCheckerAssociatedObjectManager.key);
-        if (l_tests == null) {
-        	l_tests = new modelCheckerList(graph);
-        	graph.addObject(GsModelCheckerAssociatedObjectManager.key, l_tests);
-        }
+        l_tests = (GsList)graph.getObject(GsModelCheckerAssociatedObjectManager.key, true);
         model = new modelCheckerTableModel(graph);
         table = new GsJTable(model);
         JPanel panel = new JPanel();
@@ -277,8 +274,8 @@ class modelCheckerTableModel extends DefaultTableModel {
     boolean editable = true;
     
     modelCheckerTableModel(GsRegulatoryGraph graph) {
-        mutants = GsRegulatoryMutants.getMutants(graph);
-        v_check = (modelCheckerList)graph.getObject(GsModelCheckerAssociatedObjectManager.key);
+        mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
+        v_check = (modelCheckerList)graph.getObject(GsModelCheckerAssociatedObjectManager.key, false);
     }
  
     public void lock() {
