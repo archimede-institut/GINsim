@@ -176,8 +176,10 @@
         <listitem><para role="newline">Determination of the <link linkend="scc">strongly connected components (SCC)</link> of a graph, defining a new graph composed by these SCC. You can further visualize this graph or save it.</para></listitem>
         <listitem><para role="newline"><xref linkend="layout"/>.</para></listitem>
         <listitem><para role="newline">The proper <xref linkend="simulation"/> for regulatory graphs.</para></listitem>
+        <!--
         <listitem><para role="newline">Analysing <xref linkend="circuits"/> for regulatory graphs.</para></listitem>
         <listitem><para role="newline">Running a <xref linkend="modelChecker"/> for regulatory graphs.</para></listitem>
+        -->
         <listitem><para role="newline"><link linkend="pathFinder">Path search</link> for state transition graphs.</para></listitem>
         <listitem><para role="newline"><link linkend="animator">Graphical path construction (animation)</link> for state transition graphs.</para></listitem>
       </itemizedlist>
