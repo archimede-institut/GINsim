@@ -11,6 +11,7 @@ import java.util.zip.ZipFile;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
+import fr.univmrs.ibdm.GINsim.connectivity.GsReducedGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
@@ -144,10 +145,13 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                 	ze = f.getEntry(GsGraph.zip_prefix+GsRegulatoryGraph.zip_mainEntry);
                 	if (ze == null) {
                 		ze = f.getEntry(GsGraph.zip_prefix+GsDynamicGraph.zip_mainEntry);
-                	}
-                	if (ze == null) {
-                		// TODO: nicer error here
-                		System.out.println("unable to find a known main zip entry");
+                    	if (ze == null) {
+                    		ze = f.getEntry(GsGraph.zip_prefix+GsReducedGraph.zip_mainEntry);
+                        	if (ze == null) {
+                        		// TODO: nicer error here
+                        		System.out.println("unable to find a known main zip entry");
+                        	}
+                    	}
                 	}
                 }
                 GsGraph graph = parser.parse(f.getInputStream(ze), map);

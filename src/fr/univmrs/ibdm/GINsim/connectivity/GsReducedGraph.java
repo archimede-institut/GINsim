@@ -29,6 +29,8 @@ public class GsReducedGraph extends GsGraph {
 	private ReducedParameterPanel parameterPanel = null;
     private JPanel optionPanel = null;
 
+    public static final String zip_mainEntry = "connectedComponent.ginml";
+    
 	/**
 	 * @param parent
 	 */
@@ -36,6 +38,10 @@ public class GsReducedGraph extends GsGraph {
 	    this((String)null);
         setAssociatedGraph(parent);
 	}
+	
+    protected String getGraphZipName() {
+    	return zip_mainEntry;
+    }
 
 	/**
 	 * @param map
