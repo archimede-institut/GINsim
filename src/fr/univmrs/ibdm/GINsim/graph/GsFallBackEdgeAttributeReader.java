@@ -11,15 +11,12 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
 
     private Map dataMap;
     
-    private Color defaultcolor = new Color(50, 150, 250);
     private float defaultsize = 1;
     private boolean defaultfill = true;
-    
     
     private EdgeVSdata evsd = null;
 
     private int defaultstyle;
-
     private int defaultRouting; 
     
     
@@ -31,7 +28,7 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
     }
     
     public void setDefaultEdgeColor(Color color) {
-        defaultcolor = color;
+    	GsEdgeAttributesReader.color = color;
     }
 
     public void setDefaultEdgeSize(float s) {
@@ -61,7 +58,7 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
         if (evsd == null) {
             evsd = new EdgeVSdata();
             
-            evsd.color = defaultcolor;
+            evsd.color = color;
             evsd.fill = defaultfill;
             evsd.routing = defaultRouting;
             evsd.size = defaultsize;
@@ -157,10 +154,6 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
         protected int style;
         protected List points;
 		protected float[] dash;
-    }
-
-    public Color getDefaultEdgeColor() {
-        return defaultcolor;
     }
 
     public float getDefaultEdgeSize() {

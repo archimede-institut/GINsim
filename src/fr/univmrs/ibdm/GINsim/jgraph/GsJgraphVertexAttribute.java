@@ -59,7 +59,9 @@ public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
     public GsJgraphVertexAttribute(GsJgraphtGraphManager graphmanager) {
         this.m_adaptor = graphmanager.getM_jgAdapter();
         this.defaultVertexAttr = graphmanager.getDefaultVertexAttr();
-        
+    }
+
+    public static void applyDefault(AttributeMap defaultVertexAttr) {
         GraphConstants.setBackground(defaultVertexAttr, GsVertexAttributesReader.bg);
         GraphConstants.setForeground(defaultVertexAttr, GsVertexAttributesReader.fg);
         GraphConstants.setBorder(defaultVertexAttr, (Border)v_borderRenderer[GsVertexAttributesReader.border]);
@@ -70,9 +72,8 @@ public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
         } else {
             defaultVertexAttr.remove("RENDERER");
         }
-
     }
-
+    
     public void setVertex(Object vertex) {
         cell = m_adaptor.getVertexCell(vertex);
         attr = cell.getAttributes();

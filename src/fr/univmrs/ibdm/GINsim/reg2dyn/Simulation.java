@@ -5,7 +5,6 @@ import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
@@ -32,10 +31,9 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 public final class Simulation extends Thread implements Runnable{
 	
 	private GsDynamicGraph dynGraph;
+	private GsVertexAttributesReader vreader;
 	private Reg2dynFrame frame;
 	private boolean goon = true;
-    GsVertexAttributesReader vreader;
-    GsEdgeAttributesReader ereader;
 
 	private int maxdepth; 		// limitation of the depth for exploration (all types but BFS)
 	private int maxnodes; 		// limitation of the number of nodes for exploration (all types)
@@ -72,10 +70,8 @@ public final class Simulation extends Thread implements Runnable{
 	protected Simulation(GsRegulatoryGraph regGraph, Reg2dynFrame frame, GsSimulationParameters params) {
 		this.frame = frame;
 		dynGraph = new GsDynamicGraph(regGraph);
+		vreader = dynGraph.getGraphManager().getVertexAttributesReader();
 		dynGraph.setAssociatedGraph(regGraph);
-        vreader = dynGraph.getGraphManager().getVertexAttributesReader();
-        ereader = dynGraph.getGraphManager().getEdgeAttributesReader();
-	    vreader.setDefaultVertexSize(5+10*regGraph.getNodeOrder().size(), 25);
 		listGenes = regGraph.getNodeOrder();
 		length = listGenes.size();
         this.params = params;
@@ -454,11 +450,7 @@ public final class Simulation extends Thread implements Runnable{
                         calcDynGraphByPriorityClass();
                     } else {
                         // if the node was already present add the edge anyway
-                        Object edge = dynGraph.addEdge(thisnode, node, multiple);
-                        if (i > 3) {
-                            ereader.setEdge(edge);
-                            ereader.setLineWidth(2);
-                        }
+                        dynGraph.addEdge(thisnode, node, multiple);
                     }
                     break;
                 case GsReg2dynPriorityClass.ASYNCHRONOUS: // asynchronous case

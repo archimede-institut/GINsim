@@ -24,6 +24,7 @@ public class GsJgraph extends JGraph {
         
         setGraphLayoutCache(new GraphLayoutCache(graph.getM_jgAdapter(), new GsCellViewFactory(graph)));
         
+        // FIXME: default values
 		setGridVisible(true);
 		setGridEnabled(false);
 		setDisconnectable(false);

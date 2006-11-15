@@ -11,15 +11,6 @@ public class GsFallbackVertexAttributeReader extends GsVertexAttributesReader {
     private Map dataMap = null;
     private VertexVSdata vvsd;
     
-    protected int w = 60;
-    protected int h = 25;
-    protected Color fgcolor = Color.WHITE;
-    protected Color bgcolor = new Color(255, 150, 0);
-    
-    protected int border = BORDER_RAISED;
-    protected int shape;
-
-    
     /**
      * @param map
      */
@@ -31,11 +22,11 @@ public class GsFallbackVertexAttributeReader extends GsVertexAttributesReader {
         vvsd = (VertexVSdata)dataMap.get(vertex);
         if (vvsd == null) {
             vvsd = new VertexVSdata();
-            vvsd.bgcolor = bgcolor;
-            vvsd.fgcolor = fgcolor;
+            vvsd.bgcolor = bg;
+            vvsd.fgcolor = fg;
             vvsd.border = border;
-            vvsd.w = w;
-            vvsd.h = h;
+            vvsd.w = width;
+            vvsd.h = height;
             vvsd.shape = shape;
             dataMap.put(vertex, vvsd);
         }
@@ -116,27 +107,6 @@ public class GsFallbackVertexAttributeReader extends GsVertexAttributesReader {
         vvsd.h = h;
     }
 
-    public void setDefaultVertexBackground(Color color) {
-        bgcolor = color;
-    }
-
-    public void setDefaultVertexForeground(Color color) {
-        fgcolor = color;
-    }
-
-    public void setDefaultVertexBorder(int index) {
-        border = index;
-    }
-
-    public void setDefaultVertexSize(int w, int h) {
-        this.w = w;
-        this.h = h;
-    }
-
-    public void setDefaultVertexShape(int shape) {
-        this.shape = shape;
-    }
-
     public void setBorder(int index) {
         if (vvsd == null) {
             return;
@@ -173,30 +143,5 @@ public class GsFallbackVertexAttributeReader extends GsVertexAttributesReader {
         
         protected int shape;
         protected int border;
-    }
-
-
-    public Color getDefaultVertexBackground() {
-        return bgcolor;
-    }
-
-    public Color getDefaultVertexForeground() {
-        return fgcolor;
-    }
-
-    public int getDefaultVertexBorder() {
-        return border;
-    }
-
-    public int getDefaultVertexWidth() {
-        return w;
-    }
-
-    public int getDefaultVertexHeight() {
-        return h;
-    }
-
-    public int getDefaultVertexShape() {
-        return shape;
     }
 }
