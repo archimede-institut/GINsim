@@ -88,7 +88,9 @@ public abstract class GsEdgeAttributesReader {
 	/**
 	 * @return the default edge color
 	 */
-	abstract public Color getDefaultEdgeColor();
+	public Color getDefaultEdgeColor() {
+		return color;
+	}
 	/**
 	 * @return the default edge size
 	 */

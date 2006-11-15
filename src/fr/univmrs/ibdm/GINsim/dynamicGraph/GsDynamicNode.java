@@ -2,6 +2,7 @@ package fr.univmrs.ibdm.GINsim.dynamicGraph;
 
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 
+
 /**
  * a vertex in a state transition graph (ie a possible state of the regulatory graph).
  */
@@ -42,12 +43,9 @@ public final class GsDynamicNode {
 	 */
 	public void setStable(boolean s, GsVertexAttributesReader vreader) {
 		stable = s;
-		if (s) {
+		if (stable) {
 			vreader.setVertex(this);
-			vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
-		} else {
-			vreader.setVertex(this);
-			vreader.setShape(GsVertexAttributesReader.SHAPE_RECTANGLE);
+			vreader.setShape(vreader.getDefaultVertexShape() == GsVertexAttributesReader.SHAPE_RECTANGLE ? GsVertexAttributesReader.SHAPE_ELLIPSE: GsVertexAttributesReader.SHAPE_RECTANGLE);
 		}
 	}
 	

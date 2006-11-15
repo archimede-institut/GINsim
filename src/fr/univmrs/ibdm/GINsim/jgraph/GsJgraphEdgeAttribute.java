@@ -52,15 +52,18 @@ public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
         this.m_adaptor = graphmanager.getM_jgAdapter();
         this.g = graphmanager.getG();
         this.defaultEdgeAttr = graphmanager.getDefaultEdgeAttr();
+    	applyDefault(defaultEdgeAttr);
         glc = graphmanager.getJgraph().getGraphLayoutCache();
         // routing aren't static: they need knowledge of the graphManager.
     	v_routingRenderer = new Object[NBROUTING];
     	v_routingRenderer[ROUTING_AUTO] = graphmanager.getPedgerouting();
     	v_routingRenderer[ROUTING_NONE] = null;
-            
-        GraphConstants.setLineColor(defaultEdgeAttr, GsEdgeAttributesReader.color);
     }
 
+    public static void applyDefault(AttributeMap defaultEdgeAttr) {
+        GraphConstants.setLineColor(defaultEdgeAttr, GsEdgeAttributesReader.color);
+    }
+    
 	public void setDefaultEdgeSize(float s) {
 		defaultLineWidth = s;
 		GraphConstants.setLineWidth(defaultEdgeAttr, s);

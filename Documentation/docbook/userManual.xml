@@ -3,14 +3,14 @@
 
 <article lang="en-GB"><?dbhtml dir="userManual"?>
   <articleinfo>
-    <title>GINsim user manual</title>
+    <title>GINsim user manual BOUH</title>
     <bibliomisc>Web : http://gin.univ-mrs.fr/GINsim/</bibliomisc>
   </articleinfo>
 
   <section>
     <title>Overview</title>
       <para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions. If you have never used GINsim, the <olink targetdoc="tutorial">GINsim tutorial</olink> may be a better starting point.</para>
-   <para>First, we describe the main functionalities of the tool through its main menu options. Then, we describe the specification of a regulatory graph, the simulation (ie construction of the state transition graph) and the tools available to analyse this state transition graph.</para>
+      <para>First, we describe the main functionalities of the tool through its main menu options. Then, we describe the specification of a regulatory graph, the simulation (ie construction of the state transition graph) and the tools available to analyse this state transition graph.</para>
    
            <bibliography>
             <title>References</title>
@@ -20,7 +20,7 @@
                 <authorgroup>
                     <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
                     <author><firstname>Elisabeth</firstname><surname>Remy</surname></author>
-                    <author><firstname>B</firstname><surname>Mossé</surname></author>
+                    <author><firstname>Brigitte</firstname><surname>Mossé</surname></author>
                     <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
                 </authorgroup>
                 <!-- Lectures Notes in Control and Information Sciences -->
@@ -75,11 +75,12 @@
         <itemizedlist>
         <listitem><para role="newline"><emphasis>new:</emphasis> create a new graph. This will create a new window unless the current graph is empty.</para></listitem>
         <listitem><para role="newline"><emphasis>open:</emphasis> load a graph from a file. This will create a new window unless the current graph is empty.</para></listitem>
-        <listitem><para role="newline"><emphasis>save:</emphasis> save the current graph, if no save location was previously specified, it will be asked. The <emphasis>save as</emphasis> action allows to select a new save location. The graph is saved in the, XML-based,  <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis role="strong">GINML</emphasis></ulink> format. The location selection dialog offers some options:
+        <listitem><para role="newline"><emphasis>save:</emphasis> save the current graph, if no save location was previously specified, it will be asked. The <emphasis>save as</emphasis> action allows to select a new save location. The graph is saved in the, XML-based,  <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis role="strong">GINML</emphasis></ulink> format. The location selection dialog offers to choose the level of graphical attributes: it is possible to save only the structure of the graph, ignoring all graphical attributes, or to save only the position of nodes. The default is to save all graphical attributes (position, size, color, shape...).
+<!--
         <itemizedlist>
-        	<listitem>level of graphical attributes: it is possible to save only the structure of the graph, ignoring all graphical attributes, or to save only the position of nodes. The default is to save all graphical attributes (position, size, color, shape...).</listitem>
         	<listitem>extended save: if this option is selected, the resulting file will be a zip file containing the model itself along with additionnal data (simulation parameters, definition of mutants...) that is associated to it. If the option is not selected, the file will be a text file containing only the model.</listitem>
         </itemizedlist>
+-->
         </para></listitem>
         <listitem><para role="newline"><emphasis>close:</emphasis> close the current graph, if no other window is opened, it will create a new graph in the current one, otherwise it will close it.</para></listitem>
         <listitem><para role="newline"><emphasis>quit:</emphasis> close all graphs and exit the GINsim application.</para></listitem>
@@ -93,13 +94,14 @@
         </itemizedlist>
       </section>
       <section>
-        <title>Generic exports</title>
+        <title>Available export format</title>
         <para>GINsim comes with some generic exports that can be applied to all kinds of graphs. The following export formats are available under the File/export submenu:</para>
         <itemizedlist>
           <listitem><para role="newline"><emphasis><ulink url="http://www.graphviz.org/">Graphviz</ulink>:</emphasis> Graphs can be exported to the dot format used by graphviz graph visualisation software, those tools are particulary suitable for visualising big graphs. This export format exports only the graph structure, visual settings are losts, it is mainly here for big state transition graphs that can not be viewed within GINsim.</para></listitem>
           <listitem><para role="newline"><emphasis><ulink url="http://www.biolayout.org/">Biolayout </ulink>:</emphasis> Graphs can also be exported to the biolayout format. Like in graphviz format, visual settings are losts.</para></listitem>
           <listitem><para role="newline"><emphasis><ulink url="http://www.w3.org/Graphics/SVG/">SVG</ulink>:</emphasis> the Scalable Vector Graphic (SVG) format is an XML-based format for representing vector graphics, it is gaining more and more popularity and many tools are available to view or edit SVG files. This should be a good starting point to integrate your existing GINsim graph into a paper: export your graph as SVG, you will be able to modify it and to export it to virtually any image format.</para></listitem>
         </itemizedlist>
+        <para>In addition to these generic export format, regulatory graphs can be exported into <ulink url="http://www.sbml.org/">SBML</ulink>. <warning>MORE EXPLANATIONS ARE NEEDED</warning></para>
       </section>
     </section>
     
@@ -174,8 +176,10 @@
         <listitem><para role="newline">Determination of the <link linkend="scc">strongly connected components (SCC)</link> of a graph, defining a new graph composed by these SCC. You can further visualize this graph or save it.</para></listitem>
         <listitem><para role="newline"><xref linkend="layout"/>.</para></listitem>
         <listitem><para role="newline">The proper <xref linkend="simulation"/> for regulatory graphs.</para></listitem>
+<!--				
         <listitem><para role="newline">Analysing <xref linkend="circuits"/> for regulatory graphs.</para></listitem>
         <listitem><para role="newline">Running a <xref linkend="modelChecker"/> for regulatory graphs.</para></listitem>
+-->
         <listitem><para role="newline"><link linkend="pathFinder">Path search</link> for state transition graphs.</para></listitem>
         <listitem><para role="newline"><link linkend="animator">Graphical path construction (animation)</link> for state transition graphs.</para></listitem>
       </itemizedlist>
@@ -317,21 +321,21 @@
     <section>
       <title>Node order</title>
       <para>The left part of the regulatory graph property tab shows the current node order and allows to modify it. To modify it, select the nodes you want to move, then click on the "up" or "down" button:</para>
-      <figure id="orderAnim">
-      <title>re-order nodes</title>
-      <mediaobject><imageobject><imagedata fileref="../figures/node_order.png"/></imageobject></mediaobject>
+      <figure>
+				<title>re-order nodes</title>
+				<graphic  id="orderAnim" fileref="../figures/node_order.png"/>
+				<ulink url="javascript:show('orderAnim')">Show animation</ulink>
       </figure>
-      <para role="center"><ulink id="l_orderAnim" url="javascript:show('orderAnim')">Show animation</ulink></para>
       
     </section>
     <section>
       <title>Nodes</title>
       <para>When a single node is selected, the "modelling attributes" tab allows to configure this node:</para>
-      <figure id="fig_nodeSetting">
+      <figure>
       <title>Settings of a node</title>
-      <mediaobject><imageobject><imagedata fileref="../figures/node_config.png"/></imageobject></mediaobject>
+      <graphic id="fig_nodeSetting" fileref="../figures/node_config.png"/>
+	 <ulink url="javascript:show('fig_nodeSetting')">Show animation</ulink>
       </figure>
-      <para role="center"><ulink id="l_fig_nodeSetting" url="javascript:show('fig_nodeSetting')">Show animation</ulink></para>
       <note><para>The "notes" and "parameters" buttons switch the right part between <link linkend="notes">notes</link> and <link linkend="logicalParameters">logical parameters</link> editing.</para></note>
 
       <itemizedlist>
@@ -349,11 +353,11 @@
       <para>The right list contains all interactions on the selected node, the left one contains logical parameters, it starts empty, let's see how to fill it. We want this node to take the value "1" when some interactions are actives:</para>
       <para>first, select the corresponding interactions:</para>
       <para>then, click the "&lt;&lt;" button to create a new logical parameter on the left, filled with interactions selected on the right.</para>
-      <figure id="logPara">
+      <figure>
       <title>Editing logical parameters</title>
-      <mediaobject><imageobject><imagedata fileref="../figures/logical_parameters_add.png"/></imageobject></mediaobject>
+      <graphic id="logPara" fileref="../figures/logical_parameters_add.png"/>
+	  <ulink url="javascript:show('logPara')">Show animation</ulink>
       </figure>
-      <para role="center"><ulink id="l_logPara" url="javascript:show('logPara')">Show animation</ulink></para>
 
        <tip><itemizedlist>
       <listitem>Adding twice the same interaction set is not possible.</listitem>
@@ -367,12 +371,12 @@
     <section>
       <title>Interactions</title>
       <para>When a single edge is selected, the "modelling attributes" tab allow to set the parameters of this edge:
-      <figure id="fig_edgeConfig">
+      <figure>
       <title>Settings of an edge</title>
-      <mediaobject><imageobject><imagedata fileref="../figures/interaction_config.png"/></imageobject></mediaobject>
+      <graphic id="fig_edgeConfig" fileref="../figures/interaction_config.png"/>
+		<ulink url="javascript:show('fig_edgeConfig')">Show animation</ulink>
       </figure>
       </para>
-      <para role="center"><ulink id="l_fig_edgeConfig" url="javascript:show('fig_edgeConfig')">Show animation</ulink></para>
       <para>
       An edge represents that its source node has an effect on its target node. As a node can have diferent effects on another node depending on its level of activation, edges can contain several interactions.
       <itemizedlist>
@@ -461,11 +465,12 @@
         </itemizedlist>
         The default is to have all genes in a single asynchronous priority class, leading to the same state transition graph as the one obtained under the asynchronous mode. The configuration dialog allows to add and configure priority classes, and to move nodes from one priority classes to another.
         </para>
-      <figure id="fig_priorityClass">
+      <figure>
       <title>Priority class</title>
-      <mediaobject><imageobject><imagedata fileref="../figures/priorityClass.png"/></imageobject></mediaobject>
+      <graphic id="fig_priorityClass" fileref="../figures/priorityClass.png"/>
+	  <ulink url="javascript:show('fig_priorityClass')">Show animation</ulink>
       </figure>
-      <para role="center"><ulink id="l_fig_priorityClass" url="javascript:show('fig_priorityClass')">Show animation</ulink></para>
+      <para role="center"></para>
     <para>The left part shows priority classes and allows to edit their internal mode (through the toggles in the "sync" column) and name.
     The two column on the right show all nodes of the model, some of which are in the selected class and can be removed from it, and the others, associated with an other class, can be added to it.
     </para>
@@ -552,7 +557,7 @@
       <para>Once the simulation is done (or interrupted), the user has to choose what to do with its new graph [see <ulink url="#whattodo" type=""><link linkend="whattodo">above</link></ulink>].</para>
     </section>
   </section>
-
+<!--
   <section id="circuits" xreflabel="circuits"><?dbhtml filename="circuits.html"?>
     <title>Analysing functionnality of circuits</title>
   </section>  
@@ -560,7 +565,7 @@
   <section id="modelChecker" xreflabel="model checker"><?dbhtml filename="modelChecker.html"?>
     <title>Running a model checker</title>
   </section>  
-  
+-->  
   <section><?dbhtml filename="analyseDynamicGraph.html"?>
     <title>Analizing the state transition graph</title>
     <section id="scc">
@@ -610,11 +615,11 @@
       <title>Animation plugin</title>
       <para>This plugin makes a visual link between the state transition graph and the regulatory graph. It can be launched from both of them: it will ask the user to open the second graph if it can not find it automatically.</para>
       <para>It can be used as a more visual way to represent a state: when a state is selected, the regulatory graph is colorized according to the selected state: actives genes and interactions are highlighted (but it is not perfect as each edge can contain several interactions)</para>
-      <figure id="fig_animator">
+      <figure>
         <title>The animation plugin</title>
-        <mediaobject><imageobject><imagedata fileref="../figures/animator.png"/></imageobject></mediaobject>
+        <graphic id="fig_animator" fileref="../figures/animator.png"/>
+	    <ulink id="l_fig_animator" url="javascript:show('fig_animator')">Show animation</ulink>
       </figure>
-      <para role="center"><ulink id="l_fig_animator" url="javascript:show('fig_animator')">Show animation</ulink></para>
 
       <para>The main purpose is to build a path in the state transition graph: </para>
       <para>when the first node is selected, it is colorized (in blue) and it shows which states can be reached from here. You can still select other states (and the regulatory graph will be colorized) but the path is not modified, if you select on of the "valid" states, this one is added to the path and the new "valid" states are highlighted.</para>

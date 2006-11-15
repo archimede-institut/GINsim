@@ -39,10 +39,10 @@ import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 public class GsJgraphtGraphManager extends GsGraphManager {
 
     private ListenableGraph     	g 				= null;
-    private JGraphModelAdapter 	m_jgAdapter     	= null;
-    private GsJgraph 			jgraph 			= null;
-    private GsGraph 			    gsGraph		    = null;
-    private GsParallelEdgeRouting pedgerouting	= null;
+    private JGraphModelAdapter 		m_jgAdapter    	= null;
+    private GsJgraph 				jgraph 			= null;
+    private GsGraph 				gsGraph		    = null;
+    private GsParallelEdgeRouting 	pedgerouting	= null;
     private GraphUndoManager	    undoManager		= null;
     
     private boolean visible = false;
@@ -328,13 +328,9 @@ public class GsJgraphtGraphManager extends GsGraphManager {
 	}
 
     public List getIncomingEdges(Object vertex) {
-    		try {
-	        if (g instanceof ListenableDirectedGraph) {
-	            return ((ListenableDirectedGraph)g).incomingEdgesOf(vertex);
-	        }
-    		} catch (Exception e) {
-    			// FIXME: exception triggered by some undo ?!
-    		}
+    	if (g instanceof ListenableDirectedGraph) {
+    		return ((ListenableDirectedGraph)g).incomingEdgesOf(vertex);
+    	}
         return g.edgesOf(vertex);
     }
 
@@ -413,11 +409,13 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         if (mainFrame != null) {
             defaultVertexAttr = JGraphModelAdapter.createDefaultVertexAttributes();
             defaultEdgeAttr = JGraphModelAdapter.createDefaultEdgeAttributes(g);
-            m_jgAdapter = new JGraphModelAdapter(g, defaultVertexAttr, defaultEdgeAttr);
-	        undoManager = new GraphUndoManager();
-	        jgraph = new GsJgraph( this );
-	        jgraph.getModel().addUndoableEditListener(undoManager);
+            
+	        GsJgraphEdgeAttribute.applyDefault(defaultEdgeAttr);
+	        GsJgraphVertexAttribute.applyDefault(defaultVertexAttr);
 	        pedgerouting = new GsParallelEdgeRouting();
+            
+            m_jgAdapter = new JGraphModelAdapter(g, defaultVertexAttr, defaultEdgeAttr);
+	        jgraph = new GsJgraph( this );
 	        visible = true;
             rereadVS();
         }

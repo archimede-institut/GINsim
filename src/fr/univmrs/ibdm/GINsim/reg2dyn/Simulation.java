@@ -36,8 +36,7 @@ public final class Simulation extends Thread implements Runnable{
 	private GsReg2dynFrame frame;
 	private boolean goon = true;
     GsVertexAttributesReader vreader;
-    GsEdgeAttributesReader ereader;
-
+    
 	private int maxdepth; 		// limitation of the depth for exploration (all types but BFS)
 	private int maxnodes; 		// limitation of the number of nodes for exploration (all types)
 	private Vector initStates; 
@@ -75,7 +74,6 @@ public final class Simulation extends Thread implements Runnable{
 		dynGraph = new GsDynamicGraph(regGraph);
 		dynGraph.setAssociatedGraph(regGraph);
         vreader = dynGraph.getGraphManager().getVertexAttributesReader();
-        ereader = dynGraph.getGraphManager().getEdgeAttributesReader();
 	    vreader.setDefaultVertexSize(5+10*regGraph.getNodeOrder().size(), 25);
 		listGenes = regGraph.getNodeOrder();
 		length = listGenes.size();
@@ -453,11 +451,7 @@ public final class Simulation extends Thread implements Runnable{
                         calcDynGraphByPriorityClass();
                     } else {
                         // if the node was already present add the edge anyway
-                        Object edge = dynGraph.addEdge(thisnode, node, multiple);
-                        if (i > 3) {
-                            ereader.setEdge(edge);
-                            ereader.setLineWidth(2);
-                        }
+                        dynGraph.addEdge(thisnode, node, multiple);
                     }
                     break;
                 case GsReg2dynPriorityClass.ASYNCHRONOUS: // asynchronous case

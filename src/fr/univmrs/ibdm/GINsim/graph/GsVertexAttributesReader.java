@@ -11,12 +11,12 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
  */
 public abstract class GsVertexAttributesReader {
 
-    protected static Color bg = new Color(((Integer)GsOptions.getOption("vs.vertexbg", new Integer(-26368))).intValue());
-    protected static Color fg = new Color(((Integer)GsOptions.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
-    protected static int shape = ((Integer)GsOptions.getOption("vs.vertexshape", new Integer(0))).intValue();
-    protected static int border = ((Integer)GsOptions.getOption("vs.vertexborder", new Integer(1))).intValue();
-    protected static int height = ((Integer)GsOptions.getOption("vs.vertexheight", new Integer(30))).intValue();
-    protected static int width = ((Integer)GsOptions.getOption("vs.vertexwidth", new Integer(55))).intValue();
+    public static Color bg = new Color(((Integer)GsOptions.getOption("vs.vertexbg", new Integer(-26368))).intValue());
+    public static Color fg = new Color(((Integer)GsOptions.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
+    public static int shape = ((Integer)GsOptions.getOption("vs.vertexshape", new Integer(0))).intValue();
+    public static int border = ((Integer)GsOptions.getOption("vs.vertexborder", new Integer(1))).intValue();
+    public static int height = ((Integer)GsOptions.getOption("vs.vertexheight", new Integer(30))).intValue();
+    public static int width = ((Integer)GsOptions.getOption("vs.vertexwidth", new Integer(55))).intValue();
     
     protected static Vector v_shape = null;
     protected static Vector v_border = null;
@@ -124,53 +124,76 @@ public abstract class GsVertexAttributesReader {
      * set the default background color for vertices.
      * @param color
      */
-	abstract public void setDefaultVertexBackground(Color color);
+	public void setDefaultVertexBackground(Color color) {
+		bg = color;
+	}
     /**
      * set the default foreground color for vertices.
      * @param color
      */
-	abstract public void setDefaultVertexForeground(Color color);
+	public void setDefaultVertexForeground(Color color) {
+		fg = color;
+	}
     /**
      * set the default kind of border for vertices.
      * @param index
      */
-	abstract public void setDefaultVertexBorder(int index);
+	public void setDefaultVertexBorder(int index) {
+		border = index;
+	}
 	/**
 	 * set the default size for vertices.
 	 * @param w
 	 * @param h
 	 */
-	abstract public void setDefaultVertexSize(int w, int h);
+	public void setDefaultVertexSize(int w, int h) {
+		width = w;
+		height = h;
+	}
 	/**
 	 * set the default shape for vertices.
 	 * @param shape
 	 */
-	abstract public void setDefaultVertexShape(int shape);
+	public void setDefaultVertexShape(int shape) {
+		GsVertexAttributesReader.shape = shape;
+	}
 
     /**
      * @return the default background color for vertices.
      */
-	abstract public Color getDefaultVertexBackground();
+	public Color getDefaultVertexBackground() {
+		return bg;
+	}
     /**
      * @return the default foreground color for vertices.
      */
-	abstract public Color getDefaultVertexForeground();
+	public Color getDefaultVertexForeground() {
+		return fg;
+	}
     /**
      * @return the default kind of border for vertices.
      */
-	abstract public int getDefaultVertexBorder();
+	public int getDefaultVertexBorder() {
+		return border;
+	}
 	/**
 	 * @return the default width for vertices.
 	 */
-	abstract public int getDefaultVertexWidth();
+	public int getDefaultVertexWidth() {
+		return width;
+	}
 	/**
 	 * @return the default height for vertices.
 	 */
-	abstract public int getDefaultVertexHeight();
+	public int getDefaultVertexHeight() {
+		return height;
+	}
 	/**
 	 * @return the default shape for vertices.
 	 */
-	abstract public int getDefaultVertexShape();
+	public int getDefaultVertexShape() {
+		return shape;
+	}
 
 	/**
 	 * change the kind of border for this vertex

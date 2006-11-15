@@ -702,7 +702,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             }
         }
         vReader = graphManager.getVertexAttributesReader();
-    	    eReader = graphManager.getEdgeAttributesReader();
+    	eReader = graphManager.getEdgeAttributesReader();
         saved = true;
 	}
 	

@@ -351,7 +351,6 @@ abstract public class GsGraphManager {
      */
     public boolean hasFallBackVSData() {
         return true;
-        //return ((evsmap != null && evsmap.size() > 0) || (vvsmap != null && vvsmap.size() > 0));
     }
     
     /**
