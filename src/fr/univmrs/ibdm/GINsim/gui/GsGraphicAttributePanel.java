@@ -13,7 +13,6 @@ import java.util.Vector;
 
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -65,8 +64,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	private javax.swing.JPanel jP_edge = null;
 	private javax.swing.JPanel jP_node = null;
 	private javax.swing.JPanel jP_empty = null;
-	private JComboBox jCB_simpleBorder = null;
-	private javax.swing.JLabel jL_simpleBorder = null;
 
 	private JCheckBox jCB_selectLineColor = null;
 	private JCheckBox jCB_selectLineStyle = null;
@@ -75,7 +72,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	private JCheckBox jCB_selectBackground = null;
 	private JCheckBox jCB_selectForeground = null;
 	private JCheckBox jCB_selectSize = null;
-	private JCheckBox jCB_selectBorder = null;
 	
 	private GsVertexAttributesReader vReader = null;
 	private GsEdgeAttributesReader eReader = null;
@@ -264,14 +260,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		jComboBox_shape.setEnabled(true);
 	}
 	
-	/**
-	 * Enabled component for node shape
-	 */
-	private void borderEnabled() {
-		jCB_simpleBorder.setSelectedIndex(vReader.getBorder());
-		jCB_simpleBorder.setEnabled(true);
-	}
-	
     private void sizeEnabled() {
         jTF_height.setEnabled(true);
         jTF_width.setEnabled(true);
@@ -315,7 +303,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		jButton_bgcolor.setEnabled(false);
 		jButton_fgcolor.setEnabled(false);
 		jButton_linecolor.setEnabled(false);
-		jCB_simpleBorder.setEnabled(false);
 		jComboBox_shape.setEnabled(false);
 		jTF_height.setEnabled(false);
 		jTF_width.setEnabled(false);
@@ -779,14 +766,11 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			java.awt.GridBagConstraints consGridBagConstraints14 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints141 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints15 = new java.awt.GridBagConstraints();
-			java.awt.GridBagConstraints consGridBagConstraints16 = new java.awt.GridBagConstraints();
-			java.awt.GridBagConstraints consGridBagConstraints17 = new java.awt.GridBagConstraints();
 
 			java.awt.GridBagConstraints consGridBagConstraints20 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints21 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints22 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints23 = new java.awt.GridBagConstraints();
-			java.awt.GridBagConstraints consGridBagConstraints24 = new java.awt.GridBagConstraints();
 
 			consGridBagConstraints111.gridx = 0;
 			consGridBagConstraints111.gridy = 0;
@@ -832,14 +816,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			consGridBagConstraints4.gridx = 5;
 			consGridBagConstraints4.gridy = 1;
 
-			consGridBagConstraints17.gridx = 4;
-			consGridBagConstraints17.gridy = 2;
-			consGridBagConstraints17.fill = java.awt.GridBagConstraints.BOTH;
-			consGridBagConstraints16.gridx = 5;
-			consGridBagConstraints16.gridy = 2;
-			consGridBagConstraints24.gridx = 6;
-			consGridBagConstraints24.gridy = 2;
-			
 			jP_node.add(getJLabel_shape(), consGridBagConstraints111);
 			jP_node.add(getJComboBox_shape(), consGridBagConstraints5);
 			jP_node.add(getJCB_selectShape(), consGridBagConstraints20);
@@ -855,9 +831,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			jP_node.add(getJCB_selectSize(), consGridBagConstraints23);
 			jP_node.add(getJL_width(), consGridBagConstraints15);
 			jP_node.add(getJTF_width(), consGridBagConstraints4);
-			jP_node.add(getJL_simpleBorder(), consGridBagConstraints17);
-			jP_node.add(getJCB_simpleBorder(), consGridBagConstraints16);
-			jP_node.add(getJCB_selectBorder(), consGridBagConstraints24);
 		}
 		return jP_node;
 	}
@@ -872,22 +845,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			jP_empty.setName("jP_empty");
 		}
 		return jP_empty;
-	}
-	/**
-	 * This method initializes jCB_simpleBorder
-	 * 
-	 * @return javax.swing.JCheckBox
-	 */
-	private JComboBox getJCB_simpleBorder() {
-		if(jCB_simpleBorder == null) {
-			jCB_simpleBorder = new JComboBox();
-			jCB_simpleBorder.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
-					applyBorder();
-				}
-			});
-		}
-		return jCB_simpleBorder;
 	}
 	
     private JCheckBox getJCB_selectLineColor() {
@@ -925,13 +882,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jCB_selectBackground;
 	}
-	protected JCheckBox getJCB_selectBorder() {
-		if (jCB_selectBorder == null) {
-			jCB_selectBorder = new JCheckBox();
-			jCB_selectBorder.setSelected(true);
-		}
-		return jCB_selectBorder;
-	}
 	protected JCheckBox getJCB_selectForeground() {
 		if (jCB_selectForeground == null) {
 			jCB_selectForeground = new JCheckBox();
@@ -952,20 +902,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			jCB_selectSize.setSelected(true);
 		}
 		return jCB_selectSize;
-	}
-
-	/**
-	 * This method initializes jL_simpleBorder
-	 * 
-	 * @return javax.swing.JLabel
-	 */
-	private javax.swing.JLabel getJL_simpleBorder() {
-		if(jL_simpleBorder == null) {
-			jL_simpleBorder = new javax.swing.JLabel(Translator.getString("STR_border"));
-			jL_simpleBorder.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-			jL_simpleBorder.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-		}
-		return jL_simpleBorder;
 	}
 
 	/*
@@ -1004,7 +940,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			vReader.setVertex(selected);
 			colorEnabled();
 			shapeEnabled();
-			borderEnabled();
             sizeEnabled();
 			widthHeightEnabled();
 			cards.show(jP_attr,getJP_node().getName());
@@ -1023,13 +958,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		Vector v_tmp = vReader.getShapeList();
 		for (int i=0 ; i<v_tmp.size() ; i++) {
 			jComboBox_shape.addItem(v_tmp.get(i));
-		}
-		
-		// apply border list
-		jCB_simpleBorder.removeAllItems();
-		v_tmp = vReader.getBorderList();
-		for (int i=0 ; i<v_tmp.size() ; i++) {
-			jCB_simpleBorder.addItem(v_tmp.get(i));
 		}
 		
 		// apply routing list
@@ -1118,9 +1046,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 					if (jCB_selectBackground.isSelected()) {
 						vReader.setBackgroundColor(jButton_bgcolor.getBackground());
 					}
-					if (jCB_selectBorder.isSelected()) {
-						vReader.setBorder(jCB_simpleBorder.getSelectedIndex());
-					}
                     if (jCB_selectSize.isSelected()) {
                         try {
                             int w = Integer.parseInt(jTF_width.getText());
@@ -1161,9 +1086,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 				if (jCB_selectBackground.isSelected()) {
 					vReader.setDefaultVertexBackground(jButton_bgcolor.getBackground());
 				}
-				if (jCB_selectBorder.isSelected()) {
-					vReader.setDefaultVertexBorder(jCB_simpleBorder.getSelectedIndex());
-				}
                 if (jCB_selectSize.isSelected()) {
                     try {
                         int w = Integer.parseInt(jTF_width.getText());
@@ -1188,14 +1110,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
         refreshSize();
 	}
 	
-	/**
-	 * apply the border setting
-	 */
-	protected void applyBorder() {
-		vReader.setBorder(jCB_simpleBorder.getSelectedIndex());
-		vReader.refresh();
-	}
-
 	/**
 	 * apply the current edge routing
 	 */
