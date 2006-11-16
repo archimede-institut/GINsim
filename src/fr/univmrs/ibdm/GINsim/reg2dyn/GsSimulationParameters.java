@@ -158,6 +158,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
 				out.openTag("class");
                 GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_class.get(i);
                 out.addAttr("name", pc.getName());
+                out.addAttr("mode", ""+pc.getMode());
                 out.addAttr("rank", ""+pc.rank);
 				s_tmp = new StringBuffer();
                 Iterator it = m_elt.keySet().iterator();

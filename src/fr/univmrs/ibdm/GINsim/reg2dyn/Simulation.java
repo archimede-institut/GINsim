@@ -6,7 +6,6 @@ import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;

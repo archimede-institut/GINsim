@@ -105,6 +105,11 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                     GsReg2dynPriorityClass pc = new GsReg2dynPriorityClass();
                     pc.setName(attributes.getValue("name"));
                     try {
+                    	pc.setMode(Integer.parseInt(attributes.getValue("mode")));
+                    } catch (NumberFormatException e) {
+                        // TODO: report error with mode
+                    }
+                    try {
                         pc.rank = Integer.parseInt(attributes.getValue("rank"));
                     } catch (NumberFormatException e) {
                         // TODO: report error with rank
