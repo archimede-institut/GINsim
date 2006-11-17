@@ -441,7 +441,7 @@ public final class Simulation extends Thread implements Runnable{
     
                     // add the next node to the graph and recursively call if not already present
                     node = new GsDynamicNode(nextState);
-                    boolean multiple = (changes.length > 2);
+                    boolean multiple = (changes.length > 3);
                     changes = null;
                     nextState = null;
                     if (dynGraph.addVertex(node)) {
