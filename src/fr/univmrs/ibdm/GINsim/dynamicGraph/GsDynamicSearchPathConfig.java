@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
@@ -46,6 +47,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
     private JButton but_view = null;
     private JButton but_close = null;
     private JLabel l_info = null;
+    private JPanel p_result = null;
     
     private GsDynamicAnalyserPathModel model;
     private Vector path = null;
@@ -83,7 +85,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
     }
     
     private void initialize() {
-        setSize(300, 150);
+        setSize(400, 230);
         setContentPane(getJContentPane());
         setVisible(true);
         
@@ -98,52 +100,77 @@ public class GsDynamicSearchPathConfig extends JDialog {
             jcontentPane = new JPanel();
             jcontentPane.setLayout(new GridBagLayout());
             
-            GridBagConstraints c_scroll = new GridBagConstraints();
-            GridBagConstraints c_but = new GridBagConstraints();
-            GridBagConstraints c_add = new GridBagConstraints();
-            GridBagConstraints c_del = new GridBagConstraints();
-            GridBagConstraints c_gp = new GridBagConstraints();
-            GridBagConstraints c_view = new GridBagConstraints();
-            GridBagConstraints c_close = new GridBagConstraints();
-            GridBagConstraints c_info = new GridBagConstraints();
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 0;
+            c.gridwidth = 5;
+            c.fill = GridBagConstraints.BOTH;
+            c.weightx = 1;
+            c.weighty = 1;
+            jcontentPane.add(getScrollPane(), c);
             
-            c_scroll.gridx = 0;
-            c_scroll.gridy = 0;
-            c_scroll.gridwidth = 5;
-            c_scroll.fill = GridBagConstraints.BOTH;
-            c_scroll.weightx = 1;
-            c_scroll.weighty = 1;
-            c_but.gridx = 1;
-            c_but.gridy = 1;
-            c_add.gridx = 2;
-            c_add.gridy = 1;
-            c_del.gridx = 3;
-            c_del.gridy = 1;
-            c_gp.gridx = 4;
-            c_gp.gridy = 2;
-            c_gp.anchor = GridBagConstraints.WEST;
-            c_view.gridx = 3;
-            c_view.gridy = 2;
-            c_close.gridx = 4;
-            c_close.gridy = 2;
-            c_close.anchor = GridBagConstraints.EAST;
-            c_info.gridx = 0;
-            c_info.gridy = 2;
-            c_info.gridwidth = 4;
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 3;
+            c.weightx = 0;
+            jcontentPane.add(getBut_search(), c);
+
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 1;
+            c.weightx = 0;
+            jcontentPane.add(getBut_add(), c);
             
-            jcontentPane.add(getScrollPane(), c_scroll);
-            jcontentPane.add(getBut_search(), c_but);
-            jcontentPane.add(getBut_add(), c_add);
-            jcontentPane.add(getBut_del(), c_del);
+            c = new GridBagConstraints();
+            c.gridx = 1;
+            c.gridy = 1;
+            c.weightx = 0;
+            jcontentPane.add(getBut_del(), c);
             
-            jcontentPane.add(getBut_gp(), c_gp);
-            jcontentPane.add(getBut_view(), c_view);
-            jcontentPane.add(getBut_close(), c_close);
-            jcontentPane.add(getL_info(), c_info);
+            c = new GridBagConstraints();
+            c.gridx = 3;
+            c.gridy = 3;
+            c.anchor = GridBagConstraints.EAST;
+            c.weightx = 1;
+            jcontentPane.add(getBut_close(), c);
+
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 2;
+            c.gridwidth = 5;
+            c.weightx = 1;
+            c.fill = GridBagConstraints.BOTH;
+            c.insets = new Insets(10, 0, 10, 0);
+            jcontentPane.add(getP_result(), c);
         }
         return jcontentPane;
     }
 
+    private JPanel getP_result() {
+    	if (p_result == null) {
+    		p_result = new JPanel();
+    		p_result.setLayout(new GridBagLayout());
+    		GridBagConstraints c = new GridBagConstraints();
+    		c.gridx = 0;
+    		c.gridy = 0;
+    		c.weightx = 1;
+    		c.fill = GridBagConstraints.BOTH;
+    		p_result.add(getL_info(), c);
+
+    		c = new GridBagConstraints();
+    		c.gridx = 1;
+    		c.gridy = 0;
+    		c.anchor = GridBagConstraints.WEST;
+    		p_result.add(getBut_gp(), c);
+
+    		c = new GridBagConstraints();
+    		c.gridx = 2;
+    		c.gridy = 0;
+    		p_result.add(getBut_view(), c);
+    	}
+    	return p_result;
+    }
+    
     /**
      * @return l_info
      */
