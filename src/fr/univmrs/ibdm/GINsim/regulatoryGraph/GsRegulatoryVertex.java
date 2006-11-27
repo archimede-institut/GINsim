@@ -343,12 +343,12 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      * @param index
      */
     public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge, int index) {
-    		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
-    			GsLogicalParameter interaction = (GsLogicalParameter)v_logicalParameters.get(i);
-    			if (interaction.removeEdge(multiEdge,index)) {
-                    v_logicalParameters.remove(i--);
-                }
-    		}
+		for (int i=v_logicalParameters.size()-1 ; i>=0 ; i--) {
+			GsLogicalParameter interaction = (GsLogicalParameter)v_logicalParameters.get(i);
+			if (interaction.removeEdge(multiEdge,index)) {
+				v_logicalParameters.remove(i);
+            }
+		}
     }
 
     /**
@@ -358,10 +358,10 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      * @param multiEdge
      */
     public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge) {
-		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
+		for (int i=v_logicalParameters.size()-1 ; i<=0 ; i--) {
 			GsLogicalParameter interaction = (GsLogicalParameter)v_logicalParameters.get(i);
 			if (interaction.removeEdge(multiEdge)) {
-                v_logicalParameters.remove(i--);
+				v_logicalParameters.remove(i);
             }
 		}
     }

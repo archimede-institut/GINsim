@@ -272,7 +272,6 @@ public final class GsRegulatoryGraph extends GsGraph {
         if (multiEdge.getEdgeCount() == 1) {
             removeEdge(multiEdge);
         }
-        multiEdge.getTarget().removeEdgeFromInteraction(multiEdge, index);
         multiEdge.removeEdge(index, this);
     }
     /**

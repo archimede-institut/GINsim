@@ -85,9 +85,12 @@ public class GsLogicalParameter implements GsXMLize {
 			for (int i=0 ; i<edge_index.size() ; i++) {
 				//seach the GsEdgeIndex corresponding to parameter
 				GsEdgeIndex ei = (GsEdgeIndex)edge_index.get(i);
-				if (  ei.index == index && ei.data == o) {
-					edge_index.remove(ei);
-					return true;
+				if (ei.data == o) {
+					if ( ei.index == index) {
+						return true;
+					} else if (ei.index > index) {
+						ei.index--;
+					}
 				}
 			}
 		}
