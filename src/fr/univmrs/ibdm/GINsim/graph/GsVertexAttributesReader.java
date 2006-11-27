@@ -14,7 +14,7 @@ public abstract class GsVertexAttributesReader {
     public static Color bg = new Color(((Integer)GsOptions.getOption("vs.vertexbg", new Integer(-26368))).intValue());
     public static Color fg = new Color(((Integer)GsOptions.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
     public static int shape = ((Integer)GsOptions.getOption("vs.vertexshape", new Integer(0))).intValue();
-    public static int border = ((Integer)GsOptions.getOption("vs.vertexborder", new Integer(1))).intValue();
+    public static int border = 0;
     public static int height = ((Integer)GsOptions.getOption("vs.vertexheight", new Integer(30))).intValue();
     public static int width = ((Integer)GsOptions.getOption("vs.vertexwidth", new Integer(55))).intValue();
     

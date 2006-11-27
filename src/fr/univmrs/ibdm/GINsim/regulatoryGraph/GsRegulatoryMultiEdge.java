@@ -243,7 +243,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 		if (index >= edges.size()) {
 			return;
 		}
-        if (max<1 || max > source.getMaxValue()) {
+        if ( (max!=-1 && max<1) || max > source.getMaxValue()) {
             return;
         }
 		((GsRegulatoryEdge)edges.get(index)).setMax(max);

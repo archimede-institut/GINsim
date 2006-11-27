@@ -43,10 +43,9 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
         
         if (cur == -1 || cur == max) {
             medge.setMax(index, (short)-1);
-            ((GsDirectedEdgeListModel)jlist.getModel()).update();
-            return "Max";
+        } else {
+        	medge.setMax(index, (short)(medge.getMax(index)+1));
         }
-        medge.setMax(index, (short)(medge.getMax(index)+1));
         m_max.update();
         ((GsDirectedEdgeListModel)jlist.getModel()).update();
         return new Integer(medge.getMax(index));
