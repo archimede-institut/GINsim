@@ -32,7 +32,7 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getNextMaxValue() {
-        if (!graph.isEditAllowed()) {
+        if (!graph.isEditAllowed() || medge == null) {
             return getMaxValue();
         }
         short cur = medge.getMax(index);
@@ -52,7 +52,7 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getPreviousMaxValue() {
-        if (!graph.isEditAllowed()) {
+        if (!graph.isEditAllowed() || medge == null) {
             return getMaxValue();
         }
         short cur = medge.getMax(index);
@@ -108,7 +108,7 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
         ((GsDirectedEdgeListModel)jlist.getModel()).update();
     }
     public Object getNextMinValue() {
-        if (!graph.isEditAllowed()) {
+        if (!graph.isEditAllowed() || medge == null) {
             return getMinValue();
         }
         short cur = medge.getMin(index);
@@ -127,7 +127,7 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getPreviousMinValue() {
-        if (!graph.isEditAllowed()) {
+        if (!graph.isEditAllowed() || medge == null) {
             return getMinValue();
         }
         short cur = medge.getMin(index);

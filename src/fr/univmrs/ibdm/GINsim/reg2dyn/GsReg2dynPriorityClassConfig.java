@@ -25,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
 /**
  * configure priority classes.
@@ -168,9 +169,9 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         c_scroll_av.weightx = 1;
         c_scroll_av.weighty = 1;
         
-        add(new JLabel("class"), c_classLabel);
-        add(new JLabel("Transitions outside the selected class"), c_availableLabel);
-        add(new JLabel("Selected class content"), c_contentLabel);
+        add(new JLabel(Translator.getString("STR_classList")), c_classLabel);
+        add(new JLabel(Translator.getString("STR_otherClassContent")), c_availableLabel);
+        add(new JLabel(Translator.getString("STR_classContent")), c_contentLabel);
         add(getScrollpaneClass(), c_scroll_class);
         add(getBut_new(), c_bnew);
         add(getBut_delete(), c_bdel);
@@ -268,9 +269,9 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     	if (table_class == null) {
     		classTableModel = new ClassTableModel(v_class);
     		table_class = new GsJTable(classTableModel);
-            table_class.getColumn(table_class.getColumnName(0)).setMinWidth(30);
+            table_class.getColumn(table_class.getColumnName(0)).setMinWidth(35);
             table_class.getColumn(table_class.getColumnName(1)).setMinWidth(30);
-            table_class.getColumn(table_class.getColumnName(0)).setMaxWidth(30);
+            table_class.getColumn(table_class.getColumnName(0)).setMaxWidth(35);
             table_class.getColumn(table_class.getColumnName(1)).setMaxWidth(30);
     		table_class.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
     		    public void valueChanged(ListSelectionEvent e) {
@@ -810,9 +811,9 @@ class ClassTableModel extends DefaultTableModel {
 
 	public String getColumnName(int column) {
 		switch(column) {
-		case 0: return "rank";
-		case 1: return "sync";
-		case 2: return "name";
+		case 0: return Translator.getString("STR_rank");
+		case 1: return Translator.getString("STR_sync");
+		case 2: return Translator.getString("STR_name");
 		}
 		return super.getColumnName(column);
 	}
