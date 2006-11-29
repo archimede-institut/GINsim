@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.models;
 import javax.swing.JList;
 import javax.swing.JSpinner;
 
+import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 
@@ -74,7 +75,7 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
 
     public Object getMaxValue() {
         if (medge == null || medge == null) {
-            return "";
+            return Tools.IZ;
         }
         if (medge.getMax(index) == -1) {
             return "Max";
@@ -145,7 +146,7 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
 
     public Object getMinValue() {
         if (medge == null || medge == null) {
-            return "";
+            return Tools.IZ;
         }
         return new Integer(medge.getMin(index));
     }

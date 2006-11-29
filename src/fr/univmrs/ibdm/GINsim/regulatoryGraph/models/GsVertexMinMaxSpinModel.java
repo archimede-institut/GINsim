@@ -2,6 +2,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.models;
 
 import javax.swing.JSpinner;
 
+import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
@@ -15,7 +16,6 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
     private GsMaxSpinModel m_max;
 	private GsRegulatoryGraph graph;
     
-    
     /**
      */
     public GsVertexMinMaxSpinModel() {
@@ -25,6 +25,9 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getNextMaxValue() {
+    	if (graph == null || vertex == null) {
+    		return Tools.IZ;
+    	}
         if (!graph.isEditAllowed()) {
             return new Integer(vertex.getMaxValue());
         }
@@ -34,6 +37,9 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getPreviousMaxValue() {
+    	if (graph == null || vertex == null) {
+    		return Tools.IZ;
+    	}
         if (!graph.isEditAllowed()) {
             return new Integer(vertex.getMaxValue());
         }
@@ -44,9 +50,9 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getMaxValue() {
-        if (vertex == null) {
-            return new Integer(0);
-        }
+    	if (graph == null || vertex == null) {
+    		return Tools.IZ;
+    	}
         return new Integer(vertex.getMaxValue());
     }
 
@@ -67,6 +73,9 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
     }
     
     public Object getNextMinValue() {
+    	if (graph == null || vertex == null) {
+    		return Tools.IZ;
+    	}
         if (!graph.isEditAllowed()) {
             return new Integer(vertex.getBaseValue());
         }
@@ -78,6 +87,9 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getPreviousMinValue() {
+    	if (graph == null || vertex == null) {
+    		return Tools.IZ;
+    	}
         if (!graph.isEditAllowed()) {
             return new Integer(vertex.getBaseValue());
         }
@@ -89,7 +101,7 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
 
     public Object getMinValue() {
         if (vertex == null) {
-            return "";
+            return Tools.IZ;
         }
         return new Integer(vertex.getBaseValue());
     }

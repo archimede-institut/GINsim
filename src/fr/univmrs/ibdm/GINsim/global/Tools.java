@@ -19,6 +19,9 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
  */
 public class Tools {
 
+	public static final Integer IZ = new Integer(0);
+
+	
 	/**
 	 * Sort in ascending order the specified arrays T and N in the same time
 	 * @param T - array of integer
