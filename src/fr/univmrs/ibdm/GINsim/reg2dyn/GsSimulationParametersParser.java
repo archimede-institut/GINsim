@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.xml.sax.Attributes;
@@ -40,6 +41,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
     String[] t_order;
     int pos = POS_OUT;
     GsSimulationParameters param;
+    boolean pclass_fine;
     
     /**
      * @param graph expected node order
@@ -98,6 +100,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                     }
                 } else if (qName.equals("priorityClassList")) {
                     pos = POS_PCLASS;
+                    pclass_fine = false;
                 }
                 break;
             case POS_PCLASS:
@@ -121,6 +124,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                     String[] t_content = attributes.getValue("content").split(" ");
                     for (int i=0 ; i<t_content.length ; i++) {
                         if (t_content[i].endsWith(",+") || t_content[i].endsWith(",-")) {
+                        	pclass_fine = true;
                             String s_vertex = t_content[i].substring(0, t_content[i].length()-2);
                             for (int j=0 ; j<nodeOrder.size() ; j++) {
                                 GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
@@ -155,9 +159,6 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                             }
                             // TODO: report errors, unknown vertex... ?
                         }
-                    }
-                    String[] t_s = attributes.getValue("content").split(" ");
-                    for (int i=0 ; i<t_s.length ; i++) {
                     }
                     param.v_class.add(pc);
                 }
@@ -203,6 +204,33 @@ public class GsSimulationParametersParser extends GsXMLHelper {
             case POS_PCLASS:
                 if (qName.equals("priorityClassList")) {
                     pos = POS_PARAM;
+                    // some consistency checking
+                    if (pclass_fine) {
+                    	Iterator it = nodeOrder.iterator();
+                    	while (it.hasNext()) {
+                    		Object vertex = it.next();
+                    		Object oc = param.m_elt.get(vertex);
+                    		Object[] t;
+                    		if (oc instanceof GsReg2dynPriorityClass) {
+                    			// added to a single class, fix it
+                                t = new Object[2];
+                                t[0] = t[1] = oc;
+                                param.m_elt.put(vertex, t);
+                            } else if (oc instanceof Object[]) {
+                            	t = (Object[])oc;
+                            	if (t[0] == null) {
+                            		t[0] = param.v_class.get(0);
+                            	}
+                            	if (t[1] == null) {
+                            		t[1] = param.v_class.get(0);
+                            	}
+                            } else {
+                                t = new Object[2];
+                                t[0] = t[1] = param.v_class.get(0);
+                                param.m_elt.put(vertex, t);
+                            }
+                    	}
+                    }
                 }
                 break;
             case POS_INITSTATES:
