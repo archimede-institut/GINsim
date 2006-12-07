@@ -1,11 +1,9 @@
 package fr.univmrs.ibdm.GINsim.global;
 
 import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -13,29 +11,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.xml.sax.SAXException;
-
-import fr.univmrs.ibdm.GINsim.aRegGraph.GsARegGraphPlugin;
-import fr.univmrs.ibdm.GINsim.circuit.GsCircuitPlugin;
-import fr.univmrs.ibdm.GINsim.connectivity.ConnectivityPlugin;
-import fr.univmrs.ibdm.GINsim.connectivity.GsReducedGraphDescriptor;
-import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicAnalyserPlugin;
-import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
-import fr.univmrs.ibdm.GINsim.export.GsExportPlugin;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
-import fr.univmrs.ibdm.GINsim.jgraph.layout.GsJgraphLayout;
-import fr.univmrs.ibdm.GINsim.layout.GsLayoutPlugin;
 import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.modelChecker.GsModelCheckerPlugin;
 import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
-import fr.univmrs.ibdm.GINsim.reg2dyn.Reg2DynPlugin;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 
 /**
  * This class offers tons of static methods common to all ginsim's parts.
@@ -44,6 +26,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
  */
 public class GsEnv {
 
+	protected static GsClassLoader cloader = new GsClassLoader();
 	private static String ginsimDir = null;
 	private static String dtdDir = null;
 	private static String pluginDir = null;
@@ -56,39 +39,6 @@ public class GsEnv {
 	
 	private static Vector v_graph = new Vector(0);
     
-	/** 
-	 * static "constructor": add default search path for messages and icons
-	 */
-	static {
-		ImageLoader.pushSearchPath("/fr/univmrs/ibdm/GINsim/ressources/icons");
-		Translator.pushBundle("fr.univmrs.ibdm.GINsim.ressources.messages");
-		
-		// register standard "plugins"
-		GsEnv.addGraphType(GsRegulatoryGraphDescriptor.getInstance());
-		GsEnv.addGraphType(GsDynamicGraphDescriptor.getInstance());
-		GsEnv.addGraphType(GsReducedGraphDescriptor.getInstance());
-		
-		new ConnectivityPlugin().registerPlugin();
-		new GsLayoutPlugin().registerPlugin();
-		new GsJgraphLayout().registerPlugin();
-		new Reg2DynPlugin().registerPlugin();
-		new GsExportPlugin().registerPlugin();
-		new GsARegGraphPlugin().registerPlugin();
-        new GsDynamicAnalyserPlugin().registerPlugin();
-        
-        new GsCircuitPlugin().registerPlugin();
-        new GsModelCheckerPlugin().registerPlugin();
-        
-        URL url = GsEnv.class.getResource("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
-        System.out.println("plugins config file exists ? "+url);
-        try {
-        	new ReadConfig().startParsing(url.openStream(), false);
-        	
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
-        System.exit(0);
-	}
 	
 	/**
 	 * add a frame to the list of avaible frames
@@ -169,7 +119,6 @@ public class GsEnv {
 		dtdDir= ginsimDir + "data" + File.separator + "ginml" + File.separator;
 		
 		// look for other plugins
-		GsClassLoader cloader = new GsClassLoader();
 		String[] t_files = new File(pluginDir).list();
 		if (t_files != null) {
 			for ( int i=0 ; i<t_files.length ; i++ ) {
@@ -198,7 +147,7 @@ public class GsEnv {
 		if (manifest == null) {
 			throw new GsException (GsException.GRAVITY_NORMAL, "no manifest in jar file" );
 		}
-		Attributes attr = manifest.getMainAttributes();
+		java.util.jar.Attributes attr = manifest.getMainAttributes();
 		String className = attr.getValue("GsPluginClass");
 		if (className == null) {
 			throw new GsException (GsException.GRAVITY_NORMAL, "no main class defined" );
@@ -402,26 +351,4 @@ public class GsEnv {
             frame.getGsAction().updateRecentMenu();
         }
     }
-}
-
-class ReadConfig extends GsXMLHelper {
-
-	protected ReadConfig() {
-	}
-	
-	public String getFallBackDTD() {
-		return null;
-	}
-
-	public GsGraph getGraph() {
-		return null;
-	}
-
-	public void startElement(String arg0, String arg1, String arg2, org.xml.sax.Attributes arg3) throws SAXException {
-		System.out.println("start: "+arg0);
-	}
-	
-	public void endElement(String arg0, String arg1, String arg2) throws SAXException {
-		System.out.println("end: "+arg0);
-	}
 }

@@ -27,6 +27,14 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
     private GsFileFilter ffilter;
     private static GsRegulatoryGraphDescriptor instance = null;
 
+    public GsRegulatoryGraphDescriptor() {
+    	if (GsRegulatoryGraphDescriptor.instance == null) {
+    		GsRegulatoryGraphDescriptor.instance = this;
+    	} else {
+    		System.out.println("trying to create a new graphdescriptor!");
+    	}
+    }
+    
     public String getGraphType() {
         return "regulatory";
     }

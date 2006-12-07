@@ -1,12 +1,22 @@
 package fr.univmrs.ibdm.GINsim.global;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Vector;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
 import fr.univmrs.ibdm.GINsim.graph.GsGinsimGraphDescriptor;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
+import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
+import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 
 /**
  * this class is used to run GINsim: parse args and so on
@@ -24,6 +34,13 @@ public class GsMain {
         Vector commands = new Vector(0);
         Vector open = new Vector(0);
 
+        URL url = GsEnv.class.getResource("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
+        try {
+        	new ReadConfig(GsEnv.cloader).startParsing(url.openStream(), false);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+        
         /*
          * parse args: - run without GUI - set ginsim dir - choose locale - give
          * some help
@@ -102,4 +119,52 @@ public class GsMain {
             }
         }
     }
+}
+
+class ReadConfig extends GsXMLHelper {
+
+	GsClassLoader cloader;
+	
+	protected ReadConfig(GsClassLoader cloader) {
+		this.cloader = cloader;
+	}
+	
+	public String getFallBackDTD() {
+		return null;
+	}
+
+	public GsGraph getGraph() {
+		return null;
+	}
+
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		if ("plugin".equals(qName)) {
+			String s = attributes.getValue("load");
+			if ("true".equals(s)) {
+				s = attributes.getValue("mainClass");
+				try {
+					Class cl = cloader.loadClass(s);
+					GsPlugin plugin = (GsPlugin)cl.newInstance();
+					plugin.registerPlugin();
+				} catch (Exception e) {
+					System.out.println("unable to load plugin from class: "+s);
+				}
+			}
+		} else if ("graph".equals(qName)) {
+			String s = attributes.getValue("load");
+			if ("true".equals(s)) {
+				s = attributes.getValue("mainClass");
+				try {
+					Class cl = cloader.loadClass(s);
+					GsEnv.addGraphType((GsGraphDescriptor)cl.newInstance());
+				} catch (Exception e) {
+					System.out.println("unable to add graphType from class: "+s);
+				}
+			}
+		} else if ("imagePath".equals(qName)) {
+			ImageLoader.pushSearchPath(attributes.getValue("path"));
+		} else if ("messagesPath".equals(qName)) {
+			Translator.pushBundle(attributes.getValue("path"));
+		}
+	}
 }
