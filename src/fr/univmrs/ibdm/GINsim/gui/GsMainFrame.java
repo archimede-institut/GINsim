@@ -687,9 +687,9 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
 	        if (!graph.isSaved()) {
 	            s_add += " *";
 	        }
-	        setTitle("GIN-sim - "+s_add);
+	        setTitle("GINsim - "+s_add);
         } else {
-            setTitle("GIN-sim");
+            setTitle("GINsim");
         }
     }
 	public synchronized void updateGraphNotificationMessage(GsGraph graph) {
