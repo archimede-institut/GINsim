@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.global;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -11,6 +12,8 @@ import java.util.jar.Manifest;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.aRegGraph.GsARegGraphPlugin;
 import fr.univmrs.ibdm.GINsim.circuit.GsCircuitPlugin;
@@ -32,6 +35,7 @@ import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.reg2dyn.Reg2DynPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 
 /**
  * This class offers tons of static methods common to all ginsim's parts.
@@ -74,6 +78,16 @@ public class GsEnv {
         
         new GsCircuitPlugin().registerPlugin();
         new GsModelCheckerPlugin().registerPlugin();
+        
+        URL url = GsEnv.class.getResource("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
+        System.out.println("plugins config file exists ? "+url);
+        try {
+        	new ReadConfig().startParsing(url.openStream(), false);
+        	
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+        System.exit(0);
 	}
 	
 	/**
@@ -388,4 +402,26 @@ public class GsEnv {
             frame.getGsAction().updateRecentMenu();
         }
     }
+}
+
+class ReadConfig extends GsXMLHelper {
+
+	protected ReadConfig() {
+	}
+	
+	public String getFallBackDTD() {
+		return null;
+	}
+
+	public GsGraph getGraph() {
+		return null;
+	}
+
+	public void startElement(String arg0, String arg1, String arg2, org.xml.sax.Attributes arg3) throws SAXException {
+		System.out.println("start: "+arg0);
+	}
+	
+	public void endElement(String arg0, String arg1, String arg2) throws SAXException {
+		System.out.println("end: "+arg0);
+	}
 }
