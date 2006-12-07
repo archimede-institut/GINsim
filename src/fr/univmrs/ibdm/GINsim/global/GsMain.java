@@ -34,12 +34,7 @@ public class GsMain {
         Vector commands = new Vector(0);
         Vector open = new Vector(0);
 
-        URL url = GsEnv.class.getResource("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
-        try {
-        	new ReadConfig(GsEnv.cloader).startParsing(url.openStream(), false);
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
+        GsEnv.readConfig("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
         
         /*
          * parse args: - run without GUI - set ginsim dir - choose locale - give

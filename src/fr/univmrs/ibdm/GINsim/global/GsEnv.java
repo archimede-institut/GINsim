@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.global;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -351,4 +352,13 @@ public class GsEnv {
             frame.getGsAction().updateRecentMenu();
         }
     }
+
+	public static void readConfig(String path) {
+        URL url = GsEnv.class.getResource(path);
+        try {
+        	new ReadConfig(GsEnv.cloader).startParsing(url.openStream(), false);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
+	}
 }
