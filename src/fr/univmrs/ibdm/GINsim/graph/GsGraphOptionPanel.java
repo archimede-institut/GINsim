@@ -18,4 +18,8 @@ public interface GsGraphOptionPanel {
      * @return the extension for the saved file
      */
     public String getExtension();
+    /**
+     * @return true if the extended file should be compressed
+     */
+	public boolean isCompressed();
 }

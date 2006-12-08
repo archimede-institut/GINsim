@@ -1,7 +1,6 @@
 package fr.univmrs.ibdm.GINsim.global;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -116,6 +115,11 @@ public class GsMain {
     }
 }
 
+/**
+ * This class reads GINsim's generic config file, loads plugins and so on.
+ * @author aurelien
+ *
+ */
 class ReadConfig extends GsXMLHelper {
 
 	GsClassLoader cloader;

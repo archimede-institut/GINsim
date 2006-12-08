@@ -13,6 +13,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import com.ice.tar.TarEntry;
+import com.ice.tar.TarOutputStream;
+
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
@@ -93,6 +96,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     
     protected boolean annoted = false;
     protected boolean extended = false;
+    protected boolean compressed = true;
     
     /**
      * @param descriptor
@@ -185,7 +189,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         if (saveFileName == null) {
             saveAs(false);
         } else {
-            save(false, saveFileName, saveMode, extended);
+            save(false, saveFileName, saveMode, extended, compressed);
         }
     }
     
@@ -222,17 +226,19 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     	if (filename != null) {
     		int saveMode = 0;
             boolean extended = false;
+            boolean compressed = true;
     		if (poption != null && poption instanceof GsGraphOptionPanel ) {
     			saveMode = ((GsGraphOptionPanel)poption).getSaveMode();
                 extended = ((GsGraphOptionPanel)poption).isExtended();
+                compressed = ((GsGraphOptionPanel)poption).isCompressed();
     		}
     		if (selectedOnly) {
-    			save(true, filename, saveMode, extended);
+    			save(true, filename, saveMode, extended, compressed);
     		} else {
     			this.saveMode = saveMode;
                 String s_oldfn = saveFileName;
     			saveFileName = filename;
-    			save(false, null, saveMode, extended);
+    			save(false, null, saveMode, extended, compressed);
                 if (s_oldfn == null) {
                     GsEnv.renameGraph("[UNSAVED-"+id+"]", saveFileName);
                 } else {
@@ -251,15 +257,16 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @param fileName
      * @param saveMode
      * @param extended 
+     * @param compressed
      * @throws GsException
      */
-    private void save(boolean selectedOnly, String fileName, int saveMode, boolean extended) throws GsException {
+    private void save(boolean selectedOnly, String fileName, int saveMode, boolean extended, boolean compressed) throws GsException {
         try {
             if (!extended) {
                 OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName != null ? fileName : this.saveFileName), "UTF-8");
                 doSave(os, saveMode, selectedOnly);
                 os.close();
-            } else {
+            } else if (compressed) {
                 ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName != null ? fileName : this.saveFileName));
                 zos.putNextEntry(new ZipEntry(zip_prefix+getGraphZipName()));
                 OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
@@ -299,6 +306,47 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                     }
                 }
                 zos.close();
+        	} else {
+        		TarOutputStream tos = new TarOutputStream(new FileOutputStream(fileName != null ? fileName : this.saveFileName));
+        		tos.putNextEntry(new TarEntry(zip_prefix+getGraphZipName()));
+                OutputStreamWriter osw = new OutputStreamWriter(tos, "UTF-8");
+                doSave(osw, saveMode, selectedOnly);
+                osw.flush();
+                tos.closeEntry();
+                // now save associated objects
+                if (v_OManager != null) {
+                    for (int i=0 ; i<v_OManager.size() ; i++) {
+                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+                        if (manager.needSaving(this)) {
+                            tos.putNextEntry(new TarEntry(zip_prefix+manager.getObjectName()));
+                            try {
+                                manager.doSave(osw, this);
+                            } catch (Exception e) {
+                                if (mainFrame != null) {
+                                    addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
+                                } else {
+                                    e.printStackTrace();
+                                }
+                            } finally {
+                                osw.flush();
+                                tos.closeEntry();
+                            }
+                        }
+                    }
+                    Vector v_specManager = getSpecificObjectManager();
+                    if (v_specManager != null) {
+                        for (int i=0 ; i<v_specManager.size() ; i++) {
+                            GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
+                            if (manager.needSaving(this)) {
+                                tos.putNextEntry(new TarEntry(zip_prefix+manager.getObjectName()));
+                                manager.doSave(osw, this);
+                                osw.flush();
+                                tos.closeEntry();
+                            }
+                        }
+                    }
+                    tos.close();
+            	}
             }
             if (selectedOnly) {
                 if (mainFrame != null) {
@@ -307,6 +355,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             } else {
                 saved = true;
                 this.extended = extended;
+                this.compressed = compressed;
                 if (mainFrame != null) {
                     addNotificationMessage(new GsGraphNotificationMessage(this, "graph saved", GsGraphNotificationMessage.NOTIFICATION_INFO));
                     mainFrame.updateTitle();

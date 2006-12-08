@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="lib/jgraph.jar"/>
 	<classpathentry kind="lib" path="lib/jgraphaddons.jar"/>
 	<classpathentry kind="lib" path="lib/jgrapht-0.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/tar.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

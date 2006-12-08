@@ -2,6 +2,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -20,6 +21,7 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
 	private static final long serialVersionUID = 4585614812066176148L;
 	private JComboBox comboBox;
     private JCheckBox extended;
+    private JCheckBox compressed;
 	
 	/**
 	 * create the save option panel for ginml based graphs
@@ -40,6 +42,12 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
             c.anchor = GridBagConstraints.WEST;
         }
         this.add(getExtended(), c);
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(0,10,0,0);
+        this.add(getCompressed(), c);
         comboBox.setSelectedIndex(mode);
 	}
 	
@@ -58,12 +66,25 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
         return extended.isSelected();
     }
 
+    public boolean isCompressed() {
+        GsOptions.setOption("compressedSave", compressed.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+        return compressed.isSelected();
+    }
+
     private JCheckBox getExtended() {
         if (extended == null) {
             extended = new JCheckBox(Translator.getString("STR_extendedSave"));
             extended.setSelected(GsOptions.getOption("extendedSave", Boolean.FALSE).equals(Boolean.TRUE));
         }
         return extended;
+    }
+	
+    private JCheckBox getCompressed() {
+        if (compressed == null) {
+        	compressed = new JCheckBox(Translator.getString("STR_compressedSave"));
+        	compressed.setSelected(GsOptions.getOption("compressedSave", Boolean.FALSE).equals(Boolean.TRUE));
+        }
+        return compressed;
     }
 	
 	private JComboBox getComboBox(Object[] t, int mode) {
