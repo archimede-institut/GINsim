@@ -26,7 +26,7 @@
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
 	
-	<property name="classpath"  value=".:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar"/>
+	<property name="classpath"  value=".:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/tar.jar"/>
 
 	<target name="init">
 		<!-- Create the time stamp -->
@@ -121,7 +121,6 @@
 	    <mkdir dir="${dist}/plugins"/>
     		<mkdir dir="${dist}/plugins/data"/>
 	    <copy todir="${dist}/lib"><fileset dir="lib"/></copy>
-   		<copy todir="${dist}/data"><fileset dir="data"/></copy>
 	    <copy todir="${dist}" file="runginsim.bat"/>
 	    <copy todir="${dist}" file="makeclasspath.bat"/>
 	    <copy todir="${dist}" file="runginsim.sh"/>
@@ -167,6 +166,7 @@
 		<_merge_jar jarfile="${dist}/lib/jgraph.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/jgrapht-0.6.0.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/jgraphaddons.jar" dest="${tmpdir}"/>
+		<_merge_jar jarfile="${dist}/lib/tar.jar" dest="${tmpdir}"/>
 <!--		<_merge_jar jarfile="${dist}/lib/ginsim.jar" dest="${tmpdir}"/> -->
 	    	<copy todir="${tmpdir}"><fileset dir="${build}"/></copy>
 		<jar jarfile="${ginsim}-${version}.jar" basedir="${tmpdir}" manifest="MANIFEST.MF"/> 
