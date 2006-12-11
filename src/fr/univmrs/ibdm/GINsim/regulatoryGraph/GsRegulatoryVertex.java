@@ -358,7 +358,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      * @param multiEdge
      */
     public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge) {
-		for (int i=v_logicalParameters.size()-1 ; i<=0 ; i--) {
+		for (int i=v_logicalParameters.size()-1 ; i>=0 ; i--) {
 			GsLogicalParameter interaction = (GsLogicalParameter)v_logicalParameters.get(i);
 			if (interaction.removeEdge(multiEdge)) {
 				v_logicalParameters.remove(i);
