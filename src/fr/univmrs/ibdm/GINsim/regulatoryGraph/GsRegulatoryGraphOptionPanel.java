@@ -47,7 +47,8 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
         c.gridy = 2;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0,10,0,0);
-        this.add(getCompressed(), c);
+        // TODO: add back uncompressed option
+        //this.add(getCompressed(), c);
         comboBox.setSelectedIndex(mode);
 	}
 	
@@ -67,6 +68,10 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
     }
 
     public boolean isCompressed() {
+    	if (true) {
+    		// TODO: add back uncompressed mode
+    		return true;
+    	}
         GsOptions.setOption("compressedSave", compressed.isSelected() ? Boolean.TRUE : Boolean.FALSE);
         return compressed.isSelected();
     }
