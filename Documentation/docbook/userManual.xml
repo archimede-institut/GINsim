@@ -3,103 +3,135 @@
 
 <article lang="en-GB"><?dbhtml dir="userManual"?>
   <articleinfo>
-    <title>GINsim user manual BOUH</title>
+    <title>GINsim user manual (DRAFT)</title>
     <bibliomisc>Web : http://gin.univ-mrs.fr/GINsim/</bibliomisc>
   </articleinfo>
 
   <section>
-    <title>Overview</title>
-      <para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism lean on the definition of two types of graphs: <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and <emphasis role="strong">state transition graphs </emphasis>which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions. If you have never used GINsim, the <olink targetdoc="tutorial">GINsim tutorial</olink> may be a better starting point.</para>
-      <para>First, we describe the main functionalities of the tool through its main menu options. Then, we describe the specification of a regulatory graph, the simulation (ie construction of the state transition graph) and the tools available to analyse this state transition graph.</para>
-   
-           <bibliography>
-            <title>References</title>
-        
-            <biblioentry>
-                <title>Qualitative analysis of regulatory graphs: a computational tool based on a discrete formal framework</title>
-                <authorgroup>
-                    <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
-                    <author><firstname>Elisabeth</firstname><surname>Remy</surname></author>
-                    <author><firstname>Brigitte</firstname><surname>Mossé</surname></author>
-                    <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
-                </authorgroup>
-                <!-- Lectures Notes in Control and Information Sciences -->
-                <pubdate>2003</pubdate>
-                <volumenum>294</volumenum><pagenums>119-126</pagenums>
-            </biblioentry>
-        
-            <biblioentry>
-                <title>GINsim: a software suite for the qualitative modelling, simulation and analysis of regulatory networks</title>
-                <authorgroup>
-                    <author><firstname>Aitor</firstname><surname>Larrinaga</surname></author>
-                    <author><firstname>Lucas</firstname><surname>Sanchez</surname></author>
-                    <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
-                    <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
-                </authorgroup>
-                <!-- biosystems -->
-                <pubdate>2005</pubdate>
-            </biblioentry>
-        </bibliography>
-
+    <title>Introduction</title>
+		<section>
+			<title>About GINsim</title>
+			
+    <para>GINsim is a tool supporting the definition, the simulation and the analysis of regulatory graphs, based on a <emphasis role="strong">multilevel logical formalism</emphasis>. This formalism leans on the definition of two types of graphs: 
+    <emphasis role="strong">regulatory graphs</emphasis> which model regulatory networks, and 
+    <emphasis role="strong">state transition graphs</emphasis> which represent the dynamical behaviour, for given initial state(s) and under some updating assumptions.</para>
+			</section>
+		<section>
+			<title>Availability</title>
+			<para>GINsim is freely available, under the terms of the <emphasis>General Public License</emphasis>. The GINsim website (<ulink url="http://gin.univ-mrs.fr/GINsim"/>) contains up to date informations, along with the latest official version of GINsim and of this documentation.</para>
+			</section>
+		<section>
+			<title>Running GINsim</title>
+			<para>GINsim is a java application and thus should run on any system offering a java virtual machine (version 1.4 or greater). If java is not already installed on your computer, it can be downloaded for windows, solaris and linux (i386 and AMD64) from <ulink url="http://java.sun.com">sun java website</ulink>. For macosx users, apple maintains its <ulink url="http://www.apple.com/macosx/features/java/">own port of the JVM</ulink>. For other systems, IBM maintains <ulink url="http://www-128.ibm.com/developerworks/java/jdk/index.html">some other versions</ulink> (like the linux-powerpc one).</para>
+			<para>Other system requirements depends heavilly on the size of the model the user works with. Any recent computer with at least 512Mo of RAM should be fine except for larger networks. A screen resolution of at least 1024x768 is recommended.</para>
+			<para>GINsim is available in two forms:<itemizedlist>
+					<listitem><para>A single .jar file. On a properly configured system, double-click on the file to launch the application, otherwise run it with the command: <emphasis>java -jar GINsim-$version.jar</emphasis>.</para></listitem>
+					<listitem>An archive (zip or tar.gz format). Uncompress it and run the included script: runginsim.bat for windows, runginsim.sh for UNIX-like systems and runginsim.command for macosx. This version includes the documentation (tutorial and user manual) and can be extended through plugins.</listitem>
+			</itemizedlist>
+				<tip>Working with large model requires to increase the amount of RAM available to the java virtual machine. This can be done<itemizedlist>
+						<listitem>for the jar file, with the command <emphasis>java -Xmx300M -jar GINsim-$version.jar</emphasis> (replace 300 by the amount of RAM you want, in Mo)</listitem>
+						<listitem>for the archive, by uncommenting an option at the beginning of the launcher script.</listitem>
+				</itemizedlist></tip>
+			</para>
+			</section>
+		<section>
+			<title>Overview of the manual</title>
+			<para>This manual covers first the main Graphical User Interface of GINsim, mostly through the presentation of the main menu options. Then it offers a more precise presentation of the editing tools dedicated to the regulatory graphs. The simulation (i.e. the generation of the state transition graph) and other tools come at the end.</para>
+			<para>As a first presentation of GINsim, the <olink targetdoc="tutorial">GINsim tutorial</olink> may be a better starting point. This manual uses as much as possible the same example and figures.</para>
+    <figure id="sc_mainWindow">
+      <title>Main window of GINsim</title>
+      <graphic fileref="../figures/mainWindow.png" />
+			The main window of GINsim, featuring an empty model.
+		</figure>
+			</section>
+    <bibliography>
+      <title>References</title>
+			<bibliodiv>
+				<title>Publications</title>
+      <biblioentry>
+        <authorgroup>
+          <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
+          <author><firstname>Elisabeth</firstname><surname>Remy</surname></author>
+          <author><firstname>Brigitte</firstname><surname>Mossé</surname></author>
+          <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
+        </authorgroup>
+        <title>Qualitative analysis of regulatory graphs: a computational tool based on a discrete formal framework</title>
+        <publisher>Lectures Notes in Control and Information Sciences</publisher>
+        <volumenum>294</volumenum>
+        <pagenums>119-126</pagenums>
+        <pubdate>2003</pubdate>
+      </biblioentry>
+      <biblioentry>
+        <authorgroup>
+          <author><firstname>Aitor</firstname><surname>Gonzalez Gonzalez</surname></author>
+          <author><firstname>Aurélien</firstname><surname>Naldi</surname></author>
+          <author><firstname>Lucas</firstname><surname>Sanchez</surname></author>
+          <author><firstname>Denis</firstname><surname>Thieffry</surname></author>
+          <author><firstname>Claudine</firstname><surname>Chaouiya</surname></author>
+        </authorgroup>
+        <title>GINsim: a software suite for the qualitative modelling, simulation and analysis of regulatory networks</title>
+        <publisher>Biosystems</publisher>
+        <volumenum>84</volumenum>
+        <pagenums>91-100</pagenums>
+        <pubdate>2006</pubdate>
+				<biblioid class="doi">doi:10.1016/j.biosystems.2005.10.003</biblioid>
+      </biblioentry>
+				</bibliodiv>
+			<bibliodiv>
+				<title>Website</title>
+					<para><ulink url="http://gin.univ-mrs.fr/GINsim"/></para>
+				</bibliodiv>
+    </bibliography>
   </section>
-
+  <!--      *************************************************************************  -->
   <section><?dbhtml filename="ui.html"?>
     <title>The UI</title>
     <section>
       <title>The GINsim window</title>
-      <para>When GINsim is launched, its main window opens (see the screenshot below).  This window encompasses a series of panels and menus described hereafter.</para>
-      <figure id="refscreenshot0">
-        <title>Main window of GINsim</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/mainWindow.png"/>
-          </imageobject>
-        </mediaobject>
-      </figure>
+      <para>When GINsim is launched, its main window opens (see <xref linkend="sc_mainWindow" xrefstyle="select:label"/>).  This window encompasses a series of panels and menus described hereafter.</para>
       <para>Let's now see the content of the menus.</para>
     </section>
     <section>
       <title>File menu</title>
       <figure>
       <title>The file menu</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/fileMenu.png"/>
-        </imageobject>
-      </mediaobject>
+          <graphic fileref="../figures/fileMenu.png"/>
       </figure>
-
       <section>
         <title>Classical options</title>
         <para>This menu offers all the classical options to open/save a file, to open/close a window, and to exit the application. Some of these actions (new, open and save) are also available from the toolbar.</para>
         <itemizedlist>
-        <listitem><para role="newline"><emphasis>new:</emphasis> create a new graph. This will create a new window unless the current graph is empty.</para></listitem>
-        <listitem><para role="newline"><emphasis>open:</emphasis> load a graph from a file. This will create a new window unless the current graph is empty.</para></listitem>
-        <listitem><para role="newline"><emphasis>save:</emphasis> save the current graph, if no save location was previously specified, it will be asked. The <emphasis>save as</emphasis> action allows to select a new save location. The graph is saved in the, XML-based,  <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis role="strong">GINML</emphasis></ulink> format. The location selection dialog offers to choose the level of graphical attributes: it is possible to save only the structure of the graph, ignoring all graphical attributes, or to save only the position of nodes. The default is to save all graphical attributes (position, size, color, shape...).
+        <listitem>New: create a new graph. This will create a new window unless the current graph is empty.</listitem>
+        <listitem>Open: load a graph from a file. This will create a new window unless the current graph is empty.</listitem>
+        <listitem><para>Save: save the current graph, if no save location was previously specified, it will be asked. The <emphasis>save as</emphasis> action allows to select a new save location. The graph is saved in the, XML-based,  <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis role="strong">GINML</emphasis></ulink> format. The location selection dialog (<xref linkend="fig_saveDialog" xrefstyle="select:label"/>) offers to choose the level of graphical attributes: it is possible to save only the structure of the graph, ignoring all graphical attributes, or to save only the position of nodes. The default is to save all graphical attributes (position, size, color, shape...).
 <!--
         <itemizedlist>
         	<listitem>extended save: if this option is selected, the resulting file will be a zip file containing the model itself along with additionnal data (simulation parameters, definition of mutants...) that is associated to it. If the option is not selected, the file will be a text file containing only the model.</listitem>
         </itemizedlist>
 -->
         </para></listitem>
-        <listitem><para role="newline"><emphasis>close:</emphasis> close the current graph, if no other window is opened, it will create a new graph in the current one, otherwise it will close it.</para></listitem>
-        <listitem><para role="newline"><emphasis>quit:</emphasis> close all graphs and exit the GINsim application.</para></listitem>
+        <listitem>Close: close the current graph, if no other window is opened, it will create a new graph in the current one, otherwise it will close it.</listitem>
+        <listitem>Quit: close all graphs and exit the GINsim application.</para></listitem>
         </itemizedlist>
+	 <figure id="fig_saveDialog">
+        <title>The save dialog</title>
+        <graphic fileref="../figures/saving.png" />
+    </figure>
       </section>
       <section>
         <title>Merge and save subgraph</title>
         <itemizedlist>
-        <listitem><para role="newline"><emphasis>merge graph:</emphasis> merge the opened graph with an other graph of the same type. Merging a graph is the same as opening it, selecting all the graph and pasting it in the first one. Just like copy/paste it will not work on all types of graphs (it obviously works on regulatory graphs).</para></listitem>
-        <listitem><para role="newline"><emphasis>save subgraph:</emphasis> save the current selection as a new graph. It is similar to copying the selection, pasting it into a new graph and saving this new graph.</para></listitem>
+        <listitem>Merge graph: merge the opened graph with an other graph of the same type. Merging a graph is the same as opening it, selecting all the graph and pasting it in the first one. Just like copy/paste it will not work on all types of graphs (it obviously works on regulatory graphs).</listitem>
+        <listitem>Save subgraph: save the current selection as a new graph. It is similar to copying the selection, pasting it into a new graph and saving this new graph.</listitem>
         </itemizedlist>
       </section>
       <section>
-        <title>Available export format</title>
+        <title>Available export formats</title>
         <para>GINsim comes with some generic exports that can be applied to all kinds of graphs. The following export formats are available under the File/export submenu:</para>
         <itemizedlist>
           <listitem><para role="newline"><emphasis><ulink url="http://www.graphviz.org/">Graphviz</ulink>:</emphasis> Graphs can be exported to the dot format used by graphviz graph visualisation software, those tools are particulary suitable for visualising big graphs. This export format exports only the graph structure, visual settings are losts, it is mainly here for big state transition graphs that can not be viewed within GINsim.</para></listitem>
-          <listitem><para role="newline"><emphasis><ulink url="http://www.biolayout.org/">Biolayout </ulink>:</emphasis> Graphs can also be exported to the biolayout format. Like in graphviz format, visual settings are losts.</para></listitem>
-          <listitem><para role="newline"><emphasis><ulink url="http://www.w3.org/Graphics/SVG/">SVG</ulink>:</emphasis> the Scalable Vector Graphic (SVG) format is an XML-based format for representing vector graphics, it is gaining more and more popularity and many tools are available to view or edit SVG files. This should be a good starting point to integrate your existing GINsim graph into a paper: export your graph as SVG, you will be able to modify it and to export it to virtually any image format.</para></listitem>
+          <listitem><ulink url="http://www.biolayout.org/">Biolayout </ulink>: graphs can also be exported to the biolayout format. Like in graphviz format, visual settings are losts.</listitem>
+          <listitem><ulink url="http://www.w3.org/Graphics/SVG/">SVG</ulink>: the Scalable Vector Graphic (SVG) format is an XML-based format for representing vector graphics, it is gaining more and more popularity and many tools are available to view or edit SVG files. This should be a good starting point to integrate your existing GINsim graph into a paper: export your graph as SVG, you will be able to modify it and to export it to virtually any image format.</listitem>
         </itemizedlist>
         <para>In addition to these generic export format, regulatory graphs can be exported into <ulink url="http://www.sbml.org/">SBML</ulink>. <warning>MORE EXPLANATIONS ARE NEEDED</warning></para>
       </section>
@@ -110,11 +142,7 @@
       <para>The edit menu allows the selection of some editing options.</para>
       <figure id="refscreenshot1">
         <title>The edit menu</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/editMenu.png"/>
-          </imageobject>
-        </mediaobject>
+            <graphic fileref="../figures/editMenu.png"/>
       </figure>
       <section>
         <title>Copy/paste</title>
@@ -123,27 +151,27 @@
         <itemizedlist>
           <listitem>Copy/paste works between different GINsim windows (assuming they contain the same type of graphs).</listitem>
           <listitem>Pasted items are automatically selected to make it easier to move them.</listitem>
-          <listitem>The copy action does not test selected edges, it will automatically select ALL edges between selected nodes,</listitem>
-          <listitem>Pasted nodes will be renamed by adding ".1", ".2"... to the original names,</listitem>
-          <listitem>logical paremeters are also copied and cleaned up (only logical paremeter in which all involved nodes have been copied are restored). The resulting graph is consistent but these new parameters probably need some tweaking.</listitem>
+          <listitem>The copy action does not test selected edges, it will automatically select ALL edges between selected nodes.</listitem>
+          <listitem>Pasted nodes will be renamed by adding ".1", ".2"... to the original names.</listitem>
+          <listitem>Logical paremeters are also copied and cleaned up: logical paremeter involving not-copied nodes are suppressed. The resulting graph is consistent but these new parameters need probably some tweaking.</listitem>
         </itemizedlist>
       </section>
       <section>
         <title>Editing the graph</title>
         <itemizedlist>
-          <listitem><para role="newline"><emphasis>edit</emphasis>, the normal editing mode: select/move nodes and edges,</para></listitem>
-          <listitem><para role="newline"><emphasis>add vertex:</emphasis> clicking in the graph creates a new vertex (gene),</para></listitem>
-          <listitem><para role="newline"><emphasis>add edge:</emphasis> dragging from a node to another adds an interaction between these nodes,</para></listitem>
-          <listitem><para role="newline"><emphasis>delete:</emphasis> activating this action will delete all selected items from the graph.</para></listitem>
+          <listitem>edit, the normal editing mode: select/move nodes and edges,</listitem>
+          <listitem>add vertex: clicking in the graph creates a new vertex (gene),</listitem>
+          <listitem>add edge: dragging from a node to another adds an interaction between these nodes,</listitem>
+          <listitem><para role="newline"><emphasis>delete:</emphasis> activating this action will delete all selected items from the graph.</listitem>
           Toolbar buttons show the selected edit mode and allow to change it.
         </itemizedlist>
         <tip>Each editing mode (add a node, add an edge) will be leaved once the action has been performed. Double-clicking on the corresponding toolbar button locks the editing mode until another mode is selected.</tip>
-        These options are <emphasis>not</emphasis> available when visualizing a state transition graph.
+        These options are <emphasis role="strong">not</emphasis> available when visualizing a state transition graph.
       </section>
       <section>
         <title>Selection</title>
         <itemizedlist>
-            <listitem>the "select all" action will select all items of the graph.</listitem>
+            <listitem>The "select all" action will select all items of the graph.</listitem>
             <listitem>The "invert selection" action will unselect all selected items and select all others.</listitem>
         </itemizedlist>
       </section>
@@ -152,11 +180,7 @@
       <title>View menu</title>
       <figure id="refscreenshot2">
         <title>The view menu</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/viewMenu.png"/>
-          </imageobject>
-        </mediaobject>
+            <graphic fileref="../figures/viewMenu.png"/>
       </figure>
       <para/>
       <para>The View menu allows </para>
@@ -189,20 +213,12 @@
           <formalpara><title>level layout:</title> nodes are placed on lines, nodes without any incoming edges being placed on top and nodes without any outgoing edges at the bottom.</formalpara>
         <figure id="refscreenshot4">
           <title>Level layout example</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="../figures/levelLayout.png"/>
-            </imageobject>
-          </mediaobject>
+              <graphic fileref="../figures/levelLayout.png"/>
         </figure>
             <formalpara><title>ring layout:</title>Similar to the level placement, nodes are placed on three concentric rings</formalpara>
         <figure id="refscreenshot5">
           <title>Ring layout exemple</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="../figures/ringLayout.png"/>
-            </imageobject>
-          </mediaobject>
+              <graphic fileref="../figures/ringLayout.png"/>
         </figure>
         <para>Both the level layout and the ring layout have an inversed counterpart.</para>
       </section>
@@ -236,11 +252,7 @@
         </itemizedlist>
         <figure id="refscreenshot6">
           <title>Visual settings for vertices</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="../figures/vertex_vs.png"/>
-            </imageobject>
-          </mediaobject>
+              <graphic fileref="../figures/vertex_vs.png"/>
         </figure>
         <para/>
         <itemizedlist>
@@ -255,11 +267,7 @@
         </itemizedlist>
         <figure id="refscreenshot7">
           <title>Visual settings for edges</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="../figures/edge_vs.png"/>
-            </imageobject>
-          </mediaobject>
+              <graphic fileref="../figures/edge_vs.png"/>
         </figure>
         <tip>Note the buttons on the right:
         <itemizedlist>
@@ -282,11 +290,7 @@
       <para>When a graph is generated, the user has to choose what to do with the new graph.</para>
       <figure id="refscreenshot8">
         <title>The <emphasis>what to do</emphasis> window</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/whattodo.png"/>
-          </imageobject>
-        </mediaobject>
+            <graphic fileref="../figures/whattodo.png"/>
       </figure>
       <para>The top right part will vary depending on the kind of generated graph, for state transition graphs stable states are visible directly from this window.</para>
       <para>Clicking on the "OK" buttons performs the selected action. The "what to do" window will not disappear unless the "display" action was selected, this allows the user to perform several actions on his new graph. If the graph is displayed, all these actions will be available from the GINsim window.</para>
@@ -310,11 +314,7 @@
       <para>The note panel is divided in two parts: a textual comment and a list of URL.</para>
       <figure id="refscreenshot9">
         <title>Notes</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/annotation.png"/>
-          </imageobject>
-        </mediaobject>
+            <graphic fileref="../figures/annotation.png"/>
       </figure>
       <para>To remove an URL from the list, set it to a blank value.</para>
     </section>
@@ -411,11 +411,7 @@
     <para>Select the "run simulation" action to compute the state transition graph, but it has to be configured first, hereafter is a screenshot of the configuration dialog:</para>
     <figure id="refscreenshot10">
       <title>Settings of the simulation</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/simulation_config.png"/>
-        </imageobject>
-      </mediaobject>
+          <graphic fileref="../figures/simulation_config.png"/>
     </figure>
     <section>
       <title>Search modes</title>
@@ -426,11 +422,7 @@
         <para>This is default search mode. In this mode, all changes happen and they happen independantly (in separated concurrent path). Therefore it will generate the biggest state transition graphs, taking in account any possible path. It probably contains the real, biological path but this one may be lost between many other less relevant ones. Its huge size make it difficult to generate and to analyse. Other assumptions exists to generate more manageable state transition graphs.</para>
         <figure id="refscreenshot11">
           <title>State transition graph for an asynchronous simulation</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="../figures/dynamic_async.png"/>
-            </imageobject>
-          </mediaobject>
+              <graphic fileref="../figures/dynamic_async.png"/>
         </figure>
         <para>Each state can have several "following states", each of them correspond to a single change.</para>
         <para>In this mode, the graph transition state can be generated "depth first" (read visiting the following state before visiting other following of the parent state) or "breadth first" (read generating it level by level), they will generate the same state transition graph except if interrupted (manually or by a <link linkend="dslimit">depth or size limit</link>).</para>
@@ -441,11 +433,7 @@
         <tip><para role="newline">This mode can be a "quick" way to find stable states when launched on the full graph (see <link linkend="initialStates">initial states</link>)</para></tip>
         <figure id="refscreenshot12">
           <title>State transition graph for a synchronous simulation</title>
-          <mediaobject>
-            <imageobject>
-              <imagedata fileref="../figures/dynamic_sync.png"/>
-            </imageobject>
-          </mediaobject>
+              <graphic fileref="../figures/dynamic_sync.png"/>
         </figure>
         <para>Each state has at most one "following state" corresponding to all possible changes.</para>
       </section>
@@ -505,21 +493,14 @@
       <para>One may want to simplify the state transition graph by blocking the evolution of some nodes (the regulatory ones, read genes). The "transition blocking" button open the following dialog. The selected settings leads to this state transition graph</para>
       <figure id="refscreenshot14">
         <title>Transition blocking</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/blocking.png"/>
-          </imageobject>
-        </mediaobject>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/dynamic_async_blocked.png"/>
-        </imageobject>
-      </mediaobject>
+          <graphic fileref="../figures/blocking.png"/>
+          <graphic fileref="../figures/dynamic_async_blocked.png"/>
       </figure>
       <para>The transition involving G1 leaving the "1" value has been suppressed and a stable state appeared (in other cases it may suppress stable states or more generally change the connectivity properties of the graph).</para>
       <para>Using this method to cut the original graph, we can build smaller graphs but the nice thing is that they are meaningfull: this setting is usefull to simulate some kinds of mutants without having to deal with several copies of the regulatory graph (some other types of mutants can not be simulated without modifying it). This is just an additionnal constraint and can be applied with each simulation mode.</para>
       <note>Like for initial states, GINsim will try to remember this setting, use the "reset" button to delete all previously configured transition blocking.</note>
     </section>
+		
     <section id="dslimit">
       <title>Depth and size limits</title>
       <para>An option is also offered to limit the search depth and/or the total number of states generated.</para>
@@ -527,29 +508,22 @@
         <listitem>
           <para>the limit on depth apply to all simulation modes except the asynchronous breadth first one. </para>
           <para role="lineBreak">Note: when starting with several initial states, if an initial state is already in the state transition graph when it is considered, it will not trigger another search, ie the effective depth limit on this initial state will be shorter.</para>
-        </listitem>
-      </itemizedlist>
-      <figure>
-      <title>State transition graph limited in depth</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/stg_depth_limited.jpg"/>
-        </imageobject>
-      </mediaobject>
-      </figure>
-      <itemizedlist>
+					<figure>
+						<title>Limitation of the depth in the case of a depth first
+							construction</title>
+						<graphic fileref="../figures/stg_depth_limit.png" />
+					</figure>
+				</listitem>
         <listitem>
           <para>The limit on the total number of states apply to to all simulation modes. In the asynchronous assumption, it has slightly different effects on depth first and breadth first search.</para>
+    <figure>
+      <title>Limitation of the size (depth first and breadth first
+      search construction)</title>
+      <graphic fileref="../figures/stg_size_limit_depthFirst.png" />
+      <graphic fileref="../figures/stg_size_limit_breadthFirst.png" />
+    </figure>
         </listitem>
       </itemizedlist>
-      <figure>
-      <title>State transition graph limited in size</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/stg_size_limited.jpg"/>
-        </imageobject>
-      </mediaobject>
-      </figure>
     </section>
     <section>
       <title>Running the simulation</title>
@@ -573,41 +547,21 @@
       <para>One can get the graph of the Strongly Connected Components (SCC graph) of an existing graph. The SCC graph is similar to the original graph but without cycles: each node of the SCC graph can "contain" a cycle or a set of linked cycles of the original graph, this makes it easier to follow pathways as the resulting graph is shorter and simpler. To compute this graph, use the "SCC graph" action in the "Actions" menu.</para>
       <figure>
       <title>Strongly Connected Components dialogs</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/scc.png"/>
-        </imageobject>
-      </mediaobject>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/scc_running.png"/>
-        </imageobject>
-      </mediaobject>
+          <graphic fileref="../figures/scc.png"/>
+          <graphic fileref="../figures/scc_running.png"/>
       </figure>
       <para>If this search is cancelled before the last operation (searching paths), no result can be saved. Otherwise, at least all the SCC can be saved but pathes between them may be missing.</para>
       <para>Here is a little state transition graph and the corresponding SCC graph (on the right):</para>
       <figure id="refscreenshot15">
         <title>Strongly Connected Components graph</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/sccGraph.png"/>
-          </imageobject>
-        </mediaobject>
+            <graphic fileref="../figures/sccGraph.png"/>
       </figure>
       <para>Note that the "selection attribute" tab in the SCC graph shows the content of the selected component.</para>
       <para>Once that the SCC graph is opened, one can extract a subgraph of the original graph corresponding to the selected items in the SCC graph:</para>
       <figure>
       <title>Strongly Connected Components and subgraph</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/actionMenu_reduced.png"/>
-        </imageobject>
-      </mediaobject>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/sccSubGraph.png"/>
-        </imageobject>
-      </mediaobject>
+          <graphic fileref="../figures/actionMenu_reduced.png"/>
+          <graphic fileref="../figures/sccSubGraph.png"/>
       </figure>
       <para/>
     </section>
@@ -633,21 +587,13 @@
       <para>Use search path dialog to set your starting state, the state you want to reach and optionnaly intermediate states (use the "+" and "X" buttons to add/remove intermediate states).</para>
       <figure>
       <title>Search for a path in the state transition graph</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/search_path_found.png"/>
-        </imageobject>
-      </mediaobject>
+          <graphic fileref="../figures/search_path_found.png"/>
       </figure>
       <para>If a path is found, it can be either visualized or exported as gnuplot script (see <link linkend="gnuplot">below</link>).</para>
       <para>If the user enters a state not present in the graph (if the state is impossible, or if the graph is partial), the corresponding row will be highlighted in red and the "run" button disabled:</para>
       <figure>
       <title>Can not find the path</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/search_path_notin.png"/>
-        </imageobject>
-      </mediaobject>
+          <graphic fileref="../figures/search_path_notin.png"/>
       </figure>
     </section>
     <section>
@@ -655,11 +601,7 @@
       <para><phrase id="gnuplot"/>Path created with the animation plugin or found by the path finder can be visualized using gnuplot.</para>
       <figure>
       <title>gnuplot export dialog</title>
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../figures/gnuplotExport.png"/>
-        </imageobject>
-      </mediaobject>
+          <graphic fileref="../figures/gnuplotExport.png"/>
       </figure>
       <para>First select nodes that should appear in the graph, selecting many nodes badly affects the graphs.</para>
       <para>Then select the kind of graph to create (see bellow).</para>
@@ -667,16 +609,8 @@
       <para>If you saved it as "myplot.gnuplot" ("myplot.data" will also be generated), you will juste have to run gnuplot and load the gnuplot script file in it with the <emphasis>load "mygraph.gnuplot"</emphasis> command.</para>
       <figure id="refscreenshot17">
         <title>gnuplot export examples</title>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/plot_arrow.png"/>
-          </imageobject>
-        </mediaobject>
-        <mediaobject>
-          <imageobject>
-            <imagedata fileref="../figures/plot_multi.png"/>
-          </imageobject>
-        </mediaobject>
+            <graphic fileref="../figures/plot_arrow.png"/>
+            <graphic fileref="../figures/plot_multi.png"/>
       </figure>
     </section>
   </section>
