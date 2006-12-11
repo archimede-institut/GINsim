@@ -101,17 +101,17 @@
         <title>Classical options</title>
         <para>This menu offers all the classical options to open/save a file, to open/close a window, and to exit the application. Some of these actions (new, open and save) are also available from the toolbar.</para>
         <itemizedlist>
-        <listitem>New: create a new graph. This will create a new window unless the current graph is empty.</listitem>
-        <listitem>Open: load a graph from a file. This will create a new window unless the current graph is empty.</listitem>
-        <listitem><para>Save: save the current graph, if no save location was previously specified, it will be asked. The <emphasis>save as</emphasis> action allows to select a new save location. The graph is saved in the, XML-based,  <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis role="strong">GINML</emphasis></ulink> format. The location selection dialog (<xref linkend="fig_saveDialog" xrefstyle="select:label"/>) offers to choose the level of graphical attributes: it is possible to save only the structure of the graph, ignoring all graphical attributes, or to save only the position of nodes. The default is to save all graphical attributes (position, size, color, shape...).
+        <listitem><para role="newline"><emphasis>new:</emphasis> create a new graph. This will create a new window unless the current graph is empty.</para></listitem>
+        <listitem><para role="newline"><emphasis>open:</emphasis> load a graph from a file. This will create a new window unless the current graph is empty.</para></listitem>
+        <listitem><para role="newline"><emphasis>save:</emphasis> save the current graph, if no save location was previously specified, it will be asked. The <emphasis>save as</emphasis> action allows to select a new save location. The graph is saved in the, XML-based,  <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis role="strong">GINML</emphasis></ulink> format. The location selection dialog (<xref linkend="fig_saveDialog" xrefstyle="select:label"/>) offers to choose the level of graphical attributes: it is possible to save only the structure of the graph, ignoring all graphical attributes, or to save only the position of nodes. The default is to save all graphical attributes (position, size, color, shape...).
 <!--
         <itemizedlist>
         	<listitem>extended save: if this option is selected, the resulting file will be a zip file containing the model itself along with additionnal data (simulation parameters, definition of mutants...) that is associated to it. If the option is not selected, the file will be a text file containing only the model.</listitem>
         </itemizedlist>
 -->
         </para></listitem>
-        <listitem>Close: close the current graph, if no other window is opened, it will create a new graph in the current one, otherwise it will close it.</listitem>
-        <listitem>Quit: close all graphs and exit the GINsim application.</para></listitem>
+        <listitem><para role="newline"><emphasis>close:</emphasis> close the current graph, if no other window is opened, it will create a new graph in the current one, otherwise it will close it.</para></listitem>
+        <listitem><para role="newline"><emphasis>quit:</emphasis> close all graphs and exit the GINsim application.</para></listitem>
         </itemizedlist>
 	 <figure id="fig_saveDialog">
         <title>The save dialog</title>
@@ -121,8 +121,8 @@
       <section>
         <title>Merge and save subgraph</title>
         <itemizedlist>
-        <listitem>Merge graph: merge the opened graph with an other graph of the same type. Merging a graph is the same as opening it, selecting all the graph and pasting it in the first one. Just like copy/paste it will not work on all types of graphs (it obviously works on regulatory graphs).</listitem>
-        <listitem>Save subgraph: save the current selection as a new graph. It is similar to copying the selection, pasting it into a new graph and saving this new graph.</listitem>
+        <listitem><para role="newline"><emphasis>merge graph:</emphasis> merge the opened graph with an other graph of the same type. Merging a graph is the same as opening it, selecting all the graph and pasting it in the first one. Just like copy/paste it will not work on all types of graphs (it obviously works on regulatory graphs).</para></listitem>
+        <listitem><para role="newline"><emphasis>save subgraph:</emphasis> save the current selection as a new graph. It is similar to copying the selection, pasting it into a new graph and saving this new graph.</para></listitem>
         </itemizedlist>
       </section>
       <section>
@@ -130,8 +130,8 @@
         <para>GINsim comes with some generic exports that can be applied to all kinds of graphs. The following export formats are available under the File/export submenu:</para>
         <itemizedlist>
           <listitem><para role="newline"><emphasis><ulink url="http://www.graphviz.org/">Graphviz</ulink>:</emphasis> Graphs can be exported to the dot format used by graphviz graph visualisation software, those tools are particulary suitable for visualising big graphs. This export format exports only the graph structure, visual settings are losts, it is mainly here for big state transition graphs that can not be viewed within GINsim.</para></listitem>
-          <listitem><ulink url="http://www.biolayout.org/">Biolayout </ulink>: graphs can also be exported to the biolayout format. Like in graphviz format, visual settings are losts.</listitem>
-          <listitem><ulink url="http://www.w3.org/Graphics/SVG/">SVG</ulink>: the Scalable Vector Graphic (SVG) format is an XML-based format for representing vector graphics, it is gaining more and more popularity and many tools are available to view or edit SVG files. This should be a good starting point to integrate your existing GINsim graph into a paper: export your graph as SVG, you will be able to modify it and to export it to virtually any image format.</listitem>
+          <listitem><para role="newline"><emphasis><ulink url="http://www.biolayout.org/">Biolayout </ulink>:</emphasis> Graphs can also be exported to the biolayout format. Like in graphviz format, visual settings are losts.</para></listitem>
+          <listitem><para role="newline"><emphasis><ulink url="http://www.w3.org/Graphics/SVG/">SVG</ulink>:</emphasis> the Scalable Vector Graphic (SVG) format is an XML-based format for representing vector graphics, it is gaining more and more popularity and many tools are available to view or edit SVG files. This should be a good starting point to integrate your existing GINsim graph into a paper: export your graph as SVG, you will be able to modify it and to export it to virtually any image format.</para></listitem>
         </itemizedlist>
         <para>In addition to these generic export format, regulatory graphs can be exported into <ulink url="http://www.sbml.org/">SBML</ulink>. <warning>MORE EXPLANATIONS ARE NEEDED</warning></para>
       </section>
@@ -151,27 +151,27 @@
         <itemizedlist>
           <listitem>Copy/paste works between different GINsim windows (assuming they contain the same type of graphs).</listitem>
           <listitem>Pasted items are automatically selected to make it easier to move them.</listitem>
-          <listitem>The copy action does not test selected edges, it will automatically select ALL edges between selected nodes.</listitem>
-          <listitem>Pasted nodes will be renamed by adding ".1", ".2"... to the original names.</listitem>
+          <listitem>The copy action does not test selected edges, it will automatically select ALL edges between selected nodes,</listitem>
+          <listitem>Pasted nodes will be renamed by adding ".1", ".2"... to the original names,</listitem>
           <listitem>Logical paremeters are also copied and cleaned up: logical paremeter involving not-copied nodes are suppressed. The resulting graph is consistent but these new parameters need probably some tweaking.</listitem>
         </itemizedlist>
       </section>
       <section>
         <title>Editing the graph</title>
         <itemizedlist>
-          <listitem>edit, the normal editing mode: select/move nodes and edges,</listitem>
-          <listitem>add vertex: clicking in the graph creates a new vertex (gene),</listitem>
-          <listitem>add edge: dragging from a node to another adds an interaction between these nodes,</listitem>
-          <listitem><para role="newline"><emphasis>delete:</emphasis> activating this action will delete all selected items from the graph.</listitem>
+          <listitem><para role="newline"><emphasis>edit</emphasis>, the normal editing mode: select/move nodes and edges,</para></listitem>
+          <listitem><para role="newline"><emphasis>add vertex:</emphasis> clicking in the graph creates a new vertex (gene),</para></listitem>
+          <listitem><para role="newline"><emphasis>add edge:</emphasis> dragging from a node to another adds an interaction between these nodes,</para></listitem>
+          <listitem><para role="newline"><emphasis>delete:</emphasis> activating this action will delete all selected items from the graph.</para></listitem>
           Toolbar buttons show the selected edit mode and allow to change it.
         </itemizedlist>
         <tip>Each editing mode (add a node, add an edge) will be leaved once the action has been performed. Double-clicking on the corresponding toolbar button locks the editing mode until another mode is selected.</tip>
-        These options are <emphasis role="strong">not</emphasis> available when visualizing a state transition graph.
+        These options are <emphasis>not</emphasis> available when visualizing a state transition graph.
       </section>
       <section>
         <title>Selection</title>
         <itemizedlist>
-            <listitem>The "select all" action will select all items of the graph.</listitem>
+            <listitem>the "select all" action will select all items of the graph.</listitem>
             <listitem>The "invert selection" action will unselect all selected items and select all others.</listitem>
         </itemizedlist>
       </section>

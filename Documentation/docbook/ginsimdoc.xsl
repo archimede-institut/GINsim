@@ -2,6 +2,20 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 <xsl:import href="/usr/share/xml/docbook/stylesheet/nwalsh/xhtml/profile-chunk.xsl"/>
 
+<xsl:param name="local.l10n.xml" select="document('')"/> 
+<l:i18n xmlns:l="http://docbook.sourceforge.net/xmlns/l10n/1.0"> 
+  <l:l10n language="en"> 
+    <l:context name="xref-number-and-title"> 
+      <l:template name="figure" text="figure %n: &#8220;%t&#8221;"/> 
+      <l:template name="table" text="table %n: &#8220;%t&#8221;"/> 
+    </l:context>    
+    <l:context name="xref-number"> 
+      <l:template name="figure" text="figure %n"/> 
+      <l:template name="table" text="table %n"/> 
+    </l:context>    
+  </l:l10n>
+</l:i18n>
+
 <xsl:param name="html.stylesheet" select="'../ginsim.css'"/>
 <xsl:param name="navig.graphics"  select="1"/>
 <xsl:param name="admon.graphics" select="1"/>

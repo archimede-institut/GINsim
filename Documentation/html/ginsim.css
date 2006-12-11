@@ -1,10 +1,19 @@
 body {
-    background: #EEE;
+    background: #EED;
     color: #000;
 }
 
 table {
 	border: solid 1px;
+	border-collapse: collapse;
+
+}
+table th {
+	font-weight: bold;
+}
+
+td, th {
+	padding: .1em .6em;
 }
 
 .navheader table, .navfooter table {
@@ -59,19 +68,20 @@ div.section {
     padding-left: 1.5em;
 }
 
-div.mediaobject, p {
-    padding-left: 0.6em;
+div.figure, div.table {
+    text-align: center;
+    margin: 2em 5em;
+    padding: .7em;
+    border: dotted;
+    border-width: 1px;
 }
 
-div.mediaobject {
-    display: none;
- }
-div.figure div.mediaobject {
-    display: block;
+div.table table {
+	margin: auto;
 }
-div.figure, div.mediaobject {
-    text-align: center;
-    margin-bottom: 1em;
+
+div.table table, div.figure img {
+	margin-bottom: 1em;
 }
 
 pre.programlisting {
