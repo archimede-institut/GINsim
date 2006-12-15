@@ -102,8 +102,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 	}
 
 	public Object doCreate(GsGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GsModelCheckerList((GsRegulatoryGraph)graph);
 	}
 
 }

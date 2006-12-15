@@ -36,7 +36,7 @@ public class GsModelCheckerParser extends GsXMLHelper {
     String cfg_name = null;
     GsModelChecker mcheck;
     Map m_attr = new HashMap();
-    modelCheckerList l_tests;
+    GsModelCheckerList l_tests;
     GsRegulatoryMutants l_mutant;
     
     /**
@@ -44,7 +44,7 @@ public class GsModelCheckerParser extends GsXMLHelper {
      */
     public GsModelCheckerParser(GsRegulatoryGraph graph) {
     	this.graph = graph;
-    	l_tests = new modelCheckerList(graph);
+    	l_tests = new GsModelCheckerList(graph);
     	l_mutant = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
     }
     
