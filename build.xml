@@ -8,7 +8,7 @@
         <format property="CURDATE" pattern="yyyy-MM-dd"/>
     </tstamp>
 	<property name="baseversion" value="2.3"/>
-	<property name="version" value="${baseversion}_${CURDATE}"/>
+	<property name="version" value="${baseversion}_${CURDATE}" />
 	
 	<!-- set global properties for this build -->
 	<property name="src" location="src"/>
@@ -23,6 +23,7 @@
 	<property name="doc" location="${dist}/Documentation"/>
 	<property name="javadoc" location="${doc}/javadoc"/>
 	<property name="htmldoc" location="${doc}/html"/>
+	<property name="pdfdoc" location="${doc}/pdf"/>
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
 	
@@ -36,20 +37,29 @@
 		<mkdir dir="${dist}"/>
 	</target>
 
+
+	<!-- ************************************************** -->
+	<!--	  	All Documentation targets		-->
+	<!-- ************************************************** -->
+	<target name="doc" depends="docbook,javadoc" description="generate all doc"/>
+
 	<target name="docinit" depends="init">
 	  	<!-- Create the doc directory structure -->
 	  	<mkdir dir="${doc}"/>
 	  	<mkdir dir="${javadoc}"/>
-	</target>
-	
-	 <target name="docbook" depends="docinit" description="transform docbook doc">
+	  	<mkdir dir="${pdfdoc}"/>
 
 	 	<property name="css" value="../ginsim.css"/>
 	 	<property name="dbimg" value="../images/"/>
+		
 		<!-- copy the doc source files in doc/docbook -->
   		<copy todir="${doc}/"><fileset dir="${docsrc}"/></copy>
+	</target>
 
-	 	<!-- generate chunked version of the doc: .db files then real export -->
+	<target name="docbook" depends="docinit" description="Documentation: all docbook versions (chunked, single, pdf)"/>
+
+	<!-- generate chunked version of the doc: .db files then real export -->
+	<target name="docChunked" depends="docinit" description="Documentation: html chunked pages">
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="--stringparam  targets.filename tutorial.db --stringparam collect.xref.targets only ginsimdoc.xsl tutorial.xml"/>
 	 	</exec>
@@ -63,8 +73,10 @@
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="-o ../html/ --stringparam  current.docid userManual ginsimdoc.xsl userManual.xml"/>
 	 	</exec>
+	</target>
 
-	 	<!-- and single-page version  (need to recreate .db files first) -->
+	<!-- and single-page version  -->
+	<target name="docSingle" depends="docinit" description="Documentation: html single pages">
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="--stringparam  targets.filename tutorial.db --stringparam collect.xref.targets only ginsimdoc-single.xsl tutorial.xml"/>
 	 	</exec>
@@ -77,6 +89,18 @@
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="-o ../html/userManual.html --stringparam  current.docid userManual ginsimdoc-single.xsl userManual.xml"/>
 	 	</exec>
+	</target>
+
+	<!-- finally a pdf version, using dblatex  -->
+	<target name="docPdf" depends="docinit" description="Documentation: pdf version">
+	 	<exec dir="${docbookdoc}" executable="dblatex">
+	 		<arg line="-T simple tutorial.xml"/>
+	 	</exec>
+	 	<exec dir="${docbookdoc}" executable="dblatex">
+	 		<arg line="-T simple userManual.xml"/>
+	 	</exec>
+		<move todir="${pdfdoc}" file="${docbookdoc}/tutorial.pdf"/>
+		<move todir="${pdfdoc}" file="${docbookdoc}/userManual.pdf"/>
 	 </target>
 	
 	
@@ -100,9 +124,9 @@
 	</target>
 	
 	
-	<target name="doc" depends="docbook,javadoc" description="generate all doc"/>
-
-	
+	<!-- ************************************************** -->
+	<!--	  	Compilation and archive targets		-->
+	<!-- ************************************************** -->
   	<target name="compile" depends="init"
     		description="compile the source " >
 		<!-- Compile the java code from ${src} into ${build} -->
@@ -112,14 +136,12 @@
 	</target>
 
 	
-	<target name="dist" depends="compile"
-    		description="generate the distribution" >
-    		<!-- Create the distribution directory -->
-		<mkdir dir="${dist}/lib"/>
-		<mkdir dir="${dist}/data"/>
-		<!--    <mkdir dir="${dist}/doc"/> -->
+	<target name="dist" depends="compile" description="generate the distribution" >
+	    <!-- Create the distribution directory -->
+	    <mkdir dir="${dist}/lib"/>
+	    <mkdir dir="${dist}/data"/>
 	    <mkdir dir="${dist}/plugins"/>
-    		<mkdir dir="${dist}/plugins/data"/>
+	    <mkdir dir="${dist}/plugins/data"/>
 	    <copy todir="${dist}/lib"><fileset dir="lib"/></copy>
 	    <copy todir="${dist}" file="runginsim.bat"/>
 	    <copy todir="${dist}" file="makeclasspath.bat"/>
@@ -127,8 +149,8 @@
 	    <copy tofile="${dist}/runginsim.command" file="runginsim.sh"/>
 	    <chmod  perm="u+x" file="${dist}/runginsim.sh"></chmod>
 	    <chmod  perm="u+x" file="${dist}/runginsim.command"></chmod>
-   		<!-- Put everything in ${build} into a jar file in ${dist}/lib -->
-		<jar jarfile="${dist}/lib/ginsim.jar" basedir="${build}"/>
+   	    <!-- Put everything in ${build} into a jar file in ${dist}/lib -->
+	    <jar jarfile="${dist}/lib/ginsim.jar" basedir="${build}"/>
 	</target>
 
 
@@ -142,7 +164,7 @@
 	</macrodef>
 
 
-	<target name="distzip" description="generate a .zip with binary and docbook doc" depends="dist,docbook">
+	<target name="distzip" description="generate a .zip with binary and docbook doc" depends="dist,docChunked,jardist">
 		<property name="dirname" value="${ginsim}-${version}"/>
 		<move todir="${dirname}"><fileset dir="${dist}"></fileset></move>
 		<zip destfile="${ginsim}-${version}.zip" basedir="." includes="${dirname}/**"/>
@@ -159,15 +181,15 @@
 		</tar>
 		<gzip destfile="${ginsim}-${version}.tar.gz" src="${ginsim}-${version}.tar" />
 		<move todir="${dist}"><fileset dir="${dirname}"></fileset></move>
-		
-		<!-- create a single jar with all plugins -->
+	</target>
+
+	<target name="jardist" depends="dist" description="create a runnable jar version">
 		<property name="tmpdir" value="tmp"/>
 		<mkdir dir="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/jgraph.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/jgrapht-0.6.0.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/jgraphaddons.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/tar.jar" dest="${tmpdir}"/>
-<!--		<_merge_jar jarfile="${dist}/lib/ginsim.jar" dest="${tmpdir}"/> -->
 	    	<copy todir="${tmpdir}"><fileset dir="${build}"/></copy>
 		<jar jarfile="${ginsim}-${version}.jar" basedir="${tmpdir}" manifest="MANIFEST.MF"/> 
 	 	<delete dir="${tmpdir}"/>
