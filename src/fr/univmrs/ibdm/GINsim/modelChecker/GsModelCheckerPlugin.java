@@ -33,9 +33,9 @@ public class GsModelCheckerPlugin implements GsPlugin, GsActionProvider {
 
     static {
         v_values = new Vector();
-        v_values.add("N/A");
-        v_values.add("Yes");
-        v_values.add("No");
+        v_values.add("N A");
+        v_values.add("True");
+        v_values.add("False");
 
         // define supported model checkers here
         GsModelCheckerDescr checker = new GsNuSMVCheckerDescr();
