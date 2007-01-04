@@ -105,8 +105,8 @@ public class GsSMVExportConfigPanel extends JPanel {
 				}
 			});
 	        splitpane.setRightComponent(area);
-	        splitpane.setResizeWeight(0.1);
-	        splitpane.setDividerLocation(90);
+	        splitpane.setResizeWeight(0.2);
+	        splitpane.setDividerLocation(130);
 	        splitpane.setDividerSize(5);
 	        add(splitpane, cst);
         } else {
