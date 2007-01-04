@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.export;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
@@ -93,10 +94,8 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.fill = GridBagConstraints.BOTH;
         if (test) {
 	        JSplitPane splitpane = new JSplitPane();
-	        add(splitpane, cst);
 	        splitpane.setLeftComponent(getJsp());
-	        
-        	area = new JTextArea();
+         	area = new JTextArea();
         	area.setLineWrap(true);
 	        area.addFocusListener(new FocusListener() {
 				public void focusLost(FocusEvent e) {
@@ -106,6 +105,10 @@ public class GsSMVExportConfigPanel extends JPanel {
 				}
 			});
 	        splitpane.setRightComponent(area);
+	        splitpane.setResizeWeight(0.1);
+	        splitpane.setDividerLocation(90);
+	        splitpane.setDividerSize(5);
+	        add(splitpane, cst);
         } else {
         	add(getJsp(), cst);
         }
@@ -113,10 +116,12 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst = new GridBagConstraints();
         cst.gridx = 0;
         cst.gridy = 0;
+        cst.anchor = GridBagConstraints.WEST;
         add(radioSync, cst);
         cst = new GridBagConstraints();
         cst.gridx = 0;
         cst.gridy = 1;
+        cst.anchor = GridBagConstraints.WEST;
         add(radioAsync, cst);
         
         radioSync.addChangeListener(new ChangeListener() {
