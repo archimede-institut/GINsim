@@ -506,7 +506,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         while ( graphManager.getVertexByName(id+"."+addon) != null) {
             addon++;
         }
-        vertex.setId(id+"."+addon);
+        vertex.setId(id+"_"+addon);
         graphManager.addVertex(vertex);
         nodeOrder.add(vertex);
     }
