@@ -36,6 +36,12 @@ public interface GsGraphListener {
      */
     public GsGraphEventCascade vertexUpdated(Object data);
     /**
+     * the graph was merged with another one
+     * @param data vector of all merged in vertices
+     * @return an object to describe/undo cascade event
+     */
+    public GsGraphEventCascade graphMerged(Object data);
+    /**
      * an edge was updated.
      * @param data
      * @return an object to describe/undo cascade event

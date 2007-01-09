@@ -254,6 +254,10 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 		orderModel.fireAllChanged();
         return null;
 	}
+	public GsGraphEventCascade graphMerged(Object data) {
+		orderModel.fireAllChanged();
+        return null;
+	}
 	public GsGraphEventCascade vertexRemoved(Object data) {
 		orderModel.fireAllChanged();
         return null;

@@ -64,6 +64,10 @@ public class GsModelCheckerList extends GsListAbstract implements GsList, GsGrap
 		return null;
 	}
 
+	public GsGraphEventCascade graphMerged(Object data) {
+		return null;
+	}
+
 	public Vector getObjectType() {
 		return GsModelCheckerPlugin.v_checker;
 	}

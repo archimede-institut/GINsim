@@ -197,6 +197,10 @@ public class GsOrderPanel extends JPanel implements GsGraphListener {
 		((GsListModel)orderList.getModel()).fireModelChange();
         return null;
 	}
+	public GsGraphEventCascade graphMerged(Object data) {
+		((GsListModel)orderList.getModel()).fireModelChange();
+		return null;
+	}
     public GsGraphEventCascade vertexUpdated(Object data) {
         return null;
     }

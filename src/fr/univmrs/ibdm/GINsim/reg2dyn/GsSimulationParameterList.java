@@ -71,6 +71,14 @@ public class GsSimulationParameterList extends GsListAbstract
         return null;
     }
 
+	public GsGraphEventCascade graphMerged(Object data) {
+		Vector v = (Vector)data;
+		for (int i=0 ; i<v.size() ; i++) {
+			vertexAdded(v.get(i));
+		}
+		return null;
+	}
+    
     public GsGraphEventCascade vertexRemoved(Object data) {
         // remove it from priority classes and initial states
         for (int i=0 ; i<v_data.size() ; i++) {

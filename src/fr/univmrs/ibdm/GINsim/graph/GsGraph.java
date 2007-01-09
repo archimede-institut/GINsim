@@ -78,8 +78,10 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     public static final int CHANGE_EDGEUPDATED = 4;
     /**  a vertex has been modified */
     public static final int CHANGE_VERTEXUPDATED = 5;
+    /**  a vertex has been modified */
+    public static final int CHANGE_MERGED = 6;
     /**  other kind of change */
-    public static final int CHANGE_METADATA = 6;
+    public static final int CHANGE_METADATA = 7;
     
     protected static final String zip_prefix = "GINsim-data/";
     
@@ -680,6 +682,14 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                 }
             }
             break;
+        case CHANGE_MERGED:
+            for (int i=0 ; i<listeners.size() ; i++) {
+                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).graphMerged(data);
+                if (gec != null) {
+                    v_cascade.add(gec);
+                }
+            }
+            break;
         case CHANGE_VERTEXUPDATED:
             for (int i=0 ; i<listeners.size() ; i++) {
                 GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).vertexUpdated(data);
@@ -837,8 +847,11 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	public void paste() {
 	    GsGraph graph = getCopiedGraph();
 	    if (graph != null) {
-            Vector selection = doMerge(graph);
-            graphManager.select(selection);
+	        Vector v = doMerge(graph);
+	        if (v != null) {
+	        	fireGraphChange(CHANGE_MERGED, v);
+	        }
+            graphManager.select(v);
 	    }
 	}
 	
@@ -848,7 +861,10 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	public void merge() {
 	    GsGraph graph = GsOpenAction.open(descriptor, null);
 	    if (graph != null) {
-	        doMerge(graph);
+	        Vector v = doMerge(graph);
+	        if (v != null) {
+	        	fireGraphChange(CHANGE_MERGED, v);
+	        }
 	    }
 	}
 	
@@ -1149,6 +1165,10 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         return null;
     }
 
+	public GsGraphEventCascade graphMerged(Object data) {
+        setAssociatedGraph(null);
+		return null;
+	}
     public GsGraphEventCascade vertexUpdated(Object data) {
         return null;
     }

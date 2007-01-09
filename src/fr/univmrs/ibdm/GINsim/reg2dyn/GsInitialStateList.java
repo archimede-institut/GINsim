@@ -49,6 +49,10 @@ public class GsInitialStateList extends GsListAbstract implements GsGraphListene
 		return null;
 	}
 
+	public GsGraphEventCascade graphMerged(Object data) {
+		return null;
+	}
+
 	public GsGraphEventCascade vertexRemoved(Object data) {
         // remove it from initial states
     	Vector v = null;

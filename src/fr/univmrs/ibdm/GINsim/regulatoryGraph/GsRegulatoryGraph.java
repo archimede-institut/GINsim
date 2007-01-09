@@ -503,7 +503,7 @@ public final class GsRegulatoryGraph extends GsGraph {
             return;
         }
         int addon = 1;
-        while ( graphManager.getVertexByName(id+"."+addon) != null) {
+        while ( graphManager.getVertexByName(id+"_"+addon) != null) {
             addon++;
         }
         vertex.setId(id+"_"+addon);

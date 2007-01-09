@@ -88,6 +88,9 @@ public class GsRegulatoryMutants extends GsListAbstract implements GsGraphListen
         }
         return null;
     }
+	public GsGraphEventCascade graphMerged(Object data) {
+		return null;
+	}
     public GsGraphEventCascade vertexUpdated(Object data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
