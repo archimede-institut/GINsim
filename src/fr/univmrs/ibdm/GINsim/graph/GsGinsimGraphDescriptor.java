@@ -155,27 +155,31 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                 	}
                 }
                 GsGraph graph = parser.parse(f.getInputStream(ze), map);
-                Vector v_omanager = graph.getObjectManager();
-                if (v_omanager != null) {
-                    for (int i=0 ; i<v_omanager.size() ; i++) {
-                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
-                        ze = f.getEntry((usePrefix ? GsGraph.zip_prefix:"")+manager.getObjectName());
-                        if (ze != null) {
-                            Object o = manager.doOpen(f.getInputStream(ze), graph);
-                            graph.addObject(manager.getObjectName(), o);
-                        }
-                    }
-                }
-                v_omanager = graph.getSpecificObjectManager();
-                if (v_omanager != null) {
-                    for (int i=0 ; i<v_omanager.size() ; i++) {
-                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
-                        ze = f.getEntry((usePrefix ? GsGraph.zip_prefix:"")+manager.getObjectName());
-                        if (ze != null) {
-                            Object o = manager.doOpen(f.getInputStream(ze), graph);
-                            graph.addObject(manager.getObjectName(), o);
-                        }
-                    }
+                if (map == null) {
+                	// try to restore associated data ONLY if no subgraph is selected
+                	// TODO: need to load associated entry with subgraphs
+	                Vector v_omanager = graph.getObjectManager();
+	                if (v_omanager != null) {
+	                    for (int i=0 ; i<v_omanager.size() ; i++) {
+	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
+	                        ze = f.getEntry((usePrefix ? GsGraph.zip_prefix:"")+manager.getObjectName());
+	                        if (ze != null) {
+	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
+	                            graph.addObject(manager.getObjectName(), o);
+	                        }
+	                    }
+	                }
+	                v_omanager = graph.getSpecificObjectManager();
+	                if (v_omanager != null) {
+	                    for (int i=0 ; i<v_omanager.size() ; i++) {
+	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
+	                        ze = f.getEntry((usePrefix ? GsGraph.zip_prefix:"")+manager.getObjectName());
+	                        if (ze != null) {
+	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
+	                            graph.addObject(manager.getObjectName(), o);
+	                        }
+	                    }
+	                }
                 }
                 graph.setSaveFileName(file.getAbsolutePath());
                 return graph; 
