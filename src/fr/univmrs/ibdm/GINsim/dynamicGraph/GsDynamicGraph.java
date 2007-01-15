@@ -408,7 +408,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         
         // just display the number of stable states here and a "show more" button
         if (v_stables.size() > 1) {
-            pinfo.add(new JLabel("nb stables: "+(v_stables.size()-1)));
+            pinfo.add(new JLabel("nb stable: "+(v_stables.size()-1)));
             JButton b_view = new JButton("view");
             // show all stables: quickly done but, it is "good enough" :)
             b_view.addActionListener(new ActionListener() {
