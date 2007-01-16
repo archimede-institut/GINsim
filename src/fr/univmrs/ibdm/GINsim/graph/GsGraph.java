@@ -256,20 +256,36 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**
      * 
      * @param selectedOnly
-     * @param fileName
+     * @param savePath
      * @param saveMode
      * @param extended 
      * @param compressed
      * @throws GsException
      */
-    private void save(boolean selectedOnly, String fileName, int saveMode, boolean extended, boolean compressed) throws GsException {
+    private void save(boolean selectedOnly, String savePath, int saveMode, boolean extended, boolean compressed) throws GsException {
         try {
+        	File f = new File(savePath != null ? savePath : this.saveFileName);
+        	File ftmp = null;
+        	String fileName = f.getAbsolutePath();;
+        	if (f.exists()) {
+            	// create a temporary file to avoid destroying a good file in case save does not work
+        		try {
+        			ftmp = File.createTempFile(f.getName(), null, f.getParentFile());
+        			fileName = ftmp.getAbsolutePath();
+        		} catch (Exception e) {
+        			// TODO: introduce a clean permission checking
+        			System.out.println("Could not use a tmp file in the same directory");
+//        			ftmp = File.createTempFile(f.getName(), null);
+//        			fileName = ftmp.getAbsolutePath();
+        		}
+        	}
+        	
             if (!extended) {
-                OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName != null ? fileName : this.saveFileName), "UTF-8");
+                OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8");
                 doSave(os, saveMode, selectedOnly);
                 os.close();
             } else if (compressed) {
-                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName != null ? fileName : this.saveFileName));
+                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
                 zos.putNextEntry(new ZipEntry(zip_prefix+getGraphZipName()));
                 OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
                 doSave(osw, saveMode, selectedOnly);
@@ -309,7 +325,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                 }
                 zos.close();
         	} else {
-        		TarOutputStream tos = new TarOutputStream(new FileOutputStream(fileName != null ? fileName : this.saveFileName));
+        		TarOutputStream tos = new TarOutputStream(new FileOutputStream(fileName));
         		tos.putNextEntry(new TarEntry(zip_prefix+getGraphZipName()));
                 OutputStreamWriter osw = new OutputStreamWriter(tos, "UTF-8");
                 doSave(osw, saveMode, selectedOnly);
@@ -362,6 +378,11 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                     addNotificationMessage(new GsGraphNotificationMessage(this, "graph saved", GsGraphNotificationMessage.NOTIFICATION_INFO));
                     mainFrame.updateTitle();
                 }
+            }
+            
+            if (ftmp != null) {
+            	// Everything went fine, rename the temporary file
+            	ftmp.renameTo(f);
             }
         } catch (Exception e) {
             if (mainFrame != null) {
