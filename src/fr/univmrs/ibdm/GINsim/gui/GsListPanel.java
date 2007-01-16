@@ -3,11 +3,13 @@ package fr.univmrs.ibdm.GINsim.gui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -36,14 +38,24 @@ public class GsListPanel extends JPanel {
     JButton b_add;
     JButton b_copy;
     JButton b_del;
+    JLabel l_title = new JLabel();
     
     /**
      */
     public GsListPanel() {
         sp.setViewportView(jl);
         this .setLayout(new GridBagLayout());
-        
+
         GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridwidth = 2;
+        c.fill = GridBagConstraints.BOTH;
+        c.insets = new Insets(3,5,4, 5);
+        this.add(l_title, c);
+		l_title.setVisible(false);
+		
+        c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
         c.gridheight = 6;
@@ -119,6 +131,15 @@ public class GsListPanel extends JPanel {
     public void setAutoHide(int autohide) {
         this.autohide = autohide;
         refreshHide();
+    }
+    
+    public void setTitle(String title) {
+    	if (title == null) {
+    		l_title.setVisible(false);
+    		return;
+    	}
+		l_title.setVisible(true);
+    	l_title.setText(title);
     }
     
     /**

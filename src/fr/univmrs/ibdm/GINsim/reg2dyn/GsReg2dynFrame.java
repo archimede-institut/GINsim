@@ -109,9 +109,9 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         listPanel = new GsListPanel();
         listPanel.addSelectionListener(this);
         listPanel.setList(paramList);
+        listPanel.setTitle(Translator.getString("STR_simuParamTitle"));
         spane.setLeftComponent(listPanel);
         spane.setDividerLocation(200);
-        spane.setDividerSize(3);
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;

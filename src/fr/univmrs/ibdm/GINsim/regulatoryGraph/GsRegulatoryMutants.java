@@ -3,7 +3,6 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -11,6 +10,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -34,7 +34,7 @@ public class GsRegulatoryMutants extends GsListAbstract implements GsGraphListen
      * @param graph
      * @return a panel to configure mutants
      */
-    public static JPanel getMutantConfigPanel(GsRegulatoryGraph graph) {
+    public static JSplitPane getMutantConfigPanel(GsRegulatoryGraph graph) {
         GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
         if (mutants == null) {
             mutants = new GsRegulatoryMutants(graph);
@@ -183,7 +183,7 @@ class MutantCascadeUpdate implements GsGraphEventCascade {
     }
 }
 
-class MutantPanel extends JPanel {
+class MutantPanel extends JSplitPane {
     private static final long serialVersionUID = 2625670418830465925L;
     
     GsListPanel lp;
@@ -197,10 +197,11 @@ class MutantPanel extends JPanel {
     
     MutantPanel() {
         lp = new GsListPanel();
+        lp.setTitle(Translator.getString("STR_mutantListTitle"));
         lp.setSize(50, getHeight());
-        this.setLayout(new GridLayout(1,2));
-        this.add(lp);
-        this.add(getPm());
+        setLeftComponent(lp);
+        setRightComponent(getPm());
+        setDividerLocation(200);
         
         lp.addSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
