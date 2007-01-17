@@ -110,7 +110,7 @@ public class GsDynamicItemModel extends AbstractTableModel {
                 go2Next[i].addActionListener(new Go2ActionListener(graph, nextState[i]));
             }
         }
-        fireTableStructureChanged();
+        fireTableDataChanged();
     }
 }
 
