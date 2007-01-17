@@ -95,7 +95,6 @@ public class GsModelCheckerUI extends GsStackDialog {
     	if (splitTestEdit == null) {
     		splitTestEdit = new JSplitPane();
 	    	splitTestEdit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-	    	splitTestEdit.setDividerSize(5);
 	    	splitTestEdit.setDividerLocation(100);
 	    	panelEditTest = new GsListPanel();
     	}

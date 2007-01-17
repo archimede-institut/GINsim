@@ -23,9 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -74,7 +72,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     private JButton buttonCfgPriorityClass;
     
     private JScrollPane jScrollPane = null;
-    private JTable tableInitStates = null;
+    private GsJTable tableInitStates = null;
     private Reg2dynTableModel model = null;
     private JButton buttonDelStateRow = null;
     private JButton buttonResetStateRow = null;
@@ -112,6 +110,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         listPanel.setTitle(Translator.getString("STR_simuParamTitle"));
         spane.setLeftComponent(listPanel);
         spane.setDividerLocation(200);
+        //spane.se
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
@@ -301,8 +300,10 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             tableInitStates.setModel(model);
             tableInitStates.getTableHeader().setReorderingAllowed(false);
             tableInitStates.setEnabled(false);
-            tableInitStates.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            tableInitStates.setValueAt("0", 0, 0);
+            tableInitStates.setRowSelectionAllowed(true);
+            tableInitStates.setColumnSelectionAllowed(true);
+
+            model.setTable(tableInitStates);
         }
         return tableInitStates;
     }
@@ -336,7 +337,10 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         return jScrollPane;
     }
     protected void deleteStateRow() {
-        model.deleteRow(tableInitStates.getSelectedRow());
+    	int[] t = tableInitStates.getSelectedRows();
+    	for (int i=t.length-1 ; i>=0 ; i--) {
+    		model.deleteRow(t[i]);
+    	}
     }
     private JButton getButtonDelStateRow() {
         if (buttonDelStateRow == null) {

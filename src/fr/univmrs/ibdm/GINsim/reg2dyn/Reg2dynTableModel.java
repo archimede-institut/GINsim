@@ -4,8 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
+import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
@@ -20,6 +22,8 @@ public class Reg2dynTableModel extends AbstractTableModel {
     private GsInitialStateList imanager;
 	private int nbCol;
     private GsReg2dynFrame frame;
+    
+    private JTable theTable;
 	
 	/**
 	 * simple constructor
@@ -188,6 +192,17 @@ public class Reg2dynTableModel extends AbstractTableModel {
 			}
 			return;
 		}
+		
+		int[] r_sel = theTable.getSelectedRows();
+		int[] c_sel = theTable.getSelectedColumns();
+		for (int i=0 ; i<r_sel.length ; i++) {
+			for (int j=0 ; j<c_sel.length ; j++) {
+				doSetValueAt(aValue, r_sel[i], c_sel[j]);
+			}
+		}
+	}
+	
+	public void doSetValueAt(Object aValue, int rowIndex, int columnIndex) {
 		columnIndex--;
 		int maxvalue = ((GsRegulatoryVertex)nodeOrder.get(columnIndex)).getMaxValue();
         if (aValue == null || ((String)aValue).trim().equals("") || ((String)aValue).trim().equals("*")) {
@@ -251,7 +266,7 @@ public class Reg2dynTableModel extends AbstractTableModel {
             // if on the last line: create a new line an check it
             if (rowIndex == getRowCount()-1) {
             	imanager.add(rowIndex, 0);
-            	fireTableRowsInserted(rowIndex, rowIndex);
+            	//fireTableRowsInserted(rowIndex, rowIndex);
             	setValueAt(Boolean.TRUE, rowIndex, 0);
             }
             Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
@@ -310,4 +325,8 @@ public class Reg2dynTableModel extends AbstractTableModel {
         this.param = param;
         fireTableStructureChanged();
     }
+
+	public void setTable(GsJTable tableInitStates) {
+		theTable = tableInitStates;
+	}
 }

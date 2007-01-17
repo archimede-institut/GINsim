@@ -93,7 +93,7 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.fill = GridBagConstraints.BOTH;
         if (test) {
 	        JSplitPane splitpane = new JSplitPane();
-	        splitpane.setLeftComponent(getJsp());
+	        add(splitpane, cst);
          	area = new JTextArea();
         	area.setLineWrap(true);
 	        area.addFocusListener(new FocusListener() {
@@ -104,10 +104,9 @@ public class GsSMVExportConfigPanel extends JPanel {
 				}
 			});
 	        splitpane.setRightComponent(area);
-	        splitpane.setResizeWeight(0.2);
+	        splitpane.setLeftComponent(getJsp());
+	        //splitpane.setResizeWeight(0.2);
 	        splitpane.setDividerLocation(130);
-	        splitpane.setDividerSize(5);
-	        add(splitpane, cst);
         } else {
         	add(getJsp(), cst);
         }

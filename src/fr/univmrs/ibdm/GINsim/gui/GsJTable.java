@@ -51,7 +51,6 @@ public class GsJTable extends JTable {
         setDefaultRenderer(JComponent.class,
                 new JTableButtonRenderer(defaultRenderer));
         addMouseListener(new JTableButtonMouseListener(this));
-
     }
 
     protected boolean processKeyBinding(KeyStroke ks, KeyEvent e,
