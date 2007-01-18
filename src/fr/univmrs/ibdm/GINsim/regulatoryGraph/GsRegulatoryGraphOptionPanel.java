@@ -22,6 +22,9 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
 	private JComboBox comboBox;
     private JCheckBox extended;
     private JCheckBox compressed;
+    
+    // FIXME: make uncompresed save just work
+    private static final boolean showCompressed = false;
 	
 	/**
 	 * create the save option panel for ginml based graphs
@@ -47,8 +50,9 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
         c.gridy = 2;
         c.anchor = GridBagConstraints.WEST;
         c.insets = new Insets(0,10,0,0);
-        // TODO: add back uncompressed option
-        //this.add(getCompressed(), c);
+        if (showCompressed) {
+        	this.add(getCompressed(), c);
+        }
         comboBox.setSelectedIndex(mode);
 	}
 	
@@ -68,8 +72,7 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
     }
 
     public boolean isCompressed() {
-    	if (true) {
-    		// TODO: add back uncompressed mode
+    	if (!showCompressed) {
     		return true;
     	}
         GsOptions.setOption("compressedSave", compressed.isSelected() ? Boolean.TRUE : Boolean.FALSE);

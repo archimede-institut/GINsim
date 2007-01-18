@@ -351,20 +351,20 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                             }
                         }
                     }
-                    Vector v_specManager = getSpecificObjectManager();
-                    if (v_specManager != null) {
-                        for (int i=0 ; i<v_specManager.size() ; i++) {
-                            GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
-                            if (manager.needSaving(this)) {
-                                tos.putNextEntry(new TarEntry(zip_prefix+manager.getObjectName()));
-                                manager.doSave(osw, this);
-                                osw.flush();
-                                tos.closeEntry();
-                            }
+            	}
+                Vector v_specManager = getSpecificObjectManager();
+                if (v_specManager != null) {
+                    for (int i=0 ; i<v_specManager.size() ; i++) {
+                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
+                        if (manager.needSaving(this)) {
+                            tos.putNextEntry(new TarEntry(zip_prefix+manager.getObjectName()));
+                            manager.doSave(osw, this);
+                            osw.flush();
+                            tos.closeEntry();
                         }
                     }
-                    tos.close();
-            	}
+                }
+                tos.close();
             }
             if (selectedOnly) {
                 if (mainFrame != null) {
