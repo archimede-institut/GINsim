@@ -39,6 +39,7 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
+import fr.univmrs.tagc.util.widgets.MSplitPane;
 
 /**
  * frame to set up the simulation
@@ -102,15 +103,13 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
 
     private void initialize() {
         setSize(800, 400);
-        JSplitPane spane = new JSplitPane();
+        JSplitPane spane = new MSplitPane("display.configSimulation");
         spane.setRightComponent(getMainPanel());
         listPanel = new GsListPanel();
         listPanel.addSelectionListener(this);
         listPanel.setList(paramList);
         listPanel.setTitle(Translator.getString("STR_simuParamTitle"));
         spane.setLeftComponent(listPanel);
-        spane.setDividerLocation(200);
-        //spane.se
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
