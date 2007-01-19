@@ -15,6 +15,7 @@ import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.graph.GraphChangeListener;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.ibdm.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
@@ -75,6 +76,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         }
         
         if (regGraph == null || dynGraph == null) {
+        	graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "Could not start the animator", GsGraphNotificationMessage.NOTIFICATION_WARNING));
             return;
         }
         // ok, let's start the animator
@@ -105,6 +107,8 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         // reset all node's color and save them in the hashmap
         regGraph.addBlockClose(this);
         regGraph.addBlockEdit(this);
+        dynGraph.addBlockClose(this);
+        dynGraph.addBlockEdit(this);
         Iterator it = regGraph.getGraphManager().getVertexIterator();
         while (it.hasNext()) {
             Object vertex = it.next();
@@ -145,6 +149,8 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         }
         regGraph.removeBlockClose(this);
         regGraph.removeBlockEdit(this);
+        dynGraph.removeBlockClose(this);
+        dynGraph.removeBlockEdit(this);
         if (pathPlayer != null && pathPlayer.isAlive()) {
             pathPlayer.notify();
         }
