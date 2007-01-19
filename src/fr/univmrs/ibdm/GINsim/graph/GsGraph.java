@@ -13,9 +13,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import com.ice.tar.TarEntry;
-import com.ice.tar.TarOutputStream;
-
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
@@ -284,8 +281,12 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                 OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8");
                 doSave(os, saveMode, selectedOnly);
                 os.close();
-            } else if (compressed) {
+            } else {
                 ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
+                if (!compressed) {
+                	// FIXME: uncompressed Zip require to set the CRC by hand!!
+                	zos.setMethod(ZipOutputStream.STORED);
+                }
                 zos.putNextEntry(new ZipEntry(zip_prefix+getGraphZipName()));
                 OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
                 doSave(osw, saveMode, selectedOnly);
@@ -324,47 +325,6 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                     }
                 }
                 zos.close();
-        	} else {
-        		TarOutputStream tos = new TarOutputStream(new FileOutputStream(fileName));
-        		tos.putNextEntry(new TarEntry(zip_prefix+getGraphZipName()));
-                OutputStreamWriter osw = new OutputStreamWriter(tos, "UTF-8");
-                doSave(osw, saveMode, selectedOnly);
-                osw.flush();
-                tos.closeEntry();
-                // now save associated objects
-                if (v_OManager != null) {
-                    for (int i=0 ; i<v_OManager.size() ; i++) {
-                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
-                        if (manager.needSaving(this)) {
-                            tos.putNextEntry(new TarEntry(zip_prefix+manager.getObjectName()));
-                            try {
-                                manager.doSave(osw, this);
-                            } catch (Exception e) {
-                                if (mainFrame != null) {
-                                    addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
-                                } else {
-                                    e.printStackTrace();
-                                }
-                            } finally {
-                                osw.flush();
-                                tos.closeEntry();
-                            }
-                        }
-                    }
-            	}
-                Vector v_specManager = getSpecificObjectManager();
-                if (v_specManager != null) {
-                    for (int i=0 ; i<v_specManager.size() ; i++) {
-                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
-                        if (manager.needSaving(this)) {
-                            tos.putNextEntry(new TarEntry(zip_prefix+manager.getObjectName()));
-                            manager.doSave(osw, this);
-                            osw.flush();
-                            tos.closeEntry();
-                        }
-                    }
-                }
-                tos.close();
             }
             if (selectedOnly) {
                 if (mainFrame != null) {
