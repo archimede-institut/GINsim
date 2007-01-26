@@ -55,7 +55,7 @@ public class GsPetriNetExportINA {
 
         Vector v_no = graph.getNodeOrder();
         int len = v_no.size();
-        OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees();
+        OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
         Vector[] t_transition = new Vector[len];
         short[][] t_markup = new short[len][2];
         if (!GsPetriNetExport.prepareExport(graph, t_markup, t_transition, t_tree, v_no)) {

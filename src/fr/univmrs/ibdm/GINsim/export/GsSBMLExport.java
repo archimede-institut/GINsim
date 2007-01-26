@@ -36,7 +36,7 @@ public class GsSBMLExport {
 	public static void export(GsGraph graph, String fileName) {
         Vector v_no = graph.getNodeOrder();
         int len = v_no.size();
-        OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees();
+        OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
         short[][] t_markup = new short[len][2];
         for (int i=0 ; i<len ; i++) {
             GsRegulatoryVertex vertex = ((GsRegulatoryVertex)v_no.get(i));

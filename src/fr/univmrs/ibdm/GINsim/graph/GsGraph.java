@@ -118,6 +118,8 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             GsEnv.registerGraph(this, saveFileName);
         }
         graphManager = new GsJgraphtGraphManager(this, mainFrame);
+        // TODO: abstract the graph manager a bit more (and finish the piccolo based implementation)
+        // graphManager = new GsSimpleGraphManager(this);
         vReader = graphManager.getVertexAttributesReader();
         eReader = graphManager.getEdgeAttributesReader();
     }

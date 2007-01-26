@@ -94,7 +94,7 @@ public final class Simulation extends Thread implements Runnable{
                 break;
         }
         
-        t_tree = regGraph.getAllTrees();
+        t_tree = regGraph.getAllTrees(true);
         if (params.mutant != null) {
             params.mutant.apply(t_tree, listGenes);
         }

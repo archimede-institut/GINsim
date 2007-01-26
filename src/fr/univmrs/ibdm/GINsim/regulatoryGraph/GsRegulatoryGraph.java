@@ -591,12 +591,19 @@ public final class GsRegulatoryGraph extends GsGraph {
     }
     
     /**
+     * @param focal TODO
      * @return a tree representation of logical parameters
      */
-    public OmddNode[] getAllTrees() {
+    public OmddNode[] getAllTrees(boolean focal) {
         OmddNode[] t_tree = new OmddNode[nodeOrder.size()];
         for (int i=0 ; i<nodeOrder.size() ; i++) {
-            t_tree[i] = ((GsRegulatoryVertex)nodeOrder.get(i)).getTreeParameters(this).reduce();
+        	GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+            t_tree[i] = vertex.getTreeParameters(this);
+            if (!focal) {
+            	t_tree[i] = t_tree[i].buildNonFocalTree(i, vertex.getMaxValue()+1).reduce();
+            } else {
+            	t_tree[i] = t_tree[i].reduce();
+            }
         }
         return t_tree;
     }

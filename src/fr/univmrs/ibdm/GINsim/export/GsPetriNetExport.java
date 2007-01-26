@@ -41,6 +41,10 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  *</ul>     
  */
 public class GsPetriNetExport {
+	
+	// TODO: INA does not like PN with "useless" places. Such places should be removed (with a warning)
+	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
+	
     /**
      * extract transitions from a tree view of logical parameters.
      * 

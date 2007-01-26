@@ -31,6 +31,7 @@ public class OmddNode {
     // create once for all the terminals nodes.
     /** all terminal nodes */
     public static final OmddNode[] TERMINALS;
+    public static final OmddNode MINUSONE;
     
     /**  */
     public static final int OR = 0;
@@ -40,6 +41,11 @@ public class OmddNode {
     public static final int CONSTRAINT = 2;
     
     static {
+    	MINUSONE = new OmddNode();
+    	MINUSONE.next = null;
+    	MINUSONE.value = -1;
+    	MINUSONE.key = "MO";
+    	
         TERMINALS = new OmddNode[10];
         
         TERMINALS[0] = new OmddNode();
@@ -528,5 +534,44 @@ public class OmddNode {
         }
         
         return false;
+    }
+    
+    public OmddNode buildNonFocalTree(int targetLevel, int len) {
+    	if (next == null || this.level > targetLevel) {
+    		// the targetnode was not found, insert it
+    		OmddNode ret = new OmddNode();
+    		ret.level = targetLevel;
+    		ret.next = new OmddNode[len];
+    		for (int i=0 ; i<len ; i++) {
+    			ret.next[i] = this.updateForNonFocal(i);
+    		}
+    		return ret;
+    	}
+    	// on the right level
+		OmddNode ret = new OmddNode();
+		ret.level = targetLevel;
+		ret.next = new OmddNode[len];
+		for (int i=0 ; i<len ; i++) {
+			ret.next[i] = next[i].updateForNonFocal(i);
+		}
+		return ret;
+    }
+    public OmddNode updateForNonFocal(int value) {
+    	if (next == null) {
+    		if (this.value == value) {
+    			return TERMINALS[0];
+    		}
+    		if (this.value < value) {
+    			return TERMINALS[1];
+    		}
+    		return MINUSONE;
+    	}
+    	OmddNode ret = new OmddNode();
+    	ret.level = level;
+    	ret.next = new OmddNode[this.next.length];
+    	for (int i=0 ; i<next.length ; i++) {
+    		ret.next[i] = next[i].updateForNonFocal(value);
+    	}
+    	return ret;
     }
 }
