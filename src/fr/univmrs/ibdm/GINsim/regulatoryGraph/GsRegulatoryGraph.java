@@ -591,7 +591,7 @@ public final class GsRegulatoryGraph extends GsGraph {
     }
     
     /**
-     * @param focal TODO
+     * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
      * @return a tree representation of logical parameters
      */
     public OmddNode[] getAllTrees(boolean focal) {

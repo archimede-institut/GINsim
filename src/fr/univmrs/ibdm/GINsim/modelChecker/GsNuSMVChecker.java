@@ -33,6 +33,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 	GsSMVexportConfig cfg;
 	
 	static GsSMVExportConfigPanel editPanel = null;
+	private static final String RUNCMD = "NuSMV -dynamic ";
 
 	public GsNuSMVChecker(String name, GsRegulatoryGraph graph) {
 		this.name = name;
@@ -101,7 +102,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 					System.out.println("should not come here: result based on previous result");
 					result.expected = ((GsModelCheckerTestResult) o).expected;
 				}
-				Process p = Runtime.getRuntime().exec("NuSMV "+src.getAbsolutePath());
+				Process p = Runtime.getRuntime().exec(RUNCMD+src.getAbsolutePath());
 				
 				// get the output into a separate file
 				final InputStream in = p.getInputStream();

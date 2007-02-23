@@ -1,6 +1,5 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -78,10 +77,9 @@ public class GsInteractionPanel extends GsParameterPanel {
 	 * This method initializes this
 	 */
 	private void initialize() {
-        this.setLayout(new CardLayout());
-        this.setPreferredSize(new java.awt.Dimension(700,60));
-        this.setMinimumSize(new java.awt.Dimension(300,60));
-        this.setSize(704, 60);
+//        this.setPreferredSize(new java.awt.Dimension(700,60));
+//        this.setMinimumSize(new java.awt.Dimension(300,60));
+//        this.setSize(704, 60);
         
         setLayout(new GridBagLayout());
         

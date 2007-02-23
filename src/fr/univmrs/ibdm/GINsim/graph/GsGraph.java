@@ -16,12 +16,14 @@ import javax.swing.filechooser.FileFilter;
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
+import fr.univmrs.ibdm.GINsim.global.GsMain;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphtGraphManager;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.piccolo.GsSimpleGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 
@@ -117,9 +119,12 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         } else {
             GsEnv.registerGraph(this, saveFileName);
         }
-        graphManager = new GsJgraphtGraphManager(this, mainFrame);
         // TODO: abstract the graph manager a bit more (and finish the piccolo based implementation)
-        // graphManager = new GsSimpleGraphManager(this);
+        if (GsMain.USE_PICCOLO) {
+        	graphManager = new GsSimpleGraphManager(this);
+        } else {
+            graphManager = new GsJgraphtGraphManager(this, mainFrame);
+        }
         vReader = graphManager.getVertexAttributesReader();
         eReader = graphManager.getEdgeAttributesReader();
     }

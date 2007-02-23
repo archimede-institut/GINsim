@@ -14,6 +14,7 @@ import javax.swing.JToggleButton;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
+import fr.univmrs.ibdm.GINsim.global.GsMain;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
@@ -33,9 +34,11 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 	private JSpinner f_max = null;
 	private ButtonGroup bgroup = null;
 	private JToggleButton b_interaction = null;
+	private JToggleButton b_function = null;
 	private JToggleButton jButton1 = null;
 	private JPanel jPanel2 = null;
 	private GsInteractionPanel gsInteractionPanel = null;
+	private GsLogicalFunctionPanel gsLogicalFunctionPanel = null;
 	private GsAnnotationPanel gsAnnotationPanel = null;
 	CardLayout card = null;
 	
@@ -147,6 +150,16 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.weighty = 2;
         this.add(getB_interaction(), c);
         
+        if (GsMain.SHOW_FUNCTION) {
+	        c = new GridBagConstraints();
+	        c.gridx = 2;
+	        c.gridy = 4;
+	        c.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+	        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+	        c.weighty = 2;
+	        this.add(getB_function(), c);
+        }
+        
         c = new GridBagConstraints();
         c.gridx = 3;
         c.gridy = 0;
@@ -172,6 +185,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         if (bgroup == null) {
             bgroup = new ButtonGroup();
             bgroup.add(getB_interaction());
+            bgroup.add(getB_function());
             bgroup.add(getJButton1());
         }
         return bgroup;
@@ -250,10 +264,26 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		return b_interaction;
 	}
 	
+	private JToggleButton getB_function() {
+		if (b_function == null) {
+			b_function = new JToggleButton(Translator.getString("STR_function"));
+			b_function.setSelected(true);
+			b_function.addChangeListener(new javax.swing.event.ChangeListener() { 
+				public void stateChanged(javax.swing.event.ChangeEvent e) {
+				    interactionselectedChanged();
+				}
+			});
+		}
+		return b_function;
+	}
+	
 	protected void interactionselectedChanged() {
 		if (b_interaction.isSelected()) {
 		    card.show(jPanel2, gsInteractionPanel.getName());
 		    gsInteractionPanel.setEditedObject(currentVertex);
+		} else if (b_function.isSelected()) {
+		    card.show(jPanel2, gsLogicalFunctionPanel.getName());
+		    gsLogicalFunctionPanel.setEditedObject(currentVertex);
 		} else {
 		    card.show(jPanel2, gsAnnotationPanel.getName());
 		    gsAnnotationPanel.setEditedObject(currentVertex.getAnnotation());
@@ -284,6 +314,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 			jPanel2.setPreferredSize(new java.awt.Dimension(513,60));
 			jPanel2.add(getGsAnnotationPanel(), getGsAnnotationPanel().getName());
 			jPanel2.add(getGsInteractionPanel(), getGsInteractionPanel().getName());
+			jPanel2.add(getLogicalFunctionPanel(), getLogicalFunctionPanel().getName());
 		}
 		return jPanel2;
 	}
@@ -299,6 +330,13 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 			gsInteractionPanel.setPreferredSize(new java.awt.Dimension(800,60));
 		}
 		return gsInteractionPanel;
+	}
+	private GsLogicalFunctionPanel getLogicalFunctionPanel() {
+		if (gsLogicalFunctionPanel == null) {
+			gsLogicalFunctionPanel = new GsLogicalFunctionPanel((GsRegulatoryGraph)main.getGraph());
+			gsLogicalFunctionPanel.setName("logicalFunctionPanel");
+		}
+		return gsLogicalFunctionPanel;
 	}
 	/**
 	 * This method initializes gsAnnotationPanel	
@@ -333,6 +371,8 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
             minmax.setVertex(currentVertex, (GsRegulatoryGraph)main.getGraph());
             if (b_interaction.isSelected()) {
                 gsInteractionPanel.setEditedObject(obj);
+            } else if (b_function.isSelected()) {
+                gsLogicalFunctionPanel.setEditedObject(obj);
             } else {
                 gsAnnotationPanel.setEditedObject(currentVertex.getAnnotation());
             }

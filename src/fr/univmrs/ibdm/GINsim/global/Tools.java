@@ -235,4 +235,14 @@ public class Tools {
     public static boolean isValidId(String id) {
     	return Pattern.compile("^[a-zA-Z0-9_-]+$").matcher(id).find();
     }
+	public static int addMask (int value, int mask) {
+		return value - (value&mask) +mask;
+	}
+	public static int removeMask (int value, int mask) {
+		return value - (value&mask);
+	}
+	public static boolean hasMask(int value, int mask) {
+		return (value&mask) == mask;
+	}
+
 }

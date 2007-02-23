@@ -30,8 +30,7 @@ public class LogicalNode {
 	}
 	
 	static public LogicalNode parse(String s, LogicalHelper helper) {
-		
-		
+
 		
 		return null;
 	}

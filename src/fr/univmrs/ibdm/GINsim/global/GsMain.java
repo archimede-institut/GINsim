@@ -22,6 +22,12 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
  */
 public class GsMain {
 
+	
+	// TODO: choose runtime behaviour here
+	private static boolean ENABLE_TESTING = true;
+	public static boolean SHOW_FUNCTION = ENABLE_TESTING;
+	public static boolean USE_PICCOLO = ENABLE_TESTING;
+	
     /**
      * @param args
      *            try to run it with --help for more info

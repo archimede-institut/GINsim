@@ -27,6 +27,9 @@ public class GsGraphSelectionChangeEvent {
         this.nbEdge = nbEdge;
         this.nbVertex = nbVertex;
     }
+    public GsGraphSelectionChangeEvent(Vector v_edge, Vector v_vertex) {
+    	this(v_edge, v_vertex, v_edge.size(), v_vertex.size());
+    }
     /**
      * @return the number of edges in the new selected.
      */
