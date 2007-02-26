@@ -27,7 +27,7 @@
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
 	
-	<property name="classpath"  value=".:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/tar.jar"/>
+	<property name="classpath"  value=".:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/tar.jar:lib/piccolo.jar"/>
 
 	<target name="init">
 		<!-- Create the time stamp -->
