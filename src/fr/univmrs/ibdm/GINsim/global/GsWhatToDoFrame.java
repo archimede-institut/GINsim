@@ -71,7 +71,7 @@ public class GsWhatToDoFrame extends JDialog {
 	 */
 	private void initialize() {
 		size = graph.getGraphManager().getVertexCount();
-		this.setSize(500, 300);
+		this.setSize(500, 280);
 		this.setContentPane(getTheContentPane());
 		this.setVisible(true);
 		this.setTitle(Translator.getString("STR_whatToDo_title"));
@@ -108,6 +108,7 @@ public class GsWhatToDoFrame extends JDialog {
 			theContentPane = new javax.swing.JPanel();
 			theContentPane.setLayout(new GridBagLayout());
 			
+			GridBagConstraints c_question = new GridBagConstraints();
 			GridBagConstraints c_label = new GridBagConstraints();
 			GridBagConstraints c_infoPanel = new GridBagConstraints();
 			GridBagConstraints c_r_display = new GridBagConstraints();
@@ -122,54 +123,59 @@ public class GsWhatToDoFrame extends JDialog {
 			GridBagConstraints c_r_action = new GridBagConstraints();
 			GridBagConstraints c_comboActions = new GridBagConstraints();
 			
+			c_question.gridx = 0;
+			c_question.gridy = 0;
+			c_question.insets = new Insets(10, 10, 10, 0);
+			c_question.gridwidth = 3;
+			c_question.anchor = GridBagConstraints.WEST;
 			c_label.gridx = 0;
-			c_label.gridy = 0;
-			c_label.gridwidth = 3;
+			c_label.gridy = 1;
+			c_label.gridwidth = 2;
 			c_label.insets = new Insets(10, 15, 10, 5);
 			c_label.anchor = GridBagConstraints.WEST;
 			c_infoPanel.gridx = 1;
-			c_infoPanel.gridy = 0;
+			c_infoPanel.gridy = 1;
 			c_infoPanel.weightx = 1;
 			c_infoPanel.weighty = 1;
-			c_infoPanel.gridwidth = 3;
 			c_infoPanel.insets = new Insets(0, 5, 3, 0);
 			c_labelInfo.gridx = 0;
-			c_labelInfo.gridy = 1;
-			c_labelInfo.gridwidth = 3;
+			c_labelInfo.gridy = 2;
+			c_labelInfo.gridwidth = 2;
 			c_labelInfo.anchor = GridBagConstraints.WEST;
 			c_r_display.gridx = 0;
-			c_r_display.gridy = 2;
+			c_r_display.gridy = 3;
 			c_r_display.anchor = GridBagConstraints.WEST;
 			c_checkLayout.gridx = 0;
-			c_checkLayout.gridy = 3;
+			c_checkLayout.gridy = 4;
 			c_checkLayout.insets = new Insets(0, 15, 0, 0);
 			c_checkLayout.anchor = GridBagConstraints.WEST;
 			c_comboLayout.gridx = 1;
-			c_comboLayout.gridy = 3;
+			c_comboLayout.gridy = 4;
 			c_comboLayout.anchor = GridBagConstraints.WEST;
 			c_r_save.gridx = 0;
-			c_r_save.gridy = 4;
+			c_r_save.gridy = 5;
 			c_r_save.anchor = GridBagConstraints.WEST;
 			c_r_export.gridx = 0;
-			c_r_export.gridy = 5;
+			c_r_export.gridy = 6;
 			c_r_export.anchor = GridBagConstraints.WEST;
 			c_comboExport.gridx = 1;
-			c_comboExport.gridy = 5;
+			c_comboExport.gridy = 6;
 			c_comboExport.anchor = GridBagConstraints.WEST;
 			c_r_action.gridx = 0;
-			c_r_action.gridy = 6;
+			c_r_action.gridy = 7;
 			c_r_action.anchor = GridBagConstraints.WEST;
 			c_comboActions.gridx = 1;
-			c_comboActions.gridy = 6;
+			c_comboActions.gridy = 7;
 			c_comboActions.anchor = GridBagConstraints.WEST;
 
             c_b_close.gridx = 1;
-            c_b_close.gridy = 7;
+            c_b_close.gridy = 8;
             c_b_close.anchor = GridBagConstraints.EAST;
             c_b_ok.gridx = 2;
-            c_b_ok.gridy = 7;
+            c_b_ok.gridy = 8;
             c_b_ok.anchor = GridBagConstraints.EAST;
 			
+            theContentPane.add(new JLabel(Translator.getString("STR_whatToDo_question")), c_question);
 			label = new JLabel(Translator.getString("STR_graphSize")+" "+size);
 			theContentPane.add(label, c_label);
 			theContentPane.add(getInfoPanel(), c_infoPanel);
