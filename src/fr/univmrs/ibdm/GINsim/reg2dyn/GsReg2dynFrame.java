@@ -39,7 +39,7 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
-import fr.univmrs.tagc.util.widgets.MSplitPane;
+import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
 
 /**
  * frame to set up the simulation

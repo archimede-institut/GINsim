@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.util.widgets;
+package fr.univmrs.ibdm.GINsim.util.widget;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
