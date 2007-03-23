@@ -26,7 +26,7 @@ public class GsMain {
 	// TODO: choose runtime behaviour here
 	private static boolean ENABLE_TESTING = false;
 	public static boolean SHOW_FUNCTION = ENABLE_TESTING;
-	public static boolean USE_PICCOLO = ENABLE_TESTING;
+	public static boolean USE_PICCOLO = false;
 	
     /**
      * @param args

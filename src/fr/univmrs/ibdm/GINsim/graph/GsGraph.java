@@ -23,7 +23,6 @@ import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphtGraphManager;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.piccolo.GsSimpleGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 
@@ -121,7 +120,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
         // TODO: abstract the graph manager a bit more (and finish the piccolo based implementation)
         if (GsMain.USE_PICCOLO) {
-        	graphManager = new GsSimpleGraphManager(this);
+        	// graphManager = new GsSimpleGraphManager(this);
         } else {
             graphManager = new GsJgraphtGraphManager(this, mainFrame);
         }
