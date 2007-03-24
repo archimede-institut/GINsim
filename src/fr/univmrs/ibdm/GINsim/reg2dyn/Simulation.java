@@ -1,12 +1,16 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
+//import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
@@ -31,7 +35,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  */
 public final class Simulation extends Thread implements Runnable{
 	
-	private GsDynamicGraph dynGraph;
 	private GsReg2dynFrame frame;
 	private boolean goon = true;
     GsVertexAttributesReader vreader;
@@ -42,6 +45,7 @@ public final class Simulation extends Thread implements Runnable{
 	private Vector listGenes;
 	private int length;
 	private boolean ready = false;
+	private boolean buildSTG;
 	private int nbgc = 0;	
 
 	protected static final int SEARCH_SYNCHRONE = 0;
@@ -56,10 +60,14 @@ public final class Simulation extends Thread implements Runnable{
 	private int searchMode;
 	
 	private int curdepth = 0;
-	private GsDynamicNode node;
     private int[][] pclass;
 	private OmddNode[] t_tree;
-    private GsSimulationParameters params;
+    
+	private GsDynamicGraph dynGraph;
+	private GsDynamicNode node;
+	private OmddNode reachable = OmddNode.TERMINALS[0];
+    int[] t_state;
+    int nbnode = 0;
 
 	/**
 	 * Constructs an empty dynamic graph
@@ -70,13 +78,19 @@ public final class Simulation extends Thread implements Runnable{
 	 */
 	protected Simulation(GsRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
 		this.frame = frame;
-		dynGraph = new GsDynamicGraph(regGraph);
-		dynGraph.setAssociatedGraph(regGraph);
-        vreader = dynGraph.getGraphManager().getVertexAttributesReader();
-	    vreader.setDefaultVertexSize(5+10*regGraph.getNodeOrder().size(), 25);
 		listGenes = regGraph.getNodeOrder();
 		length = listGenes.size();
-        this.params = params;
+        this.buildSTG = params.buildSTG;
+        if (buildSTG) {
+    		dynGraph = new GsDynamicGraph(regGraph);
+    		dynGraph.setAssociatedGraph(regGraph);
+            vreader = dynGraph.getGraphManager().getVertexAttributesReader();
+    	    vreader.setDefaultVertexSize(5+10*regGraph.getNodeOrder().size(), 25);
+            // add some default comments to the state transition graph
+            dynGraph.getAnnotation().setComment(params.getDescr());
+        } else {
+        	
+        }
         
         this.searchMode = params.mode;
         switch (searchMode) {
@@ -129,22 +143,22 @@ public final class Simulation extends Thread implements Runnable{
 	/**
 	 * search the full dynamic graph
 	 */
-	private void runFullGraph() {
+	private void runFullGraph() throws GsException {
         // the iterator to construct all initial states
         reg2DynFullIterator iterator = new reg2DynFullIterator(listGenes);
 		try {
 			//generate all initial states and construct partial graph from all these initial states;
-			while(iterator.hasNext() && ((maxnodes==0) || dynGraph.getGraphManager().getVertexCount()<maxnodes)) {
-				node = new GsDynamicNode(iterator.next());
+			while(iterator.hasNext()) {
+				t_state = iterator.next();
 	
 				// verify if nextNode is already in the dynamic graph and construct partial graph
-				if(dynGraph.addVertex(node)){
+				if(addState(t_state, false, false)){
 					switch (searchMode) {
 						case SEARCH_SYNCHRONE:
 							calcDynGraphSynchro();
 							break;
 						case SEARCH_ASYNCHRONE_BF:
-							toExplore.addElement(node);
+							toExplore.addElement(t_state);
 							break;
 						case SEARCH_ASYNCHRONE_DF:
 							calcDynGraphAsynchroDepthFirst();
@@ -167,16 +181,19 @@ public final class Simulation extends Thread implements Runnable{
 	
 	/**
 	 * search the dynamic graph for the given initial states
+	 * @throws GsException 
 	 *
 	 */
-	private void runPartialGraph() {
+	private void runPartialGraph() throws GsException {
 		int[] vstate;
 		
         if (initStates.size() == 0) {
             return;
         }
-        vstate = (int[])initStates.elementAt(0);
-        dynGraph.addObject("reg2dyn_firstState", vstate);
+        if (buildSTG) {
+            vstate = (int[])initStates.elementAt(0);
+        	dynGraph.addObject("reg2dyn_firstState", vstate);
+        }
         
 		for (int i=0 ; i<initStates.size() ; i++) {
 			// create the first node and check if already present
@@ -184,17 +201,17 @@ public final class Simulation extends Thread implements Runnable{
 			if (vstate.length != length) {
                 return;
 			}
-			node = new GsDynamicNode(vstate);
 			
-			if(dynGraph.addVertex(node)){
+			if(addState(vstate, false, false)){
 				switch (searchMode) {
 					case SEARCH_SYNCHRONE:
 						calcDynGraphSynchro();
 						break;
 					case SEARCH_ASYNCHRONE_BF:
-						toExplore.addElement(node);
+						toExplore.addElement(vstate);
 						break;
-					case SEARCH_ASYNCHRONE_DF:
+					case SEARCH_ASYNCHRONE_DF:		GsDynamicNode nextNode;
+
 						calcDynGraphAsynchroDepthFirst();
 						break;
                     case SEARCH_BYPRIORITYCLASS:
@@ -333,12 +350,10 @@ public final class Simulation extends Thread implements Runnable{
 	 * this is the main recursive function for the construction of the graph under a synchronous assumption
 	 * it  creates the dynamic graph by searching next states recursively
 	 * it has to be called for every initial state (ie all possible state if we want the full dynamic graph!).
+	 * @throws GsException 
 	 */
-	private void calcDynGraphSynchro () {
-
-		int[] changes = getChangingGene(node.state);
-		GsDynamicNode nextNode;
-
+	private void calcDynGraphSynchro () throws GsException {
+		int[] changes = getChangingGene(t_state);
 		// test if we are on a stable state (no changes)
 		boolean stable = true;
 		for (int i=0 ; i< length ; i++) {
@@ -348,51 +363,29 @@ public final class Simulation extends Thread implements Runnable{
 			}
 		}
 		if (stable) {
-            node.setStable(true, vreader);
-		    curdepth--;
+			if (buildSTG) {
+				node.setStable(true, vreader);
+			}
 			return;
 		}
-		
-		//stop if the max depth is reached 
-		int nbNode = dynGraph.getGraphManager().getVertexCount();
-		if (nbNode % 100 == 0) {
-		    if (frame != null) {
-                frame.setProgress(nbNode);
-            }
-		}
-		if (curdepth >= maxdepth || nbNode >= maxnodes){
-		    curdepth--;
-		    return;
-		}
-		
-		testIfshouldGo();
-		if(!goon) {
-		    curdepth--;
+		if (curdepth >= maxdepth) {
 			return;
 		}
-
+		curdepth++;
 		// the real algo!
-		// we are in the synchrone case: apply all changes at once
+		// we are in the synchronous case: apply all changes at once
 		// create the next state
 		int c = 0;
-		for (int i=0 ; i<node.state.length ; i++) {
+		for (int i=0 ; i<t_state.length ; i++) {
 			if (changes[i] != 0) {
 				c++;
 			}
-			changes[i] += node.state[i];
+			changes[i] += t_state[i];
 		}
 
 		// add the next node to the graph and recursively call if not already present
-		nextNode = new GsDynamicNode(changes);
-		changes = null;
-		if (dynGraph.addVertex(nextNode)) {
-			dynGraph.addEdge(node, nextNode, c>1);
-			curdepth++;
-			node = nextNode;
+		if (addState(changes, true, c>1)) {
 			calcDynGraphSynchro();
-		} else {
-			// if the node was already present add the edge anyway
-			dynGraph.addEdge(node, nextNode, c>1);
 		}
 		curdepth--;
 	} 
@@ -402,76 +395,48 @@ public final class Simulation extends Thread implements Runnable{
      * it  creates the dynamic graph by searching next states recursively
      * it has to be called for every initial state (ie all possible state if we want the full dynamic graph!).
      */
-    private void calcDynGraphByPriorityClass () {
+    private void calcDynGraphByPriorityClass () throws GsException {
         int[]   nextState;
-        Vector  v_changes = getPriorityClassChangingGene(node.state);
+        Vector  v_changes = getPriorityClassChangingGene(t_state);
 
         if (v_changes == null) {
-            node.setStable(true, vreader);
-            curdepth--;
+        	if (buildSTG) {
+	            node.setStable(true, vreader);
+        	}
             return;
         }
-        
-        // stop if the max depth is reached 
-        int nbNode = dynGraph.getGraphManager().getVertexCount();
-        if (nbNode % 100 == 0) {
-            frame.setProgress(nbNode);
-        }
-        if (curdepth >= maxdepth || nbNode >= maxnodes){
-            curdepth--;
-            return;
-        }
-
-        testIfshouldGo();
-        if(!goon) {
-            curdepth--;
-            return;
-        }
-        
-        GsDynamicNode thisnode = node;
+		if (curdepth >= maxdepth) {
+			return;
+		}
+		curdepth++;
+        int[] thisState = t_state;
+        GsDynamicNode thisNode = node;
         for (int index=0 ; index<v_changes.size() ; index++) {
             int[] changes = (int[])v_changes.get(index);
             switch (changes[0]) {
                 case GsReg2dynPriorityClass.SYNCHRONOUS: // synchronous case
-                    nextState = (int[])thisnode.state.clone();
-                    int i=1;
-                    for ( ; i<changes.length ; i++) {
+                    nextState = (int[])thisState.clone();
+                    int i;
+                    for (i=1 ; i<changes.length ; i++) {
                         nextState[changes[i++]] += changes[i];
                     }
-    
                     // add the next node to the graph and recursively call if not already present
-                    node = new GsDynamicNode(nextState);
-                    boolean multiple = (changes.length > 3);
-                    changes = null;
-                    nextState = null;
-                    if (dynGraph.addVertex(node)) {
-                        dynGraph.addEdge(thisnode, node, multiple);
-                        curdepth++;
+                    if (addState(nextState, true, changes.length>3)) {
                         calcDynGraphByPriorityClass();
-                    } else {
-                        // if the node was already present add the edge anyway
-                        dynGraph.addEdge(thisnode, node, multiple);
                     }
+                    node = thisNode;
+                    t_state = thisState;
                     break;
                 case GsReg2dynPriorityClass.ASYNCHRONOUS: // asynchronous case
                     // we need to keep a trace of the current node (to add correct edges)
-                    for (i=1 ; ((maxnodes==0)||(dynGraph.getGraphManager().getVertexCount()<maxnodes)); i++) {
-                        if (i >= changes.length) {
-                            break;
-                        }
-                        nextState = (int[])thisnode.state.clone();
+                    for (i=1 ; i<changes.length ; i++) {
+                        nextState = (int[])thisState.clone();
                         nextState[changes[i++]] += changes[i];
-                        node = new GsDynamicNode(nextState);
-                        nextState = null;
-                        if (dynGraph.addVertex(node)) {// if nextNode already exists then just add the edge 
-                            dynGraph.addEdge(thisnode, node, false);
-                            //recursively call calcDynGraph if it is a depth first search
-                            curdepth++;
+                        if (addState(nextState, true, false)) { 
                             calcDynGraphByPriorityClass();
                         }
-                        else {// if the node was already present add the edge anyway
-                            dynGraph.addEdge(thisnode, node, false);
-                        }
+                        node = thisNode;
+                        t_state = thisState;
                     }
             }
         }
@@ -486,11 +451,13 @@ public final class Simulation extends Thread implements Runnable{
 	 * The exploration can be limited to a maximal depth (maxdepth, 0 for unlimited)
 	 * and also to a maximal number of nodes (maxnodes)
 	 */
-	private void calcDynGraphAsynchroDepthFirst () {
-							  	
-		int[] 	changes	= getChangingGene(node.state);
+	private void calcDynGraphAsynchroDepthFirst () throws GsException {
+		int[] 	changes	= getChangingGene(t_state);
 		int[] 	nextState;
-		GsDynamicNode nextNode;
+		if (curdepth >= maxdepth) {
+			return;
+		}
+		curdepth++;
 
 		// test if we are on a stable state (no changes)
 		boolean stable = true;
@@ -501,23 +468,9 @@ public final class Simulation extends Thread implements Runnable{
 			}
 		}
 		if (stable) {
-            node.setStable(true, vreader);
-		    curdepth--;
-			return;
-		}
-
-		//stop if the max depth is reached 
-		int nbNode = dynGraph.getGraphManager().getVertexCount();
-		if (nbNode % 100 == 0) {
-		    frame.setProgress(nbNode);
-		}
-		if (curdepth >= maxdepth || nbNode >= maxnodes){
-		    curdepth--;
-			return;
-		}
-
-		testIfshouldGo();
-		if(!goon) {
+			if (buildSTG) {
+				node.setStable(true, vreader);
+			}
 		    curdepth--;
 			return;
 		}
@@ -528,28 +481,23 @@ public final class Simulation extends Thread implements Runnable{
 		// then search this new node 
 	
 		// we need to keep a trace of the current node (to add correct edges)
-		GsDynamicNode thisnode = node;
-		for (int i=0 ; ((maxnodes==0)||(dynGraph.getGraphManager().getVertexCount()<maxnodes)); i++) {
+        int[] thisState = t_state;
+        GsDynamicNode thisNode = node;
+		for (int i=0 ; ; i++) {
 			while (i<length && changes[i] == 0) {
 				i++;
 			}
 			if (i == length) {
 				break;
 			}
-			nextState = (int[])thisnode.state.clone();
+			nextState = (int[])thisState.clone();
 			nextState[i] += changes[i];
-			nextNode = new GsDynamicNode(nextState);
-			nextState = null;
-			if (dynGraph.addVertex(nextNode)) {// if nextNode already exists then just add the edge 
-				dynGraph.addEdge(thisnode, nextNode, false);
+			if (addState(nextState, true, false)) { 
 				//recursively call calcDynGraph if it is a depth first search
-				node = nextNode;
-				curdepth++;
 				calcDynGraphAsynchroDepthFirst();
 			}
-			else {// if the node was already present add the edge anyway
-				dynGraph.addEdge(thisnode, nextNode, false);
-			}
+			t_state = thisState;
+			node = thisNode;
 		}
 		curdepth--;
 	}
@@ -559,12 +507,9 @@ public final class Simulation extends Thread implements Runnable{
 	 * an asynchronous assumption and a breadth first search strategy
 	 * this exploration can be limited to a maximal number of nodes (maxnodes)
 	 */
-	private void calcDynGraphAsynchroBreadthFirst () {
-		
+	private void calcDynGraphAsynchroBreadthFirst() throws GsException {
 		int[] 	nextState;
-		GsDynamicNode nextNode;
-
-        while (toExplore.size() != 0 && ((maxnodes == 0)||(dynGraph.getGraphManager().getVertexCount() < maxnodes))){
+        while (toExplore.size() != 0 ) {
             // get the first node to explore			  	
             // first determine calls for updating on this state
             GsDynamicNode node = (GsDynamicNode)toExplore.remove(0); 
@@ -579,26 +524,11 @@ public final class Simulation extends Thread implements Runnable{
 				}
 			}
 			if (stable) {
-	            node.setStable(true, vreader);
+				if (buildSTG) {
+					node.setStable(true, vreader);
+				}
 			} else {
-				//	stop if the max number of nodes is reached 
-				// note that maxnodes == 0 if unlimited
-				int nbNode = dynGraph.getGraphManager().getVertexCount();
-				if (nbNode % 100 == 0) {
-				    frame.setProgress(nbNode);
-				}
-				if (curdepth >= maxdepth || nbNode >= maxnodes){
-					return;
-				}
-	
-				testIfshouldGo();
-				if(!goon) {
-					return;
-				}
-	
-				// create next states
-				nbNode = dynGraph.getGraphManager().getVertexCount();
-				for ( int i=0 ; (maxnodes == 0 || nbNode < maxnodes) ; i++ ) {
+				for ( int i=0 ;  ; i++ ) {
 					while( i<changes.length && changes[i] == 0 ) {
 						i++;
 					}
@@ -607,14 +537,8 @@ public final class Simulation extends Thread implements Runnable{
 					}
 					nextState = (int[])node.state.clone();
 					nextState[i] += changes[i];
-					nextNode = new GsDynamicNode(nextState);
-					if (dynGraph.addVertex(nextNode)) {
-						toExplore.addElement(nextNode);
-					}
-					dynGraph.addEdge(node, nextNode, false);
-					nbNode = dynGraph.getGraphManager().getVertexCount();
-					if (nbNode % 100 == 0) {
-					    frame.setProgress(nbNode);
+					if (addState(nextState, true, false)) {
+						toExplore.addElement(nextState);
 					}
 				}
 			}
@@ -637,19 +561,23 @@ public final class Simulation extends Thread implements Runnable{
 			return;
 		}
         
-		if (initStates == null) {
-			runFullGraph();		
-		}
-		else {
-			runPartialGraph();
-		}
-        
-        // add some default comments to the state transition graph
-        dynGraph.getAnnotation().setComment(params.getDescr());
-        
-		// return the graph found.
-		frame.endSimu(dynGraph);
-		dynGraph = null;
+		try {
+			if (initStates == null) {
+				runFullGraph();		
+			}
+			else {
+				runPartialGraph();
+			}
+		} catch (GsException e) {
+			System.out.println("simulation was interrupted");
+		} finally {
+			// return the result
+			if (buildSTG) {
+				frame.endSimu(dynGraph);
+			} else {
+				frame.endSimu(null);
+			}
+		}        
 	}
 	
 	private void testIfshouldGo() {
@@ -669,5 +597,51 @@ public final class Simulation extends Thread implements Runnable{
 		if (!ready) {
 			emergencySave();
 		}
+	}
+	
+	private boolean addState (int[] vstate, boolean addEdge, boolean multiple) throws GsException {
+		//stop if the max depth is reached 
+		if (nbnode % 100 == 0) {
+		    if (frame != null) {
+                frame.setProgress(nbnode);
+            }
+		}
+		if (nbnode >= maxnodes){
+		    throw new GsException(GsException.GRAVITY_NORMAL, (String)null);
+		}
+		
+		testIfshouldGo();
+		if(!goon) {
+		    throw new GsException(GsException.GRAVITY_NORMAL, Translator.getString("STR_interrupted"));
+		}
+
+		boolean isnew = false;
+		if (buildSTG) { // build a full state transition graph
+			GsDynamicNode newnode = new GsDynamicNode(vstate);
+			isnew = dynGraph.addVertex(newnode);
+			if (addEdge) {
+				dynGraph.addEdge(node, newnode, multiple);
+			}
+			node = newnode;
+			t_state = vstate;
+		} else { // only build reachability set
+			OmddNode newReachable = addReachable(reachable, vstate, 0);
+			if (newReachable != null) {
+				isnew = true;
+				reachable = newReachable;
+			}
+		}
+		
+		if (isnew) {
+			nbnode++;
+		}
+		return isnew;
+	}
+	
+	private OmddNode addReachable(OmddNode reachable, int[] vstate, int depth) {
+		if (reachable.next == null) {
+			
+		}
+		return null;
 	}
 }

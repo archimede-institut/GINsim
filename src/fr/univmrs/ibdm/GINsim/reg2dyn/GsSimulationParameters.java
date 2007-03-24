@@ -27,6 +27,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
     
     int maxdepth;
     int maxnodes;
+    boolean buildSTG = true;
     
     GsRegulatoryMutantDef mutant;
 
