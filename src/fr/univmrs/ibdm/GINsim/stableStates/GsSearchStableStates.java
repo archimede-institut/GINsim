@@ -25,23 +25,7 @@ public class GsSearchStableStates {
 		long start = System.currentTimeMillis();
 		dd_stable = OmddNode.TERMINALS[1];
 		for (int i=0 ; i<t_param.length ; i++) {
-			if (i%10 == 2) {
-				System.out.println("  "+i);
-			}
-			OmddNode dd = buildStableConditionFromParam(i, 
-					((GsRegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1,
-					t_param[i]);
-			dd_stable = dd_stable.merge(dd.reduce(), OmddNode.AND).reduce();
-		}
-		System.out.println("first method: "+(System.currentTimeMillis()-start));
-		showStableState(dd_stable);
-		//System.out.println(dd_stable.toString());
-		
-		// smart computation
-		start = System.currentTimeMillis();
-		dd_stable = OmddNode.TERMINALS[1];
-		for (int i=0 ; i<t_param.length ; i++) {
-			if (i%10 == 2) {
+			if (i%10 == 0) {
 				System.out.println("  "+i);
 			}
 			dd_stable = buildStableConditionFromParam(i, 
@@ -49,14 +33,13 @@ public class GsSearchStableStates {
 					t_param[i],
 					dd_stable).reduce();
 		}
-		System.out.println("smart method: "+(System.currentTimeMillis()-start));
+		System.out.println("stable states search: "+(System.currentTimeMillis()-start)+"ms");
 		showStableState(dd_stable);
-		//System.out.println(dd_stable.toString());
 	}
 	
 	
 	
-	// stupid method
+	// "stupid" method
 	private OmddNode buildStableConditionFromParam(int order, int nbChild, OmddNode param) {
 		if (param.next == null || param.level > order) {
 			OmddNode stable = new OmddNode();
