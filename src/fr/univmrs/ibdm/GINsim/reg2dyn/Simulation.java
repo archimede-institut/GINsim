@@ -639,8 +639,30 @@ public final class Simulation extends Thread implements Runnable{
 	}
 	
 	private OmddNode addReachable(OmddNode reachable, int[] vstate, int depth) {
+		int curval = vstate[depth];
 		if (reachable.next == null) {
-			
+			if (reachable.value == 1) {
+				return null;
+			}
+			if (depth == vstate.length) {
+				return OmddNode.TERMINALS[1];
+			}
+			OmddNode ret = new OmddNode();
+			ret.level = depth;
+			ret.next = new OmddNode[2]; // FIXME: user the right number of child
+			for (int i=0 ; i<ret.next.length ; i++) {
+				if (i==curval) {
+					ret.next[i] = addReachable(reachable, vstate, depth+1);
+				} else {
+					ret.next[i] = OmddNode.TERMINALS[0];
+				}
+			}
+		}
+		
+		// reachable is not a leaf: first explore it and then create a new node if needed
+		OmddNode child = addReachable(reachable.next[curval], vstate, depth);
+		if (child != null) {
+			// TODO: much more fun stuff here!
 		}
 		return null;
 	}
