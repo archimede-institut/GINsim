@@ -4,23 +4,29 @@ import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
-public class GsSearchStableStates {
+public class GsSearchStableStates extends Thread {
 
 	private GsRegulatoryGraph regGraph;
 	Vector nodeOrder;
 	OmddNode[] t_param;
 	OmddNode dd_stable;
+	GsRegulatoryMutantDef mutant;
 
-	GsSearchStableStates(GsGraph regGraph) {
+	GsSearchStableStates(GsGraph regGraph, GsRegulatoryMutantDef mutant) {
 		this.regGraph = (GsRegulatoryGraph)regGraph;
 		this.nodeOrder = regGraph.getNodeOrder();
+		this.mutant = mutant;
 	}
 	
 	public void run() {
 		t_param = regGraph.getAllTrees(true);
+		if (mutant != null) {
+			mutant.apply(t_param, nodeOrder);
+		}
 		
 		long start = System.currentTimeMillis();
 		dd_stable = OmddNode.TERMINALS[1];

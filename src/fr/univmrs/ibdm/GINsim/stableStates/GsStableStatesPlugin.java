@@ -7,6 +7,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 
 /**
@@ -32,8 +33,11 @@ public class GsStableStatesPlugin implements GsPlugin, GsActionProvider {
     }
 
     public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
-    	System.out.println("look for stable states here!");
-    	GsSearchStableStates search = new GsSearchStableStates(graph);
-    	search.run();
+    	if (!(graph instanceof GsRegulatoryGraph)) {
+    		// TODO: error here
+    		return;
+    	}
+    	GsStableStateUI ui = new GsStableStateUI((GsRegulatoryGraph)graph);
+    	ui.setVisible(true);
     }
 }
