@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -35,11 +34,12 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.ibdm.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.util.widget.GsFrame;
 
 /**
  * GINsim's main frame
  */
-public class GsMainFrame extends JFrame implements GraphChangeListener {
+public class GsMainFrame extends GsFrame implements GraphChangeListener {
 
     private static final long serialVersionUID = -3626877344852342412L;
 
@@ -85,7 +85,7 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
 	 * 
 	 */
 	public GsMainFrame() {
-		super();
+		super("display.mainFrame", 800, 600);
 		initialize();
 		eventDispatcher.addGraphChangedListener(this);
 	}
@@ -94,20 +94,12 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
 	 */
 	private void initialize() {
         this.setJMenuBar(gsActions.getMenuBar());
-        this.setSize(((Integer)GsOptions.getOption("display.mainFrame.width", new Integer(800))).intValue(),
-        		((Integer)GsOptions.getOption("display.mainFrame.height", new Integer(600))).intValue());
         this.setContentPane(getJPanel());
         
         // doesn't work on mac OSX ?
 		this.setIconImage(ImageLoader.getImage("gs1.gif"));
 		updateTitle();
 		this.setVisible(true);
-		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		addWindowListener(new java.awt.event.WindowAdapter() {
-			public void windowClosing(java.awt.event.WindowEvent evt) {
-				windowClose();
-			}
-		});
         getJSplitPane().setDividerLocation( 
                 jSplitPane.getHeight()-((Integer)GsOptions.getOption("display.dividersize", new Integer(80))).intValue());
 	}
@@ -431,7 +423,7 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
      * close the current window
      * this will exit if it is the last window
      */
-    public void windowClose() {
+    public void doClose() {
     	    doClose(true);
     }
     /**
@@ -490,8 +482,6 @@ public class GsMainFrame extends JFrame implements GraphChangeListener {
                 mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
             }
             GsOptions.setOption("display.minimapsize", new Integer(mmapDivLocation));
-            GsOptions.setOption("display.mainFrame.height", new Integer(getHeight()));
-            GsOptions.setOption("display.mainFrame.width", new Integer(getWidth()));
             if (secondaryFrame == null) {
                 GsOptions.setOption("display.dividersize", new Integer(jSplitPane.getHeight()-jSplitPane.getDividerLocation()));
             }

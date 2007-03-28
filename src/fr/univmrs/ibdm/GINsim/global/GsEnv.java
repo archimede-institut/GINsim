@@ -73,7 +73,7 @@ public class GsEnv {
 	public static void exit() {
 		// try to close all windows
 		for ( int i=allFrames.size()-1 ; i>=0 ; i--) {
-			((GsMainFrame)allFrames.get(i)).windowClose();
+			((GsMainFrame)allFrames.get(i)).closeEvent();
 		}
 	}
 	

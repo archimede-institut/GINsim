@@ -6,13 +6,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.util.widget.GsDialog;
 
 /**
  * a generic stackable dialog.
@@ -20,11 +19,10 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
  * All this is accessible via a simple API to set the main dialog and add
  * secondary dialogs or messages.
  */
-abstract public class GsStackDialog extends JDialog {
+abstract public class GsStackDialog extends GsDialog {
     private static final long serialVersionUID = -6696566567870168910L;
     
     private static final String s_mainkey = "_main";
-    private String s_key;
     
     JLabel messageLabel = new JLabel();
     CardLayout cards;
@@ -35,8 +33,8 @@ abstract public class GsStackDialog extends JDialog {
     protected JButton bcancel;
     protected JButton bclose;
     
-    public GsStackDialog(JFrame parent) {
-        super(parent);
+    public GsStackDialog(JFrame parent, String id, int w, int h) {
+        super(parent, id, w, h);
         JPanel contentPane = new JPanel();
         mainPanel = new JPanel();
         cards = new CardLayout();
@@ -77,12 +75,9 @@ abstract public class GsStackDialog extends JDialog {
         }
     }
     
-    public void setMainPanel(Component panel, String key, int width, int height) {
-    	this.s_key = key;
+    public void setMainPanel(Component panel) {
         mainPanel.add(panel, s_mainkey);
         cards.show(mainPanel, s_mainkey);
-        setSize(((Integer)GsOptions.getOption(key+".width", new Integer(width))).intValue(), 
-        		((Integer)GsOptions.getOption(key+".height", new Integer(height))).intValue());
         setVisible(true);
     }
     
@@ -191,9 +186,10 @@ abstract public class GsStackDialog extends JDialog {
      */
     protected void refreshMain() {
     }
+    public void doClose() {
+    	cancel();
+    }
     protected void cancel() {
     	setVisible(false);
-    	GsOptions.setOption(s_key+".width", new Integer(getWidth()));
-    	GsOptions.setOption(s_key+".height", new Integer(getHeight()));
     }
 }

@@ -75,7 +75,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
      * @param graph
      */
     public GsCircuitFrame(JFrame frame, GsGraph graph) {
-        super(frame);
+        super(frame, "display.circuit", 500, 300);
         if (graph == null || !(graph instanceof GsRegulatoryGraph))
             GsEnv.error("no graph", frame);
         this.graph = (GsRegulatoryGraph) graph;
@@ -87,7 +87,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
      * 
      */
     private void initialize() {
-        this.setMainPanel(getJContentPane(), "display.circuit", 500, 300);
+        this.setMainPanel(getJContentPane());
         this.setTitle(Translator.getString("STR_circuit"));
         this.setVisible(true);
         this.addWindowListener(new java.awt.event.WindowAdapter() {

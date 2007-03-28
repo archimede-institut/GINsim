@@ -47,7 +47,7 @@ public class GsModelCheckerUI extends GsStackDialog {
      * @param graph
      */
     public GsModelCheckerUI(GsRegulatoryGraph graph) {
-    	super(graph.getGraphManager().getMainFrame());
+    	super(graph.getGraphManager().getMainFrame(), "display.mchecker", 450, 300);
         this.graph = graph;
         l_tests = (GsList)graph.getObject(GsModelCheckerAssociatedObjectManager.key, true);
         model = new modelCheckerTableModel(graph);
@@ -88,7 +88,7 @@ public class GsModelCheckerUI extends GsStackDialog {
         JScrollPane sp = new JScrollPane();
         sp.setViewportView(table);
         panel.add(sp, c);
-        setMainPanel(panel, "display.mchecker", 450, 300);
+        setMainPanel(panel);
     }
     
     protected void editTest() {
