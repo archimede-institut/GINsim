@@ -208,8 +208,7 @@ public final class Simulation extends Thread implements Runnable {
 					case SEARCH_ASYNCHRONE_BF:
 						toExplore.addElement(vstate);
 						break;
-					case SEARCH_ASYNCHRONE_DF:		GsDynamicNode nextNode;
-
+					case SEARCH_ASYNCHRONE_DF:
 						calcDynGraphAsynchroDepthFirst();
 						break;
                     case SEARCH_BYPRIORITYCLASS:
