@@ -13,8 +13,6 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -37,7 +35,6 @@ import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
 
@@ -88,7 +85,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
      * @param paramList
      */
     public GsReg2dynFrame(JFrame frame, GsSimulationParameterList paramList) {
-        super(frame);
+        super(frame, "display.simulation", 800, 400);
         this.frame = frame;
         this.paramList = paramList;
         paramList.graph.addBlockEdit(this);
@@ -102,7 +99,6 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     }
 
     private void initialize() {
-        setSize(800, 400);
         JSplitPane spane = new MSplitPane("display.configSimulation");
         spane.setRightComponent(getMainPanel());
         listPanel = new GsListPanel();
@@ -115,7 +111,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         c.gridy = 1;
         c.fill = GridBagConstraints.BOTH;
         c.weightx = c.weighty = 1;
-        setMainPanel(spane, "display.simulation", 800, 400);
+        setMainPanel(spane);
     }
     
     private JPanel getMainPanel() {
@@ -730,56 +726,5 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             textMaxNodes.setEnabled(true);
         }
         refreshing = false;
-    }
-}
-
-class GsMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
-    private static final long serialVersionUID = 2348678706086666489L;
-    
-    GsRegulatoryMutants listMutants;
-    GsSimulationParameters currentParam = null;
-    
-    GsMutantModel(GsRegulatoryMutants listMutants) {
-        this.listMutants = listMutants;
-    }
-    
-    void setMutantList(GsRegulatoryMutants mutants) {
-            this.listMutants = mutants;
-            fireContentsChanged(this, 0, getSize());
-    }
-
-    void setParam(GsSimulationParameters param) {
-        currentParam = param;
-        setSelectedItem(currentParam.mutant);
-        fireContentsChanged(this, 0, getSize());
-    }
-    
-    public Object getSelectedItem() {
-        if (currentParam == null || currentParam.mutant == null) {
-            return "--";
-        }
-        return currentParam.mutant;
-    }
-
-    public void setSelectedItem(Object anItem) {
-        if (anItem instanceof GsRegulatoryMutantDef) {
-            currentParam.mutant = (GsRegulatoryMutantDef)anItem;
-        } else {
-            currentParam.mutant = null;
-        }
-    }
-
-    public Object getElementAt(int index) {
-        if (index == 0 || listMutants == null) {
-            return "--";
-        }
-        return listMutants.getElement(index-1);
-    }
-
-    public int getSize() {
-        if (listMutants == null) {
-            return 1;
-        }
-        return listMutants.getNbElements()+1;
     }
 }

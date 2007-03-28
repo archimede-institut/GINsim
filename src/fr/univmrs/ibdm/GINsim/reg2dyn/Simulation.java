@@ -1,12 +1,10 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
-//import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
@@ -33,7 +31,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  * additionnaly, genes can be blocked at given state (or range of state): once they reached those
  * states, they can't leave them anymore (but can still evolve inside the range).
  */
-public final class Simulation extends Thread implements Runnable{
+public final class Simulation extends Thread implements Runnable {
 	
 	private GsReg2dynFrame frame;
 	private boolean goon = true;
