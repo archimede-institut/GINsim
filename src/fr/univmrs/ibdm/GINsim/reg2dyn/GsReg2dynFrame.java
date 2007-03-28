@@ -9,12 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,8 +35,8 @@ import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.ui.GsMutantCombo;
 import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
 
 /**
@@ -46,7 +47,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     
     GsSimulationParameterList paramList;
     GsSimulationParameters currentParameter;
-    GsMutantModel mutantModel;
+    GsMutantCombo comboMutant;
     GsListPanel listPanel;
     Simulation sim;
     boolean isrunning = false;
@@ -246,8 +247,13 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             c.fill = GridBagConstraints.HORIZONTAL;
             c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
-            mutantModel = new GsMutantModel((GsRegulatoryMutants)paramList.graph.getObject(GsMutantListManager.key, true));
-            panel.add(new JComboBox(mutantModel), c);
+            comboMutant = new GsMutantCombo(paramList.graph);
+            comboMutant.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					mutantChanged();
+				}
+			});
+            panel.add(comboMutant, c);
             
             // initial state
             panel = new JPanel();
@@ -651,7 +657,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(paramList.graph));
-                    mutantModel.setMutantList((GsRegulatoryMutants)paramList.graph.getObject(GsMutantListManager.key, true));
+                    comboMutant.refresh(paramList.graph);
                 }
             });
         }
@@ -664,10 +670,16 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             currentParameter = null;
         } else {
             currentParameter = (GsSimulationParameters)paramList.getElement(t_sel[0]);
-            mutantModel.setParam(currentParameter);
+            comboMutant.setSelectedItem(currentParameter.mutant);
             model.setParam(currentParameter);
         }
         refresh();
+    }
+    
+    protected void mutantChanged() {
+    	if (currentParameter != null && comboMutant != null) {
+    		currentParameter.mutant = comboMutant.getMutant();
+    	}
     }
     
     private void refresh() {
