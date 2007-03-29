@@ -44,16 +44,17 @@ public class GsSearchStableStates extends Thread {
 		long start = System.currentTimeMillis();
 		dd_stable = OmddNode.TERMINALS[1];
 		for (int i=0 ; i<t_param.length ; i++) {
-			if (i%10 == 0) {
-				System.out.println("  "+i);
-			}
 			if (ORDERTEST) {
 				int sel = selectNext();
+				//System.out.print(sel+" ");
 				dd_stable = buildStableConditionFromParam(sel, 
 						((GsRegulatoryVertex)nodeOrder.get(sel)).getMaxValue()+1,
 						t_param[sel],
 						dd_stable).reduce();
 			} else {
+				if (i%10 == 0) {
+					System.out.println("  "+i);
+				}
 				dd_stable = buildStableConditionFromParam(i, 
 						((GsRegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1,
 						t_param[i],
@@ -79,6 +80,10 @@ public class GsSearchStableStates extends Thread {
 				t_regline[j] = true;
 				cpt++;
 			}
+			if (!t_reg[i][i]) {
+				t_reg[i][i] = true;
+				cpt++;
+			}
 			t_newreg[i][0] = i;
 			t_newreg[i][1] = cpt;
 			if (cpt < bestValue) {
@@ -97,13 +102,24 @@ public class GsSearchStableStates extends Thread {
 		boolean[] t_old;
 		
 		if (choice != -1) {
-			// remove the old one TODO: save it, it is still useful
+			// remove the old one
 			//System.out.println("choose "+choice+", replace "+t_newreg[choice][0]+"by "+t_newreg[choice][nbremain-1]);
 			t_newreg[choice] = t_newreg[--nbremain];
 			t_old = t_reg[choice];
 			t_reg[choice] = t_reg[nbremain];
+			for (int i=0 ; i<t_old.length ; i++) {
+				if (t_old[i]) {
+					// here is a new regulator to remove
+					for (int j=0 ; j<nbremain ; j++) {
+						if (t_reg[j][i]) {
+							t_reg[j][i] = false;
+							t_newreg[j][1]--;
+						}
+					}
+				}
+			}
 
-			// update everything here TODO: update values, do not just search the new min!
+			// update everything here
 			for (int i=0 ; i<nbremain ; i++) {
 				if (t_newreg[i][1] < bestValue) {
 					bestValue = t_newreg[i][1];
