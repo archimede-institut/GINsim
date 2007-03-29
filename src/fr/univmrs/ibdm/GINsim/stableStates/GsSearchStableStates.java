@@ -1,8 +1,11 @@
 package fr.univmrs.ibdm.GINsim.stableStates;
 
+import java.util.Iterator;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -15,6 +18,13 @@ public class GsSearchStableStates extends Thread {
 	OmddNode[] t_param;
 	OmddNode dd_stable;
 	GsRegulatoryMutantDef mutant;
+	boolean[][] t_reg;
+	int[][] t_newreg;
+	
+	static final boolean ORDERTEST = true;
+	
+	int bestIndex, bestValue;
+	int nbgene, nbremain;
 
 	GsSearchStableStates(GsGraph regGraph, GsRegulatoryMutantDef mutant) {
 		this.regGraph = (GsRegulatoryGraph)regGraph;
@@ -23,6 +33,9 @@ public class GsSearchStableStates extends Thread {
 	}
 	
 	public void run() {
+		if (ORDERTEST) {
+			buildAdjTable();
+		}
 		t_param = regGraph.getAllTrees(true);
 		if (mutant != null) {
 			mutant.apply(t_param, nodeOrder);
@@ -34,16 +47,72 @@ public class GsSearchStableStates extends Thread {
 			if (i%10 == 0) {
 				System.out.println("  "+i);
 			}
-			dd_stable = buildStableConditionFromParam(i, 
-					((GsRegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1,
-					t_param[i],
-					dd_stable).reduce();
+			if (ORDERTEST) {
+				int sel = selectNext();
+				dd_stable = buildStableConditionFromParam(sel, 
+						((GsRegulatoryVertex)nodeOrder.get(sel)).getMaxValue()+1,
+						t_param[sel],
+						dd_stable).reduce();
+			} else {
+				dd_stable = buildStableConditionFromParam(i, 
+						((GsRegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1,
+						t_param[i],
+						dd_stable).reduce();
+			}
 		}
 		System.out.println("stable states search: "+(System.currentTimeMillis()-start)+"ms");
 		showStableState(dd_stable);
 	}
 	
+	private void buildAdjTable() {
+		nbgene = nbremain = nodeOrder.size();
+		GsGraphManager manager = regGraph.getGraphManager();
+		t_newreg = new int[nbgene][2];
+		t_reg = new boolean[nbgene][nbgene];
+		bestValue = nbgene+1;
+		for (int i=0 ; i<nbgene ; i++) {
+			Iterator it_reg = manager.getIncomingEdges(nodeOrder.get(i)).iterator();
+			int cpt = 0;
+			boolean[] t_regline = t_reg[i];
+			while (it_reg.hasNext()) {
+				int j = nodeOrder.indexOf(((GsDirectedEdge)it_reg.next()).getSourceVertex());
+				t_regline[j] = true;
+				cpt++;
+			}
+			t_newreg[i][0] = i;
+			t_newreg[i][1] = cpt;
+			if (cpt < bestValue) {
+				bestValue = cpt;
+				bestIndex = i;
+			}
+		}
+	}
 	
+	private int selectNext() {
+		int choice = bestIndex;
+		int ret = t_newreg[choice][0];
+		bestValue = nbgene+1;
+		bestIndex = -1;
+		
+		boolean[] t_old;
+		
+		if (choice != -1) {
+			// remove the old one TODO: save it, it is still useful
+			//System.out.println("choose "+choice+", replace "+t_newreg[choice][0]+"by "+t_newreg[choice][nbremain-1]);
+			t_newreg[choice] = t_newreg[--nbremain];
+			t_old = t_reg[choice];
+			t_reg[choice] = t_reg[nbremain];
+
+			// update everything here TODO: update values, do not just search the new min!
+			for (int i=0 ; i<nbremain ; i++) {
+				if (t_newreg[i][1] < bestValue) {
+					bestValue = t_newreg[i][1];
+					bestIndex = i;
+				}
+			}
+		}
+		return ret;
+	}
 	
 	// "stupid" method
 	private OmddNode buildStableConditionFromParam(int order, int nbChild, OmddNode param) {
