@@ -5,7 +5,9 @@ import javax.swing.JFrame;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
@@ -33,8 +35,10 @@ public class GsStableStatesPlugin implements GsPlugin, GsActionProvider {
     }
 
     public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
-    	if (!(graph instanceof GsRegulatoryGraph)) {
-    		// TODO: error here
+    	if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrder().size() < 1) {
+            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, 
+            		Translator.getString(graph instanceof GsRegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
+            		GsGraphNotificationMessage.NOTIFICATION_WARNING));
     		return;
     	}
     	GsStableStateUI ui = new GsStableStateUI((GsRegulatoryGraph)graph);

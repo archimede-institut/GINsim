@@ -11,6 +11,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 
 /**
@@ -49,8 +50,10 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
         if (actionType != ACTION_ACTION) {
             return;
         }
-        if (graph.getNodeOrder().size() < 1) {
-            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, Translator.getString("STR_emptyGraph"), GsGraphNotificationMessage.NOTIFICATION_WARNING));
+        if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrder().size() < 1) {
+            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, 
+            		Translator.getString(graph instanceof GsRegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
+            		GsGraphNotificationMessage.NOTIFICATION_WARNING));
             return;
         }
 		if (ref == 0) {
