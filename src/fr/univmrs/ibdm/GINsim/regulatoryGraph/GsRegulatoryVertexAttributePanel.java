@@ -19,6 +19,8 @@ import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsVertexMinMaxSpinModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionPanel;
+
 /**
  * Panel showing vertex properties
  */
