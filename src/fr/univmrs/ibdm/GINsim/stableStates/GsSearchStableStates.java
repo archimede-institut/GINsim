@@ -11,7 +11,18 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
-public class GsSearchStableStates extends Thread {
+/**
+ * This implements an analytic search of stable states. A state "x" is stable if, for every gene "i",
+ * K(x) = x(i).
+ * 
+ * To find a stable state, one can build a MDD for each gene, giving the context under which 
+ * THIS gene is stable.Then the stable states can be found by combining these diagrams.
+ * 
+ * To improve performances, the individuals "stability" MDD are not built independantly 
+ * but immediately assembled.
+ * The order in which they are considerd is also chosen to keep them small as long as possible.
+ */
+class GsSearchStableStates extends Thread {
 
 	private GsRegulatoryGraph regGraph;
 	Vector nodeOrder;
@@ -21,6 +32,7 @@ public class GsSearchStableStates extends Thread {
 	boolean[][] t_reg;
 	int[][] t_newreg;
 	
+	/** use a reordering to improve the size of the MDD ? */
 	static final boolean ORDERTEST = true;
 	
 	int bestIndex, bestValue;
@@ -31,7 +43,7 @@ public class GsSearchStableStates extends Thread {
 		this.nodeOrder = regGraph.getNodeOrder();
 		this.mutant = mutant;
 	}
-	
+
 	public void run() {
 		if (ORDERTEST) {
 			buildAdjTable();
@@ -46,7 +58,6 @@ public class GsSearchStableStates extends Thread {
 		for (int i=0 ; i<t_param.length ; i++) {
 			if (ORDERTEST) {
 				int sel = selectNext();
-				//System.out.print(sel+" ");
 				dd_stable = buildStableConditionFromParam(sel, 
 						((GsRegulatoryVertex)nodeOrder.get(sel)).getMaxValue()+1,
 						t_param[sel],
@@ -103,7 +114,6 @@ public class GsSearchStableStates extends Thread {
 		
 		if (choice != -1) {
 			// remove the old one
-			//System.out.println("choose "+choice+", replace "+t_newreg[choice][0]+"by "+t_newreg[choice][nbremain-1]);
 			t_newreg[choice] = t_newreg[--nbremain];
 			t_old = t_reg[choice];
 			t_reg[choice] = t_reg[nbremain];
