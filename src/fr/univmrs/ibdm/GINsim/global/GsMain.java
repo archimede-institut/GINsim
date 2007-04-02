@@ -24,13 +24,13 @@ public class GsMain {
 
 	
 	// TODO: choose runtime behaviour here
-	private static boolean ENABLE_TESTING = false;
+	private static boolean ENABLE_TESTING = true;
 	public static boolean SHOW_FUNCTION = ENABLE_TESTING;
 	public static boolean USE_PICCOLO = false;
 	
     /**
      * @param args
-     *            try to run it with --help for more info
+     * try to run it with --help for more info
      */
     public static void main(String[] args) {
 
