@@ -41,7 +41,7 @@ class GsRegulatoryMutantChange {
         }
     }
 
-    protected OmddNode apply(OmddNode node, Vector nodeOrder) {
+    protected OmddNode apply(OmddNode node, Vector nodeOrder, boolean isstrict) {
         int maxValue = vertex.getMaxValue();
         if (min == 0 && max == maxValue) {
             // no change here!
@@ -49,22 +49,27 @@ class GsRegulatoryMutantChange {
         }
         int reflevel = nodeOrder.indexOf(vertex);
         OmddNode cst = new OmddNode();
-        cst.level = reflevel;
-        cst.next = new OmddNode[maxValue+1];
-        for (int i=0 ; i<cst.next.length ; i++) {
-            if (i==min && i!=0) {
-                OmddNode nMin = new OmddNode();
-                nMin.min = min;
-                nMin.max = max;
-                cst.next[i] = nMin;
-            } else if (i==max && max < maxValue) {
-                OmddNode nMax = new OmddNode();
-                nMax.min = min;
-                nMax.max = max;
-                cst.next[i] = nMax;
-            } else {
-                cst.next[i] = OmddNode.TERMINALS[0];
-            }
+        if (isstrict) {
+            cst.min = min;
+            cst.max = max;
+        } else {
+	        cst.level = reflevel;
+	        cst.next = new OmddNode[maxValue+1];
+	        for (int i=0 ; i<cst.next.length ; i++) {
+	            if (i==min && i!=0) {
+	                OmddNode nMin = new OmddNode();
+	                nMin.min = min;
+	                nMin.max = max;
+	                cst.next[i] = nMin;
+	            } else if (i==max && max < maxValue) {
+	                OmddNode nMax = new OmddNode();
+	                nMax.min = min;
+	                nMax.max = max;
+	                cst.next[i] = nMax;
+	            } else {
+	                cst.next[i] = OmddNode.TERMINALS[0];
+	            }
+	        }
         }
         return node.merge(cst, OmddNode.CONSTRAINT);
     }

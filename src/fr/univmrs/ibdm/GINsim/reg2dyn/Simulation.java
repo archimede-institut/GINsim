@@ -87,7 +87,7 @@ public final class Simulation extends Thread implements Runnable {
             // add some default comments to the state transition graph
             dynGraph.getAnnotation().setComment(params.getDescr());
         } else {
-        	
+        	// TODO: build reachability set here
         }
         
         this.searchMode = params.mode;
@@ -108,7 +108,7 @@ public final class Simulation extends Thread implements Runnable {
         
         t_tree = regGraph.getAllTrees(true);
         if (params.mutant != null) {
-            params.mutant.apply(t_tree, listGenes);
+            params.mutant.apply(t_tree, listGenes, false);
         }
         maxdepth = params.maxdepth;
         maxnodes = params.maxnodes;

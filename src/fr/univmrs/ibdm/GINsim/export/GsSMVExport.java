@@ -47,7 +47,7 @@ public class GsSMVExport {
             GsRegulatoryVertex[] t_vertex = new GsRegulatoryVertex[nodeOrder.size()];
             OmddNode[] t_tree = graph.getAllTrees(true);
             if (mutant != null) {
-                mutant.apply(t_tree, nodeOrder);
+                mutant.apply(t_tree, nodeOrder, false);
             }
             if (sync) {
                 out.write("\nMODULE main\n");

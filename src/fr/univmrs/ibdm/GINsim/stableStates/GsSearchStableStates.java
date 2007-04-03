@@ -48,9 +48,10 @@ class GsSearchStableStates extends Thread {
 		if (ORDERTEST) {
 			buildAdjTable();
 		}
+		
 		t_param = regGraph.getAllTrees(true);
 		if (mutant != null) {
-			mutant.apply(t_param, nodeOrder);
+			mutant.apply(t_param, nodeOrder, true);
 		}
 		
 		long start = System.currentTimeMillis();
