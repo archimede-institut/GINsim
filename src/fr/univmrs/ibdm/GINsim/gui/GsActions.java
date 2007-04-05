@@ -167,7 +167,8 @@ public class GsActions  implements GraphChangeListener {
 		actionClose = new GsBaseAction("STR_close",
 									GsEnv.getIcon("close.gif"),
 									"STR_close_descr",
-									KeyStroke.getKeyStroke( KeyEvent.VK_W, ActionEvent.CTRL_MASK )) { 
+									KeyStroke.getKeyStroke( KeyEvent.VK_W, ActionEvent.CTRL_MASK ),
+									new Integer(KeyEvent.VK_C)) { 
 					private static final long serialVersionUID = 5310411143622306390L;
 
 					public void actionPerformed(java.awt.event.ActionEvent e) {    
@@ -178,7 +179,8 @@ public class GsActions  implements GraphChangeListener {
 		actionSave = new GsBaseAction("STR_save",
 										GsEnv.getIcon("save.gif"),
 										"STR_save_descr",
-                                        KeyStroke.getKeyStroke( KeyEvent.VK_S, ActionEvent.CTRL_MASK )) {
+                                        KeyStroke.getKeyStroke( KeyEvent.VK_S, ActionEvent.CTRL_MASK ),
+    									new Integer(KeyEvent.VK_S)) {
 					private static final long serialVersionUID = -5505221251989246299L;
 
 					public void actionPerformed(java.awt.event.ActionEvent e) {    
@@ -222,7 +224,8 @@ public class GsActions  implements GraphChangeListener {
 		actionQuit = new GsBaseAction("STR_quit",
 										null,
 										"STR_quit_descr",
-                                        KeyStroke.getKeyStroke( KeyEvent.VK_Q, ActionEvent.CTRL_MASK )) {
+                                        KeyStroke.getKeyStroke( KeyEvent.VK_Q, ActionEvent.CTRL_MASK ),
+                                        new Integer(KeyEvent.VK_Q)) {
 					private static final long serialVersionUID = 4215659230452329435L;
 
 					public void actionPerformed(java.awt.event.ActionEvent e) {    
@@ -230,7 +233,7 @@ public class GsActions  implements GraphChangeListener {
 					}
 		};
 
-		actionHelp = new GsBaseAction("STR_help",	null,	"STR_help_descr", null ) { 
+		actionHelp = new GsBaseAction("STR_help",	null,	"STR_help_descr", null, new Integer(KeyEvent.VK_H)) { 
 					private static final long serialVersionUID = 6430521053940787968L;
 
 					public void actionPerformed(java.awt.event.ActionEvent e) {    
@@ -238,7 +241,7 @@ public class GsActions  implements GraphChangeListener {
 					}
 		};
 				
-		actionAbout = new GsBaseAction("STR_about",	null,	"STR_about_descr", null ) { 
+		actionAbout = new GsBaseAction("STR_about",	null,	"STR_about_descr", null, new Integer(KeyEvent.VK_C)) { 
 							private static final long serialVersionUID = -4657616921932268806L;
 
 							public void actionPerformed(java.awt.event.ActionEvent e) {    
