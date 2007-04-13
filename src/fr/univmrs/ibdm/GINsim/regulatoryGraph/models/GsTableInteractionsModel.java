@@ -26,7 +26,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 
     /**
      * default constructor
-     * 
+     *
      * @param graph
      * @param v_ok
      */
@@ -39,7 +39,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 
 	/**
 	 * constructor with GsNodeRegulationData
-	 * 
+	 *
 	 * @param no the currently selected node
 	 */
 	public GsTableInteractionsModel(GsRegulatoryVertex no) {
@@ -69,7 +69,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 * @see javax.swing.table.TableModel#isCellEditable(int, int)
 	 */
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		//only the first column is editable, except on the last line  
+		//only the first column is editable, except on the last line
 		if (columnIndex == 0 && rowIndex < interactions.size()) {
 		    return true;
 		}
@@ -127,14 +127,14 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		if (columnIndex == 0) {
 			return Translator.getString("STR_value");
-		} 
+		}
 		return Translator.getString("STR_ActiveInteractionEdgeList");
 	}
 
 	/* ** custom model ** */
 	/**
 	 * get all interactions
-	 * 
+	 *
 	 * @return vector of interactions
 	 */
 	public Vector getInteractions() {
@@ -143,7 +143,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 
 	/**
 	 * remove Interactions at index row
-	 * 
+	 *
 	 * @param row the row of the interaction, which will be removed
 	 */
 	public void removeInteractions(int row) {
@@ -156,7 +156,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 
 	/**
 	 * set the current node
-	 * 
+	 *
 	 * @param no the current node
 	 */
 	public void setNode(GsRegulatoryVertex no) {
@@ -180,7 +180,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 
 	/**
 	 * get the active(s) Edge(s) of the interaction at the row row.
-	 * 
+	 *
 	 * @param row
 	 * @return the active(s) Edge(s) of the interaction at the row row.
 	 */
@@ -193,7 +193,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 
 	/**
 	 * Set the active Edge of an interaction
-	 * 
+	 *
 	 * @param row
 	 * @param edgeIndex
 	 */
@@ -235,7 +235,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 
 	/**
 	 * remove a selection of rows
-	 * 
+	 *
 	 * @param selectedrows
 	 */
 	public void removeInteractions(int[] selectedrows) {

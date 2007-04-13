@@ -9,4 +9,7 @@ public abstract class TUnaryOperator extends TBooleanOperator {
   public void setArg(TBooleanTreeNode node) {
     arg = node;
   }
+  public String toString() {
+    return getSymbol() + arg.toString();
+  }
 }

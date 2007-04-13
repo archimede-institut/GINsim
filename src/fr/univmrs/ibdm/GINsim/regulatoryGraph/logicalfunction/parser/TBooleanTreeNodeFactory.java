@@ -4,7 +4,7 @@ import java.util.Stack;
 import java.util.Vector;
 
 public class TBooleanTreeNodeFactory {
-  private String[] operators = {"&", "|", "!"};
+  private String[] operators = {TAndOperator.SYMBOL, TOrOperator.SYMBOL, TNotOperator.SYMBOL};
   private String operatorsAndParenthesis = "";
   private String returnClassName, operandClassName;
   private TBooleanParser parser;
@@ -28,7 +28,7 @@ public class TBooleanTreeNodeFactory {
     TBooleanOperator op = null;
     TBooleanTreeNode n1, n2;
 
-    if (value.equals("&")) {
+    if (value.equals(TAndOperator.SYMBOL)) {
       op = new TAndOperator();
       op.setReturnClass(returnClassName);
       op.setParser(parser);
@@ -36,7 +36,7 @@ public class TBooleanTreeNodeFactory {
       n1 = (TBooleanTreeNode)stack.pop();
       ((TBinaryOperator)op).setArgs(n1, n2);
     }
-    else if (value.equals("|")) {
+    else if (value.equals(TOrOperator.SYMBOL)) {
       op = new TOrOperator();
       op.setReturnClass(returnClassName);
       op.setParser(parser);
@@ -44,7 +44,7 @@ public class TBooleanTreeNodeFactory {
       n1 = (TBooleanTreeNode)stack.pop();
       ((TBinaryOperator)op).setArgs(n1, n2);
     }
-    else if (value.equals("!")) {
+    else if (value.equals(TNotOperator.SYMBOL)) {
       op = new TNotOperator();
       op.setReturnClass(returnClassName);
       op.setParser(parser);
@@ -60,11 +60,11 @@ public class TBooleanTreeNodeFactory {
     return bo;
   }
   public static int getPriority(String value) {
-    if (value.equals("&"))
+    if (value.equals(TAndOperator.SYMBOL))
       return TAndOperator.priority;
-    else if (value.equals("|"))
+    else if (value.equals(TOrOperator.SYMBOL))
       return TOrOperator.priority;
-    else if (value.equals("!"))
+    else if (value.equals(TNotOperator.SYMBOL))
       return TNotOperator.priority;
     return -1;
   }

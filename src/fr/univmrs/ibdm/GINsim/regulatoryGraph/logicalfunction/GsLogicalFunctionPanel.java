@@ -66,6 +66,7 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
   }
   public void setEditedObject(Object obj) {
     if (currentVertex != null) {
+      treePanel.setEditedObject(obj);
       // apply pending changes
     }
     if (obj != null && obj instanceof GsRegulatoryVertex) {
@@ -158,8 +159,8 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
       }
       else {
         functionList = (GsLogicalFunctionList)tbp.eval();
-        treePanel.addFunctionList(functionList, value, currentVertex);
-        functionList.print();
+        treePanel.addFunctionList(functionList, value, currentVertex, ((GsBooleanParser)tbp).getRoot());
+        //functionList.print();
       }
     }
     catch (Exception ex) {

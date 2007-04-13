@@ -12,7 +12,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
  * dispatch all main events:
  * - graph change
  * - selection change.
- * 
+ *
  * it can be attached to a graph or to a frame, if attached to a frame it will just
  * use the graph's dispather as backend.
  */
@@ -22,17 +22,17 @@ public class GsEventDispatcher implements GraphChangeListener {
 	private Vector graphChangeListeners = new Vector();
     private GsEventDispatcher dispatcher = null;
     private boolean useDelagate = false;
-    
+
     /**
      * create a new event dispatcher.
      * if <code>useDelegate</code> is true, it won't do anything by itself.
-     * 
+     *
      * @param useDelegate
      */
     public GsEventDispatcher(boolean useDelegate) {
         this.useDelagate = useDelegate;
     }
-    
+
 	/**
 	 * add a new listener for graph events.
 	 * the listener will receive events about new graph and selection change.
@@ -50,7 +50,7 @@ public class GsEventDispatcher implements GraphChangeListener {
 	}
 	/**
 	 * annonce a new graph.
-	 * 
+	 *
 	 * @param source
 	 * @param oldGraph the old graph
 	 * @param newGraph
@@ -70,7 +70,7 @@ public class GsEventDispatcher implements GraphChangeListener {
         GsNewGraphEvent evt = new GsNewGraphEvent(source, oldGraph, newGraph, association);
         graphChanged(evt);
 	}
-	
+
 	/**
 	 * annonce a change in the set of selected objects.
 	 * @param evt the NEW selection.
@@ -107,7 +107,7 @@ public class GsEventDispatcher implements GraphChangeListener {
             main.getEventDispatcher().fireGraphChange(null, main.getGraph(), graph, false);
         }
     }
-    
+
     public void graphChanged(GsNewGraphEvent event) {
         for (int i=graphChangeListeners.size()-1 ; i>=0 ; i--) {
             ((GraphChangeListener)graphChangeListeners.get(i)).graphChanged(event);

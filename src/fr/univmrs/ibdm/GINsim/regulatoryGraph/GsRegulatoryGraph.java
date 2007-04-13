@@ -34,15 +34,15 @@ public final class GsRegulatoryGraph extends GsGraph {
 
 	private JPanel optionPanel = null;
 	private GsRegulatoryGraphPropertiesPanel parameterPanel = null;
-	
+
 	private int nextid=0;
-	
+
     GsParameterPanel edgePanel = null;
     GsParameterPanel vertexPanel = null;
-    
+
     private static GsGraph copiedGraph = null;
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
-    
+
     static {
         GsRegulatoryGraphDescriptor.registerObjectManager(new GsMutantListManager());
     }
@@ -56,7 +56,7 @@ public final class GsRegulatoryGraph extends GsGraph {
     protected String getGraphZipName() {
     	return zip_mainEntry;
     }
-    
+
     /**
      * @param savefilename
      */
@@ -77,21 +77,21 @@ public final class GsRegulatoryGraph extends GsGraph {
 
     private void setDefaults() {
         tabLabel = "STR_modelAttribute";
-        
+
         	vReader = graphManager.getVertexAttributesReader();
         	eReader = graphManager.getEdgeAttributesReader();
-    	
+
         vReader.setDefaultVertexSize(55, 25);
         eReader.setDefaultEdgeSize(2);
         canDelete = true;
     }
-    
+
     protected Object doInteractiveAddVertex(int param) {
-    		
+
         while ( graphManager.getVertexByName("G" + nextid) != null) {
         		nextid++;
         }
-        Object obj = new GsRegulatoryVertex(nextid++);
+        Object obj = new GsRegulatoryVertex(nextid++, (GsRegulatoryGraph)graphManager.getGsGraph());
         if (graphManager.addVertex(obj)) {
         		nodeOrder.add(obj);
         		return obj;
@@ -177,7 +177,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         	}
         	if ( mode >=0) {
         	}
-        
+
         	switch (mode) {
         		case 1:
         	        while (it.hasNext()) {
@@ -204,7 +204,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         	        }
         }
     }
-    
+
     /**
      * @param edge
      */
@@ -249,7 +249,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         if (newId.equals(rvertex.getId())) {
             return;
         }
-        
+
         Iterator it = graphManager.getVertexIterator();
         while (it.hasNext()) {
             if (newId.equals(((GsRegulatoryVertex)it.next()).getId())) {
@@ -259,7 +259,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         rvertex.setId(newId);
         fireMetaChange();
     }
-    
+
     /**
      * @param multiEdge
      * @param index
@@ -275,7 +275,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         multiEdge.removeEdge(index, this);
     }
     /**
-     * 
+     *
      * @param obj
      */
     public void removeEdge(Object obj) {
@@ -297,7 +297,7 @@ public final class GsRegulatoryGraph extends GsGraph {
 
     /**
      * add a vertex from textual parameters (for the parser).
-     * 
+     *
      * @param id
      * @param name
      * @param base
@@ -305,7 +305,7 @@ public final class GsRegulatoryGraph extends GsGraph {
      * @return the new vertex.
      */
     public GsRegulatoryVertex addNewVertex(String id, String name, short base, short max) {
-        GsRegulatoryVertex vertex = new GsRegulatoryVertex(id);
+        GsRegulatoryVertex vertex = new GsRegulatoryVertex(id, (GsRegulatoryGraph)graphManager.getGsGraph());
         if (name != null) {
             vertex.setName(name);
         }
@@ -348,19 +348,19 @@ public final class GsRegulatoryGraph extends GsGraph {
     public GsRegulatoryEdgeInfo addNewEdge(String from, String to, short minvalue, short maxvalue, short sign) {
         GsRegulatoryVertex source = null;
         GsRegulatoryVertex target = null;
-        
+
         source = (GsRegulatoryVertex) graphManager.getVertexByName(from);
         if (from.equals(to)) {
             target = source;
         } else {
             target = (GsRegulatoryVertex) graphManager.getVertexByName(to);
         }
-        
+
         if (source == null || target == null) {
             GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "STR_noSuchVertex"), null);
             return null;
         }
-        
+
         GsRegulatoryEdge edge = new GsRegulatoryEdge(minvalue, maxvalue, sign);
         Object oedge = graphManager.getEdge(source, target);
         GsRegulatoryMultiEdge me;
@@ -404,18 +404,18 @@ public final class GsRegulatoryGraph extends GsGraph {
 	protected JPanel doGetFileChooserPanel() {
 		return getOptionPanel();
 	}
-	
+
 	private JPanel getOptionPanel() {
 		if (optionPanel == null) {
 
-            Object[] t_mode = { Translator.getString("STR_saveNone"), 
-                    Translator.getString("STR_savePosition"), 
+            Object[] t_mode = { Translator.getString("STR_saveNone"),
+                    Translator.getString("STR_savePosition"),
                     Translator.getString("STR_saveComplet") };
 			optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
 		}
 		return optionPanel;
 	}
-	
+
 	private String stringNodeOrder() {
 		String s = "";
 		for (int i=0 ; i<nodeOrder.size() ; i++) {
@@ -426,7 +426,7 @@ public final class GsRegulatoryGraph extends GsGraph {
 		}
 		return s;
 	}
-	
+
 	public JPanel getGraphParameterPanel() {
 		if (parameterPanel == null) {
 			parameterPanel = new GsRegulatoryGraphPropertiesPanel(this);
@@ -450,7 +450,7 @@ public final class GsRegulatoryGraph extends GsGraph {
     protected GsGraph getCopiedGraph() {
         return copiedGraph;
     }
-    
+
     protected Vector doMerge(GsGraph otherGraph) {
         if (!(otherGraph instanceof GsRegulatoryGraph)) {
             return null;
@@ -470,7 +470,7 @@ public final class GsRegulatoryGraph extends GsGraph {
             copyMap.put(vertexOri, vertex);
             ret.add(vertex);
         }
-        
+
         it = otherGraph.getGraphManager().getEdgeIterator();
         GsEdgeAttributesReader cereader = otherGraph.getGraphManager().getEdgeAttributesReader();
         while (it.hasNext()) {
@@ -485,7 +485,7 @@ public final class GsRegulatoryGraph extends GsGraph {
             copyMap.put(deOri.getUserObject(), edge);
             ret.add(de);
         }
-        
+
         it = otherGraph.getGraphManager().getVertexIterator();
         while (it.hasNext()) {
             ((GsRegulatoryVertex)it.next()).cleanupInteractionForNewGraph(copyMap);
@@ -541,13 +541,13 @@ public final class GsRegulatoryGraph extends GsGraph {
                 cereader.copyFrom(eReader);
 	        }
         }
-        
+
         if (v_vertex != null) {
             for (int i=0 ; i<v_vertex.size() ; i++) {
                 ((GsRegulatoryVertex)v_vertex.get(i)).cleanupInteractionForNewGraph(copyMap);
             }
         }
-        
+
         GsRegulatoryGraph.copiedGraph = copiedGraph;
         return copiedGraph;
     }
@@ -563,10 +563,10 @@ public final class GsRegulatoryGraph extends GsGraph {
     /**
      * Test if an association between a regulatory graph and a state transition graph is valid:
      * all what we can do is checking the node-order to see if they obviously differ (by size of node's name).
-     * 
+     *
      * if this function returns true, it's _NOT_ a garanty that both graphs are compatibles,
      * for exemple the state transition graph could have higher max value for one of the node.
-     * 
+     *
      * @param regGraph
      * @param dynGraph
      * @return true if the two graph can be associated
@@ -575,13 +575,13 @@ public final class GsRegulatoryGraph extends GsGraph {
         if (regGraph == null || dynGraph == null) {
             return false;
         }
-        
+
         Vector regOrder = regGraph.nodeOrder;
         Vector dynOrder = dynGraph.getNodeOrder();
         if (regOrder == null || dynOrder == null || regOrder.size() != dynOrder.size()) {
             return false;
         }
-        
+
         for (int i=0 ; i<regOrder.size() ; i++) {
             if (!( regOrder.get(i).toString().equals(dynOrder.get(i).toString()) )) {
                 return false;
@@ -589,7 +589,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         }
         return true;
     }
-    
+
     /**
      * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
      * @return a tree representation of logical parameters

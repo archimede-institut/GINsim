@@ -12,16 +12,21 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeString;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeExpression;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeFunction;
 
 /**
  * the Class in which we store biological data for vertices (genes).
- * 
+ *
  * a gene has:
  * <ul>
  *		<li> a baseValue, to which it tends when no interactions is active</li>
  *		<li> a maxValue</li>
  *		<li> notes (comment and URLs)</li>
- *		<li> a list of interactions: each of them describes states to 
+ *		<li> a list of interactions: each of them describes states to
  *			which the gene tends when some incoming edges are actives </li>
  * </ul>
  */
@@ -30,42 +35,49 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	private short 			baseValue;
 	private short 			maxValue;
 	private Vector 			v_logicalParameters;
-	
+
 	private String 			name;
 	private GsAnnotation	gsa;
 	private String 			id;
+
+  private GsTreeInteractionsModel interactionsModel;
+  private GsRegulatoryGraph graph;
 
     private static final String S_ID   = Translator.getString("STR_id")+" : ";
     private static final String S_NAME = " | "+ Translator.getString("STR_name")+" : ";
     private static final String S_MAX  = " | "+ Translator.getString("STR_max") +" : ";
     private static final String S_BASE = " | "+ Translator.getString("STR_base")+" : ";
-    
-    
+
+
 	/**
 	 * Constructs an empty vector and set the baseValue (0) and the maxValue (1)
 	 * @param id
 	 */
-	public GsRegulatoryVertex(String id) {
-		super();		
+	public GsRegulatoryVertex(String id, GsRegulatoryGraph graph) {
+		super();
 		name			= "";
 		baseValue 		= 0;
 		maxValue 		= 1;
 		gsa				= new GsAnnotation();
 		v_logicalParameters 	= new Vector();
 		this.id = id;
+    this.graph = graph;
+    interactionsModel = new GsTreeInteractionsModel(graph);
 	}
 
 	/**
 	 * @param num number of the gene.
 	 */
-	public GsRegulatoryVertex(int num) {
-		super();		
+	public GsRegulatoryVertex(int num, GsRegulatoryGraph graph) {
+		super();
 		name			= "";
 		baseValue 		= 0;
 		maxValue 		= 1;
 		gsa				= new GsAnnotation();
 		v_logicalParameters 	= new Vector();
 		this.id = "G"+num;
+    this.graph = graph;
+    interactionsModel = new GsTreeInteractionsModel(graph);
 	}
 
 	/**
@@ -128,14 +140,14 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
             }
 	    }
 	}
-	
+
 	/**
 	 * @return the id of this vertex.
 	 */
 	public String getId() {
 	    return id;
 	}
-	
+
 	/**
 	 * change the id of this vertex.
 	 * @param id the new id.
@@ -162,17 +174,17 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		v_logicalParameters.add(I);
         return true;
 	}
-	
+
 	/**
 	 * Removes the specified interaction to the interactions of the node
 	 * @param I
-	 */ 
+	 */
 	public void removeInteraction (GsLogicalParameter I) {
 		v_logicalParameters.remove(I);
 	}
-	
+
 	/**
-	 * Returns the interaction at the specified position index 
+	 * Returns the interaction at the specified position index
 	 * @param index
 	 * @return GsLogicalParameter
 	 */
@@ -181,16 +193,16 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		{
 			return((GsLogicalParameter)v_logicalParameters.get(index));
 		}
-		catch (java.lang.ArrayIndexOutOfBoundsException e) 
+		catch (java.lang.ArrayIndexOutOfBoundsException e)
 		{
 			return(null);
 		}
 	}
-	
+
 	/**
 	 * change an interaction's list of edges: we have to check that the new list of edges
 	 * is not in an existing interaction.
-	 * 
+	 *
 	 * @param index
 	 * @param edges
 	 */
@@ -205,7 +217,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the number of the interaction in the node.
 	 * @return the number of user defined interactions on this node
@@ -231,7 +243,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 			this.name = name;
 		}
 	}
-	
+
 	/**
 	 * get notes on this gene.
 	 * @return the annotation associated to this node
@@ -239,7 +251,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	public GsAnnotation getAnnotation() {
 		return gsa;
 	}
-	
+
 	/**
 	 * @return the list of all interactions on this gene.
 	 */
@@ -249,7 +261,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
     /**
      * get the DAG representation of logical parameters.
-     * 
+     *
      * @param graph
      * @return an OmddNode representing logical parameters associated to this vertex.
      */
@@ -275,29 +287,31 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         }
         return root;
     }
-    
+
 	public String toToolTip() {
 		return    S_ID  + id
 				+ S_NAME+ name
                 + S_MAX + maxValue
 				+ S_BASE+ baseValue;
-	}	
+	}
 
 	public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
 
-	    	out.write("\t\t<node id=\"" + this.getId() +"\""); 
+	    	out.write("\t\t<node id=\"" + this.getId() +"\"");
 			if (name.length()>0) {
 			    out.write(" name=\"" + name + "\"");
 			}
 			out.write(" basevalue=\"" + baseValue +"\"");
 			out.write(" maxvalue=\"" + maxValue +"\">\n");
-			
+
 			for (int i = 0; i < v_logicalParameters.size(); i++) {
 				((GsLogicalParameter) v_logicalParameters.elementAt(i)).toXML(out, null, mode);
 			}
-			
+
+      saveInteractionsModel(out, mode);
+
 			gsa.toXML(out, null, mode);
-			
+
 			if (param != null) {
 			    out.write(param.toString());
 			}
@@ -327,7 +341,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	}
 
 	public Object clone() {
-		GsRegulatoryVertex clone = new GsRegulatoryVertex(id);
+		GsRegulatoryVertex clone = new GsRegulatoryVertex(id, graph);
 		clone.maxValue = maxValue;
 		clone.baseValue = baseValue;
 		clone.name = name;
@@ -377,7 +391,42 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         GsRegulatoryVertex myClone = (GsRegulatoryVertex) copyMap.get(this);
         for (int i=0 ; i<v_logicalParameters.size() ; i++) {
             ((GsLogicalParameter)v_logicalParameters.get(i)).applyNewGraph(myClone, copyMap);
-            
+
         }
+    }
+
+    public void setInteractionsModel(GsTreeInteractionsModel model) {
+      interactionsModel = model;
+      v_logicalParameters = interactionsModel.getLogicalParameters();
+    }
+
+    public GsTreeInteractionsModel getInteractionsModel() {
+      return interactionsModel;
+    }
+
+    public void saveInteractionsModel(GsXMLWriter out, int mode) throws IOException {
+      GsTreeString root = (GsTreeString)interactionsModel.getRoot();
+      GsTreeValue val;
+      GsTreeExpression exp;
+      GsTreeFunction func;
+      String chk;
+
+      for (int i = 0; i < root.getChildCount(); i++) {
+        val = (GsTreeValue)root.getChild(i);
+        out.write("\t\t\t<value val=\"" + val.getValue() + "\">\n");
+        for (int j = 0; j < val.getChildCount(); j++) {
+          exp = (GsTreeExpression)val.getChild(j);
+          chk = "";
+          for (int k = 0; k < exp.getChildCount(); k++) {
+            func = (GsTreeFunction)exp.getChild(k);
+            if (func.isSelected())
+              chk += "1";
+            else
+              chk += "0";
+          }
+          out.write("\t\t\t\t<exp str=\"" + exp.toString() + "\" chk=\"" + chk + "\"/>\n");
+        }
+        out.write("\t\t\t</value>\n");
+      }
     }
 }

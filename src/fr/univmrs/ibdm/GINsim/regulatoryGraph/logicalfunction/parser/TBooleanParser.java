@@ -4,7 +4,7 @@ import java.util.*;
 
 public abstract class TBooleanParser {
   private Stack operatorStack, operandStack;
-  private TBooleanTreeNode root;
+  protected TBooleanTreeNode root;
   private TBooleanTreeNodeFactory nodeFactory = null;
   protected Vector allData;
 

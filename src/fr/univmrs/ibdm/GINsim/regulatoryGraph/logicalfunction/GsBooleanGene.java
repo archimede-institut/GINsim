@@ -31,4 +31,7 @@ public class GsBooleanGene extends TBooleanOperand {
     il.setData(v);
     return il;
   }
+  public String toString() {
+    return getVal();
+  }
 }

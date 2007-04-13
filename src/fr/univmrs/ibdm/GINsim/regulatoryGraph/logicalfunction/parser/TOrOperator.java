@@ -4,6 +4,7 @@ import java.util.Vector;
 
 public class TOrOperator extends TBinaryOperator {
   public static final int priority = 0;
+  protected static String SYMBOL = "|";
 
   public TOrOperator() {
     super();
@@ -16,5 +17,8 @@ public class TOrOperator extends TBinaryOperator {
     TBooleanData data = (TBooleanData)Class.forName(returnClassName).newInstance();
     data.setData(orData);
     return data;
+  }
+  public String getSymbol() {
+    return SYMBOL;
   }
 }

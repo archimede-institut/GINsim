@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 public class TNotOperator extends TUnaryOperator {
   public static final int priority = 1;
+  protected static String SYMBOL = "!";
 
   public TNotOperator() {
     super();
@@ -23,5 +24,8 @@ public class TNotOperator extends TUnaryOperator {
     TBooleanData d = (TBooleanData)Class.forName(returnClassName).newInstance();
     d.setData(notData);
     return d;
+  }
+  public String getSymbol() {
+    return SYMBOL;
   }
 }

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import java.util.ArrayList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
 
 public class GsBooleanParser extends TBooleanParser {
   private Vector operandList;
@@ -78,5 +79,8 @@ public class GsBooleanParser extends TBooleanParser {
       source = (GsRegulatoryVertex)e.getSourceVertex();
       operandList.addElement(source.getId());
     }
+  }
+  public TBooleanTreeNode getRoot() {
+    return root;
   }
 }

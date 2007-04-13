@@ -17,4 +17,7 @@ public abstract class TBooleanOperand implements TBooleanTreeNode {
   public void setParser(TBooleanParser parser) {
     this.parser = parser;
   }
+  public String getVal() {
+    return value;
+  }
 }

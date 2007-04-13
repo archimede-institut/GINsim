@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 public class TAndOperator extends TBinaryOperator {
   public static final int priority = 0;
+  protected static String SYMBOL = "&";
 
   public TAndOperator() {
     super();
@@ -24,5 +25,8 @@ public class TAndOperator extends TBinaryOperator {
     TBooleanData data = (TBooleanData)Class.forName(returnClassName).newInstance();
     data.setData(andData);
     return data;
+  }
+  public String getSymbol() {
+    return SYMBOL;
   }
 }

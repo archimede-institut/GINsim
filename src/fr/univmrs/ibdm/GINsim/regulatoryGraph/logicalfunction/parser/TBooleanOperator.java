@@ -13,4 +13,5 @@ public abstract class TBooleanOperator implements TBooleanTreeNode {
   public void setParser(TBooleanParser parser) {
     this.parser = parser;
   }
+  public abstract String getSymbol();
 }
