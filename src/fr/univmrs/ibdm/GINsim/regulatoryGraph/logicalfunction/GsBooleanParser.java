@@ -11,9 +11,12 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTre
 
 public class GsBooleanParser extends TBooleanParser {
   private Vector operandList;
+  private static String returnClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList";
+  private static String operandClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene";
 
-  public GsBooleanParser(String returnClassName, String operandClassName, Vector edgesList) throws ClassNotFoundException {
+  public GsBooleanParser(Vector edgesList) throws ClassNotFoundException {
     super(returnClassName, operandClassName);
+    nodeFactory = new GsBooleanTreeNodeFactory(returnClassName, operandClassName, this);
     makeOperandList(edgesList);
     setAllData(edgesList);
   }
@@ -38,16 +41,16 @@ public class GsBooleanParser extends TBooleanParser {
       e = (GsDirectedEdge)it.next();
       n = ((GsRegulatoryMultiEdge)e.getUserObject()).getEdgeCount();
       F[i] = new ArrayList(n + 1);
-      //F[i].add("");
       F[i].add(new GsLogicalFunctionListElement(null, -1));
-      //for (int k = 0; k < n; k++) F[i].add(((GsRegulatoryMultiEdge)e.getUserObject()).getId(k));
-      for (int k = 0; k < n; k++) F[i].add(new GsLogicalFunctionListElement((GsRegulatoryMultiEdge)e.getUserObject(), k));
+      for (int k = 0; k < n; k++)
+        F[i].add(new GsLogicalFunctionListElement((GsRegulatoryMultiEdge)e.getUserObject(), k));
       N[i] = n;
       K[i] = 0;
       p *= n + 1;
       i++;
     }
-    for (i = 1; i < p; i++) {
+    K[edgesList.size() - 1] = -1;
+    for (i = 1; i <= p; i++) {
       for (j = edgesList.size() - 1; j >= 0; j--) {
         K[j]++;
         if (K[j] > N[j])
@@ -58,9 +61,10 @@ public class GsBooleanParser extends TBooleanParser {
       if (j >= 0) {
         L = new Vector();
         for (j = 0; j < edgesList.size(); j++)
-          if (!((GsLogicalFunctionListElement)F[j].get(K[j])).toString().equals(""))
-            //L = L + F[j].get(K[j]) + " ";
+          if (!((GsLogicalFunctionListElement) F[j].get(K[j])).toString().equals(""))
             L.addElement(F[j].get(K[j]));
+        //System.err.println(L);
+
         allData.addElement(L);
       }
       else
@@ -78,9 +82,17 @@ public class GsBooleanParser extends TBooleanParser {
       e = (GsDirectedEdge)it.next();
       source = (GsRegulatoryVertex)e.getSourceVertex();
       operandList.addElement(source.getId());
+      for (int i = 0; i < ((GsRegulatoryMultiEdge)e.getUserObject()).getEdgeCount(); i++)
+        operandList.addElement(source.getId() + "#" + String.valueOf(i));
     }
   }
   public TBooleanTreeNode getRoot() {
     return root;
+  }
+  public static String getReturnClassName() {
+    return returnClassName;
+  }
+  public static String getOperandClassName() {
+    return operandClassName;
   }
 }

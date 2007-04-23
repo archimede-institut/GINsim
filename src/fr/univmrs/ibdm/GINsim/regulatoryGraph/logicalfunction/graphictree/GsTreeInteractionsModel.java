@@ -111,7 +111,10 @@ public class GsTreeInteractionsModel implements TreeModel {
   }
   public void refreshVertex() {
     parseFunctions();
-    if (node != null) node.setInteractionsModel(this);
+    if (node != null) {
+      node.setInteractionsModel(this);
+      graph.getVertexAttributePanel().setEditedObject(node);
+    }
   }
   public Vector getLogicalParameters() {
     Vector v = new Vector();
@@ -210,6 +213,26 @@ public class GsTreeInteractionsModel implements TreeModel {
         }
     }
   }
+
+  public TreePath getPath(short v, String e) {
+    Object [] path = new Object[3];
+    GsTreeValue tval;
+    GsTreeExpression texp;
+
+    path[0] = root;
+    for (int i = 0; i < root.getChildCount(); i++) {
+      tval = (GsTreeValue)root.getChild(i);
+      if ((short)tval.getValue() == v)
+        path[1] = tval;
+        for (int j = 0; j < tval.getChildCount(); j++) {
+          texp = (GsTreeExpression)tval.getChild(j);
+          if (texp.toString().equals(e))
+            path[2] = texp;
+        }
+    }
+    return new TreePath(path);
+  }
+
   //////////////// TreeModel interface implementation ///////////////////////
 
   public void addTreeModelListener(TreeModelListener l) {

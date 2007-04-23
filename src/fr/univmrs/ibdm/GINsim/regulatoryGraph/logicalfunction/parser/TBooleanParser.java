@@ -5,7 +5,7 @@ import java.util.*;
 public abstract class TBooleanParser {
   private Stack operatorStack, operandStack;
   protected TBooleanTreeNode root;
-  private TBooleanTreeNodeFactory nodeFactory = null;
+  protected TBooleanTreeNodeFactory nodeFactory = null;
   protected Vector allData;
 
   public TBooleanParser(String returnClassName, String operandClassName) throws ClassNotFoundException {
@@ -83,22 +83,23 @@ public abstract class TBooleanParser {
     return ret;
   }
   private String readElement(Vector operators, Vector operands, String s, int i) {
-    String s2 = s.substring(i).trim(), tmp, ret = null;
+    String s2 = s.substring(i).trim(), tmp, ret = "";
 
     for (Enumeration enu = operands.elements(); enu.hasMoreElements(); ) {
       tmp = (String)enu.nextElement();
-      if (s2.startsWith(tmp)) {
+      if (s2.startsWith(tmp) && (tmp.length() > ret.length())) {
         ret = tmp;
-        break;
       }
     }
-    for (Enumeration enu = operators.elements(); enu.hasMoreElements(); ) {
-      tmp = (String)enu.nextElement();
-      if (s2.startsWith(tmp)) {
-        ret = tmp;
-        break;
+    if (ret.equals(""))
+      for (Enumeration enu = operators.elements(); enu.hasMoreElements(); ) {
+        tmp = (String)enu.nextElement();
+        if (s2.startsWith(tmp)) {
+          ret = tmp;
+          break;
+        }
       }
-    }
+    if (ret.equals("")) return null;
     return ret;
   }
   public Vector getAllData() {

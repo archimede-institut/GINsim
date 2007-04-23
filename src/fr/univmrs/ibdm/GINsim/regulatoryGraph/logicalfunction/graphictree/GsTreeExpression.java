@@ -14,4 +14,8 @@ public class GsTreeExpression extends GsTreeElement {
   public String toString() {
     return expression;
   }
+  public boolean isLeaf() {
+    return false;
+  }
 }
+

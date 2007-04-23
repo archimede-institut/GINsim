@@ -18,7 +18,7 @@ import java.awt.Graphics;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 
 public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListener {
-  private Font font = new Font("dialog", Font.BOLD, 10);
+  private Font font = new Font("Monospaced", Font.BOLD, 12);
   private GsTreeElement treeElement;
   private JTree tree = null;
   private boolean selected;
@@ -38,6 +38,8 @@ public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListe
       cb.addItemListener(this);
       if (sel)
         cb.setBackground(Color.yellow);
+      else if (value.toString().equals(""))
+        cb.setBackground(Color.cyan);
       else
         cb.setBackground(Color.white);
       add(cb);

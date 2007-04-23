@@ -289,7 +289,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                   ((Hashtable)values.get(vertex)).put(val, new Vector());
                 }
                 else if (qName.equals("exp")) {
-                  ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("str"));
+                  ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("str").replaceAll("AND", "&"));
                   ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("chk"));
                 }
 
@@ -408,9 +408,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
             o = (GsDirectedEdge) graph.getGraphManager().getEdge(graph.getNodeOrder().get(i), vertex);
             if (o != null) allowedEdges.addElement(o);
           }
-          TBooleanParser tbp = new GsBooleanParser(
-            "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList",
-            "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene", allowedEdges);
+          TBooleanParser tbp = new GsBooleanParser(allowedEdges);
           for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
             value = (String)enu_values.nextElement();
             for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {

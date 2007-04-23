@@ -35,6 +35,10 @@ import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
+import java.util.Iterator;
+import java.util.Hashtable;
 /**
  * Panel to edit interaction of a gene
  */
@@ -43,7 +47,7 @@ public class GsInteractionPanel extends GsParameterPanel {
 	private static final long serialVersionUID = 8583991719735516132L;
 
 	private GsRegulatoryVertex currentVertex = null;
-	
+
 	protected JTable jTable = null;
 	private JScrollPane jScrollPane = null;
 	private JList jList = null;
@@ -52,11 +56,11 @@ public class GsInteractionPanel extends GsParameterPanel {
     private JButton jButton2 = null;
     private JButton upButton = null;
     private JButton downButton = null;
-	
+
 	private GsIncomingEdgeListModel edgeList = null;
 	private GsTableInteractionsModel interactionList = null;
 	private GsRegulatoryGraph graph;
-    
+
 	private JSplitPane jSplitPane = null;
 	private JPanel jPanel = null;
 
@@ -64,9 +68,9 @@ public class GsInteractionPanel extends GsParameterPanel {
     private JTextField manualLevel = null;
     private JButton manualHelp = null;
 	/**
-	 * This method initializes 
-	 * @param graph 
-	 * 
+	 * This method initializes
+	 * @param graph
+	 *
 	 */
     public GsInteractionPanel(GsRegulatoryGraph graph) {
 		super();
@@ -80,9 +84,9 @@ public class GsInteractionPanel extends GsParameterPanel {
 //        this.setPreferredSize(new java.awt.Dimension(700,60));
 //        this.setMinimumSize(new java.awt.Dimension(300,60));
 //        this.setSize(704, 60);
-        
+
         setLayout(new GridBagLayout());
-        
+
         GridBagConstraints c_manualEntry = new GridBagConstraints();
         GridBagConstraints c_manualLevel = new GridBagConstraints();
         GridBagConstraints c_manualHelp = new GridBagConstraints();
@@ -94,7 +98,7 @@ public class GsInteractionPanel extends GsParameterPanel {
         c_split.fill = GridBagConstraints.BOTH;
         c_split.weightx = 1;
         c_split.weighty = 1;
-        
+
         c_manualLevel.gridx = 0;
         c_manualLevel.gridy = 1;
         c_manualLevel.fill = GridBagConstraints.BOTH;
@@ -104,16 +108,16 @@ public class GsInteractionPanel extends GsParameterPanel {
         c_manualEntry.weightx = 1;
         c_manualHelp.gridx = 2;
         c_manualHelp.gridy = 1;
-        
+
         add(getManualEntry(), c_manualEntry);
         add(getManualLevel(), c_manualLevel);
         add(getManualHelp(), c_manualHelp);
         add(getJSplitPane(), c_split);
-        
+
         edgeList = new GsIncomingEdgeListModel();
         jList.setModel(edgeList);
 	}
-	
+
     /**
 	 * @return the jSplitPane
 	 */
@@ -161,23 +165,23 @@ public class GsInteractionPanel extends GsParameterPanel {
 			gridBagConstraints10.gridy = 2;
 			gridBagConstraints10.weightx = 0;
 			gridBagConstraints10.weighty = 0;
-            
+
             Insets insets = new Insets(0, 5, 3, 5);
             gridBagConstraints7.insets = insets;
             gridBagConstraints8.insets = insets;
             gridBagConstraints10.insets = insets;
-            
+
             c_up.gridx = 2;
             c_up.gridy = 3;
             c_down.gridx = 2;
             c_down.gridy = 4;
-            
+
 			jPanel.add(getJScrollPane(), gridBagConstraints7);
             jPanel.add(getJButton2(), gridBagConstraints8);
             jPanel.add(getJButton(), gridBagConstraints10);
             jPanel.add(getUpButton(), c_up);
             jPanel.add(getDownButton(), c_down);
-            
+
 		}
 		return jPanel;
 	}
@@ -199,7 +203,7 @@ public class GsInteractionPanel extends GsParameterPanel {
         }
         return manualEntry;
     }
-    
+
     private JButton getManualHelp() {
         if (manualHelp == null) {
             manualHelp = new JButton("?");
@@ -234,7 +238,7 @@ public class GsInteractionPanel extends GsParameterPanel {
             graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid value: "+manualLevel.getText().trim(), GsGraphNotificationMessage.NOTIFICATION_WARNING));
             return;
         }
-        
+
         for (int i=0 ; i<nodeOrder.size() ; i++) {
             Object o = manager.getEdge(nodeOrder.get(i), currentVertex);
             if (o == null) {
@@ -248,7 +252,7 @@ public class GsInteractionPanel extends GsParameterPanel {
                 }
             }
         }
-        
+
         while(stok.hasMoreTokens()) {
             String token = stok.nextToken();
             boolean isnot = false;
@@ -287,7 +291,7 @@ public class GsInteractionPanel extends GsParameterPanel {
             index = t_edgeRef[index];
             if (index == -1) {
                 GsGraphNotificationAction action = new GsGraphNotificationAction() {
-                
+
                     public String[] getActionName() {
                         return new String[] {"add and submit", "add and edit", "edit"};
                     }
@@ -302,7 +306,7 @@ public class GsInteractionPanel extends GsParameterPanel {
                         Object target = ((Object[])data)[1];
                         if (ref < 2) {
                             Object isnot = ((Object[])data)[2];
-                            ((GsRegulatoryGraph)graph).interactiveAddEdge(source, target, 
+                            ((GsRegulatoryGraph)graph).interactiveAddEdge(source, target,
                                     isnot == Boolean.FALSE ? GsRegulatoryEdge.SIGN_POSITIVE : GsRegulatoryEdge.SIGN_NEGATIVE);
                         }
                         graph.getGraphManager().select(target);
@@ -316,9 +320,9 @@ public class GsInteractionPanel extends GsParameterPanel {
                         return true;
                     }
                 };
-                Object[] data = new Object[] {o, currentVertex, 
-                        isnot ? Boolean.TRUE : Boolean.FALSE, 
-                        manualEntry, manualEntry.getText(), 
+                Object[] data = new Object[] {o, currentVertex,
+                        isnot ? Boolean.TRUE : Boolean.FALSE,
+                        manualEntry, manualEntry.getText(),
                         manualLevel, manualLevel.getText(),
                         this};
                 graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "\""+token+"\" is not a regulator of "+currentVertex, action, data, GsGraphNotificationMessage.NOTIFICATION_WARNING));
@@ -356,7 +360,7 @@ public class GsInteractionPanel extends GsParameterPanel {
                     if (t_pos[i][j]) {
                         edgeindex.add(new GsEdgeIndex( (GsRegulatoryMultiEdge)((GsDirectedEdge)l_edge.get(i)).getUserObject(),j));
                     }
-                    
+
                     // if necessary, move to the next state
                     if (canUpdate) {
                         // reset all the next ones
@@ -370,18 +374,18 @@ public class GsInteractionPanel extends GsParameterPanel {
                             canUpdate = true;
                         }
                     }
-                    
+
                 }
             }
             interactionList.setActivesEdges(interactionList.getRowCount()-1,edgeindex, value);
         } while (canUpdate);
     }
-    
+
     /**
      * @see fr.univmrs.ibdm.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
      */
     public void setEditedObject(Object obj) {
-        
+
         if (currentVertex != null) {
             // apply pending changes
         }
@@ -400,10 +404,10 @@ public class GsInteractionPanel extends GsParameterPanel {
     }
 
 	/**
-	 * This method initializes jTable	
-	 * 	
-	 * @return javax.swing.JTable	
-	 */    
+	 * This method initializes jTable
+	 *
+	 * @return javax.swing.JTable
+	 */
 	private JTable getJTable() {
 		if (jTable == null) {
             Vector v_ok = new Vector();
@@ -422,10 +426,10 @@ public class GsInteractionPanel extends GsParameterPanel {
 		return jTable;
 	}
 	/**
-	 * This method initializes jScrollPane	
-	 * 	
-	 * @return javax.swing.JScrollPane	
-	 */    
+	 * This method initializes jScrollPane
+	 *
+	 * @return javax.swing.JScrollPane
+	 */
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
@@ -435,10 +439,10 @@ public class GsInteractionPanel extends GsParameterPanel {
 		return jScrollPane;
 	}
 	/**
-	 * This method initializes jScrollPane1	
-	 * 	
-	 * @return javax.swing.JScrollPane	
-	 */    
+	 * This method initializes jScrollPane1
+	 *
+	 * @return javax.swing.JScrollPane
+	 */
 	private JScrollPane getJScrollPane1() {
 		if (jScrollPane1 == null) {
 			jScrollPane1 = new JScrollPane();
@@ -450,10 +454,10 @@ public class GsInteractionPanel extends GsParameterPanel {
 		return jScrollPane1;
 	}
 	/**
-	 * This method initializes jList	
-	 * 	
-	 * @return javax.swing.JList	
-	 */    
+	 * This method initializes jList
+	 *
+	 * @return javax.swing.JList
+	 */
 	private JList getJList() {
 		if (jList == null) {
 			jList = new JList();
@@ -463,17 +467,17 @@ public class GsInteractionPanel extends GsParameterPanel {
 		return jList;
 	}
 	/**
-	 * This method initializes jButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */    
+	 * This method initializes jButton
+	 *
+	 * @return javax.swing.JButton
+	 */
 	private JButton getJButton() {
 		if (jButton == null) {
 			jButton = new JButton("X");
             jButton.setForeground(Color.RED);
 			jButton.setPreferredSize(new java.awt.Dimension(54,25));
 			jButton.setName("jButton");
-			jButton.addActionListener(new java.awt.event.ActionListener() { 
+			jButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					deleteInteraction();
 				}
@@ -482,15 +486,15 @@ public class GsInteractionPanel extends GsParameterPanel {
 		return jButton;
 	}
 	/**
-	 * This method initializes jButton2	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */    
+	 * This method initializes jButton2
+	 *
+	 * @return javax.swing.JButton
+	 */
 	private JButton getJButton2() {
 		if (jButton2 == null) {
 			jButton2 = new JButton("<<");
 			jButton2.setName("jButton2");
-			jButton2.addActionListener(new java.awt.event.ActionListener() { 
+			jButton2.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					insertRight2Left();
 				}
@@ -501,7 +505,7 @@ public class GsInteractionPanel extends GsParameterPanel {
 
     /**
      * This method initializes upButton
-     * 
+     *
      * @return javax.swing.JButton
      */
     private javax.swing.JButton getUpButton() {
@@ -509,7 +513,7 @@ public class GsInteractionPanel extends GsParameterPanel {
             upButton = new javax.swing.JButton(GsEnv.getIcon("upArrow.gif"));
             upButton.setName("upButton");
             upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-            upButton.addActionListener(new java.awt.event.ActionListener() { 
+            upButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     moveUp();
                 }
@@ -518,7 +522,7 @@ public class GsInteractionPanel extends GsParameterPanel {
         return upButton;
     }
     /**
-     * move the selected items up 
+     * move the selected items up
      */
     protected void moveUp() {
         int[] index=jTable.getSelectedRows();
@@ -551,15 +555,15 @@ public class GsInteractionPanel extends GsParameterPanel {
     }
     /**
      * This method initializes downButton
-     * 
+     *
      * @return javax.swing.JButton
      */
     private javax.swing.JButton getDownButton() {
         if(downButton == null) {
             downButton = new javax.swing.JButton(GsEnv.getIcon("downArrow.gif"));
             downButton.setName("downButton");
-            downButton.addActionListener(new java.awt.event.ActionListener() { 
-                public void actionPerformed(java.awt.event.ActionEvent e) {    
+            downButton.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
                     moveDown();
                 }
             });
@@ -599,9 +603,9 @@ public class GsInteractionPanel extends GsParameterPanel {
         graph.fireMetaChange();
     }
 
-    
+
 	/**
-	 * Get the selection in the left table (jTable), 
+	 * Get the selection in the left table (jTable),
 	 * and select the corresponding rows in the right list (jList)
 	 */
 	protected void selectLeft2Right() {
@@ -657,6 +661,94 @@ public class GsInteractionPanel extends GsParameterPanel {
                     jTable.getSelectionModel().addSelectionInterval(selectedrow, selectedrow);
                 }
 			}
+      else {
+        System.err.println("OK");
+        Vector nodeOrder = graph.getNodeOrder();
+        GsGraphManager manager = graph.getGraphManager();
+        Vector allowedEdges = new Vector();
+        for (int i = 0 ; i < nodeOrder.size() ; i++) {
+          GsDirectedEdge o = (GsDirectedEdge)manager.getEdge(nodeOrder.get(i), currentVertex);
+          if (o != null) allowedEdges.addElement(o);
+        }
+        Iterator it = allowedEdges.iterator();
+        Hashtable v2 = new Hashtable();
+        Hashtable v3 = new Hashtable();
+        int nb_1 = 0, N = 0;
+        while (it.hasNext()) {
+          GsDirectedEdge e = (GsDirectedEdge)it.next();
+          GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)e.getUserObject();
+          for (int i = 0; i < me.getEdgeCount(); i++) {
+            v2.put(me.getId(i), new Integer(N));
+            v3.put(new Integer(N++), me.getId(i));
+          }
+        }
+
+        Vector pattern_1 = new Vector();
+        Vector inter = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
+        for (int i = 0; i < inter.size(); i++) {
+          GsLogicalParameter p = (GsLogicalParameter)inter.elementAt(i);
+          N = 0;
+          for (int k = 0; k < p.EdgeCount(); k++)
+            N += 1 << ((Integer) v2.get(p.getEdge(k).data.getId(p.getEdge(k).index))).intValue();
+          pattern_1.addElement(new Integer(N));
+        }
+        if (currentVertex.getBaseValue() == 1) pattern_1.addElement(new Integer(0));
+        Vector pattern_0 = new Vector();
+        for (int i = 0; i < Math.pow(2, v2.size()); i++)
+          if (!pattern_1.contains(new Integer(i))) {
+            pattern_0.addElement(new Integer(i));
+
+          }
+        int mask = 0, value = 0, n = 0, h, k = 0;
+        String s, s2;
+        for (int y = 0; y < 3; y++) {
+        //while (!pattern_1.isEmpty()) {
+          for (int i = 1; i <= v2.size(); i++) {
+            for (int j = 0; j < Math.pow(2, i); j++) {
+              for (k = 0; k <= (v2.size() - i); k++) {
+                n = 0;
+                mask = ((int)Math.pow(2, i) - 1) << k;
+                value = j << k;
+                for (int i_0 = 0; i_0 < pattern_0.size(); i_0++) {
+                  h = (~((((Integer)pattern_0.get(i_0)).intValue() & mask) ^ value) & mask);
+                  if (h == mask) n++;
+                }
+                if (n == pattern_0.size()) {
+                  System.err.println("nb bits = " + i + "   value = " + j + "   pos = " + k + "   N = " + n);
+                  System.err.println("mask = " + mask);
+                  break;
+                }
+              }
+              if (n == pattern_0.size()) {
+                s = "";
+                for (int m = 0; m < i; m++) {
+                  s = (String)v3.get(new Integer(k + m));
+                  s = s.substring(0, s.lastIndexOf("_")) + "#" + s.substring(s.lastIndexOf("_") + 1);
+                  if ((value & (int)Math.pow(2, m + k)) == value)
+                    s = "!" + s;
+                  if (m < (i - 1)) s += " & ";
+                }
+                System.err.println("---> " + s);
+                it = pattern_1.iterator();
+                while (it.hasNext()) {
+                  Integer p = (Integer)it.next();
+                  int v = (~(value & mask) & mask);
+                  h = (~((p.intValue() & mask) ^ v) & mask);
+                  if (h == mask) {
+                    System.err.println("A virer : " + p);
+                    pattern_1.remove(p);
+                    it = pattern_1.iterator();
+                  }
+                }
+              }
+            }
+          }
+          System.err.println(pattern_1);
+          //break;
+        }
+        System.err.println(pattern_0);
+        System.err.println(v2);
+      }
 		}
 	}
 

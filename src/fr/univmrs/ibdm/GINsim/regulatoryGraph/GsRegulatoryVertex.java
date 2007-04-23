@@ -17,6 +17,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTree
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeFunction;
+import java.util.Iterator;
 
 /**
  * the Class in which we store biological data for vertices (genes).
@@ -396,8 +397,21 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
     }
 
     public void setInteractionsModel(GsTreeInteractionsModel model) {
+      GsLogicalParameter param;
+      boolean basalValueDefined = false;
+
       interactionsModel = model;
       v_logicalParameters = interactionsModel.getLogicalParameters();
+      for (Iterator it = v_logicalParameters.iterator(); it.hasNext(); ) {
+        param = (GsLogicalParameter)it.next();
+        if (param.EdgeCount() == 0) {
+          v_logicalParameters.removeElement(param);
+          setBaseValue((short)param.getValue(), graph);
+          basalValueDefined = true;
+          break;
+        }
+      }
+      if (!basalValueDefined) setBaseValue((short)0, graph);
     }
 
     public GsTreeInteractionsModel getInteractionsModel() {
@@ -424,7 +438,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
             else
               chk += "0";
           }
-          out.write("\t\t\t\t<exp str=\"" + exp.toString() + "\" chk=\"" + chk + "\"/>\n");
+          out.write("\t\t\t\t<exp str=\"" + exp.toString().replaceAll("&", "AND") + "\" chk=\"" + chk + "\"/>\n");
         }
         out.write("\t\t\t</value>\n");
       }

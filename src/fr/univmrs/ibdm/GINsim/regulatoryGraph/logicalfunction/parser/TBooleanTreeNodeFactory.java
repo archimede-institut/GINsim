@@ -59,6 +59,7 @@ public class TBooleanTreeNodeFactory {
     bo.setParser(parser);
     return bo;
   }
+
   public static int getPriority(String value) {
     if (value.equals(TAndOperator.SYMBOL))
       return TAndOperator.priority;

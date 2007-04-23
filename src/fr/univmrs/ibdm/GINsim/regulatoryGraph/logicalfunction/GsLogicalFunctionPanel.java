@@ -150,9 +150,7 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
 
     GsLogicalFunctionList functionList;
     try {
-      TBooleanParser tbp = new GsBooleanParser("fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList",
-                                               "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene",
-                                               allowedEdges);
+      TBooleanParser tbp = new GsBooleanParser(allowedEdges);
       if (!tbp.compile(this.getManualEntry().getText())) {
         graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
             GsGraphNotificationMessage.NOTIFICATION_WARNING));
@@ -160,7 +158,7 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
       else {
         functionList = (GsLogicalFunctionList)tbp.eval();
         treePanel.addFunctionList(functionList, value, currentVertex, ((GsBooleanParser)tbp).getRoot());
-        //functionList.print();
+        graph.getVertexAttributePanel().setEditedObject(currentVertex);
       }
     }
     catch (Exception ex) {

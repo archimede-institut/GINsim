@@ -12,8 +12,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTree
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsCellRenderer;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsCellEditor;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import javax.swing.tree.TreePath;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeElement;
+import javax.swing.tree.TreePath;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel {
   private JTree tree;
@@ -34,7 +34,6 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
   }
   private JTree getJTree(GsRegulatoryGraph graph) {
     if (tree == null) {
-      Vector v_ok = new Vector();
       interactionList = new GsTreeInteractionsModel(graph);
       tree = new JTree(interactionList);
       tree.setShowsRootHandles(true);
@@ -53,7 +52,6 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
     interactionList.setNode(currentVertex);
     interactionList.addValue(val);
     interactionList.addExpression(val, root);
-    //tree.scrollPathToVisible(new TreePath(interactionList.getExpression(root));
     while (it.hasNext()) {
       it2 = ((Vector)it.next()).iterator();
       v = new Vector();
@@ -62,11 +60,13 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
         edgeIndex = new GsEdgeIndex(element.getEdge(), element.getIndex());
         v.addElement(edgeIndex);
       }
-      interactionList.setActivesEdges(v, val);
+      if (v.size() > 0) interactionList.setActivesEdges(v, val);
       interactionList.addFunction(val, root.toString(), v);
     }
     interactionList.parseFunctions();
     ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
     currentVertex.setInteractionsModel(interactionList);
+    tree.expandPath(interactionList.getPath(val, root.toString()));
+    tree.scrollPathToVisible(interactionList.getPath(val, root.toString()));
   }
 }
