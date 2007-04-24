@@ -1,6 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
+
+import java.util.List;
 import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import java.util.Iterator;
@@ -14,16 +16,16 @@ public class GsBooleanParser extends TBooleanParser {
   private static String returnClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList";
   private static String operandClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene";
 
-  public GsBooleanParser(Vector edgesList) throws ClassNotFoundException {
+  public GsBooleanParser(List edgesList) throws ClassNotFoundException {
     super(returnClassName, operandClassName);
     nodeFactory = new GsBooleanTreeNodeFactory(returnClassName, operandClassName, this);
     makeOperandList(edgesList);
     setAllData(edgesList);
   }
-  public boolean verifOperandList(Vector list) {
+  public boolean verifOperandList(List list) {
     return (operandList.containsAll(list));
   }
-  protected void setAllData(Vector edgesList) {
+  protected void setAllData(List edgesList) {
     Iterator it = edgesList.iterator();
     GsDirectedEdge e;
 
@@ -72,7 +74,7 @@ public class GsBooleanParser extends TBooleanParser {
     }
 
   }
-  private void makeOperandList(Vector edgesList) {
+  private void makeOperandList(List edgesList) {
     Iterator it = edgesList.iterator();
     GsDirectedEdge e;
     GsRegulatoryVertex source;

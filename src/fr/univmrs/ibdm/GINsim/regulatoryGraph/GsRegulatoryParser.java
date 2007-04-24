@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -12,7 +13,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
-import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
@@ -398,20 +398,13 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     }
 
     private void parseBooleanFunctions() {
-      Vector allowedEdges;
-      GsDirectedEdge o;
+      List allowedEdges;
       GsRegulatoryVertex vertex;
       String value, exp, chk;
       try {
         for (Enumeration enu_vertex = values.keys(); enu_vertex.hasMoreElements(); ) {
           vertex = (GsRegulatoryVertex)enu_vertex.nextElement();
-          allowedEdges = new Vector();
-          for (int i = 0; i < graph.getNodeOrder().size(); i++) {
-            o = (GsDirectedEdge) graph.getGraphManager().getEdge(graph.getNodeOrder().get(i), vertex);
-            if (o != null) {
-            	allowedEdges.addElement(o);
-            }
-          }
+          allowedEdges = graph.getGraphManager().getIncomingEdges(vertex);
           if (allowedEdges.size() > 0) {
 	          TBooleanParser tbp = new GsBooleanParser(allowedEdges);
 	          for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {

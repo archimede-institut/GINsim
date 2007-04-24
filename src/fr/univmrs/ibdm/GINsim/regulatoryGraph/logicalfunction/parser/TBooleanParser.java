@@ -13,8 +13,8 @@ public abstract class TBooleanParser {
     nodeFactory = new TBooleanTreeNodeFactory(returnClassName, operandClassName, this);
     operatorStack = operandStack = null;
   }
-  public abstract boolean verifOperandList(Vector list);
-  protected abstract void setAllData(Vector list);
+  public abstract boolean verifOperandList(List list);
+  protected abstract void setAllData(List list);
   public boolean compile(String s) {
     boolean ret = true;
     int i, j, k;

@@ -1,18 +1,22 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import fr.univmrs.ibdm.GINsim.gui.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
-import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
+import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 
 public class GsLogicalFunctionPanel extends GsParameterPanel {
   private static final long serialVersionUID = -87854595177707062L;
@@ -127,7 +131,6 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
   }
 
   protected void manualActivate() {
-    Vector nodeOrder = graph.getNodeOrder();
     GsGraphManager manager = graph.getGraphManager();
     short value = (short)(currentVertex.getMaxValue() + 1);
     try {
@@ -140,17 +143,9 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
           GsGraphNotificationMessage.NOTIFICATION_WARNING));
       return;
     }
-    Vector allowedEdges = new Vector();
-    for (int i = 0 ; i < nodeOrder.size() ; i++) {
-      GsDirectedEdge o = (GsDirectedEdge)manager.getEdge(nodeOrder.get(i), currentVertex);
-      if (o != null) allowedEdges.addElement(o);
-    }
-
-    //Iterator it = l_edge.iterator();
-
     GsLogicalFunctionList functionList;
     try {
-      TBooleanParser tbp = new GsBooleanParser(allowedEdges);
+      TBooleanParser tbp = new GsBooleanParser(manager.getIncomingEdges(currentVertex));
       if (!tbp.compile(this.getManualEntry().getText())) {
         graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
             GsGraphNotificationMessage.NOTIFICATION_WARNING));
