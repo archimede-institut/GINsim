@@ -43,11 +43,13 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
     }
     return tree;
   }
-  public void addFunctionList(GsLogicalFunctionList list, short val, GsRegulatoryVertex currentVertex, TBooleanTreeNode root) {
-    Iterator it = list.getData().iterator(), it2;
+  public void addFunctionList(GsLogicalFunctionList list, short val, GsRegulatoryVertex currentVertex, GsBooleanParser parser) {
+    Vector params = parser.getParams((Vector)list.getData());
+    Iterator it = params.iterator(), it2;
     Vector v;
     GsEdgeIndex edgeIndex;
     GsLogicalFunctionListElement element;
+    TBooleanTreeNode root = parser.getRoot();
 
     interactionList.setNode(currentVertex);
     interactionList.addValue(val);

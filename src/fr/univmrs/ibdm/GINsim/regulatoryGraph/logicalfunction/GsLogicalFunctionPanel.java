@@ -145,14 +145,14 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
     }
     GsLogicalFunctionList functionList;
     try {
-      TBooleanParser tbp = new GsBooleanParser(manager.getIncomingEdges(currentVertex));
+      GsBooleanParser tbp = new GsBooleanParser(manager.getIncomingEdges(currentVertex));
       if (!tbp.compile(this.getManualEntry().getText())) {
         graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
             GsGraphNotificationMessage.NOTIFICATION_WARNING));
       }
       else {
         functionList = (GsLogicalFunctionList)tbp.eval();
-        treePanel.addFunctionList(functionList, value, currentVertex, ((GsBooleanParser)tbp).getRoot());
+        treePanel.addFunctionList(functionList, value, currentVertex, tbp);
         graph.getVertexAttributePanel().setEditedObject(currentVertex);
       }
     }

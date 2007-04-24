@@ -5,4 +5,5 @@ import java.util.Vector;
 public interface TBooleanData {
   Vector getData();
   void setData(Vector v);
+  void setParser(TBooleanParser p);
 }

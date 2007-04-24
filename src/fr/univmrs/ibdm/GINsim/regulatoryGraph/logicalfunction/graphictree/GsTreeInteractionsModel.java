@@ -37,15 +37,10 @@ public class GsTreeInteractionsModel implements TreeModel {
       this.interactions = node.getV_logicalParameters();
     else
       this.interactions = null;
-    //fireTreeStructureChanged();
+
     v_ok.clear();
     for (int i=0 ; i<interactions.size() ; i++) {
-      //if ( !((GsLogicalParameter)interactions.get(i)).activable(graph, node) ) {
-        //v_ok.add(Boolean.FALSE);
-      //}
-      //else {
         v_ok.add(Boolean.TRUE);
-      //}
     }
     v_ok.add(Boolean.TRUE);
   }
@@ -53,16 +48,8 @@ public class GsTreeInteractionsModel implements TreeModel {
     GsLogicalParameter inter = new GsLogicalParameter(value);
     inter.setEdges(edgeIndex);
     node.addLogicalParameter(inter);
-    //if (!inter.activable(graph, node) ) {
-      //v_ok.add(v_ok.size()-1, Boolean.FALSE);
-    //}
-    //else {
-      v_ok.add(v_ok.size()-1, Boolean.TRUE);
-    //}
+    v_ok.add(v_ok.size()-1, Boolean.TRUE);
     fireTreeStructureChanged(root);
-    //fireTableCellUpdated(row, 0);
-    //fireTableCellUpdated(row, 1);
-    //fireTableRowsInserted(row, row);
   }
 
   public void addValue(short v) {

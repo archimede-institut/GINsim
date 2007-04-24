@@ -27,6 +27,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanPar
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeElement;
 
 /**
  * parses a ginml regulatory graph.
@@ -418,7 +419,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 	              }
 	              else {
 	                GsLogicalFunctionList functionList = (GsLogicalFunctionList)tbp.eval();
-	                addFunctionList(functionList, Short.parseShort(value), vertex, ((GsBooleanParser)tbp).getRoot(), chk.length());
+	                addFunctionList(functionList, Short.parseShort(value), vertex, (GsBooleanParser)tbp, chk.length());
 	              }
 	            }
 	          }
@@ -440,7 +441,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       }
     }
 
-    private void addFunctionList(GsLogicalFunctionList list, short val, GsRegulatoryVertex currentVertex, TBooleanTreeNode root, int n) {
+/*    private void addFunctionList(GsLogicalFunctionList list, short val, GsRegulatoryVertex currentVertex, TBooleanTreeNode root, int n) {
       Iterator it = list.getData().iterator(), it2;
       Vector v;
       GsEdgeIndex edgeIndex;
@@ -459,6 +460,33 @@ public final class GsRegulatoryParser extends GsXMLHelper {
           v.addElement(edgeIndex);
         }
         interactionList.setActivesEdges(v, val);
+        interactionList.addFunction(val, root.toString(), v);
+      }
+      String chk1 = "";
+      for (int i = 0; i < n; i++) chk1 += "1";
+      interactionList.checkParams(val, chk1, root.toString());
+    }*/
+    public void addFunctionList(GsLogicalFunctionList list, short val, GsRegulatoryVertex currentVertex, GsBooleanParser parser, int n) {
+      Vector params = parser.getParams((Vector)list.getData());
+      Iterator it = params.iterator(), it2;
+      Vector v;
+      GsEdgeIndex edgeIndex;
+      GsLogicalFunctionListElement element;
+      TBooleanTreeNode root = parser.getRoot();
+      GsTreeInteractionsModel interactionList = currentVertex.getInteractionsModel();
+
+      interactionList.setNode(currentVertex);
+      interactionList.addValue(val);
+      interactionList.addExpression(val, root);
+      while (it.hasNext()) {
+        it2 = ((Vector)it.next()).iterator();
+        v = new Vector();
+        while (it2.hasNext()) {
+          element = (GsLogicalFunctionListElement)it2.next();
+          edgeIndex = new GsEdgeIndex(element.getEdge(), element.getIndex());
+          v.addElement(edgeIndex);
+        }
+        if (v.size() > 0) interactionList.setActivesEdges(v, val);
         interactionList.addFunction(val, root.toString(), v);
       }
       String chk1 = "";

@@ -14,6 +14,7 @@ public class TNotOperator extends TUnaryOperator {
     Vector notData = new Vector(parser.getAllData());
     notData.removeAll(data);
     TBooleanData d = (TBooleanData)Class.forName(returnClassName).newInstance();
+    d.setParser(parser);
     d.setData(notData);
     return d;
   }

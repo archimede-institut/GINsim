@@ -15,6 +15,7 @@ public class TOrOperator extends TBinaryOperator {
     Vector orData = new Vector(leftData);
     orData.addAll(rightData);
     TBooleanData data = (TBooleanData)Class.forName(returnClassName).newInstance();
+    data.setParser(parser);
     data.setData(orData);
     return data;
   }

@@ -15,6 +15,7 @@ public class GsBooleanParser extends TBooleanParser {
   private Vector operandList;
   private static String returnClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList";
   private static String operandClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene";
+  private Object[] allParams;
 
   public GsBooleanParser(List edgesList) throws ClassNotFoundException {
     super(returnClassName, operandClassName);
@@ -34,9 +35,10 @@ public class GsBooleanParser extends TBooleanParser {
     int[] K = new int[operandList.size()];
     int n, i, p, j;
 
-    Vector L;
+    Vector L, v;
 
-    allData = new Vector();
+    v = new Vector();
+
     i = 0;
     p = 1;
     while (it.hasNext()) {
@@ -67,12 +69,24 @@ public class GsBooleanParser extends TBooleanParser {
             L.addElement(F[j].get(K[j]));
         //System.err.println(L);
 
-        allData.addElement(L);
+        v.addElement(L);
       }
       else
         break;
     }
+    allParams = v.toArray();
+    allData = new Vector();
+    for (i = 0; i < allParams.length; i++) allData.addElement(new Integer(i));
+  }
 
+  public Vector getParams(Vector indexes) {
+    Vector v = new Vector();
+    for (Iterator it = indexes.iterator(); it.hasNext(); )
+      v.addElement(allParams[((Integer)it.next()).intValue()]);
+    return v;
+  }
+  public Object[] getAllParams() {
+    return allParams;
   }
   private void makeOperandList(List edgesList) {
     Iterator it = edgesList.iterator();

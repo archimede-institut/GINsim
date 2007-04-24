@@ -16,6 +16,7 @@ public class TAndOperator extends TBinaryOperator {
     Vector andData = new Vector(leftData);
     andData.retainAll(rightData);
     TBooleanData data = (TBooleanData)Class.forName(returnClassName).newInstance();
+    data.setParser(parser);
     data.setData(andData);
     return data;
   }
