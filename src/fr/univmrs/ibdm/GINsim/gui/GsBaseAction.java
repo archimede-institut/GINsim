@@ -23,18 +23,28 @@ public abstract class GsBaseAction extends AbstractAction {
 	public GsBaseAction(String name,
 			   ImageIcon icon,
 			   String tooltip,
-			   KeyStroke accelerator)
-	 {
-	 	
-	   this.putValue( Action.NAME, Translator.getString(name));
-	   if( icon != null ) {
-		 this.putValue( Action.SMALL_ICON, icon );
-	   }
-	   if (tooltip != null) {
-	   		this.putValue( Action.SHORT_DESCRIPTION, Translator.getString(tooltip) );
-	   }	   		 
-	   if (accelerator != null) {
-	   		this.putValue( Action.ACCELERATOR_KEY, accelerator );
-	   	}	 
+			   KeyStroke accelerator) {
+		this(name, icon, tooltip, accelerator, null);
+	}
+
+	public GsBaseAction(String name,
+			   ImageIcon icon,
+			   String tooltip,
+			   KeyStroke accelerator,
+			   Integer mnemonic) {
+		
+		if (mnemonic != null) {
+			this.putValue(Action.MNEMONIC_KEY, mnemonic);
+		}
+		this.putValue( Action.NAME, Translator.getString(name));
+		if( icon != null ) {
+			this.putValue( Action.SMALL_ICON, icon );
+		}
+		if (tooltip != null) {
+			this.putValue( Action.SHORT_DESCRIPTION, Translator.getString(tooltip) );
+		}	   		 
+		if (accelerator != null) {
+			this.putValue( Action.ACCELERATOR_KEY, accelerator );
+		}	 
 	 }
 }

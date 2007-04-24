@@ -76,13 +76,12 @@ public class GsRegulatoryMutantDef implements GsNamedObject {
      * @param t_tree OMDD for all genes of the model
      * @param listGenes the list of the genes
      */
-    public void apply(OmddNode[] t_tree, Vector listGenes) {
+    public void apply(OmddNode[] t_tree, Vector listGenes, boolean isstrict) {
         for (int i=0 ; i<v_changes.size() ; i++) {
             GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)v_changes.get(i);
             int index = listGenes.indexOf(change.vertex);
-            t_tree[index] = change.apply(t_tree[index], listGenes);
+            t_tree[index] = change.apply(t_tree[index], listGenes, isstrict);
         }
-        
     }
 
     public void toXML(GsXMLWriter out) throws IOException {
