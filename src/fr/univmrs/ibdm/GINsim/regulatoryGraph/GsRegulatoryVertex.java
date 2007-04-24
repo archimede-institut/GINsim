@@ -298,25 +298,29 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
 	public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
 
-	    	out.write("\t\t<node id=\"" + this.getId() +"\"");
+			out.openTag("node");
+	    	out.addAttr("id", getId());
 			if (name.length()>0) {
 			    out.write(" name=\"" + name + "\"");
+			    out.addAttr("name", name);
 			}
-			out.write(" basevalue=\"" + baseValue +"\"");
-			out.write(" maxvalue=\"" + maxValue +"\">\n");
+		    out.addAttr("basevalue", ""+baseValue);
+		    out.addAttr("maxvalue", ""+maxValue);
 
+			// TODO: at some point stop saving logical parameters
 			for (int i = 0; i < v_logicalParameters.size(); i++) {
 				((GsLogicalParameter) v_logicalParameters.elementAt(i)).toXML(out, null, mode);
 			}
-
-      saveInteractionsModel(out, mode);
-
+			// save logical functions
+			saveInteractionsModel(out, mode);
+			
 			gsa.toXML(out, null, mode);
 
 			if (param != null) {
+			    out.addContent("\n");
 			    out.write(param.toString());
 			}
-			out.write("\t\t</node>\n");
+			out.closeTag();
 	}
 
 	/**
@@ -439,7 +443,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
             else
               chk += "0";
           }
-          //out.write("\t\t\t\t<exp str=\"" + exp.toString().replaceAll("&", "&amp;") + "\" chk=\"" + chk + "\"/>\n");
           out.openTag("exp");
           out.addAttr("str", exp.toString());
           out.addAttr("chk", chk);
