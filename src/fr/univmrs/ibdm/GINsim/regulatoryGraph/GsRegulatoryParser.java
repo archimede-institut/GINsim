@@ -187,7 +187,9 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 					placeNodeOrder();
                     graph.setSaveMode(vslevel);
 
-                    if (!values.isEmpty()) parseBooleanFunctions();
+                    if (!values.isEmpty()) {
+                    	parseBooleanFunctions();
+                    }
 				}
                 pos = POS_OUTSIDE;
 				break;
@@ -289,7 +291,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                   ((Hashtable)values.get(vertex)).put(val, new Vector());
                 }
                 else if (qName.equals("exp")) {
-                  ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("str").replaceAll("AND", "&"));
+                  ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("str"));
                   ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("chk"));
                 }
 
@@ -406,33 +408,37 @@ public final class GsRegulatoryParser extends GsXMLHelper {
           allowedEdges = new Vector();
           for (int i = 0; i < graph.getNodeOrder().size(); i++) {
             o = (GsDirectedEdge) graph.getGraphManager().getEdge(graph.getNodeOrder().get(i), vertex);
-            if (o != null) allowedEdges.addElement(o);
-          }
-          TBooleanParser tbp = new GsBooleanParser(allowedEdges);
-          for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
-            value = (String)enu_values.nextElement();
-            for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
-              exp = (String)enu_exp.nextElement();
-              chk = (String)enu_exp.nextElement();
-              if (!tbp.compile(exp)) {
-                graph.addNotificationMessage(new GsGraphNotificationMessage(
-                  graph, "invalid formula", GsGraphNotificationMessage.NOTIFICATION_WARNING));
-              }
-              else {
-                GsLogicalFunctionList functionList = (GsLogicalFunctionList)tbp.eval();
-                addFunctionList(functionList, Short.parseShort(value), vertex, ((GsBooleanParser)tbp).getRoot(), chk.length());
-              }
+            if (o != null) {
+            	allowedEdges.addElement(o);
             }
           }
-          vertex.getInteractionsModel().parseFunctions();
-          for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
-            value = (String)enu_values.nextElement();
-            for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
-              exp = (String)enu_exp.nextElement();
-              chk = (String)enu_exp.nextElement();
-              vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
-              vertex.getInteractionsModel().parseFunctions();
-            }
+          if (allowedEdges.size() > 0) {
+	          TBooleanParser tbp = new GsBooleanParser(allowedEdges);
+	          for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
+	            value = (String)enu_values.nextElement();
+	            for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
+	              exp = (String)enu_exp.nextElement();
+	              chk = (String)enu_exp.nextElement();
+	              if (!tbp.compile(exp)) {
+	                graph.addNotificationMessage(new GsGraphNotificationMessage(
+	                  graph, "invalid formula", GsGraphNotificationMessage.NOTIFICATION_WARNING));
+	              }
+	              else {
+	                GsLogicalFunctionList functionList = (GsLogicalFunctionList)tbp.eval();
+	                addFunctionList(functionList, Short.parseShort(value), vertex, ((GsBooleanParser)tbp).getRoot(), chk.length());
+	              }
+	            }
+	          }
+	          vertex.getInteractionsModel().parseFunctions();
+	          for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
+	            value = (String)enu_values.nextElement();
+	            for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
+	              exp = (String)enu_exp.nextElement();
+	              chk = (String)enu_exp.nextElement();
+	              vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
+	              vertex.getInteractionsModel().parseFunctions();
+	            }
+	          }
           }
         }
       }

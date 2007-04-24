@@ -427,7 +427,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
       for (int i = 0; i < root.getChildCount(); i++) {
         val = (GsTreeValue)root.getChild(i);
-        out.write("\t\t\t<value val=\"" + val.getValue() + "\">\n");
+        out.openTag("value");
+        out.addAttr("val", ""+val.getValue());
         for (int j = 0; j < val.getChildCount(); j++) {
           exp = (GsTreeExpression)val.getChild(j);
           chk = "";
@@ -438,9 +439,13 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
             else
               chk += "0";
           }
-          out.write("\t\t\t\t<exp str=\"" + exp.toString().replaceAll("&", "AND") + "\" chk=\"" + chk + "\"/>\n");
+          //out.write("\t\t\t\t<exp str=\"" + exp.toString().replaceAll("&", "&amp;") + "\" chk=\"" + chk + "\"/>\n");
+          out.openTag("exp");
+          out.addAttr("str", exp.toString());
+          out.addAttr("chk", chk);
+          out.closeTag();
         }
-        out.write("\t\t\t</value>\n");
+        out.closeTag();
       }
     }
 }
