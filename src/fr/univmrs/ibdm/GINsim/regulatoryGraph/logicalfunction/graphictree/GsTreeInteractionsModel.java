@@ -175,20 +175,20 @@ public class GsTreeInteractionsModel implements TreeModel {
           if (func.isSelected()) {
             if (((Integer) h.get(func.toString())).intValue() == 123456) {
               func.setError(true);
-              func.setForeround(Color.red);
+              func.setForeground(Color.red);
             }
             else if (((Integer) h.get(func.toString())).intValue() < 0) {
               func.setError(true);
-              func.setForeround(Color.magenta);
+              func.setForeground(Color.magenta);
             }
             else {
               func.setError(false);
-              func.setForeround(Color.black);
+              func.setForeground(Color.black);
             }
           }
           else {
             func.setError(false);
-            func.setForeround(Color.black);
+            func.setForeground(Color.black);
           }
         }
       }
