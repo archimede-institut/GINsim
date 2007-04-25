@@ -27,7 +27,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanPar
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeElement;
 
 /**
  * parses a ginml regulatory graph.
