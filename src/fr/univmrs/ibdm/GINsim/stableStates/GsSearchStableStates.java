@@ -25,6 +25,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 class GsSearchStableStates extends Thread {
 
 	private GsRegulatoryGraph regGraph;
+	private GsStableStateUI ui;
 	Vector nodeOrder;
 	OmddNode[] t_param;
 	OmddNode dd_stable;
@@ -38,10 +39,11 @@ class GsSearchStableStates extends Thread {
 	int bestIndex, bestValue;
 	int nbgene, nbremain;
 
-	GsSearchStableStates(GsGraph regGraph, GsRegulatoryMutantDef mutant) {
+	GsSearchStableStates(GsGraph regGraph, GsRegulatoryMutantDef mutant, GsStableStateUI ui) {
 		this.regGraph = (GsRegulatoryGraph)regGraph;
 		this.nodeOrder = regGraph.getNodeOrder();
 		this.mutant = mutant;
+		this.ui = ui;
 	}
 
 	public void run() {
@@ -288,6 +290,10 @@ class GsSearchStableStates extends Thread {
 	
 	// show stable state
 	private void showStableState (OmddNode stable) {
+		if (ui != null) {
+			ui.setResult(stable);
+			return;
+		}
 		int[] state = new int[nodeOrder.size()];
 		for (int i=0 ; i<state.length ; i++) {
 			state[i] = -1;
@@ -301,7 +307,7 @@ class GsSearchStableStates extends Thread {
 				// we have a stable state:
 				System.out.print("stable: ");
 				for (int i=0 ; i<state.length ; i++) {
-					System.out.print(state[i]+" ");
+					System.out.print((state[i] != -1 ? ""+state[i] : "*") +" ");
 				}
 				System.out.println();
 			}
