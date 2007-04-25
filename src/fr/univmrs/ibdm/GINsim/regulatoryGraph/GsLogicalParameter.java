@@ -360,8 +360,10 @@ public class GsLogicalParameter implements GsXMLize {
     }
     
     public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
-		out.write("\t\t\t<parameter idActiveInteractions=\"");
-		out.write(stringEdges() + "\" val=\"" + value + "\"/>\n");
+    	out.openTag("parameter");
+    	out.addAttr("idActiveInteractions", stringEdges());
+    	out.addAttr("val", ""+value);
+    	out.closeTag();
 	}
 	
 	private String stringEdges() {

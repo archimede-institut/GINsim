@@ -29,6 +29,7 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
     private static final int PNML = 4;
     private static final int SMV = 5;
     private static final int SBML = 6;
+    private static final int GNA = 7;
     
 	public void registerPlugin() {
 		GsGraphManager.registerExportProvider(this);
@@ -39,6 +40,7 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
             if (graph instanceof GsRegulatoryGraph) {
               return new GsPluggableActionDescriptor[] {
                       new GsPluggableActionDescriptor("STR_SMV", "STR_SMV_descr", null, this, ACTION_EXPORT, SMV),
+                      new GsPluggableActionDescriptor("STR_GNA", "STR_GNA_descr", null, this, ACTION_EXPORT, GNA),
                       new GsPluggableActionDescriptor("STR_INA", "STR_INA_descr", null, this, ACTION_EXPORT, INA),
                       new GsPluggableActionDescriptor("STR_PNML", "STR_PNML_descr", null, this, ACTION_EXPORT, PNML),
                       new GsPluggableActionDescriptor("STR_SBML", "STR_SBML_descr", null, this, ACTION_EXPORT, SBML),
@@ -89,6 +91,10 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 ffilter.setExtensionList(new String[] {"sbml"}, "SBML files");
                 extension = ".sbml";
                 break;
+            case GNA:
+                ffilter.setExtensionList(new String[] {"gna"}, "GNA files");
+                extension = ".GNA";
+                break;
             case SMV:
                 config = new GsSMVexportConfig((GsRegulatoryGraph)graph);
                 GsSMVExportConfigPanel panel = new GsSMVExportConfigPanel(true, false);
@@ -131,6 +137,9 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 break;
             case SMV:
                 GsSMVExport.encode((GsRegulatoryGraph) graph, filename, config);
+                break;
+            case GNA:
+                GsGNAExport.encode((GsRegulatoryGraph) graph, filename);
                 break;
 		}
 	}

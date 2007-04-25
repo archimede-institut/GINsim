@@ -35,7 +35,7 @@ public abstract class GsTreeElement implements Comparable {
       return childs.size();
     return 0;
   }
-  public void setForeround(Color c) {
+  public void setForeground(Color c) {
     foreground = c;
   }
   public Color getForeground() {
