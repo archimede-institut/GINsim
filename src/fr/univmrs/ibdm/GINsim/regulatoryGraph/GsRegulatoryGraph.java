@@ -600,6 +600,7 @@ public final class GsRegulatoryGraph extends GsGraph {
         	GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
             t_tree[i] = vertex.getTreeParameters(this);
             if (!focal) {
+            	// FIXME: does non-focal tree works correctly ??????
             	t_tree[i] = t_tree[i].buildNonFocalTree(i, vertex.getMaxValue()+1).reduce();
             } else {
             	t_tree[i] = t_tree[i].reduce();

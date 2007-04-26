@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -118,6 +119,8 @@ abstract public class GsStackDialog extends GsDialog {
     private javax.swing.JButton getBcancel() {
         if(bcancel == null) {
         	bcancel = new javax.swing.JButton(Translator.getString("STR_cancel"));
+        	// TODO: get some nice default mnemonices everywhere 
+        	bcancel.getModel().setMnemonic(KeyEvent.VK_N);
         	bcancel.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     cancel();
@@ -129,6 +132,7 @@ abstract public class GsStackDialog extends GsDialog {
     private javax.swing.JButton getBclose() {
         if(bclose == null) {
         	bclose = new javax.swing.JButton(Translator.getString("STR_close"));
+        	bclose.getModel().setMnemonic(KeyEvent.VK_E);
         	bclose.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                 	refreshMain();
@@ -146,6 +150,7 @@ abstract public class GsStackDialog extends GsDialog {
     private javax.swing.JButton getBrun() {
         if(brun == null) {
         	brun = new javax.swing.JButton(Translator.getString("STR_run"));
+        	brun.getModel().setMnemonic(KeyEvent.VK_R);
         	brun.setActionCommand("run");
         	brun.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {

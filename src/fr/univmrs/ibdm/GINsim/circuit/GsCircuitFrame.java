@@ -35,7 +35,9 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.ui.GsMutantCombo;
 
 /**
  * configuration/status frame for circuit search/analyse
@@ -68,6 +70,10 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     private JTextArea jta = null;
     private GsCircuitSearchStoreConfig config = null;
 
+	private GsMutantCombo comboMutant;
+	private JPanel mutantPanel;
+
+    
     /**
      * This is the default constructor
      * 
@@ -96,6 +102,15 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             }
         });
     }
+	private JPanel getMutantPanel() {
+		if (mutantPanel == null) {
+			mutantPanel = new JPanel();
+			mutantPanel.add(new JLabel(Translator.getString("STR_mutants")));
+			comboMutant = new GsMutantCombo(graph);
+			mutantPanel.add(comboMutant);
+		}
+		return mutantPanel;
+	}
 
     /**
      * close the circuit search/analyse dialog. stop running algo and close
@@ -131,7 +146,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             jContentPane.add(getConfigPanel(), c);
             c = new GridBagConstraints();
             c.gridx = 0;
-            c.gridy = 0;
+            c.gridy = 1;
             c.gridwidth = 3;
             c.anchor = GridBagConstraints.WEST;
             c.fill = GridBagConstraints.HORIZONTAL;
@@ -237,13 +252,11 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
         case STATUS_SEARCH_CIRCUIT:
             break;
         case STATUS_SHOW_CIRCUIT:
+        case STATUS_SHOW_RESULT:
             if (configDialog != null) {
                 configDialog.setVisible(false);
             }
             runAnalyse();
-            break;
-        case STATUS_SHOW_RESULT:
-            cancel();
             break;
         }
     }
@@ -270,10 +283,6 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             this.status = status;
             setProgressText(v_circuit.size() + " circuit found:");
             brun.setText(Translator.getString("STR_circuit_analyse"));
-            break;
-        case STATUS_SHOW_RESULT:
-            this.status = status;
-            brun.setText(Translator.getString("STR_close"));
             break;
         }
     }
@@ -460,12 +469,18 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
         if (tree == null) {
             GridBagConstraints s_sp = new GridBagConstraints();
             s_sp.gridx = 0;
-            s_sp.gridy = 1;
+            s_sp.gridy = 2;
             s_sp.weightx = 1;
             s_sp.weighty = 1;
             s_sp.gridwidth = 2;
             s_sp.fill = GridBagConstraints.BOTH;
             jContentPane.add(getSplitPane(), s_sp);
+            s_sp = new GridBagConstraints();
+            s_sp.gridx = 0;
+            s_sp.gridy = 0;
+            s_sp.gridwidth = 2;
+            s_sp.fill = GridBagConstraints.HORIZONTAL;
+            jContentPane.add(getMutantPanel(), s_sp);
             treemodel = new GsCircuitTreeModel(v_circuit);
             tree = new JTree(treemodel);
 
@@ -480,7 +495,6 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
                 }
             });
         }
-        this.setSize(this.getWidth(), 400);
     }
 
     protected void showInfo(Object selected) {
@@ -566,31 +580,25 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     }
 
     protected void runAnalyse() {
-        treemodel.analyse(graph, config);
+    	brun.setEnabled(false);
+        treemodel.analyse(graph, config, comboMutant.getMutant());
+        brun.setEnabled(true);
 
-        updateStatus(STATUS_SHOW_RESULT);
-        GridBagConstraints s_sp = new GridBagConstraints();
-        s_sp.gridx = 0;
-        s_sp.gridy = 2;
-        s_sp.weightx = 1;
-        s_sp.gridwidth = 2;
-        s_sp.fill = GridBagConstraints.HORIZONTAL;
-        GridBagConstraints s_sp2 = new GridBagConstraints();
-        s_sp2.gridx = 0;
-        s_sp2.gridy = 3;
-        s_sp2.weightx = 1;
-        s_sp2.weighty = 1;
-        s_sp2.gridwidth = 2;
-        s_sp2.fill = GridBagConstraints.BOTH;
-
-        jContentPane.add(getInfoPanel(), s_sp);
-        getSp2().setViewportView(getJTextArea());
-
-        sp2.setSize(sp2.getWidth(), 80);
-        getSplitPane().setBottomComponent(sp2);
-        int h = splitPane.getHeight();
-        splitPane.setDividerLocation(h + 100);
-        setSize(getWidth(), Math.max(h + 50, Math.min(h + 250, 500)));
+        if (sp2 == null) {
+//	        GridBagConstraints c = new GridBagConstraints();
+//	        c.gridx = 0;
+//	        c.gridy = 2;
+//	        c.weightx = 1;
+//	        c.gridwidth = 2;
+//	        c.fill = GridBagConstraints.HORIZONTAL;
+//	        jContentPane.add(getInfoPanel(), c);
+	        getSp2().setViewportView(getJTextArea());
+	        sp2.setSize(sp2.getWidth(), 80);
+	        getSplitPane().setBottomComponent(sp2);
+	        int h = splitPane.getHeight();
+	        splitPane.setDividerLocation(h - 100);
+        }
+        
         treemodel.reload(this);
     }
 
@@ -807,6 +815,28 @@ class GsCircuitDescr {
         }
         return 0;
     }
+
+	public void clear() {
+		if (v_all != null) {
+			v_all.clear();
+		}
+    	if (v_functionnal != null) {
+    		v_functionnal.clear();
+    		v_functionnal = null;
+    	}
+    	if (v_positive != null) {
+    		v_positive.clear();
+    		v_positive = null;
+    	}
+    	if (v_negative != null) {
+    		v_negative.clear();
+    		v_negative = null;
+    	}
+    	if (v_dual != null) {
+    		v_dual.clear();
+    		v_dual = null;
+    	}
+	}
 }
 
 class GsCircuitTreeModel implements TreeModel {
@@ -828,12 +858,23 @@ class GsCircuitTreeModel implements TreeModel {
         m_parent.put(s_root, v_root);
     }
 
-    protected void analyse(GsRegulatoryGraph graph, GsCircuitSearchStoreConfig config) {
-        GsCircuitAlgo circuitAlgo = new GsCircuitAlgo(graph, config == null ? null : config.t_constraint);
+    protected void analyse(GsRegulatoryGraph graph, GsCircuitSearchStoreConfig config, GsRegulatoryMutantDef mutant) {
+        GsCircuitAlgo circuitAlgo = new GsCircuitAlgo(graph, config == null ? null : config.t_constraint, mutant);
         Vector v_functionnal = new Vector();
         Vector v_positive = new Vector();
         Vector v_negative = new Vector();
         Vector v_dual = new Vector();
+
+        v_root.clear();
+        v_root.add("all");
+        m_parent.clear();
+        m_parent.put("all", v_circuit);
+        m_parent.put(s_root, v_root);
+        for (int i = 0; i < v_circuit.size(); i++) {
+        	GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).circuit;
+        	cdescr.clear();
+        }
+        
         for (int i = 0; i < v_circuit.size(); i++) {
             GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).circuit;
             cdescr.check(circuitAlgo, graph.getNodeOrder());

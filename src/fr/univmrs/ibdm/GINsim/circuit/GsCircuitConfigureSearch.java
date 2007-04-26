@@ -47,7 +47,6 @@ public class GsCircuitConfigureSearch extends JPanel {
         this.nodeOrder = nodeOrder;
         this.config = config;
         smodel = new GsCircuitSpinModel(config, frame);
-        setSize(400,200);
         initialize();
         setVisible(true);
     }

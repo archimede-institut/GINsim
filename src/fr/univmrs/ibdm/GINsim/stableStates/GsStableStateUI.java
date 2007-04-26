@@ -62,7 +62,6 @@ public class GsStableStateUI extends GsDialog {
 		if (mutantPanel == null) {
 			mutantPanel = new JPanel();
 			mutantPanel.add(new JLabel(Translator.getString("STR_mutants")));
-
 			comboMutant = new GsMutantCombo(graph);
 			mutantPanel.add(comboMutant);
 		}

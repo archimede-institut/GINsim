@@ -8,6 +8,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
@@ -43,19 +44,27 @@ public class GsCircuitAlgo {
     private short[][] t_constraint;
     
     // some context data
-    Vector v_interactions;
     GsRegulatoryVertex target;    
     GsRegulatoryMultiEdge me;
     GsLogicalParameter gsi;
+    
     GsRegulatoryGraph graph;
+
+    Vector nodeOrder;
+    OmddNode[] t_parameters;
     
     /**
      * @param graph the studied graph
      * @param t_constraint constraints on the nodes
      */
-    public GsCircuitAlgo(GsRegulatoryGraph graph, short[][] t_constraint) {
-        this.graph = graph;
+    public GsCircuitAlgo(GsRegulatoryGraph graph, short[][] t_constraint, GsRegulatoryMutantDef mutant) {
         this.t_constraint = t_constraint;
+        t_parameters = graph.getAllTrees(true);
+        this.nodeOrder = graph.getNodeOrder();
+        this.graph = graph;
+        if (mutant != null) {
+        	mutant.apply(t_parameters, graph.getNodeOrder(), true);
+        }
     }
     
     /**
@@ -96,7 +105,6 @@ public class GsCircuitAlgo {
         
         GsRegulatoryVertex source = me.getSource();
         target = me.getTarget();
-        v_interactions = target.getV_logicalParameters();
 
         short min = me.getMin(ei.index);
         short max = me.getMax(ei.index);
@@ -149,8 +157,8 @@ public class GsCircuitAlgo {
             }
         }
         
-        // get the context tree
-        OmsddNode node = getContextFromParameters(target.getTreeParameters(graph), graph.getNodeOrder().indexOf(source), min, t_circuit, nextmin, nextmax);
+        OmsddNode node = getContextFromParameters(t_parameters[nodeOrder.indexOf(target)], nodeOrder.indexOf(source), min, t_circuit, nextmin, nextmax);
+
         node = checkConstraint(node).reduce();
         // cache the result
         subReport sr = new subReport();
