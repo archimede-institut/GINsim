@@ -3,10 +3,12 @@ package fr.univmrs.ibdm.GINsim.stableStates;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -17,9 +19,9 @@ public class GsStableStateUI extends GsStackDialog {
 	private static final long serialVersionUID = -3605525202652679586L;
 	
 	GsRegulatoryGraph graph;
+	stableTableModel tableModel;
 	MutantSelectionPanel mutantPanel;
 	JPanel buttonPanel;
-	JTextArea l_result;
 	
 	public GsStableStateUI(GsRegulatoryGraph graph) {
 		super(graph.getGraphManager().getMainFrame(), "display.stableStates", 200, 100);
@@ -39,10 +41,9 @@ public class GsStableStateUI extends GsStackDialog {
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
 		c.weighty = 1;
-		l_result = new JTextArea();
-		l_result.setEditable(false);
 		JScrollPane sp = new JScrollPane();
-		sp.setViewportView(l_result);
+		tableModel = new stableTableModel(graph.getNodeOrder());
+		sp.setViewportView(new JTable(tableModel));
 		panel.add(sp, c);
 		
 		setMainPanel(panel);
@@ -54,38 +55,68 @@ public class GsStableStateUI extends GsStackDialog {
 	}
 	
 	protected void setResult(OmddNode stable) {
-		int[] state = new int[graph.getNodeOrder().size()];
-		for (int i=0 ; i<state.length ; i++) {
-			state[i] = -1;
-		}
-		StringBuffer s = new StringBuffer();
-		findStableState(state, stable, s);
-		l_result.setText(s.toString());
+		tableModel.setResult(stable);
 		setRunning(false);
 	}
 	
-	private void findStableState(int[] state, OmddNode stable, StringBuffer s) {
+	public void doClose() {
+		setVisible(false);
+		dispose();
+	}
+}
+
+class stableTableModel extends AbstractTableModel {
+	private static final long serialVersionUID = 3483674324331745743L;
+	
+	Vector nodeOrder;
+	Vector v_stable;
+	
+	public stableTableModel(Vector nodeOrder) {
+		this.nodeOrder = nodeOrder;
+		v_stable = new Vector();
+	}
+	
+	public int getColumnCount() {
+		return nodeOrder.size();
+	}
+
+	public int getRowCount() {
+		return v_stable.size();
+	}
+
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		int[] t_state = (int[])v_stable.get(rowIndex);
+		if (t_state[columnIndex] == -1) {
+			return "*";
+		}
+		return ""+t_state[columnIndex];
+	}
+
+	public void setResult(OmddNode stable) {
+		v_stable.clear();
+		int[] state = new int[nodeOrder.size()];
+		for (int i=0 ; i<state.length ; i++) {
+			state[i] = -1;
+		}
+		findStableState(state, stable);
+		fireTableDataChanged();
+	}
+	
+	public String getColumnName(int column) {
+		return nodeOrder.get(column).toString();
+	}
+
+	private void findStableState(int[] state, OmddNode stable) {
 		if (stable.next == null) {
 			if (stable.value == 1) {
-				// we have a stable state:
-				s.append("stable: ");
-				for (int i=0 ; i<state.length ; i++) {
-					s.append((state[i] != -1 ? ""+state[i] : "*") +" ");
-				}
-				s.append("\n");
+				v_stable.add(state.clone());
 			}
 			return;
 		}
 		for (int i=0 ; i<stable.next.length ; i++) {
 			state[stable.level] = i;
-			findStableState(state, stable.next[i], s);
+			findStableState(state, stable.next[i]);
 		}
 		state[stable.level] = -1;
-	}
-
-	
-	public void doClose() {
-		setVisible(false);
-		dispose();
 	}
 }

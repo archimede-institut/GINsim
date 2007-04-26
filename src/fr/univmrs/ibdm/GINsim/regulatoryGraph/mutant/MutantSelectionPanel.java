@@ -1,5 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -24,9 +27,15 @@ public class MutantSelectionPanel extends JPanel {
 		this.graph = graph;
 		
 		setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_mutants")));
-
+		setLayout(new GridBagLayout());
 		comboMutant = new GsMutantCombo(graph);
-		add(comboMutant);
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
+		comboMutant.setSize(1000, comboMutant.getHeight());
+		add(comboMutant, c);
 		
 		if (dialog != null) {
 	        JButton buttonConfigMutants = new JButton(Translator.getString("STR_configure"));
@@ -35,6 +44,10 @@ public class MutantSelectionPanel extends JPanel {
 	            	configure();
 	            }
 	        });
+	        c = new GridBagConstraints();
+			c.gridx = 1;
+			c.gridy = 0;
+			add(comboMutant, c);
 	        add(buttonConfigMutants);
 		}
 	}
