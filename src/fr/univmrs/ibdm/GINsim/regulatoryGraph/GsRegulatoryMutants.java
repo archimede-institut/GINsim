@@ -35,10 +35,7 @@ public class GsRegulatoryMutants extends GsListAbstract implements GsGraphListen
      * @return a panel to configure mutants
      */
     public static JSplitPane getMutantConfigPanel(GsRegulatoryGraph graph) {
-        GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
-        if (mutants == null) {
-            mutants = new GsRegulatoryMutants(graph);
-        }
+        GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
         MutantPanel mpanel = new MutantPanel();
         mpanel.setEditedObject(mutants, graph.getNodeOrder());
         return mpanel;

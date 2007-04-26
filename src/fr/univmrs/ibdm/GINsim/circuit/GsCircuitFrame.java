@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,6 +37,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.ui.GsMutantCombo;
 
@@ -108,6 +110,15 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
 			mutantPanel.add(new JLabel(Translator.getString("STR_mutants")));
 			comboMutant = new GsMutantCombo(graph);
 			mutantPanel.add(comboMutant);
+			
+            JButton buttonConfigMutants = new JButton(Translator.getString("STR_configure"));
+            buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() { 
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(graph));
+                    comboMutant.refresh(graph);
+                }
+            });
+            mutantPanel.add(buttonConfigMutants);
 		}
 		return mutantPanel;
 	}
