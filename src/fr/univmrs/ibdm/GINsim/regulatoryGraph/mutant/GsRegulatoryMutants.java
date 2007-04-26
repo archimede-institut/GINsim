@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.regulatoryGraph;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -23,6 +23,10 @@ import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsAnnotationPanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.

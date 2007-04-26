@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 
@@ -20,7 +20,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
     String name = "new_parameter";
     Vector nodeOrder;
     
-    int mode;
+    int mode = Simulation.SEARCH_ASYNCHRONE_DF;
 
     Vector v_class;
     Map m_elt;

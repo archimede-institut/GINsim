@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,10 +35,9 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.ui.GsMutantCombo;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 
 /**
  * configuration/status frame for circuit search/analyse
@@ -72,8 +70,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     private JTextArea jta = null;
     private GsCircuitSearchStoreConfig config = null;
 
-	private GsMutantCombo comboMutant;
-	private JPanel mutantPanel;
+	private MutantSelectionPanel mutantPanel;
 
     
     /**
@@ -106,19 +103,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     }
 	private JPanel getMutantPanel() {
 		if (mutantPanel == null) {
-			mutantPanel = new JPanel();
-			mutantPanel.add(new JLabel(Translator.getString("STR_mutants")));
-			comboMutant = new GsMutantCombo(graph);
-			mutantPanel.add(comboMutant);
-			
-            JButton buttonConfigMutants = new JButton(Translator.getString("STR_configure"));
-            buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() { 
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(graph));
-                    comboMutant.refresh(graph);
-                }
-            });
-            mutantPanel.add(buttonConfigMutants);
+			mutantPanel = new MutantSelectionPanel(this, graph);
 		}
 		return mutantPanel;
 	}
@@ -592,17 +577,10 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
 
     protected void runAnalyse() {
     	brun.setEnabled(false);
-        treemodel.analyse(graph, config, comboMutant.getMutant());
+        treemodel.analyse(graph, config, mutantPanel.getMutant());
         brun.setEnabled(true);
 
         if (sp2 == null) {
-//	        GridBagConstraints c = new GridBagConstraints();
-//	        c.gridx = 0;
-//	        c.gridy = 2;
-//	        c.weightx = 1;
-//	        c.gridwidth = 2;
-//	        c.fill = GridBagConstraints.HORIZONTAL;
-//	        jContentPane.add(getInfoPanel(), c);
 	        getSp2().setViewportView(getJTextArea());
 	        sp2.setSize(sp2.getWidth(), 80);
 	        getSplitPane().setBottomComponent(sp2);

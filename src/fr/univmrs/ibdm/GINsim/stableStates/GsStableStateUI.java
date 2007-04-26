@@ -3,42 +3,34 @@ package fr.univmrs.ibdm.GINsim.stableStates;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.ui.GsMutantCombo;
-import fr.univmrs.ibdm.GINsim.util.widget.GsDialog;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 
-public class GsStableStateUI extends GsDialog {
+public class GsStableStateUI extends GsStackDialog {
 	private static final long serialVersionUID = -3605525202652679586L;
 	
 	GsRegulatoryGraph graph;
-	GsMutantCombo comboMutant;
-	JPanel mutantPanel;
+	MutantSelectionPanel mutantPanel;
 	JPanel buttonPanel;
-	JButton butRun;
-	JButton butClose;
 	JTextArea l_result;
 	
 	public GsStableStateUI(GsRegulatoryGraph graph) {
 		super(graph.getGraphManager().getMainFrame(), "display.stableStates", 200, 100);
 		this.graph = graph;
-		Container panel = getContentPane();
+		Container panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		panel.add(getMutantPanel(), c);
+		panel.add(new MutantSelectionPanel(this, graph), c);
 
 		c = new GridBagConstraints();
 		c.gridx = 0;
@@ -51,50 +43,13 @@ public class GsStableStateUI extends GsDialog {
 		JScrollPane sp = new JScrollPane();
 		sp.setViewportView(l_result);
 		panel.add(sp, c);
-
-		c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 2;
-		panel.add(getButtonPanel(), c);
+		
+		setMainPanel(panel);
 	}
 	
-	private JPanel getMutantPanel() {
-		if (mutantPanel == null) {
-			mutantPanel = new JPanel();
-			mutantPanel.add(new JLabel(Translator.getString("STR_mutants")));
-			comboMutant = new GsMutantCombo(graph);
-			mutantPanel.add(comboMutant);
-		}
-		return mutantPanel;
-	}
-	
-	private JPanel getButtonPanel() {
-		if (buttonPanel == null) {
-			buttonPanel = new JPanel();
-
-			butClose = new JButton(Translator.getString("STR_close"));
-			buttonPanel.add(butClose);
-			butClose.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					doClose();
-				}
-			});
-
-			butRun = new JButton(Translator.getString("STR_run"));
-			buttonPanel.add(butRun);
-			butRun.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					doStart();
-				}
-			});
-		}
-		return buttonPanel;
-	}
-	
-	protected void doStart() {
-		butRun.setEnabled(false);
-		butClose.setEnabled(false);
-		new GsSearchStableStates(graph, comboMutant.getMutant(), this).start();
+	protected void run() {
+		setRunning(true);
+		new GsSearchStableStates(graph, mutantPanel.getMutant(), this).start();
 	}
 	
 	protected void setResult(OmddNode stable) {
@@ -105,8 +60,7 @@ public class GsStableStateUI extends GsDialog {
 		StringBuffer s = new StringBuffer();
 		findStableState(state, stable, s);
 		l_result.setText(s.toString());
-		butRun.setEnabled(true);
-		butClose.setEnabled(true);
+		setRunning(false);
 	}
 	
 	private void findStableState(int[] state, OmddNode stable, StringBuffer s) {

@@ -14,7 +14,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsList;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 
 public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedObjectManager {

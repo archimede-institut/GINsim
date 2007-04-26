@@ -197,4 +197,8 @@ abstract public class GsStackDialog extends GsDialog {
     protected void cancel() {
     	setVisible(false);
     }
+    
+    protected void setRunning(boolean b) {
+    	brun.setEnabled(b==false);
+    }
 }

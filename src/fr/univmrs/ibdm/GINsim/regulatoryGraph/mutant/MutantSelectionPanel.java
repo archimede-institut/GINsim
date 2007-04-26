@@ -1,18 +1,60 @@
-package fr.univmrs.ibdm.GINsim.regulatoryGraph.ui;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutantDef;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
 
-/**
- * offers a combo box to select a mutant
- */
-public class GsMutantCombo extends JComboBox {
+public class MutantSelectionPanel extends JPanel {
+	private static final long serialVersionUID = 1213902700181873169L;
+	
+	GsStackDialog dialog;
+	GsRegulatoryGraph graph;
+	GsMutantCombo comboMutant;
+	
+	public MutantSelectionPanel(GsStackDialog dialog, GsRegulatoryGraph graph) {
+		this.dialog = dialog;
+		this.graph = graph;
+		
+		setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_mutants")));
+
+		comboMutant = new GsMutantCombo(graph);
+		add(comboMutant);
+		
+		if (dialog != null) {
+	        JButton buttonConfigMutants = new JButton(Translator.getString("STR_configure"));
+	        buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() {
+	            public void actionPerformed(java.awt.event.ActionEvent e) {
+	            	configure();
+	            }
+	        });
+	        add(buttonConfigMutants);
+		}
+	}
+	
+	protected void configure() {
+        dialog.addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(graph));
+        comboMutant.refresh(graph);
+	}
+	
+	public GsRegulatoryMutantDef getMutant() {
+		return comboMutant.getMutant();
+	}
+
+	public void setSelectedItem(GsRegulatoryMutantDef mutant) {
+		comboMutant.setSelectedItem(mutant);
+	}
+}
+
+
+class GsMutantCombo extends JComboBox {
 	private static final long serialVersionUID = -7848606073222946763L;
 
 	GsMutantModel model;

@@ -1,8 +1,10 @@
-package fr.univmrs.ibdm.GINsim.regulatoryGraph;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 
 import java.io.IOException;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 
 class GsRegulatoryMutantChange {

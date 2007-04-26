@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.regulatoryGraph;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -6,6 +6,9 @@ import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 
 /**

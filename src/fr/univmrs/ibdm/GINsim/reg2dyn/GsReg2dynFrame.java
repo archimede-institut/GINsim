@@ -9,11 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,8 +34,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.ui.GsMutantCombo;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
 
 /**
@@ -47,7 +45,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     
     GsSimulationParameterList paramList;
     GsSimulationParameters currentParameter;
-    GsMutantCombo comboMutant;
+    MutantSelectionPanel mutantPanel;
     GsListPanel listPanel;
     Simulation sim;
     boolean isrunning = false;
@@ -67,7 +65,6 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
 
     private JTextField textMaxDepth = null;
     private JTextField textMaxNodes = null;
-    private JButton buttonConfigMutants = null;
     private JButton buttonCfgPriorityClass;
     
     private JScrollPane jScrollPane = null;
@@ -123,6 +120,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             // the simulation strategy part
             JPanel panel = new JPanel();
             panel.setLayout(new GridBagLayout());
+            panel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_reg2dyn_mode")));
             GridBagConstraints c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 0;
@@ -136,38 +134,32 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             c.gridx = 0;
             c.gridy = 0;
             c.anchor = GridBagConstraints.WEST;
-            c.insets = topInset;
-            panel.add(new JLabel(Translator.getString("STR_reg2dyn_mode")), c);
+            panel.add(getRadioSynchrone(), c);
             c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 1;
             c.anchor = GridBagConstraints.WEST;
-            panel.add(getRadioSynchrone(), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 2;
-            c.anchor = GridBagConstraints.WEST;
             panel.add(getRadioAsynchrone(), c);
             c = new GridBagConstraints();
             c.gridx = 0;
-            c.gridy = 3;
+            c.gridy = 2;
             c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
             panel.add(getRadioBreadthFirst(), c);
             c = new GridBagConstraints();
             c.gridx = 0;
-            c.gridy = 4;
+            c.gridy = 3;
             c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
             panel.add(getRadioDephtFirst(), c);
             c = new GridBagConstraints();
             c.gridx = 0;
-            c.gridy = 5;
+            c.gridy = 4;
             c.anchor = GridBagConstraints.WEST;
             panel.add(getRadioPriorityClass(), c);
             c = new GridBagConstraints();
             c.gridx = 0;
-            c.gridy = 6;
+            c.gridy = 5;
             c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
             panel.add(getButtonCfgPriorityClass(), c);
@@ -175,6 +167,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             // the top-right part with number limit
             panel = new JPanel();
             panel.setLayout(new GridBagLayout());
+            panel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_sizeLimits")));
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 0;
@@ -186,17 +179,11 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             c.gridx = 0;
             c.gridy = 0;
             c.anchor = GridBagConstraints.WEST;
-            c.insets = topInset;
-            panel.add(new JLabel(Translator.getString("STR_sizeLimits")), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 1;
-            c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
             panel.add(new JLabel(Translator.getString("STR_maximum_depth")), c);
             c = new GridBagConstraints();
             c.gridx = 1;
-            c.gridy = 1;
+            c.gridy = 0;
             c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
             c.fill = GridBagConstraints.HORIZONTAL;
@@ -204,13 +191,13 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             panel.add(getTextMaxDepth(), c);
             c = new GridBagConstraints();
             c.gridx = 0;
-            c.gridy = 2;
+            c.gridy = 1;
             c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
             panel.add(new JLabel(Translator.getString("STR_maximum_nodes")), c);
             c = new GridBagConstraints();
             c.gridx = 1;
-            c.gridy = 2;
+            c.gridy = 1;
             c.anchor = GridBagConstraints.WEST;
             c.insets = indentInset;
             c.fill = GridBagConstraints.HORIZONTAL;
@@ -219,41 +206,13 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             
             
             // bottom-right part with mutants
-            panel = new JPanel();
-            panel.setLayout(new GridBagLayout());
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 1;
             c.fill = GridBagConstraints.BOTH;
             c.weightx = 0.6;
-            mainPanel.add(panel, c);
-
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.anchor = GridBagConstraints.WEST;
-            c.insets = new Insets(20, 30, 0, 0);
-            panel.add(new JLabel(Translator.getString("STR_mutants")), c);
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 1;
-            c.anchor = GridBagConstraints.EAST;
-            panel.add(getButtonConfigMutants(), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 1;
-            c.gridwidth = 1;
-            c.weightx = 1;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.anchor = GridBagConstraints.WEST;
-            c.insets = indentInset;
-            comboMutant = new GsMutantCombo(paramList.graph);
-            comboMutant.addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent arg0) {
-					mutantChanged();
-				}
-			});
-            panel.add(comboMutant, c);
+            mutantPanel = new MutantSelectionPanel(this, paramList.graph);
+            mainPanel.add(mutantPanel, c);
             
             // initial state
             panel = new JPanel();
@@ -394,7 +353,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
 
         tableInitStates.setEnabled(false);
         brun.setEnabled(false);
-        buttonConfigMutants.setEnabled(false);
+        mutantPanel.setEnabled(false);
         buttonDelStateRow.setEnabled(false);
         textMaxDepth.setEnabled(false);
         textMaxNodes.setEnabled(false);
@@ -651,34 +610,21 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         addTempPanel(new GsReg2dynPriorityClassConfig(paramList.graph.getNodeOrder(), currentParameter));
     }
     
-    private JButton getButtonConfigMutants() {
-        if (buttonConfigMutants == null) {
-            buttonConfigMutants = new JButton(Translator.getString("STR_configure"));
-            buttonConfigMutants.addActionListener(new java.awt.event.ActionListener() { 
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(paramList.graph));
-                    comboMutant.refresh(paramList.graph);
-                }
-            });
-        }
-        return buttonConfigMutants;
-    }
-
     public void valueChanged(ListSelectionEvent e) {
         int[] t_sel = listPanel.getSelection();
         if (t_sel.length != 1) {
             currentParameter = null;
         } else {
             currentParameter = (GsSimulationParameters)paramList.getElement(t_sel[0]);
-            comboMutant.setSelectedItem(currentParameter.mutant);
+            mutantPanel.setSelectedItem(currentParameter.mutant);
             model.setParam(currentParameter);
         }
         refresh();
     }
     
     protected void mutantChanged() {
-    	if (currentParameter != null && comboMutant != null) {
-    		currentParameter.mutant = comboMutant.getMutant();
+    	if (currentParameter != null && mutantPanel != null) {
+    		currentParameter.mutant = mutantPanel.getMutant();
     	}
     }
     
@@ -693,7 +639,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             radioDephtFirst.setEnabled(false);
             buttonCfgPriorityClass.setEnabled(false);
 
-            buttonConfigMutants.setEnabled(false);
+            mutantPanel.setEnabled(false);
             textMaxDepth.setEnabled(false);
             textMaxNodes.setEnabled(false);
             tableInitStates.setEnabled(false);
@@ -731,7 +677,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
                 buttonCfgPriorityClass.setEnabled(true);
                 break;
             }
-            buttonConfigMutants.setEnabled(true);
+            mutantPanel.setEnabled(true);
             textMaxDepth.setText(currentParameter.maxdepth > 0 ? ""+currentParameter.maxdepth : "");
             textMaxNodes.setText(currentParameter.maxnodes > 0 ? ""+currentParameter.maxnodes : "");
             textMaxDepth.setEnabled(true);

@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMutants;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 
 /**
  * Model checker implementations should implement this interface.

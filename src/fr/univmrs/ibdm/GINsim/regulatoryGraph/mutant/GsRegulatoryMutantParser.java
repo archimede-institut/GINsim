@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.regulatoryGraph;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 
 import java.util.Vector;
 
@@ -6,6 +6,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 
 /**
