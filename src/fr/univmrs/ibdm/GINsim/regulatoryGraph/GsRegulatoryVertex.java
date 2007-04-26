@@ -301,7 +301,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 			out.openTag("node");
 	    	out.addAttr("id", getId());
 			if (name.length()>0) {
-			    out.write(" name=\"" + name + "\"");
 			    out.addAttr("name", name);
 			}
 		    out.addAttr("basevalue", ""+baseValue);

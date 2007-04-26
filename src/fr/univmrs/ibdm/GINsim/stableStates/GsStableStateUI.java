@@ -7,9 +7,9 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
+import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
@@ -43,7 +43,11 @@ public class GsStableStateUI extends GsStackDialog {
 		c.weighty = 1;
 		JScrollPane sp = new JScrollPane();
 		tableModel = new stableTableModel(graph.getNodeOrder());
-		sp.setViewportView(new JTable(tableModel));
+
+        GsJTable tableResult = new GsJTable(tableModel);
+        tableResult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tableResult.getTableHeader().setReorderingAllowed(false);
+		sp.setViewportView(tableResult);
 		panel.add(sp, c);
 		
 		setMainPanel(panel);
