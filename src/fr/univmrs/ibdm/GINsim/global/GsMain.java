@@ -24,8 +24,8 @@ public class GsMain {
 
 	
 	// TODO: choose runtime behaviour here
-	private static boolean ENABLE_TESTING = true;
-	public static boolean SHOW_FUNCTION = ENABLE_TESTING;
+	private static boolean ENABLE_TESTING;
+	public static boolean SHOW_FUNCTION;
 	public static boolean USE_PICCOLO = false;
 	
     /**
@@ -40,7 +40,7 @@ public class GsMain {
         Vector open = new Vector(0);
 
         GsEnv.readConfig("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
-        
+        boolean testing = false;
         /*
          * parse args: - run without GUI - set ginsim dir - choose locale - give
          * some help
@@ -78,6 +78,8 @@ public class GsMain {
                 }
             } else if (args[i].equals("--noui")) {
                 startui = false;
+            } else if (args[i].equals("--test")) {
+                testing = true;
             } else if (args[i].equals("--run")) {
                 if (args.length > i) {
                     i++;
@@ -94,6 +96,8 @@ public class GsMain {
                 }
             }
         }
+        ENABLE_TESTING = testing;
+        SHOW_FUNCTION = ENABLE_TESTING;
         GsEnv.setGinsimDir(gsdir);
 
         for (int i = 0; i < commands.size(); i++) {
