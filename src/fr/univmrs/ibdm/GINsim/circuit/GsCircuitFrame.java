@@ -540,14 +540,14 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
         }
 
         if (circuit.t_context[index] == OmsddNode.FALSE) {
-            jta.setText("not functional");
+            jta.setText(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.FALSE]);
             return;
         }
         String s = circuit.t_context[index].getString(0, graph.getNodeOrder()).trim();
         if (s.equals("")) {
             jta.setText("empty data");
         } else {
-            jta.setText("score: " + circuit.t_mark[index][0] + ", sign: " + circuit.t_mark[index][1]
+            jta.setText(GsCircuitDescr.SIGNE_NAME[circuit.t_mark[index][1]] + ", score: " + circuit.t_mark[index][0]
                     + "\n" + s);
         }
     }
@@ -619,12 +619,20 @@ class GsCircuitDescr {
     /** GsRegulatoryMultiEdges in this circuit */
     public GsRegulatoryMultiEdge[] t_me;
 
-    protected static final int DUAL = -1;
-    protected static final int ALL = 0;
     protected static final int FALSE = 0;
-    protected static final int POSITIVE = 1;
-    protected static final int NEGATIVE = 2;
-    protected static final int FUNCTIONNAL = 3;
+    protected static final int ALL = 1;
+    protected static final int FUNCTIONNAL = 2;
+    protected static final int POSITIVE = 3;
+    protected static final int NEGATIVE = 4;
+    protected static final int DUAL = 5;
+    
+    protected static final String[] SIGNE_NAME = {
+    	Translator.getString("STR_not-functional"),
+    	Translator.getString("STR_all"),
+    	Translator.getString("STR_functional"),
+    	Translator.getString("STR_positive"), 
+    	Translator.getString("STR_negative"),
+    	Translator.getString("STR_dual")};
     
     // data on all subcircuits
     protected OmsddNode[] t_context;
@@ -644,23 +652,6 @@ class GsCircuitDescr {
 
     int score;
     int sign;
-
-    /**
-     * @return the sign of the circuit as a String
-     */
-    public String sign() {
-        switch (sign) {
-        case DUAL:
-            return "%";
-        case ALL:
-            return ".";
-        case POSITIVE:
-            return "+";
-        case NEGATIVE:
-            return "-";
-        }
-        return null;
-    }
 
     /**
      * print the circuit in a nice order.
@@ -841,9 +832,9 @@ class GsCircuitTreeModel implements TreeModel {
      * @param v_circuit
      */
     public GsCircuitTreeModel(Vector v_circuit) {
-        v_root.add("all");
+        v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.ALL]);
         this.v_circuit = v_circuit;
-        m_parent.put("all", v_circuit);
+        m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.ALL], v_circuit);
         m_parent.put(s_root, v_root);
     }
 
@@ -901,19 +892,19 @@ class GsCircuitTreeModel implements TreeModel {
             }
         }
         if (v_functionnal.size() > 0) {
-            v_root.add("functionnal");
-            m_parent.put("functionnal", v_functionnal);
+            v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.FUNCTIONNAL]);
+            m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.FUNCTIONNAL], v_functionnal);
             if (v_positive.size() > 0) {
-                v_root.add("positive");
-                m_parent.put("positive", v_positive);
+                v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.POSITIVE]);
+                m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.POSITIVE], v_positive);
             }
             if (v_negative.size() > 0) {
-                v_root.add("negative");
-                m_parent.put("negative", v_negative);
+                v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.NEGATIVE]);
+                m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.NEGATIVE], v_negative);
             }
             if (v_dual.size() > 0) {
-                v_root.add("dual");
-                m_parent.put("dual", v_dual);
+                v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.DUAL]);
+                m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.DUAL], v_dual);
             }
         }
         // TODO: add a sorting by context!

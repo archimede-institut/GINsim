@@ -51,6 +51,9 @@ public class GsCircuitAlgo {
     GsRegulatoryGraph graph;
 
     Vector nodeOrder;
+    int[] t_maxValues;
+    long fullPhaseSpace;
+    long score;
     OmddNode[] t_parameters;
     
     /**
@@ -61,6 +64,12 @@ public class GsCircuitAlgo {
         this.t_constraint = t_constraint;
         t_parameters = graph.getAllTrees(true);
         this.nodeOrder = graph.getNodeOrder();
+        t_maxValues = new int[t_parameters.length];
+        fullPhaseSpace = 1;
+        for (int i=0 ; i<t_maxValues.length ; i++) {
+        	t_maxValues[i] = ((GsRegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1;
+        	fullPhaseSpace *= t_maxValues[i];
+        }
         this.graph = graph;
         if (mutant != null) {
         	mutant.apply(t_parameters, graph.getNodeOrder(), true);
@@ -280,42 +289,54 @@ public class GsCircuitAlgo {
     
     /**
      * compute a score for the context.
-     * lower is better (score increases with length of branches)
+     * higher is better (score increases with the size of the phase space region)
      * return: [score, sign]
-     * sign can be: 0, 1, 2 or -1
+     * sign can be: FALSE, POSITIVE, NEGATIVE or DUAL
+     * 
+     * This method is _NOT_ thread safe
      * 
      * @param node
      * @return a score along with a sign indication
      */
     public int[] score (OmsddNode node) {
+    	int[] state = new int[t_maxValues.length];
+    	for (int i=0 ; i<state.length ; i++) {
+    		state[i] = -1;
+    	}
+    	score = fullPhaseSpace;
+    	int[] ret = new int[2];
+    	ret[1] = score(node, state);
+    	ret[0] = (int)score;  // FIXME: nee a way to "scale" the score correctly
+    	return ret;
+    }
+    private short score (OmsddNode node, int[] state) {
         if (node.next == null) {
             if (node == OmsddNode.FALSE) {
-                return new int[] {10, GsCircuitDescr.FALSE};
+                return GsCircuitDescr.FALSE;
             }
-            if (node == OmsddNode.POSITIVE) {
-                return new int[] {10, GsCircuitDescr.POSITIVE};
+            long addScore = 1;
+            for (int i=0 ; i<state.length ; i++) {
+            	if (state[i] != -1) {
+            		addScore *= t_maxValues[i];
+            	}
             }
-            return new int[] {10, GsCircuitDescr.NEGATIVE};
+            score -= addScore;
+            return (short)(node == OmsddNode.POSITIVE ? GsCircuitDescr.POSITIVE : GsCircuitDescr.NEGATIVE);
         }
-        int[] ret = score(node.next[0]);;
-        for (int i=1 ; i<node.next.length ; i++) {
-            int[] o = score(node.next[i]);
-            ret[0] += o[0];
-            switch (ret[1]) {
-                case GsCircuitDescr.FALSE:
-                    ret[1] = o[1];
-                    break;
-                case GsCircuitDescr.DUAL:
-                    break;
-                case GsCircuitDescr.NEGATIVE:
-                case GsCircuitDescr.POSITIVE:
-                    if (o[1] == GsCircuitDescr.DUAL || (o[1] != GsCircuitDescr.FALSE && o[1] != ret[1])) {
-                        ret[1] = GsCircuitDescr.DUAL;
-                    }
-            }
+        
+        short sign = GsCircuitDescr.FALSE;
+        for (int i=0 ; i<node.next.length ; i++) {
+        	state[node.level] = i;
+            short tmp = score(node.next[i], state);
+        	if (sign == GsCircuitDescr.FALSE) {
+        		sign = tmp;
+        	} else if (tmp == GsCircuitDescr.FALSE) {
+        	} else if (tmp == GsCircuitDescr.DUAL || sign == GsCircuitDescr.DUAL || tmp != sign){
+        		sign = GsCircuitDescr.DUAL;
+        	}
         }
-        ret[0] = 10 + ret[0]/node.next.length;
-        return ret;
+        state[node.level] = -1;
+        return sign;
     }
     
     /**
