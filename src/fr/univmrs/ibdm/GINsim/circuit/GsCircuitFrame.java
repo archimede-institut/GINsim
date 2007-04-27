@@ -845,6 +845,7 @@ class GsCircuitTreeModel implements TreeModel {
         Vector v_negative = new Vector();
         Vector v_dual = new Vector();
 
+        // first some cleanups, to allow running it several times in a row, with different mutants
         v_root.clear();
         v_root.add("all");
         m_parent.clear();

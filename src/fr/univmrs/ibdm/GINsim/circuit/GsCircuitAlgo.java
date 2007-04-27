@@ -165,9 +165,11 @@ public class GsCircuitAlgo {
                 t_ei = new Vector[] { t_ei[0], t_ei[1]};
             }
         }
-        
-        OmsddNode node = getContextFromParameters(t_parameters[nodeOrder.indexOf(target)], nodeOrder.indexOf(source), min, t_circuit, nextmin, nextmax);
 
+        // get the context tree
+        OmsddNode node = getContextFromParameters(t_parameters[nodeOrder.indexOf(target)], 
+        		nodeOrder.indexOf(source), min, t_circuit, nextmin, nextmax);
+        
         node = checkConstraint(node).reduce();
         // cache the result
         subReport sr = new subReport();
@@ -258,7 +260,7 @@ public class GsCircuitAlgo {
             }
         }
 
-        if (node.next == null || node.level < next.level) {
+        if (node.next == null || (next.next != null && (node.level > next.level))) {
             OmsddNode ret = new OmsddNode();
             ret.level = next.level;
             ret.next = new OmsddNode[next.next.length];
@@ -267,7 +269,7 @@ public class GsCircuitAlgo {
             }
             return ret;
         }
-        if (next.next == null || node.level > next.level) {
+        if (next.next == null || node.level < next.level) {
             OmsddNode ret = new OmsddNode();
             ret.level = node.level;
             ret.next = new OmsddNode[node.next.length];
