@@ -298,15 +298,15 @@ public class GsCircuitAlgo {
      * @param node
      * @return a score along with a sign indication
      */
-    public int[] score (OmsddNode node) {
+    public long[] score (OmsddNode node) {
     	int[] state = new int[t_maxValues.length];
     	for (int i=0 ; i<state.length ; i++) {
     		state[i] = -1;
     	}
     	score = fullPhaseSpace;
-    	int[] ret = new int[2];
+    	long[] ret = new long[2];
     	ret[1] = score(node, state);
-    	ret[0] = (int)score;  // FIXME: nee a way to "scale" the score correctly
+    	ret[0] = score;  // FIXME: nee a way to "scale" the score correctly
     	return ret;
     }
     private short score (OmsddNode node, int[] state) {

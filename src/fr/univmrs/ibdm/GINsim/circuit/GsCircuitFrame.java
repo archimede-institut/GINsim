@@ -547,7 +547,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
         if (s.equals("")) {
             jta.setText("empty data");
         } else {
-            jta.setText(GsCircuitDescr.SIGNE_NAME[circuit.t_mark[index][1]] + ", score: " + circuit.t_mark[index][0]
+            jta.setText(GsCircuitDescr.SIGNE_NAME[(int)circuit.t_mark[index][1]] + ", score: " + circuit.t_mark[index][0]
                     + "\n" + s);
         }
     }
@@ -636,7 +636,7 @@ class GsCircuitDescr {
     
     // data on all subcircuits
     protected OmsddNode[] t_context;
-    protected int[][] t_mark;
+    protected long[][] t_mark;
     protected int[][] t_sub;
     
     // which sub circuits go in which category ?
@@ -650,7 +650,7 @@ class GsCircuitDescr {
     private int[] t_pos;
     private int[] t_posMax;
 
-    int score;
+    long score;
     int sign;
 
     /**
@@ -707,7 +707,7 @@ class GsCircuitDescr {
         boolean goon;
         int sub = 0;
         t_context = new OmsddNode[nbSub];
-        t_mark = new int[nbSub][];
+        t_mark = new long[nbSub][];
         t_sub = new int[nbSub][];
         do {
             OmsddNode context = OmsddNode.POSITIVE;
@@ -729,7 +729,7 @@ class GsCircuitDescr {
             t_context[sub] = context.cleanup(t_circuit).reduce();
             t_mark[sub] = algo.score(t_context[sub]);
             t_sub[sub] = (int[])t_pos.clone();
-            switch (t_mark[sub][1]) {
+            switch ((int)t_mark[sub][1]) {
                 case POSITIVE:
                     if (v_positive == null) {
                         v_positive = new Vector();
@@ -1031,7 +1031,7 @@ class GsCircuitDescrInTree {
         return s;
     }
 
-    protected int getScore() {
+    protected long getScore() {
         if (summary) {
             return circuit.score;
         }
