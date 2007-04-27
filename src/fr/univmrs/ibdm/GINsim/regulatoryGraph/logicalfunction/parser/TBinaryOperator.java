@@ -13,4 +13,13 @@ public abstract class TBinaryOperator extends TBooleanOperator {
   public String toString() {
     return "(" + leftArg.toString() + " " + getSymbol() + " " + rightArg.toString() + ")";
   }
+  public int getNbArgs() {
+    return 2;
+  }
+  public TBooleanTreeNode[] getArgs() {
+    TBooleanTreeNode[] r = new TBooleanTreeNode[2];
+    r[0] = leftArg;
+    r[1] = rightArg;
+    return r;
+  }
 }

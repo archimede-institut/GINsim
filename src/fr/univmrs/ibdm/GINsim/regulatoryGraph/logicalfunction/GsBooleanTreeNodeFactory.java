@@ -27,6 +27,7 @@ public class GsBooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
     //if (p == null) {
       p = new Vector();
       Object[] allParams = parser.getAllParams();
+      Vector allData = parser.getAllData();
       int nb_params = allParams.length;
       Vector data;
       Iterator it_data;
@@ -42,7 +43,7 @@ public class GsBooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
           element = (GsLogicalFunctionListElement)it_data.next();
           if (((value.indexOf("#") < 0) && (element.toString().indexOf(value + "_") != -1)) ||
               ((value.indexOf("#") >= 0) && (element.toString().equals(testString)))) {
-            p.addElement(new Integer(i));
+            p.addElement(allData.elementAt(i));
             break;
           }
         }
@@ -51,7 +52,7 @@ public class GsBooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
     //}
     GsLogicalFunctionList il = new GsLogicalFunctionList();
     il.setParser(parser);
-    il.setData(p);
+    il.setData(new Vector(p));
     bg.setLogicalFunctionList(il);
     return bg;
   }

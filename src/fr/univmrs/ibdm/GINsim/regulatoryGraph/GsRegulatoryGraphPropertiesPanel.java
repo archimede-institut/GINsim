@@ -43,16 +43,16 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 	private GsGraph graph;
 
 	/**
-	 * This method initializes 
+	 * This method initializes
 	 * @param graph
-	 * 
+	 *
 	 */
 	public GsRegulatoryGraphPropertiesPanel(GsGraph graph) {
 		super();
         this.graph = graph;
 		graph.addGraphListener(this);
 		initialize();
-        
+
         gsAnnotationPanel.setGraph(graph);
 	}
 	/**
@@ -72,7 +72,7 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
         GridBagConstraints gridBagConstraints8 = new GridBagConstraints();
         GridBagConstraints gridBagConstraints9 = new GridBagConstraints();
         GridBagConstraints gridBagConstraints10 = new GridBagConstraints();
-        
+
         this.setLayout(new GridBagLayout());
         this.setSize(237, 62);
         gridBagConstraints1.gridx = 0;
@@ -111,7 +111,7 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
         gridBagConstraints9.gridy = 0;
         gridBagConstraints10.gridx = 6;
         gridBagConstraints10.gridy = 0;
-        
+
         this.add(jLabel, gridBagConstraints1);
         this.add(getJTextField(), gridBagConstraints2);
         this.add(getGsAnnotationPanel(), gridBagConstraints3);
@@ -142,7 +142,7 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 		if (jTextField == null) {
 			jTextField = new JTextField();
 			jTextField.setText(graph.getGraphName());
-			jTextField.addFocusListener(new java.awt.event.FocusAdapter() { 
+			jTextField.addFocusListener(new java.awt.event.FocusAdapter() {
 				public void focusLost(java.awt.event.FocusEvent e) {
 					doChangeGraphName();
 				}
@@ -150,7 +150,7 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 		}
 		return jTextField;
 	}
-	
+
 	protected void doChangeGraphName() {
 		try {
 			graph.setGraphName(jTextField.getText());
@@ -159,10 +159,10 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 			jTextField.setText(graph.getGraphName());
 		}
 	}
-	
+
 	/**
 	 * This method initializes orderList
-	 * 
+	 *
 	 * @return javax.swing.JList
 	 */
 	private javax.swing.JList getOrderList() {
@@ -176,7 +176,7 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 
 	/**
 	 * This method initializes jScrollPane
-	 * 
+	 *
 	 * @return javax.swing.JScrollPane
 	 */
 	private javax.swing.JScrollPane getJScrollPane() {
@@ -189,14 +189,14 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 	}
 	/**
 	 * This method initializes upButton
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private javax.swing.JButton getUpButton() {
 		if(upButton == null) {
 			upButton = new javax.swing.JButton(GsEnv.getIcon("upArrow.gif"));
 			upButton.setName("upButton");
-			upButton.addActionListener(new java.awt.event.ActionListener() { 
+			upButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				    moveUp();
 				}
@@ -217,14 +217,14 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
     }
     /**
 	 * This method initializes downButton
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private javax.swing.JButton getDownButton() {
 		if(downButton == null) {
 			downButton = new javax.swing.JButton(GsEnv.getIcon("downArrow.gif"));
 			downButton.setName("downButton");
-			downButton.addActionListener(new java.awt.event.ActionListener() { 
+			downButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				    moveDown();
 				}
@@ -316,13 +316,13 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 
 class GsListModel extends AbstractListModel {
     private static final long serialVersionUID = 5591479457883433089L;
-    
+
     private Vector vec;
-	
+
 	protected GsListModel(Vector v) {
 		vec=v;
 	}
-	
+
 	public Object getElementAt(int index) {
 		return vec.get(index);
 	}
@@ -330,7 +330,7 @@ class GsListModel extends AbstractListModel {
 	public int getSize() {
 		return vec.size();
 	}
-	
+
 	/**
 	 * the REAL job of this model: altering the node-order...
 	 * @param index
@@ -341,12 +341,12 @@ class GsListModel extends AbstractListModel {
 		vec.insertElementAt(obj,to);
 		fireContentsChanged(this, 0, vec.size());
 	}
-	
+
 	protected void setVector(Vector v) {
 		vec=v;
         fireContentsChanged(this, 0, vec.size());
 	}
-    
+
     protected void fireAllChanged() {
         fireContentsChanged(this, 0, vec.size());
     }

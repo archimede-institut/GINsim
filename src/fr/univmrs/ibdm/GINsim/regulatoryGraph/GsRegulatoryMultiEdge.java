@@ -19,7 +19,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     private Vector edges = new Vector(1);
     private GsRegulatoryVertex source, target;
     private int sign = 0;
-    
+
     /**
      * @param source
      * @param target
@@ -35,7 +35,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     /**
      * @param source
      * @param target
-     * 
+     *
      */
     public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target) {
         this.source = source;
@@ -59,17 +59,18 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     }
     /**
      * add an edge to this multiEdge
-     * 
+     *
      * @param edge the new edge
      * @param graph
      */
     public void addEdge(GsRegulatoryEdge edge, GsGraph graph) {
         edges.add(edge);
         rescanSign(graph);
+        target.incomingEdgeAdded(this);
     }
     /**
      * remove an edge from this multiEdge
-     * 
+     *
      * @param index index of the edge to remove.
      * @param graph
      */
@@ -84,7 +85,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
         }
         rescanSign(graph);
     }
-    
+
     /**
      * @return the number of edges in this multiEdge
      */
@@ -93,7 +94,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     }
     /**
      * get the id of the corresponding subedge.
-     * warning: this will return a shortened ID to put in the table, to get the real (full) id, 
+     * warning: this will return a shortened ID to put in the table, to get the real (full) id,
      * use <code>getFullId</code> instead.
      * @param index index of an edge of this multiEdge
      * @return the id of the given sub edge.
@@ -114,7 +115,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
         String name = source+"_"+target+"_";
         for (int i=0 ; i<edges.size() ; i++) {
             GsRegulatoryEdge edge = (GsRegulatoryEdge) edges.get(i);
-            
+
             int max = edge.getMax();
             if (max == -1) {
                 out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.getMin()+"\" sign=\""+ GsRegulatoryEdge.SIGN[edge.getSign()] +"\">\n");
@@ -155,7 +156,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 		return sign;
 	}
 	/**
-	 * @param index 
+	 * @param index
 	 * @return the sign of this subedge
 	 */
 	public short getSign(int index) {
@@ -166,7 +167,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	}
 	/**
 	 * change the signe of a sub edge.
-	 * 
+	 *
 	 * @param index index of the sub edge
 	 * @param sign the new sign
 	 * @param graph
@@ -185,15 +186,15 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	public GsAnnotation getGsAnnotation(int index) {
 		return ((GsRegulatoryEdge)edges.get(index)).getGsAnnotation();
 	}
-	
+
 	/**
 	 * @param index index of a subedge.
 	 * @return name of this sub edge.
-	 */	
+	 */
 	public String getEdgeName(int index) {
 		return edges.get(index).toString();
 	}
-	
+
 	/**
 	 * @param vertex
 	 */
@@ -201,7 +202,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 		for (int i=0 ; i<edges.size() ; i++) {
 			((GsRegulatoryEdge)edges.get(i)).applyNewMaxValue(vertex);
 		}
-		
+
 	}
 	/**
 	 * @param index index of a sub edge.
@@ -273,13 +274,13 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 		ereader.setLineEnd(sign);
 		ereader.refresh();
 	}
-	
+
 	public Object getTargetVertex() {
 		return target;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param index
 	 * @param sourceStatus
 	 * @return true if active
@@ -294,7 +295,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 
 	/**
 	 * get the index of the subedge having a given id
-	 * 
+	 *
 	 * @param id
 	 * @return index of the corresponding subedge or -1 if not avaible here
 	 */
@@ -331,5 +332,5 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 
     public void setUserObject(Object obj) {
     }
-	
+
 }

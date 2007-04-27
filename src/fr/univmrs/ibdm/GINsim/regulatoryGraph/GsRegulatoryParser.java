@@ -407,32 +407,24 @@ public final class GsRegulatoryParser extends GsXMLHelper {
           vertex = (GsRegulatoryVertex)enu_vertex.nextElement();
           allowedEdges = graph.getGraphManager().getIncomingEdges(vertex);
           if (allowedEdges.size() > 0) {
-	          TBooleanParser tbp = new GsBooleanParser(allowedEdges);
-	          for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
-	            value = (String)enu_values.nextElement();
-	            for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
-	              exp = (String)enu_exp.nextElement();
-	              chk = (String)enu_exp.nextElement();
-	              if (!tbp.compile(exp)) {
-	                graph.addNotificationMessage(new GsGraphNotificationMessage(
-	                  graph, "invalid formula", GsGraphNotificationMessage.NOTIFICATION_WARNING));
-	              }
-	              else {
-	                GsLogicalFunctionList functionList = (GsLogicalFunctionList)tbp.eval();
-	                addFunctionList(functionList, Short.parseShort(value), vertex, (GsBooleanParser)tbp, chk.length());
-	              }
-	            }
-	          }
-	          vertex.getInteractionsModel().parseFunctions();
-	          for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
-	            value = (String)enu_values.nextElement();
-	            for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
-	              exp = (String)enu_exp.nextElement();
-	              chk = (String)enu_exp.nextElement();
-	              vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
-	              vertex.getInteractionsModel().parseFunctions();
-	            }
-	          }
+            for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
+              value = (String)enu_values.nextElement();
+              for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
+                exp = (String)enu_exp.nextElement();
+                chk = (String)enu_exp.nextElement();
+                addExpression(Short.parseShort(value), vertex, exp, chk.length());
+              }
+            }
+            vertex.getInteractionsModel().parseFunctions();
+            for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
+              value = (String)enu_values.nextElement();
+              for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
+                exp = (String)enu_exp.nextElement();
+                chk = (String)enu_exp.nextElement();
+                vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
+                vertex.getInteractionsModel().parseFunctions();
+              }
+            }
           }
         }
       }
@@ -441,59 +433,25 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       }
     }
 
-/*    private void addFunctionList(GsLogicalFunctionList list, short val, GsRegulatoryVertex currentVertex, TBooleanTreeNode root, int n) {
-      Iterator it = list.getData().iterator(), it2;
-      Vector v;
-      GsEdgeIndex edgeIndex;
-      GsLogicalFunctionListElement element;
-      GsTreeInteractionsModel interactionList = currentVertex.getInteractionsModel();
-
-      interactionList.setNode(currentVertex);
-      interactionList.addValue(val);
-      interactionList.addExpression(val, root);
-      while (it.hasNext()) {
-        it2 = ((Vector)it.next()).iterator();
-        v = new Vector();
-        while (it2.hasNext()) {
-          element = (GsLogicalFunctionListElement)it2.next();
-          edgeIndex = new GsEdgeIndex(element.getEdge(), element.getIndex());
-          v.addElement(edgeIndex);
+    public void addExpression(short val, GsRegulatoryVertex vertex, String exp, int n) {
+      try {
+        GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
+        GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
+        if (!tbp.compile(exp)) {
+          graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
+            GsGraphNotificationMessage.NOTIFICATION_WARNING));
         }
-        interactionList.setActivesEdges(v, val);
-        interactionList.addFunction(val, root.toString(), v);
-      }
-      String chk1 = "";
-      for (int i = 0; i < n; i++) chk1 += "1";
-      interactionList.checkParams(val, chk1, root.toString());
-    }*/
-    public void addFunctionList(GsLogicalFunctionList list, short val, GsRegulatoryVertex currentVertex, GsBooleanParser parser, int n) {
-      Vector params = parser.getParams((Vector)list.getData());
-      Iterator it = params.iterator(), it2;
-      Vector v;
-      GsEdgeIndex edgeIndex;
-      GsLogicalFunctionListElement element;
-      TBooleanTreeNode root = parser.getRoot();
-      GsTreeInteractionsModel interactionList = currentVertex.getInteractionsModel();
-
-      interactionList.setNode(currentVertex);
-      interactionList.addValue(val);
-      interactionList.addExpression(val, root);
-      while (it.hasNext()) {
-        it2 = ((Vector)it.next()).iterator();
-        v = new Vector();
-        while (it2.hasNext()) {
-          element = (GsLogicalFunctionListElement)it2.next();
-          edgeIndex = new GsEdgeIndex(element.getEdge(), element.getIndex());
-          v.addElement(edgeIndex);
+        else {
+          interactionList.addExpression(val, vertex, tbp);
+          String chk1 = "";
+          for (int i = 0; i < n; i++) chk1 += "1";
+          interactionList.checkParams(val, chk1, exp);
         }
-        if (v.size() > 0) interactionList.setActivesEdges(v, val);
-        interactionList.addFunction(val, root.toString(), v);
       }
-      String chk1 = "";
-      for (int i = 0; i < n; i++) chk1 += "1";
-      interactionList.checkParams(val, chk1, root.toString());
+      catch (Exception ex) {
+        ex.printStackTrace();
+      }
     }
-
     public GsGraph getGraph() {
         return graph;
     }
