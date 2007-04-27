@@ -18,7 +18,8 @@ public class GsTreeInteractionsCellEditor extends DefaultTreeCellEditor {
   }
   public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
                                               boolean leaf, int row) {
-    return new GsTreeCellPanel(value, leaf, row, tree, isSelected, ((GsTreeElement)value).isSelected());
+    return new GsTreeCellPanel(value, leaf, row, tree, isSelected, ((GsTreeElement)value).isSelected(),
+                               ((GsTreeInteractionsCellRenderer)super.renderer).getCellPanelWidth());
   }
   protected boolean canEditImmediately(EventObject event) {
     if((event instanceof MouseEvent) && SwingUtilities.isLeftMouseButton((MouseEvent)event)) {

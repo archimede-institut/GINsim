@@ -312,7 +312,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 			}
 			// save logical functions
 			saveInteractionsModel(out, mode);
-			
+
 			gsa.toXML(out, null, mode);
 
 			if (param != null) {
@@ -367,6 +367,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 				v_logicalParameters.remove(i);
             }
 		}
+    interactionsModel.removeEdge(multiEdge, index);
     }
 
     /**
@@ -382,6 +383,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 				v_logicalParameters.remove(i);
             }
 		}
+    interactionsModel.removeEdge(multiEdge);
     }
 
     public String toString() {
@@ -449,5 +451,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         }
         out.closeTag();
       }
+    }
+    public void incomingEdgeAdded(GsRegulatoryMultiEdge me) {
+      interactionsModel.addEdge(me);
     }
 }

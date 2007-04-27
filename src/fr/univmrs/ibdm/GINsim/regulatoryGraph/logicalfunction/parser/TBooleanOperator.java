@@ -13,5 +13,10 @@ public abstract class TBooleanOperator implements TBooleanTreeNode {
   public void setParser(TBooleanParser parser) {
     this.parser = parser;
   }
+  public boolean isLeaf() {
+    return false;
+  }
   public abstract String getSymbol();
+  public abstract int getNbArgs();
+  public abstract TBooleanTreeNode[] getArgs();
 }

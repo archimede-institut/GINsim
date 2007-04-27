@@ -1,7 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
 import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -16,19 +15,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Graphics;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import java.awt.Dimension;
+import javax.swing.JTextArea;
+import javax.swing.JLabel;
 
 public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListener {
-  private Font font = new Font("Monospaced", Font.BOLD, 12);
+  private Font font = new Font("Monospaced", Font.PLAIN, 10);
   private GsTreeElement treeElement;
   private JTree tree = null;
   private boolean selected;
+  private JTextArea textArea;
+  private String text;
+  private int charWidth = 8, charHeight = 10;
 
-  public GsTreeCellPanel(Object value, boolean leaf, int row, JTree tree, boolean sel, boolean check) {
+  public GsTreeCellPanel(Object value, boolean leaf, int row, JTree tree, boolean sel, boolean check, int w) {
     super();
     selected = sel;
-    Icon icon = null;
-    if (tree != null)
-      icon = ((GsTreeInteractionsCellRenderer)tree.getCellRenderer()).getIcon();
     this.tree = tree;
     treeElement = (GsTreeElement)value;
     setLayout(new FlowLayout(FlowLayout.LEFT, 3, 0));
@@ -53,19 +55,44 @@ public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListe
         add(but);
       }
     }
-    JLabel lab = new JLabel(value.toString(), icon, JLabel.HORIZONTAL);
+    text = value.toString();
+    JLabel lab = new JLabel(text);
     lab.setFont(font);
+    //textArea = new JTextArea(text, 1, 50);
+    //textArea.setFont(font);
+    //textArea.setBorder(null);
+    //textArea.setEditable(false);
+    //textArea.setLineWrap(true);
+    //textArea.setWrapStyleWord(true);
+    //add(textArea);
+    add(lab);
     if (sel) {
       setBackground(Color.yellow);
+      //textArea.setBackground(Color.yellow);
+      lab.setBackground(Color.yellow);
     }
     else {
       setBackground(Color.white);
+      //textArea.setBackground(Color.white);
+      lab.setBackground(Color.white);
     }
+    //textArea.setForeground(treeElement.getForeground());
     lab.setForeground(treeElement.getForeground());
     setOpaque(true);
-    add(lab);
+  }
+  public void setWidth(int w) {
+    //System.err.println("w = " + w + "   col = " + w / charWidth + "    row = " + w / (charWidth * text.length()) + 1);
+    //textArea.setColumns(w / charWidth);
+    //textArea.setRows((charWidth * text.length()) / w + 1);
+    //int ps = textArea.getRows() * charHeight;
+    //textArea.setSize(new Dimension(textArea.getColumns() * charWidth, ps));
+    //setSize(new Dimension(w, ps));
+    //textArea.repaint();
+    //invalidate();
   }
   public void paint(Graphics g) {
+    charWidth = g.getFontMetrics(font).charWidth('A');
+    charHeight = g.getFontMetrics(font).getHeight();
     super.paint(g);
     if (selected) {
       g.setColor(Color.blue);

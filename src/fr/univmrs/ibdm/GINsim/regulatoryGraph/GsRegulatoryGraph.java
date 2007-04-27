@@ -109,7 +109,9 @@ public final class GsRegulatoryGraph extends GsGraph {
         obj = new GsRegulatoryMultiEdge((GsRegulatoryVertex)source, (GsRegulatoryVertex)target, param);
         Object ret = graphManager.addEdge(source, target, obj);
         ((GsRegulatoryMultiEdge)obj).rescanSign(this);
-        return ret;
+        ((GsRegulatoryVertex)target).incomingEdgeAdded((GsRegulatoryMultiEdge)obj);
+
+return ret;
     }
 
     protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
@@ -272,7 +274,8 @@ public final class GsRegulatoryGraph extends GsGraph {
         if (multiEdge.getEdgeCount() == 1) {
             removeEdge(multiEdge);
         }
-        multiEdge.removeEdge(index, this);
+        else
+          multiEdge.removeEdge(index, this);
     }
     /**
      *
@@ -280,8 +283,8 @@ public final class GsRegulatoryGraph extends GsGraph {
      */
     public void removeEdge(Object obj) {
        GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)obj).getUserObject();
-       edge.getTarget().removeEdgeFromInteraction(edge);
        graphManager.removeEdge(edge.getSource(), edge.getTarget());
+       edge.getTarget().removeEdgeFromInteraction(edge);
        fireGraphChange(CHANGE_EDGEREMOVED, obj);
     }
 
@@ -363,7 +366,7 @@ public final class GsRegulatoryGraph extends GsGraph {
 
         GsRegulatoryEdge edge = new GsRegulatoryEdge(minvalue, maxvalue, sign);
         Object oedge = graphManager.getEdge(source, target);
-        GsRegulatoryMultiEdge me;
+        GsRegulatoryMultiEdge me = null;
         if (oedge == null) {
             me = new GsRegulatoryMultiEdge(source, target, edge, this);
             graphManager.addEdge(source, target, me);

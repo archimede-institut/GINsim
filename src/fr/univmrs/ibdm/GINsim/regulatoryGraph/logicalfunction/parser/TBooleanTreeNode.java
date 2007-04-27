@@ -5,4 +5,5 @@ public interface TBooleanTreeNode {
   public void setReturnClass(String cl);
   public void setParser(TBooleanParser parser);
   public String toString();
+  public boolean isLeaf();
 }

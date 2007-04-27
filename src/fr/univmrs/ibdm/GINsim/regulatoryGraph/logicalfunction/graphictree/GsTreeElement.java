@@ -30,6 +30,9 @@ public abstract class GsTreeElement implements Comparable {
       if (childs.size() > index)
         childs.removeElementAt(index);
   }
+  public void clearChilds() {
+    if (childs != null) childs.clear();
+  }
   public int getChildCount() {
     if (childs != null)
       return childs.size();

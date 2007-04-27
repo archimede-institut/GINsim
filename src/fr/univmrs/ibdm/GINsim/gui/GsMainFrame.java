@@ -58,9 +58,9 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
     private GsGraph graph = null;
     private CardLayout cards = new CardLayout();
     private JPanel emptyPanel = null;
-    
+
     private JPanel graphParameterPanel = null;
-    
+
     private JPanel notificationPanel = null;
     private JLabel notificationMessage = null;
     private JButton bcloseNotification = null;
@@ -73,16 +73,16 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
     private GsParameterPanel edgePanel = null;
 
     private int selectedPanel = 0;
-    
+
 	private boolean alwaysForceClose = false;
 
 	private Vector v_edge;
 	private Vector v_vertex;
     private int mmapDivLocation = ((Integer)GsOptions.getOption("display.minimapSize", new Integer(100))).intValue();
-    
+
 	/**
 	 * This method initializes a new MainFrame
-	 * 
+	 *
 	 */
 	public GsMainFrame() {
 		super("display.mainFrame", 800, 600);
@@ -95,27 +95,27 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 	private void initialize() {
         this.setJMenuBar(gsActions.getMenuBar());
         this.setContentPane(getJPanel());
-        
+
         // doesn't work on mac OSX ?
 		this.setIconImage(ImageLoader.getImage("gs1.gif"));
 		updateTitle();
 		this.setVisible(true);
-        getJSplitPane().setDividerLocation( 
+        getJSplitPane().setDividerLocation(
                 jSplitPane.getHeight()-((Integer)GsOptions.getOption("display.dividersize", new Integer(80))).intValue());
 	}
 	/**
-	 * This method initializes jPanel	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */    
+	 * This method initializes jPanel
+	 *
+	 * @return javax.swing.JPanel
+	 */
 	private JPanel getJPanel() {
 		if (jPanel == null) {
 			jPanel = new JPanel();
 			jPanel.setLayout(new GridBagLayout());
-            
+
             GridBagConstraints c_toolbar = new GridBagConstraints();
             GridBagConstraints c_split = new GridBagConstraints();
-            
+
             c_toolbar.gridx = 0;
             c_toolbar.gridy = 0;
             c_toolbar.weightx = 1;
@@ -127,17 +127,17 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
             c_split.weightx = 1;
             c_split.weighty = 1;
             c_split.fill = GridBagConstraints.BOTH;
-            
+
 			jPanel.add(getJSplitPane(), c_split);
 			jPanel.add(gsActions.getToolBar(), c_toolbar);
 		}
 		return jPanel;
 	}
 	/**
-	 * This method initializes jSplitPane	
-	 * 	
-	 * @return javax.swing.JSplitPane	
-	 */    
+	 * This method initializes jSplitPane
+	 *
+	 * @return javax.swing.JSplitPane
+	 */
 	private JSplitPane getJSplitPane() {
 		if (jSplitPane == null) {
 			jSplitPane = new JSplitPane();
@@ -150,18 +150,18 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		return jSplitPane;
 	}
 	/**
-	 * This method initializes gsGraphPanel	
-	 * 	
-	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphPanel	
-	 */    
+	 * This method initializes gsGraphPanel
+	 *
+	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphPanel
+	 */
 	private JComponent getGraphPanel() {
 		if (graphPanel == null) {
 			graphPanel = new JPanel();
-			
+
 			graphPanel.setLayout(new GridBagLayout());
-			
+
 			graphScrollPane = new JScrollPane();
-			
+
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 0;
@@ -169,7 +169,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 			c.weighty = 1;
 			c.fill = GridBagConstraints.BOTH;
 			graphPanel.add(graphScrollPane, c);
-			
+
 			c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 1;
@@ -180,7 +180,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		}
 		return graphPanel;
 	}
-	
+
 	private JPanel getNotificationPanel() {
 		if (notificationPanel == null) {
 			notificationPanel = new JPanel();
@@ -189,7 +189,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 			}
 			notificationPanel.setVisible(notification != null);
 			notificationPanel.setLayout(new GridBagLayout());
-			
+
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 0;
@@ -200,7 +200,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 			c.fill = GridBagConstraints.BOTH;
 			notificationMessage = new JLabel("no notification");
 			notificationPanel.add(notificationMessage, c);
-			
+
 			c = new GridBagConstraints();
 			c.gridx = 2;
 			c.gridy = 0;
@@ -212,7 +212,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
                     notificationAction(0);
                 }
             });
-            
+
             c = new GridBagConstraints();
             c.gridx = 1;
             c.gridy = 0;
@@ -226,7 +226,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
             });
             cNotificationAction = new JComboBox();
             notificationPanel.add(cNotificationAction, c);
-			
+
 			c = new GridBagConstraints();
 			c.gridx = 3;
 			c.gridy = 0;
@@ -242,11 +242,11 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		}
 		return notificationPanel;
 	}
-	
+
 	protected void closeNotification() {
 		graph.deleteAllNotificationMessage();
 	}
-	
+
 	protected void notificationAction(int index) {
 		if (notification != null) {
             if (index == 0) {
@@ -258,12 +258,12 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
             notification.performAction(index);
 		}
 	}
-	
+
 	/**
-	 * This method initializes jSplitPane1	
-	 * 	
-	 * @return javax.swing.JSplitPane	
-	 */    
+	 * This method initializes jSplitPane1
+	 *
+	 * @return javax.swing.JSplitPane
+	 */
 	private JSplitPane getJSplitPane1() {
 		if (jSplitPane1 == null) {
 			jSplitPane1 = new JSplitPane();
@@ -275,10 +275,10 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		return jSplitPane1;
 	}
 	/**
-	 * This method initializes jTabbedPane	
-	 * 	
-	 * @return javax.swing.JTabbedPane	
-	 */    
+	 * This method initializes jTabbedPane
+	 *
+	 * @return javax.swing.JTabbedPane
+	 */
 	private JTabbedPane getJTabbedPane() {
 		if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
@@ -288,10 +288,10 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		return jTabbedPane;
 	}
 	/**
-	 * This method initializes gsGraphMapPanel	
-	 * 	
-	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphMapPanel	
-	 */    
+	 * This method initializes gsGraphMapPanel
+	 *
+	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphMapPanel
+	 */
 	private JPanel getGsGraphMapPanel() {
 		if (gsGraphMapPanel == null) {
 			gsGraphMapPanel = new JPanel();
@@ -299,10 +299,10 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		return gsGraphMapPanel;
 	}
 	/**
-	 * This method initializes jPanel1	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */    
+	 * This method initializes jPanel1
+	 *
+	 * @return javax.swing.JPanel
+	 */
 	private JPanel getJPanel1() {
 		if (jPanel1 == null) {
 			jPanel1 = new JPanel();
@@ -311,10 +311,10 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		return jPanel1;
 	}
 	/**
-	 * This method initializes gsGraphicAttributePanel	
-	 * 	
-	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphicAttributePanel	
-	 */    
+	 * This method initializes gsGraphicAttributePanel
+	 *
+	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphicAttributePanel
+	 */
 	private GsGraphicAttributePanel getGsGraphicAttributePanel() {
 		if (gsGraphicAttributePanel == null) {
 			gsGraphicAttributePanel = new GsGraphicAttributePanel();
@@ -357,7 +357,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
         	}
 
         gsActions.setDefaults();
-            
+
         if (gsGraphMapPanel == null) {
             showMiniMap(false);
         }
@@ -373,7 +373,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
         } else {
             jPanel1.add(emptyPanel, "vertex");
         }
-        
+
         gsGraphicAttributePanel.setMainFrame(this);
         jSplitPane.setTopComponent(getGraphPanel());
 
@@ -385,7 +385,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
                 jTabbedPane.setSelectedIndex(2);
             }
         }
-        
+
         // replace jSplitPane, only if this is the first graph in this frame
         if (event.getOldGraph() != null) {
             int md = jSplitPane.getHeight()-jTabbedPane.getMinimumSize().height;
@@ -437,7 +437,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
      * confirm closing the current graph (to close the window or open another graph instead).
      * WARNING: if this confirms that the graph can be closed, it will be already closed, don't call it
      * just to see.
-     * 
+     *
      * @return true if the graph can be closed
      */
     public boolean confirmCloseGraph() {
@@ -454,7 +454,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
                     s_add = s_add.substring(s_add.lastIndexOf(File.separator)+1);
                 }
 
-                int aw = JOptionPane.showConfirmDialog(this, Translator.getString("STR_saveQuestion1")+ s_add +Translator.getString("STR_saveQuestion2"), 
+                int aw = JOptionPane.showConfirmDialog(this, Translator.getString("STR_saveQuestion1")+ s_add +Translator.getString("STR_saveQuestion2"),
                         Translator.getString("STR_closeConfirm"),
                         JOptionPane.YES_NO_CANCEL_OPTION);
                 switch (aw) {
@@ -493,10 +493,10 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		    }
     	}
     }
-    
+
     /**
      * change the attribute panel position.
-     * 
+     *
      * @param b : if true the panel will be in a separate window
      */
     public void divideWindow(boolean b) {
@@ -515,7 +515,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 						gsActions.viewcallback.divideWindow(false);
 					}
 				});
-			//show 
+			//show
 			secondaryFrame.setVisible(true);
 			secondaryFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		} else if (secondaryFrame!=null) {
@@ -530,7 +530,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
     }
     /**
      * show/hide the minimap
-     * 
+     *
      * @param b : if true the miniMap will be shown
      */
     public void showMiniMap(boolean b) {
@@ -546,7 +546,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
     }
     /**
      * @see fr.univmrs.ibdm.GINsim.graph.GraphChangeListener#graphSelectionChanged(fr.univmrs.ibdm.GINsim.graph.GsGraphSelectionChangeEvent)
-     * 
+     *
      * tons of tests to activate/select the right tab depending on the context.
      * overview:
      *   - if nothing is selected (ie the background): edit graph properties if avaible
@@ -641,7 +641,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
     public Vector getSelectedEdges() {
     	return v_edge;
     }
-    
+
     /**
      * @return the list of currently selected vertices
      */
@@ -654,14 +654,14 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
     public GsActions getGsAction() {
     	return gsActions;
     }
-    
+
     protected void error (GsException e) {
         graph.addNotificationMessage(new GsGraphNotificationMessage(graph, e));
     }
-    
+
     public void graphClosed(GsGraph graph) {
     }
-    
+
     /**
      * refresh the title of the frame.
      * call it to mark it as (un)saved, update the filename...
@@ -705,7 +705,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
                 notificationPanel.setBackground(null);
                 break;
             }
-            
+
 			notificationPanel.setVisible(true);
 			notificationMessage.setText(notification.toString());
             String[] t_text = notification.getActionText();

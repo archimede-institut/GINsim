@@ -111,4 +111,7 @@ public class GsBooleanParser extends TBooleanParser {
   public static String getOperandClassName() {
     return operandClassName;
   }
+  public void setRoot(TBooleanTreeNode root) {
+    this.root = root;
+  }
 }

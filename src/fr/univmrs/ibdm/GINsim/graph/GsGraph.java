@@ -47,14 +47,14 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     protected Vector nodeOrder = new Vector();
     protected GsGraphDescriptor descriptor = null;
     protected Vector listeners = new Vector();
-    
+
     protected String graphName = "default_name";
 
     protected String tabLabel = "STR_tab_selection";
-    
+
     protected GsAnnotation gsAnnotation = null;
     protected String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
- 
+
     private static Vector v_layout = null;
     private static Vector v_export = null;
     private static Vector v_action = null;
@@ -63,7 +63,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     private Vector v_notification = new Vector();
     private Vector v_blockEdit = null;
     private Vector v_blockClose = null;
-    
+
     /**  an edged has been added */
     public static final int CHANGE_EDGEADDED = 0;
     /**  an edged has been removed */
@@ -80,24 +80,24 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     public static final int CHANGE_MERGED = 6;
     /**  other kind of change */
     public static final int CHANGE_METADATA = 7;
-    
+
     protected static final String zip_prefix = "GINsim-data/";
-    
+
 	protected GsVertexAttributesReader vReader;
 	protected GsEdgeAttributesReader eReader;
 
     private Map m_objects = null;
-    
+
     private static int graphID = 0;
     private int id;
-    
+
     protected GsGraph associatedGraph = null;
     protected String associatedID = null;
-    
+
     protected boolean annoted = false;
     protected boolean extended = false;
     protected boolean compressed = true;
-    
+
     /**
      * @param descriptor
      */
@@ -105,7 +105,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         this(descriptor, null);
     }
     /**
-     * 
+     *
      * @param descriptor
      * @param saveFileName
      */
@@ -130,7 +130,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 
     /**
      * set the save fileName.
-     * 
+     *
      * @param saveFileName
      */
     public void setSaveFileName(String saveFileName) {
@@ -144,7 +144,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     }
     /**
      * set the save mode.
-     * 
+     *
      * @param saveMode
      */
     public void setSaveMode(int saveMode) {
@@ -156,7 +156,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      */
     abstract protected Object doInteractiveAddVertex (int param);
     /**
-     * 
+     *
      * @param source
      * @param target
      * @param param the kind of edge to create
@@ -165,7 +165,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     abstract protected Object doInteractiveAddEdge (Object source, Object target, int param);
     /**
      * actually save the graph.
-     * 
+     *
      * @param os
      * @param mode
      * @param selectedOnly
@@ -174,7 +174,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     abstract protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException;
 
     /**
-     * 
+     *
      * @return a FileFilter for the save dialog (or null)
      */
     abstract protected FileFilter doGetFileFilter();
@@ -182,11 +182,11 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @return an accessory panel for the save dialog (or null)
      */
     abstract protected JPanel doGetFileChooserPanel();
-    
+
     /**
      * save the current graph.
      * if the graph has never been saved, calls saveAs.
-     * 
+     *
      * this will call the specialized method doSave() to do te work
      * @throws GsException
      */
@@ -197,7 +197,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             save(false, saveFileName, saveMode, extended, compressed);
         }
     }
-    
+
 	/**
 	 * similar to save() but will save only the selected subgraph
 	 * @throws GsException
@@ -208,7 +208,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	        subGraph.saveAs();
 	    }
 	}
-    
+
     /**
      * select a new save location.
      * when done, calls save()
@@ -216,18 +216,18 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      */
     public void saveAs() throws GsException {
     		saveAs(false);
-    }    
+    }
     /**
-     * 
+     *
      * @param selectedOnly
      * @throws GsException
      */
     private void saveAs(boolean selectedOnly) throws GsException {
     	JComponent poption = doGetFileChooserPanel();
-    	String filename = GsOpenAction.selectSaveFile(mainFrame, 
-    						doGetFileFilter(), 
+    	String filename = GsOpenAction.selectSaveFile(mainFrame,
+    						doGetFileFilter(),
 							poption, getAutoFileExtension());
-    	
+
     	if (filename != null) {
     		int saveMode = 0;
             boolean extended = false;
@@ -252,16 +252,16 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     		}
     	}
     }
-    
+
     protected String getGraphZipName() {
     	return "ginml";
     }
     /**
-     * 
+     *
      * @param selectedOnly
      * @param savePath
      * @param saveMode
-     * @param extended 
+     * @param extended
      * @param compressed
      * @throws GsException
      */
@@ -282,7 +282,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 //        			fileName = ftmp.getAbsolutePath();
         		}
         	}
-        	
+
             if (!extended) {
                 OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8");
                 doSave(os, saveMode, selectedOnly);
@@ -345,7 +345,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                     mainFrame.updateTitle();
                 }
             }
-            
+
             if (ftmp != null) {
             	// Everything went fine, rename the temporary file
             	ftmp.renameTo(f);
@@ -358,18 +358,18 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             }
         }
     }
-    
+
     /**
-     * 
+     *
      * @return the graphManager
      */
     public GsGraphManager getGraphManager() {
         return graphManager;
     }
-    
+
     /**
      * add a new vertex at the given position.
-     * 
+     *
      * @param param the kind of vertex to create.
      * @param x
      * @param y
@@ -386,9 +386,9 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
         return obj;
     }
-    
+
     /**
-     * 
+     *
      * @param source
      * @param target
      * @param param
@@ -402,17 +402,17 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     		fireGraphChange(CHANGE_EDGEADDED, obj);
     	}
     }
-    
+
     /**
      * remove a vertex from the graph.
-     * 
+     *
      * @param obj
      */
     public void removeVertex(Object obj) {
         graphManager.removeVertex(obj);
         fireGraphChange(CHANGE_VERTEXREMOVED, obj);
     }
-    
+
     /**
      * @return a GsParameterPanel able to edit edges of this graph or null if not applicable.
      */
@@ -434,7 +434,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     public String getSaveFileName() {
         return saveFileName;
     }
-    
+
     /**
      * @return the name associated with this graph.
      */
@@ -444,7 +444,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**
      * changes (if success) the name associated with this graph.
      * By default only valid xmlid are accepted.
-     * 
+     *
      * @param graphName the new name.
      * @throws GsException if the name is invalid.
      */
@@ -457,12 +457,12 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         annoted = true;
         fireMetaChange();
     }
-    
+
     /**
      * This function returns null by default, if not replaced, the frame will create generics buttons to
      * switch between editing modes. if the graph has it's own modes it should return a Vector here, eventually empty
      * to disable editing.
-     * 
+     *
      * @return a vector describing edit modes.
      * each element of the vector must be an GsEditModeDescriptor object
      */
@@ -472,7 +472,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**
      * set the id of the given vertex to the given new id.
      * we have to avoid duplicates id in some kind of graphs.
-     * 
+     *
      * @param vertex
      * @param newId
      * @throws GsException
@@ -509,7 +509,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		}
 		v_export.add(export);
 	}
-    
+
 	/**
 	 * @return a list of avaible export filters.
 	 */
@@ -518,7 +518,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 */
 	public static void registerActionProvider(GsActionProvider action) {
@@ -536,8 +536,8 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 
     /**
      * register a manager to open/save associated objects
-     * 
-     * @param manager 
+     *
+     * @param manager
      */
     public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
         if (v_OManager == null) {
@@ -564,7 +564,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
         return null;
     }
-    
+
 	/**
 	 * @return a vector of layout actions for this kind of graph
 	 */
@@ -702,7 +702,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	/**
 	 * panel to edit graph parameters, null by default => hidden.
 	 * if you want one, just override this method and return your JPanel.
-	 * 
+	 *
 	 * @return the graphParameterPanel (null by default, please override)
 	 */
 	public JPanel getGraphParameterPanel() {
@@ -723,7 +723,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	public boolean canDelete() {
 		return canDelete;
 	}
-	
+
 	/**
 	 * get the extension to be added to this kind of graph.
      * override me to return something else than <code>null</code> (ie no automatic extension)
@@ -732,10 +732,10 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     public String getAutoFileExtension() {
         return null;
     }
-    
+
 	/**
 	 * set the mainFrame containing this graph.
-	 * 
+	 *
 	 * @param mainFrame
 	 */
 	public void setMainFrame(GsMainFrame mainFrame) {
@@ -751,55 +751,55 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     	eReader = graphManager.getEdgeAttributesReader();
         saved = true;
 	}
-	
+
 	/**
 	 * get the copied graph or null if none.
 	 * NOTE: storing the copied graph in a static field is strongly encouraged
 	 * to allow copying between different graphs of the same type.
-	 * 
+	 *
 	 * graph which aren't interactively editable should just return null here.
-	 * 
+	 *
 	 * @return the previously copied graph.
 	 */
 	protected abstract GsGraph getCopiedGraph();
-	
+
 	/**
 	 * set the copied graph
 	 * NOTE: storing the copied graph in a static field is strongly encouraged
 	 * to allow copying between different graphs of the same type.
-	 * 
+	 *
 	 * graph which aren't interactively editable should do nothing here.
-	 * 
+	 *
 	 * @param graph the new copied graph
 	 * @see #doCopySelection(Vector, Vector)
 	 */
 	protected abstract void setCopiedGraph(GsGraph graph);
-	
+
 	/**
 	 * Merge the current graph with the given graph.
 	 * the graph to merge can come from a file or be a copied graph.
-	 * 
+	 *
 	 * graph which aren't interactively editable should do nothing here.
-	 * 
+	 *
 	 * @param otherGraph
      * @return the vector of newly added items
 	 */
 	protected abstract Vector doMerge (GsGraph otherGraph);
-	
+
 	/**
 	 * create a copied graph with selected vertices and edges.
 	 * NOTE: storing the copied graph in a static field is strongly encouraged
 	 * to allow copying between different graphs of the same type.
-	 * 
+	 *
 	 * graph which aren't interactively editable should do nothing here.
-	 * 
+	 *
 	 * @param vertex the selected vertices
 	 * @param edges the selected edges
-	 * 
+	 *
 	 * @return the copied graph
 	 */
 	protected abstract GsGraph doCopySelection (Vector vertex, Vector edges) ;
-	
+
 	/**
 	 * copy the selected part of the current graph.
 	 * this is just an abstract layer, the real copy has to be done by the graph implementor.
@@ -841,7 +841,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             graphManager.select(v);
 	    }
 	}
-	
+
 	/**
 	 * open a graph from a file and merge it with the current one.
 	 */
@@ -854,15 +854,15 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	        }
 	    }
 	}
-	
+
 	/**
 	 * block editing mode for this graph.
-	 * 
+	 *
 	 * @param key
 	 * @see #removeBlockEdit(Object)
 	 */
 	public void addBlockEdit(Object key) {
-	    if (key == null) { 
+	    if (key == null) {
 	        return;
 	    }
 	    if (v_blockEdit == null) {
@@ -870,7 +870,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	    }
 	    v_blockEdit.add(key);
 	}
-	
+
 	/**
 	 * @return true if edit isn't blocked
 	 * @see #addBlockEdit(Object)
@@ -878,16 +878,16 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	public boolean isEditAllowed() {
 	    return v_blockEdit == null;
 	}
-	
+
 	/**
 	 * @param key
 	 * @see #addBlockEdit(Object)
 	 */
 	public void removeBlockEdit (Object key) {
-	    if (v_blockEdit == null) { 
+	    if (v_blockEdit == null) {
 	        return;
 	    }
-	        
+
 	    v_blockEdit.remove(key);
 	    if (v_blockEdit.size() == 0) {
 	        v_blockEdit = null;
@@ -897,11 +897,11 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 * prevent closing this graph.
 	 * use with HIGH caution please!
 	 * @see #removeBlockClose(Object)
-	 * 
+	 *
 	 * @param key
 	 */
 	public void addBlockClose(Object key) {
-	    if (key == null) { 
+	    if (key == null) {
 	        return;
 	    }
 	    if (v_blockClose == null) {
@@ -909,16 +909,16 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	    }
 	    v_blockClose.add(key);
 	}
-	
+
 	/**
 	 * @param key
 	 * @see #addBlockClose(Object)
 	 */
 	public void removeBlockClose (Object key) {
-	    if (v_blockClose == null) { 
+	    if (v_blockClose == null) {
 	        return;
 	    }
-	        
+
 	    v_blockClose.remove(key);
 	    if (v_blockClose.size() == 0) {
 	        v_blockClose = null;
@@ -949,11 +949,11 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     public GsGraphDescriptor getDescriptor() {
         return descriptor;
     }
-    
+
     /**
      * plugins/algo/anything may want to associate objects witha graph to retrieve them later.
      * this (and <code>addObject(key, obj)</code>) makes it easy.
-     * 
+     *
      * @see #addObject(Object, Object)
      * @param key
      * @param create if true, a non-defined object will be created
@@ -976,15 +976,15 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         	if (manager != null) {
         		ret = manager.doCreate(this);
         		addObject(key, ret);
-        	} 
+        	}
         }
         return ret;
     }
-    
+
     /**
      * plugins/algo/anything may want to associate objects witha graph to retrieve them later.
      * this (and <code>getObject(key)</code>) makes it easy.
-     * 
+     *
      * @see #getObject(Object)
      * @see #removeObject(Object)
      * @param key
@@ -996,10 +996,10 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
         m_objects.put(key, obj);
     }
-    
+
     /**
      * remove an object previously associated to a graph with <code>addObject(Object, Object)</code>.
-     * 
+     *
      * @see #getObject(Object)
      * @see #addObject(Object, Object)
      * @param key
@@ -1010,7 +1010,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
         m_objects.remove(key);
     }
-    
+
 	/**
      * get the annotation associated with this graph.
 	 * @return the association associated with this graph
@@ -1021,14 +1021,14 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		}
 		return gsAnnotation;
 	}
-    
+
     /**
      * @return true is the graph is empty
      */
     public boolean isEmpty() {
         return !annoted && getAnnotation().isEmpty() && graphManager.getVertexCount() == 0;
     }
-	
+
 	/**
      * get the DTD used by this graph (if relevant).
 	 * @return the (ginml) DTD for this graph
@@ -1072,7 +1072,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
         graphManager = null;
     }
-    
+
     /**
      * @return the graph associated with this one.
      */
@@ -1085,7 +1085,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             } else {
                 File f = new File(associatedID);
                 if (f.exists()) {
-                    ag = GsRegulatoryGraphDescriptor.getInstance().open(f); 
+                    ag = GsRegulatoryGraphDescriptor.getInstance().open(f);
                     GsEnv.newMainFrame(ag);
                     setAssociatedGraph(ag);
                 } else {
@@ -1099,15 +1099,15 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             associatedGraph = null;
             associatedID = null;
         }
-        
+
         return associatedGraph;
     }
 
     /**
      * test if a graph can be associated with this one.
      * this is a default implementation and will always return false, override to do something usefull.
-     * 
-     * @param graph 
+     *
+     * @param graph
      * @return true if this is a valid associated graph.
      */
     protected boolean isAssociationValid(GsGraph graph) {
@@ -1116,7 +1116,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
         return false;
     }
-    
+
     /**
      * @param regGraph
      */
@@ -1177,7 +1177,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 
     public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
     }
-    
+
     public void graphClosed(GsGraph graph) {
         // it must be the associated regulatory graph
         if (graph == associatedGraph) {
@@ -1204,7 +1204,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                 return null;
             }
         }
-        
+
         if (associatedID != null) {
             File f = new File(associatedID);
             if (!f.exists() || !f.canRead()) {
@@ -1214,11 +1214,11 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         } else {
             GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_manual")), mainFrame);
         }
-        
+
         if (associatedID == null) {
             associatedID = GsOpenAction.selectFile(mainFrame);
         }
-        
+
         return associatedID;
     }
     /**
@@ -1227,7 +1227,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     public void fireMetaChange() {
         fireGraphChange(CHANGE_METADATA, null);
     }
-    
+
 	public void updateGraphNotificationMessage(GsGraph graph) {
         if (graphManager == null) {
             // can happen when the graph has been closed before the end of the timeout ?
@@ -1235,7 +1235,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
 		graphManager.getEventDispatcher().updateGraphNotificationMessage(this);
 	}
-	
+
 	/**
 	 * @return the topmost message to display
 	 */
@@ -1245,7 +1245,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		}
 		return (GsGraphNotificationMessage)v_notification.get(v_notification.size()-1);
 	}
-	
+
 	/**
 	 * @param message
 	 */
@@ -1271,7 +1271,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		updateGraphNotificationMessage(this);
 	}
 	/**
-	 * 
+	 *
 	 */
 	public void deleteAllNotificationMessage() {
 		if (v_notification == null | v_notification.size() == 0) {
