@@ -117,7 +117,7 @@ public class OmsddNode {
                         case 1: 
                         case -1:
                             if (other.next == null) {
-                                if (other.key == key) {
+                                if (other.value == value) {
                                     return this;
                                 }
                                 return FALSE;
@@ -126,7 +126,7 @@ public class OmsddNode {
                             ret.level = other.level;
                             ret.next = new OmsddNode[other.next.length];
                             for (int i=0 ; i<other.next.length ; i++) {
-                                ret.next[i] = other.next[i].merge(this, op, m, t_key);
+                                ret.next[i] = this.merge(other.next[i], op, m, t_key);
                             }
                             return ret;
                         default:
@@ -161,7 +161,7 @@ public class OmsddNode {
                 case CLEANUP:
                     switch (other.value) {
                         case 0:
-                            return this;
+                            return other;
                         case 1: 
                         case -1:
                             ret = new OmsddNode();
@@ -202,7 +202,7 @@ public class OmsddNode {
             ret.level = other.level;
             ret.next = new OmsddNode[other.next.length];
             for (int i=0 ; i<other.next.length ; i++) {
-                ret.next[i] = other.next[i].merge(this, op, m, t_key);
+                ret.next[i] = this.merge(other.next[i], op, m, t_key);
             }
             return ret;
         }
@@ -441,7 +441,7 @@ public class OmsddNode {
         }
         int cst = t_circuit[level];
         if (cst != 0) {
-        	OmsddNode fixedNode = next[cst-1].merge(next [cst], CLEANUP);
+        	OmsddNode fixedNode = next[cst-1].merge(next[cst], CLEANUP);
             return fixedNode.cleanup(t_circuit);
         }
         for (int i=0 ; i<next.length ; i++) {
