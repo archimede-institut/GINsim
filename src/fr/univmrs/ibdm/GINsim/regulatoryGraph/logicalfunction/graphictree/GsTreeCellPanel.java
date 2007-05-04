@@ -1,23 +1,23 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import javax.swing.Icon;
-import javax.swing.JCheckBox;
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.Insets;
 import java.awt.FlowLayout;
-import javax.swing.JTree;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.Font;
 import java.awt.Graphics;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import java.awt.Dimension;
-import javax.swing.JTextArea;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
+
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
 
 public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListener {
   private Font font = new Font("Monospaced", Font.PLAIN, 10);

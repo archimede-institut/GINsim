@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsInitStateTableModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
@@ -15,7 +17,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 /**
  * remember, save and restore a simulation parameter.
  */
-public class GsSimulationParameters implements GsXMLize, GsNamedObject {
+public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitialStateStore {
 
     String name = "new_parameter";
     Vector nodeOrder;
@@ -124,7 +126,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
                 Map m_init = ((GsInitialState)it.next()).m;
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
-                    s += "  "+Reg2dynTableModel.showValue((Vector)m_init.get(vertex), vertex.getMaxValue());
+                    s += "  "+GsInitStateTableModel.showValue((Vector)m_init.get(vertex), vertex.getMaxValue());
                 }
                 s += "\n";
             }
@@ -323,5 +325,9 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public Map getInitialState() {
+		return m_initState;
 	}
 }

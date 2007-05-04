@@ -34,6 +34,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsInitStateTableModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
 
@@ -69,7 +70,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     
     private JScrollPane jScrollPane = null;
     private GsJTable tableInitStates = null;
-    private Reg2dynTableModel model = null;
+    private GsInitStateTableModel model = null;
     private JButton buttonDelStateRow = null;
     private JButton buttonResetStateRow = null;
 
@@ -261,7 +262,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         if(tableInitStates == null) {
             Vector nodeNames = paramList.graph.getNodeOrder();
             tableInitStates = new GsJTable();
-            model = new Reg2dynTableModel(nodeNames, this, paramList.imanager);
+            model = new GsInitStateTableModel(nodeNames, this, paramList.imanager);
             tableInitStates.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
             tableInitStates.setModel(model);
             tableInitStates.getTableHeader().setReorderingAllowed(false);

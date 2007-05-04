@@ -1,15 +1,16 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import javax.swing.tree.DefaultTreeCellEditor;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.Component;
-import javax.swing.tree.TreeCellRenderer;
-import java.util.EventObject;
-import java.awt.event.MouseEvent;
-import javax.swing.SwingUtilities;
 import java.awt.ComponentOrientation;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.util.EventObject;
+
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreePath;
 
 public class GsTreeInteractionsCellEditor extends DefaultTreeCellEditor {

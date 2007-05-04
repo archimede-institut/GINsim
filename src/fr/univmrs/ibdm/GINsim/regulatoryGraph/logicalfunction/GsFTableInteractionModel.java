@@ -1,9 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
 
 public class GsFTableInteractionModel extends GsTableInteractionsModel {
    /* public GsFTableInteractionModel(GsRegulatoryGraph graph, Vector v_ok) {

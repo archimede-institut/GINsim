@@ -1,6 +1,5 @@
-package fr.univmrs.ibdm.GINsim.reg2dyn;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -8,17 +7,19 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.reg2dyn.GsInitialState;
+import fr.univmrs.ibdm.GINsim.reg2dyn.GsInitialStateList;
+import fr.univmrs.ibdm.GINsim.reg2dyn.GsReg2dynFrame;
 
 /**
  * model for the initState table.
  * "help" the user to select initial states for his simulation.
  */
-public class Reg2dynTableModel extends AbstractTableModel {
+public class GsInitStateTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = -1553864043658960569L;
 	private Vector nodeOrder;
-    private GsSimulationParameters param = null;
+    private Map m_initState = null;
     private GsInitialStateList imanager;
 	private int nbCol;
     private GsReg2dynFrame frame;
@@ -31,7 +32,7 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	 * @param nodeOrder
      * @param frame
 	 */	
-	public Reg2dynTableModel(Vector nodeOrder, GsReg2dynFrame frame, GsInitialStateList imanager) {
+	public GsInitStateTableModel(Vector nodeOrder, GsReg2dynFrame frame, GsInitialStateList imanager) {
 		super();
 		this.nodeOrder = nodeOrder;
         this.frame = frame;
@@ -69,16 +70,16 @@ public class Reg2dynTableModel extends AbstractTableModel {
 		Vector element;
 
 		if (columnIndex == 0) {
-			if (param == null || param.m_initState == null || rowIndex >= imanager.getNbElements()) {
+			if (m_initState == null || rowIndex >= imanager.getNbElements()) {
 				return Boolean.FALSE;
 			}
-			if (param.m_initState.containsKey(imanager.getElement(rowIndex))) {
+			if (m_initState.containsKey(imanager.getElement(rowIndex))) {
 				return Boolean.TRUE;
 			}
 			return Boolean.FALSE;
 		}
 		columnIndex--;
-		if (param == null || imanager == null || rowIndex >= imanager.getNbElements()) return "";
+		if (imanager == null || rowIndex >= imanager.getNbElements()) return "";
         Map m_row = ((GsInitialState)imanager.getElement(rowIndex)).m;
         element = (Vector)m_row.get(nodeOrder.get(columnIndex));
         return showValue(element, ((GsRegulatoryVertex)nodeOrder.get(columnIndex)).getMaxValue());
@@ -174,21 +175,18 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	 */
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         frame.setMessage("");
-		if (param == null || rowIndex > getRowCount() || columnIndex > nbCol) return;
+		if (m_initState == null || rowIndex > getRowCount() || columnIndex > nbCol) {
+			return;
+		}
 		if (columnIndex == 0) {
 			if (rowIndex >= imanager.getNbElements()) {
 				return;
 			}
 			if (aValue == Boolean.TRUE) {
-				if (param.m_initState == null) {
-					param.m_initState = new HashMap();
-				}
-				param.m_initState.put(imanager.getElement(rowIndex), null);
+				m_initState.put(imanager.getElement(rowIndex), null);
 			} else {
-				if (param.m_initState != null) {
-					param.m_initState.remove(imanager.getElement(rowIndex));
-					// set it to null if empty ? probably _not_ a good idea
-				}
+				m_initState.remove(imanager.getElement(rowIndex));
+				// set it to null if empty ? probably _not_ a good idea
 			}
 			return;
 		}
@@ -295,13 +293,10 @@ public class Reg2dynTableModel extends AbstractTableModel {
 	 *
 	 */
 	public void reset() {
-        if (param == null) {
+        if (m_initState == null) {
             return;
         }
-        if (param.m_initState != null) {
-	        param.m_initState.clear();
-	        param.m_initState = null;
-        }
+        m_initState.clear();
 	    fireTableStructureChanged();
 	}
 	
@@ -321,8 +316,8 @@ public class Reg2dynTableModel extends AbstractTableModel {
      * reverse job of the "getContent" method
      * @param param
      */
-    public void setParam(GsSimulationParameters param) {
-        this.param = param;
+    public void setParam(GsInitialStateStore param) {
+        this.m_initState = param.getInitialState();
         fireTableStructureChanged();
     }
 
