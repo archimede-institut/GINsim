@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.regulatoryGraph;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
 import java.util.Map;
 import java.util.Vector;
@@ -7,9 +7,8 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.reg2dyn.GsInitialState;
-import fr.univmrs.ibdm.GINsim.reg2dyn.GsInitialStateList;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsReg2dynFrame;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
  * model for the initState table.

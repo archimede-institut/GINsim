@@ -9,6 +9,8 @@ import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
 import fr.univmrs.ibdm.GINsim.gui.GsListListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 
 /**
@@ -177,20 +179,4 @@ public class GsSimulationParameterList extends GsListAbstract
 			}
 		}
 	}
-}
-
-class SimulationParameterCascadeUpdate implements GsGraphEventCascade {
-    protected SimulationParameterCascadeUpdate(Vector v) {
-        this.v = v;
-    }
-    Vector v;
-
-    public String toString() {
-        StringBuffer s = new StringBuffer("updated initial states:");
-        for (int i=0 ; i<v.size() ; i++) {
-            s.append(" ");
-            s.append(v.get(i));
-        }
-        return s.toString();
-    }
 }

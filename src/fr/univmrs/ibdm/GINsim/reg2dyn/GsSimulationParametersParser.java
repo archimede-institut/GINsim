@@ -11,6 +11,9 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 
@@ -176,7 +179,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                     	// associate with the existing object
                     	for (int i=0 ; i<initList.getNbElements() ; i++) {
                     		GsInitialState istate = (GsInitialState)initList.getElement(i);
-                    		if (istate.name.equals(s)) {
+                    		if (istate.getName().equals(s)) {
                             	param.m_initState.put(istate, null);
                     			break;
                     		}

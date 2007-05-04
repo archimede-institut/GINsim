@@ -11,6 +11,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 
 /**
  * here are the methods for the construction of the state transition graph 
@@ -128,7 +129,7 @@ public final class Simulation extends Thread implements Runnable {
             this.initStates = new Vector();
             Iterator it = params.m_initState.keySet().iterator();
             while (it.hasNext()) {
-                Reg2DynStatesIterator iterator = new Reg2DynStatesIterator(listGenes, ((GsInitialState)it.next()).m);
+                Reg2DynStatesIterator iterator = new Reg2DynStatesIterator(listGenes, ((GsInitialState)it.next()).getMap());
                 while (iterator.hasNext()) {
                     initStates.add(iterator.next());
                 }

@@ -34,7 +34,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsInitStateTableModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
 

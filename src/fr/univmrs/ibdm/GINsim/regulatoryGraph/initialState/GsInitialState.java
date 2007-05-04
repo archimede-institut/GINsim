@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.reg2dyn;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,5 +57,8 @@ public class GsInitialState implements GsNamedObject {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public Map getMap() {
+		return m;
 	}
 }

@@ -7,9 +7,10 @@ import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsInitStateTableModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
@@ -123,7 +124,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
             Iterator it = m_initState.keySet().iterator();
             while (it.hasNext()) {
             	// FIXME: get REAL initstate
-                Map m_init = ((GsInitialState)it.next()).m;
+                Map m_init = ((GsInitialState)it.next()).getMap();
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
                     s += "  "+GsInitStateTableModel.showValue((Vector)m_init.get(vertex), vertex.getMaxValue());
@@ -192,7 +193,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 			while(it.hasNext()) {
 				GsInitialState is = (GsInitialState)it.next();
 				out.openTag("row");
-				out.addAttr("name", is.name);
+				out.addAttr("name", is.getName());
                 out.closeTag();
 			}
 			out.closeTag();
