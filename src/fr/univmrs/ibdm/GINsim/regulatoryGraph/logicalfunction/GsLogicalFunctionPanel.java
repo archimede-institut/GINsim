@@ -15,7 +15,6 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 
 public class GsLogicalFunctionPanel extends GsParameterPanel {
@@ -120,9 +119,8 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
   }
 
   protected JPanel getTreePanel() {
-    if (treePanel == null) {
+    if (treePanel == null)
       treePanel = new GsLogicalFunctionTreePanel(graph);
-    }
     return treePanel;
   }
 
