@@ -212,7 +212,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             c.gridy = 1;
             c.fill = GridBagConstraints.BOTH;
             c.weightx = 0.6;
-            mutantPanel = new MutantSelectionPanel(this, paramList.graph);
+            mutantPanel = new MutantSelectionPanel(this, paramList.graph, currentParameter);
             mainPanel.add(mutantPanel, c);
             
             // initial state
@@ -617,17 +617,17 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             currentParameter = null;
         } else {
             currentParameter = (GsSimulationParameters)paramList.getElement(t_sel[0]);
-            mutantPanel.setSelectedItem(currentParameter.mutant);
+            mutantPanel.setStore(currentParameter);
             model.setParam(currentParameter);
         }
         refresh();
     }
     
-    protected void mutantChanged() {
-    	if (currentParameter != null && mutantPanel != null) {
-    		currentParameter.mutant = mutantPanel.getMutant();
-    	}
-    }
+//    protected void mutantChanged() {
+//    	if (currentParameter != null && mutantPanel != null) {
+//    		currentParameter.mutant = mutantPanel.getMutant();
+//    	}
+//    }
     
     private void refresh() {
         refreshing = true;
@@ -679,6 +679,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
                 break;
             }
             mutantPanel.setEnabled(true);
+            mutantPanel.refresh();
             textMaxDepth.setText(currentParameter.maxdepth > 0 ? ""+currentParameter.maxdepth : "");
             textMaxNodes.setText(currentParameter.maxnodes > 0 ? ""+currentParameter.maxnodes : "");
             textMaxDepth.setEnabled(true);

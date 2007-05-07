@@ -11,6 +11,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
@@ -18,7 +19,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 /**
  * remember, save and restore a simulation parameter.
  */
-public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitialStateStore {
+public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitialStateStore, GsMutantStore {
 
     String name = "new_parameter";
     Vector nodeOrder;
@@ -330,5 +331,13 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 	
 	public Map getInitialState() {
 		return m_initState;
+	}
+
+	public GsRegulatoryMutantDef getMutant() {
+		return mutant;
+	}
+
+	public void setMutant(GsRegulatoryMutantDef mutant) {
+		this.mutant = mutant;
 	}
 }

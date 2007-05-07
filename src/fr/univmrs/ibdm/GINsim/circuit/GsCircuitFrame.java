@@ -103,7 +103,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     }
 	private JPanel getMutantPanel() {
 		if (mutantPanel == null) {
-			mutantPanel = new MutantSelectionPanel(this, graph);
+			mutantPanel = new MutantSelectionPanel(this, graph, null);
 		}
 		return mutantPanel;
 	}
