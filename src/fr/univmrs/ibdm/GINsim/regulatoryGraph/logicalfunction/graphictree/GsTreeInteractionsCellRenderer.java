@@ -1,13 +1,12 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.Component;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.util.Enumeration;
-
-import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import java.awt.Component;
+import javax.swing.JTree;
+import java.awt.event.ComponentListener;
+import java.awt.event.ComponentEvent;
 import javax.swing.tree.TreePath;
+import java.util.Enumeration;
 
 public class GsTreeInteractionsCellRenderer extends DefaultTreeCellRenderer implements ComponentListener {
   private int cellPanelWidth;

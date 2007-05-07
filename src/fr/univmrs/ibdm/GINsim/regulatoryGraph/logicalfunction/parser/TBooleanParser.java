@@ -1,9 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser;
 
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 
 public abstract class TBooleanParser {
   private Stack operatorStack, operandStack;

@@ -1,7 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanData;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperand;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanData;
 
 public class GsBooleanGene extends TBooleanOperand {
   private GsLogicalFunctionList il;

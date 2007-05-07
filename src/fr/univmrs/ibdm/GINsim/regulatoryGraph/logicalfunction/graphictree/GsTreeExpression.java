@@ -1,11 +1,11 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBinaryOperator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TUnaryOperator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBinaryOperator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene;
 
 public class GsTreeExpression extends GsTreeElement {
   private String expression;

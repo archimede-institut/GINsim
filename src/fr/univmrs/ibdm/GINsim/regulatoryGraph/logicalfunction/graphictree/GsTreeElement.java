@@ -1,7 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.Color;
 import java.util.Vector;
+import java.awt.Color;
 
 public abstract class GsTreeElement implements Comparable {
   protected Vector childs;

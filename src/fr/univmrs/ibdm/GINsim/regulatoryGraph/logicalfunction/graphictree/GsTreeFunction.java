@@ -1,9 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.util.Iterator;
-import java.util.Vector;
-
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
+import java.util.Vector;
+import java.util.Iterator;
 
 public class GsTreeFunction extends GsTreeElement {
   private Vector edgeIndexes;
