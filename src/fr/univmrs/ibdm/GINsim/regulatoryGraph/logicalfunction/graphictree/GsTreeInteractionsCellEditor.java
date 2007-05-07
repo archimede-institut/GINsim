@@ -19,7 +19,7 @@ public class GsTreeInteractionsCellEditor extends DefaultTreeCellEditor {
   }
   public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected, boolean expanded,
                                               boolean leaf, int row) {
-    return new GsTreeCellPanel(value, leaf, row, tree, isSelected, ((GsTreeElement)value).isSelected(),
+    return new GsTreeCellPanel(value, leaf, row, tree, true, ((GsTreeElement)value).isSelected(),
                                ((GsTreeInteractionsCellRenderer)super.renderer).getCellPanelWidth());
   }
   protected boolean canEditImmediately(EventObject event) {
@@ -30,15 +30,15 @@ public class GsTreeInteractionsCellEditor extends DefaultTreeCellEditor {
     return (event == null);
   }
   protected boolean inHitRegion(int x, int y) {
+    TreePath tp = tree.getPathForLocation(x, y);
     if(lastRow != -1 && tree != null) {
       Rectangle bounds = tree.getRowBounds(lastRow);
       ComponentOrientation treeOrientation = tree.getComponentOrientation();
-      TreePath tp = tree.getPathForLocation(x, y);
       boolean leaf = false;
       if (tp != null) leaf = ((GsTreeElement)tp.getLastPathComponent()).isLeaf();
       if (treeOrientation.isLeftToRight()) {
         if (bounds != null)
-          if (!leaf && ((x <= (bounds.x + offset - 13)) || (x > (bounds.x + offset + 18))))
+          if (!leaf && ((x <= (bounds.x + offset - 13))/* || (x > (bounds.x + offset + 18))*/))
             return false;
           else if (leaf && ((x <= (bounds.x + offset - 13)) || (x > (bounds.x + offset + 5))))
             return false;

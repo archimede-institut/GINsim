@@ -167,14 +167,19 @@ public class GsTreeInteractionsModel implements TreeModel {
   }
 
   private void updateExpression(short val, GsTreeExpression exp) {
+    updateExpression(val, exp, exp.getRoot().toString());
+  }
+
+  public void updateExpression(short val, GsTreeExpression exp, String newExp) {
     try {
       TBooleanTreeNode root = exp.getRoot();
       GsBooleanParser parser = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(node));
-      if (!parser.compile(exp.toString())) {
-        graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula : " + exp.toString(),
+      if (!parser.compile(newExp)) {
+        graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula : " + newExp,
           GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));
       }
       else {
+        root = parser.getRoot();
         exp.clearChilds();
         GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
         Vector params = parser.getParams((Vector)functionList.getData());

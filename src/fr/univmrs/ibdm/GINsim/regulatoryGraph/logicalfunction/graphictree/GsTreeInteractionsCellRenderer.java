@@ -15,7 +15,7 @@ public class GsTreeInteractionsCellRenderer extends DefaultTreeCellRenderer impl
   private JTree tree = null;
   public GsTreeInteractionsCellRenderer(int w) {
     super();
-    cellPanelWidth = w - 100;
+    cellPanelWidth = w - 130;
   }
   public int getCellPanelWidth() {
     return cellPanelWidth;
@@ -23,15 +23,16 @@ public class GsTreeInteractionsCellRenderer extends DefaultTreeCellRenderer impl
   public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
                                                 boolean leaf, int row, boolean hasFocus) {
     panel = new GsTreeCellPanel(value, leaf, row, null, sel, ((GsTreeElement)value).isSelected(), cellPanelWidth);
+
     this.tree = tree;
     return panel;
   }
   public void componentHidden(ComponentEvent e) {}
   public void componentMoved(ComponentEvent e) {}
   public void componentResized(ComponentEvent e) {
-    cellPanelWidth = e.getComponent().getWidth() - 100;
-    panel.setWidth(cellPanelWidth);
+    cellPanelWidth = e.getComponent().getWidth() - 130;
     if (tree != null) {
+      tree.stopEditing();
       int[] sr = tree.getSelectionRows();
       Enumeration enu = tree.getExpandedDescendants(new TreePath((GsTreeElement)tree.getModel().getRoot()));
       ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());

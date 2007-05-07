@@ -119,9 +119,8 @@ public class GsLogicalFunctionPanel extends GsParameterPanel {
   }
 
   protected JPanel getTreePanel() {
-    if (treePanel == null) {
+    if (treePanel == null)
       treePanel = new GsLogicalFunctionTreePanel(graph);
-    }
     return treePanel;
   }
 
