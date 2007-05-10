@@ -301,14 +301,16 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
                 for (int i = 0; i < graph.getNodeOrder().size(); i++) {
                     GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph
                             .getNodeOrder().get(i);
-                    Object edge = graph.getGraphManager().getEdge(vertex,
-                            vertex);
-                    if (edge != null) {
-                        GsCircuitDescr circuit = new GsCircuitDescr();
-                        circuit.t_vertex = new GsRegulatoryVertex[] { vertex };
-                        circuit.t_me = new GsRegulatoryMultiEdge[] { (GsRegulatoryMultiEdge) ((GsDirectedEdge) edge)
-                                .getUserObject() };
-                        v_circuit.add(new GsCircuitDescrInTree(circuit, true, GsCircuitDescr.ALL));
+                    if (config.t_status[i] != 2) {  // FIXME: fix this
+	                    Object edge = graph.getGraphManager().getEdge(vertex,
+	                            vertex);
+	                    if (edge != null) {
+	                        GsCircuitDescr circuit = new GsCircuitDescr();
+	                        circuit.t_vertex = new GsRegulatoryVertex[] { vertex };
+	                        circuit.t_me = new GsRegulatoryMultiEdge[] { (GsRegulatoryMultiEdge) ((GsDirectedEdge) edge)
+	                                .getUserObject() };
+	                        v_circuit.add(new GsCircuitDescrInTree(circuit, true, GsCircuitDescr.ALL));
+	                    }
                     }
                 }
             }
@@ -516,6 +518,9 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             switch (cdtree.key) {
                 case GsCircuitDescr.ALL:
                     index = 0;
+                    break;
+                case GsCircuitDescr.FUNCTIONNAL:
+                    index = ((GsCircuitDescrInTree)cdtree.circuit.v_functionnal.get(0)).key;
                     break;
                 case GsCircuitDescr.POSITIVE:
                     index = ((GsCircuitDescrInTree)cdtree.circuit.v_positive.get(0)).key;
