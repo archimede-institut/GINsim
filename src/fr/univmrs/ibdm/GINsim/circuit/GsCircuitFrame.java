@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -65,8 +64,6 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     private javax.swing.JLabel labelProgression = null;
     private JScrollPane sp = null;
     private JScrollPane sp2 = null;
-    private JPanel infoPanel = null;
-    private JLabel infoText = null;
     private JTextArea jta = null;
     private GsCircuitSearchStoreConfig config = null;
 
@@ -217,22 +214,6 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
         return splitPane;
     }
 
-    private JPanel getInfoPanel() {
-        if (infoPanel == null) {
-            infoPanel = new JPanel();
-            infoPanel.add(getInfoText());
-            infoPanel.setSize(infoPanel.getWidth(), 30);
-        }
-        return infoPanel;
-    }
-
-    private JLabel getInfoText() {
-        if (infoText == null) {
-            infoText = new JLabel();
-        }
-        return infoText;
-    }
-
     protected void run() {
         switch (status) {
         case STATUS_NONE:
@@ -298,20 +279,23 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             if (config == null || config.minlen < 2) { // search
                                                         // autoregulation-like
                                                         // circuits
-                for (int i = 0; i < graph.getNodeOrder().size(); i++) {
-                    GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph
-                            .getNodeOrder().get(i);
-                    if (config.t_status[i] != 2) {  // FIXME: fix this
-	                    Object edge = graph.getGraphManager().getEdge(vertex,
-	                            vertex);
-	                    if (edge != null) {
-	                        GsCircuitDescr circuit = new GsCircuitDescr();
-	                        circuit.t_vertex = new GsRegulatoryVertex[] { vertex };
-	                        circuit.t_me = new GsRegulatoryMultiEdge[] { (GsRegulatoryMultiEdge) ((GsDirectedEdge) edge)
-	                                .getUserObject() };
-	                        v_circuit.add(new GsCircuitDescrInTree(circuit, true, GsCircuitDescr.ALL));
+            	if (config.minMust < 2) {
+	                for (int i = 0; i < graph.getNodeOrder().size(); i++) {
+	                    GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph
+	                            .getNodeOrder().get(i);
+	                    if ((config.minMust == 1 && config.t_status[i] == 1) ||
+	                        (config.minMust == 0 && config.t_status[i] == 3)) {
+		                    Object edge = graph.getGraphManager().getEdge(vertex,
+		                            vertex);
+		                    if (edge != null) {
+		                        GsCircuitDescr circuit = new GsCircuitDescr();
+		                        circuit.t_vertex = new GsRegulatoryVertex[] { vertex };
+		                        circuit.t_me = new GsRegulatoryMultiEdge[] { (GsRegulatoryMultiEdge) ((GsDirectedEdge) edge)
+		                                .getUserObject() };
+		                        v_circuit.add(new GsCircuitDescrInTree(circuit, true, GsCircuitDescr.ALL));
+		                    }
 	                    }
-                    }
+	                }
                 }
             }
             showCircuit();
