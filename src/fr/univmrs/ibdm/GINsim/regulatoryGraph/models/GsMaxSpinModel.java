@@ -12,7 +12,7 @@ import javax.swing.JTextField;
  * model for a max spinbutton, depends on a GsMinMaxSpinModel
  */
 public class GsMaxSpinModel extends AbstractSpinnerModel {
-    
+
     private GsMinMaxSpinModel minmax;
     private JTextField editor;
     /**
@@ -60,12 +60,12 @@ public class GsMaxSpinModel extends AbstractSpinnerModel {
         editor.setText(minmax.getMaxValue().toString());
         fireStateChanged();
     }
-    
+
     protected void applyEditor() {
         minmax.setMaxValue(editor.getText());
         update();
     }
-    
+
     /**
      * @return the associated editor.
      */

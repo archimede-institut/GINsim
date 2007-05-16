@@ -43,15 +43,15 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 	private GsLogicalFunctionPanel gsLogicalFunctionPanel = null;
 	private GsAnnotationPanel gsAnnotationPanel = null;
 	CardLayout card = null;
-	
+
 	private GsVertexMinMaxSpinModel minmax = null;
-	
+
 	private GsRegulatoryVertex currentVertex = null;
 	private GsMainFrame main = null;
 	/**
-	 * This method initializes 
+	 * This method initializes
 	 * @param main
-	 * 
+	 *
 	 */
 	public GsRegulatoryVertexAttributePanel(GsMainFrame main) {
 		super();
@@ -63,10 +63,10 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 	 */
 	private void initialize() {
         minmax = new GsVertexMinMaxSpinModel();
-        
+
         this.setLayout(new GridBagLayout());
         GridBagConstraints c;
-        
+
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
@@ -76,7 +76,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.gridwidth = 2;
         jLabel2 = new JLabel(Translator.getString("STR_name"));
         this.add(jLabel2, c);
-        
+
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 1;
@@ -93,7 +93,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.weighty = 1;
         c.anchor = java.awt.GridBagConstraints.WEST;
         this.add(getF_name(), c);
-        
+
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
@@ -110,7 +110,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.weighty = 1;
         jLabel = new JLabel(Translator.getString("STR_max"));
         this.add(jLabel, c);
-        
+
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 2;
@@ -118,7 +118,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.fill = java.awt.GridBagConstraints.HORIZONTAL;
         c.weighty = 1;
         this.add(getF_max(), c);
-        
+
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 3;
@@ -127,7 +127,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.weighty = 1;
         jLabel1 = new JLabel(Translator.getString("STR_base"));
         this.add(jLabel1, c);
-        
+
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 3;
@@ -135,7 +135,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.fill = java.awt.GridBagConstraints.HORIZONTAL;
         c.weighty = 1;
         this.add(getF_base(), c);
-        
+
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 4;
@@ -143,7 +143,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.fill = java.awt.GridBagConstraints.HORIZONTAL;
         c.weighty = 2;
         this.add(getJButton1(), c);
-        
+
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 4;
@@ -151,7 +151,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.fill = java.awt.GridBagConstraints.HORIZONTAL;
         c.weighty = 2;
         this.add(getB_interaction(), c);
-        
+
         if (GsMain.SHOW_FUNCTION) {
 	        c = new GridBagConstraints();
 	        c.gridx = 2;
@@ -161,7 +161,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 	        c.weighty = 2;
 	        this.add(getB_function(), c);
         }
-        
+
         c = new GridBagConstraints();
         c.gridx = 3;
         c.gridy = 0;
@@ -175,7 +175,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 
         this.setPreferredSize(new java.awt.Dimension(636,60));
 		this.setSize(636, 60);
-        
+
 		getBgroup();
 		card.show(jPanel2, getGsInteractionPanel().getName());
 	}
@@ -193,16 +193,16 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         return bgroup;
     }
     /**
-	 * This method initializes f_id	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */    
+	 * This method initializes f_id
+	 *
+	 * @return javax.swing.JTextField
+	 */
 	private JTextField getF_id() {
 		if (f_id == null) {
 			f_id = new JTextField();
 			f_id.setPreferredSize(new java.awt.Dimension(65,19));
-			f_id.addFocusListener(new java.awt.event.FocusAdapter() { 
-				public void focusLost(java.awt.event.FocusEvent e) {    
+			f_id.addFocusListener(new java.awt.event.FocusAdapter() {
+				public void focusLost(java.awt.event.FocusEvent e) {
 					doChangeId();
 				}
 			});
@@ -210,16 +210,16 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		return f_id;
 	}
 	/**
-	 * This method initializes f_name	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */    
+	 * This method initializes f_name
+	 *
+	 * @return javax.swing.JTextField
+	 */
 	private JTextField getF_name() {
 		if (f_name == null) {
 			f_name = new JTextField();
 			f_name.setPreferredSize(new java.awt.Dimension(65,19));
-			f_name.addFocusListener(new java.awt.event.FocusAdapter() { 
-				public void focusLost(java.awt.event.FocusEvent e) {    
+			f_name.addFocusListener(new java.awt.event.FocusAdapter() {
+				public void focusLost(java.awt.event.FocusEvent e) {
 					doChangeName();
 				}
 			});
@@ -227,10 +227,10 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		return f_name;
 	}
 	/**
-	 * This method initializes f_base	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */    
+	 * This method initializes f_base
+	 *
+	 * @return javax.swing.JTextField
+	 */
 	private JSpinner getF_base() {
 		if (f_base == null) {
             f_base = minmax.getSMin();
@@ -238,10 +238,10 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		return f_base;
 	}
 	/**
-	 * This method initializes f_max	
-	 * 	
-	 * @return javax.swing.JTextField	
-	 */    
+	 * This method initializes f_max
+	 *
+	 * @return javax.swing.JTextField
+	 */
 	private JSpinner getF_max() {
 		if (f_max == null) {
             f_max = minmax.getSMax();
@@ -249,15 +249,15 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		return f_max;
 	}
 	/**
-	 * This method initializes b_interaction	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */    
+	 * This method initializes b_interaction
+	 *
+	 * @return javax.swing.JButton
+	 */
 	private JToggleButton getB_interaction() {
 		if (b_interaction == null) {
 			b_interaction = new JToggleButton(Translator.getString("STR_parameters"));
 			b_interaction.setSelected(true);
-			b_interaction.addChangeListener(new javax.swing.event.ChangeListener() { 
+			b_interaction.addChangeListener(new javax.swing.event.ChangeListener() {
 				public void stateChanged(javax.swing.event.ChangeEvent e) {
 				    interactionselectedChanged();
 				}
@@ -265,12 +265,12 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		}
 		return b_interaction;
 	}
-	
+
 	private JToggleButton getB_function() {
 		if (b_function == null) {
 			b_function = new JToggleButton(Translator.getString("STR_function"));
 			b_function.setSelected(true);
-			b_function.addChangeListener(new javax.swing.event.ChangeListener() { 
+			b_function.addChangeListener(new javax.swing.event.ChangeListener() {
 				public void stateChanged(javax.swing.event.ChangeEvent e) {
 				    interactionselectedChanged();
 				}
@@ -278,7 +278,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		}
 		return b_function;
 	}
-	
+
 	protected void interactionselectedChanged() {
 		if (b_interaction.isSelected()) {
 		    card.show(jPanel2, gsInteractionPanel.getName());
@@ -292,10 +292,10 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		}
 	}
 	/**
-	 * This method initializes jButton1	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */    
+	 * This method initializes jButton1
+	 *
+	 * @return javax.swing.JButton
+	 */
 	private JToggleButton getJButton1() {
 		if (jButton1 == null) {
 			jButton1 = new JToggleButton(Translator.getString("STR_notes"));
@@ -303,10 +303,10 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		return jButton1;
 	}
 	/**
-	 * This method initializes jPanel2	
-	 * 	
-	 * @return javax.swing.JPanel	
-	 */    
+	 * This method initializes jPanel2
+	 *
+	 * @return javax.swing.JPanel
+	 */
 	private JPanel getJPanel2() {
 		if (jPanel2 == null) {
 			jPanel2 = new JPanel();
@@ -321,10 +321,10 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		return jPanel2;
 	}
 	/**
-	 * This method initializes gsInteractionPanel	
-	 * 	
-	 * @return fr.univmrs.ibdm.GINsim.regulatoryGraph.GsInteractionPanel	
-	 */    
+	 * This method initializes gsInteractionPanel
+	 *
+	 * @return fr.univmrs.ibdm.GINsim.regulatoryGraph.GsInteractionPanel
+	 */
 	private GsInteractionPanel getGsInteractionPanel() {
 		if (gsInteractionPanel == null) {
             gsInteractionPanel = new GsInteractionPanel((GsRegulatoryGraph)main.getGraph());
@@ -341,10 +341,10 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
 		return gsLogicalFunctionPanel;
 	}
 	/**
-	 * This method initializes gsAnnotationPanel	
-	 * 	
-	 * @return fr.univmrs.ibdm.GINsim.regulatoryGraph.GsAnnotationPanel	
-	 */    
+	 * This method initializes gsAnnotationPanel
+	 *
+	 * @return fr.univmrs.ibdm.GINsim.regulatoryGraph.GsAnnotationPanel
+	 */
 	private GsAnnotationPanel getGsAnnotationPanel() {
 		if (gsAnnotationPanel == null) {
 			gsAnnotationPanel = new GsAnnotationPanel();
@@ -382,13 +382,13 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
             currentVertex = null;
         }
     }
-    
+
     public void setMainFrame(GsMainFrame mainFrame) {
         super.setMainFrame(mainFrame);
         gsAnnotationPanel.setMainFrame(mainFrame);
         gsInteractionPanel.setMainFrame(mainFrame);
     }
-    
+
     protected void doChangeId() {
         if (!graph.isEditAllowed()) {
             return;
@@ -400,7 +400,7 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
             GsEnv.error(e, main);
         }
     }
-    
+
     protected void doChangeName() {
         if (!graph.isEditAllowed()) {
             return;

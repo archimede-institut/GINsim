@@ -5,10 +5,8 @@ import java.awt.BorderLayout;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsCellRenderer;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsCellEditor;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import javax.swing.plaf.basic.BasicTreeUI;
 import java.awt.Insets;
@@ -16,6 +14,8 @@ import java.awt.Rectangle;
 import java.awt.Graphics;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeRenderer;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeEditor;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel {
 
@@ -26,7 +26,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
       Object value = path.getLastPathComponent();
       if (!isLeaf && (!hasBeenExpanded || treeModel.getChildCount(value) > 0)) {
         int middleXOfKnob = bounds.x - (getRightChildIndent() - 1);
-        int middleYOfKnob = bounds.y + 11; //(bounds.height / 2);
+        int middleYOfKnob = bounds.y + 10; //(bounds.height / 2);
         if (isExpanded) {
           Icon expandedIcon = getExpandedIcon();
           if(expandedIcon != null)
@@ -101,7 +101,6 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
     GsRegulatoryVertex vertex = (GsRegulatoryVertex)obj;
     interactionList = vertex.getInteractionsModel();
     tree.setModel(interactionList);
-    tree.collapseRow(0);
     repaint();
   }
   private JTree getJTree(GsRegulatoryGraph graph) {
@@ -110,9 +109,9 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
       tree = new JTree(interactionList);
       tree.setUI(new GsTreeUI());
       tree.setShowsRootHandles(true);
-      GsTreeInteractionsCellRenderer cr = new GsTreeInteractionsCellRenderer(getPreferredSize().width);
+      GsBooleanFunctionTreeRenderer cr = new GsBooleanFunctionTreeRenderer(getPreferredSize().width);
       tree.setCellRenderer(cr);
-      tree.setCellEditor(new GsTreeInteractionsCellEditor(tree, cr));
+      tree.setCellEditor(new GsBooleanFunctionTreeEditor(tree, cr));
       tree.setEditable(true);
       addComponentListener(cr);
     }
@@ -125,6 +124,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
         GsGraphNotificationMessage.NOTIFICATION_WARNING));
     }
     else {
+      tree.stopEditing();
       interactionList.addExpression(val, currentVertex, tbp);
       ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
       tree.expandPath(interactionList.getPath(val, tbp.getRoot().toString()));
