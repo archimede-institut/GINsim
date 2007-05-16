@@ -53,7 +53,7 @@ public class GsPetriNetExportINA extends GsAbstractExport {
 
 	protected GsPetriNetExportINA() {
 		id = "INA";
-		extension = "pnt";
+		extension = ".pnt";
 		filter = new String[] { "pnt" };
 		filterDescr = "INA files (.pnt)";
 	}

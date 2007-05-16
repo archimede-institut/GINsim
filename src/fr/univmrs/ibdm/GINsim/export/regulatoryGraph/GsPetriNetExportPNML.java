@@ -28,9 +28,9 @@ public class GsPetriNetExportPNML extends GsAbstractExport {
 
 	protected GsPetriNetExportPNML() {
 		id = "PNML";
-		extension = "xml";
+		extension = ".xml";
 		filter = new String[] { "xml" };
-		filterDescr = "INA files (.xml)";
+		filterDescr = "PNML files (.xml)";
 	}
 
 	public GsPluggableActionDescriptor[] getT_action(int actionType,

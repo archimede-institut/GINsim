@@ -67,18 +67,24 @@ abstract public class GsAbstractExport implements GsPlugin, GsActionProvider  {
 	}
 	
 	protected void selectFile(GsExportConfig config) throws GsException {
-		String filterDescr = getFilterDescription(config);
+		GsAbstractExport export;
+		Vector v_format = getSubFormat();
+		if (v_format != null && config.format != -1) {
+			export = (GsAbstractExport)v_format.get(config.format);
+		} else {
+			export = this;
+		}
+		String filterDescr = export.getFilterDescription(config);
 		GsFileFilter ffilter = null;
 		if (filterDescr != null) {
 			ffilter = new GsFileFilter();
-			ffilter.setExtensionList(getFilter(config), filterDescr);
+			ffilter.setExtensionList(export.getFilter(config), filterDescr);
 		}
 	    
-		config.filename = GsOpenAction.selectSaveFile(null, ffilter, null, getExtension(config));
+		config.filename = GsOpenAction.selectSaveFile(null, ffilter, null, export.getExtension(config));
 		if (config.filename == null) {
 			return;
 		}
-		Vector v_format = getSubFormat();
 		if (v_format != null && config.format != -1) {
 			((GsAbstractExport)v_format.get(config.format)).doExport(config);
 		} else {

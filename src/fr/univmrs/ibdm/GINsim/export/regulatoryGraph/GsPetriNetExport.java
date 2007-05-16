@@ -8,13 +8,11 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -186,21 +184,10 @@ public class GsPetriNetExport extends GsAbstractExport {
 	 */
     protected static short[][] prepareExport(GsExportConfig config, Vector[] t_transition, OmddNode[] t_tree) {
 		Vector nodeOrder = config.getGraph().getNodeOrder();
-		GsGraphManager manager = config.getGraph().getGraphManager();
 		int len = nodeOrder.size();
 		Iterator it_state = new GsInitialStatesIterator(nodeOrder,
 				((GsInitialStateStore)config.getSpecificConfig()).getInitialState());
 		int[] t_state = (int[])it_state.next();
-		
-//		// remove this afterwards
-//		while (it_state.hasNext()) {
-//			int[] t = (int[])it_state.next();
-//			for (int i=0 ; i<t.length ; i++) {
-//				System.out.print(t[i]+" ");
-//			}
-//			System.out.println();
-//		}
-		
 		
 		short[][] t_markup = new short[len][2];
         for (int i=0 ; i<len ; i++) {
