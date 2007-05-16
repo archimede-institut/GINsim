@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
@@ -26,7 +27,13 @@ public class GsInitialState implements GsNamedObject {
                     Vector v_val = new Vector();
                     for (int j=1 ; j<t_val.length ; j++) {
                         try {
-                            Integer val = new Integer(t_val[j]);
+                        	int v = Integer.parseInt(t_val[j]);
+                            Integer val;
+                            if (v>=0 && v < GsEnv.t_integers.length) {
+                            	val = GsEnv.t_integers[v];
+                            } else {
+                            	val = new Integer(v);
+                            }
                             if (val.intValue() >= 0 && val.intValue() <= vertex.getMaxValue()) {
                                 boolean ok = true;
                                 for (int k=0 ; k<v_val.size() ; k++) {

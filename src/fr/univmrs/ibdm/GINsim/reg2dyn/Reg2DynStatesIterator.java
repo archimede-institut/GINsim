@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -9,7 +10,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
  * this iterator generates some initial states
  * they are constructing from list of value for each node...
  */
-public final class Reg2DynStatesIterator {
+public final class Reg2DynStatesIterator implements Iterator {
 	
 	int[] state;
 	int[] using;
@@ -18,7 +19,7 @@ public final class Reg2DynStatesIterator {
 	int[][] line;
 	boolean goon;
 
-	protected Reg2DynStatesIterator(Vector nodeOrder, Map m_line) {
+	public Reg2DynStatesIterator(Vector nodeOrder, Map m_line) {
 		this.nodeOrder = nodeOrder;
         
 		line = new int[nodeOrder.size()][];
@@ -65,7 +66,7 @@ public final class Reg2DynStatesIterator {
 	 * 
 	 * @return the next state
 	 */
-	public int[] next() {
+	public Object next() {
 		if (!goon) {
 			return null;
 		}
@@ -93,4 +94,7 @@ public final class Reg2DynStatesIterator {
 		return ret;
 	}
 
+	public void remove() {
+		// not implemented
+	}
 }

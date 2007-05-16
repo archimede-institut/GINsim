@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.export;
+package fr.univmrs.ibdm.GINsim.export.generic;
 
 import java.awt.geom.Point2D;
 import java.io.FileWriter;

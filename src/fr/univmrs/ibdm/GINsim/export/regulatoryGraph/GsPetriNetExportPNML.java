@@ -1,12 +1,15 @@
-package fr.univmrs.ibdm.GINsim.export;
+package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
+import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
@@ -21,23 +24,30 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  *  <li>PIPE2: http://pipe2.sourceforge.net/</li>
  * </ul>
  */
-public class GsPetriNetExportPNML {
-	/**
-	 * @param graph
-	 * @param fileName
-	 */
-	public static void export(GsGraph graph, String fileName) {
+public class GsPetriNetExportPNML extends GsAbstractExport {
+
+	protected GsPetriNetExportPNML() {
+		id = "PNML";
+		extension = "xml";
+		filter = new String[] { "xml" };
+		filterDescr = "INA files (.xml)";
+	}
+
+	public GsPluggableActionDescriptor[] getT_action(int actionType,
+			GsGraph graph) {
+		return null;
+	}
+	
+	protected void doExport(GsExportConfig config) {
+		GsGraph graph = config.getGraph();
         Vector v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
         Vector[] t_transition = new Vector[len];
-        short[][] t_markup = new short[len][2];
-        if (!GsPetriNetExport.prepareExport(graph, t_markup, t_transition, t_tree, v_no)) {
-            return;
-        }
+        short[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 
         try {
-	        FileWriter out = new FileWriter(fileName);
+	        FileWriter out = new FileWriter(config.getFilename());
             
             out.write("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n"+
                     "<pnml>\n"+

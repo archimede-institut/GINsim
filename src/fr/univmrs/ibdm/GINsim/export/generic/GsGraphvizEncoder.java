@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.export;
+package fr.univmrs.ibdm.GINsim.export.generic;
 
 import java.io.FileWriter;
 import java.io.IOException;

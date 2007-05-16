@@ -7,7 +7,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.reg2dyn.GsReg2dynFrame;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
@@ -21,7 +21,8 @@ public class GsInitStateTableModel extends AbstractTableModel {
     private Map m_initState = null;
     private GsInitialStateList imanager;
 	private int nbCol;
-    private GsReg2dynFrame frame;
+    private GsStackDialog frame;
+    private boolean several;
     
     private JTable theTable;
 	
@@ -31,11 +32,12 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	 * @param nodeOrder
      * @param frame
 	 */	
-	public GsInitStateTableModel(Vector nodeOrder, GsReg2dynFrame frame, GsInitialStateList imanager) {
+	public GsInitStateTableModel(Vector nodeOrder, GsStackDialog frame, GsInitialStateList imanager, boolean several) {
 		super();
 		this.nodeOrder = nodeOrder;
         this.frame = frame;
         this.imanager = imanager;
+        this.several = several;
 		nbCol = nodeOrder.size();
         setValueAt("0", 0, 0);
 	}
@@ -182,6 +184,10 @@ public class GsInitStateTableModel extends AbstractTableModel {
 				return;
 			}
 			if (aValue == Boolean.TRUE) {
+				if (!several) {
+					m_initState.clear();
+					//fireTableDataChanged();
+				}
 				m_initState.put(imanager.getElement(rowIndex), null);
 			} else {
 				m_initState.remove(imanager.getElement(rowIndex));

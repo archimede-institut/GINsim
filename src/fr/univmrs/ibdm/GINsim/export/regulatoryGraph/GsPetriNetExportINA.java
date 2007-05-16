@@ -1,12 +1,15 @@
-package fr.univmrs.ibdm.GINsim.export;
+package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
+import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
@@ -46,24 +49,34 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  * &#64;
  *</pre>
  */
-public class GsPetriNetExportINA {
-	/**
-	 * @param graph
-	 * @param fileName
-	 */
-	public static void export(GsGraph graph, String fileName) {
+public class GsPetriNetExportINA extends GsAbstractExport {
+
+	protected GsPetriNetExportINA() {
+		id = "INA";
+		extension = "pnt";
+		filter = new String[] { "pnt" };
+		filterDescr = "INA files (.pnt)";
+	}
+	
+	public GsPluggableActionDescriptor[] getT_action(int actionType,
+			GsGraph graph) {
+		return null;
+	}
+	
+	// FIXME: INA does not like PN with "useless" places. Such places should be removed (with a warning)
+	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
+	
+	protected void doExport(GsExportConfig config) {
+		GsGraph graph = config.getGraph();
 
         Vector v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
         Vector[] t_transition = new Vector[len];
-        short[][] t_markup = new short[len][2];
-        if (!GsPetriNetExport.prepareExport(graph, t_markup, t_transition, t_tree, v_no)) {
-            return;
-        }
+        short[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 
         try {
-	        FileWriter out = new FileWriter(fileName);
+	        FileWriter out = new FileWriter(config.getFilename());
 
             Vector[][] t_prepost = new Vector[2*len][2];
             Vector v_transition = new Vector();

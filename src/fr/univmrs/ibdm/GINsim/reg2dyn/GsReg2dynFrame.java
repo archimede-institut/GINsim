@@ -1,6 +1,5 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -9,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.Enumeration;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -19,22 +16,19 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumn;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
 
@@ -68,14 +62,9 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     private JTextField textMaxNodes = null;
     private JButton buttonCfgPriorityClass;
     
-    private JScrollPane jScrollPane = null;
-    private GsJTable tableInitStates = null;
-    private GsInitStateTableModel model = null;
-    private JButton buttonDelStateRow = null;
-    private JButton buttonResetStateRow = null;
-
-    Insets topInset = new Insets(20,0,0,0);
     Insets indentInset = new Insets(0, 30, 0, 0);
+    
+    GsInitialStatePanel initStatePanel = null;
 
     private JPanel mainPanel;
 
@@ -216,8 +205,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             mainPanel.add(mutantPanel, c);
             
             // initial state
-            panel = new JPanel();
-            panel.setLayout(new GridBagLayout());
+            initStatePanel = new GsInitialStatePanel(this, paramList.graph.getNodeOrder(), paramList.imanager, true);
             c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 2;
@@ -225,117 +213,11 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             c.fill = GridBagConstraints.BOTH;
             c.weightx = 1;
             c.weighty = 1;
-            mainPanel.add(panel, c);
-
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.anchor = GridBagConstraints.WEST;
-            c.insets = topInset;
-            panel.add(new JLabel(Translator.getString("STR_Initial_state")), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 1;
-            c.gridwidth = 4;
-            c.fill = GridBagConstraints.BOTH;
-            c.weightx = 1;
-            c.weighty = 1;
-            panel.add(getJScrollPane(), c);
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 0;
-            panel.add(getButtonDelStateRow(), c);
-            c = new GridBagConstraints();
-            c.gridx = 2;
-            c.gridy = 0;
-            panel.add(getButtonResetStateRow(), c);
+            mainPanel.add(initStatePanel, c);
         }
         return mainPanel;
     }
     
-    /**
-     * This method initializes tableInitStates
-     * 
-     * @return javax.swing.JTable
-     */
-    private javax.swing.JTable getTableInitStates() {
-        if(tableInitStates == null) {
-            Vector nodeNames = paramList.graph.getNodeOrder();
-            tableInitStates = new GsJTable();
-            model = new GsInitStateTableModel(nodeNames, this, paramList.imanager);
-            tableInitStates.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-            tableInitStates.setModel(model);
-            tableInitStates.getTableHeader().setReorderingAllowed(false);
-            tableInitStates.setEnabled(false);
-            tableInitStates.setRowSelectionAllowed(true);
-            tableInitStates.setColumnSelectionAllowed(true);
-
-            model.setTable(tableInitStates);
-        }
-        return tableInitStates;
-    }
-    /**
-     * the table's structure has changed, update it. 
-     * note: don't try to implement tablemodellistener: when this one is called, 
-     * the table structure change may not be applied yet in the column model
-     */
-    public void updateTable() {
-        Enumeration e_col = tableInitStates.getColumnModel().getColumns();
-        int i=-1;
-        while (e_col.hasMoreElements()) {
-            TableColumn col = (TableColumn)e_col.nextElement();
-            i++;
-            int w = 15+8*5;
-            col.setPreferredWidth(w+10);
-            col.setMinWidth(w);
-        }
-    }
-
-    /**
-     * This method initializes jScrollPane
-     * 
-     * @return javax.swing.JScrollPane
-     */
-    private javax.swing.JScrollPane getJScrollPane() {
-        if(jScrollPane == null) {
-            jScrollPane = new javax.swing.JScrollPane();
-            jScrollPane.setViewportView(getTableInitStates());
-        }
-        return jScrollPane;
-    }
-    protected void deleteStateRow() {
-    	int[] t = tableInitStates.getSelectedRows();
-    	for (int i=t.length-1 ; i>=0 ; i--) {
-    		model.deleteRow(t[i]);
-    	}
-    }
-    private JButton getButtonDelStateRow() {
-        if (buttonDelStateRow == null) {
-            buttonDelStateRow = new JButton("X");
-            buttonDelStateRow.setForeground(Color.RED);
-            buttonDelStateRow.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    deleteStateRow();
-                }
-            });
-        }
-        return buttonDelStateRow;
-    }
-
-    protected void resetStateRow() {
-        model.reset();
-    }
-    private JButton getButtonResetStateRow() {
-        if (buttonResetStateRow == null) {
-            buttonResetStateRow = new JButton(Translator.getString("STR_reset"));
-            buttonResetStateRow.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    resetStateRow();
-                }
-            });
-        }
-        return buttonResetStateRow;
-    }
 
     /**
      * 
@@ -352,10 +234,10 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         radioPriorityClass.setEnabled(false);
         buttonCfgPriorityClass.setEnabled(false);
 
-        tableInitStates.setEnabled(false);
+        initStatePanel.setEnabled(false);
         brun.setEnabled(false);
         mutantPanel.setEnabled(false);
-        buttonDelStateRow.setEnabled(false);
+        initStatePanel.setEnabled(false);
         textMaxDepth.setEnabled(false);
         textMaxNodes.setEnabled(false);
 
@@ -618,7 +500,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         } else {
             currentParameter = (GsSimulationParameters)paramList.getElement(t_sel[0]);
             mutantPanel.setStore(currentParameter);
-            model.setParam(currentParameter);
+            initStatePanel.setParam(currentParameter);
         }
         refresh();
     }
@@ -643,13 +525,13 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             mutantPanel.setEnabled(false);
             textMaxDepth.setEnabled(false);
             textMaxNodes.setEnabled(false);
-            tableInitStates.setEnabled(false);
+            initStatePanel.setEnabled(false);
         } else {
             // enable and refresh everything
             radioAsynchrone.setEnabled(true);
             radioSynchrone.setEnabled(true);
             radioPriorityClass.setEnabled(true);
-            tableInitStates.setEnabled(true);
+            initStatePanel.setEnabled(true);
             switch (currentParameter.mode) {
             case Simulation.SEARCH_ASYNCHRONE_BF:
                 radioAsynchrone.setSelected(true);

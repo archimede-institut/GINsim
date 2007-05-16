@@ -583,6 +583,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     private JTextArea getJTextArea() {
         if (jta == null) {
             jta = new JTextArea();
+            jta.setEditable(false);
         }
         return jta;
     }

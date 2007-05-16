@@ -36,7 +36,7 @@ abstract public class GsStackDialog extends GsDialog {
     
     public GsStackDialog(JFrame parent, String id, int w, int h) {
         super(parent, id, w, h);
-        JPanel contentPane = new JPanel();
+        JPanel contentPane = (JPanel)getContentPane();
         mainPanel = new JPanel();
         cards = new CardLayout();
         mainPanel.setLayout(cards);
@@ -55,7 +55,6 @@ abstract public class GsStackDialog extends GsDialog {
         c.gridy = 1;
         c.fill = GridBagConstraints.BOTH;
         contentPane.add(getBottomPanel(), c);
-        setContentPane(contentPane);
     }
     
     /**
@@ -103,12 +102,22 @@ abstract public class GsStackDialog extends GsDialog {
             bclose.setVisible(false);
             brun.setVisible(true);
             bcancel.setVisible(true);
+            mainPanel.grabFocus();
             return;
         }
         cards.show(mainPanel, name);
+        mainPanel.grabFocus();
         bclose.setVisible(true);
         brun.setVisible(false);
         bcancel.setVisible(false);
+    }
+    
+    protected void escape() {
+    	if (bclose.isVisible()) {
+    		setVisiblePanel(null);
+    	} else {
+    		cancel();
+    	}
     }
     
     /**
@@ -139,6 +148,7 @@ abstract public class GsStackDialog extends GsDialog {
                     setVisiblePanel(null);
                 }
             });
+        	bclose.setVisible(false);
         }
         return bclose;
     }
@@ -153,7 +163,7 @@ abstract public class GsStackDialog extends GsDialog {
         	brun.getModel().setMnemonic(KeyEvent.VK_R);
         	brun.setActionCommand("run");
         	brun.addActionListener(new java.awt.event.ActionListener() { 
-                public void actionPerformed(java.awt.event.ActionEvent e) {
+                public void actionPerformed(java.awt.event.ActionEvent e)  {
                     run();
                 }
             });
@@ -191,6 +201,7 @@ abstract public class GsStackDialog extends GsDialog {
      */
     protected void refreshMain() {
     }
+    
     public void doClose() {
     	cancel();
     }

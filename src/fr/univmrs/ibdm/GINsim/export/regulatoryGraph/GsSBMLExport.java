@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.export;
+package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

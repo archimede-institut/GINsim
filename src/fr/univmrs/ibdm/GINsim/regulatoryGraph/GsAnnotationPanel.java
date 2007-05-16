@@ -123,10 +123,10 @@ public class GsAnnotationPanel extends GsParameterPanel implements TableModelLis
 		}
 		return jTextArea;
 	}
-    /**
-     * 
-     */
     protected void applyComment() {
+    	if (currentNote == null) {
+    		return;
+    	}
         if (!currentNote.getComment().equals(jTextArea.getText())) {
         		currentNote.setComment(jTextArea.getText());
             if (listenChanges && graph != null) {

@@ -322,15 +322,34 @@ public class OmsddNode {
             prefix += "  ";
         }
         String s = "";
+        boolean[] t_tested = new boolean[next.length];
         for (int i=0 ; i<next.length ; i++) {
-            String s2 = next[i].getString(ilevel+1, names);
-            if (s2 != null) {
-                if (s2.equals("1") || s2.equals("-1")) {
-                    s += prefix+names.get(level)+"="+i+" ==> "+s2+"\n";
-                } else {
-                    s += prefix+names.get(level)+"="+i+"\n"+s2;
-                }
-            }
+        	if (!t_tested[i]) {
+        		String curval = null;
+        		for (int j=i+1 ; j<next.length ; j++) {
+        			if (next[j] == next[i]) {
+        				t_tested[j] = true;
+        				if (curval == null) {
+        					curval = "("+i+" OR "+j;
+        				} else {
+        					curval += " OR "+j;
+        				}
+        			}
+        		}
+        		if (curval == null) {
+        			curval = ""+i;
+        		} else {
+        			curval += ")";
+        		}
+	            String s2 = next[i].getString(ilevel+1, names);
+	            if (s2 != null) {
+	                if (s2.equals("1") || s2.equals("-1")) {
+	                    s += prefix+names.get(level)+"="+curval+" ==> "+s2+"\n";
+	                } else {
+	                    s += prefix+names.get(level)+"="+curval+"\n"+s2;
+	                }
+	            }
+        	}
         }
         return s;
     }

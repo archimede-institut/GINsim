@@ -39,6 +39,19 @@ public class GsEnv {
 	
     private static final Map m_graphs = new HashMap(); 
     
+    public static final Integer[] t_integers = new Integer[] {
+    	new Integer(0),
+    	new Integer(1),
+    	new Integer(2),
+    	new Integer(3),
+    	new Integer(4),
+    	new Integer(5),
+    	new Integer(6),
+    	new Integer(7),
+    	new Integer(8),
+    	new Integer(9)
+    };
+    
 	/** for doubleclick sensibility */
 	public static final long TIMEOUT = 400;
 	
