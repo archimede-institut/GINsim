@@ -6,11 +6,12 @@
 		<plugin name="layoutJGraph" mainClass="fr.univmrs.ibdm.GINsim.jgraph.layout.GsJgraphLayout" load="false"/>
 		<plugin name="circuit" mainClass="fr.univmrs.ibdm.GINsim.circuit.GsCircuitPlugin" load="true" depend=""/>
 		<plugin name="modelChecker" mainClass="fr.univmrs.ibdm.GINsim.modelChecker.GsModelCheckerPlugin" load="true" depend=""/>
-		<plugin name="export" mainClass="fr.univmrs.ibdm.GINsim.export.GsExportPlugin" load="true" depend=""/>
-		<plugin name="connectivity" mainClass="fr.univmrs.ibdm.GINsim.connectivity.ConnectivityPlugin" load="true" depend=""/>
-		<plugin name="animate" mainClass="fr.univmrs.ibdm.GINsim.aRegGraph.GsARegGraphPlugin" load="true"/>
 		<plugin name="stableStates" mainClass="fr.univmrs.ibdm.GINsim.stableStates.GsStableStatesPlugin" load="true"/>
 		<plugin name="analyseStateTransition" mainClass="fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicAnalyserPlugin" load="true"/>
+		<plugin name="export" mainClass="fr.univmrs.ibdm.GINsim.export.GsExportPlugin" load="true" depend=""/>
+		<plugin name="PNexport" mainClass="fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsPetriNetExport" load="true" depend=""/>
+		<plugin name="connectivity" mainClass="fr.univmrs.ibdm.GINsim.connectivity.ConnectivityPlugin" load="true" depend=""/>
+		<plugin name="animate" mainClass="fr.univmrs.ibdm.GINsim.aRegGraph.GsARegGraphPlugin" load="true"/>
 	</listOfPlugins>
 	
 	<listOfGraphType>

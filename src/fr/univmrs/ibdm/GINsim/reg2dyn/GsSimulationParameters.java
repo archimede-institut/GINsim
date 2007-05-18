@@ -8,6 +8,10 @@ import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
@@ -15,7 +19,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 /**
  * remember, save and restore a simulation parameter.
  */
-public class GsSimulationParameters implements GsXMLize, GsNamedObject {
+public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitialStateStore, GsMutantStore {
 
     String name = "new_parameter";
     Vector nodeOrder;
@@ -121,10 +125,10 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
             Iterator it = m_initState.keySet().iterator();
             while (it.hasNext()) {
             	// FIXME: get REAL initstate
-                Map m_init = ((GsInitialState)it.next()).m;
+                Map m_init = ((GsInitialState)it.next()).getMap();
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
-                    s += "  "+Reg2dynTableModel.showValue((Vector)m_init.get(vertex), vertex.getMaxValue());
+                    s += "  "+GsInitStateTableModel.showValue((Vector)m_init.get(vertex), vertex.getMaxValue());
                 }
                 s += "\n";
             }
@@ -190,7 +194,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
 			while(it.hasNext()) {
 				GsInitialState is = (GsInitialState)it.next();
 				out.openTag("row");
-				out.addAttr("name", is.name);
+				out.addAttr("name", is.getName());
                 out.closeTag();
 			}
 			out.closeTag();
@@ -323,5 +327,17 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public Map getInitialState() {
+		return m_initState;
+	}
+
+	public GsRegulatoryMutantDef getMutant() {
+		return mutant;
+	}
+
+	public void setMutant(GsRegulatoryMutantDef mutant) {
+		this.mutant = mutant;
 	}
 }

@@ -13,6 +13,7 @@ import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 
 /**
  * main method for the reg2dyn plugin

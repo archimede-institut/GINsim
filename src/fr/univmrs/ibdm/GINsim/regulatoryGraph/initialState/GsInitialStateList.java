@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.reg2dyn;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
 import java.util.Vector;
 
@@ -67,7 +67,7 @@ public class GsInitialStateList extends GsListAbstract implements GsGraphListene
             }
         }
         if (v != null) {
-        	return new SimulationParameterCascadeUpdate(v);
+        	return new InitialStateCascadeUpdate(v);
         }
         return null;
 	}
@@ -99,8 +99,24 @@ public class GsInitialStateList extends GsListAbstract implements GsGraphListene
             }
         }
         if (v != null) {
-        	return new SimulationParameterCascadeUpdate(v);
+        	return new InitialStateCascadeUpdate(v);
         }
         return null;
 	}
+}
+
+class InitialStateCascadeUpdate implements GsGraphEventCascade {
+    protected InitialStateCascadeUpdate(Vector v) {
+        this.v = v;
+    }
+    Vector v;
+
+    public String toString() {
+        StringBuffer s = new StringBuffer("updated initial states:");
+        for (int i=0 ; i<v.size() ; i++) {
+            s.append(" ");
+            s.append(v.get(i));
+        }
+        return s.toString();
+    }
 }

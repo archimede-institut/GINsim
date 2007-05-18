@@ -22,13 +22,13 @@ public class MutantSelectionPanel extends JPanel {
 	GsRegulatoryGraph graph;
 	GsMutantCombo comboMutant;
 	
-	public MutantSelectionPanel(GsStackDialog dialog, GsRegulatoryGraph graph) {
+	public MutantSelectionPanel(GsStackDialog dialog, GsRegulatoryGraph graph, GsMutantStore store) {
 		this.dialog = dialog;
 		this.graph = graph;
 		
 		setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_mutants")));
 		setLayout(new GridBagLayout());
-		comboMutant = new GsMutantCombo(graph);
+		comboMutant = new GsMutantCombo(graph, store);
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -54,15 +54,22 @@ public class MutantSelectionPanel extends JPanel {
 	
 	protected void configure() {
         dialog.addTempPanel(GsRegulatoryMutants.getMutantConfigPanel(graph));
-        comboMutant.refresh(graph);
+	}
+
+	public void refresh() {
+		comboMutant.refresh();
+	}
+	
+	public void setStore(GsMutantStore store) {
+		comboMutant.setStore(store);
 	}
 	
 	public GsRegulatoryMutantDef getMutant() {
-		return comboMutant.getMutant();
-	}
-
-	public void setSelectedItem(GsRegulatoryMutantDef mutant) {
-		comboMutant.setSelectedItem(mutant);
+		Object obj = comboMutant.getSelectedItem();
+		if (obj instanceof GsRegulatoryMutantDef) {
+			return (GsRegulatoryMutantDef)obj;
+		}
+		return null;
 	}
 }
 
@@ -71,21 +78,17 @@ class GsMutantCombo extends JComboBox {
 	private static final long serialVersionUID = -7848606073222946763L;
 
 	GsMutantModel model;
-	public GsMutantCombo(GsRegulatoryGraph graph) {
-		refresh(graph);
-	}
-	
-	public GsRegulatoryMutantDef getMutant() {
-		return model.curMutant;
-	}
-	
-	public void refresh(GsRegulatoryGraph graph) {
-		if (model == null) {
-			model = new GsMutantModel((GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false));
-		} else {
-			model.setMutantList((GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false));
-		}
+	public GsMutantCombo(GsRegulatoryGraph graph, GsMutantStore store) {
+		model = new GsMutantModel((GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false), store);
 		setModel(model);
+	}
+	
+	public void refresh() {
+		model.refresh();
+	}
+	
+	public void setStore(GsMutantStore store) {
+		model.setStore(store);
 	}
 }
 
@@ -94,33 +97,49 @@ class GsMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
     private static final long serialVersionUID = 2348678706086666489L;
     
     GsRegulatoryMutants listMutants;
-    GsRegulatoryMutantDef curMutant = null;
+    GsMutantStore store;
     
-    public GsMutantModel(GsRegulatoryMutants listMutants) {
-        this.listMutants = listMutants;
+    public GsMutantModel(GsRegulatoryMutants listMutants, GsMutantStore store) {
+    	setMutantList(listMutants, store);
     }
     
-    void setMutantList(GsRegulatoryMutants mutants) {
-            this.listMutants = mutants;
-            if (mutants == null || mutants.indexOf(curMutant) == -1) {
-            	curMutant = null;
-            }
-            // it must be a nicer way to do it but at least it works
-            fireContentsChanged(this, 0, getSize());
+    void setMutantList(GsRegulatoryMutants mutants, GsMutantStore store) {
+        this.listMutants = mutants;
+        setStore(store);
     }
 
+    void setStore(GsMutantStore newstore) {
+        this.store = newstore;
+        if (store == null) {
+        	this.store = new BasicMutantStore();
+        }
+        if (listMutants == null || listMutants.indexOf(store.getMutant()) == -1) {
+        	store.setMutant(null);
+        }
+        // it must be a nicer way to do it but at least it works
+        fireContentsChanged(this, 0, getSize());
+    }
+
+    public void refresh() {
+    	fireContentsChanged(this, 0, getSize());
+    }
+    
     public Object getSelectedItem() {
-    	if (curMutant == null) {
+    	if (store == null) {
     		return "--";
     	}
-    	return curMutant;
+    	GsRegulatoryMutantDef mutant = store.getMutant();
+    	if (mutant == null) {
+    		return "--";
+    	}
+    	return mutant;
     }
 
     public void setSelectedItem(Object anItem) {
         if (anItem instanceof GsRegulatoryMutantDef && listMutants.indexOf(anItem) != -1) {
-            curMutant = (GsRegulatoryMutantDef)anItem;
+            store.setMutant((GsRegulatoryMutantDef)anItem);
         } else {
-            curMutant = null;
+        	store.setMutant(null);
         }
         fireContentsChanged(this, 0, getSize());
     }
@@ -138,4 +157,14 @@ class GsMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
         }
         return listMutants.getNbElements()+1;
     }
+}
+
+class BasicMutantStore implements GsMutantStore {
+	GsRegulatoryMutantDef mutant = null;
+	public GsRegulatoryMutantDef getMutant() {
+		return mutant;
+	}
+	public void setMutant(GsRegulatoryMutantDef mutant) {
+		this.mutant = mutant;
+	}
 }

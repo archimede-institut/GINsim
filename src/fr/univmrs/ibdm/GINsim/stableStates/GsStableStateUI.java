@@ -32,7 +32,7 @@ public class GsStableStateUI extends GsStackDialog {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		mutantPanel = new MutantSelectionPanel(this, graph);
+		mutantPanel = new MutantSelectionPanel(this, graph, null);
 		panel.add(mutantPanel, c);
 
 		c = new GridBagConstraints();

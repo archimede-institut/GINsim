@@ -13,9 +13,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.export.GsSMVExport;
-import fr.univmrs.ibdm.GINsim.export.GsSMVExportConfigPanel;
-import fr.univmrs.ibdm.GINsim.export.GsSMVexportConfig;
+import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExport;
+import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExportConfigPanel;
+import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVexportConfig;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
