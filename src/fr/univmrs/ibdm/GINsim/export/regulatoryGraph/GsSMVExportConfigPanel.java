@@ -11,73 +11,79 @@ import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
+import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 
 public class GsSMVExportConfigPanel extends JPanel {
 	private static final long serialVersionUID = -7398674287463858306L;
 
 	private GsSMVexportConfig cfg;
 	
-	private JTable blockTable;
     JRadioButton radioSync = null;
     JRadioButton radioAsync = null;
-    JComboBox comboMutant = null;
+    MutantSelectionPanel mutantPanel = null;
     JButton butCfgMutant = null;
     JTextArea area;
-    private JScrollPane jsp;
+//	private JTable blockTable;
+//    private JScrollPane jsp;
+    private GsInitialStatePanel initPanel;
     private GsSMVConfigModel model;
     private GsMutantModel mutantModel;
     
     private boolean mutant;
     private boolean test;
+    private GsStackDialog dialog;
 
-    public GsSMVExportConfigPanel(boolean mutant, boolean test) {
+    public GsSMVExportConfigPanel(GsExtensibleConfig config, GsStackDialog dialog, boolean mutant, boolean test) {
     	this.mutant = mutant;
     	this.test = test;
-    	initialize();
-    }
-    
-    public void setCfg(GsSMVexportConfig cfg) {
-    	applyTest();
+		this.dialog = dialog;
+		GsSMVexportConfig cfg = new GsSMVexportConfig((GsRegulatoryGraph)config.getGraph());
+		config.setSpecificConfig(cfg);
     	this.cfg = cfg;
-    	if (cfg == null) {
-    		return;
-    	}
-		model = new GsSMVConfigModel(cfg.graph.getNodeOrder(), cfg.m_initStates);
-		blockTable.setModel(model);
-		if (cfg.isSync()) {
-			radioSync.setSelected(true);
-		} else {
-			radioAsync.setSelected(true);
-		}
-		if (mutant) {
-    		mutantModel = new GsMutantModel(cfg);
-    		comboMutant.setModel(mutantModel);
-    		comboMutant.setSelectedItem(cfg.mutant);
-		}
-		if (test) {
-			area.setText(cfg.thetest);
-		}
+    	initialize();
 	}
+
+//	public void setCfg(GsSMVexportConfig cfg) {
+//    	applyTest();
+//    	this.cfg = cfg;
+//    	if (cfg == null) {
+//    		return;
+//    	}
+//		model = new GsSMVConfigModel(cfg.graph.getNodeOrder(), cfg.m_initStates);
+//		blockTable.setModel(model);
+//		if (cfg.isSync()) {
+//			radioSync.setSelected(true);
+//		} else {
+//			radioAsync.setSelected(true);
+//		}
+//		if (mutant) {
+//    		mutantModel = new GsMutantModel(cfg);
+//    		comboMutant.setModel(mutantModel);
+//    		comboMutant.setSelectedItem(cfg.mutant);
+//		}
+//		if (test) {
+//			area.setText(cfg.thetest);
+//		}
+//	}
 	
 	private void initialize() {
-		this.setSize(150, 250);
         setLayout(new GridBagLayout());
         ButtonGroup group = new ButtonGroup();
         radioSync = new JRadioButton("synchronous");
@@ -104,11 +110,11 @@ public class GsSMVExportConfigPanel extends JPanel {
 				}
 			});
 	        splitpane.setRightComponent(area);
-	        splitpane.setLeftComponent(getJsp());
+	        splitpane.setLeftComponent(getInitPanel());
 	        //splitpane.setResizeWeight(0.2);
 	        splitpane.setDividerLocation(130);
         } else {
-        	add(getJsp(), cst);
+        	add(getInitPanel(), cst);
         }
         
         cst = new GridBagConstraints();
@@ -129,22 +135,11 @@ public class GsSMVExportConfigPanel extends JPanel {
 		});
         
         if (mutant) {
-	        comboMutant = new JComboBox();
-	        // TODO: add back config mutant button, when blocking is removed
-//	        butCfgMutant = new JButton(Translator.getString("STR_configure"));
-//	        butCfgMutant.addActionListener(new ActionListener() {
-//	            public void actionPerformed(ActionEvent e) {
-//	                GsRegulatoryMutants.editMutants(graph);
-//	            }
-//	        });
+	        mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg);
 	        cst = new GridBagConstraints();
 	        cst.gridx = 0;
 	        cst.gridy = 2;
-	        add(comboMutant, cst);
-//	        cst = new GridBagConstraints();
-//	        cst.gridx = 1;
-//	        cst.gridy = 2;
-//	        add(butCfgMutant, cst);
+	        add(mutantPanel, cst);
         }
 	}
 	
@@ -165,22 +160,15 @@ public class GsSMVExportConfigPanel extends JPanel {
 		}
 		cfg.setTest(area.getText());
 	}
-	
-	private JTable getBlockTable() {
-		if (blockTable == null) {
-			blockTable = new GsJTable();
+
+	private GsInitialStatePanel getInitPanel() {
+		if (initPanel == null) {
+			initPanel = new GsInitialStatePanel(dialog, cfg.graph, false);
+			initPanel.setParam(cfg);
 		}
-		return blockTable;
+		return initPanel;
 	}
 	
-    private JScrollPane getJsp() {
-        if (jsp == null) {
-            jsp = new JScrollPane();
-            jsp.setViewportView(getBlockTable());
-        }
-        return jsp;
-    }
-
     /**
      * refresh the state blocking.
      * @param nodeOrder

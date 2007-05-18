@@ -16,9 +16,12 @@ import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExport;
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExportConfigPanel;
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVexportConfig;
+import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 
@@ -54,7 +57,11 @@ public class GsNuSMVChecker implements GsModelChecker {
 		m.put("test", cfg.getTest());
 		m.put("mode", (cfg.isSync()?"sync":"async"));
 		String s = "";
-		Map minit = cfg.getInitStates();
+        Map minit = ((GsInitialState)cfg.getInitialState().
+        		keySet().iterator().next()).getMap();
+        if (minit == null) {
+        	minit = new HashMap();
+        }
 		Iterator it = minit.keySet().iterator();
 		while (it.hasNext()) {
 			Object key = it.next();
@@ -179,18 +186,21 @@ public class GsNuSMVChecker implements GsModelChecker {
 		}
 	}
 
-	public Component getEditPanel() {
+	public Component getEditPanel(GsExtensibleConfig config, GsStackDialog dialog) {
 		if (editPanel == null) {
-			editPanel = new GsSMVExportConfigPanel(false, true);
+			editPanel = new GsSMVExportConfigPanel(config, dialog, false, true);
 		}
-		editPanel.setCfg(cfg);
 		return editPanel;
 	}
 
 	public void setCfg(Map attr) {
 		cfg.setTest((String)attr.get("test"));
 		cfg.type = "sync".equals(attr.get("mode")) ? GsSMVexportConfig.CFG_SYNC : GsSMVexportConfig.CFG_ASYNC;
-		Map minit = cfg.getInitStates();
+        Map minit = ((GsInitialState)cfg.getInitialState().
+        		keySet().iterator().next()).getMap();
+        if (minit == null) {
+        	minit = new HashMap();
+        }
 		String[] ts = ((String)attr.get("init")).split(" ");
 		Vector norder = graph.getNodeOrder();
 		for (int i=0 ; i<ts.length ; i++) {

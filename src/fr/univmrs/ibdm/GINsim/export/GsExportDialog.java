@@ -24,7 +24,7 @@ public class GsExportDialog extends GsStackDialog {
 	GsGraph graph;
 	
 	public GsExportDialog(GsAbstractExport export, GsExportConfig config) {
-		super(config.graph.getGraphManager().getMainFrame(), "exportDialog_"+export.getID(), 400, 300);
+		super(config.getGraph().getGraphManager().getMainFrame(), "exportDialog_"+export.getID(), 400, 300);
 		this.export = export;
 		this.config = config;
 		if (export.getSubFormat() != null) {

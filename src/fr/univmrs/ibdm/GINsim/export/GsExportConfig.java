@@ -3,19 +3,17 @@ package fr.univmrs.ibdm.GINsim.export;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsOptions;
+import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 
-public class GsExportConfig {
+public class GsExportConfig extends GsExtensibleConfig {
 
-	GsGraph graph;
 	int ref;
 	int format = -1;
-	Object specificConfig = null;
 	String filename;
 	
 	public GsExportConfig(GsGraph graph, GsAbstractExport export, int ref) {
-		super();
-		this.graph = graph;
+		super(graph);
 		this.ref = ref;
 
 		// set the format
@@ -45,17 +43,6 @@ public class GsExportConfig {
 		}
 	}
 
-	public Object getSpecificConfig() {
-		return specificConfig;
-	}
-	
-	public void setSpecificConfig(Object specificConfig) {
-		this.specificConfig = specificConfig;
-	}
-	
-	public GsGraph getGraph() {
-		return graph;
-	}
 	public int gerRef() {
 		return ref;
 	}

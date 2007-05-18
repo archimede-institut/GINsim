@@ -18,8 +18,6 @@ import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatesIterator;
@@ -151,8 +149,7 @@ public class GsPetriNetExport extends GsAbstractExport {
     }
     
 	protected void doExport(GsExportConfig config) {
-		// TODO Auto-generated method stub
-		
+		// nothing needed here: subformat do all the job
 	}
 
 	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
@@ -243,9 +240,7 @@ class PNExportConfigPanel extends JPanel {
     	config.setSpecificConfig(specConfig);
     	GsGraph graph = config.getGraph();
     	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, 
-    			graph.getNodeOrder(),
-    			(GsInitialStateList)graph.getObject(GsInitialStateManager.key, true),
-    			false);
+    			graph, false);
     	initPanel.setParam(specConfig);
     	
     	setLayout(new GridBagLayout());

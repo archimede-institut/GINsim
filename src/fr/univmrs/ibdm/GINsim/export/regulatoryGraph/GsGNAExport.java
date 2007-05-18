@@ -6,27 +6,33 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
+import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
  * Encode a graph to GNA format.
+ * 
+ * TODO: revive the GNA export (waiting for new format)
  */
-public class GsGNAExport {
+public class GsGNAExport extends GsAbstractExport {
 	static transient Hashtable hash;
 
-	/**
-	 * @param graph
-	 * @param selectedOnly
-	 * @param fileName
-	 * @param config
-	 *            store the configuration
-	 */
-	public static void encode(GsRegulatoryGraph graph, String fileName) {
-		Vector nodeOrder = graph.getNodeOrder();
+    public GsGNAExport() {
+		id = "GNA";
+		extension = ".gna";
+		filter = new String[] { "gna" };
+		filterDescr = "GNA files";
+    }
+    
+	protected void doExport(GsExportConfig config) {
+		Vector nodeOrder = config.getGraph().getNodeOrder();
 		Iterator it = nodeOrder.iterator();
 		try {
-			FileWriter out = new FileWriter(fileName);
+			FileWriter out = new FileWriter(config.getFilename());
 			while (it.hasNext()) {
 				GsRegulatoryVertex node = (GsRegulatoryVertex) it.next();
 				String id = node.getId();
@@ -44,6 +50,16 @@ public class GsGNAExport {
 		}
 	}
 
+	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+        if (graph instanceof GsRegulatoryGraph) {
+        	return new GsPluggableActionDescriptor[] {
+        			new GsPluggableActionDescriptor("STR_GNA", "STR_GNA_descr", null, this, ACTION_EXPORT, 0)
+        	};
+        }
+        return null;
+	}
+
+	
 	private static String getGNAEq(GsRegulatoryVertex node) {
 		return "";
 	}

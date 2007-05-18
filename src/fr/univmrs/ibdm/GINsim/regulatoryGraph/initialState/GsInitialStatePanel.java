@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
@@ -38,6 +39,11 @@ public class GsInitialStatePanel extends JPanel {
 	private GsStackDialog dialog;
 	private boolean several;
 	
+    public GsInitialStatePanel(GsStackDialog dialog, GsGraph graph, boolean several) {
+    	this(dialog, graph.getNodeOrder(), 
+    			(GsInitialStateList)graph.getObject(GsInitialStateManager.key, true),
+    			several);
+    }
     public GsInitialStatePanel(GsStackDialog dialog, Vector nodeOrder, GsInitialStateList imanager, boolean several) {
     	this.dialog = dialog;
     	this.nodeOrder = nodeOrder;

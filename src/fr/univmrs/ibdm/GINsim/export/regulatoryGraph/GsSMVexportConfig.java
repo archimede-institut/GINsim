@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 /**
  * Configure SMV export
  */
-public class GsSMVexportConfig {
+public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
 
 	public static int CFG_SYNC = 0;
 	public static int CFG_ASYNC = 1;
@@ -40,22 +42,18 @@ public class GsSMVexportConfig {
         return type == CFG_SYNC;
     }
     
-    /**
-     * @return an array giving desired initial states (-1 for no constraint)
-     * TODO: share this initial state with simulation parameters ?
-     */
-    public Map getInitStates() {
-        return m_initStates;
-    }
+	public void setTest(String text) {
+		thetest = text;
+	}
 
-    /**
-     * @return the selected mutant (can be null)
-     */
     public GsRegulatoryMutantDef getMutant() {
         return mutant;
     }
+	public void setMutant(GsRegulatoryMutantDef mutant) {
+		this.mutant = mutant;
+	}
 
-	public void setTest(String text) {
-		thetest = text;
+	public Map getInitialState() {
+		return m_initStates;
 	}
 }
