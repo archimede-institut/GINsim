@@ -9,8 +9,8 @@ import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
@@ -19,6 +19,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsSimulationParameterList;
+import fr.univmrs.ibdm.GINsim.util.widget.GsLabel;
 
 public class GsInitialStatePanel extends JPanel {
 	private static final long serialVersionUID = -572201856207494392L;
@@ -46,21 +47,17 @@ public class GsInitialStatePanel extends JPanel {
     }
     
 	private void initialize() {
+		setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_Initial_state")));
 		setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 0;
-        c.anchor = GridBagConstraints.WEST;
-        c.insets = topInset;
-        add(new JLabel(Translator.getString("STR_Initial_state")), c);
+        GridBagConstraints c;
         if (!several) {
 	        c = new GridBagConstraints();
 	        c.gridx = 0;
-	        c.gridy = 1;
+	        c.gridy = 0;
 	        c.gridwidth = 4;
 	        c.fill = GridBagConstraints.BOTH;
 	        c.weightx = 1;
-	        add(new JLabel(Translator.getString("STR_singleInit_descr")), c);
+	        add(new GsLabel("STR_singleInit_descr", GsLabel.MESSAGE_NORMAL), c);
         }
         c = new GridBagConstraints();
         c.gridx = 0;
@@ -72,13 +69,12 @@ public class GsInitialStatePanel extends JPanel {
         add(getJScrollPane(), c);
         c = new GridBagConstraints();
         c.gridx = 1;
-        c.gridy = 0;
+        c.gridy = 1;
         add(getButtonDelStateRow(), c);
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 0;
+        c.gridy = 1;
         add(getButtonResetStateRow(), c);
-
 	}
 	
     /**
