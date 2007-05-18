@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.circuit;
 
+import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.ibdm.GINsim.util.widget.GsLabel;
 
 /**
  * configuration/status frame for circuit search/analyse
@@ -59,6 +61,8 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     protected JTree tree = null;
     private GsCircuitTreeModel treemodel = null;
     private JPanel configDialog = null;
+    private JPanel resultPanel = null;
+    private CardLayout cards;
     private JSplitPane splitPane = null;
     private javax.swing.JPanel jContentPane = null;
     private javax.swing.JLabel labelProgression = null;
@@ -66,10 +70,8 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     private JScrollPane sp2 = null;
     private JTextArea jta = null;
     private GsCircuitSearchStoreConfig config = null;
+    MutantSelectionPanel mutantPanel;
 
-	private MutantSelectionPanel mutantPanel;
-
-    
     /**
      * This is the default constructor
      * 
@@ -98,13 +100,6 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             }
         });
     }
-	private JPanel getMutantPanel() {
-		if (mutantPanel == null) {
-			mutantPanel = new MutantSelectionPanel(this, graph, null);
-		}
-		return mutantPanel;
-	}
-
     /**
      * close the circuit search/analyse dialog. stop running algo and close
      * configuration dialog if appropriate.
@@ -126,29 +121,45 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     private javax.swing.JPanel getJContentPane() {
         if (jContentPane == null) {
             jContentPane = new javax.swing.JPanel();
-            jContentPane.setLayout(new GridBagLayout());
-
-            GridBagConstraints c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.gridwidth = 3;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.BOTH;
-            c.weightx = 1;
-            c.weighty = 1;
-            jContentPane.add(getConfigPanel(), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 1;
-            c.gridwidth = 3;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.weightx = 1;
-            jContentPane.add(getLabelProgression(), c);
+            cards = new CardLayout();
+            jContentPane.setLayout(cards);
+            jContentPane.add(getConfigPanel(), "config");
+            jContentPane.add(getResultPanel(), "result");
+            cards.show(jContentPane, "config");
         }
         return jContentPane;
     }
 
+    private javax.swing.JPanel getResultPanel() {
+        if (resultPanel == null) {
+        	resultPanel = new javax.swing.JPanel();
+        	resultPanel.setLayout(new GridBagLayout());
+        	GridBagConstraints c = new GridBagConstraints();
+        	c.gridx = 0;
+        	c.gridy = 0;
+        	c.weightx = 1;
+        	c.fill = GridBagConstraints.BOTH;
+        	mutantPanel = new MutantSelectionPanel(this, graph, null);
+        	resultPanel.add(mutantPanel, c);
+
+        	c = new GridBagConstraints();
+        	c.gridx = 0;
+        	c.gridy = 1;
+        	c.weightx = 1;
+        	c.fill = GridBagConstraints.BOTH;
+        	resultPanel.add(getLabelProgression(), c);
+        	
+        	c = new GridBagConstraints();
+        	c.gridx = 0;
+        	c.gridy = 2;
+        	c.weightx = 1;
+        	c.weighty = 1;
+        	c.fill = GridBagConstraints.BOTH;
+        	resultPanel.add(getSplitPane(), c);
+        }
+        return resultPanel;
+    }
+    
     /**
      * Verify if the specified String is an integer
      * 
@@ -250,8 +261,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             break;
         case STATUS_SCC:
             this.status = status;
-            configDialog.setVisible(false);
-            labelProgression.setVisible(true);
+            cards.show(jContentPane, "result");
             brun.setText(Translator.getString("STR_cancel"));
             break;
         case STATUS_SEARCH_CIRCUIT:
@@ -449,23 +459,10 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
     private void showCircuit() {
         updateStatus(STATUS_SHOW_CIRCUIT);
         if (tree == null) {
-            GridBagConstraints s_sp = new GridBagConstraints();
-            s_sp.gridx = 0;
-            s_sp.gridy = 2;
-            s_sp.weightx = 1;
-            s_sp.weighty = 1;
-            s_sp.gridwidth = 2;
-            s_sp.fill = GridBagConstraints.BOTH;
-            jContentPane.add(getSplitPane(), s_sp);
-            s_sp = new GridBagConstraints();
-            s_sp.gridx = 0;
-            s_sp.gridy = 0;
-            s_sp.gridwidth = 2;
-            s_sp.fill = GridBagConstraints.HORIZONTAL;
-            jContentPane.add(getMutantPanel(), s_sp);
-            treemodel = new GsCircuitTreeModel(v_circuit);
+        	treemodel = new GsCircuitTreeModel(v_circuit);
             tree = new JTree(treemodel);
-
+        	cards.show(jContentPane, "result");
+            
             getSp().setViewportView(tree);
             tree.setCellRenderer(new GsListCellRenderer());
 
@@ -595,9 +592,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
      */
     public javax.swing.JLabel getLabelProgression() {
         if (labelProgression == null) {
-            labelProgression = new javax.swing.JLabel();
-            labelProgression.setText(Translator.getString("STR_circuit_ask"));
-            labelProgression.setVisible(false);
+            labelProgression = new GsLabel("STR_circuit_ask", GsLabel.MESSAGE_NORMAL);
         }
         return labelProgression;
     }
