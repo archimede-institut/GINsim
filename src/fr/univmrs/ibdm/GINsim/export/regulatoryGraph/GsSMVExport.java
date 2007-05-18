@@ -46,7 +46,7 @@ public class GsSMVExport extends GsAbstractExport {
 	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
         if (graph instanceof GsRegulatoryGraph) {
         	return new GsPluggableActionDescriptor[] {
-        			new GsPluggableActionDescriptor("STR_ModelChecker", "STR_ModelChecker_descr", null, this, ACTION_EXPORT, 0)
+        			new GsPluggableActionDescriptor("STR_modelChecker", "STR_modelCheckerExport_descr", null, this, ACTION_EXPORT, 0)
         	};
         }
         return null;

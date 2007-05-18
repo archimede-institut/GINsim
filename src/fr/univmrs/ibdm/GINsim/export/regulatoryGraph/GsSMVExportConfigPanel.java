@@ -40,8 +40,6 @@ public class GsSMVExportConfigPanel extends JPanel {
     MutantSelectionPanel mutantPanel = null;
     JButton butCfgMutant = null;
     JTextArea area;
-//	private JTable blockTable;
-//    private JScrollPane jsp;
     private GsInitialStatePanel initPanel;
     private GsSMVConfigModel model;
     private GsMutantModel mutantModel;
@@ -58,31 +56,13 @@ public class GsSMVExportConfigPanel extends JPanel {
 		config.setSpecificConfig(cfg);
     	this.cfg = cfg;
     	initialize();
+    	if (cfg.type == GsSMVexportConfig.CFG_ASYNC) {
+    		radioAsync.setSelected(true);
+    	} else {
+    		radioSync.setSelected(true);
+    	}
 	}
 
-//	public void setCfg(GsSMVexportConfig cfg) {
-//    	applyTest();
-//    	this.cfg = cfg;
-//    	if (cfg == null) {
-//    		return;
-//    	}
-//		model = new GsSMVConfigModel(cfg.graph.getNodeOrder(), cfg.m_initStates);
-//		blockTable.setModel(model);
-//		if (cfg.isSync()) {
-//			radioSync.setSelected(true);
-//		} else {
-//			radioAsync.setSelected(true);
-//		}
-//		if (mutant) {
-//    		mutantModel = new GsMutantModel(cfg);
-//    		comboMutant.setModel(mutantModel);
-//    		comboMutant.setSelectedItem(cfg.mutant);
-//		}
-//		if (test) {
-//			area.setText(cfg.thetest);
-//		}
-//	}
-	
 	private void initialize() {
         setLayout(new GridBagLayout());
         ButtonGroup group = new ButtonGroup();
@@ -98,7 +78,7 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
         if (test) {
-	        JSplitPane splitpane = new JSplitPane();
+	        JSplitPane splitpane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 	        add(splitpane, cst);
          	area = new JTextArea();
         	area.setLineWrap(true);
@@ -109,9 +89,8 @@ public class GsSMVExportConfigPanel extends JPanel {
 				public void focusGained(FocusEvent e) {
 				}
 			});
-	        splitpane.setRightComponent(area);
-	        splitpane.setLeftComponent(getInitPanel());
-	        //splitpane.setResizeWeight(0.2);
+	        splitpane.setBottomComponent(area);
+	        splitpane.setTopComponent(getInitPanel());
 	        splitpane.setDividerLocation(130);
         } else {
         	add(getInitPanel(), cst);
