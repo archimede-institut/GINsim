@@ -289,7 +289,7 @@ class GsCircuitSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getPreviousMaxValue() {
-        if (config.maxlen > 0) {
+        if (config.maxlen > 1) {
             if (config.maxlen == config.minlen) {
                 config.minlen--;
                 updateMin();
@@ -307,7 +307,7 @@ class GsCircuitSpinModel implements GsMinMaxSpinModel {
         if (value instanceof String) {
             try {
                  int val = (short)Integer.parseInt(value.toString());
-                 if (val >= 0 && val <= config.v_list.size()) {
+                 if (val > 0 && val <= config.v_list.size()) {
                      config.maxlen = val;
                      if (val < config.minlen) {
                          config.minlen = val;
@@ -333,7 +333,7 @@ class GsCircuitSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getPreviousMinValue() {
-        if (config.minlen > 0) {
+        if (config.minlen > 1) {
             config.minlen--;
         }
         return getMinValue();
@@ -347,7 +347,7 @@ class GsCircuitSpinModel implements GsMinMaxSpinModel {
         if (value instanceof String) {
             try {
                  int val = (short)Integer.parseInt(value.toString());
-                 if (val >= 0 && val <= config.v_list.size()) {
+                 if (val > 0 && val <= config.v_list.size()) {
                      config.minlen = val;
                      if (val > config.maxlen) {
                          config.maxlen = val;

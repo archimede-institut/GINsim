@@ -181,7 +181,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
             if (config == null) {
                 config = new GsCircuitSearchStoreConfig();
                 config.v_list = graph.getNodeOrder();
-                config.minlen = 0;
+                config.minlen = 1;
                 config.maxlen = config.v_list.size();
                 config.t_status = new short[graph.getNodeOrder().size()];
                 config.t_constraint = new short[graph.getNodeOrder().size()][3];
@@ -983,7 +983,11 @@ class GsCircuitDescrInTree {
         	Object o = null;
             switch (key) {
             case GsCircuitDescr.ALL:
-            	nbChild = circuit.t_sub.length;
+            	if (circuit.t_sub != null) {
+            		nbChild = circuit.t_sub.length;
+            	} else {
+            		nbChild = 1;
+            	}
                 break;
             case GsCircuitDescr.FUNCTIONNAL:
             	nbChild = circuit.v_functionnal.size();
@@ -1012,7 +1016,7 @@ class GsCircuitDescrInTree {
         }
         String s = "";
         // if the circuit has several children, then hide details
-        if (summary && nbChild > 1) {
+        if (summary && (nbChild > 1 || circuit.t_sub == null)) {
             for (int i=0 ; i < circuit.t_vertex.length ; i++) {
                 s += " " + circuit.t_vertex[i];
             }
