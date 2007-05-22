@@ -100,6 +100,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
   public void setEditedObject(Object obj) {
     GsRegulatoryVertex vertex = (GsRegulatoryVertex)obj;
     interactionList = vertex.getInteractionsModel();
+    interactionList.setNode(vertex);
     tree.setModel(interactionList);
     repaint();
   }

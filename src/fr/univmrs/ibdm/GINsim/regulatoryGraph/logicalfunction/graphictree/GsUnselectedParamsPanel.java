@@ -67,7 +67,7 @@ public class GsUnselectedParamsPanel extends JPanel implements ItemListener {
           else
             // *** paint the text disabled
             g.setColor(getDisabledTextColor());
-          SwingUtilities2.drawStringUnderlineCharAt(c,g,text, mnemIndex, textRect.x, textRect.y + fm.getAscent());
+           SwingUtilities2.drawStringUnderlineCharAt(c,g,text, mnemIndex, textRect.x, textRect.y + fm.getAscent());
         }
       }
 

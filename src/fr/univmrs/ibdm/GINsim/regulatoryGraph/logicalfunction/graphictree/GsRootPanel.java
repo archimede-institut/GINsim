@@ -70,7 +70,8 @@ public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionLis
           ((GsTreeInteractionsModel)tree.getModel()).addValue(i);
           ((GsTreeInteractionsModel)tree.getModel()).addEmptyExpression(i, vertex);
           ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-          while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
+          if (enu != null)
+            while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
         }
       }
       catch (Exception ex) {
