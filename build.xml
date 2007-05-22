@@ -131,8 +131,8 @@
     		description="compile the source " >
 		<!-- Compile the java code from ${src} into ${build} -->
     		<javac source="1.4" target="1.4" classpath="${classpath}" srcdir="${src}" destdir="${build}"/>
-  			<property name="path" value="fr/univmrs/ibdm/GINsim/ressources"/>
-  			<copy todir="${build}/${path}"><fileset dir="${src}/${path}"/></copy>
+  		<property name="path" value="fr/univmrs/ibdm/GINsim/ressources"/>
+  		<copy todir="${build}/${path}"><fileset dir="${src}/${path}"/></copy>
 	</target>
 
 	

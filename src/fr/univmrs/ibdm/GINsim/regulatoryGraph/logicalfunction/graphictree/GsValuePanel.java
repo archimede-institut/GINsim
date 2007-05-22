@@ -1,40 +1,35 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.JTree;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
+
 import javax.swing.JButton;
 import javax.swing.JSpinner;
+import javax.swing.JTree;
 import javax.swing.SpinnerNumberModel;
-import java.awt.Color;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
-import java.util.Enumeration;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.tree.TreePath;
 
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJSpinner;
+
 public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionListener, ChangeListener {
-  private JButton addButton, delButton;
+private static final long serialVersionUID = 207002545507075699L;
+private JButton addButton, delButton;
   private JSpinner spinner;
 
   public GsValuePanel(GsTreeElement value, JTree tree, boolean sel, int width) {
     super(value, tree, sel, width);
-    addButton = new JButton(GsEnv.getIcon("add.png")) {
-      public Insets getInsets() {
-        return new Insets(2, 2, 2, 2);
-      }
-    };
+    addButton = new GsJButton("add.png");
     addButton.addActionListener(this);
-    delButton = new JButton(GsEnv.getIcon("close.png")) {
-      public Insets getInsets() {
-        return new Insets(2, 2, 2, 2);
-      }
-    };
+    delButton = new GsJButton("close.png");
     delButton.addActionListener(this);
     if (treeElement.getProperty("null function") == null)
       treeElement.setProperty("null function", new Boolean(false));
@@ -47,11 +42,7 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
     snm.setMaximum(new Integer(((GsTreeInteractionsModel)tree.getModel()).getVertex().getMaxValue()));
     snm.setStepSize(new Integer(1));
     treeElement.setProperty("value", Integer.valueOf(treeElement.toString()));
-    spinner = new JSpinner(snm) {
-      public Insets getInsets() {
-        return new Insets(0, 2, 0, 0);
-      }
-    };
+    spinner = new GsJSpinner(snm);
     ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setEditable(false);
     ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setBackground(Color.white);
     spinner.setFont(defaultFont);

@@ -1,15 +1,19 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import javax.swing.tree.*;
-import javax.swing.JTree;
 import java.awt.Component;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import java.awt.event.ComponentListener;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.Enumeration;
 
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+
 public class GsBooleanFunctionTreeRenderer extends DefaultTreeCellRenderer implements ComponentListener {
-  private int width;
+private static final long serialVersionUID = 3456841880209526024L;
+private int width;
   private JTree tree = null;
 
   public GsBooleanFunctionTreeRenderer(int totalWidth) {

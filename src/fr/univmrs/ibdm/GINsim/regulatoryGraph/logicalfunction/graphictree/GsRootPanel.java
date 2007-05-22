@@ -1,33 +1,31 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import javax.swing.JTree;
 import java.awt.GridBagConstraints;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import java.awt.Insets;
-import javax.swing.plaf.ComboBoxUI;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Enumeration;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTree;
 import javax.swing.tree.TreePath;
+
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionListener {
-  private JLabel label;
+private static final long serialVersionUID = -1866485315946504210L;
+private JLabel label;
   private JButton button;
 
   public GsRootPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
     super(value, tree, sel, width);
     label = new JLabel(value.toString());
     label.setFont(defaultFont);
-    button = new JButton(GsEnv.getIcon("add.png")) {
-      public Insets getInsets() {
-        return new Insets(2, 2, 2, 2);
-      }
-    };
+    button = new GsJButton("add.png");
     button.addActionListener(this);
     if (!((Boolean)treeElement.getProperty("add")).booleanValue()) button.setEnabled(false);
     add(button, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,

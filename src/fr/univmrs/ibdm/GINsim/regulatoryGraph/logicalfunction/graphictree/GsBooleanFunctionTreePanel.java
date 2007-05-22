@@ -1,11 +1,14 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import javax.swing.*;
-import java.awt.Font;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagLayout;
+
+import javax.swing.JPanel;
+import javax.swing.JTree;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 public abstract class GsBooleanFunctionTreePanel extends JPanel {
   protected static Font defaultFont = new Font("monospaced", Font.PLAIN, 10);

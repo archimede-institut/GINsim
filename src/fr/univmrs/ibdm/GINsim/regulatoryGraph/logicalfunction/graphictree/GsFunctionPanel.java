@@ -1,65 +1,55 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import javax.swing.JTree;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import java.awt.Insets;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
 import java.awt.Color;
 import java.awt.Dimension;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import javax.swing.tree.TreePath;
-import javax.swing.JSplitPane;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.util.Vector;
-import java.util.Enumeration;
-import javax.swing.UIManager;
-import java.awt.event.MouseListener;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
+import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
+import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.tree.TreePath;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 
 public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener, PropertyChangeListener, MouseListener {
-  private JPanel buttonPanel;
-  private JButton delButton, showButton, hideButton;
-  private JTextArea textArea;
-  private JScrollPane jsp;
-  private JSplitPane splitPane = null;
-  private GsUnselectedParamsPanel listPanel;
-  private boolean toUpdate = false;
-  private TreePath[] selectedPaths;
+	private static final long serialVersionUID = 8900639275182677150L;
+	private JPanel buttonPanel;
+	private JButton delButton, showButton, hideButton;
+	private JTextArea textArea;
+	private JScrollPane jsp;
+	private JSplitPane splitPane = null;
+	private GsUnselectedParamsPanel listPanel;
+	private boolean toUpdate = false;
+	private TreePath[] selectedPaths;
 
   public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width, TreePath[] sp) {
     super(value, tree, sel, width);
     selectedPaths = sp;
     setBackground(Color.white);
-    delButton = new JButton(GsEnv.getIcon("close.png")) {
-      public Insets getInsets() {
-        return new Insets(2, 2, 2, 2);
-      }
-    };
+    delButton = new JButton("close.png");
     delButton.addActionListener(this);
-    showButton = new JButton(GsEnv.getIcon("show.png")) {
-      public Insets getInsets() {
-        return new Insets(2, 2, 2, 2);
-      }
-    };
+    showButton = new JButton("show.png");
     showButton.addActionListener(this);
-    hideButton = new JButton(GsEnv.getIcon("hide.png")) {
-      public Insets getInsets() {
-        return new Insets(2, 2, 2, 2);
-      }
-    };
+    hideButton = new JButton("hide.png");
     hideButton.addActionListener(this);
     buttonPanel = new JPanel(new GridBagLayout());
     buttonPanel.setBackground(Color.white);
