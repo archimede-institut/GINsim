@@ -24,32 +24,30 @@ public class GsBooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
     bg.setParser(parser);
     Vector p = (Vector)genePool.get(value);
 
-    //if (p == null) {
-      p = new Vector();
-      Object[] allParams = parser.getAllParams();
-      Vector allData = parser.getAllData();
-      int nb_params = allParams.length;
-      Vector data;
-      Iterator it_data;
-      GsLogicalFunctionListElement element;
-      String testString = "";
+    p = new Vector();
+    Object[] allParams = parser.getAllParams();
+    Vector allData = parser.getAllData();
+    int nb_params = allParams.length;
+    Vector data;
+    Iterator it_data;
+    GsLogicalFunctionListElement element;
+    String testString = "";
 
-      if (value.indexOf("#") >= 0) testString = value.replaceAll("#", "_");
+    if (value.indexOf("#") >= 0) testString = value.replaceAll("#", "_");
 
-      for (int i = 0; i < nb_params; i++) {
-        data = (Vector)allParams[i];
-        it_data = data.iterator();
-        while (it_data.hasNext()) {
-          element = (GsLogicalFunctionListElement)it_data.next();
-          if (((value.indexOf("#") < 0) && (element.toString().indexOf(value + "_") != -1)) ||
-              ((value.indexOf("#") >= 0) && (element.toString().equals(testString)))) {
-            p.addElement(allData.elementAt(i));
-            break;
-          }
+    for (int i = 0; i < nb_params; i++) {
+      data = (Vector)allParams[i];
+      it_data = data.iterator();
+      while (it_data.hasNext()) {
+        element = (GsLogicalFunctionListElement)it_data.next();
+        if (((value.indexOf("#") < 0) && (element.toString().indexOf(value + "_") != -1)) ||
+            ((value.indexOf("#") >= 0) && (element.toString().equals(testString)))) {
+          p.addElement(allData.elementAt(i));
+          break;
         }
       }
-      genePool.put(value, p);
-    //}
+    }
+    genePool.put(value, p);
     GsLogicalFunctionList il = new GsLogicalFunctionList();
     il.setParser(parser);
     il.setData(new Vector(p));

@@ -14,7 +14,10 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeFunction;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeString;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
@@ -116,6 +119,10 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @param graph the graph (to propagate changes if needed)
 	 */
 	public void setMaxValue(short max, GsRegulatoryGraph graph) {
+    if (!getInteractionsModel().isMaxCompatible(max)) {
+      graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
+    }
+    else
 	    if (max>0) {
             String s = "";
     		short oldmax = maxValue;
@@ -138,6 +145,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
             }
             if (oldmax != maxValue) {
                 graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
+                getInteractionsModel().refreshVertex();
             }
 	    }
 	}
@@ -427,7 +435,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
       GsTreeString root = (GsTreeString)interactionsModel.getRoot();
       GsTreeValue val;
       GsTreeExpression exp;
-      GsTreeFunction func;
+      GsTreeParam param;
       String chk;
 
       for (int i = 0; i < root.getChildCount(); i++) {
@@ -438,8 +446,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
           exp = (GsTreeExpression)val.getChild(j);
           chk = "";
           for (int k = 0; k < exp.getChildCount(); k++) {
-            func = (GsTreeFunction)exp.getChild(k);
-            if (func.isSelected())
+            param = (GsTreeParam)exp.getChild(k);
+            if (param.isChecked())
               chk += "1";
             else
               chk += "0";

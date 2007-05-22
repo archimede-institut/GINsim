@@ -18,6 +18,11 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionL
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 public class GsTreeInteractionsModel implements TreeModel {
   //the vector of interaction
@@ -33,6 +38,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 
   public GsTreeInteractionsModel(GsRegulatoryGraph graph) {
     root = new GsTreeString(null, "Function list");
+    root.setProperty("add", new Boolean(true));
     this.v_ok = new Vector();
     this.interactions = null;
     this.graph = graph;
@@ -63,7 +69,7 @@ public class GsTreeInteractionsModel implements TreeModel {
           j--;
         }
         else {
-          updateExpression((short)val.getValue(), exp);
+          setExpression((short)val.getValue(), exp);
         }
         fireTreeStructureChanged(root);
       }
@@ -83,7 +89,7 @@ public class GsTreeInteractionsModel implements TreeModel {
             j--;
           }
           else
-            updateExpression((short)val.getValue(), exp);
+            setExpression((short)val.getValue(), exp);
           fireTreeStructureChanged(root);
         }
         if (val.getChildCount() == 0) {
@@ -102,7 +108,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         val = (GsTreeValue) root.getChild(i);
         for (int j = 0; j < val.getChildCount(); j++) {
           exp = (GsTreeExpression) val.getChild(j);
-          updateExpression((short)val.getValue(), exp);
+          setExpression((short)val.getValue(), exp);
           fireTreeStructureChanged(root);
         }
       }
@@ -143,7 +149,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     Vector v;
     GsEdgeIndex edgeIndex;
     GsLogicalFunctionListElement element;
-    GsTreeFunction func;
+    GsTreeParam param;
 
     setNode(currentVertex);
     addValue(val);
@@ -157,15 +163,36 @@ public class GsTreeInteractionsModel implements TreeModel {
         v.addElement(edgeIndex);
       }
       if (v.size() > 0) setActivesEdges(v, val);
-      func = new GsTreeFunction(exp, v);
-      exp.addChild(func);
+      param = new GsTreeParam(exp, v);
+      exp.addChild(param);
     }
     parseFunctions();
     currentVertex.setInteractionsModel(this);
   }
-
-  private void updateExpression(short val, GsTreeExpression exp) {
+  public void addEmptyExpression(short val, GsRegulatoryVertex currentVertex) throws Exception {
+      setNode(currentVertex);
+      addValue(val);
+      currentVertex.setInteractionsModel(this);
+      addExpression(val, (TBooleanTreeNode)null);
+  }
+  public void addNewValue(short val) throws Exception {
+      addValue(val);
+      node.setInteractionsModel(this);
+  }
+  private void setExpression(short val, GsTreeExpression exp) {
     updateExpression(val, exp, exp.getRoot().toString());
+  }
+
+  public void updateValue(short newVal, short oldVal) {
+    GsTreeValue value;
+    for (int i = 0; i < root.getChildCount(); i++) {
+      value = (GsTreeValue)root.getChild(i);
+      if ((short)value.getValue() == oldVal) {
+        value.setValue(newVal);
+        break;
+      }
+    }
+    refreshVertex();
   }
 
   public void updateExpression(short val, GsTreeExpression exp, String newExp) {
@@ -191,8 +218,8 @@ public class GsTreeInteractionsModel implements TreeModel {
             v.addElement(edgeIndex);
           }
           if (v.size() > 0) setActivesEdges(v, val);
-          GsTreeFunction func = new GsTreeFunction(exp, v);
-          exp.addChild(func);
+          GsTreeParam param = new GsTreeParam(exp, v);
+          exp.addChild(param);
         }
         parseFunctions();
 
@@ -213,10 +240,23 @@ public class GsTreeInteractionsModel implements TreeModel {
     }
   }
   public void refreshVertex() {
+    boolean dis = false;
+
     parseFunctions();
+
     if (node != null) {
       node.setInteractionsModel(this);
       graph.getVertexAttributePanel().setEditedObject(node);
+      for (int p = node.getBaseValue(); p <= node.getMaxValue(); p++) {
+        dis = false;
+        for (int k = 0; k < root.getChildCount(); k++)
+          if (((GsTreeValue) root.getChild(k)).getValue() == p) {
+            dis = true;
+            break;
+          }
+        if (!dis)break;
+      }
+      root.setProperty("add", new Boolean(!dis));
     }
   }
   public Vector getLogicalParameters() {
@@ -224,17 +264,17 @@ public class GsTreeInteractionsModel implements TreeModel {
     GsLogicalParameter p;
     GsTreeValue val;
     GsTreeExpression exp;
-    GsTreeFunction func;
+    GsTreeParam param;
 
     for (int i = 0; i < root.getChildCount(); i++) {
       val = (GsTreeValue)root.getChild(i);
       for (int j = 0; j < val.getChildCount(); j++) {
         exp = (GsTreeExpression)val.getChild(j);
         for (int k = 0; k < exp.getChildCount(); k++) {
-          func = (GsTreeFunction)exp.getChild(k);
-          if (func.isSelected() && !func.isError()) {
+          param = (GsTreeParam)exp.getChild(k);
+          if (param.isChecked() && !param.isError()) {
             p = new GsLogicalParameter(val.getValue());
-            p.setEdges(func.getEdgeIndexes());
+            p.setEdges(param.getEdgeIndexes());
             v.addElement(p);
           }
         }
@@ -246,7 +286,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     Hashtable h = new Hashtable();
     GsTreeValue val;
     GsTreeExpression exp;
-    GsTreeFunction func;
+    GsTreeParam param;
     int v;
 
     for (int i = 0; i < root.getChildCount(); i++) {
@@ -254,16 +294,16 @@ public class GsTreeInteractionsModel implements TreeModel {
       for (int j = 0; j < val.getChildCount(); j++) {
         exp = (GsTreeExpression)val.getChild(j);
         for (int k = 0; k < exp.getChildCount(); k++) {
-          func = (GsTreeFunction)exp.getChild(k);
-          if (func.isSelected()) {
-            if (h.get(func.toString()) == null)
-              h.put(func.toString(), new Integer(val.getValue()));
+          param = (GsTreeParam)exp.getChild(k);
+          if (param.isChecked()) {
+            if (h.get(param.toString()) == null)
+              h.put(param.toString(), new Integer(val.getValue()));
             else {
-              v = ((Integer) h.get(func.toString())).intValue();
+              v = ((Integer) h.get(param.toString())).intValue();
               if (Math.abs(v) == val.getValue())
-                h.put(func.toString(), new Integer(-Math.abs(v)));
+                h.put(param.toString(), new Integer(-Math.abs(v)));
               else
-                h.put(func.toString(), new Integer(123456));
+                h.put(param.toString(), new Integer(123456));
             }
           }
         }
@@ -274,24 +314,24 @@ public class GsTreeInteractionsModel implements TreeModel {
       for (int j = 0; j < val.getChildCount(); j++) {
         exp = (GsTreeExpression)val.getChild(j);
         for (int k = 0; k < exp.getChildCount(); k++) {
-          func = (GsTreeFunction)exp.getChild(k);
-          if (func.isSelected()) {
-            if (((Integer) h.get(func.toString())).intValue() == 123456) {
-              func.setError(true);
-              func.setForeground(Color.red);
+          param = (GsTreeParam)exp.getChild(k);
+          if (param.isChecked()) {
+            if (((Integer) h.get(param.toString())).intValue() == 123456) {
+              param.setError(true);
+              param.setForeground(Color.red);
             }
-            else if (((Integer) h.get(func.toString())).intValue() < 0) {
-              func.setError(true);
-              func.setForeground(Color.magenta);
+            else if (((Integer) h.get(param.toString())).intValue() < 0) {
+              param.setError(true);
+              param.setForeground(Color.magenta);
             }
             else {
-              func.setError(false);
-              func.setForeground(Color.black);
+              param.setError(false);
+              param.setForeground(Color.black);
             }
           }
           else {
-            func.setError(false);
-            func.setForeground(Color.black);
+            param.setError(false);
+            param.setForeground(Color.black);
           }
         }
       }
@@ -301,7 +341,7 @@ public class GsTreeInteractionsModel implements TreeModel {
   public void checkParams(short v, String chk, String exp) {
     GsTreeValue tval;
     GsTreeExpression texp;
-    GsTreeFunction tfunc;
+    GsTreeParam tparam;
 
     for (int i = 0; i < root.getChildCount(); i++) {
       tval = (GsTreeValue)root.getChild(i);
@@ -310,8 +350,8 @@ public class GsTreeInteractionsModel implements TreeModel {
           texp = (GsTreeExpression)tval.getChild(j);
           if (texp.toString().equals(exp))
             for (int k = 0; k < texp.getChildCount(); k++) {
-              tfunc = (GsTreeFunction)texp.getChild(k);
-              tfunc.setSelected(chk.charAt(k) == '1');
+              tparam = (GsTreeParam)texp.getChild(k);
+              tparam.setChecked(chk.charAt(k) == '1');
             }
         }
     }
@@ -334,6 +374,22 @@ public class GsTreeInteractionsModel implements TreeModel {
         }
     }
     return new TreePath(path);
+  }
+  public GsRegulatoryVertex getVertex() {
+    return node;
+  }
+  public boolean isMaxCompatible(int max) {
+    boolean comp = true;
+    GsTreeValue value;
+
+    for (int i = 0; i < root.getChildCount(); i++) {
+      value = (GsTreeValue)root.getChild(i);
+      if (value.getValue() > max) {
+        comp = false;
+        break;
+      }
+    }
+    return comp;
   }
 
   //////////////// TreeModel interface implementation ///////////////////////

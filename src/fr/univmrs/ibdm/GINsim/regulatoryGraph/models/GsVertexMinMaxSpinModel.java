@@ -10,12 +10,12 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
  * model controlling spin buttons for base and max value of a GsRegulatoryVertex
  */
 public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
-    
+
     private GsRegulatoryVertex vertex;
     private GsMinSpinModel m_min;
     private GsMaxSpinModel m_max;
 	private GsRegulatoryGraph graph;
-    
+
     /**
      */
     public GsVertexMinMaxSpinModel() {
@@ -71,7 +71,7 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
         m_max.update();
         m_min.update();
     }
-    
+
     public Object getNextMinValue() {
     	if (graph == null || vertex == null) {
     		return Tools.IZ;
@@ -137,7 +137,7 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
         m_max.update();
         m_min.update();
     }
-    
+
     public JSpinner getSMin() {
         JSpinner smin = new JSpinner(m_min);
         smin.setEditor(m_min.getEditor());

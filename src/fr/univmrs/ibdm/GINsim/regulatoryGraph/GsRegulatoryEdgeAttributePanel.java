@@ -44,9 +44,9 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	private GsAnnotationPanel gsAnnotationPanel = null;
 	private GsEdgeMinMaxSpinModel minmax = null;
 	/**
-	 * This method initializes 
+	 * This method initializes
 	 * @param main
-	 * 
+	 *
 	 */
 	public GsRegulatoryEdgeAttributePanel(GsMainFrame main) {
 		super();
@@ -56,12 +56,12 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
         }
 		initialize();
 	}
-    
+
     public void setGraph(GsGraph graph) {
         super.setGraph(graph);
         getGsAnnotationPanel().setGraph(graph);
     }
-    
+
 	/**
 	 * This method initializes this
 	 */
@@ -74,14 +74,14 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		jLabel1 = new JLabel(Translator.getString("STR_max"));
         jLabel2 = new JLabel(Translator.getString("STR_min"));
         labelFullName = new JLabel();
-        
+
         GridBagConstraints c = new java.awt.GridBagConstraints();
         c.fill = java.awt.GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
         c.gridwidth = 3;
         this.add(labelFullName, c);
-        
+
         c = new java.awt.GridBagConstraints();
         c.fill = java.awt.GridBagConstraints.BOTH;
         c.gridx = 0;
@@ -107,14 +107,14 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		c.fill = java.awt.GridBagConstraints.NONE;
         c.anchor = java.awt.GridBagConstraints.WEST;
         this.add(jLabel2, c);
-        
+
         c = new java.awt.GridBagConstraints();
 		c.gridx = 1;
 		c.gridy = 4;
 		c.fill = java.awt.GridBagConstraints.NONE;
         c.anchor = java.awt.GridBagConstraints.WEST;
         this.add(jLabel1, c);
-        
+
         c = new java.awt.GridBagConstraints();
         c.gridx = 4;
         c.gridy = 0;
@@ -130,14 +130,14 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
         c.anchor = java.awt.GridBagConstraints.WEST;
         c.fill = java.awt.GridBagConstraints.BOTH;
         this.add(getS_min(), c);
-        
+
         c = new java.awt.GridBagConstraints();
         c.gridx = 2;
         c.gridy = 4;
         c.anchor = java.awt.GridBagConstraints.WEST;
         c.fill = java.awt.GridBagConstraints.BOTH;
         this.add(getS_max(), c);
-        
+
         c = new java.awt.GridBagConstraints();
         c.gridx = 2;
         c.gridy = 5;
@@ -165,16 +165,16 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
         }
     }
 	/**
-	 * This method initializes jList	
-	 * 	
-	 * @return javax.swing.JList	
-	 */    
+	 * This method initializes jList
+	 *
+	 * @return javax.swing.JList
+	 */
 	private JList getJList() {
 		if (jList == null) {
 			jList = new JList();
 			jList.setModel(new GsDirectedEdgeListModel());
 			jList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-			jList.addListSelectionListener(new javax.swing.event.ListSelectionListener() { 
+			jList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
 				public void valueChanged(javax.swing.event.ListSelectionEvent e) {
 				    listSelectionChanged();
 				}
@@ -188,14 +188,14 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		updateSelection();
     }
     /**
-	 * This method initializes jButton	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */    
+	 * This method initializes jButton
+	 *
+	 * @return javax.swing.JButton
+	 */
 	private JButton getJButton() {
 		if (jButton == null) {
 			jButton = new JButton("+");
-			jButton.addActionListener(new java.awt.event.ActionListener() { 
+			jButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				    addEdge();
 				}
@@ -215,17 +215,17 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		jList.setSelectedIndex(currentEdge.getEdgeCount()-1);
     }
     /**
-	 * This method initializes jButton1	
-	 * 	
-	 * @return javax.swing.JButton	
-	 */    
+	 * This method initializes jButton1
+	 *
+	 * @return javax.swing.JButton
+	 */
 	private JButton getJButton1() {
 		if (jButton1 == null) {
 			jButton1 = new JButton("X");
             jButton1.setForeground(Color.RED);
 			jButton1.setPreferredSize(new Dimension(10,50));
 			jButton1.setSize(new Dimension(10,50));
-			jButton1.addActionListener(new java.awt.event.ActionListener() { 
+			jButton1.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 				    delete();
 				}
@@ -234,7 +234,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		return jButton1;
 	}
 	/**
-     * 
+     *
      */
     protected void delete() {
 	    if (!graph.isEditAllowed()) {
@@ -246,7 +246,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
         } catch (GsException e1) {
             GsEnv.error(e1, mainFrame);
         }
-	    
+
 	    ((GsDirectedEdgeListModel)jList.getModel()).update();
 	    if (index == currentEdge.getEdgeCount()) {
 	        index--;
@@ -254,10 +254,10 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	    jList.setSelectedIndex(index);
     }
     /**
-	 * This method initializes s_min	
-	 * 	
-	 * @return javax.swing.JSpinner	
-	 */    
+	 * This method initializes s_min
+	 *
+	 * @return javax.swing.JSpinner
+	 */
 	private JSpinner getS_min() {
 		if (s_min == null) {
 			s_min = minmax.getSMin();
@@ -265,10 +265,10 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		return s_min;
 	}
 	/**
-	 * This method initializes s_max	
-	 * 	
-	 * @return javax.swing.JSpinner	
-	 */    
+	 * This method initializes s_max
+	 *
+	 * @return javax.swing.JSpinner
+	 */
 	private JSpinner getS_max() {
 		if (s_max == null) {
             s_max = minmax.getSMax();
@@ -276,10 +276,10 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		return s_max;
 	}
 	/**
-	 * This method initializes c_sign	
-	 * 	
-	 * @return javax.swing.JComboBox	
-	 */    
+	 * This method initializes c_sign
+	 *
+	 * @return javax.swing.JComboBox
+	 */
 	private JComboBox getC_sign() {
 		if (c_sign == null) {
 		    c_sign = new JComboBox();
@@ -298,7 +298,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		return c_sign;
 	}
 	/**
-     * 
+     *
      */
     protected void applySign() {
 	    if (graph.isEditAllowed() && currentEdge.getSign() != c_sign.getSelectedIndex()) {
@@ -308,17 +308,17 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	    }
     }
     /**
-	 * This method initializes gsAnnotationPanel	
-	 * 	
-	 * @return fr.univmrs.ibdm.GINsim.regulatoryGraph.GsAnnotationPanel	
-	 */    
+	 * This method initializes gsAnnotationPanel
+	 *
+	 * @return fr.univmrs.ibdm.GINsim.regulatoryGraph.GsAnnotationPanel
+	 */
 	private GsAnnotationPanel getGsAnnotationPanel() {
 		if (gsAnnotationPanel == null) {
 			gsAnnotationPanel = new GsAnnotationPanel();
 		}
 		return gsAnnotationPanel;
 	}
-	
+
 	private void updateSelection() {
 	    if (selected == -1) {
 	        // unactive all
@@ -338,7 +338,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	        gsAnnotationPanel.setEditedObject(currentEdge.getGsAnnotation(index));
 	    }
 	}
-	
+
 	/**
 	 * @return Returns the jScrollPane.
 	 */

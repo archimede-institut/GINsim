@@ -22,6 +22,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 /**
  * parses a ginml regulatory graph.
@@ -410,6 +411,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
               }
             }
             vertex.getInteractionsModel().parseFunctions();
+            if ((vertex.getMaxValue() - vertex.getBaseValue() + 1) == ((Hashtable)values.get(vertex)).size())
+              ((GsTreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
             for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
               value = (String)enu_values.nextElement();
               for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
