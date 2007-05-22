@@ -10,7 +10,6 @@ import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.*;
 import javax.swing.plaf.metal.MetalCheckBoxUI;
-import com.sun.java.swing.SwingUtilities2;
 import javax.swing.text.View;
 import javax.swing.plaf.basic.BasicHTML;
 import java.awt.event.ItemListener;
@@ -30,7 +29,7 @@ public class GsUnselectedParamsPanel extends JPanel implements ItemListener {
 
       Font f = c.getFont();
       g.setFont(f);
-      FontMetrics fm = SwingUtilities2.getFontMetrics(c, g, f);
+      FontMetrics fm = g.getFontMetrics(f);
 
       Rectangle viewRect = new Rectangle(size);
       Rectangle iconRect = new Rectangle();
@@ -60,14 +59,13 @@ public class GsUnselectedParamsPanel extends JPanel implements ItemListener {
         if (v != null)
           v.paint(g, textRect);
         else {
-          int mnemIndex = b.getDisplayedMnemonicIndex();
           if(model.isEnabled())
             // *** paint the text normally
             g.setColor(b.getForeground());
           else
             // *** paint the text disabled
             g.setColor(getDisabledTextColor());
-           SwingUtilities2.drawStringUnderlineCharAt(c,g,text, mnemIndex, textRect.x, textRect.y + fm.getAscent());
+          g.drawString(text, textRect.x, textRect.y + fm.getAscent());
         }
       }
 
