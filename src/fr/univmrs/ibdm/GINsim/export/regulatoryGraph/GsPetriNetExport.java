@@ -1,17 +1,28 @@
-package fr.univmrs.ibdm.GINsim.export;
+package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
+import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
+import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatesIterator;
 
 /**
  * Export a regulatory graph to petri net (shared methods).
@@ -40,10 +51,23 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  *      Networks</li>
  *</ul>     
  */
-public class GsPetriNetExport {
+public class GsPetriNetExport extends GsAbstractExport {
+	static Vector v_format = new Vector();
+
+	static final String PNFORMAT = "export.petriNet.defaultFormat";
+	static {
+		v_format = new Vector();
+		v_format.add(new GsPetriNetExportINA());
+		v_format.add(new GsPetriNetExportPNML());
+	}
+
+	public GsPetriNetExport() {
+		id = "PetriNet";
+	}
 	
-	// TODO: INA does not like PN with "useless" places. Such places should be removed (with a warning)
-	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
+	public Vector getSubFormat() {
+		return v_format;
+	}
 	
     /**
      * extract transitions from a tree view of logical parameters.
@@ -126,27 +150,67 @@ public class GsPetriNetExport {
         t_cst[level][0] = -1;
     }
     
-    protected static boolean prepareExport(GsGraph graph, short[][] t_markup, Vector[] t_transition, OmddNode[] t_tree, Vector v_no) {
-        int len = v_no.size();
+	protected void doExport(GsExportConfig config) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+        if (graph instanceof GsRegulatoryGraph) {
+        	return new GsPluggableActionDescriptor[] {
+        			new GsPluggableActionDescriptor("STR_PetriNet", "STR_PetriNet_descr", null, this, ACTION_EXPORT, 0)
+        	};
+        }
+        return null;
+	}
+	
+	public boolean needConfig(GsExportConfig config) {
+		return true;
+	}
+
+	protected JComponent getConfigPanel(GsExportConfig config, GsStackDialog dialog) {
+		return new PNExportConfigPanel(config, dialog);
+	}
+
+	/**
+	 * prepare the PN export:
+	 *   - read/set initial markup
+	 *   - build the set of transitions
+	 * 
+	 * @param config
+	 * @param t_transition
+	 * @param t_tree
+	 * @return the initial markup
+	 */
+    protected static short[][] prepareExport(GsExportConfig config, Vector[] t_transition, OmddNode[] t_tree) {
+		Vector nodeOrder = config.getGraph().getNodeOrder();
+		int len = nodeOrder.size();
+		Iterator it_state = new GsInitialStatesIterator(nodeOrder,
+				((GsInitialStateStore)config.getSpecificConfig()).getInitialState());
+		int[] t_state = (int[])it_state.next();
+		
+		short[][] t_markup = new short[len][2];
         for (int i=0 ; i<len ; i++) {
             OmddNode node = t_tree[i];
-            GsRegulatoryVertex vertex = ((GsRegulatoryVertex)v_no.get(i));
-            if (graph.getGraphManager().getIncomingEdges(vertex).size() == 0) {
-                // input node: no transition, use basal value as initial markup
-                t_markup[i][0] = vertex.getBaseValue();
-                t_markup[i][1] = (short)(vertex.getMaxValue() - vertex.getBaseValue());
-            } else {
+            GsRegulatoryVertex vertex = ((GsRegulatoryVertex)nodeOrder.get(i));
+            
+//            if (manager.getIncomingEdges(vertex).size() == 0) {
+//                // input node: no regulator, use basal value as initial markup ??
+//                t_markup[i][0] = vertex.getBaseValue();
+//                t_markup[i][1] = (short)(vertex.getMaxValue() - vertex.getBaseValue());
+//            } else {
                 // normal node, initial markup = 0
-                t_markup[i][0] = 0;
-                t_markup[i][1] = vertex.getMaxValue();
+                t_markup[i][0] = (short)t_state[i];
+                t_markup[i][1] = (short)(vertex.getMaxValue()-t_state[i]);
                 Vector v_transition = new Vector();
                 t_transition[i] = v_transition;
-                GsPetriNetExport.browse(v_transition, node, i, v_no, len);
-            }
+                GsPetriNetExport.browse(v_transition, node, i, nodeOrder, len);
+//            }
         }
-        int ret = JOptionPane.showConfirmDialog(null, new PNExportConfigPanel(graph.getNodeOrder(), t_markup), "initial state", JOptionPane.OK_CANCEL_OPTION);
-        return ret == JOptionPane.OK_OPTION;
+		return t_markup;
     }
+
+
 }
 
 class TransitionData {
@@ -174,76 +238,32 @@ class TransitionData {
 class PNExportConfigPanel extends JPanel {
     private static final long serialVersionUID = 9043565812912568136L;
 
-    private PNmarkupModel model;
-    
-    protected PNExportConfigPanel (Vector nodeOrder, short[][] t_markup) {
-        model = new PNmarkupModel(nodeOrder, t_markup);
-        initialize();
-    }
-    
-    private void initialize() {
-        JScrollPane spane = new JScrollPane();
-        spane.setViewportView(new JTable(model));
-        this.add(spane);
-        setSize(100, 250);
+    protected PNExportConfigPanel (GsExportConfig config, GsStackDialog dialog) {
+    	PNConfig specConfig = new PNConfig();
+    	config.setSpecificConfig(specConfig);
+    	GsGraph graph = config.getGraph();
+    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, 
+    			graph.getNodeOrder(),
+    			(GsInitialStateList)graph.getObject(GsInitialStateManager.key, true),
+    			false);
+    	initPanel.setParam(specConfig);
+    	
+    	setLayout(new GridBagLayout());
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridx = 0;
+    	c.gridy = 1;
+    	c.weightx = 1;
+    	c.weighty = 1;
+    	c.fill = GridBagConstraints.BOTH;
+    	add(initPanel, c);
     }
 }
 
-class PNmarkupModel extends DefaultTableModel {
-    private static final long serialVersionUID = -4867567086739357065L;
+class PNConfig implements GsInitialStateStore {
+	
+	Map m_init = new HashMap();
 
-    private Vector nodeOrder;
-    private short[][] t_markup;
-    
-    protected PNmarkupModel (Vector nodeorder, short[][] t_markup) {
-        this.nodeOrder = nodeorder;
-        this.t_markup = t_markup;
-    }
-
-    public int getColumnCount() {
-        return 2;
-    }
-
-    public int getRowCount() {
-        if (nodeOrder == null) {
-            return 0;
-        }
-        return nodeOrder.size();
-    }
-
-    public Object getValueAt(int row, int column) {
-        switch (column) {
-            case 0:
-                return nodeOrder.get(row);
-            case 1:
-                return ""+t_markup[row][0];
-        }
-        return null;
-    }
-
-    public boolean isCellEditable(int row, int column) {
-        return column == 1;
-    }
-    
-    public String getColumnName(int column) {
-        switch (column) {
-            case 0: return Translator.getString("STR_name");
-            case 1: return Translator.getString("STR_value");
-        }
-        return super.getColumnName(column);
-    }
-
-    public void setValueAt(Object aValue, int row, int column) {
-        if (column != 1) {
-            return;
-        }
-        int val = Integer.parseInt((String)aValue);
-        int d = val - t_markup[row][0];
-        if (val < 0 || d > t_markup[row][1]) {
-            return;
-        }
-        t_markup[row][0] += d;
-        t_markup[row][1] -= d;
-        fireTableCellUpdated(row, column);
-    }
+	public Map getInitialState() {
+		return m_init;
+	}
 }

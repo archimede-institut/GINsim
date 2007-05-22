@@ -3,6 +3,14 @@ package fr.univmrs.ibdm.GINsim.export;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import fr.univmrs.ibdm.GINsim.export.generic.GsBioLayoutEncoder;
+import fr.univmrs.ibdm.GINsim.export.generic.GsGraphvizEncoder;
+import fr.univmrs.ibdm.GINsim.export.generic.GsSVGExport;
+import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsGNAExport;
+import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSBMLExport;
+import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExport;
+import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExportConfigPanel;
+import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVexportConfig;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
@@ -25,8 +33,6 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
     private static final int GRAPHVIZ = 0;
     private static final int BIOLAYOUT = 1;
     private static final int SVG = 2;
-    private static final int INA = 3;
-    private static final int PNML = 4;
     private static final int SMV = 5;
     private static final int SBML = 6;
     private static final int GNA = 7;
@@ -40,10 +46,6 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
             if (graph instanceof GsRegulatoryGraph) {
               return new GsPluggableActionDescriptor[] {
                       new GsPluggableActionDescriptor("STR_SMV", "STR_SMV_descr", null, this, ACTION_EXPORT, SMV),
-                      new GsPluggableActionDescriptor("STR_GNA", "STR_GNA_descr", null, this, ACTION_EXPORT, GNA),
-                      new GsPluggableActionDescriptor("STR_INA", "STR_INA_descr", null, this, ACTION_EXPORT, INA),
-                      new GsPluggableActionDescriptor("STR_PNML", "STR_PNML_descr", null, this, ACTION_EXPORT, PNML),
-                      new GsPluggableActionDescriptor("STR_SBML", "STR_SBML_descr", null, this, ACTION_EXPORT, SBML),
                       new GsPluggableActionDescriptor("STR_graphviz", "STR_graphviz_descr", null, this, ACTION_EXPORT, GRAPHVIZ),
                       new GsPluggableActionDescriptor("STR_biolayout", "STR_biolayout_descr", null, this, ACTION_EXPORT, BIOLAYOUT),
                       new GsPluggableActionDescriptor("STR_SVG", "STR_SVG_descr", null, this, ACTION_EXPORT, SVG)
@@ -58,7 +60,7 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
 		return null;
 	}
 
-	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction (int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
 	    if (actionType != ACTION_EXPORT) {
 	        return;
         }
@@ -78,14 +80,6 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
             case SVG:
                 ffilter.setExtensionList(new String[] {"svg"}, "SVG files");
                 extension = ".svg";
-                break;
-            case INA:
-                ffilter.setExtensionList(new String[] {"pnt"}, "pnt (INA) files");
-                extension = ".pnt";
-                break;
-            case PNML:
-                ffilter.setExtensionList(new String[] {"xml"}, "PNML files");
-                extension = ".xml";
                 break;
             case SBML:
                 ffilter.setExtensionList(new String[] {"sbml"}, "SBML files");
@@ -125,12 +119,6 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 break;
             case SVG:
                 GsSVGExport.exportSVG(graph, false, filename);
-                break;
-            case INA:
-                GsPetriNetExportINA.export(graph, filename);
-                break;
-            case PNML:
-                GsPetriNetExportPNML.export(graph, filename);
                 break;
             case SBML:
                 GsSBMLExport.export(graph, filename);

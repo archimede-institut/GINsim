@@ -1,6 +1,10 @@
 package fr.univmrs.ibdm.GINsim.global;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +38,19 @@ public class GsEnv {
 	private static Vector allFrames = new Vector(1);
 	
     private static final Map m_graphs = new HashMap(); 
+    
+    public static final Integer[] t_integers = new Integer[] {
+    	new Integer(0),
+    	new Integer(1),
+    	new Integer(2),
+    	new Integer(3),
+    	new Integer(4),
+    	new Integer(5),
+    	new Integer(6),
+    	new Integer(7),
+    	new Integer(8),
+    	new Integer(9)
+    };
     
 	/** for doubleclick sensibility */
 	public static final long TIMEOUT = 400;
@@ -353,12 +370,14 @@ public class GsEnv {
         }
     }
 
-	public static void readConfig(String path) {
+	public static void readConfig(String path) throws IOException, FileNotFoundException {
+		InputStream stream;
         URL url = GsEnv.class.getResource(path);
-        try {
-        	new ReadConfig(GsEnv.cloader).startParsing(url.openStream(), false);
-        } catch (Exception e) {
-        	e.printStackTrace();
+        if (url != null) {
+        	stream = url.openStream();
+        } else {
+        	stream = new FileInputStream(path);
         }
+    	new ReadConfig(GsEnv.cloader).startParsing(stream, false);
 	}
 }

@@ -690,7 +690,7 @@ public class GsInteractionPanel extends GsParameterPanel {
 
           }
         int mask = 0, value = 0, n = 0, h, k = 0;
-        String s, s2;
+        String s;
         for (int y = 0; y < 3; y++) {
         //while (!pattern_1.isEmpty()) {
           for (int i = 1; i <= v2.size(); i++) {

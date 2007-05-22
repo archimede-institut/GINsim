@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.reg2dyn;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
 import java.io.IOException;
 import java.io.InputStream;

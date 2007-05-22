@@ -308,7 +308,7 @@ public class GsCircuitAlgo {
     	score = fullPhaseSpace;
     	long[] ret = new long[2];
     	ret[1] = score(node, state);
-    	ret[0] = score;  // FIXME: nee a way to "scale" the score correctly
+    	ret[0] = score;  // FIXME: still need a better, "scaled", score
     	return ret;
     }
     private short score (OmsddNode node, int[] state) {

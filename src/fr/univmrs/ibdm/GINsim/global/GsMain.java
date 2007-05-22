@@ -22,8 +22,6 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
  */
 public class GsMain {
 
-	
-	// TODO: choose runtime behaviour here
 	private static boolean ENABLE_TESTING;
 	public static boolean SHOW_FUNCTION;
 	public static boolean USE_PICCOLO = false;
@@ -38,8 +36,12 @@ public class GsMain {
         boolean startui = true;
         Vector commands = new Vector(0);
         Vector open = new Vector(0);
-
-        GsEnv.readConfig("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
+        try {
+        	GsEnv.readConfig("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	System.exit(1);
+        }
         boolean testing = false;
         /*
          * parse args: - run without GUI - set ginsim dir - choose locale - give
@@ -60,7 +62,19 @@ public class GsMain {
                     i++;
                     gsdir = args[i];
                 } else {
-                    System.out.println("\"--ginsimdir\": missing argument");
+                    System.out.println(args[i]+": missing argument");
+                    return;
+                }
+            } else if (args[i].equals("--addconfig")) {
+                if (args.length > i) {
+                    i++;
+                    try {
+						GsEnv.readConfig(args[i]);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+                } else {
+                    System.out.println(args[i]+": missing argument");
                     return;
                 }
             } else if (args[i].equals("--lang")) {
@@ -73,7 +87,7 @@ public class GsMain {
                         Translator.setLocale(Locale.FRENCH);
                     }
                 } else {
-                    System.out.println("\"--lang\": missing argument");
+                    System.out.println(args[i]+": missing argument");
                     return;
                 }
             } else if (args[i].equals("--noui")) {
@@ -127,8 +141,6 @@ public class GsMain {
 
 /**
  * This class reads GINsim's generic config file, loads plugins and so on.
- * @author aurelien
- *
  */
 class ReadConfig extends GsXMLHelper {
 
