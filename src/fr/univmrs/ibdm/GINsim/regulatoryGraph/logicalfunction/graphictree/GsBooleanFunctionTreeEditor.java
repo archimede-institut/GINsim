@@ -1,13 +1,17 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import javax.swing.tree.*;
-import javax.swing.JTree;
 import java.awt.Component;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import javax.swing.SwingUtilities;
 import java.awt.Rectangle;
-import java.util.EventObject;
 import java.awt.event.MouseEvent;
+import java.util.EventObject;
+
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultTreeCellEditor;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreePath;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
   public GsBooleanFunctionTreeEditor(JTree tree, DefaultTreeCellRenderer renderer) {

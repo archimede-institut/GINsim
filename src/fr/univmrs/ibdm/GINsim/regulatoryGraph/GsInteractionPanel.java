@@ -663,7 +663,7 @@ public class GsInteractionPanel extends GsParameterPanel {
         Iterator it = allowedEdges.iterator();
         Hashtable v2 = new Hashtable();
         Hashtable v3 = new Hashtable();
-        int nb_1 = 0, N = 0;
+        int N = 0;
         while (it.hasNext()) {
           GsDirectedEdge e = (GsDirectedEdge)it.next();
           GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)e.getUserObject();

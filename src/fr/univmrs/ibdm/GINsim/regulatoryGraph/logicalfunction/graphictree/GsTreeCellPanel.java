@@ -1,31 +1,33 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import javax.swing.Icon;
-import javax.swing.JCheckBox;
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.Insets;
-import javax.swing.JTree;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Graphics;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import java.awt.Dimension;
-import javax.swing.JTextArea;
-import java.awt.GridBagLayout;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
-import java.awt.event.KeyListener;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTree;
+
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
 
 public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListener, KeyListener {
-  private static Font defaultFont = new Font("monospaced", Font.PLAIN, 10);
+private static final long serialVersionUID = -2982270267576728776L;
+private static Font defaultFont = new Font("monospaced", Font.PLAIN, 10);
   private GsTreeElement treeElement;
   private JTree tree = null;
   private boolean selected, leaf;
@@ -44,11 +46,7 @@ public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListe
     treeElement = (GsTreeElement)value;
     setLayout(new GridBagLayout());
     if (row > 0) {
-      JCheckBox cb = new JCheckBox(){
-        public Insets getInsets() {
-          return new Insets(2, 2, 2, 2);
-        }
-      };
+      JCheckBox cb = new GsJCheckBox();
       cb.setSelected(check);
       cb.addItemListener(this);
       if (sel)
@@ -61,11 +59,7 @@ public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListe
       this.add(cb, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
                                           GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
       if (!leaf) {
-        JButton but = new JButton(GsEnv.getIcon("close.png")) {
-          public Insets getInsets() {
-            return new Insets(2, 2, 2, 2);
-          }
-        };
+        JButton but = new JButton("close.png");
         but.addActionListener(this);
         this.add(but, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                              GridBagConstraints.NONE, new Insets(2, 0, 0, 0), 0, 0));
@@ -128,8 +122,10 @@ public class GsTreeCellPanel extends JPanel implements ItemListener, ActionListe
     ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
   }
   public Insets getInsets() {
-    if (leaf) return new Insets(0, 0, 0, 0);
-    return new Insets(3, 3, 3, 3);
+	  if (leaf) {
+		  return new Insets(0, 0, 0, 0);
+	  }
+	  return new Insets(3, 3, 3, 3);
   }
   public void keyPressed(KeyEvent e) {}
   public void keyReleased(KeyEvent e) {}

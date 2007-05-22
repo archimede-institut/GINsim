@@ -1,26 +1,26 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import javax.swing.JTree;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import javax.swing.JCheckBox;
-import java.awt.Insets;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
-import javax.swing.tree.TreePath;
+import java.awt.Insets;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Enumeration;
 
+import javax.swing.JCheckBox;
+import javax.swing.JTree;
+import javax.swing.tree.TreePath;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
+
 public class GsParamPanel extends GsBooleanFunctionTreePanel implements ItemListener {
-  private JCheckBox checkBox;
+private static final long serialVersionUID = -7863256897019020183L;
+private JCheckBox checkBox;
 
   public GsParamPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
     super(value, tree, sel, width);
-    checkBox = new JCheckBox(value.toString(), true) {
-      public Insets getInsets() {
-        return new Insets(2, 2, 2, 2);
-      }
-    };
+    checkBox = new GsJCheckBox(value.toString(), true);
     checkBox.setFont(defaultFont);
     checkBox.addItemListener(this);
     if (sel)

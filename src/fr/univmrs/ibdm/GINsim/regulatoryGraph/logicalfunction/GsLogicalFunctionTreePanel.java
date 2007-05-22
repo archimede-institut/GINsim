@@ -1,25 +1,29 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 
-import javax.swing.*;
 import java.awt.BorderLayout;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import javax.swing.plaf.basic.BasicTreeUI;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.Graphics;
-import javax.swing.tree.TreePath;
+
+import javax.swing.Icon;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.TreeModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeRenderer;
+import javax.swing.tree.TreePath;
+
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
+import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeEditor;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeRenderer;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel {
-
-  class GsTreeUI extends BasicTreeUI {
+private static final long serialVersionUID = -8323666225199589729L;
+class GsTreeUI extends BasicTreeUI {
     protected void paintExpandControl(Graphics g, Rectangle clipBounds, Insets insets,
                                       Rectangle bounds, TreePath path, int row, boolean isExpanded,
                                       boolean hasBeenExpanded, boolean isLeaf) {

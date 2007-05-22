@@ -1,27 +1,40 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import javax.swing.*;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.util.Vector;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Dimension;
-import java.awt.*;
-import javax.swing.plaf.metal.MetalCheckBoxUI;
-import sun.swing.SwingUtilities2;
-import javax.swing.text.View;
-import javax.swing.plaf.basic.BasicHTML;
-import java.awt.event.ItemListener;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Enumeration;
-import javax.swing.tree.TreePath;
 import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.swing.AbstractButton;
+import javax.swing.ButtonModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicHTML;
+import javax.swing.plaf.metal.MetalCheckBoxUI;
+import javax.swing.text.View;
+import javax.swing.tree.TreePath;
+
+import sun.swing.SwingUtilities2;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
 
 public class GsUnselectedParamsPanel extends JPanel implements ItemListener {
-  class GsCheckBoxUI extends MetalCheckBoxUI {
+private static final long serialVersionUID = -3205548998282223157L;
+class GsCheckBoxUI extends MetalCheckBoxUI {
     public synchronized void paint(Graphics g, JComponent c) {
       AbstractButton b = (AbstractButton) c;
       ButtonModel model = b.getModel();
@@ -93,11 +106,7 @@ public class GsUnselectedParamsPanel extends JPanel implements ItemListener {
     checkBoxes = new Hashtable();
     if (v != null) {
       for (int k = 0; k < v.size(); k++) {
-        cb = new JCheckBox(v.elementAt(k).toString(), true) {
-          public Insets getInsets() {
-            return new Insets(1, 1, 0, 0);
-          }
-        };
+        cb = new GsJCheckBox(v.elementAt(k).toString(), true);
         checkBoxes.put(cb, v.elementAt(k));
         cb.setUI(new GsCheckBoxUI());
         cb.setFont(defaultFont);
