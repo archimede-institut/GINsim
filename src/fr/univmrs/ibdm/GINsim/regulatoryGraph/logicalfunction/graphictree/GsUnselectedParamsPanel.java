@@ -10,7 +10,7 @@ import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.*;
 import javax.swing.plaf.metal.MetalCheckBoxUI;
-import com.sun.java.swing.SwingUtilities2;
+import sun.swing.SwingUtilities2;
 import javax.swing.text.View;
 import javax.swing.plaf.basic.BasicHTML;
 import java.awt.event.ItemListener;
