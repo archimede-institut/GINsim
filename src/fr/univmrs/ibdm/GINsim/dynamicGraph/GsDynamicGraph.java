@@ -29,11 +29,13 @@ import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
 import fr.univmrs.ibdm.GINsim.gui.GsEditModeDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
+import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphPropertiesPanel;
+import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 
@@ -58,11 +60,6 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	public GsDynamicGraph(GsRegulatoryGraph regGraph) {
 	    this((String)null);
 	    nodeOrder = (Vector)regGraph.getNodeOrder().clone();
-	    String s_nodeOrder = "";
-	    for (int i=0 ; i<nodeOrder.size() ; i++) {
-	        s_nodeOrder += nodeOrder.get(i)+" ";
-	    }
-	    v_stables.add(s_nodeOrder);
 	}
     protected String getGraphZipName() {
     	return zip_mainEntry;
@@ -402,22 +399,24 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         while (it.hasNext()) {
             GsDynamicNode node = (GsDynamicNode)it.next();
             if (node.isStable()) {
-                v_stables.add(node);
+                v_stables.add(node.state);
             }
         }
         
         // just display the number of stable states here and a "show more" button
-        if (v_stables.size() > 1) {
-            pinfo.add(new JLabel("nb stable: "+(v_stables.size()-1)));
+        if (v_stables.size() > 0) {
+            pinfo.add(new JLabel("nb stable: "+(v_stables.size())));
             JButton b_view = new JButton("view");
             // show all stables: quickly done but, it is "good enough" :)
             b_view.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     JFrame frame = new JFrame("stables");
-                    frame.setSize(10*((String)v_stables.get(0)).length(), 40+25*v_stables.size());
+                    frame.setSize(Math.min(30*(nodeOrder.size()+1), 800),
+                    		Math.min(25*(v_stables.size()+1), 600));
                     JScrollPane scroll = new JScrollPane();
-                    JList list = new JList(v_stables);
-                    scroll.setViewportView(list);
+                    StableTableModel model = new StableTableModel(nodeOrder);
+                    model.setResult(v_stables);
+                    scroll.setViewportView(new GsJTable(model));
                     frame.setContentPane(scroll);
                     frame.setVisible(true);
                 }
