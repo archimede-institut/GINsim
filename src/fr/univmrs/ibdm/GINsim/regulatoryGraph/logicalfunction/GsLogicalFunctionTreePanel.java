@@ -49,7 +49,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel {
     protected void paintVerticalPartOfLeg(Graphics g, Rectangle clipBounds, Insets insets, TreePath path) {
       int depth = path.getPathCount() - 1;
       if (depth == 0 && !getShowsRootHandles() && !isRootVisible()) return;
-      int lineX = getRowX(-1, depth + 1) - getRightChildIndent() + insets.left;
+      int lineX = ((depth + 1 + depthOffset) * totalChildIndent) - getRightChildIndent() + insets.left;
       int clipLeft = clipBounds.x;
       int clipRight = clipBounds.x + (clipBounds.width - 1);
       if (((GsTreeElement)path.getLastPathComponent()).getChildCount() == 0) return;

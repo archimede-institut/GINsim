@@ -43,9 +43,9 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
 
     SpinnerNumberModel snm = new SpinnerNumberModel();
     snm.setValue(Integer.valueOf(treeElement.toString()));
-    snm.setMinimum(Integer.valueOf(((GsTreeInteractionsModel)tree.getModel()).getVertex().getBaseValue()));
-    snm.setMaximum(Integer.valueOf(((GsTreeInteractionsModel)tree.getModel()).getVertex().getMaxValue()));
-    snm.setStepSize(Integer.valueOf(1));
+    snm.setMinimum(new Integer(((GsTreeInteractionsModel)tree.getModel()).getVertex().getBaseValue()));
+    snm.setMaximum(new Integer(((GsTreeInteractionsModel)tree.getModel()).getVertex().getMaxValue()));
+    snm.setStepSize(new Integer(1));
     treeElement.setProperty("value", Integer.valueOf(treeElement.toString()));
     spinner = new JSpinner(snm) {
       public Insets getInsets() {

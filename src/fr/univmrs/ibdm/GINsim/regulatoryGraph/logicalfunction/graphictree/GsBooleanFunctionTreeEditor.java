@@ -49,10 +49,14 @@ public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
   protected boolean inHitRegion(int x, int y) {
     TreePath tp = tree.getPathForLocation(x, y);
     if (lastRow != -1 && tree != null) {
-      Rectangle bounds = tree.getRowBounds(lastRow);
+      Rectangle bounds = tree.getPathBounds(tp);
       GsTreeElement treeElement = (GsTreeElement)tp.getLastPathComponent();
       boolean leaf = false;
       if (tp != null) leaf = treeElement.isLeaf();
+
+      // Ajout pour compatibilite avec Java 1.4
+      offset = 20;
+
       if (bounds != null)
         if (!leaf && ((x <= (bounds.x + offset - 16)) || (x > (bounds.x + offset + 14))))
           return false;
