@@ -1,0 +1,129 @@
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.JTree;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import javax.swing.JButton;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.awt.Color;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
+import java.util.Enumeration;
+import javax.swing.tree.TreePath;
+
+public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionListener, ChangeListener {
+  private JButton addButton, delButton;
+  private JSpinner spinner;
+
+  public GsValuePanel(GsTreeElement value, JTree tree, boolean sel, int width) {
+    super(value, tree, sel, width);
+    addButton = new JButton(GsEnv.getIcon("add.png")) {
+      public Insets getInsets() {
+        return new Insets(2, 2, 2, 2);
+      }
+    };
+    addButton.addActionListener(this);
+    delButton = new JButton(GsEnv.getIcon("close.png")) {
+      public Insets getInsets() {
+        return new Insets(2, 2, 2, 2);
+      }
+    };
+    delButton.addActionListener(this);
+    if (treeElement.getProperty("null function") == null)
+      treeElement.setProperty("null function", new Boolean(false));
+    else if (((Boolean)treeElement.getProperty("null function")).booleanValue())
+      addButton.setEnabled(false);
+
+    SpinnerNumberModel snm = new SpinnerNumberModel();
+    snm.setValue(Integer.valueOf(treeElement.toString()));
+    snm.setMinimum(Integer.valueOf(((GsTreeInteractionsModel)tree.getModel()).getVertex().getBaseValue()));
+    snm.setMaximum(Integer.valueOf(((GsTreeInteractionsModel)tree.getModel()).getVertex().getMaxValue()));
+    snm.setStepSize(Integer.valueOf(1));
+    treeElement.setProperty("value", Integer.valueOf(treeElement.toString()));
+    spinner = new JSpinner(snm) {
+      public Insets getInsets() {
+        return new Insets(0, 2, 0, 0);
+      }
+    };
+    ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setEditable(false);
+    ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setBackground(Color.white);
+    spinner.setFont(defaultFont);
+    spinner.addChangeListener(this);
+    spinner.setBorder(null);
+    spinner.setBackground(Color.white);
+    add(addButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+                                          GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
+    add(delButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+                                          GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
+    add(spinner, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+                                          GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+  }
+  public void actionPerformed(ActionEvent e) {
+    if (e.getSource() == delButton) {
+      tree.stopEditing();
+      treeElement.remove();
+      ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
+      ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
+    }
+    else if (e.getSource() == addButton) {
+      addButton.setEnabled(false);
+      Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+      addButtonAction();
+      while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
+    }
+  }
+  public void addButtonAction() {
+    try {
+      ((GsTreeInteractionsModel)tree.getModel()).addEmptyExpression((short)((GsTreeValue)treeElement).getValue(),
+        ((GsTreeInteractionsModel)tree.getModel()).getVertex());
+      ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
+      treeElement.setProperty("null function", new Boolean(true));
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+  public void stateChanged(ChangeEvent e) {
+    GsTreeInteractionsModel model = (GsTreeInteractionsModel)tree.getModel();
+    GsTreeValue value;
+    boolean ok = true;
+    int val, oldValue;
+    Integer newValue;
+
+    oldValue = ((Integer)treeElement.getProperty("value")).intValue();
+    val = ((Integer)spinner.getValue()).intValue();
+    for (int i = 0; i < model.getChildCount(model.getRoot()); i++) {
+      value = (GsTreeValue)model.getChild(model.getRoot(), i);
+      if (value.getValue() == val) {
+        ok = false;
+        break;
+      }
+    }
+    if (!ok)
+      if (oldValue < val) {
+        newValue = new Integer(val + 1);
+        if (newValue.compareTo(((SpinnerNumberModel)spinner.getModel()).getMaximum()) <= 0)
+          spinner.setValue(newValue);
+        else
+          spinner.setValue(new Integer(oldValue));
+      }
+      else if (oldValue > val){
+        newValue = new Integer(val - 1);
+        if (newValue.compareTo(((SpinnerNumberModel)spinner.getModel()).getMinimum()) >= 0)
+          spinner.setValue(newValue);
+        else
+          spinner.setValue(new Integer(oldValue));
+      }
+      else
+        model.refreshVertex();
+    else
+      model.updateValue((short)val, (short)oldValue);
+  }
+}
