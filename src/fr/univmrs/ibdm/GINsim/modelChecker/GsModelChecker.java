@@ -6,6 +6,7 @@ import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 
@@ -45,7 +46,7 @@ public interface GsModelChecker extends GsNamedObject {
 	/**
 	 * @return a panel to edit the properties of this thing
 	 */
-	public Component getEditPanel(GsExtensibleConfig config, GsStackDialog dialog);
+	public Component getEditPanel(GsGraph graph, GsStackDialog dialog);
 	/**
 	 * @return the type of model checker to use
 	 */

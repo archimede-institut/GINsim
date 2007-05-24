@@ -17,7 +17,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.global.TempDir;
-import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsList;
 import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
@@ -120,7 +119,7 @@ public class GsModelCheckerUI extends GsStackDialog {
     		return;
     	}
     	GsModelChecker mchecker = (GsModelChecker)l_tests.getElement(ts[0]);
-    	splitTestEdit.setRightComponent(mchecker.getEditPanel(new GsExtensibleConfig(graph), this));
+    	splitTestEdit.setRightComponent(mchecker.getEditPanel(graph, this));
 		splitTestEdit.setDividerLocation(location);
     }
     
