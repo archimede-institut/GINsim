@@ -28,7 +28,6 @@ import javax.swing.plaf.metal.MetalCheckBoxUI;
 import javax.swing.text.View;
 import javax.swing.tree.TreePath;
 
-import sun.swing.SwingUtilities2;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
 

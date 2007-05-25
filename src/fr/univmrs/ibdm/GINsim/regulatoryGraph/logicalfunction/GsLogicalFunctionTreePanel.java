@@ -20,10 +20,17 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBool
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeRenderer;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
+import javax.swing.JRootPane;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.util.Enumeration;
+import java.util.Vector;
 
-public class GsLogicalFunctionTreePanel extends GsParameterPanel {
-private static final long serialVersionUID = -8323666225199589729L;
-class GsTreeUI extends BasicTreeUI {
+public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyListener {
+  private static final long serialVersionUID = -8323666225199589729L;
+
+  class GsTreeUI extends BasicTreeUI {
     protected void paintExpandControl(Graphics g, Rectangle clipBounds, Insets insets,
                                       Rectangle bounds, TreePath path, int row, boolean isExpanded,
                                       boolean hasBeenExpanded, boolean isLeaf) {
@@ -94,23 +101,33 @@ class GsTreeUI extends BasicTreeUI {
   private JTree tree;
   private GsTreeInteractionsModel interactionList = null;
   private GsRegulatoryGraph graph;
+  private GsGlassPane glassPane = new GsGlassPane();
+  private JRootPane rootPane;
 
   public GsLogicalFunctionTreePanel(GsRegulatoryGraph graph) {
     super();
     setLayout(new BorderLayout());
-    add(new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
+    rootPane = new JRootPane();
+    rootPane.getContentPane().add(new JScrollPane(getJTree(graph)));
+    rootPane.setGlassPane(glassPane);
+    glassPane.setVisible(true);
+    add(rootPane, BorderLayout.CENTER);
     this.graph = graph;
+  }
+  public JRootPane getRootPane() {
+    return rootPane;
   }
   public void setEditedObject(Object obj) {
     GsRegulatoryVertex vertex = (GsRegulatoryVertex)obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
     tree.setModel(interactionList);
+    interactionList.setGlassPane(glassPane);
     repaint();
   }
   private JTree getJTree(GsRegulatoryGraph graph) {
     if (tree == null) {
-      interactionList = new GsTreeInteractionsModel(graph);
+      interactionList = new GsTreeInteractionsModel(graph, glassPane);
       tree = new JTree(interactionList);
       tree.setUI(new GsTreeUI());
       tree.setShowsRootHandles(true);
@@ -118,6 +135,7 @@ class GsTreeUI extends BasicTreeUI {
       tree.setCellRenderer(cr);
       tree.setCellEditor(new GsBooleanFunctionTreeEditor(tree, cr));
       tree.setEditable(true);
+      tree.addKeyListener(this);
       addComponentListener(cr);
     }
     return tree;
@@ -135,5 +153,41 @@ class GsTreeUI extends BasicTreeUI {
       tree.expandPath(interactionList.getPath(val, tbp.getRoot().toString()));
       graph.getVertexAttributePanel().setEditedObject(currentVertex);
     }
+  }
+  public void keyPressed(KeyEvent e) {
+  }
+  public void keyReleased(KeyEvent e) {
+    Enumeration enu;
+    Vector v;
+    GsTreeElement treeElement;
+
+    if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+      TreePath[] selectedPaths = tree.getSelectionPaths();
+      if (selectedPaths != null) {
+        enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+        tree.stopEditing();
+        v = new Vector();
+        tree.stopEditing();
+        for (int i = 0; i < selectedPaths.length; i++) {
+          treeElement = (GsTreeElement)selectedPaths[i].getLastPathComponent();
+          if (treeElement.isLeaf())
+            treeElement.setChecked(false);
+          else {
+            treeElement.remove();
+            v.addElement(treeElement);
+            if (treeElement.toString().equals(""))
+              treeElement.getParent().setProperty("null function", new Boolean(false));
+          }
+        }
+        ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
+        ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
+        while (enu.hasMoreElements()) {
+          TreePath tp = (TreePath)enu.nextElement();
+          if (!v.contains(tp.getLastPathComponent())) tree.expandPath(tp);
+        }
+      }
+    }
+  }
+  public void keyTyped(KeyEvent e) {
   }
 }

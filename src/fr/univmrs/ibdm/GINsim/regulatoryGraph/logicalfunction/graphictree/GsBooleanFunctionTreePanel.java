@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JTree;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 public abstract class GsBooleanFunctionTreePanel extends JPanel {
   protected static Font defaultFont = new Font("monospaced", Font.PLAIN, 10);
@@ -18,6 +20,8 @@ public abstract class GsBooleanFunctionTreePanel extends JPanel {
   protected int width = 0;
   protected boolean selected;
   protected String text;
+  protected MouseListener mouseListener;
+  protected MouseMotionListener mouseMotionListener;
 
   public GsBooleanFunctionTreePanel(Object value, JTree tree, boolean sel, int w) {
     super();
@@ -37,5 +41,17 @@ public abstract class GsBooleanFunctionTreePanel extends JPanel {
       g.setColor(Color.blue);
       g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
+  }
+  public void setMouseListener(MouseListener ml) {
+    mouseListener = ml;
+  }
+  public void setMouseMotionListener(MouseMotionListener mml) {
+    mouseMotionListener = mml;
+  }
+  public MouseListener getMouseListener() {
+    return mouseListener;
+  }
+  public MouseMotionListener getMouseMotionListener() {
+    return mouseMotionListener;
   }
 }

@@ -1,36 +1,28 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Enumeration;
 
-import javax.swing.JButton;
-import javax.swing.JSpinner;
-import javax.swing.JTree;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.*;
+import javax.swing.event.*;
 import javax.swing.tree.TreePath;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJSpinner;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import fr.univmrs.ibdm.GINsim.util.widget.*;
 
-public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionListener, ChangeListener {
-private static final long serialVersionUID = 207002545507075699L;
-private JButton addButton, delButton;
+public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionListener, ChangeListener, MouseListener, MouseMotionListener {
+  private static final long serialVersionUID = 207002545507075699L;
+  private JButton addButton, moveButton;
   private JSpinner spinner;
 
   public GsValuePanel(GsTreeElement value, JTree tree, boolean sel, int width) {
     super(value, tree, sel, width);
     addButton = new GsJButton("add.png");
     addButton.addActionListener(this);
-    delButton = new GsJButton("close.png");
-    delButton.addActionListener(this);
+    moveButton = new GsJButton("move3.png");
+    moveButton.addMouseListener(this);
+    moveButton.addMouseMotionListener(this);
     if (treeElement.getProperty("null function") == null)
       treeElement.setProperty("null function", new Boolean(false));
     else if (((Boolean)treeElement.getProperty("null function")).booleanValue())
@@ -48,22 +40,23 @@ private JButton addButton, delButton;
     spinner.setFont(defaultFont);
     spinner.addChangeListener(this);
     spinner.setBorder(null);
-    spinner.setBackground(Color.white);
-    add(addButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    add(addButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                           GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(delButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                          GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
+    add(moveButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+                                           GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
     add(spinner, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                          GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+                                        GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+    if (sel) {
+      setBackground(Color.yellow);
+      spinner.setBackground(Color.yellow);
+    }
+    else {
+      setBackground(Color.white);
+      spinner.setBackground(Color.white);
+    }
   }
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == delButton) {
-      tree.stopEditing();
-      treeElement.remove();
-      ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-      ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
-    }
-    else if (e.getSource() == addButton) {
+    if (e.getSource() == addButton) {
       addButton.setEnabled(false);
       Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       addButtonAction();
@@ -116,5 +109,27 @@ private JButton addButton, delButton;
         model.refreshVertex();
     else
       model.updateValue((short)val, (short)oldValue);
+  }
+  public void mouseClicked(MouseEvent e) {
+  }
+  public void mouseEntered(MouseEvent e) {
+  }
+  public void mouseExited(MouseEvent e) {
+  }
+  public void mousePressed(MouseEvent e) {
+    e.setSource(this);
+    getMouseListener().mousePressed(e);
+  }
+  public void mouseReleased(MouseEvent e) {
+    e.setSource(this);
+    getMouseListener().mouseReleased(e);
+  }
+  public void mouseMoved(MouseEvent e) {
+    e.setSource(this);
+    getMouseMotionListener().mouseMoved(e);
+  }
+  public void mouseDragged(MouseEvent e) {
+    e.setSource(this);
+    getMouseMotionListener().mouseDragged(e);
   }
 }

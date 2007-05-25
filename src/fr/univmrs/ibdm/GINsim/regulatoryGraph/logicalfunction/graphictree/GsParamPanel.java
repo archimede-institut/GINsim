@@ -13,26 +13,43 @@ import javax.swing.tree.TreePath;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import javax.swing.JButton;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
-public class GsParamPanel extends GsBooleanFunctionTreePanel implements ItemListener {
-private static final long serialVersionUID = -7863256897019020183L;
-private JCheckBox checkBox;
+public class GsParamPanel extends GsBooleanFunctionTreePanel implements ItemListener, MouseListener, MouseMotionListener {
+  private static final long serialVersionUID = -7863256897019020183L;
+  private JCheckBox checkBox;
+  private JButton moveButton;
 
   public GsParamPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
     super(value, tree, sel, width);
+    moveButton = new GsJButton("move3.png");
+    moveButton.addMouseListener(this);
+    moveButton.addMouseMotionListener(this);
     checkBox = new GsJCheckBox(value.toString(), true);
     checkBox.setFont(defaultFont);
     checkBox.addItemListener(this);
-    if (sel)
+    if (sel) {
       checkBox.setBackground(Color.yellow);
-    else if (value.toString().equals(""))
+      setBackground(Color.yellow);
+    }
+    else if (value.toString().equals("")) {
       checkBox.setBackground(Color.cyan);
-    else
+      setBackground(Color.cyan);
+    }
+    else {
       checkBox.setBackground(Color.white);
+      setBackground(Color.white);
+    }
     checkBox.setMargin(new Insets(0, 0, 0, 0));
     checkBox.setForeground(value.getForeground());
-    add(checkBox, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
-                                         GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+    add(moveButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
+                                         GridBagConstraints.NONE, new Insets(4, 2, 2, 0), 0, 0));
+    add(checkBox, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
+                                         GridBagConstraints.NONE, new Insets(2, 5, 2, 0), 0, 0));
   }
   public void itemStateChanged(ItemEvent e) {
     checkBox.removeItemListener(this);
@@ -45,5 +62,30 @@ private JCheckBox checkBox;
       while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
     }
     checkBox.addItemListener(this);
+  }
+  public void mouseClicked(MouseEvent e) {
+
+  }
+  public void mouseEntered(MouseEvent e) {
+
+  }
+  public void mouseExited(MouseEvent e) {
+
+  }
+  public void mousePressed(MouseEvent e) {
+    e.setSource(this);
+    getMouseListener().mousePressed(e);
+  }
+  public void mouseReleased(MouseEvent e) {
+    e.setSource(this);
+    getMouseListener().mouseReleased(e);
+  }
+  public void mouseMoved(MouseEvent e) {
+    e.setSource(this);
+    getMouseMotionListener().mouseMoved(e);
+  }
+  public void mouseDragged(MouseEvent e) {
+    e.setSource(this);
+    getMouseMotionListener().mouseDragged(e);
   }
 }
