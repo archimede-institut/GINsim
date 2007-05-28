@@ -1,28 +1,17 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.util.Vector;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreePath;
-import java.util.Iterator;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.tree.TreeModel;
 import java.awt.Color;
-import java.util.Hashtable;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionListElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
+import java.util.*;
+
+import javax.swing.event.*;
+import javax.swing.tree.*;
+
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
 
 public class GsTreeInteractionsModel implements TreeModel {
   //the vector of interaction
@@ -34,14 +23,23 @@ public class GsTreeInteractionsModel implements TreeModel {
   private Vector v_ok;
   private GsTreeString root;
 
+  private GsGlassPane glassPane;
+
   private Vector treeModelListeners = new Vector();
 
-  public GsTreeInteractionsModel(GsRegulatoryGraph graph) {
+  public GsTreeInteractionsModel(GsRegulatoryGraph graph, GsGlassPane gp) {
     root = new GsTreeString(null, "Function list");
     root.setProperty("add", new Boolean(true));
     this.v_ok = new Vector();
     this.interactions = null;
     this.graph = graph;
+    glassPane = gp;
+  }
+  public GsGlassPane getGlassPane() {
+    return glassPane;
+  }
+  public void setGlassPane(GsGlassPane gp) {
+    glassPane = gp;
   }
   public void setNode(GsRegulatoryVertex no) {
     node = no;

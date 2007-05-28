@@ -1,59 +1,41 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.*;
+import java.util.*;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.tree.TreePath;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
-public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener, PropertyChangeListener, MouseListener {
-	private static final long serialVersionUID = 8900639275182677150L;
-	private JPanel buttonPanel;
-	private JButton delButton, showButton, hideButton;
-	private JTextArea textArea;
-	private JScrollPane jsp;
-	private JSplitPane splitPane = null;
-	private GsUnselectedParamsPanel listPanel;
-	private boolean toUpdate = false;
-	private TreePath[] selectedPaths;
+public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener,
+  PropertyChangeListener, MouseListener, MouseMotionListener {
+  private static final long serialVersionUID = 8900639275182677150L;
+  private JPanel buttonPanel;
+  private JButton showButton, hideButton, moveButton;
+  private JTextArea textArea;
+  private JScrollPane jsp;
+  private JSplitPane splitPane = null;
+  private GsUnselectedParamsPanel listPanel;
+  private boolean toUpdate = false;
 
-  public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width, TreePath[] sp) {
+  public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
     super(value, tree, sel, width);
-    selectedPaths = sp;
     setBackground(Color.white);
-    delButton = new JButton("close.png");
-    delButton.addActionListener(this);
-    showButton = new JButton("show.png");
+    moveButton = new GsJButton("move3.png");
+    moveButton.addMouseListener(this);
+    moveButton.addMouseMotionListener(this);
+    showButton = new GsJButton("show.png");
     showButton.addActionListener(this);
-    hideButton = new JButton("hide.png");
+    hideButton = new GsJButton("hide.png");
     hideButton.addActionListener(this);
     buttonPanel = new JPanel(new GridBagLayout());
     buttonPanel.setBackground(Color.white);
-    buttonPanel.add(delButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    buttonPanel.add(moveButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                                       GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
     if (((Boolean)value.getProperty("show unselected")).booleanValue())
       buttonPanel.add(hideButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
@@ -159,34 +141,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     }
   }
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == delButton) {
-      Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-      tree.stopEditing();
-      Vector v = new Vector();
-      if (selectedPaths != null) {
-        for (int i = 0; i < selectedPaths.length; i++) {
-          ((GsTreeElement) selectedPaths[i].getLastPathComponent()).remove();
-          v.addElement(selectedPaths[i].getLastPathComponent());
-        }
-        if (!v.contains(treeElement)) {
-          treeElement.remove();
-          v.addElement(treeElement);
-        }
-      }
-      else {
-        treeElement.remove();
-        v.addElement(treeElement);
-      }
-      if (treeElement.toString().equals(""))
-        treeElement.getParent().setProperty("null function", new Boolean(false));
-      ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-      ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
-      while (enu.hasMoreElements()) {
-        TreePath tp = (TreePath)enu.nextElement();
-        if (!v.contains(tp.getLastPathComponent())) tree.expandPath(tp);
-      }
-    }
-    else if (e.getSource() == showButton) {
+    if (e.getSource() == showButton) {
       showButtonPressed();
     }
     else if (e.getSource() == hideButton) {
@@ -288,8 +243,20 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   }
   public void mousePressed(MouseEvent e) {
     toUpdate = true;
+    e.setSource(this);
+    getMouseListener().mousePressed(e);
   }
   public void mouseReleased(MouseEvent e) {
     toUpdate = false;
+    e.setSource(this);
+    getMouseListener().mouseReleased(e);
+  }
+  public void mouseMoved(MouseEvent e) {
+    e.setSource(this);
+    getMouseMotionListener().mouseMoved(e);
+  }
+  public void mouseDragged(MouseEvent e) {
+    e.setSource(this);
+    getMouseMotionListener().mouseDragged(e);
   }
 }

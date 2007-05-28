@@ -63,7 +63,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		v_logicalParameters 	= new Vector();
 		this.id = id;
     this.graph = graph;
-    interactionsModel = new GsTreeInteractionsModel(graph);
+    interactionsModel = new GsTreeInteractionsModel(graph, null);
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		v_logicalParameters 	= new Vector();
 		this.id = "G"+num;
     this.graph = graph;
-    interactionsModel = new GsTreeInteractionsModel(graph);
+    interactionsModel = new GsTreeInteractionsModel(graph, null);
 	}
 
 	/**
