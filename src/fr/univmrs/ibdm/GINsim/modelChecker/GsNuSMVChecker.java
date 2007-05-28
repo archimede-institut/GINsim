@@ -17,6 +17,7 @@ import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExport;
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExportConfigPanel;
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVexportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -35,7 +36,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 	Map m_info = new HashMap();
 	GsSMVexportConfig cfg;
 	
-	static GsSMVExportConfigPanel editPanel = null;
+	GsSMVExportConfigPanel editPanel = null;
 	private static final String RUNCMD = "NuSMV -dynamic ";
 
 	public GsNuSMVChecker(String name, GsRegulatoryGraph graph) {
@@ -186,9 +187,11 @@ public class GsNuSMVChecker implements GsModelChecker {
 		}
 	}
 
-	public Component getEditPanel(GsExtensibleConfig config, GsStackDialog dialog) {
+	public Component getEditPanel(GsGraph graph, GsStackDialog dialog) {
 		if (editPanel == null) {
-			editPanel = new GsSMVExportConfigPanel(config, dialog, false, true);
+			GsExtensibleConfig conf = new GsExtensibleConfig(graph);
+			conf.setSpecificConfig(cfg);
+			editPanel = new GsSMVExportConfigPanel(conf, dialog, false, true);
 		}
 		return editPanel;
 	}

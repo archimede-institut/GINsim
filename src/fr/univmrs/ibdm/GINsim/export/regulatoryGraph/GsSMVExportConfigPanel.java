@@ -52,9 +52,10 @@ public class GsSMVExportConfigPanel extends JPanel {
     	this.mutant = mutant;
     	this.test = test;
 		this.dialog = dialog;
-		GsSMVexportConfig cfg = new GsSMVexportConfig((GsRegulatoryGraph)config.getGraph());
-		config.setSpecificConfig(cfg);
-    	this.cfg = cfg;
+		if (config.getSpecificConfig() == null) {
+			config.setSpecificConfig(new GsSMVexportConfig((GsRegulatoryGraph)config.getGraph()));
+		}
+		this.cfg = (GsSMVexportConfig)config.getSpecificConfig();
     	initialize();
     	if (cfg.type == GsSMVexportConfig.CFG_ASYNC) {
     		radioAsync.setSelected(true);
