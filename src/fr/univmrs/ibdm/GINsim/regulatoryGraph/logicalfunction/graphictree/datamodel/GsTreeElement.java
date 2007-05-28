@@ -60,7 +60,7 @@ public abstract class GsTreeElement implements Comparable {
     return foreground;
   }
   public boolean isLeaf() {
-    return (getChildCount() == 0);
+    return ((getChildCount() == 0) && (getDepth() != 0));
   }
   public boolean isChecked() {
     return checked;

@@ -52,7 +52,6 @@ public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
   protected boolean inHitRegion(int x, int y) {
     TreePath tp = tree.getPathForLocation(x, y);
     if (tp == null) return false;
-    if (tp == tree.getPathForRow(0)) return false;
     if (lastRow != -1) {
       Rectangle bounds = tree.getPathBounds(tp);
       GsTreeElement treeElement = (GsTreeElement)tp.getLastPathComponent();
