@@ -17,7 +17,7 @@ public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
                                               boolean expanded, boolean leaf, int row) {
     ((GsTreeElement)value).setSelected(true);
     return GsPanelFactory.getPanel((GsTreeElement)value, tree, true,
-                                   ((GsBooleanFunctionTreeRenderer)super.renderer).getWidth());
+                                   ((GsBooleanFunctionTreeRenderer)super.renderer).getWidth(), true);
   }
   protected boolean canEditImmediately(EventObject event) {
     if ((event instanceof MouseEvent) && SwingUtilities.isLeftMouseButton((MouseEvent)event)) {

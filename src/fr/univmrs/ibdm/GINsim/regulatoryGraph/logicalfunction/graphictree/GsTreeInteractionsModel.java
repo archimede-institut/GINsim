@@ -23,24 +23,24 @@ public class GsTreeInteractionsModel implements TreeModel {
   private Vector v_ok;
   private GsTreeString root;
 
-  private GsGlassPane glassPane;
+  //private GsGlassPane glassPane;
 
   private Vector treeModelListeners = new Vector();
 
-  public GsTreeInteractionsModel(GsRegulatoryGraph graph, GsGlassPane gp) {
+  public GsTreeInteractionsModel(GsRegulatoryGraph graph/*, GsGlassPane gp*/) {
     root = new GsTreeString(null, "Function list");
     root.setProperty("add", new Boolean(true));
     this.v_ok = new Vector();
     this.interactions = null;
     this.graph = graph;
-    glassPane = gp;
+    //glassPane = gp;
   }
-  public GsGlassPane getGlassPane() {
-    return glassPane;
-  }
-  public void setGlassPane(GsGlassPane gp) {
-    glassPane = gp;
-  }
+  //public GsGlassPane getGlassPane() {
+  //  return glassPane;
+  //}
+  //public void setGlassPane(GsGlassPane gp) {
+  //  glassPane = gp;
+  //}
   public void setNode(GsRegulatoryVertex no) {
     node = no;
     if (node != null)

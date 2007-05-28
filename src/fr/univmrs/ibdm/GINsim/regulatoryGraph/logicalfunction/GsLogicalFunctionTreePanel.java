@@ -26,6 +26,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 import java.util.Vector;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsPanelFactory;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyListener {
   private static final long serialVersionUID = -8323666225199589729L;
@@ -101,33 +102,35 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
   private JTree tree;
   private GsTreeInteractionsModel interactionList = null;
   private GsRegulatoryGraph graph;
-  private GsGlassPane glassPane = new GsGlassPane();
-  private JRootPane rootPane;
+  //private GsGlassPane glassPane = new GsGlassPane();
+  //private JRootPane rootPane;
 
   public GsLogicalFunctionTreePanel(GsRegulatoryGraph graph) {
     super();
     setLayout(new BorderLayout());
-    rootPane = new JRootPane();
-    rootPane.getContentPane().add(new JScrollPane(getJTree(graph)));
-    rootPane.setGlassPane(glassPane);
-    glassPane.setVisible(true);
-    add(rootPane, BorderLayout.CENTER);
+    //rootPane = new JRootPane();
+    //rootPane.getContentPane().add(new JScrollPane(getJTree(graph)));
+    //rootPane.setGlassPane(glassPane);
+    //glassPane.setVisible(true);
+    //add(rootPane, BorderLayout.CENTER);
+    add(new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
     this.graph = graph;
+    new GsPanelFactory(graph.getGraphManager().getMainFrame().getGlassPane());
   }
-  public JRootPane getRootPane() {
-    return rootPane;
-  }
+  //public JRootPane getRootPane() {
+  //  return rootPane;
+  //}
   public void setEditedObject(Object obj) {
     GsRegulatoryVertex vertex = (GsRegulatoryVertex)obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
     tree.setModel(interactionList);
-    interactionList.setGlassPane(glassPane);
+    //interactionList.setGlassPane(glassPane);
     repaint();
   }
   private JTree getJTree(GsRegulatoryGraph graph) {
     if (tree == null) {
-      interactionList = new GsTreeInteractionsModel(graph, glassPane);
+      interactionList = new GsTreeInteractionsModel(graph/*, glassPane*/);
       tree = new JTree(interactionList);
       tree.setUI(new GsTreeUI());
       tree.setShowsRootHandles(true);

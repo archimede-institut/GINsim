@@ -22,10 +22,12 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   private JSplitPane splitPane = null;
   private GsUnselectedParamsPanel listPanel;
   private boolean toUpdate = false;
+  private boolean editor = false;
 
-  public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
+  public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean editor) {
     super(value, tree, sel, width);
     setBackground(Color.white);
+    this.editor = editor;
     moveButton = new GsJButton("move3.png");
     moveButton.addMouseListener(this);
     moveButton.addMouseMotionListener(this);
@@ -229,7 +231,8 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         textArea.setRows(nbRows);
         if (nbRows > 4) nbRows = 4;
         int ps = nbRows * charHeight;
-        jsp.setPreferredSize(new Dimension(width, ps));
+        jsp.setSize(new Dimension(width, ps));
+        //setSize(new Dimension(getWidth(), ps + 4));
         treeElement.setProperty("divider location",
                                 new Double(((double) ((Integer) e.getNewValue()).intValue() / width)));
       }
@@ -242,21 +245,43 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   public void mouseExited(MouseEvent e) {
   }
   public void mousePressed(MouseEvent e) {
-    toUpdate = true;
-    e.setSource(this);
-    getMouseListener().mousePressed(e);
+    if (e.getSource() == moveButton) {
+      if (getMouseListener() != null) {
+        MouseEvent e2 = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getX(),
+                                       e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
+        getMouseListener().mousePressed(e2);
+      }
+    }
+    else
+      toUpdate = true;
   }
   public void mouseReleased(MouseEvent e) {
-    toUpdate = false;
-    e.setSource(this);
-    getMouseListener().mouseReleased(e);
+    if (e.getSource() == moveButton) {
+      if (getMouseListener() != null) {
+        MouseEvent e2 = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getX(),
+                                       e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
+        getMouseListener().mouseReleased(e2);
+      }
+    }
+    else
+      toUpdate = false;
   }
   public void mouseMoved(MouseEvent e) {
-    e.setSource(this);
-    getMouseMotionListener().mouseMoved(e);
+    if (e.getSource() == moveButton) {
+      if (getMouseListener() != null) {
+        MouseEvent e2 = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getX(),
+                                       e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
+        getMouseMotionListener().mouseMoved(e2);
+      }
+    }
   }
   public void mouseDragged(MouseEvent e) {
-    e.setSource(this);
-    getMouseMotionListener().mouseDragged(e);
+    if (e.getSource() == moveButton) {
+      if (getMouseListener() != null) {
+        MouseEvent e2 = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getX(),
+                                       e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
+        getMouseMotionListener().mouseDragged(e2);
+      }
+    }
   }
 }

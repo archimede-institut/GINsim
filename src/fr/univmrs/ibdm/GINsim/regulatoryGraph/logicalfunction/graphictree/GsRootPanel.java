@@ -17,8 +17,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionListener {
-private static final long serialVersionUID = -1866485315946504210L;
-private JLabel label;
+  private static final long serialVersionUID = -1866485315946504210L;
+  private JLabel label;
   private JButton button;
 
   public GsRootPanel(GsTreeElement value, JTree tree, boolean sel, int width) {

@@ -15,7 +15,7 @@ public class GsGlassPane extends JPanel {
 
   public GsGlassPane() {
     setOpaque(false);
-    composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
+    composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f);
   }
 
   public void setImage(BufferedImage dragged) {
