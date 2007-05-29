@@ -5,7 +5,6 @@ import java.io.File;
 import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
-import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;

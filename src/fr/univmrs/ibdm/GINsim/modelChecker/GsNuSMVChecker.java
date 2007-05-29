@@ -11,7 +11,6 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExport;
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExportConfigPanel;
@@ -21,8 +20,9 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 
@@ -35,6 +35,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 	GsRegulatoryGraph graph;
 	Map m_info = new HashMap();
 	GsSMVexportConfig cfg;
+	GsInitialStateList initList;
 	
 	GsSMVExportConfigPanel editPanel = null;
 	private static final String RUNCMD = "NuSMV -dynamic ";
@@ -42,6 +43,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 	public GsNuSMVChecker(String name, GsRegulatoryGraph graph) {
 		this.name = name;
 		this.graph = graph;
+	    this.initList = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
 		this.cfg = new GsSMVexportConfig(graph);
 	}
 	
@@ -57,24 +59,15 @@ public class GsNuSMVChecker implements GsModelChecker {
 		Map m = new HashMap();
 		m.put("test", cfg.getTest());
 		m.put("mode", (cfg.isSync()?"sync":"async"));
-		String s = "";
-        Map minit = ((GsInitialState)cfg.getInitialState().
-        		keySet().iterator().next()).getMap();
-        if (minit == null) {
-        	minit = new HashMap();
-        }
-		Iterator it = minit.keySet().iterator();
-		while (it.hasNext()) {
-			Object key = it.next();
-			s += key+":"+minit.get(key)+" ";
+		Iterator it = cfg.getInitialState().keySet().iterator();
+		if (it.hasNext()) {
+			m.put("init", ((GsInitialState)it.next()).getName());
 		}
-		m.put("init", s);
 		return m;
 	}
 	
 	public void setName(String name) {
 		this.name = name;
-		;
 	}
 
 	public String toString() {
@@ -199,26 +192,8 @@ public class GsNuSMVChecker implements GsModelChecker {
 	public void setCfg(Map attr) {
 		cfg.setTest((String)attr.get("test"));
 		cfg.type = "sync".equals(attr.get("mode")) ? GsSMVexportConfig.CFG_SYNC : GsSMVexportConfig.CFG_ASYNC;
-        Map minit = ((GsInitialState)cfg.getInitialState().
-        		keySet().iterator().next()).getMap();
-        if (minit == null) {
-        	minit = new HashMap();
-        }
-		String[] ts = ((String)attr.get("init")).split(" ");
-		Vector norder = graph.getNodeOrder();
-		for (int i=0 ; i<ts.length ; i++) {
-			String[] tval = ts[i].split(":");
-			if (tval.length == 2) {
-				for (int j=0 ; j<norder.size() ; j++) {
-					GsRegulatoryVertex vertex = (GsRegulatoryVertex)norder.get(j);
-					if (tval[0].equals(vertex.getId())) {
-						short val = (short)Integer.parseInt(tval[1]);
-						if (val >= 0 && val <= vertex.getMaxValue()) {
-							minit.put(vertex, new Integer(val));
-						}
-					}
-				}
-			}
-		}
+        Map minit = cfg.getInitialState();
+		String s_init = (String)attr.get("init");
+		minit.put(initList.getInitState(s_init), null);
 	}
 }

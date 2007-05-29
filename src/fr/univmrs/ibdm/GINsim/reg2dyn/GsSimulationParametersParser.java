@@ -177,13 +177,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                     	param.m_initState.put(istate, null);
                     } else {
                     	// associate with the existing object
-                    	for (int i=0 ; i<initList.getNbElements() ; i++) {
-                    		GsInitialState istate = (GsInitialState)initList.getElement(i);
-                    		if (istate.getName().equals(s)) {
-                            	param.m_initState.put(istate, null);
-                    			break;
-                    		}
-                    	}
+                    	param.m_initState.put(initList.getInitState(s), null);
                     }
                 }
                 break;

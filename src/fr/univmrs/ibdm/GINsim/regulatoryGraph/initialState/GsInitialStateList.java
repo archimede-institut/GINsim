@@ -103,6 +103,16 @@ public class GsInitialStateList extends GsListAbstract implements GsGraphListene
         }
         return null;
 	}
+
+	public Object getInitState(String s) {
+    	for (int i=0 ; i<getNbElements() ; i++) {
+    		GsInitialState istate = (GsInitialState)getElement(i);
+    		if (istate.getName().equals(s)) {
+    			return istate;
+    		}
+    	}
+		return null;
+	}
 }
 
 class InitialStateCascadeUpdate implements GsGraphEventCascade {

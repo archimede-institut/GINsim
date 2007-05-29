@@ -192,9 +192,8 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 			out.openTag("initstates");
 			Iterator it = m_initState.keySet().iterator();
 			while(it.hasNext()) {
-				GsInitialState is = (GsInitialState)it.next();
 				out.openTag("row");
-				out.addAttr("name", is.getName());
+				out.addAttr("name", ((GsInitialState)it.next()).getName());
                 out.closeTag();
 			}
 			out.closeTag();
