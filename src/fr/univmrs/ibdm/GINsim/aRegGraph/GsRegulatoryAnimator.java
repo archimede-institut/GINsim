@@ -1,7 +1,6 @@
 package fr.univmrs.ibdm.GINsim.aRegGraph;
 
 import java.awt.Color;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -13,10 +12,10 @@ import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.graph.GraphChangeListener;
-import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphSelectionChangeEvent;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphicalAttributesStore;
 import fr.univmrs.ibdm.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -36,16 +35,11 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     private GsDynamicGraph dynGraph;
 
     private Vector path = new Vector();
-    private HashMap oldColors = new HashMap();
-    private HashMap oldDynColors = new HashMap();
     
-    private GsEdgeAttributesReader ereader;
-    private GsVertexAttributesReader vreader;
-    private GsEdgeAttributesReader dynereader;
-    private GsVertexAttributesReader dynvreader;
+    private GsGraphicalAttributesStore gas;
+    private GsGraphicalAttributesStore dynGas;
     
     private Vector nodeOrder;
-    
     private PathPlayer pathPlayer = null;
     
     private static final Color[] BGCOLS = { 
@@ -79,7 +73,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         	graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "Could not start the animator", GsGraphNotificationMessage.NOTIFICATION_WARNING));
             return;
         }
-        // ok, let's start the animator
+        // let's start the animator
         new GsRegulatoryAnimator(frame, regGraph, dynGraph);
     }
     
@@ -93,10 +87,8 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         this.regGraph = regGraph;
         this.dynGraph = dynGraph;
         nodeOrder = regGraph.getNodeOrder();
-        ereader = regGraph.getGraphManager().getEdgeAttributesReader();
-        vreader = regGraph.getGraphManager().getVertexAttributesReader();
-        dynereader = dynGraph.getGraphManager().getEdgeAttributesReader();
-        dynvreader = dynGraph.getGraphManager().getVertexAttributesReader();
+        gas = new GsGraphicalAttributesStore(regGraph);
+        dynGas = new GsGraphicalAttributesStore(dynGraph);
         initAnim();
     }
     
@@ -109,19 +101,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         regGraph.addBlockEdit(this);
         dynGraph.addBlockClose(this);
         dynGraph.addBlockEdit(this);
-        Iterator it = regGraph.getGraphManager().getVertexIterator();
-        while (it.hasNext()) {
-            Object vertex = it.next();
-            vreader.setVertex(vertex);
-            oldColors.put(vertex, new StoreColor(vreader));
-
-            List l_edge = regGraph.getGraphManager().getOutgoingEdges(vertex);
-            for (int j=0 ; j<l_edge.size() ; j++) {
-                GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)l_edge.get(j)).getUserObject();
-                ereader.setEdge(l_edge.get(j));
-                oldColors.put(edge, new StoreColor(ereader));
-            }
-        }
+        gas.storeAll();
         dynGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
         ui = new GsAnimatorUI(frame, this);
     }
@@ -136,17 +116,8 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         
         dynGraph.getGraphManager().getEventDispatcher().removeGraphChangeListener(this);
         revertPath(0);
-        Iterator it = oldColors.keySet().iterator();
-        while (it.hasNext()) {
-            Object obj = it.next();
-            if ( obj instanceof GsRegulatoryVertex) {
-                vreader.setVertex(obj);
-                ((StoreColor)oldColors.get(obj)).restore(vreader);
-            } else {
-                ereader.setEdge(obj);
-                ((StoreColor)oldColors.get(obj)).restore(ereader);
-            }
-        }
+        gas.restoreAll();
+        
         regGraph.removeBlockClose(this);
         regGraph.removeBlockEdit(this);
         dynGraph.removeBlockClose(this);
@@ -171,19 +142,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     }
     
     private void unMarkAllPath() {
-        Iterator it = oldDynColors.keySet().iterator();
-        while (it.hasNext()) {
-            Object obj = it.next();
-            StoreColor sc = (StoreColor)oldDynColors.get(obj);
-            if ( obj instanceof GsDynamicNode) {
-                dynvreader.setVertex(obj);
-                sc.restore(dynvreader);
-            } else {
-                dynereader.setEdge(obj);
-                sc.restore(dynereader);
-            }
-        }
-        oldDynColors.clear();
+    	dynGas.restoreAll();
     }
     
     private void markAllPath() {
@@ -192,32 +151,23 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         }
         // mark all vertices and followed edges
         Object vertex = path.get(0);
-        dynvreader.setVertex(vertex);
-        if (!oldDynColors.containsKey(vertex)) {
-            oldDynColors.put(vertex, new StoreColor(dynvreader));
-        }
-        dynvreader.setBackgroundColor(Color.BLUE);
-        dynvreader.refresh();
+        dynGas.ensureStoreVertex(vertex);
+        dynGas.vreader.setBackgroundColor(Color.BLUE);
+        dynGas.vreader.refresh();
         for (int i=1 ; i<path.size() ; i++) {
             Object vertex2 = path.get(i);
-            dynvreader.setVertex(vertex2);
-            if (!oldDynColors.containsKey(vertex2)) {
-                oldDynColors.put(vertex2, new StoreColor(dynvreader));
-            }
-            dynvreader.setBackgroundColor(Color.BLUE);
-            dynvreader.refresh();
+            dynGas.ensureStoreVertex(vertex2);
+            dynGas.vreader.setBackgroundColor(Color.BLUE);
+            dynGas.vreader.refresh();
 
-            Object edge = dynGraph.getGraphManager().getEdge(vertex, vertex2);
-            dynereader.setEdge( edge );
-            if (!oldDynColors.containsKey(edge)) {
-                oldDynColors.put(edge, new StoreColor(dynereader));
-            }
-            dynereader.setLineColor(Color.MAGENTA);
-            dynereader.refresh();
+            GsDirectedEdge edge = (GsDirectedEdge)dynGraph.getGraphManager().getEdge(vertex, vertex2);
+            dynGas.ensureStoreEdge(edge);
+            dynGas.ereader.setLineColor(Color.MAGENTA);
+            dynGas.ereader.refresh();
             vertex = vertex2;
         }
         
-        // highlight avaible edges and vertices
+        // highlight available edges and vertices
         Iterator it = dynGraph.getGraphManager().getOutgoingEdges(path.get(path.size()-1)).iterator();
         Vector v_highlight = new Vector();
         while (it.hasNext()) {
@@ -226,19 +176,13 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         for (int i=0 ; i<v_highlight.size() ; i++) {
             GsDirectedEdge edge = (GsDirectedEdge)v_highlight.get(i);
             Object target = edge.getTargetVertex();
-            dynereader.setEdge(edge);
-            dynvreader.setVertex(target);
-            if (!oldDynColors.containsKey(edge)) {
-                oldDynColors.put(edge, new StoreColor(dynereader));
-            }
-            if (!oldDynColors.containsKey(target)) {
-                oldDynColors.put(target, new StoreColor(dynvreader));
-            }
-            dynvreader.setBorder(GsVertexAttributesReader.BORDER_STRONG);
-            dynvreader.setForegroundColor(Color.RED);
-            dynvreader.refresh();
-            dynereader.setLineColor(Color.GREEN);
-            dynereader.refresh();
+            dynGas.ensureStoreEdge(edge);
+            dynGas.ensureStoreVertex(target);
+            dynGas.vreader.setBorder(GsVertexAttributesReader.BORDER_STRONG);
+            dynGas.vreader.setForegroundColor(Color.RED);
+            dynGas.vreader.refresh();
+            dynGas.ereader.setLineColor(Color.GREEN);
+            dynGas.ereader.refresh();
         }
     }
     
@@ -269,23 +213,23 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
                 }
             }
             // apply the vertex's color
-            vreader.setVertex(vertex);
-            vreader.setBackgroundColor(BGCOLS[col]);
-            vreader.refresh();
+            gas.vreader.setVertex(vertex);
+            gas.vreader.setBackgroundColor(BGCOLS[col]);
+            gas.vreader.refresh();
             
             // colorize edges
             List l_edge = regGraph.getGraphManager().getOutgoingEdges(vertex);
             for (int j=0 ; j<l_edge.size() ; j++) {
                 GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)l_edge.get(j)).getUserObject();
-                ereader.setEdge(l_edge.get(j));
-                ereader.setLineColor(Color.GRAY);
+                gas.ereader.setEdge(l_edge.get(j));
+                gas.ereader.setLineColor(Color.GRAY);
                 for (int k=0 ; k<edge.getEdgeCount() ; k++) {
                     if (edge.isActive(k, curVal)) {
-                        ereader.setLineColor(Color.RED);
+                        gas.ereader.setLineColor(Color.RED);
                         break;
                     }
                 }
-                ereader.refresh();
+                gas.ereader.refresh();
             }
         }
     }
@@ -316,48 +260,6 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         markAllPath();
     }
     
-    private class StoreColor {
-        private final Color background;
-        private final Color foreGround;
-        private final int border;
-        
-        protected static final int VERTEX = 0;
-        protected static final int EDGE = 1;
-        
-        /**
-         * @param vreader
-         */
-        protected StoreColor (GsVertexAttributesReader vreader) {
-            background = vreader.getBackgroundColor();
-            foreGround = vreader.getForegroundColor();
-            border = vreader.getBorder();
-            
-            vreader.setBackgroundColor(Color.WHITE);
-            vreader.setForegroundColor(Color.BLACK);
-            vreader.setBorder(0);
-            vreader.refresh();
-        }
-        
-        protected StoreColor (GsEdgeAttributesReader ereader) {
-
-            foreGround = ereader.getLineColor();
-            background = null;
-            border = 0;
-        }
-        
-        protected void restore (GsVertexAttributesReader vreader) {
-            vreader.setBackgroundColor(background);
-            vreader.setForegroundColor(foreGround);
-            vreader.setBorder(border);
-            vreader.refresh();
-        }
-        
-        protected void restore (GsEdgeAttributesReader ereader) {
-            ereader.setLineColor(foreGround);
-            ereader.refresh();
-        }
-    }
-
     public void graphChanged(GsNewGraphEvent event) {
         endAnim();
     }
@@ -435,7 +337,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
 }
 
     /**
-     * colorize the regulatory graphe according to the selected element.
+     * colorize the regulatory graph according to the selected element.
      * 
      * @param i index of the selected element in the path list
      */
