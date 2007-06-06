@@ -11,6 +11,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 
@@ -43,6 +44,7 @@ public final class Simulation extends Thread implements Runnable {
 	private int maxnodes; 		// limitation of the number of nodes for exploration (all types)
 	private Vector initStates; 
 	private Vector listGenes;
+	private int[] t_max;
 	private int length;
 	private boolean ready = false;
 	private boolean buildSTG;
@@ -65,7 +67,8 @@ public final class Simulation extends Thread implements Runnable {
     
 	private GsDynamicGraph dynGraph;
 	private GsDynamicNode node;
-	private OmddNode reachable = OmddNode.TERMINALS[0];
+	private OmddNode dd_reachable = OmddNode.TERMINALS[0];
+	private OmddNode dd_stable = OmddNode.TERMINALS[0];
     int[] t_state;
     int nbnode = 0;
 
@@ -81,6 +84,11 @@ public final class Simulation extends Thread implements Runnable {
 		listGenes = regGraph.getNodeOrderForSimulation();
 		length = listGenes.size();
         this.buildSTG = params.buildSTG;
+        
+        t_max = new int[length];
+        for (int i=0 ; i<length ; i++) {
+        	t_max[i] = ((GsRegulatoryVertex)listGenes.get(i)).getMaxValue()+1;
+        }
         if (buildSTG) {
     		dynGraph = new GsDynamicGraph(listGenes);
     		if (regGraph instanceof GsGraph) {
@@ -366,6 +374,11 @@ public final class Simulation extends Thread implements Runnable {
 		if (stable) {
 			if (buildSTG) {
 				node.setStable(true, vreader);
+			} else {
+				OmddNode dd_tmp = addReachable(this.dd_stable, t_state, 0);
+				if (dd_tmp != null) {
+					dd_stable = dd_tmp;
+				}
 			}
 			return;
 		}
@@ -403,6 +416,11 @@ public final class Simulation extends Thread implements Runnable {
         if (v_changes == null) {
         	if (buildSTG) {
 	            node.setStable(true, vreader);
+			} else {
+				OmddNode dd_tmp = addReachable(this.dd_stable, t_state, 0);
+				if (dd_tmp != null) {
+					dd_stable = dd_tmp;
+				}
         	}
             return;
         }
@@ -471,6 +489,11 @@ public final class Simulation extends Thread implements Runnable {
 		if (stable) {
 			if (buildSTG) {
 				node.setStable(true, vreader);
+			} else {
+				OmddNode dd_tmp = addReachable(this.dd_stable, t_state, 0);
+				if (dd_tmp != null) {
+					dd_stable = dd_tmp;
+				}
 			}
 		    curdepth--;
 			return;
@@ -527,6 +550,11 @@ public final class Simulation extends Thread implements Runnable {
 			if (stable) {
 				if (buildSTG) {
 					node.setStable(true, vreader);
+				} else {
+					OmddNode dd_tmp = addReachable(this.dd_stable, t_state, 0);
+					if (dd_tmp != null) {
+						dd_stable = dd_tmp;
+					}
 				}
 			} else {
 				for ( int i=0 ;  ; i++ ) {
@@ -576,6 +604,14 @@ public final class Simulation extends Thread implements Runnable {
 			if (buildSTG) {
 				frame.endSimu(dynGraph);
 			} else {
+				System.out.println("results ("+nbnode+" nodes):");
+				dd_stable = dd_stable.reduce();
+				dd_reachable = dd_reachable.reduce();
+				System.out.println("-------- STABLES -----------");
+				System.out.println(dd_stable.getString(0, listGenes));
+				System.out.println("-------- REACHABLE ----------");
+				System.out.println(dd_reachable.getString(0, listGenes));
+				System.out.println("----------------------------");
 				frame.endSimu(null);
 			}
 		}        
@@ -626,10 +662,12 @@ public final class Simulation extends Thread implements Runnable {
 			node = newnode;
 			t_state = vstate;
 		} else { // only build reachability set
-			OmddNode newReachable = addReachable(reachable, vstate, 0);
+			OmddNode newReachable = addReachable(dd_reachable, vstate, 0);
+			
+			t_state = vstate;
 			if (newReachable != null) {
 				isnew = true;
-				reachable = newReachable;
+				dd_reachable = newReachable.reduce();
 			}
 		}
 		
@@ -640,17 +678,20 @@ public final class Simulation extends Thread implements Runnable {
 	}
 	
 	private OmddNode addReachable(OmddNode reachable, int[] vstate, int depth) {
+		if (depth == vstate.length) {
+			if (reachable.equals(OmddNode.TERMINALS[1])) {
+				return null;
+			}
+			return OmddNode.TERMINALS[1];
+		}
 		int curval = vstate[depth];
 		if (reachable.next == null) {
 			if (reachable.value == 1) {
 				return null;
 			}
-			if (depth == vstate.length) {
-				return OmddNode.TERMINALS[1];
-			}
 			OmddNode ret = new OmddNode();
 			ret.level = depth;
-			ret.next = new OmddNode[2]; // FIXME: user the right number of child
+			ret.next = new OmddNode[t_max[depth]];
 			for (int i=0 ; i<ret.next.length ; i++) {
 				if (i==curval) {
 					ret.next[i] = addReachable(reachable, vstate, depth+1);
@@ -658,12 +699,27 @@ public final class Simulation extends Thread implements Runnable {
 					ret.next[i] = OmddNode.TERMINALS[0];
 				}
 			}
+			return ret;
 		}
-		
 		// reachable is not a leaf: first explore it and then create a new node if needed
-		OmddNode child = addReachable(reachable.next[curval], vstate, depth);
+		OmddNode child;
+		if (reachable.level > depth) {
+			child = addReachable(reachable, vstate, depth+1);
+		} else {
+			child = addReachable(reachable.next[curval], vstate, depth+1);
+		}
 		if (child != null) {
-			// TODO: much more fun stuff here!
+			OmddNode ret = new OmddNode();
+			ret.level = depth;
+			ret.next = new OmddNode[t_max[depth]];
+			for (int i=0 ; i<ret.next.length ; i++) {
+				if (i==curval) {
+					ret.next[i] = child;
+				} else {
+					ret.next[i] = reachable.level > depth ? reachable : reachable.next[i];
+				}
+			}
+			return ret;
 		}
 		return null;
 	}
