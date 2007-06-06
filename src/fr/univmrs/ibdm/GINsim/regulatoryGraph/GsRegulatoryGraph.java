@@ -30,7 +30,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 /**
  * The regulatory graph
  */
-public final class GsRegulatoryGraph extends GsGraph {
+public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulatoryGraph {
 
 	private JPanel optionPanel = null;
 	private GsRegulatoryGraphPropertiesPanel parameterPanel = null;
@@ -611,4 +611,12 @@ return ret;
         }
         return t_tree;
     }
+
+	public Vector getNodeOrderForSimulation() {
+		return getNodeOrder();
+	}
+	public OmddNode[] getParametersForSimulation(boolean focal) {
+		return getAllTrees(focal);
+	}
+
 }

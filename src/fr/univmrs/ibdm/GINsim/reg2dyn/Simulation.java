@@ -7,9 +7,10 @@ import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 
@@ -75,16 +76,18 @@ public final class Simulation extends Thread implements Runnable {
 	 * @param frame
 	 * @param params 
 	 */
-	protected Simulation(GsRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
+	protected Simulation(GsGenericRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
 		this.frame = frame;
-		listGenes = regGraph.getNodeOrder();
+		listGenes = regGraph.getNodeOrderForSimulation();
 		length = listGenes.size();
         this.buildSTG = params.buildSTG;
         if (buildSTG) {
-    		dynGraph = new GsDynamicGraph(regGraph);
-    		dynGraph.setAssociatedGraph(regGraph);
+    		dynGraph = new GsDynamicGraph(listGenes);
+    		if (regGraph instanceof GsGraph) {
+    			dynGraph.setAssociatedGraph((GsGraph)regGraph);
+    		}
             vreader = dynGraph.getGraphManager().getVertexAttributesReader();
-    	    vreader.setDefaultVertexSize(5+10*regGraph.getNodeOrder().size(), 25);
+    	    vreader.setDefaultVertexSize(5+10*listGenes.size(), 25);
             // add some default comments to the state transition graph
             dynGraph.getAnnotation().setComment(params.getDescr());
         } else {
@@ -107,7 +110,7 @@ public final class Simulation extends Thread implements Runnable {
                 break;
         }
         
-        t_tree = regGraph.getAllTrees(true);
+        t_tree = regGraph.getParametersForSimulation(true);
         if (params.mutant != null) {
             params.mutant.apply(t_tree, listGenes, false);
         }

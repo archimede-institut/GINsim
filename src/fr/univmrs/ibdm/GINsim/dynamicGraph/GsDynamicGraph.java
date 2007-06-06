@@ -56,9 +56,9 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 * create a new GsDynamicGraph.
 	 * @param regGraph
 	 */
-	public GsDynamicGraph(GsRegulatoryGraph regGraph) {
+	public GsDynamicGraph(Vector nodeOrder) {
 	    this((String)null);
-	    nodeOrder = (Vector)regGraph.getNodeOrder().clone();
+	    nodeOrder = (Vector)nodeOrder.clone();
 	}
     protected String getGraphZipName() {
     	return zip_mainEntry;
