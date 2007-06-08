@@ -5,7 +5,7 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Hashtable;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -28,6 +28,14 @@ import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
+import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Map.Entry;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 /**
  * Panel to edit interaction of a gene
  */
@@ -652,92 +660,9 @@ public class GsInteractionPanel extends GsParameterPanel {
                 }
 			}
       else {
-        System.err.println("OK");
-        Vector nodeOrder = graph.getNodeOrder();
-        GsGraphManager manager = graph.getGraphManager();
-        Vector allowedEdges = new Vector();
-        for (int i = 0 ; i < nodeOrder.size() ; i++) {
-          GsDirectedEdge o = (GsDirectedEdge)manager.getEdge(nodeOrder.get(i), currentVertex);
-          if (o != null) allowedEdges.addElement(o);
-        }
-        Iterator it = allowedEdges.iterator();
-        Hashtable v2 = new Hashtable();
-        Hashtable v3 = new Hashtable();
-        int N = 0;
-        while (it.hasNext()) {
-          GsDirectedEdge e = (GsDirectedEdge)it.next();
-          GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)e.getUserObject();
-          for (int i = 0; i < me.getEdgeCount(); i++) {
-            v2.put(me.getId(i), new Integer(N));
-            v3.put(new Integer(N++), me.getId(i));
-          }
-        }
-
-        Vector pattern_1 = new Vector();
-        Vector inter = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
-        for (int i = 0; i < inter.size(); i++) {
-          GsLogicalParameter p = (GsLogicalParameter)inter.elementAt(i);
-          N = 0;
-          for (int k = 0; k < p.EdgeCount(); k++)
-            N += 1 << ((Integer) v2.get(p.getEdge(k).data.getId(p.getEdge(k).index))).intValue();
-          pattern_1.addElement(new Integer(N));
-        }
-        if (currentVertex.getBaseValue() == 1) pattern_1.addElement(new Integer(0));
-        Vector pattern_0 = new Vector();
-        for (int i = 0; i < Math.pow(2, v2.size()); i++)
-          if (!pattern_1.contains(new Integer(i))) {
-            pattern_0.addElement(new Integer(i));
-
-          }
-        int mask = 0, value = 0, n = 0, h, k = 0;
-        String s;
-        for (int y = 0; y < 3; y++) {
-        //while (!pattern_1.isEmpty()) {
-          for (int i = 1; i <= v2.size(); i++) {
-            for (int j = 0; j < Math.pow(2, i); j++) {
-              for (k = 0; k <= (v2.size() - i); k++) {
-                n = 0;
-                mask = ((int)Math.pow(2, i) - 1) << k;
-                value = j << k;
-                for (int i_0 = 0; i_0 < pattern_0.size(); i_0++) {
-                  h = (~((((Integer)pattern_0.get(i_0)).intValue() & mask) ^ value) & mask);
-                  if (h == mask) n++;
-                }
-                if (n == pattern_0.size()) {
-                  System.err.println("nb bits = " + i + "   value = " + j + "   pos = " + k + "   N = " + n);
-                  System.err.println("mask = " + mask);
-                  break;
-                }
-              }
-              if (n == pattern_0.size()) {
-                s = "";
-                for (int m = 0; m < i; m++) {
-                  s = (String)v3.get(new Integer(k + m));
-                  s = s.substring(0, s.lastIndexOf("_")) + "#" + s.substring(s.lastIndexOf("_") + 1);
-                  if ((value & (int)Math.pow(2, m + k)) == value)
-                    s = "!" + s;
-                  if (m < (i - 1)) s += " & ";
-                }
-                System.err.println("---> " + s);
-                it = pattern_1.iterator();
-                while (it.hasNext()) {
-                  Integer p = (Integer)it.next();
-                  int v = (~(value & mask) & mask);
-                  h = (~((p.intValue() & mask) ^ v) & mask);
-                  if (h == mask) {
-                    System.err.println("A virer : " + p);
-                    pattern_1.remove(p);
-                    it = pattern_1.iterator();
-                  }
-                }
-              }
-            }
-          }
-          System.err.println(pattern_1);
-          //break;
-        }
-        System.err.println(pattern_0);
-        System.err.println(v2);
+        GsFunctionsCreator c = new GsFunctionsCreator(graph.getGraphManager(),
+          ((GsTableInteractionsModel)jTable.getModel()).getInteractions(), currentVertex);
+        c.doIt();
       }
 		}
 	}

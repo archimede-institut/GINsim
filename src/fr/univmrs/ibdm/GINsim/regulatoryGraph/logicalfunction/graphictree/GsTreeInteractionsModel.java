@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 import java.awt.Color;
 import java.util.*;
 
+import javax.swing.JTree;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
@@ -11,7 +12,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
 
 public class GsTreeInteractionsModel implements TreeModel {
   //the vector of interaction
@@ -20,27 +20,18 @@ public class GsTreeInteractionsModel implements TreeModel {
   //the current selected node
   private GsRegulatoryVertex node;
   private GsRegulatoryGraph graph;
-  private Vector v_ok;
+  //private Vector v_ok;
   private GsTreeString root;
-
-  //private GsGlassPane glassPane;
 
   private Vector treeModelListeners = new Vector();
 
-  public GsTreeInteractionsModel(GsRegulatoryGraph graph/*, GsGlassPane gp*/) {
+  public GsTreeInteractionsModel(GsRegulatoryGraph graph) {
     root = new GsTreeString(null, "Function list");
     root.setProperty("add", new Boolean(true));
-    this.v_ok = new Vector();
+    //this.v_ok = new Vector();
     this.interactions = null;
     this.graph = graph;
-    //glassPane = gp;
   }
-  //public GsGlassPane getGlassPane() {
-  //  return glassPane;
-  //}
-  //public void setGlassPane(GsGlassPane gp) {
-  //  glassPane = gp;
-  //}
   public void setNode(GsRegulatoryVertex no) {
     node = no;
     if (node != null)
@@ -48,11 +39,11 @@ public class GsTreeInteractionsModel implements TreeModel {
     else
       this.interactions = null;
 
-    v_ok.clear();
+    //v_ok.clear();
     for (int i=0 ; i<interactions.size() ; i++) {
-        v_ok.add(Boolean.TRUE);
+        //v_ok.add(Boolean.TRUE);
     }
-    v_ok.add(Boolean.TRUE);
+    //v_ok.add(Boolean.TRUE);
   }
   public void removeEdge(GsRegulatoryMultiEdge multiEdge, int index) {
     GsTreeValue val;
@@ -116,13 +107,29 @@ public class GsTreeInteractionsModel implements TreeModel {
     GsLogicalParameter inter = new GsLogicalParameter(value);
     inter.setEdges(edgeIndex);
     node.addLogicalParameter(inter);
-    v_ok.add(v_ok.size()-1, Boolean.TRUE);
+    //v_ok.add(v_ok.size()-1, Boolean.TRUE);
     fireTreeStructureChanged(root);
   }
 
   public void addValue(short v) {
     GsTreeValue val = new GsTreeValue(root, v);
     root.addChild(val);
+  }
+
+  public void removeNullFunction(short v) {
+    GsTreeValue value;
+    GsTreeExpression expression;
+    for (int i = 0; i < root.getChildCount(); i++) {
+      value = (GsTreeValue)root.getChild(i);
+      if (value.getValue() == v)
+        for (int j = 0; j < value.getChildCount(); j++) {
+          expression = (GsTreeExpression)value.getChild(j);
+          if (expression.getRoot() == null) {
+            expression.remove();
+            break;
+          }
+        }
+    }
   }
 
   private GsTreeExpression addExpression(short v, TBooleanTreeNode boolRoot) {
@@ -132,7 +139,7 @@ public class GsTreeInteractionsModel implements TreeModel {
       value = (GsTreeValue)root.getChild(i);
       if (value.getValue() == v) {
         expression = new GsTreeExpression(value, boolRoot);
-        value.addChild(expression);
+        expression = (GsTreeExpression)value.addChild(expression);
         return expression;
       }
     }
@@ -167,11 +174,25 @@ public class GsTreeInteractionsModel implements TreeModel {
     parseFunctions();
     currentVertex.setInteractionsModel(this);
   }
-  public void addEmptyExpression(short val, GsRegulatoryVertex currentVertex) throws Exception {
+  public void addExpression(JTree tree, short val, GsRegulatoryVertex currentVertex, String expression) throws Exception {
+    GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(currentVertex));
+    if (!tbp.compile(expression)) {
+      graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
+        GsGraphNotificationMessage.NOTIFICATION_WARNING));
+    }
+    else {
+      addExpression(val, currentVertex, tbp);
+      fireTreeStructureChanged(root);
+      tree.expandPath(getPath(val, tbp.getRoot().toString()));
+      graph.getVertexAttributePanel().setEditedObject(currentVertex);
+    }
+  }
+
+  public GsTreeExpression addEmptyExpression(short val, GsRegulatoryVertex currentVertex) throws Exception {
       setNode(currentVertex);
       addValue(val);
       currentVertex.setInteractionsModel(this);
-      addExpression(val, (TBooleanTreeNode)null);
+      return addExpression(val, (TBooleanTreeNode)null);
   }
   public void addNewValue(short val) throws Exception {
       addValue(val);

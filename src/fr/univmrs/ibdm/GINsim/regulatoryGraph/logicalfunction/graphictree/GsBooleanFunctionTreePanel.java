@@ -11,6 +11,9 @@ import javax.swing.JTree;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.BasicStroke;
 
 public abstract class GsBooleanFunctionTreePanel extends JPanel {
   protected static Font defaultFont = new Font("monospaced", Font.PLAIN, 10);
@@ -39,6 +42,11 @@ public abstract class GsBooleanFunctionTreePanel extends JPanel {
     super.paint(g);
     if (selected) {
       g.setColor(Color.blue);
+      g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
+    }
+    if (treeElement.isDropable()) {
+      g.setColor(Color.red);
+      //((Graphics2D)g).setStroke(new BasicStroke(2));
       g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
   }

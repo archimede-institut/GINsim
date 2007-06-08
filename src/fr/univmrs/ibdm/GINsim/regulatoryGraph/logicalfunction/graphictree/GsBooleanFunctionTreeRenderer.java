@@ -27,7 +27,9 @@ private int width;
                                                 boolean leaf, int row, boolean hasFocus) {
     this.tree = tree;
     ((GsTreeElement)value).setSelected(sel);
-    return GsPanelFactory.getPanel((GsTreeElement)value, tree, sel, width, false);
+    ((GsTreeElement)value).setEdited(false);
+    GsBooleanFunctionTreePanel p = GsPanelFactory.getPanel((GsTreeElement)value, tree, sel, width, false);
+    return p;
   }
   public void componentHidden(ComponentEvent e) {}
   public void componentMoved(ComponentEvent e) {}

@@ -13,31 +13,29 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener,
-  PropertyChangeListener, MouseListener, MouseMotionListener {
+  PropertyChangeListener, MouseListener {
   private static final long serialVersionUID = 8900639275182677150L;
+  private static final Color editColor = new Color(204, 255, 204);
   private JPanel buttonPanel;
-  private JButton showButton, hideButton, moveButton;
+  private JButton showButton, hideButton, editButton;
   private JTextArea textArea;
   private JScrollPane jsp;
   private JSplitPane splitPane = null;
   private GsUnselectedParamsPanel listPanel;
   private boolean toUpdate = false;
-  private boolean editor = false;
 
-  public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean editor) {
+  public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean edit) {
     super(value, tree, sel, width);
     setBackground(Color.white);
-    this.editor = editor;
-    moveButton = new GsJButton("move3.png");
-    moveButton.addMouseListener(this);
-    moveButton.addMouseMotionListener(this);
+    editButton = new GsJButton("edit.png");
+    editButton.addActionListener(this);
     showButton = new GsJButton("show.png");
     showButton.addActionListener(this);
     hideButton = new GsJButton("hide.png");
     hideButton.addActionListener(this);
     buttonPanel = new JPanel(new GridBagLayout());
     buttonPanel.setBackground(Color.white);
-    buttonPanel.add(moveButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    buttonPanel.add(editButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                                       GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
     if (((Boolean)value.getProperty("show unselected")).booleanValue())
       buttonPanel.add(hideButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
@@ -52,7 +50,12 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     textArea.setWrapStyleWord(false);
     jsp = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     jsp.setBorder(null);
-    if (sel) {
+    if (edit) {
+      setBackground(editColor);
+      textArea.setBackground(editColor);
+      buttonPanel.setBackground(editColor);
+    }
+    else if (sel) {
       setBackground(Color.yellow);
       textArea.setBackground(Color.yellow);
       buttonPanel.setBackground(Color.yellow);
@@ -77,7 +80,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
       hideButton.setEnabled(false);
     }
     if (((Boolean)treeElement.getProperty("show unselected")).booleanValue()) {
-      listPanel = new GsUnselectedParamsPanel(v, sel, tree, this);
+      listPanel = new GsUnselectedParamsPanel(v, sel, tree, this, edit);
       JScrollPane jsp2 = new JScrollPane(listPanel);
       jsp2.setBorder(null);
       splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jsp, jsp2);
@@ -141,6 +144,9 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         jsp.setPreferredSize(new Dimension(width, ps));
       }
     }
+    addMouseListener(this);
+    //addMouseMotionListener(this);
+    //buttonPanel.addMouseListener(this);
   }
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == showButton) {
@@ -148,6 +154,9 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     }
     else if (e.getSource() == hideButton) {
       hideButtonPressed();
+    }
+    else if (e.getSource() == editButton) {
+      editButtonPressed();
     }
   }
   public void showButtonPressed() {
@@ -169,6 +178,9 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
     treeElement.setChecked(true);
     tree.getSelectionModel().addSelectionPath(tp);
+  }
+  public void editButtonPressed() {
+    treeElement.setEditable(true);
   }
   public void keyPressed(KeyEvent e) {
   }
@@ -232,9 +244,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         if (nbRows > 4) nbRows = 4;
         int ps = nbRows * charHeight;
         jsp.setSize(new Dimension(width, ps));
-        //setSize(new Dimension(getWidth(), ps + 4));
-        treeElement.setProperty("divider location",
-                                new Double(((double) ((Integer) e.getNewValue()).intValue() / width)));
+        treeElement.setProperty("divider location", new Double(((double) ((Integer) e.getNewValue()).intValue() / width)));
       }
     }
   }
@@ -245,43 +255,9 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   public void mouseExited(MouseEvent e) {
   }
   public void mousePressed(MouseEvent e) {
-    if (e.getSource() == moveButton) {
-      if (getMouseListener() != null) {
-        MouseEvent e2 = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getX(),
-                                       e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
-        getMouseListener().mousePressed(e2);
-      }
-    }
-    else
-      toUpdate = true;
+    toUpdate = true;
   }
   public void mouseReleased(MouseEvent e) {
-    if (e.getSource() == moveButton) {
-      if (getMouseListener() != null) {
-        MouseEvent e2 = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getX(),
-                                       e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
-        getMouseListener().mouseReleased(e2);
-      }
-    }
-    else
-      toUpdate = false;
-  }
-  public void mouseMoved(MouseEvent e) {
-    if (e.getSource() == moveButton) {
-      if (getMouseListener() != null) {
-        MouseEvent e2 = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getX(),
-                                       e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
-        getMouseMotionListener().mouseMoved(e2);
-      }
-    }
-  }
-  public void mouseDragged(MouseEvent e) {
-    if (e.getSource() == moveButton) {
-      if (getMouseListener() != null) {
-        MouseEvent e2 = new MouseEvent(this, e.getID(), e.getWhen(), e.getModifiers(), e.getX(),
-                                       e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
-        getMouseMotionListener().mouseDragged(e2);
-      }
-    }
+    toUpdate = false;
   }
 }

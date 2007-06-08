@@ -16,19 +16,13 @@ import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import javax.swing.JButton;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsParamPanel extends GsBooleanFunctionTreePanel implements ItemListener, MouseListener, MouseMotionListener {
   private static final long serialVersionUID = -7863256897019020183L;
   private JCheckBox checkBox;
-  private JButton moveButton;
 
   public GsParamPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
     super(value, tree, sel, width);
-    moveButton = new GsJButton("move3.png");
-    moveButton.addMouseListener(this);
-    moveButton.addMouseMotionListener(this);
     checkBox = new GsJCheckBox(value.toString(), true);
     checkBox.setFont(defaultFont);
     checkBox.addItemListener(this);
@@ -46,9 +40,7 @@ public class GsParamPanel extends GsBooleanFunctionTreePanel implements ItemList
     }
     checkBox.setMargin(new Insets(0, 0, 0, 0));
     checkBox.setForeground(value.getForeground());
-    add(moveButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
-                                         GridBagConstraints.NONE, new Insets(4, 2, 2, 0), 0, 0));
-    add(checkBox, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
+    add(checkBox, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
                                          GridBagConstraints.NONE, new Insets(2, 5, 2, 0), 0, 0));
   }
   public void itemStateChanged(ItemEvent e) {

@@ -1,28 +1,10 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.metal.MetalCheckBoxUI;
 import javax.swing.text.View;
@@ -32,8 +14,10 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
 
 public class GsUnselectedParamsPanel extends JPanel implements ItemListener {
-private static final long serialVersionUID = -3205548998282223157L;
-class GsCheckBoxUI extends MetalCheckBoxUI {
+  private static final long serialVersionUID = -3205548998282223157L;
+  private static final Color editColor = new Color(164, 215, 164);
+
+  class GsCheckBoxUI extends MetalCheckBoxUI {
     public synchronized void paint(Graphics g, JComponent c) {
       AbstractButton b = (AbstractButton) c;
       ButtonModel model = b.getModel();
@@ -94,7 +78,7 @@ class GsCheckBoxUI extends MetalCheckBoxUI {
   private JTree tree;
   private GsFunctionPanel functionPanel;
 
-  public GsUnselectedParamsPanel(Vector v, boolean sel, JTree tree, GsFunctionPanel functionPanel) {
+  public GsUnselectedParamsPanel(Vector v, boolean sel, JTree tree, GsFunctionPanel functionPanel, boolean edit) {
     super();
     this.tree = tree;
     this.functionPanel = functionPanel;
@@ -110,7 +94,9 @@ class GsCheckBoxUI extends MetalCheckBoxUI {
         cb.setFont(defaultFont);
         cb.setPreferredSize(new Dimension(cb.getPreferredSize().width, 13));
         cb.setOpaque(true);
-        if (sel)
+        if (edit)
+          cb.setBackground(editColor);
+        else if (sel)
           cb.setBackground(Color.orange);
         else
           cb.setBackground(Color.white);
@@ -118,7 +104,9 @@ class GsCheckBoxUI extends MetalCheckBoxUI {
                                        GridBagConstraints.HORIZONTAL, new Insets(0, 2, 0, 0), 0, 0));
         cb.addItemListener(this);
       }
-      if (sel)
+      if (edit)
+        setBackground(editColor);
+      else if (sel)
         setBackground(Color.orange);
       else
         setBackground(Color.white);
@@ -134,11 +122,12 @@ class GsCheckBoxUI extends MetalCheckBoxUI {
       Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       TreePath tp = tree.getSelectionPath();
       ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
-      tree.stopEditing();
       ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement.getParent());
       while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
       tree.setSelectionPath(tp);
       treeElement.getParent().setChecked(true);
+      treeElement.getParent().setEdited(true);
+      tree.startEditingAtPath(tp);
     }
     cb.addItemListener(this);
   }

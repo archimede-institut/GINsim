@@ -12,9 +12,11 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 public class GsAReg2GPModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 864660594916225977L;
+
 	private Vector nodeOrder;
+
 	private boolean[] t_selected;
-	
+
 	/**
 	 * @param nodeOrder
 	 * @param t_selected
@@ -47,35 +49,36 @@ public class GsAReg2GPModel extends AbstractTableModel {
 			return String.class;
 		}
 		if (columnIndex == 1) {
-		    return Boolean.class;
+			return Boolean.class;
 		}
 		return Object.class;
 	}
 
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (columnIndex == 1 && rowIndex < t_selected.length && rowIndex >=0) {
+		if (columnIndex == 1 && rowIndex < t_selected.length && rowIndex >= 0) {
 			return true;
 		}
 		return false;
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (rowIndex < t_selected.length && rowIndex >=0) {
-		    if (columnIndex == 0) {
-		        return ""+nodeOrder.get(rowIndex);
-		    } else if (columnIndex == 1) {
-		        if (t_selected[rowIndex]) {
-		            return Boolean.TRUE;
-		        }
-	            return Boolean.FALSE;
-		    }
+		if (rowIndex < t_selected.length && rowIndex >= 0) {
+			if (columnIndex == 0) {
+				return "" + nodeOrder.get(rowIndex);
+			} else if (columnIndex == 1) {
+				if (t_selected[rowIndex]) {
+					return Boolean.TRUE;
+				}
+				return Boolean.FALSE;
+			}
 		}
 		return null;
 	}
 
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		if (columnIndex == 1 && rowIndex < t_selected.length && rowIndex >=0 && aValue instanceof Boolean) {
-	        t_selected[rowIndex] = ((Boolean)aValue).booleanValue();
+		if (columnIndex == 1 && rowIndex < t_selected.length && rowIndex >= 0
+				&& aValue instanceof Boolean) {
+			t_selected[rowIndex] = ((Boolean) aValue).booleanValue();
 		}
 	}
 }

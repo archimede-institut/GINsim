@@ -18,15 +18,33 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeEditor;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeRenderer;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsJTree;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
-import javax.swing.JRootPane;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsPanelFactory;
+
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceListener;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetListener;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsComponentAdapter;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsDragGestureListener;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsDragSourceListener;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsDropListener;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsMotionAdapter;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyListener {
   private static final long serialVersionUID = -8323666225199589729L;
@@ -98,40 +116,56 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       }
     }
   }
-
+  class DropManager implements DropTargetListener {
+    public void dragEnter(DropTargetDragEvent dtde) {
+      System.err.println("dragEnter : " + dtde.getLocation());
+    }
+    public void dragExit(DropTargetEvent dtde) {
+      System.err.println("dragExit : ");
+    }
+    public void dragOver(DropTargetDragEvent dtde) {
+      System.err.println("dragOver : " + dtde.getLocation());
+      //motionAdapter.mouseDragged(new MouseEvent(
+      //  tree, MouseEvent.MOUSE_DRAGGED, 0, 0, dtde.getLocation().x, dtde.getLocation().y, 1, false));
+    }
+    public void drop(DropTargetDropEvent dtde) {
+      System.err.println("drop : " + dtde.getLocation());
+      //componentAdapter.mouseReleased(new MouseEvent(
+      //  tree, MouseEvent.MOUSE_RELEASED, 0, 0, dtde.getLocation().x, dtde.getLocation().y, 1, false));
+    }
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+      System.err.println("dropActionChanged : " + dtde.getLocation());
+    }
+  }
   private JTree tree;
   private GsTreeInteractionsModel interactionList = null;
   private GsRegulatoryGraph graph;
-  //private GsGlassPane glassPane = new GsGlassPane();
-  //private JRootPane rootPane;
+  private GsMotionAdapter motionAdapter;
+  private GsComponentAdapter componentAdapter;
+  private DragSource dragSource;
+  private DragGestureListener dragGestureListener;
+  private GsDragSourceListener dragSourceListener;
+  private DropTarget dropTarget;
+  private GsDropListener dropListener;
 
   public GsLogicalFunctionTreePanel(GsRegulatoryGraph graph) {
     super();
     setLayout(new BorderLayout());
-    //rootPane = new JRootPane();
-    //rootPane.getContentPane().add(new JScrollPane(getJTree(graph)));
-    //rootPane.setGlassPane(glassPane);
-    //glassPane.setVisible(true);
-    //add(rootPane, BorderLayout.CENTER);
     add(new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
     this.graph = graph;
     new GsPanelFactory(graph.getGraphManager().getMainFrame().getGlassPane());
   }
-  //public JRootPane getRootPane() {
-  //  return rootPane;
-  //}
   public void setEditedObject(Object obj) {
     GsRegulatoryVertex vertex = (GsRegulatoryVertex)obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
     tree.setModel(interactionList);
-    //interactionList.setGlassPane(glassPane);
     repaint();
   }
   private JTree getJTree(GsRegulatoryGraph graph) {
     if (tree == null) {
-      interactionList = new GsTreeInteractionsModel(graph/*, glassPane*/);
-      tree = new JTree(interactionList);
+      interactionList = new GsTreeInteractionsModel(graph);
+      tree = new GsJTree(interactionList);
       tree.setUI(new GsTreeUI());
       tree.setShowsRootHandles(true);
       GsBooleanFunctionTreeRenderer cr = new GsBooleanFunctionTreeRenderer(getPreferredSize().width);
@@ -139,23 +173,19 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       tree.setCellEditor(new GsBooleanFunctionTreeEditor(tree, cr));
       tree.setEditable(true);
       tree.addKeyListener(this);
+      dragSource = DragSource.getDefaultDragSource();
+      dropListener = new GsDropListener(tree);
+      dragSourceListener = new GsDragSourceListener(tree, (GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane());
+      dragGestureListener = new GsDragGestureListener(tree, dragSourceListener, dropListener);
+      dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY_OR_MOVE, dragGestureListener);
+      dropTarget = new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE, dropListener, true);
+      motionAdapter = new GsMotionAdapter((GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane());
+      tree.addMouseMotionListener(motionAdapter);
+      componentAdapter = new GsComponentAdapter((GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane(), "");
+      tree.addMouseListener(componentAdapter);
       addComponentListener(cr);
     }
     return tree;
-  }
-  public void addExpression(short val, GsRegulatoryVertex currentVertex, String expression) throws Exception {
-    GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(currentVertex));
-    if (!tbp.compile(expression)) {
-      graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
-        GsGraphNotificationMessage.NOTIFICATION_WARNING));
-    }
-    else {
-      tree.stopEditing();
-      interactionList.addExpression(val, currentVertex, tbp);
-      ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-      tree.expandPath(interactionList.getPath(val, tbp.getRoot().toString()));
-      graph.getVertexAttributePanel().setEditedObject(currentVertex);
-    }
   }
   public void keyPressed(KeyEvent e) {
   }
