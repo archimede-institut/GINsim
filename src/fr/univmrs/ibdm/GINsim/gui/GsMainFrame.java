@@ -35,6 +35,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.util.widget.GsFrame;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
 
 /**
  * GINsim's main frame
@@ -88,6 +89,8 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		super("display.mainFrame", 800, 600);
 		initialize();
 		eventDispatcher.addGraphChangedListener(this);
+
+    setGlassPane(new GsGlassPane());
 	}
 	/**
 	 * This method initializes this

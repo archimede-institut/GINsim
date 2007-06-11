@@ -13,16 +13,13 @@ import fr.univmrs.ibdm.GINsim.util.widget.*;
 
 public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionListener, ChangeListener, MouseListener, MouseMotionListener {
   private static final long serialVersionUID = 207002545507075699L;
-  private JButton addButton, moveButton;
+  private JButton addButton;
   private JSpinner spinner;
 
-  public GsValuePanel(GsTreeElement value, JTree tree, boolean sel, int width) {
+  public GsValuePanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean edit) {
     super(value, tree, sel, width);
     addButton = new GsJButton("add.png");
     addButton.addActionListener(this);
-    moveButton = new GsJButton("move3.png");
-    moveButton.addMouseListener(this);
-    moveButton.addMouseMotionListener(this);
     if (treeElement.getProperty("null function") == null)
       treeElement.setProperty("null function", new Boolean(false));
     else if (((Boolean)treeElement.getProperty("null function")).booleanValue())
@@ -40,13 +37,15 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
     spinner.setFont(defaultFont);
     spinner.addChangeListener(this);
     spinner.setBorder(null);
-    add(addButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    add(addButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                           GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(moveButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                           GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(spinner, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    add(spinner, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                         GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
-    if (sel) {
+    if (edit) {
+      setBackground(Color.cyan);
+      spinner.setBackground(Color.cyan);
+    }
+    else if (sel) {
       setBackground(Color.yellow);
       spinner.setBackground(Color.yellow);
     }

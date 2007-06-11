@@ -123,5 +123,8 @@ public class GsTreeExpression extends GsTreeElement {
   public TBooleanTreeNode getRoot() {
     return root;
   }
+  public void drop(GsTreeElement element) {
+
+  }
 }
 

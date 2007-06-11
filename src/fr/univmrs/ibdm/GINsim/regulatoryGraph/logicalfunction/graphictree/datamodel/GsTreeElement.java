@@ -7,7 +7,7 @@ import java.util.Hashtable;
 public abstract class GsTreeElement implements Comparable {
   protected Vector childs;
   protected GsTreeElement parent;
-  protected boolean checked, selected;
+  protected boolean checked, selected, editable, dropable, edited;
   protected Color foreground;
   protected Hashtable property;
 
@@ -18,6 +18,9 @@ public abstract class GsTreeElement implements Comparable {
     selected = false;
     foreground = Color.black;
     property = new Hashtable();
+    editable = false;
+    dropable = false;
+    edited = false;
   }
   public GsTreeElement getChild(int index) {
     GsTreeElement te = null;
@@ -30,9 +33,13 @@ public abstract class GsTreeElement implements Comparable {
     }
     return te;
   }
-  public void addChild(GsTreeElement element) {
+  public GsTreeElement addChild(GsTreeElement element) {
     if ((childs != null) && (element != null))
       if (!childs.contains(element)) childs.addElement(element);
+    for (int i = 0; i < childs.size(); i++)
+      if (childs.elementAt(i).equals(element))
+        return (GsTreeElement)childs.elementAt(i);
+    return null;
   }
   public void removeChild(int index) {
     if (childs != null)
@@ -68,11 +75,23 @@ public abstract class GsTreeElement implements Comparable {
   public boolean isSelected() {
     return selected;
   }
+  public boolean isEdited() {
+    return edited;
+  }
   public void setSelected(boolean b) {
     selected =b;
   }
+  public void setEdited(boolean b) {
+    edited =b;
+  }
   public void setChecked(boolean b) {
     checked = b;
+  }
+  public void setDropable(boolean b) {
+    dropable = b;
+  }
+  public boolean isDropable() {
+    return dropable;
   }
   public GsTreeElement getParent() {
     return parent;
@@ -115,6 +134,12 @@ public abstract class GsTreeElement implements Comparable {
       if (!((GsTreeElement)childs.elementAt(i)).isChecked()) v.addElement(childs.elementAt(i));
     return v;
   }
+  public void setEditable(boolean e) {
+    editable = e;
+  }
+  public boolean isEditable() {
+    return editable;
+  }
   public abstract String toString();
   public int compareTo(Object o) {
     GsTreeElement element = (GsTreeElement)o;
@@ -122,5 +147,7 @@ public abstract class GsTreeElement implements Comparable {
   }
   public boolean equals(Object o) {
     return compareTo(o) == 0;
+  }
+  public void drop(GsTreeElement element) {
   }
 }

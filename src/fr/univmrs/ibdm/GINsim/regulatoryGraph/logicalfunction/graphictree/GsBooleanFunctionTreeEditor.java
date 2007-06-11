@@ -16,38 +16,46 @@ public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
   public Component getTreeCellEditorComponent(JTree tree, Object value, boolean isSelected,
                                               boolean expanded, boolean leaf, int row) {
     ((GsTreeElement)value).setSelected(true);
-    return GsPanelFactory.getPanel((GsTreeElement)value, tree, true,
-                                   ((GsBooleanFunctionTreeRenderer)super.renderer).getWidth());
+    ((GsTreeElement)value).setEdited(true);
+    GsBooleanFunctionTreePanel p = GsPanelFactory.getPanel((GsTreeElement)value, tree, true,
+                                   ((GsBooleanFunctionTreeRenderer)super.renderer).getWidth(), true);
+    return p;
   }
   protected boolean canEditImmediately(EventObject event) {
     if ((event instanceof MouseEvent) && SwingUtilities.isLeftMouseButton((MouseEvent)event)) {
       MouseEvent me = (MouseEvent)event;
       TreePath tp = tree.getPathForLocation(me.getX(), me.getY());
+      if (tp == null) return false;
       GsTreeElement treeElement = (GsTreeElement)tp.getLastPathComponent();
       if (treeElement == null)
         return false;
-      else if (treeElement.isLeaf()) {
+      else if (treeElement.isEdited())
+        return true;
+      if (treeElement.isLeaf()) { // parametres
         if (inHitRegion(me.getX(), me.getY()) && (me.getClickCount() > 0))
           return true;
-        else
-          return false;
+        //else
+        //  return false;
       }
-      else if (tp.getParentPath() == tree.getPathForRow(0)) {
+      else if (tp.getParentPath() == tree.getPathForRow(0)) { // valeurs
         if (inHitRegion(me.getX(), me.getY()) && (me.getClickCount() > 0))
           return true;
         else if (!inHitRegion(me.getX(), me.getY()) && me.getClickCount() > 1)
           return true;
       }
-      else {
-        if (!inHitRegion(me.getX(), me.getY()) && (me.getClickCount() > 1))
+      else if (tp == tree.getPathForRow(0)) { // racine
+        if (inHitRegion(me.getX(), me.getY()) && (me.getClickCount() > 0))
           return true;
-        else if (inHitRegion(me.getX(), me.getY()) && (me.getClickCount() > 0))
-          return true;
-        else
-          return false;
       }
+      else { // fonctions
+        if (inHitRegion(me.getX(), me.getY()) && (me.getClickCount() > 0))
+          return true;
+      }
+      //else return true;
+      //else //if ((me.getModifiers() & me.CTRL_MASK) != me.CTRL_MASK)
+      //  return false; //(me.getClickCount() > 0);
     }
-    return (event == null);
+    return false;
   }
   protected boolean inHitRegion(int x, int y) {
     TreePath tp = tree.getPathForLocation(x, y);
@@ -61,9 +69,10 @@ public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
       offset = 20;
 
       if (bounds != null)
-        if (!leaf && ((x <= (bounds.x + offset - 16)) || (x > (bounds.x + offset + 14))))
+        if (!leaf && ((x <= (bounds.x + offset - 16)) || (x > (bounds.x + offset + 14))) ||
+            (y >= (bounds.y + 16)))
           return false;
-        else if (leaf && ((x <= (bounds.x + offset - 16)) || (x > (bounds.x + offset + 14))))
+        else if (leaf && ((x <= (bounds.x + offset - 16)) || (x > (bounds.x + offset + 3))))
           return false;
     }
     return true;
