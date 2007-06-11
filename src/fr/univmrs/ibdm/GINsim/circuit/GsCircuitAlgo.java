@@ -4,50 +4,45 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 /**
- * analyse circuits to detect their functionnality/functionnal range.
- * 
+ * analyse circuits to detect their functionality/functional range.
+ *
  * <p>on circuits:
  * <ul>
- *  <li>a circuit is non-functionnal if any of it's edge is inactive</li>
+ *  <li>a circuit is non-functional if any of it's edge is inactive</li>
  *  <li>a circuit is negative if it contains 2k+1 negative interactions</li>
  * </ul>
- * 
+ *
  * <p>on interactions:
  * <ul>
- *  <li>an interaction is non-functionnal if the main range is non-functionnal</li>
+ *  <li>an interaction is non-functional if the main range is non-functional</li>
  *  <li>an interaction is negative if the negative range is wider than the positive one</li>
  * </ul>
- * 
+ *
  * <p>about interaction's contexts:
  * <ul>
- *  <li>a context is non-functionnal if in this context, the activation of the interaction
+ *  <li>a context is non-functional if in this context, the activation of the interaction
  *      (considering min and max of it's activation range)
  *      has no effect on the activity of the target interaction</li>
- *  <li>a context is functionnal, positive (resp negative) if in this context, the activation of the interaction
+ *  <li>a context is functional, positive (resp negative) if in this context, the activation of the interaction
  *      triggers (resp inhibits) the activation of the target interaction<li>
  * </ul>
  */
 public class GsCircuitAlgo {
 
 	private static final boolean testOutLimit = false;
-	
+
     private Map m_report = new HashMap();
     private short[][] t_constraint;
-    
+
     // some context data
-    GsRegulatoryVertex target;    
+    GsRegulatoryVertex target;
     GsRegulatoryMultiEdge me;
     GsLogicalParameter gsi;
-    
+
     GsRegulatoryGraph graph;
 
     Vector nodeOrder;
@@ -55,7 +50,7 @@ public class GsCircuitAlgo {
     long fullPhaseSpace;
     long score;
     OmddNode[] t_parameters;
-    
+
     /**
      * @param graph the studied graph
      * @param t_constraint constraints on the nodes
@@ -75,13 +70,13 @@ public class GsCircuitAlgo {
         	mutant.apply(t_parameters, graph.getNodeOrder(), true);
         }
     }
-    
+
     /**
      * @param ei the edge to test
      * @param t_circuit members of the circuit
-     * @param nextmin 
-     * @param nextmax 
-     * 
+     * @param nextmin
+     * @param nextmax
+     *
      * @return the functionnal context for this edge
      */
     public OmsddNode checkEdge(GsEdgeIndex ei, int[] t_circuit, int nextmin, int nextmax) {
@@ -111,15 +106,17 @@ public class GsCircuitAlgo {
             t_report[ei.index] = new Vector();
             m_report.put(me, t_report);
         }
-        
+
         GsRegulatoryVertex source = me.getSource();
         target = me.getTarget();
 
         short min = me.getMin(ei.index);
         short max = me.getMax(ei.index);
         short smax = source.getMaxValue();
-        if (max == -1) max = smax;
-        
+        if (max == -1) {
+			max = smax;
+		}
+
         // t_lc = where are local contexts, its length depends on the context:
         //   * 2 if only the down limit to test ==> under, inside
         //   * 3 if min == max  ==> under, inside, out
@@ -167,9 +164,9 @@ public class GsCircuitAlgo {
         }
 
         // get the context tree
-        OmsddNode node = getContextFromParameters(t_parameters[nodeOrder.indexOf(target)], 
+        OmsddNode node = getContextFromParameters(t_parameters[nodeOrder.indexOf(target)],
         		nodeOrder.indexOf(source), min, t_circuit, nextmin, nextmax);
-        
+
         node = checkConstraint(node).reduce();
         // cache the result
         subReport sr = new subReport();
@@ -181,23 +178,23 @@ public class GsCircuitAlgo {
     }
 
     /**
-     * build the context of functionnality from the regulation tree.
+     * build the context of functionality from the regulation tree.
      * In this context, we have not yet meet the considered gene.
-     * 
+     *
      *  - take as input the tree view of logical parameters.
-     *  - build from it the "activity" tree of this node in this circuit by finding branches 
+     *  - build from it the "activity" tree of this node in this circuit by finding branches
      *    that differ only by the current node.
-     *    
+     *
      * @param node
      * @param level level of the considered gene
-     * @param thresold thresold of activity for the considered gene
-     * @param t_circuit 
-     * @param nextmin 
-     * @param nextmax 
-     * @return the context of functionnality
+     * @param thresold threshold of activity for the considered gene
+     * @param t_circuit
+     * @param nextmin
+     * @param nextmax
+     * @return the context of functionality
      */
     private OmsddNode getContextFromParameters(OmddNode node, int level, int thresold, int[] t_circuit, int nextmin, int nextmax) {
-        if (node.next == null || node.level > level) { // no meeting: not functionnal
+        if (node.next == null || node.level > level) { // no meeting: not functional
             return OmsddNode.FALSE;
         }
         if (node.level < level ) { // may still meet it later
@@ -214,23 +211,23 @@ public class GsCircuitAlgo {
     }
 
     /**
-     * build the context of functionnality from the regulation tree.
-     * In this context, we are analysing two parallel branches with the considered node being 
-     * inactif in the first one and actif in the second.
-     * 
+     * build the context of functionality from the regulation tree.
+     * In this context, we are analysing two parallel branches with the considered node being
+     * inactive in the first one and active in the second.
+     *
      *  - take as input the tree view of logical parameters.
-     *  - build from it the "activity" tree of this node in this circuit by finding branches 
+     *  - build from it the "activity" tree of this node in this circuit by finding branches
      *    that differ only by the current node.
-     *    
+     *
      * @param node
      * @param next
-     * @param t_circuit 
-     * @param nextmin 
-     * @param nextmax 
-     * @return the context of functionnality
+     * @param t_circuit
+     * @param nextmin
+     * @param nextmax
+     * @return the context of functionality
      */
     private OmsddNode getContextFromParameters(OmddNode node, OmddNode next, int[] t_circuit, int nextmin, int nextmax) {
-        
+
         if (node.next == null) {
             if (next.next == null) {
                 // the real end: choose the sign.
@@ -260,7 +257,7 @@ public class GsCircuitAlgo {
             }
         }
 
-        if (node.next == null || (next.next != null && (node.level > next.level))) {
+        if (node.next == null || next.next != null && node.level > next.level) {
             OmsddNode ret = new OmsddNode();
             ret.level = next.level;
             ret.next = new OmsddNode[next.next.length];
@@ -278,7 +275,7 @@ public class GsCircuitAlgo {
             }
             return ret;
         }
-        
+
         // both are non-terminal of the same level
         OmsddNode ret = new OmsddNode();
         ret.level = next.level;
@@ -288,15 +285,15 @@ public class GsCircuitAlgo {
         }
         return ret;
     }
-    
+
     /**
      * compute a score for the context.
      * higher is better (score increases with the size of the phase space region)
      * return: [score, sign]
      * sign can be: FALSE, POSITIVE, NEGATIVE or DUAL
-     * 
+     *
      * This method is _NOT_ thread safe
-     * 
+     *
      * @param node
      * @return a score along with a sign indication
      */
@@ -325,7 +322,7 @@ public class GsCircuitAlgo {
             score -= addScore;
             return (short)(node == OmsddNode.POSITIVE ? GsCircuitDescr.POSITIVE : GsCircuitDescr.NEGATIVE);
         }
-        
+
         short sign = GsCircuitDescr.FALSE;
         for (int i=0 ; i<node.next.length ; i++) {
         	state[node.level] = i;
@@ -340,10 +337,10 @@ public class GsCircuitAlgo {
         state[node.level] = -1;
         return sign;
     }
-    
+
     /**
      * *very* quickly added constraint on all genes.
-     * 
+     *
      * @param node
      * @return the new node
      */
@@ -362,11 +359,11 @@ public class GsCircuitAlgo {
         }
         return node;
     }
-    
-    private class subReport {
+
+    protected class subReport {
     	int min;
     	int max;
     	OmsddNode node;
     }
-    
+
 }

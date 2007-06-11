@@ -5,10 +5,12 @@ import java.util.Vector;
 
 /**
  * Ordered Binary Decision Diagram (OBDD) is a tree representation of boolean functions.
- * Ordered Multivalued Signed Decidion Diagram (OMSDD) is based on this representation but adapted 
+ * Ordered Multi-valued Signed Decision Diagram (OMSDD) is based on this representation but adapted 
  * for a (limited) use of non-boolean functions:
- *   - non-terminal nodes can have more than two childs (actually they have an array of childs)
- *   - terminal nodes are "signed boolean": ie can take the values -1, 0 or +1
+ * <ul>
+ *   <li> non-terminal nodes can have more than two children (actually they have an array of children)</li>
+ *   <li> terminal nodes are "signed boolean": ie can take the values -1, 0 or +1</li>
+ * </ul>
  */
 public class OmsddNode {
 
@@ -75,7 +77,7 @@ public class OmsddNode {
      * this will create new nodes, as existing one might be merged with different part, they can't be reused.
      * 
      * @param other
-     * @param op boolean operation to apply (avaible: AND, OR)
+     * @param op boolean operation to apply (available: AND, OR)
      *
      * @return the merged tree
      */
@@ -93,7 +95,7 @@ public class OmsddNode {
                         case 0:
                             return other;
                         case  1:    
-                        case -1:    // if evereything is fine, 1/-1 should ONLY get merged with 0.
+                        case -1:    // if everything is fine, 1/-1 should ONLY get merged with 0.
                             return this;
                         default:
                             return null;
@@ -261,7 +263,7 @@ public class OmsddNode {
      * WIP...
      * 
      * not sure if it is a good idea: merge function should do it already,
-     * maybe not optimally but additionnal cost is non-blocker, and at least it works.
+     * maybe not optimally but additional cost is non-blocker, and at least it works.
      * 
      * @param path
      * @param index
@@ -376,24 +378,24 @@ public class OmsddNode {
     }
     
     /**
-     * get a uniq key (imply getting the same as an existing similar subtree).
+     * get a unique key (imply getting the same as an existing similar subtree).
      * 
-     *    first attribute a temporary key builded from the level and uniq keys of childs
+     *    first attribute a temporary key builded from the level and unique keys of children
      *    if this key already exists
-     *         this subtree is similar to an existing one and should have the same uniq key, return this key
+     *         this subtree is similar to an existing one and should have the same unique key, return this key
      *    else (this is a new subtree):
-     *         replace all childs by correct nodes for their uniq key 
-     *           (uniq keys are cached to make it faster, we have then to clean this cache)
-     *         if all childs are equals 
-     *             this node is useless, return the uniq key of the first child
-     *         else return a new (incremented) uniq key
+     *         replace all children by correct nodes for their unique key 
+     *           (unique keys are cached to make it faster, we have then to clean this cache)
+     *         if all children are equals 
+     *             this node is useless, return the unique key of the first child
+     *         else return a new (incremented) unique key
      *      
      *   special case: terminals nodes will just return their value (ie "-1", "0" or "1"), these values 
      *   should then be prefilled in the Map.
      *      
-     * @param m the hashmap to store temporary (long) and uniq (shorter) keys
-     * @param t_key int[1]: value of the next uniq key
-     * @return the uniq key of this node
+     * @param m the hashmap to store temporary (long) and unique (shorter) keys
+     * @param t_key int[1]: value of the next unique key
+     * @return the unique key of this node
      */
     private String getKey(Map m, int[] t_key) {
         if (key != null) {
@@ -403,7 +405,7 @@ public class OmsddNode {
         String tempKey = level+"("+skey;
         for (int i=1 ; i<next.length;i++) {
             String skey2 = next[i].getKey(m, t_key);
-            // test if all childs are equals
+            // test if all children are equals
             if (skey != null && !skey.equals(skey2)) {
                 skey = null;
             }
@@ -411,7 +413,7 @@ public class OmsddNode {
         }
         tempKey += ")";
 
-        // if all childs are equals, we ARE the child
+        // if all children are equals, we ARE the child
         if (skey != null) {
             return skey;
         }

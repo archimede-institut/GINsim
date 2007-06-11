@@ -5,27 +5,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.circuit.OmsddNode;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 
 /**
- * the Class in which we store biological data for interaction
+ * the Class in which we store biological data for logical parameters
  * (in the vertex)
  */
 public class GsLogicalParameter implements GsXMLize {
 
-	//value of the interation
+	//value of the parameter
 	private int value;
-	//vector of incomming active interaction
+	//vector of incoming active interaction
 	private Vector edge_index;
 	private GsEdgeIndex tmp_ei = new GsEdgeIndex(null, 0);
 
 	/**
 	 * Constructs an empty vector and set the value
 	 * 
-	 * @param v of the interation
+	 * @param v of the interaction
 	 */
 	public GsLogicalParameter(int v) {
 		value = v;
@@ -75,7 +74,7 @@ public class GsLogicalParameter implements GsXMLize {
 	}
 	
 	/**
-	 * Removes the GsEdgeIndex from the interaction
+	 * Removes the GsEdgeIndex from the parameter
 	 * @param o
 	 * @param index
      * @return true if this triggered a change
@@ -83,7 +82,7 @@ public class GsLogicalParameter implements GsXMLize {
 	public boolean removeEdge(GsRegulatoryMultiEdge o,int index) {
 		try {
 			for (int i=0 ; i<edge_index.size() ; i++) {
-				//seach the GsEdgeIndex corresponding to parameter
+				//search the GsEdgeIndex corresponding to parameter
 				GsEdgeIndex ei = (GsEdgeIndex)edge_index.get(i);
 				if (ei.data == o) {
 					if ( ei.index == index) {
@@ -99,7 +98,7 @@ public class GsLogicalParameter implements GsXMLize {
 	}
 
 	/**
-	 * Removes all edges of the multiedge from the interaction 
+	 * Removes all edges of the multiedge from the parameter 
 	 * @param o
      * @return true if this triggered a change
 	 */
@@ -107,7 +106,7 @@ public class GsLogicalParameter implements GsXMLize {
         boolean changed = false;
 		try {
 			for (int i=0 ; i<edge_index.size() ; i++) {
-				//seach the GsEdgeIndex corresponding to parameter
+				//search the GsEdgeIndex corresponding to parameter
 				GsEdgeIndex ei = (GsEdgeIndex)edge_index.get(i);
 				if ( ei.data == o) {
 					edge_index.remove(ei);
@@ -122,7 +121,7 @@ public class GsLogicalParameter implements GsXMLize {
 
 	/**
 	 * @param index
-	 * @return the GsEdgeIndex at the specified position index in the interaction. 
+	 * @return the GsEdgeIndex at the specified position index in the parameter. 
 	 */
 	public GsEdgeIndex getEdge(int index) {
 		try{
@@ -132,7 +131,7 @@ public class GsLogicalParameter implements GsXMLize {
 	}
 
 	/**
-	 * @return the number of edges in this interaction.
+	 * @return the number of edges in this parameter.
 	 */
 	public int EdgeCount() {
 		return(edge_index.size());
@@ -154,19 +153,21 @@ public class GsLogicalParameter implements GsXMLize {
 	}
 
     /**
-     * build a structure reflecting expression constraints of the interaction
+     * build a structure reflecting expression constraints of the parameter
      * that should be faster to test.
      * call it before beginning the simulation!
      * 
      * details: the t_ac is a simple int[][].
-     * each line represent allowed values for a gene: 
-     *  - the first int is the index of this gene in the nodeOrder
-     *  - all other are either 0 or -1, -1 meaning that the value is forbiden
+     * each line represent allowed values for a gene:
+     * <ul>
+     *  <li> the first int is the index of this gene in the nodeOrder</li>
+     *  <li> all other are either 0 or -1, -1 meaning that the value is forbidden</li>
+     * </ul>
      *  
      *  the first line is special and only contains the value for this interaction
      *  
-     *  example: [ 3, 0, -1, -1, 0, 0, -1 ]
-     *  the third gene can take the values 0, 3 or 4 ; values 1, 2 and 5 are forbiden
+     *  <p>example: [ 3, 0, -1, -1, 0, 0, -1 ]
+     *  the third gene can take the values 0, 3 or 4 ; values 1, 2 and 5 are forbidden
      * 
      * @param regGraph
      * @param node
@@ -238,7 +239,7 @@ public class GsLogicalParameter implements GsXMLize {
     }
 
     /**
-     * build a tree of condition of activation for this logial parameter
+     * build a tree of condition of activation for this logical parameter
      * 
      * @param regGraph
      * @param node
@@ -278,85 +279,6 @@ public class GsLogicalParameter implements GsXMLize {
             root = curNode;
         }
         return root;
-    }
-
-    /**
-     * 
-     * @param regGraph
-     * @param node
-     * @param terminalNode
-     * @return a tree corresponding to this logical parameter
-     */
-    public OmsddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, OmsddNode terminalNode) {
-        if (terminalNode == null || terminalNode.next != null) {
-            return terminalNode;
-        }
-        OmsddNode rootNode = terminalNode;
-        OmsddNode curNode;
-        OmsddNode nextNode = null;
-        OmsddNode tmpNode;
-        
-        List incEdges = regGraph.getGraphManager().getIncomingEdges(node);
-        Vector nodeOrder = regGraph.getNodeOrder();
-        for (int i=incEdges.size() ; i>0 ; i--) {
-            GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)incEdges.get(i-1)).getUserObject();
-            GsRegulatoryVertex vertex = me.getSource();
-            int level = (short)nodeOrder.indexOf(vertex);
-            tmpNode = new OmsddNode();
-            curNode = rootNode;
-            if (rootNode == terminalNode || rootNode.level > level ) {
-                nextNode = rootNode;
-                curNode = tmpNode;
-                rootNode = curNode;
-            } else {
-                nextNode = rootNode;
-                while (nextNode.next != null && nextNode.level < level) {
-                    curNode = nextNode;
-                    for (int n=0 ; n<curNode.next.length ; n++) {
-                        nextNode = curNode.next[n];
-                        if (nextNode.next != null || nextNode == terminalNode) {
-                            break;
-                        }
-                    }
-                }
-                for (int n=0 ; n<curNode.next.length ; n++) {
-                    if (curNode.next[n] == nextNode) {
-                        curNode.next[n] = tmpNode;
-                    }
-                }
-            }
-            curNode.level = level;
-            curNode.next = new OmsddNode[vertex.getMaxValue()+1];
-            for (int n=0 ; n<curNode.next.length ; n++) {
-                curNode.next[n] = nextNode;
-            }
-            
-            int nbedges = me.getEdgeCount();
-            tmp_ei.data = me;
-            int m = vertex.getMaxValue();
-            for (int j=0 ; j<nbedges ; j++) {
-                tmp_ei.index = j;
-                int im = me.getMax(j);
-                if (im == -1) {
-                    im = m;
-                }
-                if (!edge_index.contains(tmp_ei)) {
-                    // must be inactive
-                    for (int l=me.getMin(j) ; l<=im ; l++) {
-                        curNode.next[l] = OmsddNode.FALSE;
-                    }
-                } else {
-                    // must be active
-                    for (int l=0 ; l<me.getMin(j) ; l++) {
-                        curNode.next[l] = OmsddNode.FALSE;
-                    }
-                    for (int l=im+1 ; l<=m ; l++) {
-                        curNode.next[l] = OmsddNode.FALSE;
-                    }
-                }
-            }
-        }
-        return rootNode;
     }
     
     public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
