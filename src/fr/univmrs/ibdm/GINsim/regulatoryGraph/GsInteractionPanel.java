@@ -5,8 +5,6 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.DefaultListSelectionModel;
@@ -20,22 +18,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicPathItemCellRenderer;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
-import java.util.List;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Map.Entry;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 /**
  * Panel to edit interaction of a gene
  */

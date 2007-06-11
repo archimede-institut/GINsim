@@ -4,16 +4,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 import javax.swing.JTree;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
-import java.awt.BasicStroke;
 
 public abstract class GsBooleanFunctionTreePanel extends JPanel {
   protected static Font defaultFont = new Font("monospaced", Font.PLAIN, 10);

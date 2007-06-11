@@ -1,11 +1,18 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 import java.util.Map.Entry;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
 
 public class GsFunctionsCreator {
