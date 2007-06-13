@@ -33,21 +33,21 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatesIterat
  *  <li>each logical parameter will be represented by transition(s) with "test" arcs to
  *      non-modified places and "normal" arcs to the positive and negative place of the modified place.</li>
  * </ul>
- * 
+ *
  * with some simplifications:
  * <ul>
  *  <li>work on the tree representation of logical parameters and use ranges instead of exact values as precondition of transitions</li>
  *  <li>"input" nodes are specials: no transition will affect them and their basal value will be used as initial markup</li>
  *  <li>autoregulation can trigger some cases where a transition can't be fired, these are not created</li>
  * </ul>
- * 
+ *
  *<p>references:
- *<ul> 
+ *<ul>
  *  <li>Simao, E., Remy, E., Thieffry, D. and Chaouiya, C.: Qualitative modelling of
  *      Regulated Metabolic Pathways: Application to the Tryptophan biosynthesis in E. Coli.</li>
  *  <li>Chaouiya, C., Remy, E. and Thieffry, D.: Petri Net Modelling of Biological Regulatory
  *      Networks</li>
- *</ul>     
+ *</ul>
  */
 public class GsPetriNetExport extends GsAbstractExport {
 	static Vector v_format = new Vector();
@@ -62,14 +62,14 @@ public class GsPetriNetExport extends GsAbstractExport {
 	public GsPetriNetExport() {
 		id = "PetriNet";
 	}
-	
+
 	public Vector getSubFormat() {
 		return v_format;
 	}
-	
+
     /**
      * extract transitions from a tree view of logical parameters.
-     * 
+     *
      * @param v_result
      * @param node tree view of logical parameters on one node
      * @param nodeIndex index of the considered node (in the regulatory graph)
@@ -80,6 +80,7 @@ public class GsPetriNetExport extends GsAbstractExport {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
+            td.maxValue = ((GsRegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
             td.nodeIndex = nodeIndex;
             td.t_cst = null;
             v_result.add(td);
@@ -91,7 +92,7 @@ public class GsPetriNetExport extends GsAbstractExport {
             browse(v_result, t_cst, 0, node, nodeIndex, v_node);
         }
     }
-    
+
     private static void browse(Vector v_result, int[][] t_cst, int level, OmddNode node, int nodeIndex, Vector v_node) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
@@ -125,7 +126,7 @@ public class GsPetriNetExport extends GsAbstractExport {
             v_result.add(td);
             return;
         }
-        
+
         // specify on which node constraints are added
         t_cst[level][0] = node.level;
         for (int i=0 ; i<node.next.length ; i++) {
@@ -147,7 +148,7 @@ public class GsPetriNetExport extends GsAbstractExport {
         // "forget" added constraints
         t_cst[level][0] = -1;
     }
-    
+
 	protected void doExport(GsExportConfig config) {
 		// nothing needed here: subformat do all the job
 	}
@@ -160,7 +161,7 @@ public class GsPetriNetExport extends GsAbstractExport {
         }
         return null;
 	}
-	
+
 	public boolean needConfig(GsExportConfig config) {
 		return true;
 	}
@@ -173,7 +174,7 @@ public class GsPetriNetExport extends GsAbstractExport {
 	 * prepare the PN export:
 	 *   - read/set initial markup
 	 *   - build the set of transitions
-	 * 
+	 *
 	 * @param config
 	 * @param t_transition
 	 * @param t_tree
@@ -185,12 +186,12 @@ public class GsPetriNetExport extends GsAbstractExport {
 		Iterator it_state = new GsInitialStatesIterator(nodeOrder,
 				((GsInitialStateStore)config.getSpecificConfig()).getInitialState());
 		int[] t_state = (int[])it_state.next();
-		
+
 		short[][] t_markup = new short[len][2];
         for (int i=0 ; i<len ; i++) {
             OmddNode node = t_tree[i];
-            GsRegulatoryVertex vertex = ((GsRegulatoryVertex)nodeOrder.get(i));
-            
+            GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+
 //            if (manager.getIncomingEdges(vertex).size() == 0) {
 //                // input node: no regulator, use basal value as initial markup ??
 //                t_markup[i][0] = vertex.getBaseValue();
@@ -216,12 +217,12 @@ class TransitionData {
 
     /** index of the concerned node */
     public int nodeIndex;
-    
+
     /** minvalue for the concerned node (0 unless an autoregulation is present) */
     public int minValue;
     /** maxvalue for the concerned node (same as node's maxvalue unless an autoregulation is present) */
     public int maxValue;
-    
+
     /** constraints of this transition: each row express range constraint for one of the nodes
      * and contains 3 values:
      *  <ul>
@@ -239,10 +240,10 @@ class PNExportConfigPanel extends JPanel {
     	PNConfig specConfig = new PNConfig();
     	config.setSpecificConfig(specConfig);
     	GsGraph graph = config.getGraph();
-    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, 
+    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog,
     			graph, false);
     	initPanel.setParam(specConfig);
-    	
+
     	setLayout(new GridBagLayout());
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
@@ -255,7 +256,7 @@ class PNExportConfigPanel extends JPanel {
 }
 
 class PNConfig implements GsInitialStateStore {
-	
+
 	Map m_init = new HashMap();
 
 	public Map getInitialState() {

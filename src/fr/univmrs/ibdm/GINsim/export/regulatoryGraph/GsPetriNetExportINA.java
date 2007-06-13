@@ -23,11 +23,11 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  *  <li>INA: http://www.informatik.hu-berlin.de/~Estarke/ina.html</li>
  *  <li>PED: http://www-dssz.informatik.tu-cottbus.de/~wwwdssz</li>
  * </ul>
- * 
- *<p>the INA file is composed of 3 parts: 
+ *
+ *<p>the INA file is composed of 3 parts:
  * <ul>
  *  <li>the first part (header: P   M   PRE,POST  NETZ 0:title) is the most important one.
- *      each row represents a place and give it's number, it's initial markup and 
+ *      each row represents a place and give it's number, it's initial markup and
  *      the list of incoming  and outgoing transitions</li>
  *  <li>the second part (header: place nr.  name capacity time) gives more data on places</li>
  *  <li>the third part (header: trans nr.   name priority time) gives more data on transitions</li>
@@ -57,15 +57,15 @@ public class GsPetriNetExportINA extends GsAbstractExport {
 		filter = new String[] { "pnt" };
 		filterDescr = "INA files (.pnt)";
 	}
-	
+
 	public GsPluggableActionDescriptor[] getT_action(int actionType,
 			GsGraph graph) {
 		return null;
 	}
-	
+
 	// FIXME: INA does not like PN with "useless" places. Such places should be removed (with a warning)
 	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
-	
+
 	protected void doExport(GsExportConfig config) {
 		GsGraph graph = config.getGraph();
 
@@ -80,12 +80,12 @@ public class GsPetriNetExportINA extends GsAbstractExport {
 
             Vector[][] t_prepost = new Vector[2*len][2];
             Vector v_transition = new Vector();
-            
+
             for (int i=0 ; i<t_prepost.length ; i++) {
                 t_prepost[i][0] = new Vector();
                 t_prepost[i][1] = new Vector();
             }
-            
+
             for (int i=0 ; i<len ; i++) {
                 String vertex = v_no.get(i).toString();
                 if (t_transition[i] != null) {
@@ -100,7 +100,7 @@ public class GsPetriNetExportINA extends GsAbstractExport {
                         int selfMaxInf = -1;
                         int selfMinSup = -1;
                         int selfMaxSup = td.maxValue;
-                        
+
                         if (selfMinInf != 0 || selfMaxSup != maxvalue) { // autoregulated
                             if (td.value > 0 && td.minValue < td.value) {
                                 v_transition.add("t_"+vertex+"_"+j+"+");
@@ -113,7 +113,7 @@ public class GsPetriNetExportINA extends GsAbstractExport {
                                 selfMinSup = Math.max(td.value+1, selfMinInf);
                                 selfMaxSup = td.value - selfMaxSup;
                             }
-                            
+
                         } else { // not autoregulated
                             if (td.value > 0) {
                                 v_transition.add("t_"+vertex+"_"+j+"+");
@@ -221,11 +221,11 @@ public class GsPetriNetExportINA extends GsAbstractExport {
                                 t_prepost[2*i+1][0].add(""+b);
                             }
                         }
-                        
+
                     }
                 }
             }
-            
+
             // write the pre-post matrix
 	        out.write("P   M   PRE,POST  NETZ 0:"+graph.getGraphName() +"\n");
             for (int i=0 ; i<t_tree.length ; i++) {
@@ -241,7 +241,7 @@ public class GsPetriNetExportINA extends GsAbstractExport {
                         s_pp += " "+v.get(j);
                     }
                 }
-                out.write((2*i+1)+" "+t_markup[i][0]+" \t "+s_pp+"\n");
+                out.write(2*i+1+" "+t_markup[i][0]+" \t "+s_pp+"\n");
                 s_pp = "";
                 v = t_prepost[2*i+1][0];
                 for (int j=0 ; j<v.size() ; j++) {
@@ -254,23 +254,23 @@ public class GsPetriNetExportINA extends GsAbstractExport {
                         s_pp += " "+v.get(j);
                     }
                 }
-                out.write((2*i+2)+" "+t_markup[i][1]+" \t "+s_pp+"\n");
+                out.write(2*i+2+" "+t_markup[i][1]+" \t "+s_pp+"\n");
             }
-            
+
             // places data
             out.write("@\nplace nr.  name \t capacity time\n");
             for (int i=0 ; i<t_tree.length ; i++) {
-                out.write((2*i+1)+":  "+v_no.get(i)+" \t 0 0\n");
-                out.write((2*i+2)+": -"+v_no.get(i)+" \t 0 0\n");
+                out.write(2*i+1+":  "+v_no.get(i)+" \t 0 0\n");
+                out.write(2*i+2+": -"+v_no.get(i)+" \t 0 0\n");
             }
-            
+
             // transitions data
             out.write("@\ntrans nr. \t name priority time\n");
             for (int i=0 ; i<v_transition.size() ; i++) {
-                out.write((i+1)+": "+v_transition.get(i)+" \t 0 0\n");
+                out.write(i+1+": "+v_transition.get(i)+" \t 0 0\n");
             }
             out.write("@\n");
-            
+
 			// Close the file
 			out.close();
 		} catch (IOException e) {
