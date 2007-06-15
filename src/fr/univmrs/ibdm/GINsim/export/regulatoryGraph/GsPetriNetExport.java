@@ -57,6 +57,7 @@ public class GsPetriNetExport extends GsAbstractExport {
 		v_format = new Vector();
 		v_format.add(new GsPetriNetExportINA());
 		v_format.add(new GsPetriNetExportPNML());
+		v_format.add(new GsPetriNetExportAPNN());
 	}
 
 	public GsPetriNetExport() {
