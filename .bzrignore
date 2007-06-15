@@ -7,3 +7,6 @@ bak/**/*
 classes/**/*
 *.jpx
 *.jpx.local
+.settings
+.project
+.classpath
