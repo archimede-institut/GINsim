@@ -23,20 +23,20 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 
     String name = "new_parameter";
     Vector nodeOrder;
-    
+
     int mode = Simulation.SEARCH_ASYNCHRONE_DF;
 
     Vector v_class;
     Map m_elt;
-    
+
     int maxdepth;
     int maxnodes;
-    boolean buildSTG = true;
-    
+    boolean buildSTG = false;
+
     GsRegulatoryMutantDef mutant;
 
     Map m_initState = new HashMap();
-    
+
     /**
      * empty constructor for everyday use.
      * @param nodeOrder
@@ -44,16 +44,16 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
     public GsSimulationParameters(Vector nodeOrder) {
         this.nodeOrder = nodeOrder;
     }
-    
+
     public String toString() {
         return name;
     }
-    
+
     /**
      * get priority class.
-     * 
+     *
      * @return a vector listing all priority classes.
-     * 
+     *
      * see also <code>getMelt</code> to get association between nodes and classes
      */
     public Vector getVclass() {
@@ -71,7 +71,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
         return v_class;
     }
     /**
-     * 
+     *
      * @return a map giving associations between nodes (the keys) and priority classes
      * use <code>getVclass</code> to get the list of priority classes
      */
@@ -81,7 +81,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
         }
         return m_elt;
     }
-    
+
     /**
      * a not so simple toString method.
      * It shows the full content of this simu parameters, used to add a usefull comment to the state transition graph.
@@ -106,7 +106,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
                         if (j>2) {
                             s += ", ";
                         }
-                        s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":(cl[j+1]==1?"+":"-"));
+                        s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":cl[j+1]==1?"+":"-");
                     }
                     s += "\n";
                 }
@@ -133,11 +133,11 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
                 s += "\n";
             }
         }
-        
+
         if (mutant != null) {
             s += "\nMutant:\n"+mutant.toString();
         }
-        
+
         if (maxdepth != 0) {
             s += "max depth: "+maxdepth+"\n";
         }
@@ -146,17 +146,17 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
         }
         return s;
     }
-    
+
 	public void toXML(GsXMLWriter out, Object param, int xmlmode) throws IOException {
 		out.openTag("parameter");
 		out.addAttr("name", name);
 		out.addAttr("mode", Simulation.MODE_NAMES[mode]);
 		out.addAttr("maxdepth", ""+maxdepth);
 		out.addAttr("maxnodes", ""+maxnodes);
-		
+
 		StringBuffer s_tmp;
-		
-		
+
+
 		if (mode == Simulation.SEARCH_BYPRIORITYCLASS) {
 			out.openTag("priorityClassList");
 			for (int i=0 ; i< v_class.size(); i++) {
@@ -209,25 +209,25 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
     /**
      * @return the compiled priority class.
      * in the form of an int[][]
-     * each int[] represent a priority class: 
+     * each int[] represent a priority class:
      *  - the very first int is the class' priority
      *  - the second int is the class' mode (sync or async)
      *  - and all others are couples: index of vertex in the nodeOrder followed by transition filter.
      *    the "transition filter" is a bit hacky: add it to your transition (which should be either +1 or -1)
      *    and if the result is zero (0), then this transition shouldn't be followed.
-     * 
+     *
      * shortly: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
      */
     public int[][] getPclass() {
-        
+
         Integer zaroo = new Integer(0);
         Integer one = new Integer(1);
         Integer minusOne = new Integer(-1);
-        
+
         // it is done by browsing twice the list:
         //   - during the first pass asynchronous classes with the same priority are merged
         //   - then the real int[][] is created from the merged classes
-        
+
         Vector v_vpclass = new Vector();
         for (int i=0 ; i<v_class.size() ; i++) {
             GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_class.get(i);
@@ -289,7 +289,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
         }
         return pclass;
     }
-    
+
     public Object clone() {
     	GsSimulationParameters newp = new GsSimulationParameters(nodeOrder);
     	newp.name = name;
@@ -297,7 +297,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
     	newp.maxdepth = maxdepth;
     	newp.maxnodes = maxnodes;
     	newp.mutant = mutant;
-    	
+
     	if (v_class != null) {
     		newp.v_class = new Vector(v_class.size());
     		for (int i=0 ; i<v_class.size() ; i++) {
@@ -327,7 +327,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Map getInitialState() {
 		return m_initState;
 	}

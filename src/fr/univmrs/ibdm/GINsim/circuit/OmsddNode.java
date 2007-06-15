@@ -5,7 +5,7 @@ import java.util.Vector;
 
 /**
  * Ordered Binary Decision Diagram (OBDD) is a tree representation of boolean functions.
- * Ordered Multi-valued Signed Decision Diagram (OMSDD) is based on this representation but adapted 
+ * Ordered Multi-valued Signed Decision Diagram (OMSDD) is based on this representation but adapted
  * for a (limited) use of non-boolean functions:
  * <ul>
  *   <li> non-terminal nodes can have more than two children (actually they have an array of children)</li>
@@ -22,7 +22,7 @@ public class OmsddNode {
     public short value;
     /** cache for the key, should always be null except while reducing */
     String key = null;
-    
+
     // create once for all the terminals nodes.
     /**  */
     public static final OmsddNode POSITIVE;
@@ -30,39 +30,39 @@ public class OmsddNode {
     public static final OmsddNode NEGATIVE;
     /**  */
     public static final OmsddNode FALSE;
-    
+
     /**  */
     public static final int OR = 0;
     /**  */
     public static final int AND = 1;
     /**  */
     public static final int CLEANUP = 2;
-    
+
     static {
         POSITIVE = new OmsddNode();
         POSITIVE.next = null;
         POSITIVE.value = 1;
         POSITIVE.key = "P";
-        
+
         NEGATIVE = new OmsddNode();
         NEGATIVE.next = null;
         NEGATIVE.value = -1;
         NEGATIVE.key = "N";
-        
+
         FALSE = new OmsddNode();
         FALSE.next = null;
         FALSE.value = 0;
         FALSE.key = "F";
     }
-    
+
     /**
      * test if a state is OK.
-     * 
+     *
      * @param status
      * @return true if the state is OK.
      */
     public short testStatus (int[] status) {
-        
+
         if (next == null) {
             return value;
         }
@@ -71,11 +71,11 @@ public class OmsddNode {
         }
         return next[status[level]].testStatus(status);
     }
-    
+
     /**
      * merge two trees into a (new?) one.
      * this will create new nodes, as existing one might be merged with different part, they can't be reused.
-     * 
+     *
      * @param other
      * @param op boolean operation to apply (available: AND, OR)
      *
@@ -85,7 +85,7 @@ public class OmsddNode {
         int [] tkey = {0};
         return merge(other, op, null, tkey);
     }
-    
+
     private OmsddNode merge(OmsddNode other, int op, Map m, int[] t_key) {
         OmsddNode ret;
         if (next == null) {
@@ -94,7 +94,7 @@ public class OmsddNode {
                     switch (value) {
                         case 0:
                             return other;
-                        case  1:    
+                        case  1:
                         case -1:    // if everything is fine, 1/-1 should ONLY get merged with 0.
                             return this;
                         default:
@@ -104,7 +104,7 @@ public class OmsddNode {
                     switch (value) {
                         case 0:
                             return this;
-                        case 1: 
+                        case 1:
                             return other;
                         case -1:
                             ret = other.revert();
@@ -116,7 +116,7 @@ public class OmsddNode {
                     switch (value) {
                         case 0:
                             return this;
-                        case 1: 
+                        case 1:
                         case -1:
                             if (other.next == null) {
                                 if (other.value == value) {
@@ -142,7 +142,7 @@ public class OmsddNode {
                     switch (other.value) {
                         case 0:
                             return this;
-                        case  1:    
+                        case  1:
                         case -1:    // if everything is fine, 1/-1 should ONLY get merged with 0.
                             return this;
                         default:
@@ -152,7 +152,7 @@ public class OmsddNode {
                     switch (other.value) {
                         case 0:
                             return other;
-                        case 1: 
+                        case 1:
                             return this;
                         case -1:
                             ret = revert();
@@ -164,7 +164,7 @@ public class OmsddNode {
                     switch (other.value) {
                         case 0:
                             return other;
-                        case 1: 
+                        case 1:
                         case -1:
                             ret = new OmsddNode();
                             ret.level = level;
@@ -179,7 +179,7 @@ public class OmsddNode {
 
             }
         }
-        
+
         if (level == other.level) { // merge all childs together
             if (next.length != other.next.length) {
                 return null;
@@ -209,11 +209,11 @@ public class OmsddNode {
             return ret;
         }
     }
-    
+
     /**
      * should be unused for now: nodes are never modified so they don't need to be cloned, just reused.
-     * 
-     * 
+     *
+     *
      * @return a copy of this ObddLeave
      */
     public Object clone() {
@@ -221,7 +221,7 @@ public class OmsddNode {
         if (next == null) {
             return this;
         }
-        
+
         OmsddNode copy = new OmsddNode();
         copy.level = level;
         copy.next = new OmsddNode[next.length];
@@ -232,7 +232,7 @@ public class OmsddNode {
         }
         return copy;
     }
-    
+
     private OmsddNode revert() {
         // if this is a terminal node, the end is near
         if (next == null) {
@@ -246,7 +246,7 @@ public class OmsddNode {
             }
             return this;
         }
-        
+
         OmsddNode copy = new OmsddNode();
         copy.level = level;
         copy.next = new OmsddNode[next.length];
@@ -257,18 +257,18 @@ public class OmsddNode {
         }
         return copy;
     }
-    
+
     /**
      * add a path to this tree.
      * WIP...
-     * 
+     *
      * not sure if it is a good idea: merge function should do it already,
      * maybe not optimally but additional cost is non-blocker, and at least it works.
-     * 
+     *
      * @param path
      * @param index
      * @param value
-     * 
+     *
      * @return the updated tree (root might have change)
      */
     public OmsddNode add2tree(int[][] path, int index, int value) {
@@ -288,7 +288,7 @@ public class OmsddNode {
         }
         return this;
     }
-    
+
     /**
      * un-nice way to write this tree in a "readable" form
      * @return a printed form of the tree
@@ -297,7 +297,7 @@ public class OmsddNode {
         if (this.next == null) {
             return ""+value;
         }
-        
+
         String s = "(";
         for (int i=0 ; i<next.length ; i++) {
             s += "(N["+level+"]="+i+" && "+next[i]+") ; ";
@@ -305,7 +305,7 @@ public class OmsddNode {
         s = s.substring(0, s.length()-3)+")";
         return s;
     }
-    
+
     /**
      * @param ilevel the indentation level
      * @param names vector of node name
@@ -318,7 +318,7 @@ public class OmsddNode {
             }
             return ""+value;
         }
-        
+
         String prefix = "";
         for (int i=0 ; i<ilevel ; i++) {
             prefix += "  ";
@@ -360,9 +360,9 @@ public class OmsddNode {
      * reduce this tree
      * will use the getKey() function, and will probably need two traversals of the tree,
      * or is it doable in one only? (the second one is on the reduced tree and used to clean up cache)
-     * 
+     *
      * use a hashmap or two to store node's keys
-     * 
+     *
      * @return the reduced tree
      */
     public OmsddNode reduce() {
@@ -376,23 +376,23 @@ public class OmsddNode {
         reduced.cleanKey();
         return reduced;
     }
-    
+
     /**
-     * get a unique key (imply getting the same as an existing similar subtree).
-     * 
+     * get a unique key (implies getting the same as an existing similar subtree).
+     *
      *    first attribute a temporary key builded from the level and unique keys of children
      *    if this key already exists
      *         this subtree is similar to an existing one and should have the same unique key, return this key
      *    else (this is a new subtree):
-     *         replace all children by correct nodes for their unique key 
+     *         replace all children by correct nodes for their unique key
      *           (unique keys are cached to make it faster, we have then to clean this cache)
-     *         if all children are equals 
+     *         if all children are equals
      *             this node is useless, return the unique key of the first child
      *         else return a new (incremented) unique key
-     *      
-     *   special case: terminals nodes will just return their value (ie "-1", "0" or "1"), these values 
+     *
+     *   special case: terminals nodes will just return their value (ie "-1", "0" or "1"), these values
      *   should then be prefilled in the Map.
-     *      
+     *
      * @param m the hashmap to store temporary (long) and unique (shorter) keys
      * @param t_key int[1]: value of the next unique key
      * @return the unique key of this node
@@ -417,12 +417,12 @@ public class OmsddNode {
         if (skey != null) {
             return skey;
         }
-        
+
         key = (String)m.get(tempKey);
         if (key == null) {
             // replace subtrees
             for (int i=0 ; i<next.length ; i++) {
-                OmsddNode nnext = (OmsddNode)m.get(next[i].getKey(m, t_key)); 
+                OmsddNode nnext = (OmsddNode)m.get(next[i].getKey(m, t_key));
                 if (nnext != null) {
                     next[i] = nnext;
                 }
@@ -434,9 +434,9 @@ public class OmsddNode {
         }
         return key;
     }
-    
+
     /**
-     * 
+     *
      *
      */
     public void cleanKey() {
@@ -450,7 +450,7 @@ public class OmsddNode {
             key = null;
         }
     }
-    
+
     /**
      * remove annoying constraints on nodes from the circuit from context
      * @param t_circuit

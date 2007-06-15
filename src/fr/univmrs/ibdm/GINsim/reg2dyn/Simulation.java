@@ -16,9 +16,9 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 
 /**
- * here are the methods for the construction of the state transition graph 
+ * here are the methods for the construction of the state transition graph
  * for a given regulatory graph.
- * 
+ *
  * supported methods are:
  * <ul>
  * 	<li>synchronous search: all changes at once, each state has at most one successor</li>
@@ -31,40 +31,40 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
  *      <li>+1 and -1 transitions can be separated to create really fine-tuned groups</li>
  *  </ul></li>
  * </ul>
- * additionnaly, genes can be blocked at given state (or range of state): once they reached those
+ * additionally, genes can be blocked at given state (or range of state): once they reached those
  * states, they can't leave them anymore (but can still evolve inside the range).
  */
 public final class Simulation extends Thread implements Runnable {
-	
+
 	private GsReg2dynFrame frame;
 	private boolean goon = true;
     GsVertexAttributesReader vreader;
-    
+
 	private int maxdepth; 		// limitation of the depth for exploration (all types but BFS)
 	private int maxnodes; 		// limitation of the number of nodes for exploration (all types)
-	private Vector initStates; 
+	private Vector initStates;
 	private Vector listGenes;
 	private int[] t_max;
 	private int length;
 	private boolean ready = false;
 	private boolean buildSTG;
-	private int nbgc = 0;	
+	private int nbgc = 0;
 
 	protected static final int SEARCH_SYNCHRONE = 0;
 	protected static final int SEARCH_ASYNCHRONE_DF = 1;
 	protected static final int SEARCH_ASYNCHRONE_BF = 2;
     protected static final int SEARCH_BYPRIORITYCLASS = 3;
-	
+
     protected static final String[] MODE_NAMES = new String[] { "synchrone", "asynchrone_df", "asynchrone_bf", "priorityClass" };
-    
+
 	private Vector toExplore = new Vector(); // queue for the BFS exploration
-	
+
 	private int searchMode;
-	
+
 	private int curdepth = 0;
     private int[][] pclass;
 	private OmddNode[] t_tree;
-    
+
 	private GsDynamicGraph dynGraph;
 	private GsDynamicNode node;
 	private OmddNode dd_reachable = OmddNode.TERMINALS[0];
@@ -74,17 +74,17 @@ public final class Simulation extends Thread implements Runnable {
 
 	/**
 	 * Constructs an empty dynamic graph
-	 * 
+	 *
 	 * @param regGraph the regulatory graph on which we are working
 	 * @param frame
-	 * @param params 
+	 * @param params
 	 */
 	protected Simulation(GsGenericRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
 		this.frame = frame;
 		listGenes = regGraph.getNodeOrderForSimulation();
 		length = listGenes.size();
-        this.buildSTG = params.buildSTG;
-        
+        buildSTG = params.buildSTG;
+
         t_max = new int[length];
         for (int i=0 ; i<length ; i++) {
         	t_max[i] = ((GsRegulatoryVertex)listGenes.get(i)).getMaxValue()+1;
@@ -101,7 +101,7 @@ public final class Simulation extends Thread implements Runnable {
         } else {
         	// TODO: build reachability set here
         }
-        
+
         this.searchMode = params.mode;
         switch (searchMode) {
             case SEARCH_ASYNCHRONE_BF:
@@ -117,7 +117,7 @@ public final class Simulation extends Thread implements Runnable {
                 pclass = params.getPclass();
                 break;
         }
-        
+
         t_tree = regGraph.getParametersForSimulation(true);
         if (params.mutant != null) {
             params.mutant.apply(t_tree, listGenes, false);
@@ -160,7 +160,7 @@ public final class Simulation extends Thread implements Runnable {
 			//generate all initial states and construct partial graph from all these initial states;
 			while(iterator.hasNext()) {
 				t_state = iterator.next();
-	
+
 				// verify if nextNode is already in the dynamic graph and construct partial graph
 				if(addState(t_state, false, false)){
 					switch (searchMode) {
@@ -178,7 +178,9 @@ public final class Simulation extends Thread implements Runnable {
                             break;
 					}
 				}
-				if (searchMode == SEARCH_ASYNCHRONE_BF) calcDynGraphAsynchroBreadthFirst();
+				if (searchMode == SEARCH_ASYNCHRONE_BF) {
+					calcDynGraphAsynchroBreadthFirst();
+				}
 				if (!goon) {
 					return;
 				}
@@ -188,15 +190,15 @@ public final class Simulation extends Thread implements Runnable {
 		    return;
 		}
 	}
-	
+
 	/**
 	 * search the dynamic graph for the given initial states
-	 * @throws GsException 
+	 * @throws GsException
 	 *
 	 */
 	private void runPartialGraph() throws GsException {
 		int[] vstate;
-		
+
         if (initStates.size() == 0) {
             return;
         }
@@ -204,14 +206,14 @@ public final class Simulation extends Thread implements Runnable {
             vstate = (int[])initStates.elementAt(0);
         	dynGraph.addObject("reg2dyn_firstState", vstate);
         }
-        
+
 		for (int i=0 ; i<initStates.size() ; i++) {
 			// create the first node and check if already present
 			vstate = (int[])initStates.elementAt(i);
 			if (vstate.length != length) {
                 return;
 			}
-			
+
 			if(addState(vstate, false, false)){
 				switch (searchMode) {
 					case SEARCH_SYNCHRONE:
@@ -228,34 +230,36 @@ public final class Simulation extends Thread implements Runnable {
                         break;
 				}
 			}
-			if (searchMode == SEARCH_ASYNCHRONE_BF) calcDynGraphAsynchroBreadthFirst();
+			if (searchMode == SEARCH_ASYNCHRONE_BF) {
+				calcDynGraphAsynchroBreadthFirst();
+			}
 
 			if (!goon) {
 				return;
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns all changing genes and their new value of activation
-	 *  
+	 *
 	 * @param initState
-	 * @return an int[] showing the way genes are willing to move to 
+	 * @return an int[] showing the way genes are willing to move to
 	 */
 	private int[] getChangingGene(int[] initState){
 		int[] t_nextState = new int[length];
-		
+
 		// for each node
 		for (int i=0 ; i<length ; i++){
 		    t_nextState[i] = nodeChange(initState, i);
 		}
-		return t_nextState;	
+		return t_nextState;
 	}
 
     /**
      * get changing genes and change mode for the first priority class.
      * used by the search by priority class.
-     * 
+     *
      * @param initState
      * @return int int[] of the gene number and it's change direction or null if the state is stable
      */
@@ -268,11 +272,11 @@ public final class Simulation extends Thread implements Runnable {
         int[] tchanges = null;
         int[] tclass = null;
         Vector v = null;
-        
+
         // look for the first changing priority class
         for ( ; i<pclass.length ; i++) {
             tclass = pclass[i];
-            
+
             for (j=2 ; j<tclass.length ; j+=2) {
                 change = nodeChange(initState, tclass[j]);
                 if (change != 0 && change+tclass[j+1] != 0) {
@@ -289,11 +293,11 @@ public final class Simulation extends Thread implements Runnable {
         // AND of the next priority classes with the same priority
         if (changed && tclass != null) {
             int p = 0;
-            tchanges = new int[(tclass.length*2)-1];
+            tchanges = new int[tclass.length*2-1];
             tchanges[p++] = tclass[1];
             tchanges[p++] = tclass[j];
             tchanges[p++] = change;
-            
+
             for (j+=2 ; j<tclass.length ; j+=2) {
                 change = nodeChange(initState, tclass[j]);
                 if (change != 0 && change+tclass[j+1] != 0) {
@@ -301,7 +305,7 @@ public final class Simulation extends Thread implements Runnable {
                     tchanges[p++] = change;
                 }
             }
-            
+
             // copy the usefull part of tchanges in the returned array
             int[] ret = new int[p];
             for (int a=0 ; a<p ; a++) {
@@ -309,11 +313,11 @@ public final class Simulation extends Thread implements Runnable {
             }
             v = new Vector();
             v.add(ret);
-            
+
             while(++i < pclass.length && pclass[i][0] == priority) {
                 tclass = pclass[i];
                 p = 0;
-                tchanges = new int[(tclass.length*2)-1];
+                tchanges = new int[tclass.length*2-1];
                 tchanges[p++] = tclass[1];
                 for (j=2 ; j<tclass.length ; j+=2) {
                     change = nodeChange(initState, tclass[j]);
@@ -330,18 +334,18 @@ public final class Simulation extends Thread implements Runnable {
                     }
                     v.add(ret);
                 }
-            }            
+            }
         }
-        return v;    
+        return v;
     }
-    
+
 	/**
 	 * get change step for a gene
-	 * 
+	 *
 	 * @param initState
 	 * @param i index of the gene to test
 	 * @return the direction in which the gene want to change: 0 for no change, 1 for increase and -1 for decrease
-	 */	
+	 */
 	private int nodeChange(int[] initState, int i) {
         int curState = initState[i];
 		int nextState = t_tree[i].testStatus(initState);
@@ -354,12 +358,12 @@ public final class Simulation extends Thread implements Runnable {
 		}
 		return 0;
 	}
-	
+
 	/**
 	 * this is the main recursive function for the construction of the graph under a synchronous assumption
 	 * it  creates the dynamic graph by searching next states recursively
 	 * it has to be called for every initial state (ie all possible state if we want the full dynamic graph!).
-	 * @throws GsException 
+	 * @throws GsException
 	 */
 	private void calcDynGraphSynchro () throws GsException {
 		int[] changes = getChangingGene(t_state);
@@ -402,7 +406,7 @@ public final class Simulation extends Thread implements Runnable {
 			calcDynGraphSynchro();
 		}
 		curdepth--;
-	} 
+	}
 
     /**
      * this is the main recursive function for the construction of the graph with changes classed in priority classes
@@ -451,7 +455,7 @@ public final class Simulation extends Thread implements Runnable {
                     for (i=1 ; i<changes.length ; i++) {
                         nextState = (int[])thisState.clone();
                         nextState[changes[i++]] += changes[i];
-                        if (addState(nextState, true, false)) { 
+                        if (addState(nextState, true, false)) {
                             calcDynGraphByPriorityClass();
                         }
                         node = thisNode;
@@ -460,10 +464,10 @@ public final class Simulation extends Thread implements Runnable {
             }
         }
         curdepth--;
-    } 
+    }
 
 	/**
-	 * this is the main recursive function for the construction of the graph with 
+	 * this is the main recursive function for the construction of the graph with
 	 * an asynchronous assumption and a depth first search strategy
 	 * it  creates the dynamic graph by searching next states recursivly
 	 * it has to be called for every initial state (ie all possible state if we want the full dynamic graph!).
@@ -502,8 +506,8 @@ public final class Simulation extends Thread implements Runnable {
 		// we are in the asynchrone case: apply changes one by one and then
 		// add nextNode to the dynamical graph if it does not already exist
 		// and if the maximum number of nodes is not reached
-		// then search this new node 
-	
+		// then search this new node
+
 		// we need to keep a trace of the current node (to add correct edges)
         int[] thisState = t_state;
         GsDynamicNode thisNode = node;
@@ -516,7 +520,7 @@ public final class Simulation extends Thread implements Runnable {
 			}
 			nextState = (int[])thisState.clone();
 			nextState[i] += changes[i];
-			if (addState(nextState, true, false)) { 
+			if (addState(nextState, true, false)) {
 				//recursively call calcDynGraph if it is a depth first search
 				calcDynGraphAsynchroDepthFirst();
 			}
@@ -525,18 +529,18 @@ public final class Simulation extends Thread implements Runnable {
 		}
 		curdepth--;
 	}
-		
+
 	/**
-	 * this is the main function for the construction of the graph with 
+	 * this is the main function for the construction of the graph with
 	 * an asynchronous assumption and a breadth first search strategy
 	 * this exploration can be limited to a maximal number of nodes (maxnodes)
 	 */
 	private void calcDynGraphAsynchroBreadthFirst() throws GsException {
 		int[] 	nextState;
         while (toExplore.size() != 0 ) {
-            // get the first node to explore			  	
+            // get the first node to explore
             // first determine calls for updating on this state
-            GsDynamicNode node = (GsDynamicNode)toExplore.remove(0); 
+            GsDynamicNode node = (GsDynamicNode)toExplore.remove(0);
 			int[]	changes    = getChangingGene(node.state);
 
 			// test if we are on a stable state (no changes)
@@ -573,7 +577,7 @@ public final class Simulation extends Thread implements Runnable {
 			}
 		}
 	}
-		
+
 	private void emergencySave () {
 		goon = false;
 	}
@@ -589,10 +593,10 @@ public final class Simulation extends Thread implements Runnable {
 		if (!ready) {
 			return;
 		}
-        
+
 		try {
 			if (initStates == null) {
-				runFullGraph();		
+				runFullGraph();
 			}
 			else {
 				runPartialGraph();
@@ -614,9 +618,9 @@ public final class Simulation extends Thread implements Runnable {
 				System.out.println("----------------------------");
 				frame.endSimu(null);
 			}
-		}        
+		}
 	}
-	
+
 	private void testIfshouldGo() {
 		// stop if it has been asked or if memory becomes unsufficient
 		if (ready && Runtime.getRuntime().freeMemory() < 10000) {
@@ -635,9 +639,9 @@ public final class Simulation extends Thread implements Runnable {
 			emergencySave();
 		}
 	}
-	
+
 	private boolean addState (int[] vstate, boolean addEdge, boolean multiple) throws GsException {
-		//stop if the max depth is reached 
+		//stop if the max depth is reached
 		if (nbnode % 100 == 0) {
 		    if (frame != null) {
                 frame.setProgress(nbnode);
@@ -646,7 +650,7 @@ public final class Simulation extends Thread implements Runnable {
 		if (nbnode >= maxnodes){
 		    throw new GsException(GsException.GRAVITY_NORMAL, (String)null);
 		}
-		
+
 		testIfshouldGo();
 		if(!goon) {
 		    throw new GsException(GsException.GRAVITY_NORMAL, Translator.getString("STR_interrupted"));
@@ -663,20 +667,20 @@ public final class Simulation extends Thread implements Runnable {
 			t_state = vstate;
 		} else { // only build reachability set
 			OmddNode newReachable = addReachable(dd_reachable, vstate, 0);
-			
+
 			t_state = vstate;
 			if (newReachable != null) {
 				isnew = true;
 				dd_reachable = newReachable.reduce();
 			}
 		}
-		
+
 		if (isnew) {
 			nbnode++;
 		}
 		return isnew;
 	}
-	
+
 	private OmddNode addReachable(OmddNode reachable, int[] vstate, int depth) {
 		if (depth == vstate.length) {
 			if (reachable.equals(OmddNode.TERMINALS[1])) {
