@@ -22,7 +22,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
  * <p>petri net tools/format:
  * <ul>
  *  <li>APNN http://www4.cs.uni-dortmund.de/APNN-TOOLBOX/</li>
- *  <li>  à voir ... RENEW (??)</li>
+ *  <li>CHARLIE: http://www.informatik.tu-cottbus.de/~ms/charlie/</li>
  * </ul>
  */
 
@@ -57,13 +57,16 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
 	        FileWriter out = new FileWriter(config.getFilename());
             
 	        // NET
-            out.write("\\beginnet{"+graph.getGraphName()+"}"+"\n");
+            out.write("\\beginnet{"+graph.getGraphName()+"}"+"\n\n");
             
             // PLACE
+            /* Comments: We add the property CAPACITY defined by \capacity{INTEGER} which represents the maximum capacity of a place. 
+               But we manage already this property and there is no possibility to overtake this value.*/
+            
             for (int i=0 ; i<t_tree.length ; i++) 
             {
-                out.write("\\place{"+v_no.get(i)+"}"+"{\\name{"+v_no.get(i)+" \\coords{"+(50)+" "+(10+80*i)+"}"+" \\init{"+t_markup[i][0]+"}}"+"\n");
-                out.write("\\place{-"+v_no.get(i)+"}"+"{\\name{-"+v_no.get(i)+" \\coords{"+(100)+" "+(10+80*i)+"}"+" \\init{"+t_markup[i][1]+"}}"+"\n\n");
+                out.write("\\place{"+v_no.get(i)+"}"+"{\\name{"+v_no.get(i)+"} \\init{"+t_markup[i][0]+"} \\capacity{"+(t_markup[i][0]+t_markup[i][1])+"} \\coords{"+(50)+" "+(10+80*i)+"}}\n");
+                out.write("\\place{-"+v_no.get(i)+"}"+"{\\name{-"+v_no.get(i)+"} \\init{"+t_markup[i][1]+"} \\capacity{"+(t_markup[i][0]+t_markup[i][1])+"} \\coords{"+(100)+" "+(10+80*i)+"}}\n\n");
             }
             
             // TRANSITION
@@ -82,12 +85,12 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
                         
                         if (td.value > 0 && td.minValue < td.value) 
                         {
-                            out.write("\\transition{t_"+s_node+"_"+j+"+}{\\name{t_"+s_node+"} \\weight{1} \\coords{"+(200+80*c)+" "+(10+80*i)+"}}\n");       
+                            out.write("\\transition{t_"+s_node+"_"+j+"+}{\\name{t_"+s_node+"_"+j+"+} \\coords{"+(200+80*c)+" "+(10+80*i)+"}}\n");       
                             c++;
                         }
                         if (td.value < max && td.maxValue > td.value) 
                         {
-                            out.write("\\transition{t_"+s_node+"_"+j+"-}{\\name{t_"+s_node+"} \\weight{1} \\coords{"+(200+80*c)+" "+(10+80*i)+"}}\n");
+                            out.write("\\transition{t_"+s_node+"_"+j+"-}{\\name{t_"+s_node+"_"+j+"-} \\coords{"+(200+80*c)+" "+(10+80*i)+"}}\n");
                             c++;
                         }
                     }
@@ -112,19 +115,19 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
                             String s_src = v_no.get(td.nodeIndex).toString();
                             if (td.minValue == 0) 
                             {
-                                out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{1}}\n");
+                                out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{1} \\type{ordinary}}\n");
                 
                             } 
                             else 
                             {
-                                out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+td.minValue+"}}\n"); 		
-                                out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+(td.minValue+1)+"}}\n"); 		
+                                out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+td.minValue+"} \\type{ordinary}}\n"); 		
+                                out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+(td.minValue+1)+"} \\type{ordinary}}\n"); 		
                             }
                             int a = (td.value <= td.maxValue ?  max-td.value+1 : max-td.maxValue);
-                            out.write("\\arc{a_-"+s_src+"_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+a+"}}\n");
+                            out.write("\\arc{a_-"+s_src+"_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+a+"} \\type{ordinary}}\n");
                             if (a > 1) 
                             {
-                                out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{"+(a-1)+"}}\n");
+                                out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{"+(a-1)+"} \\type{ordinary}}\n");
                             }
                             if (td.t_cst != null) {
                                 for (int ti=0 ; ti< td.t_cst.length ; ti++) {
@@ -137,12 +140,12 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
                                     s_src = v_no.get(index).toString();
                                     if (lmin != 0) 
                                     {
-                                        out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+lmin+"}}\n"); 		
-                                        out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+lmin+"}}\n");
+                                        out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+lmin+"} \\type{ordinary}}\n"); 		
+                                        out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+lmin+"} \\type{ordinary}}\n");
                                     }
                                     if (lmax != 0) {
-                                        out.write("\\arc{a_-"+s_src+"-_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+lmax+"}}\n");
-                                        out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{"+lmax+"}}\n");
+                                        out.write("\\arc{a_-"+s_src+"-_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+lmax+"} \\type{ordinary}}\n");
+                                        out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{"+lmax+"} \\type{ordinary}}\n");
                                     }
                                 }
                             }
@@ -152,18 +155,18 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
                             String s_src = v_no.get(td.nodeIndex).toString();
                             if (td.maxValue == max) 
                             {
-                                out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{1}}\n");
+                                out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{1} \\type{ordinary}}\n");
                             } else
                               {
-                                out.write("\\arc{a_-"+s_src+"_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+td.maxValue+"}}\n");
-                                out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{"+(td.maxValue+1)+"}}\n");
+                                out.write("\\arc{a_-"+s_src+"_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+td.maxValue+"} \\type{ordinary}}\n");
+                                out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{"+(td.maxValue+1)+"} \\type{ordinary}}\n");
                               }
                           int a = td.value >= td.minValue ?  td.value+1 : td.minValue;
                           
-                            out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+a+"}}\n");
+                            out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+a+"} \\type{ordinary}}\n");
                             if (a > 1) 
                             {
-                                out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+(a-1)+"}}\n");
+                                out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+(a-1)+"} \\type{ordinary}}\n");
                             }
                             if (td.t_cst != null) 
                             {
@@ -179,13 +182,13 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
                                     s_src = v_no.get(index).toString();
                                     if (lmin != 0)
                                     {
-                                        out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+lmin+"}}\n");
-                                        out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+lmin+"}}\n");
+                                        out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+lmin+"} \\type{ordinary}}\n");
+                                        out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+lmin+"} \\type{ordinary}}\n");
                                     }
                                     if (lmax != 0) 
                                     {
-                                        out.write("\\arc{a_-"+s_src+"_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+lmax+"}}\n");
-                                        out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{"+lmax+"}}\n");
+                                        out.write("\\arc{a_-"+s_src+"_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+lmax+"} \\type{ordinary}}\n");
+                                        out.write("\\arc{a_"+s_transition+"_-"+s_src+"}{\\from{"+s_transition+"} \\to{-"+s_src+"} \\weight{"+lmax+"} \\type{ordinary}}\n");
                                     }
                                 }
                             }
@@ -201,10 +204,3 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
 		}
 	}
 }
-
-	
-	
-	
-	
-	
-
