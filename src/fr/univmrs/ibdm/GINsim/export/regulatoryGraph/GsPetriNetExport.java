@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -15,12 +18,17 @@ import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatesIterator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 
 /**
  * Export a regulatory graph to petri net (shared methods).
@@ -188,6 +196,13 @@ public class GsPetriNetExport extends GsAbstractExport {
 				((GsInitialStateStore)config.getSpecificConfig()).getInitialState());
 		int[] t_state = (int[])it_state.next();
 
+		PNConfig specConfig = (PNConfig)config.getSpecificConfig();
+		GsRegulatoryMutantDef mutant = specConfig.getMutant();
+		if (mutant != null) {
+			mutant.apply(t_tree, config.getGraph().getNodeOrder(), true);
+		}
+		
+		
 		short[][] t_markup = new short[len][2];
         for (int i=0 ; i<len ; i++) {
             OmddNode node = t_tree[i];
@@ -232,19 +247,35 @@ class TransitionData {
      *  </ul>
      */
     public int[][] t_cst;
+    
+    public GsRegulatoryMutantDef mutant;
+    public GsRegulatoryMutantDef getMutant() {
+        return mutant;
+    }
+	public void setMutant(GsRegulatoryMutantDef mutant) {
+		this.mutant = mutant;
+	}
+	
 }
 
 class PNExportConfigPanel extends JPanel {
     private static final long serialVersionUID = 9043565812912568136L;
-
-    protected PNExportConfigPanel (GsExportConfig config, GsStackDialog dialog) {
+   
+    
+	protected PNExportConfigPanel (GsExportConfig config, GsStackDialog dialog) {
     	PNConfig specConfig = new PNConfig();
     	config.setSpecificConfig(specConfig);
+    	
     	GsGraph graph = config.getGraph();
-    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog,
-    			graph, false);
+    	MutantSelectionPanel mutantPanel = null;
+    	JButton butCfgMutant = null;
+    	
+    	
+    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
     	initPanel.setParam(specConfig);
-
+    	
+    
+    	
     	setLayout(new GridBagLayout());
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
@@ -253,14 +284,34 @@ class PNExportConfigPanel extends JPanel {
     	c.weighty = 1;
     	c.fill = GridBagConstraints.BOTH;
     	add(initPanel, c);
+    	
+    	 mutantPanel = new MutantSelectionPanel(dialog, (GsRegulatoryGraph)graph, specConfig);
+	     c = new GridBagConstraints();
+	     c.gridx = 0;
+	     c.gridy = 2;
+	     add(mutantPanel, c);
     }
 }
 
-class PNConfig implements GsInitialStateStore {
+class PNConfig implements GsInitialStateStore, GsMutantStore {
 
 	Map m_init = new HashMap();
+	private GsRegulatoryMutantDef mutant;
 
 	public Map getInitialState() {
 		return m_init;
 	}
+
+	public GsRegulatoryMutantDef getMutant() {
+		
+		return mutant;
+	}
+
+	public void setMutant(GsRegulatoryMutantDef mutant) {
+		this.mutant=mutant;
+		
+	}
+	
+
+
 }
