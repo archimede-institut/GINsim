@@ -63,6 +63,7 @@ abstract public class DecisionDiagramInfo {
 	public abstract MDDNode getNewNode(int level, MDDNode[] next);
 }
 
+
 class HashDDI extends DecisionDiagramInfo {
 
 	Map[] t_maps;
@@ -130,7 +131,7 @@ class BalancedDDI extends DecisionDiagramInfo {
 		long l = next[0].key.longValue();
 		boolean allEq = true;
 		for (int i=1 ; i<next.length ; i++) {
-			if (l != next[0].key.longValue()) {
+			if (l != next[i].key.longValue()) {
 				allEq = false;
 				break;
 			}
@@ -142,9 +143,39 @@ class BalancedDDI extends DecisionDiagramInfo {
 			t_dd[level] = new MDDNode(level, next, new Long(nextid++));
 			return t_dd[level];
 		}
-		// TODO search in the balanced tree
-		return new MDDNode(level, next, new Long(nextid++));
+		return insert(level, t_dd[level], next);
 	}
+
+	private MDDNode insert(int level, MDDNode current, MDDNode[] next) {
+		// TODO use AVL instead of basic binary tree (i.e. implement "re-balance" operation)
+		for (int i=0 ; i<next.length ; i++) {
+			if (i>current.next.length) {
+				// This should not happen, right ?
+				System.out.println("debug: different number of children for nodes of same order");
+				return null;
+			}
+			long l1 = current.next[i].key.longValue();
+			long l2 = next[i].key.longValue();
+			if (l1 > l2) {
+				if (current.p == null) {
+					MDDNode node = new MDDNode(level, next, new Long(nextid++));
+					current.p = node;
+					return node;
+				}
+				return insert(level, current.p, next);
+			}
+			if (l1 < l2) {
+				if (current.n == null) {
+					MDDNode node = new MDDNode(level, next, new Long(nextid++));
+					current.n = node;
+					return node;
+				}
+				return insert(level, current.n, next);
+			}
+		}
+		return current;
+	}
+
 
 	public void reset() {
 	}
