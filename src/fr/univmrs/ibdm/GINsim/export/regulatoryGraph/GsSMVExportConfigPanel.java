@@ -36,6 +36,7 @@ public class GsSMVExportConfigPanel extends JPanel {
 	private GsSMVexportConfig cfg;
 	
     JRadioButton radioSync = null;
+    JRadioButton radioAsync2 = null;
     JRadioButton radioAsync = null;
     MutantSelectionPanel mutantPanel = null;
     JButton butCfgMutant = null;
@@ -57,20 +58,31 @@ public class GsSMVExportConfigPanel extends JPanel {
 		}
 		this.cfg = (GsSMVexportConfig)config.getSpecificConfig();
     	initialize();
-    	if (cfg.type == GsSMVexportConfig.CFG_ASYNC) {
-    		radioAsync.setSelected(true);
-    	} else {
+    	
+    	switch(cfg.getType())
+    	{
+    	case GsSMVexportConfig.CFG_SYNC : 
     		radioSync.setSelected(true);
+    		break;
+    	case GsSMVexportConfig.CFG_ASYNC : 
+    		radioAsync.setSelected(true);
+    		break;
+        default : 
+        	radioAsync2.setSelected(true);
+        	break;
     	}
+    	
 	}
 
 	private void initialize() {
         setLayout(new GridBagLayout());
         ButtonGroup group = new ButtonGroup();
         radioSync = new JRadioButton("synchronous");
+        radioAsync2 = new JRadioButton("asynchronousBis");
         radioAsync = new JRadioButton("asynchronous");
-        group.add(radioAsync);
         group.add(radioSync);
+        group.add(radioAsync);
+        group.add(radioAsync2);
 
         GridBagConstraints cst = new GridBagConstraints();
         cst.gridx = 0;
@@ -107,13 +119,23 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.gridy = 1;
         cst.anchor = GridBagConstraints.WEST;
         add(radioAsync, cst);
+        cst = new GridBagConstraints();
+        cst.gridx = 1;
+        cst.gridy = 0;
+        cst.anchor = GridBagConstraints.WEST;
+        add(radioAsync2, cst);
         
         radioSync.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				applyMode();
 			}
 		});
-        
+        radioAsync.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				applyMode();
+			}
+		});
+       
         if (mutant) {
 	        mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg);
 	        cst = new GridBagConstraints();
@@ -127,11 +149,16 @@ public class GsSMVExportConfigPanel extends JPanel {
 		if (cfg == null) {
 			return;
 		}
+		
+		
 		if (radioSync.isSelected()) {
 			cfg.type = GsSMVexportConfig.CFG_SYNC;
-		} else {
-			cfg.type = GsSMVexportConfig.CFG_ASYNC;
+		} else if(radioAsync.isSelected()) { 
+			 cfg.type = GsSMVexportConfig.CFG_ASYNC;
+		} else { 
+			cfg.type = GsSMVexportConfig.CFG_ASYNCBIS;
 		}
+			 
 	}
 	
 	protected void applyTest() {
