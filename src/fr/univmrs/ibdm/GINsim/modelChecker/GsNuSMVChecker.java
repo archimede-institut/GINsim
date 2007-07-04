@@ -58,7 +58,21 @@ public class GsNuSMVChecker implements GsModelChecker {
 	public Map getAttrList() {
 		Map m = new HashMap();
 		m.put("test", cfg.getTest());
-		m.put("mode", (cfg.isSync()?"sync":"async"));
+		
+		String s;
+		switch (cfg.getType()) 
+		{
+		case GsSMVexportConfig.CFG_SYNC: 
+			s = "sync";
+			break;
+		case GsSMVexportConfig.CFG_ASYNC: 
+			s = "async";
+			break;
+		default: 
+			s = "syncbis";
+			break;
+		}
+		m.put("mode", s);
 		Iterator it = cfg.getInitialState().keySet().iterator();
 		if (it.hasNext()) {
 			m.put("init", ((GsInitialState)it.next()).getName());
@@ -191,7 +205,15 @@ public class GsNuSMVChecker implements GsModelChecker {
 
 	public void setCfg(Map attr) {
 		cfg.setTest((String)attr.get("test"));
-		cfg.type = "sync".equals(attr.get("mode")) ? GsSMVexportConfig.CFG_SYNC : GsSMVexportConfig.CFG_ASYNC;
+		
+		if ("sync".equals(attr.get("mode"))) {
+			cfg.type = GsSMVexportConfig.CFG_SYNC;
+		} else if ("async".equals(attr.get("mode"))) { 
+			 cfg.type = GsSMVexportConfig.CFG_ASYNC;		
+		} else { 
+			cfg.type = GsSMVexportConfig.CFG_ASYNCBIS;
+		}
+		
         Map minit = cfg.getInitialState();
 		String s_init = (String)attr.get("init");
 		minit.put(initList.getInitState(s_init), null);

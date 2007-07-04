@@ -13,8 +13,9 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
  */
 public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
 
-	public static int CFG_SYNC = 0;
-	public static int CFG_ASYNC = 1;
+	public static final int CFG_SYNC = 0;
+	public static final int CFG_ASYNC = 1;
+	public static final int CFG_ASYNCBIS = 2;
 	
     GsRegulatoryGraph graph;
     Map m_initStates;
@@ -35,11 +36,9 @@ public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
 		return thetest;
 	}
 	
-    /**
-     * @return true if the "sync" option has been selected
-     */
-    public boolean isSync() {
-        return type == CFG_SYNC;
+    
+    public int getType() {
+        return type;
     }
     
 	public void setTest(String text) {
