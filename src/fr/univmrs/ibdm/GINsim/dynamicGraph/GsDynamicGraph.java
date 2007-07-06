@@ -10,26 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.graph.GraphChangeListener;
-import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.ibdm.GINsim.gui.GsActions;
-import fr.univmrs.ibdm.GINsim.gui.GsEditModeDescriptor;
-import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.ibdm.GINsim.graph.*;
+import fr.univmrs.ibdm.GINsim.gui.*;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
@@ -46,7 +34,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
     public final static String zip_mainEntry = "stateTransitionGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	private GsRegulatoryGraphOptionPanel optionPanel;
-    
+
     protected Vector v_stables = new Vector();
 	private GsRegulatoryGraphPropertiesPanel parameterPanel = null;
     private GsParameterPanel vertexPanel = null;
@@ -58,7 +46,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 */
 	public GsDynamicGraph(Vector nodeOrder) {
 	    this((String)null);
-	    nodeOrder = (Vector)nodeOrder.clone();
+	    this.nodeOrder = (Vector)nodeOrder.clone();
 	}
     protected String getGraphZipName() {
     	return zip_mainEntry;
@@ -68,7 +56,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 */
 	public GsDynamicGraph() {
 	    this((String)null);
-	    
+
 	}
 	/**
 	 * @param filename
@@ -76,7 +64,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	public GsDynamicGraph(String filename) {
         super(GsDynamicGraphDescriptor.getInstance(), filename);
 	}
-	
+
 	/**
 	 * @param map
 	 * @param file
@@ -90,7 +78,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 
 	/**
 	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doInteractiveAddVertex(int)
-	 * 
+	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
 	public Object doInteractiveAddVertex(int param) {
@@ -99,7 +87,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 
 	/**
 	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doInteractiveAddEdge(java.lang.Object, java.lang.Object, int)
-	 * 
+	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
 	public Object doInteractiveAddEdge(Object source, Object target, int param) {
@@ -129,7 +117,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
             if (associatedID != null) {
                 out.write("<link xlink:href=\""+associatedID+"\"/>\n");
             }
-            
+
 	  		out.write("\t</graph>\n");
 	  		out.write("</gxl>\n");
         } catch (IOException e) {
@@ -161,7 +149,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         } else {
         		it = graphManager.getEdgeIterator();
         }
-        
+
         switch (mode) {
         	case 2:
 		        while (it.hasNext()) {
@@ -234,7 +222,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         	        }
         }
     }
-	
+
 	public GsParameterPanel getEdgeAttributePanel() {
 	    if (edgePanel == null) {
 	        edgePanel = new GsDynamicItemAttributePanel(this);
@@ -251,7 +239,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 
 	/**
 	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#changeVertexId(java.lang.Object, java.lang.String)
-	 * 
+	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
 	public void changeVertexId(Object vertex, String newId) throws GsException {
@@ -259,7 +247,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 
 	/**
 	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#removeEdge(java.lang.Object)
-	 * 
+	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
 	public void removeEdge(Object obj) {
@@ -285,7 +273,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 * add an edge between source and target
 	 * @param source
 	 * @param target
-	 * @param multiple 
+	 * @param multiple
 	 * @return the new edge
 	 */
 	public Object addEdge(Object source, Object target, boolean multiple) {
@@ -302,7 +290,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 		ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
 		return ffilter;
 	}
-	
+
 	public String getAutoFileExtension() {
 		return ".ginml";
 	}
@@ -310,11 +298,11 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	protected JPanel doGetFileChooserPanel() {
 		return getOptionPanel();
 	}
-	
+
 	private JPanel getOptionPanel() {
 		if (optionPanel == null) {
-            Object[] t_mode = { Translator.getString("STR_saveNone"), 
-                    Translator.getString("STR_savePosition"), 
+            Object[] t_mode = { Translator.getString("STR_saveNone"),
+                    Translator.getString("STR_savePosition"),
                     Translator.getString("STR_saveComplet") };
             optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
 		}
@@ -336,7 +324,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         return null;
     }
     protected Vector doMerge(GsGraph otherGraph) {
-        
+
         // first check if this merge is allowed!
         if (!(otherGraph instanceof GsDynamicGraph)) {
             return null;
@@ -350,7 +338,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
                 return null;
             }
         }
-        
+
         Vector ret = new Vector();
         Iterator it = otherGraph.getGraphManager().getVertexIterator();
         GsVertexAttributesReader cvreader = otherGraph.getGraphManager().getVertexAttributesReader();
@@ -363,7 +351,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
             vReader.refresh();
             ret.add(vertex);
         }
-        
+
         it = otherGraph.getGraphManager().getEdgeIterator();
         while (it.hasNext()) {
             GsDirectedEdge edge = (GsDirectedEdge)it.next();
@@ -377,7 +365,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
             }
             ret.add(addEdge(from, to, c>1));
         }
-        
+
         return ret;
     }
     protected GsGraph doCopySelection(Vector vertex, Vector edges) {
@@ -401,10 +389,10 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
                 v_stables.add(node.state);
             }
         }
-        
+
         // just display the number of stable states here and a "show more" button
         if (v_stables.size() > 0) {
-            pinfo.add(new JLabel("nb stable: "+(v_stables.size())));
+            pinfo.add(new JLabel("nb stable: "+v_stables.size()));
             JButton b_view = new JButton("view");
             // show all stables: quickly done but, it is "good enough" :)
             b_view.addActionListener(new ActionListener() {
@@ -424,7 +412,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         } else if (v_stables.size() > 1) {
             pinfo.add(new JLabel("no stable state."));
         }
-        
+
         return pinfo;
     }
 
@@ -434,7 +422,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 		}
 		return parameterPanel;
     }
-    
+
     /**
      * look for the shortest path between two states.
      * @param source
@@ -445,11 +433,11 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         GsDynamicNode n = new GsDynamicNode(source);
         GsDynamicNode n2 = new GsDynamicNode(target);
         if (graphManager.containsVertex(n) && graphManager.containsVertex(n2)) {
-            return graphManager.getShortestPath(n, n2);    
+            return graphManager.getShortestPath(n, n2);
         }
         return null;
     }
-    
+
     protected boolean isAssociationValid(GsGraph graph) {
         if (graph == null) {
             return true;
