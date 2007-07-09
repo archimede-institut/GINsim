@@ -1,21 +1,13 @@
 package fr.univmrs.ibdm.GINsim.gui;
 
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -33,7 +25,7 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 public class GsGraphicAttributePanel extends GsParameterPanel {
 
 	private static final long serialVersionUID = -1041894738941096989L;
-	
+
 	private String nodeShape=null;
 	private Color backgroundColor=null;
 	private Color foregroundColor=null;
@@ -72,10 +64,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	private JCheckBox jCB_selectBackground = null;
 	private JCheckBox jCB_selectForeground = null;
 	private JCheckBox jCB_selectSize = null;
-	
+
 	private GsVertexAttributesReader vReader = null;
 	private GsEdgeAttributesReader eReader = null;
-	
+
 	private static final int EDGESELECTED = 0;
 	private static final int VERTEXSELECTED = 1;
 	private static final int NOTHINGSELECTED = 2;
@@ -90,7 +82,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
     private JCheckBox jCB_selectLinerouting;
 
     private JSpinner jSpinner_linewidth;
-	
+
 	/**
 	 * This is the default constructor
 	 */
@@ -98,10 +90,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		super();
 		initialize();
 	}
-	
+
 	/**
 	 * This method initializes this
-	 * 
+	 *
 	 */
 	private void initialize() {
 		this.setLayout(new java.awt.BorderLayout());
@@ -109,7 +101,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		this.add(getJP_attr(), java.awt.BorderLayout.CENTER);
 		this.add(getJP_bttn(), java.awt.BorderLayout.EAST);
 	}
-	
+
 	/**
 	 * get the main frame
 	 * @return the main frame
@@ -117,10 +109,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	public GsMainFrame getMainFrame() {
 		return mainFrame;
 	}
-	
+
 	/**
 	 * This method initializes jLabel_color
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private javax.swing.JLabel getJLabel_color() {
@@ -131,10 +123,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jLabel_color;
 	}
-	
+
 	/**
 	 * This method initializes jLabel_shape
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private javax.swing.JLabel getJLabel_shape() {
@@ -145,10 +137,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jLabel_shape;
 	}
-	
+
 	/**
 	 * This method initializes jComboBox_shape
-	 * 
+	 *
 	 * @return javax.swing.JComboBox
 	 */
 	private javax.swing.JComboBox getJComboBox_shape() {
@@ -163,17 +155,17 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jComboBox_shape;
 	}
-	
+
 	/**
 	 * This method initializes jButton_bgcolor
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private javax.swing.JButton getJButton_bgcolor() {
 		if(jButton_bgcolor == null) {
 			jButton_bgcolor = new javax.swing.JButton("");
 			jButton_bgcolor.setEnabled(false);
-			jButton_bgcolor.addActionListener(new java.awt.event.ActionListener() { 
+			jButton_bgcolor.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					setBackgroundColor(JColorChooser.showDialog(mainFrame,Translator.getString("choose_color"),getBackgroundColor()));
 					applyBackgroundColor();
@@ -182,7 +174,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jButton_bgcolor;
 	}
-	
+
 	/**
 	 * Get the current selected background color
 	 * @return a color
@@ -198,7 +190,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	public Color getForegroundColor() {
 		return foregroundColor;
 	}
-	
+
 	/**
 	 * Get the current selected line color
 	 * @return Color
@@ -212,8 +204,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	 * @param color
 	 */
 	public void setBackgroundColor(Color color) {
-		if (color!=null) backgroundColor = color;
-		jButton_bgcolor.setBackground(backgroundColor);
+		if (color!=null) {
+			backgroundColor = color;
+			jButton_bgcolor.setBackground(backgroundColor);
+		}
 	}
 
 	/**
@@ -221,37 +215,40 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	 * @param color
 	 */
 	public void setForegroundColor(Color color) {
-		if (color!=null) foregroundColor = color;
-		jButton_fgcolor.setBackground(foregroundColor);
+		if (color!=null) {
+			foregroundColor = color;
+			jButton_fgcolor.setBackground(foregroundColor);
+		}
 	}
-	
+
 	/**
 	 * set the current selected line color
 	 * @param color
 	 */
 	public void setLineColor(Color color) {
-		lineColor = color;
-		if (color!=null) lineColor = color;
-		jButton_linecolor.setBackground(lineColor);
+		if (color!=null) {
+			lineColor = color;
+			jButton_linecolor.setBackground(lineColor);
+		}
 	}
 
 	/**
-	 * Enabled component for line style 
+	 * Enabled component for line style
 	 */
 	private void lineStyleEnabled() {
 		jCB_lineStyle.setSelectedIndex(eReader.getStyle());
 		jCB_lineStyle.setEnabled(true);
 	}
-	
+
 	/**
 	 * Enabled component for edge routing
 	 */
 	private void edgeRoutingEnabled() {
 		jCB_edgeRouting.setSelectedIndex(eReader.getRouting());
 		jCB_edgeRouting.setEnabled(true);
-		
+
 	}
-	
+
 	/**
 	 * Enabled component for node shape
 	 */
@@ -259,13 +256,13 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		jComboBox_shape.setSelectedIndex(vReader.getShape());
 		jComboBox_shape.setEnabled(true);
 	}
-	
+
     private void sizeEnabled() {
         jTF_height.setEnabled(true);
         jTF_width.setEnabled(true);
         refreshSize();
     }
-    
+
 	/**
 	 * Enabled component for background color
 	 */
@@ -275,7 +272,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		jButton_bgcolor.setEnabled(true);
 		jButton_fgcolor.setEnabled(true);
 	}
-	
+
 	/**
 	 * Enabled component for line color
 	 */
@@ -286,7 +283,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
     private void lineWidthEnabled() {
         jSpinner_linewidth.setValue(new Integer((int)eReader.getLineWidth()));
     }
-	
+
 	/**
 	 * Enabled component for width and height
 	 */
@@ -294,9 +291,9 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		jTF_height.setEnabled(true);
 		jTF_width.setEnabled(true);
 	}
-	
+
 	/**
-	 * Disabled all component 
+	 * Disabled all component
 	 */
 	private void allDisabled() {
 		cards.show(jP_attr,jP_empty.getName());
@@ -328,7 +325,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 
 	/**
 	 * This method initializes jBttn_setDefault
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private javax.swing.JButton getJBttn_setDefault() {
@@ -337,24 +334,24 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
             jBttn_setDefault.setSize(100,25);
 			jBttn_setDefault.setName("jBttn_setDefault");
             jBttn_setDefault.setToolTipText(Translator.getString("STR_set_default_descr"));
-			jBttn_setDefault.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
+			jBttn_setDefault.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
 					applyDefault();
 				}
 			});
 		}
 		return jBttn_setDefault;
 	}
-		
+
 	/**
 	 * This method initializes jP_attr
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private javax.swing.JPanel getJP_attr() {
 		if(jP_attr == null) {
 			jP_attr = new javax.swing.JPanel();
-			cards = new java.awt.CardLayout();						
+			cards = new java.awt.CardLayout();
 			jP_attr.setLayout(cards);
 			jP_attr.add(getJP_edge(), getJP_edge().getName());
 			jP_attr.add(getJP_node(), getJP_node().getName());
@@ -364,17 +361,17 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jP_attr;
 	}
-	
+
 	/**
 	 * This method initializes jP_bttn
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private javax.swing.JPanel getJP_bttn() {
 		if(jP_bttn == null) {
 			jP_bttn = new javax.swing.JPanel();
 			jP_bttn.setLayout(new GridBagLayout());
-            
+
             GridBagConstraints c_def = new GridBagConstraints();
             c_def.gridx = 0;
             c_def.gridy = 0;
@@ -392,7 +389,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 
     /**
      * This method initializes jB_appToAll
-     * 
+     *
      * @return javax.swing.JButton
      */
     private javax.swing.JButton getJB_appToAll() {
@@ -400,18 +397,18 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
             jB_appToAll = new javax.swing.JButton(Translator.getString("STR_apply_to_all"));
             jB_appToAll.setSize(100, 25);
             jB_appToAll.setToolTipText(Translator.getString("STR_apply_to_all_descr"));
-            jB_appToAll.addActionListener(new java.awt.event.ActionListener() { 
-                public void actionPerformed(java.awt.event.ActionEvent e) {    
+            jB_appToAll.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
                     applyToAll();
                 }
             });
         }
         return jB_appToAll;
     }
-    
+
 	/**
 	 * This method initializes jL_fg_color
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private javax.swing.JLabel getJL_fg_color() {
@@ -422,18 +419,18 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jL_fg_color;
 	}
-	
+
 	/**
 	 * This method initializes jButton_fgcolor
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private javax.swing.JButton getJButton_fgcolor() {
 		if(jButton_fgcolor == null) {
 			jButton_fgcolor = new javax.swing.JButton();
 			jButton_fgcolor.setEnabled(false);
-			jButton_fgcolor.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
+			jButton_fgcolor.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
 					setForegroundColor(JColorChooser.showDialog(mainFrame,Translator.getString("choose_color"),null));
 					applyForegroundColor();
 				}
@@ -441,10 +438,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jButton_fgcolor;
 	}
-	
+
 	/**
 	 * This method initializes jL_lineColor
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
     private javax.swing.JLabel getJL_lineColor() {
@@ -455,7 +452,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
         }
         return jL_lineColor;
     }
-    
+
     private javax.swing.JLabel getJL_linewidth() {
         if(jL_linewidth == null) {
             jL_linewidth = new javax.swing.JLabel(Translator.getString("STR_line_width"));
@@ -464,17 +461,17 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
         }
         return jL_linewidth;
     }
-    
+
 	/**
 	 * This method initializes jButton_linecolor
-	 * 
+	 *
 	 * @return javax.swing.JButton
 	 */
 	private javax.swing.JButton getJButton_linecolor() {
 		if(jButton_linecolor == null) {
 			jButton_linecolor = new javax.swing.JButton();
-			jButton_linecolor.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
+			jButton_linecolor.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
 					setLineColor(JColorChooser.showDialog(mainFrame,Translator.getString("choose_color"),null));
 					applyLineColor();
 				}
@@ -482,7 +479,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jButton_linecolor;
 	}
-	
+
     private JSpinner getJSpinner_linewidth() {
         if (jSpinner_linewidth == null) {
             jSpinner_linewidth = new JSpinner(new SpinnerNumberModel(1,1,50,1));
@@ -494,10 +491,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
         }
         return jSpinner_linewidth;
     }
-    
+
 	/**
 	 * This method initializes jL_width
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private javax.swing.JLabel getJL_width() {
@@ -508,10 +505,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jL_width;
 	}
-	
+
 	/**
 	 * This method initializes jL_height
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private javax.swing.JLabel getJL_height() {
@@ -522,24 +519,26 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jL_height;
 	}
-	
+
 	/**
 	 * This method initializes jTF_width
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private javax.swing.JTextField getJTF_width() {
 		if(jTF_width == null) {
 			jTF_width = new javax.swing.JTextField();
 			jTF_width.setEnabled(false);
-			jTF_width.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
+			jTF_width.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
 					applyWidthHeight();
 				}
 			});
-			jTF_width.addFocusListener(new java.awt.event.FocusAdapter() { 
-				public void focusLost(java.awt.event.FocusEvent e) {    
-					if (!e.isTemporary()) applyWidthHeight();
+			jTF_width.addFocusListener(new java.awt.event.FocusAdapter() {
+				public void focusLost(java.awt.event.FocusEvent e) {
+					if (!e.isTemporary()) {
+						applyWidthHeight();
+					}
 				}
                 public void focusGained(FocusEvent e) {
                     refreshSize();
@@ -548,7 +547,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jTF_width;
 	}
-	
+
 	/**
 	 * get the current with and height
 	 * @return Dimension
@@ -562,24 +561,26 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			return new Dimension(30,50);
 		}
 	}
-	
+
 	/**
 	 * This method initializes jTF_height
-	 * 
+	 *
 	 * @return javax.swing.JTextField
 	 */
 	private javax.swing.JTextField getJTF_height() {
 		if(jTF_height == null) {
 			jTF_height = new javax.swing.JTextField();
 			jTF_height.setEnabled(false);
-			jTF_height.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
+			jTF_height.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
 					applyWidthHeight();
 				}
 			});
-			jTF_height.addFocusListener(new java.awt.event.FocusAdapter() { 
-				public void focusLost(java.awt.event.FocusEvent e) { 
-					if (!e.isTemporary()) applyWidthHeight();
+			jTF_height.addFocusListener(new java.awt.event.FocusAdapter() {
+				public void focusLost(java.awt.event.FocusEvent e) {
+					if (!e.isTemporary()) {
+						applyWidthHeight();
+					}
 				}
                 public void focusGained(FocusEvent e) {
                     refreshSize();
@@ -588,10 +589,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jTF_height;
 	}
-	
+
 	/**
 	 * This method initializes jL_edgeRouting
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private javax.swing.JLabel getJL_edgeRouting() {
@@ -602,28 +603,28 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jL_edgeRouting;
 	}
-	
+
 	/**
 	 * This method initializes jCB_edgeRouting
-	 * 
+	 *
 	 * @return javax.swing.JComboBox
 	 */
 	private javax.swing.JComboBox getJCB_edgeRouting() {
 		if(jCB_edgeRouting == null) {
 			jCB_edgeRouting = new javax.swing.JComboBox();
 			jCB_edgeRouting.setEnabled(false);
-			jCB_edgeRouting.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
+			jCB_edgeRouting.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
 					applyEdgeRouting();
 				}
 			});
 		}
 		return jCB_edgeRouting;
 	}
-	
+
 	/**
 	 * This method initializes jL_lineStyle
-	 * 
+	 *
 	 * @return javax.swing.JLabel
 	 */
 	private javax.swing.JLabel getJL_lineStyle() {
@@ -634,25 +635,25 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jL_lineStyle;
 	}
-	
+
 	/**
 	 * This method initializes jCB_lineStyle
-	 * 
+	 *
 	 * @return javax.swing.JComboBox
 	 */
 	private javax.swing.JComboBox getJCB_lineStyle() {
 		if(jCB_lineStyle == null) {
 			jCB_lineStyle = new javax.swing.JComboBox();
 			jCB_lineStyle.setEnabled(false);
-			jCB_lineStyle.addActionListener(new java.awt.event.ActionListener() { 
-				public void actionPerformed(java.awt.event.ActionEvent e) {    
+			jCB_lineStyle.addActionListener(new java.awt.event.ActionListener() {
+				public void actionPerformed(java.awt.event.ActionEvent e) {
 					applyLineStyle();
 				}
 			});
 		}
 		return jCB_lineStyle;
 	}
-	
+
 	/**
 	 * apply the current line style
 	 */
@@ -660,10 +661,10 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		eReader.setStyle(jCB_lineStyle.getSelectedIndex());
 		eReader.refresh();
 	}
-	
+
 	/**
 	 * This method initializes jP_edge
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private javax.swing.JPanel getJP_edge() {
@@ -729,7 +730,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			c_cb_lstyle.fill = java.awt.GridBagConstraints.BOTH;
 			c_cb_slstyle.gridx = 5;
 			c_cb_slstyle.gridy = 1;
-			
+
             jP_edge.add(getJL_lineColor(), c_l_lcolor);
             jP_edge.add(getJButton_linecolor(), c_b_lcolor);
             jP_edge.add(getJCB_selectLineColor(), c_cb_lcolor);
@@ -747,7 +748,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	}
 	/**
 	 * This method initializes jP_node
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private javax.swing.JPanel getJP_node() {
@@ -780,7 +781,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			consGridBagConstraints5.gridy = 0;
 			consGridBagConstraints20.gridx = 2;
 			consGridBagConstraints20.gridy = 0;
-			
+
 			consGridBagConstraints12.gridx = 0;
 			consGridBagConstraints12.gridy = 1;
 			consGridBagConstraints12.fill = java.awt.GridBagConstraints.BOTH;
@@ -799,7 +800,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			consGridBagConstraints22.gridx = 2;
 			consGridBagConstraints22.gridy = 2;
 
-			
+
 			consGridBagConstraints141.gridx = 4;
 			consGridBagConstraints141.gridy = 0;
 			consGridBagConstraints141.fill = java.awt.GridBagConstraints.BOTH;
@@ -808,7 +809,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			consGridBagConstraints3.fill = java.awt.GridBagConstraints.BOTH;
 			consGridBagConstraints23.gridx = 6;
 			consGridBagConstraints23.gridy = 0;
-			
+
 			consGridBagConstraints15.gridx = 4;
 			consGridBagConstraints15.gridy = 1;
 			consGridBagConstraints15.fill = java.awt.GridBagConstraints.BOTH;
@@ -825,7 +826,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			jP_node.add(getJL_fg_color(), consGridBagConstraints14);
 			jP_node.add(getJButton_fgcolor(), consGridBagConstraints101);
 			jP_node.add(getJCB_selectForeground(), consGridBagConstraints22);
-			
+
 			jP_node.add(getJL_height(), consGridBagConstraints141);
 			jP_node.add(getJTF_height(), consGridBagConstraints3);
 			jP_node.add(getJCB_selectSize(), consGridBagConstraints23);
@@ -836,7 +837,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	}
 	/**
 	 * This method initializes jP_empty
-	 * 
+	 *
 	 * @return javax.swing.JPanel
 	 */
 	private javax.swing.JPanel getJP_empty() {
@@ -846,7 +847,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		return jP_empty;
 	}
-	
+
     private JCheckBox getJCB_selectLineColor() {
         if (jCB_selectLineColor == null) {
             jCB_selectLineColor = new JCheckBox();
@@ -952,30 +953,30 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		vReader = graph.getGraphManager().getVertexAttributesReader();
 		eReader = graph.getGraphManager().getEdgeAttributesReader();
-		
+
 		// apply shape list
 		jComboBox_shape.removeAllItems();
 		Vector v_tmp = vReader.getShapeList();
 		for (int i=0 ; i<v_tmp.size() ; i++) {
 			jComboBox_shape.addItem(v_tmp.get(i));
 		}
-		
+
 		// apply routing list
 		jCB_edgeRouting.removeAllItems();
 		v_tmp = eReader.getRoutingList();
 		for (int i=0 ; i<v_tmp.size() ; i++) {
 			jCB_edgeRouting.addItem(v_tmp.get(i));
 		}
-		
+
 		// apply line style list
 		jCB_lineStyle.removeAllItems();
 		v_tmp = eReader.getStyleList();
 		for (int i=0 ; i<v_tmp.size() ; i++) {
 			jCB_lineStyle.addItem(v_tmp.get(i));
 		}
-		
+
 	}
-	
+
 	/**
 	 * apply change on color
 	 */
@@ -983,12 +984,12 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		vReader.setBackgroundColor(jButton_bgcolor.getBackground());
 		vReader.refresh();
 	}
-	
+
 	protected void applyForegroundColor() {
 		vReader.setForegroundColor(jButton_fgcolor.getBackground());
 		vReader.refresh();
 	}
-	
+
 	/**
 	 * apply change on shape
 	 */
@@ -996,7 +997,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		vReader.setShape(jComboBox_shape.getSelectedIndex());
 		vReader.refresh();
 	}
-	
+
 	/**
 	 * apply all attribute to the selection if more than one cell is selected
 	 * or to all the graph in only one cell is selected
@@ -1096,9 +1097,9 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 				break;
 		}
 	}
-	
+
 	/**
-	 * apply with and height 
+	 * apply with and height
 	 */
 	protected void applyWidthHeight() {
         try {
@@ -1109,7 +1110,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
         } catch (NumberFormatException e) {}
         refreshSize();
 	}
-	
+
 	/**
 	 * apply the current edge routing
 	 */
@@ -1119,18 +1120,18 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			eReader.refresh();
 		}
 	}
-	
+
     protected void applyLineColor() {
         eReader.setLineColor(jButton_linecolor.getBackground());
         eReader.refresh();
     }
-    
+
     protected void applyLineWidth() {
         int w = ((Integer)jSpinner_linewidth.getValue()).intValue();
         eReader.setLineWidth(w);
         eReader.refresh();
     }
-    
+
     protected void refreshSize() {
         jTF_height.setText(""+vReader.getHeight());
         jTF_width.setText((""+vReader.getWidth()));
