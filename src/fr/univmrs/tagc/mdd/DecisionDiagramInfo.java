@@ -11,16 +11,16 @@ import java.util.Vector;
  */
 abstract public class DecisionDiagramInfo {
 
-	private static final MDDNode NEGATIVE;
-	private static final MDDNode[] TERMINALS;
+	private static final MDDLeaf NEGATIVE;
+	private static final MDDLeaf[] TERMINALS;
 	public static final int MAXTERM = 10;
 
 	private static long initId = Long.MIN_VALUE;
 	static {
-		NEGATIVE = new MDDNode(-1, new Long(initId++));
-		TERMINALS = new MDDNode[MAXTERM];
+		NEGATIVE = new MDDLeaf(-1, new Long(initId++));
+		TERMINALS = new MDDLeaf[MAXTERM];
 		for (int i=0 ; i<MAXTERM ; i++) {
-			TERMINALS[i] = new MDDNode(i, null, new Long(initId++));
+			TERMINALS[i] = new MDDLeaf(i, new Long(initId++));
 		}
 	}
 
@@ -32,6 +32,28 @@ abstract public class DecisionDiagramInfo {
 	}
 
 	long nextid = initId;
+	private final MDDVarInfo[] t_vinfo;
+	protected DecisionDiagramInfo(Vector v_vars) {
+		t_vinfo = new MDDVarInfo[v_vars.size()];
+		for (int i=0 ; i<t_vinfo.length ; i++) {
+			t_vinfo[i] = new MDDVarInfo(i);
+		}
+	}
+
+	protected DecisionDiagramInfo(int maxlevel) {
+		t_vinfo = new MDDVarInfo[maxlevel];
+		for (int i=0 ; i<t_vinfo.length ; i++) {
+			t_vinfo[i] = new MDDVarInfo(i);
+		}
+	}
+
+	protected DecisionDiagramInfo(MDDVarInfo[] t_vinfo) {
+		this.t_vinfo = t_vinfo;
+	}
+
+	public MDDVarInfo getVarInfo(int order) {
+		return t_vinfo[order];
+	}
 
 	public String getName(int order) {
 		return "" + order;
@@ -71,8 +93,8 @@ class HashDDI extends DecisionDiagramInfo {
 
 
 	HashDDI(int maxlevel) {
+		super(maxlevel+1);
 		t_maps = new Map[maxlevel+1];
-
 	}
 
 	public void reset() {
@@ -107,7 +129,7 @@ class HashDDI extends DecisionDiagramInfo {
 			node = (MDDNode)t_maps[level].get(key.toString());
 		}
 		if (node == null) {
-			node = new MDDNode(level, next, new Long(nextid++));
+			node = new MDDVarNode(getVarInfo(level), next, new Long(nextid++));
 			t_maps[level].put(key.toString(), node);
 		}
 		return node;
@@ -118,10 +140,11 @@ class HashDDI extends DecisionDiagramInfo {
 
 class BalancedDDI extends DecisionDiagramInfo {
 
-	MDDNode[] t_dd;
+	MDDVarNode[] t_dd;
 
 	BalancedDDI(int maxlevel) {
-		t_dd = new MDDNode[maxlevel+1];
+		super(maxlevel+1);
+		t_dd = new MDDVarNode[maxlevel+1];
 	}
 
 	public MDDNode getNewNode(int level, MDDNode[] next) {
@@ -140,13 +163,13 @@ class BalancedDDI extends DecisionDiagramInfo {
 			return next[0];
 		}
 		if (t_dd[level] == null) {
-			t_dd[level] = new MDDNode(level, next, new Long(nextid++));
+			t_dd[level] = new MDDVarNode(getVarInfo(level), next, new Long(nextid++));
 			return t_dd[level];
 		}
 		return insert(level, t_dd[level], next);
 	}
 
-	private MDDNode insert(int level, MDDNode current, MDDNode[] next) {
+	private MDDNode insert(int level, MDDVarNode current, MDDNode[] next) {
 		// TODO use AVL instead of basic binary tree (i.e. implement "re-balance" operation)
 		for (int i=0 ; i<next.length ; i++) {
 			if (i>current.next.length) {
@@ -158,7 +181,7 @@ class BalancedDDI extends DecisionDiagramInfo {
 			long l2 = next[i].key.longValue();
 			if (l1 > l2) {
 				if (current.p == null) {
-					MDDNode node = new MDDNode(level, next, new Long(nextid++));
+					MDDVarNode node = new MDDVarNode(getVarInfo(level), next, new Long(nextid++));
 					current.p = node;
 					return node;
 				}
@@ -166,7 +189,7 @@ class BalancedDDI extends DecisionDiagramInfo {
 			}
 			if (l1 < l2) {
 				if (current.n == null) {
-					MDDNode node = new MDDNode(level, next, new Long(nextid++));
+					MDDVarNode node = new MDDVarNode(getVarInfo(level), next, new Long(nextid++));
 					current.n = node;
 					return node;
 				}
@@ -179,5 +202,4 @@ class BalancedDDI extends DecisionDiagramInfo {
 
 	public void reset() {
 	}
-
 }

@@ -16,19 +16,19 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 
 	GsGraphManager manager;
 	int[] t_remove = null;
-	
+
 	GsGenericRegulatoryGraph graph;
-	
+
 	Vector oldNodeOrder;
 	Vector nodeOrder;
 	OmddNode[] t_oldMDD;
 	OmddNode[] t_MDD;
 	Map m_MDD4node;
 	Map m_inconsistencies;
-	
+
 	public GsModelSimplifier() {
 	}
-	
+
 	public GsModelSimplifier(GsGenericRegulatoryGraph graph) {
 		this.graph = graph;
 		if (graph != null) {
@@ -38,7 +38,7 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 			manager = ((GsGraph)graph).getGraphManager();
 		}
 	}
-	
+
 	public void setRemoveList(Vector v_remove) {
 		if (oldNodeOrder != null && v_remove != null) {
 			if (m_inconsistencies != null) {
@@ -59,11 +59,11 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 			}
 		}
 	}
-	
+
 	private void removeNode(int index) {
-		
+
 	}
-	
+
 	private void addInconsistency() {
 		// TODO: better reporting of inconsistencies
 		if (m_inconsistencies == null) {
@@ -72,16 +72,16 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 		m_inconsistencies.put(null, null);
 		System.out.println("DEBUG: modifier: inconsistency introduced");
 	}
-	
+
 	public boolean isInconsistent() {
 		return m_inconsistencies != null && m_inconsistencies.size() > 0;
 	}
-	
+
 	public OmddNode simplify(OmddNode ori, OmddNode deleted, int level) {
 		if (ori.next == null || ori.level > level) {
 			return (OmddNode)ori.clone();
 		}
-		
+
 		OmddNode ret;
 		if (deleted.next == null || deleted.level > ori.level) {
 			if (ori.level == level) {
@@ -122,10 +122,10 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 		}
 		return ret;
 	}
-	
+
 	/**
 	 * the node was found, but it is self-regulated, do something here!
-	 * 
+	 *
 	 * @param ori
 	 * @param deleted
 	 * @return
@@ -138,7 +138,7 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 	/**
 	 * need to follow ALL children of the "replaced" node!
 	 * the final value will be selected upon it, but HOW ?
-	 * 
+	 *
 	 * @param ori
 	 * @param deleted
 	 * @return
@@ -148,7 +148,7 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 		if (deleted.next == null) {
 			return (OmddNode)ori[deleted.value].clone();
 		}
-		
+
 		// find the first level
 		int level = deleted.level;
 		int nbnext = deleted.next.length;
@@ -158,7 +158,7 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 				nbnext = ori[i].next.length;
 			}
 		}
-		
+
 		// build the result
 		OmddNode[] t_next = new OmddNode[ori.length];
 		boolean[] t_visit = new boolean[ori.length];
@@ -207,7 +207,7 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 			return graph.getParametersForSimulation(focal);
 		}
 		t_oldMDD = graph.getParametersForSimulation(focal);
-		
+
 		return t_MDD;
 	}
 }

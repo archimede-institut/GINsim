@@ -61,12 +61,12 @@ class AndAction extends DecisionDiagramAction {
 	public int ask(MDDNode first, MDDNode other, int type) {
 		switch (type) {
 			case MDDNode.LN:
-				if (first.level > 0) {
+				if (((MDDLeaf)first).value > 0) {
 					return MDDNode.OTHER;
 				}
 				return MDDNode.THIS;
 			case MDDNode.NL:
-				if (other.level > 0) {
+				if (((MDDLeaf)other).value > 0) {
 					return MDDNode.THIS;
 				}
 				return MDDNode.OTHER;
@@ -87,12 +87,12 @@ class OrAction extends DecisionDiagramAction {
 	public int ask(MDDNode first, MDDNode other, int type) {
 		switch (type) {
 			case MDDNode.LN:
-				if (first.level > 0) {
+				if (((MDDLeaf)first).value > 0) {
 					return MDDNode.THIS;
 				}
 				return MDDNode.OTHER;
 			case MDDNode.NL:
-				if (other.level > 0) {
+				if (((MDDLeaf)other).value > 0) {
 					return MDDNode.OTHER;
 				}
 				return MDDNode.THIS;
