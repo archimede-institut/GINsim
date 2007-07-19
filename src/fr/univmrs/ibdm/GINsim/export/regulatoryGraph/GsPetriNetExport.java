@@ -7,9 +7,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -18,7 +15,6 @@ import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
@@ -27,7 +23,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatesIterator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 
 /**
@@ -192,6 +187,7 @@ public class GsPetriNetExport extends GsAbstractExport {
     protected static short[][] prepareExport(GsExportConfig config, Vector[] t_transition, OmddNode[] t_tree) {
 		Vector nodeOrder = config.getGraph().getNodeOrder();
 		int len = nodeOrder.size();
+		// get the selected initial state
 		Iterator it_state = new GsInitialStatesIterator(nodeOrder,
 				((GsInitialStateStore)config.getSpecificConfig()).getInitialState());
 		int[] t_state = (int[])it_state.next();
@@ -268,13 +264,9 @@ class PNExportConfigPanel extends JPanel {
     	
     	GsGraph graph = config.getGraph();
     	MutantSelectionPanel mutantPanel = null;
-    	JButton butCfgMutant = null;
-    	
     	
     	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
     	initPanel.setParam(specConfig);
-    	
-    
     	
     	setLayout(new GridBagLayout());
     	GridBagConstraints c = new GridBagConstraints();
@@ -309,9 +301,5 @@ class PNConfig implements GsInitialStateStore, GsMutantStore {
 
 	public void setMutant(GsRegulatoryMutantDef mutant) {
 		this.mutant=mutant;
-		
 	}
-	
-
-
 }
