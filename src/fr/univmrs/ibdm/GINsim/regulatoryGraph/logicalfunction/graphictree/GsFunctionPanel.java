@@ -206,9 +206,9 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   public void keyReleased(KeyEvent e) {
   }
   public void keyTyped(KeyEvent e) {
-    if (treeElement instanceof GsTreeExpression)
-      if (System.getProperty("line.separator").charAt(0) == e.getKeyChar()) {
-        try {
+    if (treeElement instanceof GsTreeExpression) {
+      if ('\n' == e.getKeyChar()) {
+    	try {
           String oldExpression = treeElement.toString();
           textArea.getDocument().remove(textArea.getCaretPosition() - 1, 1);
           Enumeration exp_path = tree.getExpandedDescendants(tree.getPathForRow(0));
@@ -230,7 +230,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         }
       }
       else {
-        text = textArea.getText();
+    	text = textArea.getText();
         int nbCols = width / charWidth;
         int nbRows = (text.length() + 1) / nbCols + 1;
         if (((text.length() + 1) % nbCols) == 0) nbRows--;
@@ -246,6 +246,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         jsp.setSize(new Dimension(width, ps));
         setSize(new Dimension(getWidth(), ps + 4));
       }
+    }
   }
   public void propertyChange(PropertyChangeEvent e) {
     if (toUpdate) {

@@ -104,14 +104,14 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
     if (!ok)
       if (oldValue < val) {
         newValue = new Integer(val + 1);
-        if (newValue.compareTo(((SpinnerNumberModel)spinner.getModel()).getMaximum()) <= 0)
+        if (newValue.compareTo((Integer)((SpinnerNumberModel)spinner.getModel()).getMaximum()) <= 0)
           spinner.setValue(newValue);
         else
           spinner.setValue(new Integer(oldValue));
       }
       else if (oldValue > val){
         newValue = new Integer(val - 1);
-        if (newValue.compareTo(((SpinnerNumberModel)spinner.getModel()).getMinimum()) >= 0)
+        if (newValue.compareTo((Integer)((SpinnerNumberModel)spinner.getModel()).getMinimum()) >= 0)
           spinner.setValue(newValue);
         else
           spinner.setValue(new Integer(oldValue));

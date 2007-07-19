@@ -1,28 +1,10 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JTree;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.metal.MetalCheckBoxUI;
 import javax.swing.text.View;
@@ -108,9 +90,9 @@ public class GsUnselectedParamsPanel extends JPanel implements ItemListener {
       for (int k = 0; k < v.size(); k++) {
         cb = new GsJCheckBox(v.elementAt(k).toString(), true);
         checkBoxes.put(cb, v.elementAt(k));
-        cb.setUI(new GsCheckBoxUI());
+        //cb.setUI(new GsCheckBoxUI());
         cb.setFont(defaultFont);
-        cb.setPreferredSize(new Dimension(cb.getPreferredSize().width, 13));
+        cb.setPreferredSize(new Dimension((int)cb.getPreferredSize().getWidth(), 13));
         cb.setOpaque(true);
         if (edit)
           cb.setBackground(editColor);

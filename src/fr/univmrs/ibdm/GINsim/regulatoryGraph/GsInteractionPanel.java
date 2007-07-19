@@ -651,6 +651,7 @@ public class GsInteractionPanel extends GsParameterPanel {
       else {
         GsFunctionsCreator c = new GsFunctionsCreator(graph.getGraphManager(),
           ((GsTableInteractionsModel)jTable.getModel()).getInteractions(), currentVertex);
+
         c.doIt();
       }
 		}

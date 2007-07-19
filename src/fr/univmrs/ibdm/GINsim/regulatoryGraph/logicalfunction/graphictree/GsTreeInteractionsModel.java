@@ -1,30 +1,16 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
 import java.awt.Color;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JTree;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
+import javax.swing.event.*;
+import javax.swing.tree.*;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionListElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
 
 public class GsTreeInteractionsModel implements TreeModel {

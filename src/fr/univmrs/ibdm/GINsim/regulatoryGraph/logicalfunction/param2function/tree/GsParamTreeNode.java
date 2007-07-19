@@ -1,17 +1,22 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import java.util.*;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
 
 public class GsParamTreeNode implements GsParamTreeElement {
   private GsRegulatoryVertex vertex;
   private GsParamTreeElement[] sons;
   private GsRegulatoryMultiEdge edge;
+  private GsParamTreeNode parent;
+  private int parentIndex;
 
-  public GsParamTreeNode(GsRegulatoryVertex v, GsRegulatoryMultiEdge me) {
+  public GsParamTreeNode(GsRegulatoryVertex v, GsRegulatoryMultiEdge me, GsParamTreeNode p, int pi) {
     super();
     vertex = v;
     edge = me;
+    parent = p;
+    parentIndex = pi;
     sons = new GsParamTreeElement[edge.getEdgeCount() + 1];
     for (int i = 0; i <= edge.getEdgeCount(); i++) sons[i] = null;
   }
@@ -34,5 +39,76 @@ public class GsParamTreeNode implements GsParamTreeElement {
   }
   public void addSon(GsParamTreeElement el, int index) {
     sons[index] = el;
+  }
+  public String toString() {
+    return vertex.getId();
+  }
+  public boolean equals(Object e2) {
+    boolean b = true;
+    if (e2 instanceof GsParamTreeNode) {
+      for (int i = 0; i < ((GsParamTreeNode)e2).getNbSons(); i++)
+        b = b && getSon(i).equals(((GsParamTreeNode)e2).getSon(i));
+      return b;
+    }
+    return false;
+  }
+  public GsParamTreeNode getParent() {
+    return parent;
+  }
+  public int getParentIndex() {
+    return parentIndex;
+  }
+  public void setSon(int i, GsParamTreeElement e) {
+    sons[i] = e;
+  }
+  public void setParent(GsParamTreeNode e) {
+    parent = e;
+  }
+  public void setParentIndex(int i) {
+    parentIndex = i;
+  }
+  public void makeFunctions(Hashtable h, String f, int bv, boolean pattern) {
+    String and = "";
+    if (!pattern && (parent != null)) and = " & ";
+
+    sons[0].makeFunctions(h, f + and + "!" + toString(), bv, pattern);
+    for (int i = 1; i < sons.length; i++) {
+      sons[i].makeFunctions(h, f + and + toString() + "#" + (i - 1), bv, pattern);
+    }
+  }
+  public Hashtable processFunctions(Hashtable h) {
+    String s, s2;
+    Object key;
+    Vector v;
+    Hashtable h2 = new Hashtable(), h3;
+
+    for (Enumeration enu = h.keys(); enu.hasMoreElements(); ) {
+      key = enu.nextElement();
+      v = (Vector)h.get(key);
+      if (key instanceof GsParamTreeLeafPattern) {
+        Enumeration enu2 = v.elements();
+        s = enu2.nextElement().toString();
+        if (s.split(" ").length > 1) s = "(" + s + ")";
+        while (enu2.hasMoreElements()) {
+          s2 = enu2.nextElement().toString();
+          if (s2.split(" ").length > 1) s2 = "(" + s2 + ")";
+          s = s + " | " + s2;
+        }
+        h3 = ((GsParamTreeLeafPattern)key).getFunctions();
+        Enumeration enu3 = h3.keys();
+        while (enu3.hasMoreElements()) {
+          key = enu3.nextElement();
+          h2.put(key, "(" + s + ")" + " & " + h3.get(key));
+        }
+        h2.put(key, new String(s));
+      }
+      else
+        h2.put(key, v);
+    }
+    return h2;
+  }
+
+  public int hashCode() {
+    return vertex.getId().hashCode();
   }
 }

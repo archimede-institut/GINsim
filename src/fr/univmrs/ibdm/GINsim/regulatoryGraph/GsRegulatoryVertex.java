@@ -442,8 +442,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         for (int j = 0; j < val.getChildCount(); j++) {
           exp = (GsTreeExpression)val.getChild(j);
           chk = "";
-          for (int k = 0; k < exp.getChildCount(); k++) {
-            param = (GsTreeParam)exp.getChild(k);
+          for (int k = 0; k < exp.getAllChildCount(); k++) {
+            param = (GsTreeParam)exp.getAllChild(k);
             if (param.isChecked())
               chk += "1";
             else
