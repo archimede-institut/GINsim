@@ -50,11 +50,14 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	}
 
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		if (columnIndex < 2 && rowIndex >= imanager.getNbElements()) {
+			return false;
+		}
 		return true;
 	}
 
 	public Class getColumnClass(int columnIndex) {
-		if (columnIndex == 0) {
+		if (columnIndex == 1) {
 			return Boolean.class;
 		}
 		return String.class;
@@ -72,6 +75,12 @@ public class GsInitStateTableModel extends AbstractTableModel {
 
 		if (columnIndex == 0) {
 			if (m_initState == null || rowIndex >= imanager.getNbElements()) {
+				return "";
+			}
+			return ((GsInitialState)imanager.getElement(rowIndex)).getName();
+		}
+		if (columnIndex == 1) {
+			if (m_initState == null || rowIndex >= imanager.getNbElements()) {
 				return Boolean.FALSE;
 			}
 			if (m_initState.containsKey(imanager.getElement(rowIndex))) {
@@ -79,11 +88,13 @@ public class GsInitStateTableModel extends AbstractTableModel {
 			}
 			return Boolean.FALSE;
 		}
-		columnIndex--;
-		if (imanager == null || rowIndex >= imanager.getNbElements()) return "";
+		int ci = columnIndex - 2;
+		if (imanager == null || rowIndex >= imanager.getNbElements()) {
+			return "";
+		}
         Map m_row = ((GsInitialState)imanager.getElement(rowIndex)).m;
-        element = (Vector)m_row.get(nodeOrder.get(columnIndex));
-        return showValue(element, ((GsRegulatoryVertex)nodeOrder.get(columnIndex)).getMaxValue());
+        element = (Vector)m_row.get(nodeOrder.get(ci));
+        return showValue(element, ((GsRegulatoryVertex)nodeOrder.get(ci)).getMaxValue());
     }
     
     /**
@@ -183,6 +194,14 @@ public class GsInitStateTableModel extends AbstractTableModel {
 			if (rowIndex >= imanager.getNbElements()) {
 				return;
 			}
+			((GsInitialState)imanager.getElement(rowIndex)).setName((String)aValue);
+			// FIXME: the name should be unique
+			return;
+		}
+		if (columnIndex == 1) {
+			if (rowIndex >= imanager.getNbElements()) {
+				return;
+			}
 			if (aValue == Boolean.TRUE) {
 				if (!several) {
 					m_initState.clear();
@@ -206,12 +225,12 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	}
 	
 	public void doSetValueAt(Object aValue, int rowIndex, int columnIndex) {
-		columnIndex--;
-		int maxvalue = ((GsRegulatoryVertex)nodeOrder.get(columnIndex)).getMaxValue();
+		int ci = columnIndex - 2;
+		int maxvalue = ((GsRegulatoryVertex)nodeOrder.get(ci)).getMaxValue();
         if (aValue == null || ((String)aValue).trim().equals("") || ((String)aValue).trim().equals("*")) {
             if (rowIndex >= 0 && rowIndex < getRowCount()-1) {
                 Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
-                m_line.remove(nodeOrder.get(columnIndex));
+                m_line.remove(nodeOrder.get(ci));
                 if (m_line.size() == 0) {
                     imanager.remove(new int[] {rowIndex});
                     fireTableStructureChanged();
@@ -267,14 +286,14 @@ public class GsInitStateTableModel extends AbstractTableModel {
 				}
 			}
             // if on the last line: create a new line an check it
-            if (rowIndex == getRowCount()-1) {
+            if (rowIndex == imanager.getNbElements()) {
             	imanager.add(rowIndex, 0);
-            	//fireTableRowsInserted(rowIndex, rowIndex);
+            	fireTableRowsInserted(rowIndex, rowIndex);
             	setValueAt(Boolean.TRUE, rowIndex, 0);
             }
             Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
-            m_line.put(nodeOrder.get(columnIndex),newcell);
-			fireTableCellUpdated(rowIndex,columnIndex);
+            m_line.put(nodeOrder.get(ci),newcell);
+			fireTableCellUpdated(rowIndex,ci);
 		} catch (Exception e) {}
 	}
 
@@ -283,14 +302,16 @@ public class GsInitStateTableModel extends AbstractTableModel {
 			return null;
 		}
 		if (columnIndex == 0) {
+			return "name";
+		}
+		if (columnIndex == 1) {
 			return "use";
 		}
-		columnIndex--;
-		return ((GsRegulatoryVertex)nodeOrder.elementAt(columnIndex)).toString();
+		return ((GsRegulatoryVertex)nodeOrder.elementAt(columnIndex-2)).toString();
 	}
 
 	public int getColumnCount() {
-		return nodeOrder.size()+1;
+		return nodeOrder.size()+2;
 	}
     
 	/**
