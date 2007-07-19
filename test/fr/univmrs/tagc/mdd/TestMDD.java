@@ -7,9 +7,18 @@ import junit.framework.TestCase;
 
 public abstract class TestMDD extends TestCase {
 
-	static final int maxlevel = 20;
+	static final int maxlevel = 70;
 	static final int maxchildtest = 20;
 	DecisionDiagramInfo ddi;
+
+	// for the N Queens test
+	int N = 8;
+	
+	MDDNode n_true;
+	MDDNode n_false;
+	MDDNode[] nextTrue;
+	MDDNode[] nextFalse;
+
 
 	public void testConstruction() {
 		ddi.reset();
@@ -97,5 +106,89 @@ public abstract class TestMDD extends TestCase {
 		}
 		System.out.println("done: "+(System.currentTimeMillis()-t));
 		System.out.println("result: "+ddi.getNodeCount());
+	}
+	
+	public void testNQueens() {
+		n_true = ddi.getLeaf(1);
+		n_false = ddi.getLeaf(0);
+		long t = System.currentTimeMillis();
+		System.out.println("start "+N+" queens:");
+		ddi.reset();
+		
+		MDDNode queen = n_true;
+		nextTrue = new MDDNode[] {n_false, n_true};
+		nextFalse = new MDDNode[] {n_true, n_false};
+		int[] t_xor = new int[N];
+		// add constraints
+		for (int i=0 ; i<N ; i++) {
+			// one on each row
+			int start = i*N;
+			for (int j=0 ; j<N ; j++) {
+				t_xor[j] = start+j;
+			}
+			queen = queen.merge(ddi, buildOr(t_xor), DecisionDiagramAction.ACTION_AND);
+
+			// one on each col
+			for (int j=0 ; j<N ; j++) {
+				t_xor[j] = j*N+i;
+			}
+			queen = queen.merge(ddi, buildOr(t_xor), DecisionDiagramAction.ACTION_AND);
+			
+			// add constraints for each case
+			for (int j=0 ; j<N ; j++) {
+				queen = queen.merge(ddi, buildCst(i, j), DecisionDiagramAction.ACTION_AND);
+			}
+		}
+		
+		System.out.println("done: "+(System.currentTimeMillis()-t));
+		System.out.println("result: "+ddi.getNodeCount());
+		System.out.println("solution: "+queen);
+	}
+
+	private MDDNode buildCst(int r, int c) {
+		MDDNode ret = ddi.getNewNode(N*r+c, nextTrue);
+		// no other queen on the same row/col
+		int start = N*r;
+		for (int i=c+1 ; i<N ; i++) {
+			ret = ret.merge(ddi, ddi.getNewNode(start+i, nextFalse), DecisionDiagramAction.ACTION_AND);
+		}
+		for (int i=r+1 ; i<N ; i++) {
+			ret = ret.merge(ddi, ddi.getNewNode(N*i+c, nextFalse), DecisionDiagramAction.ACTION_AND);
+		}
+		
+		// and for diagonals
+		for (int i=r+1, j=c+1 ; i<N && j<N ; i++, j++) {
+			ret = ret.merge(ddi, ddi.getNewNode(i*N+j, nextFalse), DecisionDiagramAction.ACTION_AND);
+		}
+		for (int i=r-1, j=c+1 ; i>=0 && j<N ; i--, j++) {
+			ret = ret.merge(ddi, ddi.getNewNode(i*N+j, nextFalse), DecisionDiagramAction.ACTION_AND);
+		}
+		ret = ret.merge(ddi, ddi.getNewNode(N*r+c, nextFalse), DecisionDiagramAction.ACTION_OR);
+//		System.out.println("cst en "+r+","+c+": "+ret);
+		return ret;
+	}
+
+	private MDDNode buildXor(int[] t_xor) {
+		MDDNode ret = n_true;
+		for (int i=0 ; i<t_xor.length ; i++) {
+			MDDNode row = n_true;
+			for (int j=0 ; j<t_xor.length ; i++) {
+				if (i == j) {
+					row = row.merge(ddi, ddi.getNewNode(t_xor[j], nextTrue), DecisionDiagramAction.ACTION_AND);
+				} else {
+					row = row.merge(ddi, ddi.getNewNode(t_xor[j], nextFalse), DecisionDiagramAction.ACTION_AND);
+				}
+			}
+			ret = ret.merge(ddi, row, DecisionDiagramAction.ACTION_OR);
+		}
+		return ret;
+	}
+	
+	private MDDNode buildOr(int[] t_xor) {
+		MDDNode ret = n_false;
+		for (int i=0 ; i< t_xor.length ; i++) {
+			ret = ret.merge(ddi, ddi.getNewNode(t_xor[i], nextTrue), DecisionDiagramAction.ACTION_OR);
+		}
+		return ret;
 	}
 }
