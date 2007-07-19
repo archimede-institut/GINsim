@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -11,9 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
@@ -31,6 +32,8 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
     JButton calculer, sauvegarder = null;
     private GsSMVexportConfig cfg;
     private JTextArea text;
+    String formule;
+    GsExportConfig config;
 
 	public GsExportStable (GsExtensibleConfig config, JTextArea text){
 		super();
@@ -46,34 +49,14 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 
 
 	public void initialize(){
-	 // création d'une interface pour tester l'atteignabilité d'un état stable
+		// UI to test stable state reachability
         setLayout(new GridBagLayout()); 
-
-//        GsInitialStatePanel init = new GsInitialStatePanel(dialog, cfg.graph, false);
-//        init.setParam(cfg);
-//        GridBagConstraints cst = new GridBagConstraints();
-//        cst.gridx = 0;
-//        cst.gridy = 0;
-//        cst.gridwidth = 2;
-//        cst.weightx = 1;
-//        cst.weighty = 1;
-//        cst.fill = GridBagConstraints.BOTH;
-//        add(init,cst);
-//        
-//        etatStable = new JLabel("Calculez un état stable :");
-//        cst = new GridBagConstraints();
-//        cst.gridx = 0;
-//        cst.gridy = 1;
-//        cst.gridwidth = 2;
-//        cst.anchor = GridBagConstraints.WEST;
-//        add(etatStable,cst);
         JScrollPane sp = new JScrollPane();
         tableModel = new StableTableModel(cfg.graph.getNodeOrder(), true);
         GsJTable tableResult = new GsJTable(tableModel);
         tableResult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tableResult.getTableHeader().setReorderingAllowed(false);
         sp.setViewportView(tableResult);
-        System.out.println(tableResult);
 		GridBagConstraints cst = new GridBagConstraints();
         cst.gridx = 0;
         cst.gridy = 2;
@@ -102,8 +85,24 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 	    add(sauvegarder,cst);
 	    sauvegarder.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		text.setText("formule CTL");
+	    		StringBuffer s = new StringBuffer("");
+	    		int i;
+	    		Vector v_no = cfg.graph.getNodeOrder();
+	    		int[] checked = tableModel.getCheckedRow();
+	    		s.append("SPEC EF ( AG (");
+	    		for ( i=0; i<(checked.length-1) ;i++) {
+	    		s.append(v_no.get(i));
+	    		s.append(" = ");
+	    		s.append(checked[i]);
+	    		s.append(" & ");
+	    		}
+	    		s.append(v_no.get(i));
+	    		s.append(" = ");
+	    		s.append(checked[i]);
+	    		s.append(") )");
+	    		text.setText(s.toString());
 	    	}
+	    	
 	    });
 	    
 	}
