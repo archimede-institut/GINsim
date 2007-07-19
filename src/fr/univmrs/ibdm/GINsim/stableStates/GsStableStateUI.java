@@ -40,7 +40,7 @@ public class GsStableStateUI extends GsStackDialog implements GenericStableState
 		c.weightx = 1;
 		c.weighty = 1;
 		JScrollPane sp = new JScrollPane();
-		tableModel = new StableTableModel(graph.getNodeOrder(), true);
+		tableModel = new StableTableModel(graph.getNodeOrder(), false);
 
         GsJTable tableResult = new GsJTable(tableModel);
         tableResult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);

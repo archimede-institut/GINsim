@@ -1,6 +1,5 @@
 package fr.univmrs.ibdm.GINsim.stableStates;
 
-import java.awt.Checkbox;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
@@ -15,6 +14,8 @@ public class StableTableModel extends AbstractTableModel {
 	
 	boolean checkbox;
 	Vector checklist;
+	
+	int checkIndex = -1;
 	
 	public StableTableModel(Vector nodeOrder) {
 		this(nodeOrder, false);
@@ -43,14 +44,18 @@ public class StableTableModel extends AbstractTableModel {
 
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		if (checkbox && columnIndex == 0) {
-			return true; // TODO: real check value
+			return true;
 		}
 		return false;
 	}
 
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		if (checkbox && columnIndex == 0) {
-			// TODO: edit checkbox
+			if (aValue == Boolean.TRUE) {
+				checkIndex = rowIndex;
+			} else if (rowIndex == checkIndex) {
+				checkIndex = -1;
+			}
 		}
 	}
 
@@ -59,7 +64,7 @@ public class StableTableModel extends AbstractTableModel {
 		int val;
 		if (checkbox) {
 			if (columnIndex == 0) {
-				return Boolean.FALSE;
+				return rowIndex == checkIndex ? Boolean.TRUE : Boolean.FALSE;
 			}
 			val = t_state[columnIndex-1];
 		} else {
@@ -80,7 +85,7 @@ public class StableTableModel extends AbstractTableModel {
 		}
 		findStableState(state, stable);
 		fireTableDataChanged();
-		//	TODO: create/reset checklist
+		checkIndex = -1;
 		checklist = new Vector();
 		checklist.clear();
 	}
@@ -112,5 +117,12 @@ public class StableTableModel extends AbstractTableModel {
 			findStableState(state, stable.next[i]);
 		}
 		state[stable.level] = -1;
+	}
+	
+	public int[] getCheckedRow() {
+		if (checkIndex == -1 || checkIndex >= getRowCount()) {
+			return null;
+		}
+		return (int[])v_stable.get(checkIndex);
 	}
 }
