@@ -187,7 +187,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	 */
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         frame.setMessage("");
-		if (m_initState == null || rowIndex > getRowCount() || columnIndex > nbCol) {
+		if (m_initState == null || rowIndex > getRowCount() || columnIndex > nbCol+1) {
 			return;
 		}
 		if (columnIndex == 0) {
@@ -289,16 +289,16 @@ public class GsInitStateTableModel extends AbstractTableModel {
             if (rowIndex == imanager.getNbElements()) {
             	imanager.add(rowIndex, 0);
             	fireTableRowsInserted(rowIndex, rowIndex);
-            	setValueAt(Boolean.TRUE, rowIndex, 0);
+            	setValueAt(Boolean.TRUE, rowIndex, 1);
             }
             Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
             m_line.put(nodeOrder.get(ci),newcell);
-			fireTableCellUpdated(rowIndex,ci);
+			fireTableCellUpdated(rowIndex,ci+2);
 		} catch (Exception e) {}
 	}
 
 	public String getColumnName(int columnIndex) {
-		if (columnIndex > nodeOrder.size()) {
+		if (columnIndex > nodeOrder.size()+1) {
 			return null;
 		}
 		if (columnIndex == 0) {
