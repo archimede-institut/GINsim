@@ -16,12 +16,11 @@ public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
 	public static final int CFG_ASYNCBIS = 2;
-	
+
     GsRegulatoryGraph graph;
     Map m_initStates;
     public GsRegulatoryMutantDef mutant;
     public int type;
-    
     String thetest = "";
     
 	/**
@@ -35,7 +34,6 @@ public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
 	public String getTest() {
 		return thetest;
 	}
-	
     
     public int getType() {
         return type;
@@ -54,5 +52,5 @@ public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
 
 	public Map getInitialState() {
 		return m_initStates;
-	}
+	}	
 }

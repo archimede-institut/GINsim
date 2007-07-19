@@ -1,34 +1,53 @@
 package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.GridLayout;
 import java.util.Map;
 import java.util.Vector;
+
 
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
+import com.sun.org.apache.regexp.internal.REDemo;
+
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
+import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.ibdm.GINsim.stableStates.*;
 
 public class GsSMVExportConfigPanel extends JPanel {
 	private static final long serialVersionUID = -7398674287463858306L;
@@ -38,21 +57,27 @@ public class GsSMVExportConfigPanel extends JPanel {
     JRadioButton radioSync = null;
     JRadioButton radioAsync2 = null;
     JRadioButton radioAsync = null;
+    
     MutantSelectionPanel mutantPanel = null;
+    
     JButton butCfgMutant = null;
     JTextArea area;
     private GsInitialStatePanel initPanel;
     private GsSMVConfigModel model;
     private GsMutantModel mutantModel;
     
+    JTabbedPane tabCTL;
+    
     private boolean mutant;
     private boolean test;
     private GsStackDialog dialog;
-
+    GsExtensibleConfig config;
     public GsSMVExportConfigPanel(GsExtensibleConfig config, GsStackDialog dialog, boolean mutant, boolean test) {
+    	super();
     	this.mutant = mutant;
     	this.test = test;
 		this.dialog = dialog;
+		this.config = config;
 		if (config.getSpecificConfig() == null) {
 			config.setSpecificConfig(new GsSMVexportConfig((GsRegulatoryGraph)config.getGraph()));
 		}
@@ -71,7 +96,6 @@ public class GsSMVExportConfigPanel extends JPanel {
         	radioAsync2.setSelected(true);
         	break;
     	}
-    	
 	}
 
 	private void initialize() {
@@ -86,7 +110,7 @@ public class GsSMVExportConfigPanel extends JPanel {
 
         GridBagConstraints cst = new GridBagConstraints();
         cst.gridx = 0;
-        cst.gridy = 3;
+        cst.gridy = 4;
         cst.weightx = 1;
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
@@ -102,7 +126,25 @@ public class GsSMVExportConfigPanel extends JPanel {
 				public void focusGained(FocusEvent e) {
 				}
 			});
-	        splitpane.setBottomComponent(area);
+	        JPanel panel = new JPanel();
+	        panel.setLayout(new GridBagLayout());
+	        cst = new GridBagConstraints();
+	        cst.gridx = 0;
+	        cst.gridy = 0;
+	        cst.weightx = 1;
+	        cst.weighty = 1;
+	        cst.fill = GridBagConstraints.BOTH;
+	        tabCTL = new JTabbedPane();
+	        panel.add(tabCTL, cst);
+	        tabCTL.addTab("stable state", new GsExportStable (config, area));
+	        cst = new GridBagConstraints();
+	        cst.gridx = 0;
+	        cst.gridy = 1;
+	        cst.weightx = 1;
+	        cst.weighty = 1;
+	        cst.fill = GridBagConstraints.BOTH;
+	        panel.add(area, cst);
+	        splitpane.setBottomComponent(panel);
 	        splitpane.setTopComponent(getInitPanel());
 	        splitpane.setDividerLocation(130);
         } else {
@@ -120,8 +162,8 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.anchor = GridBagConstraints.WEST;
         add(radioAsync, cst);
         cst = new GridBagConstraints();
-        cst.gridx = 1;
-        cst.gridy = 0;
+        cst.gridx = 0;
+        cst.gridy = 2;
         cst.anchor = GridBagConstraints.WEST;
         add(radioAsync2, cst);
         
@@ -140,7 +182,8 @@ public class GsSMVExportConfigPanel extends JPanel {
 	        mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg);
 	        cst = new GridBagConstraints();
 	        cst.gridx = 0;
-	        cst.gridy = 2;
+	        cst.gridy = 3;
+	        cst.anchor = GridBagConstraints.WEST;
 	        add(mutantPanel, cst);
         }
 	}
@@ -160,7 +203,7 @@ public class GsSMVExportConfigPanel extends JPanel {
 		}
 			 
 	}
-	
+
 	protected void applyTest() {
 		if (cfg == null) {
 			return;

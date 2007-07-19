@@ -13,7 +13,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 
-public class GsStableStateUI extends GsStackDialog {
+public class GsStableStateUI extends GsStackDialog implements GenericStableStateUI {
 	private static final long serialVersionUID = -3605525202652679586L;
 	
 	GsRegulatoryGraph graph;
@@ -40,7 +40,7 @@ public class GsStableStateUI extends GsStackDialog {
 		c.weightx = 1;
 		c.weighty = 1;
 		JScrollPane sp = new JScrollPane();
-		tableModel = new StableTableModel(graph.getNodeOrder());
+		tableModel = new StableTableModel(graph.getNodeOrder(), true);
 
         GsJTable tableResult = new GsJTable(tableModel);
         tableResult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
@@ -56,7 +56,7 @@ public class GsStableStateUI extends GsStackDialog {
 		new GsSearchStableStates(graph, mutantPanel.getMutant(), this).start();
 	}
 	
-	protected void setResult(OmddNode stable) {
+	public void setResult(OmddNode stable) {
 		tableModel.setResult(stable);
 		setRunning(false);
 	}

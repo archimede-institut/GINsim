@@ -30,6 +30,7 @@ public class GsInitialStatePanel extends JPanel {
     private GsInitStateTableModel model = null;
     private JButton buttonDelStateRow = null;
     private JButton buttonResetStateRow = null;
+   
 
     GsSimulationParameterList paramList;
 

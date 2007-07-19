@@ -22,10 +22,10 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
  * but immediately assembled.
  * The order in which they are considerd is also chosen to keep them small as long as possible.
  */
-class GsSearchStableStates extends Thread {
+public class GsSearchStableStates extends Thread {
 
 	private GsRegulatoryGraph regGraph;
-	private GsStableStateUI ui;
+	private GenericStableStateUI ui;
 	Vector nodeOrder;
 	OmddNode[] t_param;
 	OmddNode dd_stable;
@@ -39,7 +39,7 @@ class GsSearchStableStates extends Thread {
 	int bestIndex, bestValue;
 	int nbgene, nbremain;
 
-	GsSearchStableStates(GsGraph regGraph, GsRegulatoryMutantDef mutant, GsStableStateUI ui) {
+	public GsSearchStableStates(GsGraph regGraph, GsRegulatoryMutantDef mutant, GenericStableStateUI ui) {
 		this.regGraph = (GsRegulatoryGraph)regGraph;
 		this.nodeOrder = regGraph.getNodeOrder();
 		this.mutant = mutant;
