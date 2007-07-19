@@ -51,12 +51,12 @@ public class GsDragSourceListener implements DragSourceListener {
   }
 
   public void dragOver(DragSourceDragEvent dsde) {
+    Point p = dsde.getLocation();
     int action = dsde.getDropAction();
     DataFlavor choosen = transferable.getCurrentFlavor();
     if ((action != DnDConstants.ACTION_COPY) && (action != DnDConstants.ACTION_MOVE))
       dsde.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
     else if (choosen != GsTransferable.MIXED_FLAVOR) {
-      Point p = dsde.getLocation();
       SwingUtilities.convertPointFromScreen(p, tree);
       TreePath tp = tree.getPathForLocation(p.x, p.y);
       if (tp != null) {
@@ -69,6 +69,7 @@ public class GsDragSourceListener implements DragSourceListener {
           else if (action == DnDConstants.ACTION_MOVE)
             dsde.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
           p = (Point)dsde.getLocation().clone();
+          SwingUtilities.convertPointToScreen(p, tree);
           SwingUtilities.convertPointFromScreen(p, glassPane);
           glassPane.setPoint(p);
           glassPane.repaint();

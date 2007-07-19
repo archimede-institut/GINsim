@@ -1,11 +1,13 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree;
 
-public class GsParamTreeLeaf implements GsParamTreeElement {
-  private int value;
+public abstract class GsParamTreeLeaf implements GsParamTreeElement {
+  protected GsParamTreeNode parent;
+  protected int parentIndex;
 
-  public GsParamTreeLeaf() {
+  public GsParamTreeLeaf(GsParamTreeNode p, int pi) {
     super();
-    value = 0;
+    parent = p;
+    parentIndex = pi;
   }
   public boolean isLeaf() {
     return true;
@@ -16,14 +18,24 @@ public class GsParamTreeLeaf implements GsParamTreeElement {
   public GsParamTreeElement getSon(int index) {
     return null;
   }
-  public void print(int depth) {
-    for (int i = 0; i < (2 * depth); i++) System.out.print(" ");
-    System.out.println(value);
-  }
-  public void setValue(int v) {
-    value = v;
-  }
+
+  public abstract void print(int depth);
+  public abstract String toString();
+  public abstract void setValue(Object v);
+
   public void addSon(GsParamTreeElement el, int index) {
 
+  }
+  public GsParamTreeNode getParent() {
+    return parent;
+  }
+  public int getParentIndex() {
+    return parentIndex;
+  }
+  public void setParent(GsParamTreeNode e) {
+    parent = e;
+  }
+  public void setParentIndex(int i) {
+    parentIndex = i;
   }
 }

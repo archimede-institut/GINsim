@@ -17,15 +17,19 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import javax.swing.SwingUtilities;
+import java.awt.Point;
 
 public class GsDropListener implements DropTargetListener {
   private GsTransferable transferable;
   private JTree tree;
   private GsTreeElement previousDropable;
+  private GsGlassPane glassPane;
 
-  public GsDropListener(JTree tree) {
+  public GsDropListener(JTree tree, GsGlassPane gp) {
     this.tree = tree;
     previousDropable = null;
+    glassPane = gp;
   }
 
   public void dragDropEnd(DragSourceDropEvent dsde) {
@@ -49,12 +53,16 @@ public class GsDropListener implements DropTargetListener {
   }
 
   public void dragOver(DropTargetDragEvent dtde) {
+    Point p = (Point)dtde.getLocation().clone();
+    SwingUtilities.convertPointToScreen(p, tree);
+    SwingUtilities.convertPointFromScreen(p, glassPane);
+    glassPane.setPoint(p);
+    glassPane.repaint();
     if (! isDragEnabled(dtde))
       dtde.rejectDrag();
     else {
       dtde.acceptDrag(dtde.getDropAction());
     }
-
   }
 
   public void dropActionChanged(DropTargetDragEvent dtde) {
