@@ -70,7 +70,9 @@ public class GsDropListener implements DropTargetListener {
 
   public void drop(DropTargetDropEvent dtde) {
     DataFlavor choosen = null;
+    GsTreeInteractionsModel interactionsModel = null;
 
+    if (tree != null) interactionsModel = (GsTreeInteractionsModel)tree.getModel();
     if (!dtde.isLocalTransfer())
       choosen = GsTransferable.PLAIN_TEXT_FLAVOR;
     else if (dtde.isDataFlavorSupported(transferable.getCurrentFlavor()))
@@ -94,24 +96,24 @@ public class GsDropListener implements DropTargetListener {
                 te[i].setChecked(false);
                 if (tree != null) {
                   Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-                  ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
+                  interactionsModel.refreshVertex();
                   tree.stopEditing();
-                  ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(te[i].getParent());
+                  interactionsModel.fireTreeStructureChanged(te[i].getParent());
                   while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
                 }
               }
               //transfert d'une fonction dans une valeur (= changement de valeur pour une fonction)
               else if ((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeValue)) {
                 try {
-                  ((GsTreeInteractionsModel)tree.getModel()).addExpression(
+                  interactionsModel.addExpression(
                     tree,
                     (short)((GsTreeValue)choosenElement).getValue(),
-                    ((GsTreeInteractionsModel)tree.getModel()).getVertex(),
+                    interactionsModel.getVertex(),
                     te[i].toString());
-                  if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) te[i].remove();
-                  ((GsTreeInteractionsModel)tree.getModel()).removeNullFunction((short)((GsTreeValue)choosenElement).getValue());
-                  ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(choosenElement);
-                  ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
+                  if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) te[i].remove(false);
+                  interactionsModel.removeNullFunction((short)((GsTreeValue)choosenElement).getValue());
+                  interactionsModel.fireTreeStructureChanged(choosenElement);
+                  interactionsModel.refreshVertex();
                 }
                 catch (Exception ex) {
                   ex.printStackTrace();

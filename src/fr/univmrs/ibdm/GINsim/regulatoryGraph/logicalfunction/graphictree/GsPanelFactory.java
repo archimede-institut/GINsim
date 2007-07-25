@@ -1,15 +1,12 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import javax.swing.JTree;
-import java.awt.Component;
+import javax.swing.*;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
 
 public class GsPanelFactory {
-  private static Component glassPane = null;
-
-  public GsPanelFactory(Component gp) {
+  public GsPanelFactory() {
     super();
-    glassPane = gp;
   }
   public static GsBooleanFunctionTreePanel getPanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean edit) {
     GsBooleanFunctionTreePanel panel = null;
@@ -21,10 +18,16 @@ public class GsPanelFactory {
         panel = new GsValuePanel(value, tree, sel, width, edit);
         break;
       case 2 :
-        panel = new GsFunctionPanel(value, tree, sel, width, edit);
+        if (value instanceof GsTreeExpression)
+          panel = new GsFunctionPanel(value, tree, sel, width, edit);
+        else if (value instanceof GsTreeManual)
+          panel = new GsManualPanel(value, tree, sel, width);
         break;
       case 3 :
-        panel = new GsParamPanel(value, tree, sel, width);
+        if (value.getParent() instanceof GsTreeExpression)
+          panel = new GsParamPanel(value, tree, sel, width);
+        else if (value.getParent() instanceof GsTreeManual)
+          panel = new GsManualParamPanel(value, tree, sel, width);
         break;
     }
     return panel;

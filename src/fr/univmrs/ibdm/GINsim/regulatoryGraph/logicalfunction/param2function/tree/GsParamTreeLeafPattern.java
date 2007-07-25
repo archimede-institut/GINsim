@@ -26,7 +26,7 @@ public class GsParamTreeLeafPattern extends GsParamTreeLeaf {
       return ((GsParamTreeLeafPattern)e2).toString().equals(name);
     return false;
   }
-  public void makeFunctions(Hashtable h, String f, int bv, boolean pattern) {
+  public void makeFunctions(Hashtable h, String f, int dv, boolean pattern) {
     Vector v;
     if (h.containsKey(this)) {
       v = (Vector)h.get(this);
@@ -38,16 +38,16 @@ public class GsParamTreeLeafPattern extends GsParamTreeLeaf {
       h.put(this, v);
     }
   }
-  public void buildFunctions(GsParamTreeNode node, int bv) {
+  public void buildFunctions(GsParamTreeNode node, int dv) {
     Hashtable h = new Hashtable(), h2;
     Object key, key2;
     Vector v;
     String f = "", f2, f3;
     Enumeration enu_values, enu_functions, enu2_values;
-    
+
     functions.clear();
-    node.makeFunctions(h, f, bv, true);
-    enu_values = h.keys(); 
+    node.makeFunctions(h, f, dv, true);
+    enu_values = h.keys();
     while (enu_values.hasMoreElements()) {
       key = enu_values.nextElement();
       v = (Vector)h.get(key);

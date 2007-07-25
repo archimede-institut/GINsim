@@ -122,6 +122,7 @@ public class GsUnselectedParamsPanel extends JPanel implements ItemListener {
       Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       TreePath tp = tree.getSelectionPath();
       ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
+      ((GsTreeInteractionsModel)tree.getModel()).setRootInfos();
       ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement.getParent());
       while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
       tree.setSelectionPath(tp);

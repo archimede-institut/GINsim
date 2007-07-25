@@ -27,6 +27,7 @@ public abstract class GsBooleanFunctionTreePanel extends JPanel {
     super();
     setBackground(Color.white);
     treeElement = (GsTreeElement)value;
+    treeElement.setEditable(false);
     this.tree = tree;
     selected = sel;
     width = w;

@@ -6,12 +6,12 @@ import java.util.Iterator;
 
 public class GsTreeParam extends GsTreeElement {
   private Vector edgeIndexes;
-  private boolean error;
+  private boolean error, warning;
 
   public GsTreeParam(GsTreeElement parent, Vector v) {
     super(parent);
     this.edgeIndexes = v;
-    error = false;
+    error = warning = false;
   }
   public String toString() {
     String s = "";
@@ -25,10 +25,19 @@ public class GsTreeParam extends GsTreeElement {
   public Vector getEdgeIndexes() {
     return edgeIndexes;
   }
+  public void setEdgeIndexes(Vector v) {
+    edgeIndexes = v;
+  }
   public void setError(boolean b) {
     error = b;
   }
   public boolean isError() {
     return error;
+  }
+  public void setWarning(boolean b) {
+    warning = b;
+  }
+  public boolean isWarning() {
+    return warning;
   }
 }

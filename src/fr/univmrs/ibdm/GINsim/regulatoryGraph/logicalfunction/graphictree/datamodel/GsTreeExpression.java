@@ -18,6 +18,7 @@ public class GsTreeExpression extends GsTreeElement {
     else
       root = null;
     property.put("show unselected", new Boolean(false));
+    property.put("invalid", new Boolean(false));
   }
   public void setRoot(TBooleanTreeNode root) {
     this.root = root;
@@ -125,6 +126,10 @@ public class GsTreeExpression extends GsTreeElement {
   }
   public void drop(GsTreeElement element) {
 
+  }
+  public void setText(String s) {
+    expression = s;
+    property.put("invalid", new Boolean(true));
   }
 }
 

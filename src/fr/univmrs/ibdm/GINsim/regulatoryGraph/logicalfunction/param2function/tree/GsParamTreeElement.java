@@ -14,6 +14,6 @@ interface GsParamTreeElement {
   public int getParentIndex();
   public void setParent(GsParamTreeNode e);
   public void setParentIndex(int i);
-  public void makeFunctions(Hashtable h, String f, int bv, boolean pattern);
+  public void makeFunctions(Hashtable h, String f, int dv, boolean pattern);
   public int hashCode();
 }

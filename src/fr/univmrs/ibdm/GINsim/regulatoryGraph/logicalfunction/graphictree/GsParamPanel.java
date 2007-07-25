@@ -49,6 +49,7 @@ public class GsParamPanel extends GsBooleanFunctionTreePanel implements ItemList
     if (tree != null) {
       Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
+      ((GsTreeInteractionsModel)tree.getModel()).setRootInfos();
       tree.stopEditing();
       ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement.getParent());
       while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());

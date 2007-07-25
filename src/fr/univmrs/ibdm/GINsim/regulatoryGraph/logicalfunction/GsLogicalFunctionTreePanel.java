@@ -14,6 +14,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyListener {
   private static final long serialVersionUID = -8323666225199589729L;
@@ -88,13 +89,13 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
 
   private JTree tree;
   private GsTreeInteractionsModel interactionList = null;
-  private GsRegulatoryGraph graph;
+  //private GsRegulatoryGraph graph;
   private GsMotionAdapter motionAdapter;
   private GsComponentAdapter componentAdapter;
   private DragSource dragSource;
   private DragGestureListener dragGestureListener;
   private GsDragSourceListener dragSourceListener;
-  private DropTarget dropTarget;
+  //private DropTarget dropTarget;
   private GsDropListener dropListener;
 
   public GsLogicalFunctionTreePanel(GsRegulatoryGraph graph) {
@@ -102,12 +103,13 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
     setLayout(new BorderLayout());
     add(new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
     this.graph = graph;
-    new GsPanelFactory(graph.getGraphManager().getMainFrame().getGlassPane());
+    new GsPanelFactory();
   }
   public void setEditedObject(Object obj) {
     GsRegulatoryVertex vertex = (GsRegulatoryVertex)obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
+    interactionList.setRootInfos();
     tree.setModel(interactionList);
     repaint();
   }
@@ -127,7 +129,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       dragSourceListener = new GsDragSourceListener(tree, (GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane());
       dragGestureListener = new GsDragGestureListener(tree, dragSourceListener, dropListener);
       dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY_OR_MOVE, dragGestureListener);
-      dropTarget = new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE, dropListener, true);
+      /*dropTarget =*/ new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE, dropListener, true);
       motionAdapter = new GsMotionAdapter((GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane());
       tree.addMouseMotionListener(motionAdapter);
       componentAdapter = new GsComponentAdapter((GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane(), "");
@@ -152,17 +154,26 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
         tree.stopEditing();
         for (int i = 0; i < selectedPaths.length; i++) {
           treeElement = (GsTreeElement)selectedPaths[i].getLastPathComponent();
-          if (treeElement.isLeaf())
+          if (treeElement.getParent() instanceof GsTreeManual) {
+            treeElement.remove(false);
+            v.addElement(treeElement);
+          }
+          else if (treeElement.isLeaf())
             treeElement.setChecked(false);
+          else if (treeElement instanceof GsTreeManual){
+
+          }
           else {
-            treeElement.remove();
+            treeElement.remove(false);
             v.addElement(treeElement);
             if (treeElement.toString().equals(""))
               treeElement.getParent().setProperty("null function", new Boolean(false));
           }
         }
-        ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-        ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
+        GsTreeInteractionsModel interactionsModel = (GsTreeInteractionsModel)tree.getModel();
+        interactionsModel.refreshVertex();
+        interactionsModel.setRootInfos();
+        interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
         while (enu.hasMoreElements()) {
           TreePath tp = (TreePath)enu.nextElement();
           if (!v.contains(tp.getLastPathComponent())) tree.expandPath(tp);

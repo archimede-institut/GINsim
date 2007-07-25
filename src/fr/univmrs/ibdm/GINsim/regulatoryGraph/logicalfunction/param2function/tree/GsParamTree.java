@@ -14,10 +14,10 @@ import java.util.Set;
 
 public class GsParamTree {
   private GsParamTreeElement root = null;
-  private int depth = -1, basalValue = 0;
+  private int depth = -1, defaultValue = 0, basalValue;
   private ArrayList vertexList;
 
-  public GsParamTree(ArrayList l, int bv) {
+  public GsParamTree(ArrayList l, int dv, int bv) {
     super();
     vertexList = l;
     Iterator it = vertexList.iterator();
@@ -28,7 +28,11 @@ public class GsParamTree {
       if (e.getValue() != null)
         addLevel(++depth, (GsRegulatoryVertex)e.getKey(), (GsRegulatoryMultiEdge)e.getValue());
     }
-    addLeaves(bv);
+    addLeaves(dv);
+    GsParamTreeElement node = root;
+    while (!node.isLeaf()) node = node.getSon(0);
+    ((GsParamTreeLeafValue)node).setValue(new Integer(bv));
+    defaultValue = dv;
     basalValue = bv;
   }
   private void addLevel(int level, GsRegulatoryVertex v, GsRegulatoryMultiEdge me) {
@@ -53,7 +57,7 @@ public class GsParamTree {
         if (!node.getSon(i).isLeaf())
           getNodes(wantedDepth, currentDepth + 1, node.getSon(i), v);
   }
-  private void addLeaves(int bv) {
+  private void addLeaves(int dv) {
     GsParamTreeNode e;
     GsParamTreeLeafValue value;
     Vector v = new Vector();
@@ -62,7 +66,7 @@ public class GsParamTree {
       e = (GsParamTreeNode)v.elementAt(i);
       for (int j = 0; j <= e.getNbEdge(); j++) {
         value = new GsParamTreeLeafValue(e, j);
-        value.setValue(new Integer(bv));
+        value.setValue(new Integer(dv));
         e.addSon(value, j);
       }
     }
@@ -105,8 +109,10 @@ public class GsParamTree {
         for (int j = 1; j < e.getNbSons(); j++)
           b = b && e.getSon(0).equals(e.getSon(j));
         if (b) {
-          if (e.getParent() == null)
-            root = e;
+          if (e.getParent() == null) {
+            root = e.getSon(0);
+            root.setParent(null);
+          }
           else {
             p = e.getParent();
             s = e.getSon(0);
@@ -125,8 +131,8 @@ public class GsParamTree {
     GsParamTreeLeafPattern treeLeaf;
     int np = 1;
     boolean ok = true;
-    Hashtable h;
-    
+    //Hashtable h;
+
     while (ok) {
       lastNodes.clear();
       getLastNodes(lastNodes, root);
@@ -146,27 +152,26 @@ public class GsParamTree {
         if (((Integer)hm.get(node)).intValue() > 1) {
           treeLeaf = new GsParamTreeLeafPattern();
           treeLeaf.setName("P" + np);
-          //treeLeaf.setParentIndex(i);
-          treeLeaf.buildFunctions(node, basalValue);
-          h = treeLeaf.getFunctions();
-          System.out.println(treeLeaf.toString());
-          node.print(0);
-          for (Enumeration enu = h.keys(); enu.hasMoreElements(); )
-        	  System.out.println("  " + h.get(enu.nextElement()));
+          treeLeaf.buildFunctions(node, defaultValue);
+          //h = treeLeaf.getFunctions();
+          //System.out.println(treeLeaf.toString());
+          //node.print(0);
+          //for (Enumeration enu = h.keys(); enu.hasMoreElements(); )
+          //  System.out.println("  " + h.get(enu.nextElement()));
           for (Enumeration enu = lastNodes.elements(); enu.hasMoreElements(); ) {
             lastn = (GsParamTreeNode)enu.nextElement();
-            if (lastn.equals(node)) {
+            if (lastn.hashCode() == node.hashCode()) {
               parent = lastn.getParent();
-              for (int i = 0; i < parent.getNbSons(); i++)
+              for (int i = 0; i < parent.getNbSons(); i++) {
                 if (parent.getSon(i).equals(node)) {
-                  parent.setSon(i, treeLeaf);  
+                  parent.setSon(i, treeLeaf);
                 }
+              }
             }
           }
           np++;
           ok = true;
         }
-        System.out.println(node + " " + hm.get(node));
       }
     }
   }
@@ -175,7 +180,7 @@ public class GsParamTree {
   }
   public Hashtable getFunctions() {
     Hashtable h = new Hashtable();
-    root.makeFunctions(h, "", basalValue, false);
+    root.makeFunctions(h, "", defaultValue, false);
     return h;
   }
   private void getLastNodes(Vector v, GsParamTreeElement node) {

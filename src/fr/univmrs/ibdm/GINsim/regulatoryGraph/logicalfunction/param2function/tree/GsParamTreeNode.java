@@ -67,45 +67,14 @@ public class GsParamTreeNode implements GsParamTreeElement {
   public void setParentIndex(int i) {
     parentIndex = i;
   }
-  public void makeFunctions(Hashtable h, String f, int bv, boolean pattern) {
+  public void makeFunctions(Hashtable h, String f, int dv, boolean pattern) {
     String and = "";
     if (!pattern && (parent != null)) and = " & ";
 
-    sons[0].makeFunctions(h, f + and + "!" + toString(), bv, pattern);
+    sons[0].makeFunctions(h, f + and + "!" + toString(), dv, pattern);
     for (int i = 1; i < sons.length; i++) {
-      sons[i].makeFunctions(h, f + and + toString() + "#" + (i - 1), bv, pattern);
+      sons[i].makeFunctions(h, f + and + toString() + "#" + (i - 1), dv, pattern);
     }
-  }
-  public Hashtable processFunctions(Hashtable h) {
-    String s, s2;
-    Object key;
-    Vector v;
-    Hashtable h2 = new Hashtable(), h3;
-
-    for (Enumeration enu = h.keys(); enu.hasMoreElements(); ) {
-      key = enu.nextElement();
-      v = (Vector)h.get(key);
-      if (key instanceof GsParamTreeLeafPattern) {
-        Enumeration enu2 = v.elements();
-        s = enu2.nextElement().toString();
-        if (s.split(" ").length > 1) s = "(" + s + ")";
-        while (enu2.hasMoreElements()) {
-          s2 = enu2.nextElement().toString();
-          if (s2.split(" ").length > 1) s2 = "(" + s2 + ")";
-          s = s + " | " + s2;
-        }
-        h3 = ((GsParamTreeLeafPattern)key).getFunctions();
-        Enumeration enu3 = h3.keys();
-        while (enu3.hasMoreElements()) {
-          key = enu3.nextElement();
-          h2.put(key, "(" + s + ")" + " & " + h3.get(key));
-        }
-        h2.put(key, new String(s));
-      }
-      else
-        h2.put(key, v);
-    }
-    return h2;
   }
 
   public int hashCode() {

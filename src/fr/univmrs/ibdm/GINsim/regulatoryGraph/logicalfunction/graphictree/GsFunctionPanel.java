@@ -1,35 +1,16 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.*;
+import java.util.*;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.UIManager;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
-import javax.swing.tree.TreePath;
+import javax.swing.*;
+import javax.swing.plaf.basic.*;
+import javax.swing.tree.*;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import fr.univmrs.ibdm.GINsim.util.widget.*;
 
 public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener,
   PropertyChangeListener, MouseListener {
@@ -78,6 +59,11 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
       setBackground(Color.yellow);
       textArea.setBackground(Color.yellow);
       buttonPanel.setBackground(Color.yellow);
+    }
+    else if (((Boolean)value.getProperty("invalid")).booleanValue()) {
+      setBackground(Color.red);
+      textArea.setBackground(Color.red);
+      buttonPanel.setBackground(Color.red);
     }
     else {
       setBackground(Color.white);
@@ -206,6 +192,9 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   public void keyReleased(KeyEvent e) {
   }
   public void keyTyped(KeyEvent e) {
+    GsTreeInteractionsModel interactionsModel;
+    boolean ok;
+
     if (treeElement instanceof GsTreeExpression) {
       if ('\n' == e.getKeyChar()) {
     	try {
@@ -215,15 +204,22 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
           TreePath sel_path = tree.getEditingPath();
           tree.stopEditing();
           treeElement.setProperty("show unselected", new Boolean(false));
-          ((GsTreeInteractionsModel)tree.getModel()).updateExpression(
-            (short)((GsTreeValue)treeElement.getParent()).getValue(),
-            (GsTreeExpression)treeElement, textArea.getText());
-          ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-          ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
+          interactionsModel = (GsTreeInteractionsModel)tree.getModel();
+          String oldText = textArea.getText();
+          ok = interactionsModel.updateExpression((short)((GsTreeValue)treeElement.getParent()).getValue(),
+                                                  (GsTreeExpression)treeElement, textArea.getText());
+          interactionsModel.setRootInfos();
+          interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
+          interactionsModel.refreshVertex();
           while (exp_path.hasMoreElements()) tree.expandPath((TreePath)exp_path.nextElement());
           tree.setSelectionPath(sel_path);
           if (oldExpression.equals("") && !treeElement.toString().equals(""))
             treeElement.getParent().setProperty("null function", new Boolean(false));
+          if (ok) treeElement.setProperty("invalid", new Boolean(false));
+          if (!ok && !oldText.equals("")) {
+            tree.startEditingAtPath(sel_path);
+            ((GsTreeExpression)treeElement).setText(oldText);
+          }
         }
         catch (Exception ex) {
           ex.printStackTrace();
@@ -279,5 +275,8 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   }
   public void mouseReleased(MouseEvent e) {
     toUpdate = false;
+  }
+  public boolean isShowButtonEnabled() {
+    return showButton.isEnabled();
   }
 }
