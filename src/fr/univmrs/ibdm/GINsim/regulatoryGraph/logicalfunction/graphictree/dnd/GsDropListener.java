@@ -19,6 +19,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import javax.swing.SwingUtilities;
 import java.awt.Point;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
 
 public class GsDropListener implements DropTargetListener {
   private GsTransferable transferable;
@@ -93,7 +94,7 @@ public class GsDropListener implements DropTargetListener {
             for (int i = 0; i < te.length; i++) {
               // transfert d'un parametre dans une fonction (= inactivation d'un parametre)
               if ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeExpression)) {
-                te[i].setChecked(false);
+                //te[i].setChecked(false);
                 if (tree != null) {
                   Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
                   interactionsModel.refreshVertex();
@@ -148,8 +149,10 @@ public class GsDropListener implements DropTargetListener {
       GsTreeElement choosenElement = (GsTreeElement)tp.getLastPathComponent();
       if (previousDropable != null) previousDropable.setDropable(false);
       if (((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeValue)) ||
-          ((choosen == GsTransferable.VALUE_FLAVOR) && (choosenElement instanceof GsTreeString)) ||
-          ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement == transferable.getPParent()))) {
+          ((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeManual)) ||
+          ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeValue)) ||
+          ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeManual)) ||
+          ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeManual))) {
         choosenElement.setDropable(true);
         previousDropable = choosenElement;
         return true;

@@ -40,8 +40,6 @@ public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
       else if (tp.getParentPath() == tree.getPathForRow(0)) { // valeurs
         if (inHitRegion(me.getX(), me.getY()) && (me.getClickCount() > 0))
           return true;
-        else if (!inHitRegion(me.getX(), me.getY()) && me.getClickCount() > 1)
-          return true;
       }
       else if (tp == tree.getPathForRow(0)) { // racine
         if (inHitRegion(me.getX(), me.getY()) && (me.getClickCount() > 0))
@@ -72,8 +70,11 @@ public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
               return true;
             return false;
           }
-          else if (treeElement instanceof GsTreeValue)
-            return true;
+          else if (treeElement instanceof GsTreeValue) {
+            if ((x > (bounds.x + offset - 16)) && (x < (bounds.x + offset + 31)))
+              return true;
+            return false;
+          }
           else if (treeElement instanceof GsTreeManual) {
             if ((x > (bounds.x + offset - 16)) && (x < (bounds.x + offset + 3)))
               return true;
@@ -84,9 +85,9 @@ public class GsBooleanFunctionTreeEditor extends DefaultTreeCellEditor {
                 return true;
               else if (p instanceof GsParamPanel)
                 return true;
-              else if ((p != null) && (x > (bounds.x + offset + 5)) && ((x < (bounds.x + offset + 12))) &&
-                       (((GsFunctionPanel)p).isShowButtonEnabled()))
-                return true;
+              //else if ((p != null) && (x > (bounds.x + offset + 5)) && ((x < (bounds.x + offset + 12))) &&
+              //         (((GsFunctionPanel)p).isShowButtonEnabled()))
+              //  return true;
             return false;
           }
         }

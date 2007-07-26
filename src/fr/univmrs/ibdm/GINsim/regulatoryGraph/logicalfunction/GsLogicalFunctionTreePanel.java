@@ -158,9 +158,9 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
             treeElement.remove(false);
             v.addElement(treeElement);
           }
-          else if (treeElement.isLeaf())
-            treeElement.setChecked(false);
-          else if (treeElement instanceof GsTreeManual){
+          //else if (treeElement.isLeaf())
+          //  treeElement.setChecked(false);
+          /*else */if (treeElement instanceof GsTreeManual){
 
           }
           else {

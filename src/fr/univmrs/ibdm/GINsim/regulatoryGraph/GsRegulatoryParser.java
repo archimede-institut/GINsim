@@ -23,6 +23,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTree
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
 
 /**
  * parses a ginml regulatory graph.
@@ -288,9 +290,11 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                 }
                 else if (qName.equals("exp")) {
                   ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("str"));
-                  ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("chk"));
+                  //((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("chk"));
                 }
-
+                else if (qName.equals("param")) {
+                  ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement("PARAM\t" + attributes.getValue("str"));
+                }
                 break; // POS_VERTEX
 
             case POS_EDGE:
@@ -396,7 +400,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     private void parseBooleanFunctions() {
       List allowedEdges;
       GsRegulatoryVertex vertex;
-      String value, exp, chk;
+      String value, exp/*, chk*/;
       try {
         for (Enumeration enu_vertex = values.keys(); enu_vertex.hasMoreElements(); ) {
           vertex = (GsRegulatoryVertex)enu_vertex.nextElement();
@@ -406,22 +410,25 @@ public final class GsRegulatoryParser extends GsXMLHelper {
               value = (String)enu_values.nextElement();
               for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
                 exp = (String)enu_exp.nextElement();
-                chk = (String)enu_exp.nextElement();
-                addExpression(Short.parseShort(value), vertex, exp, chk.length());
+                //chk = (String)enu_exp.nextElement();
+                if (!exp.startsWith("PARAM"))
+                  addExpression(Short.parseShort(value), vertex, exp/*, chk.length()*/);
+                else
+                  addParam(Short.parseShort(value), vertex, exp.split("\t")[1]);
               }
             }
             vertex.getInteractionsModel().parseFunctions();
             if ((vertex.getMaxValue() - vertex.getBaseValue() + 1) == ((Hashtable)values.get(vertex)).size())
               ((GsTreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
-            for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
-              value = (String)enu_values.nextElement();
-              for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
-                exp = (String)enu_exp.nextElement();
-                chk = (String)enu_exp.nextElement();
-                vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
-                vertex.getInteractionsModel().parseFunctions();
-              }
-            }
+            //for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
+            //  value = (String)enu_values.nextElement();
+            //  for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
+            //    exp = (String)enu_exp.nextElement();
+                //chk = (String)enu_exp.nextElement();
+                //vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
+                //vertex.getInteractionsModel().parseFunctions();
+            //  }
+            //}
           }
         }
       }
@@ -430,7 +437,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       }
     }
 
-    public void addExpression(short val, GsRegulatoryVertex vertex, String exp, int n) {
+    public void addExpression(short val, GsRegulatoryVertex vertex, String exp/*, int n*/) {
       try {
         GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
         GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
@@ -440,14 +447,37 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         }
         else {
           interactionList.addExpression(val, vertex, tbp);
-          String chk1 = "";
-          for (int i = 0; i < n; i++) chk1 += "1";
-          interactionList.checkParams(val, chk1, exp);
+          //String chk1 = "";
+          //for (int i = 0; i < n; i++) chk1 += "1";
+          //interactionList.checkParams(val, chk1, exp);
         }
       }
       catch (Exception ex) {
         ex.printStackTrace();
       }
+    }
+    public void addParam(short val, GsRegulatoryVertex vertex, String par) throws Exception {
+      GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
+      List l = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
+      GsTreeParam param = interactionList.addEmptyParameter(val, vertex);
+      String[] t_interaction = par.split(" ");
+      GsEdgeIndex ei;
+      Vector v = new Vector();
+      String srcString, indexString;
+      GsRegulatoryMultiEdge o;
+      for (int i = 0; i < t_interaction.length; i++) {
+        srcString = t_interaction[i].substring(0, t_interaction[i].lastIndexOf("_"));
+        indexString = t_interaction[i].substring(t_interaction[i].lastIndexOf("_") + 1);
+        for (int j = 0; j < l.size(); j++) {
+          o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)l.get(j)).getUserObject();
+          if (o.getSource().getId().equals(srcString)) {
+            ei = new GsEdgeIndex(o, Integer.parseInt(indexString));
+            v.addElement(ei);
+            break;
+          }
+        }
+      }
+      param.setEdgeIndexes(v);
     }
     public GsGraph getGraph() {
         return graph;

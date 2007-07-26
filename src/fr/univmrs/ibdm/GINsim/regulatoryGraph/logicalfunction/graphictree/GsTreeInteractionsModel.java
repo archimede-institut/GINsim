@@ -209,7 +209,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 
     for (int i = 0; i < root.getChildCount(); i++) {
       val = (GsTreeValue)root.getChild(i);
-      n += val.getChildCount();
+      n += val.getChildCount() - 1;
     }
     return n;
   }
@@ -243,6 +243,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     GsTreeParam param = null;
 
     setNode(currentVertex);
+    addValue(val);
     for (int i = 0; i < root.getChildCount(); i++) {
       value = (GsTreeValue)root.getChild(i);
       if (value.getValue() == val) {
@@ -350,7 +351,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         exp = val.getChild(j);
         for (int k = 0; k < exp.getChildCount(); k++) {
           param = (GsTreeParam)exp.getChild(k);
-          if (param.isChecked() && !param.isError()) {
+          if (/*param.isChecked() &&*/ !param.isError()) {
             p = new GsLogicalParameter(val.getValue());
             p.setEdges(param.getEdgeIndexes());
             if (!(param.isWarning() && v2.contains(p.toString())))
@@ -375,7 +376,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         exp = val.getChild(j);
         for (int k = 0; k < exp.getChildCount(); k++) {
           param = (GsTreeParam)exp.getChild(k);
-          if (param.isChecked()) {
+          //if (param.isChecked()) {
             if (h.get(param.toString()) == null)
               h.put(param.toString(), new Integer(val.getValue()));
             else {
@@ -385,7 +386,7 @@ public class GsTreeInteractionsModel implements TreeModel {
               else
                 h.put(param.toString(), new Integer(123456));
             }
-          }
+          //}
         }
       }
     }
@@ -395,7 +396,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         exp = val.getChild(j);
         for (int k = 0; k < exp.getChildCount(); k++) {
           param = (GsTreeParam)exp.getChild(k);
-          if (param.isChecked()) {
+          //if (param.isChecked()) {
             if (((Integer) h.get(param.toString())).intValue() == 123456) {
               param.setError(true);
               param.setWarning(false);
@@ -411,35 +412,35 @@ public class GsTreeInteractionsModel implements TreeModel {
               param.setWarning(false);
               param.setForeground(Color.black);
             }
-          }
-          else {
-            param.setError(false);
-            param.setWarning(false);
-            param.setForeground(Color.black);
-          }
+          //}
+          //else {
+          //  param.setError(false);
+          //  param.setWarning(false);
+          //  param.setForeground(Color.black);
+          //}
         }
       }
     }
   }
 
-  public void checkParams(short v, String chk, String exp) {
-    GsTreeValue tval;
-    GsTreeElement texp;
-    GsTreeParam tparam;
+  //public void checkParams(short v, String chk, String exp) {
+  //  GsTreeValue tval;
+  //  GsTreeElement texp;
+  //  GsTreeParam tparam;
 
-    for (int i = 0; i < root.getChildCount(); i++) {
-      tval = (GsTreeValue)root.getChild(i);
-      if ((short)tval.getValue() == v)
-        for (int j = 0; j < tval.getChildCount(); j++) {
-          texp = tval.getChild(j);
-          if (texp.toString().equals(exp))
-            for (int k = 0; k < texp.getChildCount(); k++) {
-              tparam = (GsTreeParam)texp.getChild(k);
-              tparam.setChecked(chk.charAt(k) == '1');
-            }
-        }
-    }
-  }
+  //  for (int i = 0; i < root.getChildCount(); i++) {
+  //    tval = (GsTreeValue)root.getChild(i);
+  //    if ((short)tval.getValue() == v)
+  //      for (int j = 0; j < tval.getChildCount(); j++) {
+  //        texp = tval.getChild(j);
+  //        if (texp.toString().equals(exp))
+  //          for (int k = 0; k < texp.getChildCount(); k++) {
+  //            tparam = (GsTreeParam)texp.getChild(k);
+  //            tparam.setChecked(chk.charAt(k) == '1');
+  //          }
+  //      }
+  //  }
+  //}
 
   public TreePath getPath(short v, String e) {
     Object [] path = new Object[3];

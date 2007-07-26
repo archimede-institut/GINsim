@@ -6,7 +6,7 @@ import java.beans.*;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.*;
+//import javax.swing.plaf.basic.*;
 import javax.swing.tree.*;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
@@ -17,11 +17,11 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   private static final long serialVersionUID = 8900639275182677150L;
   private static final Color editColor = new Color(204, 255, 204);
   private JPanel buttonPanel;
-  private JButton showButton, hideButton, editButton;
+  private JButton /*showButton, hideButton, */editButton;
   private JTextArea textArea;
   private JScrollPane jsp;
-  private JSplitPane splitPane = null;
-  private GsUnselectedParamsPanel listPanel;
+  //private JSplitPane splitPane = null;
+  //private GsUnselectedParamsPanel listPanel;
   private boolean toUpdate = false;
 
   public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean edit) {
@@ -29,20 +29,20 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     setBackground(Color.white);
     editButton = new GsJButton("edit.png");
     editButton.addActionListener(this);
-    showButton = new GsJButton("show.png");
-    showButton.addActionListener(this);
-    hideButton = new GsJButton("hide.png");
-    hideButton.addActionListener(this);
+    //showButton = new GsJButton("show.png");
+    //showButton.addActionListener(this);
+    //hideButton = new GsJButton("hide.png");
+    //hideButton.addActionListener(this);
     buttonPanel = new JPanel(new GridBagLayout());
     buttonPanel.setBackground(Color.white);
     buttonPanel.add(editButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                                       GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-    if (((Boolean)value.getProperty("show unselected")).booleanValue())
-      buttonPanel.add(hideButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                                         GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-    else
-      buttonPanel.add(showButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                                         GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+    //if (((Boolean)value.getProperty("show unselected")).booleanValue())
+    //  buttonPanel.add(hideButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    //                                                     GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+    //else
+    //  buttonPanel.add(showButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    //                                                     GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
     textArea = new JTextArea(text);
     textArea.setFont(defaultFont);
     textArea.setEditable(true);
@@ -75,16 +75,16 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     add(buttonPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                             GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     Vector v = null;
-    if (treeElement.containsUnselectChild()) {
-      showButton.setEnabled(true);
-      hideButton.setEnabled(true);
-      v = treeElement.getUnselectChilds();
-    }
-    else {
-      showButton.setEnabled(false);
-      hideButton.setEnabled(false);
-    }
-    if (((Boolean)treeElement.getProperty("show unselected")).booleanValue()) {
+    //if (treeElement.containsUnselectChild()) {
+    //  showButton.setEnabled(true);
+    //  hideButton.setEnabled(true);
+    //  v = treeElement.getUnselectChilds();
+    //}
+    //else {
+    //  showButton.setEnabled(false);
+    //  hideButton.setEnabled(false);
+    //}
+    /*if (((Boolean)treeElement.getProperty("show unselected")).booleanValue()) {
       listPanel = new GsUnselectedParamsPanel(v, sel, tree, this, edit);
       JScrollPane jsp2 = new JScrollPane(listPanel);
       jsp2.setBorder(null);
@@ -130,7 +130,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
       splitPane.addPropertyChangeListener("dividerLocation", this);
       (((BasicSplitPaneUI)splitPane.getUI()).getDivider()).addMouseListener(this);
     }
-    else {
+    else {*/
       add(jsp, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                       GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
       if ((width >= 0) && (charWidth > 0)) {
@@ -148,23 +148,23 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         int ps = nbRows * charHeight;
         jsp.setPreferredSize(new Dimension(width, ps));
       }
-    }
+    //}
     addMouseListener(this);
     //addMouseMotionListener(this);
     //buttonPanel.addMouseListener(this);
   }
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == showButton) {
-      showButtonPressed();
-    }
-    else if (e.getSource() == hideButton) {
-      hideButtonPressed();
-    }
-    else if (e.getSource() == editButton) {
+    //if (e.getSource() == showButton) {
+    //  showButtonPressed();
+    //}
+    //else if (e.getSource() == hideButton) {
+    //  hideButtonPressed();
+    //}
+    /*else */if (e.getSource() == editButton) {
       editButtonPressed();
     }
   }
-  public void showButtonPressed() {
+  /*public void showButtonPressed() {
     treeElement.setProperty("show unselected", new Boolean(true));
     TreePath tp = tree.getEditingPath();
     Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
@@ -172,7 +172,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement);
     while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
     tree.getSelectionModel().addSelectionPath(tp);
-    treeElement.setChecked(true);
+    //treeElement.setChecked(true);
   }
   public void hideButtonPressed() {
     treeElement.setProperty("show unselected", new Boolean(false));
@@ -181,9 +181,9 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     tree.stopEditing();
     ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement);
     while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
-    treeElement.setChecked(true);
+    //treeElement.setChecked(true);
     tree.getSelectionModel().addSelectionPath(tp);
-  }
+  }*/
   public void editButtonPressed() {
     treeElement.setEditable(true);
   }
@@ -276,7 +276,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   public void mouseReleased(MouseEvent e) {
     toUpdate = false;
   }
-  public boolean isShowButtonEnabled() {
-    return showButton.isEnabled();
-  }
+  //public boolean isShowButtonEnabled() {
+  //  return showButton.isEnabled();
+  //}
 }

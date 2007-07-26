@@ -18,6 +18,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
 
 /**
  * the Class in which we store biological data for vertices (genes).
@@ -431,28 +433,39 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
     public void saveInteractionsModel(GsXMLWriter out, int mode) throws IOException {
       GsTreeString root = (GsTreeString)interactionsModel.getRoot();
       GsTreeValue val;
-      GsTreeExpression exp;
+      GsTreeElement exp;
       GsTreeParam param;
-      String chk;
+      //String chk;
 
       for (int i = 0; i < root.getChildCount(); i++) {
         val = (GsTreeValue)root.getChild(i);
         out.openTag("value");
         out.addAttr("val", ""+val.getValue());
         for (int j = 0; j < val.getChildCount(); j++) {
-          exp = (GsTreeExpression)val.getChild(j);
-          chk = "";
-          for (int k = 0; k < exp.getAllChildCount(); k++) {
-            param = (GsTreeParam)exp.getAllChild(k);
-            if (param.isChecked())
-              chk += "1";
-            else
-              chk += "0";
+          exp = val.getChild(j);
+          //chk = "";
+          //for (int k = 0; k < exp.getAllChildCount(); k++) {
+          //  param = (GsTreeParam)exp.getAllChild(k);
+          //  if (param.isChecked())
+          //    chk += "1";
+          //  else
+          //    chk += "0";
+          //}
+          if (exp instanceof GsTreeExpression) {
+            out.openTag("exp");
+            out.addAttr("str", exp.toString());
+            out.closeTag();
           }
-          out.openTag("exp");
-          out.addAttr("str", exp.toString());
-          out.addAttr("chk", chk);
-          out.closeTag();
+          else if (exp instanceof GsTreeManual) {
+            out.openTag("added");
+            for (int k = 0; k < exp.getChildCount(); k++) {
+              out.openTag("param");
+              out.addAttr("str", exp.getChild(k).toString());
+              out.closeTag();
+            }
+            out.closeTag();
+          }
+          //out.addAttr("chk", chk);
         }
         out.closeTag();
       }
