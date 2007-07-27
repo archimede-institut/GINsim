@@ -24,12 +24,14 @@ public abstract class GsTreeElement implements Comparable {
   }
   public GsTreeElement getChild(int index) {
     GsTreeElement te = null;
-    int i = 0, n = 0;
+    //int i = 0, n = 0;
     if (childs != null) {
-      do {
-        te = (GsTreeElement)childs.elementAt(i++);
-        /*if (te.isChecked())*/ n++;
-      } while (n <= index);
+      //do {
+     //   te = (GsTreeElement)childs.elementAt(i++);
+      //  /*if (te.isChecked())*/ n++;
+      //} while (n <= index);
+      if (index < childs.size())
+        te = (GsTreeElement)childs.elementAt(index);
     }
     return te;
   }
@@ -49,14 +51,18 @@ public abstract class GsTreeElement implements Comparable {
   public void clearChilds() {
     if (childs != null) childs.clear();
   }
+  public Vector getChilds() {
+    return childs;
+  }
   public int getChildCount() {
     int n = 0;
-    GsTreeElement te;
+    //GsTreeElement te;
     if (childs != null) {
-      for (int i = 0; i < childs.size(); i++) {
-        te = (GsTreeElement)childs.elementAt(i);
-        /*if (te.isChecked())*/ n++;
-      }
+      //  for (int i = 0; i < childs.size(); i++) {
+      //    te = (GsTreeElement)childs.elementAt(i);
+      //    /*if (te.isChecked())*/ n++;
+      n = childs.size();
+      //}
     }
     return n;
   }

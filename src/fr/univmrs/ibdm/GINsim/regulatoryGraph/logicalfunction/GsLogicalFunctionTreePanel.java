@@ -15,6 +15,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import javax.swing.event.TreeModelEvent;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyListener {
   private static final long serialVersionUID = -8323666225199589729L;
@@ -109,6 +111,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
     GsRegulatoryVertex vertex = (GsRegulatoryVertex)obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
+    interactionList.setView(this);
     interactionList.setRootInfos();
     tree.setModel(interactionList);
     repaint();
@@ -138,6 +141,16 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
     }
     return tree;
   }
+  public void refresh() {
+    tree.stopEditing();
+    Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+    interactionList.fireTreeStructureChanged((GsTreeElement)interactionList.getRoot());
+    if (enu != null)
+      while (enu.hasMoreElements()) {
+        TreePath tp = (TreePath)enu.nextElement();
+        tree.expandPath(tp);
+      }
+  }
   public void keyPressed(KeyEvent e) {
   }
   public void keyReleased(KeyEvent e) {
@@ -163,7 +176,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
           /*else */if (treeElement instanceof GsTreeManual){
 
           }
-          else {
+          else if (! (treeElement instanceof GsTreeParam)) {
             treeElement.remove(false);
             v.addElement(treeElement);
             if (treeElement.toString().equals(""))

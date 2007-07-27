@@ -36,7 +36,7 @@ public class GsTransferable implements Transferable {
       currentFlavor = VALUE_FLAVOR;
     else if (nodes[0] instanceof GsTreeManual)
       currentFlavor = MANUAL_FLAVOR;
-    else if (nodes[0] instanceof GsTreeParam) {
+    else if ((nodes[0] instanceof GsTreeParam) && (nodes[0].getParent() instanceof GsTreeManual)) {
       currentFlavor = PARAM_FLAVOR;
       GsTreeElement p = nodes[0].getParent();
       for (int i = 1; i < nodes.length; i++)
@@ -47,6 +47,8 @@ public class GsTransferable implements Transferable {
       if (currentFlavor != MIXED_FLAVOR)
         pParent = p;
     }
+    else
+      currentFlavor = MIXED_FLAVOR;
     if (currentFlavor != MIXED_FLAVOR)
       for (int i = 1; i < nodes.length; i++)
         if ((nodes[i] instanceof GsTreeExpression) && (currentFlavor != FUNCTION_FLAVOR)) {

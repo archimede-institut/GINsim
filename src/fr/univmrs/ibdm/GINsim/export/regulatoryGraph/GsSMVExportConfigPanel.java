@@ -33,7 +33,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.org.apache.regexp.internal.REDemo;
+//import com.sun.org.apache.regexp.internal.REDemo;
 
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
@@ -53,21 +53,21 @@ public class GsSMVExportConfigPanel extends JPanel {
 	private static final long serialVersionUID = -7398674287463858306L;
 
 	private GsSMVexportConfig cfg;
-	
+
     JRadioButton radioSync = null;
     JRadioButton radioAsync2 = null;
     JRadioButton radioAsync = null;
-    
+
     MutantSelectionPanel mutantPanel = null;
-    
+
     JButton butCfgMutant = null;
     JTextArea area;
     private GsInitialStatePanel initPanel;
     private GsSMVConfigModel model;
     private GsMutantModel mutantModel;
-    
+
     JTabbedPane tabCTL;
-    
+
     private boolean mutant;
     private boolean test;
     private GsStackDialog dialog;
@@ -83,16 +83,16 @@ public class GsSMVExportConfigPanel extends JPanel {
 		}
 		this.cfg = (GsSMVexportConfig)config.getSpecificConfig();
     	initialize();
-    	
+
     	switch(cfg.getType())
     	{
-    	case GsSMVexportConfig.CFG_SYNC : 
+    	case GsSMVexportConfig.CFG_SYNC :
     		radioSync.setSelected(true);
     		break;
-    	case GsSMVexportConfig.CFG_ASYNC : 
+    	case GsSMVexportConfig.CFG_ASYNC :
     		radioAsync.setSelected(true);
     		break;
-        default : 
+        default :
         	radioAsync2.setSelected(true);
         	break;
     	}
@@ -150,7 +150,7 @@ public class GsSMVExportConfigPanel extends JPanel {
         } else {
         	add(getInitPanel(), cst);
         }
-        
+
         cst = new GridBagConstraints();
         cst.gridx = 0;
         cst.gridy = 0;
@@ -166,7 +166,7 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.gridy = 2;
         cst.anchor = GridBagConstraints.WEST;
         add(radioAsync2, cst);
-        
+
         radioSync.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				applyMode();
@@ -177,7 +177,7 @@ public class GsSMVExportConfigPanel extends JPanel {
 				applyMode();
 			}
 		});
-       
+
         if (mutant) {
 	        mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg);
 	        cst = new GridBagConstraints();
@@ -187,21 +187,21 @@ public class GsSMVExportConfigPanel extends JPanel {
 	        add(mutantPanel, cst);
         }
 	}
-	
+
 	protected void applyMode() {
 		if (cfg == null) {
 			return;
 		}
-		
-		
+
+
 		if (radioSync.isSelected()) {
 			cfg.type = GsSMVexportConfig.CFG_SYNC;
-		} else if(radioAsync.isSelected()) { 
+		} else if(radioAsync.isSelected()) {
 			 cfg.type = GsSMVexportConfig.CFG_ASYNC;
-		} else { 
+		} else {
 			cfg.type = GsSMVexportConfig.CFG_ASYNCBIS;
 		}
-			 
+
 	}
 
 	protected void applyTest() {
@@ -218,7 +218,7 @@ public class GsSMVExportConfigPanel extends JPanel {
 		}
 		return initPanel;
 	}
-	
+
     /**
      * refresh the state blocking.
      * @param nodeOrder
@@ -248,7 +248,7 @@ class GsSMVConfigModel extends AbstractTableModel {
     private Vector nodeOrder;
     Map m_initstates;
 
-    
+
     /**
      * @param nodeOrder
      * @param t_min
@@ -341,7 +341,7 @@ class GsSMVConfigModel extends AbstractTableModel {
         if (rowIndex >= getRowCount() || columnIndex < 1 || columnIndex > 3) {
             return;
         }
-        
+
         if ("".equals(aValue) || "-".equals(aValue)) {
             switch(columnIndex) {
             case 1:
@@ -351,14 +351,14 @@ class GsSMVConfigModel extends AbstractTableModel {
             }
             return;
         }
-        
+
         int val;
         try {
             val = Integer.parseInt((String)aValue);
         } catch (Exception e) {
             return;
         }
-        
+
         if (val == -1) {
             switch(columnIndex) {
             case 1:
@@ -394,15 +394,15 @@ class GsSMVConfigModel extends AbstractTableModel {
 
 class GsMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
     private static final long serialVersionUID = 2348678706086666489L;
-    
+
     GsRegulatoryMutants listMutants;
     GsSMVexportConfig cfg;
-    
+
     GsMutantModel(GsSMVexportConfig cfg) {
     	this.cfg = cfg;
         this.listMutants = (GsRegulatoryMutants)cfg.graph.getObject(GsMutantListManager.key, true);
     }
-    
+
     void setMutantList(GsRegulatoryMutants mutants) {
             this.listMutants = mutants;
             fireContentsChanged(this, 0, getSize());

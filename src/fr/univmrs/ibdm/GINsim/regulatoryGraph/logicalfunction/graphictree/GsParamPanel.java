@@ -18,6 +18,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JLabel;
 import java.awt.Dimension;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 
 public class GsParamPanel extends GsBooleanFunctionTreePanel implements /*ItemListener,*/ MouseListener, MouseMotionListener {
   private static final long serialVersionUID = -7863256897019020183L;
@@ -41,8 +43,14 @@ public class GsParamPanel extends GsBooleanFunctionTreePanel implements /*ItemLi
     }
     else if (value.toString().equals("")) {
       //checkBox.setBackground(Color.cyan);
-      label.setBackground(Color.cyan);
-      setBackground(Color.cyan);
+      if (((GsTreeInteractionsModel)tree.getModel()).getVertex().getBaseValue() == ((GsTreeValue)value.getParent().getParent()).getValue()) {
+        label.setBackground(Color.cyan);
+        setBackground(Color.cyan);
+      }
+      else {
+        label.setBackground(Color.red);
+        setBackground(Color.red);
+      }
     }
     else {
       //checkBox.setBackground(Color.white);

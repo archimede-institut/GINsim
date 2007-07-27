@@ -105,14 +105,14 @@ public class GsTreeExpression extends GsTreeElement {
     }
     return null;
   }
-  public int getAllChildCount() {
+/*  public int getAllChildCount() {
     return childs.size();
   }
   public GsTreeElement getAllChild(int index) {
     if (index < childs.size())
       return (GsTreeElement)childs.elementAt(index);
     return null;
-  }
+  }*/
 
   public String toString() {
     if (expression == null) return "";

@@ -5,6 +5,8 @@ import javax.swing.JSpinner;
 import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsJTree;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 /**
  * model controlling spin buttons for base and max value of a GsRegulatoryVertex
@@ -124,6 +126,8 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
             m_max.update();
             m_min.update();
         }
+        if (vertex != null)
+          vertex.getInteractionsModel().refreshView();
     }
 
     /**

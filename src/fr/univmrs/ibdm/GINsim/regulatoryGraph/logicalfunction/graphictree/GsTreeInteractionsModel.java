@@ -23,6 +23,7 @@ public class GsTreeInteractionsModel implements TreeModel {
   //private Vector v_ok;
   private GsTreeString root;
 
+  private GsLogicalFunctionTreePanel view = null;
   private Vector treeModelListeners = new Vector();
 
   public GsTreeInteractionsModel(GsRegulatoryGraph graph) {
@@ -31,6 +32,12 @@ public class GsTreeInteractionsModel implements TreeModel {
     //this.v_ok = new Vector();
     this.interactions = null;
     this.graph = graph;
+  }
+  public void setView(GsLogicalFunctionTreePanel v) {
+    view = v;
+  }
+  public void refreshView() {
+    view.refresh();
   }
   public void clear() {
     root = new GsTreeString(null, "Function list");
