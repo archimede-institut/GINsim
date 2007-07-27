@@ -139,7 +139,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       tree.addMouseListener(componentAdapter);
       addComponentListener(cr);
     }
-    return tree;
+    return tree ;
   }
   public void refresh() {
     tree.stopEditing();
