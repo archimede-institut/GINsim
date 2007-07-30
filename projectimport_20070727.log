@@ -1,0 +1,24 @@
+(22:12:24:289) Importation du projet JBuilder "C:\Users\fafa\Developpement\GINsim.fabrice\GINsim.fabrice.jpx"
+(22:12:24:294) Ajout des liens sur des ressources pointant sur les répertoires des sources du projet JBuilder
+(22:12:24:351)    Le lien "src" pointe sur "C:\Users\fafa\Developpement\GINsim.fabrice\src"
+(22:12:24:358)    Le lien "test" pointe sur "C:\Users\fafa\Developpement\GINsim.fabrice\test"
+(22:12:24:358) Vérification des bibliothèques de projet à ajouter au chemin de classes
+(22:12:24:359) Impossible de trouver la bibliothèque "JUnit"
+(22:12:24:363)    Utilisation de la bibliothèque utilisateur Eclipse existante "GINsim_lib"
+(22:12:24:494) Ajout du moteur d'exécution Java au chemin de classes du projet
+(22:12:24:507) JRE du projet installé, donc disponible pour Eclipse
+(22:12:25:330) Vérification des options du compilateur Java par rapport aux valeurs par défaut de l'espace de travail
+(22:12:25:331)    Mise en conformité du source du projet avec 1.2
+(22:12:25:331) Le projet héritera de l'encodage de caractères par défaut de l'espace de travail compatible "Cp1252"
+(22:12:25:332) Vérification des configurations d'exécution/débogage du projet à ajouter à l'espace de travail
+(22:12:25:347)    Configuration "GINsim.fabrice-8-Configuration d'exécution sans titre" ajoutée
+(22:12:25:348) Aucun équivalent dans Eclipse pour le noeud de construction "GINSim" (type hb)
+(22:12:25:349)    Property category=archiving name=archiverClass value=com.borland.jbuilder.wizard.archive.ApplicationArchiver
+(22:12:25:349)    Property category=archiving name=buildWithProject value=0
+(22:12:25:349)    Property category=archiving name=contentRules.1 value=I:**/*.*
+(22:12:25:350)    Property category=archiving name=contentRules.2 value=F:src/fr/univmrs/ibdm/GINsim/ressources/GINML_2_0.dtd;fr/univmrs/ibdm/GINsim/ressources/GINML_2_0.dtd
+(22:12:25:350)    Property category=archiving name=contentRules.3 value=F:src/fr/univmrs/ibdm/GINsim/ressources/GINML_2_1.dtd;fr/univmrs/ibdm/GINsim/ressources/GINML_2_1.dtd
+(22:12:25:350)    Property category=archiving name=libraryStates.1 value=3:GINsim_lib
+(22:12:25:351)    Property category=archiving name=targetCompressed value=1
+(22:12:25:351)    Property category=archiving name=targetPath value=GINsim.fabrice.jar
+(22:12:25:351)    Property category=archiving name=usingRules value=1

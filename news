@@ -1,0 +1,130 @@
+Version 2.4.
+Changes since version 2.2:
+
+Definition of the regulatory graph:
+* entering logical parameters: allow to manually enter a formula (in progress)
+
+Analysis of the regulatory graph:
+* functionnality of circuits (in progress)
+* export the regulatory graph to petri net (INA & PNML)!
+   using the tree representation of logical parameters
+   each node will be represented by two places
+* export the regulatory graph in SBML
+   currently in SBML level 2, extensions have been proposed to make it more accurate
+* export in smv format, for model-checking by NuSMV
+* a "model checker" plugin has been started, to run several NuSMV tests automatically
+
+Simulation module:
+* the interface to set simulation parameters has been completely redone
+* mutants are now separate objects
+* mutants and simulation parameters are now saved with the graph (in extended mode)
+
+General
+* add "extended" save: save into a ZIP file, allows to save additional files along with the graph
+* the XML save has been cleaned up, more code is now reused and the encoding is well set
+* error and info messages have been added (within a bar, on the bottom of the graph)
+
+---------------------------------------------------------------------------------------------------------------------
+Version 2.2. 
+Changes since version 2.0:
+
+Definition of the regulatory graph:
+* warn about wrong logical parameters: if an invalid logical parameter is created
+(for exemple one using two mutually-exclusive interactions), it will be
+marked in red
+* allow reordering of logical parameters
+
+
+Simulation module:
+* faster simulation, using a tree representation of logical parameters
+* new simulation mode using priority classes:
+  - Genes are grouped into priority classes
+  - Each priority class has a rank (defined automatically as they are reordered): 
+    only transitions belonging to the highest ranked priority class will be triggered
+  - Concurrent transitions inside each class can happen either synchronously or asynchronously
+  - Transitions corresponding to increases and decreases can be separated
+  - Several classes can be grouped to have the same ranking
+     grouping classes that are already part of groups leads to merging these groups
+     concurrent transitions between classes of the same group happen asynchronously
+
+Working on state transition graphs:
+* The property-panel of edge and vertices of the state transition-graphs now
+allows to select the next state.
+
+Other:
+* use latest jgraph version, should fix some graph visualization bugs and slowdown
+* path-search starts with an existing state: one of the initial states of the simulation
+* updated default DTD to the new website address
+* additionnal new distribution format in a single .jar:
+  + lighter, one-click-to-run
+  - can't add additional plugin
+  - without documentation 
+
+* put the local DTD inside the jar file, some code changes to deal with this, jar dist 
+also have a fallback DTD now
+* add saving/restoring of "options" (in {HOME}/.ginsimrc)
+  - visual settings
+  - grid status
+  - recent files
+
+* new version of the documentation (in progress)
+
+---------------------------------------------------------------------------------------------------------------------
+Version 2.0. 
+Changes (bug fixes only) since version 2-beta:
+
+In the simulation module:
+* the transition blocking was too strict (restricted to the blocking of a single value in the specified range). 
+* initial states:
+ * when using ranges of values for initial states, some states were not created and some were created twice.
+ * when building a "full" state transition graph, one state was not created.
+
+---------------------------------------------------------------------------------------------------------------------
+Version 2.0 beta.
+Changes since the primary version v1.0:
+
+Definition of the regulatory graph:
+ * the user interface has been redesigned and simplified mainly for the definition of the parameters
+ * it is now possible to add some graph level annotations (the GINML DTD has been changed to take 
+   into account the new element "annotation")
+ * a new copy/paste implementation (still only internal to GINsim)
+        only available for regulatory graphs
+	available between different GINsim windows
+	with a cleaner implementation
+	graphical attributes are also restored, and pasted items are automatically selected
+
+Simulation module:
+ * after a simulation has been launched, a more detailed "what to do" window allows to choose an
+   action to be performed on the state transition graph
+ * new options have been added in the specification of the options for the simulation, 
+ 	transition blockings are now possible (facilitating the simulation of mutants)
+ 	simple priority mode defining a strict priority order between the nodes of the regulatory graph
+
+Working on state transition graphs:
+ * graph of the Strongly Connected Components (SCCs) of a state transition graph
+  	its calculation can now be stopped (may take a while)
+ 	new support for the extraction of the subgraph of the state transition graph corresponding to 
+	a set of nodes of the SCC graph
+ * paths determination/discovery in a state transition graph
+   	interactive construction, the regulatory graph is colored to match the selected state
+	interactive shortest path search (going through a set of states), for this option, there is no need
+	to display the state transtion graph
+	a path can be exported to a gnuplot script
+
+Management of regulatory graphs and state transition graphs:
+ * graphviz and biolayout export
+ * graphical attributes now support line width and can apply to all elements or to the selected elements
+ * graph association performed automatically when possible:
+	association between a regulatory graph and a state transition graph (used for animation)
+        association between a state transition graph and the graph of its stronlgy connected components (SCCs)
+       (used to extract a subgraph of the state transition graph corresponding to selected SCCs)
+ * new SVG export  using markers and  bezier tools from  jgraph
+ * automatic fallback to local DTD when the specified one is not available
+ * improvement of the default options when saving a graph (deduced from the previously saved data)
+ * new option to put all vertices foreground or background in such a way that selection is easier in large
+   graphs
+
+
+New runtime options:
+	--lang [C/FR] to set the language (C for english, FR for french)
+	[file] to open the specified file
