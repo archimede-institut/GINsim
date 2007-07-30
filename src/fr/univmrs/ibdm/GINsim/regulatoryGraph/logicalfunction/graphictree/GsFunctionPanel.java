@@ -74,7 +74,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     textArea.addKeyListener(this);
     add(buttonPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                             GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    Vector v = null;
+    //Vector v = null;
     //if (treeElement.containsUnselectChild()) {
     //  showButton.setEnabled(true);
     //  hideButton.setEnabled(true);
@@ -131,7 +131,8 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
       (((BasicSplitPaneUI)splitPane.getUI()).getDivider()).addMouseListener(this);
     }
     else {*/
-      add(jsp, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    	UIManager.put("ScrollBar.width", new Integer(2 * charWidth));
+    	add(jsp, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                       GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
       if ((width >= 0) && (charWidth > 0)) {
         int nbCols = width / charWidth;

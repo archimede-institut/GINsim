@@ -22,6 +22,9 @@ public abstract class GsTreeElement implements Comparable {
     dropable = false;
     edited = false;
   }
+  public void setParent(GsTreeElement parent) {
+    this.parent = parent;
+  }
   public GsTreeElement getChild(int index) {
     GsTreeElement te = null;
     //int i = 0, n = 0;
@@ -35,9 +38,13 @@ public abstract class GsTreeElement implements Comparable {
     }
     return te;
   }
-  public GsTreeElement addChild(GsTreeElement element) {
+  public GsTreeElement addChild(GsTreeElement element, int index) {
     if ((childs != null) && (element != null))
-      if (!childs.contains(element)) childs.addElement(element);
+      if (!childs.contains(element))
+        if (index == -1)
+          childs.addElement(element);
+        else
+          childs.insertElementAt(element, index);
     for (int i = 0; i < childs.size(); i++)
       if (childs.elementAt(i).equals(element))
         return (GsTreeElement)childs.elementAt(i);

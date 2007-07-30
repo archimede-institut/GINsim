@@ -14,10 +14,10 @@ import java.util.Set;
 
 public class GsParamTree {
   private GsParamTreeElement root = null;
-  private int depth = -1, defaultValue = 0, basalValue;
+  private int depth = -1, defaultValue = 0;
   private ArrayList vertexList;
 
-  public GsParamTree(ArrayList l, int dv, int bv) {
+  public GsParamTree(ArrayList l, int dv) {
     super();
     vertexList = l;
     Iterator it = vertexList.iterator();
@@ -29,11 +29,12 @@ public class GsParamTree {
         addLevel(++depth, (GsRegulatoryVertex)e.getKey(), (GsRegulatoryMultiEdge)e.getValue());
     }
     addLeaves(dv);
+    defaultValue = dv;
+  }
+  public void setBasalValue(int bv) {
     GsParamTreeElement node = root;
     while (!node.isLeaf()) node = node.getSon(0);
     ((GsParamTreeLeafValue)node).setValue(new Integer(bv));
-    defaultValue = dv;
-    basalValue = bv;
   }
   private void addLevel(int level, GsRegulatoryVertex v, GsRegulatoryMultiEdge me) {
     GsParamTreeNode e;

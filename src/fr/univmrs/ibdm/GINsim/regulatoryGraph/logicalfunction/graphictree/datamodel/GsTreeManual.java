@@ -3,7 +3,6 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datam
 public class GsTreeManual extends GsTreeElement {
   public GsTreeManual(GsTreeElement parent) {
     super(parent);
-
   }
   public String toString() {
     return "Added parameters";
@@ -11,5 +10,4 @@ public class GsTreeManual extends GsTreeElement {
   public boolean isLeaf() {
     return false;
   }
-
 }

@@ -19,7 +19,7 @@ public class GsFunctionsCreator {
     this.interactions = interactions;
     this.currentVertex = currentVertex;
   }
-  public Hashtable doIt() {
+  public Hashtable doIt(boolean fixBasalValue) {
     List l = graphManager.getIncomingEdges(currentVertex);
     Iterator it = l.iterator();
     GsDirectedEdge de;
@@ -62,7 +62,8 @@ public class GsFunctionsCreator {
       v = (GsRegulatoryVertex)e.getKey();
       e.setValue(((GsDirectedEdge)graphManager.getEdge(v, currentVertex)).getUserObject());
     }
-    tree = new GsParamTree(as, 0, (int)currentVertex.getBaseValue());
+    tree = new GsParamTree(as, 1234);
+    if (fixBasalValue) tree.setBasalValue((int)currentVertex.getBaseValue());
     tree.init(interactions);
     tree.process();
     tree.findPatterns();

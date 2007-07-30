@@ -12,25 +12,26 @@ import java.util.Enumeration;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionTreePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import javax.swing.SwingUtilities;
 import java.awt.Point;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
-import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 
 public class GsDropListener implements DropTargetListener {
   private GsTransferable transferable;
   private JTree tree;
+  private GsLogicalFunctionTreePanel panel;
   private GsTreeElement previousDropable;
   private GsGlassPane glassPane;
 
-  public GsDropListener(JTree tree, GsGlassPane gp) {
-    this.tree = tree;
+  public GsDropListener(GsLogicalFunctionTreePanel panel, GsGlassPane gp) {
+    tree = panel.getTree();
+    this.panel = panel;
     previousDropable = null;
     glassPane = gp;
   }
@@ -79,6 +80,7 @@ public class GsDropListener implements DropTargetListener {
     GsTreeElement choosenElement;
     Enumeration enu_expanded, enu;
     GsTreeParam param;
+    boolean move;
 
     if (tree != null) {
       tree.stopEditing();
@@ -100,125 +102,26 @@ public class GsDropListener implements DropTargetListener {
           GsTreeElement[] te = (GsTreeElement[])data;
           tp = tree.getPathForLocation(dtde.getLocation().x, dtde.getLocation().y);
           choosenElement = (GsTreeElement)tp.getLastPathComponent();
-          for (int i = 0; i < te.length; i++) {
-            // transfert d'un parametre dans une fonction (= inactivation d'un parametre)
-            //if ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeExpression)) {
-            //te[i].setChecked(false);
-            //  if (tree != null) {
-            //    Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-            //    interactionsModel.refreshVertex();
-            //    tree.stopEditing();
-            //    interactionsModel.fireTreeStructureChanged(te[i].getParent());
-            //   while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
-            //  }
-            //}
-            //transfert d'une fonction dans une valeur (= changement de valeur pour une fonction)
-            /*else*/
-            if ((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeValue)) {
-              try {
-                if (((GsTreeValue)te[i].getParent()).getValue() != ((GsTreeValue)choosenElement).getValue()) {
-                  enu_expanded = tree.getExpandedDescendants(tree.getPathForRow(0));
-                  interactionsModel.addExpression(tree, (short)((GsTreeValue)choosenElement).getValue(),
-                                                  interactionsModel.getVertex(), te[i].toString());
-                  if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) te[i].remove(false);
-                  interactionsModel.removeNullFunction((short)((GsTreeValue)choosenElement).getValue());
-                  interactionsModel.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).
-                    getLastPathComponent());
-                  interactionsModel.refreshVertex();
-                  while (enu_expanded.hasMoreElements()) {
-                    tp = (TreePath)enu_expanded.nextElement();
-                    tree.expandPath(tp);
-                  }
-                }
-              }
-              catch (Exception ex) {
-                ex.printStackTrace();
-              }
-            }
-            else if ((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeManual)) {
-              enu_expanded = tree.getExpandedDescendants(tree.getPathForRow(0));
-              enu = te[i].getChilds().elements();
-              while (enu.hasMoreElements()) {
-                param = (GsTreeParam)enu.nextElement();
-                ((GsTreeManual)choosenElement).addChild(new GsTreeParam(choosenElement, param.getEdgeIndexes()));
-              }
-              if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) te[i].remove(false);
-              interactionsModel.fireTreeStructureChanged((GsTreeElement) tree.getPathForRow(0).getLastPathComponent());
-              interactionsModel.refreshVertex();
-              while (enu_expanded.hasMoreElements()) {
-                tp = (TreePath)enu_expanded.nextElement();
-                tree.expandPath(tp);
-              }
-            }
-            else if ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeValue)) {
-              if (((GsTreeValue)choosenElement).getValue() != ((GsTreeValue)te[i].getParent()).getValue()) {
-                enu_expanded = tree.getExpandedDescendants(tree.getPathForRow(0));
-                enu = te[i].getChilds().elements();
-                while (enu.hasMoreElements()) {
-                  param = (GsTreeParam)enu.nextElement();
-                  choosenElement.getChild(0).addChild(new GsTreeParam(choosenElement.getChild(0),
-                    param.getEdgeIndexes()));
-                }
-                if (dtde.getDropAction() == DnDConstants.ACTION_MOVE)te[i].clearChilds();
-                interactionsModel.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).
-                  getLastPathComponent());
-                interactionsModel.refreshVertex();
-                while (enu_expanded.hasMoreElements()) {
-                  tp = (TreePath)enu_expanded.nextElement();
-                  tree.expandPath(tp);
-                }
-              }
-            }
-            else if ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeManual)) {
-              if (choosenElement != te[i]) {
-                enu_expanded = tree.getExpandedDescendants(tree.getPathForRow(0));
-                enu = te[i].getChilds().elements();
-                while (enu.hasMoreElements()) {
-                  param = (GsTreeParam)enu.nextElement();
-                  choosenElement.addChild(new GsTreeParam(choosenElement, param.getEdgeIndexes()));
-                }
-                if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) te[i].clearChilds();
-                interactionsModel.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).
-                  getLastPathComponent());
-                interactionsModel.refreshVertex();
-                while (enu_expanded.hasMoreElements()) {
-                  tp = (TreePath)enu_expanded.nextElement();
-                  tree.expandPath(tp);
-                }
-              }
-            }
-            else if ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeValue)) {
-              enu_expanded = tree.getExpandedDescendants(tree.getPathForRow(0));
-              choosenElement.getChild(0).addChild(new GsTreeParam(choosenElement.getChild(0),
-                ((GsTreeParam)te[i]).getEdgeIndexes()));
-              if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) te[i].remove(false);
-              interactionsModel.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).getLastPathComponent());
-              interactionsModel.refreshVertex();
-              while (enu_expanded.hasMoreElements()) {
-                tp = (TreePath)enu_expanded.nextElement();
-                tree.expandPath(tp);
-              }
-            }
-            else if ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeManual)) {
-              enu_expanded = tree.getExpandedDescendants(tree.getPathForRow(0));
-              choosenElement.addChild(new GsTreeParam(choosenElement, ((GsTreeParam)te[i]).getEdgeIndexes()));
-              if (dtde.getDropAction() == DnDConstants.ACTION_MOVE) te[i].remove(false);
-              interactionsModel.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).getLastPathComponent());
-              interactionsModel.refreshVertex();
-              while (enu_expanded.hasMoreElements()) {
-                tp = (TreePath)enu_expanded.nextElement();
-                tree.expandPath(tp);
-              }
-            }
-            // transfert d'une valeur dans la racine (= simple reorganisation des valeurs)
-            //else if ((choosen == GsTransferable.VALUE_FLAVOR) && (choosenElement == tree.getPathForRow(0).getLastPathComponent())) {
+          move = (dtde.getDropAction() == DnDConstants.ACTION_MOVE);
 
-            //}
-            //}
-            else
-              dtde.rejectDrop();
-            if (previousDropable != null) previousDropable.setDropable(false);
-          }
+          //transfert d'une fonction dans une valeur (= changement de valeur pour une fonction)
+          if ((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeValue))
+            panel.pasteFunctionsInValue(te, move, (GsTreeValue)choosenElement);
+
+          // transfert d'une valeur dans la racine (= simple reorganisation des valeurs)
+          else if ((choosen == GsTransferable.VALUE_FLAVOR) && (choosenElement == tree.getPathForRow(0).getLastPathComponent()))
+            panel.pasteValuesInRoot(te, (GsTreeString)choosenElement);
+          if ((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeManual))
+            panel.pasteFunctionsInManual(te, move, (GsTreeManual)choosenElement);
+          else if ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeValue))
+            panel.pasteManualsInValue(te, move, (GsTreeValue)choosenElement);
+          else if ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeManual))
+            panel.pasteManualsInValue(te, move, (GsTreeValue)choosenElement.getParent());
+          else if ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeValue))
+            panel.pasteParamsInValue(te, move, (GsTreeValue)choosenElement);
+          else if ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeManual))
+            panel.pasteParamsInValue(te, move, (GsTreeValue)choosenElement.getParent());
+          if (previousDropable != null) previousDropable.setDropable(false);
         }
       }
       catch (Throwable t) {

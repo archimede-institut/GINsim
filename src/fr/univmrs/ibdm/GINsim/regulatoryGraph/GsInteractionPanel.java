@@ -29,11 +29,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsMain;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import javax.swing.tree.TreePath;
 
 /**
  * Panel to edit interaction of a gene
@@ -700,12 +697,22 @@ public class GsInteractionPanel extends GsParameterPanel {
     }
 
     private void doChaos() {
-      GsFunctionsCreator c = new GsFunctionsCreator(graph.getGraphManager(),
-                                 ((GsTableInteractionsModel)jTable.getModel()).getInteractions(), currentVertex);
-      Hashtable h = c.doIt();
+      GsFunctionsCreator c = null;
+      Vector v = new Vector();
+      Vector interactions = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
+      //int[] sel;
+
+      //if (jTable.getSelectionModel().isSelectionEmpty())
+        c = new GsFunctionsCreator(graph.getGraphManager(), interactions, currentVertex);
+      //else {
+      //  sel = jTable.getSelectedRows();
+      //  for (int i = 0; i < sel.length; i++) v.addElement(interactions.elementAt(sel[i]));
+      //  c = new GsFunctionsCreator(graph.getGraphManager(), v, currentVertex);
+      //}
+
+      Hashtable h = c.doIt(true);
 
       Enumeration enu = h.keys();
-      Vector v;
       Integer key;
       String s;
 

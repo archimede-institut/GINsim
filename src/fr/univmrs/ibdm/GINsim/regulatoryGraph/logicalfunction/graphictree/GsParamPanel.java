@@ -3,22 +3,15 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.Enumeration;
 
-import javax.swing.JCheckBox;
 import javax.swing.JTree;
-import javax.swing.tree.TreePath;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JLabel;
 import java.awt.Dimension;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 
 public class GsParamPanel extends GsBooleanFunctionTreePanel implements /*ItemListener,*/ MouseListener, MouseMotionListener {

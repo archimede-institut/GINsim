@@ -57,6 +57,7 @@ public class GsManualPanel extends GsBooleanFunctionTreePanel implements ActionL
     path[2] = param.getParent();
     path[1] = param.getParent().getParent();
     treePath = new TreePath(path);
+    tree.scrollPathToVisible(treePath);
     tree.setSelectionPath(treePath);
     choiceWindow = new GsParameterChoiceWindow(tree);
     choiceWindow.init(model.getGraph().getGraphManager().getIncomingEdges(model.getVertex()), defaultFont, param,

@@ -1,7 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
 import java.awt.event.*;
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.tree.*;

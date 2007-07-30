@@ -128,16 +128,21 @@ public class GsTreeInteractionsModel implements TreeModel {
 
   public void addValue(short v) {
     GsTreeValue val = new GsTreeValue(root, v);
-    root.addChild(val);
+    root.addChild(val, -1);
     GsTreeValue value;
     GsTreeManual manual;
     for (int i = 0; i < root.getChildCount(); i++) {
       value = (GsTreeValue)root.getChild(i);
       if (value.getValue() == v) {
         manual = new GsTreeManual(value);
-        value.addChild(manual);
+        value.addChild(manual, -1);
       }
     }
+  }
+
+  public void addValue(GsTreeValue v) {
+    root.addChild(v, -1);
+    v.setParent(root);
   }
 
   public void removeNullFunction(short v) {
@@ -164,7 +169,7 @@ public class GsTreeInteractionsModel implements TreeModel {
       value = (GsTreeValue)root.getChild(i);
       if (value.getValue() == v) {
         expression = new GsTreeExpression(value, boolRoot);
-        expression = (GsTreeExpression)value.addChild(expression);
+        expression = (GsTreeExpression)value.addChild(expression, -1);
         return expression;
       }
     }
@@ -194,7 +199,7 @@ public class GsTreeInteractionsModel implements TreeModel {
       }
       if (v.size() > 0) setActivesEdges(v, val);
       param = new GsTreeParam(exp, v);
-      exp.addChild(param);
+      exp.addChild(param, -1);
     }
     parseFunctions();
     currentVertex.setInteractionsModel(this);
@@ -256,7 +261,7 @@ public class GsTreeInteractionsModel implements TreeModel {
       if (value.getValue() == val) {
         manual = (GsTreeManual)value.getChild(0);
         param = new GsTreeParam(manual, new Vector());
-        manual.addChild(param);
+        manual.addChild(param, -1);
       }
     }
     return param;
@@ -303,7 +308,7 @@ public class GsTreeInteractionsModel implements TreeModel {
           }
           if (v.size() > 0) setActivesEdges(v, val);
           GsTreeParam param = new GsTreeParam(exp, v);
-          exp.addChild(param);
+          exp.addChild(param, -1);
         }
         parseFunctions();
 

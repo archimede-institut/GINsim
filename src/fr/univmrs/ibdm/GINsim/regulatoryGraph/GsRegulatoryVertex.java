@@ -13,7 +13,6 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
@@ -119,7 +118,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 */
 	public void setMaxValue(short max, GsRegulatoryGraph graph) {
     if (!getInteractionsModel().isMaxCompatible(max)) {
-      graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
+      //graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
     }
     else
 	    if (max>0) {
@@ -434,7 +433,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
       GsTreeString root = (GsTreeString)interactionsModel.getRoot();
       GsTreeValue val;
       GsTreeElement exp;
-      GsTreeParam param;
+      //GsTreeParam param;
       //String chk;
 
       for (int i = 0; i < root.getChildCount(); i++) {
