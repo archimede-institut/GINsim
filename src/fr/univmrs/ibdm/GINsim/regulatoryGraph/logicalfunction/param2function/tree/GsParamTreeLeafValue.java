@@ -33,7 +33,7 @@ public class GsParamTreeLeafValue extends GsParamTreeLeaf {
         v = (Vector)h.get(new Integer(value));
         v.addElement(f);
       }
-      else {
+      else if (!f.equals("")) {
         v = new Vector();
         v.addElement(f);
         h.put(new Integer(value), v);

@@ -32,7 +32,7 @@ public class GsParamTreeLeafPattern extends GsParamTreeLeaf {
       v = (Vector)h.get(this);
       v.addElement(f);
     }
-    else {
+    else if (!f.equals("")) {
       v = new Vector();
       v.addElement(f);
       h.put(this, v);

@@ -112,7 +112,7 @@ public abstract class GsTreeElement implements Comparable {
   public void remove(boolean removeParent) {
     if (parent != null) {
       for (int i = 0; i < parent.getChildCount(); i++) {
-        if (parent.getChild(i).equals(this)) {
+        if (parent.getChild(i) == this) {
           parent.removeChild(i);
           if ((parent.getChildCount() == 0) && removeParent)
             parent.remove(removeParent);

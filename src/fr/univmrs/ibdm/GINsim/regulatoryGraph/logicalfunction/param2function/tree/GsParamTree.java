@@ -136,44 +136,48 @@ public class GsParamTree {
 
     while (ok) {
       lastNodes.clear();
-      getLastNodes(lastNodes, root);
-      hm = new HashMap();
-      for (Enumeration enu = lastNodes.elements(); enu.hasMoreElements(); ) {
-        node = (GsParamTreeNode)enu.nextElement();
-        if (!hm.containsKey(node))
-          hm.put(node, new Integer(1));
-        else
-          hm.put(node, new Integer(((Integer)hm.get(node)).intValue() + 1));
-      }
-      Set set = hm.entrySet();
-      Iterator it = set.iterator();
-      ok = false;
-      while (it.hasNext()) {
-        node = (GsParamTreeNode)((Entry)(it.next())).getKey();
-        if (((Integer)hm.get(node)).intValue() > 1) {
-          treeLeaf = new GsParamTreeLeafPattern();
-          treeLeaf.setName("P" + np);
-          treeLeaf.buildFunctions(node, defaultValue);
-          //h = treeLeaf.getFunctions();
-          //System.out.println(treeLeaf.toString());
-          //node.print(0);
-          //for (Enumeration enu = h.keys(); enu.hasMoreElements(); )
-          //  System.out.println("  " + h.get(enu.nextElement()));
-          for (Enumeration enu = lastNodes.elements(); enu.hasMoreElements(); ) {
-            lastn = (GsParamTreeNode)enu.nextElement();
-            if (lastn.hashCode() == node.hashCode()) {
-              parent = lastn.getParent();
-              for (int i = 0; i < parent.getNbSons(); i++) {
-                if (parent.getSon(i).equals(node)) {
-                  parent.setSon(i, treeLeaf);
+      if (!root.isLeaf()) {
+        getLastNodes(lastNodes, root);
+        hm = new HashMap();
+        for (Enumeration enu = lastNodes.elements(); enu.hasMoreElements(); ) {
+          node = (GsParamTreeNode)enu.nextElement();
+          if (!hm.containsKey(node))
+            hm.put(node, new Integer(1));
+          else
+            hm.put(node, new Integer(((Integer)hm.get(node)).intValue() + 1));
+        }
+        Set set = hm.entrySet();
+        Iterator it = set.iterator();
+        ok = false;
+        while (it.hasNext()) {
+          node = (GsParamTreeNode)((Entry)(it.next())).getKey();
+          if (((Integer)hm.get(node)).intValue() > 1) {
+            treeLeaf = new GsParamTreeLeafPattern();
+            treeLeaf.setName("P" + np);
+            treeLeaf.buildFunctions(node, defaultValue);
+            //h = treeLeaf.getFunctions();
+            //System.out.println(treeLeaf.toString());
+            //node.print(0);
+            //for (Enumeration enu = h.keys(); enu.hasMoreElements(); )
+            //  System.out.println("  " + h.get(enu.nextElement()));
+            for (Enumeration enu = lastNodes.elements(); enu.hasMoreElements(); ) {
+              lastn = (GsParamTreeNode)enu.nextElement();
+              if (lastn.hashCode() == node.hashCode()) {
+                parent = lastn.getParent();
+                for (int i = 0; i < parent.getNbSons(); i++) {
+                  if (parent.getSon(i).equals(node)) {
+                    parent.setSon(i, treeLeaf);
+                  }
                 }
               }
             }
+            np++;
+            ok = true;
           }
-          np++;
-          ok = true;
         }
       }
+      else
+        ok = false;
     }
   }
   public void print() {

@@ -64,6 +64,7 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
     try {
       UIManager.put("ScrollBar.width", new Integer(12));
       jbInit();
+      setAlwaysOnTop(true);
       setUndecorated(true);
       setModal(true);
       pack();

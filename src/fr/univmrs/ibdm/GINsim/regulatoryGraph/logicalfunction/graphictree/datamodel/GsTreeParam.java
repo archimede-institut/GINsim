@@ -13,13 +13,18 @@ public class GsTreeParam extends GsTreeElement {
     this.edgeIndexes = v;
     error = warning = false;
   }
+  public GsTreeParam(GsTreeElement parent) {
+    super(parent);
+    edgeIndexes = null;
+  }
   public String toString() {
     String s = "";
     GsEdgeIndex ei;
-    for (Iterator it = edgeIndexes.iterator(); it.hasNext(); ) {
-      ei = (GsEdgeIndex)it.next();
-      s = s + " " + ei.data.getId(ei.index);
-    }
+    if (edgeIndexes != null)
+      for (Iterator it = edgeIndexes.iterator(); it.hasNext(); ) {
+        ei = (GsEdgeIndex)it.next();
+        s = s + " " + ei.data.getId(ei.index);
+      }
     return s.trim();
   }
   public Vector getEdgeIndexes() {
@@ -39,5 +44,17 @@ public class GsTreeParam extends GsTreeElement {
   }
   public boolean isWarning() {
     return warning;
+  }
+  public boolean isBasal() {
+    return edgeIndexes == null;
+  }
+  public int compareTo(Object o) {
+    GsTreeElement element = (GsTreeElement)o;
+    if (toString().equals(element.toString()) && toString().equals("") && (element instanceof GsTreeParam))
+      if (isBasal() && ((GsTreeParam)element).isBasal())
+        return 0;
+      else
+        return 1;
+    return toString().compareTo(element.toString());
   }
 }

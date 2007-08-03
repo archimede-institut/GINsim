@@ -268,17 +268,11 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
 	  transferable = null;
 	}
 	else if (e.getActionCommand().equals(GsTreeMenu.CREATE_1_FUNCTION)) {
-      TreePath[] selectedPaths = tree.getSelectionPaths();
       createFunctions(true);
-      tree.setSelectionPaths(selectedPaths);
-      deleteSelection();
-	}
+    }
 	else if (e.getActionCommand().equals(GsTreeMenu.CREATE_N_FUNCTIONS)) {
-      TreePath[] selectedPaths = tree.getSelectionPaths();
       createFunctions(false);
-      tree.setSelectionPaths(selectedPaths);
-      deleteSelection();
-	}
+    }
   }
   public void valueChanged(TreeSelectionEvent e) {
     TreePath[] selectedPaths = tree.getSelectionPaths();
@@ -435,23 +429,38 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
     }
   }
   private void createFunctions(boolean oneFunction) {
-    if (current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR)
-      doChaos(current_transferable.getNodes(), oneFunction);
+    boolean res = false;
+    TreePath[] selectedPaths = tree.getSelectionPaths();
+    if (current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR) {
+      res = doChaos(current_transferable.getNodes(), oneFunction);
+      if (res) {
+        tree.setSelectionPaths(selectedPaths);
+        deleteSelection();
+      }
+    }
     else {
       GsTreeElement[] manuals = current_transferable.getNodes();
       GsTreeElement[] te;
       Object[] o;
+      Object[]path = new Object[3];
       for (int i = 0; i < manuals.length; i++) {
         o = manuals[i].getChilds().toArray();
         if (o.length > 0) {
           te = new GsTreeElement[o.length];
           for (int k = 0; k < o.length; k++) te[k] = (GsTreeElement)o[k];
-          doChaos(te, oneFunction);
+          res = doChaos(te, oneFunction);
+          if (res) {
+            path[0] = tree.getModel().getRoot();
+            path[1] = manuals[i].getParent();
+            path[2] = manuals[i];
+            tree.setSelectionPath(new TreePath(path));
+            deleteSelection();
+          }
         }
       }
     }
   }
-  private void doChaos(GsTreeElement[] params, boolean oneFunction) {
+  private boolean doChaos(GsTreeElement[] params, boolean oneFunction) {
     GsFunctionsCreator c = null;
     Vector v = new Vector();
     int value = ((GsTreeValue)params[0].getParent().getParent()).getValue();
@@ -500,5 +509,6 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       }
     interactionList.setRootInfos();
     interactionList.fireTreeStructureChanged((GsTreeElement)interactionList.getRoot());
+    return !h.isEmpty();
   }
 }
