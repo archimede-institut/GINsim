@@ -10,7 +10,11 @@
 		<plugin name="analyseStateTransition" mainClass="fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicAnalyserPlugin" load="true"/>
 		<plugin name="export" mainClass="fr.univmrs.ibdm.GINsim.export.GsExportPlugin" load="true" depend=""/>
 		<plugin name="PNexport" mainClass="fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsPetriNetExport" load="true" depend=""/>
-		<plugin name="SMVexport" mainClass="fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExport" load="true" depend=""/>
+		<plugin mainClass="fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExport" load="true" depend="" name="SMVexport"/><plugin
+			name="HTMLExport"
+			mainClass="fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsHTMLExport"
+			load="true">
+</plugin>
 		<plugin name="GNAexport" mainClass="fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsGNAExport" load="false" depend=""/>
 		<plugin name="connectivity" mainClass="fr.univmrs.ibdm.GINsim.connectivity.ConnectivityPlugin" load="true" depend=""/>
 		<plugin name="animate" mainClass="fr.univmrs.ibdm.GINsim.aRegGraph.GsARegGraphPlugin" load="true"/>

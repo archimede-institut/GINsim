@@ -39,7 +39,6 @@ public class GsInitStateTableModel extends AbstractTableModel {
         this.imanager = imanager;
         this.several = several;
 		nbCol = nodeOrder.size();
-        setValueAt("0", 0, 0);
 	}
 
 	public int getRowCount() {
@@ -74,7 +73,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 		Vector element;
 
 		if (columnIndex == 0) {
-			if (m_initState == null || rowIndex >= imanager.getNbElements()) {
+			if (rowIndex >= imanager.getNbElements()) {
 				return "";
 			}
 			return ((GsInitialState)imanager.getElement(rowIndex)).getName();

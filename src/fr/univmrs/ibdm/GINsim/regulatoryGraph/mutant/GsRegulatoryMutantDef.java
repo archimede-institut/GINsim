@@ -37,20 +37,20 @@ public class GsRegulatoryMutantDef implements GsNamedObject {
         return name;
     }
 
-    int getNbChanges() {
+    public int getNbChanges() {
         return v_changes.size();
     }
     
-    String getName(int index) {
+    public String getName(int index) {
         GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)v_changes.get(index);
         return change.vertex.toString();
     }
     
-    short getMin(int index) {
+    public short getMin(int index) {
         return ((GsRegulatoryMutantChange)v_changes.get(index)).getMin();
     }
 
-    short getMax(int index) {
+    public short getMax(int index) {
         return ((GsRegulatoryMutantChange)v_changes.get(index)).getMax();
     }
     void setMin(int index, short val) {

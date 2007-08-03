@@ -114,7 +114,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
             if (aValue instanceof String)
                 value = Integer.parseInt((String) aValue);
             if (value <= node.getMaxValue() && value >= 0)
-                ((GsLogicalParameter) interactions.get(rowIndex)).setValue(value);
+                ((GsLogicalParameter) interactions.get(rowIndex)).setValue(value, graph);
             fireTableCellUpdated(rowIndex, columnIndex);
         } else if (rowIndex >= interactions.size() && columnIndex == 0) {
             // TODO: information message about basal value and how to set up parameters

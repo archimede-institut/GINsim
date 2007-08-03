@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 
@@ -52,8 +53,11 @@ public class GsLogicalParameter implements GsXMLize {
 	 * set value of the interaction
 	 * @param i
 	 */
-	public void setValue(int i) {
-		value = i;
+	public void setValue(int i, GsGraph graph) {
+		if (i != value) {
+			value = i;
+			graph.fireMetaChange();
+		}
 	}
 
 	/**

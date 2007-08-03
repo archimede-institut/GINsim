@@ -16,6 +16,7 @@ public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
 	public static final int CFG_ASYNCBIS = 2;
+	public static final int CFG_APNN = 3;
 
     GsRegulatoryGraph graph;
     Map m_initStates;

@@ -4,6 +4,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -13,14 +15,22 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.stableStates.GenericStableStateUI;
 import fr.univmrs.ibdm.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
+
 
 public class GsExportStable extends JPanel implements GenericStableStateUI {
 	/**
@@ -29,12 +39,14 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 	private static final long serialVersionUID = 1L;
     JLabel  etatStable = null;
     StableTableModel tableModel = null;
-    JButton calculer, sauvegarder = null;
+    JButton calculer, formule, html = null;
     private GsSMVexportConfig cfg;
     private JTextArea text;
-    String formule;
+    GsInitialStateList initStates;
+    GsInitialState name;
     GsExportConfig config;
-
+    GsRegulatoryMutantDef mutant;
+    
 	public GsExportStable (GsExtensibleConfig config, JTextArea text){
 		super();
 		if (config.getSpecificConfig() == null) {
@@ -43,7 +55,6 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 		this.text = text;
 		this.cfg = (GsSMVexportConfig)config.getSpecificConfig();
     	initialize();
-		
 		
 	}
 
@@ -60,7 +71,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 		GridBagConstraints cst = new GridBagConstraints();
         cst.gridx = 0;
         cst.gridy = 2;
-        cst.gridwidth = 2;
+        cst.gridwidth = 3;
         cst.weightx = 1;
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
@@ -77,34 +88,90 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 			run();
 			}
 	    });
-	    sauvegarder = new JButton(Translator.getString("STR_save"));
+	    formule = new JButton("Formule");
 	    cst = new GridBagConstraints();
 	    cst.gridx = 1;
 	    cst.gridy = 3;
 	    cst.anchor = GridBagConstraints.WEST;
-	    add(sauvegarder,cst);
-	    sauvegarder.addActionListener(new ActionListener() {
+	    add(formule,cst);
+	    formule.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
+	    		switch(cfg.type) {
+	    		case GsSMVexportConfig.CFG_ASYNC:
+	    			
 	    		StringBuffer s = new StringBuffer("");
+	    		
 	    		int i;
 	    		Vector v_no = cfg.graph.getNodeOrder();
 	    		int[] checked = tableModel.getCheckedRow();
 	    		s.append("SPEC EF ( AG (");
 	    		for ( i=0; i<(checked.length-1) ;i++) {
 	    		s.append(v_no.get(i));
-	    		s.append(" = ");
+	    		s.append(".level = ");
 	    		s.append(checked[i]);
 	    		s.append(" & ");
 	    		}
 	    		s.append(v_no.get(i));
-	    		s.append(" = ");
+	    		s.append(".level = ");
 	    		s.append(checked[i]);
 	    		s.append(") )");
 	    		text.setText(s.toString());
+	    	break;
+	    	case GsSMVexportConfig.CFG_SYNC:
+	    		s = new StringBuffer("");
+		    	v_no = cfg.graph.getNodeOrder();
+		    	checked = tableModel.getCheckedRow();
+		    	s.append("SPEC EF ( AG (");
+		    	for ( i=0; i<(checked.length-1) ;i++) {
+		    	s.append(v_no.get(i));
+		    	s.append(" = ");
+		    	s.append(checked[i]);
+		    	s.append(" & ");
+		    	}
+		    	s.append(v_no.get(i));
+		    	s.append(" = ");
+		    	s.append(checked[i]);
+		    	s.append(") )");
+		    	text.setText(s.toString());
+		    break;
+	    	case GsSMVexportConfig.CFG_ASYNCBIS:
+	    		s = new StringBuffer("");
+		    	v_no = cfg.graph.getNodeOrder();
+		    	checked = tableModel.getCheckedRow();
+		    	s.append("SPEC EF ( AG (");
+		    	for ( i=0; i<(checked.length-1) ;i++) {
+		    	s.append(v_no.get(i));
+		    	s.append(" = ");
+		    	s.append(checked[i]);
+		    	s.append(" & ");
+		    	}
+		    	s.append(v_no.get(i));
+		    	s.append(" = ");
+		    	s.append(checked[i]);
+		    	s.append(") )");
+		    	text.setText(s.toString());
+		    break;
+	    	default:
+	    		s = new StringBuffer("");
+	    		v_no = cfg.graph.getNodeOrder();
+	    		checked = tableModel.getCheckedRow();
+	    		s.append("EF ( AG (");
+	    		for ( i=0; i<(checked.length-1) ;i++) {
+	    			s.append(v_no.get(i));
+	    			s.append(" == ");
+	    			s.append(checked[i]);
+	    			s.append(" & ");
+	    		}
+	    		s.append(v_no.get(i));
+	    		s.append(" == ");
+	    		s.append(checked[i]);
+	    		s.append(") );");
+	    		text.setText(s.toString());
+	    	break;
+	    		}
 	    	}
 	    	
 	    });
-	    
 	}
 	
 	protected void run() {

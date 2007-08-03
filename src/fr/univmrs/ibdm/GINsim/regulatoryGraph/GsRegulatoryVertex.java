@@ -132,7 +132,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
                 for (int i=0 ; i<v_logicalParameters.size() ; i++) {
                     GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(i);
                     if (gsi.getValue() > maxValue) {
-                        gsi.setValue(maxValue);
+                        gsi.setValue(maxValue, graph);
                         s += Translator.getString("STR_parameter_value_sup_max\n");
                     }
                 }
@@ -275,7 +275,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         OmddNode root;
         GsLogicalParameter pbaseValue = new GsLogicalParameter(0);
         if (this.baseValue != 0) {
-            pbaseValue.setValue(baseValue);
+            pbaseValue.setValue(baseValue, graph);
             root = pbaseValue.buildTree(graph, this);
             if (root == null) {
                 root = OmddNode.TERMINALS[baseValue];

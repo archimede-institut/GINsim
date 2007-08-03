@@ -1,53 +1,35 @@
 package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.GridLayout;
 import java.util.Map;
 import java.util.Vector;
-
 
 import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
-import com.sun.org.apache.regexp.internal.REDemo;
-
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.ibdm.GINsim.stableStates.*;
 
 public class GsSMVExportConfigPanel extends JPanel {
 	private static final long serialVersionUID = -7398674287463858306L;
@@ -57,6 +39,7 @@ public class GsSMVExportConfigPanel extends JPanel {
     JRadioButton radioSync = null;
     JRadioButton radioAsync2 = null;
     JRadioButton radioAsync = null;
+    JRadioButton radioApnn = null;
     
     MutantSelectionPanel mutantPanel = null;
     
@@ -92,6 +75,9 @@ public class GsSMVExportConfigPanel extends JPanel {
     	case GsSMVexportConfig.CFG_ASYNC : 
     		radioAsync.setSelected(true);
     		break;
+    	case GsSMVexportConfig.CFG_APNN : 
+    		radioAsync.setSelected(true);
+    		break;
         default : 
         	radioAsync2.setSelected(true);
         	break;
@@ -104,13 +90,15 @@ public class GsSMVExportConfigPanel extends JPanel {
         radioSync = new JRadioButton("synchronous");
         radioAsync2 = new JRadioButton("asynchronousBis");
         radioAsync = new JRadioButton("asynchronous");
+        radioApnn = new JRadioButton("apnn");
         group.add(radioSync);
         group.add(radioAsync);
         group.add(radioAsync2);
-
+        group.add(radioApnn);
         GridBagConstraints cst = new GridBagConstraints();
         cst.gridx = 0;
         cst.gridy = 4;
+        cst.gridwidth = 4;
         cst.weightx = 1;
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
@@ -147,6 +135,7 @@ public class GsSMVExportConfigPanel extends JPanel {
 	        splitpane.setBottomComponent(panel);
 	        splitpane.setTopComponent(getInitPanel());
 	        splitpane.setDividerLocation(130);
+	        
         } else {
         	add(getInitPanel(), cst);
         }
@@ -166,7 +155,11 @@ public class GsSMVExportConfigPanel extends JPanel {
         cst.gridy = 2;
         cst.anchor = GridBagConstraints.WEST;
         add(radioAsync2, cst);
-        
+        cst = new GridBagConstraints();
+        cst.gridx = 3;
+        cst.gridy = 0;
+        cst.anchor = GridBagConstraints.WEST;
+        add(radioApnn, cst);
         radioSync.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				applyMode();
@@ -177,7 +170,11 @@ public class GsSMVExportConfigPanel extends JPanel {
 				applyMode();
 			}
 		});
-       
+        radioAsync2.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				applyMode();
+			}
+		});
         if (mutant) {
 	        mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg);
 	        cst = new GridBagConstraints();
@@ -198,10 +195,11 @@ public class GsSMVExportConfigPanel extends JPanel {
 			cfg.type = GsSMVexportConfig.CFG_SYNC;
 		} else if(radioAsync.isSelected()) { 
 			 cfg.type = GsSMVexportConfig.CFG_ASYNC;
-		} else { 
+		} else if (radioAsync2.isSelected()){ 
 			cfg.type = GsSMVexportConfig.CFG_ASYNCBIS;
+		} else {
+			cfg.type = GsSMVexportConfig.CFG_APNN;
 		}
-			 
 	}
 
 	protected void applyTest() {
