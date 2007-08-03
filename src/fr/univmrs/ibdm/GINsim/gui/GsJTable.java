@@ -40,6 +40,7 @@ public class GsJTable extends JTable {
      */
     public GsJTable(TableModel model) {
         super(model);
+        putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         setDefaultEditor(Boolean.class, new BooleanCellEditor());
         setDefaultEditor(GsValueList.class, new ValueInListCellEditor());
 
