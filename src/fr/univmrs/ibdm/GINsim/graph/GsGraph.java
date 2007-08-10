@@ -348,7 +348,15 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 
             if (ftmp != null) {
             	// Everything went fine, rename the temporary file
-            	ftmp.renameTo(f);
+            	boolean r = ftmp.renameTo(f);
+            	if (!r) {
+            		if (f.exists()) {
+            			r = ftmp.renameTo(f);
+            		}
+                	if (!r) {
+                        addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath())));
+                	}
+            	}
             }
         } catch (Exception e) {
             if (mainFrame != null) {
