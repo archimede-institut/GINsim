@@ -351,6 +351,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             	boolean r = ftmp.renameTo(f);
             	if (!r) {
             		if (f.exists()) {
+            			f.delete();
             			r = ftmp.renameTo(f);
             		}
                 	if (!r) {
