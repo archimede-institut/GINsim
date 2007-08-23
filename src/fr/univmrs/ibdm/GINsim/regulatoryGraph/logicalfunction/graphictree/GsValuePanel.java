@@ -22,6 +22,9 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJSpinner;
+import java.awt.Dimension;
+import javax.swing.JPanel;
+import java.awt.Font;
 
 public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionListener, ChangeListener, MouseListener, MouseMotionListener {
   private static final long serialVersionUID = 207002545507075699L;
@@ -44,15 +47,23 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
     snm.setStepSize(new Integer(1));
     treeElement.setProperty("value", Integer.valueOf(treeElement.toString()));
     spinner = new GsJSpinner(snm);
+    if (System.getProperty("os.name").indexOf("Mac") >= 0)
+      spinner.setFont(new Font("courier", Font.PLAIN, 10));
+    spinner.setPreferredSize(new Dimension(5 * charWidth, charHeight));
     ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setEditable(false);
     ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setBackground(Color.white);
     spinner.setFont(defaultFont);
     spinner.addChangeListener(this);
     spinner.setBorder(null);
-    add(addButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    JPanel bouche = new JPanel();
+    bouche.setPreferredSize(new Dimension(width - 9, charHeight));
+    add(addButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
                                           GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(spinner, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+    add(spinner, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
                                         GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+    add(bouche, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
+                                        GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+    bouche.setOpaque(false);
     if (edit) {
       setBackground(Color.cyan);
       spinner.setBackground(Color.cyan);

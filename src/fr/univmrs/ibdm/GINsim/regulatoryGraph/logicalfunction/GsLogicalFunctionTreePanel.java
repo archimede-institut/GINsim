@@ -14,8 +14,17 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
 
-public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyListener {
+public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyListener, MouseListener,
+  ActionListener, TreeSelectionListener {
   private static final long serialVersionUID = -8323666225199589729L;
 
   class GsTreeUI extends BasicTreeUI {
@@ -88,26 +97,33 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
 
   private JTree tree;
   private GsTreeInteractionsModel interactionList = null;
-  private GsRegulatoryGraph graph;
+  //private GsRegulatoryGraph graph;
   private GsMotionAdapter motionAdapter;
   private GsComponentAdapter componentAdapter;
   private DragSource dragSource;
   private DragGestureListener dragGestureListener;
   private GsDragSourceListener dragSourceListener;
-  private DropTarget dropTarget;
+  //private DropTarget dropTarget;
   private GsDropListener dropListener;
+  private GsTreeMenu menu;
+  private GsTransferable transferable = null, current_transferable = null;
 
   public GsLogicalFunctionTreePanel(GsRegulatoryGraph graph) {
     super();
     setLayout(new BorderLayout());
     add(new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
     this.graph = graph;
-    new GsPanelFactory(graph.getGraphManager().getMainFrame().getGlassPane());
+    new GsPanelFactory();
+    menu = new GsTreeMenu(this);
+    tree.addMouseListener(this);
+    tree.getSelectionModel().addTreeSelectionListener(this);
   }
   public void setEditedObject(Object obj) {
     GsRegulatoryVertex vertex = (GsRegulatoryVertex)obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
+    interactionList.setView(this);
+    interactionList.setRootInfos();
     tree.setModel(interactionList);
     repaint();
   }
@@ -115,7 +131,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
     if (tree == null) {
       interactionList = new GsTreeInteractionsModel(graph);
       tree = new GsJTree(interactionList);
-      //tree.setUI(new GsTreeUI());
+      tree.setUI(new GsTreeUI());
       tree.setShowsRootHandles(true);
       GsBooleanFunctionTreeRenderer cr = new GsBooleanFunctionTreeRenderer(getPreferredSize().width);
       tree.setCellRenderer(cr);
@@ -123,53 +139,376 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       tree.setEditable(true);
       tree.addKeyListener(this);
       dragSource = DragSource.getDefaultDragSource();
-      dropListener = new GsDropListener(tree, (GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane());
+      dropListener = new GsDropListener(this, (GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane());
       dragSourceListener = new GsDragSourceListener(tree, (GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane());
       dragGestureListener = new GsDragGestureListener(tree, dragSourceListener, dropListener);
       dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY_OR_MOVE, dragGestureListener);
-      dropTarget = new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE, dropListener, true);
+      /*dropTarget =*/ new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE, dropListener, true);
       motionAdapter = new GsMotionAdapter((GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane());
       tree.addMouseMotionListener(motionAdapter);
       componentAdapter = new GsComponentAdapter((GsGlassPane)graph.getGraphManager().getMainFrame().getGlassPane(), "");
       tree.addMouseListener(componentAdapter);
       addComponentListener(cr);
     }
-    return tree;
+    return tree ;
+  }
+  public JTree getTree() {
+	  return tree;
+  }
+  public void refresh() {
+    tree.stopEditing();
+    Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+    interactionList.fireTreeStructureChanged((GsTreeElement)interactionList.getRoot());
+    interactionList.refreshVertex();
+    if (enu != null)
+      while (enu.hasMoreElements()) {
+        TreePath tp = (TreePath)enu.nextElement();
+        tree.expandPath(tp);
+      }
   }
   public void keyPressed(KeyEvent e) {
   }
   public void keyReleased(KeyEvent e) {
-    Enumeration enu;
-    Vector v;
-    GsTreeElement treeElement;
-
     if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-      TreePath[] selectedPaths = tree.getSelectionPaths();
-      if (selectedPaths != null) {
-        enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-        tree.stopEditing();
-        v = new Vector();
-        tree.stopEditing();
-        for (int i = 0; i < selectedPaths.length; i++) {
-          treeElement = (GsTreeElement)selectedPaths[i].getLastPathComponent();
-          if (treeElement.isLeaf())
-            treeElement.setChecked(false);
-          else {
-            treeElement.remove();
-            v.addElement(treeElement);
-            if (treeElement.toString().equals(""))
-              treeElement.getParent().setProperty("null function", new Boolean(false));
-          }
+      deleteSelection();
+    }
+  }
+  public void keyTyped(KeyEvent e) {
+  }
+  private void deleteSelection() {
+	Enumeration enu;
+	Vector v;
+	GsTreeElement treeElement;
+
+	TreePath[] selectedPaths = tree.getSelectionPaths();
+    if (selectedPaths != null) {
+      enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+      tree.stopEditing();
+      v = new Vector();
+      tree.stopEditing();
+      for (int i = 0; i < selectedPaths.length; i++) {
+        treeElement = (GsTreeElement)selectedPaths[i].getLastPathComponent();
+        if (treeElement.getParent() instanceof GsTreeManual) {
+          treeElement.remove(false);
+          v.addElement(treeElement);
         }
-        ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-        ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
-        while (enu.hasMoreElements()) {
-          TreePath tp = (TreePath)enu.nextElement();
-          if (!v.contains(tp.getLastPathComponent())) tree.expandPath(tp);
+        //else if (treeElement.isLeaf())
+        //  treeElement.setChecked(false);
+        /*else */if (treeElement instanceof GsTreeManual){
+          treeElement.remove(false);
+          treeElement.getParent().addChild(new GsTreeManual(treeElement.getParent()), 0);
+        }
+        else if (! (treeElement instanceof GsTreeParam)) {
+          treeElement.remove(false);
+          v.addElement(treeElement);
+          if (treeElement.toString().equals(""))
+            treeElement.getParent().setProperty("null function", new Boolean(false));
+        }
+      }
+      GsTreeInteractionsModel interactionsModel = (GsTreeInteractionsModel)tree.getModel();
+      interactionsModel.refreshVertex();
+      interactionsModel.setRootInfos();
+      interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
+      while (enu.hasMoreElements()) {
+        TreePath tp = (TreePath)enu.nextElement();
+        if (!v.contains(tp.getLastPathComponent())) tree.expandPath(tp);
+      }
+    }
+  }
+  public void mousePressed(MouseEvent e) {
+	if (e.getButton() == e.BUTTON3)
+	  menu.show(tree, e.getX(), e.getY());
+  }
+  public void mouseReleased(MouseEvent e) {}
+  public void mouseClicked(MouseEvent e) {}
+  public void mouseEntered(MouseEvent e) {}
+  public void mouseExited(MouseEvent e) {}
+  public void actionPerformed(ActionEvent e) {
+    if (e.getActionCommand().equals(GsTreeMenu.COPY))
+      transferable = current_transferable;
+    else if (e.getActionCommand().equals(GsTreeMenu.CUT)) {
+      transferable = current_transferable;
+      deleteSelection();
+    }
+	else if (e.getActionCommand().equals(GsTreeMenu.PASTE)) {
+	  GsTreeElement	node = (GsTreeElement)tree.getSelectionPath().getLastPathComponent();
+	  if (transferable != null) {
+		if ((transferable.getCurrentFlavor() == transferable.FUNCTION_FLAVOR) && (node instanceof GsTreeValue))
+	      pasteFunctionsInValue(transferable.getNodes(),
+                                ((e.getModifiers() & e.CTRL_MASK) == e.CTRL_MASK),
+	    		                (GsTreeValue)node);
+        else if ((transferable.getCurrentFlavor() == transferable.VALUE_FLAVOR) && (node instanceof GsTreeString))
+          pasteValuesInRoot(transferable.getNodes(),
+                            (GsTreeString)node);
+        else if ((transferable.getCurrentFlavor() == transferable.FUNCTION_FLAVOR) && (node instanceof GsTreeManual))
+          pasteFunctionsInManual(transferable.getNodes(),
+                                 ((e.getModifiers() & e.CTRL_MASK) == e.CTRL_MASK),
+                                 (GsTreeManual)node);
+        else if ((transferable.getCurrentFlavor() == transferable.MANUAL_FLAVOR) && (node instanceof GsTreeValue))
+          pasteManualsInValue(transferable.getNodes(),
+                              ((e.getModifiers() & e.CTRL_MASK) == e.CTRL_MASK),
+                              (GsTreeValue)node);
+        else if ((transferable.getCurrentFlavor() == transferable.MANUAL_FLAVOR) && (node instanceof GsTreeManual))
+          pasteManualsInValue(transferable.getNodes(),
+                              ((e.getModifiers() & e.CTRL_MASK) == e.CTRL_MASK),
+                              (GsTreeValue)node.getParent());
+        else if ((transferable.getCurrentFlavor() == transferable.PARAM_FLAVOR) && (node instanceof GsTreeValue))
+          pasteParamsInValue(transferable.getNodes(),
+                             ((e.getModifiers() & e.CTRL_MASK) == e.CTRL_MASK),
+                             (GsTreeValue)node);
+        else if ((transferable.getCurrentFlavor() == transferable.PARAM_FLAVOR) && (node instanceof GsTreeManual))
+          pasteParamsInValue(transferable.getNodes(),
+                             ((e.getModifiers() & e.CTRL_MASK) == e.CTRL_MASK),
+                             (GsTreeValue)node.getParent());
+
+      }
+	}
+	else if (e.getActionCommand().equals(GsTreeMenu.DELETE)) {
+	  deleteSelection();
+	  transferable = null;
+	}
+	else if (e.getActionCommand().equals(GsTreeMenu.CREATE_1_FUNCTION)) {
+      createFunctions(true);
+    }
+	else if (e.getActionCommand().equals(GsTreeMenu.CREATE_N_FUNCTIONS)) {
+      createFunctions(false);
+    }
+  }
+  public void valueChanged(TreeSelectionEvent e) {
+    TreePath[] selectedPaths = tree.getSelectionPaths();
+    GsTreeElement[] nodes = new GsTreeElement[tree.getSelectionCount()];
+    for (int i = 0; i < tree.getSelectionCount(); i++)
+      nodes[i] = (GsTreeElement)selectedPaths[i].getLastPathComponent();
+    if (tree.getSelectionCount() != 0)
+      current_transferable = new GsTransferable(nodes);
+    else
+      current_transferable = null;
+    menu.setEnabled(GsTreeMenu.COPY, (tree.getSelectionCount() > 0));
+    menu.setEnabled(GsTreeMenu.CUT, (tree.getSelectionCount() > 0) &&
+                    (current_transferable.getCurrentFlavor() != GsTransferable.MIXED_FLAVOR));
+    menu.setEnabled(GsTreeMenu.DELETE, (tree.getSelectionCount() > 0));
+    if (tree.getSelectionCount() == 0) {
+      menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, false);
+      menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, false);
+      menu.setEnabled(GsTreeMenu.PASTE, false);
+    }
+    else {
+      if ((current_transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR) ||
+          (current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR)) {
+        menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, true);
+        menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, true);
+      }
+      else {
+        menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, false);
+        menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, false);
+      }
+      if ((transferable != null) && (tree.getSelectionCount() == 1)) {
+        if ((current_transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR) ||
+            (current_transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR))
+          if ((transferable.getCurrentFlavor() == GsTransferable.FUNCTION_FLAVOR) ||
+              (transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR) ||
+              (transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR))
+            menu.setEnabled(GsTreeMenu.PASTE, true);
+          else
+            menu.setEnabled(GsTreeMenu.PASTE, false);
+        else if ((tree.getSelectionPath().getLastPathComponent() instanceof GsTreeString) &&
+                 (transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR))
+          menu.setEnabled(GsTreeMenu.PASTE, true);
+        else
+          menu.setEnabled(GsTreeMenu.PASTE, false);
+      }
+    }
+  }
+  public void pasteFunctionsInValue(GsTreeElement[] functions, boolean remove, GsTreeValue value) {
+	Enumeration enu;
+	TreePath tp;
+	try {
+      enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+	  for (int i = 0; i < functions.length; i++) {
+		if (((GsTreeValue)functions[i].getParent()).getValue() != value.getValue()) {
+          interactionList.addExpression(tree, (short)value.getValue(),
+                                          interactionList.getVertex(), functions[i].toString());
+          if (remove) functions[i].remove(false);
+          interactionList.removeNullFunction((short)value.getValue());
+        }
+      }
+      interactionList.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).getLastPathComponent());
+      interactionList.refreshVertex();
+      while (enu.hasMoreElements()) {
+        tp = (TreePath)enu.nextElement();
+        tree.expandPath(tp);
+      }
+	}
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+  public void pasteValuesInRoot(GsTreeElement[] values, GsTreeString root) {
+    Enumeration enu;
+    TreePath tp;
+
+    try {
+      enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+      for (int i = 0; i < values.length; i++) {
+        values[i].remove(false);
+        interactionList.addValue((GsTreeValue)values[i]);
+      }
+      interactionList.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).getLastPathComponent());
+      interactionList.refreshVertex();
+      while (enu.hasMoreElements()) {
+        tp = (TreePath)enu.nextElement();
+        tree.expandPath(tp);
+      }
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+  public void pasteFunctionsInManual(GsTreeElement[] functions, boolean remove, GsTreeManual manual) {
+    Enumeration enu, enu2;
+    TreePath tp;
+    GsTreeParam param;
+
+    try {
+      enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+      for (int i = 0; i < functions.length; i++) {
+        enu2 = functions[i].getChilds().elements();
+        while (enu2.hasMoreElements()) {
+          param = (GsTreeParam)enu2.nextElement();
+          manual.addChild(new GsTreeParam(manual, param.getEdgeIndexes()), -1);
+        }
+        if (remove) functions[i].remove(false);
+      }
+      interactionList.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).getLastPathComponent());
+      interactionList.refreshVertex();
+      while (enu.hasMoreElements()) {
+        tp = (TreePath)enu.nextElement();
+        tree.expandPath(tp);
+      }
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public void pasteManualsInValue(GsTreeElement[] manuals, boolean remove, GsTreeValue value) {
+    Enumeration enu, enu2;
+    GsTreeParam param;
+    TreePath tp;
+
+    enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+    for (int i = 0; i < manuals.length; i++) {
+      enu2 = manuals[i].getChilds().elements();
+      while (enu2.hasMoreElements()) {
+        param = (GsTreeParam)enu2.nextElement();
+        value.getChild(0).addChild(new GsTreeParam(value.getChild(0), param.getEdgeIndexes()), -1);
+      }
+      if (remove) manuals[i].clearChilds();
+    }
+    interactionList.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).getLastPathComponent());
+    interactionList.refreshVertex();
+    while (enu.hasMoreElements()) {
+      tp = (TreePath)enu.nextElement();
+      tree.expandPath(tp);
+    }
+  }
+  public void pasteParamsInValue(GsTreeElement[] params, boolean remove, GsTreeValue value) {
+    Enumeration enu;
+    TreePath tp;
+
+    enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+    for (int i = 0; i < params.length; i++) {
+      value.getChild(0).addChild(new GsTreeParam(value.getChild(0), ((GsTreeParam)params[i]).getEdgeIndexes()), -1);
+      if (remove) params[i].remove(false);
+    }
+    interactionList.fireTreeStructureChanged((GsTreeElement)tree.getPathForRow(0).getLastPathComponent());
+    interactionList.refreshVertex();
+    while (enu.hasMoreElements()) {
+      tp = (TreePath)enu.nextElement();
+      tree.expandPath(tp);
+    }
+  }
+  private void createFunctions(boolean oneFunction) {
+    boolean res = false;
+    TreePath[] selectedPaths = tree.getSelectionPaths();
+    if (current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR) {
+      res = doChaos(current_transferable.getNodes(), oneFunction);
+      if (res) {
+        tree.setSelectionPaths(selectedPaths);
+        deleteSelection();
+      }
+    }
+    else {
+      GsTreeElement[] manuals = current_transferable.getNodes();
+      GsTreeElement[] te;
+      Object[] o;
+      Object[]path = new Object[3];
+      for (int i = 0; i < manuals.length; i++) {
+        o = manuals[i].getChilds().toArray();
+        if (o.length > 0) {
+          te = new GsTreeElement[o.length];
+          for (int k = 0; k < o.length; k++) te[k] = (GsTreeElement)o[k];
+          res = doChaos(te, oneFunction);
+          if (res) {
+            path[0] = tree.getModel().getRoot();
+            path[1] = manuals[i].getParent();
+            path[2] = manuals[i];
+            tree.setSelectionPath(new TreePath(path));
+            deleteSelection();
+          }
         }
       }
     }
   }
-  public void keyTyped(KeyEvent e) {
+  private boolean doChaos(GsTreeElement[] params, boolean oneFunction) {
+    GsFunctionsCreator c = null;
+    Vector v = new Vector();
+    int value = ((GsTreeValue)params[0].getParent().getParent()).getValue();
+    GsLogicalParameter lp;
+
+    for (int i = 0; i < params.length; i++) {
+      lp = new GsLogicalParameter(value);
+      lp.setEdges(((GsTreeParam)params[i]).getEdgeIndexes());
+      v.addElement(lp);
+    }
+    c = new GsFunctionsCreator(graph.getGraphManager(), v, interactionList.getVertex());
+
+    Hashtable h = c.doIt(false);
+
+    Enumeration enu = h.keys(), enu2;
+    Integer key;
+    String s;
+
+    if (!oneFunction)
+      while (enu.hasMoreElements()) {
+        key = (Integer)enu.nextElement();
+        v = (Vector)h.get(key);
+        for (enu2 = v.elements(); enu2.hasMoreElements(); ) {
+          s = (String)enu2.nextElement();
+          try {
+            interactionList.addExpression(null, key.shortValue(), interactionList.getVertex(), s);
+          }
+          catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
+    else
+      while (enu.hasMoreElements()) {
+        key = (Integer)enu.nextElement();
+        v = (Vector)h.get(key);
+        enu2 = v.elements();
+        s = "(" + (String)enu2.nextElement() + ")";
+        while (enu2.hasMoreElements()) s = s + " | (" + (String)enu2.nextElement() + ")";
+        try {
+          interactionList.addExpression(null, key.shortValue(), interactionList.getVertex(), s);
+        }
+        catch (Exception ex) {
+          ex.printStackTrace();
+        }
+      }
+    interactionList.setRootInfos();
+    interactionList.fireTreeStructureChanged((GsTreeElement)interactionList.getRoot());
+    return !h.isEmpty();
   }
 }

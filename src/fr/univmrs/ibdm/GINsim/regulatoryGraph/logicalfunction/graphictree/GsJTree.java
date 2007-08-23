@@ -11,7 +11,7 @@ import javax.swing.tree.TreePath;
 
 public class GsJTree extends JTree implements Autoscroll {
   private int margin = 15;
-
+  
   public GsJTree(TreeModel m) {
     super(m);
   }

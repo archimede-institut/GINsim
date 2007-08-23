@@ -14,8 +14,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
 
 public class GsDragSourceListener implements DragSourceListener {
   private GsGlassPane glassPane;
@@ -62,8 +62,11 @@ public class GsDragSourceListener implements DragSourceListener {
       if (tp != null) {
         GsTreeElement choosenElement = (GsTreeElement)tp.getLastPathComponent();
         if (((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeValue)) ||
-            ((choosen == GsTransferable.VALUE_FLAVOR) && (choosenElement instanceof GsTreeString)) ||
-            ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement == transferable.getPParent()))) {
+            ((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeManual)) ||
+            ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeValue)) ||
+            ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeManual)) ||
+            ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeManual)) ||
+            ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeValue))) {
           if (action == DnDConstants.ACTION_COPY)
             dsde.getDragSourceContext().setCursor(DragSource.DefaultCopyDrop);
           else if (action == DnDConstants.ACTION_MOVE)

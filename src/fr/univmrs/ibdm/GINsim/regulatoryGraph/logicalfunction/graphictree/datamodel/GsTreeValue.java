@@ -17,7 +17,7 @@ public class GsTreeValue extends GsTreeElement {
     value = v;
   }
   public void remove() {
-    super.remove();
+    super.remove(false);
     parent.setProperty("add", new Boolean(true));
   }
 }

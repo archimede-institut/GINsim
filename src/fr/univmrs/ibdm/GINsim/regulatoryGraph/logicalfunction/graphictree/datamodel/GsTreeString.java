@@ -7,6 +7,9 @@ public class GsTreeString extends GsTreeElement {
     super(parent);
     string = s;
   }
+  public void setString(String s) {
+    string = s;
+  }
   public String toString() {
     return string;
   }

@@ -25,23 +25,23 @@ public class GsParamTreeLeafValue extends GsParamTreeLeaf {
       return (value == ((GsParamTreeLeafValue)e2).value);
     return false;
   }
-  public void makeFunctions(Hashtable h, String f, int bv, boolean pattern) {
+  public void makeFunctions(Hashtable h, String f, int dv, boolean pattern) {
     Vector v;
 
-    if (value != bv) {
+    if (value != dv) {
       if (h.containsKey(new Integer(value))) {
         v = (Vector)h.get(new Integer(value));
         v.addElement(f);
       }
-      else {
+      else if (!f.equals("")) {
         v = new Vector();
         v.addElement(f);
         h.put(new Integer(value), v);
       }
     }
   }
-  public void buildFunctions(Hashtable h, String f, int bv) {
-    makeFunctions(h, f, bv, false);
+  public void buildFunctions(Hashtable h, String f, int dv) {
+    makeFunctions(h, f, dv, false);
   }
   public int hashCode() {
     return toString().hashCode();

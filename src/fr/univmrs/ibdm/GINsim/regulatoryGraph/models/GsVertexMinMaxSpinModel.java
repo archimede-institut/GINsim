@@ -124,6 +124,8 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
             m_max.update();
             m_min.update();
         }
+        if (vertex != null)
+          vertex.getInteractionsModel().refreshView();
     }
 
     /**

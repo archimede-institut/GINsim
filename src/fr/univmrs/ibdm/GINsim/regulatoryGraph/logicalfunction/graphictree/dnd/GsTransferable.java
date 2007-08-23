@@ -10,14 +10,16 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
 
 public class GsTransferable implements Transferable {
   public static final DataFlavor FUNCTION_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Functions");
   public static final DataFlavor VALUE_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Values");
   public static final DataFlavor PARAM_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Parameters");
   public static final DataFlavor MIXED_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Mixed elements");
+  public static final DataFlavor MANUAL_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Manual");
   public static final DataFlavor PLAIN_TEXT_FLAVOR = DataFlavor.getTextPlainUnicodeFlavor();
-  public static final DataFlavor[] dataFlavors = { FUNCTION_FLAVOR, VALUE_FLAVOR, PARAM_FLAVOR, MIXED_FLAVOR, PLAIN_TEXT_FLAVOR };
+  public static final DataFlavor[] dataFlavors = { FUNCTION_FLAVOR, VALUE_FLAVOR, PARAM_FLAVOR, MIXED_FLAVOR, MANUAL_FLAVOR, PLAIN_TEXT_FLAVOR };
   public static final List dataFlavorsList = Arrays.asList(dataFlavors);
 
   private GsTreeElement[] nodes;
@@ -32,7 +34,9 @@ public class GsTransferable implements Transferable {
       currentFlavor = FUNCTION_FLAVOR;
     else if (nodes[0] instanceof GsTreeValue)
       currentFlavor = VALUE_FLAVOR;
-    else if (nodes[0] instanceof GsTreeParam) {
+    else if (nodes[0] instanceof GsTreeManual)
+      currentFlavor = MANUAL_FLAVOR;
+    else if ((nodes[0] instanceof GsTreeParam) && (nodes[0].getParent() instanceof GsTreeManual)) {
       currentFlavor = PARAM_FLAVOR;
       GsTreeElement p = nodes[0].getParent();
       for (int i = 1; i < nodes.length; i++)
@@ -43,9 +47,15 @@ public class GsTransferable implements Transferable {
       if (currentFlavor != MIXED_FLAVOR)
         pParent = p;
     }
+    else
+      currentFlavor = MIXED_FLAVOR;
     if (currentFlavor != MIXED_FLAVOR)
       for (int i = 1; i < nodes.length; i++)
         if ((nodes[i] instanceof GsTreeExpression) && (currentFlavor != FUNCTION_FLAVOR)) {
+          currentFlavor = MIXED_FLAVOR;
+          break;
+        }
+        else if ((nodes[i] instanceof GsTreeManual) && (currentFlavor != MANUAL_FLAVOR)) {
           currentFlavor = MIXED_FLAVOR;
           break;
         }

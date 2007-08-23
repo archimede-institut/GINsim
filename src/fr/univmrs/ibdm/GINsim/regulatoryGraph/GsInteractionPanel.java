@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.DefaultListSelectionModel;
@@ -25,6 +27,11 @@ import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
+
+import fr.univmrs.ibdm.GINsim.global.GsMain;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+
 /**
  * Panel to edit interaction of a gene
  */
@@ -49,6 +56,8 @@ public class GsInteractionPanel extends GsParameterPanel {
 
 	private JSplitPane jSplitPane = null;
 	private JPanel jPanel = null;
+
+	private JButton chaosButton;
 
 //    private JTextField manualEntry = null;
 //    private JTextField manualLevel = null;
@@ -169,6 +178,14 @@ public class GsInteractionPanel extends GsParameterPanel {
             jPanel.add(getUpButton(), c_up);
             jPanel.add(getDownButton(), c_down);
 
+
+            if (GsMain.SHOW_FUNCTION) {
+            	GridBagConstraints c_chaos = new GridBagConstraints();
+            	c_chaos.gridx = 2;
+            	c_chaos.gridy = 5;
+            	c_chaos.insets = new Insets(10, 5, 3, 5);
+            	jPanel.add(getChaosButton(), c_chaos);
+            }
 		}
 		return jPanel;
 	}
@@ -648,13 +665,7 @@ public class GsInteractionPanel extends GsParameterPanel {
                     jTable.getSelectionModel().addSelectionInterval(selectedrow, selectedrow);
                 }
 			}
-      else {
-        GsFunctionsCreator c = new GsFunctionsCreator(graph.getGraphManager(),
-          ((GsTableInteractionsModel)jTable.getModel()).getInteractions(), currentVertex);
-
-        c.doIt();
-      }
-		}
+ 		}
 	}
 
 	/**
@@ -670,4 +681,57 @@ public class GsInteractionPanel extends GsParameterPanel {
             graph.fireMetaChange();
         }
 	}
+
+	private javax.swing.JButton getChaosButton() {
+      if(chaosButton == null) {
+        chaosButton = new javax.swing.JButton(GsEnv.getIcon("chaos.png"));
+        chaosButton.setName("chaosButton");
+        chaosButton.setToolTipText("Are you sure ?");
+        chaosButton.addActionListener(new java.awt.event.ActionListener() {
+          public void actionPerformed(java.awt.event.ActionEvent e) {
+            doChaos();
+          }
+        });
+      }
+      return chaosButton;
+    }
+
+    private void doChaos() {
+      GsFunctionsCreator c = null;
+      Vector v = new Vector();
+      Vector interactions = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
+      //int[] sel;
+
+      //if (jTable.getSelectionModel().isSelectionEmpty())
+        c = new GsFunctionsCreator(graph.getGraphManager(), interactions, currentVertex);
+      //else {
+      //  sel = jTable.getSelectedRows();
+      //  for (int i = 0; i < sel.length; i++) v.addElement(interactions.elementAt(sel[i]));
+      //  c = new GsFunctionsCreator(graph.getGraphManager(), v, currentVertex);
+      //}
+
+      Hashtable h = c.doIt(true);
+
+      Enumeration enu = h.keys();
+      Integer key;
+      String s;
+
+      GsTreeInteractionsModel interactionsModel = currentVertex.getInteractionsModel();
+      interactionsModel.clear();
+      while (enu.hasMoreElements()) {
+        key = (Integer)enu.nextElement();
+        v = (Vector)h.get(key);
+        for (Enumeration enu2 = v.elements(); enu2.hasMoreElements(); ) {
+          s = (String)enu2.nextElement();
+          try {
+            interactionsModel.addExpression(null, key.shortValue(), currentVertex, s);
+          }
+          catch (Exception ex) {
+            ex.printStackTrace();
+          }
+        }
+      }
+      interactionsModel.setRootInfos();
+      interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
+    }
 }
