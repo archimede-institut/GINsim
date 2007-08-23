@@ -168,7 +168,9 @@ public final class Simulation extends Thread implements Runnable {
 							calcDynGraphSynchro();
 							break;
 						case SEARCH_ASYNCHRONE_BF:
-							toExplore.addElement(t_state);
+							if (addState(t_state, true, false)) {
+								toExplore.addElement(node);
+							}
 							break;
 						case SEARCH_ASYNCHRONE_DF:
 							calcDynGraphAsynchroDepthFirst();
@@ -220,7 +222,9 @@ public final class Simulation extends Thread implements Runnable {
 						calcDynGraphSynchro();
 						break;
 					case SEARCH_ASYNCHRONE_BF:
-						toExplore.addElement(vstate);
+						if (addState(vstate, true, false)) {
+							toExplore.addElement(node);
+						}
 						break;
 					case SEARCH_ASYNCHRONE_DF:
 						calcDynGraphAsynchroDepthFirst();
@@ -540,8 +544,8 @@ public final class Simulation extends Thread implements Runnable {
         while (toExplore.size() != 0 ) {
             // get the first node to explore
             // first determine calls for updating on this state
-            GsDynamicNode node = (GsDynamicNode)toExplore.remove(0);
-			int[]	changes    = getChangingGene(node.state);
+            GsDynamicNode exploringNode = (GsDynamicNode)toExplore.remove(0);
+			int[]	changes    = getChangingGene(exploringNode.state);
 
 			// test if we are on a stable state (no changes)
 			boolean stable = true;
@@ -553,7 +557,7 @@ public final class Simulation extends Thread implements Runnable {
 			}
 			if (stable) {
 				if (buildSTG) {
-					node.setStable(true, vreader);
+					exploringNode.setStable(true, vreader);
 				} else {
 					OmddNode dd_tmp = addReachable(this.dd_stable, t_state, 0);
 					if (dd_tmp != null) {
@@ -568,10 +572,10 @@ public final class Simulation extends Thread implements Runnable {
 					if (i == length) {
 						break;
 					}
-					nextState = (int[])node.state.clone();
+					nextState = (int[])exploringNode.state.clone();
 					nextState[i] += changes[i];
 					if (addState(nextState, true, false)) {
-						toExplore.addElement(nextState);
+						toExplore.addElement(node);
 					}
 				}
 			}

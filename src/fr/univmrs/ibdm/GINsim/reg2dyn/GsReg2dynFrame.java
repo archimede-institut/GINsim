@@ -9,15 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -229,7 +221,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
         setMessage(Translator.getString("STR_wait_msg"));
         bcancel.setText(Translator.getString("STR_abort"));
 
-        // nearly everything should be unenabled
+        // nearly everything should be disabled
         radioSynchrone.setEnabled(false);
         radioAsynchrone.setEnabled(false);
         radioBreadthFirst.setEnabled(false);
@@ -322,8 +314,10 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
             return;
         }
         if (radioAsynchrone.isSelected()) {
-            currentParameter.mode = radioBreadthFirst.isSelected() ? Simulation.SEARCH_ASYNCHRONE_BF : Simulation.SEARCH_ASYNCHRONE_DF;
-            getRadioBreadthFirst().setEnabled(true);
+        	// FIXME: breadth first disabled for now
+            //currentParameter.mode = radioBreadthFirst.isSelected() ? Simulation.SEARCH_ASYNCHRONE_BF : Simulation.SEARCH_ASYNCHRONE_DF;
+        	currentParameter.mode = Simulation.SEARCH_ASYNCHRONE_DF;
+            getRadioBreadthFirst().setEnabled(false);
             getRadioDephtFirst().setEnabled(true);
             buttonCfgPriorityClass.setEnabled(false);
         } else {
