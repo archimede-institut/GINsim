@@ -10,9 +10,4 @@ classes/**/*
 .settings
 .project
 .classpath
-manifest.mf
-news
 doc
-projectimport_20070727.log
-readme
-todo
