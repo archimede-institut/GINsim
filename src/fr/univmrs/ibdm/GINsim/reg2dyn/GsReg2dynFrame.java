@@ -14,7 +14,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.plaf.metal.MetalCheckBoxUI;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
@@ -40,8 +39,6 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     boolean refreshing = false;
     
     private JFrame frame;
-
-    MetalCheckBoxUI mui;
     
     private ButtonGroup syncGrp = new ButtonGroup();
     private JRadioButton radioAsynchrone = null;
@@ -58,9 +55,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     private JButton buttonCfgPriorityClass;
     
     Insets indentInset = new Insets(0, 30, 0, 0);
-    
     GsInitialStatePanel initStatePanel = null;
-
     private JPanel mainPanel;
 
     /**

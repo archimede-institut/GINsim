@@ -42,7 +42,8 @@ public class GsMain {
         	e.printStackTrace();
         	System.exit(1);
         }
-        boolean testing = false;
+        // TODO: for now ignore the "--test" option (it is always added)
+        boolean testing = true;
         /*
          * parse args: - run without GUI - set ginsim dir - choose locale - give
          * some help
