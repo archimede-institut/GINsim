@@ -5,16 +5,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.global.GsMain;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
@@ -152,15 +146,13 @@ public class GsRegulatoryVertexAttributePanel extends GsParameterPanel {
         c.weighty = 2;
         this.add(getB_interaction(), c);
 
-        if (GsMain.SHOW_FUNCTION) {
-	        c = new GridBagConstraints();
-	        c.gridx = 2;
-	        c.gridy = 4;
-	        c.anchor = java.awt.GridBagConstraints.SOUTHWEST;
-	        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
-	        c.weighty = 2;
-	        this.add(getB_function(), c);
-        }
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 4;
+        c.anchor = java.awt.GridBagConstraints.SOUTHWEST;
+        c.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        c.weighty = 2;
+        this.add(getB_function(), c);
 
         c = new GridBagConstraints();
         c.gridx = 3;

@@ -1,26 +1,33 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
-import fr.univmrs.ibdm.GINsim.jgraph.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
-import fr.univmrs.ibdm.GINsim.util.widget.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
+
+import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsParameterChoiceWindow extends JDialog implements ActionListener, ListSelectionListener {
 
-  class GsCellRenderer extends JLabel implements ListCellRenderer {
-    public GsCellRenderer() {
+	private static final long	serialVersionUID	= -1570164194427132249L;
+class GsCellRenderer extends JLabel implements ListCellRenderer {
+	private static final long	serialVersionUID	= 1720724468548717415L;
+	public GsCellRenderer() {
       setOpaque(true);
     }
     public Component getListCellRendererComponent(JList list, Object value, int index,
@@ -46,7 +53,7 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
     }
     public String toString() {
       return grme.getId(index).replace('_', ' ') + " " + grme.getEdgeName(index).substring(0,
-        grme.getEdgeName(index).indexOf((int)';')) + ((grme.getSign(index) == 0) ? "+" : "-");
+        grme.getEdgeName(index).indexOf(';')) + (grme.getSign(index) == 0 ? "+" : "-");
     }
   }
 
@@ -79,8 +86,9 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
 
     for (int i = 0; i < interactions.size(); i++) {
       o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)interactions.get(i)).getUserObject();
-      for (int j = 0; j < o.getEdgeCount(); j++)
-        vec.addElement(new GsListElement(o, j));
+      for (int j = 0; j < o.getEdgeCount(); j++) {
+		vec.addElement(new GsListElement(o, j));
+	}
     }
     interactionList.setListData(vec);
     interactionList.setFont(f);
@@ -96,8 +104,9 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
 
     for (int i = 0; i < interactions.size(); i++) {
       o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)interactions.get(i)).getUserObject();
-      for (int j = 0; j < o.getEdgeCount(); j++)
-        vec.addElement(new GsListElement(o, j));
+      for (int j = 0; j < o.getEdgeCount(); j++) {
+		vec.addElement(new GsListElement(o, j));
+	}
     }
     interactionList.setListData(vec);
     interactionList.setFont(f);
@@ -108,7 +117,7 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
       edgeIndex = (GsEdgeIndex)enu.nextElement();
       for (int k = 0; k < interactionList.getModel().getSize(); k++) {
         lElem = (GsListElement)interactionList.getModel().getElementAt(k);
-        if ((edgeIndex.data == lElem.getEdge()) && (edgeIndex.index == lElem.getIndex())) {
+        if (edgeIndex.data == lElem.getEdge() && edgeIndex.index == lElem.getIndex()) {
           interactionList.addSelectionInterval(k, k);
           break;
         }
@@ -154,7 +163,9 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
         model.setRootInfos();
         tree.stopEditing();
         model.fireTreeStructureChanged(treeParam.getParent());
-        while (enu.hasMoreElements())tree.expandPath((TreePath)enu.nextElement());
+        while (enu.hasMoreElements()) {
+			tree.expandPath((TreePath)enu.nextElement());
+		}
       }
       else {
         interactionList.setSelectedIndices(oldSelection);
@@ -172,8 +183,9 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
     if (!e.getValueIsAdjusting()) {
       Object[] sel = interactionList.getSelectedValues();
       GsLogicalParameter par = new GsLogicalParameter(value);
-      for (int i = 0; i < sel.length; i++)
-        par.addEdge(((GsListElement)sel[i]).getEdge(), ((GsListElement)sel[i]).getIndex());
+      for (int i = 0; i < sel.length; i++) {
+		par.addEdge(((GsListElement)sel[i]).getEdge(), ((GsListElement)sel[i]).getIndex());
+	}
       treeParam.setEdgeIndexes(par.getEdges());
       ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
       tree.repaint();

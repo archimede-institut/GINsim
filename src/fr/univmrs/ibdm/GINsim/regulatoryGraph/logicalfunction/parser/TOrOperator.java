@@ -10,8 +10,8 @@ public class TOrOperator extends TBinaryOperator {
     super();
   }
   public TBooleanData getValue() throws Exception {
-    Vector leftData = ((TBooleanData)leftArg.getValue()).getData();
-    Vector rightData = ((TBooleanData)rightArg.getValue()).getData();
+    Vector leftData = leftArg.getValue().getData();
+    Vector rightData = rightArg.getValue().getData();
     Vector orData = new Vector(leftData);
     orData.addAll(rightData);
     TBooleanData data = (TBooleanData)Class.forName(returnClassName).newInstance();

@@ -38,9 +38,13 @@ private int width;
     if (tree != null) {
       tree.stopEditing();
       int[] sr = tree.getSelectionRows();
-      Enumeration enu = tree.getExpandedDescendants(new TreePath((GsTreeElement)tree.getModel().getRoot()));
+      Enumeration enu = tree.getExpandedDescendants(new TreePath(tree.getModel().getRoot()));
       ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-      if (enu != null) while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
+      if (enu != null) {
+		while (enu.hasMoreElements()) {
+			tree.expandPath((TreePath)enu.nextElement());
+		}
+	}
       tree.setSelectionRows(sr);
     }
   }

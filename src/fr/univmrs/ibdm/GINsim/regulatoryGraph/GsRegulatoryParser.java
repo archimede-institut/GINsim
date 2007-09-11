@@ -1,12 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -18,13 +13,13 @@ import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
-import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
+import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 
 /**
  * parses a ginml regulatory graph.

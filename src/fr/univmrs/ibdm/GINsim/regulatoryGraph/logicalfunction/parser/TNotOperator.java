@@ -10,7 +10,7 @@ public class TNotOperator extends TUnaryOperator {
     super();
   }
   public TBooleanData getValue() throws Exception {
-    Vector data = ((TBooleanData)arg.getValue()).getData();
+    Vector data = arg.getValue().getData();
     Vector notData = new Vector(parser.getAllData());
     notData.removeAll(data);
     TBooleanData d = (TBooleanData)Class.forName(returnClassName).newInstance();

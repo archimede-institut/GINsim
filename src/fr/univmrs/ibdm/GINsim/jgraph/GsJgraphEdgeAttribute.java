@@ -8,14 +8,7 @@ import java.util.Vector;
 import org._3pq.jgrapht.Edge;
 import org._3pq.jgrapht.ListenableGraph;
 import org._3pq.jgrapht.ext.JGraphModelAdapter;
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.CellView;
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.EdgeView;
-import org.jgraph.graph.GraphConstants;
-import org.jgraph.graph.GraphLayoutCache;
-import org.jgraph.graph.PortView;
-import org.jgraph.graph.VertexView;
+import org.jgraph.graph.*;
 import org.jgraph.graph.Edge.Routing;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;

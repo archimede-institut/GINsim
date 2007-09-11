@@ -94,7 +94,7 @@ public class ModelSimplifier {
 			dOrder = ((MDDVarNode)deleted).vinfo.order;
 		}
 		if (oOrder > level) {
-			return (MDDNode)ori;
+			return ori;
 		}
 
 		int newOrder;

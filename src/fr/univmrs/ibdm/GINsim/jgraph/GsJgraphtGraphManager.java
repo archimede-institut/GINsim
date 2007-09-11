@@ -17,19 +17,10 @@ import org._3pq.jgrapht.alg.DijkstraShortestPath;
 import org._3pq.jgrapht.alg.StrongConnectivityInspector;
 import org._3pq.jgrapht.ext.JGraphModelAdapter;
 import org._3pq.jgrapht.graph.ListenableDirectedGraph;
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.GraphConstants;
-import org.jgraph.graph.GraphUndoManager;
+import org.jgraph.graph.*;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
-import fr.univmrs.ibdm.GINsim.graph.GsSelectedEdgeIterator;
-import fr.univmrs.ibdm.GINsim.graph.GsSelectedVertexIterator;
-import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.ibdm.GINsim.graph.*;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 
 /**

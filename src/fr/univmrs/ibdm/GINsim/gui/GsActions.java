@@ -6,30 +6,11 @@ import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JSeparator;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsOptions;
-import fr.univmrs.ibdm.GINsim.graph.GraphChangeListener;
-import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
-import fr.univmrs.ibdm.GINsim.graph.GsGinsimGraphDescriptor;
-import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphSelectionChangeEvent;
-import fr.univmrs.ibdm.GINsim.graph.GsNewGraphEvent;
+import fr.univmrs.ibdm.GINsim.graph.*;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
 /**

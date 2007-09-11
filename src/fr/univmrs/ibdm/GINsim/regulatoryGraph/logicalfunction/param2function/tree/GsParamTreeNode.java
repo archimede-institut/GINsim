@@ -1,8 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree;
 
-import java.util.*;
+import java.util.Hashtable;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 public class GsParamTreeNode implements GsParamTreeElement {
   private GsRegulatoryVertex vertex;

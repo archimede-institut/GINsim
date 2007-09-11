@@ -20,11 +20,7 @@
  */
 package fr.univmrs.ibdm.GINsim.manageressources;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Vector;
+import java.util.*;
 
 
 /**

@@ -1,10 +1,6 @@
 package fr.univmrs.ibdm.GINsim.jgraph;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -14,13 +10,7 @@ import java.util.Vector;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
-import org.jgraph.graph.BasicMarqueeHandler;
-import org.jgraph.graph.CellHandle;
-import org.jgraph.graph.CellView;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.Edge;
-import org.jgraph.graph.GraphConstants;
+import org.jgraph.graph.*;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphSelectionChangeEvent;

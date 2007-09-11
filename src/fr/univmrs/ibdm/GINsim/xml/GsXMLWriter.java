@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.xml;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Vector;
 
@@ -85,7 +86,7 @@ public class GsXMLWriter {
     {
     	StringCharacterIterator iterator = new StringCharacterIterator(s);
     	char cur = iterator.current();
-    	while (cur != StringCharacterIterator.DONE) {
+    	while (cur != CharacterIterator.DONE) {
            switch (cur) {
            case '&':
                write("&amp;");

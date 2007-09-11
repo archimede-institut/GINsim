@@ -16,7 +16,6 @@ import javax.swing.filechooser.FileFilter;
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.global.GsMain;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
@@ -118,12 +117,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         } else {
             GsEnv.registerGraph(this, saveFileName);
         }
-        // TODO: abstract the graph manager a bit more (and finish the piccolo based implementation)
-        if (GsMain.USE_PICCOLO) {
-        	// graphManager = new GsSimpleGraphManager(this);
-        } else {
-            graphManager = new GsJgraphtGraphManager(this, mainFrame);
-        }
+        graphManager = new GsJgraphtGraphManager(this, mainFrame);
         vReader = graphManager.getVertexAttributesReader();
         eReader = graphManager.getEdgeAttributesReader();
     }
@@ -942,7 +936,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @see #isSaved()
      */
     public boolean canClose() {
-        return (v_blockClose == null);
+        return v_blockClose == null;
     }
 
     /**
@@ -1068,7 +1062,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @return true if the graph is visible
      */
     public boolean isVisible() {
-        return (mainFrame != null);
+        return mainFrame != null;
     }
     /**
      * close the graph.

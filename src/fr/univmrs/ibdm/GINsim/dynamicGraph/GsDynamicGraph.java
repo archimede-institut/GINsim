@@ -397,15 +397,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
             // show all stables: quickly done but, it is "good enough" :)
             b_view.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    JFrame frame = new JFrame("stables");
-                    frame.setSize(Math.min(30*(nodeOrder.size()+1), 800),
-                    		Math.min(25*(v_stables.size()+1), 600));
-                    JScrollPane scroll = new JScrollPane();
-                    StableTableModel model = new StableTableModel(nodeOrder);
-                    model.setResult(v_stables);
-                    scroll.setViewportView(new GsJTable(model));
-                    frame.setContentPane(scroll);
-                    frame.setVisible(true);
+                	viewStable();
                 }
             });
             pinfo.add(b_view);
@@ -416,6 +408,18 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         return pinfo;
     }
 
+    protected void viewStable() {
+        JFrame frame = new JFrame("stables");
+        frame.setSize(Math.min(30*(nodeOrder.size()+1), 800),
+        		Math.min(25*(v_stables.size()+1), 600));
+        JScrollPane scroll = new JScrollPane();
+        StableTableModel model = new StableTableModel(nodeOrder);
+        model.setResult(v_stables);
+        scroll.setViewportView(new GsJTable(model));
+        frame.setContentPane(scroll);
+        frame.setVisible(true);
+    }
+    
     public JPanel getGraphParameterPanel() {
 		if (parameterPanel == null) {
 			parameterPanel = new GsRegulatoryGraphPropertiesPanel(this);

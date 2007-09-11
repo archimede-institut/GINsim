@@ -1,16 +1,11 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import java.util.*;
 import java.util.Map.Entry;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import java.util.Vector;
+
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.HashMap;
-import java.util.Set;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 public class GsParamTree {
   private GsParamTreeElement root = null;

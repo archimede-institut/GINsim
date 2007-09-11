@@ -9,7 +9,11 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 public class GsGlassPane extends JPanel {
-  private AlphaComposite composite;
+  /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= -5868019917889487785L;
+private AlphaComposite composite;
   private BufferedImage dragged = null;
   private Point location = new Point(0, 0);
   private int dx, dy, startx, starty;

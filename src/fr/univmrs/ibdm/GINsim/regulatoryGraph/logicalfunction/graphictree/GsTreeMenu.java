@@ -6,10 +6,13 @@ import java.util.Hashtable;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import java.awt.Color;
 
 public class GsTreeMenu extends JPopupMenu {
-  public static final String COPY = "Copy";
+  /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 8209694715096362318L;
+public static final String COPY = "Copy";
   public static final String CUT = "Cut";
   public static final String PASTE = "Paste";
   public static final String DELETE = "Delete";

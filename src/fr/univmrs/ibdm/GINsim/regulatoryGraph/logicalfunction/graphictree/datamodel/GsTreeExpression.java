@@ -13,10 +13,9 @@ public class GsTreeExpression extends GsTreeElement {
 
   public GsTreeExpression(GsTreeElement parent, TBooleanTreeNode root) {
     super(parent);
-    if (root != null)
-      setRoot(root);
-    else
-      root = null;
+    if (root != null) {
+		setRoot(root);
+	}
     property.put("show unselected", new Boolean(false));
     property.put("invalid", new Boolean(false));
   }
@@ -26,10 +25,11 @@ public class GsTreeExpression extends GsTreeElement {
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge) {
     root = remove(multiEdge.getSource().getId(), root);
-    if (root != null)
-      expression = root.toString();
-    else
-      expression = null;
+    if (root != null) {
+		expression = root.toString();
+	} else {
+		expression = null;
+	}
     return root;
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge, int index) {
@@ -60,8 +60,9 @@ public class GsTreeExpression extends GsTreeElement {
       }
       else {
         shiftIndexes(((TBooleanOperator)node).getArgs()[0], multiEdge, index);
-        if (((TBooleanOperator)node).getNbArgs() == 2)
-          shiftIndexes(((TBooleanOperator)node).getArgs()[1], multiEdge, index);
+        if (((TBooleanOperator)node).getNbArgs() == 2) {
+			shiftIndexes(((TBooleanOperator)node).getArgs()[1], multiEdge, index);
+		}
       }
     }
     catch (Exception ex) {
@@ -74,9 +75,12 @@ public class GsTreeExpression extends GsTreeElement {
     try {
       if (node.isLeaf()) {
         testString = ((GsBooleanGene)node).getVal();
-        if (testString.indexOf("#") == -1) testString += "#";
-        if (!testString.startsWith(id))
-          return node;
+        if (testString.indexOf("#") == -1) {
+			testString += "#";
+		}
+        if (!testString.startsWith(id)) {
+			return node;
+		}
       }
       else {
         if (((TBooleanOperator)node).getNbArgs() == 1) {
@@ -89,14 +93,15 @@ public class GsTreeExpression extends GsTreeElement {
         else if (((TBooleanOperator)node).getNbArgs() == 2) {
           tn1 = remove(id, ((TBooleanOperator)node).getArgs()[0]);
           tn2 = remove(id, ((TBooleanOperator)node).getArgs()[1]);
-          if ((tn1 != null) && (tn2 != null)) {
+          if (tn1 != null && tn2 != null) {
             ((TBinaryOperator)node).setArgs(tn1, tn2);
             return node;
           }
-          else if (tn1 != null)
-            return tn1;
-          else if (tn2 != null)
-            return tn2;
+          else if (tn1 != null) {
+			return tn1;
+		} else if (tn2 != null) {
+			return tn2;
+		}
         }
       }
     }
@@ -115,7 +120,9 @@ public class GsTreeExpression extends GsTreeElement {
   }*/
 
   public String toString() {
-    if (expression == null) return "";
+    if (expression == null) {
+		return "";
+	}
     return expression;
   }
   public boolean isLeaf() {

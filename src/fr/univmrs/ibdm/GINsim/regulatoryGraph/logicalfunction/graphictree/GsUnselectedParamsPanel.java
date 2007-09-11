@@ -4,16 +4,17 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 //import java.awt.event.*;
 //import java.util.*;
 
-import javax.swing.*;
-//import javax.swing.plaf.basic.BasicHTML;
-//import javax.swing.plaf.metal.MetalCheckBoxUI;
-//import javax.swing.text.View;
-//import javax.swing.tree.TreePath;
+import javax.swing.JPanel;
 
 //import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 //import fr.univmrs.ibdm.GINsim.util.widget.GsJCheckBox;
 
 public class GsUnselectedParamsPanel extends JPanel /*implements ItemListener*/ {
+
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= -8463630458630670085L;
 /*  private static final long serialVersionUID = -3205548998282223157L;
   private static final Color editColor = new Color(164, 215, 164);
 

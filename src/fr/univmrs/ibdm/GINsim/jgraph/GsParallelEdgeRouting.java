@@ -5,12 +5,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
-import org.jgraph.graph.AbstractCellView;
-import org.jgraph.graph.CellView;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.EdgeView;
-import org.jgraph.graph.PortView;
+import org.jgraph.graph.*;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 

@@ -4,28 +4,18 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
-import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.stableStates.GenericStableStateUI;
 import fr.univmrs.ibdm.GINsim.stableStates.GsSearchStableStates;
@@ -40,8 +30,8 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
     JLabel  etatStable = null;
     StableTableModel tableModel = null;
     JButton calculer, formule, html = null;
-    private GsSMVexportConfig cfg;
-    private JTextArea text;
+    GsSMVexportConfig cfg;
+    JTextArea text;
     GsInitialStateList initStates;
     GsInitialState name;
     GsExportConfig config;
@@ -105,7 +95,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 	    		Vector v_no = cfg.graph.getNodeOrder();
 	    		int[] checked = tableModel.getCheckedRow();
 	    		s.append("SPEC EF ( AG (");
-	    		for ( i=0; i<(checked.length-1) ;i++) {
+	    		for ( i=0; i<checked.length-1 ;i++) {
 	    		s.append(v_no.get(i));
 	    		s.append(".level = ");
 	    		s.append(checked[i]);
@@ -122,7 +112,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 		    	v_no = cfg.graph.getNodeOrder();
 		    	checked = tableModel.getCheckedRow();
 		    	s.append("SPEC EF ( AG (");
-		    	for ( i=0; i<(checked.length-1) ;i++) {
+		    	for ( i=0; i<checked.length-1 ;i++) {
 		    	s.append(v_no.get(i));
 		    	s.append(" = ");
 		    	s.append(checked[i]);
@@ -139,7 +129,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 		    	v_no = cfg.graph.getNodeOrder();
 		    	checked = tableModel.getCheckedRow();
 		    	s.append("SPEC EF ( AG (");
-		    	for ( i=0; i<(checked.length-1) ;i++) {
+		    	for ( i=0; i<checked.length-1 ;i++) {
 		    	s.append(v_no.get(i));
 		    	s.append(" = ");
 		    	s.append(checked[i]);
@@ -156,7 +146,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 	    		v_no = cfg.graph.getNodeOrder();
 	    		checked = tableModel.getCheckedRow();
 	    		s.append("EF ( AG (");
-	    		for ( i=0; i<(checked.length-1) ;i++) {
+	    		for ( i=0; i<checked.length-1 ;i++) {
 	    			s.append(v_no.get(i));
 	    			s.append(" == ");
 	    			s.append(checked[i]);

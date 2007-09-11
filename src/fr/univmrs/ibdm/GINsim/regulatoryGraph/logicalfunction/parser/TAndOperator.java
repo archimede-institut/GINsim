@@ -10,8 +10,8 @@ public class TAndOperator extends TBinaryOperator {
     super();
   }
   public TBooleanData getValue() throws Exception {
-    Vector leftData = ((TBooleanData)leftArg.getValue()).getData();
-    Vector rightData = ((TBooleanData)rightArg.getValue()).getData();
+    Vector leftData = leftArg.getValue().getData();
+    Vector rightData = rightArg.getValue().getData();
 
     Vector andData = new Vector(leftData);
     andData.retainAll(rightData);

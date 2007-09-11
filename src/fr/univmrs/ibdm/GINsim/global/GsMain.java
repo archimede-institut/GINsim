@@ -22,10 +22,6 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
  */
 public class GsMain {
 
-	private static boolean ENABLE_TESTING;
-	public static boolean SHOW_FUNCTION;
-	public static boolean USE_PICCOLO = false;
-	
     /**
      * @param args
      * try to run it with --help for more info
@@ -111,8 +107,6 @@ public class GsMain {
                 }
             }
         }
-        ENABLE_TESTING = testing;
-        SHOW_FUNCTION = ENABLE_TESTING;
         GsEnv.setGinsimDir(gsdir);
 
         for (int i = 0; i < commands.size(); i++) {

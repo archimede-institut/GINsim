@@ -10,7 +10,11 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 public class GsJTree extends JTree implements Autoscroll {
-  private int margin = 15;
+  /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 5256095746552134049L;
+private int margin = 15;
   
   public GsJTree(TreeModel m) {
     super(m);

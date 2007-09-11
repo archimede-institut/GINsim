@@ -21,12 +21,7 @@
 package fr.univmrs.ibdm.GINsim.manageressources;
 
 import java.text.MessageFormat;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Stack;
-import java.util.Vector;
+import java.util.*;
 
 /** 
  * Contains ResourceBundle objects.

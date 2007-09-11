@@ -1,20 +1,24 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
+import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.TreePath;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
-import fr.univmrs.ibdm.GINsim.util.widget.*;
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.Dimension;
-import java.awt.Point;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsManualParamPanel extends GsBooleanFunctionTreePanel implements ActionListener, MouseListener, MouseMotionListener {
-  private JButton /*removeButton,*/ editButton;
+  /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= 8954027473319842737L;
+private JButton /*removeButton,*/ editButton;
   private JLabel paramLabel;
 
   public GsManualParamPanel(GsTreeElement value, JTree tree, boolean sel, int width) {

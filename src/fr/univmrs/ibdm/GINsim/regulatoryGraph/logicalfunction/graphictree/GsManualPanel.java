@@ -1,17 +1,30 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
 
-import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.TreePath;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
-import fr.univmrs.ibdm.GINsim.util.widget.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsManualPanel extends GsBooleanFunctionTreePanel implements ActionListener {
-  private JLabel label;
+  /**
+	 * 
+	 */
+	private static final long	serialVersionUID	= -1746326107372469096L;
+private JLabel label;
   private JButton button;
 
   public GsManualPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
@@ -51,7 +64,9 @@ public class GsManualPanel extends GsBooleanFunctionTreePanel implements ActionL
     catch (Exception ex) {
       ex.printStackTrace();
     }
-    while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
+    while (enu.hasMoreElements()) {
+    	tree.expandPath((TreePath)enu.nextElement());
+    }
     path[0] = model.getRoot();
     path[3] = param;
     path[2] = param.getParent();

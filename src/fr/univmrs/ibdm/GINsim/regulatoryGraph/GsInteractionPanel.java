@@ -1,22 +1,11 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -24,13 +13,11 @@ import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicPathItemCellRenderer;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
-
-import fr.univmrs.ibdm.GINsim.global.GsMain;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 /**
  * Panel to edit interaction of a gene
@@ -179,13 +166,11 @@ public class GsInteractionPanel extends GsParameterPanel {
             jPanel.add(getDownButton(), c_down);
 
 
-            if (GsMain.SHOW_FUNCTION) {
-            	GridBagConstraints c_chaos = new GridBagConstraints();
-            	c_chaos.gridx = 2;
-            	c_chaos.gridy = 5;
-            	c_chaos.insets = new Insets(10, 5, 3, 5);
-            	jPanel.add(getChaosButton(), c_chaos);
-            }
+            GridBagConstraints c_chaos = new GridBagConstraints();
+            c_chaos.gridx = 2;
+            c_chaos.gridy = 5;
+            c_chaos.insets = new Insets(10, 5, 3, 5);
+            jPanel.add(getChaosButton(), c_chaos);
 		}
 		return jPanel;
 	}
@@ -536,7 +521,9 @@ public class GsInteractionPanel extends GsParameterPanel {
             if (a>0) {
                 model.moveElementAt(a, a-1);
                 index[i]=a-1;
-            } else return;
+            } else {
+				return;
+			}
         }
         DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)jTable.getSelectionModel();
         selectionModel.clearSelection();
@@ -585,7 +572,9 @@ public class GsInteractionPanel extends GsParameterPanel {
             if (a<jTable.getRowCount()-2) {
                 model.moveElementAt(a, a+1);
                 index[i]=a+1;
-            } else return;
+            } else {
+				return;
+			}
         }
         DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)jTable.getSelectionModel();
         selectionModel.clearSelection();
@@ -696,7 +685,7 @@ public class GsInteractionPanel extends GsParameterPanel {
       return chaosButton;
     }
 
-    private void doChaos() {
+    protected void doChaos() {
       GsFunctionsCreator c = null;
       Vector v = new Vector();
       Vector interactions = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();

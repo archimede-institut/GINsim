@@ -9,17 +9,21 @@ public class TBooleanTreeNodeFactory {
   private String returnClassName, operandClassName;
   private TBooleanParser parser;
 
-  public TBooleanTreeNodeFactory(String className, String operandClassName, TBooleanParser parser) throws ClassNotFoundException {
+  public TBooleanTreeNodeFactory(String className, String operandClassName, TBooleanParser parser) {
     super();
     returnClassName = className;
     this.operandClassName = operandClassName;
-    for (int i = 0; i <(int) operators.length; i++) operatorsAndParenthesis += "\\" + operators[i] + "|";
+    for (int i = 0; i < operators.length; i++) {
+		operatorsAndParenthesis += "\\" + operators[i] + "|";
+	}
     operatorsAndParenthesis += "\\(|\\)| ";
     this.parser = parser;
   }
   public Vector getOperators() {
     Vector v = new Vector();
-    for (int i = 0; i < operators.length; i++) v.addElement(operators[i]);
+    for (int i = 0; i < operators.length; i++) {
+		v.addElement(operators[i]);
+	}
     v.addElement("(");
     v.addElement(")");
     return v;
@@ -61,12 +65,13 @@ public class TBooleanTreeNodeFactory {
   }
 
   public static int getPriority(String value) {
-    if (value.equals(TAndOperator.SYMBOL))
-      return TAndOperator.priority;
-    else if (value.equals(TOrOperator.SYMBOL))
-      return TOrOperator.priority;
-    else if (value.equals(TNotOperator.SYMBOL))
-      return TNotOperator.priority;
+    if (value.equals(TAndOperator.SYMBOL)) {
+		return TAndOperator.priority;
+	} else if (value.equals(TOrOperator.SYMBOL)) {
+		return TOrOperator.priority;
+	} else if (value.equals(TNotOperator.SYMBOL)) {
+		return TNotOperator.priority;
+	}
     return -1;
   }
   public String getOperatorsAndParenthesis() {
