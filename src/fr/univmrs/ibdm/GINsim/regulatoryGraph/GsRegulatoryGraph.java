@@ -325,7 +325,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @param sign
      * @return the new edge
      */
-    public GsRegulatoryEdgeInfo addNewEdge(String from, String to, short minvalue, short maxvalue, String sign) {
+    public GsRegulatoryEdge addNewEdge(String from, String to, short minvalue, String sign) {
     	short vsign = GsRegulatoryMultiEdge.SIGN_UNKNOWN;
     	for (short i=0 ; i<GsRegulatoryMultiEdge.SIGN.length ; i++) {
     		if (GsRegulatoryMultiEdge.SIGN[i].equals(sign)) {
@@ -333,7 +333,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     			break;
     		}
     	}
-    	return addNewEdge(from, to, minvalue, maxvalue, vsign);
+    	return addNewEdge(from, to, minvalue, vsign);
     }
     /**
      * add an edge from textual parameters (for the parser).
@@ -344,7 +344,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @param sign
      * @return the new edge.
      */
-    public GsRegulatoryEdgeInfo addNewEdge(String from, String to, short minvalue, short maxvalue, short sign) {
+    public GsRegulatoryEdge addNewEdge(String from, String to, short minvalue, short sign) {
         GsRegulatoryVertex source = null;
         GsRegulatoryVertex target = null;
 
@@ -359,19 +359,18 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
             GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "STR_noSuchVertex"), null);
             return null;
         }
-
-        //FIXME: edges created with maxvalue: some glue needed to build the SAME network!
         Object oedge = graphManager.getEdge(source, target);
         GsRegulatoryMultiEdge me = null;
+        int index = 0;
         if (oedge == null) {
             me = new GsRegulatoryMultiEdge(source, target, sign, minvalue);
             graphManager.addEdge(source, target, me);
             oedge = graphManager.getEdge(source, target);
         } else {
             me = (GsRegulatoryMultiEdge) ((GsDirectedEdge)oedge).getUserObject();
-            me.addEdge(sign, minvalue, this);
+            index = me.addEdge(sign, minvalue, this);
         }
-        return new GsRegulatoryEdgeInfo((GsDirectedEdge)oedge, me.getEdge(me.getEdgeCount()-1));
+        return me.getEdge(index);
     }
 
 	/**

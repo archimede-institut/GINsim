@@ -2,6 +2,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.File;
 import java.util.*;
+import java.util.Map.Entry;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -58,6 +59,9 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     private Hashtable values;
     private String val = "";
 
+    /** some more stuff to check consistency of "old" models (with explicit and free maxvalue) */
+    Map m_checkMaxValue;
+    
     /**
      */
     public GsRegulatoryParser() {
@@ -235,14 +239,18 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                     if (map == null || map.containsKey(from) && map.containsKey(to)) {
                         pos = POS_EDGE;
                         try {
-                            short minvalue = (short)Integer.parseInt(getAttributeValueWithDefault(attributes,"minvalue", "1"));
-                            short maxvalue = (short)Integer.parseInt(getAttributeValueWithDefault(attributes,"maxvalue", "-1"));
                             String id = attributes.getValue("id");
+                            short minvalue = (short)Integer.parseInt(getAttributeValueWithDefault(attributes,"minvalue", "1"));
+                            String smax = getAttributeValueWithDefault(attributes,"maxvalue", "-1");
+                            short maxvalue = -2;
                             String sign = attributes.getValue("sign");
-                            GsRegulatoryEdgeInfo einfo = graph.addNewEdge(from, to, minvalue, maxvalue, sign);
-                            edge = einfo.edge;
+                            edge = graph.addNewEdge(from, to, minvalue, sign);
+                            if (!smax.startsWith("(")) {
+                            	maxvalue = (short)Integer.parseInt(smax);
+                            	storeMaxValueForCheck(edge, maxvalue);
+                            }
                             m_edges.put(id, edge);
-                            ereader.setEdge(einfo.edge.me);
+                            ereader.setEdge(edge.me);
                         } catch (NumberFormatException e) { throw new SAXException("malformed interaction's parameters"); }
                     } else {
                         pos = POS_FILTERED;
@@ -334,22 +342,52 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         }
     }
 
-    /**
+    private void storeMaxValueForCheck(GsRegulatoryEdge key, short maxvalue) {
+    	if (m_checkMaxValue == null) {
+    		m_checkMaxValue = new HashMap();
+    	}
+    	m_checkMaxValue.put(key, new Integer(maxvalue));
+	}
+
+	/**
      * use the contructed v_waitingInteraction to add the accurate interaction to the nodes.
      */
     private void placeInteractions() {
+    	// check the maxvalues of all interactions first
+    	if (m_checkMaxValue != null) {
+        	Vector v = null;
+    		Iterator it = m_checkMaxValue.entrySet().iterator();
+    		while (it.hasNext()) {
+    			Entry entry = (Entry)it.next();
+    			if (((GsRegulatoryEdge)entry.getKey()).getMax() != ((Integer)entry.getValue()).intValue()) {
+    				if (v == null) {
+    					v = new Vector();
+    				}
+    				v.add(entry);
+    			}
+    		}
+    		if (v != null) {
+    			String s = "consistency problem in the model:";
+    			for (int i=0 ; i<v.size() ; i++) {
+    				Entry entry = (Entry)v.get(i);
+    				int val = ((Integer)entry.getValue()).intValue();
+    				s += "\nmaxvalue of "+entry.getKey()+" should be "+(val>0 ? ""+val : "max");
+    			}
+    			GsEnv.error(s, null);
+    		}
+    	}
+    	
     	for (int i=0 ; i<v_waitingInteractions.size() ; i+=3) {
     		GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_waitingInteractions.get(i);
     		GsLogicalParameter gsi = new GsLogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)), true);
     		String[] t_interaction = ((String) v_waitingInteractions.get(i+2)).split(" ");
 
     		for (int j=0 ; j<t_interaction.length ; j++) {
-
-    			GsRegulatoryEdge ei = (GsRegulatoryEdge) m_edges.get(t_interaction[j]);
-    			if (ei == null) {
+    			GsRegulatoryEdge e = (GsRegulatoryEdge) m_edges.get(t_interaction[j]);
+    			if (e == null) {
     				// we have a problem
     			} else {
-    				gsi.addEdge(ei);
+    				gsi.addEdge(e);
     			}
     		}
     		vertex.addLogicalParameter(gsi);

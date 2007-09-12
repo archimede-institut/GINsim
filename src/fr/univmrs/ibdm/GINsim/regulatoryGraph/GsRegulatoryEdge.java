@@ -37,6 +37,6 @@ public class GsRegulatoryEdge {
 	}
 	
 	public String toString() {
-		return me.getSource()+" "+me.getEdgeName(index);
+		return me.getSource()+" "+index+" "+me.getEdgeName(index);
 	}
 }

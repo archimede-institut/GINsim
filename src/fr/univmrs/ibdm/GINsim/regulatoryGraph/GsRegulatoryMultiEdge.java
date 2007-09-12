@@ -68,15 +68,17 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     public void addEdge(int sign, GsGraph graph) {
     	addEdge(sign, 1, graph);
     }
-    public void addEdge(int sign, int threshold, GsGraph graph) {
-    	if (doAddEdge(sign, threshold)) {
+    public int addEdge(int sign, int threshold, GsGraph graph) {
+    	int index = doAddEdge(sign, threshold);
+    	if (index != -1) {
     		rescanSign(graph);
     		target.incomingEdgeAdded(this);
     	}
+    	return index;
     }
-    private boolean doAddEdge(int sign, int threshold) {
+    private int doAddEdge(int sign, int threshold) {
     	if (edgecount >= edges.length) {
-    		return false;
+    		return -1;
     	}
     	GsRegulatoryEdge edge = new GsRegulatoryEdge(this);
     	edge.sign = (short)sign;
@@ -90,12 +92,12 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     			edgecount++;
     			edges[i] = edge;
     			edge.index = (short)i;
-    			return true;
+    			return i;
     		}
     	}
     	edge.index = (short)edgecount;
-    	edges[edgecount++] = edge;
-    	return true;
+    	edges[edgecount] = edge;
+    	return edgecount++;
     }
     /**
      * remove an edge from this multiEdge
@@ -152,12 +154,8 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
         for (int i=0 ; i<edgecount ; i++) {
             GsRegulatoryEdge edge = edges[i];
 
-            int max = i<edgecount ? edges[i+1].threshold-1 : -1;
-            if (max == -1) {
-                out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\" sign=\""+ SIGN[edge.sign] +"\">\n");
-            } else {
-                out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\" maxvalue=\""+max+"\" sign=\""+ SIGN[edge.sign] +"\">\n");
-            }
+            int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
+            out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\" maxvalue=\"("+(max==-1 ? "max" : ""+max)+")\" sign=\""+ SIGN[edge.sign] +"\">\n");
             edge.annotation.toXML(out, null, mode);
             if (param != null) {
                 out.write(""+param);
