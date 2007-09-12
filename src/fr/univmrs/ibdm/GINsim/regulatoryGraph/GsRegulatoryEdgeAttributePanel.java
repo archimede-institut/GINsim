@@ -4,15 +4,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.MenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 
+import fr.univmrs.ibdm.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
@@ -188,10 +195,76 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	    if (!graph.isEditAllowed()) {
 	        return;
 	    }
-		((GsRegulatoryGraph)mainFrame.getGraph()).addToExistingEdge( currentEdge, 0);
-		((GsDirectedEdgeListModel)jList.getModel()).update();
-		jList.setSelectedIndex(currentEdge.getEdgeCount()-1);
+	    int[] t = currentEdge.getFreeValues();
+	    if (t[0] == -1) {
+	    	GsGraphNotificationAction notifAction = new NotificationAction(this);
+	    	graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
+	    			Translator.getString("STR_noMoreValueForInteraction"),
+	    			notifAction,
+	    			currentEdge,
+	    			GsGraphNotificationMessage.NOTIFICATION_WARNING));
+	    } else if (t[1] == -1) {
+	    	addEdge(t[0]);
+	    } else {
+	    	JPopupMenu menu = new JPopupMenu("select value");
+	    	for (int i=0 ; i<t.length ; i++) {
+	    		if (t[i] == -1) {
+	    			break;
+	    		}
+	    		JMenuItem item = new JMenuItem(new MenuAction(this, t[i]));
+	    		menu.add(item);
+	    	}
+	    	menu.show(jButton, jButton.getX(), jButton.getY());
+	    }
     }
+
+    protected void addEdge(int value) {
+		int index = currentEdge.addEdge(GsRegulatoryMultiEdge.SIGN_POSITIVE, value, graph);
+		if (index != -1) {
+			((GsDirectedEdgeListModel)jList.getModel()).update();
+			jList.setSelectedIndex(index);
+		}
+    }
+    
+    class NotificationAction implements GsGraphNotificationAction {
+    	GsRegulatoryEdgeAttributePanel panel;
+    	NotificationAction(GsRegulatoryEdgeAttributePanel panel) {
+    		this.panel = panel;
+    	}
+		public boolean timeout(GsGraph graph, Object data) {
+			return true;
+		}
+	
+		public boolean perform(GsGraph graph, Object data, int index) {
+			if (panel.currentEdge == data) {
+				GsRegulatoryVertex vertex = ((GsRegulatoryMultiEdge)data).getSource();
+				vertex.setMaxValue((short)(vertex.getMaxValue()+1), (GsRegulatoryGraph)graph);
+				panel.addEdge();
+				return true;
+			}
+			return false;
+		}
+		public String[] getActionName() {
+			String[] t = {"add value"};
+			return t;
+		}
+    }
+    
+    class MenuAction extends AbstractAction {
+		private static final long serialVersionUID = -7038482131591956858L;
+		int value;
+    	GsRegulatoryEdgeAttributePanel panel;
+		MenuAction(GsRegulatoryEdgeAttributePanel panel, int value) {
+    		this.value = value;
+    		this.panel = panel;
+    		this.putValue( Action.NAME, ""+value);
+    	}
+		public void actionPerformed(ActionEvent e) {
+			panel.addEdge(value);
+		}
+    }
+    
+    
     /**
 	 * This method initializes jButton1
 	 *

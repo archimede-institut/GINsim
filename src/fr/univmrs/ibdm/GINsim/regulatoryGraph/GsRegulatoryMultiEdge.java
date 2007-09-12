@@ -26,7 +26,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	/** an unknown edge */
 	static public final short SIGN_UNKNOWN = 2;
 
-	private GsRegulatoryEdge[] edges = new GsRegulatoryEdge[GsRegulatoryVertex.MAXVALUE];
+	private GsRegulatoryEdge[] edges = new GsRegulatoryEdge[GsRegulatoryVertex.MAXVALUE+1];
 	private int edgecount = 0;
     private GsRegulatoryVertex source, target;
     private int sign = 0;
@@ -283,7 +283,25 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 		if (index >= edgecount) {
 			return;
 		}
+		int cur = edges[index].threshold;
 		edges[index].threshold = min;
+		if (min > cur) {
+			for (int i=index+1 ; i<edgecount ; i++) {
+				if (edges[i].threshold < min) {
+					edges[i].threshold = min;
+				} else {
+					break;
+				}
+			}
+		} else if (min < cur) {
+			for (int i=index-1 ; i>=0 ; i--) {
+				if (edges[i].threshold > min) {
+					edges[i].threshold = min;
+				} else {
+					break;
+				}
+			}
+		}
 	}
 
 	public Object getUserObject() {
@@ -375,4 +393,22 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 		}
 	}
 
+	public int[] getFreeValues() {
+		int[] t = new int[source.getMaxValue()];
+		int cur = 1;
+		int index = 0;
+		for (int i=0 ; i<=edgecount ; i++) {
+			short nextval = i>=edgecount ? (short)(source.getMaxValue()+1) : edges[i].threshold;
+			if (nextval > cur) {
+				for ( ; cur<nextval ; cur++) {
+					t[index++] = cur;
+				}
+			}
+			cur = nextval+1;
+		}
+		for ( ; index<t.length ; index++) {
+			t[index] = -1;
+		}
+		return t;
+	}
 }
