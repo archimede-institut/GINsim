@@ -33,44 +33,11 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getNextMaxValue() {
-        if (!graph.isEditAllowed() || medge == null) {
             return getMaxValue();
-        }
-        short cur = medge.getMax(index);
-        short max = medge.getSource().getMaxValue();
-        if (update && cur != -1 && cur <= max) {
-            graph.fireMetaChange();
-        }
-        
-        if (cur == -1 || cur == max) {
-            medge.setMax(index, (short)-1);
-        } else {
-        	medge.setMax(index, (short)(medge.getMax(index)+1));
-        }
-        m_max.update();
-        ((GsDirectedEdgeListModel)jlist.getModel()).update();
-        return new Integer(medge.getMax(index));
     }
 
     public Object getPreviousMaxValue() {
-        if (!graph.isEditAllowed() || medge == null) {
             return getMaxValue();
-        }
-        short cur = medge.getMax(index);
-        short max = medge.getSource().getMaxValue();
-        if (update && (cur > 1 || cur == -1)) {
-            graph.fireMetaChange();
-        }
-        
-        if (cur == -1) {
-            medge.setMax(index, max);
-        } else if (cur > 1) {
-            medge.setMax(index, (short)(medge.getMax(index)-1));
-            m_min.update();
-        }
-        m_max.update();
-        ((GsDirectedEdgeListModel)jlist.getModel()).update();
-        return new Integer(medge.getMax(index));
     }
 
     public Object getMaxValue() {
@@ -84,29 +51,7 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public void setMaxValue(Object value) {
-        if (!graph.isEditAllowed()) {
             return;
-        }
-        if (value instanceof String) {
-            if ("Max".equalsIgnoreCase((String)value) || "m".equalsIgnoreCase((String)value)) { 
-                medge.setMax(index, (short)-1);
-                if (update) {
-                    graph.fireMetaChange();
-                }
-            }
-            try {
-                medge.setMax(index, (short)Integer.parseInt(value.toString()));
-                if (update) {
-                    graph.fireMetaChange();
-                }
-            } catch (NumberFormatException e) {}
-
-        } else if (value instanceof Integer ){
-            medge.setMax(index, ((Integer)value).shortValue());
-        }
-        m_max.update();
-        m_min.update();
-        ((GsDirectedEdgeListModel)jlist.getModel()).update();
     }
     public Object getNextMinValue() {
         if (!graph.isEditAllowed() || medge == null) {

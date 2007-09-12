@@ -15,15 +15,15 @@ public class GsRegulatoryEdgeInfo {
     /** edge (for the graphmanager), use it to restore visual settings  */
     public final GsDirectedEdge dedge;
     /** edgeIndex: use it to restore correct interactions */
-    public final GsEdgeIndex edgeIndex;
+    public final GsRegulatoryEdge edge;
     
     /**
      * @param dedge
      * @param edgeIndex
      */
-    public GsRegulatoryEdgeInfo (GsDirectedEdge dedge, GsEdgeIndex edgeIndex) {
+    public GsRegulatoryEdgeInfo (GsDirectedEdge dedge, GsRegulatoryEdge edge) {
         this.dedge = dedge;
-        this.edgeIndex = edgeIndex;
+        this.edge = edge;
     }
     
 }

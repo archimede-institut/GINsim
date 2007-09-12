@@ -81,7 +81,7 @@ public class GsParamTree {
     while (!currentNode.isLeaf()) {
       found = false;
       for (int i = 0; i < lp.EdgeCount(); i++)
-        if (lp.getEdge(i).data.getSource().getId().equals(currentNode.toString())) {
+        if (lp.getEdge(i).me.getSource().getId().equals(currentNode.toString())) {
           currentNode = currentNode.getSon(lp.getEdge(i).index + 1);
           found = true;
           break;

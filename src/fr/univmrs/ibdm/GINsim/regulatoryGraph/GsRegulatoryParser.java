@@ -48,7 +48,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     private GsRegulatoryVertex vertex = null;
     private GsVertexAttributesReader vareader = null;
     private GsEdgeAttributesReader ereader = null;
-    private GsEdgeIndex edgeIndex = null;
+    private GsRegulatoryEdge edge = null;
     private GsAnnotation annotation = null;
     private Map m_edges = new HashMap();
     private Vector v_waitingInteractions = new Vector();
@@ -198,7 +198,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         switch(pos) {
             case POS_OUTSIDE:
                 if (qName.equals("graph")) {
-                    if (!("regulatory".equals(attributes.getValue("class")))) {
+                    if (!"regulatory".equals(attributes.getValue("class"))) {
                         throw new SAXException("not a regulatory graph");
                     }
                     s_nodeOrder = attributes.getValue("nodeorder");
@@ -232,7 +232,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                 } else if (qName.equals("edge")) {
                     String from = attributes.getValue("from");
                     String to = attributes.getValue("to");
-                    if (map == null || ( map.containsKey(from) && map.containsKey(to) )) {
+                    if (map == null || map.containsKey(from) && map.containsKey(to)) {
                         pos = POS_EDGE;
                         try {
                             short minvalue = (short)Integer.parseInt(getAttributeValueWithDefault(attributes,"minvalue", "1"));
@@ -240,9 +240,9 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                             String id = attributes.getValue("id");
                             String sign = attributes.getValue("sign");
                             GsRegulatoryEdgeInfo einfo = graph.addNewEdge(from, to, minvalue, maxvalue, sign);
-                            edgeIndex = einfo.edgeIndex;
-                            m_edges.put(id, edgeIndex);
-                            ereader.setEdge(einfo.edgeIndex.data);
+                            edge = einfo.edge;
+                            m_edges.put(id, edge);
+                            ereader.setEdge(einfo.edge.me);
                         } catch (NumberFormatException e) { throw new SAXException("malformed interaction's parameters"); }
                     } else {
                         pos = POS_FILTERED;
@@ -297,7 +297,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                 	pos = POS_EDGE_VS;
                 } else if (qName.equals("annotation")) {
                     pos = POS_EDGE_NOTES;
-                    annotation = edgeIndex.data.getGsAnnotation(edgeIndex.index);
+                    annotation = edge.me.getGsAnnotation(edge.index);
                 }
                 break; // POS_EDGE
 
@@ -338,22 +338,22 @@ public final class GsRegulatoryParser extends GsXMLHelper {
      * use the contructed v_waitingInteraction to add the accurate interaction to the nodes.
      */
     private void placeInteractions() {
-    		for (int i=0 ; i<v_waitingInteractions.size() ; i+=3) {
-    			GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_waitingInteractions.get(i);
-    			GsLogicalParameter gsi = new GsLogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)));
-    			String[] t_interaction = ((String) v_waitingInteractions.get(i+2)).split(" ");
+    	for (int i=0 ; i<v_waitingInteractions.size() ; i+=3) {
+    		GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_waitingInteractions.get(i);
+    		GsLogicalParameter gsi = new GsLogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)), true);
+    		String[] t_interaction = ((String) v_waitingInteractions.get(i+2)).split(" ");
 
-    			for (int j=0 ; j<t_interaction.length ; j++) {
+    		for (int j=0 ; j<t_interaction.length ; j++) {
 
-    			    GsEdgeIndex ei = (GsEdgeIndex) m_edges.get(t_interaction[j]);
-    			    if (ei == null) {
-    			        // we have a problem
-    			    } else {
-    			        gsi.addEdge(ei);
-    			    }
+    			GsRegulatoryEdge ei = (GsRegulatoryEdge) m_edges.get(t_interaction[j]);
+    			if (ei == null) {
+    				// we have a problem
+    			} else {
+    				gsi.addEdge(ei);
     			}
-    			vertex.addLogicalParameter(gsi);
     		}
+    		vertex.addLogicalParameter(gsi);
+    	}
     }
 
     /**
@@ -406,24 +406,26 @@ public final class GsRegulatoryParser extends GsXMLHelper {
               for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
                 exp = (String)enu_exp.nextElement();
                 //chk = (String)enu_exp.nextElement();
-                if (!exp.startsWith("PARAM"))
-                  addExpression(Short.parseShort(value), vertex, exp/*, chk.length()*/);
-                else
-                  addParam(Short.parseShort(value), vertex, exp.split("\t")[1]);
+                if (!exp.startsWith("PARAM")) {
+					addExpression(Short.parseShort(value), vertex, exp/*, chk.length()*/);
+				} else {
+					addParam(Short.parseShort(value), vertex, exp.split("\t")[1]);
+				}
               }
             }
             vertex.getInteractionsModel().parseFunctions();
-            if ((vertex.getMaxValue() - vertex.getBaseValue() + 1) == ((Hashtable)values.get(vertex)).size())
-              ((GsTreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
-            //for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
-            //  value = (String)enu_values.nextElement();
-            //  for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
-            //    exp = (String)enu_exp.nextElement();
-                //chk = (String)enu_exp.nextElement();
-                //vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
-                //vertex.getInteractionsModel().parseFunctions();
-            //  }
-            //}
+            if (vertex.getMaxValue() - vertex.getBaseValue() + 1 == ((Hashtable)values.get(vertex)).size()) {
+				((GsTreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
+				//for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
+				//  value = (String)enu_values.nextElement();
+				//  for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
+				//    exp = (String)enu_exp.nextElement();
+				    //chk = (String)enu_exp.nextElement();
+				    //vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
+				    //vertex.getInteractionsModel().parseFunctions();
+				//  }
+				//}
+			}
           }
         }
       }
@@ -456,7 +458,6 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       List l = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
       GsTreeParam param = interactionList.addEmptyParameter(val, vertex);
       String[] t_interaction = par.split(" ");
-      GsEdgeIndex ei;
       Vector v = new Vector();
       String srcString, indexString;
       GsRegulatoryMultiEdge o;
@@ -466,8 +467,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         for (int j = 0; j < l.size(); j++) {
           o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)l.get(j)).getUserObject();
           if (o.getSource().getId().equals(srcString)) {
-            ei = new GsEdgeIndex(o, Integer.parseInt(indexString));
-            v.addElement(ei);
+        	  // FIXME: edge definition changed, consistency should be checked
+            v.addElement(o.getEdge(Integer.parseInt(indexString)));
             break;
           }
         }

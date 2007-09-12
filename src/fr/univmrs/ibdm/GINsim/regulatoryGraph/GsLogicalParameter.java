@@ -20,25 +20,29 @@ public class GsLogicalParameter implements GsXMLize {
 	private int value;
 	//vector of incoming active interaction
 	private Vector edge_index;
-	private GsEdgeIndex tmp_ei = new GsEdgeIndex(null, 0);
+//	private GsRegulatoryEdge tmp_ei = new GsEdgeIndex(null, 0);
 
+	private boolean isManual = true;
+	
 	/**
 	 * Constructs an empty vector and set the value
 	 * 
 	 * @param v of the interaction
 	 */
-	public GsLogicalParameter(int v) {
+	public GsLogicalParameter(int v, boolean manual) {
 		value = v;
 		edge_index = new Vector();
+		isManual = manual;
 	}
 
 	/**
      * @param newEI
      * @param v
      */
-    public GsLogicalParameter(Vector newEI, int v) {
+    public GsLogicalParameter(Vector newEI, int v, boolean manual) {
         value = v;
         edge_index = newEI;
+		isManual = manual;
     }
 
     /**
@@ -65,80 +69,35 @@ public class GsLogicalParameter implements GsXMLize {
 	 * @param me
 	 * @param index
 	 */
-	public void addEdge(GsRegulatoryMultiEdge me,int index) {
-		edge_index.addElement(new GsEdgeIndex(me,index));
+	public void addEdge(GsRegulatoryEdge edge) {
+		edge_index.addElement(edge);
 	}
 	
-	/**
-	 * Adds the GsEdgeIndex to the interaction
-	 * @param ei
-	 */
-	public void addEdge(GsEdgeIndex ei) {
-		edge_index.addElement(ei);
-	}
-	
-	/**
-	 * Removes the GsEdgeIndex from the parameter
-	 * @param o
-	 * @param index
-     * @return true if this triggered a change
-	 */
-	public boolean removeEdge(GsRegulatoryMultiEdge o,int index) {
-		try {
-			for (int i=0 ; i<edge_index.size() ; i++) {
-				//search the GsEdgeIndex corresponding to parameter
-				GsEdgeIndex ei = (GsEdgeIndex)edge_index.get(i);
-				if (ei.data == o) {
-					if ( ei.index == index) {
-						return true;
-					} else if (ei.index > index) {
-						ei.index--;
-					}
-				}
+	public boolean isDurty() {
+		for (int i=0 ; i<edge_index.size() ; i++) {
+			if (((GsRegulatoryEdge)edge_index.get(i)).index == -1) {
+				return true;
 			}
 		}
-		catch (java.lang.ArrayIndexOutOfBoundsException e) {e.printStackTrace();}
-        return false;
-	}
-
-	/**
-	 * Removes all edges of the multiedge from the parameter 
-	 * @param o
-     * @return true if this triggered a change
-	 */
-	public boolean removeEdge(GsRegulatoryMultiEdge o) {
-        boolean changed = false;
-		try {
-			for (int i=0 ; i<edge_index.size() ; i++) {
-				//search the GsEdgeIndex corresponding to parameter
-				GsEdgeIndex ei = (GsEdgeIndex)edge_index.get(i);
-				if ( ei.data == o) {
-					edge_index.remove(ei);
-					i--;
-                    changed = true;
-				}
-			}
-		}
-		catch (java.lang.ArrayIndexOutOfBoundsException e) {e.printStackTrace();}
-        return changed;
+		return false;
 	}
 
 	/**
 	 * @param index
 	 * @return the GsEdgeIndex at the specified position index in the parameter. 
 	 */
-	public GsEdgeIndex getEdge(int index) {
+	public GsRegulatoryEdge getEdge(int index) {
 		try{
-			return (GsEdgeIndex)(edge_index.get(index));
+			return (GsRegulatoryEdge)edge_index.get(index);
 		}
-		catch (java.lang.ArrayIndexOutOfBoundsException e) {return(null);}
+		catch (java.lang.ArrayIndexOutOfBoundsException e) {return null;}
 	}
 
 	/**
 	 * @return the number of edges in this parameter.
 	 */
 	public int EdgeCount() {
-		return(edge_index.size());
+		return edge_index.size();
 	}
 	
 	/**
@@ -191,15 +150,13 @@ public class GsLogicalParameter implements GsXMLize {
             t_val[0] = (short)nodeOrder.indexOf(vertex);
             t_ac[i] = t_val;
             int nbedges = me.getEdgeCount();
-            tmp_ei.data = me;
             int m = vertex.getMaxValue();
             for (int j=0 ; j<nbedges ; j++) {
-                tmp_ei.index = j;
                 int im = me.getMax(j);
                 if (im == -1) {
                     im = m;
                 }
-                if (!edge_index.contains(tmp_ei)) {
+                if (!edge_index.contains(me.getEdge(j))) {
                     // must be inactive
                     for (int l=me.getMin(j) ; l<=im ; l++) {
                         t_val[l+1] = -1;
@@ -295,8 +252,8 @@ public class GsLogicalParameter implements GsXMLize {
 	private String stringEdges() {
 		String sEdges = "";
 		for (int i = 0; i < edge_index.size(); i++) {
-			GsEdgeIndex ei = (GsEdgeIndex) edge_index.elementAt(i);
-			sEdges = sEdges + ei.getSEdge() + " ";
+			GsRegulatoryEdge e = (GsRegulatoryEdge) edge_index.elementAt(i);
+			sEdges = sEdges + e.getSEdge() + " ";
 		}
 
 		return sEdges.substring(0,sEdges.length()-1);		
@@ -320,17 +277,17 @@ public class GsLogicalParameter implements GsXMLize {
     public void applyNewGraph(GsRegulatoryVertex clone, HashMap copyMap) {
         Vector newEI = new Vector();
         for (int i=0 ; i<edge_index.size() ; i++) {
-            GsEdgeIndex ei = (GsEdgeIndex)edge_index.get(i);
-            GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)copyMap.get(ei.data);
+        	GsRegulatoryEdge ei = (GsRegulatoryEdge)edge_index.get(i);
+            GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)copyMap.get(ei.me);
             if (me != null) {
-                newEI.add(new GsEdgeIndex(me, ei.index));
+                newEI.add(me.getEdge(ei.index));
             } else {
                 // if any of the nodes involved in the interaction hasn't been copied: don't restore the interaction!
                 return;
             }
         }
         if (newEI.size() != 0) {
-            clone.addLogicalParameter(new GsLogicalParameter(newEI, value));
+            clone.addLogicalParameter(new GsLogicalParameter(newEI, value, isManual));
         }
     }
     
@@ -338,9 +295,9 @@ public class GsLogicalParameter implements GsXMLize {
         if (edge_index.size() == 0) {
             return "(basal value)";
         }
-        String str = "";
+        String str = isManual ? "" : "(f) ";
         for (int i = 0; i < edge_index.size(); i++) {
-            str += getEdge(i).data.getId(getEdge(i).index) + " ";
+            str += getEdge(i).me.getId(getEdge(i).index) + " ";
         }
         return str;
     }

@@ -96,18 +96,17 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     }
 
     protected Object doInteractiveAddEdge(Object source, Object target, int param) {
-    		Object obj = graphManager.getEdge(source, target);
-    		if (obj != null) {
-  				obj = ((GsDirectedEdge)obj).getUserObject();
-    			((GsRegulatoryMultiEdge)obj).addEdge(new GsRegulatoryEdge(param), this);
-    			return obj;
-    		}
-        obj = new GsRegulatoryMultiEdge((GsRegulatoryVertex)source, (GsRegulatoryVertex)target, param);
-        Object ret = graphManager.addEdge(source, target, obj);
-        ((GsRegulatoryMultiEdge)obj).rescanSign(this);
-        ((GsRegulatoryVertex)target).incomingEdgeAdded((GsRegulatoryMultiEdge)obj);
-
-return ret;
+    	Object obj = graphManager.getEdge(source, target);
+    	if (obj != null) {
+    		obj = ((GsDirectedEdge)obj).getUserObject();
+    		((GsRegulatoryMultiEdge)obj).addEdge(param, this);
+    		return obj;
+    	}
+    	obj = new GsRegulatoryMultiEdge((GsRegulatoryVertex)source, (GsRegulatoryVertex)target, param);
+    	Object ret = graphManager.addEdge(source, target, obj);
+    	((GsRegulatoryMultiEdge)obj).rescanSign(this);
+    	((GsRegulatoryVertex)target).incomingEdgeAdded((GsRegulatoryMultiEdge)obj);
+    	return ret;
     }
 
     protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
@@ -207,7 +206,7 @@ return ret;
      * @param edge
      */
     public void addToExistingEdge(Object edge) {
-        ((GsRegulatoryMultiEdge)((GsDirectedEdge)edge).getUserObject()).addEdge(new GsRegulatoryEdge(), this);
+        ((GsRegulatoryMultiEdge)((GsDirectedEdge)edge).getUserObject()).addEdge(this);
     }
 
     /**
@@ -215,7 +214,7 @@ return ret;
      * @param param
      */
     public void addToExistingEdge(Object edge, int param) {
-        ((GsRegulatoryMultiEdge)((GsDirectedEdge)edge).getUserObject()).addEdge(new GsRegulatoryEdge(param), this);
+        ((GsRegulatoryMultiEdge)((GsDirectedEdge)edge).getUserObject()).addEdge(this);
     }
 
     public GsParameterPanel getEdgeAttributePanel() {
@@ -269,9 +268,9 @@ return ret;
         }
         if (multiEdge.getEdgeCount() == 1) {
             removeEdge(multiEdge);
-        }
-        else
-          multiEdge.removeEdge(index, this);
+        } else {
+			multiEdge.removeEdge(index, this);
+		}
     }
     /**
      *
@@ -279,6 +278,7 @@ return ret;
      */
     public void removeEdge(Object obj) {
        GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)obj).getUserObject();
+       edge.markRemoved();
        graphManager.removeEdge(edge.getSource(), edge.getTarget());
        edge.getTarget().removeEdgeFromInteraction(edge);
        fireGraphChange(CHANGE_EDGEREMOVED, obj);
@@ -326,9 +326,9 @@ return ret;
      * @return the new edge
      */
     public GsRegulatoryEdgeInfo addNewEdge(String from, String to, short minvalue, short maxvalue, String sign) {
-    	short vsign = GsRegulatoryEdge.SIGN_UNKNOWN;
-    	for (short i=0 ; i<GsRegulatoryEdge.SIGN.length ; i++) {
-    		if (GsRegulatoryEdge.SIGN[i].equals(sign)) {
+    	short vsign = GsRegulatoryMultiEdge.SIGN_UNKNOWN;
+    	for (short i=0 ; i<GsRegulatoryMultiEdge.SIGN.length ; i++) {
+    		if (GsRegulatoryMultiEdge.SIGN[i].equals(sign)) {
     			vsign = i;
     			break;
     		}
@@ -360,18 +360,18 @@ return ret;
             return null;
         }
 
-        GsRegulatoryEdge edge = new GsRegulatoryEdge(minvalue, maxvalue, sign);
+        //FIXME: edges created with maxvalue: some glue needed to build the SAME network!
         Object oedge = graphManager.getEdge(source, target);
         GsRegulatoryMultiEdge me = null;
         if (oedge == null) {
-            me = new GsRegulatoryMultiEdge(source, target, edge, this);
+            me = new GsRegulatoryMultiEdge(source, target, sign, minvalue);
             graphManager.addEdge(source, target, me);
             oedge = graphManager.getEdge(source, target);
         } else {
             me = (GsRegulatoryMultiEdge) ((GsDirectedEdge)oedge).getUserObject();
-            me.addEdge(edge, this);
+            me.addEdge(sign, minvalue, this);
         }
-        return new GsRegulatoryEdgeInfo((GsDirectedEdge)oedge, new GsEdgeIndex (me, me.getEdgeCount()-1));
+        return new GsRegulatoryEdgeInfo((GsDirectedEdge)oedge, me.getEdge(me.getEdgeCount()-1));
     }
 
 	/**
@@ -582,7 +582,7 @@ return ret;
         }
 
         for (int i=0 ; i<regOrder.size() ; i++) {
-            if (!( regOrder.get(i).toString().equals(dynOrder.get(i).toString()) )) {
+            if (!regOrder.get(i).toString().equals(dynOrder.get(i).toString())) {
                 return false;
             }
         }

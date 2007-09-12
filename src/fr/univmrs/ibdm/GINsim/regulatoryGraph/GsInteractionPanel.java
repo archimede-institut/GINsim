@@ -614,7 +614,7 @@ public class GsInteractionPanel extends GsParameterPanel {
 		if (edge != null) {
 			int[] indices = new int[edge.size()];
 			for (int i=0 ; i<edge.size() ; i++) {
-				indices[i] = edgeList.getIndex(((GsEdgeIndex)edge.get(i)));
+				indices[i] = edgeList.getIndex(((GsRegulatoryEdge)edge.get(i)));
 			}
 			jList.setSelectedIndices(indices);
 		}
@@ -639,7 +639,7 @@ public class GsInteractionPanel extends GsParameterPanel {
 				Object[] objs = jList.getSelectedValues();
 				for (int i=0;i<indices.length;i++) {
 					if (objs[i] != null) {
-                        edgeindex.add( ((GsEdgeIndex)objs[i]).clone() );
+                        edgeindex.add(objs[i]);
                         graph.fireMetaChange();
                     }
 				}

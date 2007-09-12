@@ -68,40 +68,44 @@ public class GsTreeInteractionsModel implements TreeModel {
     //v_ok.add(Boolean.TRUE);
   }
   public void removeEdge(GsRegulatoryMultiEdge multiEdge, int index) {
-    GsTreeValue val;
-    GsTreeExpression exp;
+	  GsTreeValue val;
+	  GsTreeElement exp;
 
-    for (int i = 0; i < root.getChildCount(); i++) {
-      val = (GsTreeValue)root.getChild(i);
-      for (int j = 0; j < val.getChildCount(); j++) {
-        exp = (GsTreeExpression)val.getChild(j);
-        if (exp.remove(multiEdge, index) == null) {
-          val.removeChild(j);
-          j--;
-        }
-        else {
-          setExpression((short)val.getValue(), exp);
-        }
-        fireTreeStructureChanged(root);
-      }
-    }
+	  for (int i = 0; i < root.getChildCount(); i++) {
+		  val = (GsTreeValue)root.getChild(i);
+		  for (int j = 0; j < val.getChildCount(); j++) {
+			  exp = val.getChild(j);
+			  if (exp instanceof GsTreeExpression) {
+				  if (((GsTreeExpression)exp).remove(multiEdge, index) == null) {
+					  val.removeChild(j);
+					  j--;
+				  }
+				  else {
+					  setExpression((short)val.getValue(), (GsTreeExpression)exp);
+				  }
+			  }
+			  fireTreeStructureChanged(root);
+		  }
+	  }
   }
   public void removeEdge(GsRegulatoryMultiEdge multiEdge) {
     GsTreeValue val;
-    GsTreeExpression exp;
+    GsTreeElement exp;
 
     if (multiEdge.getTarget().equals(node)) {
       for (int i = 0; i < root.getChildCount(); i++) {
         val = (GsTreeValue) root.getChild(i);
         for (int j = 0; j < val.getChildCount(); j++) {
-          exp = (GsTreeExpression) val.getChild(j);
-          if (exp.remove(multiEdge) == null) {
-            val.removeChild(j);
-            j--;
-          } else {
-			setExpression((short)val.getValue(), exp);
-		}
-          fireTreeStructureChanged(root);
+        	exp = val.getChild(j);
+        	if (exp instanceof GsTreeExpression) {
+        		if (((GsTreeExpression)exp).remove(multiEdge) == null) {
+        			val.removeChild(j);
+        			j--;
+        		} else {
+        			setExpression((short)val.getValue(), (GsTreeExpression)exp);
+        		}
+        	}
+        	fireTreeStructureChanged(root);
         }
         if (val.getChildCount() == 0) {
           root.removeChild(i);
@@ -128,7 +132,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     }
   }
   public void setActivesEdges(Vector edgeIndex, int value) {
-    GsLogicalParameter inter = new GsLogicalParameter(value);
+    GsLogicalParameter inter = new GsLogicalParameter(value, false);
     inter.setEdges(edgeIndex);
     node.addLogicalParameter(inter);
     //v_ok.add(v_ok.size()-1, Boolean.TRUE);
@@ -193,7 +197,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     Vector params = parser.getParams(functionList.getData());
     Iterator it = params.iterator(), it2;
     Vector v;
-    GsEdgeIndex edgeIndex;
+    GsRegulatoryEdge edge;
     GsLogicalFunctionListElement element;
     GsTreeParam param;
 
@@ -205,8 +209,8 @@ public class GsTreeInteractionsModel implements TreeModel {
       v = new Vector();
       while (it2.hasNext()) {
         element = (GsLogicalFunctionListElement)it2.next();
-        edgeIndex = new GsEdgeIndex(element.getEdge(), element.getIndex());
-        v.addElement(edgeIndex);
+        edge = element.getEdge().getEdge(element.getIndex());
+        v.addElement(edge);
       }
       if (v.size() > 0) {
 		setActivesEdges(v, val);
@@ -319,8 +323,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 	  Vector v = new Vector();
 	  while (it2.hasNext()) {
 	    GsLogicalFunctionListElement element = (GsLogicalFunctionListElement)it2.next();
-	    GsEdgeIndex edgeIndex = new GsEdgeIndex(element.getEdge(), element.getIndex());
-	    v.addElement(edgeIndex);
+	    v.addElement(element.getEdge().getEdge(element.getIndex()));
 	  }
 	  if (v.size() > 0) {
 		setActivesEdges(v, val);
@@ -384,7 +387,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         for (int k = 0; k < exp.getChildCount(); k++) {
           param = (GsTreeParam)exp.getChild(k);
           if (/*param.isChecked() &&*/ !param.isError()) {
-            p = new GsLogicalParameter(val.getValue());
+            p = new GsLogicalParameter(val.getValue(), false);
             p.setEdges(param.getEdgeIndexes());
             if (!(param.isWarning() && v2.contains(p.toString()))) {
 				v.addElement(p);

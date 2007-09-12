@@ -60,8 +60,9 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 * @see javax.swing.table.TableModel#getRowCount()
 	 */
 	public int getRowCount() {
-		if (interactions == null)
+		if (interactions == null) {
 			return 0;
+		}
 		return interactions.size() + 1;
 	}
 
@@ -104,17 +105,21 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
 	 */
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		if (interactions == null)
+		if (interactions == null) {
 			return;
+		}
         if (columnIndex == 0 && rowIndex >= 0 && rowIndex < interactions.size()) {
             //the first column
             int value = 1;
-            if (aValue instanceof Integer)
-                value = ((Integer) aValue).intValue();
-            if (aValue instanceof String)
-                value = Integer.parseInt((String) aValue);
-            if (value <= node.getMaxValue() && value >= 0)
-                ((GsLogicalParameter) interactions.get(rowIndex)).setValue(value, graph);
+            if (aValue instanceof Integer) {
+				value = ((Integer) aValue).intValue();
+			}
+            if (aValue instanceof String) {
+				value = Integer.parseInt((String) aValue);
+			}
+            if (value <= node.getMaxValue() && value >= 0) {
+				((GsLogicalParameter) interactions.get(rowIndex)).setValue(value, graph);
+			}
             fireTableCellUpdated(rowIndex, columnIndex);
         } else if (rowIndex >= interactions.size() && columnIndex == 0) {
             // TODO: information message about basal value and how to set up parameters
@@ -161,10 +166,11 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 */
 	public void setNode(GsRegulatoryVertex no) {
 		node = no;
-		if (node != null)
+		if (node != null) {
 			this.interactions = node.getV_logicalParameters();
-		else
+		} else {
 			this.interactions = null;
+		}
 		fireTableDataChanged();
         v_ok.clear();
         for (int i=0 ; i<interactions.size() ; i++) {
@@ -208,7 +214,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
      */
     public void setActivesEdges(int row, Vector edgeIndex, int value) {
 		if (row >= interactions.size()) {
-			GsLogicalParameter inter = new GsLogicalParameter(value);
+			GsLogicalParameter inter = new GsLogicalParameter(value, true);
 			inter.setEdges(edgeIndex);
 			if (!node.addLogicalParameter(inter)) {
 			    return;

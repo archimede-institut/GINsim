@@ -509,7 +509,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
     GsLogicalParameter lp;
 
     for (int i = 0; i < params.length; i++) {
-      lp = new GsLogicalParameter(value);
+      lp = new GsLogicalParameter(value, false);
       lp.setEdges(((GsTreeParam)params[i]).getEdgeIndexes());
       v.addElement(lp);
     }

@@ -31,10 +31,8 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	private JButton jButton = null;
 	private JButton jButton1 = null;
     private JLabel labelFullName = null;
-	private JLabel jLabel1 = null;
 	private JLabel jLabel2 = null;
 	private JSpinner s_min = null;
-	private JSpinner s_max = null;
 	private JComboBox c_sign = null;
 	private GsAnnotationPanel gsAnnotationPanel = null;
 	private GsEdgeMinMaxSpinModel minmax = null;
@@ -66,7 +64,6 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
         this.setName("edgeAttr");
         this.setSize(new java.awt.Dimension(426,60));
 
-		jLabel1 = new JLabel(Translator.getString("STR_max"));
         jLabel2 = new JLabel(Translator.getString("STR_min"));
         labelFullName = new JLabel();
 
@@ -104,13 +101,6 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
         this.add(jLabel2, c);
 
         c = new java.awt.GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 4;
-		c.fill = java.awt.GridBagConstraints.NONE;
-        c.anchor = java.awt.GridBagConstraints.WEST;
-        this.add(jLabel1, c);
-
-        c = new java.awt.GridBagConstraints();
         c.gridx = 4;
         c.gridy = 0;
         c.fill = java.awt.GridBagConstraints.BOTH;
@@ -129,13 +119,6 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
         c = new java.awt.GridBagConstraints();
         c.gridx = 2;
         c.gridy = 4;
-        c.anchor = java.awt.GridBagConstraints.WEST;
-        c.fill = java.awt.GridBagConstraints.BOTH;
-        this.add(getS_max(), c);
-
-        c = new java.awt.GridBagConstraints();
-        c.gridx = 2;
-        c.gridy = 5;
         c.gridwidth = 1;
         c.fill = java.awt.GridBagConstraints.NONE;
         c.anchor = java.awt.GridBagConstraints.WEST;
@@ -260,17 +243,6 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		return s_min;
 	}
 	/**
-	 * This method initializes s_max
-	 *
-	 * @return javax.swing.JSpinner
-	 */
-	private JSpinner getS_max() {
-		if (s_max == null) {
-            s_max = minmax.getSMax();
-		}
-		return s_max;
-	}
-	/**
 	 * This method initializes c_sign
 	 *
 	 * @return javax.swing.JComboBox
@@ -280,7 +252,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 		    c_sign = new JComboBox();
 		    c_sign.setPreferredSize(new java.awt.Dimension(60,20));
 		    c_sign.setMinimumSize(new java.awt.Dimension(60,25));
-		    String[] s_signs = GsRegulatoryEdge.SIGN_SHORT;
+		    String[] s_signs = GsRegulatoryMultiEdge.SIGN_SHORT;
 		    for (int i=0 ; i<s_signs.length ; i++) {
 		    		c_sign.addItem(s_signs[i]);
 		    }
@@ -318,7 +290,6 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	    if (selected == -1) {
 	        // unactive all
 	        s_min.setEnabled(false);
-	        s_max.setEnabled(false);
 	        c_sign.setEnabled(false);
 	        gsAnnotationPanel.setEditedObject(null);
 	    } else {
@@ -327,7 +298,6 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	        minmax.setMedge(currentEdge);
 	        minmax.setEdge(index);
 	        s_min.setEnabled(true);
-	        s_max.setEnabled(true);
 	        c_sign.setEnabled(true);
 	        c_sign.setSelectedIndex(currentEdge.getSign(index));
 	        gsAnnotationPanel.setEditedObject(currentEdge.getGsAnnotation(index));

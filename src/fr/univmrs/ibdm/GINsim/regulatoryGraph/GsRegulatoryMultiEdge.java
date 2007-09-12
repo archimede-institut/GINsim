@@ -1,7 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
-import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
@@ -16,7 +15,19 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
  */
 public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirectedEdge {
 
-    private Vector edges = new Vector(1);
+	/** array of sign's names */
+	static public final String[] SIGN = {"positive","negative","unknown"};
+	/** array of sign's short names */
+	static public final String[] SIGN_SHORT = {"+","-","?"};
+	/** a positive edge */
+	static public final short SIGN_POSITIVE = 0;
+	/** a negative edge */
+	static public final short SIGN_NEGATIVE = 1;
+	/** an unknown edge */
+	static public final short SIGN_UNKNOWN = 2;
+
+	private GsRegulatoryEdge[] edges = new GsRegulatoryEdge[GsRegulatoryVertex.MAXVALUE];
+	private int edgecount = 0;
     private GsRegulatoryVertex source, target;
     private int sign = 0;
 
@@ -26,10 +37,20 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
      * @param param
      */
     public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param) {
+    	this(source, target, param, (short)1);
+    }
+    public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param, short threshold) {
         this.source = source;
         this.target = target;
-        edges.add(new GsRegulatoryEdge(param));
-        sign = ((GsRegulatoryEdge)edges.get(0)).getSign();
+        GsRegulatoryEdge edge = new GsRegulatoryEdge(this);
+        edge.sign = (short)param;
+        if (threshold <= source.getMaxValue()) {
+        	edge.threshold = threshold;
+        } else {
+        	edge.threshold = 1;
+        }
+        edges[edgecount++] = edge;
+        sign = param;
     }
 
     /**
@@ -38,35 +59,43 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
      *
      */
     public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target) {
-        this.source = source;
-        this.target = target;
-        edges.add(new GsRegulatoryEdge());
-        sign = ((GsRegulatoryEdge)edges.get(0)).getSign();
+    	this(source, target, 0, (short)1);
     }
 
-    /**
-     * @param source
-     * @param target
-     * @param edge
-     * @param graph
-     */
-    public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, GsRegulatoryEdge edge, GsGraph graph) {
-        this.source = source;
-        this.target = target;
-        edges.add(edge);
-        sign = edge.getSign();
-        rescanSign(graph);
+    public void addEdge(GsGraph graph) {
+    	addEdge(SIGN_POSITIVE, 1, graph);
     }
-    /**
-     * add an edge to this multiEdge
-     *
-     * @param edge the new edge
-     * @param graph
-     */
-    public void addEdge(GsRegulatoryEdge edge, GsGraph graph) {
-        edges.add(edge);
-        rescanSign(graph);
-        target.incomingEdgeAdded(this);
+    public void addEdge(int sign, GsGraph graph) {
+    	addEdge(sign, 1, graph);
+    }
+    public void addEdge(int sign, int threshold, GsGraph graph) {
+    	if (doAddEdge(sign, threshold)) {
+    		rescanSign(graph);
+    		target.incomingEdgeAdded(this);
+    	}
+    }
+    private boolean doAddEdge(int sign, int threshold) {
+    	if (edgecount >= edges.length) {
+    		return false;
+    	}
+    	GsRegulatoryEdge edge = new GsRegulatoryEdge(this);
+    	edge.sign = (short)sign;
+    	edge.threshold = (short)threshold;
+    	for (int i=0 ; i<edgecount ; i++) {
+    		if (threshold < edges[i].threshold) {
+    			for (int j=edgecount-1 ; j>=i ; j--) {
+    				edges[j].index++;
+    				edges[j+1] = edges[j];
+    			}
+    			edgecount++;
+    			edges[i] = edge;
+    			edge.index = (short)i;
+    			return true;
+    		}
+    	}
+    	edge.index = (short)edgecount;
+    	edges[edgecount++] = edge;
+    	return true;
     }
     /**
      * remove an edge from this multiEdge
@@ -75,22 +104,29 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
      * @param graph
      */
     public void removeEdge(int index, GsRegulatoryGraph graph) {
-        edges.remove(index);
-        if (target != null) {
-    			target.removeEdgeFromInteraction(this, index);
+        if (edgecount == 0) {
+        	graph.removeEdge(this);
+        	return;
         }
-        if (edges.size() == 0) {
-        		graph.removeEdge(this);
-        		return;
-        }
-        rescanSign(graph);
+        edges[index].index = -1;
+    	if (index >= 0 && index < edgecount) {
+    		for (int i=index ; i<edgecount ; i++) {
+    			if (edges[i+1] != null) {
+    				edges[i+1].index--;
+    			}
+    			edges[i] = edges[i+1];
+    		}
+    		edgecount--;
+        	target.removeEdgeFromInteraction(this, index);
+            rescanSign(graph);
+    	}
     }
 
     /**
      * @return the number of edges in this multiEdge
      */
     public int getEdgeCount() {
-        return edges.size();
+        return edgecount;
     }
     /**
      * get the id of the corresponding subedge.
@@ -113,16 +149,16 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 
     public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
         String name = source+"_"+target+"_";
-        for (int i=0 ; i<edges.size() ; i++) {
-            GsRegulatoryEdge edge = (GsRegulatoryEdge) edges.get(i);
+        for (int i=0 ; i<edgecount ; i++) {
+            GsRegulatoryEdge edge = edges[i];
 
-            int max = edge.getMax();
+            int max = i<edgecount ? edges[i+1].threshold-1 : -1;
             if (max == -1) {
-                out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.getMin()+"\" sign=\""+ GsRegulatoryEdge.SIGN[edge.getSign()] +"\">\n");
+                out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\" sign=\""+ SIGN[edge.sign] +"\">\n");
             } else {
-                out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.getMin()+"\" maxvalue=\""+max+"\" sign=\""+ GsRegulatoryEdge.SIGN[edge.getSign()] +"\">\n");
+                out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\" maxvalue=\""+max+"\" sign=\""+ SIGN[edge.sign] +"\">\n");
             }
-            edge.getGsAnnotation().toXML(out, null, mode);
+            edge.annotation.toXML(out, null, mode);
             if (param != null) {
                 out.write(""+param);
             }
@@ -147,7 +183,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @see fr.univmrs.ibdm.GINsim.data.ToolTipsable#toToolTip()
 	 */
 	public String toToolTip() {
-		return ""+source+" -> "+target+" ; "+edges.size();
+		return ""+source+" -> "+target+ (edgecount > 1 ? " ; "+edgecount : "");
 	}
 	/**
 	 * @return Returns the sign.
@@ -160,23 +196,23 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @return the sign of this subedge
 	 */
 	public short getSign(int index) {
-		if (index >= edges.size()) {
+		if (index >= edgecount) {
 			return 0;
 		}
-		return ((GsRegulatoryEdge)edges.get(index)).getSign();
+		return edges[index].sign;
 	}
 	/**
-	 * change the signe of a sub edge.
+	 * change the sign of a sub edge.
 	 *
 	 * @param index index of the sub edge
 	 * @param sign the new sign
 	 * @param graph
 	 */
 	public void setSign(int index, short sign, GsGraph graph) {
-		if (index >= edges.size()) {
+		if (index >= edgecount) {
 			return;
 		}
-		((GsRegulatoryEdge)edges.get(index)).setSign(sign);
+		edges[index].sign = sign;
 		rescanSign(graph);
 	}
 	/**
@@ -184,7 +220,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @return annotation attached to this sub edge.
 	 */
 	public GsAnnotation getGsAnnotation(int index) {
-		return ((GsRegulatoryEdge)edges.get(index)).getGsAnnotation();
+		return edges[index].annotation;
 	}
 
 	/**
@@ -192,37 +228,53 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @return name of this sub edge.
 	 */
 	public String getEdgeName(int index) {
-		return edges.get(index).toString();
+		if (index >= edgecount) {
+			return null;
+		}
+		short min = edges[index].threshold;
+		if (index == edgecount-1) {
+			return "["+min+",Max] ; "+SIGN[edges[index].sign];
+		}
+		int max = edges[index+1].threshold-1;
+		if (min > max) {
+			return "["+min+", INVALID] ; "+SIGN[edges[index].sign];
+		}
+		return "["+min+","+max+"] ; "+SIGN[edges[index].sign];
 	}
 
 	/**
 	 * @param vertex
 	 */
 	public void applyNewMaxValue(GsRegulatoryVertex vertex) {
-		for (int i=0 ; i<edges.size() ; i++) {
-			((GsRegulatoryEdge)edges.get(i)).applyNewMaxValue(vertex);
+		short max = vertex.getMaxValue();
+		for (int i=0 ; i<edgecount ; i++) {
+			if (edges[i].threshold > max) {
+				edges[i].threshold = max;
+			}
 		}
-
 	}
 	/**
 	 * @param index index of a sub edge.
 	 * @return the min value of the source vertex for which this sub edge is active
 	 */
 	public short getMin(int index) {
-		if (index >= edges.size()) {
+		if (index >= edgecount) {
 			return 0;
 		}
-		return ((GsRegulatoryEdge)edges.get(index)).getMin();
+		return edges[index].threshold;
 	}
 	/**
 	 * @param index index of a sub edge.
 	 * @return the max value of the source vertex for which this sub edge is active
 	 */
 	public short getMax(int index) {
-		if (index >= edges.size()) {
+		if (index >= edgecount) {
 			return 0;
 		}
-		return ((GsRegulatoryEdge)edges.get(index)).getMax();
+		if (index == edgecount-1) {
+			return -1;
+		}
+		return (short)(edges[index+1].threshold - 1);
 	}
 	/**
 	 * change a sub edge's min value.
@@ -230,24 +282,10 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @param min the new min value.
 	 */
 	public void setMin(int index, short min) {
-		if (index >= edges.size()) {
+		if (index >= edgecount) {
 			return;
 		}
-		((GsRegulatoryEdge)edges.get(index)).setMin(min);
-	}
-	/**
-	 * change a sub edge's max value.
-	 * @param index index of a sub edge.
-	 * @param max the new max value
-	 */
-	public void setMax(int index, short max) {
-		if (index >= edges.size()) {
-			return;
-		}
-        if ( (max!=-1 && max<1) || max > source.getMaxValue()) {
-            return;
-        }
-		((GsRegulatoryEdge)edges.get(index)).setMax(max);
+		edges[index].threshold = min;
 	}
 
 	public Object getUserObject() {
@@ -259,11 +297,11 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	}
 
 	protected void rescanSign(GsGraph graph) {
-		this.sign = ((GsRegulatoryEdge)edges.get(0)).getSign();
-		for (int i=0 ; i<edges.size() ; i++) {
-			if (((GsRegulatoryEdge)edges.get(i)).getSign() != sign) {
-                if (this.sign == GsRegulatoryEdge.SIGN_UNKNOWN || ((GsRegulatoryEdge)edges.get(i)).getSign() == GsRegulatoryEdge.SIGN_UNKNOWN) {
-                    this.sign = GsRegulatoryEdge.SIGN_UNKNOWN;
+		this.sign = edges[0].sign;
+		for (int i=0 ; i<edgecount ; i++) {
+			if ( edges[i].sign != sign) {
+                if (this.sign == SIGN_UNKNOWN || edges[i].sign == SIGN_UNKNOWN) {
+                    this.sign = SIGN_UNKNOWN;
                     break;
                 }
                 this.sign = GsEdgeAttributesReader.ARROW_DOUBLE;
@@ -286,11 +324,13 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @return true if active
 	 */
 	public boolean isActive(int index, int sourceStatus) {
-		GsRegulatoryEdge edge = (GsRegulatoryEdge)edges.get(index);
-		if (edge.getMin() <= sourceStatus && (edge.getMax() == -1 || edge.getMax() >= sourceStatus)) {
-			return true;
+		if (sourceStatus < edges[index].threshold) {
+			return false;
 		}
-		return false;
+		if (index < edgecount-1 && sourceStatus >= edges[index+1].threshold) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -304,7 +344,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 		int index = -1;
 		if (ts.length == 3 && ts[0].equals(source.toString()) && ts[1].equals(target.toString())) {
 			index = Integer.parseInt(ts[2]);
-			if (index >= edges.size()) {
+			if (index >= edgecount) {
 				index = -1;
 			}
 		}
@@ -315,22 +355,26 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
      * @param edgeOri
      */
     public void copyFrom(GsRegulatoryMultiEdge edgeOri) {
-        GsRegulatoryEdge edge = (GsRegulatoryEdge)edges.get(0);
-        edge.setMin(edgeOri.getMin(0));
-        edge.setMax(edgeOri.getMax(0));
-        edge.setSign(edgeOri.getSign(0));
-        edge.setGsAnnotation( (GsAnnotation)edgeOri.getGsAnnotation(0).clone() );
-        for (int i=1 ; i<edgeOri.getEdgeCount() ; i++) {
-            edge = new GsRegulatoryEdge();
-            edge.setMin(edgeOri.getMin(i));
-            edge.setMax(edgeOri.getMax(i));
-            edge.setSign(edgeOri.getSign(i));
-            edge.setGsAnnotation( (GsAnnotation)edgeOri.getGsAnnotation(i).clone() );
-            edges.add(edge);
-        }
+    	edgecount = edgeOri.edgecount;
+    	sign = edgeOri.sign;
+    	for (int i=0 ; i<edgecount ; i++) {
+    		edges[i] = (GsRegulatoryEdge)edgeOri.edges[i].clone();
+    	}
+    	for (int i=edgecount ; i<edges.length ; i++) {
+    		edges[i] = null;
+    	}
     }
 
     public void setUserObject(Object obj) {
     }
+    
+	public GsRegulatoryEdge getEdge(int index) {
+		return edges[index];
+	}
+	public void markRemoved() {
+		for (int i=0 ; i<edgecount ; i++) {
+			edges[i].index = -1;
+		}
+	}
 
 }

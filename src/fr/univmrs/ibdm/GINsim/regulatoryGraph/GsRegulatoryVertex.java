@@ -38,14 +38,15 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	private GsAnnotation	gsa;
 	private String 			id;
 
-  private GsTreeInteractionsModel interactionsModel;
-  private GsRegulatoryGraph graph;
+	private GsTreeInteractionsModel interactionsModel;
+	private GsRegulatoryGraph graph;
 
     private static final String S_ID   = Translator.getString("STR_id")+" : ";
     private static final String S_NAME = " | "+ Translator.getString("STR_name")+" : ";
     private static final String S_MAX  = " | "+ Translator.getString("STR_max") +" : ";
     private static final String S_BASE = " | "+ Translator.getString("STR_base")+" : ";
 
+    public static final int MAXVALUE = 9;
 
 	/**
 	 * Constructs an empty vector and set the baseValue (0) and the maxValue (1)
@@ -59,8 +60,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		gsa				= new GsAnnotation();
 		v_logicalParameters 	= new Vector();
 		this.id = id;
-    this.graph = graph;
-    interactionsModel = new GsTreeInteractionsModel(graph);
+		this.graph = graph;
+		interactionsModel = new GsTreeInteractionsModel(graph);
 	}
 
 	/**
@@ -74,8 +75,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		gsa				= new GsAnnotation();
 		v_logicalParameters 	= new Vector();
 		this.id = "G"+num;
-    this.graph = graph;
-    interactionsModel = new GsTreeInteractionsModel(graph);
+		this.graph = graph;
+		interactionsModel = new GsTreeInteractionsModel(graph);
 	}
 
 	/**
@@ -113,34 +114,32 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @param graph the graph (to propagate changes if needed)
 	 */
 	public void setMaxValue(short max, GsRegulatoryGraph graph) {
-    if (!getInteractionsModel().isMaxCompatible(max)) {
-      //graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
-    }
-    else
-	    if (max>0) {
-            String s = "";
-    		short oldmax = maxValue;
-			maxValue = max;
-			if (maxValue < baseValue) {
-			    baseValue = maxValue;
-			}
-			if (oldmax > maxValue) {
-				s += graph.applyNewMaxValue(this);
-                for (int i=0 ; i<v_logicalParameters.size() ; i++) {
-                    GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(i);
-                    if (gsi.getValue() > maxValue) {
-                        gsi.setValue(maxValue, graph);
-                        s += Translator.getString("STR_parameter_value_sup_max\n");
-                    }
-                }
-			}
-            if (!"".equals(s)) {
-                graph.addNotificationMessage( new GsGraphNotificationMessage(graph, s.trim(), GsGraphNotificationMessage.NOTIFICATION_WARNING) );
-            }
-            if (oldmax != maxValue) {
-                graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
-                getInteractionsModel().refreshVertex();
-            }
+	    if (!getInteractionsModel().isMaxCompatible(max)) {
+	      //graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
+	    } else if (max>0 && max<= MAXVALUE) {
+	    	String s = "";
+	    	short oldmax = maxValue;
+	    	maxValue = max;
+	    	if (maxValue < baseValue) {
+	    		baseValue = maxValue;
+	    	}
+	    	if (oldmax > maxValue) {
+	    		s += graph.applyNewMaxValue(this);
+	    		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
+	    			GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(i);
+	    			if (gsi.getValue() > maxValue) {
+	    				gsi.setValue(maxValue, graph);
+	    				s += Translator.getString("STR_parameter_value_sup_max\n");
+	    			}
+	    		}
+	    	}
+	    	if (!"".equals(s)) {
+	    		graph.addNotificationMessage( new GsGraphNotificationMessage(graph, s.trim(), GsGraphNotificationMessage.NOTIFICATION_WARNING) );
+	    	}
+	    	if (oldmax != maxValue) {
+	    		graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
+	    		getInteractionsModel().refreshVertex();
+	    	}
 	    }
 	}
 
@@ -194,11 +193,11 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	public GsLogicalParameter getInteraction(int index) {
 		try
 		{
-			return((GsLogicalParameter)v_logicalParameters.get(index));
+			return (GsLogicalParameter)v_logicalParameters.get(index);
 		}
 		catch (java.lang.ArrayIndexOutOfBoundsException e)
 		{
-			return(null);
+			return null;
 		}
 	}
 
@@ -226,7 +225,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @return the number of user defined interactions on this node
 	 */
 	public int interactionCount() {
-		return(v_logicalParameters.size());
+		return v_logicalParameters.size();
 	}
 
 	/**
@@ -270,7 +269,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      */
     public OmddNode getTreeParameters(GsRegulatoryGraph graph) {
         OmddNode root;
-        GsLogicalParameter pbaseValue = new GsLogicalParameter(0);
+        GsLogicalParameter pbaseValue = new GsLogicalParameter(0, true);
         if (this.baseValue != 0) {
             pbaseValue.setValue(baseValue, graph);
             root = pbaseValue.buildTree(graph, this);
@@ -355,38 +354,40 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		return clone;
 	}
 
-    /**
-     * when an incoming edge is deleted, we don't want to see it appear in interactions anymore.
-     * This will remove a subedge.
-     * NOTE: ALL interaction involving the deleted subedge will be suppressed.
-     * @param multiEdge
-     * @param index
-     */
-    public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge, int index) {
+	/**
+	 * update logical parameters when an interaction is deleted.
+	 */
+	public void cleanupInteraction() {
 		for (int i=v_logicalParameters.size()-1 ; i>=0 ; i--) {
-			GsLogicalParameter interaction = (GsLogicalParameter)v_logicalParameters.get(i);
-			if (interaction.removeEdge(multiEdge,index)) {
+			if (((GsLogicalParameter)v_logicalParameters.get(i)).isDurty()) {
 				v_logicalParameters.remove(i);
-            }
+			}
 		}
-    interactionsModel.removeEdge(multiEdge, index);
-    }
+	}
 
-    /**
-     * when an incoming edge is deleted, we don't want to see it appear in interactions anymore.
-     * This will remove all subedges of a multiedge.
-     * NOTE: ALL interaction involving the deleted multiedge will be suppressed.
-     * @param multiEdge
-     */
-    public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge) {
-		for (int i=v_logicalParameters.size()-1 ; i>=0 ; i--) {
-			GsLogicalParameter interaction = (GsLogicalParameter)v_logicalParameters.get(i);
-			if (interaction.removeEdge(multiEdge)) {
-				v_logicalParameters.remove(i);
-            }
-		}
-    interactionsModel.removeEdge(multiEdge);
-    }
+	
+	/**
+	 * when an incoming edge is deleted, we don't want to see it appear in interactions anymore.
+	 * This will remove a subedge.
+	 * NOTE: ALL interaction involving the deleted subedge will be suppressed.
+	 * @param multiEdge
+	 * @param index
+	 */
+	public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge, int index) {
+		cleanupInteraction();
+		interactionsModel.removeEdge(multiEdge, index);
+	}
+
+	/**
+	 * when an incoming edge is deleted, we don't want to see it appear in interactions anymore.
+	 * This will remove all subedges of a multiedge.
+	 * NOTE: ALL interaction involving the deleted multiedge will be suppressed.
+	 * @param multiEdge
+	 */
+	public void removeEdgeFromInteraction(GsRegulatoryMultiEdge multiEdge) {
+		cleanupInteraction();
+		interactionsModel.removeEdge(multiEdge);
+	}
 
     public String toString() {
         return id;
@@ -418,7 +419,9 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
           break;
         }
       }
-      if (!basalValueDefined) setBaseValue((short)0, graph);
+      if (!basalValueDefined) {
+		setBaseValue((short)0, graph);
+      }
     }
 
     public GsTreeInteractionsModel getInteractionsModel() {

@@ -38,8 +38,8 @@ public class GsFunctionsCreator {
     for (int i = 0; i < interactions.size(); i++) {
       GsLogicalParameter p = (GsLogicalParameter)interactions.elementAt(i);
       for (int j = 0; j < p.EdgeCount(); j++) {
-        I = ((Integer)h.get(p.getEdge(j).data.getSource())).intValue() + 1;
-        h.put(p.getEdge(j).data.getSource(), new Integer(I));
+        I = ((Integer)h.get(p.getEdge(j).me.getSource())).intValue() + 1;
+        h.put(p.getEdge(j).me.getSource(), new Integer(I));
       }
     }
     Object key, key2;

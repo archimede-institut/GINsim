@@ -79,8 +79,8 @@ public class GsCircuitAlgo {
      *
      * @return the functionnal context for this edge
      */
-    public OmsddNode checkEdge(GsEdgeIndex ei, int[] t_circuit, int nextmin, int nextmax) {
-        me = ei.data;
+    public OmsddNode checkEdge(GsRegulatoryEdge ei, int[] t_circuit, int nextmin, int nextmax) {
+        me = ei.me;
         // first look for a previous test on this interaction with the same constraints
         Vector[] t_report = (Vector[])m_report.get(me);
         if (!testOutLimit || nextmax == -1) {
@@ -143,7 +143,7 @@ public class GsCircuitAlgo {
             int val = t_lc[i];
             for (int j=0 ; j<me.getEdgeCount() ; j++) {
                 if (val >= me.getMin(j) && (me.getMax(j) == -1 || val <= me.getMax(j))) {
-                    v.add(new GsEdgeIndex(me, j));
+                    v.add(me.getEdge(j));
                 }
             }
             t_ei[i] = v;

@@ -5,7 +5,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 
 
@@ -64,7 +64,9 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	 * @see javax.swing.ListModel#getElementAt(int)
 	 */
 	public Object getElementAt(int index) {
-		if (edge==null) return null; //no data
+		if (edge==null) {
+			return null; //no data
+		}
 		int j=0; 
 		for (int i=0;i<edge.size();i++) {
 			//for each incoming edge
@@ -76,7 +78,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 					j += ((GsRegulatoryMultiEdge)de.getUserObject()).getEdgeCount();
 				} else {
 					//return the good data
-					return new GsEdgeIndex((GsRegulatoryMultiEdge)de.getUserObject(),index-j);
+					return ((GsRegulatoryMultiEdge)de.getUserObject()).getEdge(index-j);
 				}
 			}
 		}
@@ -103,10 +105,10 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	
 	/**
 	 * get the index in list of a GsEdgeIndex
-	 * @param edg an GsEdgeIndex object
+	 * @param e an GsEdgeIndex object
 	 * @return it's index in the edge list
 	 */
-	public int getIndex(GsEdgeIndex edg) {
+	public int getIndex(GsRegulatoryEdge e) {
 		if (edge == null) {
             return 0;
         }
@@ -115,8 +117,8 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 			Object obj = edge.get(i);
 			if (obj instanceof GsDirectedEdge) {
 				GsDirectedEdge de = (GsDirectedEdge)obj;
-				if (edg.data == de.getUserObject()) {
-					return j+edg.index;
+				if (e.me == de.getUserObject()) {
+					return j+e.index;
 				}
 				j += ((GsRegulatoryMultiEdge)de.getUserObject()).getEdgeCount();				
 			}

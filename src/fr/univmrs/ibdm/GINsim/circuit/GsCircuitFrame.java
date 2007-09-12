@@ -27,7 +27,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.gui.GsListCellRenderer;
 import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -75,8 +75,9 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
      */
     public GsCircuitFrame(JFrame frame, GsGraph graph) {
         super(frame, "display.circuit", 500, 300);
-        if (graph == null || !(graph instanceof GsRegulatoryGraph))
-            GsEnv.error("no graph", frame);
+        if (graph == null || !(graph instanceof GsRegulatoryGraph)) {
+			GsEnv.error("no graph", frame);
+		}
         this.graph = (GsRegulatoryGraph) graph;
         initialize();
     }
@@ -288,8 +289,8 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
 	                for (int i = 0; i < graph.getNodeOrder().size(); i++) {
 	                    GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph
 	                            .getNodeOrder().get(i);
-	                    if ((config.minMust == 1 && config.t_status[i] == 1) ||
-	                        (config.minMust == 0 && config.t_status[i] == 3)) {
+	                    if (config.minMust == 1 && config.t_status[i] == 1 ||
+	                        config.minMust == 0 && config.t_status[i] == 3) {
 		                    Object edge = graph.getGraphManager().getEdge(vertex,
 		                            vertex);
 		                    if (edge != null) {
@@ -682,8 +683,9 @@ class GsCircuitDescr {
         for (int i=0 ; i< t_me.length ; i++) {
             t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(0);
         }
-        GsEdgeIndex ei = new GsEdgeIndex(null, 0);
-        GsEdgeIndex next_ei = new GsEdgeIndex(null, 0);
+//        GsEdgeIndex ei = new GsEdgeIndex(null, 0);
+//        GsEdgeIndex next_ei = new GsEdgeIndex(null, 0);
+        GsRegulatoryEdge edge, next_edge;
         boolean goon;
         int sub = 0;
         t_context = new OmsddNode[nbSub];
@@ -691,16 +693,12 @@ class GsCircuitDescr {
         t_sub = new int[nbSub][];
         do {
             OmsddNode context = OmsddNode.POSITIVE;
-            ei.data = t_me[t_me.length - 1];
-            ei.index = t_pos[t_pos.length - 1];
+            edge = t_me[t_me.length - 1].getEdge(t_pos[t_pos.length - 1]);
             for (int i = 0; i < t_me.length; i++) {
-                next_ei.data = t_me[i];
-                next_ei.index = t_pos[i];
-                OmsddNode node = algo.checkEdge(ei, t_circuit,
-                        next_ei.data.getMin(next_ei.index), next_ei.data
-                        .getMax(next_ei.index));
-                ei.data = next_ei.data;
-                ei.index = next_ei.index;
+            	next_edge = t_me[i].getEdge(t_pos[i]);
+                OmsddNode node = algo.checkEdge(edge, t_circuit,
+                        next_edge.getMin(), next_edge.getMax());
+                edge = next_edge;
                 context = context.merge(node, OmsddNode.AND);
             }
 

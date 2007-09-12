@@ -1,8 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsEdgeIndex;
-import java.util.Vector;
 import java.util.Iterator;
+import java.util.Vector;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
 
 public class GsTreeParam extends GsTreeElement {
   private Vector edgeIndexes;
@@ -19,11 +20,11 @@ public class GsTreeParam extends GsTreeElement {
   }
   public String toString() {
     String s = "";
-    GsEdgeIndex ei;
+    GsRegulatoryEdge ei;
     if (edgeIndexes != null) {
 		for (Iterator it = edgeIndexes.iterator(); it.hasNext(); ) {
-		    ei = (GsEdgeIndex)it.next();
-		    s = s + " " + ei.data.getId(ei.index);
+		    ei = (GsRegulatoryEdge)it.next();
+		    s = s + " " + ei.me.getId(ei.index);
 		  }
 	}
     return s.trim();
