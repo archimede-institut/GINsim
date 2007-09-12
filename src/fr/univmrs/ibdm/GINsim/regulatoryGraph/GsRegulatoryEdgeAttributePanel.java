@@ -4,16 +4,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 
-import fr.univmrs.ibdm.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
@@ -71,7 +76,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
         this.setName("edgeAttr");
         this.setSize(new java.awt.Dimension(426,60));
 
-        jLabel2 = new JLabel(Translator.getString("STR_min"));
+        jLabel2 = new JLabel(Translator.getString("STR_threshold"));
         labelFullName = new JLabel();
 
         GridBagConstraints c = new java.awt.GridBagConstraints();
