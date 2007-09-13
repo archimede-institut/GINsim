@@ -749,6 +749,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             if (mainFrame.getGraph() != this) {
                 mainFrame.getEventDispatcher().fireGraphChange(null, mainFrame.getGraph(), this, false);
             }
+            updateGraphNotificationMessage(this);
         }
         vReader = graphManager.getVertexAttributesReader();
     	eReader = graphManager.getEdgeAttributesReader();
@@ -1288,8 +1289,8 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 * @param message
 	 */
 	public void addNotificationMessage(GsGraphNotificationMessage message) {
+		v_notification.add(message);
 		if (mainFrame != null) {
-			v_notification.add(message);
 			updateGraphNotificationMessage(this);
 		}
 	}

@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -12,8 +16,10 @@ import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -245,10 +251,12 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                             short maxvalue = -2;
                             String sign = attributes.getValue("sign");
                             edge = graph.addNewEdge(from, to, minvalue, sign);
-                            if (!smax.startsWith("(")) {
+                            if (smax.startsWith("m")) {
+                            	maxvalue = -1;
+                            } else {
                             	maxvalue = (short)Integer.parseInt(smax);
-                            	storeMaxValueForCheck(edge, maxvalue);
                             }
+                        	storeMaxValueForCheck(edge, maxvalue);
                             m_edges.put(id, edge);
                             ereader.setEdge(edge.me);
                         } catch (NumberFormatException e) { throw new SAXException("malformed interaction's parameters"); }
@@ -350,30 +358,35 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 	}
 
 	/**
-     * use the contructed v_waitingInteraction to add the accurate interaction to the nodes.
+     * use the constructed v_waitingInteraction to add the accurate interaction to the nodes.
      */
     private void placeInteractions() {
     	// check the maxvalues of all interactions first
     	if (m_checkMaxValue != null) {
-        	Vector v = null;
+        	Map m = null;
     		Iterator it = m_checkMaxValue.entrySet().iterator();
     		while (it.hasNext()) {
     			Entry entry = (Entry)it.next();
-    			if (((GsRegulatoryEdge)entry.getKey()).getMax() != ((Integer)entry.getValue()).intValue()) {
-    				if (v == null) {
-    					v = new Vector();
+    			short m1 = ((GsRegulatoryEdge)entry.getKey()).getMax();
+    			short m2 = ((Integer)entry.getValue()).shortValue();
+    			short max = ((GsRegulatoryEdge)entry.getKey()).me.getSource().getMaxValue();
+    			if ( m1 != m2 ) {
+					if (m == null) {
+    					m = new HashMap();
     				}
-    				v.add(entry);
+    				if ((m1 == -1 && m2 == max) || (m2 == -1 && m1 == max)) {
+    					m.put(entry, "");
+    				} else {
+	    				m.put(entry, null);
+    				}
     			}
     		}
-    		if (v != null) {
-    			String s = "consistency problem in the model:";
-    			for (int i=0 ; i<v.size() ; i++) {
-    				Entry entry = (Entry)v.get(i);
-    				int val = ((Integer)entry.getValue()).intValue();
-    				s += "\nmaxvalue of "+entry.getKey()+" should be "+(val>0 ? ""+val : "max");
-    			}
-    			GsEnv.error(s, null);
+    		if (m != null) {
+    			graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
+    					"inconsistency in some interactions",
+    					new InteractionInconsistencyAction(),
+    					m,
+    					GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));
     		}
     	}
     	
@@ -520,4 +533,77 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     public String getFallBackDTD() {
         return GsGinmlHelper.LOCAL_URL_DTD_FILE;
     }
+}
+
+class InteractionInconsistencyAction implements GsGraphNotificationAction {
+
+	public String[] getActionName() {
+		String t[] = { "view" };
+		return t;
+	}
+
+	public boolean perform(GsGraph graph, Object data, int index) {
+		GsStackDialog d = new InteractionInconsistencyDialog((Map)data,
+				graph,
+				"interactionInconststancy",
+				200, 150);
+		d.setVisible(true);
+		return true;
+	}
+
+	public boolean timeout(GsGraph graph, Object data) {
+		return true;
+	}
+}
+
+class InteractionInconsistencyDialog extends GsStackDialog {
+	private static final long serialVersionUID = 4607140440879983498L;
+
+	GsRegulatoryGraph graph;
+	Map m;
+	JPanel panel = null;
+	
+	public InteractionInconsistencyDialog(Map m, GsGraph graph,
+			String msg, int w, int h) {
+		super(graph.getGraphManager().getMainFrame(), msg, w, h);
+		this.graph = (GsRegulatoryGraph)graph;
+		this.m = m;
+		
+		setMainPanel(getMainPanel());
+	}
+
+	private JPanel getMainPanel() {
+		if (panel == null) {
+			panel = new JPanel();
+			JTextArea txt = new JTextArea();
+			String s1 = "";
+			String s2 = "";
+			Iterator it = m.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry entry = (Entry)it.next();
+				Entry e2 = (Entry)entry.getKey();
+				GsRegulatoryEdge edge = (GsRegulatoryEdge)e2.getKey();
+				short oldmax = ((Integer)e2.getValue()).shortValue();
+				if (entry.getValue() == null) {
+					s1 += edge.getLongDetail(" ")+": max should be "+(oldmax == -1 ? "max" : ""+oldmax)+"\n";
+				} else {
+					s2 += edge.getLongDetail(" ")+ ": max was explicitely set to "+oldmax+"\n";
+				}
+			}
+			
+			if (s1 != "") {
+				s1 = "potential problems:\n" + s1+"\n\n";
+			}
+			if (s2 != "") {
+				s1 = s1 + "warnings only:\n"+s2;
+			}
+			txt.setText(s1);
+			txt.setEditable(false);
+			panel.add(txt);
+		}
+		return panel;
+	}
+	public void run() {
+		// TODO: propose some automatic corrections
+	}
 }

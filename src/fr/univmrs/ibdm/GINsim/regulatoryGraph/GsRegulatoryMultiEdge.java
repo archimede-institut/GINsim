@@ -150,12 +150,11 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     }
 
     public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
-        String name = source+"_"+target+"_";
         for (int i=0 ; i<edgecount ; i++) {
             GsRegulatoryEdge edge = edges[i];
 
             int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
-            out.write("\t\t<edge id=\""+ name + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\" maxvalue=\"("+(max==-1 ? "max" : ""+max)+")\" sign=\""+ SIGN[edge.sign] +"\">\n");
+            out.write("\t\t<edge id=\""+ edge.getLongInfo("_") + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ SIGN[edge.sign] +"\">\n");
             edge.annotation.toXML(out, null, mode);
             if (param != null) {
                 out.write(""+param);
@@ -229,15 +228,16 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 		if (index >= edgecount) {
 			return null;
 		}
-		short min = edges[index].threshold;
-		if (index == edgecount-1) {
-			return "["+min+",Max] ; "+SIGN[edges[index].sign];
-		}
-		int max = edges[index+1].threshold-1;
-		if (min > max) {
-			return "["+min+", INVALID] ; "+SIGN[edges[index].sign];
-		}
-		return "["+min+","+max+"] ; "+SIGN[edges[index].sign];
+		return edges[index].getShortDetail(" ");
+//		short min = edges[index].threshold;
+//		if (index == edgecount-1) {
+//			return "["+min+",Max] ; "+SIGN[edges[index].sign];
+//		}
+//		int max = edges[index+1].threshold-1;
+//		if (min > max) {
+//			return "["+min+", INVALID] ; "+SIGN[edges[index].sign];
+//		}
+//		return "["+min+","+max+"] ; "+SIGN[edges[index].sign];
 	}
 
 	/**

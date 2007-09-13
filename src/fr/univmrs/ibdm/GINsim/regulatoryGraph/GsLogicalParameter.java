@@ -297,7 +297,7 @@ public class GsLogicalParameter implements GsXMLize {
         }
         String str = isManual ? "" : "(f) ";
         for (int i = 0; i < edge_index.size(); i++) {
-            str += getEdge(i).me.getId(getEdge(i).index) + " ";
+            str += getEdge(i).getShortInfo("_") + " ";
         }
         return str;
     }
