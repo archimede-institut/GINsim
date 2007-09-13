@@ -253,7 +253,7 @@ public class GsLogicalParameter implements GsXMLize {
 		String sEdges = "";
 		for (int i = 0; i < edge_index.size(); i++) {
 			GsRegulatoryEdge e = (GsRegulatoryEdge) edge_index.elementAt(i);
-			sEdges = sEdges + e.getSEdge() + " ";
+			sEdges = sEdges + e.getLongInfo("_") + " ";
 		}
 
 		return sEdges.substring(0,sEdges.length()-1);		

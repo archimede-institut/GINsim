@@ -284,7 +284,9 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             } else {
                 ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
                 if (!compressed) {
-                	// FIXME: uncompressed Zip require to set the CRC by hand!!
+                	// FIXME: uncompressed Zip require to set the size and CRC by hand!!
+                	// this must be done for each ZipEntry: save it to a tmpfile,
+                	// mesure the CRC and the size, then put it in the uncompressed zip...
                 	zos.setMethod(ZipOutputStream.STORED);
                 }
                 zos.putNextEntry(new ZipEntry(zip_prefix+getGraphZipName()));

@@ -154,7 +154,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
             GsRegulatoryEdge edge = edges[i];
 
             int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
-            out.write("\t\t<edge id=\""+ edge.getLongInfo("_") + i +"\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ SIGN[edge.sign] +"\">\n");
+            out.write("\t\t<edge id=\""+ edge.getLongInfo("_") + "\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ SIGN[edge.sign] +"\">\n");
             edge.annotation.toXML(out, null, mode);
             if (param != null) {
                 out.write(""+param);

@@ -32,10 +32,6 @@ public class GsRegulatoryEdge {
 		return me.getMax(index);
 	}
 
-	public String getSEdge() {
-		return me.getFullId(index);
-	}
-	
 	public String toString() {
 		return getShortDetail("_");
 	}

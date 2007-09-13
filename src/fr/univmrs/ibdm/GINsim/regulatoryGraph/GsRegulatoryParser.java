@@ -1,10 +1,15 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.File;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 import java.util.Map.Entry;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
