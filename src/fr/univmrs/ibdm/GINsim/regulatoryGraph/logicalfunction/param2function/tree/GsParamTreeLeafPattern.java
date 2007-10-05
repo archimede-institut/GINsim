@@ -100,4 +100,7 @@ public class GsParamTreeLeafPattern extends GsParamTreeLeaf {
   public Hashtable getFunctions() {
     return functions;
   }
+
+  public void makeDNF(Vector v, int value) {
+  }
 }

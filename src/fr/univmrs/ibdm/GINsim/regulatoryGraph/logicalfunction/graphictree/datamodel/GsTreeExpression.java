@@ -1,42 +1,70 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TUnaryOperator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBinaryOperator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.model.GsFunctionEditorModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
+import java.util.Iterator;
+import java.util.Vector;
+import java.awt.Point;
 
 public class GsTreeExpression extends GsTreeElement {
-  private String expression;
+  private String compactExpression, userExpression, dnfExpression;
   private TBooleanTreeNode root;
+  private boolean showCompactExpression, showDNFExpression, normal;
+  private GsFunctionEditorModel editorModel;
+  private GsFunctionsCreator functionsCreator;
+  private Point selection;
 
-  public GsTreeExpression(GsTreeElement parent, TBooleanTreeNode root) {
+  public GsTreeExpression(GsTreeElement parent, TBooleanTreeNode root, GsFunctionsCreator fc) {
     super(parent);
+    compactExpression = dnfExpression = userExpression = "";
+    showCompactExpression = showDNFExpression = false;
+    normal = true;
     if (root != null) {
-		setRoot(root);
-	}
-    property.put("show unselected", new Boolean(false));
+      setRoot(root);
+      userExpression = root.toString();
+    }
     property.put("invalid", new Boolean(false));
+    functionsCreator = fc;
+    selection = null;
+  }
+  public void setEditorModel(GsFunctionEditorModel em) {
+    editorModel = em;
+  }
+  public void setSelection(Point p, boolean norm) {
+    selection = p;
+    normal = norm;
+  }
+  public Point getSelection() {
+    return selection;
+  }
+  public GsFunctionEditorModel getEditorModel() {
+    return editorModel;
   }
   public void setRoot(TBooleanTreeNode root) {
     this.root = root;
-    expression = root.toString();
+    compactExpression = root.toString();
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge) {
     root = remove(multiEdge.getSource().getId(), root);
     if (root != null) {
-		expression = root.toString();
-	} else {
-		expression = null;
-	}
+      compactExpression = root.toString();
+      //dnfExpression = userExpression = root.toDNF();
+    }
+    else {
+      compactExpression = userExpression = dnfExpression = "";
+    }
     return root;
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge, int index) {
     root = remove(multiEdge.getSource().getId() + "#" + index, root);
     if (root != null) {
       shiftIndexes(root, multiEdge, index);
-      expression = root.toString();
+      compactExpression = root.toString();
+      //dnfExpression = userExpression = root.toDNF();
     }
     return root;
   }
@@ -61,8 +89,8 @@ public class GsTreeExpression extends GsTreeElement {
       else {
         shiftIndexes(((TBooleanOperator)node).getArgs()[0], multiEdge, index);
         if (((TBooleanOperator)node).getNbArgs() == 2) {
-			shiftIndexes(((TBooleanOperator)node).getArgs()[1], multiEdge, index);
-		}
+          shiftIndexes(((TBooleanOperator)node).getArgs()[1], multiEdge, index);
+        }
       }
     }
     catch (Exception ex) {
@@ -76,11 +104,11 @@ public class GsTreeExpression extends GsTreeElement {
       if (node.isLeaf()) {
         testString = ((GsBooleanGene)node).getVal();
         if (testString.indexOf("#") == -1) {
-			testString += "#";
-		}
+          testString += "#";
+        }
         if (!testString.startsWith(id)) {
-			return node;
-		}
+          return node;
+        }
       }
       else {
         if (((TBooleanOperator)node).getNbArgs() == 1) {
@@ -98,10 +126,11 @@ public class GsTreeExpression extends GsTreeElement {
             return node;
           }
           else if (tn1 != null) {
-			return tn1;
-		} else if (tn2 != null) {
-			return tn2;
-		}
+            return tn1;
+          }
+          else if (tn2 != null) {
+            return tn2;
+          }
         }
       }
     }
@@ -110,20 +139,29 @@ public class GsTreeExpression extends GsTreeElement {
     }
     return null;
   }
-/*  public int getAllChildCount() {
-    return childs.size();
-  }
-  public GsTreeElement getAllChild(int index) {
-    if (index < childs.size())
-      return (GsTreeElement)childs.elementAt(index);
-    return null;
-  }*/
-
   public String toString() {
-    if (expression == null) {
-		return "";
-	}
-    return expression;
+    if (showCompactExpression)
+      return compactExpression;
+    else if (showDNFExpression)
+      return dnfExpression;
+    return userExpression;
+  }
+  private void makeDNFString() throws Exception {
+    GsParamTree tr = functionsCreator.makeTree();
+    GsBooleanParser parser = new GsBooleanParser(functionsCreator.getGraphManager().getIncomingEdges(functionsCreator.getCurrentVertex()));
+    parser.compile(userExpression);
+    root = parser.getRoot();
+    GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
+    Vector params = parser.getParams(functionList.getData());
+    Iterator it = params.iterator();
+    while (it.hasNext()) {
+      Iterator it2 = ((Vector)it.next()).iterator();
+      Vector v = new Vector();
+      while (it2.hasNext()) {
+        GsLogicalFunctionListElement element = (GsLogicalFunctionListElement)it2.next();
+        v.addElement(element.getEdge().getEdge(element.getIndex()));
+      }
+    }
   }
   public boolean isLeaf() {
     return false;
@@ -135,8 +173,10 @@ public class GsTreeExpression extends GsTreeElement {
 
   }
   public void setText(String s) {
-    expression = s;
-    property.put("invalid", new Boolean(true));
+    userExpression = s;
+  }
+  public boolean isNormal() {
+    return normal;
   }
 }
 

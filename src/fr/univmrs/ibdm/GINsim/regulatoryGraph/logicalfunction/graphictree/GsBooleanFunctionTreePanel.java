@@ -16,7 +16,7 @@ public abstract class GsBooleanFunctionTreePanel extends JPanel {
   protected static Font defaultFont = new Font("monospaced", Font.PLAIN, 10);
   protected GsTreeElement treeElement;
   protected JTree tree = null;
-  protected static int charWidth = 8, charHeight = 8;
+  protected static int charWidth = 8, charHeight = 12;
   protected int width = 0;
   protected boolean selected;
   protected String text;
@@ -44,7 +44,6 @@ public abstract class GsBooleanFunctionTreePanel extends JPanel {
     }
     if (treeElement.isDropable()) {
       g.setColor(Color.red);
-      //((Graphics2D)g).setStroke(new BasicStroke(2));
       g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
     }
   }

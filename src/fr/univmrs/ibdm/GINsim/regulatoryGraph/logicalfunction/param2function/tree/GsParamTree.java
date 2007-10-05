@@ -127,7 +127,6 @@ public class GsParamTree {
     GsParamTreeLeafPattern treeLeaf;
     int np = 1;
     boolean ok = true;
-    //Hashtable h;
 
     while (ok) {
       lastNodes.clear();
@@ -150,11 +149,6 @@ public class GsParamTree {
             treeLeaf = new GsParamTreeLeafPattern();
             treeLeaf.setName("P" + np);
             treeLeaf.buildFunctions(node, defaultValue);
-            //h = treeLeaf.getFunctions();
-            //System.out.println(treeLeaf.toString());
-            //node.print(0);
-            //for (Enumeration enu = h.keys(); enu.hasMoreElements(); )
-            //  System.out.println("  " + h.get(enu.nextElement()));
             for (Enumeration enu = lastNodes.elements(); enu.hasMoreElements(); ) {
               lastn = (GsParamTreeNode)enu.nextElement();
               if (lastn.hashCode() == node.hashCode()) {
@@ -182,6 +176,23 @@ public class GsParamTree {
     Hashtable h = new Hashtable();
     root.makeFunctions(h, "", defaultValue, false);
     return h;
+  }
+  public String getDNFForm(int value, Vector params) {
+    Vector v = new Vector();
+    root.makeDNF(v, value);
+    String s = "", tmp;
+    if (v.size() > 0) {
+      tmp = s = (String)v.firstElement();
+      if (tmp.indexOf((int)'&') >= 0) s = "(" + tmp + ")";
+      for (int i = 1; i < v.size(); i++) {
+        tmp = (String)v.elementAt(i);
+        if (tmp.indexOf((int)'&') >= 0)
+          s += " & (" + tmp + ")";
+        else
+          s += "& " + tmp;
+      }
+    }
+    return s;
   }
   private void getLastNodes(Vector v, GsParamTreeElement node) {
     boolean ok = true;

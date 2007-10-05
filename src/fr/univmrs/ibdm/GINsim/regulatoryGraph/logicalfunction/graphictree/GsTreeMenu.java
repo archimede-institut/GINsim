@@ -8,11 +8,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 public class GsTreeMenu extends JPopupMenu {
-  /**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 8209694715096362318L;
-public static final String COPY = "Copy";
+  private static final long	serialVersionUID	= 8209694715096362318L;
+  public static final String COPY = "Copy";
   public static final String CUT = "Cut";
   public static final String PASTE = "Paste";
   public static final String DELETE = "Delete";
@@ -21,9 +18,9 @@ public static final String COPY = "Copy";
 
   private Hashtable items = new Hashtable();
 
-  public GsTreeMenu(ActionListener al	) {
-	super();
-	init(al);
+  public GsTreeMenu(ActionListener al) {
+    super();
+    init(al);
   }
   public void init(ActionListener al) {
     addItem(null, COPY, false, al);
@@ -32,9 +29,9 @@ public static final String COPY = "Copy";
     addItem(null, DELETE, false, al);
     addSeparator();
     JMenu createMenu = new JMenu("Create");
-	add(createMenu);
+    add(createMenu);
     addItem(createMenu, CREATE_1_FUNCTION, false, al);
-	addItem(createMenu, CREATE_N_FUNCTIONS, false, al);
+    addItem(createMenu, CREATE_N_FUNCTIONS, false, al);
   }
   private void addItem(JMenu parent, String text, boolean enabled, ActionListener al) {
     JMenuItem item = new JMenuItem(text);

@@ -20,8 +20,12 @@ public class GsLogicalFunctionListElement implements Comparable {
   public int getIndex() {
     return index;
   }
+  public boolean equals(Object o) {
+    GsLogicalFunctionListElement f = (GsLogicalFunctionListElement)o;
+    return f.getIndex() == index;
+  }
   public int compareTo(Object o) {
     GsLogicalFunctionListElement f = (GsLogicalFunctionListElement)o;
-    return f.toString().compareTo(toString());
+    return f.getIndex() - index;
   }
 }

@@ -3,9 +3,8 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -14,20 +13,15 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsParameterChoiceWindow extends JDialog implements ActionListener, ListSelectionListener {
-
-	private static final long	serialVersionUID	= -1570164194427132249L;
-class GsCellRenderer extends JLabel implements ListCellRenderer {
-	private static final long	serialVersionUID	= 1720724468548717415L;
-	public GsCellRenderer() {
+  private static final long	serialVersionUID	= -1570164194427132249L;
+  class GsCellRenderer extends JLabel implements ListCellRenderer {
+    private static final long	serialVersionUID	= 1720724468548717415L;
+    public GsCellRenderer() {
       setOpaque(true);
     }
     public Component getListCellRendererComponent(JList list, Object value, int index,
@@ -87,8 +81,8 @@ class GsCellRenderer extends JLabel implements ListCellRenderer {
     for (int i = 0; i < interactions.size(); i++) {
       o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)interactions.get(i)).getUserObject();
       for (int j = 0; j < o.getEdgeCount(); j++) {
-		vec.addElement(new GsListElement(o, j));
-	}
+        vec.addElement(new GsListElement(o, j));
+      }
     }
     interactionList.setListData(vec);
     interactionList.setFont(f);
@@ -105,8 +99,8 @@ class GsCellRenderer extends JLabel implements ListCellRenderer {
     for (int i = 0; i < interactions.size(); i++) {
       o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)interactions.get(i)).getUserObject();
       for (int j = 0; j < o.getEdgeCount(); j++) {
-		vec.addElement(new GsListElement(o, j));
-	}
+        vec.addElement(new GsListElement(o, j));
+      }
     }
     interactionList.setListData(vec);
     interactionList.setFont(f);
@@ -164,8 +158,8 @@ class GsCellRenderer extends JLabel implements ListCellRenderer {
         tree.stopEditing();
         model.fireTreeStructureChanged(treeParam.getParent());
         while (enu.hasMoreElements()) {
-			tree.expandPath((TreePath)enu.nextElement());
-		}
+          tree.expandPath((TreePath)enu.nextElement());
+        }
       }
       else {
         interactionList.setSelectedIndices(oldSelection);
@@ -184,8 +178,8 @@ class GsCellRenderer extends JLabel implements ListCellRenderer {
       Object[] sel = interactionList.getSelectedValues();
       GsLogicalParameter par = new GsLogicalParameter(value, false);
       for (int i = 0; i < sel.length; i++) {
-		par.addEdge(((GsListElement)sel[i]).getEdge().getEdge(((GsListElement)sel[i]).getIndex()));
-	}
+        par.addEdge(((GsListElement)sel[i]).getEdge().getEdge(((GsListElement)sel[i]).getIndex()));
+      }
       treeParam.setEdgeIndexes(par.getEdges());
       ((GsTreeInteractionsModel)tree.getModel()).refreshVertex();
       tree.repaint();

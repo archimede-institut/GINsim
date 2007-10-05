@@ -4,6 +4,7 @@ import java.util.Hashtable;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import java.util.Vector;
 
 public class GsParamTreeNode implements GsParamTreeElement {
   private GsRegulatoryVertex vertex;
@@ -77,7 +78,9 @@ public class GsParamTreeNode implements GsParamTreeElement {
       sons[i].makeFunctions(h, f + and + toString() + "#" + (i - 1), dv, pattern);
     }
   }
+  public void makeDNF(Vector v, int value) {
 
+  }
   public int hashCode() {
     return vertex.getId().hashCode();
   }

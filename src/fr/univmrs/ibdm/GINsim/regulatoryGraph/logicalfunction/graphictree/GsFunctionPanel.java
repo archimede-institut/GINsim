@@ -9,21 +9,19 @@ import java.util.Enumeration;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.GsFunctionEditor;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 
 public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener,
-  PropertyChangeListener, MouseListener {
+    PropertyChangeListener, MouseListener {
   private static final long serialVersionUID = 8900639275182677150L;
   private static final Color editColor = new Color(204, 255, 204);
   private JPanel buttonPanel;
-  private JButton /*showButton, hideButton, */editButton;
+  private JButton editButton;
   private JTextArea textArea;
   private JScrollPane jsp;
-  //private JSplitPane splitPane = null;
-  //private GsUnselectedParamsPanel listPanel;
   private boolean toUpdate = false;
 
   public GsFunctionPanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean edit) {
@@ -31,21 +29,12 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     setBackground(Color.white);
     editButton = new GsJButton("edit.png");
     editButton.addActionListener(this);
-    //showButton = new GsJButton("show.png");
-    //showButton.addActionListener(this);
-    //hideButton = new GsJButton("hide.png");
-    //hideButton.addActionListener(this);
     buttonPanel = new JPanel(new GridBagLayout());
     buttonPanel.setBackground(Color.white);
     buttonPanel.add(editButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                                      GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-    //if (((Boolean)value.getProperty("show unselected")).booleanValue())
-    //  buttonPanel.add(hideButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-    //                                                     GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-    //else
-    //  buttonPanel.add(showButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-    //                                                     GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+        GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
     textArea = new JTextArea(text);
+
     textArea.setFont(defaultFont);
     textArea.setEditable(true);
     textArea.setLineWrap(true);
@@ -69,195 +58,150 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     }
     else {
       setBackground(Color.white);
-      textArea.setBackground(Color.white);
       buttonPanel.setBackground(Color.white);
     }
     textArea.setForeground(treeElement.getForeground());
     textArea.addKeyListener(this);
     add(buttonPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
                                             GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    //Vector v = null;
-    //if (treeElement.containsUnselectChild()) {
-    //  showButton.setEnabled(true);
-    //  hideButton.setEnabled(true);
-    //  v = treeElement.getUnselectChilds();
-    //}
-    //else {
-    //  showButton.setEnabled(false);
-    //  hideButton.setEnabled(false);
-    //}
-    /*if (((Boolean)treeElement.getProperty("show unselected")).booleanValue()) {
-      listPanel = new GsUnselectedParamsPanel(v, sel, tree, this, edit);
-      JScrollPane jsp2 = new JScrollPane(listPanel);
-      jsp2.setBorder(null);
-      splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jsp, jsp2);
-      splitPane.setBorder(null);
-      splitPane.setContinuousLayout(true);
-      splitPane.setDividerSize(3);
-      add(splitPane, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                            GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-      int lpWidth, lpHeight;
-      lpHeight = listPanel.getPreferredSize().height;
-      if (treeElement.getProperty("divider location") == null) {
-        lpWidth = listPanel.getPreferredSize().width;
-        if (lpWidth > (width / 2)) lpWidth = width / 2;
+    UIManager.put("ScrollBar.width", new Integer(2 * charWidth));
+    add(jsp, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
+                                    GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+    if (width >= 0 && charWidth > 0) {
+      int nbCols = width / charWidth;
+      int nbRows = (text.length() + 1) / nbCols + 1;
+      if ((text.length() + 1) % nbCols == 0) {
+        nbRows--;
       }
-      else
-        lpWidth = (int)((1.0D - ((Double)treeElement.getProperty("divider location")).doubleValue()) * width);
-      if (lpHeight > (4 * charHeight)) {
-        lpHeight = 4 * charHeight;
-        lpWidth += 2 * charWidth;
-      }
-      UIManager.put("ScrollBar.width", new Integer(2 * charWidth));
-      jsp2.setPreferredSize(new Dimension(lpWidth, lpHeight));
-      int nbCols = (width - lpWidth) /charWidth;
-      if ((width >= 0) && (charWidth > 0)) {
-        int nbRows = (text.length() + 1) / nbCols + 1;
-        if (((text.length() + 1) % nbCols) == 0) nbRows--;
-        if (nbRows > 4) {
-          nbCols -= 2;
-          nbRows = (text.length() + 1) / nbCols + 1;
-          if (((text.length() + 1) % nbCols) == 0) nbRows--;
-        }
-        textArea.setColumns(nbCols);
-        textArea.setRows(nbRows);
-        if (nbRows > 4) nbRows = 4;
-        int ps = nbRows * charHeight;
-        jsp.setPreferredSize(new Dimension(width - lpWidth, ps));
-      }
-      if (treeElement.getProperty("divider location") == null)
-        splitPane.setDividerLocation((double)(width - lpWidth) / width);
-      else
-        splitPane.setDividerLocation((int)(((Double)treeElement.getProperty("divider location")).doubleValue() * width));
-      splitPane.addPropertyChangeListener("dividerLocation", this);
-      (((BasicSplitPaneUI)splitPane.getUI()).getDivider()).addMouseListener(this);
-    }
-    else {*/
-    	UIManager.put("ScrollBar.width", new Integer(2 * charWidth));
-    	add(jsp, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                      GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-      if (width >= 0 && charWidth > 0) {
-        int nbCols = width / charWidth;
-        int nbRows = (text.length() + 1) / nbCols + 1;
+      if (nbRows > 4) {
+        nbCols -= 2;
+        nbRows = (text.length() + 1) / nbCols + 1;
         if ((text.length() + 1) % nbCols == 0) {
-			nbRows--;
-		}
-        if (nbRows > 4) {
-          nbCols -= 2;
-          nbRows = (text.length() + 1) / nbCols + 1;
-          if ((text.length() + 1) % nbCols == 0) {
-			nbRows--;
-		}
+          nbRows--;
         }
-        textArea.setColumns(nbCols);
-        textArea.setRows(nbRows);
-        if (nbRows > 4) {
-			nbRows = 4;
-		}
-        int ps = nbRows * charHeight;
-        jsp.setPreferredSize(new Dimension(width, ps));
       }
-    //}
+      textArea.setColumns(nbCols);
+      textArea.setRows(nbRows);
+      if (nbRows > 4) {
+        nbRows = 4;
+      }
+      int ps = nbRows * charHeight;
+      jsp.setPreferredSize(new Dimension(width, ps));
+    }
     addMouseListener(this);
-    //addMouseMotionListener(this);
-    //buttonPanel.addMouseListener(this);
   }
   public void actionPerformed(ActionEvent e) {
-    //if (e.getSource() == showButton) {
-    //  showButtonPressed();
-    //}
-    //else if (e.getSource() == hideButton) {
-    //  hideButtonPressed();
-    //}
-    /*else */if (e.getSource() == editButton) {
-      editButtonPressed();
-    }
+    if (e.getSource() == editButton)
+      if (!treeElement.isEditable())
+        editButtonPressed();
+      else
+        editButtonPressed2();
   }
-  /*public void showButtonPressed() {
-    treeElement.setProperty("show unselected", new Boolean(true));
-    TreePath tp = tree.getEditingPath();
-    Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-    tree.stopEditing();
-    ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement);
-    while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
-    tree.getSelectionModel().addSelectionPath(tp);
-    //treeElement.setChecked(true);
-  }
-  public void hideButtonPressed() {
-    treeElement.setProperty("show unselected", new Boolean(false));
-    TreePath tp = tree.getEditingPath();
-    Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-    tree.stopEditing();
-    ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement);
-    while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
-    //treeElement.setChecked(true);
-    tree.getSelectionModel().addSelectionPath(tp);
-  }*/
   public void editButtonPressed() {
     treeElement.setEditable(true);
+  }
+  public void editButtonPressed2() {
+    GsFunctionEditor functionEditor;
+    GsTreeInteractionsModel model = (GsTreeInteractionsModel)tree.getModel();
+    functionEditor = new GsFunctionEditor(model, this);
+    Object[] path = new Object[3];
+    path[0] = model.getRoot();
+    path[1] = treeElement.getParent();
+    path[2] = treeElement;
+    TreePath treePath = new TreePath(path);
+    Point p = tree.getPathBounds(treePath).getLocation();
+    p.translate(0, - functionEditor.getWindow().getPreferredSize().height - 2);
+    SwingUtilities.convertPointToScreen(p, tree);
+    functionEditor.getWindow().setLocation(p);
+    functionEditor.getWindow().setVisible(true);
+  }
+  public GsTreeExpression getTreeExpression() {
+    return (GsTreeExpression)treeElement;
+  }
+  public void selectText(Point pt, boolean norm) {
+    Color col = null;
+    if (norm)
+      col = Color.cyan;
+    else
+      col = Color.green;
+    try {
+      textArea.getHighlighter().removeAllHighlights();
+      textArea.getHighlighter().addHighlight(pt.x, pt.x + pt.y, new DefaultHighlightPainter(col));
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+    textArea.repaint();
+  }
+  public void validateText(String s) {
+    GsTreeInteractionsModel interactionsModel;
+    boolean ok;
+    String oldExpression = treeElement.toString();
+    Enumeration exp_path = tree.getExpandedDescendants(tree.getPathForRow(0));
+    TreePath sel_path = tree.getEditingPath();
+    tree.stopEditing();
+    interactionsModel = (GsTreeInteractionsModel)tree.getModel();
+    String oldText = s;
+    ok = interactionsModel.updateExpression((short)((GsTreeValue)treeElement.getParent()).getValue(),
+                                            (GsTreeExpression)treeElement, s);
+    if (((GsTreeExpression)treeElement).getEditorModel() != null)
+      ((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
+          ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
+    interactionsModel.setRootInfos();
+    interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
+    interactionsModel.refreshVertex();
+    while (exp_path.hasMoreElements()) {
+      tree.expandPath((TreePath)exp_path.nextElement());
+    }
+    tree.setSelectionPath(sel_path);
+    if (oldExpression.equals("") && !treeElement.toString().equals("")) {
+      treeElement.getParent().setProperty("null function", new Boolean(false));
+    }
+    if (ok) {
+      treeElement.setProperty("invalid", new Boolean(false));
+      ((GsTreeExpression)treeElement).setText(oldText);
+    }
+    if (!ok && !oldText.equals("")) {
+      tree.startEditingAtPath(sel_path);
+      ((GsTreeExpression)treeElement).setText(oldText);
+    }
   }
   public void keyPressed(KeyEvent e) {
   }
   public void keyReleased(KeyEvent e) {
   }
   public void keyTyped(KeyEvent e) {
-    GsTreeInteractionsModel interactionsModel;
-    boolean ok;
 
     if (treeElement instanceof GsTreeExpression) {
       if ('\n' == e.getKeyChar()) {
-    	try {
-          String oldExpression = treeElement.toString();
+        try {
           textArea.getDocument().remove(textArea.getCaretPosition() - 1, 1);
-          Enumeration exp_path = tree.getExpandedDescendants(tree.getPathForRow(0));
-          TreePath sel_path = tree.getEditingPath();
-          tree.stopEditing();
-          treeElement.setProperty("show unselected", new Boolean(false));
-          interactionsModel = (GsTreeInteractionsModel)tree.getModel();
-          String oldText = textArea.getText();
-          ok = interactionsModel.updateExpression((short)((GsTreeValue)treeElement.getParent()).getValue(),
-                                                  (GsTreeExpression)treeElement, textArea.getText());
-          interactionsModel.setRootInfos();
-          interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
-          interactionsModel.refreshVertex();
-          while (exp_path.hasMoreElements()) {
-			tree.expandPath((TreePath)exp_path.nextElement());
-		}
-          tree.setSelectionPath(sel_path);
-          if (oldExpression.equals("") && !treeElement.toString().equals("")) {
-			treeElement.getParent().setProperty("null function", new Boolean(false));
-		}
-          if (ok) {
-			treeElement.setProperty("invalid", new Boolean(false));
-		}
-          if (!ok && !oldText.equals("")) {
-            tree.startEditingAtPath(sel_path);
-            ((GsTreeExpression)treeElement).setText(oldText);
-          }
         }
         catch (Exception ex) {
           ex.printStackTrace();
         }
+        validateText(textArea.getText());
+        ((GsTreeExpression)treeElement).setEditorModel(null);
       }
       else {
     	text = textArea.getText();
         int nbCols = width / charWidth;
         int nbRows = (text.length() + 1) / nbCols + 1;
         if ((text.length() + 1) % nbCols == 0) {
-			nbRows--;
-		}
+          nbRows--;
+        }
         if (nbRows > 4) {
           nbCols -= 2;
           nbRows = (text.length() + 1) / nbCols + 1;
           if ((text.length() + 1) % nbCols == 0) {
-			nbRows--;
-		}
+            nbRows--;
+          }
         }
         textArea.setRows(nbRows);
         textArea.setColumns(nbCols);
         if (nbRows > 4) {
-			nbRows = 4;
-		}
+          nbRows = 4;
+        }
         int ps = nbRows * charHeight;
         jsp.setSize(new Dimension(width, ps));
         setSize(new Dimension(getWidth(), ps + 4));
@@ -270,23 +214,22 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
       if (width >= 0 && nbCols > 0) {
         int nbRows = (text.length() + 1) / nbCols + 1;
         if ((text.length() + 1) % nbCols == 0) {
-			nbRows--;
-		}
+          nbRows--;
+        }
         if (nbRows > 4) {
           nbCols -= 2;
           nbRows = (text.length() + 1) / nbCols + 1;
           if ((text.length() + 1) % nbCols == 0) {
-			nbRows--;
-		}
+            nbRows--;
+          }
         }
         textArea.setColumns(nbCols);
         textArea.setRows(nbRows);
         if (nbRows > 4) {
-			nbRows = 4;
-		}
+          nbRows = 4;
+        }
         int ps = nbRows * charHeight;
         jsp.setSize(new Dimension(width, ps));
-        treeElement.setProperty("divider location", new Double(((double) ((Integer) e.getNewValue()).intValue() / width)));
       }
     }
   }
@@ -302,7 +245,4 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   public void mouseReleased(MouseEvent e) {
     toUpdate = false;
   }
-  //public boolean isShowButtonEnabled() {
-  //  return showButton.isEnabled();
-  //}
 }

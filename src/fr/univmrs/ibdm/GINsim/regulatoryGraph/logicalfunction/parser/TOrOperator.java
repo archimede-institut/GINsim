@@ -13,7 +13,9 @@ public class TOrOperator extends TBinaryOperator {
     Vector leftData = leftArg.getValue().getData();
     Vector rightData = rightArg.getValue().getData();
     Vector orData = new Vector(leftData);
-    orData.addAll(rightData);
+    for (int i = 0; i < rightData.size(); i++)
+      if (!orData.contains(rightData.elementAt(i))) orData.addElement(rightData.elementAt(i));
+    //orData.addAll(rightData);
     TBooleanData data = (TBooleanData)Class.forName(returnClassName).newInstance();
     data.setParser(parser);
     data.setData(orData);
