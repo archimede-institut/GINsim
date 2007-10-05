@@ -7,14 +7,13 @@ import java.util.Hashtable;
 public abstract class GsTreeElement implements Comparable {
   protected Vector childs;
   protected GsTreeElement parent;
-  protected boolean /*checked, */selected, editable, dropable, edited;
+  protected boolean selected, editable, dropable, edited;
   protected Color foreground;
   protected Hashtable property;
 
   public GsTreeElement(GsTreeElement parent) {
     childs = new Vector();
     this.parent = parent;
-    //checked = true;
     selected = false;
     foreground = Color.black;
     property = new Hashtable();
@@ -27,12 +26,7 @@ public abstract class GsTreeElement implements Comparable {
   }
   public GsTreeElement getChild(int index) {
     GsTreeElement te = null;
-    //int i = 0, n = 0;
     if (childs != null) {
-      //do {
-     //   te = (GsTreeElement)childs.elementAt(i++);
-      //  /*if (te.isChecked())*/ n++;
-      //} while (n <= index);
       if (index < childs.size())
         te = (GsTreeElement)childs.elementAt(index);
     }
@@ -63,13 +57,8 @@ public abstract class GsTreeElement implements Comparable {
   }
   public int getChildCount() {
     int n = 0;
-    //GsTreeElement te;
     if (childs != null) {
-      //  for (int i = 0; i < childs.size(); i++) {
-      //    te = (GsTreeElement)childs.elementAt(i);
-      //    /*if (te.isChecked())*/ n++;
       n = childs.size();
-      //}
     }
     return n;
   }
@@ -82,9 +71,6 @@ public abstract class GsTreeElement implements Comparable {
   public boolean isLeaf() {
     return ((getChildCount() == 0) && (getDepth() != 0));
   }
-  //public boolean isChecked() {
-  //  return checked;
-  //}
   public boolean isSelected() {
     return selected;
   }
@@ -97,9 +83,6 @@ public abstract class GsTreeElement implements Comparable {
   public void setEdited(boolean b) {
     edited =b;
   }
-  //public void setChecked(boolean b) {
-  //  checked = b;
-  //}
   public void setDropable(boolean b) {
     dropable = b;
   }
@@ -136,17 +119,6 @@ public abstract class GsTreeElement implements Comparable {
   public Object getProperty(String key) {
     return property.get(key);
   }
-  //public boolean containsUnselectChild() {
-  //  for (int i = 0; i < childs.size(); i++)
-  //    if (!((GsTreeElement)childs.elementAt(i)).isChecked()) return true;
-  //  return false;
-  //}
-  //public Vector getUnselectChilds() {
-  //  Vector v = new Vector();
-  //  for (int i = 0; i < childs.size(); i++)
-  //    if (!((GsTreeElement)childs.elementAt(i)).isChecked()) v.addElement(childs.elementAt(i));
-  //  return v;
-  //}
   public void setEditable(boolean e) {
     editable = e;
   }

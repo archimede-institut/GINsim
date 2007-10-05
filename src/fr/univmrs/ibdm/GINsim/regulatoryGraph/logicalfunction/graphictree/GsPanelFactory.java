@@ -5,6 +5,7 @@ import javax.swing.JTree;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
+import java.awt.Point;
 
 public class GsPanelFactory {
   public GsPanelFactory() {
@@ -20,8 +21,13 @@ public class GsPanelFactory {
         panel = new GsValuePanel(value, tree, sel, width, edit);
         break;
       case 2 :
-        if (value instanceof GsTreeExpression)
+        if (value instanceof GsTreeExpression) {
           panel = new GsFunctionPanel(value, tree, sel, width, edit);
+          Point p =((GsTreeExpression)value).getSelection();
+          if (p != null) {
+            ((GsFunctionPanel)panel).selectText(p, ((GsTreeExpression)value).isNormal());
+          }
+        }
         else if (value instanceof GsTreeManual)
           panel = new GsManualPanel(value, tree, sel, width);
         break;

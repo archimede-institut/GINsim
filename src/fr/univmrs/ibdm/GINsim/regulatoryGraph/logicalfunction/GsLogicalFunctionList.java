@@ -25,7 +25,6 @@ public class GsLogicalFunctionList implements TBooleanData {
   public Vector getAsStringVector() {
     Vector params = parser.getParams(logicalFunctions);
     Iterator it = params.iterator(), it2;
-    //Iterator it = logicalFunctions.iterator(), it2;
     Vector v, v2 = new Vector();
     Integer element;
     String s;

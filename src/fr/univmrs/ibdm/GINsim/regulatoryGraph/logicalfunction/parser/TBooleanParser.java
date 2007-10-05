@@ -28,10 +28,10 @@ public abstract class TBooleanParser {
     TBooleanTreeNode tbtn;
 
     for (i = 0; i < split.length; i++) {
-		if (!split[i].equals("")) {
-			operands.addElement(split[i]);
-		}
-	}
+      if (!split[i].equals("")) {
+        operands.addElement(split[i]);
+      }
+    }
     if (verifOperandList(operands)) {
       operators = nodeFactory.getOperators();
       i = 0;
@@ -45,15 +45,17 @@ public abstract class TBooleanParser {
             break;
           }
           else if (operands.contains(elem)) {
-			operandStack.push(nodeFactory.createOperand(elem));
-		} else if (elem.equals("(")) {
-			operatorStack.push(elem);
-		} else if (elem.equals(")")) {
+            operandStack.push(nodeFactory.createOperand(elem));
+          }
+          else if (elem.equals("(")) {
+            operatorStack.push(elem);
+          }
+          else if (elem.equals(")")) {
             while (!((String) operatorStack.peek()).equals("(")) {
               tbtn = nodeFactory.createOperator((String) operatorStack.pop(), operandStack);
               if (tbtn != null) {
-				operandStack.push(tbtn);
-			}
+                operandStack.push(tbtn);
+              }
             }
             operatorStack.pop();
           }
@@ -61,13 +63,13 @@ public abstract class TBooleanParser {
             j = TBooleanTreeNodeFactory.getPriority(elem);
             while (!operatorStack.empty()) {
               k = TBooleanTreeNodeFactory.getPriority((String) operatorStack.peek());
-              if (k <= j) {
+              if (k < j) {
                 break;
               }
               tbtn = nodeFactory.createOperator((String) operatorStack.pop(), operandStack);
               if (tbtn != null) {
-				operandStack.push(tbtn);
-			}
+                operandStack.push(tbtn);
+              }
             }
             operatorStack.push(elem);
           }
@@ -76,8 +78,9 @@ public abstract class TBooleanParser {
         while (!operatorStack.empty()) {
           tbtn = nodeFactory.createOperator((String) operatorStack.pop(), operandStack);
           if (tbtn != null) {
-			operandStack.push(tbtn);
-		} else {
+            operandStack.push(tbtn);
+          }
+          else {
             ret = false;
             break;
           }
@@ -87,9 +90,10 @@ public abstract class TBooleanParser {
       catch (Exception ex) {
         ret = false;
       }
-    } else {
-		ret = false;
-	}
+    }
+    else {
+      ret = false;
+    }
     return ret;
   }
   private String readElement(Vector operators, Vector operands, String s, int i) {
@@ -102,17 +106,17 @@ public abstract class TBooleanParser {
       }
     }
     if (ret.equals("")) {
-		for (Enumeration enu = operators.elements(); enu.hasMoreElements(); ) {
-		    tmp = (String)enu.nextElement();
-		    if (s2.startsWith(tmp)) {
-		      ret = tmp;
-		      break;
-		    }
-		  }
-	}
+      for (Enumeration enu = operators.elements(); enu.hasMoreElements(); ) {
+        tmp = (String)enu.nextElement();
+        if (s2.startsWith(tmp)) {
+          ret = tmp;
+          break;
+        }
+      }
+    }
     if (ret.equals("")) {
-		return null;
-	}
+      return null;
+    }
     return ret;
   }
   public Vector getAllData() {
