@@ -158,10 +158,6 @@ public class GsSimulationParameterList extends GsListAbstract
         }
     }
 
-	public Vector getObjectType() {
-		return null;
-	}
-
 	protected Object doCreate(String name, int type) {
         GsSimulationParameters parameter = new GsSimulationParameters(graph.getNodeOrder());
         parameter.name = name;

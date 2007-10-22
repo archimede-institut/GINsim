@@ -19,6 +19,9 @@ abstract public class GsListAbstract implements GsList {
 	protected boolean canRemove = false;
 	protected boolean canEdit = false;
 	protected boolean canOrder = false;
+	protected boolean canFilter = true;
+	
+	protected String filter = null;
 	
 	public void addListListener(GsListListener l) {
 		if (v_listeners == null) {
@@ -97,6 +100,19 @@ abstract public class GsListAbstract implements GsList {
 		return canRemove;
 	}
 
+	public boolean canFilter() {
+		return canFilter;
+	}
+
+	public void setFilter(String filter) {
+		if (!canFilter) {
+			return;
+		}
+		this.filter = filter;
+	}
+	public Vector getObjectType() {
+		return null;
+	}
 	public int copy(int i) {
 		if (!canCopy) {
 			return -1;
@@ -128,11 +144,36 @@ abstract public class GsListAbstract implements GsList {
 	}
 
 	public Object getElement(int i) {
-		return v_data.get(i);
+		if (filter == null) {
+			return v_data.get(i);
+		}
+		for (int j=0, c=0 ; j<v_data.size() ; j++) {
+			Object o = v_data.get(j);
+			if (match(filter, o)) {
+				if (c == i) {
+					return o;
+				}
+				c++;
+			}
+		}
+		return null;
+	}
+	
+	public boolean match(String filter, Object o) {
+		return o.toString().contains(filter);
 	}
 
 	public int getNbElements() {
-		return v_data.size();
+		if (filter == null) {
+			return v_data.size();
+		}
+		int c=0;
+		for (int i=0 ; i<v_data.size() ; i++) {
+			if (match(filter, v_data.get(i))) {
+				c++;
+			}
+		}
+		return c;
 	}
 
     public boolean moveElement(int src, int dst) {

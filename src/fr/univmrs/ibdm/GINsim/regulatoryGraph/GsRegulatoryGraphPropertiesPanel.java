@@ -16,6 +16,7 @@ import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
+import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 /**
@@ -207,7 +208,9 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 			if (index[i]>0) {
 				((GsListModel)orderList.getModel()).moveElementAt(index[i],index[i]-1);
 				index[i]--;
-			} else return;
+			} else {
+				return;
+			}
 		}
 		orderList.setSelectedIndices(index);
     }
@@ -235,7 +238,9 @@ public class GsRegulatoryGraphPropertiesPanel extends JPanel implements GsGraphL
 			if (index[i]>=0 && index[i]+1<((GsListModel)orderList.getModel()).getSize()) {
 				((GsListModel)orderList.getModel()).moveElementAt(index[i],index[i]+1);
 				index[i]++;
-			} else return;
+			} else {
+				return;
+			}
 		}
 		orderList.setSelectedIndices(index);
     }
@@ -348,3 +353,10 @@ class GsListModel extends AbstractListModel {
     }
 }
 
+class GsNodeList extends GsListAbstract {
+
+	protected Object doCreate(String name, int type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

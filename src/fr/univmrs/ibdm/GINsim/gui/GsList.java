@@ -33,6 +33,11 @@ public interface GsList {
      * @return true if one can remove elements
      */
     public boolean canRemove();
+    /**
+     * 
+     * @return true if this list can be filtered
+     */
+    public boolean canFilter();
     
     /**
      * @return the size of the list
@@ -88,4 +93,10 @@ public interface GsList {
      * @return true if the list has changed
      */
     public boolean moveElement(int src, int dst);
+    /**
+     * set a filter on this list
+     * 
+     * @param filter the filter
+     */
+	public void setFilter(String filter);
 }

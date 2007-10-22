@@ -15,8 +15,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 /**
  * Save/open simulation parameters along with the model.
  */
-public class GsSimulationParametersManager implements
-        GsGraphAssociatedObjectManager {
+public class GsSimulationParametersManager implements GsGraphAssociatedObjectManager {
 
 	public static final String key = "reg2dyn_parameters";
 	
@@ -56,7 +55,7 @@ public class GsSimulationParametersManager implements
 
     public boolean needSaving(GsGraph graph) {
         GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
-        return (paramList != null && paramList.getNbElements() > 0);
+        return paramList != null && paramList.getNbElements() > 0;
     }
 
 	public Object doCreate(GsGraph graph) {

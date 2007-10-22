@@ -141,4 +141,4 @@ public class GsAnnotationPanel extends GsParameterPanel implements TableModelLis
         }
     }
     
-}  //  @jve:decl-index=0:visual-constraint="2,10"
+}

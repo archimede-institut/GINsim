@@ -6,6 +6,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
@@ -16,10 +18,10 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 
 /**
  * Generic UI to display the content of a list.
- * It offers optionnal UI to reorder and alter the content of the list,
+ * It offers optional UI to reorder and alter the content of the list,
  * using the Glist interface as a backend.
  */
-public class GsListPanel extends JPanel {
+public class GsListPanel extends JPanel implements KeyListener {
     private static final long serialVersionUID = -4236977685092639157L;
     
     JScrollPane sp = new JScrollPane();
@@ -33,6 +35,7 @@ public class GsListPanel extends JPanel {
     JButton b_add;
     JButton b_copy;
     JButton b_del;
+    JTextField t_filter;
     JLabel l_title = new JLabel();
     
     /**
@@ -53,7 +56,16 @@ public class GsListPanel extends JPanel {
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
-        c.gridheight = 6;
+        c.weightx = 1;
+        c.fill = GridBagConstraints.BOTH;
+        t_filter = new JTextField();
+        t_filter.addKeyListener(this);
+        this.add(t_filter, c);
+		
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.gridheight = 5;
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
@@ -166,6 +178,7 @@ public class GsListPanel extends JPanel {
             b_add.setVisible(false);
             b_copy.setVisible(false);
             b_del.setVisible(false);
+            t_filter.setVisible(false);
             return;
         }
         
@@ -174,6 +187,7 @@ public class GsListPanel extends JPanel {
         b_add.setVisible(list.canAdd());
         b_copy.setVisible(list.canCopy());
         b_del.setVisible(list.canRemove());
+        t_filter.setVisible(list.canFilter());
         if (list.getNbElements() > 0) {
             jl.getSelectionModel().setSelectionInterval(0, 0);
         }
@@ -189,7 +203,9 @@ public class GsListPanel extends JPanel {
             if (a>0) {
                 list.moveElement(a, a-1);
                 index[i]=a-1;
-            } else return;
+            } else {
+				return;
+			}
         }
         DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)jl.getSelectionModel();
         selectionModel.clearSelection();
@@ -219,7 +235,9 @@ public class GsListPanel extends JPanel {
             if (a<list.getNbElements()-1) {
                 list.moveElement(a, a+1);
                 index[i]=a+1;
-            } else return;
+            } else {
+				return;
+			}
         }
         DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)jl.getSelectionModel();
         selectionModel.clearSelection();
@@ -238,7 +256,9 @@ public class GsListPanel extends JPanel {
             }
             selectionModel.addSelectionInterval(min, max);
         }
+        
     }
+    
     protected void doAdd() {
         if (list == null) {
             return;
@@ -305,6 +325,13 @@ public class GsListPanel extends JPanel {
             setSize(100, getHeight());
         }
     }
+	public void keyTyped(KeyEvent e) {
+		model.setFilter(t_filter.getText());
+	}
+	public void keyReleased(KeyEvent e) {
+	}
+	public void keyPressed(KeyEvent e) {
+	}
 }
 
 class listModel extends AbstractTableModel {
@@ -344,6 +371,13 @@ class listModel extends AbstractTableModel {
         return "";
     }
 
+    public void setFilter(String filter) {
+    	if (list == null || !list.canFilter()) {
+    		return;
+    	}
+    	list.setFilter(filter);
+    	fireTableDataChanged();
+    }
     void setList(GsList list) {
         this.list = list;
         fireTableStructureChanged();
