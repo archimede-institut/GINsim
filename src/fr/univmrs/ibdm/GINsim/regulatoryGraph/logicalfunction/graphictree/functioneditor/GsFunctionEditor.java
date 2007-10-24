@@ -11,11 +11,7 @@ public class GsFunctionEditor {
 
   public GsFunctionEditor(GsTreeInteractionsModel model, GsFunctionPanel p) {
     GsTreeExpression exp = p.getTreeExpression();
-    if (exp.getEditorModel() == null) {
-      this.model = new GsFunctionEditorModel(model, exp);
-    }
-    else
-      this.model = exp.getEditorModel();
+    this.model = new GsFunctionEditorModel(model, exp);
     controler = new GsFunctionEditorControler(p, this.model);
     window = new GsFunctionEditorWindow(controler, this.model);
   }

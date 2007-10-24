@@ -29,6 +29,7 @@ private int width;
     ((GsTreeElement)value).setSelected(sel);
     ((GsTreeElement)value).setEdited(false);
     GsBooleanFunctionTreePanel p = GsPanelFactory.getPanel((GsTreeElement)value, tree, sel, width, false);
+    p.updateSize();
     return p;
   }
   public void componentHidden(ComponentEvent e) {}
@@ -41,10 +42,10 @@ private int width;
       Enumeration enu = tree.getExpandedDescendants(new TreePath(tree.getModel().getRoot()));
       ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
       if (enu != null) {
-		while (enu.hasMoreElements()) {
-			tree.expandPath((TreePath)enu.nextElement());
-		}
-	}
+        while (enu.hasMoreElements()) {
+          tree.expandPath((TreePath)enu.nextElement());
+        }
+      }
       tree.setSelectionRows(sr);
     }
   }

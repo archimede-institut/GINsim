@@ -72,7 +72,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 
     /** some more stuff to check consistency of "old" models (with explicit and free maxvalue) */
     Map m_checkMaxValue;
-    
+
     /**
      */
     public GsRegulatoryParser() {
@@ -394,7 +394,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     					GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));
     		}
     	}
-    	
+
     	for (int i=0 ; i<v_waitingInteractions.size() ; i+=3) {
     		GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_waitingInteractions.get(i);
     		GsLogicalParameter gsi = new GsLogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)), true);
@@ -451,7 +451,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     private void parseBooleanFunctions() {
       List allowedEdges;
       GsRegulatoryVertex vertex;
-      String value, exp/*, chk*/;
+      String value, exp;
       try {
         for (Enumeration enu_vertex = values.keys(); enu_vertex.hasMoreElements(); ) {
           vertex = (GsRegulatoryVertex)enu_vertex.nextElement();
@@ -461,27 +461,17 @@ public final class GsRegulatoryParser extends GsXMLHelper {
               value = (String)enu_values.nextElement();
               for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
                 exp = (String)enu_exp.nextElement();
-                //chk = (String)enu_exp.nextElement();
                 if (!exp.startsWith("PARAM")) {
-					addExpression(Short.parseShort(value), vertex, exp/*, chk.length()*/);
-				} else {
-					addParam(Short.parseShort(value), vertex, exp.split("\t")[1]);
-				}
+                  addExpression(Short.parseShort(value), vertex, exp);
+                } else {
+                  addParam(Short.parseShort(value), vertex, exp.split("\t")[1]);
+                }
               }
             }
             vertex.getInteractionsModel().parseFunctions();
             if (vertex.getMaxValue() - vertex.getBaseValue() + 1 == ((Hashtable)values.get(vertex)).size()) {
-				((GsTreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
-				//for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
-				//  value = (String)enu_values.nextElement();
-				//  for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
-				//    exp = (String)enu_exp.nextElement();
-				    //chk = (String)enu_exp.nextElement();
-				    //vertex.getInteractionsModel().checkParams(Short.parseShort(value), chk, exp);
-				    //vertex.getInteractionsModel().parseFunctions();
-				//  }
-				//}
-			}
+              ((GsTreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
+            }
           }
         }
       }
@@ -490,7 +480,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       }
     }
 
-    public void addExpression(short val, GsRegulatoryVertex vertex, String exp/*, int n*/) {
+    public void addExpression(short val, GsRegulatoryVertex vertex, String exp) {
       try {
         GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
         GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
@@ -500,9 +490,6 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         }
         else {
           interactionList.addExpression(val, vertex, tbp);
-          //String chk1 = "";
-          //for (int i = 0; i < n; i++) chk1 += "1";
-          //interactionList.checkParams(val, chk1, exp);
         }
       }
       catch (Exception ex) {
@@ -518,13 +505,20 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       String srcString, indexString;
       GsRegulatoryMultiEdge o;
       for (int i = 0; i < t_interaction.length; i++) {
-        srcString = t_interaction[i].substring(0, t_interaction[i].lastIndexOf("_"));
-        indexString = t_interaction[i].substring(t_interaction[i].lastIndexOf("_") + 1);
+        if (t_interaction[i].lastIndexOf("_") != -1) {
+          srcString = t_interaction[i].substring(0, t_interaction[i].lastIndexOf("_"));
+          indexString = t_interaction[i].substring(t_interaction[i].lastIndexOf("_") + 1);
+        }
+        else {
+          srcString = t_interaction[i];
+          indexString = "1";
+        }
         for (int j = 0; j < l.size(); j++) {
           o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)l.get(j)).getUserObject();
           if (o.getSource().getId().equals(srcString)) {
         	  // FIXME: edge definition changed, consistency should be checked
-            v.addElement(o.getEdge(Integer.parseInt(indexString)));
+                  // FIXED ... I hope
+            v.addElement(o.getEdge(Integer.parseInt(indexString) - 1));
             break;
           }
         }
@@ -567,13 +561,13 @@ class InteractionInconsistencyDialog extends GsStackDialog {
 	GsRegulatoryGraph graph;
 	Map m;
 	JPanel panel = null;
-	
+
 	public InteractionInconsistencyDialog(Map m, GsGraph graph,
 			String msg, int w, int h) {
 		super(graph.getGraphManager().getMainFrame(), msg, w, h);
 		this.graph = (GsRegulatoryGraph)graph;
 		this.m = m;
-		
+
 		setMainPanel(getMainPanel());
 	}
 
@@ -595,7 +589,7 @@ class InteractionInconsistencyDialog extends GsStackDialog {
 					s2 += edge.getLongDetail(" ")+ ": max was explicitely set to "+oldmax+"\n";
 				}
 			}
-			
+
 			if (s1 != "") {
 				s1 = "potential problems:\n" + s1+"\n\n";
 			}

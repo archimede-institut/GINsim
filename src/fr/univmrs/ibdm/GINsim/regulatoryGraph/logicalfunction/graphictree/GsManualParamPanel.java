@@ -15,7 +15,7 @@ import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsManualParamPanel extends GsBooleanFunctionTreePanel implements ActionListener, MouseListener, MouseMotionListener {
   /**
-	 * 
+	 *
 	 */
 	private static final long	serialVersionUID	= 8954027473319842737L;
 private JButton /*removeButton,*/ editButton;
@@ -45,16 +45,11 @@ private JButton /*removeButton,*/ editButton;
       setBackground(Color.white);
     }
     paramLabel.setForeground(value.getForeground());
-    //removeButton = new GsJButton("remove.png");
-    //removeButton.addActionListener(this);
     editButton = new GsJButton("edit.png");
     editButton.addActionListener(this);
-    //add(removeButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-    //                                         GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(editButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                             GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(paramLabel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                           GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+    buttonPanel.add(editButton);
+    add(buttonPanel, BorderLayout.WEST);
+    add(paramLabel, BorderLayout.CENTER);
     paramLabel.setPreferredSize(new Dimension(width - editButton.getPreferredSize().width, charHeight));
   }
   public void itemStateChanged(ItemEvent e) {
@@ -62,18 +57,7 @@ private JButton /*removeButton,*/ editButton;
   }
   public void actionPerformed(ActionEvent e) {
     GsTreeInteractionsModel model = (GsTreeInteractionsModel)tree.getModel();
-    /*if (e.getSource() == removeButton) {
-      treeElement.remove(false);
-      if (tree != null) {
-        Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-        model.refreshVertex();
-        model.setRootInfos();
-        tree.stopEditing();
-        model.fireTreeStructureChanged(treeElement.getParent());
-        while (enu.hasMoreElements())tree.expandPath((TreePath)enu.nextElement());
-      }
-    }
-    else */if (e.getSource() == editButton) {
+    if (e.getSource() == editButton) {
       GsParameterChoiceWindow choiceWindow;
       TreePath treePath = tree.getSelectionPath();
 

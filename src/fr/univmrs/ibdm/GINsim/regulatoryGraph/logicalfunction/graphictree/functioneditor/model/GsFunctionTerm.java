@@ -29,9 +29,7 @@ public abstract class GsFunctionTerm {
   public void update(Vector le) {
 
   }
-  public void update(boolean n) {
-
-  }
+  public abstract void update();
   public boolean isNormal() {
     return false;
   }

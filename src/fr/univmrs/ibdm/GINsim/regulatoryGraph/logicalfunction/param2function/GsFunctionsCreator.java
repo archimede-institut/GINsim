@@ -130,7 +130,10 @@ public class GsFunctionsCreator {
   }
   public String makeDNFExpression(int value) {
     String s = "";
-
+    GsParamTree tree = makeTree();
+    tree.init(interactions);
+    tree.process();
+    s = tree.getDNFForm(value, null);
     return s;
   }
 }

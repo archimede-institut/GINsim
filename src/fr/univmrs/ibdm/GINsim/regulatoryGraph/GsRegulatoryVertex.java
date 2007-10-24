@@ -365,7 +365,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		}
 	}
 
-	
+
 	/**
 	 * when an incoming edge is deleted, we don't want to see it appear in interactions anymore.
 	 * This will remove a subedge.
@@ -432,8 +432,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
       GsTreeString root = (GsTreeString)interactionsModel.getRoot();
       GsTreeValue val;
       GsTreeElement exp;
-      //GsTreeParam param;
-      //String chk;
 
       for (int i = 0; i < root.getChildCount(); i++) {
         val = (GsTreeValue)root.getChild(i);
@@ -441,14 +439,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         out.addAttr("val", ""+val.getValue());
         for (int j = 0; j < val.getChildCount(); j++) {
           exp = val.getChild(j);
-          //chk = "";
-          //for (int k = 0; k < exp.getAllChildCount(); k++) {
-          //  param = (GsTreeParam)exp.getAllChild(k);
-          //  if (param.isChecked())
-          //    chk += "1";
-          //  else
-          //    chk += "0";
-          //}
           if (exp instanceof GsTreeExpression) {
             out.openTag("exp");
             out.addAttr("str", exp.toString());
@@ -463,7 +453,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
             }
             out.closeTag();
           }
-          //out.addAttr("chk", chk);
         }
         out.closeTag();
       }
