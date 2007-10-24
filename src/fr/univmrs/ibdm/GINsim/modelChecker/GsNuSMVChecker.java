@@ -11,14 +11,14 @@ import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVExportConfigPanel;
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSMVexportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
-import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.tagc.datastore.ValueList;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * a model checker using NuSMV
@@ -105,8 +105,8 @@ public class GsNuSMVChecker implements GsModelChecker {
 				GsModelCheckerTestResult result = new GsModelCheckerTestResult();
 				if (o == null) {
 					result.expected = 0;
-				} else if (o instanceof GsValueList) {
-					result.expected = ((GsValueList) o).getSelectedIndex();
+				} else if (o instanceof ValueList) {
+					result.expected = ((ValueList) o).getSelectedIndex();
 				} else {
 					System.out.println("should not come here: result based on previous result");
 					result.expected = ((GsModelCheckerTestResult) o).expected;
@@ -162,7 +162,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 	public Object getInfo(Object mutant) {
 		Object o = m_info.get(mutant);
 		if (o == null) {
-			o = new GsValueList(GsModelCheckerPlugin.v_values, 0);
+			o = new ValueList(GsModelCheckerPlugin.v_values, 0);
 			m_info.put(mutant, o);
 		}
 		return o;
@@ -182,13 +182,13 @@ public class GsNuSMVChecker implements GsModelChecker {
 			Object k = it.next();
 			Object r = m_info.get(k);
 			if (r instanceof GsModelCheckerTestResult) {
-				m_info.put(k, new GsValueList(GsModelCheckerPlugin.v_values,
+				m_info.put(k, new ValueList(GsModelCheckerPlugin.v_values,
 						((GsModelCheckerTestResult) r).expected));
 			}
 		}
 	}
 
-	public Component getEditPanel(GsGraph graph, GsStackDialog dialog) {
+	public Component getEditPanel(GsGraph graph, StackDialog dialog) {
 		if (editPanel == null) {
 			GsExtensibleConfig conf = new GsExtensibleConfig(graph);
 			conf.setSpecificConfig(cfg);

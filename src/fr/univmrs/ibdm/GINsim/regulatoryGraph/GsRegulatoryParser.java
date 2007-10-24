@@ -24,7 +24,6 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -32,6 +31,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * parses a ginml regulatory graph.
@@ -548,7 +548,7 @@ class InteractionInconsistencyAction implements GsGraphNotificationAction {
 	}
 
 	public boolean perform(GsGraph graph, Object data, int index) {
-		GsStackDialog d = new InteractionInconsistencyDialog((Map)data,
+		StackDialog d = new InteractionInconsistencyDialog((Map)data,
 				graph,
 				"interactionInconststancy",
 				200, 150);
@@ -561,7 +561,7 @@ class InteractionInconsistencyAction implements GsGraphNotificationAction {
 	}
 }
 
-class InteractionInconsistencyDialog extends GsStackDialog {
+class InteractionInconsistencyDialog extends StackDialog {
 	private static final long serialVersionUID = 4607140440879983498L;
 
 	GsRegulatoryGraph graph;

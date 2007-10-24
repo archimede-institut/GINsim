@@ -16,17 +16,17 @@ import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsSimulationParameterList;
 import fr.univmrs.ibdm.GINsim.util.widget.GsLabel;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 public class GsInitialStatePanel extends JPanel {
 	private static final long serialVersionUID = -572201856207494392L;
 	
 	private JScrollPane jScrollPane = null;
-    private GsJTable tableInitStates = null;
+    private EnhancedJTable tableInitStates = null;
     private GsInitStateTableModel model = null;
     private JButton buttonDelStateRow = null;
     private JButton buttonResetStateRow = null;
@@ -37,15 +37,15 @@ public class GsInitialStatePanel extends JPanel {
     Insets topInset = new Insets(20,0,0,0);
 	private Vector nodeOrder;
 	private GsInitialStateList imanager;
-	private GsStackDialog dialog;
+	private StackDialog dialog;
 	private boolean several;
 	
-    public GsInitialStatePanel(GsStackDialog dialog, GsGraph graph, boolean several) {
+    public GsInitialStatePanel(StackDialog dialog, GsGraph graph, boolean several) {
     	this(dialog, graph.getNodeOrder(), 
     			(GsInitialStateList)graph.getObject(GsInitialStateManager.key, true),
     			several);
     }
-    public GsInitialStatePanel(GsStackDialog dialog, Vector nodeOrder, GsInitialStateList imanager, boolean several) {
+    public GsInitialStatePanel(StackDialog dialog, Vector nodeOrder, GsInitialStateList imanager, boolean several) {
     	this.dialog = dialog;
     	this.nodeOrder = nodeOrder;
     	this.imanager = imanager;
@@ -91,7 +91,7 @@ public class GsInitialStatePanel extends JPanel {
      */
     private javax.swing.JTable getTableInitStates() {
         if(tableInitStates == null) {
-            tableInitStates = new GsJTable();
+            tableInitStates = new EnhancedJTable();
             model = new GsInitStateTableModel(nodeOrder, dialog, imanager, several);
             tableInitStates.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
             tableInitStates.setModel(model);

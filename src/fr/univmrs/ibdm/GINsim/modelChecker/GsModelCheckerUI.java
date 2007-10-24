@@ -12,18 +12,18 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.global.TempDir;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.gui.GsList;
-import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.tagc.datastore.GenericList;
+import fr.univmrs.tagc.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * Generic UI to setup/run model checking on model/mutants
  */
-public class GsModelCheckerUI extends GsStackDialog {
+public class GsModelCheckerUI extends StackDialog {
     private static final long serialVersionUID = 8241761052780368139L;
 
     JTable table;
@@ -31,9 +31,9 @@ public class GsModelCheckerUI extends GsStackDialog {
     JButton b_EditMutant;
     modelCheckerTableModel model;
     GsRegulatoryGraph graph;
-    GsList l_tests;
+    GenericList l_tests;
     JSplitPane splitTestEdit;
-    GsListPanel panelEditTest;
+    GenericListPanel panelEditTest;
     JLabel label = new JLabel(Translator.getString("STR_disabled"));
     
     modelCheckerRunner runner = null;
@@ -44,9 +44,9 @@ public class GsModelCheckerUI extends GsStackDialog {
     public GsModelCheckerUI(GsRegulatoryGraph graph) {
     	super(graph.getGraphManager().getMainFrame(), "display.mchecker", 450, 300);
         this.graph = graph;
-        l_tests = (GsList)graph.getObject(GsModelCheckerAssociatedObjectManager.key, true);
+        l_tests = (GenericList)graph.getObject(GsModelCheckerAssociatedObjectManager.key, true);
         model = new modelCheckerTableModel(graph);
-        table = new GsJTable(model);
+        table = new EnhancedJTable(model);
         JPanel panel = new JPanel();
         
         b_EditTest = new JButton("Edit tests");
@@ -91,7 +91,7 @@ public class GsModelCheckerUI extends GsStackDialog {
     		splitTestEdit = new JSplitPane();
 	    	splitTestEdit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 	    	splitTestEdit.setDividerLocation(100);
-	    	panelEditTest = new GsListPanel();
+	    	panelEditTest = new GenericListPanel();
     	}
     	panelEditTest.setList(l_tests);
     	splitTestEdit.setLeftComponent(panelEditTest);
@@ -161,10 +161,10 @@ public class GsModelCheckerUI extends GsStackDialog {
 
 class modelCheckerRunner extends Thread {
 	private GsModelCheckerUI ui;
-	private GsList l_tests;
+	private GenericList l_tests;
 	private GsRegulatoryMutants mutants;
 	
-	protected modelCheckerRunner(GsModelCheckerUI ui, GsList l_tests, GsRegulatoryMutants mutants) {
+	protected modelCheckerRunner(GsModelCheckerUI ui, GenericList l_tests, GsRegulatoryMutants mutants) {
 		this.mutants = mutants;
 		this.ui = ui;
 		this.l_tests = l_tests;

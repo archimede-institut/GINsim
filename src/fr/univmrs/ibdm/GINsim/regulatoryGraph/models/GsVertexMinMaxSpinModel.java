@@ -3,25 +3,30 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.models;
 import javax.swing.JSpinner;
 
 import fr.univmrs.ibdm.GINsim.global.Tools;
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.datastore.MaxSpinModel;
+import fr.univmrs.tagc.datastore.MinMaxSpinModel;
+import fr.univmrs.tagc.datastore.MinSpinModel;
 
 /**
  * model controlling spin buttons for base and max value of a GsRegulatoryVertex
  */
-public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
+public class GsVertexMinMaxSpinModel implements MinMaxSpinModel {
 
     private GsRegulatoryVertex vertex;
-    private GsMinSpinModel m_min;
-    private GsMaxSpinModel m_max;
+    private MinSpinModel m_min;
+    private MaxSpinModel m_max;
 	private GsRegulatoryGraph graph;
 
     /**
      */
-    public GsVertexMinMaxSpinModel() {
+    public GsVertexMinMaxSpinModel(GsRegulatoryGraph graph) {
         super();
-        m_min = new GsMinSpinModel(this);
-        m_max = new GsMaxSpinModel(this);
+        this.graph = graph;
+        m_min = new MinSpinModel(this);
+        m_max = new MaxSpinModel(this);
     }
 
     public Object getNextMaxValue() {
@@ -73,6 +78,7 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
     }
 
     public Object getNextMinValue() {
+    	System.out.println("get next min");
     	if (graph == null || vertex == null) {
     		return Tools.IZ;
     	}
@@ -124,20 +130,9 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
             m_max.update();
             m_min.update();
         }
-        if (vertex != null)
-          vertex.getInteractionsModel().refreshView();
-    }
-
-    /**
-     * set the edited vertex.
-     * @param vertex
-     * @param graph
-     */
-    public void setVertex(GsRegulatoryVertex vertex, GsRegulatoryGraph graph) {
-        this.vertex = vertex;
-        this.graph = graph;
-        m_max.update();
-        m_min.update();
+        if (vertex != null) {
+			vertex.getInteractionsModel().refreshView();
+		}
     }
 
     public JSpinner getSMin() {
@@ -150,4 +145,18 @@ public class GsVertexMinMaxSpinModel implements GsMinMaxSpinModel {
         smax.setEditor(m_max.getEditor());
         return smax;
     }
+
+	public String getMaxName() {
+		return Translator.getString("STR_max");
+	}
+
+	public String getMinName() {
+		return Translator.getString("STR_base");
+	}
+
+	public void setEditedObject(Object rawValue) {
+        this.vertex = (GsRegulatoryVertex)rawValue;
+        m_max.update();
+        m_min.update();
+	}
 }

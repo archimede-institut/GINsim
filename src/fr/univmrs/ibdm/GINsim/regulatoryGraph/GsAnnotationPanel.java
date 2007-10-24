@@ -12,10 +12,14 @@ import javax.swing.event.TableModelListener;
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsAnnotationTableModel;
+import fr.univmrs.tagc.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
 /**
  * Panel to edit annotations
  */
-public class GsAnnotationPanel extends GsParameterPanel implements TableModelListener {
+public class GsAnnotationPanel extends GsParameterPanel 
+	implements ObjectPropertyEditorUI, TableModelListener {
 
 	private static final long serialVersionUID = -8542547209276966234L;
 
@@ -26,6 +30,8 @@ public class GsAnnotationPanel extends GsParameterPanel implements TableModelLis
 	private JScrollPane jScrollPane = null;
 	private JScrollPane jScrollPane1 = null;
 	private JTextArea jTextArea = null;
+
+	private GenericPropertyInfo	pinfo;
 	/**
 	 * This method initializes 
 	 * 
@@ -55,9 +61,6 @@ public class GsAnnotationPanel extends GsParameterPanel implements TableModelLis
         gridBagConstraints16.fill = java.awt.GridBagConstraints.BOTH;
         this.add(getJScrollPane1(), gridBagConstraints16);
 	}
-    /**
-     * @see fr.univmrs.ibdm.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
-     */
     public void setEditedObject(Object obj) {
         if (obj != null && obj instanceof GsAnnotation) {
             listenChanges = false;
@@ -140,5 +143,14 @@ public class GsAnnotationPanel extends GsParameterPanel implements TableModelLis
             graph.fireMetaChange();
         }
     }
-    
+	public void apply() {
+	}
+	public void refresh(boolean force) {
+		setEditedObject(pinfo.getRawValue());
+	}
+	public void setEditedProperty(GenericPropertyInfo pinfo,
+			GenericPropertyHolder panel) {
+		this.pinfo = pinfo;
+		panel.addField(this, pinfo, 0);
+	}
 }

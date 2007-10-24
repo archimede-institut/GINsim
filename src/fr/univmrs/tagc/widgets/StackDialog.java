@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.widgets;
 
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -20,7 +20,7 @@ import fr.univmrs.ibdm.GINsim.util.widget.GsDialog;
  * All this is accessible via a simple API to set the main dialog and add
  * secondary dialogs or messages.
  */
-abstract public class GsStackDialog extends GsDialog {
+abstract public class StackDialog extends GsDialog {
     private static final long serialVersionUID = -6696566567870168910L;
     
     private static final String s_mainkey = "_main";
@@ -34,7 +34,7 @@ abstract public class GsStackDialog extends GsDialog {
     protected JButton bcancel;
     protected JButton bclose;
     
-    public GsStackDialog(JFrame parent, String id, int w, int h) {
+    public StackDialog(JFrame parent, String id, int w, int h) {
         super(parent, id, w, h);
         JPanel contentPane = (JPanel)getContentPane();
         mainPanel = new JPanel();

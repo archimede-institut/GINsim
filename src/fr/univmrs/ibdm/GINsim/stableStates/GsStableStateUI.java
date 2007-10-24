@@ -7,13 +7,13 @@ import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.StackDialog;
 
-public class GsStableStateUI extends GsStackDialog implements GenericStableStateUI {
+public class GsStableStateUI extends StackDialog implements GenericStableStateUI {
 	private static final long serialVersionUID = -3605525202652679586L;
 	
 	GsRegulatoryGraph graph;
@@ -42,7 +42,7 @@ public class GsStableStateUI extends GsStackDialog implements GenericStableState
 		JScrollPane sp = new JScrollPane();
 		tableModel = new StableTableModel(graph.getNodeOrder(), false);
 
-        GsJTable tableResult = new GsJTable(tableModel);
+        EnhancedJTable tableResult = new EnhancedJTable(tableModel);
         tableResult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tableResult.getTableHeader().setReorderingAllowed(false);
 		sp.setViewportView(tableResult);

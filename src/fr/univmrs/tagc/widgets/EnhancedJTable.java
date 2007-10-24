@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.widgets;
 
 import java.awt.Component;
 import java.awt.event.KeyEvent;
@@ -11,28 +11,31 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+
+import fr.univmrs.tagc.datastore.ValueList;
+
 /**
  * A "better" JTable with some often needed customizations.
  *  - cell value if deleted on keypress.
  *  - JButtons can be added and will get clicks (but not keypress?)
  */
-public class GsJTable extends JTable {
+public class EnhancedJTable extends JTable {
     private static final long serialVersionUID = 835349911766025807L;
 
     /** 
      */
-    public GsJTable() {
+    public EnhancedJTable() {
         this(null);
     }
 
     /**
      * @param model
      */
-    public GsJTable(TableModel model) {
+    public EnhancedJTable(TableModel model) {
         super(model);
         putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
         setDefaultEditor(Boolean.class, new BooleanCellEditor());
-        setDefaultEditor(GsValueList.class, new ValueInListCellEditor());
+        setDefaultEditor(ValueList.class, new ValueInListCellEditor());
 
         TableCellRenderer defaultRenderer;
         
@@ -72,7 +75,7 @@ class ValueInListCellEditor extends AbstractCellEditor implements TableCellEdito
 
     GsComboModel model = new GsComboModel();
     JComboBox combo = new JComboBox(model);
-    GsValueList data;
+    ValueList data;
     
     public boolean shouldSelectCell(EventObject anEvent) {
         return false;
@@ -83,8 +86,8 @@ class ValueInListCellEditor extends AbstractCellEditor implements TableCellEdito
     }
 
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        if (value instanceof GsValueList) {
-            model.setData((GsValueList)value);
+        if (value instanceof ValueList) {
+            model.setData((ValueList)value);
             return combo;
         }
         return new JLabel("not of the good type!");
@@ -106,8 +109,9 @@ class JTableButtonRenderer implements TableCellRenderer {
                            boolean hasFocus,
                            int row, int column)
     {
-      if(value instanceof Component)
-        return (Component)value;
+      if(value instanceof Component) {
+		return (Component)value;
+	}
       return __defaultRenderer.getTableCellRendererComponent(
          table, value, isSelected, hasFocus, row, column);
     }
@@ -147,8 +151,9 @@ class JTableButtonMouseListener implements MouseListener {
 //      MouseEvent buttonEvent;
 
       if(row >= __table.getRowCount() || row < 0 ||
-         column >= __table.getColumnCount() || column < 0)
-        return;
+         column >= __table.getColumnCount() || column < 0) {
+		return;
+	}
 
       value = __table.getValueAt(row, column);
 
@@ -197,16 +202,16 @@ class JTableButtonMouseListener implements MouseListener {
 class GsComboModel extends DefaultComboBoxModel {
     private static final long serialVersionUID = -8553547226168566527L;
     
-    GsValueList data;
+    ValueList data;
 
     GsComboModel() {
     }
     
-    GsComboModel(GsValueList data) {
+    GsComboModel(ValueList data) {
         this.data = data;
     }
     
-    void setData(GsValueList data) {
+    void setData(ValueList data) {
         this.data = data;
         fireContentsChanged(this, 0, getSize());
     }
@@ -230,7 +235,7 @@ class GsComboModel extends DefaultComboBoxModel {
             return null;
         }
         int sel = data.getSelectedIndex();
-        sel = (sel == -1) ? 0 : sel;
+        sel = sel == -1 ? 0 : sel;
         return data.get(data.getSelectedIndex());
     }
 

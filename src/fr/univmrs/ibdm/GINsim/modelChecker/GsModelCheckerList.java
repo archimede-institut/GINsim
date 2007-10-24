@@ -6,15 +6,15 @@ import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.gui.GsList;
-import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
-import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.tagc.datastore.GenericList;
+import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.datastore.ValueList;
 
-public class GsModelCheckerList extends GsListAbstract implements GsList, GsGraphListener, GsRegulatoryMutantListener {
+public class GsModelCheckerList extends SimpleGenericList implements GenericList, GsGraphListener, GsRegulatoryMutantListener {
 
 	private GsRegulatoryGraph graph;
 	
@@ -139,7 +139,7 @@ class modelCheckerTableModel extends DefaultTableModel {
     
     public Class getColumnClass(int columnIndex) {
         if (columnIndex > 0) {
-            return GsValueList.class;
+            return ValueList.class;
         }
         return super.getColumnClass(columnIndex);
     }

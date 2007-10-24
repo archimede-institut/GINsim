@@ -3,8 +3,8 @@ package fr.univmrs.ibdm.GINsim.dynamicGraph;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**
  * basic info on a vertex of the state transition graph (ie state of the system)
@@ -44,7 +44,7 @@ public class GsDynamicItemAttributePanel extends GsParameterPanel {
 	private javax.swing.JTable getJTable() {
 		if(jTable == null) {
 			GsDynamicItemModel model = new GsDynamicItemModel((GsDynamicGraph)graph);
-            jTable = new GsJTable(model);
+            jTable = new EnhancedJTable(model);
 			jTable.setDefaultRenderer(Object.class, new GsDynamicItemCellRenderer());
 			jTable.setModel(model);
             jTable.getTableHeader().setReorderingAllowed(false);

@@ -1,14 +1,15 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.datastore;
 
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 
-abstract public class GsListAbstract implements GsList {
+public class SimpleGenericList implements GenericList {
 
-	public Vector v_data = new Vector();
+	public Vector v_data;
 	protected String prefix = "name_";
 	protected String pattern = "^[a-zA-Z0-9_-]+$";
 
@@ -20,16 +21,34 @@ abstract public class GsListAbstract implements GsList {
 	protected boolean canEdit = false;
 	protected boolean canOrder = false;
 	protected boolean canFilter = true;
+	protected boolean hasAction = true;
 	
 	protected String filter = null;
 	
-	public void addListListener(GsListListener l) {
+	public SimpleGenericList(Vector v_data) {
+		setData(v_data);
+	}
+	public SimpleGenericList() {
+		this.v_data = new Vector();
+	}
+	public void setData(Vector v_data) {
+		this.v_data = v_data;
+		if (v_listeners == null) {
+			return;
+		}
+		Iterator it = v_listeners.iterator();
+		while (it.hasNext()) {
+			((GenericListListener)it.next()).StructureChanged();
+		}
+	}
+	
+	public void addListListener(GenericListListener l) {
 		if (v_listeners == null) {
 			v_listeners = new Vector();
 		}
 		v_listeners.add(l);
 	}
-	public void removeListListener(GsListListener l) {
+	public void removeListListener(GenericListListener l) {
 		if (v_listeners == null) {
 			return;
 		}
@@ -71,14 +90,18 @@ abstract public class GsListAbstract implements GsList {
 		Object item = doCreate(s, type);
 		v_data.add(item);
 		if (v_listeners != null) {
-			for (int l=0 ; l<v_listeners.size() ; l++) {
-				((GsListListener)v_listeners.get(l)).ItemAdded(item);
+			Iterator it = v_listeners.iterator();
+			while (it.hasNext()) {
+				((GenericListListener)it.next()).ItemAdded(item);
 			}
 		}
 		return v_data.indexOf(item);
 	}
 	
-	protected abstract Object doCreate(String name, int type);
+	protected Object doCreate(String name, int type) {
+		System.out.println("you should override this if you plan to use it");
+		return null;
+	}
 
 	public boolean canAdd() {
 		return canAdd;
@@ -104,11 +127,18 @@ abstract public class GsListAbstract implements GsList {
 		return canFilter;
 	}
 
+	public boolean hasAction() {
+		return hasAction;
+	}
+
 	public void setFilter(String filter) {
 		if (!canFilter) {
 			return;
 		}
 		this.filter = filter;
+	}
+	public void run(int i) {
+		// TODO: run
 	}
 	public Vector getObjectType() {
 		return null;
@@ -121,11 +151,31 @@ abstract public class GsListAbstract implements GsList {
 		return -1;
 	}
 
-	public boolean edit(int index, Object o) {
+	private int getRealIndex(int i) {
+		if (filter == null) {
+			return i;
+		}
+		int c = 0;
+		for (int j=0 ; j<v_data.size() ; j++) {
+			if (match(filter, v_data.get(j))) {
+				if (c == i) {
+					return j;
+				}
+				c++;
+			}
+		}
+		return -1;
+	}
+	public boolean edit(int pos, Object o) {
 		if (!canEdit) {
 			return false;
 		}
-		GsNamedObject obj = (GsNamedObject)v_data.get(index);
+		int index = getRealIndex(pos);
+		Object data = v_data.get(index);
+		if (!(data instanceof GsNamedObject)) {
+			return doEdit(data, o);
+		}
+		GsNamedObject obj = (GsNamedObject)data;
 		if (obj.getName().equals(o.toString())) {
 			return false;
 		}
@@ -143,6 +193,10 @@ abstract public class GsListAbstract implements GsList {
 		return true;
 	}
 
+	protected boolean doEdit(Object data, Object value) {
+		return false;
+	}
+	
 	public Object getElement(int i) {
 		if (filter == null) {
 			return v_data.get(i);
@@ -160,7 +214,7 @@ abstract public class GsListAbstract implements GsList {
 	}
 	
 	public boolean match(String filter, Object o) {
-		return o.toString().contains(filter);
+		return o.toString().toLowerCase().contains(filter.toLowerCase());
 	}
 
 	public int getNbElements() {
@@ -196,8 +250,9 @@ abstract public class GsListAbstract implements GsList {
 			Object item = v_data.get(t_index[i]);
 			v_data.remove(t_index[i]);
 			if (v_listeners != null) {
-				for (int l=0 ; l<v_listeners.size() ; l++) {
-					((GsListListener)v_listeners.get(l)).itemRemoved(item);
+				Iterator it = v_listeners.iterator();
+				while (it.hasNext()) {
+					((GenericListListener)it.next()).itemRemoved(item);
 				}
 			}
 		}

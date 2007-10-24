@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.datastore.gui;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -15,19 +15,26 @@ import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.datastore.GenericList;
+import fr.univmrs.tagc.datastore.GenericListListener;
+import fr.univmrs.tagc.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.StatusTextField;
 
 /**
  * Generic UI to display the content of a list.
  * It offers optional UI to reorder and alter the content of the list,
  * using the Glist interface as a backend.
  */
-public class GsListPanel extends JPanel implements KeyListener {
+public class GenericListPanel extends JPanel 
+	implements KeyListener, ObjectPropertyEditorUI {
     private static final long serialVersionUID = -4236977685092639157L;
     
     JScrollPane sp = new JScrollPane();
-    GsList list;
+    GenericList list;
     listModel model = new listModel();
-    JTable jl = new JTable(model);
+    EnhancedJTable jl = new EnhancedJTable(model);
     int autohide = -1;
     
     JButton b_up;
@@ -35,12 +42,12 @@ public class GsListPanel extends JPanel implements KeyListener {
     JButton b_add;
     JButton b_copy;
     JButton b_del;
-    JTextField t_filter;
+    StatusTextField t_filter;
     JLabel l_title = new JLabel();
+
+	private GenericPropertyInfo	pinfo;
     
-    /**
-     */
-    public GsListPanel() {
+    public GenericListPanel() {
         sp.setViewportView(jl);
         this .setLayout(new GridBagLayout());
 
@@ -58,7 +65,7 @@ public class GsListPanel extends JPanel implements KeyListener {
         c.gridy = 1;
         c.weightx = 1;
         c.fill = GridBagConstraints.BOTH;
-        t_filter = new JTextField();
+        t_filter = new StatusTextField("filter", true);
         t_filter.addKeyListener(this);
         this.add(t_filter, c);
 		
@@ -169,7 +176,7 @@ public class GsListPanel extends JPanel implements KeyListener {
      * set the list to show.
      * @param list
      */
-    public void setList(GsList list) {
+    public void setList(GenericList list) {
         this.list = list;
         model.setList(list);
         if (list == null) {
@@ -326,18 +333,31 @@ public class GsListPanel extends JPanel implements KeyListener {
         }
     }
 	public void keyTyped(KeyEvent e) {
-		model.setFilter(t_filter.getText());
 	}
 	public void keyReleased(KeyEvent e) {
+		model.setFilter(t_filter.getText());
 	}
 	public void keyPressed(KeyEvent e) {
 	}
+
+	public void apply() {
+	}
+
+	public void refresh(boolean force) {
+		setList((GenericList)pinfo.getRawValue());
+	}
+
+	public void setEditedProperty(GenericPropertyInfo pinfo,
+			GenericPropertyHolder panel) {
+		this.pinfo = pinfo;
+		panel.addField(this, pinfo, 0);
+	}
 }
 
-class listModel extends AbstractTableModel {
+class listModel extends AbstractTableModel implements GenericListListener {
     private static final long serialVersionUID = 886643323547667463L;
     
-    private GsList list;
+    private GenericList list;
     
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return columnIndex == 0 && list.canEdit();
@@ -378,12 +398,33 @@ class listModel extends AbstractTableModel {
     	list.setFilter(filter);
     	fireTableDataChanged();
     }
-    void setList(GsList list) {
+    void setList(GenericList list) {
         this.list = list;
+        list.addListListener(this);
         fireTableStructureChanged();
     }
     
     void firechange(int min, int max) {
         fireTableRowsUpdated(min, max);
     }
+
+	public void refresh() {
+		fireTableStructureChanged();
+	}
+
+	public void ContentChanged() {
+		fireTableDataChanged();
+	}
+
+	public void ItemAdded(Object item) {
+		fireTableRowsInserted(0, list.getNbElements());
+	}
+
+	public void StructureChanged() {
+		fireTableStructureChanged();
+	}
+
+	public void itemRemoved(Object item) {
+		fireTableRowsDeleted(0, list.getNbElements());
+	}
 }

@@ -15,8 +15,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**
  * configure priority classes.
@@ -259,7 +259,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     private JTable getTableClass() {
     	if (table_class == null) {
     		classTableModel = new ClassTableModel(v_class);
-    		table_class = new GsJTable(classTableModel);
+    		table_class = new EnhancedJTable(classTableModel);
             table_class.getColumn(table_class.getColumnName(0)).setMinWidth(35);
             table_class.getColumn(table_class.getColumnName(1)).setMinWidth(30);
             table_class.getColumn(table_class.getColumnName(0)).setMaxWidth(35);

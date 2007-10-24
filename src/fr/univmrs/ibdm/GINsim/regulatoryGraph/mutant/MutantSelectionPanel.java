@@ -5,19 +5,19 @@ import java.awt.GridBagLayout;
 
 import javax.swing.*;
 
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 public class MutantSelectionPanel extends JPanel {
 	private static final long serialVersionUID = 1213902700181873169L;
 	
-	GsStackDialog dialog;
+	StackDialog dialog;
 	GsRegulatoryGraph graph;
 	GsMutantCombo comboMutant;
 	
-	public MutantSelectionPanel(GsStackDialog dialog, GsRegulatoryGraph graph, GsMutantStore store) {
+	public MutantSelectionPanel(StackDialog dialog, GsRegulatoryGraph graph, GsMutantStore store) {
 		this.dialog = dialog;
 		this.graph = graph;
 		

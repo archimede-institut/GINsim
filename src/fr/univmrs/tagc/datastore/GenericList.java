@@ -1,12 +1,13 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.datastore;
 
 import java.util.Vector;
+
 
 /**
  * generic interface for list of objects, a common UI will allow to sho it,
  * and eventually offer generic services: reordering, adding/removing objects...
  */
-public interface GsList {
+public interface GenericList {
 
     /**
      * can elements of this list be reordered interactively ?
@@ -38,7 +39,13 @@ public interface GsList {
      * @return true if this list can be filtered
      */
     public boolean canFilter();
-    
+    /**
+     * @return true if the entries have an associated action (see <code>run(int)</code> to launch it)
+     */
+    public boolean hasAction();
+
+    public void addListListener(GenericListListener l);
+    public void removeListListener(GenericListListener l);
     /**
      * @return the size of the list
      */
@@ -99,4 +106,9 @@ public interface GsList {
      * @param filter the filter
      */
 	public void setFilter(String filter);
+	/**
+	 * Run the action associated to an entry
+	 * @param i index of the entry
+	 */
+	public void run(int i);
 }

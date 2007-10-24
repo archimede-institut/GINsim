@@ -5,20 +5,26 @@ import javax.swing.JSpinner;
 
 import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.datastore.MaxSpinModel;
+import fr.univmrs.tagc.datastore.MinMaxSpinModel;
+import fr.univmrs.tagc.datastore.MinSpinModel;
 
 /**
  * model controlling the behavior of min and max spinbuttons for an edge
  */
-public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
+public class GsEdgeMinMaxSpinModel implements MinMaxSpinModel {
     
     private int index = 0;
     private GsRegulatoryMultiEdge medge = null;
-    private GsMinSpinModel m_min;
-    private GsMaxSpinModel m_max;
+    private MinSpinModel m_min;
+    private MaxSpinModel m_max;
     private JList jlist = null;
     private GsGraph graph = null;
     private boolean update = true;
+
+    // FIXME: this class should die
     
     /**
      * @param graph
@@ -28,8 +34,8 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
         super();
         this.graph = graph;
         this.jlist = jlist;
-        m_min = new GsMinSpinModel(this);
-        m_max = new GsMaxSpinModel(this);
+        m_min = new MinSpinModel(this);
+        m_max = new MaxSpinModel(this);
     }
 
     public Object getNextMaxValue() {
@@ -145,4 +151,15 @@ public class GsEdgeMinMaxSpinModel implements GsMinMaxSpinModel {
         smax.setEditor(m_max.getEditor());
         return smax;
     }
+
+	public String getMaxName() {
+		return Translator.getString("STR_max");
+	}
+
+	public String getMinName() {
+		return Translator.getString("STR_min");
+	}
+
+	public void setEditedObject(Object rawValue) {
+	}
 }

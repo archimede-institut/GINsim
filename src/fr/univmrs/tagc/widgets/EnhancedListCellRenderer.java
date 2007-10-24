@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.widgets;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -6,16 +6,18 @@ import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import fr.univmrs.ibdm.GINsim.gui.GsColorable;
+
 /**
  * modified listCellRenderer: highlight some rows.
  */
-public class GsListCellRenderer extends DefaultTreeCellRenderer {
+public class EnhancedListCellRenderer extends DefaultTreeCellRenderer {
     private static final long serialVersionUID = 296160062672716600L;
     
     /**
      * Empty constructor if you add GsColorable Objects to your list
      */
-    public GsListCellRenderer() {
+    public EnhancedListCellRenderer() {
         super();
     }
 
@@ -28,16 +30,4 @@ public class GsListCellRenderer extends DefaultTreeCellRenderer {
       cmp.setBackground(Color.BLUE);
       return cmp;
     }
-    
-    
-    
-//    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//        Component cmp = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//        if (value instanceof GsColorable) {
-//            cmp.setBackground(((GsColorable)value).getColor());
-//            return cmp;
-//        }
-//        cmp.setBackground(Color.BLUE);
-//        return cmp;
-//    }
 }

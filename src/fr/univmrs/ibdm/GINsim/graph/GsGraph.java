@@ -24,6 +24,7 @@ import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphtGraphManager;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
+import fr.univmrs.tagc.datastore.ObjectEditor;
 
 /**
  * Base class for specialized graphs, with some common functions.
@@ -421,11 +422,23 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**
      * @return a GsParameterPanel able to edit edges of this graph or null if not applicable.
      */
-    public abstract GsParameterPanel getEdgeAttributePanel();
+    public GsParameterPanel getEdgeAttributePanel() {
+    	return null;
+    }
     /**
      * @return a GsParameterPanel able to edit vertices of this graph or null if not applicable.
      */
-    public abstract GsParameterPanel getVertexAttributePanel();
+    public GsParameterPanel getVertexAttributePanel() {
+    	return null;
+    }
+    
+    // TODO: deprecate get----AttributePanel to promote get---Editor
+    public ObjectEditor getEdgeEditor() {
+    	return null;
+    }
+    public ObjectEditor getVertexEditor() {
+    	return null;
+    }
 
     /**
      * @return true if the graph is already saved (ie hasn't been altered since the last save);
@@ -711,6 +724,9 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 * @return the graphParameterPanel (null by default, please override)
 	 */
 	public JPanel getGraphParameterPanel() {
+		return null;
+	}
+	public ObjectEditor getGraphEditor() {
 		return null;
 	}
 	/**

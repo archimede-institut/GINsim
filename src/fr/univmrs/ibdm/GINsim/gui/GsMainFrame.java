@@ -17,6 +17,8 @@ import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
 import fr.univmrs.ibdm.GINsim.util.widget.GsFrame;
+import fr.univmrs.tagc.datastore.ObjectEditor;
+import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
 
 /**
  * GINsim's main frame
@@ -42,6 +44,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
     private JPanel emptyPanel = null;
 
     private JPanel graphParameterPanel = null;
+    private ObjectEditor graphEditor = null;
 
     private JPanel notificationPanel = null;
     private JLabel notificationMessage = null;
@@ -51,6 +54,8 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
     private JButton bNotificationAction2 = null;
     private GsGraphNotificationMessage notification = null;
 
+    private ObjectEditor vertexEditor = null;
+    private ObjectEditor edgeEditor = null;
     private GsParameterPanel vertexPanel = null;
     private GsParameterPanel edgePanel = null;
 
@@ -326,8 +331,14 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
         graphScrollPane.setViewportView(graph.getGraphManager().getGraphPanel());
         jPanel1.removeAll();
         jPanel1.add(getEmptyPanel(), "empty");
-        edgePanel = graph.getEdgeAttributePanel();
-        vertexPanel = graph.getVertexAttributePanel();
+        edgeEditor = graph.getEdgeEditor();
+        if (edgeEditor == null) {
+        	edgePanel = graph.getEdgeAttributePanel();
+        }
+        vertexEditor = graph.getVertexEditor();
+        if (vertexEditor == null) {
+        	vertexPanel = graph.getVertexAttributePanel();
+        }
         jSplitPane1.remove(gsGraphMapPanel);
         gsGraphMapPanel = graph.getGraphManager().getGraphMapPanel(graphScrollPane);
         jSplitPane1.setRightComponent(gsGraphMapPanel);
@@ -335,9 +346,15 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
         	if (graphParameterPanel != null) {
         		jTabbedPane.remove(graphParameterPanel);
         	}
-        	graphParameterPanel = graph.getGraphParameterPanel();
-        	if (graphParameterPanel != null) {
-    			jTabbedPane.addTab(Translator.getString("STR_tab_graphParameter"), null, graphParameterPanel, null);
+        	graphEditor = graph.getGraphEditor();
+        	if (graphEditor == null) {
+        		graphParameterPanel = graph.getGraphParameterPanel();
+        		if (graphParameterPanel != null) {
+        			jTabbedPane.addTab(Translator.getString("STR_tab_graphParameter"), null, graphParameterPanel, null);
+        		}
+        	} else {
+    			jTabbedPane.addTab(Translator.getString("STR_tab_graphParameter"), null, new GenericPropertyEditorPanel(graphEditor), null);
+    			graphEditor.setEditedObject(graph);
         	}
 
         gsActions.setDefaults();
@@ -345,13 +362,17 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
         if (gsGraphMapPanel == null) {
             showMiniMap(false);
         }
-        if (edgePanel != null) {
-        		edgePanel.setMainFrame(this);
+        if (edgeEditor != null) {
+        	jPanel1.add(new GenericPropertyEditorPanel(edgeEditor), "edge");
+        } else if (edgePanel != null) {
+        	edgePanel.setMainFrame(this);
             jPanel1.add(edgePanel, "edge");
         } else {
             jPanel1.add(emptyPanel, "edge");
         }
-        if (vertexPanel != null) {
+        if (vertexEditor != null) {
+        	jPanel1.add(new GenericPropertyEditorPanel(vertexEditor), "vertex");
+        } else if (vertexPanel != null) {
             vertexPanel.setMainFrame(this);
             jPanel1.add(vertexPanel, "vertex");
         } else {
@@ -553,7 +574,9 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
             if (event.getNbEdge() == 1) {
                 jTabbedPane.setEnabledAt(0, true);
                 cards.show(jPanel1, "edge");
-                if (edgePanel != null) {
+                if (edgeEditor != null) {
+                	edgeEditor.setEditedObject(v_edge.get(0));
+                } else if (edgePanel != null) {
                     edgePanel.setEditedObject(v_edge.get(0));
                 }
                 gsGraphicAttributePanel.setEditedObject(v_edge.get(0));
@@ -578,7 +601,9 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
             if (event.getNbVertex() == 1) {
                 jTabbedPane.setEnabledAt(0, true);
                 cards.show(jPanel1, "vertex");
-                if (vertexPanel != null) {
+                if (vertexEditor != null) {
+                	vertexEditor.setEditedObject(v_vertex.get(0));
+                } else if (vertexPanel != null) {
                     vertexPanel.setEditedObject(v_vertex.get(0));
                 }
                 gsGraphicAttributePanel.setEditedObject(v_vertex.get(0));

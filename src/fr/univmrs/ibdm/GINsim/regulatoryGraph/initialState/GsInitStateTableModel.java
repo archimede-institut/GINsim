@@ -6,9 +6,9 @@ import java.util.Vector;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * model for the initState table.
@@ -21,7 +21,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
     private Map m_initState = null;
     private GsInitialStateList imanager;
 	private int nbCol;
-    private GsStackDialog frame;
+    private StackDialog frame;
     private boolean several;
     
     private JTable theTable;
@@ -32,7 +32,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	 * @param nodeOrder
      * @param frame
 	 */	
-	public GsInitStateTableModel(Vector nodeOrder, GsStackDialog frame, GsInitialStateList imanager, boolean several) {
+	public GsInitStateTableModel(Vector nodeOrder, StackDialog frame, GsInitialStateList imanager, boolean several) {
 		super();
 		this.nodeOrder = nodeOrder;
         this.frame = frame;
@@ -346,7 +346,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
         fireTableStructureChanged();
     }
 
-	public void setTable(GsJTable tableInitStates) {
+	public void setTable(EnhancedJTable tableInitStates) {
 		theTable = tableInitStates;
 	}
 }

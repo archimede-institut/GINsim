@@ -5,20 +5,20 @@ import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
-import fr.univmrs.ibdm.GINsim.gui.GsListListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.tagc.datastore.GenericListListener;
+import fr.univmrs.tagc.datastore.SimpleGenericList;
 
 /**
  * store all simulation parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
-public class GsSimulationParameterList extends GsListAbstract 
-	implements GsGraphListener, GsRegulatoryMutantListener, GsListListener {
+public class GsSimulationParameterList extends SimpleGenericList 
+	implements GsGraphListener, GsRegulatoryMutantListener, GenericListListener {
 
     String s_current;
     GsRegulatoryGraph graph;
@@ -174,5 +174,10 @@ public class GsSimulationParameterList extends GsListAbstract
 				param.m_initState.remove(item);
 			}
 		}
+	}
+
+	public void ContentChanged() {
+	}
+	public void StructureChanged() {
 	}
 }

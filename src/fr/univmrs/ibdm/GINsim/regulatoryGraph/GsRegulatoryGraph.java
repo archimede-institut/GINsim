@@ -22,6 +22,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.datastore.ObjectEditor;
 
 /**
  * The regulatory graph
@@ -29,12 +30,13 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulatoryGraph {
 
 	private JPanel optionPanel = null;
-	private GsRegulatoryGraphPropertiesPanel parameterPanel = null;
+	//private GsRegulatoryGraphPropertiesPanel parameterPanel = null;
+	private ObjectEditor graphEditor;
 
 	private int nextid=0;
 
     GsParameterPanel edgePanel = null;
-    GsParameterPanel vertexPanel = null;
+    ObjectEditor vertexEditor = null;
 
     private static GsGraph copiedGraph = null;
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
@@ -224,13 +226,12 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         return edgePanel;
     }
 
-    public GsParameterPanel getVertexAttributePanel() {
-        if (vertexPanel == null) {
-            vertexPanel = new GsRegulatoryVertexAttributePanel(mainFrame);
-        }
-        return vertexPanel;
+    public ObjectEditor getVertexEditor() {
+    	if (vertexEditor == null) {
+    		vertexEditor = new RegulatoryVertexEditor(this);
+    	}
+    	return vertexEditor;
     }
-
     public Vector getEditingModes() {
         Vector v_mode = new Vector();
         v_mode.add(new GsEditModeDescriptor("STR_addGene", "STR_addGene_descr", GsEnv.getIcon("insertsquare.gif"), GsActions.MODE_ADD_VERTEX, 0));
@@ -425,11 +426,18 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 		return s;
 	}
 
-	public JPanel getGraphParameterPanel() {
-		if (parameterPanel == null) {
-			parameterPanel = new GsRegulatoryGraphPropertiesPanel(this);
+//	public JPanel getGraphParameterPanel() {
+//		if (parameterPanel == null) {
+//			parameterPanel = new GsRegulatoryGraphPropertiesPanel(this);
+//		}
+//		return parameterPanel;
+//	}
+	public ObjectEditor getGraphEditor() {
+		if (graphEditor == null) {
+			graphEditor = new RegulatoryGraphEditor();
+			graphEditor.setEditedObject(this);
 		}
-		return parameterPanel;
+		return graphEditor;
 	}
 
 	public Vector getSpecificLayout() {

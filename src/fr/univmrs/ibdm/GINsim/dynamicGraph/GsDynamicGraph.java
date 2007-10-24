@@ -17,14 +17,19 @@ import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.*;
-import fr.univmrs.ibdm.GINsim.gui.*;
+import fr.univmrs.ibdm.GINsim.gui.GsActions;
+import fr.univmrs.ibdm.GINsim.gui.GsEditModeDescriptor;
+import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
+import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphPropertiesPanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.RegulatoryGraphEditor;
 import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.datastore.ObjectEditor;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**
  * the dynamic (state transition) graph.
@@ -36,7 +41,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	private GsRegulatoryGraphOptionPanel optionPanel;
 
     protected Vector v_stables = new Vector();
-	private GsRegulatoryGraphPropertiesPanel parameterPanel = null;
+    private ObjectEditor graphEditor = null;
     private GsParameterPanel vertexPanel = null;
     private GsParameterPanel edgePanel;
 
@@ -415,16 +420,16 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         JScrollPane scroll = new JScrollPane();
         StableTableModel model = new StableTableModel(nodeOrder);
         model.setResult(v_stables);
-        scroll.setViewportView(new GsJTable(model));
+        scroll.setViewportView(new EnhancedJTable(model));
         frame.setContentPane(scroll);
         frame.setVisible(true);
     }
     
-    public JPanel getGraphParameterPanel() {
-		if (parameterPanel == null) {
-			parameterPanel = new GsRegulatoryGraphPropertiesPanel(this);
+    public ObjectEditor getGraphEditor() {
+		if (graphEditor == null) {
+			graphEditor = new RegulatoryGraphEditor();
 		}
-		return parameterPanel;
+		return graphEditor;
     }
 
     /**

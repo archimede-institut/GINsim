@@ -11,18 +11,22 @@ import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicPathItemCellRenderer;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
+import fr.univmrs.tagc.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**
  * Panel to edit interaction of a gene
  */
-public class GsInteractionPanel extends GsParameterPanel {
+public class GsInteractionPanel extends GsParameterPanel
+	implements ObjectPropertyEditorUI {
 
 	private static final long serialVersionUID = 8583991719735516132L;
 
@@ -46,9 +50,10 @@ public class GsInteractionPanel extends GsParameterPanel {
 
 	private JButton chaosButton;
 
-//    private JTextField manualEntry = null;
-//    private JTextField manualLevel = null;
-//    private JButton manualHelp = null;
+	private GenericPropertyInfo	pinfo;
+
+    public GsInteractionPanel() {
+    }
 	/**
 	 * This method initializes
 	 * @param graph
@@ -63,40 +68,16 @@ public class GsInteractionPanel extends GsParameterPanel {
 	 * This method initializes this
 	 */
 	private void initialize() {
-//        this.setPreferredSize(new java.awt.Dimension(700,60));
-//        this.setMinimumSize(new java.awt.Dimension(300,60));
-//        this.setSize(704, 60);
-
         setLayout(new GridBagLayout());
 
-//        GridBagConstraints c_manualEntry = new GridBagConstraints();
-//        GridBagConstraints c_manualLevel = new GridBagConstraints();
-//        GridBagConstraints c_manualHelp = new GridBagConstraints();
         GridBagConstraints c_split = new GridBagConstraints();
-
         c_split.gridx = 0;
         c_split.gridy = 0;
         c_split.gridwidth = 3;
         c_split.fill = GridBagConstraints.BOTH;
         c_split.weightx = 1;
         c_split.weighty = 1;
-
-        // TODO: finish removing entry text in logical parameters panel
-//        c_manualLevel.gridx = 0;
-//        c_manualLevel.gridy = 1;
-//        c_manualLevel.fill = GridBagConstraints.BOTH;
-//        c_manualEntry.gridx = 1;
-//        c_manualEntry.gridy = 1;
-//        c_manualEntry.fill = GridBagConstraints.BOTH;
-//        c_manualEntry.weightx = 1;
-//        c_manualHelp.gridx = 2;
-//        c_manualHelp.gridy = 1;
-//
-//        add(getManualEntry(), c_manualEntry);
-//        add(getManualLevel(), c_manualLevel);
-//        add(getManualHelp(), c_manualHelp);
         add(getJSplitPane(), c_split);
-
         edgeList = new GsIncomingEdgeListModel();
         jList.setModel(edgeList);
 	}
@@ -174,201 +155,6 @@ public class GsInteractionPanel extends GsParameterPanel {
 		}
 		return jPanel;
 	}
-//    private JTextField getManualLevel() {
-//        if (manualLevel == null) {
-//            manualLevel = new JTextField("1");
-//            manualLevel.setMinimumSize(new Dimension(35, 18));
-//        }
-//        return manualLevel;
-//    }
-//    private JTextField getManualEntry() {
-//        if (manualEntry == null) {
-//            manualEntry = new JTextField();
-//            manualEntry.addActionListener(new ActionListener() {
-//                public void actionPerformed(ActionEvent e) {
-//                    manualActivate();
-//                }
-//            });
-//        }
-//        return manualEntry;
-//    }
-//
-//    private JButton getManualHelp() {
-//        if (manualHelp == null) {
-//            manualHelp = new JButton("?");
-//            manualHelp.addActionListener(new ActionListener() {
-//                public void actionPerformed(ActionEvent e) {
-//                    manualHelp();
-//                }
-//            });
-//        }
-//        return manualHelp;
-//    }
-//
-//    protected void manualHelp() {
-//        // TODO: help for formula
-//    }
-//
-//    protected void manualActivate() {
-//        // check the entered formula and build the corresponding tree
-//        Vector nodeOrder = graph.getNodeOrder();
-//        GsGraphManager manager = graph.getGraphManager();
-//        String s = manualEntry.getText().trim();
-//        StringTokenizer stok = new StringTokenizer(s);
-//        List l_edge = edgeList.getEdge();
-//        short[][] t_cst = new short[l_edge.size()][];
-//        int[] t_edgeRef = new int[nodeOrder.size()];
-//        short value = (short)(currentVertex.getMaxValue() + 1);
-//        try {
-//            value = (short)Integer.parseInt(manualLevel.getText().trim());
-//        } catch (Exception e) {
-//        }
-//        if (value > currentVertex.getMaxValue()) {
-//            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid value: "+manualLevel.getText().trim(), GsGraphNotificationMessage.NOTIFICATION_WARNING));
-//            return;
-//        }
-//
-//        for (int i=0 ; i<nodeOrder.size() ; i++) {
-//            Object o = manager.getEdge(nodeOrder.get(i), currentVertex);
-//            if (o == null) {
-//                t_edgeRef[i] = -1;
-//            } else {
-//                int ref = l_edge.indexOf(o);
-//                t_edgeRef[i] = ref;
-//                t_cst[ref] = new short[ ((GsRegulatoryMultiEdge)((GsDirectedEdge)o).getUserObject()).getEdgeCount() ];
-//                for (int j=0 ; j<t_cst[ref].length ; j++) {
-//                    t_cst[ref][j] = (short)-1;
-//                }
-//            }
-//        }
-//
-//        while(stok.hasMoreTokens()) {
-//            String token = stok.nextToken();
-//            boolean isnot = false;
-//            if (token.startsWith("!")) {
-//                isnot = true;
-//                if (token.length() == 1) {
-//                    if (stok.hasMoreTokens()) {
-//                        token = stok.nextToken();
-//                    } else {
-//                        graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula", GsGraphNotificationMessage.NOTIFICATION_WARNING));
-//                        return;
-//                    }
-//                } else {
-//                    token = token.substring(1);
-//                }
-//            }
-//            int delim = token.lastIndexOf("#");
-//            int mindex = 0;
-//            if (delim != -1) {
-//                try {
-//                    mindex = Integer.parseInt(token.substring(delim+1));
-//                } catch (Exception e) {
-//                    mindex = -1;
-//                    graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "\""+token.substring(delim+1)+"\" is not a valid interaction index", GsGraphNotificationMessage.NOTIFICATION_WARNING));
-//                    return;
-//                }
-//                token = token.substring(0,delim);
-//            }
-//            Object o = manager.getVertexByName(token);
-//            int index = nodeOrder.indexOf(o);
-//            if (index == -1) {
-//                graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "\""+token+"\" is not a valid gene", GsGraphNotificationMessage.NOTIFICATION_WARNING));
-//                return;
-//            }
-//            // check that the token IS a regulator
-//            index = t_edgeRef[index];
-//            if (index == -1) {
-//                GsGraphNotificationAction action = new GsGraphNotificationAction() {
-//
-//                    public String[] getActionName() {
-//                        return new String[] {"add and submit", "add and edit", "edit"};
-//                    }
-//                    public boolean timeout(GsGraph graph, Object data) {
-//                        return true;
-//                    }
-//                    public boolean perform(GsGraph graph, Object data, int ref) {
-//                        if (!(data instanceof Object[])) {
-//                            return true;
-//                        }
-//                        Object source = ((Object[])data)[0];
-//                        Object target = ((Object[])data)[1];
-//                        if (ref < 2) {
-//                            Object isnot = ((Object[])data)[2];
-//                            ((GsRegulatoryGraph)graph).interactiveAddEdge(source, target,
-//                                    isnot == Boolean.FALSE ? GsRegulatoryEdge.SIGN_POSITIVE : GsRegulatoryEdge.SIGN_NEGATIVE);
-//                        }
-//                        graph.getGraphManager().select(target);
-//                        ((JTextField)((Object[])data)[3]).setText(""+((Object[])data)[4]);
-//                        ((JTextField)((Object[])data)[5]).setText(""+((Object[])data)[6]);
-//                        if (ref == 0) {
-//                            ((GsInteractionPanel)((Object[])data)[7]).manualActivate();
-//                        } else {
-//                            ((JTextField)((Object[])data)[3]).requestFocusInWindow();
-//                        }
-//                        return true;
-//                    }
-//                };
-//                Object[] data = new Object[] {o, currentVertex,
-//                        isnot ? Boolean.TRUE : Boolean.FALSE,
-//                        manualEntry, manualEntry.getText(),
-//                        manualLevel, manualLevel.getText(),
-//                        this};
-//                graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "\""+token+"\" is not a regulator of "+currentVertex, action, data, GsGraphNotificationMessage.NOTIFICATION_WARNING));
-//                return;
-//            }
-//
-//            if (mindex < 0 || mindex >= t_cst[index].length) {
-//                graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "\""+mindex+"\" is not a valid interaction index", GsGraphNotificationMessage.NOTIFICATION_WARNING));
-//                return;
-//            }
-//
-//            o = manager.getEdge(o, currentVertex);
-//
-//            boolean hasTrue = true;
-//            t_cst[index][mindex] = isnot ? (short)0 : (short)1;
-//            if (!hasTrue) {
-//                graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "broken formula: never happens", GsGraphNotificationMessage.NOTIFICATION_WARNING));
-//                return;
-//            }
-//        }
-//        // build and add all logical parameters corresponding to this formula
-//        boolean[][] t_pos = new boolean [t_cst.length][];
-//        for (int i=0 ; i<t_pos.length ; i++) {
-//            t_pos[i] = new boolean[t_cst[i].length];
-//            for (int j=0 ; j<t_cst[i].length ; j++) {
-//                t_pos[i][j] = t_cst[i][j] == (short)1;
-//            }
-//        }
-//        boolean canUpdate = true;
-//        do {
-//            canUpdate = false;
-//            Vector edgeindex = new Vector();
-//            for (int i=0 ; i<t_pos.length ; i++) {
-//                for (int j=0 ; j<t_pos[i].length ; j++) {
-//                    if (t_pos[i][j]) {
-//                        edgeindex.add(new GsEdgeIndex( (GsRegulatoryMultiEdge)((GsDirectedEdge)l_edge.get(i)).getUserObject(),j));
-//                    }
-//
-//                    // if necessary, move to the next state
-//                    if (canUpdate) {
-//                        // reset all the next ones
-//                        if (t_pos[i][j] && t_cst[i][j] == -1) {
-//                            t_pos[i][j] = false;
-//                        }
-//                    } else {
-//                        // test if an update is possible here
-//                        if (!t_pos[i][j] && t_cst[i][j] == -1) {
-//                            t_pos[i][j] = true;
-//                            canUpdate = true;
-//                        }
-//                    }
-//
-//                }
-//            }
-//            interactionList.setActivesEdges(interactionList.getRowCount()-1,edgeindex, value);
-//        } while (canUpdate);
-//    }
 
     /**
      * @see fr.univmrs.ibdm.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
@@ -380,15 +166,12 @@ public class GsInteractionPanel extends GsParameterPanel {
         }
         if (obj != null && obj instanceof GsRegulatoryVertex) {
             currentVertex = (GsRegulatoryVertex)obj;
-            edgeList.setEdge(mainFrame.getGraph().getGraphManager().getIncomingEdges(currentVertex));
+            edgeList.setEdge(graph.getGraphManager().getIncomingEdges(currentVertex));
             interactionList.setNode(currentVertex);
             if (jTable.getSelectedRow() == -1) {
                 int i = interactionList.getRowCount();
                 jTable.getSelectionModel().setSelectionInterval(i, i);
             }
-            //cplModel.setNode(currentVertex, graph);
-//            manualEntry.setText("");
-//            manualLevel.setText("1");
         }
     }
 
@@ -401,7 +184,7 @@ public class GsInteractionPanel extends GsParameterPanel {
 		if (jTable == null) {
             Vector v_ok = new Vector();
 	        interactionList = new GsTableInteractionsModel(graph, v_ok);
-			jTable = new GsJTable(interactionList);
+			jTable = new EnhancedJTable(interactionList);
             jTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
             jTable.getColumn(jTable.getColumnName(0)).setMaxWidth(50);
             jTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -723,4 +506,16 @@ public class GsInteractionPanel extends GsParameterPanel {
       interactionsModel.setRootInfos();
       interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
     }
+	public void apply() {
+	}
+	public void refresh(boolean force) {
+		setEditedObject(pinfo.getRawValue());
+	}
+	public void setEditedProperty(GenericPropertyInfo pinfo,
+			GenericPropertyHolder panel) {
+		this.pinfo = pinfo;
+		this.graph = (GsRegulatoryGraph)pinfo.data;
+		initialize();
+		panel.addField(this, pinfo, 0);
+	}
 }

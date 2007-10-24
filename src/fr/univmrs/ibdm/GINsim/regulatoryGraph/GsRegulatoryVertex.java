@@ -154,10 +154,12 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * change the id of this vertex.
 	 * @param id the new id.
 	 */
-	public void setId(String id) {
+	public boolean setId(String id) {
 		if (Tools.isValidId(id)) {
 			this.id = id;
+			return true;
 		}
+		return false;
 	}
 	/**
 	 * Adds the specified interaction I to the interactions of the node

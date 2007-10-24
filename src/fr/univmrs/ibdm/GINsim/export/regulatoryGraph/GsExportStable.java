@@ -10,7 +10,6 @@ import javax.swing.*;
 
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
@@ -20,6 +19,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.stableStates.GenericStableStateUI;
 import fr.univmrs.ibdm.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 
 public class GsExportStable extends JPanel implements GenericStableStateUI {
@@ -54,7 +54,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
         setLayout(new GridBagLayout()); 
         JScrollPane sp = new JScrollPane();
         tableModel = new StableTableModel(cfg.graph.getNodeOrder(), true);
-        GsJTable tableResult = new GsJTable(tableModel);
+        EnhancedJTable tableResult = new EnhancedJTable(tableModel);
         tableResult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tableResult.getTableHeader().setReorderingAllowed(false);
         sp.setViewportView(tableResult);

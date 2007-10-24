@@ -24,8 +24,6 @@ import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsProgressListener;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
-import fr.univmrs.ibdm.GINsim.gui.GsListCellRenderer;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -34,11 +32,13 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.ibdm.GINsim.util.widget.GsLabel;
+import fr.univmrs.tagc.widgets.EnhancedListCellRenderer;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * configuration/status frame for circuit search/analyse
  */
-public class GsCircuitFrame extends GsStackDialog implements GsProgressListener {
+public class GsCircuitFrame extends StackDialog implements GsProgressListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
 
@@ -460,7 +460,7 @@ public class GsCircuitFrame extends GsStackDialog implements GsProgressListener 
         	cards.show(jContentPane, "result");
             
             getSp().setViewportView(tree);
-            tree.setCellRenderer(new GsListCellRenderer());
+            tree.setCellRenderer(new EnhancedListCellRenderer());
 
             tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
             

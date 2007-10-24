@@ -13,7 +13,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -22,6 +21,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 public class GsSMVExportConfigPanel extends JPanel {
 	private static final long serialVersionUID = -7398674287463858306L;
@@ -45,9 +45,9 @@ public class GsSMVExportConfigPanel extends JPanel {
     
     private boolean mutant;
     private boolean test;
-    private GsStackDialog dialog;
+    private StackDialog dialog;
     GsExtensibleConfig config;
-    public GsSMVExportConfigPanel(GsExtensibleConfig config, GsStackDialog dialog, boolean mutant, boolean test) {
+    public GsSMVExportConfigPanel(GsExtensibleConfig config, StackDialog dialog, boolean mutant, boolean test) {
     	super();
     	this.mutant = mutant;
     	this.test = test;

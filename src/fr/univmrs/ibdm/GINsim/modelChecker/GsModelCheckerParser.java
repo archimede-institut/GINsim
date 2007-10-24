@@ -7,12 +7,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.datastore.ValueList;
 
 /**
  * parser for simulation parameters file
@@ -78,7 +78,7 @@ public class GsModelCheckerParser extends GsXMLHelper {
             			if (s.equals(mc.getName())) {
             				s = attributes.getValue("mutant");
             				if (s == null || s.equals("-")) {
-        						GsValueList vl = (GsValueList)mc.getInfo("-");
+        						ValueList vl = (ValueList)mc.getInfo("-");
         						s = attributes.getValue("value");
         						if ("Yes".equals(s)) {
         							vl.setSelectedIndex(1);
@@ -90,7 +90,7 @@ public class GsModelCheckerParser extends GsXMLHelper {
             				} else for (int j=0 ; j<l_mutant.getNbElements() ; j++) {
             					GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)l_mutant.getElement(j);
             					if (s.equals(mutant.toString())) {
-            						GsValueList vl = (GsValueList)mc.getInfo(mutant);
+            						ValueList vl = (ValueList)mc.getInfo(mutant);
             						s = attributes.getValue("value");
             						if ("Yes".equals(s)) {
             							vl.setSelectedIndex(1);

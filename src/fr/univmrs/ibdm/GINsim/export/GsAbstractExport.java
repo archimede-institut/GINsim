@@ -11,8 +11,8 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * Basic helper class for exports.
@@ -108,7 +108,7 @@ abstract public class GsAbstractExport implements GsPlugin, GsActionProvider  {
 	protected boolean needConfig(GsExportConfig config) {
 		return false;
 	}
-	protected JComponent getConfigPanel(GsExportConfig config, GsStackDialog dialog) {
+	protected JComponent getConfigPanel(GsExportConfig config, StackDialog dialog) {
 		return null;
 	}
 

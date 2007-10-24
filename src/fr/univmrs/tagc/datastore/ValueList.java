@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.datastore;
 
 import java.util.Vector;
 
@@ -6,7 +6,7 @@ import java.util.Vector;
  * Default implementation of <code>GsValueInList</code>.
  * This implementation uses a Vector to store the possible values.
  */
-public class GsValueList {
+public class ValueList {
     private Vector v_values;
     private int selected;
     private String s_none;
@@ -15,14 +15,14 @@ public class GsValueList {
      * @param v_values
      * @param selected
      */
-    public GsValueList(Vector v_values, int selected) {
+    public ValueList(Vector v_values, int selected) {
         this(v_values, selected, "");
     }
     /**
      * @param v_values
      * @param s_none
      */
-    public GsValueList(Vector v_values, String s_none) {
+    public ValueList(Vector v_values, String s_none) {
         this(v_values, -1, s_none);
     }
     /**
@@ -30,7 +30,7 @@ public class GsValueList {
      * @param selected
      * @param s_none
      */
-    public GsValueList(Vector v_values, int selected, String s_none) {
+    public ValueList(Vector v_values, int selected, String s_none) {
         this.v_values = v_values;
         this.selected = selected;
         this.s_none = s_none;

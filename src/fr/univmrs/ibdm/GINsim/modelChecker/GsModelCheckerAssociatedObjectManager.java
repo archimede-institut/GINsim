@@ -10,12 +10,12 @@ import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.ibdm.GINsim.gui.GsList;
-import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.datastore.GenericList;
+import fr.univmrs.tagc.datastore.ValueList;
 
 public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedObjectManager {
 
@@ -28,7 +28,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 	}
 
 	public void doSave(OutputStreamWriter os, GsGraph graph) {
-		GsList l_test = (GsList)graph.getObject(key, false);
+		GenericList l_test = (GenericList)graph.getObject(key, false);
 		if (l_test == null) {
 			return;
 		}
@@ -62,7 +62,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 			out.openTag("ExpectedList");
 			for (int i=0 ; i<l_test.getNbElements() ; i++) {
 				GsModelChecker mcheck = (GsModelChecker)l_test.getElement(i);
-				GsValueList o = (GsValueList)mcheck.getInfo("-");
+				ValueList o = (ValueList)mcheck.getInfo("-");
 				if (o != null) {
 					out.openTag("expected");
 					out.addAttr("test", mcheck.getName());
@@ -72,7 +72,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 				}
 				for (int j=0 ; j<mutants.getNbElements() ; j++) {
 					Object mutant = mutants.getElement(j);
-					o = (GsValueList)mcheck.getInfo(mutant);
+					o = (ValueList)mcheck.getInfo(mutant);
 					if (o != null) {
 						out.openTag("expected");
 						out.addAttr("test", mcheck.getName());
@@ -95,7 +95,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 
 	public boolean needSaving(GsGraph graph) {
 		Object o = graph.getObject(key, false);
-		if (o == null || !(o instanceof GsList) || ((GsList)o).getNbElements() < 1) {
+		if (o == null || !(o instanceof GenericList) || ((GenericList)o).getNbElements() < 1) {
 			return false;
 		}
 		return true;

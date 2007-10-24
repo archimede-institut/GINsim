@@ -11,11 +11,11 @@ import javax.swing.JPanel;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
+import fr.univmrs.tagc.widgets.StackDialog;
 
-public class GsExportDialog extends GsStackDialog {
+public class GsExportDialog extends StackDialog {
 	private static final long serialVersionUID = -6796117147061825176L;
 
 	GsAbstractExport export;

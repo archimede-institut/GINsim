@@ -5,11 +5,11 @@ import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.datastore.SimpleGenericList;
 
-public class GsInitialStateList extends GsListAbstract implements GsGraphListener {
+public class GsInitialStateList extends SimpleGenericList implements GsGraphListener {
 	GsRegulatoryGraph graph;
 	
     public GsInitialStateList(GsGraph graph) {

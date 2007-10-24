@@ -1,11 +1,11 @@
-package fr.univmrs.ibdm.GINsim.regulatoryGraph.models;
+package fr.univmrs.tagc.datastore;
 
 import javax.swing.JSpinner;
 
 /**
  * GsMinMaxSpinModel: model controlling min and max spinbuttons
  */
-public interface GsMinMaxSpinModel {
+public interface MinMaxSpinModel {
     /**
      * try to increase the max value
      * @return the new max value (may have changed or not)
@@ -61,4 +61,9 @@ public interface GsMinMaxSpinModel {
      * @return a max spinner following this model
      */
     public abstract JSpinner getSMax();
+
+	public abstract String getMinName();
+	public abstract String getMaxName();
+
+	public abstract void setEditedObject(Object rawValue);
 }

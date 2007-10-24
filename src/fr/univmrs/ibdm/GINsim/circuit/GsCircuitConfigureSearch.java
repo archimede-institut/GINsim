@@ -7,12 +7,12 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsMaxSpinModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsMinMaxSpinModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsMinSpinModel;
+import fr.univmrs.tagc.datastore.MaxSpinModel;
+import fr.univmrs.tagc.datastore.MinMaxSpinModel;
+import fr.univmrs.tagc.datastore.MinSpinModel;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**
  * configure the circuit-search.
@@ -100,7 +100,7 @@ public class GsCircuitConfigureSearch extends JPanel {
     private JTable getJTable() {
         if (jtable == null) {
             model = new GsCircuitConfigModel(circuitFrame, config.v_list, config.t_status, config.t_constraint);
-            jtable = new GsJTable(model);
+            jtable = new EnhancedJTable(model);
         }
         return jtable;
     }
@@ -202,7 +202,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
             case 1:
             case 2:
             case 3:
-                return (t_status[row] == column) ? Boolean.TRUE : Boolean.FALSE;
+                return t_status[row] == column ? Boolean.TRUE : Boolean.FALSE;
             case 4:
                 if (t_constraint[row][0] == 0) {
                     return "";
@@ -254,11 +254,11 @@ class GsCircuitConfigModel extends DefaultTableModel {
     }
 }
 
-class GsCircuitSpinModel implements GsMinMaxSpinModel {
+class GsCircuitSpinModel implements MinMaxSpinModel {
 
     private GsCircuitSearchStoreConfig config;
-    private GsMinSpinModel m_min;
-    private GsMaxSpinModel m_max;
+    private MinSpinModel m_min;
+    private MaxSpinModel m_max;
 
     private JSpinner smin = null;
     private JSpinner smax = null;
@@ -272,8 +272,8 @@ class GsCircuitSpinModel implements GsMinMaxSpinModel {
     public GsCircuitSpinModel(GsCircuitSearchStoreConfig config, GsCircuitFrame frame) {
         this.config = config;
         this.frame = frame;
-        m_min = new GsMinSpinModel(this);
-        m_max = new GsMaxSpinModel(this);
+        m_min = new MinSpinModel(this);
+        m_max = new MaxSpinModel(this);
     }
     
     public Object getNextMaxValue() {
@@ -380,4 +380,13 @@ class GsCircuitSpinModel implements GsMinMaxSpinModel {
         m_max.update();
         frame.updateStatus(GsCircuitFrame.STATUS_NONE);
     }
+
+	public String getMaxName() {
+		return Translator.getString("STR_max");
+	}
+	public String getMinName() {
+		return Translator.getString("STR_min");
+	}
+	public void setEditedObject(Object rawValue) {
+	}
 }

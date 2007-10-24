@@ -17,23 +17,23 @@ import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
+import fr.univmrs.tagc.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * frame to set up the simulation
  */
-public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListener {
+public class GsReg2dynFrame extends StackDialog implements ListSelectionListener {
     private static final long serialVersionUID = -4386183125281770860L;
     
     GsSimulationParameterList paramList;
     GsSimulationParameters currentParameter;
     MutantSelectionPanel mutantPanel;
-    GsListPanel listPanel;
+    GenericListPanel listPanel;
     Simulation sim;
     boolean isrunning = false;
     boolean refreshing = false;
@@ -79,7 +79,7 @@ public class GsReg2dynFrame extends GsStackDialog implements ListSelectionListen
     private void initialize() {
         JSplitPane spane = new MSplitPane("display.configSimulation");
         spane.setRightComponent(getMainPanel());
-        listPanel = new GsListPanel();
+        listPanel = new GenericListPanel();
         listPanel.addSelectionListener(this);
         listPanel.setList(paramList);
         listPanel.setTitle(Translator.getString("STR_simulationSettings"));

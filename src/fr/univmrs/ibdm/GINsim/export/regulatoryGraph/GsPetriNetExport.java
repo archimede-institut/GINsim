@@ -14,7 +14,6 @@ import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.ibdm.GINsim.gui.GsStackDialog;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
@@ -24,6 +23,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatesIterat
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * Export a regulatory graph to petri net (shared methods).
@@ -170,7 +170,7 @@ public class GsPetriNetExport extends GsAbstractExport {
 		return true;
 	}
 
-	protected JComponent getConfigPanel(GsExportConfig config, GsStackDialog dialog) {
+	protected JComponent getConfigPanel(GsExportConfig config, StackDialog dialog) {
 		return new PNExportConfigPanel(config, dialog);
 	}
 
@@ -258,7 +258,7 @@ class PNExportConfigPanel extends JPanel {
     private static final long serialVersionUID = 9043565812912568136L;
    
     
-	protected PNExportConfigPanel (GsExportConfig config, GsStackDialog dialog) {
+	protected PNExportConfigPanel (GsExportConfig config, StackDialog dialog) {
     	PNConfig specConfig = new PNConfig();
     	config.setSpecificConfig(specConfig);
     	

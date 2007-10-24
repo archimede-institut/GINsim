@@ -17,21 +17,21 @@ import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.gui.GsJTable;
-import fr.univmrs.ibdm.GINsim.gui.GsListAbstract;
-import fr.univmrs.ibdm.GINsim.gui.GsListPanel;
-import fr.univmrs.ibdm.GINsim.gui.GsValueList;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsAnnotationPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.datastore.ValueList;
+import fr.univmrs.tagc.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.
  */
-public class GsRegulatoryMutants extends GsListAbstract implements GsGraphListener {
+public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphListener {
 
     /**
      * edit mutants associated with a graph
@@ -187,17 +187,17 @@ class MutantCascadeUpdate implements GsGraphEventCascade {
 class MutantPanel extends JSplitPane {
     private static final long serialVersionUID = 2625670418830465925L;
     
-    GsListPanel lp;
+    GenericListPanel lp;
     JPanel pm;
     GsRegulatoryMutantModel model;
-    GsJTable table_change;
+    EnhancedJTable table_change;
     GsRegulatoryMutantDef curMutant = null;
     private GsRegulatoryMutants mutants;
     Vector v_nodeOrder;
     GsAnnotationPanel ap;
     
     MutantPanel() {
-        lp = new GsListPanel();
+        lp = new GenericListPanel();
         lp.setTitle(Translator.getString("STR_mutantListTitle"));
         lp.setSize(50, getHeight());
         setLeftComponent(lp);
@@ -226,7 +226,7 @@ class MutantPanel extends JSplitPane {
             c.gridwidth = 2;
             c.fill = GridBagConstraints.BOTH;
             JScrollPane sp = new JScrollPane();
-            table_change = new GsJTable(model);
+            table_change = new EnhancedJTable(model);
             sp.setViewportView(table_change);
             pm.add(sp, c);
             c = new GridBagConstraints();
@@ -292,7 +292,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
 
     private GsRegulatoryMutantDef curMutant;
     Vector v_genes;
-    GsValueList vlist;
+    ValueList vlist;
     
     /**
      * @param nodeOrder
@@ -302,7 +302,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
     public void setEditedObject(GsRegulatoryMutantDef curMutant, Vector v_node_order) {
         this.curMutant = curMutant;
         if (vlist == null) {
-            vlist = new GsValueList(v_node_order, -1, "Select a gene...");
+            vlist = new ValueList(v_node_order, -1, "Select a gene...");
         } else {
             vlist.reset(v_node_order, -1, "Select a gene...");
         }
@@ -342,7 +342,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
 
     public Class getColumnClass(int columnIndex) {
         if (columnIndex == 0) {
-            return GsValueList.class;
+            return ValueList.class;
         }
         if (columnIndex > 0 && columnIndex < 3) {
             return String.class;
@@ -404,7 +404,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         
         if (rowIndex == curMutant.getNbChanges()) {
             if (columnIndex == 0) {
-                    GsValueList value = (GsValueList)getValueAt(rowIndex, columnIndex);
+                    ValueList value = (ValueList)getValueAt(rowIndex, columnIndex);
                     curMutant.addChange((GsRegulatoryVertex)value.get(value.getSelectedIndex()));
                     fireTableStructureChanged();
             }
