@@ -47,6 +47,7 @@ public class GsParamTreeLeafValue extends GsParamTreeLeaf {
     return toString().hashCode();
   }
 
-  public void makeDNF(Vector v, int value) {
+  public void makeDNF(Vector v, String s, int value) {
+    if (this.value == value) v.addElement(s);
   }
 }

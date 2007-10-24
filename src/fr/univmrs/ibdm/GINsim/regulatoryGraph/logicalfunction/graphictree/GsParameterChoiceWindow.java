@@ -16,8 +16,14 @@ import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.MouseEvent;
 
-public class GsParameterChoiceWindow extends JDialog implements ActionListener, ListSelectionListener {
+public class GsParameterChoiceWindow extends JDialog implements MouseListener, MouseMotionListener,
+    WindowListener, ActionListener, ListSelectionListener {
   private static final long	serialVersionUID	= -1570164194427132249L;
   class GsCellRenderer extends JLabel implements ListCellRenderer {
     private static final long	serialVersionUID	= 1720724468548717415L;
@@ -58,6 +64,7 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
   private int value;
   private JTree tree;
   private int[] oldSelection = null;
+  private int xm, ym;
 
   public GsParameterChoiceWindow(JTree t) {
     super();
@@ -65,9 +72,13 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
     try {
       UIManager.put("ScrollBar.width", new Integer(12));
       jbInit();
-      setAlwaysOnTop(true);
+      //setAlwaysOnTop(true);
       setUndecorated(true);
-      setModal(true);
+      //setModal(true);
+      xm = ym = -1;
+      addMouseListener(this);
+      addMouseMotionListener(this);
+      addWindowListener(this);
       pack();
     }
     catch (Exception ex) {
@@ -185,4 +196,46 @@ public class GsParameterChoiceWindow extends JDialog implements ActionListener, 
       tree.repaint();
     }
   }
+
+  public void mouseClicked(MouseEvent arg0) {
+  }
+  public void mouseEntered(MouseEvent arg0) {
+  }
+  public void mouseExited(MouseEvent arg0) {
+  }
+  public void mousePressed(MouseEvent arg0) {
+    xm = arg0.getX();
+    ym = arg0.getY();
+  }
+  public void mouseReleased(MouseEvent arg0) {
+  }
+
+  public void mouseDragged(MouseEvent arg0) {
+    if ((xm != -1) && (ym != -1)) {
+      int dx = arg0.getX() - xm;
+      int dy = arg0.getY() - ym;
+      Point p = this.getLocation();
+      p.setLocation(p.getX() + dx, p.getY() + dy);
+      this.setLocation(p);
+    }
+  }
+  public void mouseMoved(MouseEvent arg0) {
+  }
+
+  public void windowActivated(WindowEvent arg0) {
+  }
+  public void windowClosed(WindowEvent arg0) {
+  }
+  public void windowClosing(WindowEvent arg0) {
+  }
+  public void windowDeactivated(WindowEvent arg0) {
+    toFront();
+  }
+  public void windowDeiconified(WindowEvent arg0) {
+  }
+  public void windowIconified(WindowEvent arg0) {
+  }
+  public void windowOpened(WindowEvent arg0) {
+  }
+
 }

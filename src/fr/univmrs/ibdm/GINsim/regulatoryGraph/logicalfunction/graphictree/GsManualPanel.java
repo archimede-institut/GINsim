@@ -18,13 +18,11 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
+import java.awt.BorderLayout;
 
 public class GsManualPanel extends GsBooleanFunctionTreePanel implements ActionListener {
-  /**
-	 * 
-	 */
-	private static final long	serialVersionUID	= -1746326107372469096L;
-private JLabel label;
+  private static final long	serialVersionUID	= -1746326107372469096L;
+  private JLabel label;
   private JButton button;
 
   public GsManualPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
@@ -39,11 +37,9 @@ private JLabel label;
     else {
       setBackground(Color.white);
     }
-
-    add(button, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                       GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(label, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                      GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+    buttonPanel.add(button);
+    add(buttonPanel, BorderLayout.WEST);
+    add(label, BorderLayout.CENTER);
   }
   public void actionPerformed(ActionEvent e) {
     tree.stopEditing();

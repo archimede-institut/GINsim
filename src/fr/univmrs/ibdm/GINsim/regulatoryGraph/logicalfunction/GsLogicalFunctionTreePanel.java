@@ -16,6 +16,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.*;
+import javax.swing.plaf.TreeUI;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
     KeyListener, MouseListener,
@@ -107,15 +108,13 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
   }
 
 
-  private JTree tree;
+  private JTree tree = null;
   private GsTreeInteractionsModel interactionList = null;
-  //private GsRegulatoryGraph graph;
   private GsMotionAdapter motionAdapter;
   private GsComponentAdapter componentAdapter;
   private DragSource dragSource;
   private DragGestureListener dragGestureListener;
   private GsDragSourceListener dragSourceListener;
-  //private DropTarget dropTarget;
   private GsDropListener dropListener;
   private GsTreeMenu menu;
   private GsTransferable transferable = null, current_transferable = null;
@@ -137,15 +136,14 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
     interactionList.setNode(vertex);
     interactionList.setView(this);
     interactionList.setRootInfos();
+    tree.stopEditing();
     tree.setModel(interactionList);
-    repaint();
-  }
+ }
 
   private JTree getJTree(GsRegulatoryGraph graph) {
     if (tree == null) {
       interactionList = new GsTreeInteractionsModel(graph);
-      tree = new GsJTree(interactionList);
-      tree.setUI(new GsTreeUI());
+      tree = new JTree(interactionList);
       tree.setShowsRootHandles(true);
       GsBooleanFunctionTreeRenderer cr = new GsBooleanFunctionTreeRenderer(getPreferredSize().width);
       tree.setCellRenderer(cr);
@@ -157,11 +155,15 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
       dragSourceListener = new GsDragSourceListener(tree, (GsGlassPane) graph.getGraphManager().getMainFrame().getGlassPane());
       dragGestureListener = new GsDragGestureListener(tree, dragSourceListener, dropListener);
       dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY_OR_MOVE, dragGestureListener);
-      /*dropTarget =*/new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE, dropListener, true);
+      new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE, dropListener, true);
       motionAdapter = new GsMotionAdapter((GsGlassPane) graph.getGraphManager().getMainFrame().getGlassPane());
       tree.addMouseMotionListener(motionAdapter);
       componentAdapter = new GsComponentAdapter((GsGlassPane) graph.getGraphManager().getMainFrame().getGlassPane(), "");
       tree.addMouseListener(componentAdapter);
+      if (System.getProperty("os.name").indexOf("Mac") < 0) {
+        TreeUI ui = new GsTreeUI();
+        tree.setUI(ui);
+      }
       addComponentListener(cr);
     }
     return tree;
@@ -188,9 +190,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
   }
 
   public void keyReleased(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-      deleteSelection();
-    }
+    if ((e.getKeyCode() == KeyEvent.VK_DELETE) || (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)) deleteSelection();
   }
 
   public void keyTyped(KeyEvent e) {
@@ -213,9 +213,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
           treeElement.remove(false);
           v.addElement(treeElement);
         }
-        //else if (treeElement.isLeaf())
-        //  treeElement.setChecked(false);
-        /*else */ if (treeElement instanceof GsTreeManual) {
+        if (treeElement instanceof GsTreeManual) {
           treeElement.remove(false);
           treeElement.getParent().addChild(new GsTreeManual(treeElement.getParent()), 0);
         }
@@ -241,8 +239,9 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
   }
 
   public void mousePressed(MouseEvent e) {
-    if (e.getButton() == MouseEvent.BUTTON3) {
+    if ((e.getButton() == MouseEvent.BUTTON3) || (e.isPopupTrigger())) {
       menu.show(tree, e.getX(), e.getY());
+      e.consume();
     }
   }
 
@@ -562,9 +561,9 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
         key = (Integer) enu.nextElement();
         v = (Vector) h.get(key);
         enu2 = v.elements();
-        s = "(" + (String) enu2.nextElement() + ")";
+        s = (String) enu2.nextElement();
         while (enu2.hasMoreElements()) {
-          s = s + " | (" + (String) enu2.nextElement() + ")";
+          s = s + " | (" + (String)enu2.nextElement() + ")";
         }
         try {
           interactionList.addExpression(null, key.shortValue(), interactionList.getVertex(), s);
@@ -576,6 +575,6 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
     }
     interactionList.setRootInfos();
     interactionList.fireTreeStructureChanged((GsTreeElement) interactionList.getRoot());
-    return!h.isEmpty();
+    return !h.isEmpty();
   }
 }

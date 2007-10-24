@@ -22,10 +22,10 @@ public class GsLogicalFunctionListElement implements Comparable {
   }
   public boolean equals(Object o) {
     GsLogicalFunctionListElement f = (GsLogicalFunctionListElement)o;
-    return f.getIndex() == index;
+    return f.toString().equals(toString()); // f.getIndex() == index;
   }
   public int compareTo(Object o) {
     GsLogicalFunctionListElement f = (GsLogicalFunctionListElement)o;
-    return f.getIndex() - index;
+    return f.toString().compareTo(toString()); // f.getIndex() - index;
   }
 }

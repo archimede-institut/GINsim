@@ -27,17 +27,20 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
       treeElement.setProperty("null function", new Boolean(false));
     else if (((Boolean)treeElement.getProperty("null function")).booleanValue())
       addButton.setEnabled(false);
+    buttonPanel.add(Box.createVerticalGlue());
+    buttonPanel.add(addButton);
+    buttonPanel.add(Box.createVerticalGlue());
 
     SpinnerNumberModel snm = new SpinnerNumberModel();
     snm.setValue(Integer.valueOf(treeElement.toString()));
-    snm.setMinimum(new Integer(((GsTreeInteractionsModel)tree.getModel()).getVertex().getBaseValue()));
+    snm.setMinimum(new Integer(0));
     snm.setMaximum(new Integer(((GsTreeInteractionsModel)tree.getModel()).getVertex().getMaxValue()));
     snm.setStepSize(new Integer(1));
     treeElement.setProperty("value", Integer.valueOf(treeElement.toString()));
     spinner = new GsJSpinner(snm);
     if (System.getProperty("os.name").indexOf("Mac") >= 0)
-      spinner.setFont(new Font("courier", Font.PLAIN, 10));
-    spinner.setPreferredSize(new Dimension(5 * charWidth, charHeight));
+      spinner.setFont(new Font("courier", Font.PLAIN, 7));
+    spinner.setPreferredSize(new Dimension(5 * charWidth, charHeight + 6));
     ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setEditable(false);
     ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setBackground(Color.white);
     spinner.setFont(defaultFont);
@@ -45,12 +48,16 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
     spinner.setBorder(null);
     JPanel bouche = new JPanel();
     bouche.setPreferredSize(new Dimension(width - 9, charHeight));
-    add(addButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
-                                          GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(spinner, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
-                                        GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
-    add(bouche, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
-                                        GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+    add(buttonPanel, BorderLayout.WEST);
+
+    JPanel spinnerPanel = new JPanel();
+    spinnerPanel.setLayout(new BoxLayout(spinnerPanel, BoxLayout.X_AXIS));
+    spinnerPanel.setBackground(Color.white);
+    spinnerPanel.add(spinner);
+    spinnerPanel.add(bouche);
+    spinnerPanel.setOpaque(false);
+    spinner.setOpaque(false);
+    add(spinnerPanel, BorderLayout.CENTER);
     bouche.setOpaque(false);
     if (edit) {
       setBackground(Color.cyan);

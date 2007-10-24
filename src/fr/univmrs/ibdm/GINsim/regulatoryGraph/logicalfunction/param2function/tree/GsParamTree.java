@@ -179,7 +179,7 @@ public class GsParamTree {
   }
   public String getDNFForm(int value, Vector params) {
     Vector v = new Vector();
-    root.makeDNF(v, value);
+    root.makeDNF(v, "", value);
     String s = "", tmp;
     if (v.size() > 0) {
       tmp = s = (String)v.firstElement();
@@ -187,9 +187,9 @@ public class GsParamTree {
       for (int i = 1; i < v.size(); i++) {
         tmp = (String)v.elementAt(i);
         if (tmp.indexOf((int)'&') >= 0)
-          s += " & (" + tmp + ")";
+          s += " | (" + tmp + ")";
         else
-          s += "& " + tmp;
+          s += "| " + tmp;
       }
     }
     return s;

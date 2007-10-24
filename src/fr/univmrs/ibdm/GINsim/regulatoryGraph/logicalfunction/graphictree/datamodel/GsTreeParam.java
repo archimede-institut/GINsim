@@ -22,11 +22,11 @@ public class GsTreeParam extends GsTreeElement {
     String s = "";
     GsRegulatoryEdge ei;
     if (edgeIndexes != null) {
-		for (Iterator it = edgeIndexes.iterator(); it.hasNext(); ) {
-		    ei = (GsRegulatoryEdge)it.next();
-		    s = s + " " + ei.me.getId(ei.index);
-		  }
-	}
+      for (Iterator it = edgeIndexes.iterator(); it.hasNext(); ) {
+        ei = (GsRegulatoryEdge)it.next();
+        s = s + " " + ei.me.getEdge(ei.index).getShortInfo("#");
+      }
+    }
     return s.trim();
   }
   public Vector getEdgeIndexes() {

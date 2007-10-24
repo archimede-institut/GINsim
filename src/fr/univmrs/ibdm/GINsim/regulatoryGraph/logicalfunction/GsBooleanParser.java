@@ -10,9 +10,12 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import java.util.ArrayList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
+import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
+import java.util.Hashtable;
 
 public class GsBooleanParser extends TBooleanParser {
-  private Vector operandList;
+  private Hashtable operandList;
   private static String returnClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList";
   private static String operandClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene";
   private Object[] allParams;
@@ -24,7 +27,33 @@ public class GsBooleanParser extends TBooleanParser {
     setAllData(edgesList);
   }
   public boolean verifOperandList(List list) {
-    return (operandList.containsAll(list));
+    Vector v = new Vector();
+    Object o;
+    Iterator it = operandList.keySet().iterator();
+    GsRegulatoryEdge re;
+    GsDirectedEdge e;
+    GsRegulatoryVertex source;
+
+    while (it.hasNext()) {
+      o = it.next();
+      if (o instanceof GsRegulatoryEdge) {
+        re = (GsRegulatoryEdge) o;
+        source = re.me.getSource();
+        v.addElement(source.getId());
+        for (int i = 0; i < re.me.getEdgeCount(); i++)
+          v.addElement(re.me.getEdge(i).getShortInfo("#"));
+      }
+      else if (o instanceof GsDirectedEdge) {
+        e = (GsDirectedEdge) o;
+        source = (GsRegulatoryVertex)e.getSourceVertex();
+        v.addElement(source.getId() + "#1");
+      }
+      else if (o instanceof GsRegulatoryVertex) {
+        source = (GsRegulatoryVertex)o;
+        v.addElement(source.getId());
+      }
+    }
+    return (v.containsAll(list));
   }
   protected void setAllData(List edgesList) {
     Iterator it = edgesList.iterator();
@@ -47,7 +76,7 @@ public class GsBooleanParser extends TBooleanParser {
       F[i] = new ArrayList(n + 1);
       F[i].add(new GsLogicalFunctionListElement(null, -1));
       for (int k = 0; k < n; k++)
-        F[i].add(new GsLogicalFunctionListElement((GsRegulatoryMultiEdge)e.getUserObject(), k));
+        F[i].add(new GsLogicalFunctionListElement((GsRegulatoryMultiEdge)e.getUserObject(), k + 1));
       N[i] = n;
       K[i] = 0;
       p *= n + 1;
@@ -67,8 +96,6 @@ public class GsBooleanParser extends TBooleanParser {
         for (j = 0; j < edgesList.size(); j++)
           if (!((GsLogicalFunctionListElement) F[j].get(K[j])).toString().equals(""))
             L.addElement(F[j].get(K[j]));
-        //System.err.println(L);
-
         v.addElement(L);
       }
       else
@@ -76,7 +103,8 @@ public class GsBooleanParser extends TBooleanParser {
     }
     allParams = v.toArray();
     allData = new Vector();
-    for (i = 0; i < allParams.length; i++) allData.addElement(new Integer(i));
+    for (i = 0; i < allParams.length; i++)
+      allData.addElement(new Integer(i));
   }
 
   public Vector getParams(Vector indexes) {
@@ -92,15 +120,26 @@ public class GsBooleanParser extends TBooleanParser {
     Iterator it = edgesList.iterator();
     GsDirectedEdge e;
     GsRegulatoryVertex source;
+    GsRegulatoryEdge re;
+    GsRegulatoryMultiEdge me;
 
-    operandList = new Vector();
+    operandList = new Hashtable();
     while (it.hasNext()) {
       e = (GsDirectedEdge)it.next();
+      me = (GsRegulatoryMultiEdge)e.getUserObject();
       source = (GsRegulatoryVertex)e.getSourceVertex();
-      operandList.addElement(source.getId());
-      for (int i = 0; i < ((GsRegulatoryMultiEdge)e.getUserObject()).getEdgeCount(); i++)
-        operandList.addElement(source.getId() + "#" + String.valueOf(i));
+      operandList.put(source, source.getId());
+      for (int i = 0; i < me.getEdgeCount(); i++) {
+        re = me.getEdge(i);
+        if (me.getEdgeCount() > 1)
+          operandList.put(re/*.getShortInfo("#")*/, re.getShortDetail("_"));
+        else
+          operandList.put(e/*.getId() + "#" + (i + 1)*/, re.getShortDetail("_"));
+      }
     }
+  }
+  public String getSaveString(String s) {
+    return (String)operandList.get(s);
   }
   public TBooleanTreeNode getRoot() {
     return root;

@@ -1,9 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
 import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
 import javax.swing.JTree;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
@@ -13,6 +10,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JLabel;
 import java.awt.Dimension;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import java.awt.BorderLayout;
 
 public class GsParamPanel extends GsBooleanFunctionTreePanel implements MouseListener, MouseMotionListener {
   private static final long serialVersionUID = -7863256897019020183L;
@@ -44,8 +42,7 @@ public class GsParamPanel extends GsBooleanFunctionTreePanel implements MouseLis
       setBackground(Color.white);
     }
     label.setForeground(value.getForeground());
-    add(label, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST,
-                                      GridBagConstraints.NONE, new Insets(2, 5, 2, 0), 0, 0));
+    add(label, BorderLayout.CENTER);
   }
   public void mouseClicked(MouseEvent e) {
 

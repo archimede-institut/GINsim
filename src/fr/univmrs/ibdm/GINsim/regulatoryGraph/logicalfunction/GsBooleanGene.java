@@ -19,4 +19,7 @@ public class GsBooleanGene extends TBooleanOperand {
   public String toString() {
     return getVal();
   }
+  public String getSaveVal(){
+    return ((GsBooleanParser)parser).getSaveString(value);
+  }
 }

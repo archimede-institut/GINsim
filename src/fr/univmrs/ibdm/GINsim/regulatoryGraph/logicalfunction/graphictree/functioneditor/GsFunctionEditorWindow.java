@@ -13,8 +13,15 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functi
 import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.model.GsFunctionTerm;
 import java.util.Arrays;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
 
-public class GsFunctionEditorWindow extends JDialog {
+public class GsFunctionEditorWindow extends JDialog implements MouseListener, MouseMotionListener, WindowListener {
   class GsCellRenderer extends JLabel implements ListCellRenderer {
     private static final long	serialVersionUID	= 1720724468548717415L;
     public GsCellRenderer() {
@@ -31,6 +38,17 @@ public class GsFunctionEditorWindow extends JDialog {
     public void valueChanged(ListSelectionEvent e) {
       if (!e.getValueIsAdjusting()) {
         Object[] sel = interactionsList.getSelectedValues();
+        int ix = -1, ec = 0;
+        if (sel.length > 0) {
+          ec = ((GsListInteraction) sel[0]).getEdge().getEdgeCount();
+          ix = ((GsListInteraction) sel[0]).getIndex();
+        }
+        if (sel.length == 0)
+          notButton.setEnabled(false);
+        else if ((sel.length == 1) && ((ec == 1) || ((ec > 1) && (ix <= 0))))
+          notButton.setEnabled(false);
+        else
+          notButton.setEnabled(true);
         if (sel.length > 0)
           controler.exec(GsFunctionEditorControler.MODIF_TERM, new Vector(Arrays.asList(sel)), editorModel.getCurrentTerm());
         else
@@ -53,6 +71,7 @@ public class GsFunctionEditorWindow extends JDialog {
   private GsFunctionEditorControler controler;
   private GsFunctionEditorModel editorModel;
   private GsInteractionListSelectionListener interactionsListSelectionListener;
+  private int xm, ym;
 
   public GsFunctionEditorWindow(GsFunctionEditorControler c, GsFunctionEditorModel m) {
     super();
@@ -62,6 +81,15 @@ public class GsFunctionEditorWindow extends JDialog {
     init();
     initListeners();
     refresh();
+    if (editorModel.getCurrentTermIndex() == (editorModel.getNbTerms() - 1))
+      nextButton.setEnabled(false);
+    else
+      nextButton.setEnabled(true);
+    previousButton.setEnabled(editorModel.getCurrentTermIndex() > 0);
+    xm = ym = -1;
+    addMouseListener(this);
+    addMouseMotionListener(this);
+    addWindowListener(this);
     pack();
   }
 
@@ -82,28 +110,84 @@ public class GsFunctionEditorWindow extends JDialog {
       public void actionPerformed(ActionEvent e) {
         controler.exec(GsFunctionEditorControler.ADD_EMPTY_TERM, new Integer(GsFunctionTerm.AND));
         interactionsList.clearSelection();
+        if (editorModel.getCurrentTermIndex() == (editorModel.getNbTerms() - 1))
+          nextButton.setEnabled(false);
+        else
+          nextButton.setEnabled(true);
+        previousButton.setEnabled(editorModel.getCurrentTermIndex() > 0);
       }
     });
     orButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         controler.exec(GsFunctionEditorControler.ADD_EMPTY_TERM, new Integer(GsFunctionTerm.OR));
+        interactionsList.clearSelection();
+        if (editorModel.getCurrentTermIndex() == (editorModel.getNbTerms() - 1))
+          nextButton.setEnabled(false);
+        else
+          nextButton.setEnabled(true);
+        previousButton.setEnabled(editorModel.getCurrentTermIndex() > 0);
       }
     });
     previousButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         controler.exec(GsFunctionEditorControler.PREVIOUS_TERM);
+        if (editorModel.getCurrentTermIndex() == (editorModel.getNbTerms() - 1))
+          nextButton.setEnabled(false);
+        else
+          nextButton.setEnabled(true);
+        previousButton.setEnabled(editorModel.getCurrentTermIndex() > 0);
         refresh();
       }
     });
     nextButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         controler.exec(GsFunctionEditorControler.NEXT_TERM);
+        if (editorModel.getCurrentTermIndex() == (editorModel.getNbTerms() - 1))
+          nextButton.setEnabled(false);
+        else
+          nextButton.setEnabled(true);
+        previousButton.setEnabled(editorModel.getCurrentTermIndex() > 0);
         refresh();
       }
     });
     notButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         controler.exec(GsFunctionEditorControler.NOT);
+      }
+    });
+    deleteButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        controler.exec(GsFunctionEditorControler.DELETE);
+        if (editorModel.getCurrentTermIndex() == (editorModel.getNbTerms() - 1))
+          nextButton.setEnabled(false);
+        else
+          nextButton.setEnabled(true);
+        previousButton.setEnabled(editorModel.getCurrentTermIndex() > 0);
+        refresh();
+      }
+    });
+    compactCheckBox.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        ChangeListener cl = dnfCheckBox.getChangeListeners()[0];
+        dnfCheckBox.removeChangeListener(cl);
+        dnfCheckBox.setSelected(false);
+        dnfCheckBox.addChangeListener(cl);
+        controler.exec(GsFunctionEditorControler.COMPACT, new Boolean(compactCheckBox.isSelected()));
+        nextButton.setEnabled(editorModel.getCurrentTermIndex() < (editorModel.getNbTerms() - 1));
+        previousButton.setEnabled(editorModel.getCurrentTermIndex() > 0);
+        refresh();
+      }
+    });
+    dnfCheckBox.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        ChangeListener cl = compactCheckBox.getChangeListeners()[0];
+        compactCheckBox.removeChangeListener(cl);
+        compactCheckBox.setSelected(false);
+        compactCheckBox.addChangeListener(cl);
+        controler.exec(GsFunctionEditorControler.DNF, new Boolean(dnfCheckBox.isSelected()));
+        nextButton.setEnabled(editorModel.getCurrentTermIndex() < (editorModel.getNbTerms() - 1));
+        previousButton.setEnabled(editorModel.getCurrentTermIndex() > 0);
+        refresh();
       }
     });
     interactionsListSelectionListener = new GsInteractionListSelectionListener();
@@ -115,13 +199,26 @@ public class GsFunctionEditorWindow extends JDialog {
     interactionsList.clearSelection();
     if (editorModel.getCurrentTermIndex() >= 0) {
       Vector v = editorModel.getCurrentTerm().getInteractions();
-      for (int i = 0; i < v.size(); i++) {
-        GsListInteraction in = (GsListInteraction)v.elementAt(i);
-        int p = editorModel.getInteractions().indexOf(in);
-        interactionsList.getSelectionModel().addSelectionInterval(p, p);
-      }
+      if (v != null)
+        for (int i = 0; i < v.size(); i++) {
+          GsListInteraction in = (GsListInteraction)v.elementAt(i);
+          int p = editorModel.getInteractions().indexOf(in);
+          interactionsList.getSelectionModel().addSelectionInterval(p, p);
+        }
     }
     interactionsList.addListSelectionListener(interactionsListSelectionListener);
+    Object[] sel = interactionsList.getSelectedValues();
+    int ix = -1, ec = 0;
+    if (sel.length > 0) {
+      ec = ((GsListInteraction) sel[0]).getEdge().getEdgeCount();
+      ix = ((GsListInteraction) sel[0]).getIndex();
+    }
+    if (sel.length == 0)
+      notButton.setEnabled(false);
+    else if ((sel.length == 1) && ((ec == 1) || ((ec > 1) && (ix <= 0))))
+      notButton.setEnabled(false);
+    else
+      notButton.setEnabled(true);
   }
   private void init() {
     JPanel mainPane = new JPanel(new BorderLayout());
@@ -133,10 +230,10 @@ public class GsFunctionEditorWindow extends JDialog {
     JPanel listCommandPanel = new JPanel();
     JPanel buttonPanel = new JPanel();
     JPanel browsePanel = new JPanel();
-    this.setModal(true);
+    //this.setModal(true);
     this.setResizable(false);
     this.setUndecorated(true);
-    this.setAlwaysOnTop(true);
+    //this.setAlwaysOnTop(true);
     listPanel.setLayout(new GridBagLayout());
     commandPanel.setLayout(new GridBagLayout());
     listScrollPane.setBorder(BorderFactory.createEtchedBorder(Color.white, UIManager.getColor("TextField.shadow")));
@@ -189,5 +286,46 @@ public class GsFunctionEditorWindow extends JDialog {
         GridBagConstraints.NONE, new Insets(0, 5, 0, 2), 0, 0));
     commandPanel.add(orButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER,
         GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 0, 0));
+  }
+
+  public void mouseClicked(MouseEvent arg0) {
+  }
+  public void mouseEntered(MouseEvent arg0) {
+  }
+  public void mouseExited(MouseEvent arg0) {
+  }
+  public void mousePressed(MouseEvent arg0) {
+    xm = arg0.getX();
+    ym = arg0.getY();
+  }
+  public void mouseReleased(MouseEvent arg0) {
+  }
+
+  public void mouseDragged(MouseEvent arg0) {
+    if ((xm != -1) && (ym != -1)) {
+      int dx = arg0.getX() - xm;
+      int dy = arg0.getY() - ym;
+      Point p = this.getLocation();
+      p.setLocation(p.getX() + dx, p.getY() + dy);
+      this.setLocation(p);
+    }
+  }
+  public void mouseMoved(MouseEvent arg0) {
+  }
+
+  public void windowActivated(WindowEvent arg0) {
+  }
+  public void windowClosed(WindowEvent arg0) {
+  }
+  public void windowClosing(WindowEvent arg0) {
+  }
+  public void windowDeactivated(WindowEvent arg0) {
+    toFront();
+  }
+  public void windowDeiconified(WindowEvent arg0) {
+  }
+  public void windowIconified(WindowEvent arg0) {
+  }
+  public void windowOpened(WindowEvent arg0) {
   }
 }

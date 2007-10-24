@@ -20,7 +20,6 @@ public class GsFunctionNF extends GsFunctionTerm {
     not = n;
     operator = op;
     makeStringValue();
-    //System.err.println("new GsFunctionNF : " + stringValue);
   }
   public GsFunctionNF(Vector le, boolean n, int op, String s) {
     if (le != null)
@@ -30,7 +29,6 @@ public class GsFunctionNF extends GsFunctionTerm {
     not = n;
     operator = op;
     stringValue = s;
-    //System.err.println("new GsFunctionNF : " + stringValue);
   }
   private void makeStringValue() {
     stringValue = "";
@@ -39,9 +37,8 @@ public class GsFunctionNF extends GsFunctionTerm {
     else if (operator == GsFunctionTerm.OR)
       stringValue = " | ";
     if (not) stringValue += "!";
-    if (interactions.size() == 1) {
+    if (interactions.size() == 1)
       stringValue += ((GsListInteraction)interactions.elementAt(0)).stringValue();
-    }
     else if (interactions.size() > 1) {
       stringValue += "(";
       stringValue += ((GsListInteraction)interactions.elementAt(0)).stringValue();
@@ -58,6 +55,11 @@ public class GsFunctionNF extends GsFunctionTerm {
       interactions = new Vector(le);
     else
       interactions = new Vector();
+    if (interactions.size() < 2) not = false;
+    makeStringValue();
+  }
+  public void update() {
+    if (interactions.size() < 2) not = false;
     makeStringValue();
   }
   public void toggleNot() {

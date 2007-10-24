@@ -383,7 +383,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 
     public void setUserObject(Object obj) {
     }
-    
+
 	public GsRegulatoryEdge getEdge(int index) {
 		return edges[index];
 	}

@@ -17,6 +17,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 import java.awt.Dimension;
 import java.awt.Color;
+import java.awt.BorderLayout;
 
 public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionListener {
   private static final long serialVersionUID = -1866485315946504210L;
@@ -30,15 +31,14 @@ public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionLis
     label.setPreferredSize(new Dimension(width, charHeight));
     button = new GsJButton("add.png");
     button.addActionListener(this);
+    buttonPanel.add(button);
     if (sel) {
       label.setBackground(Color.yellow);
       setBackground(Color.yellow);
     }
     if (!((Boolean)treeElement.getProperty("add")).booleanValue()) button.setEnabled(false);
-    add(button, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                       GridBagConstraints.NONE, new Insets(2, 2, 2, 0), 0, 0));
-    add(label, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH,
-                                      GridBagConstraints.NONE, new Insets(2, 5, 2, 2), 0, 0));
+    add(buttonPanel, BorderLayout.WEST);
+    add(label, BorderLayout.CENTER);
   }
   public void actionPerformed(ActionEvent e) {
     GsRegulatoryVertex vertex;

@@ -7,4 +7,7 @@ public class GsFunctionUF extends GsFunctionTerm {
     operator = op;
     //System.err.println("new GsFunctionUF : " + stringValue);
   }
+  public void update() {
+
+  }
 }

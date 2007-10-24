@@ -101,6 +101,6 @@ public class GsParamTreeLeafPattern extends GsParamTreeLeaf {
     return functions;
   }
 
-  public void makeDNF(Vector v, int value) {
+  public void makeDNF(Vector v, String s, int value) {
   }
 }

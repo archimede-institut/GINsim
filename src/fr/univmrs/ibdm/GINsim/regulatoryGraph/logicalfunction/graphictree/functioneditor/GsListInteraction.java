@@ -17,18 +17,18 @@ public class GsListInteraction {
     return index;
   }
   public String toString() {
-    if (index >= 0)
-      return grme.getId(index).replace('_', ' ') + " " + grme.getEdgeName(index).substring(0,
-          grme.getEdgeName(index).indexOf(';')) + (grme.getSign(index) == 0 ? "+" : "-");
-    return "!" + grme.getSource().getId();
+    if (index > 0)
+      return grme.getEdge(index - 1).getShortDetail(" ");
+    else if (index == -1)
+      return "!" + grme.getSource().getId();
+    return grme.getSource().getId();
   }
   public String stringValue() {
-    int i = grme.getId(index).lastIndexOf((int)'_');
-    if (index >= 0) {
-      return grme.getId(index).substring(0, i) + "#" + grme.getId(index).substring(i + 1);
-    }
-    else {
-      return "!" + grme.getId(index).substring(0, i);
-    }
+    int i = grme.getId(index - 1).lastIndexOf((int)'_');
+    if (index > 0)
+      return grme.getEdge(index - 1).getShortInfo("#");
+    else if (index == -1)
+      return "!" + grme.getId(index - 1).substring(0, i);
+    return grme.getId(index - 1).substring(0, i);
   }
 }

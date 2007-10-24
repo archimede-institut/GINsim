@@ -1,14 +1,15 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
+import java.awt.Point;
+import java.util.Iterator;
+import java.util.Vector;
+
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.model.GsFunctionEditorModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
-import java.util.Iterator;
-import java.util.Vector;
-import java.awt.Point;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.*;
 
 public class GsTreeExpression extends GsTreeElement {
   private String compactExpression, userExpression, dnfExpression;
@@ -28,6 +29,7 @@ public class GsTreeExpression extends GsTreeElement {
       userExpression = root.toString();
     }
     property.put("invalid", new Boolean(false));
+    property.put("autoedit", new Boolean(false));
     functionsCreator = fc;
     selection = null;
   }
@@ -60,15 +62,15 @@ public class GsTreeExpression extends GsTreeElement {
     return root;
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge, int index) {
-    root = remove(multiEdge.getSource().getId() + "#" + index, root);
+    root = remove(multiEdge.getSource().getId() + "#" + (index + 1), root);
     if (root != null) {
-      shiftIndexes(root, multiEdge, index);
-      compactExpression = root.toString();
+      decIndexes(root, multiEdge, index);
+      userExpression = compactExpression = root.toString();
       //dnfExpression = userExpression = root.toDNF();
     }
     return root;
   }
-  private void shiftIndexes(TBooleanTreeNode node, GsRegulatoryMultiEdge multiEdge, int index) {
+  private void decIndexes(TBooleanTreeNode node, GsRegulatoryMultiEdge multiEdge, int index) {
     String oldId;
     int oldIndex, i;
 
@@ -81,15 +83,15 @@ public class GsTreeExpression extends GsTreeElement {
           oldIndex = Integer.parseInt(oldId.substring(i + 1));
           oldId = oldId.substring(0, i);
         }
-        if (oldIndex > index) {
+        if (oldIndex > (index + 1)) {
           oldIndex--;
           ((GsBooleanGene)node).setValue(oldId + "#" + oldIndex);
         }
       }
       else {
-        shiftIndexes(((TBooleanOperator)node).getArgs()[0], multiEdge, index);
+        decIndexes(((TBooleanOperator)node).getArgs()[0], multiEdge, index);
         if (((TBooleanOperator)node).getNbArgs() == 2) {
-          shiftIndexes(((TBooleanOperator)node).getArgs()[1], multiEdge, index);
+          decIndexes(((TBooleanOperator)node).getArgs()[1], multiEdge, index);
         }
       }
     }
@@ -97,6 +99,36 @@ public class GsTreeExpression extends GsTreeElement {
       ex.printStackTrace();
     }
   }
+  public void incIndexes(TBooleanTreeNode node, GsRegulatoryMultiEdge multiEdge, int index) {
+    String oldId;
+    int oldIndex, i;
+
+    try {
+      if (node.isLeaf()) {
+        i = ((GsBooleanGene)node).getVal().lastIndexOf("#");
+        oldId = ((GsBooleanGene)node).getVal();
+        oldIndex = -1;
+        if (i >= 0) {
+          oldIndex = Integer.parseInt(oldId.substring(i + 1));
+          oldId = oldId.substring(0, i);
+        }
+        if (oldIndex > (index + 1)) {
+          oldIndex++;
+          ((GsBooleanGene)node).setValue(oldId + "#" + oldIndex);
+        }
+      }
+      else {
+        incIndexes(((TBooleanOperator)node).getArgs()[0], multiEdge, index);
+        if (((TBooleanOperator)node).getNbArgs() == 2) {
+          incIndexes(((TBooleanOperator)node).getArgs()[1], multiEdge, index);
+        }
+      }
+    }
+    catch (Exception ex) {
+      ex.printStackTrace();
+    }
+  }
+
   private TBooleanTreeNode remove(String id, TBooleanTreeNode node) {
     TBooleanTreeNode tn1, tn2;
     String testString;
@@ -106,7 +138,7 @@ public class GsTreeExpression extends GsTreeElement {
         if (testString.indexOf("#") == -1) {
           testString += "#";
         }
-        if (!testString.startsWith(id)) {
+        if (!id.startsWith(testString)) {
           return node;
         }
       }
