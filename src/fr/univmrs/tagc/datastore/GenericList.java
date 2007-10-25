@@ -34,6 +34,7 @@ public interface GenericList {
      * @return true if one can remove elements
      */
     public boolean canRemove();
+    public boolean doInlineAddRemove();
     /**
      * 
      * @return true if this list can be filtered
@@ -111,4 +112,7 @@ public interface GenericList {
 	 * @param i index of the entry
 	 */
 	public void run(int i);
+	
+	public Object getAction(int row);
+	public String getName();
 }

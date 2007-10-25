@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.EventObject;
+import java.util.Iterator;
+import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -13,6 +15,8 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import fr.univmrs.tagc.datastore.ValueList;
+import fr.univmrs.tagc.datastore.gui.TableActionListener;
+import fr.univmrs.tagc.datastore.models.ValueListComboModel;
 
 /**
  * A "better" JTable with some often needed customizations.
@@ -22,6 +26,8 @@ import fr.univmrs.tagc.datastore.ValueList;
 public class EnhancedJTable extends JTable {
     private static final long serialVersionUID = 835349911766025807L;
 
+    private Vector v_actionListeners;
+    
     /** 
      */
     public EnhancedJTable() {
@@ -34,7 +40,6 @@ public class EnhancedJTable extends JTable {
     public EnhancedJTable(TableModel model) {
         super(model);
         putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        setDefaultEditor(Boolean.class, new BooleanCellEditor());
         setDefaultEditor(ValueList.class, new ValueInListCellEditor());
 
         TableCellRenderer defaultRenderer;
@@ -56,24 +61,33 @@ public class EnhancedJTable extends JTable {
         }
         return super.processKeyBinding(ks, e, condition, pressed);
     }
-}
 
-class BooleanCellEditor extends DefaultCellEditor {
-    private static final long serialVersionUID = -2790803389946873836L;
-
-    protected BooleanCellEditor() {
-        super(new JCheckBox());
+    public void addActionListener(TableActionListener l) {
+    	if (v_actionListeners == null) {
+    		v_actionListeners = new Vector();
+    	}
+    	v_actionListeners.add(l);
     }
-
-    public boolean shouldSelectCell(EventObject anEvent) {
-        return false;
+    public void removeActionListener(TableActionListener l) {
+    	if (v_actionListeners == null) {
+    		return;
+    	}
+    	v_actionListeners.remove(l);
     }
+	public void click(int row, int col) {
+		if (v_actionListeners != null) {
+			Iterator it = v_actionListeners.iterator();
+			while (it.hasNext()) {
+				((TableActionListener)it.next()).actionPerformed(row, col);
+			}
+		}
+	}
 }
 
 class ValueInListCellEditor extends AbstractCellEditor implements TableCellEditor {
     private static final long serialVersionUID = -2790803389946873836L;
 
-    GsComboModel model = new GsComboModel();
+    ValueListComboModel model = new ValueListComboModel();
     JComboBox combo = new JComboBox(model);
     ValueList data;
     
@@ -107,40 +121,18 @@ class JTableButtonRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value,
                            boolean isSelected,
                            boolean hasFocus,
-                           int row, int column)
-    {
-      if(value instanceof Component) {
-		return (Component)value;
-	}
-      return __defaultRenderer.getTableCellRendererComponent(
-         table, value, isSelected, hasFocus, row, column);
+                           int row, int column) {
+    	if(value instanceof Component) {
+    		return (Component)value;
+    	}
+    	return __defaultRenderer.getTableCellRendererComponent(
+    			table, value, isSelected, hasFocus, row, column);
     }
 }
 
-//class JTableValueInListRenderer implements TableCellRenderer {
-//    private TableCellRenderer __defaultRenderer;
-//
-//    /**
-//     * @param renderer
-//     */
-//    public JTableValueInListRenderer(TableCellRenderer renderer) {
-//      __defaultRenderer = renderer;
-//    }
-//
-//    public Component getTableCellRendererComponent(JTable table, Object value,
-//                           boolean isSelected,
-//                           boolean hasFocus,
-//                           int row, int column)
-//    {
-//      if(value instanceof GsValueList)
-//        return new JComboBox(new GsComboModel((GsValueList)value));
-//      return __defaultRenderer.getTableCellRendererComponent(
-//         table, value, isSelected, hasFocus, row, column);
-//    }
-//}
 
 class JTableButtonMouseListener implements MouseListener {
-    private JTable __table;
+    private EnhancedJTable __table;
 
     private void __forwardEventToButton(MouseEvent e) {
       TableColumnModel columnModel = __table.getColumnModel();
@@ -148,7 +140,6 @@ class JTableButtonMouseListener implements MouseListener {
       int row    = e.getY() / __table.getRowHeight();
       Object value;
       JButton button;
-//      MouseEvent buttonEvent;
 
       if(row >= __table.getRowCount() || row < 0 ||
          column >= __table.getColumnCount() || column < 0) {
@@ -161,20 +152,16 @@ class JTableButtonMouseListener implements MouseListener {
           button = (JButton)value;
           if (e.getID() == MouseEvent.MOUSE_CLICKED && e.getButton() == MouseEvent.BUTTON1) {
               button.doClick();
+              __table.click(row, column);
           }
       }
-//      buttonEvent = SwingUtilities.convertMouseEvent(__table, e, button);
-//      button.dispatchEvent(buttonEvent);
-      // This is necessary so that when a button is pressed and released
-      // it gets rendered properly.  Otherwise, the button may still appear
-      // pressed down when it has been released.
       __table.repaint();
     }
 
     /**
      * @param table
      */
-    public JTableButtonMouseListener(JTable table) {
+    public JTableButtonMouseListener(EnhancedJTable table) {
       __table = table;
     }
 
@@ -198,58 +185,3 @@ class JTableButtonMouseListener implements MouseListener {
       __forwardEventToButton(e);
     }
 }
-
-class GsComboModel extends DefaultComboBoxModel {
-    private static final long serialVersionUID = -8553547226168566527L;
-    
-    ValueList data;
-
-    GsComboModel() {
-    }
-    
-    GsComboModel(ValueList data) {
-        this.data = data;
-    }
-    
-    void setData(ValueList data) {
-        this.data = data;
-        fireContentsChanged(this, 0, getSize());
-    }
-    
-    public Object getElementAt(int index) {
-        if (data == null) {
-            return null;
-        }
-        return data.get(index);
-    }
-
-    public int getIndexOf(Object anObject) {
-        if (data == null) {
-            return -1;
-        }
-        return data.indexOf(anObject);
-    }
-
-    public Object getSelectedItem() {
-        if (data == null) {
-            return null;
-        }
-        int sel = data.getSelectedIndex();
-        sel = sel == -1 ? 0 : sel;
-        return data.get(data.getSelectedIndex());
-    }
-
-    public int getSize() {
-        if (data == null) {
-            return 0;
-        }
-        return data.size();
-    }
-
-    public void setSelectedItem(Object anObject) {
-        if (data == null) {
-            return;
-        }
-        data.setSelectedIndex(getIndexOf(anObject));
-    }
-}  

@@ -53,6 +53,15 @@ public class StatusTextField extends JTextField implements FocusListener,
 	}
 
 	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			apply();
+		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			if (pinfo != null) {
+				setText(pinfo.getStringValue());
+			} else {
+				setText("");
+			}
+		}
 		redraw();
 	}
 

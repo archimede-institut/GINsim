@@ -7,9 +7,9 @@ import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.datastore.MaxSpinModel;
-import fr.univmrs.tagc.datastore.MinMaxSpinModel;
-import fr.univmrs.tagc.datastore.MinSpinModel;
+import fr.univmrs.tagc.datastore.models.MaxSpinModel;
+import fr.univmrs.tagc.datastore.models.MinMaxSpinModel;
+import fr.univmrs.tagc.datastore.models.MinSpinModel;
 
 /**
  * model controlling the behavior of min and max spinbuttons for an edge

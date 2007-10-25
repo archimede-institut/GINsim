@@ -12,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.util.widget.GsDialog;
 
 /**
  * a generic stackable dialog.
@@ -20,7 +19,7 @@ import fr.univmrs.ibdm.GINsim.util.widget.GsDialog;
  * All this is accessible via a simple API to set the main dialog and add
  * secondary dialogs or messages.
  */
-abstract public class StackDialog extends GsDialog {
+abstract public class StackDialog extends SimpleDialog {
     private static final long serialVersionUID = -6696566567870168910L;
     
     private static final String s_mainkey = "_main";

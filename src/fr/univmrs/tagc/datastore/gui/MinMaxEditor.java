@@ -3,8 +3,8 @@ package fr.univmrs.tagc.datastore.gui;
 import javax.swing.JLabel;
 
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.MinMaxSpinModel;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.datastore.models.MinMaxSpinModel;
 
 
 public class MinMaxEditor implements ObjectPropertyEditorUI {

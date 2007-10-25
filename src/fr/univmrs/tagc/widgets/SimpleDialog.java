@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.util.widget;
+package fr.univmrs.tagc.widgets;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -7,7 +7,7 @@ import javax.swing.*;
 
 import fr.univmrs.ibdm.GINsim.global.GsOptions;
 
-public abstract class GsDialog extends JDialog {
+public abstract class SimpleDialog extends JDialog {
 
 	String id;
 	
@@ -18,7 +18,7 @@ public abstract class GsDialog extends JDialog {
 		}
 	};
       
-	public GsDialog(Frame parent, String id, int w, int h) {
+	public SimpleDialog(Frame parent, String id, int w, int h) {
 		super(parent);
 		this.id = id;
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

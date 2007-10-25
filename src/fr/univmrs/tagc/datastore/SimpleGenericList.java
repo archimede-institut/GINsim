@@ -10,20 +10,23 @@ import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 public class SimpleGenericList implements GenericList {
 
 	public Vector v_data;
+	protected Vector v_listeners;
+	protected String filter = null;
+	
+	protected String name = "";
 	protected String prefix = "name_";
 	protected String pattern = "^[a-zA-Z0-9_-]+$";
-
-	protected Vector v_listeners;
 	
-	protected boolean canAdd = false;
-	protected boolean canCopy = false;
-	protected boolean canRemove = false;
-	protected boolean canEdit = false;
-	protected boolean canOrder = false;
-	protected boolean canFilter = true;
-	protected boolean hasAction = true;
+	public boolean canAdd = false;
+	public boolean canCopy = false;
+	public boolean canRemove = false;
+	public boolean canEdit = false;
+	public boolean canOrder = false;
+	public boolean canFilter = true;
+	public boolean hasAction = false;
+	public boolean enforceUnique = true;
+	public boolean inlineAddDel = false;
 	
-	protected String filter = null;
 	
 	public SimpleGenericList(Vector v_data) {
 		setData(v_data);
@@ -38,7 +41,7 @@ public class SimpleGenericList implements GenericList {
 		}
 		Iterator it = v_listeners.iterator();
 		while (it.hasNext()) {
-			((GenericListListener)it.next()).StructureChanged();
+			((GenericListListener)it.next()).ContentChanged();
 		}
 	}
 	
@@ -65,6 +68,9 @@ public class SimpleGenericList implements GenericList {
         for (int j=0 ; j<t.length ; j++) {
             t[j] = true;
         }
+        if (v_data.size() > 0 && !(v_data.get(0) instanceof GsNamedObject)) {
+        	return triggerAdd(doCreate(s, type));
+        }
         for (int j=0 ; j<t.length ; j++) {
             GsNamedObject obj = (GsNamedObject)v_data.get(j);
             if (obj.getName().startsWith(prefix)) {
@@ -87,58 +93,41 @@ public class SimpleGenericList implements GenericList {
             s = prefix+(t.length+1);
         }
 
-		Object item = doCreate(s, type);
+		return triggerAdd(doCreate(s, type));
+	}
+
+	private int triggerAdd(Object item) {
+		if (item == null) {
+			return -1;
+		}
 		v_data.add(item);
+		int pos = v_data.indexOf(item);
 		if (v_listeners != null) {
 			Iterator it = v_listeners.iterator();
 			while (it.hasNext()) {
-				((GenericListListener)it.next()).ItemAdded(item);
+				((GenericListListener)it.next()).ItemAdded(item, getRealIndex(pos));
 			}
 		}
-		return v_data.indexOf(item);
+		return pos;
 	}
 	
-	protected Object doCreate(String name, int type) {
-		System.out.println("you should override this if you plan to use it");
-		return null;
-	}
-
-	public boolean canAdd() {
-		return canAdd;
-	}
-
-	public boolean canCopy() {
-		return canCopy;
-	}
-
-	public boolean canEdit() {
-		return canEdit;
-	}
-
-	public boolean canOrder() {
-		return canOrder;
-	}
-
-	public boolean canRemove() {
-		return canRemove;
-	}
-
-	public boolean canFilter() {
-		return canFilter;
-	}
-
-	public boolean hasAction() {
-		return hasAction;
-	}
 
 	public void setFilter(String filter) {
 		if (!canFilter) {
 			return;
 		}
-		this.filter = filter;
+		if (filter.length() == 0) {
+			this.filter = null;
+		} else {
+			this.filter = filter;
+		}
 	}
 	public void run(int i) {
-		// TODO: run
+		if (!hasAction) {
+			return;
+		}
+		int index = getRealIndex(i);
+		doRun(index);
 	}
 	public Vector getObjectType() {
 		return null;
@@ -171,7 +160,27 @@ public class SimpleGenericList implements GenericList {
 			return false;
 		}
 		int index = getRealIndex(pos);
+		if (index == v_data.size()) {
+			if (!inlineAddDel) {
+				return false;
+			}
+			Object newObj = doCreate((String)o, 0);
+			if (newObj != null) {
+				triggerAdd(newObj);
+				return true;
+			}
+			return false;
+		}
+		if ((o == null || o.equals("")) && inlineAddDel) {
+			int[] t = new int[1];
+			t[0] = pos;
+			remove(t);
+			return true;
+		}
 		Object data = v_data.get(index);
+		if (data.getClass() == o.getClass()) {
+			v_data.setElementAt(o, index);
+		}
 		if (!(data instanceof GsNamedObject)) {
 			return doEdit(data, o);
 		}
@@ -180,13 +189,17 @@ public class SimpleGenericList implements GenericList {
 			return false;
 		}
 		// check that the new name is valid
-		Matcher matcher = Pattern.compile(pattern).matcher(o.toString());
-		if (!matcher.find()) {
-			return false;
-		}
-		for (int i=0 ; i<v_data.size() ; i++) {
-			if (i != index && ((GsNamedObject)v_data.get(i)).getName().equals(o.toString())) {
+		if (pattern != null) {
+			Matcher matcher = Pattern.compile(pattern).matcher(o.toString());
+			if (!matcher.find()) {
 				return false;
+			}
+		}
+		if (enforceUnique ) {
+			for (int i=0 ; i<v_data.size() ; i++) {
+				if (i != index && ((GsNamedObject)v_data.get(i)).getName().equals(o.toString())) {
+					return false;
+				}
 			}
 		}
 		obj.setName(o.toString());
@@ -198,25 +211,9 @@ public class SimpleGenericList implements GenericList {
 	}
 	
 	public Object getElement(int i) {
-		if (filter == null) {
-			return v_data.get(i);
-		}
-		for (int j=0, c=0 ; j<v_data.size() ; j++) {
-			Object o = v_data.get(j);
-			if (match(filter, o)) {
-				if (c == i) {
-					return o;
-				}
-				c++;
-			}
-		}
-		return null;
+		return v_data.get(getRealIndex(i));
 	}
 	
-	public boolean match(String filter, Object o) {
-		return o.toString().toLowerCase().contains(filter.toLowerCase());
-	}
-
 	public int getNbElements() {
 		if (filter == null) {
 			return v_data.size();
@@ -231,7 +228,7 @@ public class SimpleGenericList implements GenericList {
 	}
 
     public boolean moveElement(int src, int dst) {
-    	if (!canOrder) {
+    	if (!canOrder || filter != null) {
     		return false;
     	}
         if (src<0 || dst<0 || src >= v_data.size() || dst>=v_data.size()) {
@@ -247,15 +244,57 @@ public class SimpleGenericList implements GenericList {
 			return false;
 		}
 		for (int i=t_index.length-1 ; i>-1 ; i--) {
-			Object item = v_data.get(t_index[i]);
-			v_data.remove(t_index[i]);
+			int index = getRealIndex(t_index[i]);
+			Object item = v_data.remove(index);
 			if (v_listeners != null) {
 				Iterator it = v_listeners.iterator();
 				while (it.hasNext()) {
-					((GenericListListener)it.next()).itemRemoved(item);
+					((GenericListListener)it.next()).itemRemoved(item, index);
 				}
 			}
 		}
 		return true;
+	}
+	
+	public boolean match(String filter, Object o) {
+		return o.toString().toLowerCase().contains(filter.toLowerCase());
+	}
+	protected Object doCreate(String name, int type) {
+		System.out.println("you should override this if you plan to use it");
+		return null;
+	}
+	protected void doRun(int index) {
+		System.out.println("you should override this if you plan to use it");
+		return;
+	}
+	public boolean canAdd() {
+		return canAdd;
+	}
+	public boolean canCopy() {
+		return canCopy;
+	}
+	public boolean canEdit() {
+		return canEdit;
+	}
+	public boolean canOrder() {
+		return canOrder;
+	}
+	public boolean canRemove() {
+		return canRemove;
+	}
+	public boolean doInlineAddRemove() {
+		return inlineAddDel;
+	}
+	public boolean canFilter() {
+		return canFilter;
+	}
+	public boolean hasAction() {
+		return hasAction;
+	}
+	public Object getAction(int row) {
+		return "->";
+	}
+	public String getName() {
+		return name;
 	}
 }

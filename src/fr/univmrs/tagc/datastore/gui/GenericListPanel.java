@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
@@ -45,9 +47,13 @@ public class GenericListPanel extends JPanel
     StatusTextField t_filter;
     JLabel l_title = new JLabel();
 
+	// TODO: fix ugly hack for the size of the action column
+    int bsize = 25;
+    
 	private GenericPropertyInfo	pinfo;
     
     public GenericListPanel() {
+    	jl.addActionListener(model);
         sp.setViewportView(jl);
         this .setLayout(new GridBagLayout());
 
@@ -188,19 +194,28 @@ public class GenericListPanel extends JPanel
             t_filter.setVisible(false);
             return;
         }
-        
         b_up.setVisible(list.canOrder());
         b_down.setVisible(list.canOrder());
-        b_add.setVisible(list.canAdd());
+        b_add.setVisible(list.canAdd() && !list.doInlineAddRemove());
         b_copy.setVisible(list.canCopy());
-        b_del.setVisible(list.canRemove());
+        b_del.setVisible(list.canRemove() && !list.doInlineAddRemove());
         t_filter.setVisible(list.canFilter());
         if (list.getNbElements() > 0) {
             jl.getSelectionModel().setSelectionInterval(0, 0);
         }
+        if (list != null && list.hasAction()) {
+        	jl.getColumnModel().getColumn(0).setMaxWidth(bsize);
+        }
     }
-    
-    protected void doMoveUp() {
+
+//	public void setBounds(int x, int y, int width, int height) {
+//		super.setBounds(x, y, width, height);
+//        if (list != null && list.hasAction()) {
+//        	jl.getColumnModel().getColumn(0).setMaxWidth(bsize);
+//        }
+//	}
+
+	protected void doMoveUp() {
         if (list == null) {
             return;
         }
@@ -311,7 +326,7 @@ public class GenericListPanel extends JPanel
      * force a refresh of the list
      */
     public void refresh() {
-        model.fireTableStructureChanged();
+        model.fireTableDataChanged();
         refreshHide();
     }
     
@@ -336,6 +351,13 @@ public class GenericListPanel extends JPanel
 	}
 	public void keyReleased(KeyEvent e) {
 		model.setFilter(t_filter.getText());
+		if (t_filter.getText().length() > 0) {
+			b_down.setEnabled(false);
+			b_up.setEnabled(false);
+		} else {
+			b_down.setEnabled(true);
+			b_up.setEnabled(true);
+		}
 	}
 	public void keyPressed(KeyEvent e) {
 	}
@@ -354,15 +376,16 @@ public class GenericListPanel extends JPanel
 	}
 }
 
-class listModel extends AbstractTableModel implements GenericListListener {
+class listModel extends AbstractTableModel implements GenericListListener, TableActionListener {
     private static final long serialVersionUID = 886643323547667463L;
     
     private GenericList list;
-    
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 0 && list.canEdit();
-    }
+    private int lastLineInc = 0;
+    private Map m_button = new HashMap();
 
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return list.canEdit() && (!list.hasAction() || columnIndex == 1);
+    }
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         list.edit(rowIndex, aValue);
     }
@@ -371,26 +394,58 @@ class listModel extends AbstractTableModel implements GenericListListener {
         if (list == null) {
             return null;
         }
+        if (lastLineInc != 0 && row == list.getNbElements()) {
+        	return "";
+        }
+        if (list.hasAction() && col == 0) {
+        	Object oa = list.getAction(row);
+        	if (oa == null || "".equals(oa)) {
+        		return "";
+        	}
+        	JButton b = (JButton)m_button.get(oa);
+        	if (b == null) {
+        		if (oa instanceof String) {
+        			b = new JButton((String)oa);
+        		} else if (oa instanceof Icon) {
+        			b = new JButton((Icon)oa);
+        		} else {
+        			return "";
+        		}
+        		b.setBorder(BorderFactory.createEmptyBorder());
+        		m_button.put(oa, b);
+        	}
+        	return b;
+        }
         return list.getElement(row);
     }
-
-    public int getRowCount() {
+    public Class getColumnClass(int columnIndex) {
+    	if (list.hasAction() && columnIndex == 0) {
+    		return JButton.class;
+    	}
+		return super.getColumnClass(columnIndex);
+	}
+	public int getRowCount() {
         if (list == null) {
             return 0;
         }
-        return list.getNbElements();
+        return list.getNbElements()+lastLineInc;
     }
     public int getColumnCount() {
         if (list == null) {
             return 0;
         }
+        if (list.hasAction()) {
+        	return 2;
+        }
         return 1;
     }
     
     public String getColumnName(int column) {
+    	if (list != null && (!list.hasAction() || column == 1)) {
+    		return list.getName();
+    	}
         return "";
     }
-
     public void setFilter(String filter) {
     	if (list == null || !list.canFilter()) {
     		return;
@@ -401,30 +456,29 @@ class listModel extends AbstractTableModel implements GenericListListener {
     void setList(GenericList list) {
         this.list = list;
         list.addListListener(this);
+        if (list.doInlineAddRemove()) {
+        	lastLineInc = 1;
+        } else {
+        	lastLineInc = 0;
+        }
         fireTableStructureChanged();
     }
-    
     void firechange(int min, int max) {
         fireTableRowsUpdated(min, max);
     }
-
-	public void refresh() {
-		fireTableStructureChanged();
-	}
-
 	public void ContentChanged() {
 		fireTableDataChanged();
 	}
-
-	public void ItemAdded(Object item) {
-		fireTableRowsInserted(0, list.getNbElements());
+	public void ItemAdded(Object item, int pos) {
+		fireTableRowsInserted(pos, pos);
 	}
-
 	public void StructureChanged() {
 		fireTableStructureChanged();
 	}
-
-	public void itemRemoved(Object item) {
-		fireTableRowsDeleted(0, list.getNbElements());
+	public void itemRemoved(Object item, int pos) {
+		fireTableRowsDeleted(pos, pos);
+	}
+	public void actionPerformed(int row, int col) {
+		list.run(row);
 	}
 }

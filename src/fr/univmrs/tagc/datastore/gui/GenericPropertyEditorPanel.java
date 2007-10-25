@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.MinMaxSpinModel;
 import fr.univmrs.tagc.datastore.ObjectEditor;
+import fr.univmrs.tagc.datastore.models.MinMaxSpinModel;
 import fr.univmrs.tagc.widgets.StatusTextField;
 
 /**

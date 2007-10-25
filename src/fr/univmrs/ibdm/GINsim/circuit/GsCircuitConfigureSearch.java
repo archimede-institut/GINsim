@@ -9,9 +9,9 @@ import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.datastore.MaxSpinModel;
-import fr.univmrs.tagc.datastore.MinMaxSpinModel;
-import fr.univmrs.tagc.datastore.MinSpinModel;
+import fr.univmrs.tagc.datastore.models.MaxSpinModel;
+import fr.univmrs.tagc.datastore.models.MinMaxSpinModel;
+import fr.univmrs.tagc.datastore.models.MinSpinModel;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**

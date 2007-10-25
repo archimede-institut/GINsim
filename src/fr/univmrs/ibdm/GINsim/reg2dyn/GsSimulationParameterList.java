@@ -164,10 +164,10 @@ public class GsSimulationParameterList extends SimpleGenericList
 		return parameter;
 	}
 
-	public void ItemAdded(Object item) {
+	public void ItemAdded(Object item, int pos) {
 	}
 
-	public void itemRemoved(Object item) {
+	public void itemRemoved(Object item, int pos) {
 		for (int i=0 ; i<v_data.size() ; i++) {
 			GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
 			if (param.m_initState != null) {

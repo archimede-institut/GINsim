@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.datastore;
+package fr.univmrs.tagc.datastore.models;
 
 import javax.swing.JSpinner;
 

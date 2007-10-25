@@ -9,9 +9,9 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsVertexMinMaxSpinModel;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.MinMaxSpinModel;
 import fr.univmrs.tagc.datastore.ObjectEditor;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
+import fr.univmrs.tagc.datastore.models.MinMaxSpinModel;
 
 public class RegulatoryVertexEditor extends ObjectEditor {
 

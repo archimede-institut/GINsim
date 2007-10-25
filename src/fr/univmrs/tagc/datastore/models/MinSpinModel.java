@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.datastore;
+package fr.univmrs.tagc.datastore.models;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -7,18 +7,18 @@ import javax.swing.AbstractSpinnerModel;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 
-
 /**
- * model for a max spinbutton, depends on a GsMinMaxSpinModel
+ * model for a min spinbutton, depends on a GsMinMaxSpinModel
  */
-public class MaxSpinModel extends AbstractSpinnerModel {
-
-    private MinMaxSpinModel minmax;
+public class MinSpinModel extends AbstractSpinnerModel {
+    
+    MinMaxSpinModel minmax;
     private JTextField editor;
+    
     /**
      * @param minmax the real model
      */
-    public MaxSpinModel(MinMaxSpinModel minmax) {
+    public MinSpinModel(MinMaxSpinModel minmax) {
         this.minmax = minmax;
         editor = new JTextField();
         editor.addFocusListener(new FocusListener() {
@@ -31,25 +31,25 @@ public class MaxSpinModel extends AbstractSpinnerModel {
     }
 
     public Object getNextValue() {
-        Object ret = minmax.getNextMaxValue();
+        Object ret = minmax.getNextMinValue();
         editor.setText(ret.toString());
         return ret;
     }
 
     public Object getPreviousValue() {
-        Object ret = minmax.getPreviousMaxValue();
+        Object ret = minmax.getPreviousMinValue();
         editor.setText(ret.toString());
         return ret;
     }
 
     public Object getValue() {
-        Object ret = minmax.getMaxValue();
+        Object ret = minmax.getMinValue();
         editor.setText(ret.toString());
         return ret;
     }
 
     public void setValue(Object value) {
-        minmax.setMaxValue(value);
+        minmax.setMinValue(value);
         update();
     }
 
@@ -57,15 +57,15 @@ public class MaxSpinModel extends AbstractSpinnerModel {
      * update the display
      */
     public void update() {
-        editor.setText(minmax.getMaxValue().toString());
+        editor.setText(minmax.getMinValue().toString());
         fireStateChanged();
     }
-
+    
     protected void applyEditor() {
-        minmax.setMaxValue(editor.getText());
+        minmax.setMinValue(editor.getText());
         update();
     }
-
+    
     /**
      * @return the associated editor.
      */

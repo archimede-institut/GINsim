@@ -1,19 +1,21 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsAnnotationTableModel;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
 /**
  * Panel to edit annotations
@@ -25,10 +27,9 @@ public class GsAnnotationPanel extends GsParameterPanel
 
 	private GsAnnotation currentNote = null;
     private boolean listenChanges = true;
-	
-	private JTable jTable = null;
+	SimpleGenericList linkList;
+	GenericListPanel linkListPanel = null;
 	private JScrollPane jScrollPane = null;
-	private JScrollPane jScrollPane1 = null;
 	private JTextArea jTextArea = null;
 
 	private GenericPropertyInfo	pinfo;
@@ -54,36 +55,30 @@ public class GsAnnotationPanel extends GsParameterPanel
         gridBagConstraints15.weightx = 1.0;
         gridBagConstraints15.weighty = 1.0;
         gridBagConstraints15.fill = java.awt.GridBagConstraints.BOTH;
-        this.add(getJScrollPane(), gridBagConstraints15);
+        this.add(getLinkList(), gridBagConstraints15);
         this.setPreferredSize(new java.awt.Dimension(800,60));
         gridBagConstraints16.weightx = 1.0;
         gridBagConstraints16.weighty = 1.0;
         gridBagConstraints16.fill = java.awt.GridBagConstraints.BOTH;
-        this.add(getJScrollPane1(), gridBagConstraints16);
+        this.add(getJScrollPane(), gridBagConstraints16);
 	}
     public void setEditedObject(Object obj) {
         if (obj != null && obj instanceof GsAnnotation) {
             listenChanges = false;
             currentNote = (GsAnnotation)obj;
-            ((GsAnnotationTableModel)jTable.getModel()).setLinkList(currentNote.getLinkList());
+            linkList.setData(currentNote.getLinkList());
             jTextArea.setText(currentNote.getComment());
             listenChanges = true;
         }
     }
-    
-	/**
-	 * This method initializes jTable	
-	 * 	
-	 * @return javax.swing.JTable	
-	 */    
-	private JTable getJTable() {
-		if (jTable == null) {
-			jTable = new JTable();
-			jTable.setModel(new GsAnnotationTableModel());
-            jTable.getModel().addTableModelListener(this);
-		}
-		return jTable;
-	}
+    public Component getLinkList() {
+    	if (linkListPanel == null) {
+    		linkList = new LinkList();
+    		linkListPanel = new GenericListPanel();
+    		linkListPanel.setList(linkList);
+    	}
+    	return linkListPanel;
+    }
 	/**
 	 * This method initializes jScrollPane	
 	 * 	
@@ -92,21 +87,9 @@ public class GsAnnotationPanel extends GsParameterPanel
 	private JScrollPane getJScrollPane() {
 		if (jScrollPane == null) {
 			jScrollPane = new JScrollPane();
-			jScrollPane.setViewportView(getJTable());
+			jScrollPane.setViewportView(getJTextArea());
 		}
 		return jScrollPane;
-	}
-	/**
-	 * This method initializes jScrollPane	
-	 * 	
-	 * @return javax.swing.JScrollPane	
-	 */    
-	private JScrollPane getJScrollPane1() {
-		if (jScrollPane1 == null) {
-			jScrollPane1 = new JScrollPane();
-			jScrollPane1.setViewportView(getJTextArea());
-		}
-		return jScrollPane1;
 	}
 	/**
 	 * This method initializes jTextArea	
@@ -152,5 +135,21 @@ public class GsAnnotationPanel extends GsParameterPanel
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
 		panel.addField(this, pinfo, 0);
+	}
+}
+
+class LinkList extends SimpleGenericList {
+	LinkList() {
+		canAdd = true;
+		hasAction = true;
+		canRemove = true;
+		canEdit = true;
+		inlineAddDel = true;
+	}
+	public Object doCreate(String name, int type) {
+		return name;
+	}
+	public void doRun(int index) {
+		Tools.webBrowse((String)v_data.get(index));
 	}
 }

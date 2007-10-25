@@ -497,12 +497,6 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         refresh();
     }
     
-//    protected void mutantChanged() {
-//    	if (currentParameter != null && mutantPanel != null) {
-//    		currentParameter.mutant = mutantPanel.getMutant();
-//    	}
-//    }
-    
     private void refresh() {
         refreshing = true;
         if (currentParameter == null) {
