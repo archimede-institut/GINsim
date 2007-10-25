@@ -21,6 +21,8 @@
 package fr.univmrs.ibdm.GINsim.manageressources;
 
 import java.awt.Image;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Stack;
 
@@ -88,12 +90,22 @@ public class ImageLoader {
      */
     public static URL getImagePath(int searchPathIndex , String imageName){
         // precondition test
-        if (imageName == null)
-            return null;
+        if (imageName == null) {
+			return null;
+		}
             
         // image loading
         if (searchPathIndex < searchPath.size() && searchPathIndex >= 0){
-            URL url = ImageLoader.class.getResource(((String)searchPath.get(searchPathIndex)) + imageName) ;
+        	String s_url = (String)searchPath.get(searchPathIndex) + imageName;
+            URL url = ImageLoader.class.getResource(s_url) ;
+            if (url == null) {
+            	File f = new File(s_url);
+            	if (f.exists()) {
+            		try {
+						return new URL("file", "", f.getAbsolutePath());
+					} catch (MalformedURLException e) {}
+            	}
+            }
             if (url != null){
                 return url;
             }

@@ -241,20 +241,26 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", GsEnv.getIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
         return v_mode;
     }
-
+    public boolean idExists(String newId) {
+        Iterator it = graphManager.getVertexIterator();
+        while (it.hasNext()) {
+            if (newId.equals(((GsRegulatoryVertex)it.next()).getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
     public void changeVertexId(Object vertex, String newId) throws GsException {
         GsRegulatoryVertex rvertex = (GsRegulatoryVertex)vertex;
         if (newId.equals(rvertex.getId())) {
             return;
         }
-
-        Iterator it = graphManager.getVertexIterator();
-        while (it.hasNext()) {
-            if (newId.equals(((GsRegulatoryVertex)it.next()).getId())) {
-                throw  new GsException(GsException.GRAVITY_ERROR, "id already exists");
-            }
+        if (idExists(newId)) {
+        	throw  new GsException(GsException.GRAVITY_ERROR, "id already exists");
         }
-        rvertex.setId(newId);
+        if (!rvertex.setId(newId)) {
+        	throw  new GsException(GsException.GRAVITY_ERROR, "invalid id");
+        }
         fireMetaChange();
     }
 

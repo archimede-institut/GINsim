@@ -22,10 +22,10 @@ public class SimpleGenericList implements GenericList {
 	public boolean canRemove = false;
 	public boolean canEdit = false;
 	public boolean canOrder = false;
-	public boolean canFilter = true;
 	public boolean hasAction = false;
 	public boolean enforceUnique = true;
 	public boolean inlineAddDel = false;
+	public int	   filterTh = 10;
 	
 	
 	public SimpleGenericList(Vector v_data) {
@@ -41,7 +41,7 @@ public class SimpleGenericList implements GenericList {
 		}
 		Iterator it = v_listeners.iterator();
 		while (it.hasNext()) {
-			((GenericListListener)it.next()).ContentChanged();
+			((GenericListListener)it.next()).contentChanged();
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class SimpleGenericList implements GenericList {
 		if (v_listeners != null) {
 			Iterator it = v_listeners.iterator();
 			while (it.hasNext()) {
-				((GenericListListener)it.next()).ItemAdded(item, getRealIndex(pos));
+				((GenericListListener)it.next()).itemAdded(item, getRealIndex(pos));
 			}
 		}
 		return pos;
@@ -113,10 +113,7 @@ public class SimpleGenericList implements GenericList {
 	
 
 	public void setFilter(String filter) {
-		if (!canFilter) {
-			return;
-		}
-		if (filter.length() == 0) {
+		if (getNbElements() < filterTh || filter.length() == 0) {
 			this.filter = null;
 		} else {
 			this.filter = filter;
@@ -249,7 +246,16 @@ public class SimpleGenericList implements GenericList {
 			if (v_listeners != null) {
 				Iterator it = v_listeners.iterator();
 				while (it.hasNext()) {
-					((GenericListListener)it.next()).itemRemoved(item, index);
+					((GenericListListener)it.next()).itemRemoved(item, t_index[i]);
+				}
+			}
+		}
+		if (filter != null && getNbElements()<filterTh) {
+			filter = null;
+			if (v_listeners != null) {
+				Iterator it = v_listeners.iterator();
+				while (it.hasNext()) {
+					((GenericListListener)it.next()).contentChanged();
 				}
 			}
 		}
@@ -285,8 +291,8 @@ public class SimpleGenericList implements GenericList {
 	public boolean doInlineAddRemove() {
 		return inlineAddDel;
 	}
-	public boolean canFilter() {
-		return canFilter;
+	public int filterThreshold() {
+		return filterTh;
 	}
 	public boolean hasAction() {
 		return hasAction;

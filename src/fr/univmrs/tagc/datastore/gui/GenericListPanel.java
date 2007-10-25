@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.datastore.gui;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -15,7 +14,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.GenericListListener;
@@ -23,6 +21,7 @@ import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 import fr.univmrs.tagc.widgets.StatusTextField;
+import fr.univmrs.tagc.widgets.StockButton;
 
 /**
  * Generic UI to display the content of a list.
@@ -70,6 +69,7 @@ public class GenericListPanel extends JPanel
         c.gridx = 1;
         c.gridy = 1;
         c.weightx = 1;
+        c.gridwidth = 2;
         c.fill = GridBagConstraints.BOTH;
         t_filter = new StatusTextField("filter", true);
         t_filter.addKeyListener(this);
@@ -78,7 +78,7 @@ public class GenericListPanel extends JPanel
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 2;
-        c.gridheight = 5;
+        c.gridheight = 6;
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
@@ -86,9 +86,8 @@ public class GenericListPanel extends JPanel
         
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 3;
-        b_del = new JButton("X");
-        b_del.setForeground(Color.RED);
+        c.gridy = 4;
+        b_del = new StockButton("list-remove.png", true);
         b_del.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 doRemove();
@@ -98,8 +97,8 @@ public class GenericListPanel extends JPanel
         
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 1;
-        b_add = new JButton("+");
+        c.gridy = 2;
+        b_add = new StockButton("list-add.png", true);
         b_add.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 doAdd();
@@ -109,8 +108,8 @@ public class GenericListPanel extends JPanel
         
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 2;
-        b_copy = new JButton(Translator.getString("STR_copy"));
+        c.gridy = 3;
+        b_copy = new StockButton(Translator.getString("STR_copy"));
         b_copy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 doCopy();
@@ -120,8 +119,8 @@ public class GenericListPanel extends JPanel
         
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 4;
-        b_up = new JButton(GsEnv.getIcon("upArrow.gif"));
+        c.gridy = 5;
+        b_up = new StockButton("go-up.png", true);
         b_up.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 doMoveUp();
@@ -131,8 +130,8 @@ public class GenericListPanel extends JPanel
         
         c = new GridBagConstraints();
         c.gridx = 2;
-        c.gridy = 5;
-        b_down = new JButton(GsEnv.getIcon("downArrow.gif"));
+        c.gridy = 6;
+        b_down = new StockButton("go-down.png", true);
         b_down.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 doMoveDown();
@@ -184,7 +183,7 @@ public class GenericListPanel extends JPanel
      */
     public void setList(GenericList list) {
         this.list = list;
-        model.setList(list);
+        model.setList(list, this);
         if (list == null) {
             b_up.setVisible(false);
             b_down.setVisible(false);
@@ -199,21 +198,22 @@ public class GenericListPanel extends JPanel
         b_add.setVisible(list.canAdd() && !list.doInlineAddRemove());
         b_copy.setVisible(list.canCopy());
         b_del.setVisible(list.canRemove() && !list.doInlineAddRemove());
-        t_filter.setVisible(list.canFilter());
         if (list.getNbElements() > 0) {
             jl.getSelectionModel().setSelectionInterval(0, 0);
         }
-        if (list != null && list.hasAction()) {
+        if (list.hasAction()) {
         	jl.getColumnModel().getColumn(0).setMaxWidth(bsize);
         }
     }
-
-//	public void setBounds(int x, int y, int width, int height) {
-//		super.setBounds(x, y, width, height);
-//        if (list != null && list.hasAction()) {
-//        	jl.getColumnModel().getColumn(0).setMaxWidth(bsize);
-//        }
-//	}
+    
+    protected void updateFilter() {
+    	boolean cur = t_filter.isVisible();
+    	boolean next = list.getNbElements() > list.filterThreshold();
+    	if (cur != next) {
+    		t_filter.setVisible(next);
+    		getLayout().layoutContainer(this);
+    	}
+    }
 
 	protected void doMoveUp() {
         if (list == null) {
@@ -380,6 +380,7 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     private static final long serialVersionUID = 886643323547667463L;
     
     private GenericList list;
+    private GenericListPanel panel;
     private int lastLineInc = 0;
     private Map m_button = new HashMap();
 
@@ -447,36 +448,42 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
         return "";
     }
     public void setFilter(String filter) {
-    	if (list == null || !list.canFilter()) {
+    	if (list == null) {
     		return;
     	}
     	list.setFilter(filter);
     	fireTableDataChanged();
     }
-    void setList(GenericList list) {
+    void setList(GenericList list, GenericListPanel panel) {
         this.list = list;
+        this.panel = panel;
         list.addListListener(this);
         if (list.doInlineAddRemove()) {
         	lastLineInc = 1;
         } else {
         	lastLineInc = 0;
         }
-        fireTableStructureChanged();
+        structureChanged();
     }
     void firechange(int min, int max) {
         fireTableRowsUpdated(min, max);
+		panel.updateFilter();
     }
-	public void ContentChanged() {
+	public void contentChanged() {
 		fireTableDataChanged();
+		panel.updateFilter();
 	}
-	public void ItemAdded(Object item, int pos) {
+	public void itemAdded(Object item, int pos) {
 		fireTableRowsInserted(pos, pos);
+		panel.updateFilter();
 	}
-	public void StructureChanged() {
+	public void structureChanged() {
 		fireTableStructureChanged();
+		panel.updateFilter();
 	}
 	public void itemRemoved(Object item, int pos) {
 		fireTableRowsDeleted(pos, pos);
+		panel.updateFilter();
 	}
 	public void actionPerformed(int row, int col) {
 		list.run(row);

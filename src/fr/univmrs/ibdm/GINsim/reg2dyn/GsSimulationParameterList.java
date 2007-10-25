@@ -164,7 +164,7 @@ public class GsSimulationParameterList extends SimpleGenericList
 		return parameter;
 	}
 
-	public void ItemAdded(Object item, int pos) {
+	public void itemAdded(Object item, int pos) {
 	}
 
 	public void itemRemoved(Object item, int pos) {
@@ -176,8 +176,8 @@ public class GsSimulationParameterList extends SimpleGenericList
 		}
 	}
 
-	public void ContentChanged() {
+	public void contentChanged() {
 	}
-	public void StructureChanged() {
+	public void structureChanged() {
 	}
 }

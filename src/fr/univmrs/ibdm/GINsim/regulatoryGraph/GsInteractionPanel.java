@@ -1,6 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -10,7 +13,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicPathItemCellRenderer;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
@@ -21,6 +23,7 @@ import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.StockButton;
 
 /**
  * Panel to edit interaction of a gene
@@ -245,10 +248,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	 */
 	private JButton getJButton() {
 		if (jButton == null) {
-			jButton = new JButton("X");
-            jButton.setForeground(Color.RED);
-			jButton.setPreferredSize(new java.awt.Dimension(54,25));
-			jButton.setName("jButton");
+			jButton = new StockButton("list-remove.png", true);
 			jButton.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					deleteInteraction();
@@ -264,8 +264,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	 */
 	private JButton getJButton2() {
 		if (jButton2 == null) {
-			jButton2 = new JButton("<<");
-			jButton2.setName("jButton2");
+			jButton2 = new StockButton("go-previous.png", true);
 			jButton2.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					insertRight2Left();
@@ -282,9 +281,7 @@ public class GsInteractionPanel extends GsParameterPanel
      */
     private javax.swing.JButton getUpButton() {
         if(upButton == null) {
-            upButton = new javax.swing.JButton(GsEnv.getIcon("upArrow.gif"));
-            upButton.setName("upButton");
-            upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+			upButton = new StockButton("go-up.png", true);
             upButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     moveUp();
@@ -334,8 +331,7 @@ public class GsInteractionPanel extends GsParameterPanel
      */
     private javax.swing.JButton getDownButton() {
         if(downButton == null) {
-            downButton = new javax.swing.JButton(GsEnv.getIcon("downArrow.gif"));
-            downButton.setName("downButton");
+			downButton = new StockButton("go-down.png", true);
             downButton.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     moveDown();
@@ -456,7 +452,7 @@ public class GsInteractionPanel extends GsParameterPanel
 
 	private javax.swing.JButton getChaosButton() {
       if(chaosButton == null) {
-        chaosButton = new javax.swing.JButton(GsEnv.getIcon("chaos.png"));
+        chaosButton = new StockButton("chaos.png", false);
         chaosButton.setName("chaosButton");
         chaosButton.setToolTipText("Are you sure ?");
         chaosButton.addActionListener(new java.awt.event.ActionListener() {

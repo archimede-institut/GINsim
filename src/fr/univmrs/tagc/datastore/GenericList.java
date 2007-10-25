@@ -39,7 +39,7 @@ public interface GenericList {
      * 
      * @return true if this list can be filtered
      */
-    public boolean canFilter();
+    public int filterThreshold();
     /**
      * @return true if the entries have an associated action (see <code>run(int)</code> to launch it)
      */

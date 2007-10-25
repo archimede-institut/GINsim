@@ -103,7 +103,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		try {
 			switch (prop) {
 				case PROP_ID:
-					return Tools.isValidId(value);
+					return Tools.isValidId(value) && !graph.idExists(value);
 				case PROP_NAME:
 					return true;
 				case PROP_MAX:
