@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Constructor;
 import java.util.EventObject;
 import java.util.Iterator;
 import java.util.Vector;
@@ -28,6 +29,27 @@ public class EnhancedJTable extends JTable {
 
     private Vector v_actionListeners;
     
+    public void addCellEditor(Class cl, TableCellEditor ied) {
+            setDefaultEditor(cl, ied);
+    }
+    public void addCellRenderer(Class cl, Class rd) {
+        TableCellRenderer defaultRenderer;
+        Class[] t_cstr = {TableCellRenderer.class};
+        Object[] t_args = new Object[1];
+        defaultRenderer = getDefaultRenderer(cl);
+        TableCellRenderer ird;
+		try {
+			Constructor cstr = rd.getConstructor(t_cstr);
+			t_args[0] = defaultRenderer;
+			ird = (TableCellRenderer)cstr.newInstance(t_args);
+            setDefaultRenderer(cl, ird);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+    }
+    
+    static {
+    }
     /** 
      */
     public EnhancedJTable() {
@@ -39,19 +61,13 @@ public class EnhancedJTable extends JTable {
      */
     public EnhancedJTable(TableModel model) {
         super(model);
-        putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-        setDefaultEditor(ValueList.class, new ValueInListCellEditor());
-
-        TableCellRenderer defaultRenderer;
-        
-        defaultRenderer = getDefaultRenderer(JButton.class);
-        setDefaultRenderer(JButton.class,
-                new JTableButtonRenderer(defaultRenderer));
-        setDefaultRenderer(JComponent.class,
-                new JTableButtonRenderer(defaultRenderer));
+        // add some custom stuff
+    	addCellRenderer(JComponent.class, JTableButtonRenderer.class);
+    	addCellEditor(ValueList.class, new ValueInListCellEditor());
         addMouseListener(new JTableButtonMouseListener(this));
+        putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     }
-
+    
     protected boolean processKeyBinding(KeyStroke ks, KeyEvent e,
             int condition, boolean pressed) {
         Component editorComponent = getEditorComponent();
@@ -115,7 +131,7 @@ class JTableButtonRenderer implements TableCellRenderer {
      * @param renderer
      */
     public JTableButtonRenderer(TableCellRenderer renderer) {
-      __defaultRenderer = renderer;
+    	__defaultRenderer = renderer;
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
@@ -155,6 +171,11 @@ class JTableButtonMouseListener implements MouseListener {
               __table.click(row, column);
           }
       }
+      
+      if (value instanceof Component) {
+    	  // TODO: forward click!
+      }
+      
       __table.repaint();
     }
 

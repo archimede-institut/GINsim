@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.datastore;
 
+import java.util.Map;
 import java.util.Vector;
 
 
@@ -63,6 +64,8 @@ public interface GenericList {
      * @return the list of available types, or null if none.
      */
     public Vector getObjectType();
+    
+    public Map getCellEditor();
     
     /**
      * edit an element.

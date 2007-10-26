@@ -26,10 +26,14 @@ public abstract class ObjectEditor {
 	
 	public void setEditedObject(Object o) {
 		this.o = o;
+		refresh(true);
+	}
+	
+	public void refresh(boolean force) {
 		if (v_listener != null) {
 			Iterator it = v_listener.iterator();
 			while (it.hasNext()) {
-				((ObjectPropertyEditorUI)it.next()).refresh(true);
+				((ObjectPropertyEditorUI)it.next()).refresh(force);
 			}
 		}
 	}

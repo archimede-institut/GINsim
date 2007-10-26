@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.datastore;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -302,5 +303,8 @@ public class SimpleGenericList implements GenericList {
 	}
 	public String getName() {
 		return name;
+	}
+	public Map getCellEditor() {
+		return null;
 	}
 }

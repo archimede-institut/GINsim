@@ -280,7 +280,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @param min the new min value.
 	 */
 	public void setMin(int index, short min) {
-		if (index >= edgecount) {
+		if (index >= edgecount || min < 1 || min > source.getMaxValue()) {
 			return;
 		}
 		int cur = edges[index].threshold;

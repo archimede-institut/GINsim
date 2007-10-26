@@ -37,6 +37,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 
     GsParameterPanel edgePanel = null;
     ObjectEditor vertexEditor = null;
+	private ObjectEditor	edgeEditor;
 
     private static GsGraph copiedGraph = null;
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
@@ -219,13 +220,12 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         ((GsRegulatoryMultiEdge)((GsDirectedEdge)edge).getUserObject()).addEdge(this);
     }
 
-    public GsParameterPanel getEdgeAttributePanel() {
-        if (edgePanel == null) {
-            edgePanel = new GsRegulatoryEdgeAttributePanel(mainFrame);
-        }
-        return edgePanel;
+    public ObjectEditor getEdgeEditor() {
+    	if (edgeEditor == null) {
+    		edgeEditor = new RegulatoryEdgeEditor(this);
+    	}
+    	return edgeEditor;
     }
-
     public ObjectEditor getVertexEditor() {
     	if (vertexEditor == null) {
     		vertexEditor = new RegulatoryVertexEditor(this);

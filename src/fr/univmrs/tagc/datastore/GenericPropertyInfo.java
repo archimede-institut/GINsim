@@ -29,6 +29,9 @@ public class GenericPropertyInfo {
     public boolean isValidValue(String value) {
     	return editor.isValidValue(id, value);
     }
+	public void setValue(int value) {
+		editor.setValue(id, value);
+	}
 	public void setValue(String value) {
 		editor.setValue(id, value);
 	}

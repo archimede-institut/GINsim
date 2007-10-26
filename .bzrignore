@@ -1,6 +1,7 @@
 bin
 build
 classes
+core
 bak
 bin/**/*
 bak/**/*

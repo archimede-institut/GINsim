@@ -8,11 +8,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
+import java.util.Map.Entry;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.tagc.datastore.GenericList;
@@ -36,6 +41,7 @@ public class GenericListPanel extends JPanel
     GenericList list;
     listModel model = new listModel();
     EnhancedJTable jl = new EnhancedJTable(model);
+    boolean rendererInstalled = false;
     int autohide = -1;
     
     JButton b_up;
@@ -53,6 +59,11 @@ public class GenericListPanel extends JPanel
     
     public GenericListPanel() {
     	jl.addActionListener(model);
+    	jl.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                updateSelection();
+            }
+        });
         sp.setViewportView(jl);
         this .setLayout(new GridBagLayout());
 
@@ -140,6 +151,11 @@ public class GenericListPanel extends JPanel
         this.add(b_down, c);
     }
 
+    protected void updateSelection() {
+    	if (pinfo != null) {
+    		pinfo.setValue(jl.getSelectedRow());
+    	}
+    }
     /**
      * set when to autohide most of this widget.
      * (when the list contains <code>autohide</code> elements or less, 
@@ -366,13 +382,32 @@ public class GenericListPanel extends JPanel
 	}
 
 	public void refresh(boolean force) {
-		setList((GenericList)pinfo.getRawValue());
+		if (force) {
+			setList((GenericList)pinfo.getRawValue());
+		}
 	}
 
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
 		panel.addField(this, pinfo, 0);
+	}
+
+	public void installEditor() {
+		if (!rendererInstalled) {
+			Map m = list.getCellEditor();
+			rendererInstalled = true;
+			if (m == null) {
+				return;
+			}
+	        // FIXME: put row height at the right place...
+	        jl.setRowHeight(35);
+			Iterator it = m.entrySet().iterator();
+			while (it.hasNext()) {
+				Entry e = (Entry)it.next();
+				jl.addCellEditor((Class)e.getKey(), (TableCellEditor)e.getValue());
+			}
+		}
 	}
 }
 
@@ -383,6 +418,7 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     private GenericListPanel panel;
     private int lastLineInc = 0;
     private Map m_button = new HashMap();
+    private Vector v_type;
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return list.canEdit() && (!list.hasAction() || columnIndex == 1);
@@ -423,6 +459,10 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     	if (list.hasAction() && columnIndex == 0) {
     		return JButton.class;
     	}
+    	if (v_type != null) {
+    		panel.installEditor();
+    		return (Class)v_type.get(list.hasAction() ? columnIndex-1 : columnIndex);
+    	}
 		return super.getColumnClass(columnIndex);
 	}
 	public int getRowCount() {
@@ -457,6 +497,7 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     void setList(GenericList list, GenericListPanel panel) {
         this.list = list;
         this.panel = panel;
+        this.v_type = list.getObjectType();
         list.addListListener(this);
         if (list.doInlineAddRemove()) {
         	lastLineInc = 1;
