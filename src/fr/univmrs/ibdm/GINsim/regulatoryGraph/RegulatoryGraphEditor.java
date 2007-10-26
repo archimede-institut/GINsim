@@ -2,7 +2,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
@@ -32,7 +32,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 		pinfo.addPosition(0, 1, 2, 1, 1, 1, GridBagConstraints.SOUTH);
 		pinfo.data = nodeList;
 		v_prop.add(pinfo);
-		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), GsAnnotation.class);
+		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
 		pinfo.addPosition(3, 0, 1, 2, 4, 1, GridBagConstraints.SOUTH);
 		v_prop.add(pinfo);
 	}

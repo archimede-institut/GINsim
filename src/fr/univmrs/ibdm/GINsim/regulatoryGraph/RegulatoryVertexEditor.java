@@ -3,7 +3,8 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 import java.awt.GridBagConstraints;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
+import fr.univmrs.ibdm.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionPanel;
@@ -27,7 +28,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	GsRegulatoryGraph graph;
 
 	static {
-		GenericPropertyEditorPanel.addSupportedClass(GsAnnotation.class, GsAnnotationPanel.class);
+		GenericPropertyEditorPanel.addSupportedClass(Annotation.class, AnnotationPanel.class);
 		GenericPropertyEditorPanel.addSupportedClass(GsRegulatoryVertex.class, GsInteractionPanel.class);
 		GenericPropertyEditorPanel.addSupportedClass(GsLogicalFunctionPanel.class, GsLogicalFunctionPanel.class);
 	}
@@ -48,7 +49,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 
 		// build the group [note, parameter, function]
 		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
-		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), GsAnnotation.class);
+		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
 		t[0] = pinfo;
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_parameters"), GsRegulatoryVertex.class);
 		pinfo.data = graph;

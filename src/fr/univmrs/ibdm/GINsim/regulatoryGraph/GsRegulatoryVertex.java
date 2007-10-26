@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
 import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
@@ -35,7 +35,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	private Vector 			v_logicalParameters;
 
 	private String 			name;
-	private GsAnnotation	gsa;
+	private Annotation	gsa;
 	private String 			id;
 
 	private GsTreeInteractionsModel interactionsModel;
@@ -57,7 +57,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		name			= "";
 		baseValue 		= 0;
 		maxValue 		= 1;
-		gsa				= new GsAnnotation();
+		gsa				= new Annotation();
 		v_logicalParameters 	= new Vector();
 		this.id = id;
 		this.graph = graph;
@@ -72,7 +72,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		name			= "";
 		baseValue 		= 0;
 		maxValue 		= 1;
-		gsa				= new GsAnnotation();
+		gsa				= new Annotation();
 		v_logicalParameters 	= new Vector();
 		this.id = "G"+num;
 		this.graph = graph;
@@ -252,7 +252,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * get notes on this gene.
 	 * @return the annotation associated to this node
 	 */
-	public GsAnnotation getAnnotation() {
+	public Annotation getAnnotation() {
 		return gsa;
 	}
 
@@ -328,14 +328,14 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	/**
 	 * @return annotation for this node
 	 */
-	public GsAnnotation getGsa() {
+	public Annotation getGsa() {
 		return gsa;
 	}
 
 	/**
 	 * @param annotation for this node.
 	 */
-	public void setGsa(GsAnnotation annotation) {
+	public void setGsa(Annotation annotation) {
 		gsa = annotation;
 	}
 
@@ -352,7 +352,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		clone.maxValue = maxValue;
 		clone.baseValue = baseValue;
 		clone.name = name;
-		clone.setGsa((GsAnnotation)gsa.clone());
+		clone.setGsa((Annotation)gsa.clone());
 		return clone;
 	}
 

@@ -15,11 +15,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import fr.univmrs.ibdm.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsAnnotationPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -194,7 +194,7 @@ class MutantPanel extends JSplitPane {
     GsRegulatoryMutantDef curMutant = null;
     private GsRegulatoryMutants mutants;
     Vector v_nodeOrder;
-    GsAnnotationPanel ap;
+    AnnotationPanel ap;
     
     MutantPanel() {
         lp = new GenericListPanel();
@@ -247,7 +247,7 @@ class MutantPanel extends JSplitPane {
             c.weightx = 1;
             c.weighty = 1;
             c.fill = GridBagConstraints.BOTH;
-            ap = new GsAnnotationPanel();
+            ap = new AnnotationPanel();
             pm.add(ap,c);
         }
         return pm;

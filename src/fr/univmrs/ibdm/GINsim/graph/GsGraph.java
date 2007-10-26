@@ -13,7 +13,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
@@ -52,7 +52,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 
     protected String tabLabel = "STR_tab_selection";
 
-    protected GsAnnotation gsAnnotation = null;
+    protected Annotation gsAnnotation = null;
     protected String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 
     private static Vector v_layout = null;
@@ -1037,9 +1037,9 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * get the annotation associated with this graph.
 	 * @return the association associated with this graph
 	 */
-	public GsAnnotation getAnnotation() {
+	public Annotation getAnnotation() {
 		if (gsAnnotation == null) {
-			gsAnnotation = new GsAnnotation();
+			gsAnnotation = new Annotation();
 		}
 		return gsAnnotation;
 	}

@@ -1,13 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.File;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.Map.Entry;
 
 import javax.swing.JPanel;
@@ -16,14 +10,10 @@ import javax.swing.JTextArea;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.ibdm.GINsim.graph.*;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -61,7 +51,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     private GsVertexAttributesReader vareader = null;
     private GsEdgeAttributesReader ereader = null;
     private GsRegulatoryEdge edge = null;
-    private GsAnnotation annotation = null;
+    private Annotation annotation = null;
     private Map m_edges = new HashMap();
     private Vector v_waitingInteractions = new Vector();
     private String s_nodeOrder;
@@ -282,7 +272,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
             		break; // POS_GRAPH_NOTES
             case POS_GRAPH_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.getLinkList().add(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"));
                 }
                 break; // POS_GRAPH_NOTES_LINKLIST
 
@@ -344,12 +334,12 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                 break; // POS_EDGE_NOTES
             case POS_VERTEX_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.getLinkList().add(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"));
                 }
                 break; // POS_VERTEX_NOTES
             case POS_EDGE_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.getLinkList().add(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"));
                 }
                 break; // POS_EDGE_NOTES
         }
@@ -379,7 +369,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 					if (m == null) {
     					m = new HashMap();
     				}
-    				if ((m1 == -1 && m2 == max) || (m2 == -1 && m1 == max)) {
+    				if (m1 == -1 && m2 == max || m2 == -1 && m1 == max) {
     					m.put(entry, "");
     				} else {
 	    				m.put(entry, null);

@@ -7,7 +7,7 @@ import java.util.Vector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
@@ -38,7 +38,7 @@ public final class GsDynamicParser extends GsXMLHelper {
     private Object edge = null;
     private GsVertexAttributesReader vareader = null;
     private GsEdgeAttributesReader ereader = null;
-    private GsAnnotation annotation = null;
+    private Annotation annotation = null;
     private Map map;
 
     /**
@@ -157,7 +157,7 @@ public final class GsDynamicParser extends GsXMLHelper {
                 } else if (qName.equals("edge")) {
                     String s_from = attributes.getValue("from");
                     String s_to = attributes.getValue("to");
-                    if (map == null || (map.containsKey(s_from.substring(1)) && map.containsKey(s_to.substring(1)))) {
+                    if (map == null || map.containsKey(s_from.substring(1)) && map.containsKey(s_to.substring(1))) {
                         pos = POS_EDGE;
                         GsDynamicNode from = new GsDynamicNode(s_from);
                         GsDynamicNode to = new GsDynamicNode(s_to);
@@ -172,7 +172,7 @@ public final class GsDynamicParser extends GsXMLHelper {
                         pos = POS_FILTERED;
                     }
                 } else if (qName.equals("graph")) {
-            			if (!("dynamical".equals(attributes.getValue("class")))) {
+            			if (!"dynamical".equals(attributes.getValue("class"))) {
             				throw new SAXException("not a dynamical graph");
             			}
             			try {
@@ -203,7 +203,7 @@ public final class GsDynamicParser extends GsXMLHelper {
             		break; // POS_GRAPH_NOTES
             case POS_GRAPH_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.getLinkList().add(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"));
                 }
                 break; // POS_GRAPH_NOTES_LINKLIST
 

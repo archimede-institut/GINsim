@@ -2,7 +2,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
@@ -216,7 +216,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @param index index of a subedge.
 	 * @return annotation attached to this sub edge.
 	 */
-	public GsAnnotation getGsAnnotation(int index) {
+	public Annotation getGsAnnotation(int index) {
 		return edges[index].annotation;
 	}
 

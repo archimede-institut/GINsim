@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.regulatoryGraph;
+package fr.univmrs.ibdm.GINsim.annotation;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -9,8 +9,6 @@ import javax.swing.JTextArea;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
@@ -20,12 +18,12 @@ import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
 /**
  * Panel to edit annotations
  */
-public class GsAnnotationPanel extends GsParameterPanel 
+public class AnnotationPanel extends GsParameterPanel 
 	implements ObjectPropertyEditorUI, TableModelListener {
 
 	private static final long serialVersionUID = -8542547209276966234L;
 
-	private GsAnnotation currentNote = null;
+	private Annotation currentNote = null;
     private boolean listenChanges = true;
 	SimpleGenericList linkList;
 	GenericListPanel linkListPanel = null;
@@ -37,7 +35,7 @@ public class GsAnnotationPanel extends GsParameterPanel
 	 * This method initializes 
 	 * 
 	 */
-	public GsAnnotationPanel() {
+	public AnnotationPanel() {
 		super();
 		initialize();
 	}
@@ -63,10 +61,10 @@ public class GsAnnotationPanel extends GsParameterPanel
         this.add(getJScrollPane(), gridBagConstraints16);
 	}
     public void setEditedObject(Object obj) {
-        if (obj != null && obj instanceof GsAnnotation) {
+        if (obj != null && obj instanceof Annotation) {
             listenChanges = false;
-            currentNote = (GsAnnotation)obj;
-            linkList.setData(currentNote.getLinkList());
+            currentNote = (Annotation)obj;
+            linkList.setData(currentNote.linkList);
             jTextArea.setText(currentNote.getComment());
             listenChanges = true;
         }
@@ -147,9 +145,13 @@ class LinkList extends SimpleGenericList {
 		inlineAddDel = true;
 	}
 	public Object doCreate(String name, int type) {
-		return name;
+		return new AnnotationLink(name);
+	}
+	public boolean doEdit(Object data, Object value) {
+		((AnnotationLink)data).setText((String)value);
+		return true;
 	}
 	public void doRun(int index) {
-		Tools.webBrowse((String)v_data.get(index));
+		((AnnotationLink)v_data.get(index)).open();
 	}
 }

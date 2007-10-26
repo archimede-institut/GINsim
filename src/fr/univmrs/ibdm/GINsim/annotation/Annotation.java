@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.data;
+package fr.univmrs.ibdm.GINsim.annotation;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -9,16 +9,16 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 /**
  * Annotation for Gene : contains text and a list of url
  */
-public class GsAnnotation implements GsXMLize
+public class Annotation implements GsXMLize
 {
     /** list of links  */
-	private Vector linkList;
+	protected Vector linkList;
 	private String comment;
-
+	
 	/**
 	 * create an empty annotation.
 	 */
-	public GsAnnotation() {
+	public Annotation() {
 		linkList = new Vector();
 		comment = "";
 	}
@@ -27,18 +27,22 @@ public class GsAnnotation implements GsXMLize
 	 * get the vector of url
 	 * @return the vector of String (url).
 	 */
-	public Vector getLinkList() {
-		return linkList;
+	public String getLink(int index) {
+		return linkList.get(index).toString();
 	}
-
-	/**
-	 * Set the vector of url
-	 * @param links the new linklist
-	 */
-	private void setLinkList(Vector links) {
-		this.linkList = links;
+	public void openLink(int index) {
+		((AnnotationLink)linkList.get(index)).open();
 	}
-
+	public void addLink(String s) {
+		setLink(s, linkList.size());
+	}
+	public void setLink(String s, int index) {
+		if (index == linkList.size()) {
+			linkList.add(new AnnotationLink(s));
+		} else {
+			((AnnotationLink)linkList.get(index)).setText(s);
+		}
+	}
 	/**
 	 * return the String containing the comments.
 	 * @return a String
@@ -78,13 +82,11 @@ public class GsAnnotation implements GsXMLize
 	}
 	
 	public Object clone() {
-		GsAnnotation clone = new GsAnnotation();
+		Annotation clone = new Annotation();
 		int len = linkList.size();
-		Vector ll = new Vector(len);
 		for (int i=0 ; i<len ; i++) {
-			ll.add(new String((String)linkList.get(i)));
+			clone.addLink(getLink(i));
 		}
-		clone.setLinkList((Vector)linkList.clone());
 		clone.setComment(new String(comment));
 		return clone;
 	}

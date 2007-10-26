@@ -3,7 +3,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 import java.io.IOException;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -17,7 +17,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 public class GsRegulatoryMutantDef implements GsNamedObject {
     String name;
     Vector v_changes = new Vector();
-    GsAnnotation annotation = new GsAnnotation();
+    Annotation annotation = new Annotation();
 
     boolean check(GsRegulatoryGraph graph) {
         GsGraphManager gm = graph.getGraphManager();

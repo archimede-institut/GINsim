@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 
 
 public class GsRegulatoryEdge {
@@ -10,7 +10,7 @@ public class GsRegulatoryEdge {
 	public short index;
 	public GsRegulatoryMultiEdge me;
 	
-	GsAnnotation annotation = new GsAnnotation();
+	Annotation annotation = new Annotation();
 	
 	public GsRegulatoryEdge(GsRegulatoryMultiEdge me) {
 		this.me = me;
@@ -20,7 +20,7 @@ public class GsRegulatoryEdge {
 		GsRegulatoryEdge clone = new GsRegulatoryEdge(me);
 		clone.threshold = threshold;
 		clone.sign = sign;
-		clone.annotation = (GsAnnotation)annotation.clone();
+		clone.annotation = (Annotation)annotation.clone();
 		return clone;
 	}
 	

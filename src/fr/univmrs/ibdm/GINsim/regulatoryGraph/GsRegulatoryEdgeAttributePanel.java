@@ -19,6 +19,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 
+import fr.univmrs.ibdm.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
@@ -46,7 +47,7 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	private JLabel jLabel2 = null;
 	private JSpinner s_min = null;
 	private JComboBox c_sign = null;
-	private GsAnnotationPanel gsAnnotationPanel = null;
+	private AnnotationPanel gsAnnotationPanel = null;
 	private GsEdgeMinMaxSpinModel minmax = null;
 	/**
 	 * This method initializes
@@ -357,9 +358,9 @@ public class GsRegulatoryEdgeAttributePanel extends GsParameterPanel {
 	 *
 	 * @return fr.univmrs.ibdm.GINsim.regulatoryGraph.GsAnnotationPanel
 	 */
-	private GsAnnotationPanel getGsAnnotationPanel() {
+	private AnnotationPanel getGsAnnotationPanel() {
 		if (gsAnnotationPanel == null) {
-			gsAnnotationPanel = new GsAnnotationPanel();
+			gsAnnotationPanel = new AnnotationPanel();
 		}
 		return gsAnnotationPanel;
 	}

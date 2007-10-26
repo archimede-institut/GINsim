@@ -7,7 +7,7 @@ import java.util.Vector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.ibdm.GINsim.data.GsAnnotation;
+import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
@@ -40,7 +40,7 @@ public class GsReducedGraphParser extends GsXMLHelper {
     private Vector v_content = null;
     private GsVertexAttributesReader vareader = null;
     private GsEdgeAttributesReader ereader = null;
-    private GsAnnotation annotation = null;
+    private Annotation annotation = null;
     private Map map;
     
     /**
@@ -170,14 +170,14 @@ public class GsReducedGraphParser extends GsXMLHelper {
                 } else if (qName.equals("edge")) {
                     String s_from = attributes.getValue("from");
                     String s_to = attributes.getValue("to");
-                    if (map == null || (map.containsKey(s_from) && map.containsKey(s_to))) {
+                    if (map == null || map.containsKey(s_from) && map.containsKey(s_to)) {
                         pos = POS_EDGE;
                         graph.addEdge(new GsNodeReducedData(s_from), new GsNodeReducedData(s_to));
                     } else {
                         pos = POS_FILTERED;
                     }
                 } else if (qName.equals("graph")) {
-            			if (!("reduced".equals(attributes.getValue("class")))) {
+            			if (!"reduced".equals(attributes.getValue("class"))) {
             				throw new SAXException("not a reduced graph");
             			}
             			try {
@@ -199,7 +199,7 @@ public class GsReducedGraphParser extends GsXMLHelper {
             		break; // POS_GRAPH_NOTES
             case POS_GRAPH_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.getLinkList().add(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"));
                 }
                 break; // POS_GRAPH_NOTES_LINKLIST
 
