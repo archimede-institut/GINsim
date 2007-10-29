@@ -89,8 +89,6 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 		this.setIconImage(ImageLoader.getImage("gs1.gif"));
 		updateTitle();
 		this.setVisible(true);
-        getJSplitPane().setDividerLocation(
-                jSplitPane.getHeight()-((Integer)GsOptions.getOption("display.dividersize", new Integer(80))).intValue());
 	}
 	/**
 	 * This method initializes jPanel
@@ -400,6 +398,9 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
             }
             jSplitPane.setDividerLocation(d);
         }
+        getJSplitPane().setDividerLocation(
+                jSplitPane.getHeight()-((Integer)GsOptions.getOption("display.dividersize", new Integer(80))).intValue());
+
         updateTitle();
         updateGraphNotificationMessage(graph);
     }
