@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.annotation;
 import java.io.IOException;
 import java.util.Vector;
 
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 
@@ -33,14 +34,14 @@ public class Annotation implements GsXMLize
 	public void openLink(int index) {
 		((AnnotationLink)linkList.get(index)).open();
 	}
-	public void addLink(String s) {
-		setLink(s, linkList.size());
+	public void addLink(String s, GsGraph graph) {
+		setLink(s, linkList.size(), graph);
 	}
-	public void setLink(String s, int index) {
+	public void setLink(String s, int index, GsGraph graph) {
 		if (index == linkList.size()) {
-			linkList.add(new AnnotationLink(s));
+			linkList.add(new AnnotationLink(s, graph));
 		} else {
-			((AnnotationLink)linkList.get(index)).setText(s);
+			((AnnotationLink)linkList.get(index)).setText(s, graph);
 		}
 	}
 	/**
@@ -85,7 +86,7 @@ public class Annotation implements GsXMLize
 		Annotation clone = new Annotation();
 		int len = linkList.size();
 		for (int i=0 ; i<len ; i++) {
-			clone.addLink(getLink(i));
+			clone.addLink(getLink(i), null);
 		}
 		clone.setComment(new String(comment));
 		return clone;

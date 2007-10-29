@@ -272,7 +272,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
             		break; // POS_GRAPH_NOTES
             case POS_GRAPH_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.addLink(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"), graph);
                 }
                 break; // POS_GRAPH_NOTES_LINKLIST
 
@@ -334,12 +334,12 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                 break; // POS_EDGE_NOTES
             case POS_VERTEX_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.addLink(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"), graph);
                 }
                 break; // POS_VERTEX_NOTES
             case POS_EDGE_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.addLink(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"), graph);
                 }
                 break; // POS_EDGE_NOTES
         }

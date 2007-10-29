@@ -4,12 +4,14 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
@@ -18,14 +20,15 @@ import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
 /**
  * Panel to edit annotations
  */
-public class AnnotationPanel extends GsParameterPanel 
+public class AnnotationPanel extends JPanel
 	implements ObjectPropertyEditorUI, TableModelListener {
 
 	private static final long serialVersionUID = -8542547209276966234L;
 
+	private GsGraph graph;
 	private Annotation currentNote = null;
     private boolean listenChanges = true;
-	SimpleGenericList linkList;
+	LinkList linkList;
 	GenericListPanel linkListPanel = null;
 	private JScrollPane jScrollPane = null;
 	private JTextArea jTextArea = null;
@@ -36,7 +39,6 @@ public class AnnotationPanel extends GsParameterPanel
 	 * 
 	 */
 	public AnnotationPanel() {
-		super();
 		initialize();
 	}
 	/**
@@ -71,7 +73,7 @@ public class AnnotationPanel extends GsParameterPanel
     }
     public Component getLinkList() {
     	if (linkListPanel == null) {
-    		linkList = new LinkList();
+    		linkList = new LinkList(graph);
     		linkListPanel = new GenericListPanel();
     		linkListPanel.setList(linkList);
     	}
@@ -132,12 +134,15 @@ public class AnnotationPanel extends GsParameterPanel
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
+		linkList.graph = (GsRegulatoryGraph)pinfo.editor.getMasterObject();
 		panel.addField(this, pinfo, 0);
 	}
 }
 
 class LinkList extends SimpleGenericList {
-	LinkList() {
+	GsGraph graph;
+	LinkList(GsGraph graph) {
+		this.graph = graph;
 		canAdd = true;
 		hasAction = true;
 		canRemove = true;
@@ -145,10 +150,10 @@ class LinkList extends SimpleGenericList {
 		inlineAddDel = true;
 	}
 	public Object doCreate(String name, int type) {
-		return new AnnotationLink(name);
+		return new AnnotationLink(name, graph);
 	}
 	public boolean doEdit(Object data, Object value) {
-		((AnnotationLink)data).setText((String)value);
+		((AnnotationLink)data).setText((String)value, graph);
 		return true;
 	}
 	public void doRun(int index) {

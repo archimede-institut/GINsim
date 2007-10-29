@@ -13,6 +13,11 @@ public abstract class ObjectEditor {
 	protected Vector v_listener = null;
 	protected Vector v_prop = new Vector();
 	protected Object o;
+	protected Object master;
+	
+	public Object getMasterObject() {
+		return master;
+	}
 	
 	abstract public String getStringValue(int prop);
 	

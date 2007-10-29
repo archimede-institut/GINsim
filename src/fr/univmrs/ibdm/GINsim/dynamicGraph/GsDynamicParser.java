@@ -203,7 +203,7 @@ public final class GsDynamicParser extends GsXMLHelper {
             		break; // POS_GRAPH_NOTES
             case POS_GRAPH_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.addLink(attributes.getValue("xlink:href"));
+                    annotation.addLink(attributes.getValue("xlink:href"), graph);
                 }
                 break; // POS_GRAPH_NOTES_LINKLIST
 

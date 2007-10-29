@@ -35,6 +35,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	
 	public RegulatoryVertexEditor(GsRegulatoryGraph graph) {
 		this.graph = graph;
+		master = graph;
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_id"), String.class);
 		v_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_NAME, Translator.getString("STR_name"), String.class);

@@ -96,19 +96,19 @@ public class Tools {
 	public static String getColorCode(Color color) {
 		String scol;
 		String ret = "";
-		scol = (Integer.toHexString(color.getRed())).toUpperCase();
+		scol = Integer.toHexString(color.getRed()).toUpperCase();
 		if (scol.length() == 1) {
 			ret += "0"+scol;
 		} else {
 			ret += scol;
 		}
-		scol = (Integer.toHexString(color.getGreen())).toUpperCase();
+		scol = Integer.toHexString(color.getGreen()).toUpperCase();
 		if (scol.length() == 1) {
 			ret += "0"+scol;
 		} else {
 			ret += scol;
 		}
-		scol = (Integer.toHexString(color.getBlue())).toUpperCase();
+		scol = Integer.toHexString(color.getBlue()).toUpperCase();
 		if (scol.length() == 1) {
 			ret += "0"+scol;
 		} else {
@@ -124,6 +124,24 @@ public class Tools {
 	public static Color getColorFromCode(String code) {
 		return Color.decode(code);
 	}
+	/**
+	 * Open a file.
+	 * On UNIX, let's rely on xdg-open and ignore the old mess.
+	 * TODO: make it also work on mac/win
+	 * 
+	 * @param fileName
+	 * @return true if it managed
+	 */
+	public static boolean openFile(String fileName) {
+		try {
+			Runtime.getRuntime().exec("xdg-open "+fileName);
+			return true;
+		} catch (Exception e1) {
+		}
+		System.out.println("how to open a file ??");
+		return false;
+	}
+
 	/**
 	 * run a web browser to visit "url"
 	 * @param url the url to visit
@@ -160,7 +178,7 @@ public class Tools {
                 throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_error_notWritable"));
 			}
 			int a = JOptionPane.showConfirmDialog(frame, Translator.getString("STR_question_overwrite"));
-			return (a==JOptionPane.OK_OPTION);
+			return a==JOptionPane.OK_OPTION;
 		}
 		try {
 			if (!file.createNewFile()) {
@@ -193,7 +211,7 @@ public class Tools {
      */
     public static boolean ask(String msg, String title) {
         int ret = JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.OK_CANCEL_OPTION);
-        return (ret == JOptionPane.OK_OPTION);
+        return ret == JOptionPane.OK_OPTION;
     }
 
     /**

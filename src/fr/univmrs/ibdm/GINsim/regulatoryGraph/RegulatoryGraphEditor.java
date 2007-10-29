@@ -48,6 +48,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 				this.graph.addGraphListener(this);
 			}
 		}
+		master = o;
 		super.setEditedObject(o);
 	}
 	

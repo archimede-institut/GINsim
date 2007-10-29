@@ -83,7 +83,7 @@ public class GsRegulatoryMutantParser extends GsXMLHelper {
                 // TODO: report error
                 return;
             }
-            mutant.annotation.addLink(attributes.getValue("xlink:href"));
+            mutant.annotation.addLink(attributes.getValue("xlink:href"), null);
         } else if (qName.equals("comment")) {
             curval = "";
         }

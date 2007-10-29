@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.global.Tools;
+import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 
 public class AnnotationLink {
 	
 	protected static Map m_helper = new HashMap();
 	static {
 		HttpHelper.setup();
+		ReferencerHelper.setup();
 	}
 	static void addHelperClass(String key, AnnotationHelper helper) {
 		m_helper.put(key, helper);
@@ -19,10 +21,10 @@ public class AnnotationLink {
 	String proto;
 	String value;
 
-	public AnnotationLink(String s) {
-		setText(s);
+	public AnnotationLink(String s, GsGraph graph) {
+		setText(s, graph);
 	}
-	public void setText(String s) {
+	public void setText(String s, GsGraph graph) {
 		String[] ts = s.split(":", 2);
 		if (ts.length == 1) {
 			this.helper = null;
@@ -34,7 +36,7 @@ public class AnnotationLink {
 		value = ts[1].trim();
 		helper = (AnnotationHelper)m_helper.get(proto);
 		if (helper != null) {
-			helper.update(this);
+			helper.update(this, graph);
 		}
 	}
 	

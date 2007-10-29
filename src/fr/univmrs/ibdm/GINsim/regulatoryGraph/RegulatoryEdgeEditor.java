@@ -44,6 +44,7 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	
 	public RegulatoryEdgeEditor(GsRegulatoryGraph graph) {
 		this.graph = graph;
+		master = graph;
 		
 		// info on top
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, SOURCE, 
