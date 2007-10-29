@@ -19,14 +19,13 @@ public class StockButton extends JButton {
 	static int w = 30;
 	static int h = 25;
 
-	private static String s_base;
+	private static String[] t_base = new String[2];
 	
 	static {
-		File f = new File("/usr/share/icons/Tango/22x22/actions/");
+		t_base[0] = "/fr/univmrs/tagc/ressources/icons/actions/";
+		File f = new File("/usr/share/icons/Human/22x22/actions/");
 		if (f.exists()) {
-			s_base = "/usr/share/icons/Tango/22x22/actions/";
-		} else {
-			s_base = "/fr/univmrs/tagc/ressources/icons/actions/";
+			t_base[1] = f.getAbsolutePath();
 		}
 	}
 	
@@ -47,7 +46,7 @@ public class StockButton extends JButton {
 		}
 	}
 	static public URL getURL(String name) {
-		String s_url = s_base+name;
+		String s_url = t_base[0]+name;
         URL url = ImageLoader.class.getResource(s_url) ;
         if (url == null) {
         	File f = new File(s_url);

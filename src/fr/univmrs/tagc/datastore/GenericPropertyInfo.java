@@ -15,6 +15,7 @@ public class GenericPropertyInfo {
 	public Class type;
 	public Vector v_position;
 	public Object data;
+	public boolean isEditable = true;
 	
 	public GenericPropertyInfo(ObjectEditor editor, int id, String name, Class type) {
 		this.editor = editor;
@@ -75,5 +76,9 @@ public class GenericPropertyInfo {
 			System.out.println("how to deal with this: "+type);
 			e.printStackTrace();
 		}
+	}
+
+	public void run() {
+		editor.performAction(id);
 	}
 }

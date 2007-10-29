@@ -33,17 +33,35 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	
 	private static final int ANNOTATION = 0; 
 	private static final int EDGES = 1; 
+	private static final int SOURCE = 11;
+	private static final int TARGET = 12;
 	
 	
 	public RegulatoryEdgeEditor(GsRegulatoryGraph graph) {
 		this.graph = graph;
-		edgeList = new EdgeList(graph);
-		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, EDGES, null, GenericList.class);
+		
+		// info on top
+		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, SOURCE, 
+				Translator.getString("STR_from"), Action.class);
+		pinfo.addPosition(0, 0);
+		pinfo.addPosition(1, 0);
 		v_prop.add(pinfo);
-		pinfo.addPosition(0, 0, 1, 1, 1, 1, GridBagConstraints.SOUTH);
+		pinfo = new GenericPropertyInfo(this, TARGET, 
+				Translator.getString("STR_to"), Action.class);
+		pinfo.addPosition(2, 0);
+		pinfo.addPosition(3, 0);
+		v_prop.add(pinfo);
+		
+		// edge list
+		edgeList = new EdgeList(graph);
+		pinfo = new GenericPropertyInfo(this, EDGES, null, GenericList.class);
+		v_prop.add(pinfo);
+		pinfo.addPosition(0, 1, 5, 1, 1, 1, GridBagConstraints.SOUTH);
+		
+		// annotation
 		pinfo = new GenericPropertyInfo(this, ANNOTATION, null, Annotation.class);
 		v_prop.add(pinfo);
-		pinfo.addPosition(1, 0, 1, 1, 4, 1, GridBagConstraints.SOUTH);
+		pinfo.addPosition(5, 0, 1, 2, 4, 1, GridBagConstraints.SOUTH);
 	}
 	
 	public void setEditedObject(Object o) {
@@ -76,7 +94,6 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 					// FIXME: hack to trigger a refresh and avoid an infinite loop
 					// it should be replaced by something cleaner...
 					refresh(false);
-					
 					return true;
 				}
 		}
@@ -87,7 +104,24 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 		return 0;
 	}
 	public String getStringValue(int prop) {
+		switch (prop) {
+			case SOURCE:
+				return medge.getSource().getId();
+			case TARGET:
+				return medge.getTarget().getId();
+		}
 		return null;
+	}
+
+	public void performAction(int prop) {
+		switch (prop) {
+			case SOURCE:
+				graph.getGraphManager().select(medge.getSourceVertex());
+				break;
+			case TARGET:
+				graph.getGraphManager().select(medge.getTargetVertex());
+				break;
+		}
 	}
 
 	public boolean isValidValue(int prop, String value) {

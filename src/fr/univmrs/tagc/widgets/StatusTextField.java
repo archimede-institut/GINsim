@@ -160,9 +160,16 @@ public class StatusTextField extends JTextField implements FocusListener,
 
 	public void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
+		int pos = 0;
 		if (pinfo.name != null) {
 			panel.addField(new JLabel(pinfo.name), pinfo, 0);
+			pos++;
 		}
-		panel.addField(this, pinfo, 1);
+		if (pinfo.isEditable) {
+			panel.addField(this, pinfo, pos);
+		} else {
+			setEditable(false);
+			panel.addField(this, pinfo, pos);
+		}
 	}
 }

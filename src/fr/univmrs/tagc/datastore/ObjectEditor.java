@@ -55,4 +55,7 @@ public abstract class ObjectEditor {
 	}
 
 	public abstract Object getRawValue(int prop);
+	public void performAction(int prop) {
+		System.out.println("override this!");
+	}
 }

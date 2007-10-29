@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.swing.Action;
 import javax.swing.JPanel;
 
 import fr.univmrs.tagc.datastore.GenericList;
@@ -30,6 +31,7 @@ public class GenericPropertyEditorPanel extends JPanel implements GenericPropert
 		m_class.put(GenericPropertyInfo[].class, PropertySwitch.class);
 		m_class.put(MinMaxSpinModel.class, MinMaxEditor.class);
 		m_class.put(GenericList.class, GenericListPanel.class);
+		m_class.put(Action.class, PropertyActionButton.class);
 	}
 	public static void addSupportedClass(Class data, Class widget) {
 		m_class.put(data, widget);
