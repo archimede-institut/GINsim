@@ -22,6 +22,7 @@ import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.GenericListListener;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectEditor;
+import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
 
 public class RegulatoryEdgeEditor extends ObjectEditor {
 
@@ -33,9 +34,13 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	
 	private static final int ANNOTATION = 0; 
 	private static final int EDGES = 1; 
+	private static final int EDGE = 2; 
 	private static final int SOURCE = 11;
 	private static final int TARGET = 12;
 	
+	static {
+		GenericPropertyEditorPanel.addSupportedClass(GsRegulatoryEdge.class, RegulatoryEdgeEditPanel.class);
+	}
 	
 	public RegulatoryEdgeEditor(GsRegulatoryGraph graph) {
 		this.graph = graph;
@@ -55,13 +60,19 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 		// edge list
 		edgeList = new EdgeList(graph);
 		pinfo = new GenericPropertyInfo(this, EDGES, null, GenericList.class);
-		v_prop.add(pinfo);
 		pinfo.addPosition(0, 1, 5, 1, 1, 1, GridBagConstraints.SOUTH);
+		v_prop.add(pinfo);
+		
+//		// edge edit panel
+//		pinfo = new GenericPropertyInfo(this, EDGE, null, GsRegulatoryEdge.class);
+//		pinfo.data = graph;
+//		pinfo.addPosition(0, 2, 5, 1, 1, 0, GridBagConstraints.SOUTH);
+//		v_prop.add(pinfo);
 		
 		// annotation
 		pinfo = new GenericPropertyInfo(this, ANNOTATION, null, Annotation.class);
+		pinfo.addPosition(5, 0, 1, 3, 4, 1, GridBagConstraints.SOUTH);
 		v_prop.add(pinfo);
-		pinfo.addPosition(5, 0, 1, 2, 4, 1, GridBagConstraints.SOUTH);
 	}
 	
 	public void setEditedObject(Object o) {
@@ -81,6 +92,8 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 				return edge.annotation;
 			case EDGES:
 				return edgeList;
+			case EDGE:
+				return edge;
 		}
 		return null;
 	}
@@ -162,8 +175,15 @@ class EdgeList implements GenericList {
     protected void addEdge(int value) {
 		int index = medge.addEdge(GsRegulatoryMultiEdge.SIGN_POSITIVE, value, graph);
 		if (index != -1) {
-			// FIXME: refresh
+			update();
 		}
+    }
+    
+    protected void update() {
+    	Iterator it = v_listener.iterator();
+    	while (it.hasNext()) {
+    		((GenericListListener)it.next()).contentChanged();
+    	}
     }
     
 	public int add(int index, int type) {
@@ -205,7 +225,10 @@ class EdgeList implements GenericList {
 		return medge.getEdgeCount();
 	}
 	public boolean remove(int[] t_index) {
-		// TODO Auto-generated method stub
+		if (medge.getEdgeCount() > 1 && t_index.length == 1) {
+			medge.removeEdge(t_index[0], graph);
+			return true;
+		}
 		return false;
 	}
 

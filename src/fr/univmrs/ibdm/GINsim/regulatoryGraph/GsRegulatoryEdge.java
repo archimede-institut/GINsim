@@ -55,6 +55,9 @@ public class GsRegulatoryEdge {
 		return prefix+(index+1);
 	}
 	private String getRangeAndSign() {
+		return "["+threshold+","+getMaxAsString()+"] ; "+GsRegulatoryMultiEdge.SIGN[sign];
+	}
+	public String getMaxAsString() {
 		String smax;
 		if (index == me.getEdgeCount()-1) {
 			smax = "max";
@@ -63,6 +66,6 @@ public class GsRegulatoryEdge {
 		} else {
 			smax = "INVALID";
 		}
-		return "["+threshold+","+smax+"] ; "+GsRegulatoryMultiEdge.SIGN[sign];
+		return smax;
 	}
 }
