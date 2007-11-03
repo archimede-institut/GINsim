@@ -15,13 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.datastore.GenericListListener;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
 import fr.univmrs.tagc.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.widgets.StockButton;
 
 /**
  * configure priority classes.
@@ -168,7 +168,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     
     private JButton getBut_insert() {
         if (but_insert == null) {
-            but_insert = new JButton("<<");
+            but_insert = new StockButton("go-previous.png", true);
             but_insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     insert();
@@ -179,7 +179,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     }
     private JButton getBut_remove() {
         if (but_remove == null) {
-            but_remove = new JButton(">>");
+            but_remove = new StockButton("go-next.png", true);
             but_remove.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     remove();
@@ -348,7 +348,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         if (i>=0 && i<v_class.size()) {
             currentClass = (GsReg2dynPriorityClass)v_class.get(i);
         } else {
-//            table_class.getSelectionModel().setSelectionInterval(0, 0);
+            listPanel.getSelectionModel().setSelectionInterval(0, 0);
             return;
         }
         if (v_class.size() < 2) {
@@ -438,9 +438,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
                 break;
         }
         classList.refresh();
-//        classTableModel.fireTableRowsDeleted(0, size);
-//        classTableModel.fireTableRowsInserted(0, v_class.size()-1);
-//        table_class.getSelectionModel().setSelectionInterval(0, 0);
+        listPanel.getSelectionModel().setSelectionInterval(0, 0);
     }
 }
 
@@ -672,77 +670,6 @@ class PriorityClassList extends SimpleGenericList {
     }
 
 
-}
-
-class ClassTableModel extends DefaultTableModel {
-    private static final long serialVersionUID = 7741212000452988183L;
-
-	Vector v;
-	
-	protected ClassTableModel(Vector v) {
-		this.v = v;
-	}
-
-	public int getColumnCount() {
-		return 3;
-	}
-
-	public String getColumnName(int column) {
-		switch(column) {
-		case 0: return Translator.getString("STR_rank");
-		case 1: return Translator.getString("STR_sync");
-		case 2: return Translator.getString("STR_name");
-		}
-		return super.getColumnName(column);
-	}
-
-	public int getRowCount() {
-        if (v == null) {
-            return 0;
-        }
-		return v.size();
-	}
-
-	public Class getColumnClass(int columnIndex) {
-        if (columnIndex == 1) {
-            return Boolean.class;
-        }
-        return super.getColumnClass(columnIndex);
-    }
-
-    public Object getValueAt(int row, int column) {
-		if (row < v.size()) {
-			GsReg2dynPriorityClass pclass = (GsReg2dynPriorityClass)v.get(row);
-			switch (column) {
-				case 0: return ""+pclass.rank;
-                case 1: return pclass.getMode() == GsReg2dynPriorityClass.ASYNCHRONOUS ? Boolean.FALSE : Boolean.TRUE;
-				case 2: return pclass.getName();
-			}
-		}
-		return super.getValueAt(row, column);
-	}
-
-	public boolean isCellEditable(int row, int column) {
-		return column == 1 || column == 2;
-	}
-
-	public void setValueAt(Object aValue, int row, int column) {
-		if (row < v.size()) {
-            if (column == 1 && aValue instanceof Boolean) {
-                ((GsReg2dynPriorityClass)v.get(row)).setMode(aValue == Boolean.FALSE ? GsReg2dynPriorityClass.ASYNCHRONOUS : GsReg2dynPriorityClass.SYNCHRONOUS);
-            }
-            if (column == 2) {
-                ((GsReg2dynPriorityClass)v.get(row)).setName(aValue.toString());
-            }
-		}
-	}
-    
-    protected void moveElementAt(int i, int j) {
-        Object obj=v.remove(i);
-        v.insertElementAt(obj,j);
-        fireTableRowsDeleted(i, i);
-        fireTableRowsInserted(j, j);
-    }
 }
 
 class ClassList extends SimpleGenericList {
