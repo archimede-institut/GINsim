@@ -10,10 +10,16 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 import java.util.Map.Entry;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -22,6 +28,7 @@ import javax.swing.table.TableCellEditor;
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.GenericListListener;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.datastore.MultiColObject;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 import fr.univmrs.tagc.widgets.StatusTextField;
@@ -211,16 +218,11 @@ public class GenericListPanel extends JPanel
         if (list == null) {
             return;
         }
-        int[] index=jl.getSelectedRows();
-        for (int i=0;i<index.length;i++) {
-            int a = index[i];
-            if (a>0) {
-                list.moveElement(a, a-1);
-                index[i]=a-1;
-            } else {
-				return;
-			}
+        int[] index = jl.getSelectedRows();
+        if (!list.move(index, -1)) {
+        	return;
         }
+
         DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)jl.getSelectionModel();
         selectionModel.clearSelection();
         int min, max;
@@ -244,15 +246,10 @@ public class GenericListPanel extends JPanel
             return;
         }
         int[] index=jl.getSelectedRows();
-        for (int i=index.length-1;i>=0;i--) {
-            int a = index[i];
-            if (a<list.getNbElements(null)-1) {
-                list.moveElement(a, a+1);
-                index[i]=a+1;
-            } else {
-				return;
-			}
+        if (!list.move(index, 1)) {
+        	return;
         }
+
         DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)jl.getSelectionModel();
         selectionModel.clearSelection();
         int min, max;
@@ -277,7 +274,7 @@ public class GenericListPanel extends JPanel
         if (list == null) {
             return;
         }
-        int n = list.add();
+        int n = list.add(jl.getSelectedRow());
         if (n != -1) {
             refresh();
             jl.getSelectionModel().setSelectionInterval(n, n);
@@ -383,6 +380,10 @@ public class GenericListPanel extends JPanel
 			}
 		}
 	}
+
+	public ListSelectionModel getSelectionModel() {
+		return jl.getSelectionModel();
+	}
 }
 
 class listModel extends AbstractTableModel implements GenericListListener, TableActionListener {
@@ -392,15 +393,15 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     private GenericListPanel panel;
     private int lastLineInc = 0;
     private Map m_button = new HashMap();
-    private Vector v_type;
+    private Class[] t_type;
     
     private String filter = null;
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return list.canEdit() && columnIndex > list.nbAction;
+        return list.canEdit() && columnIndex >= list.nbAction;
     }
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        list.edit(filter, rowIndex, aValue);
+        list.edit(filter, rowIndex, columnIndex, aValue);
     }
 
     public Object getValueAt(int row, int col) {
@@ -429,15 +430,19 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
         	}
         	return b;
         }
-        return list.getElement(filter, row);
+        Object o = list.getElement(filter, row);
+        if (o instanceof MultiColObject) {
+    		return ((MultiColObject)o).getVal(col-list.nbAction);
+        }
+        return o;
     }
     public Class getColumnClass(int columnIndex) {
     	if (columnIndex < list.nbAction) {
     		return JButton.class;
     	}
-    	if (v_type != null) {
+    	if (t_type != null) {
     		panel.installEditor();
-    		return (Class)v_type.get(columnIndex-list.nbAction);
+    		return t_type[columnIndex-list.nbAction];
     	}
 		return super.getColumnClass(columnIndex);
 	}
@@ -474,7 +479,7 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     void setList(GenericList list, GenericListPanel panel) {
         this.list = list;
         this.panel = panel;
-        this.v_type = list.getObjectType();
+        this.t_type = list.getObjectType();
         list.addListListener(this);
         if (list.doInlineAddRemove()) {
         	lastLineInc = 1;

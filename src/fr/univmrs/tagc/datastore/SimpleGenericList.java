@@ -15,6 +15,7 @@ public class SimpleGenericList extends GenericList {
 	protected String	pattern			= "^[a-zA-Z0-9_-]+$";
 
 	public boolean		enforceUnique	= true;
+	public boolean		addWithPosition = false;
 
 	public SimpleGenericList(Vector v_data) {
 		setData(v_data);
@@ -29,7 +30,7 @@ public class SimpleGenericList extends GenericList {
 		refresh();
 	}
 
-	public int add() {
+	public int add(int position) {
 		if (!canAdd) {
 			return -1;
 		}
@@ -40,7 +41,7 @@ public class SimpleGenericList extends GenericList {
 			t[j] = true;
 		}
 		if (v_data.size() > 0 && !(v_data.get(0) instanceof GsNamedObject)) {
-			return triggerAdd(doCreate(s));
+			return triggerAdd(wrapCreate(s, position));
 		}
 		for (int j = 0 ; j < t.length ; j++) {
 			GsNamedObject obj = (GsNamedObject)v_data.get(j);
@@ -65,7 +66,7 @@ public class SimpleGenericList extends GenericList {
 			s = prefix + (t.length + 1);
 		}
 
-		return triggerAdd(doCreate(s));
+		return triggerAdd(wrapCreate(s, position));
 	}
 
 	private int triggerAdd(Object item) {
@@ -107,16 +108,16 @@ public class SimpleGenericList extends GenericList {
 		return -1;
 	}
 
-	public boolean edit(String filter, int pos, Object o) {
+	public boolean edit(String filter, int pos, int col, Object o) {
 		if (!canEdit) {
 			return false;
 		}
 		int index = getRealIndex(filter, pos);
 		if (index == v_data.size()) {
-			if (!doInlineAddRemove) {
+			if (!doInlineAddRemove || o == null || o == "") {
 				return false;
 			}
-			Object newObj = doCreate((String)o);
+			Object newObj = wrapCreate((String)o, pos);
 			if (newObj != null) {
 				triggerAdd(newObj);
 				return true;
@@ -130,8 +131,12 @@ public class SimpleGenericList extends GenericList {
 			return true;
 		}
 		Object data = v_data.get(index);
+		if (data instanceof MultiColObject) {
+			return ((MultiColObject)data).setVal(col, o);
+		}
 		if (data.getClass() == o.getClass()) {
 			v_data.setElementAt(o, index);
+			return true;
 		}
 		if (!(data instanceof GsNamedObject)) {
 			return doEdit(data, o);
@@ -181,7 +186,43 @@ public class SimpleGenericList extends GenericList {
 		return c;
 	}
 
-	public boolean moveElement(int src, int dst) {
+	public boolean move(int[] sel, int diff) {
+
+		if (diff == 0 || sel == null || sel.length == 0 || 
+				(diff < 0 && sel[0] <= -(diff+1)) ||
+				(diff > 0 && sel[sel.length-1] >= v_data.size() - diff)) {
+			return false;
+		}
+		if (diff > 0) {
+			doMoveDown(sel, diff);
+		} else {
+			doMoveUp(sel, diff);
+		}
+	    return true;
+
+	
+	}
+	
+	protected void doMoveUp(int[] sel, int diff) {
+	    for (int i=0 ; i<sel.length ; i++) {
+		    int a = sel[i];
+		    if (a >= diff) {
+			    moveElement(a, a+diff);
+			    sel[i] += diff;
+		    }
+	    }
+	}
+	protected void doMoveDown(int[] sel, int diff) {
+	    for (int i=sel.length-1 ; i>=0 ; i--) {
+		    int a = sel[i];
+		    if (a < v_data.size()+diff) {
+			    moveElement(a, a+diff);
+			    sel[i] += diff;
+		    }
+	    }
+	}
+	
+	protected boolean moveElement(int src, int dst) {
 		if (!canOrder) {
 			return false;
 		}
@@ -218,6 +259,16 @@ public class SimpleGenericList extends GenericList {
 	protected Object doCreate(String name) {
 		System.out.println("you should override this if you plan to use it");
 		return null;
+	}
+	protected Object doCreate(String name, int pos) {
+		System.out.println("you should override this if you plan to use it");
+		return null;
+	}
+	protected Object wrapCreate(String name, int pos) {
+		if (addWithPosition) {
+			return doCreate(name, pos);
+		}
+		return doCreate(name);
 	}
 
 	protected void doRun(int row, int col) {

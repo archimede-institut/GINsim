@@ -1,11 +1,13 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import fr.univmrs.tagc.datastore.MultiColObject;
+
 
 /**
  * a priority class for the simulation.
  * each class has a name, a simulation mode and a list of elements
  */
-public class GsReg2dynPriorityClass {
+public class GsReg2dynPriorityClass implements MultiColObject {
     
     /** this class is synchronous */
     public static final int SYNCHRONOUS = 0;
@@ -76,5 +78,35 @@ public class GsReg2dynPriorityClass {
     	clone.rank = rank;
     	return clone;
     }
+	public Object getVal(int index) {
+		switch (index) {
+			case 0:
+				return ""+rank;
+			case 1:
+				if (mode == SYNCHRONOUS) {
+					return Boolean.TRUE;
+				}
+				return Boolean.FALSE;
+			case 2:
+				return name;
+		}
+		return null;
+	}
+    
+	public boolean setVal(int index, Object val) {
+		switch (index) {
+			case 1:
+				if (val == Boolean.TRUE) {
+					mode = SYNCHRONOUS;
+				} else {
+					mode = ASYNCHRONOUS;
+				}
+				return true;
+			case 2:
+				name = val.toString();
+				return true;
+		}
+		return false;
+	}
     
 }

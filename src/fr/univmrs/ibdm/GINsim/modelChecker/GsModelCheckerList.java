@@ -1,7 +1,5 @@
 package fr.univmrs.ibdm.GINsim.modelChecker;
 
-import java.util.Vector;
-
 import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
@@ -67,10 +65,6 @@ public class GsModelCheckerList extends SimpleGenericList implements GsGraphList
 		return null;
 	}
 
-	public Vector getObjectType() {
-		return GsModelCheckerPlugin.v_checker;
-	}
-	
 	public Object getInfo(int index, Object mutant) {
 		GsModelChecker test = (GsModelChecker)v_data.get(index);
 		return test.getInfo(mutant);

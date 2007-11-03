@@ -21,7 +21,7 @@ abstract public class GenericList {
 	
 	String name = "";
 	
-	protected Vector v_type = null;
+	protected Class[] t_type = null;
 	protected Map m_editor = null;
 	
 	protected Vector v_listeners = new Vector();
@@ -75,8 +75,8 @@ abstract public class GenericList {
      * if this list can deal with object of several types,
      * @return the list of available types, or null if none.
      */
-    public Vector getObjectType() {
-    	return v_type;
+    public Class[] getObjectType() {
+    	return t_type;
     }
     
     public Map getCellEditor() {
@@ -100,17 +100,21 @@ abstract public class GenericList {
     /**
      * edit an element.
      * @param filter TODO
-     * @param i the suggested position
+     * @param row the suggested position
+     * @param col TODO
      * @param o the result of the edit
      * @return true if the list has changed
      */
-    abstract public boolean edit(String filter, int i, Object o);
+    abstract public boolean edit(String filter, int row, int col, Object o);
     
+    public int add() {
+    	return add(getNbElements(null));
+    }
     /**
      * add an element.
      * @return the index of the added element, or -1 if none
      */
-    abstract public int add();
+    abstract public int add(int position);
     
     /**
      * add an element.
@@ -121,12 +125,12 @@ abstract public class GenericList {
     abstract public boolean remove(String filter, int[] t_index);
     
     /**
-     * move an element.
-     * @param src the element to move
+     * move a set of elements.
+     * @param selection the elements to move
      * @param dst its new position
-     * @return true if the list has changed
+     * @return true if the list was changed
      */
-    abstract public boolean moveElement(int src, int dst);
+    abstract public boolean move(int[] selection, int dst);
 	/**
 	 * Run the action associated to an entry
 	 * @param row index of the entry

@@ -68,7 +68,7 @@ public class GsModelCheckerParser extends GsXMLHelper {
             			throw new SAXException(testType+" model checker is not available");
             		}
             		int ref = l_tests.add();
-            		l_tests.edit(null, ref, testName);
+            		l_tests.edit(null, ref, 0, testName);
             		mcheck = (GsModelChecker)l_tests.getElement(null, ref);
             		m_attr.clear();
             	} else if ("expected".equals(qName)) {

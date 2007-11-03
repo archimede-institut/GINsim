@@ -28,11 +28,6 @@ public class GsInitialStateList extends SimpleGenericList implements GsGraphList
 		return i;
 	}
 
-	public Vector getObjectType() {
-		return null;
-	}
-
-
 	public GsGraphEventCascade edgeAdded(Object data) {
 		return null;
 	}

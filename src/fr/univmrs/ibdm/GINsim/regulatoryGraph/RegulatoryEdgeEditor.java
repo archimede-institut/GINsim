@@ -158,8 +158,9 @@ class EdgeList extends GenericList {
 		canAdd = true;
 		canEdit = true;
 		canRemove = true;
-		v_type = new Vector();
-		v_type.add(GsRegulatoryEdge.class);
+		t_type = new Class[1];
+		t_type[0] = GsRegulatoryEdge.class;
+		
 		m_editor = new HashMap();
 		m_editor.put(GsRegulatoryEdge.class, new RegulatoryEdgeCellEditor(graph));
 	}
@@ -176,7 +177,7 @@ class EdgeList extends GenericList {
 		}
     }
     
-	public int add() {
+	public int add(int position) {
 	    if (!graph.isEditAllowed()) {
 	        return -1;
 	    }
@@ -219,10 +220,10 @@ class EdgeList extends GenericList {
 		return false;
 	}
 
-	public boolean edit(String filter, int i, Object o) {
+	public boolean edit(String filter, int i, int col, Object o) {
 		return false;
 	}
-	public boolean moveElement(int src, int dst) {
+	public boolean move(int[] sel, int diff) {
 		return false;
 	}
 	public void run(String filter, int row, int col) {
