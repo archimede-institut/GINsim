@@ -490,7 +490,7 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         if (t_sel.length != 1) {
             currentParameter = null;
         } else {
-            currentParameter = (GsSimulationParameters)paramList.getElement(t_sel[0]);
+            currentParameter = (GsSimulationParameters)paramList.getElement(null, t_sel[0]);
             mutantPanel.setStore(currentParameter);
             initStatePanel.setParam(currentParameter);
         }

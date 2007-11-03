@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
@@ -24,6 +25,7 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	public GsStableStateUI(GsRegulatoryGraph graph) {
 		super(graph.getGraphManager().getMainFrame(), "display.stableStates", 200, 100);
 		this.graph = graph;
+		setTitle(Translator.getString("STR_stableStates"));
 		Container panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		

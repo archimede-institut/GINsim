@@ -28,7 +28,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
     public void doSave(OutputStreamWriter os, GsGraph graph) {
         GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
         Vector nodeOrder = graph.getNodeOrder();
-        if (paramList == null || paramList.getNbElements() == 0 || nodeOrder == null || nodeOrder.size() == 0) {
+        if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
         try {
@@ -39,8 +39,8 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
                 s_nodeOrder += " "+nodeOrder.get(i);
             }
             out.addAttr("nodeOrder", s_nodeOrder);
-            for (int i=0 ; i<paramList.getNbElements() ; i++) {
-                GsSimulationParameters sparam = (GsSimulationParameters)paramList.getElement(i);
+            for (int i=0 ; i<paramList.getNbElements(null) ; i++) {
+                GsSimulationParameters sparam = (GsSimulationParameters)paramList.getElement(null, i);
                 sparam.toXML(out, null, 0);
             }
             out.closeTag();
@@ -55,7 +55,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
 
     public boolean needSaving(GsGraph graph) {
         GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
-        return paramList != null && paramList.getNbElements() > 0;
+        return paramList != null && paramList.getNbElements(null) > 0;
     }
 
 	public Object doCreate(GsGraph graph) {

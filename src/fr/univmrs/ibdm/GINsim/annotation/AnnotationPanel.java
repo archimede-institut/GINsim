@@ -144,19 +144,19 @@ class LinkList extends SimpleGenericList {
 	LinkList(GsGraph graph) {
 		this.graph = graph;
 		canAdd = true;
-		hasAction = true;
+		nbAction = 1;
 		canRemove = true;
 		canEdit = true;
-		inlineAddDel = true;
+		doInlineAddRemove = true;
 	}
-	public Object doCreate(String name, int type) {
+	public Object doCreate(String name) {
 		return new AnnotationLink(name, graph);
 	}
 	public boolean doEdit(Object data, Object value) {
 		((AnnotationLink)data).setText((String)value, graph);
 		return true;
 	}
-	public void doRun(int index) {
-		((AnnotationLink)v_data.get(index)).open();
+	public void doRun(int row, int col) {
+		((AnnotationLink)v_data.get(row)).open();
 	}
 }

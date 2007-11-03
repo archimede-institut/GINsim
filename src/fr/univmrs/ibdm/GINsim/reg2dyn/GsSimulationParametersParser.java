@@ -98,7 +98,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                         param.mutant = mutantList.get(s);
                         if (param.mutant == null) {
                             // TODO: report mutant not found
-                            System.out.println("mutant not found "+s+" ("+mutantList.getNbElements()+")");
+                            System.out.println("mutant not found "+s+" ("+mutantList.getNbElements(null)+")");
                         }
                     }
                 } else if (qName.equals("priorityClassList")) {
@@ -171,8 +171,8 @@ public class GsSimulationParametersParser extends GsXMLHelper {
                     String s = attributes.getValue("name");
                     if (s == null) {
                     	// old file, do some cleanup
-                    	int index = initList.add(-1,0);
-                    	GsInitialState istate = (GsInitialState)initList.getElement(index);
+                    	int index = initList.add();
+                    	GsInitialState istate = (GsInitialState)initList.getElement(null, index);
                     	istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
                     	param.m_initState.put(istate, null);
                     } else {

@@ -113,7 +113,7 @@ public class GsModelCheckerUI extends StackDialog {
     		splitTestEdit.setDividerLocation(location);
     		return;
     	}
-    	GsModelChecker mchecker = (GsModelChecker)l_tests.getElement(ts[0]);
+    	GsModelChecker mchecker = (GsModelChecker)l_tests.getElement(null, ts[0]);
     	splitTestEdit.setRightComponent(mchecker.getEditPanel(graph, this));
 		splitTestEdit.setDividerLocation(location);
     }
@@ -144,8 +144,8 @@ public class GsModelCheckerUI extends StackDialog {
 		}
 		super.cancel();
 		dispose();
-        for (int i=0 ; i<l_tests.getNbElements() ; i++) {
-            GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
+        for (int i=0 ; i<l_tests.getNbElements(null) ; i++) {
+            GsModelChecker checker = (GsModelChecker)l_tests.getElement(null, i);
             checker.cleanup();
         }
 	}
@@ -174,8 +174,8 @@ class modelCheckerRunner extends Thread {
         File output;
 		try {
 			output = TempDir.createGeneratedName("GINsim-mcheck_", null);
-	        for (int i=0 ; i<l_tests.getNbElements() ; i++) {
-	            GsModelChecker checker = (GsModelChecker)l_tests.getElement(i);
+	        for (int i=0 ; i<l_tests.getNbElements(null) ; i++) {
+	            GsModelChecker checker = (GsModelChecker)l_tests.getElement(null, i);
 	        	File odir = TempDir.createNamed(checker.getName(), output);
 	            try {
 					checker.run(mutants, ui, odir);

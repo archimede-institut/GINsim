@@ -84,12 +84,12 @@ public class GsNuSMVChecker implements GsModelChecker {
 
 	public void run(GsRegulatoryMutants mutants, GsModelCheckerUI ui, File outputDir) throws InterruptedException {
 		try {
-			for (int i = -1; i < mutants.getNbElements(); i++) {
+			for (int i = -1; i < mutants.getNbElements(null); i++) {
 				Object m;
 				if (i == -1) {
 					m = "-";
 				} else {
-					m = mutants.getElement(i);
+					m = mutants.getElement(null, i);
 				}
 				File src = new File(outputDir, m+".in");
 

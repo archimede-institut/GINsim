@@ -16,6 +16,9 @@ import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**
@@ -29,11 +32,9 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     private static final int DOWN = 1;
     private static final int NONE = 2;
     
+    protected static final String[] t_typeName = {" [+]", " [-]", ""};
+    
     private JScrollPane scrollpane;
-    private JScrollPane scrollpaneContent;
-    private JScrollPane scrollpaneAvaible;
-    private JList list_content;
-    private JList list_avaible;
     private JButton but_up;
     private JButton but_down;
     private JButton but_new;
@@ -46,16 +47,13 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     
     private Vector v_class;
     private Vector v_nodeOrder;
-    private ClassListModel contentModel;
-    private ClassListModel avaibleModel;
+    GenericListPanel contentPanel;
+    GenericListPanel availablePanel;
+    SimpleGenericList contentList = new SimpleGenericList();
+    SimpleGenericList availableList = new SimpleGenericList();
     
     private Vector v_content = new Vector();
-    private Vector v_content_comment = new Vector();
     private Vector v_avaible = new Vector();
-    private Vector v_avaible_comment = new Vector();
-    
-    private String S_PLUS = " [+]";
-    private String S_MINUS = " [-]";
     
     private Map m_elt;
     private GsReg2dynPriorityClass currentClass;
@@ -80,7 +78,8 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         this.m_elt = param.getMelt();
         this.v_nodeOrder = nodeOrder;
         initialize();
-        setSize(700, 400);
+        contentList.setData(v_content);
+        availableList.setData(v_avaible);
     }
     
     private void initialize() {
@@ -169,11 +168,26 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         add(getBut_up(), c_bup);
         add(getBut_down(), c_bdown);
         add(getCb_auto(), c_cautoconf);
-        add(getScrollpaneContent(), c_scroll_in);
+        add(getContentPanel(), c_scroll_in);
         add(getBut_insert(), c_binsert);
         add(getBut_remove(), c_bremove);
-        add(getScrollpaneAvaible(), c_scroll_av);
+        add(getAvaiblePanel(), c_scroll_av);
         add(getBut_group(), c_bgroup);
+    }
+    
+    protected GenericListPanel getContentPanel() {
+    	if (contentPanel == null) {
+    		contentPanel = new GenericListPanel();
+    		contentPanel.setList(contentList);
+    	}
+    	return contentPanel;
+    }
+    protected GenericListPanel getAvaiblePanel() {
+    	if (availablePanel == null) {
+    		availablePanel = new GenericListPanel();
+    		availablePanel.setList(availableList);
+    	}
+    	return availablePanel;
     }
     
     private JButton getBut_delete() {
@@ -273,20 +287,6 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     	return table_class;
     }
     
-    private JList getList_content() {
-        if (list_content == null) {
-            contentModel = new ClassListModel(v_content, v_content_comment);
-            list_content = new JList(contentModel);
-        }
-        return list_content;
-    }
-    private JList getList_avaible() {
-        if (list_avaible == null) {
-            avaibleModel = new ClassListModel(v_avaible, v_avaible_comment);
-            list_avaible = new JList(avaibleModel);
-        }
-        return list_avaible;
-    }
     private JScrollPane getScrollpaneClass() {
         if (scrollpane == null) {
             scrollpane = new JScrollPane();
@@ -294,24 +294,6 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
             scrollpane.setSize(20, scrollpane.getHeight());
         }
         return scrollpane;
-    }
-
-    private JScrollPane getScrollpaneContent() {
-        if (scrollpaneContent == null) {
-            scrollpaneContent = new JScrollPane();
-            scrollpaneContent.setViewportView(getList_content());
-            scrollpaneContent.setSize(100, scrollpaneContent.getHeight());
-        }
-        return scrollpaneContent;
-    }
-
-    private JScrollPane getScrollpaneAvaible() {
-        if (scrollpaneAvaible == null) {
-            scrollpaneAvaible = new JScrollPane();
-            scrollpaneAvaible.setViewportView(getList_avaible());
-            scrollpaneAvaible.setSize(100, scrollpaneAvaible.getHeight());
-        }
-        return scrollpaneAvaible;
     }
 
     protected void delete() {
@@ -401,7 +383,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
                 start++;
                 stop--;
                 // if moving up and already on top or moving down and already on bottom: don't do anything
-                if ((key==UP && start == 0) || (key==DOWN && stop == end-1)) {
+                if (key==UP && start == 0 || key==DOWN && stop == end-1) {
                     return null;
                 }
                 count++;
@@ -568,18 +550,19 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
      * add genes to the selected class: they will be removed from their current class.
      */
     protected void insert() {
-        int[] t = list_avaible.getSelectedIndices();
+        int[] t = availablePanel.getSelection();
         for (int i=0 ; i<t.length ; i++) {
-            Object k = v_avaible.get(t[i]);
-            if (v_avaible_comment.size() == v_avaible.size()) { // +1 and -1 are separated, don't move everything
-                Object[] tk = (Object[])m_elt.get(k);
-                if (v_avaible_comment.get(t[i]) == S_PLUS) {
+        	int index = t[i];
+            PriorityMember k = (PriorityMember)v_avaible.get(index);
+            if (k.type != NONE) { // +1 and -1 are separated, don't move everything
+                Object[] tk = (Object[])m_elt.get(k.vertex);
+                if (k.type == UP) {
                     tk[0] = currentClass;
                 } else {
                     tk[1] = currentClass;
                 }
             } else { // simple case
-                m_elt.put(k, currentClass);
+                m_elt.put(k.vertex, currentClass);
             }
         }
         classSelectionChanged();
@@ -589,19 +572,20 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
      * remove genes from the selected class: they will go back to the default one.
      */
     protected void remove() {
-        int[] t = list_content.getSelectedIndices();
+        int[] t = contentPanel.getSelection();
         for (int i=0 ; i<t.length ; i++) {
-            Object k = v_content.get(t[i]);
+        	int index = t[i];
+            PriorityMember k = (PriorityMember)v_content.get(index);
             Object lastClass = v_class.get(v_class.size()-1);
-            if (v_content_comment.size() == v_content.size()) { // +1 and -1 are separated, don't move everything
-                Object[] tk = (Object[])m_elt.get(k);
-                if (v_content_comment.get(t[i]) == S_PLUS) {
+            if (k.type != NONE) { // +1 and -1 are separated, don't move everything
+                Object[] tk = (Object[])m_elt.get(k.vertex);
+                if (k.type == UP) {
                     tk[0] = lastClass;
                 } else {
                     tk[1] = lastClass;
                 }
             } else { // simple case
-                m_elt.put(k, lastClass);
+                m_elt.put(k.vertex, lastClass);
             }
         }
         classSelectionChanged();
@@ -612,9 +596,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
      */
     protected void classSelectionChanged() {
         v_content.clear();
-        v_content_comment.clear();
         v_avaible.clear();
-        v_avaible_comment.clear();
         
         int[] ts = table_class.getSelectedRows();
         int[][] selExtended = getMovingRows(NONE, ts);
@@ -636,8 +618,8 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
             but_remove.setEnabled(false);
             but_insert.setEnabled(false);
             but_delete.setEnabled(false);
-            contentModel.fireAllChanged();
-            avaibleModel.fireAllChanged();
+            contentList.refresh();
+            availableList.refresh();
             return;
         }
         but_remove.setEnabled(true);
@@ -660,47 +642,38 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         
         Iterator it = v_nodeOrder.iterator();
         while (it.hasNext()) {
-            Object k = it.next();
-            Object target = m_elt.get(k);
+        	GsRegulatoryVertex v = (GsRegulatoryVertex)it.next();
+            PriorityMember k = new PriorityMember(v, NONE);
+            Object target = m_elt.get(v);
             if (target instanceof Object[]) {
                 Object[] t = (Object[])target;
+                k.type = DOWN;
+                PriorityMember kp = new PriorityMember(v, UP);
                 if (t[0] == currentClass) {
                     if (t[1] == currentClass) {
                         v_content.add(k);
-                        v_content_comment.add(S_PLUS);
-                        v_content.add(k);
-                        v_content_comment.add(S_MINUS);
+                        v_content.add(kp);
                     } else {
-                        v_content.add(k);
-                        v_content_comment.add(S_PLUS);
+                        v_content.add(kp);
                         v_avaible.add(k);
-                        v_avaible_comment.add(S_MINUS);
                     }
                 } else if (t[1] == currentClass) {
-                    v_avaible.add(k);
-                    v_avaible_comment.add(S_PLUS);
+                    v_avaible.add(kp);
                     v_content.add(k);
-                    v_content_comment.add(S_MINUS);
                 } else {
+                    v_avaible.add(kp);
                     v_avaible.add(k);
-                    v_avaible_comment.add(S_PLUS);
-                    v_avaible.add(k);
-                    v_avaible_comment.add(S_MINUS);
                 }
             } else {
-                if (m_elt.get(k) == currentClass) {
+                if (target == currentClass) {
                     v_content.add(k);
                 } else {
                     v_avaible.add(k);
                 }
             }
         }
-        contentModel.fireAllChanged();
-        avaibleModel.fireAllChanged();
-        
-        // reset selection in content and avaible lists
-        list_content.setSelectedIndices(new int[0]);
-        list_avaible.setSelectedIndices(new int[0]);
+        contentList.refresh();
+        availableList.refresh();
     }
     
     private JComboBox getCb_auto() {
@@ -754,37 +727,18 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     }
 }
 
-class ClassListModel extends DefaultListModel {
-    private static final long serialVersionUID = 7741212000452988183L;
-    
-    private Vector v;
-    private Vector v_comment;
-    
-    protected ClassListModel(Vector v, Vector v_comment) {
-        this.v = v;
-        this.v_comment = v_comment;
-    }
-    
-    public int getSize() {
-        return v.size();
-    }
+class PriorityMember {
+	GsRegulatoryVertex vertex;
+	int type;
+	
+	public PriorityMember(GsRegulatoryVertex vertex, int type) {
+		this.vertex = vertex;
+		this.type = type;
+	}
 
-    public Object getElementAt(int index) {
-        String s;
-        if (index >= 0 && index < getSize()) {
-            if (v_comment.size() == v.size()) {
-                s = ""+v_comment.get(index);
-            } else {
-                s = "";
-            }
-            return v.get(index) + s;
-        }
-        return null;
-    }
-
-    protected void fireAllChanged() {
-        fireContentsChanged(this, 0, getSize());
-    }
+	public String toString() {
+		return vertex+GsReg2dynPriorityClassConfig.t_typeName[type];
+	}
 }
 
 class ClassTableModel extends DefaultTableModel {
@@ -856,4 +810,14 @@ class ClassTableModel extends DefaultTableModel {
         fireTableRowsDeleted(i, i);
         fireTableRowsInserted(j, j);
     }
+}
+
+class ClassList extends SimpleGenericList {
+	protected ClassList (Vector v) {
+		setData(v);
+		canEdit = true;
+		canAdd = true;
+		canRemove = true;
+		canOrder = true;
+	}
 }

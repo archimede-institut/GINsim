@@ -45,11 +45,11 @@ public class GsInitStateTableModel extends AbstractTableModel {
         if (imanager == null ) {
             return 0;
         }
-		return imanager.getNbElements()+1;
+		return imanager.getNbElements(null)+1;
 	}
 
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (columnIndex < 2 && rowIndex >= imanager.getNbElements()) {
+		if (columnIndex < 2 && rowIndex >= imanager.getNbElements(null)) {
 			return false;
 		}
 		return true;
@@ -73,25 +73,25 @@ public class GsInitStateTableModel extends AbstractTableModel {
 		Vector element;
 
 		if (columnIndex == 0) {
-			if (rowIndex >= imanager.getNbElements()) {
+			if (rowIndex >= imanager.getNbElements(null)) {
 				return "";
 			}
-			return ((GsInitialState)imanager.getElement(rowIndex)).getName();
+			return ((GsInitialState)imanager.getElement(null, rowIndex)).getName();
 		}
 		if (columnIndex == 1) {
-			if (m_initState == null || rowIndex >= imanager.getNbElements()) {
+			if (m_initState == null || rowIndex >= imanager.getNbElements(null)) {
 				return Boolean.FALSE;
 			}
-			if (m_initState.containsKey(imanager.getElement(rowIndex))) {
+			if (m_initState.containsKey(imanager.getElement(null, rowIndex))) {
 				return Boolean.TRUE;
 			}
 			return Boolean.FALSE;
 		}
 		int ci = columnIndex - 2;
-		if (imanager == null || rowIndex >= imanager.getNbElements()) {
+		if (imanager == null || rowIndex >= imanager.getNbElements(null)) {
 			return "";
 		}
-        Map m_row = ((GsInitialState)imanager.getElement(rowIndex)).m;
+        Map m_row = ((GsInitialState)imanager.getElement(null, rowIndex)).m;
         element = (Vector)m_row.get(nodeOrder.get(ci));
         return showValue(element, ((GsRegulatoryVertex)nodeOrder.get(ci)).getMaxValue());
     }
@@ -190,15 +190,15 @@ public class GsInitStateTableModel extends AbstractTableModel {
 			return;
 		}
 		if (columnIndex == 0) {
-			if (rowIndex >= imanager.getNbElements()) {
+			if (rowIndex >= imanager.getNbElements(null)) {
 				return;
 			}
-			((GsInitialState)imanager.getElement(rowIndex)).setName((String)aValue);
+			((GsInitialState)imanager.getElement(null, rowIndex)).setName((String)aValue);
 			// FIXME: the name should be unique
 			return;
 		}
 		if (columnIndex == 1) {
-			if (rowIndex >= imanager.getNbElements()) {
+			if (rowIndex >= imanager.getNbElements(null)) {
 				return;
 			}
 			if (aValue == Boolean.TRUE) {
@@ -206,9 +206,9 @@ public class GsInitStateTableModel extends AbstractTableModel {
 					m_initState.clear();
 					//fireTableDataChanged();
 				}
-				m_initState.put(imanager.getElement(rowIndex), null);
+				m_initState.put(imanager.getElement(null, rowIndex), null);
 			} else {
-				m_initState.remove(imanager.getElement(rowIndex));
+				m_initState.remove(imanager.getElement(null, rowIndex));
 				// set it to null if empty ? probably _not_ a good idea
 			}
 			return;
@@ -228,10 +228,10 @@ public class GsInitStateTableModel extends AbstractTableModel {
 		int maxvalue = ((GsRegulatoryVertex)nodeOrder.get(ci)).getMaxValue();
         if (aValue == null || ((String)aValue).trim().equals("") || ((String)aValue).trim().equals("*")) {
             if (rowIndex >= 0 && rowIndex < getRowCount()-1) {
-                Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
+                Map m_line = ((GsInitialState)imanager.getElement(null, rowIndex)).m;
                 m_line.remove(nodeOrder.get(ci));
                 if (m_line.size() == 0) {
-                    imanager.remove(new int[] {rowIndex});
+                    imanager.remove(null, new int[] {rowIndex});
                     fireTableStructureChanged();
                 }
             }
@@ -285,12 +285,12 @@ public class GsInitStateTableModel extends AbstractTableModel {
 				}
 			}
             // if on the last line: create a new line an check it
-            if (rowIndex == imanager.getNbElements()) {
-            	imanager.add(rowIndex, 0);
+            if (rowIndex == imanager.getNbElements(null)) {
+            	imanager.add();
             	fireTableRowsInserted(rowIndex, rowIndex);
             	setValueAt(Boolean.TRUE, rowIndex, 1);
             }
-            Map m_line = ((GsInitialState)imanager.getElement(rowIndex)).m;
+            Map m_line = ((GsInitialState)imanager.getElement(null, rowIndex)).m;
             m_line.put(nodeOrder.get(ci),newcell);
 			fireTableCellUpdated(rowIndex,ci+2);
 		} catch (Exception e) {}
@@ -333,7 +333,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
         if (imanager == null || row < 0 || row == getRowCount()-1) {
             return;
         }
-        imanager.remove(new int[] {row});
+        imanager.remove(null, new int[] {row});
         fireTableRowsDeleted(row, row);
 	}
 

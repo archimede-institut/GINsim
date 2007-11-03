@@ -22,7 +22,7 @@ public class GsInitialStateList extends SimpleGenericList implements GsGraphList
         graph.addGraphListener(this);
     }
 
-	protected Object doCreate(String name, int type) {
+	protected Object doCreate(String name) {
 		GsInitialState i = new GsInitialState();
 		i.setName(name);
 		return i;
@@ -87,7 +87,7 @@ public class GsInitialStateList extends SimpleGenericList implements GsGraphList
                         if (v_val.size() == 0) {
                         	is.m.remove(data);
                         	if (is.m.isEmpty()) {
-                        		remove(new int[] {i});
+                        		remove(null, new int[] {i});
                         	}
                         }
                 		if (v == null) {
@@ -105,8 +105,8 @@ public class GsInitialStateList extends SimpleGenericList implements GsGraphList
 	}
 
 	public Object getInitState(String s) {
-    	for (int i=0 ; i<getNbElements() ; i++) {
-    		GsInitialState istate = (GsInitialState)getElement(i);
+    	for (int i=0 ; i<getNbElements(null) ; i++) {
+    		GsInitialState istate = (GsInitialState)getElement(null, i);
     		if (istate.getName().equals(s)) {
     			return istate;
     		}

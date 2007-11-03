@@ -418,13 +418,13 @@ class GsMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
         if (index == 0 || listMutants == null) {
             return "--";
         }
-        return listMutants.getElement(index-1);
+        return listMutants.getElement(null, index-1);
     }
 
     public int getSize() {
         if (listMutants == null) {
             return 1;
         }
-        return listMutants.getNbElements()+1;
+        return listMutants.getNbElements(null)+1;
     }
 }

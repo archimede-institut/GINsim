@@ -3,8 +3,6 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.AbstractAction;
@@ -19,7 +17,6 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.tagc.datastore.GenericList;
-import fr.univmrs.tagc.datastore.GenericListListener;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectEditor;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
@@ -151,43 +148,35 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	}
 }
 
-class EdgeList implements GenericList {
+class EdgeList extends GenericList {
 
 	GsRegulatoryGraph graph;
 	GsRegulatoryMultiEdge medge;
-	Vector v_listener = new Vector();
-	Vector v_type = new Vector();
-	private Map	m_ed = new HashMap();
 	
 	EdgeList(GsRegulatoryGraph graph) {
 		this.graph = graph;
+		canAdd = true;
+		canEdit = true;
+		canRemove = true;
+		v_type = new Vector();
 		v_type.add(GsRegulatoryEdge.class);
-		m_ed.put(GsRegulatoryEdge.class, new RegulatoryEdgeCellEditor(graph));
+		m_editor = new HashMap();
+		m_editor.put(GsRegulatoryEdge.class, new RegulatoryEdgeCellEditor(graph));
 	}
 	
 	void setMEdge(GsRegulatoryMultiEdge medge) {
 		this.medge = medge;
-		Iterator it = v_listener.iterator();
-		while (it.hasNext()) {
-			((GenericListListener)it.next()).contentChanged();
-		}
+		refresh();
 	}
 
     protected void addEdge(int value) {
 		int index = medge.addEdge(GsRegulatoryMultiEdge.SIGN_POSITIVE, value, graph);
 		if (index != -1) {
-			update();
+			refresh();
 		}
     }
     
-    protected void update() {
-    	Iterator it = v_listener.iterator();
-    	while (it.hasNext()) {
-    		((GenericListListener)it.next()).contentChanged();
-    	}
-    }
-    
-	public int add(int index, int type) {
+	public int add() {
 	    if (!graph.isEditAllowed()) {
 	        return -1;
 	    }
@@ -215,17 +204,14 @@ class EdgeList implements GenericList {
 		return 0;
 	}
 
-	public int filterThreshold() {
-		return Integer.MAX_VALUE;
-	}
-	public Object getElement(int i) {
+	public Object getElement(String filter, int i) {
 		return medge.getEdge(i);
 	}
 
-	public int getNbElements() {
+	public int getNbElements(String filter) {
 		return medge.getEdgeCount();
 	}
-	public boolean remove(int[] t_index) {
+	public boolean remove(String filter, int[] t_index) {
 		if (medge.getEdgeCount() > 1 && t_index.length == 1) {
 			medge.removeEdge(t_index[0], graph);
 			return true;
@@ -233,58 +219,13 @@ class EdgeList implements GenericList {
 		return false;
 	}
 
-	public void addListListener(GenericListListener l) {
-		v_listener.add(l);
-	}
-	public void removeListListener(GenericListListener l) {
-		v_listener.remove(l);
-	}
-	public boolean canAdd() {
-		return true;
-	}
-	public boolean canCopy() {
-		return false;
-	}
-	public boolean canEdit() {
-		return true;
-	}
-	public boolean canOrder() {
-		return false;
-	}
-	public boolean canRemove() {
-		return true;
-	}
-	public int copy(int i) {
-		return -1;
-	}
-	public boolean doInlineAddRemove() {
-		return false;
-	}
-	public boolean edit(int i, Object o) {
-		return false;
-	}
-	public Object getAction(int row) {
-		return null;
-	}
-	public String getName() {
-		return null;
-	}
-	public Vector getObjectType() {
-		return v_type;
-	}
-	public boolean hasAction() {
+	public boolean edit(String filter, int i, Object o) {
 		return false;
 	}
 	public boolean moveElement(int src, int dst) {
 		return false;
 	}
-	public void run(int i) {
-	}
-	public void setFilter(String filter) {
-	}
-
-	public Map getCellEditor() {
-		return m_ed;
+	public void run(String filter, int row, int col) {
 	}
 }
 
@@ -301,7 +242,7 @@ class AddEdgeNotificationAction implements GsGraphNotificationAction {
 		if (edgeList.medge == data) {
 			GsRegulatoryVertex vertex = ((GsRegulatoryMultiEdge)data).getSource();
 			vertex.setMaxValue((short)(vertex.getMaxValue()+1), (GsRegulatoryGraph)graph);
-			edgeList.add(-1,-1);
+			edgeList.add();
 			return true;
 		}
 		return false;

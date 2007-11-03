@@ -44,7 +44,7 @@ public class GsSimulationParameterList extends SimpleGenericList
         GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
         mutants.addListener(this);
         if (param == null) {
-        	add(0, 0);
+        	add();
         } else {
         	add(param,0);
         }
@@ -96,47 +96,48 @@ public class GsSimulationParameterList extends SimpleGenericList
     	return null;
     }
 
-    public int copy(int index) {
-    	if (index < 0 || index >= v_data.size()) {
-    		return -1;
-    	}
-    	GsSimulationParameters old = (GsSimulationParameters)v_data.get(index);
-        // find an unused name
-        String s = null;
-        boolean[] t = new boolean[getNbElements()];
-        for (int j=0 ; j<t.length ; j++) {
-            t[j] = true;
-        }
-        for (int j=0 ; j<t.length ; j++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_data.get(j);
-            if (param.name.startsWith(old.name+"_")) {
-                try {
-                    int v = Integer.parseInt(param.name.substring(10));
-                    if (v > 0 && v <= t.length) {
-                        t[v-1] = false;
-                    }
-                } catch (NumberFormatException e) {
-                }
-            }
-        }
-        for (int j=0 ; j<t.length ; j++) {
-            if (t[j]) {
-                s = old.name+"_"+(j+1);
-                break;
-            }
-        }
-        if (s == null) {
-            s = old.name+"_"+(t.length+1);
-        }
-
-        GsSimulationParameters parameter = (GsSimulationParameters)old.clone();
-        parameter.name = s;
-        index++;
-        if (index<=0 || index>v_data.size()) {
-            index = v_data.size();
-        }
-    	return add(parameter, index);
-    }
+    // TODO: purge/adapt dead code
+//    public int copy(int index) {
+//    	if (index < 0 || index >= v_data.size()) {
+//    		return -1;
+//    	}
+//    	GsSimulationParameters old = (GsSimulationParameters)v_data.get(index);
+//        // find an unused name
+//        String s = null;
+//        boolean[] t = new boolean[getNbElements(null)];
+//        for (int j=0 ; j<t.length ; j++) {
+//            t[j] = true;
+//        }
+//        for (int j=0 ; j<t.length ; j++) {
+//            GsSimulationParameters param = (GsSimulationParameters)v_data.get(j);
+//            if (param.name.startsWith(old.name+"_")) {
+//                try {
+//                    int v = Integer.parseInt(param.name.substring(10));
+//                    if (v > 0 && v <= t.length) {
+//                        t[v-1] = false;
+//                    }
+//                } catch (NumberFormatException e) {
+//                }
+//            }
+//        }
+//        for (int j=0 ; j<t.length ; j++) {
+//            if (t[j]) {
+//                s = old.name+"_"+(j+1);
+//                break;
+//            }
+//        }
+//        if (s == null) {
+//            s = old.name+"_"+(t.length+1);
+//        }
+//
+//        GsSimulationParameters parameter = (GsSimulationParameters)old.clone();
+//        parameter.name = s;
+//        index++;
+//        if (index<=0 || index>v_data.size()) {
+//            index = v_data.size();
+//        }
+//    	return add(parameter, index);
+//    }
 
     public int add(GsSimulationParameters param, int index) {
     	v_data.add(index, param);
@@ -158,7 +159,7 @@ public class GsSimulationParameterList extends SimpleGenericList
         }
     }
 
-	protected Object doCreate(String name, int type) {
+	protected Object doCreate(String name) {
         GsSimulationParameters parameter = new GsSimulationParameters(graph.getNodeOrder());
         parameter.name = name;
 		return parameter;

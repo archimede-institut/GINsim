@@ -55,8 +55,8 @@ public class GsRegulatoryMutantParser extends GsXMLHelper {
             }
             mutant = new GsRegulatoryMutantDef();
             mutant.name = attributes.getValue("name");
-            for (int i=0 ; i<mutantList.getNbElements() ; i++) {
-                if (mutantList.getElement(i).toString().equals(mutant.name)) {
+            for (int i=0 ; i<mutantList.getNbElements(null) ; i++) {
+                if (mutantList.getElement(null, i).toString().equals(mutant.name)) {
                     // TODO: report error: duplicate ID entry
                     return;
                 }

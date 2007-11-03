@@ -72,7 +72,7 @@ public class GsHTMLExport extends GsAbstractExport implements GenericStableState
 			out.write("  <h2>Initial states</h2>\n");
 			GsInitialStateList initStates = (GsInitialStateList) graph.getObject(
 					GsInitialStateManager.key, false);
-			if (initStates != null && initStates.getNbElements() > 0) {
+			if (initStates != null && initStates.getNbElements(null) > 0) {
 				model = new GsInitStateTableModel(v_no, null, initStates, false);
 				out.write("  <table>\n");
 				out.write("  <tr>\n");
@@ -81,7 +81,7 @@ public class GsHTMLExport extends GsAbstractExport implements GenericStableState
 					out.write("<td>" + v_no.get(i) + "</td>\n");
 				}
 				out.write("</tr>\n");
-				for ( int i=0 ; i< initStates.getNbElements() ; i++ ) {
+				for ( int i=0 ; i< initStates.getNbElements(null) ; i++ ) {
 					Map m = null;
 					out.write("<tr>\n");
 					out.write("<td>" + model.getValueAt(i, 0) + "</td>\n");
@@ -119,13 +119,13 @@ public class GsHTMLExport extends GsAbstractExport implements GenericStableState
 			
 			// mutants
 			GsRegulatoryMutants mlist = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
-			if (mlist != null && mlist.getNbElements() > 0) {
+			if (mlist != null && mlist.getNbElements(null) > 0) {
 				out.write("  <h2>Mutants</h2>\n");
 				out.write("<table>\n");
 				out.write("<tr align = " + "\"center\"" + ">\n");
 				out.write("<td>Mutant</td><td>Gene</td><td>Min</td>\n<td>Max</td>\n</tr>\n");
-				for (int i=0 ; i< mlist.getNbElements() ; i++) {
-					GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)mlist.getElement(i);
+				for (int i=0 ; i< mlist.getNbElements(null) ; i++) {
+					GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)mlist.getElement(null, i);
 					int nb = mutant.getNbChanges();
 					out.write("<tr>\n<td rowspan="+(nb+1)+">" + mutant.getName()+"</td>\n");
 					for (int j=0 ; j<nb ; j++) {

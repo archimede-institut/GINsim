@@ -67,14 +67,14 @@ public class GsModelCheckerParser extends GsXMLHelper {
             		if (typeIndex == -1) {
             			throw new SAXException(testType+" model checker is not available");
             		}
-            		int ref = l_tests.add(-1, 0);
-            		l_tests.edit(ref, testName);
-            		mcheck = (GsModelChecker)l_tests.getElement(ref);
+            		int ref = l_tests.add();
+            		l_tests.edit(null, ref, testName);
+            		mcheck = (GsModelChecker)l_tests.getElement(null, ref);
             		m_attr.clear();
             	} else if ("expected".equals(qName)) {
             		String s = attributes.getValue("test");
-            		for (int i=0 ; i<l_tests.getNbElements() ; i++) {
-            			GsModelChecker mc = (GsModelChecker)l_tests.getElement(i);
+            		for (int i=0 ; i<l_tests.getNbElements(null) ; i++) {
+            			GsModelChecker mc = (GsModelChecker)l_tests.getElement(null, i);
             			if (s.equals(mc.getName())) {
             				s = attributes.getValue("mutant");
             				if (s == null || s.equals("-")) {
@@ -87,21 +87,23 @@ public class GsModelCheckerParser extends GsXMLHelper {
         						} else {
         							vl.setSelectedIndex(0);
         						}
-            				} else for (int j=0 ; j<l_mutant.getNbElements() ; j++) {
-            					GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)l_mutant.getElement(j);
-            					if (s.equals(mutant.toString())) {
-            						ValueList vl = (ValueList)mc.getInfo(mutant);
-            						s = attributes.getValue("value");
-            						if ("Yes".equals(s)) {
-            							vl.setSelectedIndex(1);
-            						} else if ("No".equals(s)) {
-            							vl.setSelectedIndex(2);
-            						} else {
-            							vl.setSelectedIndex(0);
-            						}
-            						break;
-            					}
-            				}
+            				} else {
+								for (int j=0 ; j<l_mutant.getNbElements(null) ; j++) {
+									GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)l_mutant.getElement(null, j);
+									if (s.equals(mutant.toString())) {
+										ValueList vl = (ValueList)mc.getInfo(mutant);
+										s = attributes.getValue("value");
+										if ("Yes".equals(s)) {
+											vl.setSelectedIndex(1);
+										} else if ("No".equals(s)) {
+											vl.setSelectedIndex(2);
+										} else {
+											vl.setSelectedIndex(0);
+										}
+										break;
+									}
+								}
+							}
             				break;
             			}
             		}

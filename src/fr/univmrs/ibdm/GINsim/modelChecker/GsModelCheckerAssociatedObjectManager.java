@@ -37,8 +37,8 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 			GsXMLWriter out = new GsXMLWriter(os, null);
 			out.openTag("modelCheckerConfig");
 			out.openTag("testList");
-			for (int i=0 ; i<l_test.getNbElements() ; i++) {
-				GsModelChecker mcheck = (GsModelChecker)l_test.getElement(i);
+			for (int i=0 ; i<l_test.getNbElements(null) ; i++) {
+				GsModelChecker mcheck = (GsModelChecker)l_test.getElement(null, i);
 				out.openTag("test");
 				out.addAttr("name", mcheck.getName());
 				out.addAttr("type", mcheck.getType());
@@ -60,8 +60,8 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 			}
 			out.closeTag();
 			out.openTag("ExpectedList");
-			for (int i=0 ; i<l_test.getNbElements() ; i++) {
-				GsModelChecker mcheck = (GsModelChecker)l_test.getElement(i);
+			for (int i=0 ; i<l_test.getNbElements(null) ; i++) {
+				GsModelChecker mcheck = (GsModelChecker)l_test.getElement(null, i);
 				ValueList o = (ValueList)mcheck.getInfo("-");
 				if (o != null) {
 					out.openTag("expected");
@@ -70,8 +70,8 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 					out.addAttr("value", (String)o.get(o.getSelectedIndex()));
 					out.closeTag();
 				}
-				for (int j=0 ; j<mutants.getNbElements() ; j++) {
-					Object mutant = mutants.getElement(j);
+				for (int j=0 ; j<mutants.getNbElements(null) ; j++) {
+					Object mutant = mutants.getElement(null, j);
 					o = (ValueList)mcheck.getInfo(mutant);
 					if (o != null) {
 						out.openTag("expected");
@@ -95,7 +95,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 
 	public boolean needSaving(GsGraph graph) {
 		Object o = graph.getObject(key, false);
-		if (o == null || !(o instanceof GenericList) || ((GenericList)o).getNbElements() < 1) {
+		if (o == null || !(o instanceof GenericList) || ((GenericList)o).getNbElements(null) < 1) {
 			return false;
 		}
 		return true;

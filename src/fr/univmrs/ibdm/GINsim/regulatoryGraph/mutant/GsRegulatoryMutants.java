@@ -157,11 +157,7 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
         return null;
     }
 
-	public Vector getObjectType() {
-		return null;
-	}
-
-	protected Object doCreate(String name, int type) {
+	protected Object doCreate(String name) {
         GsRegulatoryMutantDef m = new GsRegulatoryMutantDef();
         m.name = name;
 		return m;
@@ -267,7 +263,7 @@ class MutantPanel extends JSplitPane {
            pm.setEnabled(false);
            return;
        }
-       curMutant = (GsRegulatoryMutantDef)mutants.getElement(t_sel[0]);
+       curMutant = (GsRegulatoryMutantDef)mutants.getElement(null, t_sel[0]);
        pm.setEnabled(true);
        model.setEditedObject(curMutant, v_nodeOrder);
        ap.setEditedObject(curMutant.annotation);

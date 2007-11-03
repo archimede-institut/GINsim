@@ -31,14 +31,14 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
     public void doSave(OutputStreamWriter os, GsGraph graph) {
         GsInitialStateList list = (GsInitialStateList)graph.getObject(key, true);
         Vector nodeOrder = graph.getNodeOrder();
-        if (list == null || list.getNbElements() == 0 || nodeOrder == null || nodeOrder.size() == 0) {
+        if (list == null || list.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
         try {
             GsXMLWriter out = new GsXMLWriter(os, null);
             out.openTag("initialStates");
-            for (int i=0 ; i<list.getNbElements() ; i++) {
-            	GsInitialState is = (GsInitialState)list.getElement(i);
+            for (int i=0 ; i<list.getNbElements(null) ; i++) {
+            	GsInitialState is = (GsInitialState)list.getElement(null, i);
             	out.openTag("initialState");
             	out.addAttr("name", is.name);
                 String s = "";
@@ -67,7 +67,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 
     public boolean needSaving(GsGraph graph) {
         GsInitialStateList list = (GsInitialStateList)graph.getObject(key, false);
-        return (list != null && list.getNbElements() > 0);
+        return list != null && list.getNbElements(null) > 0;
     }
 
 	public Object doCreate(GsGraph graph) {
@@ -94,8 +94,8 @@ class initStateParser extends GsXMLHelper {
         super.startElement(uri, localName, qName, attributes);
         
         if ("initialState".equals(qName)) {
-        	int index = list.add(-1,0);
-        	GsInitialState istate = (GsInitialState)list.getElement(index);
+        	int index = list.add();
+        	GsInitialState istate = (GsInitialState)list.getElement(null, index);
         	istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
         	istate.name = attributes.getValue("name").trim();
         }

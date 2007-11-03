@@ -31,14 +31,14 @@ public class GsMutantListManager implements
     public void doSave(OutputStreamWriter os, GsGraph graph) {
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject(key, false);
         Vector nodeOrder = graph.getNodeOrder();
-        if (lMutant == null || lMutant.getNbElements() == 0 || nodeOrder == null || nodeOrder.size() == 0) {
+        if (lMutant == null || lMutant.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
         try {
             GsXMLWriter out = new GsXMLWriter(os, null);
             out.openTag("mutantList");
-            for (int i=0 ; i<lMutant.getNbElements() ; i++) {
-                GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)lMutant.getElement(i);
+            for (int i=0 ; i<lMutant.getNbElements(null) ; i++) {
+                GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)lMutant.getElement(null, i);
                 mutant.toXML(out);
             }
             out.closeTag();
@@ -53,7 +53,7 @@ public class GsMutantListManager implements
 
     public boolean needSaving(GsGraph graph) {
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject("mutant", false);
-        return (lMutant != null && lMutant.getNbElements() > 0);
+        return (lMutant != null && lMutant.getNbElements(null) > 0);
     }
 
 	public Object doCreate(GsGraph graph) {

@@ -10,11 +10,10 @@ import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
 import fr.univmrs.tagc.datastore.ValueList;
 
-public class GsModelCheckerList extends SimpleGenericList implements GenericList, GsGraphListener, GsRegulatoryMutantListener {
+public class GsModelCheckerList extends SimpleGenericList implements GsGraphListener, GsRegulatoryMutantListener {
 
 	private GsRegulatoryGraph graph;
 	
@@ -26,8 +25,8 @@ public class GsModelCheckerList extends SimpleGenericList implements GenericList
 		canEdit = true;
 	}
 
-	public Object doCreate(String name, int type) {
-		return ((GsModelCheckerDescr)GsModelCheckerPlugin.v_checker.get(type)).createNew(name, graph);
+	public Object doCreate(String name) {
+		return ((GsModelCheckerDescr)GsModelCheckerPlugin.v_checker.get(0)).createNew(name, graph);
 	}
 
 	public void mutantAdded(Object mutant) {
@@ -99,21 +98,21 @@ class modelCheckerTableModel extends DefaultTableModel {
     	if (v_check == null) {
     		return 1;
     	}
-        return v_check.getNbElements() + 1;
+        return v_check.getNbElements(null) + 1;
     }
 
     public String getColumnName(int column) {
         if (column == 0) {
             return "mutant";
         }
-        return v_check.getElement(column-1).toString();
+        return v_check.getElement(null, column-1).toString();
     }
 
     public int getRowCount() {
     	if (mutants == null) {
     		return 1;
     	}
-        return mutants.getNbElements()+1;
+        return mutants.getNbElements(null)+1;
     }
 
     public Object getValueAt(int row, int column) {
@@ -121,12 +120,12 @@ class modelCheckerTableModel extends DefaultTableModel {
             if (row == 0) {
                 return "-";
             }
-            return mutants.getElement(row-1);
+            return mutants.getElement(null, row-1);
         }
         if (row == 0) {
         	return v_check.getInfo(column-1, "-");
         }
-        return v_check.getInfo(column-1, mutants.getElement(row-1));
+        return v_check.getInfo(column-1, mutants.getElement(null, row-1));
     }
 
     public boolean isCellEditable(int row, int column) {

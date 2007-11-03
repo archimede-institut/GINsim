@@ -19,7 +19,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.GenericListListener;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
@@ -47,7 +46,6 @@ public class GenericListPanel extends JPanel
     JButton b_up;
     JButton b_down;
     JButton b_add;
-    JButton b_copy;
     JButton b_del;
     StatusTextField t_filter;
     JLabel l_title = new JLabel();
@@ -116,17 +114,6 @@ public class GenericListPanel extends JPanel
             }
         });
         this.add(b_add, c);
-        
-        c = new GridBagConstraints();
-        c.gridx = 2;
-        c.gridy = 3;
-        b_copy = new StockButton(Translator.getString("STR_copy"));
-        b_copy.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                doCopy();
-            }
-        });
-        this.add(b_copy, c);
         
         c = new GridBagConstraints();
         c.gridx = 2;
@@ -204,7 +191,6 @@ public class GenericListPanel extends JPanel
             b_up.setVisible(false);
             b_down.setVisible(false);
             b_add.setVisible(false);
-            b_copy.setVisible(false);
             b_del.setVisible(false);
             t_filter.setVisible(false);
             return;
@@ -212,25 +198,15 @@ public class GenericListPanel extends JPanel
         b_up.setVisible(list.canOrder());
         b_down.setVisible(list.canOrder());
         b_add.setVisible(list.canAdd() && !list.doInlineAddRemove());
-        b_copy.setVisible(list.canCopy());
         b_del.setVisible(list.canRemove() && !list.doInlineAddRemove());
-        if (list.getNbElements() > 0) {
+        if (list.getNbElements(null) > 0) {
             jl.getSelectionModel().setSelectionInterval(0, 0);
         }
-        if (list.hasAction()) {
-        	jl.getColumnModel().getColumn(0).setMaxWidth(bsize);
+        for (int i=0 ; i<list.nbAction ; i++) {
+        	jl.getColumnModel().getColumn(i).setMaxWidth(bsize);
         }
     }
     
-    protected void updateFilter() {
-    	boolean cur = t_filter.isVisible();
-    	boolean next = list.getNbElements() > list.filterThreshold();
-    	if (cur != next) {
-    		t_filter.setVisible(next);
-    		getLayout().layoutContainer(this);
-    	}
-    }
-
 	protected void doMoveUp() {
         if (list == null) {
             return;
@@ -270,7 +246,7 @@ public class GenericListPanel extends JPanel
         int[] index=jl.getSelectedRows();
         for (int i=index.length-1;i>=0;i--) {
             int a = index[i];
-            if (a<list.getNbElements()-1) {
+            if (a<list.getNbElements(null)-1) {
                 list.moveElement(a, a+1);
                 index[i]=a+1;
             } else {
@@ -301,18 +277,7 @@ public class GenericListPanel extends JPanel
         if (list == null) {
             return;
         }
-        // TODO: deal with several types!
-        int n = list.add(jl.getSelectedRow(), 0);
-        if (n != -1) {
-            refresh();
-            jl.getSelectionModel().setSelectionInterval(n, n);
-        }
-    }
-    protected void doCopy() {
-        if (list == null) {
-            return;
-        }
-        int n = list.copy(jl.getSelectedRow());
+        int n = list.add();
         if (n != -1) {
             refresh();
             jl.getSelectionModel().setSelectionInterval(n, n);
@@ -323,9 +288,9 @@ public class GenericListPanel extends JPanel
             return;
         }
         int[] sel = jl.getSelectedRows();
-        if (sel.length > 0 && list.remove(sel)) {
+        if (sel.length > 0 && list.remove(null, sel)) {
             int i = sel[0];
-            i = i>=list.getNbElements() ? list.getNbElements()-1 : i;
+            i = i>=list.getNbElements(null) ? list.getNbElements(null)-1 : i;
             refresh();
             jl.getSelectionModel().setSelectionInterval(i,i);
         }
@@ -335,7 +300,16 @@ public class GenericListPanel extends JPanel
      * @return the current selection
      */
     public int[] getSelection() {
-        return jl.getSelectedRows();
+    	String filter = t_filter.getText();
+    	if (filter == null || filter == "") {
+    		return jl.getSelectedRows();
+    	}
+    	int[] t = jl.getSelectedRows();
+    	int[] ret = new int[t.length];
+    	for (int i=0 ; i<t.length ; i++) {
+    		ret[i] = list.getRealIndex(filter, t[i]);
+    	}
+    	return ret;
     }
 
     /**
@@ -347,7 +321,7 @@ public class GenericListPanel extends JPanel
     }
     
     private void refreshHide() {
-        if (list.getNbElements() <= autohide) {
+        if (list.getNbElements(null) <= autohide) {
             if (sp.isVisible()) {
                 sp.setVisible(false);
                 b_del.setVisible(false);
@@ -419,23 +393,25 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     private int lastLineInc = 0;
     private Map m_button = new HashMap();
     private Vector v_type;
+    
+    private String filter = null;
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return list.canEdit() && (!list.hasAction() || columnIndex == 1);
+        return list.canEdit() && columnIndex > list.nbAction;
     }
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        list.edit(rowIndex, aValue);
+        list.edit(filter, rowIndex, aValue);
     }
 
     public Object getValueAt(int row, int col) {
         if (list == null) {
             return null;
         }
-        if (lastLineInc != 0 && row == list.getNbElements()) {
+        if (lastLineInc != 0 && row == list.getNbElements(null)) {
         	return "";
         }
-        if (list.hasAction() && col == 0) {
-        	Object oa = list.getAction(row);
+        if (col < list.nbAction) {
+        	Object oa = list.getAction(filter, row, col);
         	if (oa == null || "".equals(oa)) {
         		return "";
         	}
@@ -453,15 +429,15 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
         	}
         	return b;
         }
-        return list.getElement(row);
+        return list.getElement(filter, row);
     }
     public Class getColumnClass(int columnIndex) {
-    	if (list.hasAction() && columnIndex == 0) {
+    	if (columnIndex < list.nbAction) {
     		return JButton.class;
     	}
     	if (v_type != null) {
     		panel.installEditor();
-    		return (Class)v_type.get(list.hasAction() ? columnIndex-1 : columnIndex);
+    		return (Class)v_type.get(columnIndex-list.nbAction);
     	}
 		return super.getColumnClass(columnIndex);
 	}
@@ -469,20 +445,17 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
         if (list == null) {
             return 0;
         }
-        return list.getNbElements()+lastLineInc;
+        return list.getNbElements(filter)+lastLineInc;
     }
     public int getColumnCount() {
-        if (list == null) {
-            return 0;
-        }
-        if (list.hasAction()) {
-        	return 2;
-        }
-        return 1;
+    	if (list == null) {
+    		return 0;
+    	}
+        return list.getNbCol();
     }
     
     public String getColumnName(int column) {
-    	if (list != null && (!list.hasAction() || column == 1)) {
+    	if (list != null && column > list.nbAction) {
     		return list.getName();
     	}
         return "";
@@ -491,7 +464,11 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     	if (list == null) {
     		return;
     	}
-    	list.setFilter(filter);
+    	if (filter != null && filter.length() == 0) {
+    		this.filter = null;
+    	} else {
+    		this.filter = filter;
+    	}
     	fireTableDataChanged();
     }
     void setList(GenericList list, GenericListPanel panel) {
@@ -508,25 +485,20 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     }
     void firechange(int min, int max) {
         fireTableRowsUpdated(min, max);
-		panel.updateFilter();
     }
 	public void contentChanged() {
 		fireTableDataChanged();
-		panel.updateFilter();
 	}
 	public void itemAdded(Object item, int pos) {
 		fireTableRowsInserted(pos, pos);
-		panel.updateFilter();
 	}
 	public void structureChanged() {
 		fireTableStructureChanged();
-		panel.updateFilter();
 	}
 	public void itemRemoved(Object item, int pos) {
 		fireTableRowsDeleted(pos, pos);
-		panel.updateFilter();
 	}
 	public void actionPerformed(int row, int col) {
-		list.run(row);
+		list.run(filter, row, col);
 	}
 }

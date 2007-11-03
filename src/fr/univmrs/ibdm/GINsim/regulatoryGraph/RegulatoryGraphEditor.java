@@ -142,7 +142,7 @@ class GsGraphOrderList extends SimpleGenericList {
 		if (graph instanceof GsRegulatoryGraph) {
 			canOrder = true;
 			canEdit = true;
-			hasAction = true;
+			nbAction = 1;
 			this.graph = (GsRegulatoryGraph)graph;
 		}
 	}
@@ -156,8 +156,8 @@ class GsGraphOrderList extends SimpleGenericList {
 		}
 	}
 
-	protected void doRun(int index) {
-		graph.getGraphManager().select(v_data.get(index));
+	protected void doRun(int row, int col) {
+		graph.getGraphManager().select(v_data.get(row));
 	}
 	
 }
