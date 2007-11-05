@@ -7,7 +7,7 @@
     <tstamp>
         <format property="CURDATE" pattern="yyyy-MM-dd"/>
     </tstamp>
-	<property name="baseversion" value="2.3"/>
+	<property name="baseversion" value="2.4"/>
 	<property name="version" value="${baseversion}_${CURDATE}" />
 	
 	<!-- set global properties for this build -->
@@ -133,6 +133,8 @@
     		<javac source="1.4" target="1.4" classpath="${classpath}" srcdir="${src}" destdir="${build}"/>
   		<property name="path" value="fr/univmrs/ibdm/GINsim/ressources"/>
   		<copy todir="${build}/${path}"><fileset dir="${src}/${path}"/></copy>
+  		<property name="p2" value="fr/univmrs/tagc/ressources"/>
+  		<copy todir="${build}/${p2}"><fileset dir="${src}/${p2}"/></copy>
 	</target>
 
 	
