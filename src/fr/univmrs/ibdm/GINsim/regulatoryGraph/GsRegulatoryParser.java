@@ -253,6 +253,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                             }
                         	storeMaxValueForCheck(edge, maxvalue);
                             m_edges.put(id, edge);
+                            edge.me.rescanSign(graph);
                             ereader.setEdge(edge.me);
                         } catch (NumberFormatException e) { throw new SAXException("malformed interaction's parameters"); }
                     } else {
