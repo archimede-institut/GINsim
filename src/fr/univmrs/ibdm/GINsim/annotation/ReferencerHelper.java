@@ -70,6 +70,7 @@ public class ReferencerHelper implements AnnotationHelper {
 					}
 				
 				};
+				
 				graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
 						Translator.getString("STR_noref"), 
 					action, this,

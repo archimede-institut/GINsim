@@ -119,17 +119,17 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 	}
 
 	public GsGraphEventCascade vertexAdded(Object data) {
-		setEditedObject(graph);
+		refresh(true);
 		return null;
 	}
 
 	public GsGraphEventCascade vertexRemoved(Object data) {
-		setEditedObject(graph);
+		refresh(true);
 		return null;
 	}
 
 	public GsGraphEventCascade vertexUpdated(Object data) {
-		setEditedObject(graph);
+		refresh(true);
 		return null;
 	}
 }

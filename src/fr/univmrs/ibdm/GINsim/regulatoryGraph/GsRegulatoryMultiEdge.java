@@ -229,15 +229,6 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 			return null;
 		}
 		return edges[index].getShortDetail(" ");
-//		short min = edges[index].threshold;
-//		if (index == edgecount-1) {
-//			return "["+min+",Max] ; "+SIGN[edges[index].sign];
-//		}
-//		int max = edges[index+1].threshold-1;
-//		if (min > max) {
-//			return "["+min+", INVALID] ; "+SIGN[edges[index].sign];
-//		}
-//		return "["+min+","+max+"] ; "+SIGN[edges[index].sign];
 	}
 
 	/**

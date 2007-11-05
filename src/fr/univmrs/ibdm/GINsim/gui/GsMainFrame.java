@@ -341,20 +341,19 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
         gsGraphMapPanel = graph.getGraphManager().getGraphMapPanel(graphScrollPane);
         jSplitPane1.setRightComponent(gsGraphMapPanel);
 
-        	if (graphParameterPanel != null) {
-        		jTabbedPane.remove(graphParameterPanel);
-        	}
-        	graphEditor = graph.getGraphEditor();
-        	if (graphEditor == null) {
-        		graphParameterPanel = graph.getGraphParameterPanel();
-        		if (graphParameterPanel != null) {
-        			jTabbedPane.addTab(Translator.getString("STR_tab_graphParameter"), null, graphParameterPanel, null);
-        		}
-        	} else {
-    			jTabbedPane.addTab(Translator.getString("STR_tab_graphParameter"), null, new GenericPropertyEditorPanel(graphEditor), null);
-    			graphEditor.setEditedObject(graph);
-        	}
-
+        if (graphParameterPanel != null) {
+        	jTabbedPane.remove(graphParameterPanel);
+        }
+        graphEditor = graph.getGraphEditor();
+        if (graphEditor != null) {
+        	graphParameterPanel = new GenericPropertyEditorPanel(graphEditor);
+        	graphEditor.refresh(true);
+        } else {
+        	graphParameterPanel = graph.getGraphParameterPanel();
+        }
+        if (graphParameterPanel != null) {
+        	jTabbedPane.addTab(Translator.getString("STR_tab_graphParameter"), null, graphParameterPanel, null);
+        }
         gsActions.setDefaults();
 
         if (gsGraphMapPanel == null) {

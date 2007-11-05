@@ -30,14 +30,13 @@ import fr.univmrs.tagc.datastore.ObjectEditor;
 public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulatoryGraph {
 
 	private JPanel optionPanel = null;
-	//private GsRegulatoryGraphPropertiesPanel parameterPanel = null;
 	private ObjectEditor graphEditor;
 
 	private int nextid=0;
 
     GsParameterPanel edgePanel = null;
     ObjectEditor vertexEditor = null;
-	private ObjectEditor	edgeEditor;
+	private ObjectEditor edgeEditor;
 
     private static GsGraph copiedGraph = null;
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
@@ -432,12 +431,6 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 		return s;
 	}
 
-//	public JPanel getGraphParameterPanel() {
-//		if (parameterPanel == null) {
-//			parameterPanel = new GsRegulatoryGraphPropertiesPanel(this);
-//		}
-//		return parameterPanel;
-//	}
 	public ObjectEditor getGraphEditor() {
 		if (graphEditor == null) {
 			graphEditor = new RegulatoryGraphEditor();
