@@ -1,9 +1,6 @@
 package fr.univmrs.tagc.datastore.gui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -30,7 +27,7 @@ import fr.univmrs.tagc.widgets.StockButton;
  * using the GenericList interface as a backend.
  */
 public class GenericListPanel extends JPanel 
-	implements KeyListener, ObjectPropertyEditorUI {
+	implements KeyListener, ObjectPropertyEditorUI, ListSelectionListener {
     private static final long serialVersionUID = -4236977685092639157L;
     
     JScrollPane sp = new JScrollPane();
@@ -46,6 +43,9 @@ public class GenericListPanel extends JPanel
     JButton b_del;
     StatusTextField t_filter;
     JLabel l_title = new JLabel();
+    
+    JPanel p_right;
+    CardLayout cards;
 
 	// TODO: fix ugly hack for the size of the action column
     int bsize = 25;
@@ -53,27 +53,30 @@ public class GenericListPanel extends JPanel
 	private GenericPropertyInfo	pinfo;
     
     public GenericListPanel() {
-    	this(null, null, null);
+    	this(null, null);
     }
-    public GenericListPanel(JComponent rightCmp, JComponent bottomCmp, JComponent buttonCmp) {
+    public GenericListPanel(Map m_right, Map m_bottom) {
     	jl.addActionListener(model);
-    	jl.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                updateSelection();
-            }
-        });
+    	jl.getSelectionModel().addListSelectionListener(this);
     	JPanel targetpanel = this;
-    	if (rightCmp != null) {
+    	if (m_right != null) {
     		setLayout(new GridLayout());
     		JSplitPane split = new JSplitPane();
     		targetpanel = new JPanel();
-    		split.setRightComponent(rightCmp);
+    		p_right = new JPanel();
+    		cards = new CardLayout();
+    		p_right.setLayout(cards);
+    		p_right.add(new JPanel(), "empty");
+    		Iterator it = m_right.entrySet().iterator();
+    		while (it.hasNext()) {
+    			Entry e = (Entry)it.next();
+    			p_right.add((Component)e.getValue(), e.getKey().toString());
+    		}
+    		cards.show(p_right, "empty");
+    		split.setRightComponent(p_right);
     		split.setLeftComponent(targetpanel);
     		this.add(split);
-    		if (rightCmp instanceof ListSelectionListener) {
-    			// TODO: give it something more useful ?
-    			jl.getSelectionModel().addListSelectionListener((ListSelectionListener)rightCmp);
-    		}
+    		split.setDividerLocation(150);
     	}
         targetpanel .setLayout(new GridBagLayout());
         sp.setViewportView(jl);
@@ -151,11 +154,6 @@ public class GenericListPanel extends JPanel
         targetpanel.add(b_down, c);
     }
 
-    protected void updateSelection() {
-    	if (pinfo != null) {
-    		pinfo.setValue(jl.getSelectedRow());
-    	}
-    }
     /**
      * set when to autohide most of this widget.
      * (when the list contains <code>autohide</code> elements or less, 
@@ -399,6 +397,19 @@ public class GenericListPanel extends JPanel
 		}
 		return list.getElement(t_filter.getText(),t_sel[0]);
 	}
+	public void valueChanged(ListSelectionEvent e) {
+    	if (pinfo != null) {
+    		pinfo.setValue(jl.getSelectedRow());
+    	}
+    	if (cards != null) {
+	    	int[] t_sel = getSelection();
+	    	if (t_sel.length == 1) {
+	    		cards.show(p_right, getSelectedItem().getClass().toString());
+	    	} else {
+	    		cards.show(p_right, "empty");
+	    	}
+    	}
+	}
 }
 
 class listModel extends AbstractTableModel implements GenericListListener, TableActionListener {
@@ -475,8 +486,8 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     }
     
     public String getColumnName(int column) {
-    	if (list != null && column > list.nbAction) {
-    		if (list.nbcol == list.nbAction+1) {
+    	if (list != null && column >= list.nbAction) {
+    		if (list.nbcol == 1) {
     			return list.getTitle();
     		}
     		return list.getColName(column-list.nbAction);

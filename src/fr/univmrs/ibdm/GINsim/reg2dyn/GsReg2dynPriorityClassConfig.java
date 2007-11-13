@@ -51,7 +51,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
     GenericListPanel listPanel = null;
 
     private JToggleButton but_group;
-	private GenericListPanel	pcpanel;
+	private GenericListPanel pcpanel;
     
     private static final int AUTO_MANY = 1;
     private static final int AUTO_PLUS_MINUS = 2;

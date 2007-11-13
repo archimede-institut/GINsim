@@ -68,6 +68,19 @@ class PriorityClassDefinition extends SimpleGenericList implements GsNamedObject
         return newclass;
 	}
 	
+	public String getColName(int col) {
+		switch (col) {
+			case 0:
+				return "Rank";
+			case 1:
+				return "Sync";
+			case 2:
+				return "Name";
+			default:
+				return super.getColName(col);
+		}
+	}
+
 	public boolean remove(String filter, int[] t_index) {
 		if (t_index.length >= v_data.size()) {
 			return false;

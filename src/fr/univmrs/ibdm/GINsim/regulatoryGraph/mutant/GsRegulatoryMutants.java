@@ -5,12 +5,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -38,11 +39,15 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
      * @param graph
      * @return a panel to configure mutants
      */
-    public static JSplitPane getMutantConfigPanel(GsRegulatoryGraph graph) {
+    public static JPanel getMutantConfigPanel(GsRegulatoryGraph graph) {
         GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
         MutantPanel mpanel = new MutantPanel();
-        mpanel.setEditedObject(mutants, graph.getNodeOrder());
-        return mpanel;
+        Map m = new HashMap();
+        m.put(GsRegulatoryMutantDef.class, mpanel);
+        GenericListPanel lp = new GenericListPanel(m, null);
+        lp.setList(mutants);
+        mpanel.setEditedObject(mutants, lp, graph.getNodeOrder());
+    	return lp;
     }
 
     Vector v_listeners = new Vector();
@@ -180,73 +185,53 @@ class MutantCascadeUpdate implements GsGraphEventCascade {
     }
 }
 
-class MutantPanel extends JSplitPane {
+class MutantPanel extends JPanel {
     private static final long serialVersionUID = 2625670418830465925L;
     
     GenericListPanel lp;
-    JPanel pm;
+
     GsRegulatoryMutantModel model;
     EnhancedJTable table_change;
     GsRegulatoryMutantDef curMutant = null;
     private GsRegulatoryMutants mutants;
     Vector v_nodeOrder;
     AnnotationPanel ap;
-    
-    MutantPanel() {
-        lp = new GenericListPanel();
-        lp.setTitle(Translator.getString("STR_mutantListTitle"));
-        lp.setSize(50, getHeight());
-        setLeftComponent(lp);
-        setRightComponent(getPm());
-        setDividerLocation(200);
+
+    public MutantPanel() { 
+        setLayout(new GridBagLayout());
         
-        lp.addSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                updateSelection();
+        model = new GsRegulatoryMutantModel();
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridwidth = 2;
+        c.fill = GridBagConstraints.BOTH;
+        JScrollPane sp = new JScrollPane();
+        table_change = new EnhancedJTable(model);
+        sp.setViewportView(table_change);
+        add(sp, c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        JButton bdel = new JButton("X");
+        bdel.setForeground(Color.RED);
+        bdel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                delete();
             }
         });
-    }
-    
-    private JPanel getPm() {
-        if (pm == null) {
-            pm = new JPanel();
-            pm.setLayout(new GridBagLayout());
-            pm.setSize(250, getHeight());
-            
-            model = new GsRegulatoryMutantModel();
-            GridBagConstraints c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 2;
-            c.weightx = 1;
-            c.weighty = 1;
-            c.gridwidth = 2;
-            c.fill = GridBagConstraints.BOTH;
-            JScrollPane sp = new JScrollPane();
-            table_change = new EnhancedJTable(model);
-            sp.setViewportView(table_change);
-            pm.add(sp, c);
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 1;
-            JButton bdel = new JButton("X");
-            bdel.setForeground(Color.RED);
-            bdel.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    delete();
-                }
-            });
-            pm.add(bdel,c);
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 3;
-            c.gridwidth = 2;
-            c.weightx = 1;
-            c.weighty = 1;
-            c.fill = GridBagConstraints.BOTH;
-            ap = new AnnotationPanel();
-            pm.add(ap,c);
-        }
-        return pm;
+        add(bdel,c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 3;
+        c.gridwidth = 2;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.fill = GridBagConstraints.BOTH;
+        ap = new AnnotationPanel();
+        add(ap,c);
     }
     
     protected void delete() {
@@ -260,25 +245,23 @@ class MutantPanel extends JSplitPane {
         int[] t_sel = lp.getSelection();
        if (t_sel == null || t_sel.length != 1) {
            curMutant = null;
-           pm.setEnabled(false);
            return;
        }
        curMutant = (GsRegulatoryMutantDef)mutants.getElement(null, t_sel[0]);
-       pm.setEnabled(true);
        model.setEditedObject(curMutant, v_nodeOrder);
        ap.setEditedObject(curMutant.annotation);
     }
     
-    void setEditedObject(GsRegulatoryMutants mutants, Vector v_nodeOrder) {
+    void setEditedObject(GsRegulatoryMutants mutants, GenericListPanel lp, Vector v_nodeOrder) {
+    	this.lp = lp;
         this.mutants = mutants;
         this.v_nodeOrder = v_nodeOrder;
         
-        if (mutants == null) {
-            lp.setEnabled(false);
-            pm.setEnabled(false);
-            return;
-        }
-        lp.setList(mutants);
+        lp.addSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                updateSelection();
+            }
+        });
     }
 }
 

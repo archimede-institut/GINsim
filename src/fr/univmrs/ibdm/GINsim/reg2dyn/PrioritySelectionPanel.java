@@ -1,5 +1,8 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import fr.univmrs.tagc.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.datastore.gui.GenericListSelectionPanel;
 import fr.univmrs.tagc.widgets.StackDialog;
@@ -18,7 +21,9 @@ public class PrioritySelectionPanel extends GenericListSelectionPanel {
 	protected void configure() {
     	if (pcpanel == null) {
     		GsReg2dynPriorityClassConfig p = new GsReg2dynPriorityClassConfig(pcmanager.nodeOrder);
-    		pcpanel = new GenericListPanel(p, null, null);
+    		Map m = new HashMap();
+    		m.put(PriorityClassDefinition.class, p);
+    		pcpanel = new GenericListPanel(m, null);
     		p.setClassPanel(pcpanel);
     		pcpanel.setList(pcmanager);
     	}
