@@ -44,8 +44,9 @@ public class GenericListPanel extends JPanel
     StatusTextField t_filter;
     JLabel l_title = new JLabel();
     
-    JPanel p_right;
-    CardLayout cards;
+    protected JPanel p_right;
+    protected JPanel targetpanel;
+    protected CardLayout cards;
 
 	// TODO: fix ugly hack for the size of the action column
     int bsize = 25;
@@ -53,12 +54,12 @@ public class GenericListPanel extends JPanel
 	private GenericPropertyInfo	pinfo;
     
     public GenericListPanel() {
-    	this(null, null);
+    	this(null);
     }
-    public GenericListPanel(Map m_right, Map m_bottom) {
+    public GenericListPanel(Map m_right) {
     	jl.addActionListener(model);
     	jl.getSelectionModel().addListSelectionListener(this);
-    	JPanel targetpanel = this;
+    	targetpanel = this;
     	if (m_right != null) {
     		setLayout(new GridLayout());
     		JSplitPane split = new JSplitPane();

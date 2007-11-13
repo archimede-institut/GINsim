@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -20,7 +21,7 @@ import fr.univmrs.tagc.widgets.StockButton;
 /**
  * configure priority classes.
   */
-public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectionListener {
+public class GsReg2dynPriorityClassConfig extends GenericListPanel implements ListSelectionListener {
 
     private static final long serialVersionUID = -3214357334096594239L;
 
@@ -48,8 +49,6 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
 
     PriorityClassDefinition pcdef;
     
-    GenericListPanel listPanel = null;
-
     private JToggleButton but_group;
 	private GenericListPanel pcpanel;
     
@@ -63,6 +62,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
      * @param param
      */
     public GsReg2dynPriorityClassConfig(Vector nodeOrder) {
+    	super(new HashMap());
         this.v_nodeOrder = nodeOrder;
         initialize();
         contentList.setData(v_content);
@@ -70,45 +70,25 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
     }
     
     private void initialize() {
-        setLayout(new GridBagLayout());
         
-        GridBagConstraints c_binsert = new GridBagConstraints();
-        GridBagConstraints c_bremove = new GridBagConstraints();
-        GridBagConstraints c_bgroup = new GridBagConstraints();
-        GridBagConstraints c_scroll_class = new GridBagConstraints();
+        JPanel p_edit = new JPanel();
+        p_edit.setLayout(new GridBagLayout());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 4;
+        c.gridy = 1;
+        p_edit.add(getBut_insert(), c);
+        c = new GridBagConstraints();
+        c.gridx = 4;
+        c.gridy = 2;
+        p_edit.add(getBut_remove(), c);
+
+
         GridBagConstraints c_scroll_in = new GridBagConstraints();
         GridBagConstraints c_scroll_av = new GridBagConstraints();
-        GridBagConstraints c_cautoconf = new GridBagConstraints();
-        GridBagConstraints c_classLabel = new GridBagConstraints();
         GridBagConstraints c_availableLabel = new GridBagConstraints();
         GridBagConstraints c_contentLabel = new GridBagConstraints();
-        
-        c_binsert.gridx = 4;
-        c_binsert.gridy = 1;
-        c_bremove.gridx = 4;
-        c_bremove.gridy = 2;
 
-        c_bgroup.gridx = 1;
-        c_bgroup.gridy = 2;
-        c_bgroup.anchor = GridBagConstraints.NORTH;
-        
-        c_classLabel.gridx = 0;
-        c_classLabel.gridy = 0;
-        c_classLabel.weightx = 1;
-        c_classLabel.fill = GridBagConstraints.HORIZONTAL;
-        c_scroll_class.gridx = 0;
-        c_scroll_class.gridy = 1;
-        c_scroll_class.gridheight = 4;
-        c_scroll_class.fill = GridBagConstraints.BOTH;
-        c_scroll_class.weightx = 1;
-        c_scroll_class.weighty = 1;
-        
-        c_cautoconf.gridx = 0;
-        c_cautoconf.gridy = 5;
-	    c_cautoconf.gridwidth = 3;
-        c_cautoconf.fill = GridBagConstraints.HORIZONTAL;
-        
-        
         c_contentLabel.gridx = 3;
         c_contentLabel.gridy = 0;
         c_contentLabel.weightx = 1;
@@ -131,16 +111,27 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
         c_scroll_av.weightx = 1;
         c_scroll_av.weighty = 1;
         
-        add(new JLabel(Translator.getString("STR_classList")), c_classLabel);
-        add(new JLabel(Translator.getString("STR_otherClassContent")), c_availableLabel);
-        add(new JLabel(Translator.getString("STR_classContent")), c_contentLabel);
-        add(getBut_group(), c_bgroup);
-        add(getCb_auto(), c_cautoconf);
-        add(getContentPanel(), c_scroll_in);
-        add(getBut_insert(), c_binsert);
-        add(getBut_remove(), c_bremove);
-        add(getAvaiblePanel(), c_scroll_av);
-        add(getListPanel(), c_scroll_class);
+
+        p_edit.add(new JLabel(Translator.getString("STR_otherClassContent")), c_availableLabel);
+        p_edit.add(new JLabel(Translator.getString("STR_classContent")), c_contentLabel);
+        p_edit.add(getContentPanel(), c_scroll_in);
+        p_edit.add(getAvaiblePanel(), c_scroll_av);
+        
+        p_right.add(p_edit, GsReg2dynPriorityClass.class.toString());
+
+        // customize the list panel
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 7;
+        c.anchor = GridBagConstraints.NORTH;
+        targetpanel.add(getBut_group(), c);
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 9;
+	    c.gridwidth = 3;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        targetpanel.add(getCb_auto(), c);
+
     }
     
     protected GenericListPanel getContentPanel() {
@@ -193,27 +184,13 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
         return but_group;
     }
 
-
-    private GenericListPanel getListPanel() {
-    	if (listPanel == null) {
-    		listPanel = new GenericListPanel();
-    		listPanel.addSelectionListener(new ListSelectionListener() {
-				public void valueChanged(ListSelectionEvent arg0) {
-					classSelectionChanged();
-				}
-			});
-    		listPanel.setList(pcdef);
-    	}
-    	return listPanel;
-    }
-    
     /**
      * toggle the selection grouping:
      *    - if all selected items are part of the same group, it will be "ungrouped"
      *    - if selected items are part of several groups, they will be merged with the first one
      */
     protected void groupToggle() {
-        int[] ts = listPanel.getSelection();
+        int[] ts = getSelection();
         int[][] selExtended = pcdef.getMovingRows(NONE, ts);
         // if class with different priorities are selected: give them all the same priority
         if (selExtended.length < 1) {
@@ -240,8 +217,8 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
             	((GsReg2dynPriorityClass)pcdef.v_data.get(j)).rank -= l;
             }
             pcdef.refresh();
-            listPanel.getSelectionModel().clearSelection();
-            listPanel.getSelectionModel().addSelectionInterval(selExtended[0][0],pos);
+            getSelectionModel().clearSelection();
+            getSelectionModel().addSelectionInterval(selExtended[0][0],pos);
         } else {
             if (selExtended[0][0] != selExtended[0][1]) {
                 int i = selExtended[0][0];
@@ -310,7 +287,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
         v_content.clear();
         v_avaible.clear();
         
-        int[] ti = listPanel.getSelection();
+        int[] ti = getSelection();
         int[][] selExtended = pcdef.getMovingRows(NONE, ti);
         if (selExtended.length != 1) {
             but_group.setEnabled(true);
@@ -339,7 +316,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
         if (i>=0 && i<pcdef.v_data.size()) {
             currentClass = (GsReg2dynPriorityClass)pcdef.v_data.get(i);
         } else {
-            listPanel.getSelectionModel().setSelectionInterval(0, 0);
+            getSelectionModel().setSelectionInterval(0, 0);
             return;
         }
         if (pcdef.v_data.size() < 2) {
@@ -429,7 +406,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
                 break;
         }
         pcdef.refresh();
-        listPanel.getSelectionModel().setSelectionInterval(0, 0);
+        getSelectionModel().setSelectionInterval(0, 0);
     }
 
 	public void setClassPanel(GenericListPanel pcpanel) {
@@ -438,14 +415,19 @@ public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectio
 	}
 
 	public void valueChanged(ListSelectionEvent e) {
-		pcdef = (PriorityClassDefinition)pcpanel.getSelectedItem();
-		if (pcdef == null) {
-			listPanel.setList(null);
-			setEnabled(false);
-			return;
+		if (e.getSource() == getSelectionModel()) {
+			super.valueChanged(e);
+			classSelectionChanged();
+		} else {
+			pcdef = (PriorityClassDefinition)pcpanel.getSelectedItem();
+			if (pcdef == null) {
+				setList(null);
+				setEnabled(false);
+				return;
+			}
+			setEnabled(true);
+			setList(pcdef);
 		}
-		setEnabled(true);
-		listPanel.setList(pcdef);
 	}
 	
 	public void setEnabled(boolean b) {

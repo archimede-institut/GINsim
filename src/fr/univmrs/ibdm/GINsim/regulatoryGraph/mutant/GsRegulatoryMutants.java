@@ -44,7 +44,7 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
         MutantPanel mpanel = new MutantPanel();
         Map m = new HashMap();
         m.put(GsRegulatoryMutantDef.class, mpanel);
-        GenericListPanel lp = new GenericListPanel(m, null);
+        GenericListPanel lp = new GenericListPanel(m);
         lp.setList(mutants);
         mpanel.setEditedObject(mutants, lp, graph.getNodeOrder());
     	return lp;
