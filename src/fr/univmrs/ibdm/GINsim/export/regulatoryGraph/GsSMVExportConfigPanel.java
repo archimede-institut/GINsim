@@ -168,7 +168,7 @@ public class GsSMVExportConfigPanel extends JPanel {
 			}
 		});
         if (mutant) {
-	        mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg);
+	        mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg.store);
 	        cst = new GridBagConstraints();
 	        cst.gridx = 0;
 	        cst.gridy = 3;

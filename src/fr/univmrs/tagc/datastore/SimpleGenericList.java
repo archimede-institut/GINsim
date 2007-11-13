@@ -189,8 +189,8 @@ public class SimpleGenericList extends GenericList {
 	public boolean move(int[] sel, int diff) {
 
 		if (diff == 0 || sel == null || sel.length == 0 || 
-				(diff < 0 && sel[0] <= -(diff+1)) ||
-				(diff > 0 && sel[sel.length-1] >= v_data.size() - diff)) {
+				diff < 0 && sel[0] <= -(diff+1) ||
+				diff > 0 && sel[sel.length-1] >= v_data.size() - diff) {
 			return false;
 		}
 		if (diff > 0) {
@@ -275,4 +275,16 @@ public class SimpleGenericList extends GenericList {
 		System.out.println("you should override this if you plan to use it");
 		return;
 	}
+	
+	public Object getElement(String name) {
+		Iterator it = v_data.iterator();
+		while (it.hasNext()) {
+			Object o = it.next();
+			if (o != null && o instanceof GsNamedObject && name.equals(((GsNamedObject)o).getName())) {
+				return o;
+			}
+		}
+		return null;
+	}
+
 }

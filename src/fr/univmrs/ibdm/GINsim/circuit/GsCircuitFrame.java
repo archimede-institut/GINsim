@@ -32,6 +32,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.ibdm.GINsim.util.widget.GsLabel;
+import fr.univmrs.tagc.datastore.ObjectStore;
 import fr.univmrs.tagc.widgets.EnhancedListCellRenderer;
 import fr.univmrs.tagc.widgets.StackDialog;
 
@@ -65,6 +66,7 @@ public class GsCircuitFrame extends StackDialog implements GsProgressListener {
     private JScrollPane sp2 = null;
     private JTextArea jta = null;
     private GsCircuitSearchStoreConfig config = null;
+    ObjectStore mutantstore = new ObjectStore();
     MutantSelectionPanel mutantPanel;
 
     /**
@@ -135,7 +137,7 @@ public class GsCircuitFrame extends StackDialog implements GsProgressListener {
         	c.gridy = 0;
         	c.weightx = 1;
         	c.fill = GridBagConstraints.BOTH;
-        	mutantPanel = new MutantSelectionPanel(this, graph, null);
+        	mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
         	resultPanel.add(mutantPanel, c);
 
         	c = new GridBagConstraints();
@@ -559,7 +561,7 @@ public class GsCircuitFrame extends StackDialog implements GsProgressListener {
 
     protected void runAnalyse() {
     	brun.setEnabled(false);
-        treemodel.analyse(graph, config, mutantPanel.getMutant());
+        treemodel.analyse(graph, config, (GsRegulatoryMutantDef)mutantstore.getObject(0));
         brun.setEnabled(true);
 
         if (sp2 == null) {

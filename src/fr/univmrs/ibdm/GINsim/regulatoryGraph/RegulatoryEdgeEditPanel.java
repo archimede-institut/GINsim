@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
@@ -19,7 +20,6 @@ public class RegulatoryEdgeEditPanel extends JPanel
 	GsRegulatoryEdge edge;
 	GsRegulatoryGraph graph;
 	GenericPropertyInfo pinfo;
-	JLabel labelMax = new JLabel();
 	
 	private EdgeThresholdModel thmodel = null;
 	private JComboBox signcombo;
@@ -30,7 +30,7 @@ public class RegulatoryEdgeEditPanel extends JPanel
         setLayout(new GridBagLayout());
         
         GridBagConstraints c = new GridBagConstraints();
-        add(new JLabel("[ "), c);
+        add(new JLabel(Translator.getString("STR_threshold")), c);
         
         c = new GridBagConstraints();
         c.gridx = 1;
@@ -39,8 +39,7 @@ public class RegulatoryEdgeEditPanel extends JPanel
         c = new GridBagConstraints();
         c.gridx = 2;
         c.anchor = GridBagConstraints.WEST;
-        add(labelMax, c);
-        labelMax.setSize(50, labelMax.getHeight());
+        add(new JLabel(Translator.getString("STR_sign")), c);
 
         c = new GridBagConstraints();
         c.gridx = 3;
@@ -54,9 +53,6 @@ public class RegulatoryEdgeEditPanel extends JPanel
 	}
 	public void setEdge(GsRegulatoryEdge edge) {
 		this.edge = edge;
-		String smax = " , "+edge.getMaxAsString()+"]  ";
-		labelMax.setText(smax);
-		labelMax.setSize(70, labelMax.getHeight());
 		thmodel.setSelection(edge);
 		signcombo.setSelectedIndex(edge.sign);
 	}

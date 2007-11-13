@@ -5,20 +5,14 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.datastore.GenericListListener;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
 import fr.univmrs.tagc.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.widgets.StockButton;
@@ -26,7 +20,7 @@ import fr.univmrs.tagc.widgets.StockButton;
 /**
  * configure priority classes.
   */
-public class GsReg2dynPriorityClassConfig extends JPanel {
+public class GsReg2dynPriorityClassConfig extends JPanel implements ListSelectionListener {
 
     private static final long serialVersionUID = -3214357334096594239L;
 
@@ -41,7 +35,6 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     private JButton but_insert;
     private JButton but_remove;
     
-    private Vector v_class;
     private Vector v_nodeOrder;
     GenericListPanel contentPanel;
     GenericListPanel availablePanel;
@@ -51,13 +44,14 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     private Vector v_content = new Vector();
     private Vector v_avaible = new Vector();
     
-    private Map m_elt;
     private GsReg2dynPriorityClass currentClass;
 
-    PriorityClassList classList;
+    PriorityClassDefinition pcdef;
+    
     GenericListPanel listPanel = null;
 
     private JToggleButton but_group;
+	private GenericListPanel	pcpanel;
     
     private static final int AUTO_MANY = 1;
     private static final int AUTO_PLUS_MINUS = 2;
@@ -68,9 +62,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
      * @param nodeOrder
      * @param param
      */
-    public GsReg2dynPriorityClassConfig(Vector nodeOrder, GsSimulationParameters param) {
-        this.v_class = param.getVclass();
-        this.m_elt = param.getMelt();
+    public GsReg2dynPriorityClassConfig(Vector nodeOrder) {
         this.v_nodeOrder = nodeOrder;
         initialize();
         contentList.setData(v_content);
@@ -210,8 +202,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
 					classSelectionChanged();
 				}
 			});
-    		classList = new PriorityClassList(v_class, m_elt);
-    		listPanel.setList(classList);
+    		listPanel.setList(pcdef);
     	}
     	return listPanel;
     }
@@ -223,7 +214,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
      */
     protected void groupToggle() {
         int[] ts = listPanel.getSelection();
-        int[][] selExtended = classList.getMovingRows(NONE, ts);
+        int[][] selExtended = pcdef.getMovingRows(NONE, ts);
         // if class with different priorities are selected: give them all the same priority
         if (selExtended.length < 1) {
         	return;
@@ -233,22 +224,22 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
                 return;
             }
             int pos = selExtended[0][1];
-            int pr = ((GsReg2dynPriorityClass)v_class.get(pos)).rank;
+            int pr = ((GsReg2dynPriorityClass)pcdef.v_data.get(pos)).rank;
             for (int i=1 ; i<selExtended.length ; i++) {
             	for (int j=selExtended[i-1][1]+1 ; j<selExtended[i][0] ; j++) {
-            		((GsReg2dynPriorityClass)v_class.get(j)).rank -= i-1;
+            		((GsReg2dynPriorityClass)pcdef.v_data.get(j)).rank -= i-1;
             	}
             	for (int j=selExtended[i][0] ; j<=selExtended[i][1] ; j++) {
 	                pos++;
-	                ((GsReg2dynPriorityClass)v_class.get(j)).rank = pr;
-                    classList.moveElementAt(j, pos);
+	                ((GsReg2dynPriorityClass)pcdef.v_data.get(j)).rank = pr;
+	                pcdef.moveElementAt(j, pos);
             	}
             }
             int l = selExtended.length - 1;
-            for (int j=selExtended[l][1]+1 ; j<v_class.size() ; j++) {
-            	((GsReg2dynPriorityClass)v_class.get(j)).rank -= l;
+            for (int j=selExtended[l][1]+1 ; j<pcdef.v_data.size() ; j++) {
+            	((GsReg2dynPriorityClass)pcdef.v_data.get(j)).rank -= l;
             }
-            classList.refresh();
+            pcdef.refresh();
             listPanel.getSelectionModel().clearSelection();
             listPanel.getSelectionModel().addSelectionInterval(selExtended[0][0],pos);
         } else {
@@ -256,13 +247,13 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
                 int i = selExtended[0][0];
                 int inc = 1;
                 for (i++ ; i<selExtended[0][1] ; i++) {
-                    ((GsReg2dynPriorityClass)v_class.get(i)).rank += inc;
+                    ((GsReg2dynPriorityClass)pcdef.v_data.get(i)).rank += inc;
                     inc++;
                 }
-                for ( ; i<v_class.size() ; i++) {
-                    ((GsReg2dynPriorityClass)v_class.get(i)).rank += inc;
+                for ( ; i<pcdef.v_data.size() ; i++) {
+                    ((GsReg2dynPriorityClass)pcdef.v_data.get(i)).rank += inc;
                 }
-                classList.refresh();
+                pcdef.refresh();
             }
         }
     }
@@ -276,14 +267,14 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         	int index = t[i];
             PriorityMember k = (PriorityMember)v_avaible.get(index);
             if (k.type != NONE) { // +1 and -1 are separated, don't move everything
-                Object[] tk = (Object[])m_elt.get(k.vertex);
+                Object[] tk = (Object[])pcdef.m_elt.get(k.vertex);
                 if (k.type == UP) {
                     tk[0] = currentClass;
                 } else {
                     tk[1] = currentClass;
                 }
             } else { // simple case
-                m_elt.put(k.vertex, currentClass);
+            	pcdef.m_elt.put(k.vertex, currentClass);
             }
         }
         classSelectionChanged();
@@ -297,16 +288,16 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         for (int i=0 ; i<t.length ; i++) {
         	int index = t[i];
             PriorityMember k = (PriorityMember)v_content.get(index);
-            Object lastClass = v_class.get(v_class.size()-1);
+            Object lastClass = pcdef.v_data.get(pcdef.v_data.size()-1);
             if (k.type != NONE) { // +1 and -1 are separated, don't move everything
-                Object[] tk = (Object[])m_elt.get(k.vertex);
+                Object[] tk = (Object[])pcdef.m_elt.get(k.vertex);
                 if (k.type == UP) {
                     tk[0] = lastClass;
                 } else {
                     tk[1] = lastClass;
                 }
             } else { // simple case
-                m_elt.put(k.vertex, lastClass);
+            	pcdef.m_elt.put(k.vertex, lastClass);
             }
         }
         classSelectionChanged();
@@ -320,7 +311,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         v_avaible.clear();
         
         int[] ti = listPanel.getSelection();
-        int[][] selExtended = classList.getMovingRows(NONE, ti);
+        int[][] selExtended = pcdef.getMovingRows(NONE, ti);
         if (selExtended.length != 1) {
             but_group.setEnabled(true);
             but_group.setSelected(false);
@@ -345,13 +336,13 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         but_insert.setEnabled(true);
         
         int i = ti[0];
-        if (i>=0 && i<v_class.size()) {
-            currentClass = (GsReg2dynPriorityClass)v_class.get(i);
+        if (i>=0 && i<pcdef.v_data.size()) {
+            currentClass = (GsReg2dynPriorityClass)pcdef.v_data.get(i);
         } else {
             listPanel.getSelectionModel().setSelectionInterval(0, 0);
             return;
         }
-        if (v_class.size() < 2) {
+        if (pcdef.v_data.size() < 2) {
             but_remove.setEnabled(false);
         } else {
             but_remove.setEnabled(true);
@@ -361,7 +352,7 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
         while (it.hasNext()) {
         	GsRegulatoryVertex v = (GsRegulatoryVertex)it.next();
             PriorityMember k = new PriorityMember(v, NONE);
-            Object target = m_elt.get(v);
+            Object target = pcdef.m_elt.get(v);
             if (target instanceof Object[]) {
                 Object[] t = (Object[])target;
                 k.type = DOWN;
@@ -410,36 +401,60 @@ public class GsReg2dynPriorityClassConfig extends JPanel {
     
     protected void applyAuto() {
         // first delete all classes
-        while (v_class.size() > 1) {
-            v_class.remove(1);
+        while (pcdef.v_data.size() > 1) {
+        	pcdef.v_data.remove(1);
         }
-        Object lastClass = v_class.get(0);
+        Object lastClass = pcdef.v_data.get(0);
         ((GsReg2dynPriorityClass)lastClass).setName("new class");
         for (int i=0 ; i<v_nodeOrder.size() ; i++) {
-            m_elt.put(v_nodeOrder.get(i), lastClass);
+        	pcdef.m_elt.put(v_nodeOrder.get(i), lastClass);
         }
         switch (cb_auto.getSelectedIndex()) {
             case AUTO_MANY:
                 // should be equivalent to the old priority system: add one class per node
-                v_class.clear();
-                m_elt.clear();
+            	pcdef.v_data.clear();
+            	pcdef.m_elt.clear();
                 for (int i=0 ; i<v_nodeOrder.size() ; i++) {
                     currentClass = new GsReg2dynPriorityClass();
-                    v_class.add(i, currentClass);
-                    m_elt.put(v_nodeOrder.get(i), currentClass);
+                    pcdef.v_data.add(i, currentClass);
+                    pcdef.m_elt.put(v_nodeOrder.get(i), currentClass);
                     currentClass.setName(""+v_nodeOrder.get(i));
                 }
                 break;
             case AUTO_PLUS_MINUS:
                 for (int i=0 ; i<v_nodeOrder.size() ; i++) {
                     Object[] t = {lastClass, lastClass};
-                    m_elt.put(v_nodeOrder.get(i), t);
+                    pcdef.m_elt.put(v_nodeOrder.get(i), t);
                 }
                 break;
         }
-        classList.refresh();
+        pcdef.refresh();
         listPanel.getSelectionModel().setSelectionInterval(0, 0);
     }
+
+	public void setClassPanel(GenericListPanel pcpanel) {
+		this.pcpanel = pcpanel;
+		pcpanel.addSelectionListener(this);
+	}
+
+	public void valueChanged(ListSelectionEvent e) {
+		pcdef = (PriorityClassDefinition)pcpanel.getSelectedItem();
+		if (pcdef == null) {
+			listPanel.setList(null);
+			setEnabled(false);
+			return;
+		}
+		setEnabled(true);
+		listPanel.setList(pcdef);
+	}
+	
+	public void setEnabled(boolean b) {
+		contentPanel.setEnabled(b);
+		availablePanel.setEnabled(b);
+		but_group.setEnabled(b);
+		but_insert.setEnabled(b);
+		but_remove.setEnabled(b);
+	}
 }
 
 class PriorityMember {
@@ -454,222 +469,6 @@ class PriorityMember {
 	public String toString() {
 		return vertex+GsReg2dynPriorityClassConfig.t_typeName[type];
 	}
-}
-
-class PriorityClassList extends SimpleGenericList {
-
-	Map m_elt;
-	
-	public PriorityClassList(Vector v_class, Map m_elt) {
-		canAdd = true;
-		canRemove = true;
-		canOrder = true;
-		canEdit = true;
-		nbcol = 3;
-		addWithPosition = true;
-		this.m_elt = m_elt;
-		Class[] t = {Integer.class, Boolean.class, String.class};
-		t_type = t;
-		setData(v_class);
-	}
-	public void moveElementAt(int j, int pos) {
-		moveElement(j, pos);
-		
-	}
-	public Object doCreate(String name, int pos) {
-        int priority = ((GsReg2dynPriorityClass)v_data.get(pos)).rank;
-        for ( ; pos < v_data.size() ; pos++) {
-            if (((GsReg2dynPriorityClass)v_data.get(pos)).rank != priority) {
-                break;
-            }
-        }
-        GsReg2dynPriorityClass newclass = new GsReg2dynPriorityClass(priority+1);
-        for (int i=pos ; i<v_data.size() ; i++) {
-            ((GsReg2dynPriorityClass)v_data.get(i)).rank++;
-        }
-        return newclass;
-	}
-	
-	public boolean remove(String filter, int[] t_index) {
-		if (t_index.length >= v_data.size()) {
-			return false;
-		}
-		for (int i = t_index.length - 1 ; i > -1 ; i--) {
-			int index = getRealIndex(filter, t_index[i]);
-			
-            GsReg2dynPriorityClass c = (GsReg2dynPriorityClass) v_data.remove(index);
-            if (index < v_data.size()) {
-            	// update rank of the next priority classes
-            	if ( index == 0 || ((GsReg2dynPriorityClass) v_data.get(index-1)).rank != c.rank) {
-            		if (((GsReg2dynPriorityClass) v_data.get(index)).rank != c.rank) {
-            			for (int j=index ; j<v_data.size() ; j++) {
-            				((GsReg2dynPriorityClass) v_data.get(j)).rank--;
-            			}
-            		}
-            	}
-            }
-            Iterator it = m_elt.keySet().iterator();
-            Object lastClass = v_data.get(v_data.size()-1);
-            while (it.hasNext()) {
-                Object k = it.next();
-                Object cl = m_elt.get(k); 
-                if (cl == c) {
-                    m_elt.put(k,lastClass);
-                } else if (cl instanceof Object[]) {
-                    Object[] t = (Object[])cl;
-                    for (int j=0 ; j<t.length ; j++) {
-                        if (t[j] == c) {
-                            t[j] = lastClass;
-                        }
-                    }
-                }
-            }
-			
-			if (v_listeners != null) {
-				it = v_listeners.iterator();
-				while (it.hasNext()) {
-					((GenericListListener)it.next()).itemRemoved(c, t_index[i]);
-				}
-			}
-		}
-		return true;
-	}
-
-	
-    /**
-     * move the whole selection up.
-     * if some selected class are part of a group, the whole group will move with it.
-     */
-    protected void doMoveUp(int[] selection, int diff) {
-        int[][] index = getMovingRows(GsReg2dynPriorityClassConfig.UP, selection);
-        if (index == null) {
-            return;
-        }
-        
-        int reselect = 0;
-        for (int i=0 ; i<index.length ; i++) {
-            int start = index[i][0];
-            int stop = index[i][1];
-            int target = start+diff;
-            int pr = ((GsReg2dynPriorityClass)v_data.get(start)).rank;
-            int prTarget = ((GsReg2dynPriorityClass)v_data.get(target)).rank;
-            target--;
-            while (target >= 0 && ((GsReg2dynPriorityClass)v_data.get(target)).rank == prTarget) {
-                target--;
-            }
-            target++;
-            for (int j=target ; j<start ; j++) {
-                ((GsReg2dynPriorityClass)v_data.get(j)).rank = pr;
-            }
-            for (int j=0 ; j<=stop-start ; j++) {
-            	((GsReg2dynPriorityClass)v_data.get(start+j)).rank = prTarget;
-            	moveElement(start+j, target+j);
-            	if (reselect < selection.length && selection[reselect] == start+j) {
-            		selection[reselect++] = target+j;
-                }
-            }
-        }
-        refresh();
-    }
-
-    /**
-     * move the whole selection down
-     * if some selected class are part of a group, the whole group will move with it.
-     */
-    protected void doMoveDown(int[] selection, int diff) {
-        int[][] index = getMovingRows(GsReg2dynPriorityClassConfig.DOWN, selection);
-        if (index == null) {
-            return;
-        }
-        
-        int reselect = 0;
-        for (int i=0 ; i<index.length ; i++) {
-            int start = index[i][0];
-            int stop = index[i][1];
-            int target = stop+diff;
-            int pr = ((GsReg2dynPriorityClass)v_data.get(start)).rank;
-            int prTarget = ((GsReg2dynPriorityClass)v_data.get(target)).rank;
-            target++;
-            while (target < v_data.size() && ((GsReg2dynPriorityClass)v_data.get(target)).rank == prTarget) {
-                target++;
-            }
-            target--;
-            for (int j=stop+1 ; j<=target ; j++) {
-                ((GsReg2dynPriorityClass)v_data.get(j)).rank = pr;
-            }
-            for (int j=0 ; j<=stop-start ; j++) {
-                ((GsReg2dynPriorityClass)v_data.get(start)).rank = prTarget;
-                moveElement(start, target);
-                if (reselect < selection.length && selection[reselect] == start+j) {
-            		selection[reselect++] = target-stop+start+j;
-                }
-            }
-        }
-        refresh();
-    }
-    
-    /**
-     * when moving a selection of class, they must move with other class of the same priority.
-     * this checks the selection and compute a list of all really moving rows as ranges: start-stop for each selected clas
-     * @param key
-     * @param index 
-     * @return moving ranges or null if nothing should move
-     */
-    int[][] getMovingRows(int key, int[] index) {
-        if (index == null) {
-        	return null;
-        }
-        int end = v_data.size();
-        int count = 0;
-        int lastPriority = -1;
-        for (int i=0 ; i<index.length ; i++) {
-            int priority = ((GsReg2dynPriorityClass)v_data.get(index[i])).rank;
-            if (priority != lastPriority) {
-                int start = index[i]-1;
-                int stop = index[i]+1;
-                while(start >= 0 && ((GsReg2dynPriorityClass)v_data.get(start)).rank == priority) {
-                    start--;
-                }
-                while(stop < end && ((GsReg2dynPriorityClass)v_data.get(stop)).rank == priority) {
-                    stop++;
-                }
-                start++;
-                stop--;
-                // if moving up and already on top or moving down and already on bottom: don't do anything
-                if (key==GsReg2dynPriorityClassConfig.UP && start == 0 || key==GsReg2dynPriorityClassConfig.DOWN && stop == end-1) {
-                    return null;
-                }
-                count++;
-                lastPriority = priority;
-            }
-        }
-        
-        int[][] ret = new int[count][3];
-        lastPriority = -1;
-        count = 0;
-        for (int i=0 ; i<index.length ; i++) {
-            int priority = ((GsReg2dynPriorityClass)v_data.get(index[i])).rank;
-            if (priority != lastPriority) {
-                int start = index[i]-1;
-                int stop = index[i]+1;
-                while(start >= 0 && ((GsReg2dynPriorityClass)v_data.get(start)).rank == priority) {
-                    start--;
-                }
-                while(stop < end && ((GsReg2dynPriorityClass)v_data.get(stop)).rank == priority) {
-                    stop++;
-                }
-                start++;
-                stop--;
-                ret[count][0] = start;
-                ret[count][1] = stop;
-                lastPriority = priority;
-                count++;
-            }
-        }
-        return ret;
-    }
-
-
 }
 
 class ClassList extends SimpleGenericList {

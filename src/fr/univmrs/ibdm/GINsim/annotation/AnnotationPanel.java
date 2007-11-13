@@ -11,7 +11,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
@@ -134,7 +133,7 @@ public class AnnotationPanel extends JPanel
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
-		linkList.graph = (GsRegulatoryGraph)pinfo.editor.getMasterObject();
+		linkList.graph = (GsGraph)pinfo.editor.getMasterObject();
 		panel.addField(this, pinfo, 0);
 	}
 }

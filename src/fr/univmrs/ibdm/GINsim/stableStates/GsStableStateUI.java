@@ -10,7 +10,9 @@ import javax.swing.JScrollPane;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.datastore.ObjectStore;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 import fr.univmrs.tagc.widgets.StackDialog;
 
@@ -19,6 +21,7 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	
 	GsRegulatoryGraph graph;
 	StableTableModel tableModel;
+	ObjectStore mutantstore = new ObjectStore();
 	MutantSelectionPanel mutantPanel;
 	JPanel buttonPanel;
 	
@@ -32,7 +35,7 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		mutantPanel = new MutantSelectionPanel(this, graph, null);
+		mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
 		panel.add(mutantPanel, c);
 
 		c = new GridBagConstraints();
@@ -55,7 +58,7 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	
 	protected void run() {
 		setRunning(true);
-		new GsSearchStableStates(graph, mutantPanel.getMutant(), this).start();
+		new GsSearchStableStates(graph, (GsRegulatoryMutantDef)mutantstore.getObject(0), this).start();
 	}
 	
 	public void setResult(OmddNode stable) {

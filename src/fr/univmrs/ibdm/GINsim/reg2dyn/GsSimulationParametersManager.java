@@ -11,6 +11,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 
 /**
  * Save/open simulation parameters along with the model.
@@ -39,6 +40,13 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
                 s_nodeOrder += " "+nodeOrder.get(i);
             }
             out.addAttr("nodeOrder", s_nodeOrder);
+            // add priority class definition
+            if (paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 0) {
+                for (int i=0 ; i<paramList.pcmanager.getNbElements(null) ; i++) {
+                	((GsXMLize)paramList.pcmanager.getElement(null, i)).toXML(out, null, 0);
+                }
+            }
+            // and the real parameters
             for (int i=0 ; i<paramList.getNbElements(null) ; i++) {
                 GsSimulationParameters sparam = (GsSimulationParameters)paramList.getElement(null, i);
                 sparam.toXML(out, null, 0);
@@ -55,7 +63,8 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
 
     public boolean needSaving(GsGraph graph) {
         GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
-        return paramList != null && paramList.getNbElements(null) > 0;
+        return paramList != null && (paramList.getNbElements(null) > 0 || 
+        		paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 0);
     }
 
 	public Object doCreate(GsGraph graph) {

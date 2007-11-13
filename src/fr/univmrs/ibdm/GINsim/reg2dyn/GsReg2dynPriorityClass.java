@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
+import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.tagc.datastore.MultiColObject;
 
 
@@ -7,7 +8,7 @@ import fr.univmrs.tagc.datastore.MultiColObject;
  * a priority class for the simulation.
  * each class has a name, a simulation mode and a list of elements
  */
-public class GsReg2dynPriorityClass implements MultiColObject {
+public class GsReg2dynPriorityClass implements MultiColObject, GsNamedObject {
     
     /** this class is synchronous */
     public static final int SYNCHRONOUS = 0;
@@ -23,19 +24,19 @@ public class GsReg2dynPriorityClass implements MultiColObject {
      * 
      */
     public GsReg2dynPriorityClass() {
-        this(0);
+        this(0, null);
     }
     /**
      * @param priority
      */
-    public GsReg2dynPriorityClass(int priority) {
+    public GsReg2dynPriorityClass(int priority, String name) {
         this.mode = ASYNCHRONOUS;
         this.rank = priority;
-        name = "new class";
+        this.name = name==null ? "new class": name;
     }
     
     public String toString() {
-        return rank+": "+name + " ; "+((mode==ASYNCHRONOUS) ? "async" : "sync");
+        return rank+": "+name + " ; "+(mode==ASYNCHRONOUS ? "async" : "sync");
     }
     
     /**

@@ -19,10 +19,10 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatesIterator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.datastore.ObjectStore;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
@@ -188,12 +188,12 @@ public class GsPetriNetExport extends GsAbstractExport {
 		Vector nodeOrder = config.getGraph().getNodeOrder();
 		int len = nodeOrder.size();
 		// get the selected initial state
-		Iterator it_state = new GsInitialStatesIterator(nodeOrder,
+		Iterator it_state = new InitialStatesIterator(nodeOrder,
 				((GsInitialStateStore)config.getSpecificConfig()).getInitialState());
 		int[] t_state = (int[])it_state.next();
 
 		PNConfig specConfig = (PNConfig)config.getSpecificConfig();
-		GsRegulatoryMutantDef mutant = specConfig.getMutant();
+		GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)specConfig.store.getObject(0);
 		if (mutant != null) {
 			mutant.apply(t_tree, config.getGraph().getNodeOrder(), true);
 		}
@@ -277,7 +277,7 @@ class PNExportConfigPanel extends JPanel {
     	c.fill = GridBagConstraints.BOTH;
     	add(initPanel, c);
     	
-    	 mutantPanel = new MutantSelectionPanel(dialog, (GsRegulatoryGraph)graph, specConfig);
+    	 mutantPanel = new MutantSelectionPanel(dialog, (GsRegulatoryGraph)graph, specConfig.store);
 	     c = new GridBagConstraints();
 	     c.gridx = 0;
 	     c.gridy = 2;
@@ -285,21 +285,13 @@ class PNExportConfigPanel extends JPanel {
     }
 }
 
-class PNConfig implements GsInitialStateStore, GsMutantStore {
+class PNConfig implements GsInitialStateStore {
 
 	Map m_init = new HashMap();
+	ObjectStore store = new ObjectStore();
 	private GsRegulatoryMutantDef mutant;
 
 	public Map getInitialState() {
 		return m_init;
-	}
-
-	public GsRegulatoryMutantDef getMutant() {
-		
-		return mutant;
-	}
-
-	public void setMutant(GsRegulatoryMutantDef mutant) {
-		this.mutant=mutant;
 	}
 }

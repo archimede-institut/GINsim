@@ -428,6 +428,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
     public ObjectEditor getGraphEditor() {
 		if (graphEditor == null) {
 			graphEditor = new RegulatoryGraphEditor();
+			graphEditor.setEditedObject(this);
 		}
 		return graphEditor;
     }

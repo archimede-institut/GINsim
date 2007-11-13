@@ -13,7 +13,8 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 /**
  * here are the methods for the construction of the state transition graph
@@ -42,8 +43,6 @@ public final class Simulation extends Thread implements Runnable {
 
 	private int maxdepth; 		// limitation of the depth for exploration (all types but BFS)
 	private int maxnodes; 		// limitation of the number of nodes for exploration (all types)
-	private Vector initStates;
-	private Vector listGenes;
 	private int[] t_max;
 	private int length;
 	private boolean ready = false;
@@ -71,6 +70,7 @@ public final class Simulation extends Thread implements Runnable {
 	private OmddNode dd_stable = OmddNode.TERMINALS[0];
     int[] t_state;
     int nbnode = 0;
+	private GsSimulationParameters	params;
 
 	/**
 	 * Constructs an empty dynamic graph
@@ -81,21 +81,21 @@ public final class Simulation extends Thread implements Runnable {
 	 */
 	protected Simulation(GsGenericRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
 		this.frame = frame;
-		listGenes = regGraph.getNodeOrderForSimulation();
-		length = listGenes.size();
+		this.params = params;
+		length = params.nodeOrder.size();
         buildSTG = params.buildSTG;
 
         t_max = new int[length];
         for (int i=0 ; i<length ; i++) {
-        	t_max[i] = ((GsRegulatoryVertex)listGenes.get(i)).getMaxValue()+1;
+        	t_max[i] = ((GsRegulatoryVertex)params.nodeOrder.get(i)).getMaxValue()+1;
         }
         if (buildSTG) {
-    		dynGraph = new GsDynamicGraph(listGenes);
+    		dynGraph = new GsDynamicGraph(params.nodeOrder);
     		if (regGraph instanceof GsGraph) {
     			dynGraph.setAssociatedGraph((GsGraph)regGraph);
     		}
             vreader = dynGraph.getGraphManager().getVertexAttributesReader();
-    	    vreader.setDefaultVertexSize(5+10*listGenes.size(), 25);
+    	    vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
             // add some default comments to the state transition graph
             dynGraph.getAnnotation().setComment(params.getDescr());
         } else {
@@ -119,8 +119,9 @@ public final class Simulation extends Thread implements Runnable {
         }
 
         t_tree = regGraph.getParametersForSimulation(true);
-        if (params.mutant != null) {
-            params.mutant.apply(t_tree, listGenes, false);
+        GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)params.store.getObject(GsSimulationParameters.MUTANT);
+        if (mutant != null) {
+            mutant.apply(t_tree, params.nodeOrder, false);
         }
         maxdepth = params.maxdepth;
         maxnodes = params.maxnodes;
@@ -134,114 +135,8 @@ public final class Simulation extends Thread implements Runnable {
         } else {
             this.maxnodes = params.maxnodes;
         }
-
-        // deploy initial states
-        if (params.m_initState != null && params.m_initState.size() > 0) {
-            this.initStates = new Vector();
-            Iterator it = params.m_initState.keySet().iterator();
-            while (it.hasNext()) {
-                Reg2DynStatesIterator iterator = new Reg2DynStatesIterator(listGenes, ((GsInitialState)it.next()).getMap());
-                while (iterator.hasNext()) {
-                    initStates.add(iterator.next());
-                }
-            }
-        }
         ready = true;
         start();
-	}
-
-	/**
-	 * search the full dynamic graph
-	 */
-	private void runFullGraph() throws GsException {
-        // the iterator to construct all initial states
-        reg2DynFullIterator iterator = new reg2DynFullIterator(listGenes);
-		try {
-			//generate all initial states and construct partial graph from all these initial states;
-			while(iterator.hasNext()) {
-				t_state = iterator.next();
-
-				// verify if nextNode is already in the dynamic graph and construct partial graph
-				if(addState(t_state, false, false)){
-					switch (searchMode) {
-						case SEARCH_SYNCHRONE:
-							calcDynGraphSynchro();
-							break;
-						case SEARCH_ASYNCHRONE_BF:
-							if (addState(t_state, true, false)) {
-								toExplore.addElement(node);
-							}
-							break;
-						case SEARCH_ASYNCHRONE_DF:
-							calcDynGraphAsynchroDepthFirst();
-							break;
-                        case SEARCH_BYPRIORITYCLASS:
-                            calcDynGraphByPriorityClass();
-                            break;
-					}
-				}
-				if (searchMode == SEARCH_ASYNCHRONE_BF) {
-					calcDynGraphAsynchroBreadthFirst();
-				}
-				if (!goon) {
-					return;
-				}
-			}
-		} catch (OutOfMemoryError e) {
-		    GsEnv.error("Out Of Memory", null);
-		    return;
-		}
-	}
-
-	/**
-	 * search the dynamic graph for the given initial states
-	 * @throws GsException
-	 *
-	 */
-	private void runPartialGraph() throws GsException {
-		int[] vstate;
-
-        if (initStates.size() == 0) {
-            return;
-        }
-        if (buildSTG) {
-            vstate = (int[])initStates.elementAt(0);
-        	dynGraph.addObject("reg2dyn_firstState", vstate);
-        }
-
-		for (int i=0 ; i<initStates.size() ; i++) {
-			// create the first node and check if already present
-			vstate = (int[])initStates.elementAt(i);
-			if (vstate.length != length) {
-                return;
-			}
-
-			if(addState(vstate, false, false)){
-				switch (searchMode) {
-					case SEARCH_SYNCHRONE:
-						calcDynGraphSynchro();
-						break;
-					case SEARCH_ASYNCHRONE_BF:
-						if (addState(vstate, true, false)) {
-							toExplore.addElement(node);
-						}
-						break;
-					case SEARCH_ASYNCHRONE_DF:
-						calcDynGraphAsynchroDepthFirst();
-						break;
-                    case SEARCH_BYPRIORITYCLASS:
-                        calcDynGraphByPriorityClass();
-                        break;
-				}
-			}
-			if (searchMode == SEARCH_ASYNCHRONE_BF) {
-				calcDynGraphAsynchroBreadthFirst();
-			}
-
-			if (!goon) {
-				return;
-			}
-		}
 	}
 
 	/**
@@ -599,14 +494,41 @@ public final class Simulation extends Thread implements Runnable {
 		}
 
 		try {
-			if (initStates == null) {
-				runFullGraph();
-			}
-			else {
-				runPartialGraph();
+			// iterate through initial states and run the simulation from each of them
+	        Iterator iterator = new InitialStatesIterator(params.nodeOrder, params.m_initState);
+			while(iterator.hasNext()) {
+				t_state = (int[])iterator.next();
+				// verify if nextNode is already in the dynamic graph and construct partial graph
+				if(addState(t_state, false, false)){
+					switch (searchMode) {
+						case SEARCH_SYNCHRONE:
+							calcDynGraphSynchro();
+							break;
+						case SEARCH_ASYNCHRONE_BF:
+							if (addState(t_state, true, false)) {
+								toExplore.addElement(node);
+							}
+							break;
+						case SEARCH_ASYNCHRONE_DF:
+							calcDynGraphAsynchroDepthFirst();
+							break;
+                        case SEARCH_BYPRIORITYCLASS:
+                            calcDynGraphByPriorityClass();
+                            break;
+					}
+				}
+				if (searchMode == SEARCH_ASYNCHRONE_BF) {
+					calcDynGraphAsynchroBreadthFirst();
+				}
+				if (!goon) {
+					return;
+				}
 			}
 		} catch (GsException e) {
 			System.out.println("simulation was interrupted");
+		} catch (OutOfMemoryError e) {
+		    GsEnv.error("Out Of Memory", null);
+		    return;
 		} finally {
 			// return the result
 			if (buildSTG) {
@@ -616,9 +538,9 @@ public final class Simulation extends Thread implements Runnable {
 				dd_stable = dd_stable.reduce();
 				dd_reachable = dd_reachable.reduce();
 				System.out.println("-------- STABLES -----------");
-				System.out.println(dd_stable.getString(0, listGenes));
+				System.out.println(dd_stable.getString(0, params.nodeOrder));
 				System.out.println("-------- REACHABLE ----------");
-				System.out.println(dd_reachable.getString(0, listGenes));
+				System.out.println(dd_reachable.getString(0, params.nodeOrder));
 				System.out.println("----------------------------");
 				frame.endSimu(null);
 			}

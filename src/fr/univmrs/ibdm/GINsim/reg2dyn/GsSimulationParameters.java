@@ -11,38 +11,39 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.tagc.datastore.ObjectStore;
 
 /**
  * remember, save and restore a simulation parameter.
  */
-public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitialStateStore, GsMutantStore {
+public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitialStateStore {
 
+	static final int MUTANT = 0;
+	static final int PCLASS = 1;
+	
     String name = "new_parameter";
     Vector nodeOrder;
 
     int mode = Simulation.SEARCH_ASYNCHRONE_DF;
 
-    Vector v_class;
-    Map m_elt;
-
     int maxdepth;
     int maxnodes;
     boolean buildSTG = true;
 
-    GsRegulatoryMutantDef mutant;
+    ObjectStore store = new ObjectStore(2);
 
     Map m_initState = new HashMap();
+	GsSimulationParameterList param_list;
 
     /**
      * empty constructor for everyday use.
      * @param nodeOrder
      */
-    public GsSimulationParameters(Vector nodeOrder) {
-        this.nodeOrder = nodeOrder;
+    public GsSimulationParameters(GsSimulationParameterList param_list) {
+    	this.param_list = param_list;
+        this.nodeOrder = param_list.graph.getNodeOrder();
     }
 
     public String toString() {
@@ -57,18 +58,8 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
      * see also <code>getMelt</code> to get association between nodes and classes
      */
     public Vector getVclass() {
-        if (v_class == null) {
-            v_class = new Vector();
-        }
-        if (v_class.size() == 0) {
-            GsReg2dynPriorityClass lastClass = new GsReg2dynPriorityClass();
-            v_class.add(lastClass);
-            for (int i=0 ; i<nodeOrder.size() ; i++) {
-                getMelt().put(nodeOrder.get(i), lastClass);
-            }
-        }
-
-        return v_class;
+    	PriorityClassDefinition pcdef = getPriorityClassDefinition(true);
+    	return pcdef.v_data;
     }
     /**
      *
@@ -76,10 +67,8 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
      * use <code>getVclass</code> to get the list of priority classes
      */
     public Map getMelt() {
-        if (m_elt == null) {
-            m_elt = new HashMap();
-        }
-        return m_elt;
+    	PriorityClassDefinition pcdef = getPriorityClassDefinition(true);
+    	return pcdef.m_elt;
     }
 
     /**
@@ -134,8 +123,8 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
             }
         }
 
-        if (mutant != null) {
-            s += "\nMutant:\n"+mutant.toString();
+        if (store.getObject(MUTANT) != null) {
+            s += "\nMutant:\n"+store.getObject(MUTANT).toString();
         }
 
         if (maxdepth != 0) {
@@ -154,38 +143,9 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 		out.addAttr("maxdepth", ""+maxdepth);
 		out.addAttr("maxnodes", ""+maxnodes);
 
-		StringBuffer s_tmp;
-
-
 		if (mode == Simulation.SEARCH_BYPRIORITYCLASS) {
-			out.openTag("priorityClassList");
-			for (int i=0 ; i< v_class.size(); i++) {
-				out.openTag("class");
-                GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_class.get(i);
-                out.addAttr("name", pc.getName());
-                out.addAttr("mode", ""+pc.getMode());
-                out.addAttr("rank", ""+pc.rank);
-				s_tmp = new StringBuffer();
-                Iterator it = m_elt.keySet().iterator();
-                while (it.hasNext()) {
-                    Object o = it.next();
-                    Object oc = m_elt.get(o);
-                    if (oc instanceof GsReg2dynPriorityClass) {
-                        if (m_elt.get(o) == pc) {
-                            s_tmp.append(o+" ");
-                        }
-                    } else if (oc instanceof Object[]) {
-                        Object[] t = (Object[])oc;
-                        for (int j=0 ; j<t.length ; j++) {
-                            if (t[j] == pc) {
-                                s_tmp.append(o+","+(j==0 ? "+" : "-")+" ");
-                            }
-                        }
-                    }
-                }
-				out.addAttr("content", s_tmp.toString());
-				out.closeTag();
-			}
+			out.openTag("priorityClass");
+			out.addAttr("ref", ((GsNamedObject)store.getObject(PCLASS)).getName());
 			out.closeTag();
 		}
 		if (m_initState != null && m_initState.keySet().size() > 0) {
@@ -198,9 +158,9 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 			}
 			out.closeTag();
 		}
-		if (mutant != null) {
+		if (store.getObject(MUTANT) != null) {
             out.openTag("mutant");
-            out.addAttr("value", mutant.toString());
+            out.addAttr("value", store.getObject(MUTANT).toString());
             out.closeTag();
 		}
 		out.closeTag();
@@ -228,6 +188,8 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
         //   - during the first pass asynchronous classes with the same priority are merged
         //   - then the real int[][] is created from the merged classes
 
+		Vector v_class = getVclass();
+		Map m_elt = getMelt();
         Vector v_vpclass = new Vector();
         for (int i=0 ; i<v_class.size() ; i++) {
             GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_class.get(i);
@@ -291,25 +253,14 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
     }
 
     public Object clone() {
-    	GsSimulationParameters newp = new GsSimulationParameters(nodeOrder);
+    	GsSimulationParameters newp = new GsSimulationParameters(param_list);
     	newp.name = name;
     	newp.mode = mode;
     	newp.maxdepth = maxdepth;
     	newp.maxnodes = maxnodes;
-    	newp.mutant = mutant;
+    	newp.store.setObject(MUTANT, store.getObject(MUTANT));
+    	newp.store.setObject(PCLASS, store.getObject(PCLASS));
 
-    	if (v_class != null) {
-    		newp.v_class = new Vector(v_class.size());
-    		for (int i=0 ; i<v_class.size() ; i++) {
-    			newp.v_class.add(((GsReg2dynPriorityClass)v_class.get(i)).clone());
-    		}
-    		newp.m_elt = new HashMap();
-    		Iterator it = m_elt.keySet().iterator();
-    		while (it.hasNext()) {
-    			Object k = it.next();
-    			newp.m_elt.put(k, newp.v_class.get( v_class.indexOf(m_elt.get(k)) ));
-    		}
-    	}
     	if (m_initState != null) {
     		newp.m_initState = new HashMap();
     		Iterator it = m_initState.keySet().iterator();
@@ -332,11 +283,13 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 		return m_initState;
 	}
 
-	public GsRegulatoryMutantDef getMutant() {
-		return mutant;
-	}
-
-	public void setMutant(GsRegulatoryMutantDef mutant) {
-		this.mutant = mutant;
+	public PriorityClassDefinition getPriorityClassDefinition(boolean b) {
+		PriorityClassDefinition pcd = (PriorityClassDefinition)store.getObject(PCLASS);
+		if (b && pcd == null) {
+			int index = param_list.pcmanager.add();
+			pcd = (PriorityClassDefinition)param_list.pcmanager.getElement(null, index);
+			store.setObject(PCLASS, pcd);
+		}
+		return pcd;
 	}
 }

@@ -5,13 +5,13 @@ import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsMutantStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.datastore.ObjectStore;
 
 /**
  * Configure SMV export
  */
-public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
+public class GsSMVexportConfig implements GsInitialStateStore {
 
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
@@ -20,6 +20,7 @@ public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
 
     GsRegulatoryGraph graph;
     Map m_initStates;
+    ObjectStore store = new ObjectStore();
     public GsRegulatoryMutantDef mutant;
     public int type;
     String thetest = "";
@@ -42,13 +43,6 @@ public class GsSMVexportConfig implements GsMutantStore, GsInitialStateStore {
     
 	public void setTest(String text) {
 		thetest = text;
-	}
-
-    public GsRegulatoryMutantDef getMutant() {
-        return mutant;
-    }
-	public void setMutant(GsRegulatoryMutantDef mutant) {
-		this.mutant = mutant;
 	}
 
 	public Map getInitialState() {

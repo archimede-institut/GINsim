@@ -23,6 +23,7 @@ public class GsSimulationParameterList extends SimpleGenericList
     String s_current;
     GsRegulatoryGraph graph;
     GsInitialStateList imanager;
+    PriorityClassManager pcmanager;
 
     /**
      * @param graph
@@ -35,6 +36,7 @@ public class GsSimulationParameterList extends SimpleGenericList
         this.graph = (GsRegulatoryGraph)graph;
         imanager = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
         imanager.addListListener(this);
+        pcmanager = new PriorityClassManager(this.graph);
     	prefix = "parameter_";
     	canAdd = true;
     	canEdit = true;
@@ -66,9 +68,12 @@ public class GsSimulationParameterList extends SimpleGenericList
         // if needed, add it to the default priority class!
         for (int i=0 ; i<v_data.size() ; i++) {
             GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
-            if (param.m_elt != null) {
-            	param.m_elt.put(data, param.v_class.get(0));
-            }
+        }
+        for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
+        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
+    		if (pcdef.m_elt != null) {
+    			pcdef.m_elt.put(data, pcdef.getElement(null, 0));
+    		}
         }
         return null;
     }
@@ -85,9 +90,12 @@ public class GsSimulationParameterList extends SimpleGenericList
         // remove it from priority classes and initial states
         for (int i=0 ; i<v_data.size() ; i++) {
             GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
-            if (param.m_elt != null) {
-                param.m_elt.remove(data);
-            }
+        }
+        for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
+        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
+    		if (pcdef.m_elt != null) {
+    			pcdef.m_elt.remove(data);
+    		}
         }
         return null;
     }
@@ -95,49 +103,6 @@ public class GsSimulationParameterList extends SimpleGenericList
     public GsGraphEventCascade vertexUpdated(Object data) {
     	return null;
     }
-
-    // TODO: purge/adapt dead code
-//    public int copy(int index) {
-//    	if (index < 0 || index >= v_data.size()) {
-//    		return -1;
-//    	}
-//    	GsSimulationParameters old = (GsSimulationParameters)v_data.get(index);
-//        // find an unused name
-//        String s = null;
-//        boolean[] t = new boolean[getNbElements(null)];
-//        for (int j=0 ; j<t.length ; j++) {
-//            t[j] = true;
-//        }
-//        for (int j=0 ; j<t.length ; j++) {
-//            GsSimulationParameters param = (GsSimulationParameters)v_data.get(j);
-//            if (param.name.startsWith(old.name+"_")) {
-//                try {
-//                    int v = Integer.parseInt(param.name.substring(10));
-//                    if (v > 0 && v <= t.length) {
-//                        t[v-1] = false;
-//                    }
-//                } catch (NumberFormatException e) {
-//                }
-//            }
-//        }
-//        for (int j=0 ; j<t.length ; j++) {
-//            if (t[j]) {
-//                s = old.name+"_"+(j+1);
-//                break;
-//            }
-//        }
-//        if (s == null) {
-//            s = old.name+"_"+(t.length+1);
-//        }
-//
-//        GsSimulationParameters parameter = (GsSimulationParameters)old.clone();
-//        parameter.name = s;
-//        index++;
-//        if (index<=0 || index>v_data.size()) {
-//            index = v_data.size();
-//        }
-//    	return add(parameter, index);
-//    }
 
     public int add(GsSimulationParameters param, int index) {
     	v_data.add(index, param);
@@ -153,14 +118,14 @@ public class GsSimulationParameterList extends SimpleGenericList
     public void mutantRemoved(Object mutant) {
         for (int i=0 ; i< v_data.size() ; i++) {
             GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
-            if (param.mutant == mutant) {
-                param.mutant = null;
+            if (param.store.getObject(GsSimulationParameters.MUTANT) == mutant) {
+                param.store.setObject(GsSimulationParameters.MUTANT, null);
             }
         }
     }
 
 	protected Object doCreate(String name) {
-        GsSimulationParameters parameter = new GsSimulationParameters(graph.getNodeOrder());
+        GsSimulationParameters parameter = new GsSimulationParameters(this);
         parameter.name = name;
 		return parameter;
 	}

@@ -2,6 +2,7 @@ package fr.univmrs.tagc.datastore.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,24 +13,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
-import fr.univmrs.tagc.datastore.GenericList;
-import fr.univmrs.tagc.datastore.GenericListListener;
-import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.MultiColObject;
-import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.datastore.*;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 import fr.univmrs.tagc.widgets.StatusTextField;
 import fr.univmrs.tagc.widgets.StockButton;
@@ -37,7 +27,7 @@ import fr.univmrs.tagc.widgets.StockButton;
 /**
  * Generic UI to display the content of a list.
  * It offers optional UI to reorder and alter the content of the list,
- * using the Glist interface as a backend.
+ * using the GenericList interface as a backend.
  */
 public class GenericListPanel extends JPanel 
 	implements KeyListener, ObjectPropertyEditorUI {
@@ -63,14 +53,30 @@ public class GenericListPanel extends JPanel
 	private GenericPropertyInfo	pinfo;
     
     public GenericListPanel() {
+    	this(null, null, null);
+    }
+    public GenericListPanel(JComponent rightCmp, JComponent bottomCmp, JComponent buttonCmp) {
     	jl.addActionListener(model);
     	jl.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 updateSelection();
             }
         });
+    	JPanel targetpanel = this;
+    	if (rightCmp != null) {
+    		setLayout(new GridLayout());
+    		JSplitPane split = new JSplitPane();
+    		targetpanel = new JPanel();
+    		split.setRightComponent(rightCmp);
+    		split.setLeftComponent(targetpanel);
+    		this.add(split);
+    		if (rightCmp instanceof ListSelectionListener) {
+    			// TODO: give it something more useful ?
+    			jl.getSelectionModel().addListSelectionListener((ListSelectionListener)rightCmp);
+    		}
+    	}
+        targetpanel .setLayout(new GridBagLayout());
         sp.setViewportView(jl);
-        this .setLayout(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
@@ -78,7 +84,7 @@ public class GenericListPanel extends JPanel
         c.gridwidth = 2;
         c.fill = GridBagConstraints.BOTH;
         c.insets = new Insets(3,5,4, 5);
-        this.add(l_title, c);
+        targetpanel.add(l_title, c);
 		l_title.setVisible(false);
 		
         c = new GridBagConstraints();
@@ -89,7 +95,7 @@ public class GenericListPanel extends JPanel
         c.fill = GridBagConstraints.BOTH;
         t_filter = new StatusTextField("filter", true);
         t_filter.addKeyListener(this);
-        this.add(t_filter, c);
+        targetpanel.add(t_filter, c);
 		
         c = new GridBagConstraints();
         c.gridx = 1;
@@ -98,7 +104,7 @@ public class GenericListPanel extends JPanel
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
-        this.add(sp, c);
+        targetpanel.add(sp, c);
         
         c = new GridBagConstraints();
         c.gridx = 2;
@@ -109,7 +115,7 @@ public class GenericListPanel extends JPanel
                 doRemove();
             }
         });
-        this.add(b_del, c);
+        targetpanel.add(b_del, c);
         
         c = new GridBagConstraints();
         c.gridx = 2;
@@ -120,7 +126,7 @@ public class GenericListPanel extends JPanel
                 doAdd();
             }
         });
-        this.add(b_add, c);
+        targetpanel.add(b_add, c);
         
         c = new GridBagConstraints();
         c.gridx = 2;
@@ -131,7 +137,7 @@ public class GenericListPanel extends JPanel
                 doMoveUp();
             }
         });
-        this.add(b_up, c);
+        targetpanel.add(b_up, c);
         
         c = new GridBagConstraints();
         c.gridx = 2;
@@ -142,7 +148,7 @@ public class GenericListPanel extends JPanel
                 doMoveDown();
             }
         });
-        this.add(b_down, c);
+        targetpanel.add(b_down, c);
     }
 
     protected void updateSelection() {
@@ -193,15 +199,17 @@ public class GenericListPanel extends JPanel
      */
     public void setList(GenericList list) {
         this.list = list;
-        model.setList(list, this);
         if (list == null) {
             b_up.setVisible(false);
             b_down.setVisible(false);
             b_add.setVisible(false);
             b_del.setVisible(false);
             t_filter.setVisible(false);
+            jl.setEnabled(false);
             return;
         }
+        model.setList(list, this);
+        jl.setEnabled(true);
         b_up.setVisible(list.canOrder());
         b_down.setVisible(list.canOrder());
         b_add.setVisible(list.canAdd() && !list.doInlineAddRemove());
@@ -384,6 +392,13 @@ public class GenericListPanel extends JPanel
 	public ListSelectionModel getSelectionModel() {
 		return jl.getSelectionModel();
 	}
+	public Object getSelectedItem() {
+		int[] t_sel = getSelection();
+		if (t_sel.length != 1) {
+			return null;
+		}
+		return list.getElement(t_filter.getText(),t_sel[0]);
+	}
 }
 
 class listModel extends AbstractTableModel implements GenericListListener, TableActionListener {
@@ -461,7 +476,10 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     
     public String getColumnName(int column) {
     	if (list != null && column > list.nbAction) {
-    		return list.getName();
+    		if (list.nbcol == list.nbAction+1) {
+    			return list.getTitle();
+    		}
+    		return list.getColName(column-list.nbAction);
     	}
         return "";
     }

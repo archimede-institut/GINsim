@@ -2,8 +2,6 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
-import java.util.HashMap;
-import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -61,11 +59,11 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 		pinfo.addPosition(0, 1, 5, 1, 1, 1, GridBagConstraints.SOUTH);
 		v_prop.add(pinfo);
 		
-//		// edge edit panel
-//		pinfo = new GenericPropertyInfo(this, EDGE, null, GsRegulatoryEdge.class);
-//		pinfo.data = graph;
-//		pinfo.addPosition(0, 2, 5, 1, 1, 0, GridBagConstraints.SOUTH);
-//		v_prop.add(pinfo);
+		// edge edit panel
+		pinfo = new GenericPropertyInfo(this, EDGE, null, GsRegulatoryEdge.class);
+		pinfo.data = graph;
+		pinfo.addPosition(0, 2, 5, 1, 1, 0, GridBagConstraints.SOUTH);
+		v_prop.add(pinfo);
 		
 		// annotation
 		pinfo = new GenericPropertyInfo(this, ANNOTATION, null, Annotation.class);
@@ -160,9 +158,6 @@ class EdgeList extends GenericList {
 		canRemove = true;
 		t_type = new Class[1];
 		t_type[0] = GsRegulatoryEdge.class;
-		
-		m_editor = new HashMap();
-		m_editor.put(GsRegulatoryEdge.class, new RegulatoryEdgeCellEditor(graph));
 	}
 	
 	void setMEdge(GsRegulatoryMultiEdge medge) {

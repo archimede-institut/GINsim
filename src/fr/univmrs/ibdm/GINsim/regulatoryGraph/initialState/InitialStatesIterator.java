@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.reg2dyn;
+package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -6,11 +6,49 @@ import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
+public class InitialStatesIterator implements Iterator {
+
+	Iterator helper;
+	Iterator helperIterator = null;
+	Vector nodeOrder;
+	
+	public InitialStatesIterator(Vector nodeOrder, Map m_initstates) {
+		this.nodeOrder = nodeOrder;
+		if (m_initstates == null || m_initstates.size() < 1) {
+			Vector v = new Vector();
+			v.add(new GsInitialState());
+			helperIterator = v.iterator();
+		} else {
+			helperIterator = m_initstates.keySet().iterator();
+		}
+		helper = new Reg2DynStatesIterator(nodeOrder, 
+				((GsInitialState)helperIterator.next()).getMap());
+	}
+	
+	public boolean hasNext() {
+		return helper.hasNext();
+	}
+
+	public Object next() {
+		Object ret = helper.next();
+		if (!helper.hasNext() && helperIterator != null && helperIterator.hasNext()) {
+			helper = new Reg2DynStatesIterator(nodeOrder,
+					((GsInitialState)helperIterator.next()).getMap());
+		}
+		return ret;
+	}
+
+	public void remove() {
+		// not supported
+	}
+}
+
+
 /**
  * this iterator generates some initial states
  * they are constructing from list of value for each node...
  */
-public final class Reg2DynStatesIterator implements Iterator {
+final class Reg2DynStatesIterator implements Iterator {
 	
 	int[] state;
 	int[] using;

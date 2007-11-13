@@ -19,7 +19,7 @@ abstract public class GenericList {
 	public int nbAction = 0;
 	public int nbcol = 1;
 	
-	String name = "";
+	protected String title = "";
 	
 	protected Class[] t_type = null;
 	protected Map m_editor = null;
@@ -138,8 +138,11 @@ abstract public class GenericList {
 	 */
 	abstract public void run(String filter, int row, int col);
 	
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
+	}
+	public String getColName(int col) {
+		return null;
 	}
     public int getNbCol() {
     	return nbcol+nbAction;
@@ -158,5 +161,13 @@ abstract public class GenericList {
 	}
 	public int getRealIndex(String filter, int i) {
 		return i;
+	}
+	public int indexOf(Object anItem) {
+		for (int i=0 ; i<getNbElements(null) ; i++) {
+			if (getElement(null, i).equals(anItem)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 }

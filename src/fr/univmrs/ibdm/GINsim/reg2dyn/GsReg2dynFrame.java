@@ -21,7 +21,9 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
+import fr.univmrs.tagc.datastore.ObjectStore;
 import fr.univmrs.tagc.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.datastore.gui.GenericListSelectionPanel;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
@@ -52,7 +54,7 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
 
     private JTextField textMaxDepth = null;
     private JTextField textMaxNodes = null;
-    private JButton buttonCfgPriorityClass;
+    private GenericListSelectionPanel selectPriorityClass;
     
     Insets indentInset = new Insets(0, 30, 0, 0);
     GsInitialStatePanel initStatePanel = null;
@@ -141,8 +143,10 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
             c.gridx = 0;
             c.gridy = 5;
             c.anchor = GridBagConstraints.WEST;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.weightx = 1;
             c.insets = indentInset;
-            panel.add(getButtonCfgPriorityClass(), c);
+            panel.add(getPriorityClassSelector(), c);
             
             // the top-right part with number limit
             panel = new JPanel();
@@ -191,7 +195,8 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
             c.gridy = 1;
             c.fill = GridBagConstraints.BOTH;
             c.weightx = 0.6;
-            mutantPanel = new MutantSelectionPanel(this, paramList.graph, currentParameter);
+            ObjectStore store = currentParameter == null ? null : currentParameter.store;
+            mutantPanel = new MutantSelectionPanel(this, paramList.graph, store);
             mainPanel.add(mutantPanel, c);
             
             // initial state
@@ -222,7 +227,7 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         radioBreadthFirst.setEnabled(false);
         radioDephtFirst.setEnabled(false);
         radioPriorityClass.setEnabled(false);
-        buttonCfgPriorityClass.setEnabled(false);
+        selectPriorityClass.setEnabled(false);
 
         initStatePanel.setEnabled(false);
         brun.setEnabled(false);
@@ -314,15 +319,15 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         	currentParameter.mode = Simulation.SEARCH_ASYNCHRONE_DF;
             getRadioBreadthFirst().setEnabled(false);
             getRadioDephtFirst().setEnabled(true);
-            buttonCfgPriorityClass.setEnabled(false);
+            selectPriorityClass.setEnabled(false);
         } else {
             getRadioBreadthFirst().setEnabled(false);
             getRadioDephtFirst().setEnabled(false);
             if (radioPriorityClass.isSelected()) {
                 currentParameter.mode = Simulation.SEARCH_BYPRIORITYCLASS;
-                buttonCfgPriorityClass.setEnabled(true);
+                selectPriorityClass.setEnabled(true);
             } else {
-                buttonCfgPriorityClass.setEnabled(false);
+                selectPriorityClass.setEnabled(false);
                 currentParameter.mode = Simulation.SEARCH_SYNCHRONE;
             }
         }
@@ -469,30 +474,23 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         }
         return textMaxNodes;
     }
-    private JButton getButtonCfgPriorityClass() {
-        if (buttonCfgPriorityClass == null) {
-            buttonCfgPriorityClass = new JButton(Translator.getString("STR_configure"));
-            buttonCfgPriorityClass.addActionListener(new java.awt.event.ActionListener() { 
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    configurePriorityClass();
-                }
-            });
-        }
-        return buttonCfgPriorityClass;
-    }
     
-    protected void configurePriorityClass() {
-        addTempPanel(new GsReg2dynPriorityClassConfig(paramList.graph.getNodeOrder(), currentParameter));
+    private GenericListSelectionPanel getPriorityClassSelector() {
+    	if (selectPriorityClass == null) {
+    		selectPriorityClass = new PrioritySelectionPanel(this, paramList.pcmanager);
+    	}
+    	return selectPriorityClass;
     }
-    
+
     public void valueChanged(ListSelectionEvent e) {
         int[] t_sel = listPanel.getSelection();
         if (t_sel.length != 1) {
             currentParameter = null;
         } else {
             currentParameter = (GsSimulationParameters)paramList.getElement(null, t_sel[0]);
-            mutantPanel.setStore(currentParameter);
+            mutantPanel.setStore(currentParameter.store);
             initStatePanel.setParam(currentParameter);
+    		selectPriorityClass.setStore(currentParameter.store, GsSimulationParameters.PCLASS);
         }
         refresh();
     }
@@ -506,7 +504,7 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
             radioPriorityClass.setEnabled(false);
             radioBreadthFirst.setEnabled(false);
             radioDephtFirst.setEnabled(false);
-            buttonCfgPriorityClass.setEnabled(false);
+            selectPriorityClass.setEnabled(false);
 
             mutantPanel.setEnabled(false);
             textMaxDepth.setEnabled(false);
@@ -524,26 +522,26 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
                 radioBreadthFirst.setEnabled(true);
                 radioDephtFirst.setEnabled(true);
                 radioBreadthFirst.setSelected(true);
-                buttonCfgPriorityClass.setEnabled(false);
+                selectPriorityClass.setEnabled(false);
                 break;
             case Simulation.SEARCH_ASYNCHRONE_DF:
                 radioAsynchrone.setSelected(true);
                 radioBreadthFirst.setEnabled(true);
                 radioDephtFirst.setEnabled(true);
                 radioDephtFirst.setSelected(true);
-                buttonCfgPriorityClass.setEnabled(false);
+                selectPriorityClass.setEnabled(false);
                 break;
             case Simulation.SEARCH_SYNCHRONE:
                 radioSynchrone.setSelected(true);
                 radioBreadthFirst.setEnabled(false);
                 radioDephtFirst.setEnabled(false);
-                buttonCfgPriorityClass.setEnabled(false);
+                selectPriorityClass.setEnabled(false);
                 break;
             case Simulation.SEARCH_BYPRIORITYCLASS:
                 radioPriorityClass.setSelected(true);
                 radioBreadthFirst.setEnabled(false);
                 radioDephtFirst.setEnabled(false);
-                buttonCfgPriorityClass.setEnabled(true);
+                selectPriorityClass.setEnabled(true);
                 break;
             }
             mutantPanel.setEnabled(true);
