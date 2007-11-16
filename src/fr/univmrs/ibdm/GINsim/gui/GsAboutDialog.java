@@ -47,7 +47,7 @@ import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 	};
 	private static final String[][] previousContributors = {
 		{"Frederic CORDEIL", "Prototype development"},
-		{"Aitor Gonzalez", "Prototype development and biological application"},
+		{"Aitor GONZALEZ", "Prototype development and biological application"},
 		{"Kevin MATHIEU", "APNN export"},
 		{"Thomas MARCQ", "Prototype development"},
 		{"Cecile MENAHEM", "Prototype development"},
@@ -83,7 +83,7 @@ import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 	 * This is the default constructor
 	 */
 	public GsAboutDialog() {
-		setSize(400, 400);
+		setSize(430, 400);
 		setContentPane(getJContentPane());
 	}
 	
