@@ -5,9 +5,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
-
-
 public class SimpleGenericList extends GenericList {
 
 	public Vector		v_data;
@@ -40,11 +37,11 @@ public class SimpleGenericList extends GenericList {
 		for (int j = 0 ; j < t.length ; j++) {
 			t[j] = true;
 		}
-		if (v_data.size() > 0 && !(v_data.get(0) instanceof GsNamedObject)) {
-			return triggerAdd(wrapCreate(s, position));
+		if (v_data.size() > 0 && !(v_data.get(0) instanceof NamedObject)) {
+			return triggerAdd(wrapCreate(s, position), position);
 		}
 		for (int j = 0 ; j < t.length ; j++) {
-			GsNamedObject obj = (GsNamedObject)v_data.get(j);
+			NamedObject obj = (NamedObject)v_data.get(j);
 			if (obj.getName().startsWith(prefix)) {
 				try {
 					int v = Integer.parseInt(obj.getName().substring(
@@ -66,14 +63,18 @@ public class SimpleGenericList extends GenericList {
 			s = prefix + (t.length + 1);
 		}
 
-		return triggerAdd(wrapCreate(s, position));
+		return triggerAdd(wrapCreate(s, position), position);
 	}
 
-	private int triggerAdd(Object item) {
+	private int triggerAdd(Object item, int position) {
 		if (item == null) {
 			return -1;
 		}
-		v_data.add(item);
+		if (addWithPosition) {
+			v_data.add(position, item);
+		} else {
+			v_data.add(item);
+		}
 		int pos = v_data.indexOf(item);
 		if (v_listeners != null) {
 			Iterator it = v_listeners.iterator();
@@ -114,17 +115,17 @@ public class SimpleGenericList extends GenericList {
 		}
 		int index = getRealIndex(filter, pos);
 		if (index == v_data.size()) {
-			if (!doInlineAddRemove || o == null || o == "") {
+			if (!doInlineAddRemove || "".equals(o)) {
 				return false;
 			}
 			Object newObj = wrapCreate((String)o, pos);
 			if (newObj != null) {
-				triggerAdd(newObj);
+				triggerAdd(newObj, pos);
 				return true;
 			}
 			return false;
 		}
-		if ((o == null || o.equals("")) && doInlineAddRemove) {
+		if ("".equals(o) && doInlineAddRemove) {
 			int[] t = new int[1];
 			t[0] = pos;
 			remove(null, t);
@@ -138,10 +139,10 @@ public class SimpleGenericList extends GenericList {
 			v_data.setElementAt(o, index);
 			return true;
 		}
-		if (!(data instanceof GsNamedObject)) {
+		if (!(data instanceof NamedObject)) {
 			return doEdit(data, o);
 		}
-		GsNamedObject obj = (GsNamedObject)data;
+		NamedObject obj = (NamedObject)data;
 		if (obj.getName().equals(o.toString())) {
 			return false;
 		}
@@ -155,7 +156,7 @@ public class SimpleGenericList extends GenericList {
 		if (enforceUnique) {
 			for (int i = 0 ; i < v_data.size() ; i++) {
 				if (i != index
-						&& ((GsNamedObject)v_data.get(i)).getName().equals(
+						&& ((NamedObject)v_data.get(i)).getName().equals(
 								o.toString())) {
 					return false;
 				}
@@ -199,8 +200,6 @@ public class SimpleGenericList extends GenericList {
 			doMoveUp(sel, diff);
 		}
 	    return true;
-
-	
 	}
 	
 	protected void doMoveUp(int[] sel, int diff) {
@@ -280,11 +279,10 @@ public class SimpleGenericList extends GenericList {
 		Iterator it = v_data.iterator();
 		while (it.hasNext()) {
 			Object o = it.next();
-			if (o != null && o instanceof GsNamedObject && name.equals(((GsNamedObject)o).getName())) {
+			if (o != null && o instanceof NamedObject && name.equals(((NamedObject)o).getName())) {
 				return o;
 			}
 		}
 		return null;
 	}
-
 }

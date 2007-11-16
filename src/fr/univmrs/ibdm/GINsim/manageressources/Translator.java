@@ -112,8 +112,9 @@ public class Translator {
 		try {
 			return defaultBundle.getString(sKey);
 		} catch (MissingResourceException mrex) {
-			if (logNotFoundResources)
-					System.err.println("Resource for the following key not found:" + sKey);
+			if (logNotFoundResources) {
+				System.err.println("Resource for the following key not found:" + sKey);
+			}
 			return sKey;
 		}
 	}
@@ -164,8 +165,9 @@ public class Translator {
 		try {
 			return defaultBundle.getString(sKey);
 		} catch (MissingResourceException mrex) {
-			if (logNotFoundResources)
-					System.err.println("Resource for the following key not found:" + sKey);
+			if (logNotFoundResources) {
+				System.err.println("Resource for the following key not found:" + sKey);
+			}
 			return null;
 		}
 	}

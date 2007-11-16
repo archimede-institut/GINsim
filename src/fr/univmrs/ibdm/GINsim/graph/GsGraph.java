@@ -260,7 +260,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @param compressed
      * @throws GsException
      */
-    private void save(boolean selectedOnly, String savePath, int saveMode, boolean extended, boolean compressed) throws GsException {
+    private void save(boolean selectedOnly, String savePath, int saveMode, boolean extended, boolean compressed) {
         try {
         	File f = new File(savePath != null ? savePath : this.saveFileName);
         	File ftmp = null;

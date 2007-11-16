@@ -6,7 +6,6 @@ import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.datastore.models.MinMaxSpinModel;
 
-
 public class MinMaxEditor implements ObjectPropertyEditorUI {
 
 	MinMaxSpinModel model;

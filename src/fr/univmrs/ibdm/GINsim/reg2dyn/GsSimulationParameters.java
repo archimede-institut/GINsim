@@ -6,19 +6,19 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.tagc.datastore.NamedObject;
 import fr.univmrs.tagc.datastore.ObjectStore;
 
 /**
  * remember, save and restore a simulation parameter.
  */
-public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitialStateStore {
+public class GsSimulationParameters implements GsXMLize, NamedObject, GsInitialStateStore {
 
 	static final int MUTANT = 0;
 	static final int PCLASS = 1;
@@ -145,7 +145,7 @@ public class GsSimulationParameters implements GsXMLize, GsNamedObject, GsInitia
 
 		if (mode == Simulation.SEARCH_BYPRIORITYCLASS) {
 			out.openTag("priorityClass");
-			out.addAttr("ref", ((GsNamedObject)store.getObject(PCLASS)).getName());
+			out.addAttr("ref", ((NamedObject)store.getObject(PCLASS)).getName());
 			out.closeTag();
 		}
 		if (m_initState != null && m_initState.keySet().size() > 0) {

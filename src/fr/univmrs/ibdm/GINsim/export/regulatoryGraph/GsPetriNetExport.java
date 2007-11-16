@@ -289,7 +289,6 @@ class PNConfig implements GsInitialStateStore {
 
 	Map m_init = new HashMap();
 	ObjectStore store = new ObjectStore();
-	private GsRegulatoryMutantDef mutant;
 
 	public Map getInitialState() {
 		return m_init;

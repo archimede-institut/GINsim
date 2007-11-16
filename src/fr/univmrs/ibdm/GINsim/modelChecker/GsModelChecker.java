@@ -4,15 +4,15 @@ import java.awt.Component;
 import java.io.File;
 import java.util.Map;
 
-import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.tagc.datastore.NamedObject;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * Model checker implementations should implement this interface.
  */
-public interface GsModelChecker extends GsNamedObject {
+public interface GsModelChecker extends NamedObject {
 
     /**
      * @param mutants list of mutants on which to run the test

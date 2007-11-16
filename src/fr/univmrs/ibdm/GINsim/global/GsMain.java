@@ -38,8 +38,6 @@ public class GsMain {
         	e.printStackTrace();
         	System.exit(1);
         }
-        // TODO: for now ignore the "--test" option (it is always added)
-        boolean testing = true;
         /*
          * parse args: - run without GUI - set ginsim dir - choose locale - give
          * some help
@@ -89,8 +87,6 @@ public class GsMain {
                 }
             } else if (args[i].equals("--noui")) {
                 startui = false;
-            } else if (args[i].equals("--test")) {
-                testing = true;
             } else if (args[i].equals("--run")) {
                 if (args.length > i) {
                     i++;

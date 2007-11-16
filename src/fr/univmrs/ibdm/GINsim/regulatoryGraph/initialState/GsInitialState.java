@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.datastore.NamedObject;
 
-public class GsInitialState implements GsNamedObject {
+public class GsInitialState implements NamedObject {
 	String name;
 	Map m = new HashMap();
 	

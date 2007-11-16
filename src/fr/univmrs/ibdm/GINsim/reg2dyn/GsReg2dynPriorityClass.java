@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
+import fr.univmrs.tagc.datastore.NamedObject;
 import fr.univmrs.tagc.datastore.MultiColObject;
 
 
@@ -8,7 +8,7 @@ import fr.univmrs.tagc.datastore.MultiColObject;
  * a priority class for the simulation.
  * each class has a name, a simulation mode and a list of elements
  */
-public class GsReg2dynPriorityClass implements MultiColObject, GsNamedObject {
+public class GsReg2dynPriorityClass implements MultiColObject, NamedObject {
     
     /** this class is synchronous */
     public static final int SYNCHRONOUS = 0;

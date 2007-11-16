@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 
-
 public class PropertyActionButton extends JButton 
 	implements ObjectPropertyEditorUI, ActionListener {
 	private static final long	serialVersionUID	= -2434800129909268912L;
@@ -43,5 +42,4 @@ public class PropertyActionButton extends JButton
 	public void actionPerformed(ActionEvent e) {
 		pinfo.run();
 	}
-
 }

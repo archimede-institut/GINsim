@@ -66,9 +66,6 @@ public class GsSimulationParameterList extends SimpleGenericList
 
     public GsGraphEventCascade vertexAdded(Object data) {
         // if needed, add it to the default priority class!
-        for (int i=0 ; i<v_data.size() ; i++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
-        }
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
     		if (pcdef.m_elt != null) {
@@ -87,10 +84,7 @@ public class GsSimulationParameterList extends SimpleGenericList
 	}
     
     public GsGraphEventCascade vertexRemoved(Object data) {
-        // remove it from priority classes and initial states
-        for (int i=0 ; i<v_data.size() ; i++) {
-            GsSimulationParameters param = (GsSimulationParameters)v_data.get(i);
-        }
+        // remove it from priority classes
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
     		if (pcdef.m_elt != null) {

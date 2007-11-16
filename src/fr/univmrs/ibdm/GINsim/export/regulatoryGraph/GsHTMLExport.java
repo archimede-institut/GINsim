@@ -2,7 +2,6 @@ package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.table.TableModel;
@@ -82,7 +81,6 @@ public class GsHTMLExport extends GsAbstractExport implements GenericStableState
 				}
 				out.write("</tr>\n");
 				for ( int i=0 ; i< initStates.getNbElements(null) ; i++ ) {
-					Map m = null;
 					out.write("<tr>\n");
 					out.write("<td>" + model.getValueAt(i, 0) + "</td>\n");
 					for (int j = 0; j < len; j++) {

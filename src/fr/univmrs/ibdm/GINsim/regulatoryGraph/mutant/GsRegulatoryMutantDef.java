@@ -4,17 +4,17 @@ import java.io.IOException;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
-import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.datastore.NamedObject;
 
 /**
  * store the definition of a mutant
  */
-public class GsRegulatoryMutantDef implements GsNamedObject {
+public class GsRegulatoryMutantDef implements NamedObject {
     String name;
     Vector v_changes = new Vector();
     Annotation annotation = new Annotation();

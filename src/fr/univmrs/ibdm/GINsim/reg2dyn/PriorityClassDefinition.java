@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import fr.univmrs.ibdm.GINsim.global.GsNamedObject;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 import fr.univmrs.tagc.datastore.GenericListListener;
+import fr.univmrs.tagc.datastore.NamedObject;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
 
 
-class PriorityClassDefinition extends SimpleGenericList implements GsNamedObject, GsXMLize {
+class PriorityClassDefinition extends SimpleGenericList implements NamedObject, GsXMLize {
 
 	Map m_elt;
 	String name;
@@ -51,21 +51,23 @@ class PriorityClassDefinition extends SimpleGenericList implements GsNamedObject
 	}
 	public Object doCreate(String name, int pos) {
 		int priority;
-		if (pos < 0 || pos >= getNbElements(null)) {
-			priority = 0;
-		} else {
-			priority = ((GsReg2dynPriorityClass)v_data.get(pos)).rank;
+		int i = pos;
+		int len = getNbElements(null);
+		if (pos<0 || pos >= len) {
+			i = len == 0 ? 0 : len-1;
 		}
-        for ( ; pos < v_data.size() ; pos++) {
-            if (((GsReg2dynPriorityClass)v_data.get(pos)).rank != priority) {
+		priority = len == 0 ? 0: ((GsReg2dynPriorityClass)v_data.get(i)).rank;
+        for ( ; i < len ; i++) {
+            if (((GsReg2dynPriorityClass)v_data.get(i)).rank != priority) {
                 break;
             }
         }
-        GsReg2dynPriorityClass newclass = new GsReg2dynPriorityClass(priority+1, name);
-        for (int i=pos ; i<v_data.size() ; i++) {
+        v_data.add(i, new GsReg2dynPriorityClass(priority+1, name));
+        for ( i++; i<len ; i++) {
             ((GsReg2dynPriorityClass)v_data.get(i)).rank++;
         }
-        return newclass;
+        refresh();
+        return null;
 	}
 	
 	public String getColName(int col) {

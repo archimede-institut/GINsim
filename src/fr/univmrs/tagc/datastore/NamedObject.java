@@ -1,6 +1,6 @@
-package fr.univmrs.ibdm.GINsim.global;
+package fr.univmrs.tagc.datastore;
 
-public interface GsNamedObject {
+public interface NamedObject {
     /**
      * @return the name of this object
      */
