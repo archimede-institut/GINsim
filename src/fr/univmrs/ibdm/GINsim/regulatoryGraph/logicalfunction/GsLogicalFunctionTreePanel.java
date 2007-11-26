@@ -1,22 +1,39 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 
-import java.awt.*;
-import java.awt.dnd.*;
+import java.awt.BorderLayout;
+import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DropTarget;
 import java.awt.event.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.plaf.basic.*;
-import javax.swing.tree.*;
-
-import fr.univmrs.ibdm.GINsim.gui.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.*;
+import javax.swing.Icon;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.plaf.TreeUI;
+import javax.swing.plaf.basic.BasicTreeUI;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+
+import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 
 public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
     KeyListener, MouseListener,
@@ -190,7 +207,9 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
   }
 
   public void keyReleased(KeyEvent e) {
-    if ((e.getKeyCode() == KeyEvent.VK_DELETE) || (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)) deleteSelection();
+    if (e.getKeyCode() == KeyEvent.VK_DELETE || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+		deleteSelection();
+	}
   }
 
   public void keyTyped(KeyEvent e) {
@@ -209,15 +228,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
       tree.stopEditing();
       for (int i = 0; i < selectedPaths.length; i++) {
         treeElement = (GsTreeElement) selectedPaths[i].getLastPathComponent();
-        if (treeElement.getParent() instanceof GsTreeManual) {
-          treeElement.remove(false);
-          v.addElement(treeElement);
-        }
-        if (treeElement instanceof GsTreeManual) {
-          treeElement.remove(false);
-          treeElement.getParent().addChild(new GsTreeManual(treeElement.getParent()), 0);
-        }
-        else if (!(treeElement instanceof GsTreeParam)) {
+        if (!(treeElement instanceof GsTreeParam)) {
           treeElement.remove(false);
           v.addElement(treeElement);
           if (treeElement.toString().equals("")) {
@@ -239,7 +250,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
   }
 
   public void mousePressed(MouseEvent e) {
-    if ((e.getButton() == MouseEvent.BUTTON3) || (e.isPopupTrigger())) {
+    if (e.getButton() == MouseEvent.BUTTON3 || e.isPopupTrigger()) {
       menu.show(tree, e.getX(), e.getY());
       e.consume();
     }
@@ -272,30 +283,15 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
         else if (transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR && node instanceof GsTreeString) {
           pasteValuesInRoot(transferable.getNodes(), (GsTreeString) node);
         }
-        else if (transferable.getCurrentFlavor() == GsTransferable.FUNCTION_FLAVOR && node instanceof GsTreeManual) {
-          pasteFunctionsInManual(transferable.getNodes(),
-                                 ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
-                                 (GsTreeManual) node);
-        }
         else if (transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR && node instanceof GsTreeValue) {
           pasteManualsInValue(transferable.getNodes(),
                               ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
                               (GsTreeValue) node);
         }
-        else if (transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR && node instanceof GsTreeManual) {
-          pasteManualsInValue(transferable.getNodes(),
-                              ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
-                              (GsTreeValue) node.getParent());
-        }
         else if (transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR && node instanceof GsTreeValue) {
           pasteParamsInValue(transferable.getNodes(),
                              ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
                              (GsTreeValue) node);
-        }
-        else if (transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR && node instanceof GsTreeManual) {
-          pasteParamsInValue(transferable.getNodes(),
-                             ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
-                             (GsTreeValue) node.getParent());
         }
       }
     }
@@ -414,34 +410,34 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
     }
   }
 
-  public void pasteFunctionsInManual(GsTreeElement[] functions, boolean remove, GsTreeManual manual) {
-    Enumeration enu, enu2;
-    TreePath tp;
-    GsTreeParam param;
-
-    try {
-      enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-      for (int i = 0; i < functions.length; i++) {
-        enu2 = functions[i].getChilds().elements();
-        while (enu2.hasMoreElements()) {
-          param = (GsTreeParam) enu2.nextElement();
-          manual.addChild(new GsTreeParam(manual, param.getEdgeIndexes()), -1);
-        }
-        if (remove) {
-          functions[i].remove(false);
-        }
-      }
-      interactionList.fireTreeStructureChanged((GsTreeElement) tree.getPathForRow(0).getLastPathComponent());
-      interactionList.refreshVertex();
-      while (enu.hasMoreElements()) {
-        tp = (TreePath) enu.nextElement();
-        tree.expandPath(tp);
-      }
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+//  public void pasteFunctionsInManual(GsTreeElement[] functions, boolean remove, GsTreeManual manual) {
+//    Enumeration enu, enu2;
+//    TreePath tp;
+//    GsTreeParam param;
+//
+//    try {
+//      enu = tree.getExpandedDescendants(tree.getPathForRow(0));
+//      for (int i = 0; i < functions.length; i++) {
+//        enu2 = functions[i].getChilds().elements();
+//        while (enu2.hasMoreElements()) {
+//          param = (GsTreeParam) enu2.nextElement();
+//          manual.addChild(new GsTreeParam(manual, param.getEdgeIndexes()), -1);
+//        }
+//        if (remove) {
+//          functions[i].remove(false);
+//        }
+//      }
+//      interactionList.fireTreeStructureChanged((GsTreeElement) tree.getPathForRow(0).getLastPathComponent());
+//      interactionList.refreshVertex();
+//      while (enu.hasMoreElements()) {
+//        tp = (TreePath) enu.nextElement();
+//        tree.expandPath(tp);
+//      }
+//    }
+//    catch (Exception ex) {
+//      ex.printStackTrace();
+//    }
+//  }
 
   public void pasteManualsInValue(GsTreeElement[] manuals, boolean remove, GsTreeValue value) {
     Enumeration enu, enu2;

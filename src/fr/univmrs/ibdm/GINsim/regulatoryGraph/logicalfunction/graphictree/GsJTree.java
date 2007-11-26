@@ -20,15 +20,16 @@ private int margin = 15;
     super(m);
   }
   public void setSelectionPath(TreePath path) {
-    if (!isPathSelected(path))
-      super.setSelectionPath(path);
+    if (!isPathSelected(path)) {
+		super.setSelectionPath(path);
+	}
   }
   public void autoscroll(Point p) {
     int realrow = getRowForLocation(p.x, p.y);
     if (realrow != -1) {
       Rectangle outer = getBounds();
-      realrow = ((p.y + outer.y) <= margin ? realrow < 1 ? 0 : realrow - 1 :
-                 realrow < (getRowCount() - 1) ? realrow + 1 : realrow);
+      realrow = p.y + outer.y <= margin ? realrow < 1 ? 0 : realrow - 1 :
+                 realrow < getRowCount() - 1 ? realrow + 1 : realrow;
       scrollRowToVisible(realrow);
     }
   }

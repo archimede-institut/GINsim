@@ -396,7 +396,7 @@ public class GenericListPanel extends JPanel
 		if (t_sel.length != 1) {
 			return null;
 		}
-		return list.getElement(t_filter.getText(),t_sel[0]);
+		return list.getElement(null, t_sel[0]);
 	}
 	public void valueChanged(ListSelectionEvent e) {
     	if (pinfo != null) {

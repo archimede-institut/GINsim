@@ -6,7 +6,10 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.Arrays;
 import java.util.List;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 
 public class GsTransferable implements Transferable {
   public static final DataFlavor FUNCTION_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Functions");
@@ -26,43 +29,29 @@ public class GsTransferable implements Transferable {
     super();
     nodes = el;
     pParent = null;
-    if (nodes[0] instanceof GsTreeExpression)
-      currentFlavor = FUNCTION_FLAVOR;
-    else if (nodes[0] instanceof GsTreeValue)
-      currentFlavor = VALUE_FLAVOR;
-    else if (nodes[0] instanceof GsTreeManual)
-      currentFlavor = MANUAL_FLAVOR;
-    else if ((nodes[0] instanceof GsTreeParam) && (nodes[0].getParent() instanceof GsTreeManual)) {
-      currentFlavor = PARAM_FLAVOR;
-      GsTreeElement p = nodes[0].getParent();
-      for (int i = 1; i < nodes.length; i++)
-        if (p != nodes[i].getParent()) {
-          currentFlavor = MIXED_FLAVOR;
-          break;
-        }
-      if (currentFlavor != MIXED_FLAVOR)
-        pParent = p;
-    }
-    else
-      currentFlavor = MIXED_FLAVOR;
-    if (currentFlavor != MIXED_FLAVOR)
-      for (int i = 1; i < nodes.length; i++)
-        if ((nodes[i] instanceof GsTreeExpression) && (currentFlavor != FUNCTION_FLAVOR)) {
-          currentFlavor = MIXED_FLAVOR;
-          break;
-        }
-        else if ((nodes[i] instanceof GsTreeManual) && (currentFlavor != MANUAL_FLAVOR)) {
-          currentFlavor = MIXED_FLAVOR;
-          break;
-        }
-        else if ((nodes[i] instanceof GsTreeValue) && (currentFlavor != VALUE_FLAVOR)) {
-          currentFlavor = MIXED_FLAVOR;
-          break;
-        }
-        else if ((nodes[i] instanceof GsTreeParam) && (currentFlavor != PARAM_FLAVOR)) {
-          currentFlavor = MIXED_FLAVOR;
-          break;
-        }
+    if (nodes[0] instanceof GsTreeExpression) {
+		currentFlavor = FUNCTION_FLAVOR;
+	} else if (nodes[0] instanceof GsTreeValue) {
+		currentFlavor = VALUE_FLAVOR;
+	} else {
+		currentFlavor = MIXED_FLAVOR;
+	}
+    if (currentFlavor != MIXED_FLAVOR) {
+		for (int i = 1; i < nodes.length; i++) {
+			if (nodes[i] instanceof GsTreeExpression && currentFlavor != FUNCTION_FLAVOR) {
+		      currentFlavor = MIXED_FLAVOR;
+		      break;
+		    }
+		    else if (nodes[i] instanceof GsTreeValue && currentFlavor != VALUE_FLAVOR) {
+		      currentFlavor = MIXED_FLAVOR;
+		      break;
+		    }
+		    else if (nodes[i] instanceof GsTreeParam && currentFlavor != PARAM_FLAVOR) {
+		      currentFlavor = MIXED_FLAVOR;
+		      break;
+		    }
+		}
+	}
   }
   public DataFlavor getCurrentFlavor() {
     return currentFlavor;
@@ -76,13 +65,16 @@ public class GsTransferable implements Transferable {
   public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
     if (flavor == PLAIN_TEXT_FLAVOR) {
       StringBuffer text = new StringBuffer();
-      for (int i = 0; i < nodes.length; i++) text.append(nodes[i].toString() + "\n");
+      for (int i = 0; i < nodes.length; i++) {
+		text.append(nodes[i].toString() + "\n");
+	}
       return text.toString();
     }
-    else if (dataFlavorsList.contains(flavor))
-      return nodes;
-    else
-      throw new UnsupportedFlavorException(flavor);
+    else if (dataFlavorsList.contains(flavor)) {
+		return nodes;
+	} else {
+		throw new UnsupportedFlavorException(flavor);
+	}
   }
   public boolean isDataFlavorSupported(DataFlavor flavor) {
     return dataFlavorsList.contains(flavor);

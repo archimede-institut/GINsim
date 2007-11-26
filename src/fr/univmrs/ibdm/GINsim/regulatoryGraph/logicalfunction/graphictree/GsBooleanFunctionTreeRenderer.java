@@ -15,10 +15,11 @@ public class GsBooleanFunctionTreeRenderer extends DefaultTreeCellRenderer imple
 private static final long serialVersionUID = 3456841880209526024L;
 private int width;
   private JTree tree = null;
+  private static final int leftmargin = 90;
 
   public GsBooleanFunctionTreeRenderer(int totalWidth) {
     super();
-    width = totalWidth - 140;
+    width = totalWidth - leftmargin;
   }
   public int getWidth() {
     return width;
@@ -35,7 +36,7 @@ private int width;
   public void componentHidden(ComponentEvent e) {}
   public void componentMoved(ComponentEvent e) {}
   public void componentResized(ComponentEvent e) {
-    width = e.getComponent().getWidth() - 140;
+    width = e.getComponent().getWidth() - leftmargin;
     if (tree != null) {
       tree.stopEditing();
       int[] sr = tree.getSelectionRows();

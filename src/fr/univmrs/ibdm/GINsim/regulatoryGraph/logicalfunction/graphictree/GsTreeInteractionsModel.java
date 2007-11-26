@@ -133,13 +133,8 @@ public class GsTreeInteractionsModel implements TreeModel {
     GsTreeValue val = new GsTreeValue(root, v);
     root.addChild(val, -1);
     GsTreeValue value;
-    GsTreeManual manual;
     for (int i = 0; i < root.getChildCount(); i++) {
       value = (GsTreeValue)root.getChild(i);
-      if (value.getValue() == v) {
-        manual = new GsTreeManual(value);
-        value.addChild(manual, -1);
-      }
     }
   }
 
@@ -264,18 +259,12 @@ public class GsTreeInteractionsModel implements TreeModel {
   }
   public GsTreeParam addEmptyParameter(short val, GsRegulatoryVertex currentVertex) throws Exception {
     GsTreeValue value;
-    GsTreeManual manual;
     GsTreeParam param = null;
 
     setNode(currentVertex);
     addValue(val);
     for (int i = 0; i < root.getChildCount(); i++) {
       value = (GsTreeValue)root.getChild(i);
-      if (value.getValue() == val) {
-        manual = (GsTreeManual)value.getChild(0);
-        param = new GsTreeParam(manual, new Vector());
-        manual.addChild(param, -1);
-      }
     }
     return param;
   }

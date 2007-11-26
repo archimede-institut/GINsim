@@ -12,7 +12,10 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 
@@ -444,15 +447,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
           if (exp instanceof GsTreeExpression) {
             out.openTag("exp");
             out.addAttr("str", exp.toString());
-            out.closeTag();
-          }
-          else if (exp instanceof GsTreeManual) {
-            out.openTag("added");
-            for (int k = 0; k < exp.getChildCount(); k++) {
-              out.openTag("param");
-              out.addAttr("str", exp.getChild(k).toString());
-              out.closeTag();
-            }
             out.closeTag();
           }
         }

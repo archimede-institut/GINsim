@@ -9,7 +9,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 
 public class GsDragSourceListener implements DragSourceListener {
@@ -49,23 +48,21 @@ public class GsDragSourceListener implements DragSourceListener {
     Point p = dsde.getLocation();
     int action = dsde.getDropAction();
     DataFlavor choosen = transferable.getCurrentFlavor();
-    if ((action != DnDConstants.ACTION_COPY) && (action != DnDConstants.ACTION_MOVE))
-      dsde.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
-    else if (choosen != GsTransferable.MIXED_FLAVOR) {
+    if (action != DnDConstants.ACTION_COPY && action != DnDConstants.ACTION_MOVE) {
+		dsde.getDragSourceContext().setCursor(DragSource.DefaultMoveNoDrop);
+	} else if (choosen != GsTransferable.MIXED_FLAVOR) {
       SwingUtilities.convertPointFromScreen(p, tree);
       TreePath tp = tree.getPathForLocation(p.x, p.y);
       if (tp != null) {
         GsTreeElement choosenElement = (GsTreeElement)tp.getLastPathComponent();
-        if (((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeValue)) ||
-            ((choosen == GsTransferable.FUNCTION_FLAVOR) && (choosenElement instanceof GsTreeManual)) ||
-            ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeValue)) ||
-            ((choosen == GsTransferable.MANUAL_FLAVOR) && (choosenElement instanceof GsTreeManual)) ||
-            ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeManual)) ||
-            ((choosen == GsTransferable.PARAM_FLAVOR) && (choosenElement instanceof GsTreeValue))) {
-          if (action == DnDConstants.ACTION_COPY)
-            dsde.getDragSourceContext().setCursor(DragSource.DefaultCopyDrop);
-          else if (action == DnDConstants.ACTION_MOVE)
-            dsde.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
+        if (choosen == GsTransferable.FUNCTION_FLAVOR && choosenElement instanceof GsTreeValue ||
+        		choosen == GsTransferable.MANUAL_FLAVOR && choosenElement instanceof GsTreeValue ||
+        		choosen == GsTransferable.PARAM_FLAVOR && choosenElement instanceof GsTreeValue) {
+          if (action == DnDConstants.ACTION_COPY) {
+			dsde.getDragSourceContext().setCursor(DragSource.DefaultCopyDrop);
+		} else if (action == DnDConstants.ACTION_MOVE) {
+			dsde.getDragSourceContext().setCursor(DragSource.DefaultMoveDrop);
+		}
           p = (Point)dsde.getLocation().clone();
           SwingUtilities.convertPointToScreen(p, tree);
           SwingUtilities.convertPointFromScreen(p, glassPane);
@@ -77,6 +74,5 @@ public class GsDragSourceListener implements DragSourceListener {
   }
 
   public void dropActionChanged(DragSourceDragEvent dsde) {
-
   }
 }

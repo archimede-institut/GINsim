@@ -29,7 +29,7 @@ import fr.univmrs.tagc.widgets.StackDialog;
 public final class GsRegulatoryParser extends GsXMLHelper {
 
     private static final int POS_OUTSIDE = -1;  // outside of the graph (or in an ignored one)
-    private static final int POS_OUT = 0;       // in the graph, outise of all vertices/edges
+    private static final int POS_OUT = 0;       // in the graph, outside of all vertices/edges
     private static final int POS_FILTERED = 50;
     private static final int POS_GRAPH_NOTES = 1;
     private static final int POS_GRAPH_NOTES_LINKLIST = 2;
@@ -58,7 +58,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     private Map map;
 
     private Hashtable values;
-    private String val = "";
+    private Vector v_function;
 
     /** some more stuff to check consistency of "old" models (with explicit and free maxvalue) */
     Map m_checkMaxValue;
@@ -292,15 +292,10 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 
 
                 else if (qName.equals("value")) {
-                  val = attributes.getValue("val");
-                  ((Hashtable)values.get(vertex)).put(val, new Vector());
-                }
-                else if (qName.equals("exp")) {
-                  ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("str"));
-                  //((Vector)((Hashtable)values.get(vertex)).get(val)).addElement(attributes.getValue("chk"));
-                }
-                else if (qName.equals("param")) {
-                  ((Vector)((Hashtable)values.get(vertex)).get(val)).addElement("PARAM\t" + attributes.getValue("str"));
+                  v_function = new Vector();
+                  ((Hashtable)values.get(vertex)).put(attributes.getValue("val"), v_function);
+                } else if (qName.equals("exp")) {
+                  v_function.addElement(attributes.getValue("str"));
                 }
                 break; // POS_VERTEX
 

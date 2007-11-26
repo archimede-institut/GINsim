@@ -1,11 +1,11 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
+import java.awt.Point;
+
 import javax.swing.JTree;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeManual;
-import java.awt.Point;
 
 public class GsPanelFactory {
   public GsPanelFactory() {
@@ -28,14 +28,11 @@ public class GsPanelFactory {
             ((GsFunctionPanel)panel).selectText(p, ((GsTreeExpression)value).isNormal());
           }
         }
-        else if (value instanceof GsTreeManual)
-          panel = new GsManualPanel(value, tree, sel, width);
         break;
       case 3 :
-        if (value.getParent() instanceof GsTreeExpression)
-          panel = new GsParamPanel(value, tree, sel, width);
-        else if (value.getParent() instanceof GsTreeManual)
-          panel = new GsManualParamPanel(value, tree, sel, width);
+        if (value.getParent() instanceof GsTreeExpression) {
+			panel = new GsParamPanel(value, tree, sel, width);
+		}
         break;
     }
     return panel;
