@@ -27,7 +27,7 @@ public class SimpleGenericList extends GenericList {
 		refresh();
 	}
 
-	public int add(int position) {
+	public int add(int position, int x, int y) {
 		if (!canAdd) {
 			return -1;
 		}

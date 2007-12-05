@@ -172,7 +172,7 @@ class EdgeList extends GenericList {
 		}
     }
     
-	public int add(int position) {
+	public int add(int position, int x, int y) {
 	    if (!graph.isEditAllowed()) {
 	        return -1;
 	    }
@@ -195,6 +195,7 @@ class EdgeList extends GenericList {
 	    		JMenuItem item = new JMenuItem(new AddEdgeMenuAction(this, t[i]));
 	    		menu.add(item);
 	    	}
+	    	menu.setLocation(x, y);
 	    	menu.setVisible(true);
 	    }
 		return 0;

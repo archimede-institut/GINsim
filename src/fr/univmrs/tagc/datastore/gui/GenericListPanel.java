@@ -281,7 +281,8 @@ public class GenericListPanel extends JPanel
         if (list == null) {
             return;
         }
-        int n = list.add(jl.getSelectedRow());
+        Point b = b_add.getLocationOnScreen();
+        int n = list.add(jl.getSelectedRow(), b.x, b.y);
         if (n != -1) {
             refresh();
             jl.getSelectionModel().setSelectionInterval(n, n);

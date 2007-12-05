@@ -108,13 +108,15 @@ abstract public class GenericList {
     abstract public boolean edit(String filter, int row, int col, Object o);
     
     public int add() {
-    	return add(getNbElements(null));
+    	return add(getNbElements(null), 0, 0);
     }
     /**
      * add an element.
+     * @param x TODO
+     * @param y TODO
      * @return the index of the added element, or -1 if none
      */
-    abstract public int add(int position);
+    abstract public int add(int position, int x, int y);
     
     /**
      * add an element.
