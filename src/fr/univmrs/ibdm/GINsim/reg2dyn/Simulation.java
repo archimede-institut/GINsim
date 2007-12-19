@@ -46,6 +46,7 @@ public final class Simulation extends Thread implements Runnable {
 	private int[] t_max;
 	private int length;
 	private boolean ready = false;
+	private boolean maxDepthReached = false;
 	private boolean buildSTG;
 	private int nbgc = 0;
 
@@ -302,7 +303,11 @@ public final class Simulation extends Thread implements Runnable {
 
 		// add the next node to the graph and recursively call if not already present
 		if (addState(changes, true, c>1)) {
-			calcDynGraphSynchro();
+			try {
+				calcDynGraphSynchro();
+			} catch (StackOverflowError e) {
+				maxDepthReached = true;
+			}
 		}
 		curdepth--;
 	}
@@ -344,7 +349,11 @@ public final class Simulation extends Thread implements Runnable {
                     }
                     // add the next node to the graph and recursively call if not already present
                     if (addState(nextState, true, changes.length>3)) {
+                    	try {
                         calcDynGraphByPriorityClass();
+	        			} catch (StackOverflowError e) {
+	        				maxDepthReached = true;
+	        			}
                     }
                     node = thisNode;
                     t_state = thisState;
@@ -355,7 +364,11 @@ public final class Simulation extends Thread implements Runnable {
                         nextState = (int[])thisState.clone();
                         nextState[changes[i++]] += changes[i];
                         if (addState(nextState, true, false)) {
-                            calcDynGraphByPriorityClass();
+                        	try {
+                        		calcDynGraphByPriorityClass();
+                			} catch (StackOverflowError e) {
+                				maxDepthReached = true;
+                			}
                         }
                         node = thisNode;
                         t_state = thisState;
@@ -421,7 +434,11 @@ public final class Simulation extends Thread implements Runnable {
 			nextState[i] += changes[i];
 			if (addState(nextState, true, false)) {
 				//recursively call calcDynGraph if it is a depth first search
-				calcDynGraphAsynchroDepthFirst();
+				try {
+					calcDynGraphAsynchroDepthFirst();
+				} catch (StackOverflowError e) {
+					maxDepthReached = true;
+				}
 			}
 			t_state = thisState;
 			node = thisNode;
@@ -530,6 +547,10 @@ public final class Simulation extends Thread implements Runnable {
 		    GsEnv.error("Out Of Memory", null);
 		    return;
 		} finally {
+			if (maxDepthReached) {
+				GsEnv.error("Reached the max depth", null);
+				//TODO: explain what happened and give some hints
+			}
 			// return the result
 			if (buildSTG) {
 				frame.endSimu(dynGraph);
