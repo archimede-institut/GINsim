@@ -314,10 +314,8 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
             return;
         }
         if (radioAsynchrone.isSelected()) {
-        	// FIXME: breadth first disabled for now
-            //currentParameter.mode = radioBreadthFirst.isSelected() ? Simulation.SEARCH_ASYNCHRONE_BF : Simulation.SEARCH_ASYNCHRONE_DF;
-        	currentParameter.mode = Simulation.SEARCH_ASYNCHRONE_DF;
-            getRadioBreadthFirst().setEnabled(false);
+            currentParameter.mode = radioBreadthFirst.isSelected() ? Simulation.SEARCH_ASYNCHRONE_BF : Simulation.SEARCH_ASYNCHRONE_DF;
+            getRadioBreadthFirst().setEnabled(true);
             getRadioDephtFirst().setEnabled(true);
             selectPriorityClass.setEnabled(false);
         } else {
