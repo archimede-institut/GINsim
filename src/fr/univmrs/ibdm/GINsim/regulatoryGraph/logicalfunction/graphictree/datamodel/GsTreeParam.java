@@ -60,4 +60,11 @@ public class GsTreeParam extends GsTreeElement {
     }
     return toString().compareTo(element.toString());
   }
+
+  public GsTreeElement addChild(GsTreeElement element, int index) {
+    if (childs != null && !childs.contains(element)) {
+		return super.addChild(element, index);
+	}
+    return null;
+  } 
 }

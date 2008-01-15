@@ -27,30 +27,34 @@ public abstract class GsTreeElement implements Comparable {
   public GsTreeElement getChild(int index) {
     GsTreeElement te = null;
     if (childs != null) {
-      if (index < childs.size())
-        te = (GsTreeElement)childs.elementAt(index);
+      if (index < childs.size()) {
+		te = (GsTreeElement)childs.elementAt(index);
+	}
     }
     return te;
   }
+
   public GsTreeElement addChild(GsTreeElement element, int index) {
-    if ((childs != null) && (element != null))
-      if (!childs.contains(element))
-        if (index == -1)
-          childs.addElement(element);
-        else
-          childs.insertElementAt(element, index);
-    for (int i = 0; i < childs.size(); i++)
-      if (childs.elementAt(i).equals(element))
-        return (GsTreeElement)childs.elementAt(i);
-    return null;
+    if (childs != null && element != null) {
+		if (index == -1) {
+			childs.add(element);
+		} else {
+			childs.insertElementAt(element, index);
+		}
+	}
+    return element;
   }
   public void removeChild(int index) {
-    if (childs != null)
-      if (childs.size() > index)
-        childs.removeElementAt(index);
+    if (childs != null) {
+		if (childs.size() > index) {
+			childs.removeElementAt(index);
+		}
+	}
   }
   public void clearChilds() {
-    if (childs != null) childs.clear();
+    if (childs != null) {
+		childs.clear();
+	}
   }
   public Vector getChilds() {
     return childs;
@@ -69,7 +73,7 @@ public abstract class GsTreeElement implements Comparable {
     return foreground;
   }
   public boolean isLeaf() {
-    return ((getChildCount() == 0) && (getDepth() != 0));
+    return getChildCount() == 0 && getDepth() != 0;
   }
   public boolean isSelected() {
     return selected;
@@ -97,8 +101,9 @@ public abstract class GsTreeElement implements Comparable {
       for (int i = 0; i < parent.getChildCount(); i++) {
         if (parent.getChild(i) == this) {
           parent.removeChild(i);
-          if ((parent.getChildCount() == 0) && removeParent)
-            parent.remove(removeParent);
+          if (parent.getChildCount() == 0 && removeParent) {
+			parent.remove(removeParent);
+		}
           break;
         }
       }

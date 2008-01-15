@@ -13,4 +13,11 @@ public class GsTreeString extends GsTreeElement {
   public String toString() {
     return string;
   }
+
+  public GsTreeElement addChild(GsTreeElement element, int index) {
+    if (childs != null && !childs.contains(element)) {
+		return super.addChild(element, index);
+	}
+    return null;
+  } 
 }

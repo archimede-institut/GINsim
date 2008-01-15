@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel;
 
+
 public class GsTreeValue extends GsTreeElement {
   private short value;
 
@@ -20,4 +21,11 @@ public class GsTreeValue extends GsTreeElement {
     super.remove(false);
     parent.setProperty("add", new Boolean(true));
   }
+
+  public GsTreeElement addChild(GsTreeElement element, int index) {
+    if (childs != null && !childs.contains(element)) {
+		return super.addChild(element, index);
+	}
+    return null;
+  } 
 }

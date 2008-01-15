@@ -5,11 +5,17 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionListElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.model.GsFunctionEditorModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBinaryOperator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperator;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TUnaryOperator;
 
 public class GsTreeExpression extends GsTreeElement {
   private String compactExpression, userExpression, dnfExpression;
@@ -83,7 +89,7 @@ public class GsTreeExpression extends GsTreeElement {
           oldIndex = Integer.parseInt(oldId.substring(i + 1));
           oldId = oldId.substring(0, i);
         }
-        if (oldIndex > (index + 1)) {
+        if (oldIndex > index + 1) {
           oldIndex--;
           ((GsBooleanGene)node).setValue(oldId + "#" + oldIndex);
         }
@@ -112,7 +118,7 @@ public class GsTreeExpression extends GsTreeElement {
           oldIndex = Integer.parseInt(oldId.substring(i + 1));
           oldId = oldId.substring(0, i);
         }
-        if (oldIndex > (index + 1)) {
+        if (oldIndex > index + 1) {
           oldIndex++;
           ((GsBooleanGene)node).setValue(oldId + "#" + oldIndex);
         }
@@ -172,10 +178,11 @@ public class GsTreeExpression extends GsTreeElement {
     return null;
   }
   public String toString() {
-    if (showCompactExpression)
-      return compactExpression;
-    else if (showDNFExpression)
-      return dnfExpression;
+    if (showCompactExpression) {
+		return compactExpression;
+	} else if (showDNFExpression) {
+		return dnfExpression;
+	}
     return userExpression;
   }
   private void makeDNFString() throws Exception {
@@ -210,5 +217,11 @@ public class GsTreeExpression extends GsTreeElement {
   public boolean isNormal() {
     return normal;
   }
+  public GsTreeElement addChild(GsTreeElement element, int index) {
+    if (childs != null) {
+		return super.addChild(element, index);
+	}
+    return null;
+  } 
 }
 
