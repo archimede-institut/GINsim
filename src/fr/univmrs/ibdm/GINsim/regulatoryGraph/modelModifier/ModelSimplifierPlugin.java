@@ -7,6 +7,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
+import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
@@ -20,7 +21,6 @@ public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
 
     static {
     }
-    
     private GsPluggableActionDescriptor[] t_action = null;
 
     public void registerPlugin() {
@@ -51,8 +51,11 @@ public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
             return;
         }
 		if (ref == 0) {
-            graph.getGraphManager().getMainFrame().getGsAction().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
-            // TODO: run the actual model simplifier
+			GsMainFrame mframe = graph.getGraphManager().getMainFrame();
+			if (mframe != null) {
+				mframe.getGsAction().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
+				new ModelSimplifierConfigDialog((GsRegulatoryGraph)graph);
+			}
 		}
 	}
 }

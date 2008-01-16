@@ -1,16 +1,21 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.modelModifier;
 
+import fr.univmrs.ibdm.GINsim.global.GsException;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import junit.framework.TestCase;
 
 public class TestModifier extends TestCase {
 
-	ModelSimplifier simplifier = new ModelSimplifier();
+	GsRegulatoryGraph graph = new GsRegulatoryGraph();
+	ModelSimplifierConfig cfg = new ModelSimplifierConfig();
+	ModelSimplifier simplifier = new ModelSimplifier(graph, cfg, null);
 
 	/**
 	 * basic test of model simplification, without funny stuff
+	 * @throws GsException 
 	 */
-    public void testBasicModification() {
+    public void testBasicModification() throws GsException {
     	
     	/* deleted node (level 3):
     	 *   !A & D
@@ -54,15 +59,15 @@ public class TestModifier extends TestCase {
     	ori.next[0] = tmp2;
     	ori.next[1] = tmp;
 
-    	ModelSimplifier simplifier = new ModelSimplifier();
-    	OmddNode result = simplifier.simplify(ori, deleted, 3);
+    	ModelSimplifier simplifier = new ModelSimplifier(graph, cfg, null);
+    	OmddNode result = simplifier.remove(ori, deleted, 3);
     	
     	/*  expected result:
     	 *    A | B | D
     	 */
         assertEquals(result.toString(), "((N[1]=0 && ((N[2]=0 && ((N[4]=0 && 0) ; (N[4]=1 && 1))) ; (N[2]=1 && 1))) ; (N[1]=1 && 1))");
     }
-    public void testUnNeededModification() {
+    public void testUnNeededModification() throws GsException {
     	
     	/* deleted node (level 3):
     	 *   !A & D
@@ -97,14 +102,14 @@ public class TestModifier extends TestCase {
     	/*  expected result:
     	 *    A | B
     	 */
-    	OmddNode result = simplifier.simplify(ori, deleted, 3);
+    	OmddNode result = simplifier.remove(ori, deleted, 3);
         assertEquals(result.toString(), "((N[1]=0 && ((N[2]=0 && 0) ; (N[2]=1 && 1))) ; (N[1]=1 && 1))");
         
         // some other trivial tests:
         tmp.level = 4;
-    	result = simplifier.simplify(tmp, deleted, 3);
+    	result = simplifier.remove(tmp, deleted, 3);
         assertEquals(result.toString(), "((N[4]=0 && 0) ; (N[4]=1 && 1))");
-    	result = simplifier.simplify(ori, deleted, 3);
+    	result = simplifier.remove(ori, deleted, 3);
         assertEquals(result.toString(), "((N[1]=0 && ((N[4]=0 && 0) ; (N[4]=1 && 1))) ; (N[1]=1 && 1))");
         
     }

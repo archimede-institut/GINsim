@@ -1,187 +1,74 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.modelModifier;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
+import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.
  */
-public class ModelSimplifier {
+public class ModelSimplifier extends Thread implements Runnable {
 
 	GsGraphManager manager;
+	ModelSimplifierConfigDialog dialog;
+	ModelSimplifierConfig config;
 	int[] t_remove = null;
 
 	GsRegulatoryGraph graph;
+	GsRegulatoryGraph simplifiedGraph;
+	Map m_modified = new HashMap();
 
-	Vector oldNodeOrder;
-	Vector nodeOrder;
-	OmddNode[] t_oldMDD;
-	OmddNode[] t_MDD;
-	Map m_MDD4node;
-	Map m_inconsistencies;
-
-	public ModelSimplifier() {
-	}
-
-	public ModelSimplifier(GsRegulatoryGraph graph) {
+	public ModelSimplifier(GsRegulatoryGraph graph, ModelSimplifierConfig config, ModelSimplifierConfigDialog dialog) {
 		this.graph = graph;
+		this.dialog = dialog;
+		this.config = config;
 		if (graph != null) {
-			oldNodeOrder = graph.getNodeOrderForSimulation();
 			manager = graph.getGraphManager();
 		}
+		start();
 	}
 
-	public void setRemoveList(Vector v_remove) {
-		if (oldNodeOrder != null && v_remove != null) {
-			if (m_inconsistencies != null) {
-				m_inconsistencies.clear();
-			} else {
-				m_inconsistencies = new HashMap();
+	public void run() {
+		Iterator it;
+		
+		// first do the "real" simplification work
+		it = config.m_removed.keySet().iterator();
+		while (it.hasNext()) {
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+			
+			// TODO: remove the vertex;
+			System.out.println("has to remove: "+vertex.getId());
+		}
+		
+		// then build the new regulatory graph
+		simplifiedGraph = new GsRegulatoryGraph();
+		GsGraphManager simplifiedManager = simplifiedGraph.getGraphManager();
+		GsVertexAttributesReader vreader = manager.getVertexAttributesReader();
+		GsVertexAttributesReader simplified_vreader = simplifiedManager.getVertexAttributesReader();
+		it = graph.getNodeOrder().iterator();
+		while (it.hasNext()) {
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+			if (!config.m_removed.containsKey(vertex)) {
+				GsRegulatoryVertex clone = (GsRegulatoryVertex)vertex.clone();
+				simplifiedManager.addVertex(clone);
+				vreader.setVertex(vertex);
+				simplified_vreader.setVertex(clone);
+				simplified_vreader.copyFrom(vreader);
 			}
-			this.t_remove = new int[v_remove.size()];
-			for (int i=0 ; i<t_remove.length ; i++) {
-				t_remove[i] = oldNodeOrder.indexOf(v_remove.get(i));
-			}
-			nodeOrder = new Vector();
-			for (int i=0 ; i<oldNodeOrder.size() ; i++) {
-				Object node = oldNodeOrder.get(i);
-				if (v_remove.contains(node)) {
-					nodeOrder.add(node);
-				}
-			}
+		}
+		
+		if (dialog != null) {
+			dialog.endSimu(simplifiedGraph);
 		}
 	}
-
-	private void addInconsistency() {
-		// TODO: better reporting of inconsistencies
-		if (m_inconsistencies == null) {
-			m_inconsistencies = new HashMap();
-		}
-		m_inconsistencies.put(null, null);
-		System.out.println("DEBUG: modifier: inconsistency introduced");
-	}
-
-	public boolean isInconsistent() {
-		return m_inconsistencies != null && m_inconsistencies.size() > 0;
-	}
-
-	public OmddNode simplify(OmddNode ori, OmddNode deleted, int level) {
-		if (ori.next == null || ori.level > level) {
-			return (OmddNode)ori.clone();
-		}
-
-		OmddNode ret;
-		if (deleted.next == null || deleted.level > ori.level) {
-			if (ori.level == level) {
-				if (deleted.next == null) {
-					return (OmddNode)ori.next[deleted.value].clone();
-				}
-				return replace(ori.next, deleted);
-			}
-			ret = new OmddNode();
-			ret.level = ori.level;
-			ret.next = new OmddNode[ori.next.length];
-			for (int i=0 ; i<ret.next.length ; i++) {
-				ret.next[i] = simplify(ori.next[i], deleted, level);
-			}
-		} else if (deleted.level == ori.level) {
-			if (ori.level == level) {
-				addInconsistency();
-				return replace(ori, deleted);
-			}
-			ret = new OmddNode();
-			ret.level = ori.level;
-			ret.next = new OmddNode[ori.next.length];
-			for (int i=0 ; i<ret.next.length ; i++) {
-				ret.next[i] = simplify(ori.next[i], deleted.next[i], level);
-			}
-		} else {
-			if (deleted.level == level) { // should have returned ori.clone()
-				// no inconsistency <b>for THIS target</b>
-				System.out.println("DEBUG: mofifier: deleted.level == level < ori.level");
-				return null;
-			}
-			ret = new OmddNode();
-			ret.level = deleted.level;
-			ret.next = new OmddNode[deleted.next.length];
-			for (int i=0 ; i<ret.next.length ; i++) {
-				ret.next[i] = simplify(ori, deleted.next[i], level);
-			}
-		}
-		return ret;
-	}
-
-	/**
-	 * the node was found, but it is self-regulated, do something here!
-	 *
-	 * @param ori
-	 * @param deleted
-	 * @return
-	 */
-	private OmddNode replace(OmddNode ori, OmddNode deleted) {
-		// FIXME: warning and some smart stuff needed here!
-		return replace(ori.next, deleted.next[0]);
-	}
-
-	/**
-	 * need to follow ALL children of the "replaced" node!
-	 * the final value will be selected upon it, but HOW ?
-	 *
-	 * @param ori
-	 * @param deleted
-	 * @return
-	 */
-	private OmddNode replace(OmddNode[] ori, OmddNode deleted) {
-		// if the deleted node has an assigned value, we are done
-		if (deleted.next == null) {
-			return (OmddNode)ori[deleted.value].clone();
-		}
-
-		// find the first level
-		int level = deleted.level;
-		int nbnext = deleted.next.length;
-		for (int i=0 ; i<ori.length ; i++) {
-			if (ori[i].next != null && ori[i].level < level) {
-				level = ori[i].level;
-				nbnext = ori[i].next.length;
-			}
-		}
-
-		// build the result
-		OmddNode[] t_next = new OmddNode[ori.length];
-		boolean[] t_visit = new boolean[ori.length];
-		for (int i=0 ; i<t_next.length ; i++) {
-			if (ori[i].next == null || ori[i].level > level) {
-				t_visit[i] = false;
-				t_next[i] = ori[i];
-			} else {
-				t_visit[i] = true;
-			}
-		}
-		OmddNode del_next = deleted;
-		OmddNode ret = new OmddNode();
-		ret.level = level;
-		ret.next = new OmddNode[nbnext];
-		for (int n=0 ; n<nbnext ; n++) {
-			// find out which nodes must be kept and which must be visited
-			if (deleted.level == level) {
-				del_next = deleted.next[n];
-			}
-			for (int i=0 ; i<t_visit.length ; i++) {
-				if (t_visit[i]) {
-					t_next[i] = ori[i].next[n];
-				}
-			}
-			ret.next[n] = replace(t_next, del_next);
-		}
-		return ret;
-	}
+	
 
 	/* *************************************************************
 	 *  
