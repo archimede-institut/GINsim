@@ -405,7 +405,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         GsRegulatoryVertex myClone = (GsRegulatoryVertex) copyMap.get(this);
         for (int i=0 ; i<v_logicalParameters.size() ; i++) {
             ((GsLogicalParameter)v_logicalParameters.get(i)).applyNewGraph(myClone, copyMap);
-
+            // TODO: copy the logical functions as well
         }
     }
 

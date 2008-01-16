@@ -225,7 +225,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 
     for (int i = 0; i < root.getChildCount(); i++) {
       val = (GsTreeValue)root.getChild(i);
-      n += val.getChildCount() - 1;
+      n += val.getChildCount();
     }
     return n;
   }
