@@ -5,20 +5,19 @@ import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.
  */
-public class GsModelSimplifier implements GsGenericRegulatoryGraph {
+public class GsModelSimplifier {
 
 	GsGraphManager manager;
 	int[] t_remove = null;
 
-	GsGenericRegulatoryGraph graph;
+	GsRegulatoryGraph graph;
 
 	Vector oldNodeOrder;
 	Vector nodeOrder;
@@ -30,13 +29,11 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 	public GsModelSimplifier() {
 	}
 
-	public GsModelSimplifier(GsGenericRegulatoryGraph graph) {
+	public GsModelSimplifier(GsRegulatoryGraph graph) {
 		this.graph = graph;
 		if (graph != null) {
 			oldNodeOrder = graph.getNodeOrderForSimulation();
-		}
-		if (graph instanceof GsGraph) {
-			manager = ((GsGraph)graph).getGraphManager();
+			manager = graph.getGraphManager();
 		}
 	}
 
@@ -59,10 +56,6 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 				}
 			}
 		}
-	}
-
-	private void removeNode(int index) {
-
 	}
 
 	private void addInconsistency() {
@@ -189,29 +182,6 @@ public class GsModelSimplifier implements GsGenericRegulatoryGraph {
 		}
 		return ret;
 	}
-
-	public Vector getNodeOrderForSimulation() {
-		if (oldNodeOrder == null) {
-			return null;
-		}
-		if (t_remove == null) {
-			return oldNodeOrder;
-		}
-		return null;
-	}
-
-	public OmddNode[] getParametersForSimulation(boolean focal) {
-		if (oldNodeOrder == null) {
-			return null;
-		}
-		if (t_remove == null) {
-			return graph.getParametersForSimulation(focal);
-		}
-		t_oldMDD = graph.getParametersForSimulation(focal);
-
-		return t_MDD;
-	}
-	
 
 	/* *************************************************************
 	 *  
