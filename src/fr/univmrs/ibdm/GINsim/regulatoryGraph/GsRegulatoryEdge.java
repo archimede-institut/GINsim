@@ -16,9 +16,10 @@ public class GsRegulatoryEdge {
 		this.me = me;
 	}
 	
-	public Object clone() {
+	public Object clone(GsRegulatoryMultiEdge me) {
 		GsRegulatoryEdge clone = new GsRegulatoryEdge(me);
 		clone.threshold = threshold;
+		clone.index = index;
 		clone.sign = sign;
 		clone.annotation = (Annotation)annotation.clone();
 		return clone;

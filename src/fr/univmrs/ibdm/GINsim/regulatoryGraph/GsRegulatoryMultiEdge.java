@@ -365,7 +365,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     	edgecount = edgeOri.edgecount;
     	sign = edgeOri.sign;
     	for (int i=0 ; i<edgecount ; i++) {
-    		edges[i] = (GsRegulatoryEdge)edgeOri.edges[i].clone();
+    		edges[i] = (GsRegulatoryEdge)edgeOri.edges[i].clone(this);
     	}
     	for (int i=edgecount ; i<edges.length ; i++) {
     		edges[i] = null;
