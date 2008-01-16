@@ -12,7 +12,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.
  */
-public class GsModelSimplifier {
+public class ModelSimplifier {
 
 	GsGraphManager manager;
 	int[] t_remove = null;
@@ -26,10 +26,10 @@ public class GsModelSimplifier {
 	Map m_MDD4node;
 	Map m_inconsistencies;
 
-	public GsModelSimplifier() {
+	public ModelSimplifier() {
 	}
 
-	public GsModelSimplifier(GsRegulatoryGraph graph) {
+	public ModelSimplifier(GsRegulatoryGraph graph) {
 		this.graph = graph;
 		if (graph != null) {
 			oldNodeOrder = graph.getNodeOrderForSimulation();

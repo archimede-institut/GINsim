@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 
 public class TestModifier extends TestCase {
 
-	GsModelSimplifier simplifier = new GsModelSimplifier();
+	ModelSimplifier simplifier = new ModelSimplifier();
 
 	/**
 	 * basic test of model simplification, without funny stuff
@@ -54,7 +54,7 @@ public class TestModifier extends TestCase {
     	ori.next[0] = tmp2;
     	ori.next[1] = tmp;
 
-    	GsModelSimplifier simplifier = new GsModelSimplifier();
+    	ModelSimplifier simplifier = new ModelSimplifier();
     	OmddNode result = simplifier.simplify(ori, deleted, 3);
     	
     	/*  expected result:
