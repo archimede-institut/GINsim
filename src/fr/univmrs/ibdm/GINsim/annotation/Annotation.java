@@ -84,14 +84,18 @@ public class Annotation implements GsXMLize
 	
 	public Object clone() {
 		Annotation clone = new Annotation();
-		int len = linkList.size();
-		for (int i=0 ; i<len ; i++) {
-			clone.addLink(getLink(i), null);
-		}
-		clone.setComment(new String(comment));
+		clone.copyFrom(this);
 		return clone;
 	}
 
+	public void copyFrom(Annotation other) {
+		int len = other.linkList.size();
+		for (int i=0 ; i<len ; i++) {
+			addLink(other.getLink(i), null);
+		}
+		setComment(other.comment);
+	}
+	
     /**
      * @return true if the annotation is empty
      */

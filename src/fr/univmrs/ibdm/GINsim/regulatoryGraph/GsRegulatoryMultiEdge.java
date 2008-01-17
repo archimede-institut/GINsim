@@ -372,6 +372,27 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
     	}
     }
 
+    /**
+     * 
+     * @param t_required
+     */
+    public void copyFrom(boolean[] t_required) {
+    	edgecount = 0;
+    	sign = SIGN_UNKNOWN;
+    	for (int i=0 ; i<t_required.length ; i++) {
+    		if (t_required[i]) {
+    			GsRegulatoryEdge edge = new GsRegulatoryEdge(this);
+    			edge.index = (short)edgecount;
+    			edge.threshold = (short)i;
+    			edge.sign = SIGN_UNKNOWN;
+        		edges[edgecount++] = edge;
+    		}
+    	}
+    	for (int i=edgecount ; i<edges.length ; i++) {
+    		edges[i] = null;
+    	}
+    }
+
     public void setUserObject(Object obj) {
     }
 
