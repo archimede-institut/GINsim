@@ -52,7 +52,8 @@ public class ModelSimplifierConfigDialog extends StackDialog {
 }
 
 class SimplifierConfigPanel extends JPanel {
-	
+	private static final long	serialVersionUID	= 1112333567261768396L;
+
 	public SimplifierConfigPanel() {
 		add(new JTextArea("TODO: config UI.\n" +
 				"For now all nodes with a name starting with \"r_\" will be removed\n"+

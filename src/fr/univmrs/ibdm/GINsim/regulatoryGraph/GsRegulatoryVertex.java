@@ -1,8 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
@@ -401,7 +401,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
     /**
      * @param copyMap
      */
-    public void cleanupInteractionForNewGraph(HashMap copyMap) {
+    public void cleanupInteractionForNewGraph(Map copyMap) {
         GsRegulatoryVertex myClone = (GsRegulatoryVertex) copyMap.get(this);
         for (int i=0 ; i<v_logicalParameters.size() ; i++) {
             ((GsLogicalParameter)v_logicalParameters.get(i)).applyNewGraph(myClone, copyMap);

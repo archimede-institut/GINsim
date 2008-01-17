@@ -1,8 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
@@ -274,7 +274,7 @@ public class GsLogicalParameter implements GsXMLize {
      * @param clone
      * @param copyMap
      */
-    public void applyNewGraph(GsRegulatoryVertex clone, HashMap copyMap) {
+    public void applyNewGraph(GsRegulatoryVertex clone, Map copyMap) {
         Vector newEI = new Vector();
         for (int i=0 ; i<edge_index.size() ; i++) {
         	GsRegulatoryEdge ei = (GsRegulatoryEdge)edge_index.get(i);

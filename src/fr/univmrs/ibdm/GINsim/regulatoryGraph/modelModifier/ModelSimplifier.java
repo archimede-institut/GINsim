@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
@@ -39,19 +41,37 @@ public class ModelSimplifier extends Thread implements Runnable {
 		Iterator it;
 		
 		// first do the "real" simplification work
+		Map m_affected = new HashMap();
 		it = config.m_removed.keySet().iterator();
 		while (it.hasNext()) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+			OmddNode deleted = vertex.getTreeParameters(graph);
+			int pos = graph.getNodeOrder().indexOf(vertex);
 			
-			// TODO: remove the vertex;
-			System.out.println("has to remove: "+vertex.getId());
+			// mark all its targets as affected
+			Iterator it_targets = manager.getOutgoingEdges(vertex).iterator();
+			while (it_targets.hasNext()) {
+				GsRegulatoryVertex target = (GsRegulatoryVertex)((GsDirectedEdge)it_targets.next()).getTargetVertex();
+				OmddNode targetNode = (OmddNode)m_affected.get(target);
+				if (targetNode == null) {
+					targetNode = target.getTreeParameters(graph);
+				}
+				try {
+					m_affected.put(target, remove(targetNode, deleted, pos));
+				} catch (GsException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
-		// then build the new regulatory graph
+		// create the new regulatory graph
 		simplifiedGraph = new GsRegulatoryGraph();
 		GsGraphManager simplifiedManager = simplifiedGraph.getGraphManager();
+		
+		// Create all the nodes of the new model
 		GsVertexAttributesReader vreader = manager.getVertexAttributesReader();
 		GsVertexAttributesReader simplified_vreader = simplifiedManager.getVertexAttributesReader();
+		Map copyMap = new HashMap();
 		it = graph.getNodeOrder().iterator();
 		while (it.hasNext()) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
@@ -61,6 +81,36 @@ public class ModelSimplifier extends Thread implements Runnable {
 				vreader.setVertex(vertex);
 				simplified_vreader.setVertex(clone);
 				simplified_vreader.copyFrom(vreader);
+				copyMap.put(vertex, clone);
+			}
+		}
+		
+		// copy all unaffected edges
+		it = manager.getEdgeIterator();
+		while (it.hasNext()) {
+			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)it.next()).getUserObject();
+			GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(me.getSource());
+			GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(me.getTarget());
+			if (src != null && target != null) {
+				GsRegulatoryMultiEdge me_clone = new GsRegulatoryMultiEdge(src, target);
+				me_clone.copyFrom(me);
+				simplifiedManager.addEdge(src, target, me_clone);
+				copyMap.put(me, me_clone);
+			}
+		}
+
+		// copy parameters/logical functions on the unaffected nodes
+		it = graph.getNodeOrder().iterator();
+		while (it.hasNext()) {
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+			if (!config.m_removed.containsKey(vertex)) {
+				if (! m_affected.containsKey(vertex)) {
+					vertex.cleanupInteractionForNewGraph(copyMap);
+					// TODO: copy logical functions as well (cf copy/paste)
+				} else {
+					// TODO: add/ensure new edges on the affected nodes
+					// TODO: rebuild the parameters for the affected nodes
+				}
 			}
 		}
 		
