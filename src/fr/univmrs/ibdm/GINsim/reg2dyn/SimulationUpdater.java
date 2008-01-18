@@ -2,6 +2,7 @@ package fr.univmrs.ibdm.GINsim.reg2dyn;
 
 import java.util.Iterator;
 
+import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -27,6 +28,9 @@ abstract public class SimulationUpdater implements Iterator {
 	int length;
 	int[] cur_state;
 	int[] next = null;
+	int depth;
+	GsDynamicNode node;
+	boolean multiple;
 	
 	public SimulationUpdater(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
         t_tree = regGraph.getParametersForSimulation(true);
@@ -41,7 +45,8 @@ abstract public class SimulationUpdater implements Iterator {
 		return next != null;
 	}
 	public Object next() {
-		Object ret = next;
+		SimulationQueuedState ret = new SimulationQueuedState(next, depth, node, multiple);
+		multiple = false;
 		doBuildNext();
 		return ret;
 	}
@@ -50,11 +55,16 @@ abstract public class SimulationUpdater implements Iterator {
 
 	/**
 	 * set the state which should be used as basis.
+	 * @param node 
+	 * @param depth 
 	 * 
 	 * @param t_tree
 	 */
-	void setState(int[] state) {
+	void setState(int[] state, int depth, GsDynamicNode node) {
 		this.cur_state = state;
+		this.depth = depth;
+		this.node = node;
+		multiple = false;
 		doSetState();
 	}
 	
@@ -113,6 +123,9 @@ class SynchronousSimulationUpdater extends SimulationUpdater {
 		for (int i=0 ; i<length ; i++){
 		    int change = nodeChange(cur_state, i);
 		    if (change != 0) {
+		    	if (hasChange) {
+		    		multiple = true;
+		    	}
 		    	hasChange = true;
 		    	next[i] = cur_state[i] + change;
 		    } else {
@@ -251,6 +264,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         	for ( ; nextIndex<classChangesList.length ; nextIndex++) {
         		next[classChangesList[nextIndex++]] += classChangesList[nextIndex];
         	}
+        	multiple = classChangesList.length > 1;
         } else {
         	next[classChangesList[1]] += classChangesList[2];
         	nextIndex = 3;
@@ -323,6 +337,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         	for ( ; nextIndex<classChangesList.length ; nextIndex++) {
         		next[classChangesList[nextIndex++]] += classChangesList[nextIndex];
         	}
+        	multiple = classChangesList.length > 1;
         } else {
         	next[classChangesList[1]] += classChangesList[2];
         	nextIndex = 3;

@@ -73,11 +73,11 @@ public final class Simulation extends Thread implements Runnable {
 	        Iterator iterator = new InitialStatesIterator(params.nodeOrder, params.m_initState);
 			while(iterator.hasNext()) {
 				// add the next proposed state
-				queue.add(new LinkedItem((int[])iterator.next(), 0, null));
+				queue.add(new SimulationQueuedState((int[])iterator.next(), 0, null, false));
 				
 				// do the simulation itself
 				while (!queue.isEmpty()) {
-					LinkedItem item = (LinkedItem)(
+					SimulationQueuedState item = (SimulationQueuedState)(
 							breathFirst ? queue.removeFirst() 
 										: queue.removeLast());
 
@@ -110,13 +110,13 @@ public final class Simulation extends Thread implements Runnable {
 						}
 
 						// run the simulation on the new node
-						updater.setState(item.state);
+						updater.setState(item.state, item.depth, helper.node);
 						if (!updater.hasNext()) {
 							helper.setStable();
 						} else {
 							if (params.maxdepth == 0 || item.depth < params.maxdepth) {
 								while (updater.hasNext()) {
-									queue.addLast(new LinkedItem((int[])updater.next(), item.depth+1, helper.node));
+									queue.addLast(updater.next());
 								}
 							} else {
 								maxDepthReached = true;
@@ -143,7 +143,7 @@ public final class Simulation extends Thread implements Runnable {
 
 abstract class SimulationHelper {
 	GsDynamicNode node;
-	abstract boolean addNode(LinkedItem item);
+	abstract boolean addNode(SimulationQueuedState item);
 	abstract GsGraph endSimulation();
 	abstract void setStable();
 }
@@ -164,7 +164,7 @@ class DynGraphHelper extends SimulationHelper {
         dynGraph.getAnnotation().setComment(params.getDescr());
 	}
 
-	public boolean addNode(LinkedItem item) {
+	public boolean addNode(SimulationQueuedState item) {
 		node = new GsDynamicNode(item.state);
 		boolean isnew = dynGraph.addVertex(node);
 		if (item.previous != null) {
@@ -182,19 +182,6 @@ class DynGraphHelper extends SimulationHelper {
 	}
 }
 
-class LinkedItem {
-	int[] state;
-	GsDynamicNode previous = null;
-	boolean multiple = false;
-	int depth;
-	
-	LinkedItem(int[] state, int depth, GsDynamicNode previous) {
-		this.state = state;
-		this.previous = previous;
-		this.depth = depth;
-	}
-}
-
 class ReachabilitySetHelper extends SimulationHelper {
 
 	private int[] t_max;
@@ -209,7 +196,7 @@ class ReachabilitySetHelper extends SimulationHelper {
 		}
 	}
 	
-	public boolean addNode(LinkedItem item) {
+	public boolean addNode(SimulationQueuedState item) {
 		
 		OmddNode newReachable = addReachable(dd_reachable, item.state, 0);
 		if (newReachable != null) {
