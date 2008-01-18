@@ -413,27 +413,25 @@ public class GsInteractionPanel extends GsParameterPanel
                 selectedrow = -1;
             }
 			int[] indices=jList.getSelectedIndices();
-			if (indices.length>0) {
-				Vector edgeindex = new Vector();
-				Object[] objs = jList.getSelectedValues();
-				for (int i=0;i<indices.length;i++) {
-					if (objs[i] != null) {
-                        edgeindex.add(objs[i]);
-                        graph.fireMetaChange();
-                    }
-				}
-                jTable.clearSelection();
-				if (selectedrow>=0) {
-                    interactionList.setActivesEdges(selectedrow,edgeindex);
-                    jTable.getSelectionModel().addSelectionInterval(selectedrow, selectedrow);
-                }
-				else {
-                    interactionList.setActivesEdges(interactionList.getRowCount()-1, edgeindex);
-                    selectedrow = interactionList.getRowCount()-1;
-                    jTable.getSelectionModel().addSelectionInterval(selectedrow, selectedrow);
+			Vector edgeindex = new Vector();
+			Object[] objs = jList.getSelectedValues();
+			for (int i=0;i<indices.length;i++) {
+				if (objs[i] != null) {
+                    edgeindex.add(objs[i]);
                 }
 			}
- 		}
+            graph.fireMetaChange();
+            jTable.clearSelection();
+			if (selectedrow>=0) {
+                interactionList.setActivesEdges(selectedrow,edgeindex);
+                jTable.getSelectionModel().addSelectionInterval(selectedrow, selectedrow);
+            }
+			else {
+                interactionList.setActivesEdges(interactionList.getRowCount()-1, edgeindex);
+                selectedrow = interactionList.getRowCount()-1;
+                jTable.getSelectionModel().addSelectionInterval(selectedrow, selectedrow);
+            }
+		}
 	}
 
 	/**
@@ -478,7 +476,7 @@ public class GsInteractionPanel extends GsParameterPanel
       //  c = new GsFunctionsCreator(graph.getGraphManager(), v, currentVertex);
       //}
 
-      Hashtable h = c.doIt(true);
+      Hashtable h = c.doIt();
 
       Enumeration enu = h.keys();
       Integer key;

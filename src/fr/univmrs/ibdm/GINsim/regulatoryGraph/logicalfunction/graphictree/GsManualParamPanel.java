@@ -1,6 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.*;
 
 import javax.swing.JButton;
@@ -10,7 +13,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
 public class GsManualParamPanel extends GsBooleanFunctionTreePanel implements ActionListener, MouseListener, MouseMotionListener {
@@ -29,18 +31,7 @@ private JButton /*removeButton,*/ editButton;
     if (sel) {
       paramLabel.setBackground(Color.yellow);
       setBackground(Color.yellow);
-    }
-    else if (value.toString().equals("")) {
-      if (((GsTreeInteractionsModel)tree.getModel()).getVertex().getBaseValue() == ((GsTreeValue)value.getParent().getParent()).getValue()) {
-        paramLabel.setBackground(Color.cyan);
-        setBackground(Color.cyan);
-      }
-      else {
-        paramLabel.setBackground(Color.red);
-        setBackground(Color.red);
-      }
-    }
-    else {
+    } else {
       paramLabel.setBackground(Color.white);
       setBackground(Color.white);
     }

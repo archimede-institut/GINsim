@@ -1,7 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
@@ -15,9 +16,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
-import java.awt.Dimension;
-import java.awt.Color;
-import java.awt.BorderLayout;
 
 public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionListener {
   private static final long serialVersionUID = -1866485315946504210L;
@@ -36,7 +34,9 @@ public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionLis
       label.setBackground(Color.yellow);
       setBackground(Color.yellow);
     }
-    if (!((Boolean)treeElement.getProperty("add")).booleanValue()) button.setEnabled(false);
+    if (!((Boolean)treeElement.getProperty("add")).booleanValue()) {
+		button.setEnabled(false);
+	}
     add(buttonPanel, BorderLayout.WEST);
     add(label, BorderLayout.CENTER);
   }
@@ -49,34 +49,42 @@ public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionLis
       try {
         vertex = ((GsTreeInteractionsModel)tree.getModel()).getVertex();
         Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-        for (i = vertex.getBaseValue(); i <= vertex.getMaxValue(); i++) {
+        for (i=0 ; i <= vertex.getMaxValue(); i++) {
           ok = true;
-          for (int k = 0; k < treeElement.getChildCount(); k++)
-            if (((GsTreeValue)treeElement.getChild(k)).getValue() == i) {
+          for (int k = 0; k < treeElement.getChildCount(); k++) {
+			if (((GsTreeValue)treeElement.getChild(k)).getValue() == i) {
               ok = false;
               break;
             }
+		}
           if (ok) {
             for (int p = i + 1; p <= vertex.getMaxValue(); p++) {
               dis = false;
-              for (int k = 0; k < treeElement.getChildCount(); k++)
-                if (((GsTreeValue)treeElement.getChild(k)).getValue() == p) {
+              for (int k = 0; k < treeElement.getChildCount(); k++) {
+				if (((GsTreeValue)treeElement.getChild(k)).getValue() == p) {
                   dis = true;
                   break;
                 }
-              if (!dis) break;
+			}
+              if (!dis) {
+				break;
+			}
             }
             break;
           }
         }
-        if (dis)
-          treeElement.setProperty("add", new Boolean(false));
+        if (dis) {
+			treeElement.setProperty("add", new Boolean(false));
+		}
         if (ok) {
           ((GsTreeInteractionsModel)tree.getModel()).addValue(i);
           ((GsTreeInteractionsModel)tree.getModel()).addEmptyExpression(i, vertex);
           ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
-          if (enu != null)
-            while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
+          if (enu != null) {
+			while (enu.hasMoreElements()) {
+				tree.expandPath((TreePath)enu.nextElement());
+			}
+		}
         }
       }
       catch (Exception ex) {

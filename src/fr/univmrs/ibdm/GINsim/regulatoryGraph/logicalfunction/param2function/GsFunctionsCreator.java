@@ -3,10 +3,12 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function;
 import java.util.*;
 import java.util.Map.Entry;
 
-import fr.univmrs.ibdm.GINsim.data.*;
-import fr.univmrs.ibdm.GINsim.graph.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.*;
+import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTreeLeafPattern;
 
 public class GsFunctionsCreator {
   private GsGraphManager graphManager;
@@ -68,16 +70,13 @@ public class GsFunctionsCreator {
     }
     return new GsParamTree(as, 1234);
   }
-  public Hashtable doIt(boolean fixBasalValue) {
+  public Hashtable doIt() {
     Hashtable functions, hash;
     Vector vector;
     String s, s2;
     Object key, key2;
 
     GsParamTree tree = makeTree();
-    if (fixBasalValue) {
-      tree.setBasalValue(currentVertex.getBaseValue());
-    }
     tree.init(interactions);
     tree.process();
     tree.findPatterns();

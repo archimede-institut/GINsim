@@ -1,43 +1,33 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.JLabel;
 import javax.swing.JTree;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import javax.swing.JLabel;
-import java.awt.Dimension;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import java.awt.BorderLayout;
 
 public class GsParamPanel extends GsBooleanFunctionTreePanel implements MouseListener, MouseMotionListener {
   private static final long serialVersionUID = -7863256897019020183L;
   private JLabel label;
   public GsParamPanel(GsTreeElement value, JTree tree, boolean sel, int width) {
     super(value, tree, sel, width);
-    if (value.toString().equals(""))
-      label = new JLabel("          ");
-    else
-      label = new JLabel(value.toString());
+    if (value.toString().equals("")) {
+		label = new JLabel("          ");
+	} else {
+		label = new JLabel(value.toString());
+	}
     label.setFont(defaultFont);
     label.setPreferredSize(new Dimension(width, charHeight));
     if (sel) {
       label.setBackground(Color.yellow);
       setBackground(Color.yellow);
-    }
-    else if (value.toString().equals("")) {
-      if (((GsTreeInteractionsModel)tree.getModel()).getVertex().getBaseValue() == ((GsTreeValue)value.getParent().getParent()).getValue()) {
-        label.setBackground(Color.cyan);
-        setBackground(Color.cyan);
-      }
-      else {
-        label.setBackground(Color.red);
-        setBackground(Color.red);
-      }
-    }
-    else {
+    } else {
       label.setBackground(Color.white);
       setBackground(Color.white);
     }

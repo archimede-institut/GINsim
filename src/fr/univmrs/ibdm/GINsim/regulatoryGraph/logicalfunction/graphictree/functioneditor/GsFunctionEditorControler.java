@@ -1,6 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
@@ -73,7 +75,9 @@ public class GsFunctionEditorControler {
         break;
       case COMPACT :
         if (((Boolean)p).booleanValue()) {
-          if (initString.equals("")) initString = editorModel.getStringValue();
+          if (initString.equals("")) {
+			initString = editorModel.getStringValue();
+		}
           functionPanel.validateText(editorModel.getStringValue());
           Vector params = functionPanel.getTreeExpression().getChilds();
           GsFunctionsCreator c = null;
@@ -88,11 +92,13 @@ public class GsFunctionEditorControler {
           }
           c = new GsFunctionsCreator(editorModel.getTreeInteractionsModel().getGraph().getGraphManager(),
                                      v, editorModel.getTreeInteractionsModel().getVertex());
-          Hashtable h = c.doIt(false);
+          Hashtable h = c.doIt();
           v = (Vector)h.elements().nextElement();
           Enumeration enu = v.elements();
           String s = (String)enu.nextElement();
-          while (enu.hasMoreElements()) s = s + " | (" + (String) enu.nextElement() + ")";
+          while (enu.hasMoreElements()) {
+			s = s + " | (" + (String) enu.nextElement() + ")";
+		}
           functionPanel.setText(s);
           editorModel.update();
           functionPanel.getTreeExpression().setSelection(editorModel.getCurrentPosition(),
@@ -108,7 +114,9 @@ public class GsFunctionEditorControler {
         break;
       case DNF :
         if (((Boolean)p).booleanValue()) {
-          if (initString.equals("")) initString = editorModel.getStringValue();
+          if (initString.equals("")) {
+			initString = editorModel.getStringValue();
+		}
           functionPanel.validateText(editorModel.getStringValue());
           Vector params = functionPanel.getTreeExpression().getChilds();
           GsFunctionsCreator c = null;

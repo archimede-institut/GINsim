@@ -20,7 +20,6 @@ public class GsLogicalParameter implements GsXMLize {
 	private int value;
 	//vector of incoming active interaction
 	private Vector edge_index;
-//	private GsRegulatoryEdge tmp_ei = new GsEdgeIndex(null, 0);
 
 	private boolean isManual = true;
 	
@@ -142,6 +141,10 @@ public class GsLogicalParameter implements GsXMLize {
         short[][] t_ac = new short[incEdges.size()+1][];
         t_ac[0] = new short[1];
         t_ac[0][0] = (short)value;
+        if (incEdges.size() == 0 && edge_index.size() == 0) {
+        	// special case for the old "basal value"
+        	return t_ac;
+        }
         boolean ok = false;
         for (int i=incEdges.size() ; i>0 ; i--) {
             GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)incEdges.get(i-1)).getUserObject();

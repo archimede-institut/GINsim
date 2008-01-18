@@ -39,11 +39,14 @@ public class GsSBMLExport {
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
         short[][] t_markup = new short[len][2];
         for (int i=0 ; i<len ; i++) {
-            GsRegulatoryVertex vertex = ((GsRegulatoryVertex)v_no.get(i));
+            GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_no.get(i);
             if (graph.getGraphManager().getIncomingEdges(vertex).size() == 0) {
                 // input node: no transition, use basal value as initial markup
-                t_markup[i][0] = vertex.getBaseValue();
-                t_markup[i][1] = (short)(vertex.getMaxValue() - vertex.getBaseValue());
+            	
+            	// TODO: put back max value ?
+            	
+//                t_markup[i][0] = vertex.getBaseValue();
+//                t_markup[i][1] = (short)(vertex.getMaxValue() - vertex.getBaseValue());
             } else {
                 // normal node, initial markup = 0
                 t_markup[i][0] = 0;

@@ -345,7 +345,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     if (node != null) {
       node.setInteractionsModel(this);
       graph.getVertexEditor().setEditedObject(node);
-      for (int p = node.getBaseValue(); p <= node.getMaxValue(); p++) {
+      for (int p = 0 ; p <= node.getMaxValue(); p++) {
         dis = false;
         for (int k = 0; k < root.getChildCount(); k++) {
 			if (((GsTreeValue) root.getChild(k)).getValue() == p) {

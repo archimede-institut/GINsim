@@ -1,7 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -35,7 +34,6 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
  */
 public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
-	private short 			baseValue;
 	private short 			maxValue;
 	private Vector 			v_logicalParameters;
 
@@ -49,7 +47,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
     private static final String S_ID   = Translator.getString("STR_id")+" : ";
     private static final String S_NAME = " | "+ Translator.getString("STR_name")+" : ";
     private static final String S_MAX  = " | "+ Translator.getString("STR_max") +" : ";
-    private static final String S_BASE = " | "+ Translator.getString("STR_base")+" : ";
 
     public static final int MAXVALUE = 9;
 
@@ -60,7 +57,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	public GsRegulatoryVertex(String id, GsRegulatoryGraph graph) {
 		super();
 		name			= "";
-		baseValue 		= 0;
 		maxValue 		= 1;
 		gsa				= new Annotation();
 		v_logicalParameters 	= new Vector();
@@ -75,7 +71,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	public GsRegulatoryVertex(int num, GsRegulatoryGraph graph) {
 		super();
 		name			= "";
-		baseValue 		= 0;
 		maxValue 		= 1;
 		gsa				= new Annotation();
 		v_logicalParameters 	= new Vector();
@@ -85,32 +80,10 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	}
 
 	/**
-	 * @return the base value of the node
-	 */
-	public short getBaseValue() {
-		return baseValue;
-	}
-
-	/**
 	 * @return the max value of the node
 	 */
 	public short getMaxValue() {
 		return maxValue;
-	}
-
-	/**
-	 * Sets the base value to the node
-	 * @param i
-     * @param graph
-	 */
-	public void setBaseValue(short i, GsRegulatoryGraph graph) {
-	    if (i > -1) {
-			baseValue = i;
-			if (baseValue > maxValue) {
-			    maxValue = baseValue;
-			}
-            graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
-	    }
 	}
 
 	/**
@@ -125,9 +98,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	    	String s = "";
 	    	short oldmax = maxValue;
 	    	maxValue = max;
-	    	if (maxValue < baseValue) {
-	    		baseValue = maxValue;
-	    	}
 	    	if (oldmax > maxValue) {
 	    		s += graph.applyNewMaxValue(this);
 	    		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
@@ -172,9 +142,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @return true if the logical parameter has been added
 	 */
 	public boolean addLogicalParameter (GsLogicalParameter I) {
-	    if (I.EdgeCount() == 0) {
-	        return false;
-	    }
 		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
 			if (v_logicalParameters.get(i).equals(I)) {
 				return false;
@@ -276,16 +243,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      */
     public OmddNode getTreeParameters(GsRegulatoryGraph graph) {
         OmddNode root;
-        GsLogicalParameter pbaseValue = new GsLogicalParameter(0, true);
-        if (this.baseValue != 0) {
-            pbaseValue.setValue(baseValue, graph);
-            root = pbaseValue.buildTree(graph, this);
-            if (root == null) {
-                root = OmddNode.TERMINALS[baseValue];
-            }
-        } else {
-            root = OmddNode.TERMINALS[0];
-        }
+        root = OmddNode.TERMINALS[0];
         OmddNode curNode;
         for (int j=0 ; j<v_logicalParameters.size() ; j++) {
             GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(j);
@@ -300,8 +258,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	public String toToolTip() {
 		return    S_ID  + id
 				+ S_NAME+ name
-                + S_MAX + maxValue
-				+ S_BASE+ baseValue;
+                + S_MAX + maxValue;
 	}
 
 	public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
@@ -311,7 +268,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 			if (name.length()>0) {
 			    out.addAttr("name", name);
 			}
-		    out.addAttr("basevalue", ""+baseValue);
 		    out.addAttr("maxvalue", ""+maxValue);
 
 			// TODO: at some point stop saving logical parameters
@@ -355,7 +311,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	public Object clone() {
 		GsRegulatoryVertex clone = new GsRegulatoryVertex(id, graph);
 		clone.maxValue = maxValue;
-		clone.baseValue = baseValue;
 		clone.name = name;
 		clone.setGsa((Annotation)gsa.clone());
 		return clone;
@@ -412,23 +367,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
     }
 
     public void setInteractionsModel(GsTreeInteractionsModel model) {
-      GsLogicalParameter param;
-      boolean basalValueDefined = false;
-
       interactionsModel = model;
       v_logicalParameters = interactionsModel.getLogicalParameters();
-      for (Iterator it = v_logicalParameters.iterator(); it.hasNext(); ) {
-        param = (GsLogicalParameter)it.next();
-        if (param.EdgeCount() == 0) {
-          v_logicalParameters.removeElement(param);
-          setBaseValue((short)param.getValue(), graph);
-          basalValueDefined = true;
-          break;
-        }
-      }
-      if (!basalValueDefined) {
-		setBaseValue((short)0, graph);
-      }
     }
 
     public GsTreeInteractionsModel getInteractionsModel() {
@@ -506,12 +446,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 				}
 			}
 			
-			// this can be removed when removing basal value
-			if (v.size() == 0) {
-				setBaseValue(value, graph);
-			} else {
-				addLogicalParameter(new GsLogicalParameter(v, value, true));
-			}
+			addLogicalParameter(new GsLogicalParameter(v, value, true));
 
 			// stop if no free value was found
 			if (lastIndex == -1) {

@@ -305,17 +305,15 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      *
      * @param id
      * @param name
-     * @param base
      * @param max
      * @return the new vertex.
      */
-    public GsRegulatoryVertex addNewVertex(String id, String name, short base, short max) {
+    public GsRegulatoryVertex addNewVertex(String id, String name, short max) {
         GsRegulatoryVertex vertex = new GsRegulatoryVertex(id, (GsRegulatoryGraph)graphManager.getGsGraph());
         if (name != null) {
             vertex.setName(name);
         }
         vertex.setMaxValue(max, this);
-        vertex.setBaseValue(base, this);
         if (graphManager.addVertex(vertex)) {
         		nodeOrder.add(vertex);
         }

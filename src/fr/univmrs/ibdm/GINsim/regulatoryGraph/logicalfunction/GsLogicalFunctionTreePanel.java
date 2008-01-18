@@ -531,7 +531,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
     }
     c = new GsFunctionsCreator(graph.getGraphManager(), v, interactionList.getVertex());
 
-    Hashtable h = c.doIt(false);
+    Hashtable h = c.doIt();
 
     Enumeration enu = h.keys(), enu2;
     Integer key;

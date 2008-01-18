@@ -222,10 +222,16 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                     if (map == null || map.containsKey(id)) {
                         pos = POS_VERTEX;
                         try {
-                            short basevalue = (short)Integer.parseInt(getAttributeValueWithDefault(attributes,"basevalue", "1"));
                             short maxvalue = (short)Integer.parseInt(attributes.getValue("maxvalue"));
                             String name = attributes.getValue("name");
-                            vertex = graph.addNewVertex(id, name, basevalue, maxvalue);
+                            vertex = graph.addNewVertex(id, name, maxvalue);
+                        	String s_basal = attributes.getValue("basevalue");
+                        	if (s_basal != null) {
+                        		short basevalue = (short)Integer.parseInt(s_basal);
+                        		if (basevalue != 0) {
+                        			vertex.addLogicalParameter(new GsLogicalParameter(basevalue, true));
+                        		}
+                        	}
 
                             values.put(vertex, new Hashtable());
 
@@ -455,7 +461,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
               }
             }
             vertex.getInteractionsModel().parseFunctions();
-            if (vertex.getMaxValue() - vertex.getBaseValue() + 1 == ((Hashtable)values.get(vertex)).size()) {
+            if (vertex.getMaxValue() + 1 == ((Hashtable)values.get(vertex)).size()) {
               ((GsTreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
             }
           }
