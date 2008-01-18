@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
@@ -17,6 +18,16 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.
+ * 
+ * The first step is to build new MDD for the targets of the removed nodes.
+ * If this succeeded (no circuit was removed...), a new regulatory graph is created
+ * and all non-removed nodes are copied into it, as well as all remaining interactions.
+ * Then the logical parameters of the unaffected nodes are restored.
+ * For the affected nodes, some work is required, using the newly built MDD for their logical function:
+ * <ul>
+ *   <li>new edges are added if needed (coming from the regulators of their deleted regulators)</li> 
+ *   <li>new logical parameters are extracted from the MDD</li>
+ * </ul>
  */
 public class ModelSimplifier extends Thread implements Runnable {
 
@@ -51,7 +62,10 @@ public class ModelSimplifier extends Thread implements Runnable {
 		it = config.m_removed.keySet().iterator();
 		while (it.hasNext()) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
-			OmddNode deleted = vertex.getTreeParameters(graph);
+			OmddNode deleted = (OmddNode)m_affected.get(vertex);
+			if (deleted == null) {
+				deleted = vertex.getTreeParameters(graph);
+			}
 			int pos = graph.getNodeOrder().indexOf(vertex);
 			s_comment += ", "+vertex.getId();
 			
@@ -65,10 +79,12 @@ public class ModelSimplifier extends Thread implements Runnable {
 				}
 				try {
 					System.out.println("add affected node: "+target);
-					m_affected.put(target, remove(targetNode, deleted, pos));
+					m_affected.put(target, remove(targetNode, deleted, pos).reduce());
 				} catch (GsException e) {
 					System.out.println("trying to perform an impossible simplification ?");
+					GsEnv.error(e, graph.getGraphManager().getMainFrame());
 					e.printStackTrace();
+					return;
 				}
 			}
 		}
@@ -128,47 +144,51 @@ public class ModelSimplifier extends Thread implements Runnable {
 		while (it.hasNext()) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
 			GsRegulatoryVertex clone = (GsRegulatoryVertex)copyMap.get(vertex);
-			if (!config.m_removed.containsKey(vertex)) {
-				if (! m_affected.containsKey(vertex)) {
-					vertex.cleanupInteractionForNewGraph(copyMap);
-				} else {
-					System.out.println("fixing affected node: "+vertex);
-					OmddNode newNode = (OmddNode)m_affected.get(vertex);
-
-					// make sure that the needed edges target the affected node
-					m_edges.clear(); 
-					extractEdgesFromNode(newNode);
-					GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(vertex);
-					Iterator it_newEdges = m_edges.entrySet().iterator();
-					while (it_newEdges.hasNext()) {
-						Entry e = (Entry)it_newEdges.next();
-						GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(e.getKey());
-						GsDirectedEdge de = (GsDirectedEdge)simplifiedManager.getEdge(src, target);
-						GsRegulatoryMultiEdge new_me;
-						if (de == null) {
-							new_me = new GsRegulatoryMultiEdge(src, target);
-							simplifiedManager.addEdge(src, target, new_me);
-							System.out.println("  add edge: ("+src+","+target+")");
-						} else {
-							new_me = (GsRegulatoryMultiEdge)de.getUserObject();
-						}
-						boolean[] t_required = (boolean[])e.getValue();
-						new_me.copyFrom(t_required);
-					}
-					
-					// rebuild the parameters
-					m_edges.clear();
-					List edges = simplifiedManager.getIncomingEdges(clone);
-					Iterator it2 = edges.iterator();
-					while (it2.hasNext()) {
-						GsDirectedEdge e = (GsDirectedEdge)it2.next();
-						GsRegulatoryVertex src = (GsRegulatoryVertex)e.getSourceVertex();
-						int[] t_val = {0, src.getMaxValue()};
-						m_edges.put(src, t_val);
-					}
-					buildParametersFromNode(edges, clone, newNode);
-				}
+			if (config.m_removed.containsKey(vertex)) {
+				continue;
 			}
+			if (!m_affected.containsKey(vertex)) {
+				vertex.cleanupInteractionForNewGraph(copyMap);
+				continue;
+			}
+			
+			// this node needs new parameters
+			System.out.println("fixing affected node: "+vertex);
+			// this reduce seems needed, even if one was done before ??
+			OmddNode newNode = ((OmddNode)m_affected.get(vertex)).reduce();
+
+			// make sure that the needed edges target the affected node
+			m_edges.clear(); 
+			extractEdgesFromNode(newNode);
+			GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(vertex);
+			Iterator it_newEdges = m_edges.entrySet().iterator();
+			while (it_newEdges.hasNext()) {
+				Entry e = (Entry)it_newEdges.next();
+				GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(e.getKey());
+				GsDirectedEdge de = (GsDirectedEdge)simplifiedManager.getEdge(src, target);
+				GsRegulatoryMultiEdge new_me;
+				if (de == null) {
+					new_me = new GsRegulatoryMultiEdge(src, target);
+					simplifiedManager.addEdge(src, target, new_me);
+					System.out.println("  add edge: ("+src+","+target+")");
+				} else {
+					new_me = (GsRegulatoryMultiEdge)de.getUserObject();
+				}
+				boolean[] t_required = (boolean[])e.getValue();
+				new_me.copyFrom(t_required);
+			}
+			
+			// rebuild the parameters
+			m_edges.clear();
+			List edges = simplifiedManager.getIncomingEdges(clone);
+			Iterator it2 = edges.iterator();
+			while (it2.hasNext()) {
+				GsDirectedEdge e = (GsDirectedEdge)it2.next();
+				GsRegulatoryVertex src = (GsRegulatoryVertex)e.getSourceVertex();
+				int[] t_val = {0, src.getMaxValue()};
+				m_edges.put(src, t_val);
+			}
+			buildParametersFromNode(edges, clone, newNode);
 		}
 		
 		if (dialog != null) {
