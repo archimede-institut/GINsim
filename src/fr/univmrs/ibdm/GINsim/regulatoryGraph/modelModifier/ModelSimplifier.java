@@ -67,6 +67,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 					System.out.println("add affected node: "+target);
 					m_affected.put(target, remove(targetNode, deleted, pos));
 				} catch (GsException e) {
+					System.out.println("trying to perform an impossible simplification ?");
 					e.printStackTrace();
 				}
 			}
@@ -129,8 +130,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			GsRegulatoryVertex clone = (GsRegulatoryVertex)copyMap.get(vertex);
 			if (!config.m_removed.containsKey(vertex)) {
 				if (! m_affected.containsKey(vertex)) {
-					clone.cleanupInteractionForNewGraph(copyMap);
-					// TODO: copy logical functions as well (cf copy/paste)
+					vertex.cleanupInteractionForNewGraph(copyMap);
 				} else {
 					System.out.println("fixing affected node: "+vertex);
 					OmddNode newNode = (OmddNode)m_affected.get(vertex);
@@ -143,11 +143,14 @@ public class ModelSimplifier extends Thread implements Runnable {
 					while (it_newEdges.hasNext()) {
 						Entry e = (Entry)it_newEdges.next();
 						GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(e.getKey());
-						GsRegulatoryMultiEdge new_me = (GsRegulatoryMultiEdge)simplifiedManager.getEdge(src, target);
-						if (new_me == null) {
+						GsDirectedEdge de = (GsDirectedEdge)simplifiedManager.getEdge(src, target);
+						GsRegulatoryMultiEdge new_me;
+						if (de == null) {
 							new_me = new GsRegulatoryMultiEdge(src, target);
 							simplifiedManager.addEdge(src, target, new_me);
 							System.out.println("  add edge: ("+src+","+target+")");
+						} else {
+							new_me = (GsRegulatoryMultiEdge)de.getUserObject();
 						}
 						boolean[] t_required = (boolean[])e.getValue();
 						new_me.copyFrom(t_required);
@@ -159,10 +162,11 @@ public class ModelSimplifier extends Thread implements Runnable {
 					Iterator it2 = edges.iterator();
 					while (it2.hasNext()) {
 						GsDirectedEdge e = (GsDirectedEdge)it2.next();
-						Object src = e.getSourceVertex();
-						m_edges.put(src, new int[2]);
+						GsRegulatoryVertex src = (GsRegulatoryVertex)e.getSourceVertex();
+						int[] t_val = {0, src.getMaxValue()};
+						m_edges.put(src, t_val);
 					}
-					buildParametersFromNode(edges, newNode);
+					buildParametersFromNode(edges, clone, newNode);
 				}
 			}
 		}
@@ -206,34 +210,31 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * build the logical parameters corresponding to a given logical function.
 	 * @param node
 	 */
-	private void buildParametersFromNode(List edges, OmddNode node) {
+	private void buildParametersFromNode(List edges, GsRegulatoryVertex targetVertex, OmddNode node) {
 		if (node.next == null) {
 			// this is a leaf: build the parameters if needed
-			if (node.value == 0) {
-				// 0-valued leaf: no parameters
-				return;
+			if (node.value != 0) {
+				targetVertex.addParametersForMDDLeaf(node.value, edges, m_edges);
 			}
-			System.out.println("--> one set of parameters here:");
-			Iterator it = m_edges.entrySet().iterator();
-			System.out.print("  ");
-			while (it.hasNext()) {
-				Entry e = (Entry)it.next();
-				System.out.print(e.getKey()+":"+e.getValue()+"  ");
-			}
-			System.out.println();
 			return;
 		}
 		// continue but remember the selected value for this node
-		Object vertex = copyMap.get(oldNodeOrder.get(node.level));
-		OmddNode child = null;
-		for (int i=0 ; i<node.next.length ; i++) {
-			if (child != node.next[i]) {
-				child = node.next[i];
-				m_edges.put(vertex, null); // FIXME
-				buildParametersFromNode(edges, node.next[i]);
+		GsRegulatoryVertex vertex = (GsRegulatoryVertex)copyMap.get(oldNodeOrder.get(node.level));
+		int[] t_val = (int[])m_edges.get(vertex);
+		int start = 0;
+		for (int i=1 ; i<node.next.length ; i++) {
+			if (node.next[start] != node.next[i]) {
+				t_val[0] = start;
+				t_val[1] = i-1;
+				buildParametersFromNode(edges, targetVertex, node.next[start]);
+				start = i;
 			}
 		}
-		m_edges.remove(vertex);
+		t_val[0] = start;
+		t_val[1] = vertex.getMaxValue();
+		buildParametersFromNode(edges, targetVertex, node.next[start]);
+		t_val[0] = 0;
+		t_val[1] = vertex.getMaxValue();
 	}
 
 

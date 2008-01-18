@@ -76,7 +76,8 @@ public class ReferencerHelper implements AnnotationHelper {
 					action, this,
 					GsGraphNotificationMessage.NOTIFICATION_WARNING));
 			} else {
-				System.out.println("got problem...");
+				// TODO: finish biblio manager
+				// System.out.println("got problem...");
 			}
 		}
 	}
