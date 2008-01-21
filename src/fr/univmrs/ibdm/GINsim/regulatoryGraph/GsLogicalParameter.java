@@ -247,21 +247,19 @@ public class GsLogicalParameter implements GsXMLize {
     
     public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
     	out.openTag("parameter");
-    	out.addAttr("idActiveInteractions", stringEdges());
+		int len = edge_index.size();
+		if (len != 0) {
+			String sEdges = "";
+			for (int i=0 ; i<len ; i++) {
+				GsRegulatoryEdge e = (GsRegulatoryEdge) edge_index.elementAt(i);
+				sEdges = sEdges + " " + e.getLongInfo("_");
+			}
+    		out.addAttr("idActiveInteractions", sEdges);
+		}
     	out.addAttr("val", ""+value);
     	out.closeTag();
 	}
 	
-	private String stringEdges() {
-		String sEdges = "";
-		for (int i = 0; i < edge_index.size(); i++) {
-			GsRegulatoryEdge e = (GsRegulatoryEdge) edge_index.elementAt(i);
-			sEdges = sEdges + e.getLongInfo("_") + " ";
-		}
-
-		return sEdges.substring(0,sEdges.length()-1);		
-	}
-
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof GsLogicalParameter)) {
 			return false;

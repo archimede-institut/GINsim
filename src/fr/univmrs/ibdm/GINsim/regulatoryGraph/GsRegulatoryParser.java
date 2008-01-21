@@ -390,15 +390,18 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     	for (int i=0 ; i<v_waitingInteractions.size() ; i+=3) {
     		GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_waitingInteractions.get(i);
     		GsLogicalParameter gsi = new GsLogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)), true);
-    		String[] t_interaction = ((String) v_waitingInteractions.get(i+2)).split(" ");
-
-    		for (int j=0 ; j<t_interaction.length ; j++) {
-    			GsRegulatoryEdge e = (GsRegulatoryEdge) m_edges.get(t_interaction[j]);
-    			if (e == null) {
-    				// we have a problem
-    			} else {
-    				gsi.addEdge(e);
-    			}
+    		String s_interactions = (String) v_waitingInteractions.get(i+2);
+    		if (s_interactions != null) {
+	    		String[] t_interactions = s_interactions.split(" ");
+	
+	    		for (int j=0 ; j<t_interactions.length ; j++) {
+	    			GsRegulatoryEdge e = (GsRegulatoryEdge) m_edges.get(t_interactions[j]);
+	    			if (e == null) {
+	    				// we have a problem
+	    			} else {
+	    				gsi.addEdge(e);
+	    			}
+	    		}
     		}
     		vertex.addLogicalParameter(gsi);
     	}
