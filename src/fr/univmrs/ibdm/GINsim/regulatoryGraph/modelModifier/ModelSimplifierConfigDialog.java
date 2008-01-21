@@ -1,15 +1,21 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.modelModifier;
 
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 import fr.univmrs.tagc.widgets.StackDialog;
 
@@ -18,18 +24,32 @@ public class ModelSimplifierConfigDialog extends StackDialog {
 	private static final long	serialVersionUID	= 3618855894072951620L;
 
 	GsRegulatoryGraph graph;
-	ModelSimplifierConfig cfg = new ModelSimplifierConfig();
+	GenericListPanel lp;
 	
 	ModelSimplifierConfigDialog(GsRegulatoryGraph graph) {
 		super(graph.getGraphManager().getMainFrame(), "modelSimplifier", 600, 500);
 		this.graph = graph;
 		setTitle("select nodes to remove");
-		setMainPanel(new SimplifierConfigPanel(graph.getNodeOrder(), cfg));
+		
+		
+        ModelSimplifierConfigList cfgList = (ModelSimplifierConfigList)graph.getObject(ModelSimplifierConfigManager.key, true);
+		if (cfgList.getNbElements(null) == 0) {
+			cfgList.add();
+		}
+        SimplifierConfigPanel panel = new SimplifierConfigPanel();
+        Map m = new HashMap();
+        m.put(ModelSimplifierConfig.class, panel);
+        lp = new GenericListPanel(m);
+        lp.setList(cfgList);
+		panel.setEditedObject(graph.getNodeOrder(), lp);
+		setMainPanel(lp);
 		setVisible(true);
 	}
 	
 	protected void run() {
-		new ModelSimplifier(graph, cfg, this);
+		if (lp.getSelectedItem() != null) {
+			new ModelSimplifier(graph, (ModelSimplifierConfig)lp.getSelectedItem(), this);
+		}
 	}
 	
     public void endSimu(GsGraph graph) {
@@ -42,27 +62,45 @@ public class ModelSimplifierConfigDialog extends StackDialog {
     }
 }
 
-class SimplifierConfigPanel extends JPanel {
+class SimplifierConfigPanel extends JPanel implements ListSelectionListener {
 	private static final long	serialVersionUID	= 1112333567261768396L;
 	
 	private SimplifierConfigTableModel model = new SimplifierConfigTableModel();
+	private List nodeOrder;
+	GenericListPanel lp;
 
-	public SimplifierConfigPanel(Vector nodeOrder, ModelSimplifierConfig cfg) {
-		model.setSelected(nodeOrder, cfg);
+	public SimplifierConfigPanel() {
 		JScrollPane sp = new JScrollPane();
 		sp.setViewportView(new EnhancedJTable(model));
 		setLayout(new GridBagLayout());
-		add(sp);
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(sp, c);
+	}
+	
+	public void setEditedObject(List nodeOrder, GenericListPanel lp) {
+		this.nodeOrder = nodeOrder;
+		this.lp = lp;
+		lp.addSelectionListener(this);
+		valueChanged(null);
+	}
+
+	public void valueChanged(ListSelectionEvent e) {
+		model.setSelected(nodeOrder, (ModelSimplifierConfig)lp.getSelectedItem());
 	}
 }
 
 class SimplifierConfigTableModel extends AbstractTableModel {
 	private static final long	serialVersionUID	= 652081136537658336L;
 	
-	Vector nodeOrder;
+	List nodeOrder;
 	ModelSimplifierConfig config;
 	
-	public void setSelected(Vector nodes, ModelSimplifierConfig config) {
+	public void setSelected(List nodes, ModelSimplifierConfig config) {
 		this.nodeOrder = nodes;
 		this.config = config;
 		fireTableDataChanged();

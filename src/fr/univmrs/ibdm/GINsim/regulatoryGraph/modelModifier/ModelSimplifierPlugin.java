@@ -1,10 +1,22 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.modelModifier;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+
 import javax.swing.JFrame;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
@@ -13,6 +25,9 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 
 /**
  * main method for the model simplification plugin
@@ -20,6 +35,9 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
 
     static {
+        if (!GsRegulatoryGraphDescriptor.isObjectManagerRegistred(ModelSimplifierConfigManager.key)) {
+            GsRegulatoryGraphDescriptor.registerObjectManager(new ModelSimplifierConfigManager());
+        }
     }
     private GsPluggableActionDescriptor[] t_action = null;
 
@@ -57,5 +75,106 @@ public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
 				new ModelSimplifierConfigDialog((GsRegulatoryGraph)graph);
 			}
 		}
+	}
+}
+
+
+/**
+ * Save/open simulation parameters along with the model.
+ */
+class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
+
+	public static final String key = "modelSimplifier";
+	
+    public Object doOpen(InputStream is, GsGraph graph) {
+        ModelSimplifierConfigParser parser = new ModelSimplifierConfigParser((GsRegulatoryGraph)graph);
+        parser.startParsing(is, false);
+        return parser.getParameters();
+    }
+
+    public void doSave(OutputStreamWriter os, GsGraph graph) {
+        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
+        Vector nodeOrder = graph.getNodeOrder();
+        if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
+            return;
+        }
+        try {
+            GsXMLWriter out = new GsXMLWriter(os, null);
+            out.openTag("modelSimplifications");
+            // add the available configurations
+            for (int i=0 ; i<paramList.getNbElements(null) ; i++) {
+                ((ModelSimplifierConfig)paramList.getElement(null, i)).toXML(out, null, 0);
+            }
+            out.closeTag();
+        } catch (IOException e) {
+            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+        }
+    }
+
+    public String getObjectName() {
+        return key;
+    }
+
+    public boolean needSaving(GsGraph graph) {
+        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
+        return paramList != null && paramList.getNbElements(null) > 0;
+    }
+
+	public Object doCreate(GsGraph graph) {
+		return new ModelSimplifierConfigList(graph);
+	}
+}
+
+/**
+ * parser for simulation parameters file
+ */
+class ModelSimplifierConfigParser extends GsXMLHelper {
+
+    public GsGraph getGraph() {
+        // doesn't create a graph!
+        return null;
+    }
+    public String getFallBackDTD() {
+        // doesn't use a DTD either
+        return null;
+    }
+    
+    List nodeOrder;
+    ModelSimplifierConfigList paramList;
+    
+    /**
+     * @param graph expected node order
+     */
+    public ModelSimplifierConfigParser(GsRegulatoryGraph graph) {
+    	this.nodeOrder = graph.getNodeOrder();
+        this.paramList = (ModelSimplifierConfigList)graph.getObject(ModelSimplifierConfigManager.key, true);
+    }
+    
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+        super.startElement(uri, localName, qName, attributes);
+        if (qName.equals("simplificationConfig")) {
+        	ModelSimplifierConfig cfg = (ModelSimplifierConfig)paramList.getElement(null, paramList.add());
+        	cfg.name = attributes.getValue("name");
+        	String[] t_remove = attributes.getValue("removeList").split(" ");
+        	for (int i=0 ; i<t_remove.length ; i++) {
+        		Iterator it = nodeOrder.iterator();
+        		while (it.hasNext()) {
+        			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+        			if (vertex.getId().equals(t_remove[i])) {
+        				cfg.m_removed.put(vertex, null);
+        			}
+        		}
+        	}
+        }
+    }
+    
+    public void endElement (String uri, String localName, String qName) throws SAXException {
+        super.endElement(uri, localName, qName);
+    }
+    /**
+     * @return the list of parameters read by this parser.
+     */
+	public Object getParameters() {
+		return paramList;
 	}
 }
