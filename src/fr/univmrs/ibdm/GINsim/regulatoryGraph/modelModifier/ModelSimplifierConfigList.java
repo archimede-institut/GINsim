@@ -37,7 +37,10 @@ public class ModelSimplifierConfigList extends SimpleGenericList
 	}
     
     public GsGraphEventCascade vertexRemoved(Object data) {
-    	// TODO: some cleanup
+    	for (int i=0 ; i<v_data.size() ; i++) {
+    		ModelSimplifierConfig cfg = (ModelSimplifierConfig)v_data.get(i);
+    		cfg.m_removed.remove(data);
+    	}
         return null;
     }
 
