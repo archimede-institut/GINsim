@@ -59,9 +59,12 @@ public class ModelSimplifier extends Thread implements Runnable {
 		// first do the "real" simplification work
 		Map m_affected = new HashMap();
 		String s_comment = "";
-		it = config.m_removed.keySet().iterator();
+		it = config.m_removed.entrySet().iterator();
+		TargetEdgesIterator it_targets = new TargetEdgesIterator(config.m_removed);
 		while (it.hasNext()) {
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+			Entry entry = (Entry)it.next();
+			List targets = new ArrayList();
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex)entry.getKey();
 			OmddNode deleted = (OmddNode)m_affected.get(vertex);
 			if (deleted == null) {
 				deleted = vertex.getTreeParameters(graph);
@@ -70,9 +73,10 @@ public class ModelSimplifier extends Thread implements Runnable {
 			s_comment += ", "+vertex.getId();
 			
 			// mark all its targets as affected
-			Iterator it_targets = manager.getOutgoingEdges(vertex).iterator();
+			it_targets.setOutgoingList(manager.getOutgoingEdges(vertex));
 			while (it_targets.hasNext()) {
-				GsRegulatoryVertex target = (GsRegulatoryVertex)((GsDirectedEdge)it_targets.next()).getTargetVertex();
+				GsRegulatoryVertex target = (GsRegulatoryVertex)it_targets.next();
+				targets.add(target);
 				OmddNode targetNode = (OmddNode)m_affected.get(target);
 				if (targetNode == null) {
 					targetNode = target.getTreeParameters(graph);
@@ -87,6 +91,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 					return;
 				}
 			}
+			entry.setValue(new ArrayList(targets));
 		}
 		
 		// create the new regulatory graph
@@ -154,8 +159,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			
 			// this node needs new parameters
 			System.out.println("fixing affected node: "+vertex);
-			// this reduce seems needed, even if one was done before ??
-			OmddNode newNode = ((OmddNode)m_affected.get(vertex)).reduce();
+			OmddNode newNode = (OmddNode)m_affected.get(vertex);
 
 			// make sure that the needed edges target the affected node
 			m_edges.clear(); 
@@ -370,5 +374,67 @@ public class ModelSimplifier extends Thread implements Runnable {
 			}
 		}
 		return ret;
+	}
+}
+
+
+class TargetEdgesIterator implements Iterator {
+
+	LinkedList queue = new LinkedList();
+	Map m_visited = new HashMap();
+	Map m_removed;
+	
+	Object next;
+	
+	public TargetEdgesIterator(Map m_removed) {
+		this.m_removed = m_removed;
+	}
+	
+	public boolean hasNext() {
+		return next != null;
+	}
+
+	public Object next() {
+		Object ret = next;
+		
+		// find the next.
+		// it can be a "normal next target" if it was not removed
+		// if it was removed, it may be one of the targets of the removed node
+		next = null;
+		while (queue.size() > 0) {
+			Object vertex = queue.removeFirst();
+			if (m_visited.containsKey(vertex)) {
+				// this node was checked already, skip it
+				continue;
+			}
+			m_visited.put(vertex, null);
+			Object targets = m_removed.get(vertex);
+			if (targets == null) {
+				// "clean" node: go for it!
+				next = vertex;
+				break;
+			}
+			
+			// "dirty" node: enqueue its targets
+			Iterator it = ((List)targets).iterator();
+			while (it.hasNext()) {
+				queue.addLast(it.next());
+			}
+		}
+		return ret;
+	}
+
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
+	
+	public void setOutgoingList(List outgoing) {
+		Iterator outgoingIterator = outgoing.iterator();
+		m_visited.clear();
+		queue.clear();
+		while (outgoingIterator.hasNext()) {
+			queue.addLast(((GsDirectedEdge)outgoingIterator.next()).getTargetVertex());
+		}
+		next();
 	}
 }

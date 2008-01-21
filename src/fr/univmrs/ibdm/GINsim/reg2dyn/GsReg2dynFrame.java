@@ -259,7 +259,7 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         if (null == graph) {
             GsEnv.error("no state transition graph", frame);
         } else {
-            GsEnv.whatToDoWithGraph(frame, graph);
+            GsEnv.whatToDoWithGraph(frame, graph, true);
         }
         cancel();
     }

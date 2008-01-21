@@ -55,7 +55,7 @@ public class ConnectivityPlugin implements GsPlugin, GsActionProvider {
             if (s_ag != null) {
     	        GsGraph subgraph = GsOpenAction.open(gd, null, ((GsReducedGraph)graph).getSelectedMap(), s_ag);
     	        if (subgraph != null) {
-    	            GsEnv.whatToDoWithGraph(null, subgraph);
+    	            GsEnv.whatToDoWithGraph(null, subgraph, true);
     	        }
             }
 	    } else {

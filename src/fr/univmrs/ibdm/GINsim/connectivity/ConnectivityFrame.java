@@ -160,7 +160,7 @@ public class ConnectivityFrame extends JDialog implements GsProgressListener {
     
     public void setResult(Object result) {
         if (result != null && result instanceof GsReducedGraph) {
-            GsEnv.whatToDoWithGraph(frame, (GsReducedGraph)result);
+            GsEnv.whatToDoWithGraph(frame, (GsReducedGraph)result, true);
         }
         close();
     }

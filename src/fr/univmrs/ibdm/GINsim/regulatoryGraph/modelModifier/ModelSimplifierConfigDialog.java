@@ -36,7 +36,7 @@ public class ModelSimplifierConfigDialog extends StackDialog {
         if (null == graph) {
             GsEnv.error("no state transition graph", this.graph.getGraphManager().getMainFrame());
         } else {
-            GsEnv.whatToDoWithGraph(this.graph.getGraphManager().getMainFrame(), graph);
+            GsEnv.whatToDoWithGraph(this.graph.getGraphManager().getMainFrame(), graph, false);
         }
         cancel();
     }

@@ -304,7 +304,16 @@ public class GsEnv {
 	 * @param graph
 	 */
 	public static void whatToDoWithGraph(JFrame frame, GsGraph graph) {
-		new GsWhatToDoFrame(frame, graph);
+		whatToDoWithGraph(frame, graph, true);
+	}
+
+	/**
+	 * @param frame
+	 * @param graph
+	 * @param needLayout TODO
+	 */
+	public static void whatToDoWithGraph(JFrame frame, GsGraph graph, boolean needLayout) {
+		new GsWhatToDoFrame(frame, graph, needLayout);
 	}
     
     /**

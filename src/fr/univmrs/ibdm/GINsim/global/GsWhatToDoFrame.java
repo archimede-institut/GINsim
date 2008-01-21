@@ -50,13 +50,29 @@ public class GsWhatToDoFrame extends JDialog {
 	 * This is the default constructor
 	 * @param frame
 	 * @param graph
+	 * @param needLayout 
 	 */
-	public GsWhatToDoFrame(JFrame frame, GsGraph graph) {
+	public GsWhatToDoFrame(JFrame frame, GsGraph graph, boolean needLayout) {
 		super(frame);
 		this.graph = graph;
 		this.frame = frame;
 		initialize();
-		System.gc();
+
+		// propose to display and autolayout by default
+		radioDisplay.setSelected(true);
+		checkLayout.setSelected(needLayout);
+		
+		// big graphs: add a warning and save by default (fully disable display if really big)
+		if (size > 500) {
+			getLabelInfo().setForeground(Color.RED);
+			getRadioSave().setSelected(true);
+			if (size > 1000) {
+				getRadioDisplay().setEnabled(false);
+				getLabelInfo().setText(Translator.getString("STR_warning_reallyBigGraph"));
+			} else {
+				getLabelInfo().setText(Translator.getString("STR_warning_bigGraph"));
+			}
+		}
 	}
 
 	/**
@@ -73,22 +89,6 @@ public class GsWhatToDoFrame extends JDialog {
 			    close();
 			}
 		});
-		
-		// propose to display and autolayout by default
-		radioDisplay.setSelected(true);
-		checkLayout.setSelected(true);
-		
-		// big graphs: add a warning and save by default (fully disable display if really big)
-		if (size > 500) {
-			getLabelInfo().setForeground(Color.RED);
-			getRadioSave().setSelected(true);
-			if (size > 1000) {
-				getRadioDisplay().setEnabled(false);
-				getLabelInfo().setText(Translator.getString("STR_warning_reallyBigGraph"));
-			} else {
-				getLabelInfo().setText(Translator.getString("STR_warning_bigGraph"));
-			}
-		}
 	}
 
 	/**
