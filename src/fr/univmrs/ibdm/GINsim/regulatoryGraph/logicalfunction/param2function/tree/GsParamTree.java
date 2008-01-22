@@ -22,7 +22,7 @@ public class GsParamTree {
       e = (Entry)it.next();
       if (e.getValue() != null) {
 		addLevel(++depth, (GsRegulatoryVertex)e.getKey(), (GsRegulatoryMultiEdge)e.getValue());
-	}
+      }
     }
     addLeaves(dv);
     defaultValue = dv;
@@ -68,10 +68,11 @@ public class GsParamTree {
       }
     }
   }
-  public void init(Vector interactions) {
-    for (int i = 0; i < interactions.size(); i++) {
-		init((GsLogicalParameter)interactions.elementAt(i));
-	}
+  public void init(List interactions) {
+	  Iterator it = interactions.iterator();
+	  while (it.hasNext()) {
+		  init((GsLogicalParameter)it.next());
+	  }
   }
   private void init(GsLogicalParameter lp) {
     getLeaf(lp).setValue(new Integer(lp.getValue()));

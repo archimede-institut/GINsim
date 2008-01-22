@@ -22,6 +22,7 @@ public class GsLogicalParameter implements GsXMLize {
 	private Vector edge_index;
 
 	private boolean isManual = true;
+	private boolean hasConflict = false;
 	
 	/**
 	 * Constructs an empty vector and set the value

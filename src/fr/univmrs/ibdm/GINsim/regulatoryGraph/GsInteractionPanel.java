@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -465,7 +466,7 @@ public class GsInteractionPanel extends GsParameterPanel
     protected void doChaos() {
       GsFunctionsCreator c = null;
       Vector v = new Vector();
-      Vector interactions = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
+      List interactions = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
       //int[] sel;
 
       //if (jTable.getSelectionModel().isSelectionEmpty())

@@ -35,7 +35,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
 	private short 			maxValue;
-	private Vector 			v_logicalParameters;
+	private List 			v_logicalParameters;
 
 	private String 			name;
 	private Annotation	gsa;
@@ -92,9 +92,11 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @param graph the graph (to propagate changes if needed)
 	 */
 	public void setMaxValue(short max, GsRegulatoryGraph graph) {
-	    if (!getInteractionsModel().isMaxCompatible(max)) {
-	      //graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
-	    } else if (max>0 && max<= MAXVALUE) {
+	    if (max>0 && max<= MAXVALUE && max != maxValue) {
+		    if (!getInteractionsModel().isMaxCompatible(max)) {
+			      graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
+		    	return;
+		    }
 	    	String s = "";
 	    	short oldmax = maxValue;
 	    	maxValue = max;
@@ -111,10 +113,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	    	if (!"".equals(s)) {
 	    		graph.addNotificationMessage( new GsGraphNotificationMessage(graph, s.trim(), GsGraphNotificationMessage.NOTIFICATION_WARNING) );
 	    	}
-	    	if (oldmax != maxValue) {
-	    		graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
-	    		getInteractionsModel().refreshVertex();
-	    	}
+    		graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
+    		getInteractionsModel().refreshVertex();
 	    }
 	}
 
@@ -231,7 +231,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	/**
 	 * @return the list of all interactions on this gene.
 	 */
-	public Vector getV_logicalParameters() {
+	public List getV_logicalParameters() {
 		return v_logicalParameters;
 	}
 
@@ -272,7 +272,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
 			// TODO: at some point stop saving logical parameters
 			for (int i = 0; i < v_logicalParameters.size(); i++) {
-				((GsLogicalParameter) v_logicalParameters.elementAt(i)).toXML(out, null, mode);
+				((GsLogicalParameter) v_logicalParameters.get(i)).toXML(out, null, mode);
 			}
 			// save logical functions
 			saveInteractionsModel(out, mode);
@@ -368,6 +368,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
     public void setInteractionsModel(GsTreeInteractionsModel model) {
       interactionsModel = model;
+      // FIXME: do something here
       v_logicalParameters = interactionsModel.getLogicalParameters();
     }
 

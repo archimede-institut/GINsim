@@ -12,10 +12,10 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tre
 
 public class GsFunctionsCreator {
   private GsGraphManager graphManager;
-  private Vector interactions;
+  private List interactions;
   private GsRegulatoryVertex currentVertex;
 
-  public GsFunctionsCreator(GsGraphManager graphManager, Vector interactions, GsRegulatoryVertex currentVertex) {
+  public GsFunctionsCreator(GsGraphManager graphManager, List interactions, GsRegulatoryVertex currentVertex) {
     super();
     this.graphManager = graphManager;
     this.interactions = interactions;
@@ -40,7 +40,7 @@ public class GsFunctionsCreator {
     if (interactions != null) {
       int I;
       for (int i = 0; i < interactions.size(); i++) {
-        GsLogicalParameter p = (GsLogicalParameter) interactions.elementAt(i);
+        GsLogicalParameter p = (GsLogicalParameter) interactions.get(i);
         for (int j = 0; j < p.EdgeCount(); j++) {
           I = ((Integer) h.get(p.getEdge(j).me.getSource())).intValue() + 1;
           h.put(p.getEdge(j).me.getSource(), new Integer(I));

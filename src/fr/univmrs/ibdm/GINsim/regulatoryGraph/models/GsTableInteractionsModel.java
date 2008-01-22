@@ -1,5 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.models;
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
@@ -17,7 +18,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	private static final long serialVersionUID = -2093185924206743169L;
 
 	//the vector of interaction
-	private Vector interactions;
+	private List interactions;
 
 	//the current selected node
 	private GsRegulatoryVertex node;
@@ -142,7 +143,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 *
 	 * @return vector of interactions
 	 */
-	public Vector getInteractions() {
+	public List getInteractions() {
 		return interactions;
 	}
 
@@ -260,7 +261,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
      */
     public void moveElementAt(int index,int to) {
         Object obj=interactions.remove(index);
-        interactions.insertElementAt(obj,to);
+        interactions.add(to, obj);
         if (index < to) {
             fireTableRowsUpdated(index, to);
         } else {

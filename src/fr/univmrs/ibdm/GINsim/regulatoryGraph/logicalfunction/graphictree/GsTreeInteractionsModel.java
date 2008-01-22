@@ -1,10 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
 import java.awt.Color;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
@@ -24,7 +21,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTre
 
 public class GsTreeInteractionsModel implements TreeModel {
   //the vector of interaction
-  private Vector interactions;
+  private List interactions;
 
   //the current selected node
   private GsRegulatoryVertex node;
