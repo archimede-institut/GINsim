@@ -86,7 +86,7 @@ public class GsFunctionEditorControler {
           GsLogicalParameter lp;
 
           for (int i = 0; i < params.size(); i++) {
-            lp = new GsLogicalParameter(value, false);
+            lp = new GsLogicalParameter(value);
             lp.setEdges(((GsTreeParam) params.elementAt(i)).getEdgeIndexes());
             v.addElement(lp);
           }
@@ -125,7 +125,7 @@ public class GsFunctionEditorControler {
           GsLogicalParameter lp;
 
           for (int i = 0; i < params.size(); i++) {
-            lp = new GsLogicalParameter(value, false);
+            lp = new GsLogicalParameter(value);
             lp.setEdges(((GsTreeParam) params.elementAt(i)).getEdgeIndexes());
             v.addElement(lp);
           }

@@ -188,6 +188,11 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                     if (!values.isEmpty()) {
                     	parseBooleanFunctions();
                     }
+                    Iterator it = graph.getNodeOrder().iterator();
+                    while (it.hasNext()) {
+                    	GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+                    	vertex.getV_logicalParameters().cleanupDup();
+                    }
 				}
                 pos = POS_OUTSIDE;
 				break;
@@ -229,7 +234,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                         	if (s_basal != null) {
                         		short basevalue = (short)Integer.parseInt(s_basal);
                         		if (basevalue != 0) {
-                        			vertex.addLogicalParameter(new GsLogicalParameter(basevalue, true));
+                        			vertex.addLogicalParameter(new GsLogicalParameter(basevalue), true);
                         		}
                         	}
 
@@ -389,7 +394,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 
     	for (int i=0 ; i<v_waitingInteractions.size() ; i+=3) {
     		GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_waitingInteractions.get(i);
-    		GsLogicalParameter gsi = new GsLogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)), true);
+    		GsLogicalParameter gsi = new GsLogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)));
     		String s_interactions = (String) v_waitingInteractions.get(i+2);
     		if (s_interactions != null) {
 	    		String[] t_interactions = s_interactions.split(" ");
@@ -403,7 +408,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 	    			}
 	    		}
     		}
-    		vertex.addLogicalParameter(gsi);
+    		vertex.addLogicalParameter(gsi, true);
     	}
     }
 

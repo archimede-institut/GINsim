@@ -1,10 +1,11 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
+import java.awt.event.*;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -13,14 +14,13 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.MouseEvent;
 
 public class GsParameterChoiceWindow extends JDialog implements MouseListener, MouseMotionListener,
     WindowListener, ActionListener, ListSelectionListener {
@@ -103,14 +103,15 @@ public class GsParameterChoiceWindow extends JDialog implements MouseListener, M
   }
   public void init(List interactions, Font f, GsTreeElement el) {
     GsRegulatoryMultiEdge o;
-    Vector vec = new Vector(), vec2;
+    Vector vec = new Vector();
+    List vec2;
     GsRegulatoryEdge edgeIndex;
     GsListElement lElem;
 
     for (int i = 0; i < interactions.size(); i++) {
       o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)interactions.get(i)).getUserObject();
       for (int j = 0; j < o.getEdgeCount(); j++) {
-        vec.addElement(new GsListElement(o, j));
+        vec.add(new GsListElement(o, j));
       }
     }
     interactionList.setListData(vec);
@@ -118,8 +119,8 @@ public class GsParameterChoiceWindow extends JDialog implements MouseListener, M
     treeParam = (GsTreeParam)el;
     value = ((GsTreeValue)el.getParent().getParent()).getValue();
     vec2 = treeParam.getEdgeIndexes();
-    for (Enumeration enu = vec2.elements(); enu.hasMoreElements(); ) {
-      edgeIndex = (GsRegulatoryEdge)enu.nextElement();
+    for (Iterator enu = vec2.iterator(); enu.hasNext(); ) {
+      edgeIndex = (GsRegulatoryEdge)enu.next();
       for (int k = 0; k < interactionList.getModel().getSize(); k++) {
         lElem = (GsListElement)interactionList.getModel().getElementAt(k);
         if (edgeIndex.me == lElem.getEdge() && edgeIndex.index == lElem.getIndex()) {
@@ -187,7 +188,7 @@ public class GsParameterChoiceWindow extends JDialog implements MouseListener, M
   public void valueChanged(ListSelectionEvent e) {
     if (!e.getValueIsAdjusting()) {
       Object[] sel = interactionList.getSelectedValues();
-      GsLogicalParameter par = new GsLogicalParameter(value, false);
+      GsLogicalParameter par = new GsLogicalParameter(value);
       for (int i = 0; i < sel.length; i++) {
         par.addEdge(((GsListElement)sel[i]).getEdge().getEdge(((GsListElement)sel[i]).getIndex()));
       }
@@ -211,7 +212,7 @@ public class GsParameterChoiceWindow extends JDialog implements MouseListener, M
   }
 
   public void mouseDragged(MouseEvent arg0) {
-    if ((xm != -1) && (ym != -1)) {
+    if (xm != -1 && ym != -1) {
       int dx = arg0.getX() - xm;
       int dy = arg0.getY() - ym;
       Point p = this.getLocation();

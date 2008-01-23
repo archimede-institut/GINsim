@@ -1,15 +1,15 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
 
 public class GsTreeParam extends GsTreeElement {
-  private Vector edgeIndexes;
+  private List edgeIndexes;
   private boolean error, warning;
 
-  public GsTreeParam(GsTreeElement parent, Vector v) {
+  public GsTreeParam(GsTreeElement parent, List v) {
     super(parent);
     this.edgeIndexes = v;
     error = warning = false;
@@ -29,10 +29,10 @@ public class GsTreeParam extends GsTreeElement {
     }
     return s.trim();
   }
-  public Vector getEdgeIndexes() {
+  public List getEdgeIndexes() {
     return edgeIndexes;
   }
-  public void setEdgeIndexes(Vector v) {
+  public void setEdgeIndexes(List v) {
     edgeIndexes = v;
   }
   public void setError(boolean b) {

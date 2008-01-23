@@ -19,30 +19,28 @@ public class GsLogicalParameter implements GsXMLize {
 	//value of the parameter
 	private int value;
 	//vector of incoming active interaction
-	private Vector edge_index;
+	private List edge_index;
 
-	private boolean isManual = true;
-	private boolean hasConflict = false;
+	protected boolean isDup = false;
+	protected boolean hasConflict = false;
 	
 	/**
 	 * Constructs an empty vector and set the value
 	 * 
 	 * @param v of the interaction
 	 */
-	public GsLogicalParameter(int v, boolean manual) {
+	public GsLogicalParameter(int v) {
 		value = v;
 		edge_index = new Vector();
-		isManual = manual;
 	}
 
 	/**
      * @param newEI
      * @param v
      */
-    public GsLogicalParameter(Vector newEI, int v, boolean manual) {
+    public GsLogicalParameter(Vector newEI, int v) {
         value = v;
         edge_index = newEI;
-		isManual = manual;
     }
 
     /**
@@ -70,7 +68,7 @@ public class GsLogicalParameter implements GsXMLize {
 	 * @param index
 	 */
 	public void addEdge(GsRegulatoryEdge edge) {
-		edge_index.addElement(edge);
+		edge_index.add(edge);
 	}
 	
 	public boolean isDurty() {
@@ -103,7 +101,7 @@ public class GsLogicalParameter implements GsXMLize {
 	/**
 	 * @return all the GsEdgeIndex
 	 */
-	public Vector getEdges() {
+	public List getEdges() {
 		return edge_index;
 	}
 
@@ -111,8 +109,8 @@ public class GsLogicalParameter implements GsXMLize {
 	 * Set the vector of GsEdgeIndex
 	 * @param vector
 	 */
-	public void setEdges(Vector vector) {
-		edge_index = vector;
+	public void setEdges(List list) {
+		edge_index = list;
 	}
 
     /**
@@ -252,7 +250,7 @@ public class GsLogicalParameter implements GsXMLize {
 		if (len != 0) {
 			String sEdges = "";
 			for (int i=0 ; i<len ; i++) {
-				GsRegulatoryEdge e = (GsRegulatoryEdge) edge_index.elementAt(i);
+				GsRegulatoryEdge e = (GsRegulatoryEdge) edge_index.get(i);
 				sEdges = sEdges + " " + e.getLongInfo("_");
 			}
     		out.addAttr("idActiveInteractions", sEdges);
@@ -265,7 +263,7 @@ public class GsLogicalParameter implements GsXMLize {
 		if (obj == null || !(obj instanceof GsLogicalParameter)) {
 			return false;
 		}
-		Vector o_edge = ((GsLogicalParameter)obj).edge_index;
+		List o_edge = ((GsLogicalParameter)obj).edge_index;
 		if (o_edge.size() != edge_index.size() || !o_edge.containsAll(edge_index)) {
 			return false;
 		}
@@ -289,7 +287,7 @@ public class GsLogicalParameter implements GsXMLize {
             }
         }
         if (newEI.size() != 0) {
-            clone.addLogicalParameter(new GsLogicalParameter(newEI, value, isManual));
+            clone.addLogicalParameter(new GsLogicalParameter(newEI, value), true);
         }
     }
     
@@ -297,7 +295,7 @@ public class GsLogicalParameter implements GsXMLize {
         if (edge_index.size() == 0) {
             return "(basal value)";
         }
-        String str = isManual ? "" : "(f) ";
+        String str = "";
         for (int i = 0; i < edge_index.size(); i++) {
             str += getEdge(i).getShortInfo("_") + " ";
         }

@@ -9,6 +9,7 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.LogicalParameterList;
 
 /**
  * This is the model behind the interaction editor
@@ -18,12 +19,11 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	private static final long serialVersionUID = -2093185924206743169L;
 
 	//the vector of interaction
-	private List interactions;
+	private LogicalParameterList interactions;
 
 	//the current selected node
 	private GsRegulatoryVertex node;
     private GsRegulatoryGraph graph;
-    private Vector v_ok;
 
     /**
      * default constructor
@@ -33,7 +33,6 @@ public class GsTableInteractionsModel extends AbstractTableModel {
      */
 	public GsTableInteractionsModel(GsRegulatoryGraph graph, Vector v_ok) {
 		super();
-        this.v_ok = v_ok;
 		this.interactions = null;
         this.graph = graph;
 	}
@@ -72,7 +71,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 */
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		//only the first column is editable, except on the last line
-		if (columnIndex == 0 && rowIndex < interactions.size()) {
+		if (columnIndex == 0 && rowIndex < interactions.getManualSize()) {
 		    return true;
 		}
 		return false;
@@ -109,7 +108,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 		if (interactions == null) {
 			return;
 		}
-        if (columnIndex == 0 && rowIndex >= 0 && rowIndex < interactions.size()) {
+        if (columnIndex == 0 && rowIndex >= 0 && rowIndex < interactions.getManualSize()) {
             //the first column
             int value = 1;
             if (aValue instanceof Integer) {
@@ -119,11 +118,9 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 				value = Integer.parseInt((String) aValue);
 			}
             if (value <= node.getMaxValue() && value >= 0) {
-				((GsLogicalParameter) interactions.get(rowIndex)).setValue(value, graph);
+				interactions.setParameterValue(rowIndex, value, graph);
 			}
             fireTableCellUpdated(rowIndex, columnIndex);
-        } else if (rowIndex >= interactions.size() && columnIndex == 0) {
-            // TODO: information message about basal value and how to set up parameters
 		}
 	}
 
@@ -137,13 +134,12 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 		return Translator.getString("STR_ActiveInteractionEdgeList");
 	}
 
-	/* ** custom model ** */
 	/**
 	 * get all interactions
 	 *
 	 * @return vector of interactions
 	 */
-	public List getInteractions() {
+	public LogicalParameterList getInteractions() {
 		return interactions;
 	}
 
@@ -153,9 +149,8 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 * @param row the row of the interaction, which will be removed
 	 */
 	public void removeInteractions(int row) {
-		if (row < interactions.size()) {
+		if (row < interactions.getManualSize()) {
 			interactions.remove(row);
-            v_ok.remove(row);
         }
 		fireTableRowsDeleted(row, row);
 	}
@@ -173,16 +168,6 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 			this.interactions = null;
 		}
 		fireTableDataChanged();
-        v_ok.clear();
-        for (int i=0 ; i<interactions.size() ; i++) {
-            if ( !((GsLogicalParameter)interactions.get(i)).activable(graph, node) ) {
-                v_ok.add(Boolean.FALSE);
-            } else {
-                v_ok.add(Boolean.TRUE);
-            }
-        }
-        // one more for the empty line
-        v_ok.add(Boolean.TRUE);
 	}
 
 	/**
@@ -191,7 +176,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 * @param row
 	 * @return the active(s) Edge(s) of the interaction at the row row.
 	 */
-	public Vector getActivesEdges(int row) {
+	public List getActivesEdges(int row) {
 		if (row > -1 && row < interactions.size()) {
 			return ((GsLogicalParameter) interactions.get(row)).getEdges();
 		}
@@ -215,15 +200,10 @@ public class GsTableInteractionsModel extends AbstractTableModel {
      */
     public void setActivesEdges(int row, Vector edgeIndex, int value) {
 		if (row >= interactions.size()) {
-			GsLogicalParameter inter = new GsLogicalParameter(value, true);
+			GsLogicalParameter inter = new GsLogicalParameter(value);
 			inter.setEdges(edgeIndex);
-			if (!node.addLogicalParameter(inter)) {
+			if (!node.addLogicalParameter(inter, true)) {
 			    return;
-            }
-            if (!inter.activable(graph, node) ) {
-                v_ok.add(v_ok.size()-1, Boolean.FALSE);
-            } else {
-                v_ok.add(v_ok.size()-1, Boolean.TRUE);
             }
 
 			fireTableCellUpdated(row, 0);
@@ -231,11 +211,6 @@ public class GsTableInteractionsModel extends AbstractTableModel {
             fireTableRowsInserted(row, row);
 		} else {
 		    node.updateInteraction(row, edgeIndex);
-            if ( !((GsLogicalParameter)interactions.get(row)).activable(graph, node) ) {
-                v_ok.set(row, Boolean.FALSE);
-            } else {
-                v_ok.set(row, Boolean.TRUE);
-            }
 			fireTableCellUpdated(row, 1);
 		}
 	}
@@ -249,7 +224,6 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 		for (int i = selectedrows.length - 1; i >= 0; i--) {
 			if (selectedrows[i] < interactions.size()) {
 				interactions.remove(selectedrows[i]);
-                v_ok.remove(selectedrows[i]);
             }
 		}
 		fireTableDataChanged();
@@ -259,13 +233,22 @@ public class GsTableInteractionsModel extends AbstractTableModel {
      * @param index
      * @param to
      */
-    public void moveElementAt(int index,int to) {
-        Object obj=interactions.remove(index);
-        interactions.add(to, obj);
+    public boolean moveElementAt(int index,int to) {
+    	if (!interactions.moveElement(index, to)) {
+    		return false;
+    	}
         if (index < to) {
             fireTableRowsUpdated(index, to);
         } else {
             fireTableRowsUpdated(to, index);
         }
+        return true;
     }
+
+	public GsLogicalParameter getParameter(int row) {
+		if (row < interactions.size()) {
+			return (GsLogicalParameter) interactions.get(row);
+		}
+		return null;
+	}
 }

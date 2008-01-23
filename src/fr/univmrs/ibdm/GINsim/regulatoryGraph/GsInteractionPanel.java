@@ -1,9 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
@@ -12,8 +9,8 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 
-import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicPathItemCellRenderer;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
@@ -48,6 +45,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	private GsIncomingEdgeListModel edgeList = null;
 	private GsTableInteractionsModel interactionList = null;
 	private GsRegulatoryGraph graph;
+	private LogicalParameterCellRenderer cellRenderer;
 
 	private JSplitPane jSplitPane = null;
 	private JPanel jPanel = null;
@@ -172,6 +170,7 @@ public class GsInteractionPanel extends GsParameterPanel
             currentVertex = (GsRegulatoryVertex)obj;
             edgeList.setEdge(graph.getGraphManager().getIncomingEdges(currentVertex));
             interactionList.setNode(currentVertex);
+            cellRenderer.setVertex(currentVertex);
             if (jTable.getSelectedRow() == -1) {
                 int i = interactionList.getRowCount();
                 jTable.getSelectionModel().setSelectionInterval(i, i);
@@ -192,7 +191,9 @@ public class GsInteractionPanel extends GsParameterPanel
             jTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
             jTable.getColumn(jTable.getColumnName(0)).setMaxWidth(50);
             jTable.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-            jTable.setDefaultRenderer(Object.class, new GsDynamicPathItemCellRenderer(v_ok));
+            this.cellRenderer = new LogicalParameterCellRenderer(graph, interactionList);
+            jTable.setDefaultRenderer(Object.class, cellRenderer);
+            jTable.setDefaultRenderer(Integer.class, cellRenderer);
             jTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
                 public void valueChanged(ListSelectionEvent e) {
                     selectLeft2Right();
@@ -349,7 +350,7 @@ public class GsInteractionPanel extends GsParameterPanel
         GsTableInteractionsModel model = (GsTableInteractionsModel)jTable.getModel();
         for (int i=index.length-1;i>=0;i--) {
             int a = index[i];
-            if (a<jTable.getRowCount()-2) {
+            if (a<model.getInteractions().getManualSize()-1) {
                 model.moveElementAt(a, a+1);
                 index[i]=a+1;
             } else {
@@ -382,22 +383,32 @@ public class GsInteractionPanel extends GsParameterPanel
 	 * and select the corresponding rows in the right list (jList)
 	 */
 	protected void selectLeft2Right() {
+		int sepIndex = interactionList.getInteractions().getManualSize();
         int[]t_selection = jTable.getSelectedRows();
-        if (t_selection == null || t_selection.length > 1 || t_selection.length == 0) {
+        boolean add = t_selection != null && t_selection.length == 1 ;
+        boolean edit = t_selection != null && t_selection.length > 0 &&
+        	t_selection[0] < sepIndex && t_selection[t_selection.length-1] < sepIndex;
+        boolean chaos = true;
+
+    	getJButton().setEnabled(edit);
+    	getUpButton().setEnabled(edit);
+    	getDownButton().setEnabled(edit);
+    	getChaosButton().setEnabled(chaos);
+    	if (add) {
+            getJButton2().setEnabled(true);
+            jList.setEnabled(true);
+    		List edges = interactionList.getActivesEdges(t_selection[0]);
+    		if (edges != null) {
+    			int[] indices = new int[edges.size()];
+    			for (int i=0 ; i<edges.size() ; i++) {
+    				indices[i] = edgeList.getIndex(((GsRegulatoryEdge)edges.get(i)));
+    			}
+    			jList.setSelectedIndices(indices);
+    		}
+    	} else {
             getJButton2().setEnabled(false);
             jList.setEnabled(false);
-            return;
-        }
-        getJButton2().setEnabled(true);
-        jList.setEnabled(true);
-		Vector edge = interactionList.getActivesEdges(t_selection[0]);
-		if (edge != null) {
-			int[] indices = new int[edge.size()];
-			for (int i=0 ; i<edge.size() ; i++) {
-				indices[i] = edgeList.getIndex(((GsRegulatoryEdge)edge.get(i)));
-			}
-			jList.setSelectedIndices(indices);
-		}
+    	}
 	}
 
 	/**
@@ -410,7 +421,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	    }
 		if (jTable.getSelectedRowCount()<=1) {
 			int selectedrow = jTable.getSelectedRow();
-            if (selectedrow == interactionList.getRowCount()-1) {
+            if (selectedrow >= interactionList.getInteractions().getManualSize()-1) {
                 selectedrow = -1;
             }
 			int[] indices=jList.getSelectedIndices();
@@ -464,6 +475,7 @@ public class GsInteractionPanel extends GsParameterPanel
     }
 
     protected void doChaos() {
+      // TODO: allow to "copy" a set of function-generated parameters in the manual section
       GsFunctionsCreator c = null;
       Vector v = new Vector();
       List interactions = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
@@ -513,4 +525,45 @@ public class GsInteractionPanel extends GsParameterPanel
 		initialize();
 		panel.addField(this, pinfo, 0);
 	}
+}
+
+class LogicalParameterCellRenderer extends DefaultTableCellRenderer {
+	private static final long	serialVersionUID	= -1799999900862412151L;
+
+	private GsTableInteractionsModel model;
+	private GsRegulatoryGraph graph;
+	private GsRegulatoryVertex	vertex;
+	
+	public LogicalParameterCellRenderer(GsRegulatoryGraph graph, GsTableInteractionsModel model) {
+		this.model = model;
+		this.graph = graph;
+	}
+
+	public void setVertex(GsRegulatoryVertex vertex) {
+		this.vertex = vertex;
+	}
+
+	public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+
+        Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
+        setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+    	if (column == 0) {
+    		if (row >= model.getInteractions().getManualSize() && row < model.getInteractions().size() ) {
+    			setBackground(isSelected ? Color.GRAY : Color.LIGHT_GRAY);
+    		}
+    	} else {
+	        GsLogicalParameter param = model.getParameter(row);
+	        if (param != null) {
+		        if (param.isDup) {
+		        	setBackground(isSelected ? Color.GRAY : Color.LIGHT_GRAY);
+		        } else if (param.hasConflict) {
+		        	setBackground(isSelected ? Color.PINK : Color.RED);
+ 		        } else if (!param.activable(graph, vertex)) {
+		        	setBackground(isSelected ? Color.PINK : Color.ORANGE);
+		        }
+	        }
+    	}
+        return cmp;
+    }
 }

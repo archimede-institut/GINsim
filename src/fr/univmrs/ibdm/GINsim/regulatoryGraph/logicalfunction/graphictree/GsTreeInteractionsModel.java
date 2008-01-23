@@ -21,7 +21,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTre
 
 public class GsTreeInteractionsModel implements TreeModel {
   //the vector of interaction
-  private List interactions;
 
   //the current selected node
   private GsRegulatoryVertex node;
@@ -34,7 +33,6 @@ public class GsTreeInteractionsModel implements TreeModel {
   public GsTreeInteractionsModel(GsRegulatoryGraph graph) {
     root = new GsTreeString(null, "Function list");
     root.setProperty("add", new Boolean(true));
-    interactions = null;
     this.graph = graph;
   }
   public void setView(GsLogicalFunctionTreePanel v) {
@@ -46,15 +44,9 @@ public class GsTreeInteractionsModel implements TreeModel {
   public void clear() {
     root = new GsTreeString(null, "Function list");
     root.setProperty("add", new Boolean(true));
-    interactions = null;
   }
   public void setNode(GsRegulatoryVertex no) {
     node = no;
-    if (node != null) {
-		interactions = node.getV_logicalParameters();
-	} else {
-		interactions = null;
-	}
   }
   public void removeEdge(GsRegulatoryMultiEdge multiEdge, int index) {
     GsTreeValue val;
@@ -120,9 +112,9 @@ public class GsTreeInteractionsModel implements TreeModel {
     }
   }
   public void setActivesEdges(Vector edgeIndex, int value) {
-    GsLogicalParameter inter = new GsLogicalParameter(value, false);
+    GsLogicalParameter inter = new GsLogicalParameter(value);
     inter.setEdges(edgeIndex);
-    node.addLogicalParameter(inter);
+    node.addLogicalParameter(inter, false);
     fireTreeStructureChanged(root);
   }
 
@@ -206,12 +198,12 @@ public class GsTreeInteractionsModel implements TreeModel {
     currentVertex.setInteractionsModel(this);
   }
   public boolean isBasalValueDefined() {
-    Vector parameters = getLogicalParameters();
+    List parameters = getLogicalParameters();
     GsLogicalParameter p;
     boolean b = false;
 
-    for (Enumeration enu = parameters.elements(); enu.hasMoreElements(); ) {
-      p = (GsLogicalParameter)enu.nextElement();
+    for (Iterator enu = parameters.iterator(); enu.hasNext(); ) {
+      p = (GsLogicalParameter)enu.next();
       b |= p.EdgeCount() == 0;
     }
     return b;
@@ -357,13 +349,14 @@ public class GsTreeInteractionsModel implements TreeModel {
       root.setProperty("add", new Boolean(!dis));
     }
   }
-  public Vector getLogicalParameters() {
-    Vector v = new Vector();
-    Vector v2 = new Vector();
+  public List getLogicalParameters() {
+    List v = new ArrayList();
+    List v2 = new ArrayList();
     GsLogicalParameter p;
     GsTreeValue val;
     GsTreeElement exp;
     GsTreeParam param;
+    v.clear();
 
     for (int i = 0; i < root.getChildCount(); i++) {
       val = (GsTreeValue)root.getChild(i);
@@ -372,13 +365,13 @@ public class GsTreeInteractionsModel implements TreeModel {
         for (int k = 0; k < exp.getChildCount(); k++) {
           param = (GsTreeParam)exp.getChild(k);
           if (!param.isError()) {
-            p = new GsLogicalParameter(val.getValue(), false);
+            p = new GsLogicalParameter(val.getValue());
             p.setEdges(param.getEdgeIndexes());
             if (!(param.isWarning() && v2.contains(p.toString()))) {
-				v.addElement(p);
+				v.add(p);
 			}
             if (param.isWarning()) {
-				v2.addElement(p.toString());
+				v2.add(p.toString());
 			}
           }
         }

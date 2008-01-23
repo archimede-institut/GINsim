@@ -525,7 +525,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
     GsLogicalParameter lp;
 
     for (int i = 0; i < params.length; i++) {
-      lp = new GsLogicalParameter(value, false);
+      lp = new GsLogicalParameter(value);
       lp.setEdges(((GsTreeParam) params[i]).getEdgeIndexes());
       v.addElement(lp);
     }

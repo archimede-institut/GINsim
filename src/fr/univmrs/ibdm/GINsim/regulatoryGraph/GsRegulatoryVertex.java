@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -35,7 +36,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 
 	private short 			maxValue;
-	private List 			v_logicalParameters;
+	private final LogicalParameterList v_logicalParameters;
 
 	private String 			name;
 	private Annotation	gsa;
@@ -59,7 +60,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		name			= "";
 		maxValue 		= 1;
 		gsa				= new Annotation();
-		v_logicalParameters 	= new Vector();
+		v_logicalParameters 	= new LogicalParameterList();
 		this.id = id;
 		this.graph = graph;
 		interactionsModel = new GsTreeInteractionsModel(graph);
@@ -73,7 +74,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		name			= "";
 		maxValue 		= 1;
 		gsa				= new Annotation();
-		v_logicalParameters 	= new Vector();
+		v_logicalParameters 	= new LogicalParameterList();
 		this.id = "G"+num;
 		this.graph = graph;
 		interactionsModel = new GsTreeInteractionsModel(graph);
@@ -102,12 +103,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	    	maxValue = max;
 	    	if (oldmax > maxValue) {
 	    		s += graph.applyNewMaxValue(this);
-	    		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
-	    			GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(i);
-	    			if (gsi.getValue() > maxValue) {
-	    				gsi.setValue(maxValue, graph);
-	    				s += Translator.getString("STR_parameter_value_sup_max\n");
-	    			}
+	    		if (v_logicalParameters.applyNewMaxValue(max, graph)) {
+	    			s += Translator.getString("STR_parameter_value_sup_max\n");
 	    		}
 	    	}
 	    	if (!"".equals(s)) {
@@ -141,14 +138,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @param I
 	 * @return true if the logical parameter has been added
 	 */
-	public boolean addLogicalParameter (GsLogicalParameter I) {
-		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
-			if (v_logicalParameters.get(i).equals(I)) {
-				return false;
-			}
-		}
-		v_logicalParameters.add(I);
-        return true;
+	public boolean addLogicalParameter (GsLogicalParameter I, boolean manual) {
+		return v_logicalParameters.addLogicalParameter(I, manual);
 	}
 
 	/**
@@ -183,15 +174,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @param edges
 	 */
 	public void updateInteraction(int index, Vector edges) {
-	    GsLogicalParameter I = (GsLogicalParameter)v_logicalParameters.get(index);
-	    Vector oldList = I.getEdges();
-	    I.setEdges(edges);
-		for (int i=0 ; i<v_logicalParameters.size() ; i++) {
-			if ( i!= index && v_logicalParameters.get(i).equals(I)) {
-			    I.setEdges(oldList);
-				return;
-			}
-		}
+		v_logicalParameters.updateInteraction(index, edges);
 	}
 
 	/**
@@ -199,7 +182,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * @return the number of user defined interactions on this node
 	 */
 	public int interactionCount() {
-		return v_logicalParameters.size();
+		return v_logicalParameters.getRealSize();
 	}
 
 	/**
@@ -231,7 +214,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	/**
 	 * @return the list of all interactions on this gene.
 	 */
-	public List getV_logicalParameters() {
+	public LogicalParameterList getV_logicalParameters() {
 		return v_logicalParameters;
 	}
 
@@ -245,8 +228,9 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         OmddNode root;
         root = OmddNode.TERMINALS[0];
         OmddNode curNode;
-        for (int j=0 ; j<v_logicalParameters.size() ; j++) {
-            GsLogicalParameter gsi = (GsLogicalParameter)v_logicalParameters.get(j);
+        Iterator it = v_logicalParameters.iterator();
+        while (it.hasNext()) {
+            GsLogicalParameter gsi = (GsLogicalParameter)it.next();
             curNode = gsi.buildTree(graph, this);
             if (curNode != null) {
                 root = root.merge(curNode, OmddNode.OR);
@@ -271,8 +255,9 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		    out.addAttr("maxvalue", ""+maxValue);
 
 			// TODO: at some point stop saving logical parameters
-			for (int i = 0; i < v_logicalParameters.size(); i++) {
-				((GsLogicalParameter) v_logicalParameters.get(i)).toXML(out, null, mode);
+		    Iterator it = v_logicalParameters.iterator();
+		    while (it.hasNext()) {
+				((GsLogicalParameter) it.next()).toXML(out, null, mode);
 			}
 			// save logical functions
 			saveInteractionsModel(out, mode);
@@ -300,14 +285,6 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 		gsa = annotation;
 	}
 
-	/**
-	 * Set the interactions vector.
-	 * @param vector
-	 */
-	public void setV_logicalParameters(Vector vector) {
-		v_logicalParameters = vector;
-	}
-
 	public Object clone() {
 		GsRegulatoryVertex clone = new GsRegulatoryVertex(id, graph);
 		clone.maxValue = maxValue;
@@ -320,11 +297,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 * update logical parameters when an interaction is deleted.
 	 */
 	public void cleanupInteraction() {
-		for (int i=v_logicalParameters.size()-1 ; i>=0 ; i--) {
-			if (((GsLogicalParameter)v_logicalParameters.get(i)).isDurty()) {
-				v_logicalParameters.remove(i);
-			}
-		}
+		v_logicalParameters.cleanupInteraction();
 	}
 
 
@@ -360,16 +333,16 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
      */
     public void cleanupInteractionForNewGraph(Map copyMap) {
         GsRegulatoryVertex myClone = (GsRegulatoryVertex) copyMap.get(this);
-        for (int i=0 ; i<v_logicalParameters.size() ; i++) {
-            ((GsLogicalParameter)v_logicalParameters.get(i)).applyNewGraph(myClone, copyMap);
+        Iterator it = v_logicalParameters.iterator();
+        while (it.hasNext()) {
+            ((GsLogicalParameter)it.next()).applyNewGraph(myClone, copyMap);
             // TODO: copy the logical functions as well
         }
     }
 
     public void setInteractionsModel(GsTreeInteractionsModel model) {
       interactionsModel = model;
-      // FIXME: do something here
-      v_logicalParameters = interactionsModel.getLogicalParameters();
+      v_logicalParameters.setFunctionParameters(interactionsModel.getLogicalParameters());
     }
 
     public GsTreeInteractionsModel getInteractionsModel() {
@@ -447,7 +420,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 				}
 			}
 			
-			addLogicalParameter(new GsLogicalParameter(v, value, true));
+			addLogicalParameter(new GsLogicalParameter(v, value), true);
 
 			// stop if no free value was found
 			if (lastIndex == -1) {
