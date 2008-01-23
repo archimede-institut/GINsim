@@ -2,7 +2,6 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.util.*;
 
-
 public class LogicalParameterList extends AbstractList implements List {
 
 	private List fromFunctions = new ArrayList();

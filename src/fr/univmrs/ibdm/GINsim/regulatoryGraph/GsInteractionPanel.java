@@ -560,7 +560,7 @@ class LogicalParameterCellRenderer extends DefaultTableCellRenderer {
 		        } else if (param.hasConflict) {
 		        	setBackground(isSelected ? Color.PINK : Color.RED);
  		        } else if (!param.activable(graph, vertex)) {
-		        	setBackground(isSelected ? Color.PINK : Color.ORANGE);
+		        	setBackground(isSelected ? Color.ORANGE : Color.ORANGE);
 		        }
 	        }
     	}

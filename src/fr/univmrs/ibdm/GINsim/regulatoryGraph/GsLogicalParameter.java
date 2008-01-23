@@ -286,9 +286,7 @@ public class GsLogicalParameter implements GsXMLize {
                 return;
             }
         }
-        if (newEI.size() != 0) {
-            clone.addLogicalParameter(new GsLogicalParameter(newEI, value), true);
-        }
+        clone.addLogicalParameter(new GsLogicalParameter(newEI, value), true);
     }
     
     public String toString() {
