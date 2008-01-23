@@ -25,6 +25,7 @@ public class ModelSimplifierConfigDialog extends StackDialog {
 
 	GsRegulatoryGraph graph;
 	GenericListPanel lp;
+	boolean isRunning = false;
 	
 	ModelSimplifierConfigDialog(GsRegulatoryGraph graph) {
 		super(graph.getGraphManager().getMainFrame(), "modelSimplifier", 600, 500);
@@ -47,18 +48,21 @@ public class ModelSimplifierConfigDialog extends StackDialog {
 	}
 	
 	protected void run() {
-		if (lp.getSelectedItem() != null) {
+		if (!isRunning && lp.getSelectedItem() != null) {
+			isRunning = true;
 			new ModelSimplifier(graph, (ModelSimplifierConfig)lp.getSelectedItem(), this);
+		} else {
 		}
 	}
 	
-    public void endSimu(GsGraph graph) {
+    public void endSimu(GsGraph graph, Exception e) {
+    	isRunning = false;
         if (null == graph) {
-            GsEnv.error("no state transition graph", this.graph.getGraphManager().getMainFrame());
+            GsEnv.error(e.getMessage(), this.graph.getGraphManager().getMainFrame());
         } else {
             GsEnv.whatToDoWithGraph(this.graph.getGraphManager().getMainFrame(), graph, false);
+            cancel();
         }
-        cancel();
     }
 }
 
