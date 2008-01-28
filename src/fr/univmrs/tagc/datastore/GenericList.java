@@ -24,6 +24,7 @@ abstract public class GenericList {
 	protected Class[] t_type = null;
 	protected Map m_editor = null;
 	
+	public MultiColHelper mcolHelper = null;
 	protected Vector v_listeners = new Vector();
 	
 	

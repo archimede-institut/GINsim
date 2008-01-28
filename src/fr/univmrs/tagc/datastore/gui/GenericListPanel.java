@@ -459,6 +459,9 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
         	return b;
         }
         Object o = list.getElement(filter, row);
+        if (list.mcolHelper != null) {
+        	return list.mcolHelper.getVal(o, col-list.nbAction);
+        }
         if (o instanceof MultiColObject) {
     		return ((MultiColObject)o).getVal(col-list.nbAction);
         }

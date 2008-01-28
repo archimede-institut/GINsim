@@ -132,6 +132,9 @@ public class SimpleGenericList extends GenericList {
 			return true;
 		}
 		Object data = v_data.get(index);
+		if (mcolHelper != null) {
+			return mcolHelper.setVal(data, col, o);
+		}
 		if (data instanceof MultiColObject) {
 			return ((MultiColObject)data).setVal(col, o);
 		}

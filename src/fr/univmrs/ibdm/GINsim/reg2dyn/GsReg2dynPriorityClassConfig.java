@@ -131,7 +131,6 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
 	    c.gridwidth = 3;
         c.fill = GridBagConstraints.HORIZONTAL;
         targetpanel.add(getCb_auto(), c);
-
     }
     
     protected GenericListPanel getContentPanel() {

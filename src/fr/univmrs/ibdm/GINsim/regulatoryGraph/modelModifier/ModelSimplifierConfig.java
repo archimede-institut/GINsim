@@ -8,10 +8,11 @@ import java.util.HashMap;
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.tagc.datastore.MultiColHelper;
 import fr.univmrs.tagc.datastore.NamedObject;
 
 
-public class ModelSimplifierConfig implements NamedObject, GsXMLize {
+public class ModelSimplifierConfig implements NamedObject, GsXMLize, MultiColHelper {
 	String name;
 	Annotation note = new Annotation();
 	Map m_removed = new HashMap();
@@ -42,5 +43,23 @@ public class ModelSimplifierConfig implements NamedObject, GsXMLize {
 		out.addAttr("removeList", s_removed.substring(1));
 		note.toXML(out, param, mode);
 		out.closeTag();
+	}
+	
+	public Object getVal(Object o, int index) {
+		if (index == 1) {
+			return m_removed.containsKey(o) ? Boolean.TRUE : Boolean.FALSE;
+		}
+		return o;
+	}
+	public boolean setVal(Object o, int index, Object value) {
+		if (index == 1) {
+			if (value.equals(Boolean.TRUE)) {
+				m_removed.put(o, null);
+			} else {
+				m_removed.remove(o);
+			}
+			return true;
+		}
+		return false;
 	}
 }
