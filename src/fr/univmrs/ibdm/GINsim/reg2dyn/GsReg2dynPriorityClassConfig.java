@@ -62,7 +62,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
      * @param param
      */
     public GsReg2dynPriorityClassConfig(Vector nodeOrder) {
-    	super(new HashMap());
+    	super(new HashMap(), "pclassConfig");
         this.v_nodeOrder = nodeOrder;
         initialize();
         contentList.setData(v_content);

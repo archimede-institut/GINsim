@@ -21,6 +21,7 @@ import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.SplitPane;
 import fr.univmrs.tagc.widgets.StockButton;
 
 /**
@@ -37,8 +38,8 @@ public class GsInteractionPanel extends GsParameterPanel
 	private JScrollPane jScrollPane = null;
 	private JList jList = null;
 	private JScrollPane jScrollPane1 = null;
-    private JButton jButton = null;
-    private JButton jButton2 = null;
+    private JButton but_remove = null;
+    private JButton but_addParameter = null;
     private JButton upButton = null;
     private JButton downButton = null;
 
@@ -89,13 +90,11 @@ public class GsInteractionPanel extends GsParameterPanel
 	 */
 	private Component getJSplitPane() {
 		if (jSplitPane == null) {
-			jSplitPane = new JSplitPane();
-			jSplitPane.setName("jSplitPane");
-			jSplitPane.setDividerSize(2);
+			jSplitPane = new SplitPane();
 			jSplitPane.setResizeWeight(1);
 			jSplitPane.setLeftComponent(getJPanel());
 			jSplitPane.setRightComponent(getJScrollPane1());
-			jSplitPane.setDividerLocation(380);
+			jSplitPane.setName("logicalParametersPanel");
 		}
 		return jSplitPane;
 	}
@@ -143,8 +142,8 @@ public class GsInteractionPanel extends GsParameterPanel
             c_down.gridy = 4;
 
 			jPanel.add(getJScrollPane(), gridBagConstraints7);
-            jPanel.add(getJButton2(), gridBagConstraints8);
-            jPanel.add(getJButton(), gridBagConstraints10);
+            jPanel.add(getButAddParameter(), gridBagConstraints8);
+            jPanel.add(getButRemove(), gridBagConstraints10);
             jPanel.add(getUpButton(), c_up);
             jPanel.add(getDownButton(), c_down);
 
@@ -248,32 +247,32 @@ public class GsInteractionPanel extends GsParameterPanel
 	 *
 	 * @return javax.swing.JButton
 	 */
-	private JButton getJButton() {
-		if (jButton == null) {
-			jButton = new StockButton("list-remove.png", true);
-			jButton.addActionListener(new java.awt.event.ActionListener() {
+	private JButton getButRemove() {
+		if (but_remove == null) {
+			but_remove = new StockButton("list-remove.png", true);
+			but_remove.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
-					deleteInteraction();
+					deleteParameter();
 				}
 			});
 		}
-		return jButton;
+		return but_remove;
 	}
 	/**
 	 * This method initializes jButton2
 	 *
 	 * @return javax.swing.JButton
 	 */
-	private JButton getJButton2() {
-		if (jButton2 == null) {
-			jButton2 = new StockButton("go-previous.png", true);
-			jButton2.addActionListener(new java.awt.event.ActionListener() {
+	private JButton getButAddParameter() {
+		if (but_addParameter == null) {
+			but_addParameter = new StockButton("go-previous.png", true);
+			but_addParameter.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent e) {
 					insertRight2Left();
 				}
 			});
 		}
-		return jButton2;
+		return but_addParameter;
 	}
 
     /**
@@ -390,12 +389,12 @@ public class GsInteractionPanel extends GsParameterPanel
         	t_selection[0] < sepIndex && t_selection[t_selection.length-1] < sepIndex;
         boolean chaos = true;
 
-    	getJButton().setEnabled(edit);
+    	getButRemove().setEnabled(edit);
     	getUpButton().setEnabled(edit);
     	getDownButton().setEnabled(edit);
     	getChaosButton().setEnabled(chaos);
     	if (add) {
-            getJButton2().setEnabled(true);
+            getButAddParameter().setEnabled(true);
             jList.setEnabled(true);
     		List edges = interactionList.getActivesEdges(t_selection[0]);
     		if (edges != null) {
@@ -406,7 +405,7 @@ public class GsInteractionPanel extends GsParameterPanel
     			jList.setSelectedIndices(indices);
     		}
     	} else {
-            getJButton2().setEnabled(false);
+            getButAddParameter().setEnabled(false);
             jList.setEnabled(false);
     	}
 	}
@@ -449,7 +448,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	/**
 	 * delete the selected row in the table
 	 */
-	protected void deleteInteraction() {
+	protected void deleteParameter() {
 	    if (!graph.isEditAllowed()) {
 	        return;
 	    }

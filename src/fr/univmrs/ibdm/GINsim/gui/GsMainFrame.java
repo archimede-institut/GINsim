@@ -19,6 +19,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.Gs
 import fr.univmrs.ibdm.GINsim.util.widget.GsFrame;
 import fr.univmrs.tagc.datastore.ObjectEditor;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
+import fr.univmrs.tagc.widgets.SplitPane;
 
 /**
  * GINsim's main frame
@@ -127,12 +128,13 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 	 */
 	private JSplitPane getJSplitPane() {
 		if (jSplitPane == null) {
-			jSplitPane = new JSplitPane();
+			jSplitPane = new SplitPane();
 			jSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 			jSplitPane.setTopComponent(getGraphPanel());
-			jSplitPane.setDividerSize(4);
 			jSplitPane.setBottomComponent(getJSplitPane1());
 			jSplitPane.setResizeWeight(1.0D);
+			jSplitPane.setName("mainFrameSeparator");
+			jSplitPane.setOneTouchExpandable(true);
 		}
 		return jSplitPane;
 	}
@@ -253,11 +255,12 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 	 */
 	private JSplitPane getJSplitPane1() {
 		if (jSplitPane1 == null) {
-			jSplitPane1 = new JSplitPane();
+			jSplitPane1 = new SplitPane();
 			jSplitPane1.setLeftComponent(getJTabbedPane());
 			jSplitPane1.setRightComponent(getGsGraphMapPanel());
 			jSplitPane1.setDividerSize(2);
 			jSplitPane1.setResizeWeight(0.7);
+			jSplitPane1.setName("mapSeparator");
 		}
 		return jSplitPane1;
 	}
@@ -510,7 +513,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 			//create second frame
 			secondaryFrame=new JDialog(this);
 			secondaryFrame.setTitle(Translator.getString("STR_Tools"));
-			//detach commponent from SplitPane_H
+			//detach component from SplitPane_H
 			jSplitPane.setBottomComponent(null);
 			//set tools in ContentPane
 			secondaryFrame.setContentPane(jSplitPane1);

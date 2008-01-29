@@ -23,7 +23,7 @@ public class SpinEditor implements ObjectPropertyEditorUI {
 			GenericPropertyHolder panel) {
 		this.model = (SpinModel)pinfo.data;
 		this.pinfo = pinfo;
-		panel.addField(new JLabel(model.getName()), pinfo, 0);
+		panel.addField(new JLabel(pinfo.name), pinfo, 0);
 		panel.addField(new JSpinner(model), pinfo, 1);
 	}
 }

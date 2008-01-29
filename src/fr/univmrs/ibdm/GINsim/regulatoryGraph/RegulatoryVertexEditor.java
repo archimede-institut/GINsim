@@ -39,7 +39,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		v_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_NAME, Translator.getString("STR_name"), String.class);
 		v_prop.add(pinfo);
-		pinfo = new GenericPropertyInfo(this, PROP_RAW, null, SpinModel.class);
+		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_max"), SpinModel.class);
 		pinfo.data = new VertexMaxValueSpinModel(graph);
 		pinfo.addPosition(0,3);
 		pinfo.addPosition(1, 3);

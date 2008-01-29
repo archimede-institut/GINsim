@@ -18,6 +18,7 @@ import javax.swing.table.TableCellEditor;
 
 import fr.univmrs.tagc.datastore.*;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.SplitPane;
 import fr.univmrs.tagc.widgets.StatusTextField;
 import fr.univmrs.tagc.widgets.StockButton;
 
@@ -54,15 +55,15 @@ public class GenericListPanel extends JPanel
 	private GenericPropertyInfo	pinfo;
     
     public GenericListPanel() {
-    	this(null);
+    	this(null, null);
     }
-    public GenericListPanel(Map m_right) {
+    public GenericListPanel(Map m_right, String name) {
     	jl.addActionListener(model);
     	jl.getSelectionModel().addListSelectionListener(this);
     	targetpanel = this;
     	if (m_right != null) {
     		setLayout(new GridLayout());
-    		JSplitPane split = new JSplitPane();
+    		JSplitPane split = new SplitPane();
     		targetpanel = new JPanel();
     		p_right = new JPanel();
     		cards = new CardLayout();
@@ -77,7 +78,7 @@ public class GenericListPanel extends JPanel
     		split.setRightComponent(p_right);
     		split.setLeftComponent(targetpanel);
     		this.add(split);
-    		split.setDividerLocation(150);
+    		split.setName(name+".split");
     	}
         targetpanel .setLayout(new GridBagLayout());
         sp.setViewportView(jl);

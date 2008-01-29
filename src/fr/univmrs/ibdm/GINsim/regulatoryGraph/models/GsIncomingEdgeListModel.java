@@ -67,7 +67,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 		if (edge==null) {
 			return null; //no data
 		}
-		int j=0; 
+		int j=0;
 		for (int i=0;i<edge.size();i++) {
 			//for each incoming edge
 			Object obj=edge.get(i);

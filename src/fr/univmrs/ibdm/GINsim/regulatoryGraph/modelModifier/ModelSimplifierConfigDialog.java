@@ -37,7 +37,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
         panel.setList(ctlist);
         Map m = new HashMap();
         m.put(ModelSimplifierConfig.class, panel);
-        lp = new GenericListPanel(m);
+        lp = new GenericListPanel(m, "modelSimplifier");
         lp.addSelectionListener(this);
         lp.setList(cfgList);
 		setMainPanel(lp);
