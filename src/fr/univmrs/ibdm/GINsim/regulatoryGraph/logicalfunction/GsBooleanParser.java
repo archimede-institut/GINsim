@@ -1,24 +1,23 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
+import java.util.*;
 
-import java.util.List;
-import java.util.Vector;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import java.util.Iterator;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import java.util.ArrayList;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
+import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
-import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
-import java.util.Hashtable;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
 
 public class GsBooleanParser extends TBooleanParser {
   private Hashtable operandList;
   private static String returnClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList";
   private static String operandClassName = "fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene";
   private Object[] allParams;
+  private GsRegulatoryGraph graph;
+private GsRegulatoryVertex	vertex;
 
   public GsBooleanParser(List edgesList) throws ClassNotFoundException {
     super(returnClassName, operandClassName);
@@ -40,8 +39,9 @@ public class GsBooleanParser extends TBooleanParser {
         re = (GsRegulatoryEdge) o;
         source = re.me.getSource();
         v.addElement(source.getId());
-        for (int i = 0; i < re.me.getEdgeCount(); i++)
-          v.addElement(re.me.getEdge(i).getShortInfo("#"));
+        for (int i = 0; i < re.me.getEdgeCount(); i++) {
+			v.addElement(re.me.getEdge(i).getShortInfo("#"));
+		}
       }
       else if (o instanceof GsDirectedEdge) {
         e = (GsDirectedEdge) o;
@@ -53,7 +53,7 @@ public class GsBooleanParser extends TBooleanParser {
         v.addElement(source.getId());
       }
     }
-    return (v.containsAll(list));
+    return v.containsAll(list);
   }
   protected void setAllData(List edgesList) {
     Iterator it = edgesList.iterator();
@@ -75,8 +75,9 @@ public class GsBooleanParser extends TBooleanParser {
       n = ((GsRegulatoryMultiEdge)e.getUserObject()).getEdgeCount();
       F[i] = new ArrayList(n + 1);
       F[i].add(new GsLogicalFunctionListElement(null, -1));
-      for (int k = 0; k < n; k++)
-        F[i].add(new GsLogicalFunctionListElement((GsRegulatoryMultiEdge)e.getUserObject(), k + 1));
+      for (int k = 0; k < n; k++) {
+		F[i].add(new GsLogicalFunctionListElement((GsRegulatoryMultiEdge)e.getUserObject(), k + 1));
+	}
       N[i] = n;
       K[i] = 0;
       p *= n + 1;
@@ -86,31 +87,36 @@ public class GsBooleanParser extends TBooleanParser {
     for (i = 1; i <= p; i++) {
       for (j = edgesList.size() - 1; j >= 0; j--) {
         K[j]++;
-        if (K[j] > N[j])
-          K[j] = 0;
-        else
-          break;
+        if (K[j] > N[j]) {
+			K[j] = 0;
+		} else {
+			break;
+		}
       }
       if (j >= 0) {
         L = new Vector();
-        for (j = 0; j < edgesList.size(); j++)
-          if (!((GsLogicalFunctionListElement) F[j].get(K[j])).toString().equals(""))
-            L.addElement(F[j].get(K[j]));
+        for (j = 0; j < edgesList.size(); j++) {
+			if (!((GsLogicalFunctionListElement) F[j].get(K[j])).toString().equals("")) {
+				L.addElement(F[j].get(K[j]));
+			}
+		}
         v.addElement(L);
-      }
-      else
-        break;
+      } else {
+		break;
+	}
     }
     allParams = v.toArray();
     allData = new Vector();
-    for (i = 0; i < allParams.length; i++)
+    for (i = 0; i < allParams.length; i++) {
       allData.addElement(new Integer(i));
+    }
   }
 
   public Vector getParams(Vector indexes) {
     Vector v = new Vector();
-    for (Iterator it = indexes.iterator(); it.hasNext(); )
-      v.addElement(allParams[((Integer)it.next()).intValue()]);
+    for (Iterator it = indexes.iterator(); it.hasNext(); ) {
+		v.addElement(allParams[((Integer)it.next()).intValue()]);
+	}
     return v;
   }
   public Object[] getAllParams() {
@@ -131,10 +137,11 @@ public class GsBooleanParser extends TBooleanParser {
       operandList.put(source, source.getId());
       for (int i = 0; i < me.getEdgeCount(); i++) {
         re = me.getEdge(i);
-        if (me.getEdgeCount() > 1)
-          operandList.put(re/*.getShortInfo("#")*/, re.getShortDetail("_"));
-        else
-          operandList.put(e/*.getId() + "#" + (i + 1)*/, re.getShortDetail("_"));
+        if (me.getEdgeCount() > 1) {
+			operandList.put(re/*.getShortInfo("#")*/, re.getShortDetail("_"));
+		} else {
+			operandList.put(e/*.getId() + "#" + (i + 1)*/, re.getShortDetail("_"));
+		}
       }
     }
   }
@@ -152,5 +159,60 @@ public class GsBooleanParser extends TBooleanParser {
   }
   public void setRoot(TBooleanTreeNode root) {
     this.root = root;
+  }
+  
+  public boolean compile(String v, GsRegulatoryGraph graph, GsRegulatoryVertex vertex) {
+	  this.graph = graph;
+	  this.vertex = vertex;
+	  try {
+		  return super.compile(v);
+	  } catch (Exception e) {
+		  if (e instanceof GsException) {
+			  System.out.println("working");
+		  }
+		  e.printStackTrace();
+		  return false;
+	  }
+  }
+  public GsRegulatoryEdge getEdge(String value) throws GsException {
+	  String nodeID;
+	  int edgeTh = value.indexOf("#");
+	  if (edgeTh != -1) {
+		  int i = value.lastIndexOf("#");
+		  if (edgeTh != i) {
+			  throw new GsException(GsException.GRAVITY_ERROR, "invalid identifier: "+value);
+		  }
+		  nodeID = value.substring(0, i);
+		  try {
+			  edgeTh = Integer.parseInt(value.substring(i+1));
+		  } catch (Exception e) {
+			  throw new GsException(GsException.GRAVITY_ERROR, "invalid edge threshold in "+value);
+		  }
+	  } else {
+		  nodeID = value;
+	  }
+	  Iterator it = graph.getNodeOrder().iterator();
+	  GsRegulatoryVertex vertex = null;
+	  boolean found = false;
+	  while (it.hasNext()) {
+		  vertex = (GsRegulatoryVertex)it.next();
+		  if (vertex.getId().equals(nodeID)) {
+			  found = true;
+			  break;
+		  }
+	  }
+	  if (!found) {
+		  throw new GsException(GsException.GRAVITY_NORMAL, "no such node");
+	  }
+	  GsDirectedEdge de = (GsDirectedEdge)graph.getGraphManager().getEdge(vertex, this.vertex);
+	  GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)de.getUserObject();
+	  if (edgeTh != -1) {
+		  GsRegulatoryEdge edge = me.getEdgeForThreshold(edgeTh);
+		  if (edge == null) {
+			  throw new GsException(GsException.GRAVITY_NORMAL, "no such edge threshold");
+		  }
+		  return edge;
+	  }
+	  return me.getEdge(0);
   }
 }

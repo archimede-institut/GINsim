@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import java.util.Vector;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
@@ -8,7 +8,7 @@ import fr.univmrs.tagc.datastore.SimpleGenericList;
 
 public class PriorityClassManager extends SimpleGenericList {
 
-	Vector nodeOrder;
+	List nodeOrder;
 	
 	public PriorityClassManager(GsRegulatoryGraph graph) {
 		this.nodeOrder = graph.getNodeOrder();

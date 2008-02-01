@@ -1,8 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -12,7 +13,7 @@ public class GsInitialState implements NamedObject {
 	String name;
 	Map m = new HashMap();
 	
-	public void setData(String[] t_s, Vector nodeOrder) {
+	public void setData(String[] t_s, List nodeOrder) {
         for (int i=0 ; i<t_s.length ; i++) {
             GsRegulatoryVertex vertex = null;
             String[] t_val = t_s[i].split(";");
@@ -24,7 +25,7 @@ public class GsInitialState implements NamedObject {
                     }
                 }
                 if (vertex != null) {
-                    Vector v_val = new Vector();
+                	List v_val = new ArrayList();
                     for (int j=1 ; j<t_val.length ; j++) {
                         try {
                         	int v = Integer.parseInt(t_val[j]);

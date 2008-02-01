@@ -137,7 +137,9 @@ public class GsJgraphtGraphManager extends GsGraphManager {
     }
 
     public void placeVertex( Object vertex, int x, int y ) {
-        if (!visible) return;
+        if (!visible) {
+			return;
+		}
         DefaultGraphCell cell   = m_jgAdapter.getVertexCell( vertex );
         AttributeMap     attr   = cell.getAttributes();
         Rectangle2D      bounds = GraphConstants.getBounds( attr );
@@ -521,7 +523,12 @@ public class GsJgraphtGraphManager extends GsGraphManager {
             return;
         }
         if (obj instanceof GsDirectedEdge) {
-            jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)obj));
+        	if (obj instanceof Edge) {
+                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)obj));
+			} else {
+				GsDirectedEdge de = (GsDirectedEdge)obj;
+				jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)getEdge(de.getSourceVertex(), de.getTargetVertex())));
+			}
         } else {
             jgraph.addSelectionCell(m_jgAdapter.getVertexCell(obj));
         }

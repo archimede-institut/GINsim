@@ -5,10 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -40,7 +37,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	private GsRegulatoryGraphOptionPanel optionPanel;
 
-    protected Vector v_stables = new Vector();
+    protected List v_stables = new Vector();
     private ObjectEditor graphEditor = null;
     private GsParameterPanel vertexPanel = null;
     private GsParameterPanel edgePanel;
@@ -49,9 +46,9 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 * create a new GsDynamicGraph.
 	 * @param regGraph
 	 */
-	public GsDynamicGraph(Vector nodeOrder) {
+	public GsDynamicGraph(List nodeOrder) {
 	    this((String)null);
-	    this.nodeOrder = (Vector)nodeOrder.clone();
+	    this.nodeOrder = new ArrayList(nodeOrder);
 	}
     protected String getGraphZipName() {
     	return zip_mainEntry;
@@ -313,28 +310,28 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 		}
 		return optionPanel;
 	}
-	public Vector getSpecificLayout() {
+	public List getSpecificLayout() {
 		return GsDynamicGraphDescriptor.getLayout();
 	}
-	public Vector getSpecificExport() {
+	public List getSpecificExport() {
 		return GsDynamicGraphDescriptor.getExport();
 	}
-    public Vector getSpecificAction() {
+    public List getSpecificAction() {
         return GsDynamicGraphDescriptor.getAction();
     }
-    public Vector getSpecificObjectManager() {
+    public List getSpecificObjectManager() {
         return GsDynamicGraphDescriptor.getObjectManager();
     }
     protected GsGraph getCopiedGraph() {
         return null;
     }
-    protected Vector doMerge(GsGraph otherGraph) {
+    protected List doMerge(GsGraph otherGraph) {
 
         // first check if this merge is allowed!
         if (!(otherGraph instanceof GsDynamicGraph)) {
             return null;
         }
-        Vector v_order = ((GsDynamicGraph)otherGraph).nodeOrder;
+        List v_order = ((GsDynamicGraph)otherGraph).nodeOrder;
         if (v_order.size() != nodeOrder.size()) {
             return null;
         }
@@ -344,7 +341,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
             }
         }
 
-        Vector ret = new Vector();
+        List ret = new ArrayList();
         Iterator it = otherGraph.getGraphManager().getVertexIterator();
         GsVertexAttributesReader cvreader = otherGraph.getGraphManager().getVertexAttributesReader();
         while (it.hasNext()) {

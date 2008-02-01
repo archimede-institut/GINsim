@@ -2,7 +2,7 @@ package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.table.TableModel;
 
@@ -45,7 +45,7 @@ public class GsHTMLExport extends GsAbstractExport implements GenericStableState
 	
 	protected synchronized void run() {
 		GsRegulatoryGraph graph = (GsRegulatoryGraph) config.getGraph();
-		Vector v_no = graph.getNodeOrder();
+		List v_no = graph.getNodeOrder();
 		int len = v_no.size();
 		try {
 			FileWriter out = new FileWriter(config.getFilename());

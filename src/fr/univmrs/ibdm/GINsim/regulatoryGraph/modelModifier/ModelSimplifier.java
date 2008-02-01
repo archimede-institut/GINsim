@@ -35,7 +35,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	int[] t_remove = null;
 
 	GsRegulatoryGraph graph;
-	Vector oldNodeOrder;
+	List oldNodeOrder;
 	GsRegulatoryGraph simplifiedGraph;
 	Map m_modified = new HashMap();
 	Map m_edges = new HashMap();
@@ -97,7 +97,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			}
 			
 			GsGraphManager simplifiedManager = simplifiedGraph.getGraphManager();
-			Vector simplified_nodeOrder = simplifiedGraph.getNodeOrder();
+			List simplified_nodeOrder = simplifiedGraph.getNodeOrder();
 			
 			// Create all the nodes of the new model
 			GsVertexAttributesReader vreader = manager.getVertexAttributesReader();

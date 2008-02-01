@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JFrame;
 
@@ -94,7 +93,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
 
     public void doSave(OutputStreamWriter os, GsGraph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
-        Vector nodeOrder = graph.getNodeOrder();
+        List nodeOrder = graph.getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }

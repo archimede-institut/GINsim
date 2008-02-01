@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -30,7 +30,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 
     public void doSave(OutputStreamWriter os, GsGraph graph) {
         GsInitialStateList list = (GsInitialStateList)graph.getObject(key, true);
-        Vector nodeOrder = graph.getNodeOrder();
+        List nodeOrder = graph.getNodeOrder();
         if (list == null || list.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
@@ -45,7 +45,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
                 Iterator it_line = is.m.keySet().iterator();
                 while (it_line.hasNext()) {
                         GsRegulatoryVertex vertex = (GsRegulatoryVertex)it_line.next();
-                        Vector v_val = (Vector)is.m.get(vertex);
+                        List v_val = (List)is.m.get(vertex);
                         s += vertex.getId();
                         for (int j=0 ; j<v_val.size() ; j++) {
                                 s += ";"+((Integer)v_val.get(j)).intValue();
@@ -79,7 +79,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 
 class initStateParser extends GsXMLHelper {
 
-    Vector nodeOrder;
+	List nodeOrder;
     GsInitialStateList list;
     
     /**

@@ -1,9 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
@@ -31,14 +31,14 @@ public class GsLogicalParameter implements GsXMLize {
 	 */
 	public GsLogicalParameter(int v) {
 		value = v;
-		edge_index = new Vector();
+		edge_index = new ArrayList();
 	}
 
 	/**
      * @param newEI
      * @param v
      */
-    public GsLogicalParameter(Vector newEI, int v) {
+    public GsLogicalParameter(List newEI, int v) {
         value = v;
         edge_index = newEI;
     }
@@ -136,7 +136,7 @@ public class GsLogicalParameter implements GsXMLize {
      */
 	private short[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
 	    List incEdges = regGraph.getGraphManager().getIncomingEdges(node);
-        Vector nodeOrder = regGraph.getNodeOrder();
+	    List nodeOrder = regGraph.getNodeOrder();
         short[][] t_ac = new short[incEdges.size()+1][];
         t_ac[0] = new short[1];
         t_ac[0][0] = (short)value;
@@ -251,7 +251,7 @@ public class GsLogicalParameter implements GsXMLize {
 			String sEdges = "";
 			for (int i=0 ; i<len ; i++) {
 				GsRegulatoryEdge e = (GsRegulatoryEdge) edge_index.get(i);
-				sEdges = sEdges + " " + e.getLongInfo("_");
+				sEdges = sEdges + " " + e.getLongInfo(":");
 			}
     		out.addAttr("idActiveInteractions", sEdges);
 		}
@@ -275,7 +275,7 @@ public class GsLogicalParameter implements GsXMLize {
      * @param copyMap
      */
     public void applyNewGraph(GsRegulatoryVertex clone, Map copyMap) {
-        Vector newEI = new Vector();
+    	List newEI = new ArrayList();
         for (int i=0 ; i<edge_index.size() ; i++) {
         	GsRegulatoryEdge ei = (GsRegulatoryEdge)edge_index.get(i);
             GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)copyMap.get(ei.me);
@@ -295,7 +295,7 @@ public class GsLogicalParameter implements GsXMLize {
         }
         String str = "";
         for (int i = 0; i < edge_index.size(); i++) {
-            str += getEdge(i).getShortInfo("_") + " ";
+            str += getEdge(i).getShortInfo("#") + " ";
         }
         return str;
     }

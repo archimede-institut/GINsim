@@ -1,7 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
@@ -17,7 +18,7 @@ import fr.univmrs.tagc.widgets.StackDialog;
 public class GsInitStateTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = -1553864043658960569L;
-	private Vector nodeOrder;
+	private List nodeOrder;
     private Map m_initState = null;
     private GsInitialStateList imanager;
 	private int nbCol;
@@ -32,7 +33,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	 * @param nodeOrder
      * @param frame
 	 */	
-	public GsInitStateTableModel(Vector nodeOrder, StackDialog frame, GsInitialStateList imanager, boolean several) {
+	public GsInitStateTableModel(List nodeOrder, StackDialog frame, GsInitialStateList imanager, boolean several) {
 		super();
 		this.nodeOrder = nodeOrder;
         this.frame = frame;
@@ -70,7 +71,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	  * we want to show the vector [1 ; 2 ; 3 ; 4 ;  6 ; 7] as : "1-4 ; 6-7"
 	 */
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		Vector element;
+		List element;
 
 		if (columnIndex == 0) {
 			if (rowIndex >= imanager.getNbElements(null)) {
@@ -92,7 +93,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 			return "";
 		}
         Map m_row = ((GsInitialState)imanager.getElement(null, rowIndex)).m;
-        element = (Vector)m_row.get(nodeOrder.get(ci));
+        element = (List)m_row.get(nodeOrder.get(ci));
         return showValue(element, ((GsRegulatoryVertex)nodeOrder.get(ci)).getMaxValue());
     }
     
@@ -102,7 +103,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
      * @param maxvalue
      * @return a formated String showing values for this gene
      */
-    public static Object showValue(Vector element, int maxvalue) {
+    public static Object showValue(List element, int maxvalue) {
         if (element == null) {
             return "*";
         }
@@ -239,7 +240,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
         }
         
 		// change the value if appropriate
-		Vector newcell = new Vector(1);
+        List newcell = new ArrayList(1);
 		try {
 			String[] values = ((String)aValue).split(";");
 			for (int i=0 ; i<values.length ; i++) {
@@ -306,7 +307,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 		if (columnIndex == 1) {
 			return "use";
 		}
-		return ((GsRegulatoryVertex)nodeOrder.elementAt(columnIndex-2)).toString();
+		return ((GsRegulatoryVertex)nodeOrder.get(columnIndex-2)).toString();
 	}
 
 	public int getColumnCount() {

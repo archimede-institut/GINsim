@@ -1,8 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +17,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
-import java.awt.BorderLayout;
 
 public class GsManualPanel extends GsBooleanFunctionTreePanel implements ActionListener {
   private static final long	serialVersionUID	= -1746326107372469096L;

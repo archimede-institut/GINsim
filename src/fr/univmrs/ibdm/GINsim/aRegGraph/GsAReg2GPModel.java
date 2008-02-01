@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.aRegGraph;
 
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -12,14 +12,14 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 public class GsAReg2GPModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 864660594916225977L;
-	private Vector nodeOrder;
+	private List nodeOrder;
 	private boolean[] t_selected;
 	
 	/**
 	 * @param nodeOrder
 	 * @param t_selected
 	 */
-	public GsAReg2GPModel(Vector nodeOrder, boolean[] t_selected) {
+	public GsAReg2GPModel(List nodeOrder, boolean[] t_selected) {
 		this.nodeOrder = nodeOrder;
 		this.t_selected = t_selected;
 	}

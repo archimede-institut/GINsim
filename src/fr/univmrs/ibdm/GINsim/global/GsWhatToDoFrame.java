@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -361,27 +361,27 @@ public class GsWhatToDoFrame extends JDialog {
     private JComboBox getComboActions() {
 		if (comboActions == null) {
 			comboActions = new JComboBox();
-			fillComboWithVector(comboActions, graph.getGraphManager().getAction(), GsActionProvider.ACTION_ACTION, graph);
-			fillComboWithVector(comboActions, graph.getAction(), GsActionProvider.ACTION_ACTION, graph);
-			fillComboWithVector(comboActions, graph.getSpecificAction(), GsActionProvider.ACTION_ACTION, graph);
+			fillComboWithList(comboActions, graph.getGraphManager().getAction(), GsActionProvider.ACTION_ACTION, graph);
+			fillComboWithList(comboActions, graph.getAction(), GsActionProvider.ACTION_ACTION, graph);
+			fillComboWithList(comboActions, graph.getSpecificAction(), GsActionProvider.ACTION_ACTION, graph);
 		}
 		return comboActions;
 	}
 	private JComboBox getComboExport() {
 		if (comboExport == null) {
 			comboExport = new JComboBox();
-			fillComboWithVector(comboExport, graph.getGraphManager().getExport(), GsActionProvider.ACTION_EXPORT, graph);
-			fillComboWithVector(comboExport, graph.getExport(), GsActionProvider.ACTION_EXPORT, graph);
-			fillComboWithVector(comboExport, graph.getSpecificExport(), GsActionProvider.ACTION_EXPORT, graph);
+			fillComboWithList(comboExport, graph.getGraphManager().getExport(), GsActionProvider.ACTION_EXPORT, graph);
+			fillComboWithList(comboExport, graph.getExport(), GsActionProvider.ACTION_EXPORT, graph);
+			fillComboWithList(comboExport, graph.getSpecificExport(), GsActionProvider.ACTION_EXPORT, graph);
 		}
 		return comboExport;
 	}
 	private JComboBox getComboLayout() {
 		if (comboLayout == null) {
 			comboLayout = new JComboBox();
-			fillComboWithVector(comboLayout, graph.getLayout(), GsActionProvider.ACTION_LAYOUT, graph);
-			fillComboWithVector(comboLayout, graph.getGraphManager().getLayout(), GsActionProvider.ACTION_LAYOUT, graph);
-			fillComboWithVector(comboLayout, graph.getSpecificLayout(), GsActionProvider.ACTION_LAYOUT, graph);
+			fillComboWithList(comboLayout, graph.getLayout(), GsActionProvider.ACTION_LAYOUT, graph);
+			fillComboWithList(comboLayout, graph.getGraphManager().getLayout(), GsActionProvider.ACTION_LAYOUT, graph);
+			fillComboWithList(comboLayout, graph.getSpecificLayout(), GsActionProvider.ACTION_LAYOUT, graph);
 		}
 		return comboLayout;
 	}
@@ -411,12 +411,12 @@ public class GsWhatToDoFrame extends JDialog {
 		return radioExport;
 	}
 	
-	private void fillComboWithVector(JComboBox combo, Vector v, int actionCode, GsGraph graph) {
-		if (v == null) {
+	private void fillComboWithList(JComboBox combo, List l, int actionCode, GsGraph graph) {
+		if (l == null) {
 			return;
 		}
-		for (int i=0 ; i<v.size() ; i++) {
-		    Object obj = v.get(i);
+		for (int i=0 ; i<l.size() ; i++) {
+		    Object obj = l.get(i);
 		    if (obj instanceof GsPluggableActionDescriptor) {
 		        combo.addItem(obj);
 		    } else if (obj instanceof GsActionProvider) {

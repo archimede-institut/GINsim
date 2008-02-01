@@ -98,6 +98,12 @@ public class EnhancedJTable extends JTable {
 			}
 		}
 	}
+	public void setMaxCols(int[] maxcols) {
+        TableColumnModel colModel = getColumnModel();
+        for (int i=0 ; i<maxcols.length ; i+=2) {
+        	colModel.getColumn(maxcols[i]).setMaxWidth(maxcols[i+1]);
+        }
+	}
 }
 
 class ValueInListCellEditor extends AbstractCellEditor implements TableCellEditor {

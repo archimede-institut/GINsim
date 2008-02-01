@@ -1,8 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.model.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.model.GsFunctionEditorModel;
 
 public class GsFunctionEditor {
   private GsFunctionEditorWindow window;

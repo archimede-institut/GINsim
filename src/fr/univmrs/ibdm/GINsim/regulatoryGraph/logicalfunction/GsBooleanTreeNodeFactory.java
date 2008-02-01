@@ -16,12 +16,13 @@ public class GsBooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
     super(className, operandClassName, parser);
     this.operandClassName = operandClassName;
     this.parser = (GsBooleanParser)parser;
-    if (genePool == null) genePool = new HashMap();
+    if (genePool == null) {
+		genePool = new HashMap();
+	}
   }
   public TBooleanOperand createOperand(String value) throws Exception {
     GsBooleanGene bg = (GsBooleanGene)Class.forName(operandClassName).newInstance();
-    bg.setValue(value);
-    bg.setParser(parser);
+    bg.setInteractionName(parser, value);
     Vector p = (Vector)genePool.get(value);
 
     p = new Vector();
@@ -33,15 +34,17 @@ public class GsBooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
     GsLogicalFunctionListElement element;
     String testString = "";
 
-    if (value.indexOf("#") >= 0) testString = value.replaceAll("#", "_");
+    if (value.indexOf("#") >= 0) {
+		testString = value.replaceAll("#", "_");
+	}
 
     for (int i = 0; i < nb_params; i++) {
       data = (Vector)allParams[i];
       it_data = data.iterator();
       while (it_data.hasNext()) {
         element = (GsLogicalFunctionListElement)it_data.next();
-        if (((value.indexOf("#") < 0) && (element.toString().indexOf(value + "_") != -1)) ||
-            ((value.indexOf("#") >= 0) && (element.toString().equals(testString)))) {
+        if (value.indexOf("#") < 0 && element.toString().indexOf(value + "_") != -1 ||
+            value.indexOf("#") >= 0 && element.toString().equals(testString)) {
           p.addElement(allData.elementAt(i));
           break;
         }

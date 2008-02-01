@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.stableStates;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -9,22 +10,22 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 public class StableTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 3483674324331745743L;
 	
-	Vector nodeOrder;
-	Vector v_stable;
+	List nodeOrder;
+	List v_stable;
 	
 	boolean checkbox;
-	Vector checklist;
+	List checklist;
 	
 	int checkIndex = -1;
 	
-	public StableTableModel(Vector nodeOrder) {
+	public StableTableModel(List nodeOrder) {
 		this(nodeOrder, false);
 	}
 	
-	public StableTableModel(Vector nodeOrder, boolean checkbox) {
+	public StableTableModel(List nodeOrder, boolean checkbox) {
 		this.nodeOrder = nodeOrder;
 		this.checkbox = checkbox;
-		v_stable = new Vector();
+		v_stable = new ArrayList();
 	}
 	
 	public int getColumnCount() {
@@ -86,11 +87,11 @@ public class StableTableModel extends AbstractTableModel {
 		findStableState(state, stable);
 		fireTableDataChanged();
 		checkIndex = -1;
-		checklist = new Vector();
+		checklist = new ArrayList();
 		checklist.clear();
 	}
 	
-	public void setResult(Vector v_stable) {
+	public void setResult(List v_stable) {
 		this.v_stable = v_stable;
 		fireTableDataChanged();
 	}

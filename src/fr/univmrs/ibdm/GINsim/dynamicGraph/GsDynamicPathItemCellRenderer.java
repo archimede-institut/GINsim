@@ -2,7 +2,7 @@ package fr.univmrs.ibdm.GINsim.dynamicGraph;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -13,7 +13,7 @@ public class GsDynamicPathItemCellRenderer extends DefaultTableCellRenderer {
 
     private static final long serialVersionUID = 1L;
 
-    private Vector v_in;
+    private List v_in;
     private boolean[] t_in;
     private Color defaultColor;
     private Color highlightColor;
@@ -21,7 +21,7 @@ public class GsDynamicPathItemCellRenderer extends DefaultTableCellRenderer {
     /**
      * @param v_in
      */
-    public GsDynamicPathItemCellRenderer(Vector v_in) {
+    public GsDynamicPathItemCellRenderer(List v_in) {
         this(null, v_in, Color.WHITE, Color.RED);
     }
     
@@ -38,7 +38,7 @@ public class GsDynamicPathItemCellRenderer extends DefaultTableCellRenderer {
      * @param defaultColor 
      * @param highlightColor 
      */
-    public GsDynamicPathItemCellRenderer(boolean[] t_in, Vector v_in, Color defaultColor, Color highlightColor) {
+    public GsDynamicPathItemCellRenderer(boolean[] t_in, List v_in, Color defaultColor, Color highlightColor) {
         super();
         this.t_in = t_in;
         this.v_in = v_in;

@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
@@ -154,7 +155,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
             GsRegulatoryEdge edge = edges[i];
 
             int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
-            out.write("\t\t<edge id=\""+ edge.getLongInfo("_") + "\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ SIGN[edge.sign] +"\">\n");
+            out.write("\t\t<edge id=\""+ edge.getLongInfo(":") + "\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ SIGN[edge.sign] +"\">\n");
             edge.annotation.toXML(out, null, mode);
             if (param != null) {
                 out.write(""+param);
@@ -234,11 +235,21 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	/**
 	 * @param vertex
 	 */
-	public void applyNewMaxValue(GsRegulatoryVertex vertex) {
-		short max = vertex.getMaxValue();
+	public void applyNewMaxValue(short max) {
 		for (int i=0 ; i<edgecount ; i++) {
 			if (edges[i].threshold > max) {
 				edges[i].threshold = max;
+			}
+		}
+	}
+	public void canApplyNewMaxValue(short max, List l_fixable, List l_conflict) {
+		for (int i=0 ; i<edgecount ; i++) {
+			if (edges[i].threshold > max) {
+				if (i == edgecount-1 && (i == 0 || edges[i-1].threshold < max)) {
+					l_fixable.add(this);
+				} else {
+					l_conflict.add(this);
+				}
 			}
 		}
 	}
@@ -271,28 +282,24 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 	 * @param min the new min value.
 	 */
 	public void setMin(int index, short min) {
-		if (index >= edgecount || min < 1 || min > source.getMaxValue()) {
+		if (index >= edgecount || min < 1 || min > source.getMaxValue() ||
+				edges[index].threshold == min) {
 			return;
 		}
-		int cur = edges[index].threshold;
-		edges[index].threshold = min;
-		if (min > cur) {
+		if (min > edges[index].threshold) {
 			for (int i=index+1 ; i<edgecount ; i++) {
-				if (edges[i].threshold < min) {
-					edges[i].threshold = min;
-				} else {
-					break;
+				if (edges[i].threshold <= min) {
+					return;
 				}
 			}
-		} else if (min < cur) {
+		} else{
 			for (int i=index-1 ; i>=0 ; i--) {
-				if (edges[i].threshold > min) {
-					edges[i].threshold = min;
-				} else {
-					break;
+				if (edges[i].threshold >= min) {
+					return;
 				}
 			}
 		}
+		edges[index].threshold = min;
 	}
 
 	public Object getUserObject() {
@@ -422,5 +429,13 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
 			t[index] = -1;
 		}
 		return t;
+	}
+	public GsRegulatoryEdge getEdgeForThreshold(int threshold) {
+		for (int i=0 ; i<=edgecount ; i++) {
+			if (edges[i].threshold == threshold) {
+				return edges[i];
+			}
+		}
+		return null;
 	}
 }

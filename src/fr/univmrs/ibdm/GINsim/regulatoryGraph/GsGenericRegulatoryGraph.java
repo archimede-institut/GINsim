@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * a generic interface for regulatory graph and similar to implement.
@@ -12,6 +12,6 @@ import java.util.Vector;
  */
 public interface GsGenericRegulatoryGraph {
 
-	public Vector getNodeOrderForSimulation();
+	public List getNodeOrderForSimulation();
 	public OmddNode[] getParametersForSimulation(boolean focal);
 }

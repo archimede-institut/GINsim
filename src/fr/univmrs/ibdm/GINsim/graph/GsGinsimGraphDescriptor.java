@@ -3,8 +3,9 @@ package fr.univmrs.ibdm.GINsim.graph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -26,9 +27,9 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
  */
 public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 
-    private static Vector v_layout = null;
-    private static Vector v_export = null;
-    private static Vector v_action = null;
+    private static List v_layout = null;
+    private static List v_export = null;
+    private static List v_action = null;
     private GsFileFilter ffilter;
     private static GsGinsimGraphDescriptor instance = null;
 
@@ -70,14 +71,14 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 	 */
 	public static void registerLayoutProvider(GsActionProvider layout) {
 		if (v_layout == null) {
-			v_layout = new Vector();
+			v_layout = new ArrayList();
 		}
 		v_layout.add(layout);
 	}
 	/**
 	 * @return a list of avaible layouts.
 	 */
-	public Vector getLayout() {
+	public List getLayout() {
 		return v_layout;
 	}
 
@@ -86,14 +87,14 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 	 */
 	public static void registerExportProvider(GsActionProvider export) {
 		if (v_export == null) {
-			v_export = new Vector();
+			v_export = new ArrayList();
 		}
 		v_export.add(export);
 	}
 	/**
 	 * @return a list of avaible export filters.
 	 */
-	public Vector getExport() {
+	public List getExport() {
 		return v_export;
 	}
 
@@ -103,14 +104,14 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 	 */
 	public static void registerActionProvider(GsActionProvider action) {
 		if (v_action == null) {
-			v_action = new Vector();
+			v_action = new ArrayList();
 		}
 		v_action.add(action);
 	}
 	/**
 	 * @return a list of avaible actions.
 	 */
-	public Vector getAction() {
+	public List getAction() {
 		return v_action;
 	}
 
@@ -158,7 +159,7 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                 if (map == null) {
                 	// try to restore associated data ONLY if no subgraph is selected
                 	// TODO: need to load associated entry with subgraphs
-	                Vector v_omanager = graph.getObjectManager();
+                	List v_omanager = graph.getObjectManager();
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
 	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);

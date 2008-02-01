@@ -1,8 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
@@ -10,12 +11,12 @@ public class InitialStatesIterator implements Iterator {
 
 	Iterator helper;
 	Iterator helperIterator = null;
-	Vector nodeOrder;
+	List nodeOrder;
 	
-	public InitialStatesIterator(Vector nodeOrder, Map m_initstates) {
+	public InitialStatesIterator(List nodeOrder, Map m_initstates) {
 		this.nodeOrder = nodeOrder;
 		if (m_initstates == null || m_initstates.size() < 1) {
-			Vector v = new Vector();
+			List v = new ArrayList();
 			v.add(new GsInitialState());
 			helperIterator = v.iterator();
 		} else {
@@ -53,17 +54,17 @@ final class Reg2DynStatesIterator implements Iterator {
 	int[] state;
 	int[] using;
 	int nbGenes;
-	Vector nodeOrder;
+	List nodeOrder;
 	int[][] line;
 	boolean goon;
 
-	public Reg2DynStatesIterator(Vector nodeOrder, Map m_line) {
+	public Reg2DynStatesIterator(List nodeOrder, Map m_line) {
 		this.nodeOrder = nodeOrder;
         
 		line = new int[nodeOrder.size()][];
 		for (int i=0 ; i<nodeOrder.size() ; i++) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
-			Vector v_val = (Vector)m_line.get(vertex);
+			List v_val = (List)m_line.get(vertex);
 			if (v_val == null || v_val.size() == 0) {
 				line[i] = new int[vertex.getMaxValue()+1];
 				for (int j=0 ; j<line[i].length ; j++) {

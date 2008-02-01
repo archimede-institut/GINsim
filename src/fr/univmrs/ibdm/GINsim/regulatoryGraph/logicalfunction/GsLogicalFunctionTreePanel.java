@@ -529,7 +529,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
       lp.setEdges(((GsTreeParam) params[i]).getEdgeIndexes());
       v.addElement(lp);
     }
-    c = new GsFunctionsCreator(graph.getGraphManager(), v, interactionList.getVertex());
+    c = new GsFunctionsCreator((GsRegulatoryGraph)graph, v, interactionList.getVertex());
 
     Hashtable h = c.doIt();
 

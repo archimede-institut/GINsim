@@ -2,7 +2,8 @@ package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
@@ -69,28 +70,28 @@ public class GsPetriNetExportINA extends GsAbstractExport {
 	protected void doExport(GsExportConfig config) {
 		GsGraph graph = config.getGraph();
 
-        Vector v_no = graph.getNodeOrder();
+		List v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
-        Vector[] t_transition = new Vector[len];
+        List[] t_transition = new List[len];
         short[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 
         try {
 	        FileWriter out = new FileWriter(config.getFilename());
 
-            Vector[][] t_prepost = new Vector[2*len][2];
-            Vector v_transition = new Vector();
+	        List[][] t_prepost = new ArrayList[2*len][2];
+	        List v_transition = new ArrayList();
 
             for (int i=0 ; i<t_prepost.length ; i++) {
-                t_prepost[i][0] = new Vector();
-                t_prepost[i][1] = new Vector();
+                t_prepost[i][0] = new ArrayList();
+                t_prepost[i][1] = new ArrayList();
             }
 
             for (int i=0 ; i<len ; i++) {
                 String vertex = v_no.get(i).toString();
                 if (t_transition[i] != null) {
                     int maxvalue = ((GsRegulatoryVertex)v_no.get(i)).getMaxValue();
-                    Vector v_trst = t_transition[i];
+                    List v_trst = t_transition[i];
                     for (int j=0 ; j<v_trst.size() ; j++) {
                         TransitionData td = (TransitionData)v_trst.get(j);
                         // transform the TransitionData into prepost matrix
@@ -230,7 +231,7 @@ public class GsPetriNetExportINA extends GsAbstractExport {
 	        out.write("P   M   PRE,POST  NETZ 0:"+graph.getGraphName() +"\n");
             for (int i=0 ; i<t_tree.length ; i++) {
                 String s_pp = "";
-                Vector v = t_prepost[2*i][0];
+                List v = t_prepost[2*i][0];
                 for (int j=0 ; j<v.size() ; j++) {
                     s_pp += " "+v.get(j);
                 }

@@ -3,10 +3,7 @@ package fr.univmrs.ibdm.GINsim.connectivity;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
@@ -221,22 +218,22 @@ public class GsReducedGraph extends GsGraph {
 	public void addEdge(Object source, Object target) {
 		graphManager.addEdge(source, target, null);
 	}
-	public Vector getSpecificLayout() {
+	public List getSpecificLayout() {
 		return GsReducedGraphDescriptor.getLayout();
 	}
-	public Vector getSpecificExport() {
+	public List getSpecificExport() {
 		return GsReducedGraphDescriptor.getExport();
 	}
-	public Vector getSpecificAction() {
+	public List getSpecificAction() {
 		return GsReducedGraphDescriptor.getAction();
 	}
-    public Vector getSpecificObjectManager() {
+    public List getSpecificObjectManager() {
         return GsReducedGraphDescriptor.getObjectManager();
     }
     protected GsGraph getCopiedGraph() {
         return null;
     }
-    protected Vector doMerge(GsGraph otherGraph) {
+    protected List doMerge(GsGraph otherGraph) {
         return null;
     }
     protected GsGraph doCopySelection(Vector vertex, Vector edges) {

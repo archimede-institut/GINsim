@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.circuit;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -45,7 +46,7 @@ public class GsCircuitAlgo {
 
     GsRegulatoryGraph graph;
 
-    Vector nodeOrder;
+    List nodeOrder;
     int[] t_maxValues;
     long fullPhaseSpace;
     long score;
@@ -67,7 +68,7 @@ public class GsCircuitAlgo {
         }
         this.graph = graph;
         if (mutant != null) {
-        	mutant.apply(t_parameters, graph.getNodeOrder(), true);
+        	mutant.apply(t_parameters, graph);
         }
     }
 

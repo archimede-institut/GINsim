@@ -7,7 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,7 +35,7 @@ public class GsInitialStatePanel extends JPanel {
     GsSimulationParameterList paramList;
 
     Insets topInset = new Insets(20,0,0,0);
-	private Vector nodeOrder;
+	private List nodeOrder;
 	private GsInitialStateList imanager;
 	private StackDialog dialog;
 	private boolean several;
@@ -45,7 +45,7 @@ public class GsInitialStatePanel extends JPanel {
     			(GsInitialStateList)graph.getObject(GsInitialStateManager.key, true),
     			several);
     }
-    public GsInitialStatePanel(StackDialog dialog, Vector nodeOrder, GsInitialStateList imanager, boolean several) {
+    public GsInitialStatePanel(StackDialog dialog, List nodeOrder, GsInitialStateList imanager, boolean several) {
     	this.dialog = dialog;
     	this.nodeOrder = nodeOrder;
     	this.imanager = imanager;

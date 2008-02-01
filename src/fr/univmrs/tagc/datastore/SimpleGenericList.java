@@ -1,28 +1,29 @@
 package fr.univmrs.tagc.datastore;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SimpleGenericList extends GenericList {
 
-	public Vector		v_data;
+	public List		v_data;
 	protected String	prefix			= "name_";
 	protected String	pattern			= "^[a-zA-Z0-9_-]+$";
 
 	public boolean		enforceUnique	= true;
 	public boolean		addWithPosition = false;
 
-	public SimpleGenericList(Vector v_data) {
+	public SimpleGenericList(List v_data) {
 		setData(v_data);
 	}
 
 	public SimpleGenericList() {
-		this.v_data = new Vector();
+		this.v_data = new ArrayList();
 	}
 
-	public void setData(Vector v_data) {
+	public void setData(List v_data) {
 		this.v_data = v_data;
 		refresh();
 	}
@@ -139,7 +140,7 @@ public class SimpleGenericList extends GenericList {
 			return ((MultiColObject)data).setVal(col, o);
 		}
 		if (data.getClass() == o.getClass()) {
-			v_data.setElementAt(o, index);
+			v_data.add(index, o);
 			return true;
 		}
 		if (!(data instanceof NamedObject)) {

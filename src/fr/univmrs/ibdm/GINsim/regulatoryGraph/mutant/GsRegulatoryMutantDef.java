@@ -77,13 +77,13 @@ public class GsRegulatoryMutantDef implements NamedObject {
      * apply this mutant on the OMDD.
      * 
      * @param t_tree OMDD for all genes of the model
-     * @param listGenes the list of the genes
+     * @param graph the regulatory graph
      */
-    public void apply(OmddNode[] t_tree, Vector listGenes, boolean isstrict) {
+    public void apply(OmddNode[] t_tree, GsRegulatoryGraph graph) {
         for (int i=0 ; i<v_changes.size() ; i++) {
             GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)v_changes.get(i);
-            int index = listGenes.indexOf(change.vertex);
-            t_tree[index] = change.apply(t_tree[index], listGenes, isstrict);
+            int index = graph.getNodeOrderForSimulation().indexOf(change.vertex);
+            t_tree[index] = change.apply(t_tree[index], graph);
         }
     }
 
@@ -103,5 +103,21 @@ public class GsRegulatoryMutantDef implements NamedObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isStrict(int index) {
+		return ((GsRegulatoryMutantChange)v_changes.get(index)).force;
+	}
+
+	public void setStrict(int index, boolean b) {
+		((GsRegulatoryMutantChange)v_changes.get(index)).force = b;
+	}
+	
+	public String getCondition(int index) {
+		return ((GsRegulatoryMutantChange)v_changes.get(index)).getCondition();
+	}
+	
+	public void setCondition(int index, GsRegulatoryGraph graph, String condition) {
+		((GsRegulatoryMutantChange)v_changes.get(index)).setCondition(condition, graph);
 	}
 }

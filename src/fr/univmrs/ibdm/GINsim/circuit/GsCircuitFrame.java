@@ -671,7 +671,7 @@ class GsCircuitDescr {
      * 
      * @return true if the circuit is functionnal
      */
-    public boolean check(GsCircuitAlgo algo, Vector nodeOrder) {
+    public boolean check(GsCircuitAlgo algo, List nodeOrder) {
         t_pos = new int[t_me.length];
         t_posMax = new int[t_me.length];
         int nbSub = 1;

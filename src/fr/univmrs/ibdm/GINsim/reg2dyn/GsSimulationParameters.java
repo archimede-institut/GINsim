@@ -1,10 +1,7 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
@@ -24,7 +21,7 @@ public class GsSimulationParameters implements GsXMLize, NamedObject, GsInitialS
 	static final int PCLASS = 1;
 	
     String name = "new_parameter";
-    Vector nodeOrder;
+    List nodeOrder;
 
     int mode = Simulation.SEARCH_ASYNCHRONE_DF;
 
@@ -53,11 +50,11 @@ public class GsSimulationParameters implements GsXMLize, NamedObject, GsInitialS
     /**
      * get priority class.
      *
-     * @return a vector listing all priority classes.
+     * @return a list listing all priority classes.
      *
      * see also <code>getMelt</code> to get association between nodes and classes
      */
-    public Vector getVclass() {
+    public List getVclass() {
     	PriorityClassDefinition pcdef = getPriorityClassDefinition(true);
     	return pcdef.v_data;
     }
@@ -117,7 +114,7 @@ public class GsSimulationParameters implements GsXMLize, NamedObject, GsInitialS
                 Map m_init = ((GsInitialState)it.next()).getMap();
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
-                    s += "  "+GsInitStateTableModel.showValue((Vector)m_init.get(vertex), vertex.getMaxValue());
+                    s += "  "+GsInitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
                 }
                 s += "\n";
             }
@@ -188,19 +185,19 @@ public class GsSimulationParameters implements GsXMLize, NamedObject, GsInitialS
         //   - during the first pass asynchronous classes with the same priority are merged
         //   - then the real int[][] is created from the merged classes
 
-		Vector v_class = getVclass();
+		List v_class = getVclass();
 		Map m_elt = getMelt();
-        Vector v_vpclass = new Vector();
+		List v_vpclass = new ArrayList();
         for (int i=0 ; i<v_class.size() ; i++) {
             GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_class.get(i);
-            Vector v_content;
+            List v_content;
             if (pc.getMode() == GsReg2dynPriorityClass.ASYNCHRONOUS) {
-                v_content = new Vector();
+                v_content = new ArrayList();
                 v_content.add(new Integer(pc.rank));
                 v_content.add(new Integer(pc.getMode()));
                 v_vpclass.add(v_content);
             } else {
-                v_content = new Vector();
+                v_content = new ArrayList();
                 v_content.add(new Integer(pc.rank));
                 v_content.add(new Integer(pc.getMode()));
                 v_vpclass.add(v_content);
@@ -235,7 +232,7 @@ public class GsSimulationParameters implements GsXMLize, NamedObject, GsInitialS
 
         int[][] pclass = new int[v_vpclass.size()][];
         for (int i=0 ; i<pclass.length ; i++) {
-            Vector v_content = (Vector)v_vpclass.get(i);
+            List v_content = (List)v_vpclass.get(i);
             int[] t = new int[v_content.size()];
             t[0] = ((Integer)v_content.get(0)).intValue();
             if (v_content.size() > 1) {

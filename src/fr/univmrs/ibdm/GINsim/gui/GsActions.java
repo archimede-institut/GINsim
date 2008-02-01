@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -375,8 +376,9 @@ public class GsActions  implements GraphChangeListener {
 
 					public void actionPerformed(java.awt.event.ActionEvent e) { 
 						
-						if (e.getSource() instanceof JCheckBoxMenuItem) 
+						if (e.getSource() instanceof JCheckBoxMenuItem) {
 							viewcallback.divideWindow(((JCheckBoxMenuItem)e.getSource()).getState());
+						}
 					}
 		};
 		actionDisplayGrid = new GsBaseAction("STR_DisplayGrid",
@@ -386,8 +388,9 @@ public class GsActions  implements GraphChangeListener {
 					private static final long serialVersionUID = 6518755881749690697L;
 
 					public void actionPerformed(java.awt.event.ActionEvent e) { 
-						if (e.getSource() instanceof JCheckBoxMenuItem) 
+						if (e.getSource() instanceof JCheckBoxMenuItem) {
 							viewcallback.displayGrid(((JCheckBoxMenuItem)e.getSource()).getState());
+						}
 					}
 		};
         actionGridActive = new GsBaseAction("STR_gridActive",
@@ -397,8 +400,9 @@ public class GsActions  implements GraphChangeListener {
             private static final long serialVersionUID = 6518755881749690697L;
 
             public void actionPerformed(java.awt.event.ActionEvent e) { 
-                if (e.getSource() instanceof JCheckBoxMenuItem) 
-                    viewcallback.gridActive(((JCheckBoxMenuItem)e.getSource()).getState());
+                if (e.getSource() instanceof JCheckBoxMenuItem) {
+					viewcallback.gridActive(((JCheckBoxMenuItem)e.getSource()).getState());
+				}
             }
         };
                 
@@ -409,8 +413,9 @@ public class GsActions  implements GraphChangeListener {
 					private static final long serialVersionUID = 7152250065865101484L;
 
 					public void actionPerformed(java.awt.event.ActionEvent e) { 
-						if (e.getSource() instanceof JCheckBoxMenuItem) 
+						if (e.getSource() instanceof JCheckBoxMenuItem) {
 							viewcallback.displayMiniMap(((JCheckBoxMenuItem)e.getSource()).getState());
+						}
 					}
 	    };
 		
@@ -535,7 +540,7 @@ public class GsActions  implements GraphChangeListener {
 		}
 		toolBar.add(actionSave);
 		
-		(((JComponent)toolBar.add(new JSeparator(SwingConstants.VERTICAL)))).setMaximumSize(new java.awt.Dimension(10,30));
+		((JComponent)toolBar.add(new JSeparator(SwingConstants.VERTICAL))).setMaximumSize(new java.awt.Dimension(10,30));
 	}
 	/**
 	 * get the menu bar
@@ -595,11 +600,11 @@ public class GsActions  implements GraphChangeListener {
     	if (graphManager.canUndo()) {
 	    	toolBar.add(actionUndo);
 	    	toolBar.add(actionRedo);
-			(((JComponent)toolBar.add(new JSeparator(SwingConstants.VERTICAL)))).setMaximumSize(new java.awt.Dimension(7,30));
+			((JComponent)toolBar.add(new JSeparator(SwingConstants.VERTICAL))).setMaximumSize(new java.awt.Dimension(7,30));
     	}
     	if (graph.canDelete()) {
     		toolBar.add(actionDelete);
-    		(((JComponent)toolBar.add(new JSeparator(SwingConstants.VERTICAL)))).setMaximumSize(new java.awt.Dimension(7,30));
+    		((JComponent)toolBar.add(new JSeparator(SwingConstants.VERTICAL))).setMaximumSize(new java.awt.Dimension(7,30));
     	}
     	
         Vector v_modes = graph.getEditingModes();
@@ -672,7 +677,7 @@ public class GsActions  implements GraphChangeListener {
         btt_gridActive.setSelected(graph.getGraphManager().isGridActive());
     }
 
-    private void addToMenu(JMenu menu, Vector v_actions, int actionCode, GsGraph graph) {
+    private void addToMenu(JMenu menu, List v_actions, int actionCode, GsGraph graph) {
 		if (v_actions != null) {
 			for (int i=0 ; i<v_actions.size() ; i++) {
 				Object obj = v_actions.get(i);

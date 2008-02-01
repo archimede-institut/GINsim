@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 
-import java.util.Vector;
+import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -27,7 +27,7 @@ public class GsRegulatoryMutantParser extends GsXMLHelper {
 
     GsRegulatoryMutants mutantList = null;
     GsRegulatoryGraph graph;
-    Vector nodeOrder;
+    List nodeOrder;
     String[] t_order;
     GsRegulatoryMutantDef mutant;
     

@@ -3,7 +3,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.Vector;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
@@ -30,7 +30,7 @@ public class GsMutantListManager implements
 
     public void doSave(OutputStreamWriter os, GsGraph graph) {
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject(key, false);
-        Vector nodeOrder = graph.getNodeOrder();
+        List nodeOrder = graph.getNodeOrder();
         if (lMutant == null || lMutant.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
@@ -53,7 +53,7 @@ public class GsMutantListManager implements
 
     public boolean needSaving(GsGraph graph) {
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject("mutant", false);
-        return (lMutant != null && lMutant.getNbElements(null) > 0);
+        return lMutant != null && lMutant.getNbElements(null) > 0;
     }
 
 	public Object doCreate(GsGraph graph) {

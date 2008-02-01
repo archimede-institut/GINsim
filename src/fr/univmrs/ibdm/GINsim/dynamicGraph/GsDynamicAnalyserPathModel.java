@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.dynamicGraph;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -15,9 +16,9 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
     
     private int len;
     private int nbBad;
-    private Vector nodeOrder;
-    private Vector v;
-    private Vector v_in;
+    private List nodeOrder;
+    private List v;
+    private List v_in;
     private GsGraphManager gmanager;
     private GsDynamicSearchPathConfig searchConfig;
     
@@ -27,7 +28,7 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
      * @param v_inPath
      * @param config
      */
-    public GsDynamicAnalyserPathModel(GsDynamicGraph graph, Vector v_path, Vector v_inPath, GsDynamicSearchPathConfig config) {
+    public GsDynamicAnalyserPathModel(GsDynamicGraph graph, List v_path, List v_inPath, GsDynamicSearchPathConfig config) {
         nodeOrder = graph.getNodeOrder();
         len = nodeOrder.size();
         this.searchConfig = config;
@@ -35,7 +36,7 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
         this.v = v_path;
         v_in = v_inPath;
         if (v == null) {
-            v = new Vector(2);
+            v = new ArrayList(2);
         }
         if (v.size() == 0 ) {
             v.add(new int[len]);
@@ -134,6 +135,6 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
      * @return true if all states are in the graph
      */
     public boolean isOk() {
-        return (nbBad == 0);
+        return nbBad == 0;
     }
 }

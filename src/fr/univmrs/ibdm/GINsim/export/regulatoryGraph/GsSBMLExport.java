@@ -3,7 +3,7 @@ package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -34,7 +34,7 @@ public class GsSBMLExport {
 	 * @param fileName
 	 */
 	public static void export(GsGraph graph, String fileName) {
-        Vector v_no = graph.getNodeOrder();
+        List v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
         short[][] t_markup = new short[len][2];
@@ -136,7 +136,7 @@ public class GsSBMLExport {
 		}
 	}
 
-    private static void writeNode(GsXMLWriter out, OmddNode node, Vector v_no, String s_node, int max, int index, int val) throws IOException {
+    private static void writeNode(GsXMLWriter out, OmddNode node, List v_no, String s_node, int max, int index, int val) throws IOException {
         if (node.next == null) {
             if (val != -1) { // self-regulation
                 if (val > node.value) {
@@ -234,7 +234,7 @@ class SBMLExportConfigPanel extends JPanel {
 
     private SBMLmarkupModel model;
     
-    protected SBMLExportConfigPanel (Vector nodeOrder, short[][] t_markup) {
+    protected SBMLExportConfigPanel (List nodeOrder, short[][] t_markup) {
         model = new SBMLmarkupModel(nodeOrder, t_markup);
         initialize();
     }
@@ -250,10 +250,10 @@ class SBMLExportConfigPanel extends JPanel {
 class SBMLmarkupModel extends DefaultTableModel {
     private static final long serialVersionUID = -4867567086739357065L;
 
-    private Vector nodeOrder;
+    private List nodeOrder;
     private short[][] t_markup;
     
-    protected SBMLmarkupModel (Vector nodeorder, short[][] t_markup) {
+    protected SBMLmarkupModel (List nodeorder, short[][] t_markup) {
         this.nodeOrder = nodeorder;
         this.t_markup = t_markup;
     }

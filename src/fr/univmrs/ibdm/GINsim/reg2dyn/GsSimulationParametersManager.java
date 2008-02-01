@@ -3,7 +3,7 @@ package fr.univmrs.ibdm.GINsim.reg2dyn;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.Vector;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
@@ -28,7 +28,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
 
     public void doSave(OutputStreamWriter os, GsGraph graph) {
         GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
-        Vector nodeOrder = graph.getNodeOrder();
+        List nodeOrder = graph.getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }

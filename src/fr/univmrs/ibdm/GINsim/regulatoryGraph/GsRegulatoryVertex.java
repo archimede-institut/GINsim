@@ -1,16 +1,14 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
 import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -94,22 +92,25 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 	 */
 	public void setMaxValue(short max, GsRegulatoryGraph graph) {
 	    if (max>0 && max<= MAXVALUE && max != maxValue) {
-		    if (!getInteractionsModel().isMaxCompatible(max)) {
-			      graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
-		    	return;
-		    }
-	    	String s = "";
 	    	short oldmax = maxValue;
-	    	maxValue = max;
-	    	if (oldmax > maxValue) {
-	    		s += graph.applyNewMaxValue(this);
-	    		if (v_logicalParameters.applyNewMaxValue(max, graph)) {
-	    			s += Translator.getString("STR_parameter_value_sup_max\n");
+	    	if (oldmax > max) {
+	    		List l_fixable = new ArrayList();
+	    		List l_conflict = new ArrayList();
+	    		List l_parameters = new ArrayList();
+			    if (!getInteractionsModel().isMaxCompatible(max)) {
+			    	graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
+			    	return;
+			    }
+	    		graph.canApplyNewMaxValue(this, max, l_fixable, l_conflict);
+	    		v_logicalParameters.applyNewMaxValue(max, graph, l_parameters);
+	    		if (l_fixable.size() > 0 || l_conflict.size() > 0 || l_parameters.size() > 0) {
+	    			GsGraphNotificationAction action = new UpdateMaxBlockedAction(this, max, l_fixable, l_conflict, l_parameters);
+		    		graph.addNotificationMessage(new GsGraphNotificationMessage(
+		    				graph, "max value decrease is blocked", action, null, GsGraphNotificationMessage.NOTIFICATION_WARNING) );
+	    			return;
 	    		}
 	    	}
-	    	if (!"".equals(s)) {
-	    		graph.addNotificationMessage( new GsGraphNotificationMessage(graph, s.trim(), GsGraphNotificationMessage.NOTIFICATION_WARNING) );
-	    	}
+	    	maxValue = max;
     		graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
     		getInteractionsModel().refreshVertex();
 	    }
@@ -433,4 +434,59 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
 			}
 		}
 	}
+}
+
+class UpdateMaxBlockedAction implements GsGraphNotificationAction {
+
+	String[] t_action;
+	
+	GsRegulatoryVertex vertex;
+	short max;
+	List l_fixable, l_conflict, l_parameters;
+	
+	public UpdateMaxBlockedAction(GsRegulatoryVertex vertex,
+			short max, List l_fixable, List l_conflict, List l_parameters) {
+		this.vertex = vertex;
+		this.max = max;
+		this.l_conflict = l_conflict;
+		this.l_fixable = l_fixable;
+		this.l_parameters = l_parameters;
+		if (l_conflict.size() == 0) {
+			t_action = new String[2];
+			t_action[1] = "Fix";
+		} else {
+			t_action = new String[1];
+		}
+		t_action[0] = "Detail";
+	}
+
+	public String[] getActionName() {
+		return t_action;
+	}
+
+	public boolean perform(GsGraph graph, Object data, int index) {
+		if (index == 1) {
+			if (l_conflict.size() > 0) {
+				return false;
+			}
+			Iterator it = l_fixable.iterator();
+			while (it.hasNext()) {
+				((GsRegulatoryMultiEdge)it.next()).applyNewMaxValue(max);
+			}
+			it = l_parameters.iterator();
+			while (it.hasNext()) {
+				((GsLogicalParameter)it.next()).setValue(max, graph);
+			}
+			vertex.setMaxValue(max, (GsRegulatoryGraph)graph);
+			return true;
+		}
+		
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean timeout(GsGraph graph, Object data) {
+		return true;
+	}
+	
 }

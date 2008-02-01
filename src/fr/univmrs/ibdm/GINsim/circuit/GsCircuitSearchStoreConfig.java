@@ -1,5 +1,5 @@
 package fr.univmrs.ibdm.GINsim.circuit;
-import java.util.Vector;
+import java.util.List;
 
 /**
  * store configuration of circuit search.
@@ -10,7 +10,7 @@ public class GsCircuitSearchStoreConfig {
     /**  */
     public short[][] t_constraint;
     /**  */
-    public Vector v_list;
+    public List v_list;
     /**  */
     public int minlen;
     /**  */

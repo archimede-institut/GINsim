@@ -2,7 +2,7 @@ package fr.univmrs.ibdm.GINsim.circuit;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -28,7 +28,7 @@ public class GsCircuitConfigureSearch extends JPanel {
     private GsCircuitFrame circuitFrame;
     private GsCircuitSpinModel smodel;
     private JButton buttonReset;
-    private Vector nodeOrder;
+    private List nodeOrder;
     
     /**
      * create the configuration window.
@@ -37,7 +37,7 @@ public class GsCircuitConfigureSearch extends JPanel {
      * @param config
      * @param nodeOrder 
      */
-    public GsCircuitConfigureSearch(GsCircuitFrame frame, GsCircuitSearchStoreConfig config, Vector nodeOrder) {
+    public GsCircuitConfigureSearch(GsCircuitFrame frame, GsCircuitSearchStoreConfig config, List nodeOrder) {
         this.circuitFrame = frame;
         this.nodeOrder = nodeOrder;
         this.config = config;
@@ -132,7 +132,7 @@ public class GsCircuitConfigureSearch extends JPanel {
 class GsCircuitConfigModel extends DefaultTableModel {
     private static final long serialVersionUID = -8900180159435512429L;
  
-    private Vector v_list;
+    private List v_list;
     private short[] t_status;
     private short[][] t_constraint;
     private GsCircuitFrame frame;
@@ -144,7 +144,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
      * @param t_status
      * @param t_constraint 
      */
-    public GsCircuitConfigModel(GsCircuitFrame frame, Vector v_list, short[] t_status, short[][] t_constraint) {
+    public GsCircuitConfigModel(GsCircuitFrame frame, List v_list, short[] t_status, short[][] t_constraint) {
         this.frame = frame;
         this.v_list = v_list;
         this.t_status = t_status;

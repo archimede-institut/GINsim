@@ -33,7 +33,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     private GsGraphicalAttributesStore gas;
     private GsGraphicalAttributesStore dynGas;
     
-    private Vector nodeOrder;
+    private List nodeOrder;
     private PathPlayer pathPlayer = null;
     
     private static final Color[] BGCOLS = { 
@@ -199,7 +199,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
             if (curVal == 0) {
                 col = 0;
             } else {
-                col = (NBCOL*curVal/vertex.getMaxValue());
+                col = NBCOL*curVal/vertex.getMaxValue();
                 if (col == 0) {
                     col = 1;
                 } else if (col >= NBCOL) { // SHOULDN'T happen but....
@@ -288,7 +288,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
             return;
         }
         if (pathPlayer == null) {
-            pathPlayer = new PathPlayer(path, this, (start == -1) ? 0 : start);
+            pathPlayer = new PathPlayer(path, this, start == -1 ? 0 : start);
         }
         
         ui.busyPlaying();

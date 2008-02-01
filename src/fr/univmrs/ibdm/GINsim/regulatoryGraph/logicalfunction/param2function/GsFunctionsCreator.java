@@ -4,31 +4,30 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTreeLeafPattern;
 
 public class GsFunctionsCreator {
-  private GsGraphManager graphManager;
+  private GsRegulatoryGraph graph;
   private List interactions;
   private GsRegulatoryVertex currentVertex;
 
-  public GsFunctionsCreator(GsGraphManager graphManager, List interactions, GsRegulatoryVertex currentVertex) {
-    super();
-    this.graphManager = graphManager;
+  public GsFunctionsCreator(GsRegulatoryGraph graph, List interactions, GsRegulatoryVertex currentVertex) {
+    this.graph = graph;
     this.interactions = interactions;
     this.currentVertex = currentVertex;
   }
-  public GsGraphManager getGraphManager() {
-    return graphManager;
+  public GsRegulatoryGraph getGraph() {
+    return graph;
   }
   public GsRegulatoryVertex getCurrentVertex() {
     return currentVertex;
   }
   public GsParamTree makeTree() {
-    List l = graphManager.getIncomingEdges(currentVertex);
+    List l = graph.getGraphManager().getIncomingEdges(currentVertex);
     Iterator it = l.iterator();
     GsDirectedEdge de;
     HashMap h = new HashMap();
@@ -66,7 +65,7 @@ public class GsFunctionsCreator {
     while (it.hasNext()) {
       e = (Entry)it.next();
       v = (GsRegulatoryVertex)e.getKey();
-      e.setValue(((GsDirectedEdge)graphManager.getEdge(v, currentVertex)).getUserObject());
+      e.setValue(((GsDirectedEdge)graph.getGraphManager().getEdge(v, currentVertex)).getUserObject());
     }
     return new GsParamTree(as, 1234);
   }

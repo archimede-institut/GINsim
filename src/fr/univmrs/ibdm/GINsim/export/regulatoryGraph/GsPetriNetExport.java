@@ -2,10 +2,7 @@ package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -80,7 +77,7 @@ public class GsPetriNetExport extends GsAbstractExport {
      * @param v_node all nodes
      * @param len number of nodes in the original graph
      */
-    protected static void browse(Vector v_result, OmddNode node, int nodeIndex, Vector v_node, int len) {
+    protected static void browse(List v_result, OmddNode node, int nodeIndex, List v_node, int len) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
@@ -97,7 +94,7 @@ public class GsPetriNetExport extends GsAbstractExport {
         }
     }
 
-    private static void browse(Vector v_result, int[][] t_cst, int level, OmddNode node, int nodeIndex, Vector v_node) {
+    private static void browse(List v_result, int[][] t_cst, int level, OmddNode node, int nodeIndex, List v_node) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
@@ -184,8 +181,8 @@ public class GsPetriNetExport extends GsAbstractExport {
 	 * @param t_tree
 	 * @return the initial markup
 	 */
-    protected static short[][] prepareExport(GsExportConfig config, Vector[] t_transition, OmddNode[] t_tree) {
-		Vector nodeOrder = config.getGraph().getNodeOrder();
+    protected static short[][] prepareExport(GsExportConfig config, List[] t_transition, OmddNode[] t_tree) {
+    	List nodeOrder = config.getGraph().getNodeOrder();
 		int len = nodeOrder.size();
 		// get the selected initial state
 		Iterator it_state = new InitialStatesIterator(nodeOrder,
@@ -195,7 +192,7 @@ public class GsPetriNetExport extends GsAbstractExport {
 		PNConfig specConfig = (PNConfig)config.getSpecificConfig();
 		GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)specConfig.store.getObject(0);
 		if (mutant != null) {
-			mutant.apply(t_tree, config.getGraph().getNodeOrder(), true);
+			mutant.apply(t_tree, (GsRegulatoryGraph)config.getGraph());
 		}
 		
 		

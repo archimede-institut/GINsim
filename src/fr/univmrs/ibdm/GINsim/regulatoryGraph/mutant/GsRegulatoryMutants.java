@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -46,7 +47,7 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
         m.put(GsRegulatoryMutantDef.class, mpanel);
         GenericListPanel lp = new GenericListPanel(m, "mutantList");
         lp.setList(mutants);
-        mpanel.setEditedObject(mutants, lp, graph.getNodeOrder());
+        mpanel.setEditedObject(mutants, lp, graph);
     	return lp;
     }
 
@@ -194,7 +195,7 @@ class MutantPanel extends JPanel {
     EnhancedJTable table_change;
     GsRegulatoryMutantDef curMutant = null;
     private GsRegulatoryMutants mutants;
-    Vector v_nodeOrder;
+    GsRegulatoryGraph graph;
     AnnotationPanel ap;
 
     public MutantPanel() { 
@@ -212,6 +213,8 @@ class MutantPanel extends JPanel {
         table_change = new EnhancedJTable(model);
         sp.setViewportView(table_change);
         add(sp, c);
+        int[] maxcols = {0,150 , 1,40 , 2,40 , 3,40};
+        table_change.setMaxCols(maxcols);
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
@@ -248,14 +251,14 @@ class MutantPanel extends JPanel {
            return;
        }
        curMutant = (GsRegulatoryMutantDef)mutants.getElement(null, t_sel[0]);
-       model.setEditedObject(curMutant, v_nodeOrder);
+       model.setEditedObject(curMutant, graph);
        ap.setEditedObject(curMutant.annotation);
     }
     
-    void setEditedObject(GsRegulatoryMutants mutants, GenericListPanel lp, Vector v_nodeOrder) {
+    void setEditedObject(GsRegulatoryMutants mutants, GenericListPanel lp, GsRegulatoryGraph graph) {
     	this.lp = lp;
         this.mutants = mutants;
-        this.v_nodeOrder = v_nodeOrder;
+        this.graph = graph;
         
         lp.addSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
@@ -270,7 +273,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
     private static final long serialVersionUID = 864660594916225977L;
 
     private GsRegulatoryMutantDef curMutant;
-    Vector v_genes;
+    private GsRegulatoryGraph graph;
     ValueList vlist;
     
     /**
@@ -278,14 +281,16 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
      * @param curMutant
      * @param v_node_order
      */
-    public void setEditedObject(GsRegulatoryMutantDef curMutant, Vector v_node_order) {
+    public void setEditedObject(GsRegulatoryMutantDef curMutant, GsRegulatoryGraph graph) {
+    	this.graph = graph;
         this.curMutant = curMutant;
+        List nodeOrder = graph.getNodeOrder();
         if (vlist == null) {
-            vlist = new ValueList(v_node_order, -1, "Select a gene...");
+            vlist = new ValueList(nodeOrder, -1, "Select a gene...");
         } else {
-            vlist.reset(v_node_order, -1, "Select a gene...");
+            vlist.reset(nodeOrder, -1, "Select a gene...");
         }
-        fireTableStructureChanged();
+        fireTableDataChanged();
     }
 
     protected void delete(int i) {
@@ -293,7 +298,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             return;
         }
         curMutant.v_changes.remove(i);
-        fireTableStructureChanged();
+        fireTableDataChanged();
     }
 
     public int getRowCount() {
@@ -304,7 +309,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
     }
 
     public int getColumnCount() {
-        return 3;
+        return 5;
     }
 
     public String getColumnName(int columnIndex) {
@@ -312,9 +317,13 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         case 0:
             return Translator.getString("STR_node");
         case 1:
-            return Translator.getString("STR_min");
+            return Translator.getString("STR_strict");
         case 2:
+            return Translator.getString("STR_min");
+        case 3:
             return Translator.getString("STR_max");
+        case 4:
+            return Translator.getString("STR_condition");
         }
         return null;
     }
@@ -323,7 +332,10 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         if (columnIndex == 0) {
             return ValueList.class;
         }
-        if (columnIndex > 0 && columnIndex < 3) {
+        if (columnIndex == 1) {
+        	return Boolean.class;
+        }
+        if (columnIndex > 1 && columnIndex < 4) {
             return String.class;
         }
         return Object.class;
@@ -334,7 +346,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             return false;
         }
         if (rowIndex == curMutant.getNbChanges()) {
-            if (columnIndex == 0) {
+            if (columnIndex == 0 || columnIndex == 1) {
                 return true;
             }
             return false;
@@ -342,6 +354,8 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         switch (columnIndex) {
             case 1:
             case 2:
+            case 3:
+            case 4:
                 return true;
         }
         return false;
@@ -356,17 +370,24 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             if (columnIndex == 0) {
                 return vlist;
             }
+            if (columnIndex == 1) {
+            	return Boolean.FALSE;
+            }
             return "";
         }
         switch (columnIndex) {
             case 0:
                 return curMutant.getName(rowIndex);
             case 1:
+                return curMutant.isStrict(rowIndex) ? Boolean.TRUE : Boolean.FALSE;
+            case 2:
                 value = curMutant.getMin(rowIndex);
                 break;
-            case 2:
+            case 3:
                 value = curMutant.getMax(rowIndex);
                 break;
+            case 4:
+                return curMutant.getCondition(rowIndex); 
             default:
                 return null;
         }
@@ -377,7 +398,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
     }
 
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (rowIndex >= getRowCount() || columnIndex < 0 || columnIndex > 2) {
+        if (rowIndex >= getRowCount() || columnIndex < 0 || columnIndex > 4) {
             return;
         }
         
@@ -385,11 +406,22 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             if (columnIndex == 0) {
                     ValueList value = (ValueList)getValueAt(rowIndex, columnIndex);
                     curMutant.addChange((GsRegulatoryVertex)value.get(value.getSelectedIndex()));
-                    fireTableStructureChanged();
+                    fireTableDataChanged();
             }
             return;
         }
-
+        
+        if (columnIndex == 1) {
+        	if (!(aValue instanceof Boolean)) {
+        		return;
+			}
+        	curMutant.setStrict(rowIndex, aValue == Boolean.TRUE);
+        	return;
+        }
+        
+        if (columnIndex == 4) {
+        	curMutant.setCondition(rowIndex, graph, (String)aValue);
+        }
         
         if ("".equals(aValue) || "-".equals(aValue)) {
             curMutant.setMin(rowIndex, (short)-1);
@@ -414,10 +446,10 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             return;
         }
         switch (columnIndex) {
-            case 1:
+            case 2:
                 curMutant.setMin(rowIndex, val);
                 break;
-            case 2:
+            case 3:
                 curMutant.setMax(rowIndex, val);
                 break;
         }

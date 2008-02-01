@@ -76,7 +76,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
      * @throws SAXException
      */
     public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws SAXException {
-        this.graph = new GsRegulatoryGraph(s_filename);
+        graph = new GsRegulatoryGraph(s_filename);
         graph.setDTD(s_dtd);
         this.map = map;
 		s_nodeOrder = attributes.getValue("nodeorder");
@@ -107,8 +107,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     	this.map = map;
 		vareader = graph.getGraphManager().getVertexAttributesReader();
 		ereader = graph.getGraphManager().getEdgeAttributesReader();
-
-    		startParsing(file);
+		startParsing(file);
     }
 
     public void endElement(String uri, String localName, String qName)
@@ -230,6 +229,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                             short maxvalue = (short)Integer.parseInt(attributes.getValue("maxvalue"));
                             String name = attributes.getValue("name");
                             vertex = graph.addNewVertex(id, name, maxvalue);
+                            vertex.getV_logicalParameters().setUpdateDup(false);
                         	String s_basal = attributes.getValue("basevalue");
                         	if (s_basal != null) {
                         		short basevalue = (short)Integer.parseInt(s_basal);
@@ -237,10 +237,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                         			vertex.addLogicalParameter(new GsLogicalParameter(basevalue), true);
                         		}
                         	}
-
                             values.put(vertex, new Hashtable());
-
-
                         } catch (NumberFormatException e) { throw new SAXException("malformed node's parameters"); }
                     } else {
                         pos = POS_FILTERED;
@@ -299,14 +296,11 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                 		v_waitingInteractions.add(vertex);
                 		v_waitingInteractions.add(attributes.getValue("val"));
                 		v_waitingInteractions.add(attributes.getValue("idActiveInteractions"));
-                }
-
-
-                else if (qName.equals("value")) {
-                  v_function = new Vector();
-                  ((Hashtable)values.get(vertex)).put(attributes.getValue("val"), v_function);
+                } else if (qName.equals("value")) {
+                	v_function = new Vector();
+                	((Hashtable)values.get(vertex)).put(attributes.getValue("val"), v_function);
                 } else if (qName.equals("exp")) {
-                  v_function.addElement(attributes.getValue("str"));
+                	v_function.addElement(attributes.getValue("str"));
                 }
                 break; // POS_VERTEX
 
@@ -484,7 +478,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       try {
         GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
         GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
-        if (!tbp.compile(exp)) {
+        if (!tbp.compile(exp, graph, vertex)) {
           graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
             GsGraphNotificationMessage.NOTIFICATION_WARNING));
         }

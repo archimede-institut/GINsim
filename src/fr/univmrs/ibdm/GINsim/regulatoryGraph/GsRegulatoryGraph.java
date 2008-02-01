@@ -12,9 +12,7 @@ import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.ibdm.GINsim.graph.*;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
 import fr.univmrs.ibdm.GINsim.gui.GsEditModeDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
@@ -101,7 +99,25 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     	Object obj = graphManager.getEdge(source, target);
     	if (obj != null) {
     		obj = ((GsDirectedEdge)obj).getUserObject();
-    		((GsRegulatoryMultiEdge)obj).addEdge(param, this);
+    		GsGraphNotificationAction action = new GsGraphNotificationAction() {
+    			final String[] t_action = {"go"};
+				public boolean timeout(GsGraph graph, Object data) {
+					return true;
+				}
+				public boolean perform(GsGraph graph, Object data, int index) {
+					graph.getGraphManager().select(data);
+					return true;
+				}
+				public String[] getActionName() {
+					return t_action;
+				}
+			
+			};
+	    	this.addNotificationMessage(new GsGraphNotificationMessage(this,
+	    			Translator.getString("STR_usePanelToAddMoreEdges"),
+	    			action,
+	    			obj,
+	    			GsGraphNotificationMessage.NOTIFICATION_WARNING));
     		return obj;
     	}
     	obj = new GsRegulatoryMultiEdge((GsRegulatoryVertex)source, (GsRegulatoryVertex)target, param);
@@ -381,20 +397,14 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 	 * @param vertex
      * @return a warning string if necessary
 	 */
-	public String applyNewMaxValue(GsRegulatoryVertex vertex) {
-        String s = "";
+	public void canApplyNewMaxValue(GsRegulatoryVertex vertex, short newMax, List l_fixable, List l_conflict) {
 		Iterator it = graphManager.getOutgoingEdges(vertex).iterator();
 		while (it.hasNext()) {
 			Object next = it.next();
 			GsRegulatoryMultiEdge me;
 			me = (GsRegulatoryMultiEdge)((GsDirectedEdge)next).getUserObject();
-			me.applyNewMaxValue(vertex);
-            // FIXME: add warning when updating
-            // populate "s" or better way (tm) ?
-            // a clean way would take undo into account
-            // do it later...
+			me.canApplyNewMaxValue(newMax, l_fixable, l_conflict);
 		}
-        return s;
 	}
 
 	protected FileFilter doGetFileFilter() {
@@ -437,16 +447,16 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 		return graphEditor;
 	}
 
-	public Vector getSpecificLayout() {
+	public List getSpecificLayout() {
 		return GsRegulatoryGraphDescriptor.getLayout();
 	}
-	public Vector getSpecificExport() {
+	public List getSpecificExport() {
 		return GsRegulatoryGraphDescriptor.getExport();
 	}
-    public Vector getSpecificAction() {
+    public List getSpecificAction() {
         return GsRegulatoryGraphDescriptor.getAction();
     }
-    public Vector getSpecificObjectManager() {
+    public List getSpecificObjectManager() {
         return GsRegulatoryGraphDescriptor.getObjectManager();
     }
 
@@ -454,7 +464,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         return copiedGraph;
     }
 
-    protected Vector doMerge(GsGraph otherGraph) {
+    protected List doMerge(GsGraph otherGraph) {
         if (!(otherGraph instanceof GsRegulatoryGraph)) {
             return null;
         }
@@ -579,8 +589,8 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
             return false;
         }
 
-        Vector regOrder = regGraph.nodeOrder;
-        Vector dynOrder = dynGraph.getNodeOrder();
+        List regOrder = regGraph.nodeOrder;
+        List dynOrder = dynGraph.getNodeOrder();
         if (regOrder == null || dynOrder == null || regOrder.size() != dynOrder.size()) {
             return false;
         }
@@ -612,7 +622,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         return t_tree;
     }
 
-	public Vector getNodeOrderForSimulation() {
+	public List getNodeOrderForSimulation() {
 		return getNodeOrder();
 	}
 	public OmddNode[] getParametersForSimulation(boolean focal) {

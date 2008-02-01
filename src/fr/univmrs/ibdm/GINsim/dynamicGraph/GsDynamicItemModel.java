@@ -3,7 +3,6 @@ package fr.univmrs.ibdm.GINsim.dynamicGraph;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
@@ -16,7 +15,7 @@ import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 public class GsDynamicItemModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 8860415338236400531L;
-    private Vector nodeOrder;
+    private List nodeOrder;
     GsDynamicGraph graph;
     private int[] state;
     private GsDynamicNode[] nextState;

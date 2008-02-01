@@ -2,7 +2,7 @@ package fr.univmrs.ibdm.GINsim.reg2dyn;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -40,7 +40,7 @@ public class GsSimulationParametersParser extends GsXMLHelper {
     GsSimulationParameterList paramLists;
     GsInitialStateList initList = null;
     GsRegulatoryGraph graph;
-    Vector nodeOrder;
+    List nodeOrder;
     String[] t_order;
     int pos = POS_OUT;
     int posback = POS_OUT;

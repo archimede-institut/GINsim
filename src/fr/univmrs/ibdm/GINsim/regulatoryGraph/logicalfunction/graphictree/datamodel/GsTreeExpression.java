@@ -187,8 +187,8 @@ public class GsTreeExpression extends GsTreeElement {
   }
   private void makeDNFString() throws Exception {
     GsParamTree tr = functionsCreator.makeTree();
-    GsBooleanParser parser = new GsBooleanParser(functionsCreator.getGraphManager().getIncomingEdges(functionsCreator.getCurrentVertex()));
-    parser.compile(userExpression);
+    GsBooleanParser parser = new GsBooleanParser(functionsCreator.getGraph().getGraphManager().getIncomingEdges(functionsCreator.getCurrentVertex()));
+    parser.compile(userExpression, functionsCreator.getGraph(), functionsCreator.getCurrentVertex());
     root = parser.getRoot();
     GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
     Vector params = parser.getParams(functionList.getData());

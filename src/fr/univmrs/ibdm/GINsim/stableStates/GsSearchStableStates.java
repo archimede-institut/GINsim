@@ -1,7 +1,7 @@
 package fr.univmrs.ibdm.GINsim.stableStates;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
@@ -26,7 +26,7 @@ public class GsSearchStableStates extends Thread {
 
 	private GsRegulatoryGraph regGraph;
 	private GenericStableStateUI ui;
-	Vector nodeOrder;
+	List nodeOrder;
 	OmddNode[] t_param;
 	OmddNode dd_stable;
 	GsRegulatoryMutantDef mutant;
@@ -53,7 +53,7 @@ public class GsSearchStableStates extends Thread {
 		
 		t_param = regGraph.getAllTrees(true);
 		if (mutant != null) {
-			mutant.apply(t_param, nodeOrder, true);
+			mutant.apply(t_param, regGraph);
 		}
 		
 		long start = System.currentTimeMillis();

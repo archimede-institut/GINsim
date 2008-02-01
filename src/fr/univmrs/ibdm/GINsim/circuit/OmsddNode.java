@@ -1,7 +1,7 @@
 package fr.univmrs.ibdm.GINsim.circuit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * Ordered Binary Decision Diagram (OBDD) is a tree representation of boolean functions.
@@ -311,7 +311,7 @@ public class OmsddNode {
      * @param names vector of node name
      * @return a printed form of the tree
      */
-    public String getString(int ilevel, Vector names) {
+    public String getString(int ilevel, List names) {
         if (this.next == null) {
             if (value == 0) {
                 return null;

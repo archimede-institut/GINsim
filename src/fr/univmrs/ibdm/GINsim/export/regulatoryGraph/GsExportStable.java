@@ -4,7 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -92,7 +92,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 	    		StringBuffer s = new StringBuffer("");
 	    		
 	    		int i;
-	    		Vector v_no = cfg.graph.getNodeOrder();
+	    		List v_no = cfg.graph.getNodeOrder();
 	    		int[] checked = tableModel.getCheckedRow();
 	    		s.append("SPEC EF ( AG (");
 	    		for ( i=0; i<checked.length-1 ;i++) {

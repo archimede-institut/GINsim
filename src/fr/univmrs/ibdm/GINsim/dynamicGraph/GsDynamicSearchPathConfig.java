@@ -3,6 +3,7 @@ package fr.univmrs.ibdm.GINsim.dynamicGraph;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
@@ -22,7 +23,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
     private static final long serialVersionUID = -1664002987035655174L;
     
     private GsDynamicGraph graph;
-    private Vector v_pathConstraints = new Vector(2);
+    private List v_pathConstraints = new ArrayList(2);
     
     private JPanel jcontentPane = null;
     private JScrollPane scrollPane = null;
@@ -37,7 +38,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
     private JPanel p_result = null;
     
     private GsDynamicAnalyserPathModel model;
-    private Vector path = null;
+    private List path = null;
     private JFrame frame;
     private String s_nodeOrder;
     
@@ -51,7 +52,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
         super(main);
         this.frame = main;
         this.graph = graph;
-        Vector nodeOrder = graph.getNodeOrder();
+        List nodeOrder = graph.getNodeOrder();
         s_nodeOrder = "";
         for (int i=0 ; i<nodeOrder.size() ; i++) {
             s_nodeOrder += nodeOrder.get(i)+" ";
@@ -171,7 +172,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
     protected void search() {
         boolean isPath = false;
         if (path == null) {
-            path = new Vector();
+            path = new ArrayList();
         } else {
             path.clear();
         }
@@ -239,9 +240,9 @@ public class GsDynamicSearchPathConfig extends JDialog {
         v_path.addAll(this.path);
         JDialog pathViewDialog = new JDialog(frame);
         int w = 10*s_nodeOrder.length();
-        w = (w > 800) ? 800 : w;
+        w = w > 800 ? 800 : w;
         int h = 40+25*path.size();
-        h = (h>600) ? 600 : h;
+        h = h>600 ? 600 : h;
         pathViewDialog.setSize(w,h);
         JScrollPane scrollPane = new JScrollPane();
         pathViewDialog.setContentPane(scrollPane);
@@ -328,7 +329,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
     private JTable getTableConstraint() {
         if (tableConstraint == null) {
             tableConstraint = new JTable();
-            Vector v_inPath = new Vector(2);
+            List v_inPath = new ArrayList(2);
             model = new GsDynamicAnalyserPathModel(graph, v_pathConstraints, v_inPath, this);
             tableConstraint.setModel(model);
             tableConstraint.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

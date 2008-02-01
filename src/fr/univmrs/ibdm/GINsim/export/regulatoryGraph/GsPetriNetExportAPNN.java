@@ -3,7 +3,8 @@ package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
@@ -27,7 +28,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 
 public class GsPetriNetExportAPNN extends GsPetriNetExport 
 {
-	
 	protected GsPetriNetExportAPNN()
 	{
 		id = "APNN";
@@ -45,10 +45,10 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
 	protected void doExport(GsExportConfig config) 
 	{
 		GsGraph graph = config.getGraph();
-        Vector v_no = graph.getNodeOrder();
+        List v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
-        Vector[] t_transition = new Vector[len];
+        List[] t_transition = new ArrayList[len];
         short[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 
         try 
@@ -64,14 +64,14 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
             
             for (int i=0 ; i<t_tree.length ; i++) 
             {
-                out.write("\\place{"+v_no.get(i)+"}"+"{\\name{"+v_no.get(i)+"} \\init{"+t_markup[i][0]+"} \\capacity{"+(t_markup[i][0]+t_markup[i][1])+"} \\coords{"+(50)+" "+(10+80*i)+"}}\n");
-                out.write("\\place{-"+v_no.get(i)+"}"+"{\\name{-"+v_no.get(i)+"} \\init{"+t_markup[i][1]+"} \\capacity{"+(t_markup[i][0]+t_markup[i][1])+"} \\coords{"+(100)+" "+(10+80*i)+"}}\n\n");
+                out.write("\\place{"+v_no.get(i)+"}"+"{\\name{"+v_no.get(i)+"} \\init{"+t_markup[i][0]+"} \\capacity{"+(t_markup[i][0]+t_markup[i][1])+"} \\coords{"+50+" "+(10+80*i)+"}}\n");
+                out.write("\\place{-"+v_no.get(i)+"}"+"{\\name{-"+v_no.get(i)+"} \\init{"+t_markup[i][1]+"} \\capacity{"+(t_markup[i][0]+t_markup[i][1])+"} \\coords{"+100+" "+(10+80*i)+"}}\n\n");
             }
             
             // TRANSITION
             for (int i=0 ; i<t_transition.length ; i++) 
             {
-                Vector v_transition = t_transition[i];
+            	List v_transition = t_transition[i];
                 String s_node = v_no.get(i).toString();
                 int max = ((GsRegulatoryVertex)v_no.get(i)).getMaxValue();
                 int c = 0;
@@ -99,7 +99,7 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
             // ARC
             for (int i=0 ; i<t_transition.length ; i++) 
             {
-                Vector v_transition = t_transition[i];
+            	List v_transition = t_transition[i];
                 String s_node = v_no.get(i).toString();
                 int max = ((GsRegulatoryVertex)v_no.get(i)).getMaxValue();
                 
@@ -122,7 +122,7 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
                                 out.write("\\arc{a_"+s_src+"_"+s_transition+"}{\\from{"+s_src+"} \\to{"+s_transition+"} \\weight{"+td.minValue+"} \\type{ordinary}}\n"); 		
                                 out.write("\\arc{a_"+s_transition+"_"+s_src+"}{\\from{"+s_transition+"} \\to{"+s_src+"} \\weight{"+(td.minValue+1)+"} \\type{ordinary}}\n"); 		
                             }
-                            int a = (td.value <= td.maxValue ?  max-td.value+1 : max-td.maxValue);
+                            int a = td.value <= td.maxValue ?  max-td.value+1 : max-td.maxValue;
                             out.write("\\arc{a_-"+s_src+"_"+s_transition+"}{\\from{-"+s_src+"} \\to{"+s_transition+"} \\weight{"+a+"} \\type{ordinary}}\n");
                             if (a > 1) 
                             {

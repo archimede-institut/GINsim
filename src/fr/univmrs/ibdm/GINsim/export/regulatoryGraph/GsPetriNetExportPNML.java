@@ -2,7 +2,8 @@ package fr.univmrs.ibdm.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
@@ -40,10 +41,10 @@ public class GsPetriNetExportPNML extends GsAbstractExport {
 	
 	protected void doExport(GsExportConfig config) {
 		GsGraph graph = config.getGraph();
-        Vector v_no = graph.getNodeOrder();
+		List v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
-        Vector[] t_transition = new Vector[len];
+        List[] t_transition = new ArrayList[len];
         short[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 
         try {
@@ -56,12 +57,12 @@ public class GsPetriNetExportPNML extends GsAbstractExport {
             // places data
             for (int i=0 ; i<t_tree.length ; i++) {
                 out.write("  <place id=\""+v_no.get(i)+"\">\n"+
-                          "     <graphics><position x=\""+(50)+"\" y=\""+(10+80*i)+"\"/></graphics>\n"+
+                          "     <graphics><position x=\""+50+"\" y=\""+(10+80*i)+"\"/></graphics>\n"+
                           "     <name><value>"+v_no.get(i)+"</value></name>\n"+
                           "     <initialMarking><value>"+t_markup[i][0]+"</value></initialMarking>\n"+
                           "  </place>\n");
                 out.write("  <place id=\"-"+v_no.get(i)+"\">\n"+
-                          "     <graphics><position x=\""+(100)+"\" y=\""+(10+80*i)+"\"/></graphics>\n"+
+                          "     <graphics><position x=\""+100+"\" y=\""+(10+80*i)+"\"/></graphics>\n"+
                           "     <name><value>-"+v_no.get(i)+"</value></name>\n"+
                           "     <initialMarking><value>"+t_markup[i][1]+"</value></initialMarking>\n"+
                           "  </place>\n");
@@ -69,7 +70,7 @@ public class GsPetriNetExportPNML extends GsAbstractExport {
             
             // transitions data
             for (int i=0 ; i<t_transition.length ; i++) {
-                Vector v_transition = t_transition[i];
+            	List v_transition = t_transition[i];
                 String s_node = v_no.get(i).toString();
                 int max = ((GsRegulatoryVertex)v_no.get(i)).getMaxValue();
                 int c = 0;
@@ -103,7 +104,7 @@ public class GsPetriNetExportPNML extends GsAbstractExport {
             
             // arcs
             for (int i=0 ; i<t_transition.length ; i++) {
-                Vector v_transition = t_transition[i];
+            	List v_transition = t_transition[i];
                 String s_node = v_no.get(i).toString();
                 int max = ((GsRegulatoryVertex)v_no.get(i)).getMaxValue();
                 if (v_transition != null) {
@@ -125,7 +126,7 @@ public class GsPetriNetExportPNML extends GsAbstractExport {
                                         "     <inscription><value>"+(td.minValue+1)+"</value></inscription>\n" +
                                         "  </arc>\n");
                             }
-                            int a = (td.value <= td.maxValue ?  max-td.value+1 : max-td.maxValue);
+                            int a = td.value <= td.maxValue ?  max-td.value+1 : max-td.maxValue;
                             out.write("  <arc id=\"a_-"+s_src+"_"+s_transition+"\" source=\"-"+s_src+"\" target=\""+s_transition+"\">\n" +
                                     "     <inscription><value>"+a+"</value></inscription>\n" +
                                     "  </arc>\n");

@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.connectivity;
 
 import java.io.OutputStreamWriter;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -71,23 +72,23 @@ public final class GsTmpGraph extends GsGraph {
 	public void addEdge(Object source, Object target) {
 		graphManager.addEdge(source, target, null);
 	}
-	public Vector getSpecificLayout() {
+	public List getSpecificLayout() {
 		return null;
 	}
-	public Vector getSpecificExport() {
+	public List getSpecificExport() {
 		return null;
 	}
-	public Vector getSpecificAction() {
+	public List getSpecificAction() {
 		return null;
 	}
-    public Vector getSpecificObjectManager() {
+    public List getSpecificObjectManager() {
         return null;
     }
 
     protected GsGraph getCopiedGraph() {
         return null;
     }
-    protected Vector doMerge(GsGraph otherGraph) {
+    protected List doMerge(GsGraph otherGraph) {
         // this can't be usefull in anyway here
         return null;
     }

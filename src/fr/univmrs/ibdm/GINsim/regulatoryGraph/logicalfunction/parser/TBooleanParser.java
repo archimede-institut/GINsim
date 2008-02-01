@@ -18,7 +18,7 @@ public abstract class TBooleanParser {
   }
   public abstract boolean verifOperandList(List list);
   protected abstract void setAllData(List list);
-  public boolean compile(String s) {
+  public boolean compile(String s) throws Exception {
     boolean ret = true;
     int i, j, k;
     String elem;

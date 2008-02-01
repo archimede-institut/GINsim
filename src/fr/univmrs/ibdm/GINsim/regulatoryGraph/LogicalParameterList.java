@@ -171,20 +171,15 @@ public class LogicalParameterList extends AbstractList implements List {
 		}
 	}
 
-
-	public boolean applyNewMaxValue(short max, GsRegulatoryGraph graph) {
+	public void applyNewMaxValue(short max, GsRegulatoryGraph graph, List l) {
 		Iterator it = manual.iterator();
-		boolean ret = false;
 		while (it.hasNext()) {
 			GsLogicalParameter param = (GsLogicalParameter)it.next();
 			if (param.getValue() > max) {
-				param.setValue(max, graph);
-				ret = true;
+				l.add(param);
 			}
 		}
-		return ret;
 	}
-
 
 	public void setParameterValue(int rowIndex, int value,
 			GsRegulatoryGraph graph) {
@@ -202,7 +197,6 @@ public class LogicalParameterList extends AbstractList implements List {
 		this.updateDup = updateDup;
 		refreshDupAndConflicts();
 	}
-
 
 	public boolean moveElement(int index, int to) {
 		if (index < 0 || index > manual.size() || to < 0 || to >= manual.size()) {

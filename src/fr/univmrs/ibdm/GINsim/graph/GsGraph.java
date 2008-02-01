@@ -3,9 +3,7 @@ package fr.univmrs.ibdm.GINsim.graph;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -44,7 +42,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     protected boolean canDelete = false;
     protected boolean opening = false;
     protected boolean saved = true;
-    protected Vector nodeOrder = new Vector();
+    protected List nodeOrder = new ArrayList();
     protected GsGraphDescriptor descriptor = null;
     protected Vector listeners = new Vector();
 
@@ -316,7 +314,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                         }
                     }
                 }
-                Vector v_specManager = getSpecificObjectManager();
+                List v_specManager = getSpecificObjectManager();
                 if (v_specManager != null) {
                     for (int i=0 ; i<v_specManager.size() ; i++) {
                         GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
@@ -586,19 +584,19 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	/**
 	 * @return a vector of layout actions for this kind of graph
 	 */
-	abstract public Vector getSpecificLayout();
+	abstract public List getSpecificLayout();
 	/**
 	 * @return a vector of export actions for this kind of graph.
 	 */
-	abstract public Vector getSpecificExport();
+	abstract public List getSpecificExport();
     /**
      * @return a vector of action related to this kind of graph.
      */
-    abstract public Vector getSpecificAction();
+    abstract public List getSpecificAction();
     /**
      * @return a vector of action related to this kind of graph.
      */
-    abstract public Vector getSpecificObjectManager();
+    abstract public List getSpecificObjectManager();
     /**
      * @param key
      * @return the object manager associated with THIS kind of graph and to a given key
@@ -621,7 +619,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	/**
 	 * @return the node order
 	 */
-	public Vector getNodeOrder() {
+	public List getNodeOrder() {
 		return nodeOrder;
 	}
 	/**
@@ -806,7 +804,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 * @param otherGraph
      * @return the vector of newly added items
 	 */
-	protected abstract Vector doMerge (GsGraph otherGraph);
+	protected abstract List doMerge (GsGraph otherGraph);
 
 	/**
 	 * create a copied graph with selected vertices and edges.
@@ -856,7 +854,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	public void paste() {
 	    GsGraph graph = getCopiedGraph();
 	    if (graph != null) {
-	        Vector v = doMerge(graph);
+	        List v = doMerge(graph);
 	        if (v != null) {
 	        	fireGraphChange(CHANGE_MERGED, v);
 	        }
@@ -870,7 +868,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	public void merge() {
 	    GsGraph graph = GsOpenAction.open(descriptor, null);
 	    if (graph != null) {
-	        Vector v = doMerge(graph);
+	    	List v = doMerge(graph);
 	        if (v != null) {
 	        	fireGraphChange(CHANGE_MERGED, v);
 	        }

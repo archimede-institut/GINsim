@@ -121,10 +121,6 @@ public class GsTreeInteractionsModel implements TreeModel {
   public void addValue(short v) {
     GsTreeValue val = new GsTreeValue(root, v);
     root.addChild(val, -1);
-    GsTreeValue value;
-    for (int i = 0; i < root.getChildCount(); i++) {
-      value = (GsTreeValue)root.getChild(i);
-    }
   }
 
   public void addValue(GsTreeValue v) {
@@ -157,7 +153,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     for (int i = 0; i < root.getChildCount(); i++) {
       value = (GsTreeValue)root.getChild(i);
       if (value.getValue() == v) {
-        expression = new GsTreeExpression(value, boolRoot, new GsFunctionsCreator(graph.getGraphManager(),
+        expression = new GsTreeExpression(value, boolRoot, new GsFunctionsCreator(graph,
             null, node));
         expression = (GsTreeExpression)value.addChild(expression, -1);
         return expression;
@@ -220,7 +216,7 @@ public class GsTreeInteractionsModel implements TreeModel {
   }
   public void addExpression(JTree tree, short val, GsRegulatoryVertex currentVertex, String expression) throws Exception {
     GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(currentVertex));
-    if (!tbp.compile(expression)) {
+    if (!tbp.compile(expression, graph, currentVertex)) {
       graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
         GsGraphNotificationMessage.NOTIFICATION_WARNING));
     }
@@ -247,14 +243,10 @@ public class GsTreeInteractionsModel implements TreeModel {
     return addExpression(val, (TBooleanTreeNode)null);
   }
   public GsTreeParam addEmptyParameter(short val, GsRegulatoryVertex currentVertex) throws Exception {
-    GsTreeValue value;
     GsTreeParam param = null;
 
     setNode(currentVertex);
     addValue(val);
-    for (int i = 0; i < root.getChildCount(); i++) {
-      value = (GsTreeValue)root.getChild(i);
-    }
     return param;
   }
   private void setExpression(short val, GsTreeExpression exp) {
@@ -285,7 +277,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         graph.getVertexEditor().setEditedObject(node);
         return true;
       }
-      if (!parser.compile(newExp.trim())) {
+      if (!parser.compile(newExp.trim(), graph, node)) {
         graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula : " + newExp,
             GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));
         exp.clearChilds();

@@ -1,6 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -10,7 +13,9 @@ import javax.swing.*;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.tree.TreePath;
 
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.GsFunctionEditor;
 import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
 
@@ -68,13 +73,19 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     if (width >= 0 && charWidth > 0) {
       int nbCols = width / charWidth;
       int nbRows = (text.length() + 1) / nbCols + 1;
-      if ((text.length() + 1) % nbCols == 0) nbRows--;
+      if ((text.length() + 1) % nbCols == 0) {
+		nbRows--;
+	}
       if (nbRows > 4) {
         nbCols -= 2;
         nbRows = (text.length() + 1) / nbCols + 1;
-        if ((text.length() + 1) % nbCols == 0) nbRows--;
+        if ((text.length() + 1) % nbCols == 0) {
+			nbRows--;
+		}
       }
-      if (nbRows > 4) nbRows = 4;
+      if (nbRows > 4) {
+		nbRows = 4;
+	}
       textArea.setColumns(nbCols);
       textArea.setRows(nbRows);
       int ps = nbRows * charHeight;
@@ -96,11 +107,13 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     jsp.setPreferredSize(new Dimension(width, ps));
   }
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == editButton)
-      if (!treeElement.isEditable())
-        editButtonPressed();
-      else
-        editButtonPressed2();
+    if (e.getSource() == editButton) {
+		if (!treeElement.isEditable()) {
+			editButtonPressed();
+		} else {
+			editButtonPressed2();
+		}
+	}
   }
   public void editButtonPressed() {
     treeElement.setEditable(true);
@@ -110,8 +123,10 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     Enumeration exp_path = tree.getExpandedDescendants(tree.getPathForRow(0));
     TreePath sel_path = tree.getEditingPath();
     tree.stopEditing();
-    ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)treeElement);
-    while (exp_path.hasMoreElements()) tree.expandPath((TreePath)exp_path.nextElement());
+    ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement);
+    while (exp_path.hasMoreElements()) {
+		tree.expandPath((TreePath)exp_path.nextElement());
+	}
     tree.setSelectionPath(sel_path);
     GsFunctionEditor functionEditor;
     GsTreeInteractionsModel model = (GsTreeInteractionsModel)tree.getModel();
@@ -134,18 +149,20 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   }
   public void selectText(Point pt, boolean norm) {
     Color col = null;
-    if (norm)
-      col = Color.cyan;
-    else
-      col = Color.green;
+    if (norm) {
+		col = Color.cyan;
+	} else {
+		col = Color.green;
+	}
     try {
       textArea.getHighlighter().removeAllHighlights();
       textArea.getHighlighter().addHighlight(pt.x, pt.x + pt.y, new DefaultHighlightPainter(col));
       int r = pt.x / textArea.getColumns();
       int sbValue = jsp.getVerticalScrollBar().getValue();
       jsp.getVerticalScrollBar().setMaximum(charHeight * (textArea.getDocument().getLength() / textArea.getColumns() - 2));
-      if (!((sbValue < (r * charHeight)) && ((r * charHeight) < (sbValue + 4 * charHeight))))
-        jsp.getVerticalScrollBar().setValue(r * charHeight);
+      if (!(sbValue < r * charHeight && r * charHeight < sbValue + 4 * charHeight)) {
+		jsp.getVerticalScrollBar().setValue(r * charHeight);
+	}
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -159,12 +176,15 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     tree.stopEditing();
     GsTreeInteractionsModel interactionsModel = (GsTreeInteractionsModel)tree.getModel();
     ((GsTreeExpression)treeElement).setText(s);
-    if (((GsTreeExpression)treeElement).getEditorModel() != null)
-      ((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
-                                                   ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
+    if (((GsTreeExpression)treeElement).getEditorModel() != null) {
+		((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
+		                                               ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
+	}
     ((GsTreeExpression)treeElement).setProperty("invalid", new Boolean(false));
     interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
-    while (exp_path.hasMoreElements()) tree.expandPath((TreePath)exp_path.nextElement());
+    while (exp_path.hasMoreElements()) {
+		tree.expandPath((TreePath)exp_path.nextElement());
+	}
     tree.setSelectionPath(sel_path);
   }
 
@@ -182,17 +202,22 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     String oldText = s;
     ok = interactionsModel.updateExpression((short)((GsTreeValue)treeElement.getParent()).getValue(),
                                             (GsTreeExpression)treeElement, s);
-    if (((GsTreeExpression)treeElement).getEditorModel() != null)
-      ((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
-          ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
+    if (((GsTreeExpression)treeElement).getEditorModel() != null) {
+		((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
+		      ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
+	}
     treeElement.getParent().setProperty("null function", new Boolean(treeElement.toString().equals("")));
     ((GsTreeExpression)treeElement).setText(oldText);
     treeElement.setProperty("invalid", new Boolean(!ok));
-    if (!ok && !oldText.equals("")) tree.startEditingAtPath(sel_path);
+    if (!ok && !oldText.equals("")) {
+		tree.startEditingAtPath(sel_path);
+	}
     interactionsModel.setRootInfos();
     interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
     interactionsModel.refreshVertex();
-    while (exp_path.hasMoreElements()) tree.expandPath((TreePath)exp_path.nextElement());
+    while (exp_path.hasMoreElements()) {
+		tree.expandPath((TreePath)exp_path.nextElement());
+	}
     tree.setSelectionPath(sel_path);
   }
   public void keyPressed(KeyEvent e) {
@@ -216,15 +241,21 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         text = textArea.getText();
         int nbCols = width / charWidth;
         int nbRows = (text.length() + 1) / nbCols + 1;
-        if ((text.length() + 1) % nbCols == 0) nbRows--;
+        if ((text.length() + 1) % nbCols == 0) {
+			nbRows--;
+		}
         if (nbRows > 4) {
           nbCols -= 2;
           nbRows = (text.length() + 1) / nbCols + 1;
-          if ((text.length() + 1) % nbCols == 0) nbRows--;
+          if ((text.length() + 1) % nbCols == 0) {
+			nbRows--;
+		}
         }
         textArea.setRows(nbRows);
         textArea.setColumns(nbCols);
-        if (nbRows > 4) nbRows = 4;
+        if (nbRows > 4) {
+			nbRows = 4;
+		}
         int ps = nbRows * charHeight;
         jsp.setSize(new Dimension(width, ps));
         setSize(new Dimension(getWidth(), ps + 4));
@@ -236,15 +267,21 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
       int nbCols = ((Integer) e.getNewValue()).intValue() / charWidth;
       if (width >= 0 && nbCols > 0) {
         int nbRows = (text.length() + 1) / nbCols + 1;
-        if ((text.length() + 1) % nbCols == 0) nbRows--;
+        if ((text.length() + 1) % nbCols == 0) {
+			nbRows--;
+		}
         if (nbRows > 4) {
           nbCols -= 2;
           nbRows = (text.length() + 1) / nbCols + 1;
-          if ((text.length() + 1) % nbCols == 0) nbRows--;
+          if ((text.length() + 1) % nbCols == 0) {
+			nbRows--;
+		}
         }
         textArea.setColumns(nbCols);
         textArea.setRows(nbRows);
-        if (nbRows > 4) nbRows = 4;
+        if (nbRows > 4) {
+			nbRows = 4;
+		}
         int ps = nbRows * charHeight;
         jsp.setSize(new Dimension(width, ps));
       }

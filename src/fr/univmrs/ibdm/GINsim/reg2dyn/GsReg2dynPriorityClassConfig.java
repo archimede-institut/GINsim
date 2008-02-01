@@ -4,9 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -36,14 +34,14 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     private JButton but_insert;
     private JButton but_remove;
     
-    private Vector v_nodeOrder;
+    private List nodeOrder;
     GenericListPanel contentPanel;
     GenericListPanel availablePanel;
     SimpleGenericList contentList = new SimpleGenericList();
     SimpleGenericList availableList = new SimpleGenericList();
     
-    private Vector v_content = new Vector();
-    private Vector v_avaible = new Vector();
+    private List l_content = new ArrayList();
+    private List l_avaible = new ArrayList();
     
     private GsReg2dynPriorityClass currentClass;
 
@@ -61,12 +59,12 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
      * @param nodeOrder
      * @param param
      */
-    public GsReg2dynPriorityClassConfig(Vector nodeOrder) {
+    public GsReg2dynPriorityClassConfig(List nodeOrder) {
     	super(new HashMap(), "pclassConfig");
-        this.v_nodeOrder = nodeOrder;
+        this.nodeOrder = nodeOrder;
         initialize();
-        contentList.setData(v_content);
-        availableList.setData(v_avaible);
+        contentList.setData(l_content);
+        availableList.setData(l_avaible);
     }
     
     private void initialize() {
@@ -241,7 +239,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         int[] t = availablePanel.getSelection();
         for (int i=0 ; i<t.length ; i++) {
         	int index = t[i];
-            PriorityMember k = (PriorityMember)v_avaible.get(index);
+            PriorityMember k = (PriorityMember)l_avaible.get(index);
             if (k.type != NONE) { // +1 and -1 are separated, don't move everything
                 Object[] tk = (Object[])pcdef.m_elt.get(k.vertex);
                 if (k.type == UP) {
@@ -263,7 +261,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         int[] t = contentPanel.getSelection();
         for (int i=0 ; i<t.length ; i++) {
         	int index = t[i];
-            PriorityMember k = (PriorityMember)v_content.get(index);
+            PriorityMember k = (PriorityMember)l_content.get(index);
             Object lastClass = pcdef.v_data.get(pcdef.v_data.size()-1);
             if (k.type != NONE) { // +1 and -1 are separated, don't move everything
                 Object[] tk = (Object[])pcdef.m_elt.get(k.vertex);
@@ -283,8 +281,8 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
      * call it when the user changes the class selection: update UI to match the selection
      */
     protected void classSelectionChanged() {
-        v_content.clear();
-        v_avaible.clear();
+        l_content.clear();
+        l_avaible.clear();
         
         int[] ti = getSelection();
         int[][] selExtended = pcdef.getMovingRows(NONE, ti);
@@ -324,7 +322,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
             but_remove.setEnabled(true);
         }
         
-        Iterator it = v_nodeOrder.iterator();
+        Iterator it = nodeOrder.iterator();
         while (it.hasNext()) {
         	GsRegulatoryVertex v = (GsRegulatoryVertex)it.next();
             PriorityMember k = new PriorityMember(v, NONE);
@@ -335,24 +333,24 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
                 PriorityMember kp = new PriorityMember(v, UP);
                 if (t[0] == currentClass) {
                     if (t[1] == currentClass) {
-                        v_content.add(k);
-                        v_content.add(kp);
+                        l_content.add(k);
+                        l_content.add(kp);
                     } else {
-                        v_content.add(kp);
-                        v_avaible.add(k);
+                        l_content.add(kp);
+                        l_avaible.add(k);
                     }
                 } else if (t[1] == currentClass) {
-                    v_avaible.add(kp);
-                    v_content.add(k);
+                    l_avaible.add(kp);
+                    l_content.add(k);
                 } else {
-                    v_avaible.add(kp);
-                    v_avaible.add(k);
+                    l_avaible.add(kp);
+                    l_avaible.add(k);
                 }
             } else {
                 if (target == currentClass) {
-                    v_content.add(k);
+                    l_content.add(k);
                 } else {
-                    v_avaible.add(k);
+                    l_avaible.add(k);
                 }
             }
         }
@@ -382,25 +380,25 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         }
         Object lastClass = pcdef.v_data.get(0);
         ((GsReg2dynPriorityClass)lastClass).setName("new class");
-        for (int i=0 ; i<v_nodeOrder.size() ; i++) {
-        	pcdef.m_elt.put(v_nodeOrder.get(i), lastClass);
+        for (int i=0 ; i<nodeOrder.size() ; i++) {
+        	pcdef.m_elt.put(nodeOrder.get(i), lastClass);
         }
         switch (cb_auto.getSelectedIndex()) {
             case AUTO_MANY:
                 // should be equivalent to the old priority system: add one class per node
             	pcdef.v_data.clear();
             	pcdef.m_elt.clear();
-                for (int i=0 ; i<v_nodeOrder.size() ; i++) {
+                for (int i=0 ; i<nodeOrder.size() ; i++) {
                     currentClass = new GsReg2dynPriorityClass();
                     pcdef.v_data.add(i, currentClass);
-                    pcdef.m_elt.put(v_nodeOrder.get(i), currentClass);
-                    currentClass.setName(""+v_nodeOrder.get(i));
+                    pcdef.m_elt.put(nodeOrder.get(i), currentClass);
+                    currentClass.setName(""+nodeOrder.get(i));
                 }
                 break;
             case AUTO_PLUS_MINUS:
-                for (int i=0 ; i<v_nodeOrder.size() ; i++) {
+                for (int i=0 ; i<nodeOrder.size() ; i++) {
                     Object[] t = {lastClass, lastClass};
-                    pcdef.m_elt.put(v_nodeOrder.get(i), t);
+                    pcdef.m_elt.put(nodeOrder.get(i), t);
                 }
                 break;
         }

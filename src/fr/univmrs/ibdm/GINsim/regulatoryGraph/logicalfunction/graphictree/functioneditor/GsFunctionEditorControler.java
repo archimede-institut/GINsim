@@ -90,7 +90,7 @@ public class GsFunctionEditorControler {
             lp.setEdges(((GsTreeParam) params.elementAt(i)).getEdgeIndexes());
             v.addElement(lp);
           }
-          c = new GsFunctionsCreator(editorModel.getTreeInteractionsModel().getGraph().getGraphManager(),
+          c = new GsFunctionsCreator(editorModel.getTreeInteractionsModel().getGraph(),
                                      v, editorModel.getTreeInteractionsModel().getVertex());
           Hashtable h = c.doIt();
           v = (Vector)h.elements().nextElement();
@@ -129,7 +129,7 @@ public class GsFunctionEditorControler {
             lp.setEdges(((GsTreeParam) params.elementAt(i)).getEdgeIndexes());
             v.addElement(lp);
           }
-          c = new GsFunctionsCreator(editorModel.getTreeInteractionsModel().getGraph().getGraphManager(),
+          c = new GsFunctionsCreator(editorModel.getTreeInteractionsModel().getGraph(),
                                      v, editorModel.getTreeInteractionsModel().getVertex());
           String s = c.makeDNFExpression(value);
           functionPanel.setText(s);

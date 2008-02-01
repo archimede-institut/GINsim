@@ -11,6 +11,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
@@ -46,7 +47,7 @@ public final class Simulation extends Thread implements Runnable {
 	 * @param frame
 	 * @param params
 	 */
-	protected Simulation(GsGenericRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
+	protected Simulation(GsRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
 		this.frame = frame;
 		this.params = params;
 		

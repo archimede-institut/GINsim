@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
@@ -29,7 +29,7 @@ public class GsGNAExport extends GsAbstractExport {
     }
     
 	protected void doExport(GsExportConfig config) {
-		Vector nodeOrder = config.getGraph().getNodeOrder();
+		List nodeOrder = config.getGraph().getNodeOrder();
 		Iterator it = nodeOrder.iterator();
 		try {
 			FileWriter out = new FileWriter(config.getFilename());
@@ -59,7 +59,6 @@ public class GsGNAExport extends GsAbstractExport {
         return null;
 	}
 
-	
 	private static String getGNAEq(GsRegulatoryVertex node) {
 		return "";
 	}

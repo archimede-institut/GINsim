@@ -1,8 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.modelModifier;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -70,7 +70,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 
 class SimplifierConfigContentList extends SimpleGenericList {
 
-	SimplifierConfigContentList(Vector nodeOrder) {
+	SimplifierConfigContentList(List nodeOrder) {
 		super(nodeOrder);
 		canAdd = false;
 		canOrder = false;

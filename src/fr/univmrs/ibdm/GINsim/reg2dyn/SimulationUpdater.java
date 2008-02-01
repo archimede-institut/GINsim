@@ -3,7 +3,7 @@ package fr.univmrs.ibdm.GINsim.reg2dyn;
 import java.util.Iterator;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
-import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
+import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
@@ -32,11 +32,11 @@ abstract public class SimulationUpdater implements Iterator {
 	GsDynamicNode node;
 	boolean multiple;
 	
-	public SimulationUpdater(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public SimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
         t_tree = regGraph.getParametersForSimulation(true);
         GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)params.store.getObject(GsSimulationParameters.MUTANT);
         if (mutant != null) {
-            mutant.apply(t_tree, params.nodeOrder, false);
+            mutant.apply(t_tree, regGraph);
         }
 		this.length = t_tree.length;
 	}
@@ -91,7 +91,7 @@ abstract public class SimulationUpdater implements Iterator {
 		return 0;
 	}
 	
-	static public SimulationUpdater getInstance(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
+	static public SimulationUpdater getInstance(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		switch (params.mode) {
 			case Simulation.SEARCH_SYNCHRONE:
 				return new SynchronousSimulationUpdater(regGraph, params);
@@ -108,7 +108,7 @@ abstract public class SimulationUpdater implements Iterator {
 
 class SynchronousSimulationUpdater extends SimulationUpdater {
 
-	public SynchronousSimulationUpdater(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public SynchronousSimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		super(regGraph, params);
 	}
 
@@ -146,7 +146,7 @@ class AsynchronousSimulationUpdater extends SimulationUpdater {
 	int nextChange = -1;
 	int nextUpdate;
 
-	public AsynchronousSimulationUpdater(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public AsynchronousSimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		super(regGraph, params);
 	}
 
@@ -210,7 +210,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
     int priority;
 
 	
-    public PrioritySimulationUpdater(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
+    public PrioritySimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		super(regGraph, params);
 		pclass = params.getPclass();
 	}

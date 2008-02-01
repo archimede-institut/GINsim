@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.*;
 
@@ -27,7 +26,7 @@ public class GsAReg2GPConfig extends JDialog {
 	private static final long serialVersionUID = -7398674287463858306L;
 	private JTable blockTable;
 
-	private Vector nodeOrder;
+	private List nodeOrder;
 	private boolean[] t_selected;
 	private JPanel contentPane;
 	private JScrollPane scrollPane;
@@ -42,7 +41,7 @@ public class GsAReg2GPConfig extends JDialog {
 	 * @param path
 	 * @param nodeOrder
 	 */
-	public GsAReg2GPConfig(JFrame frame, List path, Vector nodeOrder) {
+	public GsAReg2GPConfig(JFrame frame, List path, List nodeOrder) {
 	    super(frame);
 		this.nodeOrder = nodeOrder;
         this.path = path;
@@ -156,7 +155,7 @@ public class GsAReg2GPConfig extends JDialog {
      * @param nodeOrder
      * @param selected
      */
-    public static void doSaveGnuPlotArrowPath(File scriptfile, File datafile, List path, Vector nodeOrder, boolean[] selected) {        
+    public static void doSaveGnuPlotArrowPath(File scriptfile, File datafile, List path, List nodeOrder, boolean[] selected) {        
         int[] exported = new int[selected.length];
         int nbExported = 0;
         for (int i=0 ; i<selected.length ; i++) {
@@ -226,7 +225,7 @@ public class GsAReg2GPConfig extends JDialog {
      * @param nodeOrder
      * @param selected
      */
-    public static void doSaveGnuPlotMultiPath(File scriptfile, File datafile, List path,Vector nodeOrder, boolean[] selected) {        
+    public static void doSaveGnuPlotMultiPath(File scriptfile, File datafile, List path, List nodeOrder, boolean[] selected) {        
         int[] exported = new int[selected.length];
         int nbExported = 0;
         for (int i=0 ; i<selected.length ; i++) {
@@ -256,7 +255,7 @@ public class GsAReg2GPConfig extends JDialog {
                     s += value+"\t";
                 }
                 out.write(i+"\t"+s+"\n");
-                out.write((i+1)+"\t"+s+"\n");
+                out.write(i+1+"\t"+s+"\n");
             }
             out.close();
             
@@ -281,7 +280,7 @@ public class GsAReg2GPConfig extends JDialog {
 
             // then add other plots
             for (i=1 ; i<nbExported ; i++) {
-                out.write("set origin 0, "+(i*yscale)+"; "+s_plot + (i+2) +" title '"+nodeOrder.get(exported[i])+"' with lines\n");
+                out.write("set origin 0, "+i*yscale+"; "+s_plot + (i+2) +" title '"+nodeOrder.get(exported[i])+"' with lines\n");
             }
             out.write ("set nomultiplot\n");
             out.close();

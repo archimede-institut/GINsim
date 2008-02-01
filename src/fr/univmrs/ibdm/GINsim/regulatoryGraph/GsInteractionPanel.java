@@ -481,7 +481,7 @@ public class GsInteractionPanel extends GsParameterPanel
       //int[] sel;
 
       //if (jTable.getSelectionModel().isSelectionEmpty())
-        c = new GsFunctionsCreator(graph.getGraphManager(), interactions, currentVertex);
+        c = new GsFunctionsCreator(graph, interactions, currentVertex);
       //else {
       //  sel = jTable.getSelectedRows();
       //  for (int i = 0; i < sel.length; i++) v.addElement(interactions.elementAt(sel[i]));

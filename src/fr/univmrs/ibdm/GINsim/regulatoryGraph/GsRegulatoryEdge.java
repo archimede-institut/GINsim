@@ -34,17 +34,17 @@ public class GsRegulatoryEdge {
 	}
 
 	public String toString() {
-		return getShortDetail("_");
+		return getShortDetail(" ");
 	}
 	
 	public String getShortInfo(String separator) {
-		return me.getSource()+getStringIndex(separator);
+		return me.getSource()+getStringThreshold(separator);
 	}
 	public String getLongInfo(String separator) {
 		return me.getSource()+separator+me.getTarget()+getStringIndex(separator);
 	}
 	public String getShortDetail(String separator) {
-		return getShortInfo(separator)+separator+getRangeAndSign();
+		return getShortInfo("#")+separator+getRangeAndSign();
 	}
 	public String getLongDetail(String separator) {
 		return getLongInfo(separator)+separator+getRangeAndSign();
@@ -54,6 +54,12 @@ public class GsRegulatoryEdge {
 			return "";
 		}
 		return prefix+(index+1);
+	}
+	private String getStringThreshold(String prefix) {
+		if (threshold == 1) {
+			return "";
+		}
+		return prefix+threshold;
 	}
 	private String getRangeAndSign() {
 		return "["+threshold+","+getMaxAsString()+"] ; "+GsRegulatoryMultiEdge.SIGN[sign];
