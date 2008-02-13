@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 		}
 		return String.class;
 	}
-
+	
 	/**
 	  * @see javax.swing.table.TableModel#getValueAt(int, int)
 	  * 
@@ -297,6 +298,13 @@ public class GsInitStateTableModel extends AbstractTableModel {
 		} catch (Exception e) {}
 	}
 
+	public void copyLine(int line) {
+		Map m_line = ((GsInitialState)imanager.getElement(null, line)).m;
+		GsInitialState newState = (GsInitialState)imanager.getElement(null, imanager.add());
+		newState.m = new HashMap(m_line);
+		fireTableDataChanged();
+	}
+	
 	public String getColumnName(int columnIndex) {
 		if (columnIndex > nodeOrder.size()+1) {
 			return null;

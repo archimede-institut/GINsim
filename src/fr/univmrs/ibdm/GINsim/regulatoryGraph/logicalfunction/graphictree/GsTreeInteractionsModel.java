@@ -20,8 +20,6 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsF
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
 
 public class GsTreeInteractionsModel implements TreeModel {
-  //the vector of interaction
-
   //the current selected node
   private GsRegulatoryVertex node;
   private GsRegulatoryGraph graph;
@@ -181,7 +179,7 @@ public class GsTreeInteractionsModel implements TreeModel {
       v = new Vector();
       while (it2.hasNext()) {
         element = (GsLogicalFunctionListElement)it2.next();
-        edge = element.getEdge().getEdge(element.getIndex() - 1);
+        edge = element.getEdge().getEdge(element.getIndex());
         v.addElement(edge);
       }
       if (v.size() > 0) {
@@ -294,7 +292,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         Vector v = new Vector();
         while (it2.hasNext()) {
           GsLogicalFunctionListElement element = (GsLogicalFunctionListElement)it2.next();
-          v.addElement(element.getEdge().getEdge(element.getIndex() - 1));
+          v.addElement(element.getEdge().getEdge(element.getIndex()));
         }
         if (v.size() > 0) {
 			setActivesEdges(v, val);

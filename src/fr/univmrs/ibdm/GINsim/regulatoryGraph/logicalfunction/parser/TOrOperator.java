@@ -1,5 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class TOrOperator extends TBinaryOperator {
@@ -10,11 +12,11 @@ public class TOrOperator extends TBinaryOperator {
     super();
   }
   public TBooleanData getValue() throws Exception {
-    Vector leftData = leftArg.getValue().getData();
-    Vector rightData = rightArg.getValue().getData();
-    Vector orData = new Vector(leftData);
+    List leftData = leftArg.getValue().getData();
+    List rightData = rightArg.getValue().getData();
+    List orData = new ArrayList(leftData);
     for (int i = 0; i < rightData.size(); i++)
-      if (!orData.contains(rightData.elementAt(i))) orData.addElement(rightData.elementAt(i));
+      if (!orData.contains(rightData.get(i))) orData.add(rightData.get(i));
     //orData.addAll(rightData);
     TBooleanData data = (TBooleanData)Class.forName(returnClassName).newInstance();
     data.setParser(parser);

@@ -11,7 +11,9 @@ public class GsLogicalFunctionListElement implements Comparable {
     index = k;
   }
   public String toString() {
-    if (index == -1) return "";
+    if (index == -1) {
+		return "";
+	}
     return edge.getId(index);
   }
   public GsRegulatoryMultiEdge getEdge() {

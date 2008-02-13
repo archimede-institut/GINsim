@@ -29,6 +29,7 @@ public class GsInitialStatePanel extends JPanel {
     private EnhancedJTable tableInitStates = null;
     private GsInitStateTableModel model = null;
     private JButton buttonDelStateRow = null;
+    private JButton buttonCopyStateRow = null;
     private JButton buttonResetStateRow = null;
    
 
@@ -82,6 +83,10 @@ public class GsInitialStatePanel extends JPanel {
         c.gridx = 2;
         c.gridy = 1;
         add(getButtonResetStateRow(), c);
+        c = new GridBagConstraints();
+        c.gridx = 3;
+        c.gridy = 1;
+        add(getButtonCopyStateRow(), c);
 	}
 	
     /**
@@ -138,6 +143,13 @@ public class GsInitialStatePanel extends JPanel {
     		model.deleteRow(t[i]);
     	}
     }
+    protected void copyStateRow() {
+    	int[] t = tableInitStates.getSelectedRows();
+    	for (int i=0 ; i<t.length ; i++) {
+    		model.copyLine(t[i]);
+    	}
+    }
+    
     private JButton getButtonDelStateRow() {
         if (buttonDelStateRow == null) {
             buttonDelStateRow = new JButton("X");
@@ -149,6 +161,17 @@ public class GsInitialStatePanel extends JPanel {
             });
         }
         return buttonDelStateRow;
+    }
+    private JButton getButtonCopyStateRow() {
+        if (buttonCopyStateRow == null) {
+        	buttonCopyStateRow = new JButton("CP");
+        	buttonCopyStateRow.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    copyStateRow();
+                }
+            });
+        }
+        return buttonCopyStateRow;
     }
 
     protected void resetStateRow() {

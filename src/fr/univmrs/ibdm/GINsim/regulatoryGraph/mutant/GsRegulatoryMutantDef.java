@@ -120,4 +120,8 @@ public class GsRegulatoryMutantDef implements NamedObject {
 	public void setCondition(int index, GsRegulatoryGraph graph, String condition) {
 		((GsRegulatoryMutantChange)v_changes.get(index)).setCondition(condition, graph);
 	}
+	
+	public Annotation getAnnotation() {
+		return annotation;
+	}
 }

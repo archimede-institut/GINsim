@@ -46,7 +46,7 @@ public class GsSearchStableStates extends Thread {
 		this.ui = ui;
 	}
 
-	public void run() {
+	public OmddNode getStable() {
 		if (ORDERTEST) {
 			buildAdjTable();
 		}
@@ -75,8 +75,12 @@ public class GsSearchStableStates extends Thread {
 						dd_stable).reduce();
 			}
 		}
-		System.out.println("stable states search: "+(System.currentTimeMillis()-start)+"ms");
-		showStableState(dd_stable);
+		//System.out.println("stable states search: "+(System.currentTimeMillis()-start)+"ms");
+		return dd_stable;
+	}
+	
+	public void run() {
+		showStableState(getStable());
 	}
 	
 	private void buildAdjTable() {
@@ -318,5 +322,9 @@ public class GsSearchStableStates extends Thread {
 			findStableState(state, stable.next[i]);
 		}
 		state[stable.level] = -1;
+	}
+
+	public void setMutant(GsRegulatoryMutantDef mutant) {
+		this.mutant = mutant;
 	}
 }

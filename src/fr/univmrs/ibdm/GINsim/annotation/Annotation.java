@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.annotation;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
@@ -102,4 +103,31 @@ public class Annotation implements GsXMLize
     public boolean isEmpty() {
         return "".equals(comment) && linkList.size() == 0;
     }
+
+	public String getHTMLComment() {
+		StringBuffer buf = new StringBuffer();
+		boolean hasLink = false;
+		for (Iterator it = linkList.iterator() ; it.hasNext() ; ) {
+			AnnotationLink lnk = (AnnotationLink)it.next();
+			if (lnk.helper != null) {
+				String s = lnk.helper.getLink(lnk);
+				if (s != null) {
+					if (!hasLink) {
+						hasLink = true;
+						buf.append("<ul>\n");
+					}
+					if (s == lnk.toString() && s.length() >= 50) {
+						buf.append("<li><a href='" + s +"'>" + s.substring(0, 45) + "...</a></li>\n");
+					} else {
+						buf.append("<li><a href='" + s +"'>" + lnk + "</a></li>\n");
+					}
+				}
+			}
+		}
+		if (hasLink) {
+			buf.append("</ul>\n<p/>");
+		}
+		buf.append(comment.replaceAll("\n", "<br/>"));
+		return buf.toString();
+	}
 }

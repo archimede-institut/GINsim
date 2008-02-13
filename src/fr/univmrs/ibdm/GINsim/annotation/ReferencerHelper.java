@@ -93,6 +93,14 @@ public class ReferencerHelper implements AnnotationHelper {
 		ReferencerHelper h = new ReferencerHelper();
 		AnnotationLink.addHelperClass("ref", h);
 	}
+
+	public String getLink(AnnotationLink l) {
+		Ref ref = (Ref)m_ref.get(l.value);
+		if (ref != null && ref.doi != null && !"".equals(ref.doi.trim())) {
+			return HttpHelper.DOIBASE + ref.doi;
+		}
+		return null;
+	}
 }
 
 class Ref {

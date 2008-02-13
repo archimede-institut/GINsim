@@ -1,6 +1,7 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TAndOperator extends TBinaryOperator {
   public static final int priority = 0;
@@ -10,10 +11,10 @@ public class TAndOperator extends TBinaryOperator {
     super();
   }
   public TBooleanData getValue() throws Exception {
-    Vector leftData = leftArg.getValue().getData();
-    Vector rightData = rightArg.getValue().getData();
+    List leftData = leftArg.getValue().getData();
+    List rightData = rightArg.getValue().getData();
 
-    Vector andData = new Vector(leftData);
+    List andData = new ArrayList(leftData);
     andData.retainAll(rightData);
     TBooleanData data = (TBooleanData)Class.forName(returnClassName).newInstance();
     data.setParser(parser);

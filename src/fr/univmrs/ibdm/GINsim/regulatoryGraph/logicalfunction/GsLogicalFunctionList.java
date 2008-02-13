@@ -1,12 +1,13 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 
+import java.util.List;
 import java.util.Vector;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanData;
 import java.util.Iterator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
 
 public class GsLogicalFunctionList implements TBooleanData {
-  private Vector logicalFunctions;
+  private List logicalFunctions;
   private GsBooleanParser parser;
 
   public GsLogicalFunctionList() {
@@ -16,10 +17,10 @@ public class GsLogicalFunctionList implements TBooleanData {
   public void setParser(TBooleanParser p) {
     parser = (GsBooleanParser)p;
   }
-  public Vector getData() {
+  public List getData() {
     return logicalFunctions;
   }
-  public void setData(Vector v) {
+  public void setData(List v) {
     logicalFunctions = v;
   }
   public Vector getAsStringVector() {
@@ -44,6 +45,8 @@ public class GsLogicalFunctionList implements TBooleanData {
 
   public void print() {
     Iterator it = getAsStringVector().iterator();
-    while (it.hasNext()) System.err.println(it.next());
+    while (it.hasNext()) {
+		System.err.println(it.next());
+	}
   }
 }

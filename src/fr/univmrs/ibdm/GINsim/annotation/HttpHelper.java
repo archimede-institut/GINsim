@@ -14,16 +14,18 @@ public class HttpHelper implements AnnotationHelper {
 	
 	public void update(AnnotationLink l, GsGraph graph) {
 		// for later usage...
-		if (l.proto.equals("http")) {
-			l.helper = null;
+		if (l.proto.equals("http") || l.proto.equals("https") || l.proto.equals("ftp")) {
+			l.value = l.proto+l.value;
+			l.proto = null;
 		}
 	}
 
 	public void open(AnnotationLink l) {
-		Tools.webBrowse(m_proto.get(l.proto)+l.value);
+		Tools.webBrowse(getLink(l));
 	}
 
 	public static void setup() {
+		m_proto.put("http", null);
 		m_proto.put("wp", "http://en.wikipedia.org/wiki/");
 
 		m_proto.put("doi", DOIBASE);
@@ -37,5 +39,12 @@ public class HttpHelper implements AnnotationHelper {
 		while (it.hasNext()) {
 			AnnotationLink.addHelperClass((String)it.next(), h);
 		}
+	}
+
+	public String getLink(AnnotationLink l) {
+		if (l.proto == null) {
+			return l.value;
+		}
+		return m_proto.get(l.proto)+l.value;
 	}
 }

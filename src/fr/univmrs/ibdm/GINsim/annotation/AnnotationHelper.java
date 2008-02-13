@@ -7,4 +7,5 @@ public interface AnnotationHelper {
 
 	public void update(AnnotationLink l, GsGraph graph);
 	public void open(AnnotationLink l);
+	public String getLink(AnnotationLink l);
 }

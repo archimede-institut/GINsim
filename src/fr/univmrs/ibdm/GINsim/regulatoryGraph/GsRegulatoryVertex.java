@@ -338,6 +338,8 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
         while (it.hasNext()) {
             ((GsLogicalParameter)it.next()).applyNewGraph(myClone, copyMap);
             // TODO: copy the logical functions as well
+            // if pasted into a new graph, the "interactionModel" should be
+            // recreated/updated for the new graph
         }
     }
 
