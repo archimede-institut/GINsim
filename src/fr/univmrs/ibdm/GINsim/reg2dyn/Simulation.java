@@ -114,6 +114,11 @@ public final class Simulation extends Thread implements Runnable {
 						updater.setState(item.state, item.depth, helper.node);
 						if (!updater.hasNext()) {
 							helper.setStable();
+							System.out.print("stable (depth "+item.depth+"): ");
+							for (int i=0 ; i<item.state.length ; i++ ) {
+								System.out.print(item.state[i]+" ");
+							}
+							System.out.println();
 						} else {
 							if (params.maxdepth == 0 || item.depth < params.maxdepth) {
 								while (updater.hasNext()) {
