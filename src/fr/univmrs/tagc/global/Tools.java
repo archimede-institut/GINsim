@@ -1,8 +1,8 @@
 package fr.univmrs.tagc.global;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.jgraph.util.BrowserLauncher;
 
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.tagc.manageressources.Translator;
 
 /**
@@ -291,4 +292,12 @@ public class Tools {
     public static void error(String s, JFrame main) {
         JOptionPane.showMessageDialog(main, s+"\n", "error",JOptionPane.ERROR_MESSAGE);
     }
+
+	public static InputStream getStreamForPath(String path) throws IOException, FileNotFoundException {
+        URL url = GsEnv.class.getResource(path);
+        if (url != null) {
+        	return url.openStream();
+        }
+        return new FileInputStream(path);
+	}
 }

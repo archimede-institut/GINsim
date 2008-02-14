@@ -15,6 +15,7 @@ import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.manageressources.ImageLoader;
 import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.widgets.AboutDialog;
 import fr.univmrs.tagc.xml.XMLHelper;
 
 /**
@@ -177,6 +178,8 @@ class ReadConfig extends XMLHelper {
 			ImageLoader.pushSearchPath(attributes.getValue("path"));
 		} else if ("messagesPath".equals(qName)) {
 			Translator.pushBundle(attributes.getValue("path"));
+		} else if ("doap".equals(qName)) {
+			AboutDialog.setDOAPFile(attributes.getValue("path"));
 		}
 	}
 }

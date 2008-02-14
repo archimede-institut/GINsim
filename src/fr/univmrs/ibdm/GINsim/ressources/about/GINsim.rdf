@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<rdf:RDF xml:lang="en"
+         xmlns="http://usefulinc.com/ns/doap#" 
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+         xmlns:asfext="http://projects.apache.org/ns/asfext#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/">
+
+  <Project>
+    <name>GINsim</name>
+    <description>A computer tool for the modeling and simulation of genetic regulatory networks</description>
+    <homepage rdf:resource="http://gin.univ-mrs.fr/GINsim" />
+    <logo rdf:ressource=""/>
+    <version>2.4-{$DATE}</version>
+    <!--
+	    <created>2008-01-21</created>
+    -->
+    <license rdf:resource="http://usefulinc.com/doap/licenses/gpl">GPL</license>
+    <!--
+    <bug-database rdf:resource="http://crfb.univ-mrs.fr/gp/GINsim/query" />
+    <mailing-list rdf:resource="http://gin.univ-mrs.fr/GINsim/contact.html" />
+    <download-page rdf:resource="http://gin.univ-mrs.fr/GINsim/download.html" />
+    <programming-language>Java</programming-language>
+    -->
+    <maintainer>
+      <foaf:Person>
+        <foaf:name>Aurélien Naldi</foaf:name>
+        <foaf:mbox rdf:resource="mailto:naldi@tagc.univ-mrs.fr"/>
+        <foaf:made>Development and biological applications</foaf:made>
+      </foaf:Person>
+    </maintainer>
+  </Project>
+</rdf:RDF>

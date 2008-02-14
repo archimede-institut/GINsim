@@ -6,6 +6,7 @@ import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.tagc.global.GsException;
 import fr.univmrs.tagc.global.Tools;
 import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.widgets.AboutDialog;
 
 /**
  * Here are the (few) callback for entry in the "help" menu
@@ -16,7 +17,7 @@ public class GsHelpCallBack {
 	 * an about dialog
 	 */
 	public void about() {
-		new GsAboutDialog().setVisible(true);
+		new AboutDialog().setVisible(true);
 	}
 
 	/**

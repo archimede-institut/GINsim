@@ -1,7 +1,9 @@
 package fr.univmrs.ibdm.GINsim.global;
 
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -350,13 +352,7 @@ public class GsEnv extends Env {
     }
 
 	public static void readConfig(String path) throws IOException, FileNotFoundException {
-		InputStream stream;
-        URL url = GsEnv.class.getResource(path);
-        if (url != null) {
-        	stream = url.openStream();
-        } else {
-        	stream = new FileInputStream(path);
-        }
+		InputStream stream = Tools.getStreamForPath(path);
     	new ReadConfig(GsEnv.cloader).startParsing(stream, false);
 	}
 }
