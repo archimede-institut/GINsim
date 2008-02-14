@@ -45,7 +45,7 @@ abstract public class SimulationUpdater implements Iterator {
 		return next != null;
 	}
 	public Object next() {
-		SimulationQueuedState ret = new SimulationQueuedState(next, depth, node, multiple);
+		SimulationQueuedState ret = new SimulationQueuedState(next, depth+1, node, multiple);
 		multiple = false;
 		doBuildNext();
 		return ret;
