@@ -1,8 +1,8 @@
 package fr.univmrs.ibdm.GINsim.gui;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.OptionStore;
 
 /**
  * Here are the callback for entry in the "file" menu
@@ -35,7 +35,7 @@ public class GsFileCallBack {
 	public void save() {
 	    try {
             main.getGraph().save();
-            GsOptions.addRecent(main.getGraph().getSaveFileName());
+            OptionStore.addRecent(main.getGraph().getSaveFileName());
         } catch (GsException e) {
             GsEnv.error(e, main);
         }

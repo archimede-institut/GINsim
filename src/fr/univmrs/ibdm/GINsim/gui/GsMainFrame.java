@@ -8,23 +8,23 @@ import java.util.Vector;
 
 import javax.swing.*;
 
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.global.GsEventDispatcher;
-import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.*;
-import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
-import fr.univmrs.ibdm.GINsim.util.widget.GsFrame;
 import fr.univmrs.tagc.datastore.ObjectEditor;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.manageressources.ImageLoader;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.widgets.Frame;
 import fr.univmrs.tagc.widgets.SplitPane;
 
 /**
  * GINsim's main frame
  */
-public class GsMainFrame extends GsFrame implements GraphChangeListener {
+public class GsMainFrame extends Frame implements GraphChangeListener {
 
     private static final long serialVersionUID = -3626877344852342412L;
 
@@ -66,7 +66,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
 
 	private Vector v_edge;
 	private Vector v_vertex;
-    private int mmapDivLocation = ((Integer)GsOptions.getOption("display.minimapSize", new Integer(100))).intValue();
+    private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
 
 	/**
 	 * This method initializes a new MainFrame
@@ -401,7 +401,7 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
             jSplitPane.setDividerLocation(d);
         }
         getJSplitPane().setDividerLocation(
-                jSplitPane.getHeight()-((Integer)GsOptions.getOption("display.dividersize", new Integer(80))).intValue());
+                jSplitPane.getHeight()-((Integer)OptionStore.getOption("display.dividersize", new Integer(80))).intValue());
 
         updateTitle();
         updateGraphNotificationMessage(graph);
@@ -489,9 +489,9 @@ public class GsMainFrame extends GsFrame implements GraphChangeListener {
             if (gsGraphMapPanel.isVisible()) {
                 mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
             }
-            GsOptions.setOption("display.minimapsize", new Integer(mmapDivLocation));
+            OptionStore.setOption("display.minimapsize", new Integer(mmapDivLocation));
             if (secondaryFrame == null) {
-                GsOptions.setOption("display.dividersize", new Integer(jSplitPane.getHeight()-jSplitPane.getDividerLocation()));
+                OptionStore.setOption("display.dividersize", new Integer(jSplitPane.getHeight()-jSplitPane.getDividerLocation()));
             }
 		    if (force || GsEnv.getNbFrame() > 1) {
 		        GsEnv.delFrame(this);

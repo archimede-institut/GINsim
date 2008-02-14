@@ -11,16 +11,17 @@ import javax.swing.filechooser.FileFilter;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.*;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
 import fr.univmrs.ibdm.GINsim.gui.GsEditModeDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.tagc.datastore.ObjectEditor;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.ImageLoader;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 /**
  * The regulatory graph
@@ -129,7 +130,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 
     protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
     	try {
-            GsXMLWriter out = new GsXMLWriter(os, dtdFile);
+            XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"regulatory\"");
@@ -153,7 +154,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(GsXMLWriter out, int mode, boolean selectedOnly) throws IOException {
+    private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
         Iterator it;
         if (selectedOnly) {
         		it = graphManager.getSelectedEdgeIterator();
@@ -183,7 +184,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(GsXMLWriter out, int mode, boolean selectedOnly) throws IOException {
+    private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
         	Iterator it;
         	if (selectedOnly) {
         		it = graphManager.getSelectedVertexIterator();
@@ -249,11 +250,11 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     }
     public Vector getEditingModes() {
         Vector v_mode = new Vector();
-        v_mode.add(new GsEditModeDescriptor("STR_addGene", "STR_addGene_descr", GsEnv.getIcon("insertsquare.gif"), GsActions.MODE_ADD_VERTEX, 0));
-        v_mode.add(new GsEditModeDescriptor("STR_addPositivInteraction", "STR_addPositivInteraction_descr", GsEnv.getIcon("insertpositiveedge.gif"), GsActions.MODE_ADD_EDGE, 0));
-        v_mode.add(new GsEditModeDescriptor("STR_addNegativInteraction", "STR_addNegativInteraction_descr", GsEnv.getIcon("insertnegativeedge.gif"), GsActions.MODE_ADD_EDGE, 1));
-        v_mode.add(new GsEditModeDescriptor("STR_addUnknownInteraction", "STR_addUnknownInteraction_descr", GsEnv.getIcon("insertunknownedge.gif"), GsActions.MODE_ADD_EDGE, 2));
-        v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", GsEnv.getIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
+        v_mode.add(new GsEditModeDescriptor("STR_addGene", "STR_addGene_descr", ImageLoader.getImageIcon("insertsquare.gif"), GsActions.MODE_ADD_VERTEX, 0));
+        v_mode.add(new GsEditModeDescriptor("STR_addPositivInteraction", "STR_addPositivInteraction_descr", ImageLoader.getImageIcon("insertpositiveedge.gif"), GsActions.MODE_ADD_EDGE, 0));
+        v_mode.add(new GsEditModeDescriptor("STR_addNegativInteraction", "STR_addNegativInteraction_descr", ImageLoader.getImageIcon("insertnegativeedge.gif"), GsActions.MODE_ADD_EDGE, 1));
+        v_mode.add(new GsEditModeDescriptor("STR_addUnknownInteraction", "STR_addUnknownInteraction_descr", ImageLoader.getImageIcon("insertunknownedge.gif"), GsActions.MODE_ADD_EDGE, 2));
+        v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", ImageLoader.getImageIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
         return v_mode;
     }
     public boolean idExists(String newId) {

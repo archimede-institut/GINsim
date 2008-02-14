@@ -11,11 +11,12 @@ import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryParser;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.xml.XMLHelper;
 
 /**
  * parses a ginml regulatory graph.
  */
-public final class GsGinmlParser extends GsXMLHelper {
+public final class GsGinmlParser extends XMLHelper {
     
     private Map map;
     private GsXMLHelper realParser = null;

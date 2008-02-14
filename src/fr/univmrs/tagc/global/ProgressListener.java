@@ -1,9 +1,9 @@
-package fr.univmrs.ibdm.GINsim.global;
+package fr.univmrs.tagc.global;
 
 /**
  * listen for progress messages.
  */
-public interface GsProgressListener {
+public interface ProgressListener {
 
     /**
      * @param text

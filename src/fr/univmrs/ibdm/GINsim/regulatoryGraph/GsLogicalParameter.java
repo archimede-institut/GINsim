@@ -7,14 +7,14 @@ import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.xml.XMLize;
 
 /**
  * the Class in which we store biological data for logical parameters
  * (in the vertex)
  */
-public class GsLogicalParameter implements GsXMLize {
+public class GsLogicalParameter implements XMLize {
 
 	//value of the parameter
 	private int value;
@@ -244,7 +244,7 @@ public class GsLogicalParameter implements GsXMLize {
         return root;
     }
     
-    public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
+    public void toXML(XMLWriter out, Object param, int mode) throws IOException {
     	out.openTag("parameter");
 		int len = edge_index.size();
 		if (len != 0) {

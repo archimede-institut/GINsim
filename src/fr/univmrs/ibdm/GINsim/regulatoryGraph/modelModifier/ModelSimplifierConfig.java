@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.HashMap;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 import fr.univmrs.tagc.datastore.MultiColHelper;
 import fr.univmrs.tagc.datastore.NamedObject;
+import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.xml.XMLize;
 
 
-public class ModelSimplifierConfig implements NamedObject, GsXMLize, MultiColHelper {
+public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelper {
 	String name;
 	Annotation note = new Annotation();
 	Map m_removed = new HashMap();
@@ -28,7 +28,7 @@ public class ModelSimplifierConfig implements NamedObject, GsXMLize, MultiColHel
 		return name;
 	}
 	
-	public void toXML(GsXMLWriter out, Object param, int mode)
+	public void toXML(XMLWriter out, Object param, int mode)
 			throws IOException {
 		Iterator it = m_removed.keySet().iterator();
 		if (!it.hasNext()) {

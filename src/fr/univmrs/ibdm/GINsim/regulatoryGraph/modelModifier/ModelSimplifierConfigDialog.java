@@ -12,6 +12,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
 import fr.univmrs.tagc.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.global.Tools;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener {
@@ -55,7 +56,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
     public void endSimu(GsGraph graph, Exception e) {
     	isRunning = false;
         if (null == graph) {
-            GsEnv.error(e.getMessage(), this.graph.getGraphManager().getMainFrame());
+            Tools.error(e.getMessage(), this.graph.getGraphManager().getMainFrame());
         } else {
             GsEnv.whatToDoWithGraph(this.graph.getGraphManager().getMainFrame(), graph, false);
             cancel();

@@ -7,9 +7,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.ObjectStore;
+import fr.univmrs.tagc.manageressources.Translator;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 abstract public class GenericListSelectionPanel extends JPanel implements ActionListener {

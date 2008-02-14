@@ -4,13 +4,13 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
+import fr.univmrs.tagc.global.GsException;
 
 /**
  * This class contains different placement algorithms, 

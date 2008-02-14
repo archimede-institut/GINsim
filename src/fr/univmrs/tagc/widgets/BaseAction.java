@@ -1,17 +1,17 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.widgets;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * this class is used for all actions, it will lookup for an internatiolized string
  * for the name and the tooltip
  */
-public abstract class GsBaseAction extends AbstractAction {
+public abstract class BaseAction extends AbstractAction {
 
     /**
      * 
@@ -20,14 +20,14 @@ public abstract class GsBaseAction extends AbstractAction {
      * @param tooltip
      * @param accelerator (ie keyboard shortcut)
      */
-	public GsBaseAction(String name,
+	public BaseAction(String name,
 			   ImageIcon icon,
 			   String tooltip,
 			   KeyStroke accelerator) {
 		this(name, icon, tooltip, accelerator, null);
 	}
 
-	public GsBaseAction(String name,
+	public BaseAction(String name,
 			   ImageIcon icon,
 			   String tooltip,
 			   KeyStroke accelerator,

@@ -20,26 +20,26 @@ import javax.swing.tree.TreeSelectionModel;
 import fr.univmrs.ibdm.GINsim.connectivity.AlgoConnectivity;
 import fr.univmrs.ibdm.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsProgressListener;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.ibdm.GINsim.util.widget.GsLabel;
 import fr.univmrs.tagc.datastore.ObjectStore;
+import fr.univmrs.tagc.global.ProgressListener;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
 import fr.univmrs.tagc.widgets.EnhancedListCellRenderer;
+import fr.univmrs.tagc.widgets.Label;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
  * configuration/status frame for circuit search/analyse
  */
-public class GsCircuitFrame extends StackDialog implements GsProgressListener {
+public class GsCircuitFrame extends StackDialog implements ProgressListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
 
@@ -78,7 +78,7 @@ public class GsCircuitFrame extends StackDialog implements GsProgressListener {
     public GsCircuitFrame(JFrame frame, GsGraph graph) {
         super(frame, "display.circuit", 500, 300);
         if (graph == null || !(graph instanceof GsRegulatoryGraph)) {
-			GsEnv.error("no graph", frame);
+			Tools.error("no graph", frame);
 		}
         this.graph = (GsRegulatoryGraph) graph;
         initialize();
@@ -590,7 +590,7 @@ public class GsCircuitFrame extends StackDialog implements GsProgressListener {
      */
     public javax.swing.JLabel getLabelProgression() {
         if (labelProgression == null) {
-            labelProgression = new GsLabel("STR_circuit_ask", GsLabel.MESSAGE_NORMAL);
+            labelProgression = new Label("STR_circuit_ask", Label.MESSAGE_NORMAL);
         }
         return labelProgression;
     }

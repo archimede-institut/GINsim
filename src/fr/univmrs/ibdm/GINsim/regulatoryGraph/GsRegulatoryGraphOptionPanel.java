@@ -8,9 +8,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphOptionPanel;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * offer save option for regulatory graphs 
@@ -67,7 +67,7 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
 	}
     
     public boolean isExtended() {
-        GsOptions.setOption("extendedSave", extended.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+        OptionStore.setOption("extendedSave", extended.isSelected() ? Boolean.TRUE : Boolean.FALSE);
         return extended.isSelected();
     }
 
@@ -75,14 +75,14 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
     	if (!showCompressed) {
     		return true;
     	}
-        GsOptions.setOption("compressedSave", compressed.isSelected() ? Boolean.TRUE : Boolean.FALSE);
+        OptionStore.setOption("compressedSave", compressed.isSelected() ? Boolean.TRUE : Boolean.FALSE);
         return compressed.isSelected();
     }
 
     private JCheckBox getExtended() {
         if (extended == null) {
             extended = new JCheckBox(Translator.getString("STR_extendedSave"));
-            extended.setSelected(GsOptions.getOption("extendedSave", Boolean.FALSE).equals(Boolean.TRUE));
+            extended.setSelected(OptionStore.getOption("extendedSave", Boolean.FALSE).equals(Boolean.TRUE));
         }
         return extended;
     }
@@ -90,7 +90,7 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
     private JCheckBox getCompressed() {
         if (compressed == null) {
         	compressed = new JCheckBox(Translator.getString("STR_compressedSave"));
-        	compressed.setSelected(GsOptions.getOption("compressedSave", Boolean.FALSE).equals(Boolean.TRUE));
+        	compressed.setSelected(OptionStore.getOption("compressedSave", Boolean.FALSE).equals(Boolean.TRUE));
         }
         return compressed;
     }

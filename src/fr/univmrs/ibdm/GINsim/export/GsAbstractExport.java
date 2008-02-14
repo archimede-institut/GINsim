@@ -5,13 +5,13 @@ import java.util.Vector;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
+import fr.univmrs.tagc.global.GsException;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 /**

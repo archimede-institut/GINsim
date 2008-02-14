@@ -3,13 +3,13 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction;
 import java.util.*;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
+import fr.univmrs.tagc.global.GsException;
 
 public class GsBooleanParser extends TBooleanParser {
   private Hashtable operandList;

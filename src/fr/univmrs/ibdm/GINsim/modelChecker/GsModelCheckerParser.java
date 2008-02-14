@@ -11,13 +11,13 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
 import fr.univmrs.tagc.datastore.ValueList;
+import fr.univmrs.tagc.xml.XMLHelper;
 
 /**
  * parser for simulation parameters file
  */
-public class GsModelCheckerParser extends GsXMLHelper {
+public class GsModelCheckerParser extends XMLHelper {
 
     public GsGraph getGraph() {
         // doesn't create a graph!

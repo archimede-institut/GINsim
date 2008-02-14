@@ -2,8 +2,8 @@ package fr.univmrs.ibdm.GINsim.graph;
 
 import javax.swing.JFrame;
 
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
+import fr.univmrs.tagc.global.GsException;
 
 /**
  * how layout/action/export providers should annonce their capabilities.

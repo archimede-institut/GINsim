@@ -20,7 +20,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
+import fr.univmrs.tagc.widgets.Button;
 
 public class GsParameterChoiceWindow extends JDialog implements MouseListener, MouseMotionListener,
     WindowListener, ActionListener, ListSelectionListener {
@@ -58,8 +58,8 @@ public class GsParameterChoiceWindow extends JDialog implements MouseListener, M
   }
 
   private JList interactionList = new JList();
-  private JButton okButton = new GsJButton(null, 4, 4, 0, 0);
-  private JButton cancelButton = new GsJButton(null, 4, 4, 0, 0);
+  private JButton okButton = new Button(null, 4, 4, 0, 0);
+  private JButton cancelButton = new Button(null, 4, 4, 0, 0);
   private GsTreeParam treeParam;
   private int value;
   private JTree tree;

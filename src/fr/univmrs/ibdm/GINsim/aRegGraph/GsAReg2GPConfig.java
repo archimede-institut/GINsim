@@ -13,9 +13,9 @@ import javax.swing.*;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * Export a path in the state transition graph to gnuplot scripts.

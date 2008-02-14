@@ -3,9 +3,9 @@ package fr.univmrs.ibdm.GINsim.gui;
 import java.io.File;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.global.Tools;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * Here are the (few) callback for entry in the "help" menu

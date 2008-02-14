@@ -13,13 +13,13 @@ import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 /**
  * Export a regulatory graph to the SBML format.
@@ -61,7 +61,7 @@ public class GsSBMLExport {
         try {
             // FIXME: dtd for SBML ?
             FileOutputStream os = new FileOutputStream(fileName);
-            GsXMLWriter out = new GsXMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os, null);
             String s_compartment = "c_"+graph.getGraphName();
             out.openTag("sbml");
             out.addAttr("xmlns", "http://www.sbml.org/sbml/level2");
@@ -136,7 +136,7 @@ public class GsSBMLExport {
 		}
 	}
 
-    private static void writeNode(GsXMLWriter out, OmddNode node, List v_no, String s_node, int max, int index, int val) throws IOException {
+    private static void writeNode(XMLWriter out, OmddNode node, List v_no, String s_node, int max, int index, int val) throws IOException {
         if (node.next == null) {
             if (val != -1) { // self-regulation
                 if (val > node.value) {

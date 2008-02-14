@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * Actions associated with the eventCascade notification message

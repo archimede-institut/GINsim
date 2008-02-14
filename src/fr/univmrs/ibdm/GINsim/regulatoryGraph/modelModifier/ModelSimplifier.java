@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
@@ -14,6 +13,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.global.GsException;
 
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.
@@ -75,12 +75,14 @@ public class ModelSimplifier extends Thread implements Runnable {
 				it_targets.setOutgoingList(manager.getOutgoingEdges(vertex));
 				while (it_targets.hasNext()) {
 					GsRegulatoryVertex target = (GsRegulatoryVertex)it_targets.next();
-					targets.add(target);
-					OmddNode targetNode = (OmddNode)m_affected.get(target);
-					if (targetNode == null) {
-						targetNode = target.getTreeParameters(graph);
+					if (!target.equals(vertex)) {
+						targets.add(target);
+						OmddNode targetNode = (OmddNode)m_affected.get(target);
+						if (targetNode == null) {
+							targetNode = target.getTreeParameters(graph);
+						}
+						m_affected.put(target, remove(targetNode, deleted, pos).reduce());
 					}
-					m_affected.put(target, remove(targetNode, deleted, pos).reduce());
 				}
 				entry.setValue(new ArrayList(targets));
 			}

@@ -10,7 +10,6 @@ import javax.swing.table.TableModel;
 import fr.univmrs.ibdm.GINsim.export.GsAbstractExport;
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
@@ -25,7 +24,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 public class GsHTMLExport extends GsAbstractExport {
 
@@ -34,7 +34,7 @@ public class GsHTMLExport extends GsAbstractExport {
 	GsExportConfig config = null;
 	GsRegulatoryMutants mlist = null;
 	FileWriter fout = null;
-	GsXMLWriter out = null;
+	XMLWriter out = null;
 	TableModel model;
 	List v_no;
 	int len;
@@ -74,7 +74,7 @@ public class GsHTMLExport extends GsAbstractExport {
 		v_no = graph.getNodeOrder();
 		len = v_no.size();
 		fout = new FileWriter(config.getFilename());
-		out = new GsXMLWriter(fout, null);
+		out = new XMLWriter(fout, null);
 
 		if (fullHTML) {
 			out.write("<!DOCTYPE html PUBLIC \""

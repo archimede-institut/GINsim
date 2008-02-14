@@ -7,14 +7,15 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsProgressListener;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.global.ProgressListener;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * config frame for the connectivity plugin.
  */
-public class ConnectivityFrame extends JDialog implements GsProgressListener {
+public class ConnectivityFrame extends JDialog implements ProgressListener {
 
 	private static final long serialVersionUID = 2671795894716799300L;
 	private javax.swing.JPanel jContentPane = null;
@@ -32,7 +33,9 @@ public class ConnectivityFrame extends JDialog implements GsProgressListener {
 	public ConnectivityFrame(JFrame frame, GsGraph graph) {
 		super(frame);
 		this.frame = frame;
-		if (graph == null) GsEnv.error("no graph", frame);
+		if (graph == null) {
+			Tools.error("no graph", frame);
+		}
 		this.graph = graph;
 		initialize();
 	}

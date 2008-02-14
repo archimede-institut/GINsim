@@ -10,7 +10,6 @@ import javax.swing.*;
 
 import fr.univmrs.ibdm.GINsim.export.GsExportConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
@@ -19,6 +18,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.stableStates.GenericStableStateUI;
 import fr.univmrs.ibdm.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
+import fr.univmrs.tagc.manageressources.Translator;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 

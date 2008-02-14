@@ -60,7 +60,7 @@ public class GenericPropertyEditorPanel extends JPanel implements GenericPropert
 	
 	private GridBagConstraints getCst(GenericPropertyInfo pinfo, int num) {
 		int[] t_position;
-		if (pinfo.v_position == null) {
+		if (pinfo.l_position == null) {
 			t_position = new int[2];
 			t_position[0] = num;
 			if (num == 0) {
@@ -68,7 +68,7 @@ public class GenericPropertyEditorPanel extends JPanel implements GenericPropert
 			}
 			t_position[1] = count;
 		} else {
-			t_position = (int[])pinfo.v_position.get(num);
+			t_position = (int[])pinfo.l_position.get(num);
 		}
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = t_position[0];

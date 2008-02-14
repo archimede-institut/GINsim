@@ -6,13 +6,13 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 /**
  * Save/open simulation parameters along with the model.
@@ -35,7 +35,7 @@ public class GsMutantListManager implements
             return;
         }
         try {
-            GsXMLWriter out = new GsXMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os, null);
             out.openTag("mutantList");
             for (int i=0 ; i<lMutant.getNbElements(null) ; i++) {
                 GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)lMutant.getElement(null, i);

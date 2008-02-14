@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.global.GsProgressListener;
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphtGraphManager;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.global.ProgressListener;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * the class with the algorithms for strongest connected component
@@ -39,7 +39,7 @@ public final class AlgoConnectivity extends Thread {
 	private int count;
 	private int time ;
     private int mode;
-	private GsProgressListener frame;
+	private ProgressListener frame;
     private boolean canceled = false;
     
 	/**
@@ -49,7 +49,7 @@ public final class AlgoConnectivity extends Thread {
 	 * @param frame
      * @param searchMode MODE_COMPO=only find components; MODE_FULL=also search for path and create the reduced graph
 	 */
-	public void configure(GsGraph graphm, GsProgressListener frame, int searchMode) {
+	public void configure(GsGraph graphm, ProgressListener frame, int searchMode) {
 		this.graphModel = graphm.getGraphManager();
 		this.frame = frame;
         this.g = graphm;

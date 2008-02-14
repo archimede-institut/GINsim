@@ -13,12 +13,12 @@ import javax.swing.JFileChooser;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.xml.XMLHelper;
 
 public class ReferencerHelper implements AnnotationHelper {
 	Map m_ref = new HashMap();
@@ -116,7 +116,7 @@ class Ref {
 	}
 }
 
-class ReferencerParser extends GsXMLHelper {
+class ReferencerParser extends XMLHelper {
 
 	Map m_ref;
 	Ref curRef;

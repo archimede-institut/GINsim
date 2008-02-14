@@ -11,8 +11,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import fr.univmrs.ibdm.GINsim.global.Tools;
-import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.ImageLoader;
 
 /**
  * "About dialog" for GINsim

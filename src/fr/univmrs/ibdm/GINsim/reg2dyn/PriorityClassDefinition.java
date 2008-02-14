@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 import fr.univmrs.tagc.datastore.GenericListListener;
 import fr.univmrs.tagc.datastore.NamedObject;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.xml.XMLize;
 
 
-class PriorityClassDefinition extends SimpleGenericList implements NamedObject, GsXMLize {
+class PriorityClassDefinition extends SimpleGenericList implements NamedObject, XMLize {
 
 	Map m_elt;
 	String name;
@@ -262,7 +262,7 @@ class PriorityClassDefinition extends SimpleGenericList implements NamedObject, 
         return ret;
     }
 
-	public void toXML(GsXMLWriter out, Object param, int mode)
+	public void toXML(XMLWriter out, Object param, int mode)
 			throws IOException {
 		out.openTag("priorityClassList");
 		out.addAttr("id", name);

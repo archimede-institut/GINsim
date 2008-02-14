@@ -3,20 +3,20 @@ package fr.univmrs.ibdm.GINsim.graph;
 import java.awt.Color;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * extract from graph graphic info on a vertex.
  */
 public abstract class GsVertexAttributesReader {
 
-    public static Color bg = new Color(((Integer)GsOptions.getOption("vs.vertexbg", new Integer(-26368))).intValue());
-    public static Color fg = new Color(((Integer)GsOptions.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
-    public static int shape = ((Integer)GsOptions.getOption("vs.vertexshape", new Integer(0))).intValue();
+    public static Color bg = new Color(((Integer)OptionStore.getOption("vs.vertexbg", new Integer(-26368))).intValue());
+    public static Color fg = new Color(((Integer)OptionStore.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
+    public static int shape = ((Integer)OptionStore.getOption("vs.vertexshape", new Integer(0))).intValue();
     public static int border = 0;
-    public static int height = ((Integer)GsOptions.getOption("vs.vertexheight", new Integer(30))).intValue();
-    public static int width = ((Integer)GsOptions.getOption("vs.vertexwidth", new Integer(55))).intValue();
+    public static int height = ((Integer)OptionStore.getOption("vs.vertexheight", new Integer(30))).intValue();
+    public static int width = ((Integer)OptionStore.getOption("vs.vertexwidth", new Integer(55))).intValue();
     
     protected static Vector v_shape = null;
     protected static Vector v_border = null;
@@ -53,12 +53,12 @@ public abstract class GsVertexAttributesReader {
      * remember default values
      */
     public static void saveOptions() {
-        GsOptions.setOption("vs.vertexfg", new Integer(fg.getRGB()));
-        GsOptions.setOption("vs.vertexbg", new Integer(bg.getRGB()));
-        GsOptions.setOption("vs.vertexshape", new Integer(shape));
-        GsOptions.setOption("vs.vertexborder", new Integer(border));
-        GsOptions.setOption("vs.vertexheight", new Integer(height));
-        GsOptions.setOption("vs.vertexwidth", new Integer(width));
+        OptionStore.setOption("vs.vertexfg", new Integer(fg.getRGB()));
+        OptionStore.setOption("vs.vertexbg", new Integer(bg.getRGB()));
+        OptionStore.setOption("vs.vertexshape", new Integer(shape));
+        OptionStore.setOption("vs.vertexborder", new Integer(border));
+        OptionStore.setOption("vs.vertexheight", new Integer(height));
+        OptionStore.setOption("vs.vertexwidth", new Integer(width));
     }
 
     /**

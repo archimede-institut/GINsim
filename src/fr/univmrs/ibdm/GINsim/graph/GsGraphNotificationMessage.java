@@ -1,14 +1,14 @@
 package fr.univmrs.ibdm.GINsim.graph;
 
-import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.global.GsTimeout;
-import fr.univmrs.ibdm.GINsim.global.GsTimeoutObject;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.Timeout;
+import fr.univmrs.tagc.global.TimeoutObject;
 
 /**
  * A notification message
  *
  */
-public class GsGraphNotificationMessage implements GsTimeoutObject {
+public class GsGraphNotificationMessage implements TimeoutObject {
 
 	private String message;
 	private GsGraph graph;
@@ -78,7 +78,7 @@ public class GsGraphNotificationMessage implements GsTimeoutObject {
                 this.type = NOTIFICATION_ERROR;
         }
         if (timeout > 0) {
-            GsTimeout.addTimeout(this, timeout*1000);
+            Timeout.addTimeout(this, timeout*1000);
         }
 	}
 

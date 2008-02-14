@@ -15,12 +15,13 @@ import javax.swing.filechooser.FileFilter;
 import fr.univmrs.ibdm.GINsim.connectivity.GsReducedGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.ImageLoader;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * descriptor for regulatoryGraph.
@@ -118,9 +119,9 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 	public ImageIcon getGraphIcon(int mode) {
 	    switch (mode) {
 	    	case GsOpenAction.MODE_OPEN:
-	    	    return GsEnv.getIcon("open.gif");
+	    	    return ImageLoader.getImageIcon("open.gif");
 	    	case GsOpenAction.MODE_NEW:
-	    	    return GsEnv.getIcon("new.gif");
+	    	    return ImageLoader.getImageIcon("new.gif");
 	    }
 		return null;
 	}

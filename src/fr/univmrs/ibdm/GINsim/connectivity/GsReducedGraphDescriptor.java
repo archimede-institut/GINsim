@@ -12,7 +12,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * descriptor for regulatoryGraph.

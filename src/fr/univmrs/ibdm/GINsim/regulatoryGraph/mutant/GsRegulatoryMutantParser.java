@@ -9,12 +9,12 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.xml.XMLHelper;
 
 /**
  * parser for simulation parameters file
  */
-public class GsRegulatoryMutantParser extends GsXMLHelper {
+public class GsRegulatoryMutantParser extends XMLHelper {
 
     public GsGraph getGraph() {
         // doesn't create a graph!

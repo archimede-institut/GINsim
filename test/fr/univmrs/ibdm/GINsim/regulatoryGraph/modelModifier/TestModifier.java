@@ -1,8 +1,8 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.modelModifier;
 
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.global.GsException;
 import junit.framework.TestCase;
 
 public class TestModifier extends TestCase {
@@ -117,7 +117,33 @@ public class TestModifier extends TestCase {
     /**
      * This will be a more complex test, with consistency checks and so on.
      */
-    public void testComplexStuff() {
-        assertEquals("Hello World!", "Hello World!");
+    public void testComplexStuff() throws GsException {
+    	// can we remove a regulator with an auto-regulation if it is not functional ?
+    	OmddNode tmp = new OmddNode();
+    	tmp.level = 2;
+    	tmp.next = new OmddNode[2];
+    	tmp.next[0] = OmddNode.TERMINALS[0];
+    	tmp.next[1] = OmddNode.TERMINALS[1];
+    	OmddNode deleted = new OmddNode();
+    	deleted.level = 1;
+    	deleted.next = new OmddNode[2];
+    	deleted.next[0] = tmp;
+    	deleted.next[1] = OmddNode.TERMINALS[1];
+    	
+    	tmp = new OmddNode();
+    	tmp.level = 2;
+    	tmp.next = new OmddNode[2];
+    	tmp.next[0] = OmddNode.TERMINALS[0];
+    	tmp.next[1] = OmddNode.TERMINALS[1];
+    	OmddNode target = new OmddNode();
+    	target.level = 1;
+    	target.next = new OmddNode[2];
+    	target.next[0] = OmddNode.TERMINALS[0];
+    	target.next[1] = tmp;
+    	
+    	OmddNode result = simplifier.remove(target, deleted, 2);
+    	assertEquals(result.level, 1);
+    	assertEquals(result.next[0], OmddNode.TERMINALS[0]);
+    	assertEquals(result.next[1], OmddNode.TERMINALS[1]);
     }
 }

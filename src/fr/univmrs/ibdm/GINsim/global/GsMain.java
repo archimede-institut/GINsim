@@ -11,11 +11,11 @@ import fr.univmrs.ibdm.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
-import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.manageressources.ImageLoader;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.xml.XMLHelper;
 
 /**
  * this class is used to run GINsim: parse args and so on
@@ -133,7 +133,7 @@ public class GsMain {
 /**
  * This class reads GINsim's generic config file, loads plugins and so on.
  */
-class ReadConfig extends GsXMLHelper {
+class ReadConfig extends XMLHelper {
 
 	GsClassLoader cloader;
 	

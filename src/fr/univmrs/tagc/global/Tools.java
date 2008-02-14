@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.global;
+package fr.univmrs.tagc.global;
 
 import java.awt.Color;
 import java.io.File;
@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.jgraph.util.BrowserLauncher;
 
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * some little utilities, might be replaced later by call to some external code, 
@@ -154,7 +154,7 @@ public class Tools {
 				BrowserLauncher.openURL(url);
 			}
 		} catch (IOException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_NORMAL, Translator.getString("STR_browserError")), null);
+			error(new GsException(GsException.GRAVITY_NORMAL, Translator.getString("STR_browserError")), null);
 		}
 	}
 
@@ -263,4 +263,32 @@ public class Tools {
 		return (value&mask) == mask;
 	}
 
+    /**
+     * an error occured, give the user some feedback.
+     * 
+     * @param e
+     * @param main
+     */
+    public static void error(GsException e, JFrame main) {
+        int i = -1;
+        switch (e.getGravity()) {
+            case GsException.GRAVITY_INFO:
+            case GsException.GRAVITY_NORMAL:
+                i = JOptionPane.INFORMATION_MESSAGE;
+                break;
+        	default:
+                i = JOptionPane.ERROR_MESSAGE;
+        }
+        JOptionPane.showMessageDialog(main, e.getMessage()+"\n", e.getTitle(),i);
+    }
+
+    /**
+     * an error occured, give the user some feedback.
+     * 
+     * @param s
+     * @param main
+     */
+    public static void error(String s, JFrame main) {
+        JOptionPane.showMessageDialog(main, s+"\n", "error",JOptionPane.ERROR_MESSAGE);
+    }
 }

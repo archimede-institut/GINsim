@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.gui;
+package fr.univmrs.tagc.widgets;
 
 import java.awt.Color;
 
@@ -6,7 +6,7 @@ import java.awt.Color;
  * in a JList or a JTable, this Object can "choose" its background color. 
  *
  */
-public interface GsColorable {
+public interface ColorableItem {
 
     /**
      * @return the background color to use for this object

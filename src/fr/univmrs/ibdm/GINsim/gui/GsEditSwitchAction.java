@@ -6,11 +6,12 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import fr.univmrs.tagc.widgets.BaseAction;
 
 /**
  * Helper action to easily add custom actions (typically layout, export...)
  */
-public class GsEditSwitchAction extends GsBaseAction {
+public class GsEditSwitchAction extends BaseAction {
 
     private static final long serialVersionUID = -8958595762708145152L;
 

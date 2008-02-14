@@ -7,15 +7,15 @@ import java.util.Iterator;
 import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.ValueList;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedObjectManager {
 
@@ -34,7 +34,7 @@ public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedO
 		}
 		GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
 		try {
-			GsXMLWriter out = new GsXMLWriter(os, null);
+			XMLWriter out = new XMLWriter(os, null);
 			out.openTag("modelCheckerConfig");
 			out.openTag("testList");
 			for (int i=0 ; i<l_test.getNbElements(null) ; i++) {

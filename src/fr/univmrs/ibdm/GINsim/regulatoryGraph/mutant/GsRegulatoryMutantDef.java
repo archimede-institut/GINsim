@@ -8,8 +8,8 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.tagc.datastore.NamedObject;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 /**
  * store the definition of a mutant
@@ -87,7 +87,7 @@ public class GsRegulatoryMutantDef implements NamedObject {
         }
     }
 
-    public void toXML(GsXMLWriter out) throws IOException {
+    public void toXML(XMLWriter out) throws IOException {
         out.openTag("mutant");
         out.addAttr("name", name);
         for (int i=0 ; i<v_changes.size() ; i++) {

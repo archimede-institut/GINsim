@@ -13,7 +13,7 @@ import javax.swing.table.TableColumn;
 
 import fr.univmrs.ibdm.GINsim.aRegGraph.GsAReg2GPConfig;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * UI to search a path in the dynamic graph.

@@ -1,7 +1,8 @@
 package fr.univmrs.tagc.datastore;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;;
 
 /**
  * An ObjectEditor acts as proxy between an object and the UI to edit its properties.
@@ -10,8 +11,8 @@ import java.util.Vector;
  */
 public abstract class ObjectEditor {
 
-	protected Vector v_listener = null;
-	protected Vector v_prop = new Vector();
+	protected List v_listener = null;
+	protected List v_prop = new ArrayList();
 	protected Object o;
 	protected Object master;
 	
@@ -45,7 +46,7 @@ public abstract class ObjectEditor {
 	
 	public void addListener(ObjectPropertyEditorUI l) {
 		if (v_listener == null) {
-			v_listener = new Vector();
+			v_listener = new ArrayList();
 		}
 		v_listener.add(l);
 	}
@@ -55,7 +56,7 @@ public abstract class ObjectEditor {
 		}
 	}
 	
-	public Vector getProperties() {
+	public List getProperties() {
 		return v_prop;
 	}
 

@@ -1,9 +1,9 @@
-package fr.univmrs.ibdm.GINsim.global;
+package fr.univmrs.tagc.global;
 
 /**
  * Objects waiting for a timeout
  */
-public interface GsTimeoutObject {
+public interface TimeoutObject {
 
     /**
      * the timeout is elapsed

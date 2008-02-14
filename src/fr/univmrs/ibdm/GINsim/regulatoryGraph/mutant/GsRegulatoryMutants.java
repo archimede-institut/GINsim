@@ -20,7 +20,6 @@ import javax.swing.table.AbstractTableModel;
 import fr.univmrs.ibdm.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -28,6 +27,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
 import fr.univmrs.tagc.datastore.ValueList;
 import fr.univmrs.tagc.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.manageressources.Translator;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 
 /**

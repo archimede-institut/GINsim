@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package fr.univmrs.ibdm.GINsim.manageressources;
+package fr.univmrs.tagc.manageressources;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -69,7 +69,7 @@ public class Translator {
 	protected static Stack bundleNames = new Stack();
 	
     /**
-	 * Resouce Bundle with proper names.
+	 * Resource Bundle with proper names.
 	 */
     protected static DefaultResourceBundle defaultBundle = new DefaultResourceBundle();
 
@@ -172,25 +172,6 @@ public class Translator {
 		}
 	}
 
-	/**
-	 * Adds a locale change listener to this Translator. If
-	 * the local changes, this
-	 * translator will fire locale change events.
-	 * @param listener the new listener to register.
-	 *
-	 */
-	public static void addLocaleChangeListener(LocaleChangeListener listener) {
-		listeners.add(listener);
-	}
-
-	/** 
-	 * Removes the registered Listener
-	 * @param listener
-	 */
-	public static void removeLocaleChangeListener(LocaleChangeListener listener) {
-		listeners.remove(listener);
-	}
-
 	/** 
 	 * Returns the current locale
 	 * @return the currently used locale
@@ -206,24 +187,10 @@ public class Translator {
 	 */
 	public static void setLocale(Locale locale) {
 		// change the locale
-		Locale oldLocale = Locale.getDefault();
 		Locale.setDefault(locale);
 
 		// reload the bundles
 		reloadBundles();
-
-		// update listeners
-		Vector cpyListeners;
-		synchronized (listeners) {
-			cpyListeners = (Vector) listeners.clone();
-		}
-
-		Enumeration oEnum = cpyListeners.elements();
-		while (oEnum.hasMoreElements()) {
-			LocaleChangeListener listener =
-				(LocaleChangeListener) oEnum.nextElement();
-			listener.localeChanged(new LocaleChangeEvent(oldLocale, locale));
-		}
 	}
 
 	/** 

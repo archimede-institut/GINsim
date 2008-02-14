@@ -5,11 +5,11 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.LogicalParameterList;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * This is the model behind the interaction editor

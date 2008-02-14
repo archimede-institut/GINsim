@@ -6,18 +6,18 @@ import java.util.*;
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.xml.XMLize;
 
 /**
  * the Class in which we store biological data for vertices (genes).
@@ -31,7 +31,7 @@ import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
  *			which the gene tends when some incoming edges are actives </li>
  * </ul>
  */
-public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
+public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 
 	private short 			maxValue;
 	private final LogicalParameterList v_logicalParameters;
@@ -246,7 +246,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
                 + S_MAX + maxValue;
 	}
 
-	public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
+	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
 
 			out.openTag("node");
 	    	out.addAttr("id", getId());
@@ -352,7 +352,7 @@ public class GsRegulatoryVertex implements ToolTipsable, GsXMLize {
       return interactionsModel;
     }
 
-    public void saveInteractionsModel(GsXMLWriter out, int mode) throws IOException {
+    public void saveInteractionsModel(XMLWriter out, int mode) throws IOException {
       GsTreeString root = (GsTreeString)interactionsModel.getRoot();
       GsTreeValue val;
       GsTreeElement exp;

@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.global;
+package fr.univmrs.tagc.global;
 
 import java.io.File;
 import java.io.IOException;

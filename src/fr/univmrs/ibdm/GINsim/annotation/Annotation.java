@@ -5,13 +5,13 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.xml.XMLize;
 
 /**
  * Annotation for Gene : contains text and a list of url
  */
-public class Annotation implements GsXMLize
+public class Annotation implements XMLize
 {
     /** list of links  */
 	protected Vector linkList;
@@ -61,7 +61,7 @@ public class Annotation implements GsXMLize
 		this.comment = comment;
 	}
 	
-	public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
+	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
 			if (comment.equals("") && linkList.size()==0) {
 			    return;         
             }

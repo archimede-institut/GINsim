@@ -6,12 +6,12 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.xml.XMLize;
 
 /**
  * Save/open simulation parameters along with the model.
@@ -33,7 +33,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
             return;
         }
         try {
-            GsXMLWriter out = new GsXMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os, null);
             out.openTag("simulationParameters");
             String s_nodeOrder = nodeOrder.get(0).toString();
             for (int i=1 ; i<nodeOrder.size() ; i++) {
@@ -43,7 +43,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
             // add priority class definition
             if (paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 0) {
                 for (int i=0 ; i<paramList.pcmanager.getNbElements(null) ; i++) {
-                	((GsXMLize)paramList.pcmanager.getElement(null, i)).toXML(out, null, 0);
+                	((XMLize)paramList.pcmanager.getElement(null, i)).toXML(out, null, 0);
                 }
             }
             // and the real parameters

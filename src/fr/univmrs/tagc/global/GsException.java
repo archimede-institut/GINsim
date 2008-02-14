@@ -1,6 +1,6 @@
-package fr.univmrs.ibdm.GINsim.global;
+package fr.univmrs.tagc.global;
 
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * When something bad happen, a GsException must be raised.

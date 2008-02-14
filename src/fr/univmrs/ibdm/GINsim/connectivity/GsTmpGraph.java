@@ -7,9 +7,9 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.global.GsException;
 
 /**
  * Temporary graph, not savable, not editable, nothing...

@@ -2,18 +2,18 @@ package fr.univmrs.ibdm.GINsim.reg2dyn;
 
 import javax.swing.JFrame;
 
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * main method for the reg2dyn plugin

@@ -17,7 +17,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.GsFunctionEditor;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
+import fr.univmrs.tagc.widgets.Button;
 
 public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener,
     PropertyChangeListener, MouseListener {
@@ -32,7 +32,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     super(value, tree, sel, width);
     setLayout(new BorderLayout(2, 2));
     setBackground(Color.white);
-    editButton = new GsJButton("edit.png");
+    editButton = new Button("edit.png");
     editButton.addActionListener(this);
     buttonPanel.add(editButton);
 

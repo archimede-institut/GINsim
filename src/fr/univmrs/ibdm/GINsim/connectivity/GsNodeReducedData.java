@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.global.Tools;
+import fr.univmrs.tagc.global.Tools;
 
 /**
  * this object represents nodes in the reduced graph : the graph of strong connected components

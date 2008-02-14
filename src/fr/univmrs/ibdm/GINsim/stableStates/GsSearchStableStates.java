@@ -56,7 +56,6 @@ public class GsSearchStableStates extends Thread {
 			mutant.apply(t_param, regGraph);
 		}
 		
-		long start = System.currentTimeMillis();
 		dd_stable = OmddNode.TERMINALS[1];
 		for (int i=0 ; i<t_param.length ; i++) {
 			if (ORDERTEST) {
@@ -75,7 +74,6 @@ public class GsSearchStableStates extends Thread {
 						dd_stable).reduce();
 			}
 		}
-		//System.out.println("stable states search: "+(System.currentTimeMillis()-start)+"ms");
 		return dd_stable;
 	}
 	

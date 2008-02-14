@@ -2,9 +2,9 @@ package fr.univmrs.ibdm.GINsim.export;
 
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.global.OptionStore;
 
 public class GsExportConfig extends GsExtensibleConfig {
 
@@ -19,7 +19,7 @@ public class GsExportConfig extends GsExtensibleConfig {
 		// set the format
 		Vector v_format = export.getSubFormat();
 		if (v_format != null) {
-			String s_format = (String)GsOptions.getOption("export."+export.getID()+".format", 
+			String s_format = (String)OptionStore.getOption("export."+export.getID()+".format", 
 					v_format.get(0).toString());
 			format = 0;
 			for (int i=0 ; i<v_format.size() ; i++) {
@@ -38,7 +38,7 @@ public class GsExportConfig extends GsExtensibleConfig {
 			return;
 		}
 		if (index >-1 && index < v_format.size()) {
-			GsOptions.setOption("export."+export.getID()+".format", v_format.get(index).toString());
+			OptionStore.setOption("export."+export.getID()+".format", v_format.get(index).toString());
 			format = index;
 		}
 	}

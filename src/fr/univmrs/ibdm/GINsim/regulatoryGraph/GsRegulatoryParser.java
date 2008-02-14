@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.*;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
@@ -21,6 +20,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.Tools;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
@@ -436,7 +437,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     		}
     		if (!ok || v_order.size() != graph.getGraphManager().getVertexCount()) {
     			// error
-    			GsEnv.error("incoherent nodeOrder, not restoring it", null);
+    			Tools.error("incoherent nodeOrder, not restoring it", null);
     		} else {
     			graph.setNodeOrder(v_order);
     		}

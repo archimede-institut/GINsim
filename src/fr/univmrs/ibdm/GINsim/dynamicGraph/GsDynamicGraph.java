@@ -11,22 +11,22 @@ import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.*;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
 import fr.univmrs.ibdm.GINsim.gui.GsEditModeDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.RegulatoryGraphEditor;
 import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
 import fr.univmrs.tagc.datastore.ObjectEditor;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.ImageLoader;
+import fr.univmrs.tagc.manageressources.Translator;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 /**
  * the dynamic (state transition) graph.
@@ -101,7 +101,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 */
 	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
         try {
-            GsXMLWriter out = new GsXMLWriter(os, dtdFile);
+            XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"dynamical\"");
@@ -144,7 +144,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(GsXMLWriter out, int mode, boolean selectedOnly) throws IOException {
+    private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
         Iterator it;
         if (selectedOnly) {
         		it = graphManager.getSelectedEdgeIterator();
@@ -187,7 +187,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(GsXMLWriter out, int mode, boolean selectedOnly) throws IOException {
+    private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
     	Iterator it;
     	if (selectedOnly) {
     		it = graphManager.getSelectedVertexIterator();
@@ -457,7 +457,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 
     public Vector getEditingModes() {
         Vector v_mode = new Vector();
-        v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", GsEnv.getIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
+        v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", ImageLoader.getImageIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
         return v_mode;
     }
 }

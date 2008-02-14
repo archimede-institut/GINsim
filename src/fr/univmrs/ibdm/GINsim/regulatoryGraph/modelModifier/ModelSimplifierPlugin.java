@@ -12,7 +12,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
@@ -20,13 +19,14 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsActions;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.xml.XMLHelper;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 /**
  * main method for the model simplification plugin
@@ -98,7 +98,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
             return;
         }
         try {
-            GsXMLWriter out = new GsXMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os, null);
             out.openTag("modelSimplifications");
             // add the available configurations
             for (int i=0 ; i<paramList.getNbElements(null) ; i++) {
@@ -127,7 +127,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
 /**
  * parser for simulation parameters file
  */
-class ModelSimplifierConfigParser extends GsXMLHelper {
+class ModelSimplifierConfigParser extends XMLHelper {
 
     public GsGraph getGraph() {
         // doesn't create a graph!

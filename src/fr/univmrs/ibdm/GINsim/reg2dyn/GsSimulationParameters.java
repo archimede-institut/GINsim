@@ -7,15 +7,15 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
 import fr.univmrs.tagc.datastore.NamedObject;
 import fr.univmrs.tagc.datastore.ObjectStore;
+import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.xml.XMLize;
 
 /**
  * remember, save and restore a simulation parameter.
  */
-public class GsSimulationParameters implements GsXMLize, NamedObject, GsInitialStateStore {
+public class GsSimulationParameters implements XMLize, NamedObject, GsInitialStateStore {
 
 	static final int MUTANT = 0;
 	static final int PCLASS = 1;
@@ -133,7 +133,7 @@ public class GsSimulationParameters implements GsXMLize, NamedObject, GsInitialS
         return s;
     }
 
-	public void toXML(GsXMLWriter out, Object param, int xmlmode) throws IOException {
+	public void toXML(XMLWriter out, Object param, int xmlmode) throws IOException {
 		out.openTag("parameter");
 		out.addAttr("name", name);
 		out.addAttr("mode", Simulation.MODE_NAMES[mode]);

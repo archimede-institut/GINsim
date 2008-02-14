@@ -10,10 +10,10 @@ import java.util.Map;
 
 import org.jgraph.util.Bezier;
 
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.global.Tools;
 
 /**
  * export the graph to SVG

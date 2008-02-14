@@ -10,7 +10,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
+import fr.univmrs.tagc.manageressources.ImageLoader;
 
 
 public class StockButton extends JButton {

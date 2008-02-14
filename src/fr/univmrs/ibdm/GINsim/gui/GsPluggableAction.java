@@ -3,13 +3,14 @@ package fr.univmrs.ibdm.GINsim.gui;
 import java.awt.event.ActionEvent;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.widgets.BaseAction;
 
 /**
  * Helper action to easily add custom mode (as several kind of vertex or edge to add)
  */
-public class GsPluggableAction extends GsBaseAction {
+public class GsPluggableAction extends BaseAction {
 
     private static final long serialVersionUID = 5364117207428709800L;
 	private GsMainFrame main;

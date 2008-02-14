@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JSplitPane;
 
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
+import fr.univmrs.tagc.global.OptionStore;
 
 
 public class SplitPane extends JSplitPane implements PropertyChangeListener {
@@ -17,7 +17,7 @@ public class SplitPane extends JSplitPane implements PropertyChangeListener {
 		super.setName(name);
 		this.name = name;
 		if (name != null) {
-			Object option = GsOptions.getOption("display."+name+".divider");
+			Object option = OptionStore.getOption("display."+name+".divider");
 			addPropertyChangeListener(DIVIDER_LOCATION_PROPERTY, this);
 			if (option instanceof Integer) {
 				setDividerLocation(((Integer)option).intValue());
@@ -33,7 +33,7 @@ public class SplitPane extends JSplitPane implements PropertyChangeListener {
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (name != null) {
-			GsOptions.setOption("display."+name+".divider", ""+getDividerLocation());
+			OptionStore.setOption("display."+name+".divider", ""+getDividerLocation());
 		}
 	}
 }

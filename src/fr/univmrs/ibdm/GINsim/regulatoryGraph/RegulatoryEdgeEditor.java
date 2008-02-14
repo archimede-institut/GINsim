@@ -13,11 +13,11 @@ import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectEditor;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
+import fr.univmrs.tagc.manageressources.Translator;
 
 public class RegulatoryEdgeEditor extends ObjectEditor {
 

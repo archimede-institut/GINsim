@@ -9,14 +9,14 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 /**
  * reduced Graph.
@@ -83,7 +83,7 @@ public class GsReducedGraph extends GsGraph {
 	 */
 	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
         try {
-            GsXMLWriter out = new GsXMLWriter(os, dtdFile);
+            XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"reduced\">\n");
@@ -112,7 +112,7 @@ public class GsReducedGraph extends GsGraph {
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(GsXMLWriter out, int mode, boolean selectedOnly) throws IOException {
+    private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
         Iterator it;
         if (selectedOnly) {
         		it = graphManager.getSelectedEdgeIterator();
@@ -140,7 +140,7 @@ public class GsReducedGraph extends GsGraph {
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(GsXMLWriter out, int mode, boolean selectedOnly) throws IOException {
+    private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
     	Iterator it;
     	if (selectedOnly) {
     		it = graphManager.getSelectedVertexIterator();

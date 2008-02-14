@@ -10,13 +10,13 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.xml.XMLHelper;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 
@@ -35,7 +35,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
             return;
         }
         try {
-            GsXMLWriter out = new GsXMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os, null);
             out.openTag("initialStates");
             for (int i=0 ; i<list.getNbElements(null) ; i++) {
             	GsInitialState is = (GsInitialState)list.getElement(null, i);
@@ -77,7 +77,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 }
 
 
-class initStateParser extends GsXMLHelper {
+class initStateParser extends XMLHelper {
 
 	List nodeOrder;
     GsInitialStateList list;

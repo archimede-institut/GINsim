@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.*;
 
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
+import fr.univmrs.tagc.global.OptionStore;
 
 public abstract class SimpleDialog extends JDialog {
 
@@ -28,8 +28,8 @@ public abstract class SimpleDialog extends JDialog {
 			}
 		});
 		
-		this.setSize(((Integer)GsOptions.getOption(id+".width", new Integer(w))).intValue(),
-        		((Integer)GsOptions.getOption(id+".height", new Integer(h))).intValue());
+		this.setSize(((Integer)OptionStore.getOption(id+".width", new Integer(w))).intValue(),
+        		((Integer)OptionStore.getOption(id+".height", new Integer(h))).intValue());
 		
 	    JPanel content = (JPanel) getContentPane();
 	    KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
@@ -39,8 +39,8 @@ public abstract class SimpleDialog extends JDialog {
 	}
 	
 	public void closeEvent() {
-		GsOptions.setOption(id+".width", new Integer(getWidth()));
-		GsOptions.setOption(id+".height", new Integer(getHeight()));
+		OptionStore.setOption(id+".width", new Integer(getWidth()));
+		OptionStore.setOption(id+".height", new Integer(getHeight()));
 		doClose();
 	}
 	

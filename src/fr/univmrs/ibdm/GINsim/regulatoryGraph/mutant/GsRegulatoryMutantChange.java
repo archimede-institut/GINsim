@@ -9,7 +9,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 class GsRegulatoryMutantChange {
     GsRegulatoryVertex vertex;
@@ -116,7 +116,7 @@ class GsRegulatoryMutantChange {
         return node.merge(cst, OmddNode.CONSTRAINT);
     }
 
-    public void toXML(GsXMLWriter out) throws IOException {
+    public void toXML(XMLWriter out) throws IOException {
         out.openTag("change");
         out.addAttr("target", vertex.getId());
         out.addAttr("min", ""+min);

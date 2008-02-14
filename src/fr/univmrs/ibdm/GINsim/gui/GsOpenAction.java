@@ -11,12 +11,16 @@ import fr.univmrs.ibdm.GINsim.global.*;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphOptionPanel;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.widgets.BaseAction;
 
 /**
  * generic action for open methods: uses it's graphDescriptor to open a new graph
  */
-public class GsOpenAction extends GsBaseAction {
+public class GsOpenAction extends BaseAction {
 
 	private static final long serialVersionUID = -4552503269216370623L;
 
@@ -103,7 +107,7 @@ public class GsOpenAction extends GsBaseAction {
         case MODE_RECENT:
             if (path != null && new File(path).exists()) {
                 GsGraph graph = gd.open(new File(path));
-                GsOptions.addRecent(path);
+                OptionStore.addRecent(path);
                 if (main.getGraph().isEmpty()) {
                     GsEventDispatcher.associateGraphWithFrame(graph, main);
                 } else {
@@ -197,8 +201,8 @@ public class GsOpenAction extends GsBaseAction {
         				absoluteNameFile = jfc.getSelectedFile().getPath();
         				GsGraph graph = gd.open(filter, new File(absoluteNameFile));
         				GsEventDispatcher.associateGraphWithFrame(graph, main);
-                    GsOptions.addRecent(absoluteNameFile);
-                    GsOptions.setOption("currentDirectory", jfc.getCurrentDirectory().toString());
+                    OptionStore.addRecent(absoluteNameFile);
+                    OptionStore.setOption("currentDirectory", jfc.getCurrentDirectory().toString());
         				return graph;
         			} else if (!(JFileChooser.CANCEL_OPTION == result)) {
         			    JOptionPane.showMessageDialog(null, Translator.getString("STR_unableToOpen"),
@@ -207,7 +211,7 @@ public class GsOpenAction extends GsBaseAction {
             } else {
                 GsGraph graph = gd.open(filter, new File(path));
                 GsEventDispatcher.associateGraphWithFrame(graph, main);
-                GsOptions.addRecent(path);
+                OptionStore.addRecent(path);
                 return graph;
             }
 		} catch (Exception e) {
@@ -224,7 +228,7 @@ public class GsOpenAction extends GsBaseAction {
         if (jfc != null) {
             curDir = jfc.getCurrentDirectory();
         } else {
-            String path = (String)GsOptions.getOption("currentDirectory");
+            String path = (String)OptionStore.getOption("currentDirectory");
             if (path != null) {
                 curDir = new File(path);
             }
@@ -312,7 +316,7 @@ public class GsOpenAction extends GsBaseAction {
 		int ret = jfc.showSaveDialog(frame);
 		
         if (null != jfc.getSelectedFile() && ret == JFileChooser.APPROVE_OPTION) {
-            GsOptions.setOption("currentDirectory", jfc.getCurrentDirectory());
+            OptionStore.setOption("currentDirectory", jfc.getCurrentDirectory());
             	String filename = jfc.getSelectedFile().getPath();
             	String extension = autoExtension;
                 if (accessory instanceof GsGraphOptionPanel) {

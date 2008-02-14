@@ -13,16 +13,16 @@ import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphtGraphManager;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.datastore.ObjectEditor;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * Base class for specialized graphs, with some common functions.

@@ -3,8 +3,8 @@ package fr.univmrs.ibdm.GINsim.annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.global.Tools;
 
 public class AnnotationLink {
 	

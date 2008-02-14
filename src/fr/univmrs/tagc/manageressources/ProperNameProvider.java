@@ -4,7 +4,7 @@
  *
  * Please visit our website at http://librarian.sf.de
  */
-package fr.univmrs.ibdm.GINsim.manageressources;
+package fr.univmrs.tagc.manageressources;
 
 import java.util.Enumeration;
 

@@ -1,9 +1,9 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph.models;
 
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.datastore.models.SpinModel;
+import fr.univmrs.tagc.global.Tools;
 
 /**
  * model controlling spin buttons for base and max value of a GsRegulatoryVertex

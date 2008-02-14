@@ -1,19 +1,20 @@
-package fr.univmrs.ibdm.GINsim.xml;
+package fr.univmrs.tagc.xml;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  */
-public class GsXMLWriter {
+public class XMLWriter {
 
     private OutputStreamWriter out = null;
-    private Vector v_stack = new Vector();
+    private List v_stack = new ArrayList();
     private boolean inTag;
     private boolean inContent;
     private boolean indent;
@@ -25,10 +26,10 @@ public class GsXMLWriter {
      * @param dtdFile
      * @throws IOException
      */
-    public GsXMLWriter(OutputStreamWriter out, String dtdFile) throws IOException {
+    public XMLWriter(OutputStreamWriter out, String dtdFile) throws IOException {
         this(out,dtdFile,true);
     }
-    public GsXMLWriter(OutputStream out, String dtdFile) throws IOException {
+    public XMLWriter(OutputStream out, String dtdFile) throws IOException {
         this(new OutputStreamWriter(out, "UTF-8"),dtdFile,true);
     }
 
@@ -39,7 +40,7 @@ public class GsXMLWriter {
      * @param indent
      * @throws IOException
      */
-    public GsXMLWriter(OutputStreamWriter out, String dtdFile, boolean indent) throws IOException {
+    public XMLWriter(OutputStreamWriter out, String dtdFile, boolean indent) throws IOException {
         this.indent = indent;
         this.out = out;
         if (dtdFile != null) {

@@ -11,12 +11,12 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import fr.univmrs.ibdm.GINsim.global.TempDir;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.global.TempDir;
+import fr.univmrs.tagc.manageressources.Translator;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
 import fr.univmrs.tagc.widgets.StackDialog;
 

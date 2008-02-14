@@ -14,8 +14,7 @@ import javax.swing.tree.TreePath;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJButton;
-import fr.univmrs.ibdm.GINsim.util.widget.GsJSpinner;
+import fr.univmrs.tagc.widgets.Button;
 
 public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionListener, ChangeListener, MouseListener, MouseMotionListener {
   private static final long serialVersionUID = 207002545507075699L;
@@ -24,12 +23,13 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
 
   public GsValuePanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean edit) {
     super(value, tree, sel, width);
-    addButton = new GsJButton("add.png");
+    addButton = new Button("add.png");
     addButton.addActionListener(this);
-    if (treeElement.getProperty("null function") == null)
-      treeElement.setProperty("null function", new Boolean(false));
-    else if (((Boolean)treeElement.getProperty("null function")).booleanValue())
-      addButton.setEnabled(false);
+    if (treeElement.getProperty("null function") == null) {
+		treeElement.setProperty("null function", new Boolean(false));
+	} else if (((Boolean)treeElement.getProperty("null function")).booleanValue()) {
+		addButton.setEnabled(false);
+	}
     buttonPanel.add(Box.createVerticalGlue());
     buttonPanel.add(addButton);
     buttonPanel.add(Box.createVerticalGlue());
@@ -40,9 +40,10 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
     snm.setMaximum(new Integer(((GsTreeInteractionsModel)tree.getModel()).getVertex().getMaxValue()));
     snm.setStepSize(new Integer(1));
     treeElement.setProperty("value", Integer.valueOf(treeElement.toString()));
-    spinner = new GsJSpinner(snm);
-    if (System.getProperty("os.name").indexOf("Mac") >= 0)
-      spinner.setFont(new Font("courier", Font.PLAIN, 7));
+    spinner = new JSpinner(snm);
+    if (System.getProperty("os.name").indexOf("Mac") >= 0) {
+		spinner.setFont(new Font("courier", Font.PLAIN, 7));
+	}
     spinner.setPreferredSize(new Dimension(5 * charWidth, charHeight + 6));
     ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setEditable(false);
     ((JSpinner.DefaultEditor)spinner.getEditor()).getTextField().setBackground(Color.white);
@@ -80,7 +81,9 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
       addButton.setEnabled(false);
       Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       addButtonAction();
-      while (enu.hasMoreElements()) tree.expandPath((TreePath)enu.nextElement());
+      while (enu.hasMoreElements()) {
+		tree.expandPath((TreePath)enu.nextElement());
+	}
     }
   }
   public void addButtonAction() {
@@ -110,25 +113,28 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
         break;
       }
     }
-    if (!ok)
-      if (oldValue < val) {
-        newValue = new Integer(val + 1);
-        if (newValue.compareTo((Integer)((SpinnerNumberModel)spinner.getModel()).getMaximum()) <= 0)
-          spinner.setValue(newValue);
-        else
-          spinner.setValue(new Integer(oldValue));
-      }
-      else if (oldValue > val){
-        newValue = new Integer(val - 1);
-        if (newValue.compareTo((Integer)((SpinnerNumberModel)spinner.getModel()).getMinimum()) >= 0)
-          spinner.setValue(newValue);
-        else
-          spinner.setValue(new Integer(oldValue));
-      }
-      else
-        model.refreshVertex();
-    else
-      model.updateValue((short)val, (short)oldValue);
+    if (!ok) {
+		if (oldValue < val) {
+		    newValue = new Integer(val + 1);
+		    if (newValue.compareTo((Integer)((SpinnerNumberModel)spinner.getModel()).getMaximum()) <= 0) {
+				spinner.setValue(newValue);
+			} else {
+				spinner.setValue(new Integer(oldValue));
+			}
+		  }
+		  else if (oldValue > val){
+		    newValue = new Integer(val - 1);
+		    if (newValue.compareTo((Integer)((SpinnerNumberModel)spinner.getModel()).getMinimum()) >= 0) {
+				spinner.setValue(newValue);
+			} else {
+				spinner.setValue(new Integer(oldValue));
+			}
+		  } else {
+			model.refreshVertex();
+		}
+	} else {
+		model.updateValue((short)val, (short)oldValue);
+	}
   }
   public void mouseClicked(MouseEvent e) {
   }

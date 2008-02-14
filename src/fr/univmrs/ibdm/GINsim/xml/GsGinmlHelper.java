@@ -7,10 +7,9 @@ import java.util.Vector;
 
 import org.xml.sax.Attributes;
 
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.global.Tools;
 
 /**
  * some help function to parse/write ginml files.
@@ -97,7 +96,7 @@ public class GsGinmlHelper {
 				}
 				ereader.setPoints(l);
 		    } catch (Exception e) {
-		        GsEnv.error("invalid points", null);
+		        Tools.error("invalid points", null);
 		    }
 			ereader.refresh();
 		}
@@ -114,7 +113,7 @@ public class GsGinmlHelper {
         List l_point = eReader.getPoints(false);
         for (int i=0 ; i<l_point.size() ; i++) {
             Point2D pt = (Point2D)l_point.get(i); 
-            s += ((int)pt.getX())+","+((int)pt.getY())+" ";
+            s += (int)pt.getX()+","+(int)pt.getY()+" ";
         }
         if (s.length() > 1) {
             svs += " points=\""+s.substring(0, s.length()-1)+"\"";

@@ -15,12 +15,12 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.xml.XMLHelper;
 
 /**
  * parser for simulation parameters file
  */
-public class GsSimulationParametersParser extends GsXMLHelper {
+public class GsSimulationParametersParser extends XMLHelper {
 
     public GsGraph getGraph() {
         // doesn't create a graph!

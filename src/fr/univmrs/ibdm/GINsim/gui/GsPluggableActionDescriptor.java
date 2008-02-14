@@ -3,7 +3,7 @@ package fr.univmrs.ibdm.GINsim.gui;
 import javax.swing.ImageIcon;
 
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * all info needed to add a custom action in the menus or toolbar without any headache.

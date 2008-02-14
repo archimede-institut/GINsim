@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.datastore;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
@@ -13,7 +14,7 @@ public class GenericPropertyInfo {
 	public ObjectEditor editor;
 	public String name;
 	public Class type;
-	public Vector v_position;
+	public List l_position;
 	public Object data;
 	public boolean isEditable = true;
 	
@@ -38,8 +39,8 @@ public class GenericPropertyInfo {
 	}
 
 	public void addPosition(int i, int j, int w, int h, int wx, int wy, int anchor) {
-		if (v_position == null) {
-			v_position = new Vector();
+		if (l_position == null) {
+			l_position = new ArrayList();
 		}
 		int[] t = new int[7];
 		t[0] = i;
@@ -49,16 +50,16 @@ public class GenericPropertyInfo {
 		t[4] = wx;
 		t[5] = wy;
 		t[6] = anchor;
-		v_position.add(t);
+		l_position.add(t);
 	}
 	public void addPosition(int i, int j) {
-		if (v_position == null) {
-			v_position = new Vector();
+		if (l_position == null) {
+			l_position = new ArrayList();
 		}
 		int[] t = new int[2];
 		t[0] = i;
 		t[1] = j;
-		v_position.add(t);
+		l_position.add(t);
 	}
 
 	public Object getRawValue() {

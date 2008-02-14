@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.gui;
 
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
+import fr.univmrs.tagc.global.OptionStore;
 
 /**
  * Here are the callback for entry in the "view" menu
@@ -44,7 +44,7 @@ public class GsViewCallBack {
 	 */
 	public void displayEdgeName(boolean b) {
 	    main.getGraph().getGraphManager().displayEdgeName(b);
-        GsOptions.setOption("display.edgename", b?Boolean.TRUE:Boolean.FALSE);
+        OptionStore.setOption("display.edgename", b?Boolean.TRUE:Boolean.FALSE);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class GsViewCallBack {
 	 */
 	protected void divideWindow(boolean b) {
 		main.divideWindow(b);
-        GsOptions.setOption("display.dividewindow", b?Boolean.TRUE:Boolean.FALSE);
+        OptionStore.setOption("display.dividewindow", b?Boolean.TRUE:Boolean.FALSE);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class GsViewCallBack {
 	 */
 	protected void displayGrid(boolean b) {
 	    main.getGraph().getGraphManager().showGrid(b);
-        GsOptions.setOption("display.grid", b?Boolean.TRUE:Boolean.FALSE);
+        OptionStore.setOption("display.grid", b?Boolean.TRUE:Boolean.FALSE);
 	}
 
     /**
@@ -70,7 +70,7 @@ public class GsViewCallBack {
      */
     public void gridActive(boolean b) {
         main.getGraph().getGraphManager().setGridActive(b);
-        GsOptions.setOption("display.gridactive", b?Boolean.TRUE:Boolean.FALSE);
+        OptionStore.setOption("display.gridactive", b?Boolean.TRUE:Boolean.FALSE);
     }
     
 	/**
@@ -79,7 +79,7 @@ public class GsViewCallBack {
 	 */
 	protected void displayMiniMap(boolean b) {
 		main.showMiniMap(b);
-        GsOptions.setOption("display.minimap", b?Boolean.TRUE:Boolean.FALSE);
+        OptionStore.setOption("display.minimap", b?Boolean.TRUE:Boolean.FALSE);
 	}
 
     /**

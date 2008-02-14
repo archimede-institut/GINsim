@@ -7,7 +7,7 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphLayoutCache;
 
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
+import fr.univmrs.tagc.global.OptionStore;
 
 /**
  * custumize jgraph to our needs
@@ -24,8 +24,8 @@ public class GsJgraph extends JGraph {
         super(graph.getM_jgAdapter());
         
         setGraphLayoutCache(new GraphLayoutCache(graph.getM_jgAdapter(), new GsCellViewFactory(graph)));
-		setGridVisible(((Boolean)GsOptions.getOption("display.grid", Boolean.TRUE)).booleanValue());
-		setGridEnabled(((Boolean)GsOptions.getOption("display.gridactive", Boolean.FALSE)).booleanValue());
+		setGridVisible(((Boolean)OptionStore.getOption("display.grid", Boolean.TRUE)).booleanValue());
+		setGridEnabled(((Boolean)OptionStore.getOption("display.gridactive", Boolean.FALSE)).booleanValue());
 		setDisconnectable(false);
 		edgeLabelDisplayed = false;
         setAntiAliased(true);

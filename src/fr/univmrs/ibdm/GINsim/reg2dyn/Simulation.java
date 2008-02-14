@@ -5,16 +5,16 @@ import java.util.LinkedList;
 
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicNode;
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * This is the main part of the simulation. It supports pluggable backends
@@ -129,11 +129,11 @@ public final class Simulation extends Thread implements Runnable {
 		} catch (GsException e) {
 			System.out.println("simulation was interrupted");
 		} catch (OutOfMemoryError e) {
-		    GsEnv.error("Out Of Memory", null);
+		    Tools.error("Out Of Memory", null);
 		    return;
 		} finally {
 			if (maxDepthReached) {
-				GsEnv.error("Reached the max depth", null);
+				Tools.error("Reached the max depth", null);
 				//TODO: explain what happened and give some hints
 			}
 			// return the result

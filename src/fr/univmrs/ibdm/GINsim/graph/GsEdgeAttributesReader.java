@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Vector;
 
-import fr.univmrs.ibdm.GINsim.global.GsOptions;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
+import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.manageressources.Translator;
 
 /**
  * graphic info on an edge.
@@ -14,7 +14,7 @@ import fr.univmrs.ibdm.GINsim.manageressources.Translator;
  */
 public abstract class GsEdgeAttributesReader {
 
-    protected static Color color = new Color(((Integer)GsOptions.getOption("vs.edgecolor", new Integer(-13395457))).intValue());
+    protected static Color color = new Color(((Integer)OptionStore.getOption("vs.edgecolor", new Integer(-13395457))).intValue());
     // we don't want to remember other options for now
     
     /**  */
@@ -60,7 +60,7 @@ public abstract class GsEdgeAttributesReader {
      * remember default values
      */
     public static void saveOptions() {
-        GsOptions.setOption("vs.edgecolor", new Integer(color.getRGB()));
+        OptionStore.setOption("vs.edgecolor", new Integer(color.getRGB()));
     }
     
     protected float defaultLineWidth;

@@ -8,13 +8,13 @@ import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLize;
+import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.xml.XMLize;
 
 /**
  * This edge object allows to have several edges from a vertex to another
  */
-public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirectedEdge {
+public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEdge {
 
 	/** array of sign's names */
 	static public final String[] SIGN = {"positive","negative","unknown"};
@@ -150,7 +150,7 @@ public class GsRegulatoryMultiEdge implements GsXMLize, ToolTipsable, GsDirected
         return source+"_"+target+"_"+index;
     }
 
-    public void toXML(GsXMLWriter out, Object param, int mode) throws IOException {
+    public void toXML(XMLWriter out, Object param, int mode) throws IOException {
         for (int i=0 ; i<edgecount ; i++) {
             GsRegulatoryEdge edge = edges[i];
 

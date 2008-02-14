@@ -1,18 +1,19 @@
 package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.annotation.AnnotationPanel;
-import fr.univmrs.ibdm.GINsim.global.Tools;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.VertexMaxValueSpinModel;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectEditor;
 import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.datastore.models.SpinModel;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
 
 public class RegulatoryVertexEditor extends ObjectEditor {
 
@@ -21,7 +22,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	public static final int PROP_MAX = 2;
 	public static final int PROP_ANNOTATION = 5;
 	public static final int PROP_RAW = 10;
-	private Vector v_prop = new Vector();
+	private List l_prop = new ArrayList();
 	
 	GsRegulatoryVertex vertex;
 	GsRegulatoryGraph graph;
@@ -36,16 +37,16 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		this.graph = graph;
 		master = graph;
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_id"), String.class);
-		v_prop.add(pinfo);
+		l_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_NAME, Translator.getString("STR_name"), String.class);
-		v_prop.add(pinfo);
+		l_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_max"), SpinModel.class);
 		pinfo.data = new VertexMaxValueSpinModel(graph);
 		pinfo.addPosition(0,3);
 		pinfo.addPosition(1, 3);
 		pinfo.addPosition(0, 2);
 		pinfo.addPosition(1, 2);
-		v_prop.add(pinfo);
+		l_prop.add(pinfo);
 
 		// build the group [note, parameter, function]
 		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
@@ -64,7 +65,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		pinfo.name = Translator.getString("STR_parameters");
 		pinfo.addPosition(0, 4, 2, 1, 0, 0, GridBagConstraints.SOUTH);
 		pinfo.addPosition(2, 0, 1, 5, 1, 1, GridBagConstraints.SOUTH);
-		v_prop.add(pinfo);
+		l_prop.add(pinfo);
 	}
 	
 	public void setEditedObject(Object o) {
@@ -80,8 +81,8 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		return 0;
 	}
 
-	public Vector getProperties() {
-		return v_prop;
+	public List getProperties() {
+		return l_prop;
 	}
 
 	public String getStringValue(int prop) {

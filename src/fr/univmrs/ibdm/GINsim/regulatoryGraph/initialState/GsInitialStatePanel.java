@@ -16,10 +16,10 @@ import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsSimulationParameterList;
-import fr.univmrs.ibdm.GINsim.util.widget.GsLabel;
+import fr.univmrs.tagc.manageressources.Translator;
 import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.widgets.Label;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 public class GsInitialStatePanel extends JPanel {
@@ -65,7 +65,7 @@ public class GsInitialStatePanel extends JPanel {
 	        c.gridwidth = 4;
 	        c.fill = GridBagConstraints.BOTH;
 	        c.weightx = 1;
-	        add(new GsLabel("STR_singleInit_descr", GsLabel.MESSAGE_NORMAL), c);
+	        add(new Label("STR_singleInit_descr", Label.MESSAGE_NORMAL), c);
         }
         c = new GridBagConstraints();
         c.gridx = 0;

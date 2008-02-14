@@ -8,24 +8,26 @@ import java.util.Vector;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
-import fr.univmrs.ibdm.GINsim.manageressources.ImageLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
+import fr.univmrs.tagc.global.Env;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.widgets.Frame;
 
 /**
  * This class offers tons of static methods common to all ginsim's parts.
  * it loads plugins on startup
  * each frame is registred here, so that we can try to close them all when quitting
  */
-public class GsEnv {
+public class GsEnv extends Env {
 
 	protected static GsClassLoader cloader = new GsClassLoader();
 	private static String ginsimDir = null;
@@ -74,7 +76,7 @@ public class GsEnv {
 	public static void delFrame (GsMainFrame frame) {
 		allFrames.remove(frame);
 		if (allFrames.size() == 0) {
-            GsOptions.saveOptions();
+            OptionStore.saveOptions();
 			System.exit(0);
 		}
 	}
@@ -102,15 +104,6 @@ public class GsEnv {
 	 */
 	public static String getGinsimDTDdir() {
 		return dtdDir;
-	}
-	
-	/**
-	 * @param iconname the name of the icon we want to load
-	 * 
-	 * @return an ImageIcon corresponding to the given iconname
-	 */
-	public static ImageIcon getIcon(String iconname) {
-		return ImageLoader.getImageIcon(iconname);
 	}
 	
 	/**
@@ -271,32 +264,13 @@ public class GsEnv {
      * @param e
      * @param main
      */
-    public static void error(GsException e, JFrame main) {
+    public static void error(GsException e, Frame main) {
         if (main instanceof GsMainFrame) {
             GsGraph graph = ((GsMainFrame)main).getGraph();
             graph.addNotificationMessage(new GsGraphNotificationMessage(graph, e));
             return;
         }
-        int i = -1;
-        switch (e.getGravity()) {
-            case GsException.GRAVITY_INFO:
-            case GsException.GRAVITY_NORMAL:
-                i = JOptionPane.INFORMATION_MESSAGE;
-                break;
-        	default:
-                i = JOptionPane.ERROR_MESSAGE;
-        }
-        JOptionPane.showMessageDialog(main, e.getMessage()+"\n", e.getTitle(),i);
-    }
-
-    /**
-     * an error occured, give the user some feedback.
-     * 
-     * @param s
-     * @param main
-     */
-    public static void error(String s, JFrame main) {
-        JOptionPane.showMessageDialog(main, s+"\n", "error",JOptionPane.ERROR_MESSAGE);
+        Tools.error(e, main);
     }
 
 	/**

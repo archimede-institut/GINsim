@@ -17,13 +17,14 @@ import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.ibdm.GINsim.util.widget.MSplitPane;
 import fr.univmrs.tagc.datastore.ObjectStore;
 import fr.univmrs.tagc.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.datastore.gui.GenericListSelectionPanel;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.widgets.SplitPane;
 import fr.univmrs.tagc.widgets.StackDialog;
 
 /**
@@ -79,7 +80,8 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
     }
 
     private void initialize() {
-        JSplitPane spane = new MSplitPane("display.configSimulation");
+        SplitPane spane = new SplitPane();
+        spane.setName("display.configSimulation");
         spane.setRightComponent(getMainPanel());
         listPanel = new GenericListPanel();
         listPanel.addSelectionListener(this);
@@ -257,7 +259,7 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
     public void endSimu(GsGraph graph) {
         isrunning = false;
         if (null == graph) {
-            GsEnv.error("no state transition graph", frame);
+            Tools.error("no state transition graph", frame);
         } else {
             GsEnv.whatToDoWithGraph(frame, graph, true);
         }

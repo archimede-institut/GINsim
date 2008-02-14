@@ -6,7 +6,6 @@ import fr.univmrs.ibdm.GINsim.export.generic.GsBioLayoutEncoder;
 import fr.univmrs.ibdm.GINsim.export.generic.GsGraphvizEncoder;
 import fr.univmrs.ibdm.GINsim.export.generic.GsSVGExport;
 import fr.univmrs.ibdm.GINsim.export.regulatoryGraph.GsSBMLExport;
-import fr.univmrs.ibdm.GINsim.global.GsException;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
@@ -15,6 +14,7 @@ import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.global.GsException;
 
 /**
  * register export plugins.

@@ -3,16 +3,16 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph;
 import java.awt.GridBagConstraints;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
-import fr.univmrs.ibdm.GINsim.global.GsException;
-import fr.univmrs.ibdm.GINsim.global.Tools;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.ibdm.GINsim.manageressources.Translator;
 import fr.univmrs.tagc.datastore.GenericList;
 import fr.univmrs.tagc.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.datastore.ObjectEditor;
 import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.manageressources.Translator;
 
 
 public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListener {

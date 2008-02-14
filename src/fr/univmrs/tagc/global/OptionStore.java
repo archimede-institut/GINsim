@@ -1,4 +1,4 @@
-package fr.univmrs.ibdm.GINsim.global;
+package fr.univmrs.tagc.global;
 
 import java.io.*;
 import java.util.HashMap;
@@ -13,15 +13,16 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.ibdm.GINsim.xml.GsXMLWriter;
+import fr.univmrs.tagc.xml.XMLWriter;
 
 /**
  * handle options: remember them during the session, restore them when first called
  * and save them when exiting.
  */
-public class GsOptions extends DefaultHandler {
+public class OptionStore extends DefaultHandler {
 
     // some static stuff
     private static Map m_option = new HashMap();
@@ -33,7 +34,7 @@ public class GsOptions extends DefaultHandler {
         File f_option = new File(optionFile);
         if (f_option.exists()) {
             SAXParserFactory spf = SAXParserFactory.newInstance();
-            GsOptions options = new GsOptions();
+            OptionStore options = new OptionStore();
             XMLReader xr;
             try {
                 SAXParser sp = spf.newSAXParser();
@@ -44,18 +45,18 @@ public class GsOptions extends DefaultHandler {
                 FileReader r = new FileReader(f_option);
                 xr.parse(new InputSource(r));
             } catch (FileNotFoundException e) { 
-                GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (IOException e) {
-                GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (ParserConfigurationException e) {
-                GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (SAXParseException e) {
-                GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
+            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
             } catch (SAXException e) {
-                GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
+            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
             }
         }
     }
@@ -150,7 +151,7 @@ public class GsOptions extends DefaultHandler {
         }
         try {
             OutputStreamWriter fos = new OutputStreamWriter(new FileOutputStream(optionFile), "UTF-8");
-            GsXMLWriter out = new GsXMLWriter(fos, null); 
+            XMLWriter out = new XMLWriter(fos, null); 
             out.write("<gsconfig>\n");
             for (int i=0 ; i<v_recent.size() ; i++) {
                 out.openTag("recent");
@@ -162,9 +163,13 @@ public class GsOptions extends DefaultHandler {
                 Object k = it.next();
                 Object v = m_option.get(k);
                 String t;
-                if (v instanceof Boolean) t = "boolean";
-                else if (v instanceof Integer) t = "integer";
-                else t = "string";
+                if (v instanceof Boolean) {
+					t = "boolean";
+				} else if (v instanceof Integer) {
+					t = "integer";
+				} else {
+					t = "string";
+				}
                 out.write("   <option key=\""+k+"\" type=\""+t+"\" value=\""+v+"\"/>\n");
             }
             out.write("</gsconfig>\n");
@@ -197,9 +202,13 @@ public class GsOptions extends DefaultHandler {
             String sv = attributes.getValue("value");
             String t = attributes.getValue("type");
             Object v;
-            if ("boolean".equals(t)) v = new Boolean(sv);
-            else if ("integer".equals(t)) v = new Integer(sv);
-            else v = sv;
+            if ("boolean".equals(t)) {
+				v = new Boolean(sv);
+			} else if ("integer".equals(t)) {
+				v = new Integer(sv);
+			} else {
+				v = sv;
+			}
 
             setOption(k, v);
         }
