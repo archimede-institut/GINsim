@@ -29,5 +29,5 @@
 	
 	<imagePath path="/fr/univmrs/ibdm/GINsim/ressources/icons"/>
 	<messagesPath path="fr.univmrs.ibdm.GINsim.ressources.messages"/>
-	<doap path="/fr/univmrs/ibdm/GINsim/ressources/about/GINsim.rdf"/>
+	<doap path="/fr/univmrs/ibdm/GINsim/ressources/GINsim-about.rdf"/>
 </GINsim-addon>

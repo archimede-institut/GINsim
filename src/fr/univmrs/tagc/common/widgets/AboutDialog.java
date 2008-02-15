@@ -3,12 +3,16 @@ package fr.univmrs.tagc.common.widgets;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+
+import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
@@ -176,12 +180,8 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 
 class AboutData {
 
-	String		LOGO					= "gs1.gif";
-	String		NAME					= "GINsim";
-	String		VERSION					= "2.3";
-	String		LINK					= "http://gin.univ-mrs.fr/GINsim";
-	String		DESCRIPTION				= "A computer tool for the modeling and simulation of genetic regulatory networks";
-	String[][]	contributors			= {
+	String		LOGO, NAME, VERSION, DESCRIPTION, LINK;
+	String[][]	contributors = {
 			{ "Claudine CHAOUIYA", "Project coordination" },
 			{ "Adrien Fauré", "Biological applications" },
 			{ "Fabrice LOPEZ", "Software development" },
@@ -199,9 +199,27 @@ class AboutData {
 
 class DOAPParser extends XMLHelper {
 
+	private static final Map CALLMAP = new HashMap();
+	private static final int NAME =	0;
+	private static final int DESCR =	1;
+	private static final int LOGO =	2;
+	private static final int VERSION =	3;
+	private static final int HOMEPAGE =	4;
+	private static final int MAINTAINER = 5;
+		
+	static {
+		addCall("name", NAME, CALLMAP, ENDONLY, true);
+		addCall("description", DESCR, CALLMAP, ENDONLY, true);
+		addCall("logo", LOGO, CALLMAP, ENDONLY, true);
+		addCall("version", VERSION, CALLMAP, ENDONLY, true);
+		addCall("homepage", HOMEPAGE, CALLMAP, STARTONLY, false);
+		addCall("maintainer", MAINTAINER, CALLMAP, NOCALL, false);
+	}
+	
 	AboutData data;
 	
 	public DOAPParser(AboutData data, String path) {
+		m_call = CALLMAP;
 		this.data = data;
 		try {
 			startParsing(Tools.getStreamForPath(path), false);
@@ -210,6 +228,31 @@ class DOAPParser extends XMLHelper {
 		}
 	}
 	
+	protected void startElement(int id, Attributes attributes) {
+		switch (id) {
+			case HOMEPAGE:
+				data.LINK = attributes.getValue("rdf:resource");
+				break;
+		}
+	}
+	
+	protected void endElement(int id) {
+		switch (id) {
+			case NAME:
+				data.NAME = curval;
+				break;
+			case DESCR:
+				data.DESCRIPTION = curval;
+				break;
+			case LOGO:
+				data.LOGO = curval;
+				break;
+			case VERSION:
+				data.VERSION = curval;
+				break;
+		}
+	}
+
 	public String getFallBackDTD() {
 		return null;
 	}

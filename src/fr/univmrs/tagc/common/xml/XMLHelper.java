@@ -22,6 +22,30 @@ import fr.univmrs.tagc.common.manageressources.Translator;
  */
 abstract public class XMLHelper extends DefaultHandler implements EntityResolver {
 
+	protected static final int NOCALL = 0;
+	protected static final int ENDONLY = 1;
+	protected static final int STARTONLY = 2;
+	protected static final int BOTH = 3;
+	
+	protected static void addCall(String tag, int id, int constraint, Map m_call, 
+			int callmode, boolean readcontent) {
+		CallDescription cd = new CallDescription(id, constraint, callmode, readcontent);
+		CallDescription cur = (CallDescription)m_call.get(tag);
+		if (cur == null) {
+			m_call.put(tag, cd);
+		} else {
+			cur.other = cd;
+		}
+	}
+	protected static void addCall(String tag, int id, Map m_call, 
+			int callmode, boolean readcontent) {
+		addCall(tag, id, -1, m_call, callmode, readcontent);
+	}
+	protected static void addCall(String tag, int id, Map m_call) {
+		addCall(tag, id, -1, m_call, BOTH, false);
+	}
+
+	
     /** if set to other than null, characters will be stored here */
 	protected String curval;
 	protected String s_dtd;
@@ -31,6 +55,8 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	private boolean showError = true;
     
 	private static Map m_dtdError = null;
+	
+	protected Map m_call = null;
 	
 	public void error(SAXParseException e) throws SAXException {
 	    if (!showError) {
@@ -64,7 +90,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	}
 
     /**
-     * if <code>curVal</code> is not null, readed characters will be appended there.
+     * if <code>curVal</code> is not null, read characters will be appended there.
      * a bit less work for other implementors, they just have to set curVal to null or ""
      * when they need it.
      * 
@@ -259,4 +285,55 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
         }
         return defValue;
     }
+	public void startElement(String uri, String localName, String qName,
+            Attributes attributes) throws SAXException {
+		super.startElement(uri, localName, qName, attributes);
+		if (m_call != null) {
+			CallDescription cd = (CallDescription)m_call.get(qName);
+			if (cd != null) {
+				// TODO: deal with handlers with different priorities
+				startElement(cd.id, attributes);
+				if (cd.readcontent) {
+					curval = "";
+				}
+			}
+		}
+	}
+	
+	
+	public void endElement(String uri, String localName, String qName)
+	throws SAXException {
+		super.endElement(uri, localName, qName);
+		if (m_call != null) {
+			CallDescription cd = (CallDescription)m_call.get(qName);
+			if (cd != null) {
+				// TODO: deal with handlers with different priorities
+				endElement(cd.id);
+				if (cd.readcontent) {
+					curval = null;
+				}
+			}
+		}
+	}
+    
+	protected void startElement(int id, Attributes attributes) {
+	}
+	protected void endElement(int id) {
+	}
+    
+}
+
+class CallDescription {
+	int id;
+	int callmode;
+	int constraint;
+	boolean readcontent;
+	CallDescription other = null;
+	
+	public CallDescription(int id, int constraint, int callmode, boolean readcontent) {
+		this.id = id;
+		this.callmode = callmode;
+		this.constraint = constraint;
+		this.readcontent = readcontent;
+	}
 }

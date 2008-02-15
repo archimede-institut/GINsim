@@ -8,8 +8,8 @@
   <Project>
     <name>GINsim</name>
     <description>A computer tool for the modeling and simulation of genetic regulatory networks</description>
-    <homepage rdf:resource="http://gin.univ-mrs.fr/GINsim" />
-    <logo rdf:ressource=""/>
+    <homepage rdf:resource="http://gin.univ-mrs.fr/GINsim/download.html" />
+    <logo>gs1.gif</logo>
     <version>2.4-{$DATE}</version>
     <!--
 	    <created>2008-01-21</created>

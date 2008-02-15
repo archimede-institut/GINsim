@@ -34,7 +34,7 @@ public class GsMain {
         Vector commands = new Vector(0);
         Vector open = new Vector(0);
         try {
-        	GsEnv.readConfig("/fr/univmrs/ibdm/GINsim/ressources/plugins/defaultPlugins.xml");
+        	GsEnv.readConfig("/fr/univmrs/ibdm/GINsim/ressources/GINsim-config.xml");
         } catch (Exception e) {
         	e.printStackTrace();
         	System.exit(1);
