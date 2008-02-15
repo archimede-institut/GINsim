@@ -166,7 +166,9 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
      * get the local DTD file (full path, including the protocol (file://))
      * @return an url path to the fallbackDTD
      */
-    abstract public String getFallBackDTD();
+    public String getFallBackDTD() {
+    	return null;
+    }
     
     /**
      * when the entityresolver has choosen it's DTD, it will notify the parser using this function.

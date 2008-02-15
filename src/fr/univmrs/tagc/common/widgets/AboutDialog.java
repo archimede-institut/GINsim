@@ -43,10 +43,10 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 		new DOAPParser(data, path);
 
 		StringBuffer s = new StringBuffer("<body><center>");
-		s.append("\n<img src='" + ImageLoader.getImagePath(data.LOGO) + "'/>");
-		s.append("\n<h1>" + data.NAME + " " + data.VERSION + "</h1>");
-		s.append(data.DESCRIPTION);
-		s.append("\n<p/><a href='" + data.LINK + "'>Site web</a>");
+		s.append("\n<img src='" + ImageLoader.getImagePath(data.logo) + "'/>");
+		s.append("\n<h1>" + data.name + " " + data.version + "</h1>");
+		s.append(data.description);
+		s.append("\n<p/><a href='" + data.link + "'>Site web</a>");
 		s.append("</center></body>");
 		aboutText = s.toString();
 
@@ -180,7 +180,7 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 
 class AboutData {
 
-	String		LOGO, NAME, VERSION, DESCRIPTION, LINK;
+	String		logo, name, version, description, link;
 	String[][]	contributors = {
 			{ "Claudine CHAOUIYA", "Project coordination" },
 			{ "Adrien Fauré", "Biological applications" },
@@ -231,7 +231,7 @@ class DOAPParser extends XMLHelper {
 	protected void startElement(int id, Attributes attributes) {
 		switch (id) {
 			case HOMEPAGE:
-				data.LINK = attributes.getValue("rdf:resource");
+				data.link = attributes.getValue("rdf:resource");
 				break;
 		}
 	}
@@ -239,21 +239,17 @@ class DOAPParser extends XMLHelper {
 	protected void endElement(int id) {
 		switch (id) {
 			case NAME:
-				data.NAME = curval;
+				data.name = curval;
 				break;
 			case DESCR:
-				data.DESCRIPTION = curval;
+				data.description = curval;
 				break;
 			case LOGO:
-				data.LOGO = curval;
+				data.logo = curval;
 				break;
 			case VERSION:
-				data.VERSION = curval;
+				data.version = curval;
 				break;
 		}
-	}
-
-	public String getFallBackDTD() {
-		return null;
 	}
 }
