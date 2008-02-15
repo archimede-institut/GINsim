@@ -17,10 +17,10 @@ import javax.swing.table.TableColumn;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.reg2dyn.GsSimulationParameterList;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.EnhancedJTable;
-import fr.univmrs.tagc.widgets.Label;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.widgets.Label;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class GsInitialStatePanel extends JPanel {
 	private static final long serialVersionUID = -572201856207494392L;

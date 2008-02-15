@@ -10,7 +10,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
-import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.common.GsException;
 
 /**
  * This class contains different placement algorithms, 

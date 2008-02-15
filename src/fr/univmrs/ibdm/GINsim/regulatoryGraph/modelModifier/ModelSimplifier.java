@@ -13,7 +13,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.common.GsException;
 
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.

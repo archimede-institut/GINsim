@@ -8,9 +8,9 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphtGraphManager;
-import fr.univmrs.tagc.global.ProgressListener;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.ProgressListener;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * the class with the algorithms for strongest connected component

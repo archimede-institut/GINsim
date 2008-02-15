@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.widgets.BaseAction;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**
  * Helper action to easily add custom mode (as several kind of vertex or edge to add)

@@ -13,7 +13,7 @@ import org.jgraph.util.Bezier;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.common.Tools;
 
 /**
  * export the graph to SVG

@@ -11,11 +11,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
-import fr.univmrs.tagc.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
+import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 /**
  * Panel to edit annotations
  */

@@ -1,8 +1,8 @@
 package fr.univmrs.ibdm.GINsim.gui;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * Here are the callback for entry in the "file" menu

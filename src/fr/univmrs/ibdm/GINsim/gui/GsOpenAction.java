@@ -7,15 +7,16 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
-import fr.univmrs.ibdm.GINsim.global.*;
+import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import fr.univmrs.ibdm.GINsim.global.GsEventDispatcher;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphOptionPanel;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.global.OptionStore;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.BaseAction;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**
  * generic action for open methods: uses it's graphDescriptor to open a new graph

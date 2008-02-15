@@ -17,11 +17,11 @@ import fr.univmrs.ibdm.GINsim.gui.GsEditModeDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.tagc.datastore.ObjectEditor;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.manageressources.ImageLoader;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.datastore.ObjectEditor;
+import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * The regulatory graph

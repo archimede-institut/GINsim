@@ -7,10 +7,10 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
-import fr.univmrs.tagc.datastore.NamedObject;
-import fr.univmrs.tagc.datastore.ObjectStore;
-import fr.univmrs.tagc.xml.XMLWriter;
-import fr.univmrs.tagc.xml.XMLize;
+import fr.univmrs.tagc.common.datastore.NamedObject;
+import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.xml.XMLWriter;
+import fr.univmrs.tagc.common.xml.XMLize;
 
 /**
  * remember, save and restore a simulation parameter.

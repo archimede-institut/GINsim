@@ -1,8 +1,8 @@
 package fr.univmrs.ibdm.GINsim.graph;
 
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.global.Timeout;
-import fr.univmrs.tagc.global.TimeoutObject;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.Timeout;
+import fr.univmrs.tagc.common.TimeoutObject;
 
 /**
  * A notification message

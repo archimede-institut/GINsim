@@ -6,13 +6,13 @@ import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
-import fr.univmrs.tagc.datastore.GenericList;
-import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.ObjectEditor;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.datastore.GenericList;
+import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.common.datastore.ObjectEditor;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 
 public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListener {

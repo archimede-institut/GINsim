@@ -12,14 +12,14 @@ import fr.univmrs.ibdm.GINsim.global.GsEventDispatcher;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.*;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
-import fr.univmrs.tagc.datastore.ObjectEditor;
-import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.global.OptionStore;
-import fr.univmrs.tagc.manageressources.ImageLoader;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.Frame;
-import fr.univmrs.tagc.widgets.SplitPane;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.datastore.ObjectEditor;
+import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
+import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.Frame;
+import fr.univmrs.tagc.common.widgets.SplitPane;
 
 /**
  * GINsim's main frame

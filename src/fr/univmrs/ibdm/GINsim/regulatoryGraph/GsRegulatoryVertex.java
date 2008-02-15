@@ -14,10 +14,10 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.xml.XMLWriter;
-import fr.univmrs.tagc.xml.XMLize;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.xml.XMLWriter;
+import fr.univmrs.tagc.common.xml.XMLize;
 
 /**
  * the Class in which we store biological data for vertices (genes).

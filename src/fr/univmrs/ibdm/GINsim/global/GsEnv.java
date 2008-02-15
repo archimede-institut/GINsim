@@ -18,11 +18,11 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
-import fr.univmrs.tagc.global.Env;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.global.OptionStore;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.widgets.Frame;
+import fr.univmrs.tagc.common.Env;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.widgets.Frame;
 
 /**
  * This class offers tons of static methods common to all ginsim's parts.

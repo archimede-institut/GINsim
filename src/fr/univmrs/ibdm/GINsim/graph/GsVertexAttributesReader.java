@@ -3,8 +3,8 @@ package fr.univmrs.ibdm.GINsim.graph;
 import java.awt.Color;
 import java.util.Vector;
 
-import fr.univmrs.tagc.global.OptionStore;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * extract from graph graphic info on a vertex.

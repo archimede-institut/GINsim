@@ -16,9 +16,9 @@ import org.xml.sax.SAXException;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.xml.XMLHelper;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.xml.XMLHelper;
 
 public class ReferencerHelper implements AnnotationHelper {
 	Map m_ref = new HashMap();

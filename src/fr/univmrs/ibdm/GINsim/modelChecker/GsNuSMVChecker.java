@@ -17,8 +17,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.datastore.ValueList;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.datastore.ValueList;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * a model checker using NuSMV

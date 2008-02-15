@@ -8,11 +8,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.datastore.models.MaxSpinModel;
-import fr.univmrs.tagc.datastore.models.MinMaxSpinModel;
-import fr.univmrs.tagc.datastore.models.MinSpinModel;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.datastore.models.MaxSpinModel;
+import fr.univmrs.tagc.common.datastore.models.MinMaxSpinModel;
+import fr.univmrs.tagc.common.datastore.models.MinSpinModel;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 /**
  * configure the circuit-search.

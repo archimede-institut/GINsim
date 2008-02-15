@@ -15,7 +15,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.xml.XMLHelper;
+import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
  * parser for simulation parameters file

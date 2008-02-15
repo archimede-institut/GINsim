@@ -10,8 +10,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.datastore.GenericListListener;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.datastore.GenericListListener;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 /**
  * store all simulation parameters and offer a mean to access them.

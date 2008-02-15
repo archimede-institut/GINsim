@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import fr.univmrs.tagc.datastore.GenericListListener;
-import fr.univmrs.tagc.datastore.NamedObject;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
-import fr.univmrs.tagc.xml.XMLWriter;
-import fr.univmrs.tagc.xml.XMLize;
+import fr.univmrs.tagc.common.datastore.GenericListListener;
+import fr.univmrs.tagc.common.datastore.NamedObject;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.xml.XMLWriter;
+import fr.univmrs.tagc.common.xml.XMLize;
 
 
 class PriorityClassDefinition extends SimpleGenericList implements NamedObject, XMLize {

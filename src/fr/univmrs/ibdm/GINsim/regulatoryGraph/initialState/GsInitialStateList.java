@@ -7,7 +7,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 public class GsInitialStateList extends SimpleGenericList implements GsGraphListener {
 	GsRegulatoryGraph graph;

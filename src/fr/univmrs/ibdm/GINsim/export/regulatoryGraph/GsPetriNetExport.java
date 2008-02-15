@@ -19,8 +19,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.datastore.ObjectStore;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * Export a regulatory graph to petri net (shared methods).

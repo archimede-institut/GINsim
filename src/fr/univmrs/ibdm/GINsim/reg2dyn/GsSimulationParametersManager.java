@@ -9,9 +9,9 @@ import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.xml.XMLWriter;
-import fr.univmrs.tagc.xml.XMLize;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.xml.XMLWriter;
+import fr.univmrs.tagc.common.xml.XMLize;
 
 /**
  * Save/open simulation parameters along with the model.

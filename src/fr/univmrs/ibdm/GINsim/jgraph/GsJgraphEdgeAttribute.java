@@ -13,7 +13,7 @@ import org.jgraph.graph.Edge.Routing;
 
 import fr.univmrs.ibdm.GINsim.data.GsDirectedEdge;
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.common.Tools;
 
 /**
  * extract info on jgraph's edges.

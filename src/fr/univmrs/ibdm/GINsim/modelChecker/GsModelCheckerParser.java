@@ -11,8 +11,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.datastore.ValueList;
-import fr.univmrs.tagc.xml.XMLHelper;
+import fr.univmrs.tagc.common.datastore.ValueList;
+import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
  * parser for simulation parameters file

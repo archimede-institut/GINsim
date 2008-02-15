@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 /**
  * basic info on a vertex of the state transition graph (ie state of the system)

@@ -3,7 +3,7 @@ package fr.univmrs.ibdm.GINsim.reg2dyn;
 import java.util.List;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 
 public class PriorityClassManager extends SimpleGenericList {

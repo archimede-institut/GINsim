@@ -9,8 +9,8 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.widgets.EnhancedJTable;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * model for the initState table.

@@ -20,7 +20,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.tagc.widgets.Button;
+import fr.univmrs.tagc.common.widgets.Button;
 
 public class GsParameterChoiceWindow extends JDialog implements MouseListener, MouseMotionListener,
     WindowListener, ActionListener, ListSelectionListener {

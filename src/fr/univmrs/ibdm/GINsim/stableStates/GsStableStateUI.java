@@ -11,10 +11,10 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.datastore.ObjectStore;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.EnhancedJTable;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class GsStableStateUI extends StackDialog implements GenericStableStateUI {
 	private static final long serialVersionUID = -3605525202652679586L;

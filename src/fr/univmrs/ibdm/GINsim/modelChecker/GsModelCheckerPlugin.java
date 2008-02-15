@@ -13,8 +13,8 @@ import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * main method for the reg2dyn plugin

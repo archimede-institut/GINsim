@@ -9,7 +9,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
-import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.common.GsException;
 
 public class GsBooleanParser extends TBooleanParser {
   private Hashtable operandList;

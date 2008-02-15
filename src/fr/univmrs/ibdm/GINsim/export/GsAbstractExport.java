@@ -11,8 +11,8 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * Basic helper class for exports.

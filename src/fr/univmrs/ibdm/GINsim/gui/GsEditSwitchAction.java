@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.tagc.widgets.BaseAction;
+import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**
  * Helper action to easily add custom actions (typically layout, export...)

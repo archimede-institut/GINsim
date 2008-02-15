@@ -13,12 +13,12 @@ import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.datastore.GenericList;
-import fr.univmrs.tagc.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.global.TempDir;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.EnhancedJTable;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.TempDir;
+import fr.univmrs.tagc.common.datastore.GenericList;
+import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * Generic UI to setup/run model checking on model/mutants

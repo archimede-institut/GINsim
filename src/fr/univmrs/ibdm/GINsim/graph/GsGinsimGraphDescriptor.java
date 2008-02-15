@@ -19,9 +19,9 @@ import fr.univmrs.ibdm.GINsim.gui.GsFileFilter;
 import fr.univmrs.ibdm.GINsim.gui.GsMainFrame;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.manageressources.ImageLoader;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * descriptor for regulatoryGraph.

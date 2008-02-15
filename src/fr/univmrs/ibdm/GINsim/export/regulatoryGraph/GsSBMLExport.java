@@ -17,9 +17,9 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * Export a regulatory graph to the SBML format.

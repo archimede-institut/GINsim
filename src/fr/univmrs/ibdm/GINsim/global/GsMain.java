@@ -13,10 +13,10 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.gui.GsOpenAction;
 import fr.univmrs.ibdm.GINsim.plugin.GsClassLoader;
 import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
-import fr.univmrs.tagc.manageressources.ImageLoader;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.AboutDialog;
-import fr.univmrs.tagc.xml.XMLHelper;
+import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.AboutDialog;
+import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
  * this class is used to run GINsim: parse args and so on

@@ -9,7 +9,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
-import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 class GsRegulatoryMutantChange {
     GsRegulatoryVertex vertex;

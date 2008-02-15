@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.common.Tools;
 
 public class AnnotationLink {
 	

@@ -23,10 +23,10 @@ import fr.univmrs.ibdm.GINsim.plugin.GsPlugin;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.xml.XMLHelper;
-import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.xml.XMLHelper;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * main method for the model simplification plugin

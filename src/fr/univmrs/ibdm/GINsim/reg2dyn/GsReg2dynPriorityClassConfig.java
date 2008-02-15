@@ -11,10 +11,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
-import fr.univmrs.tagc.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.StockButton;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.StockButton;
 
 /**
  * configure priority classes.

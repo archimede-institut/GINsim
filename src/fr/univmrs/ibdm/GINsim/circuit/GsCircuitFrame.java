@@ -28,13 +28,13 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.datastore.ObjectStore;
-import fr.univmrs.tagc.global.ProgressListener;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.EnhancedListCellRenderer;
-import fr.univmrs.tagc.widgets.Label;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.ProgressListener;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.EnhancedListCellRenderer;
+import fr.univmrs.tagc.common.widgets.Label;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * configuration/status frame for circuit search/analyse

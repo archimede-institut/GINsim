@@ -14,9 +14,9 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.xml.XMLHelper;
-import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.xml.XMLHelper;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 

@@ -14,7 +14,7 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
-import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.common.GsException;
 
 /**
  * parses a ginml regulatory graph.

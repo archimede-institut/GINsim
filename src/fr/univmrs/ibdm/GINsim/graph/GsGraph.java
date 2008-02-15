@@ -20,9 +20,9 @@ import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.jgraph.GsJgraphtGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.tagc.datastore.ObjectEditor;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.datastore.ObjectEditor;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * Base class for specialized graphs, with some common functions.

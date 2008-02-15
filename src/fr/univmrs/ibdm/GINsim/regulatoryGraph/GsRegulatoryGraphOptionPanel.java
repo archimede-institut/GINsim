@@ -9,8 +9,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraphOptionPanel;
-import fr.univmrs.tagc.global.OptionStore;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * offer save option for regulatory graphs 

@@ -6,7 +6,7 @@ import java.util.Map;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.datastore.ObjectStore;
+import fr.univmrs.tagc.common.datastore.ObjectStore;
 
 /**
  * Configure SMV export

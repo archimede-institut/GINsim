@@ -24,8 +24,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class GsHTMLExport extends GsAbstractExport {
 

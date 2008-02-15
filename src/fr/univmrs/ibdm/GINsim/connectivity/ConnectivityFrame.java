@@ -8,9 +8,9 @@ import javax.swing.JFrame;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.global.ProgressListener;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.ProgressListener;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * config frame for the connectivity plugin.

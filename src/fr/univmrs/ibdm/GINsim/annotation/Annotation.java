@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.xml.XMLWriter;
-import fr.univmrs.tagc.xml.XMLize;
+import fr.univmrs.tagc.common.xml.XMLWriter;
+import fr.univmrs.tagc.common.xml.XMLize;
 
 /**
  * Annotation for Gene : contains text and a list of url

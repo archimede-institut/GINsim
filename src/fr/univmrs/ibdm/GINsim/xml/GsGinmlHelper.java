@@ -9,7 +9,7 @@ import org.xml.sax.Attributes;
 
 import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.common.Tools;
 
 /**
  * some help function to parse/write ginml files.

@@ -9,7 +9,7 @@ import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.common.GsException;
 
 /**
  * Temporary graph, not savable, not editable, nothing...

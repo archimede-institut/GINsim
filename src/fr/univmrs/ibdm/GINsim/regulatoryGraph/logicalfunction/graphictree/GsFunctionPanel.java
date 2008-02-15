@@ -17,7 +17,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.GsFunctionEditor;
-import fr.univmrs.tagc.widgets.Button;
+import fr.univmrs.tagc.common.widgets.Button;
 
 public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener,
     PropertyChangeListener, MouseListener {

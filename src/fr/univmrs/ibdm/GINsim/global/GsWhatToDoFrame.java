@@ -13,8 +13,8 @@ import javax.swing.event.ChangeListener;
 import fr.univmrs.ibdm.GINsim.graph.GsActionProvider;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * This frame offers to the user a choice about it's new graph.

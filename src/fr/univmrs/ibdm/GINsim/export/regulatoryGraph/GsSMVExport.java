@@ -18,8 +18,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * Encode a graph to SMV format.

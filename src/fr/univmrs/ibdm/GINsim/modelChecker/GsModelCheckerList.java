@@ -8,8 +8,8 @@ import fr.univmrs.ibdm.GINsim.reg2dyn.GsRegulatoryMutantListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
-import fr.univmrs.tagc.datastore.ValueList;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.datastore.ValueList;
 
 public class GsModelCheckerList extends SimpleGenericList implements GsGraphListener, GsRegulatoryMutantListener {
 

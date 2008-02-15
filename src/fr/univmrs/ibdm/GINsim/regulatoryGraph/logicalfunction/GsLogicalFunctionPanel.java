@@ -6,9 +6,9 @@ import fr.univmrs.ibdm.GINsim.gui.GsParameterPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
-import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
-import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
+import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 
 import java.awt.BorderLayout;
 

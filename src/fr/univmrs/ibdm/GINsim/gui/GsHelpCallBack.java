@@ -3,10 +3,10 @@ package fr.univmrs.ibdm.GINsim.gui;
 import java.io.File;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.AboutDialog;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.AboutDialog;
 
 /**
  * Here are the (few) callback for entry in the "help" menu

@@ -17,12 +17,12 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
-import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.ObjectPropertyEditorUI;
-import fr.univmrs.tagc.datastore.gui.GenericPropertyHolder;
-import fr.univmrs.tagc.widgets.EnhancedJTable;
-import fr.univmrs.tagc.widgets.SplitPane;
-import fr.univmrs.tagc.widgets.StockButton;
+import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.widgets.SplitPane;
+import fr.univmrs.tagc.common.widgets.StockButton;
 
 /**
  * Panel to edit interaction of a gene

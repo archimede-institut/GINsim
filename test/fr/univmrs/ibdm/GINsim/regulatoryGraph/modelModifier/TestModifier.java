@@ -2,7 +2,7 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.modelModifier;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.common.GsException;
 import junit.framework.TestCase;
 
 public class TestModifier extends TestCase {

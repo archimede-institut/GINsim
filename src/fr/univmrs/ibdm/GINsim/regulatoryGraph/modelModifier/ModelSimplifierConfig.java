@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 import fr.univmrs.ibdm.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.datastore.MultiColHelper;
-import fr.univmrs.tagc.datastore.NamedObject;
-import fr.univmrs.tagc.xml.XMLWriter;
-import fr.univmrs.tagc.xml.XMLize;
+import fr.univmrs.tagc.common.datastore.MultiColHelper;
+import fr.univmrs.tagc.common.datastore.NamedObject;
+import fr.univmrs.tagc.common.xml.XMLWriter;
+import fr.univmrs.tagc.common.xml.XMLize;
 
 
 public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelper {

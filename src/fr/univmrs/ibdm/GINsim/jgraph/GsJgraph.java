@@ -7,7 +7,7 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphLayoutCache;
 
 import fr.univmrs.ibdm.GINsim.data.ToolTipsable;
-import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * custumize jgraph to our needs

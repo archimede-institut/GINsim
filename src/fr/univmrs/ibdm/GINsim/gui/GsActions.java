@@ -11,10 +11,10 @@ import javax.swing.*;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.*;
-import fr.univmrs.tagc.global.OptionStore;
-import fr.univmrs.tagc.manageressources.ImageLoader;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.BaseAction;
+import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.BaseAction;
 
 
 /**

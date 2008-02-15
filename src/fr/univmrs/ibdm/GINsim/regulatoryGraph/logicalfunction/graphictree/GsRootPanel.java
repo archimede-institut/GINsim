@@ -15,7 +15,7 @@ import javax.swing.tree.TreePath;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.tagc.widgets.Button;
+import fr.univmrs.tagc.common.widgets.Button;
 
 public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionListener {
   private static final long serialVersionUID = -1866485315946504210L;

@@ -11,7 +11,7 @@ import fr.univmrs.ibdm.GINsim.dynamicGraph.GsDynamicParser;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryParser;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
-import fr.univmrs.tagc.xml.XMLHelper;
+import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
  * parses a ginml regulatory graph.

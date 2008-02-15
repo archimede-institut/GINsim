@@ -2,11 +2,11 @@ package fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant;
 
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.datastore.GenericList;
-import fr.univmrs.tagc.datastore.ObjectStore;
-import fr.univmrs.tagc.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.datastore.GenericList;
+import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class MutantSelectionPanel extends GenericListSelectionPanel {
 	private static final long serialVersionUID = 1213902700181873169L;

@@ -1,6 +1,6 @@
 package fr.univmrs.ibdm.GINsim.gui;
 
-import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * Here are the callback for entry in the "view" menu

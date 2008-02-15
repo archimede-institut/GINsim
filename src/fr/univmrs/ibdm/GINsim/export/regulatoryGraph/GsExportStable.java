@@ -18,8 +18,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.stableStates.GenericStableStateUI;
 import fr.univmrs.ibdm.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.ibdm.GINsim.stableStates.StableTableModel;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 
 public class GsExportStable extends JPanel implements GenericStableStateUI {

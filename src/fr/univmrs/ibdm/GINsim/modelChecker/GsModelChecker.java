@@ -6,8 +6,8 @@ import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.datastore.NamedObject;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.datastore.NamedObject;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * Model checker implementations should implement this interface.

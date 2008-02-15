@@ -19,13 +19,13 @@ import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.datastore.ObjectStore;
-import fr.univmrs.tagc.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.SplitPane;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.SplitPane;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * frame to set up the simulation

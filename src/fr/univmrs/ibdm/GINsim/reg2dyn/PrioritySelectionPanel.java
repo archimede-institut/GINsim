@@ -3,9 +3,9 @@ package fr.univmrs.ibdm.GINsim.reg2dyn;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.univmrs.tagc.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class PrioritySelectionPanel extends GenericListSelectionPanel {
 	private static final long serialVersionUID = 1213902700181873169L;

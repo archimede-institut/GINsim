@@ -7,7 +7,7 @@ import java.util.Map;
 
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.datastore.NamedObject;
+import fr.univmrs.tagc.common.datastore.NamedObject;
 
 public class GsInitialState implements NamedObject {
 	String name;

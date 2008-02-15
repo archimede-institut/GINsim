@@ -12,10 +12,10 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.datastore.GenericList;
-import fr.univmrs.tagc.datastore.ValueList;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.datastore.GenericList;
+import fr.univmrs.tagc.common.datastore.ValueList;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class GsModelCheckerAssociatedObjectManager implements GsGraphAssociatedObjectManager {
 

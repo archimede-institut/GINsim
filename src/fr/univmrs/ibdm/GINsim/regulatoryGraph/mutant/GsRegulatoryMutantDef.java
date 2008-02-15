@@ -8,8 +8,8 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraphManager;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.datastore.NamedObject;
-import fr.univmrs.tagc.xml.XMLWriter;
+import fr.univmrs.tagc.common.datastore.NamedObject;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * store the definition of a mutant

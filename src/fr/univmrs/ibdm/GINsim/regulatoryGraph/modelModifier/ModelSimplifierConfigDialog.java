@@ -10,10 +10,10 @@ import javax.swing.event.ListSelectionListener;
 import fr.univmrs.ibdm.GINsim.global.GsEnv;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
-import fr.univmrs.tagc.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener {
 	private static final long	serialVersionUID	= 3618855894072951620L;

@@ -17,7 +17,7 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.VertexRenderer;
 
 import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.global.Tools;
+import fr.univmrs.tagc.common.Tools;
 
 /**
  * extract info on vertices for jgraph based graphs.

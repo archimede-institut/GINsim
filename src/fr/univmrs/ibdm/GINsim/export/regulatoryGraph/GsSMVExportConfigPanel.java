@@ -20,8 +20,8 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.manageressources.Translator;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class GsSMVExportConfigPanel extends JPanel {
 	private static final long serialVersionUID = -7398674287463858306L;

@@ -20,9 +20,9 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.ibdm.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.ibdm.GINsim.xml.GsXMLHelper;
-import fr.univmrs.tagc.global.GsException;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.widgets.StackDialog;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * parses a ginml regulatory graph.

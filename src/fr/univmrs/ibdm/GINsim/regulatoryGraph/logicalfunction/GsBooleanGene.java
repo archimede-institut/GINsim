@@ -4,7 +4,7 @@ import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanData;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperand;
-import fr.univmrs.tagc.global.GsException;
+import fr.univmrs.tagc.common.GsException;
 
 public class GsBooleanGene extends TBooleanOperand {
   private GsLogicalFunctionList il;

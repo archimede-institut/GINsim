@@ -1,7 +1,7 @@
 package fr.univmrs.ibdm.GINsim.reg2dyn;
 
-import fr.univmrs.tagc.datastore.NamedObject;
-import fr.univmrs.tagc.datastore.MultiColObject;
+import fr.univmrs.tagc.common.datastore.MultiColObject;
+import fr.univmrs.tagc.common.datastore.NamedObject;
 
 
 /**

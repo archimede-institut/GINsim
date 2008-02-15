@@ -8,12 +8,12 @@ import fr.univmrs.ibdm.GINsim.annotation.Annotation;
 import fr.univmrs.ibdm.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionPanel;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.models.VertexMaxValueSpinModel;
-import fr.univmrs.tagc.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.datastore.ObjectEditor;
-import fr.univmrs.tagc.datastore.gui.GenericPropertyEditorPanel;
-import fr.univmrs.tagc.datastore.models.SpinModel;
-import fr.univmrs.tagc.global.Tools;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.common.datastore.ObjectEditor;
+import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
+import fr.univmrs.tagc.common.datastore.models.SpinModel;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class RegulatoryVertexEditor extends ObjectEditor {
 

@@ -4,8 +4,8 @@ import fr.univmrs.ibdm.GINsim.graph.GsGraph;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.ibdm.GINsim.graph.GsGraphListener;
 import fr.univmrs.ibdm.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.datastore.GenericListListener;
-import fr.univmrs.tagc.datastore.SimpleGenericList;
+import fr.univmrs.tagc.common.datastore.GenericListListener;
+import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 /**
  * store all simulation parameters and offer a mean to access them.

@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import fr.univmrs.ibdm.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.ibdm.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.global.OptionStore;
+import fr.univmrs.tagc.common.OptionStore;
 
 public class GsExportConfig extends GsExtensibleConfig {
 

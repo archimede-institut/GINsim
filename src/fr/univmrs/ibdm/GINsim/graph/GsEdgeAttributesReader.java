@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Vector;
 
-import fr.univmrs.tagc.global.OptionStore;
-import fr.univmrs.tagc.manageressources.Translator;
+import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * graphic info on an edge.
