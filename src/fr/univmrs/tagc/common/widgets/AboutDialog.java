@@ -3,8 +3,7 @@ package fr.univmrs.tagc.common.widgets;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
@@ -51,15 +50,21 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 		aboutText = s.toString();
 
 		s = new StringBuffer("<body><table>");
-		s.append("<tr><th colspan='2'>Current team</th></tr>");
-		for (int i = 0 ; i < data.contributors.length ; i++) {
-			String[] t = data.contributors[i];
-			s.append("<tr><td>" + t[0] + "</td><td>" + t[1] + "</td></tr>");
+		if (data.contributors.size() > 0) {
+			s.append("<tr><th colspan='2'>Current team</th></tr>");
+			for (Iterator it = data.contributors.iterator() ; it.hasNext() ; ) {
+				String[] t = (String[])it.next();
+				String s_name = t[1] != null ? "<a href='"+t[1]+"'>"+t[0]+"</a>" : t[0];
+				s.append("<tr><td>" + s_name + "</td><td>" + t[2] + "</td></tr>");
+			}
 		}
-		s.append("<tr><th colspan='2'>Previous contributors</th></tr>");
-		for (int i = 0 ; i < data.previousContributors.length ; i++) {
-			String[] t = data.previousContributors[i];
-			s.append("<tr><td>" + t[0] + "</td><td>" + t[1] + "</td></tr>");
+		if (data.previousContributors.size() > 0) {
+			s.append("<tr><th colspan='2'>Previous contributors</th></tr>");
+			for (Iterator it = data.previousContributors.iterator() ; it.hasNext() ; ) {
+				String[] t = (String[])it.next();
+				String s_name = t[1] != null ? "<a href='"+t[1]+"'>"+t[0]+"</a>" : t[0];
+				s.append("<tr><td>" + s_name + "</td><td>" + t[2] + "</td></tr>");
+			}
 		}
 		s.append("</table></body>");
 		contribText = s.toString();
@@ -176,25 +181,11 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 }
 
 
-// FIXME: fill the "AboutData" object with the DOAP parser
-
 class AboutData {
 
-	String		logo, name, version, description, link;
-	String[][]	contributors = {
-			{ "Claudine CHAOUIYA", "Project coordination" },
-			{ "Adrien Fauré", "Biological applications" },
-			{ "Fabrice LOPEZ", "Software development" },
-			{ "Aurelien NALDI", "Development and biological applications" },
-			{ "Denis THIEFFRY", "Project coordination" },	};
-	String[][]	previousContributors	= {
-			{ "Frederic CORDEIL", "Prototype development" },
-			{ "Aitor GONZALEZ",
-			"Prototype development and biological application" },
-			{ "Kevin MATHIEU", "APNN export" },
-			{ "Thomas MARCQ", "Prototype development" },
-			{ "Cecile MENAHEM", "Prototype development" },
-			{ "Romain MUTI", "Prototype development" },	};
+	String logo, name, version, description, link;
+	List contributors = new ArrayList();
+	List previousContributors = new ArrayList();
 }
 
 class DOAPParser extends XMLHelper {
@@ -205,7 +196,13 @@ class DOAPParser extends XMLHelper {
 	private static final int LOGO =	2;
 	private static final int VERSION =	3;
 	private static final int HOMEPAGE =	4;
-	private static final int MAINTAINER = 5;
+	private static final int PERSON = 5;
+	private static final int FNAME =	6;
+	private static final int FMBOX =	7;
+	private static final int FMADE =	8;
+	private static final int CONTRIB =	10;
+	private static final int OLDCONTRIB =	11;
+	
 		
 	static {
 		addCall("name", NAME, CALLMAP, ENDONLY, true);
@@ -213,10 +210,19 @@ class DOAPParser extends XMLHelper {
 		addCall("logo", LOGO, CALLMAP, ENDONLY, true);
 		addCall("version", VERSION, CALLMAP, ENDONLY, true);
 		addCall("homepage", HOMEPAGE, CALLMAP, STARTONLY, false);
-		addCall("maintainer", MAINTAINER, CALLMAP, NOCALL, false);
+		
+		addCall("maintainer", CONTRIB, CALLMAP, BOTH, false);
+		addCall("helper", OLDCONTRIB, CALLMAP, BOTH, false);
+		
+		addCall("foaf:Person", PERSON, CALLMAP, BOTH, false);
+		addCall("foaf:name", FNAME, CALLMAP, ENDONLY, true);
+		//addCall("foaf:mbox", FMBOX, CALLMAP, STARTONLY, false);
+		addCall("foaf:made", FMADE, CALLMAP, ENDONLY, true);
 	}
 	
 	AboutData data;
+	List contribList = null;
+	String[] s_currentContrib = null;
 	
 	public DOAPParser(AboutData data, String path) {
 		m_call = CALLMAP;
@@ -232,6 +238,24 @@ class DOAPParser extends XMLHelper {
 		switch (id) {
 			case HOMEPAGE:
 				data.link = attributes.getValue("rdf:resource");
+				break;
+			case FMBOX:
+				if (s_currentContrib != null) {
+					s_currentContrib[1] = attributes.getValue("rdf:resource");
+				}
+				// TODO: load e-mail
+				break;
+			case PERSON:
+				if (contribList != null) {
+					s_currentContrib = new String[3];
+					contribList.add(s_currentContrib);
+				}
+				break;
+			case CONTRIB:
+				contribList = data.contributors;
+				break;
+			case OLDCONTRIB:
+				contribList = data.previousContributors;
 				break;
 		}
 	}
@@ -249,6 +273,23 @@ class DOAPParser extends XMLHelper {
 				break;
 			case VERSION:
 				data.version = curval;
+				break;
+			case PERSON:
+				s_currentContrib = null;
+				break;
+			case CONTRIB:
+			case OLDCONTRIB:
+				contribList = null;
+				break;
+			case FNAME:
+				if (s_currentContrib != null) {
+					s_currentContrib[0] = curval;
+				}
+				break;
+			case FMADE:
+				if (s_currentContrib != null) {
+					s_currentContrib[2] = curval;
+				}
 				break;
 		}
 	}

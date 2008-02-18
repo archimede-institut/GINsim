@@ -10,17 +10,39 @@
     <description>A computer tool for the modeling and simulation of genetic regulatory networks</description>
     <homepage rdf:resource="http://gin.univ-mrs.fr/GINsim/download.html" />
     <logo>gs1.gif</logo>
-    <version>2.4-{$DATE}</version>
-    <!--
-	    <created>2008-01-21</created>
-    -->
     <license rdf:resource="http://usefulinc.com/doap/licenses/gpl">GPL</license>
-    <!--
+    <version>2.4</version>
+<!--
+    <created>2008-01-21</created>
     <bug-database rdf:resource="http://crfb.univ-mrs.fr/gp/GINsim/query" />
     <mailing-list rdf:resource="http://gin.univ-mrs.fr/GINsim/contact.html" />
     <download-page rdf:resource="http://gin.univ-mrs.fr/GINsim/download.html" />
     <programming-language>Java</programming-language>
-    -->
+-->
+    
+<!--	CREDITS		-->
+<!-- Current team -->
+    <maintainer>
+      <foaf:Person>
+        <foaf:name>Claudine Chaouiya</foaf:name>
+        <foaf:mbox rdf:resource="mailto:chaouiya@tagc.univ-mrs.fr"/>
+        <foaf:made>Project coordination</foaf:made>
+      </foaf:Person>
+    </maintainer>
+    <maintainer>
+      <foaf:Person>
+        <foaf:name>Adrien Fauré</foaf:name>
+        <foaf:mbox rdf:resource="mailto:faure@tagc.univ-mrs.fr"/>
+        <foaf:made>Biological applications</foaf:made>
+      </foaf:Person>
+    </maintainer>
+    <maintainer>
+      <foaf:Person>
+        <foaf:name>Fabrice Lopez</foaf:name>
+        <foaf:mbox rdf:resource="mailto:lopez@tagc.univ-mrs.fr"/>
+        <foaf:made>Software development</foaf:made>
+      </foaf:Person>
+    </maintainer>
     <maintainer>
       <foaf:Person>
         <foaf:name>Aurélien Naldi</foaf:name>
@@ -28,5 +50,50 @@
         <foaf:made>Development and biological applications</foaf:made>
       </foaf:Person>
     </maintainer>
+    <maintainer>
+      <foaf:Person>
+        <foaf:name>Denis Thieffry</foaf:name>
+        <foaf:mbox rdf:resource="mailto:thieffry@tagc.univ-mrs.fr"/>
+        <foaf:made>Project coordination</foaf:made>
+      </foaf:Person>
+    </maintainer>
+    
+<!-- previous contributors -->
+    <helper>
+      <foaf:Person>
+        <foaf:name>Frederic Cordeil</foaf:name>
+        <foaf:made>Prototype development</foaf:made>
+      </foaf:Person>
+    </helper>
+    <helper>
+      <foaf:Person>
+        <foaf:name>Aitor Gonzalez</foaf:name>
+        <foaf:made>Prototype development and biological application</foaf:made>
+      </foaf:Person>
+    </helper>
+    <helper>
+      <foaf:Person>
+        <foaf:name>Kevin Mathieu</foaf:name>
+        <foaf:made>APNN export</foaf:made>
+      </foaf:Person>
+    </helper>
+    <helper>
+      <foaf:Person>
+        <foaf:name>Thomas Marcq</foaf:name>
+        <foaf:made>Prototype development</foaf:made>
+      </foaf:Person>
+    </helper>
+    <helper>
+      <foaf:Person>
+        <foaf:name>Cecile Menahem</foaf:name>
+        <foaf:made>Prototype development</foaf:made>
+      </foaf:Person>
+    </helper>
+    <helper>
+      <foaf:Person>
+        <foaf:name>Romain Muti</foaf:name>
+        <foaf:made>Prototype development</foaf:made>
+      </foaf:Person>
+    </helper>
   </Project>
 </rdf:RDF>
