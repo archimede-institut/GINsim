@@ -1,17 +1,21 @@
+Version 2.4. 
+Changes since version 2.3:
+
+Definition of the regulatory graph:
+* logical functions
+* change in the definition of interactions: now it uses only one threshold (instead of a range with min and max).
+* removal of the "basal value": it is now a regular logical parameter
+* Model "Simplification"
+
+---------------------------------------------------------------------------------------------------------------------
 Version 2.3.
 Changes since version 2.2:
 
-Definition of the regulatory graph:
-* logical functions (in progress, cf documentation (TODO))
-* change in the definition of interactions: now it uses only one threshold (instead of a range with min and max).
-
 Analysis of the regulatory graph:
-* functionnality of circuits (in progress)
+* functionnality of circuits
 * export the regulatory graph to petri net (INA, PNML and APNN)!
    using the tree representation of logical parameters
    each node is represented by two places
-* export the regulatory graph in SBML
-   currently in SBML level 2, extensions have been proposed to make it more accurate
 * export in smv format, for model-checking by NuSMV
 * a "model checker" plugin has been started, to run several NuSMV tests automatically
 

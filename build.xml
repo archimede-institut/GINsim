@@ -56,7 +56,7 @@
   		<copy todir="${doc}/"><fileset dir="${docsrc}"/></copy>
 	</target>
 
-	<target name="docbook" depends="docinit" description="Documentation: all docbook versions (chunked, single, pdf)"/>
+	<target name="docbook" depends="docSingle, docChunked, docPdf" description="Documentation: all docbook versions (chunked, single, pdf)"/>
 
 	<!-- generate chunked version of the doc: .db files then real export -->
 	<target name="docChunked" depends="docinit" description="Documentation: html chunked pages">

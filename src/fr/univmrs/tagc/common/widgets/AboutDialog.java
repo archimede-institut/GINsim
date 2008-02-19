@@ -24,11 +24,11 @@ import fr.univmrs.tagc.common.xml.XMLHelper;
  */
 public class AboutDialog extends Frame implements HyperlinkListener {
 
-	private static final long		serialVersionUID		= 8297377937071144230L;
+	private static final long		serialVersionUID = 8297377937071144230L;
 
-	private javax.swing.JPanel		jContentPane			= null;
-	private javax.swing.JEditorPane	jEditorPane				= null;
-	private javax.swing.JScrollPane	jScrollPane				= null;
+	private javax.swing.JPanel		jContentPane = null;
+	private javax.swing.JEditorPane	jEditorPane  = null;
+	private javax.swing.JScrollPane	jScrollPane  = null;
 	private JTabbedPane				tabpane;
 	private JScrollPane				jScrollPane2;
 	private JEditorPane				jEditorPane2;
@@ -45,7 +45,7 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 		s.append("\n<img src='" + ImageLoader.getImagePath(data.logo) + "'/>");
 		s.append("\n<h1>" + data.name + " " + data.version + "</h1>");
 		s.append(data.description);
-		s.append("\n<p/><a href='" + data.link + "'>Site web</a>");
+		s.append("\n<p/><a href='" + data.link + "'>"+data.link+"</a>");
 		s.append("</center></body>");
 		aboutText = s.toString();
 
@@ -243,7 +243,6 @@ class DOAPParser extends XMLHelper {
 				if (s_currentContrib != null) {
 					s_currentContrib[1] = attributes.getValue("rdf:resource");
 				}
-				// TODO: load e-mail
 				break;
 			case PERSON:
 				if (contribList != null) {
