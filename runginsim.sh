@@ -16,7 +16,7 @@ do
 	GINSIM_CLASSPATH="$GINSIM_CLASSPATH:$i"
 done
 
-GsArgs="-cp $GINSIM_CLASSPATH fr.univmrs.ibdm.GINsim.global.GsMain --ginsimdir $GINSIM_DIR $*"
+GsArgs="-cp $GINSIM_CLASSPATH fr.univmrs.tagc.GINsim.global.GsMain --ginsimdir $GINSIM_DIR $*"
 test $JAVAMAXMEM && GsArgs="-Xmx"$JAVAMAXMEM"M $GsArgs"
 
 test $LOGFILE && java $GsArgs > $LOGFILE 2>&1 || java $GsArgs

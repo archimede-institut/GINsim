@@ -23,7 +23,7 @@ public class ReducedParameterPanel extends GsParameterPanel{
 	}
 	
 	/*
-	 * @see fr.univmrs.ibdm.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
+	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
 	 */
 	public void setEditedObject(Object obj) {
 		if (obj instanceof GsNodeReducedData) {

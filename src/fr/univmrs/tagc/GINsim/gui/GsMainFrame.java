@@ -141,7 +141,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 	/**
 	 * This method initializes gsGraphPanel
 	 *
-	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphPanel
+	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphPanel
 	 */
 	private JComponent getGraphPanel() {
 		if (graphPanel == null) {
@@ -280,7 +280,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 	/**
 	 * This method initializes gsGraphMapPanel
 	 *
-	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphMapPanel
+	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphMapPanel
 	 */
 	private JPanel getGsGraphMapPanel() {
 		if (gsGraphMapPanel == null) {
@@ -303,7 +303,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 	/**
 	 * This method initializes gsGraphicAttributePanel
 	 *
-	 * @return fr.univmrs.ibdm.GINsim.gui.GsGraphicAttributePanel
+	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphicAttributePanel
 	 */
 	private GsGraphicAttributePanel getGsGraphicAttributePanel() {
 		if (gsGraphicAttributePanel == null) {

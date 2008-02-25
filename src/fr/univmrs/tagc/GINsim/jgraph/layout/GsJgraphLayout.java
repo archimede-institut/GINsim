@@ -28,7 +28,7 @@ public class GsJgraphLayout implements GsPlugin, GsActionProvider {
 	private GsPluggableActionDescriptor[] t_layout = null;
 	
 	/*
-	 * @see fr.univmrs.ibdm.GINsim.plugin.GsPlugin#registerPlugin()
+	 * @see fr.univmrs.tagc.GINsim.plugin.GsPlugin#registerPlugin()
 	 */
 	public void registerPlugin() {
 	    // jgraphaddons layouts are disabled

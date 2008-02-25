@@ -103,7 +103,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	}
 
 	/*
-	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
+	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
 	 */
 	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
         try {

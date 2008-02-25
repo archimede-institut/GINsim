@@ -24,8 +24,7 @@ public class GsGinmlHelper {
     public static final String LOCAL_URL_DTD_FILE;
 
     static {
-        //LOCAL_URL_DTD_FILE  = "file:/"+GsEnv.getGinsimDir()+"data/ginml/GINML_2_1.dtd";
-        LOCAL_URL_DTD_FILE  = "file://fr/univmrs/ibdm/GINsim/ressources/GINML_2_1.dtd";
+        LOCAL_URL_DTD_FILE  = "file://fr/univmrs/tagc/GINsim/ressources/GINML_2_1.dtd";
     }
     /**
      * we are reading node visual settings from a ginml file, apply them on

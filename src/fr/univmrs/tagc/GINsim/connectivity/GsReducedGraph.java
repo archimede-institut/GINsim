@@ -65,21 +65,21 @@ public class GsReducedGraph extends GsGraph {
     }
 
     /*
-	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doInteractiveAddVertex(int)
+	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddVertex(int)
 	 */
 	protected Object doInteractiveAddVertex(int param) {
 		return null;
 	}
 
 	/*
-	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doInteractiveAddEdge(java.lang.Object, java.lang.Object, int)
+	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddEdge(java.lang.Object, java.lang.Object, int)
 	 */
 	protected Object doInteractiveAddEdge(Object source, Object target, int param) {
 		return null;
 	}
 
 	/*
-	 * @see fr.univmrs.ibdm.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
+	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
 	 */
 	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
         try {
