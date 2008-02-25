@@ -10,11 +10,15 @@
 		<plugin name="analyseStateTransition" mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicAnalyserPlugin" load="true"/>
 		<plugin name="export" mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin" load="true" depend=""/>
 		<plugin name="PNexport" mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsPetriNetExport" load="true" depend=""/>
-		<plugin mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSMVExport" load="true" depend="" name="SMVexport"/><plugin
+		<plugin mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSMVExport" load="true" depend="" name="SMVexport"/>
+		<plugin
 			name="HTMLExport"
 			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsHTMLExport"
-			load="true">
-</plugin>
+			load="true"/>
+		<plugin
+			name="CytoscapeExport"
+			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"
+			load="true"/>
 		<plugin name="modelSimplifier" mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier.ModelSimplifierPlugin" load="true" depend=""/>
 		<plugin name="GNAexport" mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport" load="false" depend=""/>
 		<plugin name="connectivity" mainClass="fr.univmrs.tagc.GINsim.connectivity.ConnectivityPlugin" load="true" depend=""/>
