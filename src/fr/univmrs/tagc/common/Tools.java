@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.jgraph.util.BrowserLauncher;
 
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
+import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**

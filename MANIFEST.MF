@@ -1,2 +1,2 @@
-Main-Class: fr.univmrs.ibdm.GINsim.global.GsMain
+Main-Class: fr.univmrs.tagc.GINsim.global.GsMain
 

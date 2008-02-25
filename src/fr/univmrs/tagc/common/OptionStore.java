@@ -13,9 +13,9 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
-import fr.univmrs.ibdm.GINsim.global.GsEnv;
-import fr.univmrs.ibdm.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.ibdm.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.GINsim.global.GsEnv;
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
