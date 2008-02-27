@@ -3,7 +3,6 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
@@ -48,7 +47,7 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
         List v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
-        List[] t_transition = new ArrayList[len];
+        List[] t_transition = new List[len];
         short[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 
         try 
