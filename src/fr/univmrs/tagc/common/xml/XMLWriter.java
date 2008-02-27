@@ -158,10 +158,57 @@ public class XMLWriter {
         v_stack.add(name);
         inContent = false;
     }
-    
+
+    /**
+     * add (i.e. open and close) a tag with specified attributes and content.
+     * @param name
+     * @param attributes
+     * @param content
+     * @throws IOException
+     */
+    public void addTag(String name, String[] attributes, String content) throws IOException {
+    	openTag(name, attributes);
+    	addContent(content);
+    	closeTag();
+    }
+    /**
+     * open a tag and add it the specified attributes.
+     * @param name
+     * @param attributes
+     * @throws IOException
+     */
+    public void openTag(String name, String[] attributes) throws IOException {
+    	openTag(name);
+    	for (int i=0 ; i<attributes.length ; i+=2) {
+    		addAttr(attributes[i], attributes[i+1]);
+    	}
+    }
+    /**
+     * add (i.e. open and close) a tag with specified attributes and no content.
+     * @param name
+     * @param attributes
+     * @throws IOException
+     */
+    public void addTag(String name, String[] attributes) throws IOException {
+    	openTag(name, attributes);
+    	closeTag();
+    }
+
+    /**
+     * add (i.e. open and close) a tag with specified content and no attributes.
+     * @param tag
+     * @param content
+     * @throws IOException
+     */
     public void addTagWithContent(String tag, Object content) throws IOException {
     	addTagWithContent(tag, content.toString());
     }
+    /**
+     * add (i.e. open and close) a tag with specified content and no attributes.
+     * @param tag
+     * @param content
+     * @throws IOException
+     */
     public void addTagWithContent(String tag, String content) throws IOException {
     	openTag(tag);
     	addContent(content);
