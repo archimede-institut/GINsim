@@ -98,7 +98,7 @@ public class GsHTMLExport extends GsAbstractExport {
 		out.closeTag();
 		// add some javascript for the stable states
 		out.openTag("script");
-		out.addAttr("language", "javascript");
+		out.addAttr("type", "text/javascript");
 		out.addContent("function ShowHide(id) {\n"
 				+ "  obj = document.getElementById(id);\n"
 				+ "  if (obj.style.display == 'block') {\n"
