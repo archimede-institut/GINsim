@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
+import java.awt.Color;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -11,7 +12,9 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
@@ -62,10 +65,9 @@ public class CytoscapeExport extends GsAbstractExport {
 		GsRegulatoryGraph graph = (GsRegulatoryGraph) config.getGraph();
 		fout = new FileWriter(config.getFilename());
 		out = new XMLWriter(fout, null);
-		
-		System.out.println(graph.getGraphName());
-		
+				
 		//Header
+		out.write("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>");
 		out.openTag("graph");
 		out.addAttr("label", graph.getGraphName());
 		out.addAttr("id", graph.getGraphName());
@@ -75,11 +77,8 @@ public class CytoscapeExport extends GsAbstractExport {
 		out.addAttr("xmlns:rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 		out.addAttr("xmlns", "http://www.cs.rpi.edu/XGMML");
 		
-		out.openTag("att");
-		out.addAttr("name", "documentVersion");
-		out.addAttr("value", "1.0");
-		out.closeTag();
-		
+		out.addTag("att", new String[] {"name", "documentVersion", "value", "1.0"});
+
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		out.openTag("att");
 		out.addAttr("name", "networkMetadata");
@@ -97,106 +96,121 @@ public class CytoscapeExport extends GsAbstractExport {
 		out.closeTag();//RDF
 		out.closeTag();//Att
 		
-		out.openTag("att");
-		out.addAttr("name", "backgroundColor");
-		out.addAttr("value", "#ffffff");
-		out.closeTag();
-		
-		out.openTag("att");
-		out.addAttr("name", "GRAPH_VIEW_ZOOM");
-		out.addAttr("label", "GRAPH_VIEW_ZOOM");
-		out.addAttr("type", "real");
-		out.addAttr("value", "1.0");
-		out.closeTag();
-		
-		out.openTag("att");
-		out.addAttr("name", "GRAPH_VIEW_CENTER_X");
-		out.addAttr("label", "GRAPH_VIEW_CENTER_X");
-		out.addAttr("type", "real");
-		out.addAttr("value", "0.0");
-		out.closeTag();
-		
-		out.openTag("att");
-		out.addAttr("name", "GRAPH_VIEW_CENTER_Y");
-		out.addAttr("label", "GRAPH_VIEW_CENTER_Y");
-		out.addAttr("type", "real");
-		out.addAttr("value", "0.0");
-		out.closeTag();
+		out.addTag("att", new String[] {"name", "backgroundColor", "value", "#ffffff"});
+		out.addTag("att", new String[] {"name", "GRAPH_VIEW_ZOOM", "label", "GRAPH_VIEW_ZOOM", "type", "real", "value", "1.0"});
+		out.addTag("att", new String[] {"name", "GRAPH_VIEW_CENTER_X", "label", "GRAPH_VIEW_CENTER_X", "type", "real", "value", "0.0"});
+		out.addTag("att", new String[] {"name", "GRAPH_VIEW_CENTER_Y", "label", "GRAPH_VIEW_CENTER_Y", "type", "real", "value", "0.0"});
+
 		
 		//vertex
 		int current_index_of_node_id = -graph.getGraphManager().getVertexCount();
-		Hashtable gs2cyt_Ids = new Hashtable(graph.getGraphManager().getVertexCount());
+		Hashtable gs2cyt_Ids = new Hashtable(graph.getGraphManager().getVertexCount()); //To convert GINsim ID to Cytoscape ID
+		GsVertexAttributesReader vertexAttributeReader = graph.getGraphManager().getVertexAttributesReader();
 		for (Iterator it=graph.getGraphManager().getVertexIterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
-			String name = vertex.getName();
-			if (name.length() == 0) name = vertex.getId();
-			Integer node_id = new Integer(current_index_of_node_id++);
-			gs2cyt_Ids.put(vertex.getId(), node_id);
-			out.openTag("node");
-			out.addAttr("label", name);
-			out.addAttr("id", node_id.toString());
 			
+			String name = vertex.getName();//The complete name (label) of the edge
+			if (name.length() == 0) name = vertex.getId(); //if it isn't defined, set to id
+			
+			Integer node_id = new Integer(current_index_of_node_id++); //Current cytoscape ID
+			gs2cyt_Ids.put(vertex.getId(), node_id);//Put the new ID into the map
+			
+			out.openTag("node");
+			out.addAttr("label", vertex.getId());
+			out.addAttr("id", node_id.toString());
+		
+			out.addTag("att", new String[] {"name", "hiddenLabel", "label", "hiddenLabel", "type", "string"});
+			out.addTag("att", new String[] {"name", "canonicalName", "label", "canonicalName", "type", "string", "value", name});
+			
+			vertexAttributeReader.setVertex(vertex);
+			out.openTag("graphics");
+			out.addAttr("w", String.valueOf(vertexAttributeReader.getWidth()));
+			out.addAttr("h", String.valueOf(vertexAttributeReader.getHeight()));
+			out.addAttr("width", "1");
+			out.addAttr("outline", color2Hex(vertexAttributeReader.getForegroundColor()));
+			out.addAttr("fill", color2Hex(vertexAttributeReader.getBackgroundColor()));
+			out.addAttr("y", String.valueOf(vertexAttributeReader.getY()));
+			out.addAttr("x", String.valueOf(vertexAttributeReader.getX()));
+			if (vertexAttributeReader.getShape() == GsVertexAttributesReader.SHAPE_RECTANGLE) {
+				out.addAttr("type", "rectangle");
+			} else if (vertexAttributeReader.getShape() == GsVertexAttributesReader.SHAPE_ELLIPSE) {
+				out.addAttr("type", "ellipse");
+			}			
 			out.openTag("att");
-			out.addAttr("name", "hiddenLabel");
-			out.addAttr("label", "hiddenLabel");
-			out.addAttr("type", "string");
-			out.closeTag();
-			out.openTag("att");
-			out.addAttr("name", "canonicalName");
-			out.addAttr("label", "canonicalName");
-			out.addAttr("type", "string");
-			out.addAttr("value", name);
-			out.closeTag();
+			out.addAttr("name", "cytoscapeNodeGraphicsAttributes");
+			out.addTag("att", new String[] {"name", "nodeTransparency", "value", "1.0"});
+			out.addTag("att", new String[] {"name", "nodeLabelFont", "value", "Default-0-12"});
+			out.addTag("att", new String[] {"name", "borderLineType", "value", "solid"});
+			out.closeTag();//att
+			out.closeTag();//graphics
 
-			out.closeTag();
+
+			out.closeTag();//Node
 		}
 		
 		//edges
+		GsEdgeAttributesReader edgeAttributeReader = graph.getGraphManager().getEdgeAttributesReader();
 		for (Iterator it=graph.getGraphManager().getEdgeIterator() ; it.hasNext() ;) {
 			GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)it.next()).getUserObject();
 
-			
-			String source_id = ((GsRegulatoryVertex)edge.getTargetVertex()).getId();
-			String target_id = ((GsRegulatoryVertex)edge.getSourceVertex()).getId();
-			String edge_type;
+			String source_id = ((GsRegulatoryVertex)edge.getTargetVertex()).getId(); //C1
+			String target_id = ((GsRegulatoryVertex)edge.getSourceVertex()).getId(); //C2
+			String edge_type; //inhibit | activate | undefined
+			String edge_cyt_id; //15 | 3 | 12
 			switch (edge.getSign()) {
 				case GsRegulatoryMultiEdge.SIGN_NEGATIVE: 
-					edge_type = "inhibit"; 
+					edge_type = "inhibit";
+					edge_cyt_id = "15";
 					break;
 				case GsRegulatoryMultiEdge.SIGN_POSITIVE: 
 					edge_type = "activate"; 
+					edge_cyt_id = "3";
 					break;
 				default:
 					edge_type = "undefined"; 
+					edge_cyt_id = "12";
 					break;
 			}			
-			String long_label = source_id+" ("+edge_type+") "+target_id;
-
+			String long_label = source_id+" ("+edge_type+") "+target_id; //C1 (inhibit) C2
 			
+			edgeAttributeReader.setEdge(edge);
 			out.openTag("edge");
 			out.addAttr("target", gs2cyt_Ids.get(source_id).toString());
 			out.addAttr("source", gs2cyt_Ids.get(target_id).toString());
 			out.addAttr("label", long_label);
 			out.addAttr("id", long_label);
 			
-			out.openTag("att");
-			out.addAttr("name", "interaction");
-			out.addAttr("label", "interaction");
-			out.addAttr("type", "string");
-			out.addAttr("value", edge_type);
-			out.closeTag();
-			out.openTag("att");
-			out.addAttr("name", "canonicalName");
-			out.addAttr("label", "canonicalName");
-			out.addAttr("type", "string");
-			out.addAttr("value", long_label);
-			out.closeTag();
+			out.addTag("att", new String[] {"name", "interaction", "label", "interaction", "type", "string", "value", edge_type});
+			out.addTag("att", new String[] {"name", "canonicalName", "label", "canonicalName", "type", "string", "value", long_label});
 
-			out.closeTag();
+			out.openTag("graphics");
+			out.addAttr("width", String.valueOf((int)edgeAttributeReader.getLineWidth()));
+			out.addAttr("fill", color2Hex(edgeAttributeReader.getLineColor()));
+			out.openTag("att");
+			out.addAttr("name", "cytoscapeEdgeGraphicsAttributes");
+			out.addTag("att", new String[] {"name", "sourceArrow", "value", "0"});
+			out.addTag("att", new String[] {"name", "targetArrow", "value", edge_cyt_id});
+			out.addTag("att", new String[] {"name", "edgeLabelFont", "value", "Default-0-10"});
+			out.addTag("att", new String[] {"name", "edgeLineType", "value", "SOLID"});
+			out.addTag("att", new String[] {"name", "sourceArrowColor", "value", color2Hex(edgeAttributeReader.getLineColor())});
+			out.addTag("att", new String[] {"name", "targetArrowColor", "value", color2Hex(edgeAttributeReader.getLineColor())});
+			if (edgeAttributeReader.getStyle() == GsEdgeAttributesReader.STYLE_STRAIGHT) {
+				out.addTag("att", new String[] {"name", "curved", "value", "STRAIGHT_LINES"});
+			} else {
+				out.addTag("att", new String[] {"name", "curved", "value", "CURVED_LINES"});
+			}
+			out.closeTag();//att
+			out.closeTag();//graphics
+
+			out.closeTag();//edge
 		}
 		
 		//End
 		out.closeTag();//graph
 		fout.close(); //Close filewriter
+	}
+	
+	public String color2Hex(Color color) {
+		return "#"+Integer.toHexString((color.getRGB() & 0xffffff) | 0x1000000).substring(1);
 	}
 }
