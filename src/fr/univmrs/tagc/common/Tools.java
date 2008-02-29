@@ -95,27 +95,28 @@ public class Tools {
 	 * @return an haxadecimal color code (like 00FF00 for green)
 	 */
 	public static String getColorCode(Color color) {
-		String scol;
-		String ret = "";
-		scol = Integer.toHexString(color.getRed()).toUpperCase();
-		if (scol.length() == 1) {
-			ret += "0"+scol;
-		} else {
-			ret += scol;
-		}
-		scol = Integer.toHexString(color.getGreen()).toUpperCase();
-		if (scol.length() == 1) {
-			ret += "0"+scol;
-		} else {
-			ret += scol;
-		}
-		scol = Integer.toHexString(color.getBlue()).toUpperCase();
-		if (scol.length() == 1) {
-			ret += "0"+scol;
-		} else {
-			ret += scol;
-		}
-		return ret;
+		return Integer.toHexString((color.getRGB() & 0xffffff) | 0x1000000).substring(1);
+//		String scol;
+//		String ret = "";
+//		scol = Integer.toHexString(color.getRed()).toUpperCase();
+//		if (scol.length() == 1) {
+//			ret += "0"+scol;
+//		} else {
+//			ret += scol;
+//		}
+//		scol = Integer.toHexString(color.getGreen()).toUpperCase();
+//		if (scol.length() == 1) {
+//			ret += "0"+scol;
+//		} else {
+//			ret += scol;
+//		}
+//		scol = Integer.toHexString(color.getBlue()).toUpperCase();
+//		if (scol.length() == 1) {
+//			ret += "0"+scol;
+//		} else {
+//			ret += scol;
+//		}
+//		return ret;
 	}
 	/**
 	 * get a Color corresponding to a given color code. 

@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
-import java.awt.Color;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -22,6 +21,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.xml.XMLWriter;
+import fr.univmrs.tagc.common.Tools;
 
 public class CytoscapeExport extends GsAbstractExport {
 	
@@ -127,8 +127,8 @@ public class CytoscapeExport extends GsAbstractExport {
 			out.addAttr("w", String.valueOf(vertexAttributeReader.getWidth()));
 			out.addAttr("h", String.valueOf(vertexAttributeReader.getHeight()));
 			out.addAttr("width", "1");
-			out.addAttr("outline", color2Hex(vertexAttributeReader.getForegroundColor()));
-			out.addAttr("fill", color2Hex(vertexAttributeReader.getBackgroundColor()));
+			out.addAttr("outline", '#'+Tools.getColorCode(vertexAttributeReader.getForegroundColor()));
+			out.addAttr("fill", '#'+Tools.getColorCode(vertexAttributeReader.getBackgroundColor()));
 			out.addAttr("y", String.valueOf(vertexAttributeReader.getY()));
 			out.addAttr("x", String.valueOf(vertexAttributeReader.getX()));
 			if (vertexAttributeReader.getShape() == GsVertexAttributesReader.SHAPE_RECTANGLE) {
@@ -180,20 +180,21 @@ public class CytoscapeExport extends GsAbstractExport {
 			out.addAttr("label", long_label);
 			out.addAttr("id", long_label);
 			
+	        out.addTag("att", new String[] {"name", "XGMML Edge Label", "label", "XGMML Edge Label", "type", "string", "value", long_label});
 			out.addTag("att", new String[] {"name", "interaction", "label", "interaction", "type", "string", "value", edge_type});
 			out.addTag("att", new String[] {"name", "canonicalName", "label", "canonicalName", "type", "string", "value", long_label});
 
 			out.openTag("graphics");
 			out.addAttr("width", String.valueOf((int)edgeAttributeReader.getLineWidth()));
-			out.addAttr("fill", color2Hex(edgeAttributeReader.getLineColor()));
+			out.addAttr("fill", '#'+Tools.getColorCode(edgeAttributeReader.getLineColor()));
 			out.openTag("att");
 			out.addAttr("name", "cytoscapeEdgeGraphicsAttributes");
 			out.addTag("att", new String[] {"name", "sourceArrow", "value", "0"});
 			out.addTag("att", new String[] {"name", "targetArrow", "value", edge_cyt_id});
 			out.addTag("att", new String[] {"name", "edgeLabelFont", "value", "Default-0-10"});
 			out.addTag("att", new String[] {"name", "edgeLineType", "value", "SOLID"});
-			out.addTag("att", new String[] {"name", "sourceArrowColor", "value", color2Hex(edgeAttributeReader.getLineColor())});
-			out.addTag("att", new String[] {"name", "targetArrowColor", "value", color2Hex(edgeAttributeReader.getLineColor())});
+			out.addTag("att", new String[] {"name", "sourceArrowColor", "value", '#'+Tools.getColorCode(edgeAttributeReader.getLineColor())});
+			out.addTag("att", new String[] {"name", "targetArrowColor", "value", '#'+Tools.getColorCode(edgeAttributeReader.getLineColor())});
 			if (edgeAttributeReader.getStyle() == GsEdgeAttributesReader.STYLE_STRAIGHT) {
 				out.addTag("att", new String[] {"name", "curved", "value", "STRAIGHT_LINES"});
 			} else {
@@ -208,9 +209,5 @@ public class CytoscapeExport extends GsAbstractExport {
 		//End
 		out.closeTag();//graph
 		fout.close(); //Close filewriter
-	}
-	
-	public String color2Hex(Color color) {
-		return "#"+Integer.toHexString((color.getRGB() & 0xffffff) | 0x1000000).substring(1);
 	}
 }
