@@ -85,18 +85,20 @@ public class GsGinmlHelper {
 			}
 			ereader.setRouting(i);
 			
-			s = attributes.getValue("points");
-			String[] ts = s.split(" ");
-		    try {
-				List l = new Vector();
-				for (int j=0 ; j<ts.length ; j++) {
-				    String[] t_point = ts[j].split(",");
-			        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
-				}
-				ereader.setPoints(l);
-		    } catch (Exception e) {
-		        Tools.error("invalid points", null);
-		    }
+			s = attributes.getValue("points").trim();
+			if (!s.equals("")) {
+				String[] ts = s.split(" ");
+			    try {
+					List l = new Vector();
+					for (int j=0 ; j<ts.length ; j++) {
+					    String[] t_point = ts[j].split(",");
+				        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
+					}
+					ereader.setPoints(l);
+			    } catch (Exception e) {
+			        Tools.error("invalid points", null);
+			    }
+			}
 			ereader.refresh();
 		}
 	}
