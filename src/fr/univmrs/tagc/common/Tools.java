@@ -89,35 +89,19 @@ public class Tools {
 			}
 		 return true;
 	}
+	
 	/**
-	 * get an hexa color code for a given Color.
-	 * @param color
-	 * @return an haxadecimal color code (like 00FF00 for green)
+	 * Convert a 8-bit Color into a CSS-like string (without the #).<br>
+	 * <i>Exemple : Color(255,127,0) -> "FF7F00"</i>
+	 * 
+	 * @param color the color to convert.
+	 * @return String : a string representation.
+	 * 
 	 */
 	public static String getColorCode(Color color) {
 		return Integer.toHexString((color.getRGB() & 0xffffff) | 0x1000000).substring(1);
-//		String scol;
-//		String ret = "";
-//		scol = Integer.toHexString(color.getRed()).toUpperCase();
-//		if (scol.length() == 1) {
-//			ret += "0"+scol;
-//		} else {
-//			ret += scol;
-//		}
-//		scol = Integer.toHexString(color.getGreen()).toUpperCase();
-//		if (scol.length() == 1) {
-//			ret += "0"+scol;
-//		} else {
-//			ret += scol;
-//		}
-//		scol = Integer.toHexString(color.getBlue()).toUpperCase();
-//		if (scol.length() == 1) {
-//			ret += "0"+scol;
-//		} else {
-//			ret += scol;
-//		}
-//		return ret;
 	}
+	
 	/**
 	 * get a Color corresponding to a given color code. 
 	 * @param code the hexadecimal color code
@@ -126,6 +110,7 @@ public class Tools {
 	public static Color getColorFromCode(String code) {
 		return Color.decode(code);
 	}
+	
 	/**
 	 * Open a file.
 	 * On UNIX, let's rely on xdg-open and ignore the old mess.
