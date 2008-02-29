@@ -11,6 +11,10 @@ import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
+import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
+import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParametersManager;
+import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassDefinition;
+import fr.univmrs.tagc.GINsim.reg2dyn.PrioritySelectionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -51,7 +55,6 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
  */
 public class GsPetriNetExport extends GsAbstractExport {
 	static Vector v_format = new Vector();
-
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 	static {
 		v_format = new Vector();
@@ -77,29 +80,37 @@ public class GsPetriNetExport extends GsAbstractExport {
      * @param v_node all nodes
      * @param len number of nodes in the original graph
      */
-    protected static void browse(List v_result, OmddNode node, int nodeIndex, List v_node, int len) {
+    protected static void browse(List v_result, OmddNode node, int[][] t_priorities, int nodeIndex, List v_node, int len) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
             td.maxValue = ((GsRegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
             td.nodeIndex = nodeIndex;
             td.t_cst = null;
+            if (t_priorities != null) {
+				td.increasePriority = t_priorities[nodeIndex][0];
+				td.decreasePriority = t_priorities[nodeIndex][1];
+			}
             v_result.add(td);
         } else {
             int[][] t_cst = new int[len][3];
             for (int i=0 ; i<t_cst.length ; i++) {
                 t_cst[i][0] = -1;
             }
-            browse(v_result, t_cst, 0, node, nodeIndex, v_node);
+            browse(v_result, t_cst, 0, node, t_priorities, nodeIndex, v_node);
         }
     }
 
-    private static void browse(List v_result, int[][] t_cst, int level, OmddNode node, int nodeIndex, List v_node) {
+    private static void browse(List v_result, int[][] t_cst, int level, OmddNode node, int[][] t_priorities, int nodeIndex, List v_node) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
             td.maxValue = ((GsRegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
             td.nodeIndex = nodeIndex;
+            if (t_priorities != null) {
+				td.increasePriority = t_priorities[nodeIndex][0];
+				td.decreasePriority = t_priorities[nodeIndex][1];
+			}
             td.t_cst = new int[t_cst.length][3];
             int ti = 0;
             for (int i=0 ; i<t_cst.length ; i++) {
@@ -143,7 +154,7 @@ public class GsPetriNetExport extends GsAbstractExport {
             j--;
             t_cst[level][1] = i;
             t_cst[level][2] = j;
-            browse(v_result, t_cst, level+1, next, nodeIndex, v_node);
+            browse(v_result, t_cst, level+1, next, t_priorities, nodeIndex, v_node);
             i = j;
         }
         // "forget" added constraints
@@ -190,11 +201,37 @@ public class GsPetriNetExport extends GsAbstractExport {
 		int[] t_state = (int[])it_state.next();
 
 		PNConfig specConfig = (PNConfig)config.getSpecificConfig();
+		// apply mutant
 		GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)specConfig.store.getObject(0);
 		if (mutant != null) {
 			mutant.apply(t_tree, (GsRegulatoryGraph)config.getGraph());
 		}
-		
+		// use priority classes
+		PriorityClassDefinition priorities = (PriorityClassDefinition)specConfig.store.getObject(1);
+		int[][] t_priorities = null;
+		if (priorities != null) {
+			t_priorities = new int[len][2];
+			int[][] t_pclass = priorities.getPclass(nodeOrder);
+			for (int i=0 ; i<t_pclass.length ; i++) {
+				int[] t_class = t_pclass[i];
+				int priority = t_class[0];
+				for (int j=2 ; j<t_class.length ; j++) {
+					int index = t_class[j++];
+					System.out.println("priority of "+priority+" for "+index+" ("+t_class[j]+")");
+					switch (t_class[j]) {
+						case 1:
+							t_priorities[index][0] = priority;
+							break;
+						case -1:
+							t_priorities[index][1] = priority;
+							break;
+						default:
+							t_priorities[index][0] = priority;
+							t_priorities[index][1] = priority;
+					}
+				}
+			}
+		}
 		
 		short[][] t_markup = new short[len][2];
         for (int i=0 ; i<len ; i++) {
@@ -211,19 +248,17 @@ public class GsPetriNetExport extends GsAbstractExport {
                 t_markup[i][1] = (short)(vertex.getMaxValue()-t_state[i]);
                 Vector v_transition = new Vector();
                 t_transition[i] = v_transition;
-                GsPetriNetExport.browse(v_transition, node, i, nodeOrder, len);
+                GsPetriNetExport.browse(v_transition, node, t_priorities, i, nodeOrder, len);
 //            }
         }
 		return t_markup;
     }
-
-
 }
 
 class TransitionData {
     /** target value of this transition */
     public int value;
-
+    
     /** index of the concerned node */
     public int nodeIndex;
 
@@ -231,7 +266,12 @@ class TransitionData {
     public int minValue;
     /** maxvalue for the concerned node (same as node's maxvalue unless an autoregulation is present) */
     public int maxValue;
-
+    
+    /** priority when decreasing */
+    public int decreasePriority = 0;
+    /** priority when increasing */
+    public int increasePriority = 0;
+    
     /** constraints of this transition: each row express range constraint for one of the nodes
      * and contains 3 values:
      *  <ul>
@@ -261,31 +301,44 @@ class PNExportConfigPanel extends JPanel {
     	
     	GsGraph graph = config.getGraph();
     	MutantSelectionPanel mutantPanel = null;
+    	PrioritySelectionPanel priorityPanel = null;
     	
     	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
     	initPanel.setParam(specConfig);
     	
     	setLayout(new GridBagLayout());
+    	mutantPanel = new MutantSelectionPanel(dialog, (GsRegulatoryGraph)graph, specConfig.store);
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
-    	c.gridy = 1;
+		c.gridy = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		add(mutantPanel, c);
+
+		GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
+        priorityPanel = new PrioritySelectionPanel(dialog, paramList.pcmanager);
+        priorityPanel.setStore(specConfig.store, 1);
+		c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		add(priorityPanel, c);
+
+		c = new GridBagConstraints();
+    	c.gridx = 0;
+    	c.gridy = 2;
+    	c.gridwidth = 2;
     	c.weightx = 1;
     	c.weighty = 1;
     	c.fill = GridBagConstraints.BOTH;
     	add(initPanel, c);
     	
-    	 mutantPanel = new MutantSelectionPanel(dialog, (GsRegulatoryGraph)graph, specConfig.store);
-	     c = new GridBagConstraints();
-	     c.gridx = 0;
-	     c.gridy = 2;
-	     add(mutantPanel, c);
     }
 }
 
 class PNConfig implements GsInitialStateStore {
 
 	Map m_init = new HashMap();
-	ObjectStore store = new ObjectStore();
+	ObjectStore store = new ObjectStore(2);
 
 	public Map getInitialState() {
 		return m_init;

@@ -16,10 +16,10 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
 
 /**
- * Export a regulatory graph to petri net (INA format).
+ * Export a regulatory graph to Petri net (INA format).
  * The core of the translation is in GsPetriNetExport.
  *
- * <p>used petri net tools:
+ * <p>Tools:
  * <ul>
  *  <li>INA: http://www.informatik.hu-berlin.de/~Estarke/ina.html</li>
  *  <li>PED: http://www-dssz.informatik.tu-cottbus.de/~wwwdssz</li>
@@ -102,27 +102,27 @@ public class GsPetriNetExportINA extends GsAbstractExport {
                         int selfMinSup = -1;
                         int selfMaxSup = td.maxValue;
 
-                        if (selfMinInf != 0 || selfMaxSup != maxvalue) { // autoregulated
+                        if (selfMinInf != 0 || selfMaxSup != maxvalue) { // auto-regulated
                             if (td.value > 0 && td.minValue < td.value) {
-                                v_transition.add("t_"+vertex+"_"+j+"+");
+                                v_transition.add("t_"+vertex+"_"+j+"+"+" \t "+td.increasePriority+" 0\n");
                                 a = v_transition.size();
                                 selfMaxInf = maxvalue - Math.min(td.value-1, selfMaxSup);
                             }
                             if (td.value < maxvalue && td.maxValue > td.value) {
-                                v_transition.add("t_"+vertex+"_"+j+"-");
+                                v_transition.add("t_"+vertex+"_"+j+"-"+" \t "+td.decreasePriority+" 0\n");
                                 b = v_transition.size();
                                 selfMinSup = Math.max(td.value+1, selfMinInf);
                                 selfMaxSup = td.value - selfMaxSup;
                             }
 
-                        } else { // not autoregulated
+                        } else { // not auto-regulated
                             if (td.value > 0) {
-                                v_transition.add("t_"+vertex+"_"+j+"+");
+                                v_transition.add("t_"+vertex+"_"+j+"+"+" \t "+td.increasePriority+" 0\n");
                                 a = v_transition.size();
                                 selfMaxInf = maxvalue - (td.value-1);
                             }
                             if (td.value < maxvalue) {
-                                v_transition.add("t_"+vertex+"_"+j+"-");
+                                v_transition.add("t_"+vertex+"_"+j+"-"+" \t "+td.decreasePriority+" 0\n");
                                 b = v_transition.size();
                                 selfMinSup = td.value+1;
                                 selfMaxSup = 0;
@@ -261,14 +261,16 @@ public class GsPetriNetExportINA extends GsAbstractExport {
             // places data
             out.write("@\nplace nr.  name \t capacity time\n");
             for (int i=0 ; i<t_tree.length ; i++) {
-                out.write(2*i+1+":  "+v_no.get(i)+" \t 0 0\n");
-                out.write(2*i+2+": -"+v_no.get(i)+" \t 0 0\n");
+            	GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_no.get(i);
+            	String s = vertex + " \t "+vertex.getMaxValue()+ " 0\n";
+                out.write(2*i+1+":  "+s);
+                out.write(2*i+2+": -"+s);
             }
 
             // transitions data
             out.write("@\ntrans nr. \t name priority time\n");
             for (int i=0 ; i<v_transition.size() ; i++) {
-                out.write(i+1+": "+v_transition.get(i)+" \t 0 0\n");
+                out.write(i+1+": "+v_transition.get(i));
             }
             out.write("@\n");
 
