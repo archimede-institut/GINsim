@@ -1,17 +1,18 @@
 package fr.univmrs.tagc.common.document;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
+
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 
@@ -22,7 +23,6 @@ public class OOoDocumentWriter extends DocumentWriter {
 	ZipOutputStream zo;
 	OutputStreamWriter writer;
 	
-	Map m_style = new HashMap();
 	Vector v_table = new Vector();
 	OOoTable curTable = null;
 	
@@ -75,25 +75,15 @@ public class OOoDocumentWriter extends DocumentWriter {
 		xmlw.addAttr("xmlns:xsd","http://www.w3.org/2001/XMLSchema");
 		xmlw.addAttr("xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance");
 		xmlw.addAttr("office:version","1.0");
-		
-		Iterator it;
-		
+				
 		xmlw.openTag("office:scripts");
 		xmlw.closeTag();
 		
 		xmlw.openTag("office:font-face-decls");
 		xmlw.closeTag();
 		
-		xmlw.openTag("office:automatic-styles");
-		it = m_style.keySet().iterator();
-		while (it.hasNext()) {
-			DocumentStyle style = (DocumentStyle)m_style.get(it.next());
-			xmlw.openTag("style:style");
-			xmlw.addAttr("style:name", style.name);
-			xmlw.addAttr("style:family", style.familly);
-		}
-		xmlw.closeTag();
-		
+		doWriteStyles();
+
 		xmlw.openTag("office:body");
 		xmlw.openTag("office:text");
 		
@@ -105,6 +95,49 @@ public class OOoDocumentWriter extends DocumentWriter {
 		xmlw.openTag("text:sequence-decls");
 		xmlw.closeTag();
 	}
+	
+	protected void doWriteStyles() throws IOException {
+		if (documentStyles != null) {
+			xmlw.openTag("office:automatic-styles");
+			Iterator styleIterator = documentStyles.getStyleIterator();
+			while (styleIterator.hasNext()) {
+				String style = (String) styleIterator.next();
+				xmlw.openTag("style:style");
+				xmlw.addAttr("style:name", style);
+				xmlw.addAttr("style:family", "paragraph"); //FIXME:
+				
+//				StringBuffer buf = new StringBuffer(style);
+//				buf.append('{');
+//				Map properties = styles.getPropertiesForStyle(style);
+//				Iterator propertiesIterator = styles.getPropertiesIteratorForStyle(style);
+//				while (propertiesIterator.hasNext()) {
+//					String property = (String) propertiesIterator.next();
+//					buf.append(property);
+//					buf.append(':');
+//					buf.append(getStyleValue(property, properties.get(property)));
+//					buf.append(';');
+//				}
+//				buf.append('}');
+//				xmlw.addContent(buf.toString());
+				xmlw.closeTag();	
+			}
+			xmlw.closeTag();	
+		}
+	}
+
+	private String getStyleValue(String property, Object value) {
+		if (property.equals(DocumentStyle.COLOR)) {
+			return "#"+Tools.getColorCode((Color)value);
+		} else if (property.equals(DocumentStyle.FONT_SIZE)) {
+			return value.toString()+"pt";
+		} else if (property.equals(DocumentStyle.HEIGHT)) {
+			return value.toString()+"px";
+		} else if (property.equals(DocumentStyle.WIDTH)) {
+			return value.toString()+"px";
+		}
+		return property.toString();
+	}
+
 	
 	protected void doOpenParagraph(String style) throws IOException {
 		xmlw.openTag("text:p");
@@ -123,11 +156,15 @@ public class OOoDocumentWriter extends DocumentWriter {
 		v_table.add(curTable);
 		xmlw.openTag("table:table");
 		xmlw.addAttr("table:name", name);
-		xmlw.addAttr("table:style-name", style);
-		for (int i=0 ; i<t_colStyle.length ; i++) {
-			xmlw.openTag("table:table-column");
-			xmlw.addAttr("table:style-name", t_colStyle[i]);
-			xmlw.closeTag();
+		if (style != null) {
+			xmlw.addAttr("table:style-name", style);
+		}
+		if (t_colStyle != null) {
+			for (int i=0 ; i<t_colStyle.length ; i++) {
+				xmlw.openTag("table:table-column");
+				xmlw.addAttr("table:style-name", t_colStyle[i]);
+				xmlw.closeTag();
+			}
 		}
 	}
 	
