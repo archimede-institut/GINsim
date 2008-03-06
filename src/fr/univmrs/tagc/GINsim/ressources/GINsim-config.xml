@@ -19,6 +19,10 @@
 			name="CytoscapeExport"
 			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"
 			load="true"/>
+		<plugin
+			name="SnakesExport"
+			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"
+			load="true"/>
 		<plugin name="modelSimplifier" mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier.ModelSimplifierPlugin" load="true" depend=""/>
 		<plugin name="GNAexport" mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport" load="false" depend=""/>
 		<plugin name="connectivity" mainClass="fr.univmrs.tagc.GINsim.connectivity.ConnectivityPlugin" load="true" depend=""/>
