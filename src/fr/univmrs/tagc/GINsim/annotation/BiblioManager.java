@@ -25,7 +25,7 @@ public class BiblioManager extends BasicGraphAssociatedManager {
 	public Object doOpen(InputStream is, GsGraph graph) {
 		BiblioList bibList = (BiblioList)graph.getObject(key, true);
 		BiblioParser parser = new BiblioParser(bibList);
-		parser.startParsing(is);
+		parser.startParsing(is, false);
 		return bibList;
 	}
 }
