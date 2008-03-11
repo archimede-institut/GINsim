@@ -25,7 +25,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
 
 public class BiblioList implements XMLize, OpenHelper {
 
-	List files = new ArrayList();
+	Map files = new TreeMap();
 	Map m_references = new HashMap();
 	Map m_used = new HashMap();
 	Ref curRef = null;
@@ -39,7 +39,7 @@ public class BiblioList implements XMLize, OpenHelper {
 		out.openTag("biblio");
 		
 		out.openTag("files");
-		Iterator it = files.iterator();
+		Iterator it = files.keySet().iterator();
 		while (it.hasNext()) {
 			out.addTag("file", new String[] {"filename", it.next().toString()});
 		}
@@ -67,10 +67,6 @@ public class BiblioList implements XMLize, OpenHelper {
 		if (key == null || curRef == null || curRef.key != null) {
 			return;
 		}
-		if (m_references.containsKey(key)) {
-			System.out.println("key already exists: "+key);
-			return;
-		}
 		curRef.key = key;
 		m_references.put(key, curRef);
 	}
@@ -88,35 +84,8 @@ public class BiblioList implements XMLize, OpenHelper {
 			return;
 		}
 		m_used.put(value, null);
-		if (!m_references.containsKey(value) && graph != null) {
-				GsGraphNotificationAction action = new GsGraphNotificationAction() {
-					String[] t = {Translator.getString("STR_addBib"), Translator.getString("STR_ignore")};
-					public boolean timeout(GsGraph graph, Object data) {
-						return true;
-					}
-				
-					public boolean perform(GsGraph graph, Object data, int index) {
-						switch (index) {
-							case 0:
-								((BiblioList)data).addFile();
-								break;
-							case 1:
-								//((BiblioList)data).ignore();
-								break;
-						}
-						return true;
-					}
-				
-					public String[] getActionName() {
-						return t;
-					}
-				
-				};
-				
-				graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
-						Translator.getString("STR_noref"), 
-					action, this,
-					GsGraphNotificationMessage.NOTIFICATION_WARNING));
+		if (!m_references.containsKey(value)) {
+			addMissingRefWarning(value);
 		}
 	}
 
@@ -136,22 +105,98 @@ public class BiblioList implements XMLize, OpenHelper {
 		}
 		Ref ref = (Ref)m_references.get(value);
 		if (ref == null) {
+			addMissingRefWarning(value);
 			return false;
 		}
 		ref.open();
 		return true;
 	}
 
+	public void addMissingRefWarning(String value) {
+		// just in case: check if one of the source file has been updated
+		Iterator it = files.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry e = (Entry)it.next();
+			Date d = (Date)e.getValue();
+			if (d != null) {
+				File f = new File((String)e.getKey());
+				if (f.lastModified() > d.getTime()) {
+					addFile(f.getAbsolutePath());
+					if (m_references.containsKey(value)) {
+						return;
+					}
+				}
+			}
+		}
+		GsGraphNotificationAction action = new GsGraphNotificationAction() {
+			String[] t = {Translator.getString("STR_addBib"), Translator.getString("STR_ignore")};
+			public boolean timeout(GsGraph graph, Object data) {
+				return true;
+			}
+		
+			public boolean perform(GsGraph graph, Object data, int index) {
+				switch (index) {
+					case 0:
+						((BiblioList)data).addFile();
+						break;
+					case 1:
+						//((BiblioList)data).ignore();
+						break;
+				}
+				return true;
+			}
+		
+			public String[] getActionName() {
+				return t;
+			}
+		
+		};
+		
+		graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
+				Translator.getString("STR_noref"), 
+			action, this,
+			GsGraphNotificationMessage.NOTIFICATION_WARNING));
+	}
+	
 	public String getLink(String proto, String value) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void addFile(String fileName) {
-		files.add(fileName);
+		files.put(fileName, new Date());
 		
-		// FIXME: add a mechanism to support other biblio parsers
-		new ReferencerParser(this, fileName);
+		File f = new File(fileName);
+		if (f.exists()) {
+			// FIXME: add a mechanism to support other biblio parsers
+			new ReferencerParser(this, fileName);
+		} else {
+			GsGraphNotificationAction action = new GsGraphNotificationAction() {
+				String[] t = {Translator.getString("STR_purge")};
+				public boolean timeout(GsGraph graph, Object data) {
+					return true;
+				}
+			
+				public boolean perform(GsGraph graph, Object data, int index) {
+					((BiblioList)((Object[])data)[0]).removeFile(((Object[])data)[1].toString());
+					return true;
+				}
+			
+				public String[] getActionName() {
+					return t;
+				}
+			
+			};
+			
+			graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
+					Translator.getString("STR_noBibFile"), 
+				action, new Object[] {this, fileName},
+				GsGraphNotificationMessage.NOTIFICATION_WARNING));
+		}
+	}
+	
+	public void removeFile(String fileName) {
+		files.remove(fileName);
 	}
 }
 
