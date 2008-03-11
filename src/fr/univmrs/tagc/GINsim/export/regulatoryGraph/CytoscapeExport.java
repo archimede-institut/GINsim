@@ -23,8 +23,14 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.Tools;
 
+/**
+ * CytoscapeExport is a plugin for GINsim to export a regulatory graph into XGMML format.
+ * 
+ * @author BERENGUIER duncan - M1BBSG
+ * @version 1.0
+ * february 2008 - april 2008 
+ */
 public class CytoscapeExport extends GsAbstractExport {
-	
 	int EDGE_INHIBIT = 1;
 	int EDGE_ACTIVATE = 2;
 	int EDGE_UNDEFINED = 3;
@@ -40,8 +46,7 @@ public class CytoscapeExport extends GsAbstractExport {
 		filterDescr = "Cytoscape files";
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType,
-			GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
 		if (graph instanceof GsRegulatoryGraph) {
 			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
 					"STR_cytoscape", "STR_cytoscape_descr", null, this, ACTION_EXPORT, 0) };
@@ -61,6 +66,10 @@ public class CytoscapeExport extends GsAbstractExport {
 		}
 	}
 	
+	/**
+	 * Write the regulatory graph into a file using XMLWriter.
+	 * @throws IOException
+	 */
 	protected synchronized void run() throws IOException {
 		GsRegulatoryGraph graph = (GsRegulatoryGraph) config.getGraph();
 		fout = new FileWriter(config.getFilename());
@@ -79,7 +88,7 @@ public class CytoscapeExport extends GsAbstractExport {
 		
 		out.addTag("att", new String[] {"name", "documentVersion", "value", "1.0"});
 
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//for dc:date
 		out.openTag("att");
 		out.addAttr("name", "networkMetadata");
 		out.openTag("rdf:RDF");
@@ -103,8 +112,10 @@ public class CytoscapeExport extends GsAbstractExport {
 
 		
 		//vertex
-		int current_index_of_node_id = -graph.getGraphManager().getVertexCount();
-		Hashtable gs2cyt_Ids = new Hashtable(graph.getGraphManager().getVertexCount()); //To convert GINsim ID to Cytoscape ID
+		//We need a Hashtable to translate GINSim IDs into cytoscapes IDs.
+		Hashtable gs2cyt_Ids = new Hashtable(graph.getGraphManager().getVertexCount());
+		
+		int current_index_of_node_id = -graph.getGraphManager().getVertexCount(); // The IDs goes from -vertexCount to -1
 		GsVertexAttributesReader vertexAttributeReader = graph.getGraphManager().getVertexAttributesReader();
 		for (Iterator it=graph.getGraphManager().getVertexIterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
