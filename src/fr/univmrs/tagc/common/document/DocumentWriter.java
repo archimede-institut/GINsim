@@ -41,7 +41,7 @@ import java.util.Map;
  * </ul>
  * @see fr.univmrs.tagc.common.document.DocumentStyle;
  * 
- * @author Naldi Aurélien, Berenguier Duncan
+ * @author Naldi Aurelien, Berenguier Duncan
  *
  */
 public abstract class DocumentWriter {
