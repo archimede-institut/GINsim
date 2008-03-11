@@ -1,27 +1,18 @@
-package fr.univmrs.tagc.GINsim.annotation;
+package fr.univmrs.tagc.common;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.common.Tools;
-
-public class HttpHelper implements AnnotationHelper {
+public class HttpHelper implements OpenHelper {
 
 	static Map m_proto = new HashMap();
 	public static final String DOIBASE = "http://dx.doi.org/";
 	
-	public void update(AnnotationLink l, GsGraph graph) {
-		// for later usage...
-		if (l.proto.equals("http") || l.proto.equals("https") || l.proto.equals("ftp")) {
-			l.value = l.proto+l.value;
-			l.proto = null;
-		}
+	public boolean open(String proto, String value) {
+		return Tools.openURI(getLink(proto, value));
 	}
-
-	public void open(AnnotationLink l) {
-		Tools.webBrowse(getLink(l));
+	public void add(String proto, String value) {
 	}
 
 	public static void setup() {
@@ -37,14 +28,10 @@ public class HttpHelper implements AnnotationHelper {
 		HttpHelper h = new HttpHelper();
 		Iterator it = m_proto.keySet().iterator();
 		while (it.hasNext()) {
-			AnnotationLink.addHelperClass((String)it.next(), h);
+			Tools.addHelperClass((String)it.next(), h);
 		}
 	}
-
-	public String getLink(AnnotationLink l) {
-		if (l.proto == null) {
-			return l.value;
-		}
-		return m_proto.get(l.proto)+l.value;
+	public String getLink(String proto, String value) {
+		return m_proto.get(proto)+value;
 	}
 }

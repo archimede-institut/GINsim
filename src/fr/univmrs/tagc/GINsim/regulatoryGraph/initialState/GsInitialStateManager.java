@@ -71,8 +71,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
     }
 
 	public Object doCreate(GsGraph graph) {
-		GsInitialStateList l = new GsInitialStateList(graph);
-		return l;
+		return new GsInitialStateList(graph);
 	}
 }
 

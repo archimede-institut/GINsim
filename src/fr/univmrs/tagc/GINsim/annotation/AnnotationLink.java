@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.common.HttpHelper;
+import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;
 
 public class AnnotationLink {
@@ -11,13 +13,12 @@ public class AnnotationLink {
 	protected static Map m_helper = new HashMap();
 	static {
 		HttpHelper.setup();
-		ReferencerHelper.setup();
 	}
-	static void addHelperClass(String key, AnnotationHelper helper) {
-		m_helper.put(key, helper);
+	static void addHelperClass(String key, String objectKey) {
+		m_helper.put(key, objectKey);
 	}
 	
-	AnnotationHelper helper = null;
+	OpenHelper helper = null;
 	String proto;
 	String value;
 
@@ -34,19 +35,21 @@ public class AnnotationLink {
 		}
 		proto = ts[0].trim();
 		value = ts[1].trim();
-		helper = (AnnotationHelper)m_helper.get(proto);
-		if (helper != null) {
-			helper.update(this, graph);
+		String okey = (String)m_helper.get(proto);
+		if (okey != null) {
+			helper = (OpenHelper)graph.getObject(okey, true);
+			if (helper != null) {
+				helper.add(proto, value);
+			}
 		}
 	}
-	
 	public void open() {
 		if (helper != null) {
-			helper.open(this);
+			helper.open(proto, value);
 			return;
 		}
-		// no helper, assume web page!
-		Tools.webBrowse(proto+value);
+		// no helper, use a generic open call
+		Tools.open(proto, value);
 	}
 	
 	public String toString() {

@@ -3,6 +3,8 @@ package fr.univmrs.tagc.common;
 import java.awt.Color;
 import java.io.*;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -11,7 +13,6 @@ import javax.swing.JOptionPane;
 
 import org.jgraph.util.BrowserLauncher;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
@@ -22,6 +23,27 @@ public class Tools {
 
 	public static final Integer IZ = new Integer(0);
 
+	public static final String OPEN_COMMAND;
+	
+	protected static Map m_helper = new HashMap();
+	
+	public static void addHelperClass(String key, OpenHelper helper) {
+		m_helper.put(key, helper);
+	}
+
+	
+	static {
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.startsWith("windows")) {
+			OPEN_COMMAND = "open";
+		} else if (os.startsWith("windows")) {
+			OPEN_COMMAND = "open";
+		} else if (os.startsWith("linux")) {
+			OPEN_COMMAND = "xdg-open";
+		} else {
+			OPEN_COMMAND = null;
+		}
+	}
 	
 	/**
 	 * Sort in ascending order the specified arrays T and N in the same time
@@ -92,58 +114,56 @@ public class Tools {
 	/**
 	 * get an hexa color code for a given Color.
 	 * @param color
-	 * @return an haxadecimal color code (like 00FF00 for green)
+	 * @return an hexadecimal color code (like 00FF00 for green)
 	 */
 	public static String getColorCode(Color color) {
-		return Integer.toHexString((color.getRGB() & 0xffffff) | 0x1000000).substring(1);
-//		String scol;
-//		String ret = "";
-//		scol = Integer.toHexString(color.getRed()).toUpperCase();
-//		if (scol.length() == 1) {
-//			ret += "0"+scol;
-//		} else {
-//			ret += scol;
-//		}
-//		scol = Integer.toHexString(color.getGreen()).toUpperCase();
-//		if (scol.length() == 1) {
-//			ret += "0"+scol;
-//		} else {
-//			ret += scol;
-//		}
-//		scol = Integer.toHexString(color.getBlue()).toUpperCase();
-//		if (scol.length() == 1) {
-//			ret += "0"+scol;
-//		} else {
-//			ret += scol;
-//		}
-//		return ret;
+		return Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
 	}
 	/**
 	 * get a Color corresponding to a given color code. 
 	 * @param code the hexadecimal color code
-	 * @return the correponding Color
+	 * @return the corresponding Color
 	 */
 	public static Color getColorFromCode(String code) {
 		return Color.decode(code);
 	}
 	/**
 	 * Open a file.
-	 * On UNIX, let's rely on xdg-open and ignore the old mess.
-	 * TODO: make it also work on mac/win
 	 * 
 	 * @param fileName
 	 * @return true if it managed
 	 */
 	public static boolean openFile(String fileName) {
+		File f = new File(fileName);
+		if (!f.exists()) {
+			return false;
+		}
+		return openURI(fileName);
+	}
+
+	public static boolean openURI(String uri) {
+		if (OPEN_COMMAND == null) {
+			return false;
+		}
 		try {
-			Runtime.getRuntime().exec("xdg-open "+fileName);
+			Process process = Runtime.getRuntime().exec(new String[] {OPEN_COMMAND, uri});
+			if (process.exitValue() != 0) {
+				System.out.println("execution failed");
+				return false;
+			}
 			return true;
 		} catch (Exception e1) {
 		}
-		System.out.println("how to open a file ??");
 		return false;
 	}
-
+	
+	public static boolean open(Object protocol, Object value) {
+		OpenHelper helper = (OpenHelper)m_helper.get(protocol);
+		if (helper != null) {
+			return helper.open(protocol.toString(), value.toString());
+		}
+		return openURI(protocol+":"+value);
+	}
 	/**
 	 * run a web browser to visit "url"
 	 * @param url the url to visit
@@ -152,6 +172,7 @@ public class Tools {
 		try {
 			try {
 				Runtime.getRuntime().exec("xdg-open "+url);
+				System.getProperty("os.name");
 			} catch (Exception e1) {
 				BrowserLauncher.openURL(url);
 			}
@@ -295,7 +316,7 @@ public class Tools {
     }
 
 	public static InputStream getStreamForPath(String path) throws IOException, FileNotFoundException {
-        URL url = GsEnv.class.getResource(path);
+        URL url = Tools.class.getResource(path);
         if (url != null) {
         	return url.openStream();
         }

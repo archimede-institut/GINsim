@@ -110,7 +110,7 @@ public class Annotation implements XMLize
 		for (Iterator it = linkList.iterator() ; it.hasNext() ; ) {
 			AnnotationLink lnk = (AnnotationLink)it.next();
 			if (lnk.helper != null) {
-				String s = lnk.helper.getLink(lnk);
+				String s = lnk.helper.getLink(lnk.proto, lnk.value);
 				if (s != null) {
 					if (!hasLink) {
 						hasLink = true;
