@@ -1,7 +1,9 @@
 package fr.univmrs.tagc.common;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.io.*;
+import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,14 +36,24 @@ public class Tools {
 	
 	static {
 		String os = System.getProperty("os.name").toLowerCase();
-		if (os.startsWith("windows")) {
-			OPEN_COMMAND = "open";
-		} else if (os.startsWith("windows")) {
-			OPEN_COMMAND = "open";
-		} else if (os.startsWith("linux")) {
-			OPEN_COMMAND = "xdg-open";
+		boolean supported = false;
+		try {
+			supported = Desktop.isDesktopSupported();
+		} catch (Exception e) {
+		}
+		if (supported) {
+			OPEN_COMMAND = "";
 		} else {
-			OPEN_COMMAND = null;
+			if (os.startsWith("windows")) {
+				OPEN_COMMAND = "open";
+			} else if (os.startsWith("mac")) {
+				OPEN_COMMAND = "open";
+			} else if (os.startsWith("linux")) {
+				OPEN_COMMAND = "xdg-open";
+			} else {
+				System.out.println("no way to open !!");
+				OPEN_COMMAND = null;
+			}
 		}
 	}
 	
@@ -121,7 +133,7 @@ public class Tools {
 	 * 
 	 */
 	public static String getColorCode(Color color) {
-		return Integer.toHexString((color.getRGB() & 0xffffff) | 0x1000000).substring(1);
+		return Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
 	}
 	
 	/**
@@ -151,6 +163,15 @@ public class Tools {
 		if (OPEN_COMMAND == null) {
 			return false;
 		}
+		if (OPEN_COMMAND == "") {
+			try {
+				Desktop.getDesktop().browse(new URI(uri));
+				return true;
+			} catch (Exception e) {
+				System.out.println("open failed");
+				return false;
+			}
+		}
 		try {
 			Process process = Runtime.getRuntime().exec(new String[] {OPEN_COMMAND, uri});
 			if (process.exitValue() != 0) {
@@ -160,6 +181,7 @@ public class Tools {
 			return true;
 		} catch (Exception e1) {
 		}
+		System.out.println("execution failed");
 		return false;
 	}
 	
