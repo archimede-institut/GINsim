@@ -295,7 +295,7 @@ public class GsLogicalParameter implements XMLize {
         }
         String str = "";
         for (int i = 0; i < edge_index.size(); i++) {
-            str += getEdge(i).getShortInfo("#") + " ";
+            str += getEdge(i).getShortInfo(":") + " ";
         }
         return str;
     }
