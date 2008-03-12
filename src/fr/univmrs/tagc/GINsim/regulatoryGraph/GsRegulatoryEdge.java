@@ -36,7 +36,6 @@ public class GsRegulatoryEdge {
 	public String toString() {
 		return getShortDetail(" ");
 	}
-	
 	public String getShortInfo(String separator) {
 		return me.getSource()+getStringThreshold(separator);
 	}
@@ -45,6 +44,12 @@ public class GsRegulatoryEdge {
 	}
 	public String getShortDetail(String separator) {
 		return getShortInfo(":")+separator+getRangeAndSign();
+	}
+	public String getShortDetail() {
+		return getShortInfo() + " " + getRangeAndSign();
+	}
+	public String getShortInfo() {
+		return me.getSource() + ":" + threshold;
 	}
 	public String getLongDetail(String separator) {
 		return getLongInfo(separator)+separator+getRangeAndSign();

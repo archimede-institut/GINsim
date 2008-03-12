@@ -191,16 +191,14 @@ public class GsParamTree {
     String s = "", tmp;
     if (v.size() > 0) {
       tmp = s = (String)v.firstElement();
-      if (tmp.indexOf('&') >= 0) {
-		s = "(" + tmp + ")";
-	}
+      if (tmp.indexOf('&') >= 0)
+		    s = "(" + tmp + ")";
       for (int i = 1; i < v.size(); i++) {
         tmp = (String)v.elementAt(i);
-        if (tmp.indexOf('&') >= 0) {
-			s += " | (" + tmp + ")";
-		} else {
-			s += "| " + tmp;
-		}
+        if (tmp.indexOf('&') >= 0)
+			    s += " | (" + tmp + ")";
+		    else
+			    s += "| " + tmp;
       }
     }
     return s;

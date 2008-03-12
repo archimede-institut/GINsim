@@ -75,9 +75,8 @@ public class GsFunctionEditorControler {
         break;
       case COMPACT :
         if (((Boolean)p).booleanValue()) {
-          if (initString.equals("")) {
-			initString = editorModel.getStringValue();
-		}
+          if (initString.equals(""))
+			      initString = editorModel.getStringValue();
           functionPanel.validateText(editorModel.getStringValue());
           Vector params = functionPanel.getTreeExpression().getChilds();
           GsFunctionsCreator c = null;
@@ -96,9 +95,8 @@ public class GsFunctionEditorControler {
           v = (Vector)h.elements().nextElement();
           Enumeration enu = v.elements();
           String s = (String)enu.nextElement();
-          while (enu.hasMoreElements()) {
-			s = s + " | (" + (String) enu.nextElement() + ")";
-		}
+          while (enu.hasMoreElements())
+			      s = s + " | (" + (String) enu.nextElement() + ")";
           functionPanel.setText(s);
           editorModel.update();
           functionPanel.getTreeExpression().setSelection(editorModel.getCurrentPosition(),
@@ -114,9 +112,8 @@ public class GsFunctionEditorControler {
         break;
       case DNF :
         if (((Boolean)p).booleanValue()) {
-          if (initString.equals("")) {
-			initString = editorModel.getStringValue();
-		}
+          if (initString.equals(""))
+			      initString = editorModel.getStringValue();
           functionPanel.validateText(editorModel.getStringValue());
           Vector params = functionPanel.getTreeExpression().getChilds();
           GsFunctionsCreator c = null;

@@ -21,7 +21,7 @@ public class GsBooleanGene extends TBooleanOperand {
   public void setLogicalFunctionList(GsLogicalFunctionList list) {
     il = list;
   }
-  public String toString() {
+  public String toString(boolean par) {
     return getVal();
   }
   public String getSaveVal(){
@@ -32,7 +32,7 @@ public class GsBooleanGene extends TBooleanOperand {
 		  return "nil";
 	  }
 	  if (edge != null) {
-		  return edge.getShortInfo("#");
+		  return edge.getShortInfo();
 	  }
 	  return me.getSource().getId();
   }

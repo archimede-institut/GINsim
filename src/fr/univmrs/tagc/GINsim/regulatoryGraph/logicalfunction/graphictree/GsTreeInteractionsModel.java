@@ -222,7 +222,7 @@ public class GsTreeInteractionsModel implements TreeModel {
       addExpression(val, currentVertex, tbp);
       fireTreeStructureChanged(root);
       if (tree != null) {
-		tree.expandPath(getPath(val, tbp.getRoot().toString()));
+		tree.expandPath(getPath(val, tbp.getRoot().toString(false)));
 	}
       graph.getVertexEditor().setEditedObject(currentVertex);
     }
@@ -249,7 +249,7 @@ public class GsTreeInteractionsModel implements TreeModel {
   }
   private void setExpression(short val, GsTreeExpression exp) {
     if (exp.getRoot() != null) {
-		updateExpression(val, exp, exp.getRoot().toString());
+		updateExpression(val, exp, exp.getRoot().toString(false));
 	}
   }
 

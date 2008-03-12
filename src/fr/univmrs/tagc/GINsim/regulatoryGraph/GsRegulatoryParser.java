@@ -17,6 +17,7 @@ import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
@@ -106,10 +107,10 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     public void parse(File file, Map map, GsGraph graph) {
     	this.graph = (GsRegulatoryGraph) graph;
     	this.map = map;
-		vareader = graph.getGraphManager().getVertexAttributesReader();
-		ereader = graph.getGraphManager().getEdgeAttributesReader();
-		startParsing(file);
-    }
+		  vareader = graph.getGraphManager().getVertexAttributesReader();
+		  ereader = graph.getGraphManager().getEdgeAttributesReader();
+		  startParsing(file);
+   	}
 
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
@@ -184,7 +185,6 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 					placeInteractions();
 					placeNodeOrder();
                     graph.setSaveMode(vslevel);
-
                     if (!values.isEmpty()) {
                     	parseBooleanFunctions();
                     }
@@ -456,11 +456,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
               value = (String)enu_values.nextElement();
               for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
                 exp = (String)enu_exp.nextElement();
-                if (!exp.startsWith("PARAM")) {
-                  addExpression(Short.parseShort(value), vertex, exp);
-                } else {
-                  addParam(Short.parseShort(value), vertex, exp.split("\t")[1]);
-                }
+                addExpression(Short.parseShort(value), vertex, exp);
               }
             }
             vertex.getInteractionsModel().parseFunctions();
@@ -476,12 +472,17 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     }
 
     public void addExpression(short val, GsRegulatoryVertex vertex, String exp) {
-      try {
+    	try {
         GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
         GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
         if (!tbp.compile(exp, graph, vertex)) {
-          graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
-            GsGraphNotificationMessage.NOTIFICATION_WARNING));
+        	InvalidFunctionNotificationAction a = new InvalidFunctionNotificationAction();
+        	Vector o = new Vector();
+        	o.addElement(new Short(val));
+        	o.addElement(vertex);
+        	o.addElement(exp);
+          graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "Invalid formula : " + exp,
+            a, o, GsGraphNotificationMessage.NOTIFICATION_WARNING));
         }
         else {
           interactionList.addExpression(val, vertex, tbp);
@@ -547,6 +548,44 @@ class InteractionInconsistencyAction implements GsGraphNotificationAction {
 
 	public boolean timeout(GsGraph graph, Object data) {
 		return true;
+	}
+}
+
+class InvalidFunctionNotificationAction implements GsGraphNotificationAction {
+	public InvalidFunctionNotificationAction() {
+		super();
+	}
+	public boolean timeout(GsGraph graph, Object data) {
+		return false;
+	}
+
+	public boolean perform(GsGraph graph, Object data, int index) {
+		Vector v = (Vector)data;
+		short value = ((Short)v.elementAt(0)).shortValue();
+		GsRegulatoryVertex vertex = (GsRegulatoryVertex)v.elementAt(1);
+		String exp = (String)v.elementAt(2);
+		boolean ok = true;
+		switch (index) {
+		  case 0 :
+		  	try {
+		  	  GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
+		  	  GsTreeExpression texp = interactionList.addEmptyExpression(value, vertex);
+      	  texp.setText(exp);
+          texp.setProperty("invalid", new Boolean("true"));
+        }
+		  	catch (Exception ex) {
+		  		ex.printStackTrace();
+		  		ok = false;
+		  	}
+			  break;
+		  case 1 :
+		  	break;
+		}
+		return ok;
+	}
+	public String[] getActionName() {
+		String[] t = {"Keep function", "Discard function"};
+		return t;
 	}
 }
 

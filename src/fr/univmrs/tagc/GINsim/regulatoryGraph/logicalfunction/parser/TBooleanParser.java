@@ -123,6 +123,7 @@ public abstract class TBooleanParser {
     return allData;
   }
   public TBooleanData eval() throws Exception {
+  	if (root == null) return null;
     return root.getValue();
   }
 }

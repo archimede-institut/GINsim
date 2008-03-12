@@ -40,12 +40,13 @@ public class GsLogicalFunctionPanel extends GsParameterPanel
     edgeList = new GsIncomingEdgeListModel();
   }
   public void setEditedObject(Object obj) {
-    if (currentVertex != null) {
+  	if (currentVertex != null) {
       treePanel.setEditedObject(obj);
     }
     if (obj != null && obj instanceof GsRegulatoryVertex) {
       currentVertex = (GsRegulatoryVertex)obj;
       edgeList.setEdge(mainFrame.getGraph().getGraphManager().getIncomingEdges(currentVertex));
+      treePanel.setEditedObject(obj);
     }
   }
 
