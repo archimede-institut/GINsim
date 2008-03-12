@@ -45,7 +45,7 @@ public class RegulatoryEdgeEditPanel extends JPanel
         c.gridx = 3;
         c.anchor = GridBagConstraints.EAST;
         add(signcombo, c);
-        signcombo.addActionListener(this);
+        signcombo.addActionListener(this); 
 	}
 	public RegulatoryEdgeEditPanel(GsRegulatoryGraph graph) {
 		this();

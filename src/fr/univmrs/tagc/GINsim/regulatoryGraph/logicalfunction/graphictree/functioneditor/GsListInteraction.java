@@ -18,7 +18,7 @@ public class GsListInteraction {
 	}
 	public String toString() {
 		if (index > 0) {
-			return grme.getEdge(index - 1).getShortDetail(" ");
+			return grme.getEdge(index - 1).getShortDetail();
 		} else if (index == -1) {
 			return "!" + grme.getSource().getId();
 		}
@@ -27,7 +27,7 @@ public class GsListInteraction {
 	public String stringValue() {
 		int i = grme.getId(index - 1).lastIndexOf('_');
 		if (index > 0) {
-			return grme.getEdge(index - 1).getShortInfo("#");
+			return grme.getEdge(index - 1).getShortInfo();
 		} else if (index == -1) {
 			return "!" + grme.getId(index - 1).substring(0, i);
 		}

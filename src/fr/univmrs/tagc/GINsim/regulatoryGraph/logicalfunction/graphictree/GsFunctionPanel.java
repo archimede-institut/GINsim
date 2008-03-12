@@ -124,10 +124,9 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     TreePath sel_path = tree.getEditingPath();
     tree.stopEditing();
     ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged(treeElement);
-    while (exp_path.hasMoreElements()) {
-		tree.expandPath((TreePath)exp_path.nextElement());
-	}
-    tree.setSelectionPath(sel_path);
+    while (exp_path.hasMoreElements())
+		  tree.expandPath((TreePath)exp_path.nextElement());
+	  tree.setSelectionPath(sel_path);
     GsFunctionEditor functionEditor;
     GsTreeInteractionsModel model = (GsTreeInteractionsModel)tree.getModel();
     functionEditor = new GsFunctionEditor(model, this);
@@ -189,7 +188,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   }
 
   public String getCompactString() {
-    return ((GsTreeElement)((GsTreeInteractionsModel)tree.getModel()).getRoot()).toString();
+    return ((GsTreeExpression)((GsTreeInteractionsModel)tree.getModel()).getRoot()).toString();
   }
 
   public void validateText(String s) {
@@ -202,23 +201,24 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     String oldText = s;
     ok = interactionsModel.updateExpression((short)((GsTreeValue)treeElement.getParent()).getValue(),
                                             (GsTreeExpression)treeElement, s);
-    if (((GsTreeExpression)treeElement).getEditorModel() != null) {
-		((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
-		      ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
-	}
-    treeElement.getParent().setProperty("null function", new Boolean(treeElement.toString().equals("")));
-    ((GsTreeExpression)treeElement).setText(oldText);
+    if (((GsTreeExpression)treeElement).getEditorModel() != null)
+		  ((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
+		    ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
+	  treeElement.getParent().setProperty("null function", new Boolean(treeElement.toString().equals("")));
+	  
+    if (ok) 
+    	((GsTreeExpression)treeElement).setText(((GsTreeExpression)treeElement).getRoot().toString(false));
+    else
+    	((GsTreeExpression)treeElement).setText(oldText);
     treeElement.setProperty("invalid", new Boolean(!ok));
-    if (!ok && !oldText.equals("")) {
-		tree.startEditingAtPath(sel_path);
-	}
-    interactionsModel.setRootInfos();
+    if (!ok && !oldText.equals(""))
+		  tree.startEditingAtPath(sel_path);
+	  interactionsModel.setRootInfos();
     interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
     interactionsModel.refreshVertex();
-    while (exp_path.hasMoreElements()) {
-		tree.expandPath((TreePath)exp_path.nextElement());
-	}
-    tree.setSelectionPath(sel_path);
+    while (exp_path.hasMoreElements())
+		  tree.expandPath((TreePath)exp_path.nextElement());
+	  tree.setSelectionPath(sel_path);
   }
   public void keyPressed(KeyEvent e) {
   }

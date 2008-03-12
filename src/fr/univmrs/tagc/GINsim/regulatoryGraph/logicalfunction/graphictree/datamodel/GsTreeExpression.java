@@ -32,9 +32,20 @@ public class GsTreeExpression extends GsTreeElement {
     normal = true;
     if (root != null) {
       setRoot(root);
-      userExpression = root.toString();
+      userExpression = root.toString(false);
     }
     property.put("invalid", new Boolean(false));
+    property.put("autoedit", new Boolean(false));
+    functionsCreator = fc;
+    selection = null;
+  }
+  public GsTreeExpression(GsTreeElement parent, String s, GsFunctionsCreator fc) {
+  	super(parent);
+  	compactExpression = dnfExpression = "";
+  	userExpression = s;
+    showCompactExpression = showDNFExpression = false;
+    normal = true;
+    property.put("invalid", new Boolean(true));
     property.put("autoedit", new Boolean(false));
     functionsCreator = fc;
     selection = null;
@@ -54,12 +65,12 @@ public class GsTreeExpression extends GsTreeElement {
   }
   public void setRoot(TBooleanTreeNode root) {
     this.root = root;
-    compactExpression = root.toString();
+    compactExpression = root.toString(false);
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge) {
     root = remove(multiEdge.getSource().getId(), root);
     if (root != null) {
-      compactExpression = root.toString();
+      compactExpression = root.toString(false);
       //dnfExpression = userExpression = root.toDNF();
     }
     else {
@@ -68,10 +79,10 @@ public class GsTreeExpression extends GsTreeElement {
     return root;
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge, int index) {
-    root = remove(multiEdge.getSource().getId() + "#" + (index + 1), root);
+    root = remove(multiEdge.getSource().getId() + ":" + (index + 1), root);
     if (root != null) {
       decIndexes(root, multiEdge, index);
-      userExpression = compactExpression = root.toString();
+      userExpression = compactExpression = root.toString(false);
       //dnfExpression = userExpression = root.toDNF();
     }
     return root;
@@ -82,7 +93,7 @@ public class GsTreeExpression extends GsTreeElement {
 
     try {
       if (node.isLeaf()) {
-        i = ((GsBooleanGene)node).getVal().lastIndexOf("#");
+        i = ((GsBooleanGene)node).getVal().lastIndexOf(":");
         oldId = ((GsBooleanGene)node).getVal();
         oldIndex = -1;
         if (i >= 0) {
@@ -91,7 +102,7 @@ public class GsTreeExpression extends GsTreeElement {
         }
         if (oldIndex > index + 1) {
           oldIndex--;
-          ((GsBooleanGene)node).setValue(oldId + "#" + oldIndex);
+          ((GsBooleanGene)node).setValue(oldId + ":" + oldIndex);
         }
       }
       else {
@@ -111,7 +122,7 @@ public class GsTreeExpression extends GsTreeElement {
 
     try {
       if (node.isLeaf()) {
-        i = ((GsBooleanGene)node).getVal().lastIndexOf("#");
+        i = ((GsBooleanGene)node).getVal().lastIndexOf(":");
         oldId = ((GsBooleanGene)node).getVal();
         oldIndex = -1;
         if (i >= 0) {
@@ -120,7 +131,7 @@ public class GsTreeExpression extends GsTreeElement {
         }
         if (oldIndex > index + 1) {
           oldIndex++;
-          ((GsBooleanGene)node).setValue(oldId + "#" + oldIndex);
+          ((GsBooleanGene)node).setValue(oldId + ":" + oldIndex);
         }
       }
       else {
@@ -141,8 +152,8 @@ public class GsTreeExpression extends GsTreeElement {
     try {
       if (node.isLeaf()) {
         testString = ((GsBooleanGene)node).getVal();
-        if (testString.indexOf("#") == -1) {
-          testString += "#";
+        if (testString.indexOf(":") == -1) {
+          testString += ":";
         }
         if (!id.startsWith(testString)) {
           return node;

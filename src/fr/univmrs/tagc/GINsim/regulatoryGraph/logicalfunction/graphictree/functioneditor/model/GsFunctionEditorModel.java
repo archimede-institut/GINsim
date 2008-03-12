@@ -29,10 +29,10 @@ public class GsFunctionEditorModel {
 		for (int i = 0; i < ed.size(); i++) {
 			o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)ed.get(i)).getUserObject();
 			interactions.addElement(new GsListInteraction(o, -1));
-			if (o.getEdgeCount() > 1) {
-				interactions.addElement(new GsListInteraction(o, 0));
-			}
-			for (int j = 1; j <= o.getEdgeCount(); j++) {
+			//if (o.getEdgeCount() > 1) {
+			//	interactions.addElement(new GsListInteraction(o, 0));
+			//}
+			for (int j = 0; j <= o.getEdgeCount(); j++) {
 				interactions.addElement(new GsListInteraction(o, j));
 			}
 		}

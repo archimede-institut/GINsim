@@ -137,11 +137,11 @@ public class GsMain {
 class ReadConfig extends XMLHelper {
 
 	GsClassLoader cloader;
-	
+
 	protected ReadConfig(GsClassLoader cloader) {
 		this.cloader = cloader;
 	}
-	
+
 	public String getFallBackDTD() {
 		return null;
 	}
@@ -179,7 +179,7 @@ class ReadConfig extends XMLHelper {
 		} else if ("messagesPath".equals(qName)) {
 			Translator.pushBundle(attributes.getValue("path"));
 		} else if ("doap".equals(qName)) {
-			AboutDialog.setDOAPFile(attributes.getValue("path"));
+      AboutDialog.setDOAPFile(attributes.getValue("path"));
 		}
 	}
 }

@@ -10,8 +10,20 @@ public abstract class TBinaryOperator extends TBooleanOperator {
     leftArg = leftNode;
     rightArg = rightNode;
   }
-  public String toString() {
-    return "(" + leftArg.toString() + " " + getSymbol() + " " + rightArg.toString() + ")";
+  public String toString(boolean par) {
+  	boolean leftPar = true;
+  	if (leftArg.isLeaf()) 
+  		leftPar = false;
+  	else if (((TBooleanOperator)leftArg).getSymbol().equals(getSymbol()))
+  		leftPar = false;
+  	boolean rightPar = true;
+  	if (rightArg.isLeaf()) 
+  		rightPar = false;
+  	else if (((TBooleanOperator)rightArg).getSymbol().equals(getSymbol()))
+  		rightPar = false;
+  	String s = leftArg.toString(leftPar) + " " + getSymbol() + " " + rightArg.toString(rightPar);
+  	if (par) s = "(" + s + ")";
+    return s;
   }
   public int getNbArgs() {
     return 2;

@@ -75,17 +75,17 @@ public class GsParamTreeNode implements GsParamTreeElement {
 
     sons[0].makeFunctions(h, f + and + "!" + toString(), dv, pattern);
     for (int i = 1; i < sons.length; i++)
-      sons[i].makeFunctions(h, f + and + toString() + "#" + i, dv, pattern);
+      sons[i].makeFunctions(h, f + and + toString() + ":" + edge.getMin(i), dv, pattern);
   }
   public void makeDNF(Vector v, String s, int value) {
     String and = "";
     if (!s.equals("")) and = " & ";
     sons[0].makeDNF(v, s + and + "!" + toString(), value);
     for (int i = 1; i < sons.length; i++)
-      if (sons.length > 1)
-        sons[i].makeDNF(v, s + and + toString() + "#" + i, value);
-      else
-        sons[i].makeDNF(v, s + and + toString(), value);
+      //if (sons.length > 1)
+        sons[i].makeDNF(v, s + and + toString() + ":" + edge.getMin(i), value);
+      //else
+      //  sons[i].makeDNF(v, s + and + toString(), value);
   }
   public int hashCode() {
     return vertex.getId().hashCode();

@@ -86,7 +86,7 @@ public class GsFunctionsCreator {
       key = enu.nextElement();
       Enumeration enu2 = ((Vector)functions.get(key)).elements();
       if (key instanceof GsParamTreeLeafPattern) {
-        s = enu2.nextElement().toString();
+      	s = enu2.nextElement().toString();
         if (s.split(" ").length > 1) {
           s = "(" + s + ")";
         }

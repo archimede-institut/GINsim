@@ -24,7 +24,7 @@ public class GsTreeParam extends GsTreeElement {
     if (edgeIndexes != null) {
       for (Iterator it = edgeIndexes.iterator(); it.hasNext(); ) {
         ei = (GsRegulatoryEdge)it.next();
-        s = s + " " + ei.me.getEdge(ei.index).getShortInfo("#");
+        s = s + " " + ei.me.getEdge(ei.index).getShortInfo();
       }
     }
     return s.trim();
