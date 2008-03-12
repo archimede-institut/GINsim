@@ -6,7 +6,7 @@
 		<plugin name="layoutJGraph" mainClass="fr.univmrs.tagc.GINsim.jgraph.layout.GsJgraphLayout" load="false"/>
 		<plugin name="circuit" mainClass="fr.univmrs.tagc.GINsim.circuit.GsCircuitPlugin" load="true" depend=""/>
 		<plugin name="modelChecker" mainClass="fr.univmrs.tagc.GINsim.modelChecker.GsModelCheckerPlugin" load="true" depend=""/>
-		<plugin name="stableStates" mainClass="fr.univmrs.tagc.GINsim.stableStates.GsStableStatesPlugin" load="true"/>
+		<plugin name="stableStates" mainClass="fr.univmrs.tagc.GINsim.stableStates.GsStableStatesPlugin" load="false"/>
 		<plugin name="analyseStateTransition" mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicAnalyserPlugin" load="true"/>
 		<plugin name="export" mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin" load="true" depend=""/>
 		<plugin name="PNexport" mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsPetriNetExport" load="true" depend=""/>

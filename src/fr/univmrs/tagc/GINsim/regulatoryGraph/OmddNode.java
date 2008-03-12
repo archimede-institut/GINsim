@@ -15,7 +15,7 @@ import java.util.Vector;
 public class OmddNode {
 
     /** level of this node (only for non-terminal nodes) */
-    public int level;
+    public int level = -1;
     /** leaves reacheable from this one (only for non-terminal nodes, null otherwise) */
     public OmddNode[] next;
     /** value of the terminal node */
@@ -170,7 +170,7 @@ public class OmddNode {
                 case CONSTRAINT:
                     if (other.next == null) {
                         // just check that the constraint is verified
-                        if (other.min == -1 || (value >= other.min && value <= other.max)) {
+                        if (other.min == -1 || value >= other.min && value <= other.max) {
                             return this;
                         }
                         if (value <= other.min) {
@@ -511,7 +511,7 @@ public class OmddNode {
                 return false;
             }
             if (node.next == null) {
-                return (node.value == 0 || node.value  == value);
+                return node.value == 0 || node.value  == value;
             }
             for (int i=0 ; i<node.next.length ; i++) {
                 if (node.next[i].conflict(this)) {

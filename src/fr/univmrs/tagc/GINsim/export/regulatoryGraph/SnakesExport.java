@@ -19,7 +19,7 @@ import fr.univmrs.tagc.common.GsException;
 
 
 /**
- * Export the logicials functions from regulatory graphs to python for use with the Snakes python library.
+ * Export the logical functions from regulatory graphs to python for use with the Snakes python library.
  * @see http://lacl.univ-paris12.fr/pommereau/soft/snakes/
  * 
  * @author Berenguier Duncan
@@ -67,8 +67,8 @@ public class SnakesExport extends GsAbstractExport  {
 		
 		out.write("class "+graph.getGraphName()+" (Module):\n");
 		for (int node_i = 0; node_i < nodes.length; node_i++) {
-			//gererate the argument list from incoming edges : a, b, _a, _b
-			List incomingEdges = graph.getGraphManager().getIncomingEdges((GsRegulatoryVertex)nodeOrder.get(node_i));
+			//generate the argument list from incoming edges : a, b, _a, _b
+			List incomingEdges = graph.getGraphManager().getIncomingEdges(nodeOrder.get(node_i));
 			StringBuffer s = new StringBuffer();
 			Iterator it = incomingEdges.iterator();
 			while (it.hasNext()) {
@@ -110,10 +110,9 @@ public class SnakesExport extends GsAbstractExport  {
 			out.write(indent+"if "+getVertexNameForLevel(parent.level, nodeOrder)+" == "+parent_value+":\n");
 			out.write(indent+"\treturn "+current.value+"\n");
 			return;
-		} else {
-			if (parent != null) {
-				out.write(indent+"if "+getVertexNameForLevel(parent.level, nodeOrder)+" == "+parent_value+":\n");
-			}
+		}
+		if (parent != null) {
+			out.write(indent+"if "+getVertexNameForLevel(parent.level, nodeOrder)+" == "+parent_value+":\n");
 		}
 		for (int node_i = 0; node_i < current.next.length; node_i++) {
 			exploreNode(current.next[node_i], current, node_i, indent+"\t", nodeOrder);

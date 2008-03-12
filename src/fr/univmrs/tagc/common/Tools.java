@@ -49,7 +49,6 @@ public class Tools {
 				m = cl_desktop.getMethod("getDesktop", null);
 				o_desktop = m.invoke(null, null);
 				met_browse = cl_desktop.getMethod("browse", new Class[] {URI.class});
-				System.out.println("open will use java6 tools");
 				supported = true;
 			}
 		} catch (Exception e) {
