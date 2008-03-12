@@ -1,8 +1,8 @@
 package fr.univmrs.tagc.common;
 
 import java.awt.Color;
-import java.awt.Desktop;
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
@@ -25,9 +25,13 @@ public class Tools {
 
 	public static final Integer IZ = new Integer(0);
 
-	public static final String OPEN_COMMAND;
+	public static String OPEN_COMMAND = null;
+	public static Object o_desktop = null;
+	protected static Method met_browse = null;
 	
 	protected static Map m_helper = new HashMap();
+	
+	private static final ClassLoader cloader = ClassLoader.getSystemClassLoader();
 	
 	public static void addHelperClass(String key, OpenHelper helper) {
 		m_helper.put(key, helper);
@@ -36,23 +40,28 @@ public class Tools {
 	
 	static {
 		String os = System.getProperty("os.name").toLowerCase();
+		Class cl_desktop;
 		boolean supported = false;
 		try {
-			supported = Desktop.isDesktopSupported();
+			cl_desktop = cloader.loadClass("java.awt.Desktop");
+			Method m = cl_desktop.getMethod("isDesktopSupported", null);
+			if (((Boolean)m.invoke(null, null)).booleanValue()) {
+				m = cl_desktop.getMethod("getDesktop", null);
+				o_desktop = m.invoke(null, null);
+				met_browse = cl_desktop.getMethod("browse", new Class[] {URI.class});
+				System.out.println("open will use java6 tools");
+				supported = true;
+			}
 		} catch (Exception e) {
 		}
-		if (supported) {
-			OPEN_COMMAND = "";
-		} else {
+		if (!supported) {
+			System.out.println("open will use dirty hacks, consider upgrading to java6");
 			if (os.startsWith("windows")) {
 				OPEN_COMMAND = "open";
 			} else if (os.startsWith("mac")) {
 				OPEN_COMMAND = "open";
 			} else if (os.startsWith("linux")) {
 				OPEN_COMMAND = "xdg-open";
-			} else {
-				System.out.println("no way to open !!");
-				OPEN_COMMAND = null;
 			}
 		}
 	}
@@ -160,17 +169,16 @@ public class Tools {
 	}
 
 	public static boolean openURI(String uri) {
-		if (OPEN_COMMAND == null) {
-			return false;
-		}
-		if (OPEN_COMMAND == "") {
+		if (met_browse != null) {
 			try {
-				Desktop.getDesktop().browse(new URI(uri));
+				met_browse.invoke(o_desktop, new Object[] {new URI(uri)});
 				return true;
 			} catch (Exception e) {
 				System.out.println("open failed");
-				return false;
 			}
+		}
+		if (OPEN_COMMAND == null) {
+			return false;
 		}
 		try {
 			Process process = Runtime.getRuntime().exec(new String[] {OPEN_COMMAND, uri});
