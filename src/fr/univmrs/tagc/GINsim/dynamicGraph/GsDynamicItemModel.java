@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 
 /**
  * table model to display a dynamic node or edge.
@@ -17,13 +18,18 @@ public class GsDynamicItemModel extends AbstractTableModel {
     private static final long serialVersionUID = 8860415338236400531L;
     private List nodeOrder;
     GsDynamicGraph graph;
+    GsGraphManager graphManager;
     private int[] state;
     private GsDynamicNode[] nextState;
+    private GsDynamicNode[] prevState;
     private JButton[] go2Next;
     private int len;
+    private int nbNext;
+    private int nbRelated;
     
     protected GsDynamicItemModel (GsDynamicGraph graph) {
         this.graph = graph;
+        this.graphManager = graph.getGraphManager();
         this.nodeOrder = graph.getNodeOrder();
         len = nodeOrder.size()+1;
     }
@@ -32,10 +38,7 @@ public class GsDynamicItemModel extends AbstractTableModel {
         if (state == null) {
             return 0;
         }
-        if (nextState == null) {
-            return 1;
-        }
-        return nextState.length+1;
+        return nbRelated+1;
     }
 
     public int getColumnCount() {
@@ -62,8 +65,12 @@ public class GsDynamicItemModel extends AbstractTableModel {
         if (rowIndex == 0) {
             return ""+state[columnIndex-1];
         }
-        if (nextState == null || rowIndex > nextState.length) {
-            return null;
+        if (rowIndex > nbNext) {
+        	int r = rowIndex - nbNext;
+        	if (prevState == null || r > prevState.length) {
+        		return null;
+        	}
+        	return ""+prevState[r-1].state[columnIndex-1];
         }
         return ""+nextState[rowIndex-1].state[columnIndex-1];
     }
@@ -82,34 +89,53 @@ public class GsDynamicItemModel extends AbstractTableModel {
      * @param obj the edited object
      */
     public void setContent(Object obj) {
+    	nbRelated = 0;
         if (obj instanceof GsDynamicNode) {
-            List l_next = graph.getGraphManager().getOutgoingEdges(obj);
-            if (l_next == null || l_next.size() == 0) {
-                state = ((GsDynamicNode)obj).state;
-                nextState = null;
-            } else {
-                nextState = new GsDynamicNode[l_next.size()];
-                for (int i=0 ; i<nextState.length ; i++) {
-                    nextState[i] = (GsDynamicNode)((GsDirectedEdge)l_next.get(i)).getTargetVertex();
-                }
-                state = ((GsDynamicNode)obj).state;
-            }
+            state = ((GsDynamicNode)obj).state;
+            nextState = getRelatedNodes(graphManager.getOutgoingEdges(obj), true);
+            prevState = getRelatedNodes(graphManager.getIncomingEdges(obj), false);
+            nbNext = nextState != null ? nextState.length : 0;
+            nbRelated = nbNext + ( prevState != null ? prevState.length : 0 );
         } else if (obj instanceof GsDirectedEdge){
             GsDirectedEdge edge = (GsDirectedEdge)obj;
             state = ((GsDynamicNode)edge.getSourceVertex()).state;
             nextState = new GsDynamicNode[1];
             nextState[0] = (GsDynamicNode)edge.getTargetVertex();
+            prevState = null;
+            nbNext = nextState != null ? nextState.length : 0;
+            nbRelated = nbNext;
         }
-        if (nextState == null) {
+        if (nbRelated == 0) {
             go2Next = null;
         } else {
-            go2Next = new JButton[nextState.length];
-            for (int i=0 ; i<go2Next.length ; i++) {
+            go2Next = new JButton[nbRelated];
+            for (int i=0 ; i<nbNext ; i++) {
                 go2Next[i] = new JButton("->");
                 go2Next[i].addActionListener(new Go2ActionListener(graph, nextState[i]));
             }
+            if (prevState != null) {
+	            for (int i=0 ; i<prevState.length ; i++) {
+	                go2Next[nbNext+i] = new JButton("<-");
+	                go2Next[nbNext+i].addActionListener(new Go2ActionListener(graph, prevState[i]));
+	            }
+            }
         }
         fireTableDataChanged();
+    }
+    
+    private GsDynamicNode[] getRelatedNodes(List l_related, boolean target) {
+        if (l_related == null || l_related.size() == 0) {
+            return null;
+        }
+        GsDynamicNode[] ret = new GsDynamicNode[l_related.size()];
+        for (int i=0 ; i<ret.length ; i++) {
+        	if (target) {
+        		ret[i] = (GsDynamicNode)((GsDirectedEdge)l_related.get(i)).getTargetVertex();
+        	} else {
+        		ret[i] = (GsDynamicNode)((GsDirectedEdge)l_related.get(i)).getSourceVertex();
+        	}
+        }
+        return ret;
     }
 }
 

@@ -160,6 +160,15 @@ public class XMLWriter {
     }
 
     /**
+     * add (i.e. open and close) a tag without any attributes and content.
+     * @param name
+     * @throws IOException
+     */
+    public void addTag(String name) throws IOException {
+    	openTag(name);
+    	closeTag();
+    }
+    /**
      * add (i.e. open and close) a tag with specified attributes and content.
      * @param name
      * @param attributes

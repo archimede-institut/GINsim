@@ -7,6 +7,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
+import fr.univmrs.tagc.GINsim.annotation.BiblioManager;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
@@ -30,6 +31,7 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
     public GsRegulatoryGraphDescriptor() {
     	if (GsRegulatoryGraphDescriptor.instance == null) {
     		GsRegulatoryGraphDescriptor.instance = this;
+            registerObjectManager(new BiblioManager());
     	} else {
     		System.out.println("trying to create a new graphdescriptor!");
     	}

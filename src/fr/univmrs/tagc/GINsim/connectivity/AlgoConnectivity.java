@@ -30,8 +30,8 @@ public final class AlgoConnectivity extends Thread {
     
 	private Object[] t_vertex;
 	
-	/** list of node explored for depht search */
-	private int[] explored ;
+	/** list of node explored for depth search */
+	private boolean[] explored ;
 	/** time of last exploration of each node */
 	private int[] lastExploration ;
 	/** time of first exploration of each node */
@@ -61,7 +61,7 @@ public final class AlgoConnectivity extends Thread {
         int nbCompo = 0;
         try {
             t_vertex = graphModel.getVertexArray();
-            explored =new int[t_vertex.length];
+            explored = new boolean[t_vertex.length];
             lastExploration = new int[t_vertex.length];
             firstExploration = new int[t_vertex.length];
             count = 0;
@@ -80,7 +80,7 @@ public final class AlgoConnectivity extends Thread {
                          if (set.size() == 1) {
                              sid = null;
                          } else {
-                             sid = "cc-"+(id++);
+                             sid = "cc-"+id++;
                          }
                          GsNodeReducedData node = new GsNodeReducedData(sid, (Set)jcp.get(i));
                          component.add(node);
@@ -162,45 +162,43 @@ public final class AlgoConnectivity extends Thread {
     }
 
 	/**
-	 * Search of all strong connected components
-	 * NOTE: this is mainly unusefull: we try to use jgrapht's internal search instead.
-     * NOTE2: in fact it seems to be still usefull: jgrapht's search doesn't work...
-	 * @return all strong connected component
+	 * Search of all strongly connected components
+	 * NOTE: this is mainly useless: we try to use jgrapht's internal search instead.
+     * NOTE2: in fact it seems to be still useful: jgrapht's search doesn't work...
+	 * @return all strongly connected component
 	 * @throws InterruptedException 
 	 */
 	private List findConnectedComponent() throws InterruptedException {
 		int id = 0;
-		// depht first search on the Graph graphModel
+		// depth first search on the Graph graphModel
         frame.setProgressText(S_SEARCH_CC+Translator.getString("STR_connectivity_DFS"));
-		int[] last = (int[])dephtSearch(t_vertex,graphModel).elementAt(0);
+		depthSearch(t_vertex,graphModel);
 		
 		// compute the reverse graph of graphModel
         frame.setProgressText(S_SEARCH_CC+Translator.getString("STR_connectivity_reverse"));
-		GsGraph tG = tGraph();
-		//change the order of nodes in fonction of the higher postorder 
-		Object[] tAllNode = Tools.decrease(last,t_vertex);
+		//change the order of nodes in function of the higher postorder 
+		Object[] tAllNode = Tools.decrease(lastExploration,t_vertex);
 	
-		// depht first search on the reverse graph
+		// depth first search on the reverse graph
         frame.setProgressText(S_SEARCH_CC+Translator.getString("STR_connectivity_reverseDFS"));
-		Vector prepost = dephtSearch(tAllNode,tG.getGraphManager());
-		int[] pre = (int[])prepost.elementAt(1);
-
+		depthSearch(tAllNode,graphModel, true);
+		
 		// sort the arrays	
-		Tools.increase(pre,tAllNode);		
+		Tools.increase(firstExploration, tAllNode);		
 		int end = 0;
 		//the list of all connected components
 		Vector components = new Vector(0);
-		int indice= pre.length;
+		int index = firstExploration.length;
 		
-		// sort nodes in fonction of their components
+		// sort nodes in function of their components
 		while (end<tAllNode.length){
 			Vector temp = new Vector(0);
-			indice=pre[end];
+			index = firstExploration[end];
             if (canceled) {
                 throw new InterruptedException();
             }
-			for (int i=end;i<pre.length;i++) {
-				if (pre[i] == indice){
+			for (int i=end ; i<firstExploration.length ; i++) {
+				if (firstExploration[i] == index){
 					end++;
 					temp.add(tAllNode[i]);
 				}
@@ -210,87 +208,63 @@ public final class AlgoConnectivity extends Thread {
                     // add a prefix even if alone in it's CC: it must be a valid id
 			        components.add(new GsNodeReducedData("u-"+temp.get(0), temp));
 			    } else {
-			        components.add(new GsNodeReducedData("cc-"+(id++), temp));
+			        components.add(new GsNodeReducedData("cc-"+id++, temp));
 			    }
 			}
 		}
 		return components;
 	}
 	/**
-	 * Recursive function called by the depht search algorithms
-	 * @param i - the indice of the node which will be explore
+	 * Recursive function called by the depth search algorithms
+	 * @param i - the index of the node which will be explored
 	 * @param allNode
 	 * @param graph
 	 * @throws InterruptedException 
 	 */
 	
-	private void explore(int i,Object[] allNode,GsGraphManager graph) throws InterruptedException  {
+	private void explore(int i, Object[] allNode, GsGraphManager graph, boolean reverse) throws InterruptedException  {
 		int allSize = allNode.length; 
-		explored[i]= 1;// begin of the exploration of i
-		firstExploration[i]=count;
+		explored[i] = true;
+		firstExploration[i] = count;
 		for(int j=0;j<allSize;j++){
-			if (graph.getEdge(allNode[i],allNode[j]) != null){
-				if (explored[j]==0){
-					explore(j,allNode,graph);
+			Object edge = reverse ? graph.getEdge(allNode[j],allNode[i]) : graph.getEdge(allNode[i],allNode[j]);
+			if (edge != null){
+				if (!explored[j]){
+					explore(j,allNode,graph, reverse);
 				}
 			}
 		}
-		explored[i]= 2; // the exploration of i is finished
-		time = time+1;
-		lastExploration[i]=time;		
+		time++;
+		lastExploration[i] = time;		
 	}
+
 	/**
-	 * The depht first search algorithms
+	 * The depth first search algorithms
 	 * @param allNode
 	 * @param graph
 	 * @return the list of the last and the first treatment of each node
 	 * @throws InterruptedException 
 	 */
-	private Vector dephtSearch(Object[] allNode,GsGraphManager graph) throws InterruptedException  {
-		Vector exploration = new Vector(0);
+	private void depthSearch(Object[] allNode,GsGraphManager graph) throws InterruptedException  {
+		depthSearch(allNode, graph, false);
+	}
+	private void depthSearch(Object[] allNode,GsGraphManager graph, boolean reverse) throws InterruptedException  {
 		int allSize = allNode.length;  
 		for(int i=0;i<allSize;i++){
-			explored[i] = 0;
+			explored[i] = false;
 		}
 		time = 0;
 		for(int i=0;i<allSize;i++) {
             if (canceled) {
                 throw new InterruptedException();
             }
-			if (explored[i] == 0) {
-				explore(i,allNode,graph);
+			if (!explored[i]) {
+				explore(i, allNode, graph, reverse);
 			}
 			count++;
 		}
-		exploration.add(lastExploration);
-		exploration.add(firstExploration);	
-		return exploration;
 	}
 	
-	/**
-	 * Calculates the reverse graph 
-	 * @return the reverse graph 
-	 */
-	private GsGraph tGraph()  {
-		GsTmpGraph tGraph = new GsTmpGraph();
-
-		int allSize = t_vertex.length;
-		// tGraph is like graphModel but without edges
-		for(int i=0;i<allSize;i++){
-			tGraph.addVertex(t_vertex[i]);
-		}
-		// all orientation of edge are changed (inversed)
-		for(int i=0;i<allSize;i++){
-			Object ellati = t_vertex[i];
-			for (int j=0;j<allSize;j++){
-				if (graphModel.getEdge(ellati,t_vertex[j]) != null){
-					tGraph.addEdge(t_vertex[j],ellati);
-				}
-			}
-		}
-		return tGraph;	
-	}
-
     /**
      * stop the computation
      */

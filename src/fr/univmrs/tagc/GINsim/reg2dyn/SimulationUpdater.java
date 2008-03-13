@@ -212,7 +212,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
 	
     public PrioritySimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		super(regGraph, params);
-		pclass = params.getPclass();
+		pclass = params.getPriorityClassDefinition(true).getPclass(params.nodeOrder);
 	}
 
 	protected void doBuildNext() {

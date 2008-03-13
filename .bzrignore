@@ -13,3 +13,4 @@ classes/**/*
 .project
 .classpath
 doc
+*.cld

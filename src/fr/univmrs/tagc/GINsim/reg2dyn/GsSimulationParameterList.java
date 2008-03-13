@@ -23,7 +23,7 @@ public class GsSimulationParameterList extends SimpleGenericList
     String s_current;
     GsRegulatoryGraph graph;
     GsInitialStateList imanager;
-    PriorityClassManager pcmanager;
+    public PriorityClassManager pcmanager;
 
     /**
      * @param graph

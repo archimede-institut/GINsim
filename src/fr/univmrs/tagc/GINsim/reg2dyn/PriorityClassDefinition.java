@@ -1,9 +1,7 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.NamedObject;
@@ -12,7 +10,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
 
-class PriorityClassDefinition extends SimpleGenericList implements NamedObject, XMLize {
+public class PriorityClassDefinition extends SimpleGenericList implements NamedObject, XMLize {
 
 	Map m_elt;
 	String name;
@@ -296,4 +294,87 @@ class PriorityClassDefinition extends SimpleGenericList implements NamedObject, 
 		}
 		out.closeTag();
 	}
+
+	/**
+     * @return the compiled priority class.
+     * in the form of an int[][]
+     * each int[] represent a priority class:
+     *  - the very first int is the class' priority
+     *  - the second int is the class' mode (sync or async)
+     *  - and all others are couples: index of vertex in the nodeOrder followed by transition filter.
+     *    the "transition filter" is a bit hacky: add it to your transition (which should be either +1 or -1)
+     *    and if the result is zero (0), then this transition shouldn't be followed.
+     *
+     * shortly: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
+     */
+    public int[][] getPclass(List nodeOrder) {
+
+        Integer zaroo = new Integer(0);
+        Integer one = new Integer(1);
+        Integer minusOne = new Integer(-1);
+
+        // it is done by browsing twice the list:
+        //   - during the first pass asynchronous classes with the same priority are merged
+        //   - then the real int[][] is created from the merged classes
+		List v_vpclass = new ArrayList();
+        for (int i=0 ; i<v_data.size() ; i++) {
+            GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_data.get(i);
+            List v_content;
+            if (pc.getMode() == GsReg2dynPriorityClass.ASYNCHRONOUS) {
+                v_content = new ArrayList();
+                v_content.add(new Integer(pc.rank));
+                v_content.add(new Integer(pc.getMode()));
+                v_vpclass.add(v_content);
+            } else {
+                v_content = new ArrayList();
+                v_content.add(new Integer(pc.rank));
+                v_content.add(new Integer(pc.getMode()));
+                v_vpclass.add(v_content);
+            }
+            for (int n=0 ; n<nodeOrder.size() ; n++) {
+                Object k = nodeOrder.get(n);
+                Object target = m_elt.get(k);
+                // if +1 and -1 are separated, target is an Object[]
+                if (target instanceof Object[]) {
+                    Object[] t = (Object[])target;
+                    if (t[0] == pc) {
+                        // to do it right: if both +1 and -1 are in the same class, add the node only once :)
+                        if (t[1] == pc) {
+                            v_content.add(new Integer(n));
+                            v_content.add(zaroo);
+                        } else {
+                            v_content.add(new Integer(n));
+                            v_content.add(one);
+                        }
+                    } else if (t[1] == pc) {
+                        v_content.add(new Integer(n));
+                        v_content.add(minusOne);
+                    }
+                } else { // +1 and -1 aren't separated, always accept every transitions
+                    if (target == pc) {
+                        v_content.add(new Integer(n));
+                        v_content.add(zaroo);
+                    }
+                }
+            }
+        }
+
+        int[][] pclass = new int[v_vpclass.size()][];
+        for (int i=0 ; i<pclass.length ; i++) {
+            List v_content = (List)v_vpclass.get(i);
+            int[] t = new int[v_content.size()];
+            t[0] = ((Integer)v_content.get(0)).intValue();
+            if (v_content.size() > 1) {
+                t[1] = ((Integer)v_content.get(1)).intValue();
+            } else {
+                // if only one node in the class, async mode is useless!
+                t[1] = GsReg2dynPriorityClass.SYNCHRONOUS;
+            }
+            for (int n=2 ; n<t.length ; n++) {
+                t[n] = ((Integer)v_content.get(n)).intValue();
+            }
+            pclass[i] = t;
+        }
+        return pclass;
+    }
 }
