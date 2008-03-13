@@ -15,3 +15,4 @@ classes/**/*
 doc
 testCase/tmp
 testCase/tmp/**/*
+*.cld

@@ -46,7 +46,7 @@ public class GsGNAExport extends GsAbstractExport {
 		try {
 			long l = System.currentTimeMillis();
 			run();
-			System.out.println("snakes export: done in "+(System.currentTimeMillis()-l)+"ms");
+			System.out.println("gna export: done in "+(System.currentTimeMillis()-l)+"ms");
 		} catch (IOException e) {
 			e.printStackTrace();
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
@@ -55,9 +55,9 @@ public class GsGNAExport extends GsAbstractExport {
 
 	protected synchronized void run() throws IOException {
 		this.graph = (GsRegulatoryGraph) config.getGraph();
+		this.out = new FileWriter(config.getFilename());
   		List nodeOrder = graph.getNodeOrder();
 		Iterator it = nodeOrder.iterator();
-		out = new FileWriter(config.getFilename());
 		while (it.hasNext()) {
 			GsRegulatoryVertex node = (GsRegulatoryVertex) it.next();
 			int thresholdLevels = node.getMaxValue();
@@ -70,20 +70,20 @@ public class GsGNAExport extends GsAbstractExport {
 			
 			//threshold-parameters: 
 			StringBuffer tmp = new StringBuffer();
-			for (int i = 0; i < thresholdLevels; i++) {
+			for (int i = 1; i <= thresholdLevels; i++) {
 				tmp.append("t_"+id+i);
-				if (i < thresholdLevels-1) {
+				if (i < thresholdLevels) {
 					tmp.append(", ");
 				}
 			}
 			out.write(tmp.toString());
 			
 			//synthesis-parameters:
-			out.write("\n  synthesis-parameters: ");
+			out.write("\n  production-parameters: ");
 			tmp = new StringBuffer();
 			for (int i = 1; i <= thresholdLevels; i++) {
-				tmp.append("K_"+id+i);
-				if (i < thresholdLevels-1) {
+				tmp.append("k_"+id+i);
+				if (i < thresholdLevels) {
 					tmp.append(", ");
 				}
 			}
@@ -92,24 +92,61 @@ public class GsGNAExport extends GsAbstractExport {
 
 			out.write("  degradation-parameters: g_" + id + "\n"
 					+ "  state-equation:\n    d/dt " + id + " = "
-					+ getGNAEq(node));
+					+ getGNAEq(node, nodeOrder)
+					+ " - g_"+id+" * "+id+"\n");
 			
 			//threshold-inequalities:
-			out.write("threshold-inequalities: zero_"+id+" < ");
+			out.write("  threshold-inequalities: zero_"+id+" < ");
 			tmp = new StringBuffer();
 			for (int i = 1; i <= thresholdLevels; i++) {
 				tmp.append("t_"+id+i+" < ");
-				tmp.append("K_"+id+"1 / g_"+id+" < ");
+				tmp.append("k_"+id+i+" / g_"+id+" < ");
 			}
-			out.write("max_"+id);
 			out.write(tmp.toString());
-
+			out.write("max_"+id+"\n\n");
 		}
+		out.close();
 	}
 
-	private String getGNAEq(GsRegulatoryVertex node) {
-		OmddNode params = node.getTreeParameters(graph);
-		//TODO : get equation
-		return "";
+	private String getGNAEq(GsRegulatoryVertex node, List nodeOrder) {
+		String s = exploreNode(node.getId(), node.getTreeParameters(graph).reduce(), nodeOrder);
+		return s.substring(0, s.length()-3);
+	}
+
+	private String exploreNode(String topNodeId, OmddNode node, List nodeOrder) {
+		if (node.next == null) {
+			return "k_"+topNodeId+node.value+" + ";
+		} else {
+			String res = "";
+			String nodeName = getVertexNameForLevel(node.level, nodeOrder);
+			OmddNode currentChild;
+			for (int i = 0; i < node.next.length; i++) {
+				currentChild = node.next[i];
+				int begin = i;
+				int end = i+1;
+				for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++);
+				if (begin > 0) {
+					res += "s+("+nodeName+", t_"+nodeName+begin+")";
+				}
+				if (end < node.next.length) {
+					if (res.length() > 0) {
+						res += " * ";
+					}
+					res += "s-("+nodeName+", t_"+nodeName+end+")";
+				}
+				res += " * "+exploreNode(topNodeId, node.next[begin], nodeOrder);
+			}
+			return res;
+		}
+	}
+	
+	/**
+	 * Return the ID of a node using his order and node order for the graph.
+	 * @param order : The order of the node
+	 * @param nodeOrder : The node order (in the graph)
+	 * @return the ID as string
+	 */
+	private String getVertexNameForLevel(int order, List nodeOrder) {
+		return ((GsRegulatoryVertex) nodeOrder.get(order)).getId();
 	}
 }

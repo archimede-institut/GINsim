@@ -49,4 +49,7 @@ public class GsExportConfig extends GsExtensibleConfig {
 	public String getFilename() {
 		return filename;
 	}
+	public String setFilename(String filename) {
+		return this.filename = filename;
+	}
 }
