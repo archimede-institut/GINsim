@@ -2,10 +2,6 @@ package fr.univmrs.tagc.common.mdd;
 
 import java.util.Vector;
 
-import fr.univmrs.tagc.common.mdd.DecisionDiagramAction;
-import fr.univmrs.tagc.common.mdd.DecisionDiagramInfo;
-import fr.univmrs.tagc.common.mdd.MDDNode;
-
 import junit.framework.TestCase;
 
 
@@ -16,7 +12,7 @@ public abstract class TestMDD extends TestCase {
 	DecisionDiagramInfo ddi;
 
 	// for the N Queens test
-	int N = 8;
+	int N = 3;
 	
 	MDDNode n_true;
 	MDDNode n_false;

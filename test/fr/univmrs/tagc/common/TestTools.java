@@ -20,7 +20,7 @@ public class TestTools {
 	
 	public static File getTempDir() {
 		try {
-			return TempDir.createNamed("tmp", getTestDir());
+			return TempDir.createGeneratedName("tmp", getTestDir());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
