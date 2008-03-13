@@ -10,7 +10,7 @@ public abstract class TUnaryOperator extends TBooleanOperator {
     arg = node;
   }
   public String toString(boolean par) {
-  	String s = getSymbol() + arg.toString(par);
+  	String s = getSymbol() + arg.toString(true);
     return s;
   }
   public int getNbArgs() {
