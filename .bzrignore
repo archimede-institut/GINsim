@@ -13,3 +13,5 @@ classes/**/*
 .project
 .classpath
 doc
+testCase/tmp
+testCase/tmp/**/*
