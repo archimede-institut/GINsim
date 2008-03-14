@@ -153,7 +153,7 @@ class ReadConfig extends XMLHelper {
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if ("plugin".equals(qName)) {
 			String s = attributes.getValue("load");
-			if ("true".equals(s)) {
+			if (null == s || "true".equals(s)) {
 				s = attributes.getValue("mainClass");
 				try {
 					Class cl = cloader.loadClass(s);

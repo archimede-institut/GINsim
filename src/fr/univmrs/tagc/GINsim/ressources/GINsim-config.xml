@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GINsim-addon>
 	<listOfPlugins>
-		<plugin name="simulation" mainClass="fr.univmrs.tagc.GINsim.reg2dyn.Reg2DynPlugin" load="true"/>
-		<plugin name="layout" mainClass="fr.univmrs.tagc.GINsim.layout.GsLayoutPlugin" load="true"/>
-		<plugin name="layoutJGraph" mainClass="fr.univmrs.tagc.GINsim.jgraph.layout.GsJgraphLayout" load="false"/>
-		<plugin name="circuit" mainClass="fr.univmrs.tagc.GINsim.circuit.GsCircuitPlugin" load="true" depend=""/>
-		<plugin name="modelChecker" mainClass="fr.univmrs.tagc.GINsim.modelChecker.GsModelCheckerPlugin" load="true" depend=""/>
-		<plugin name="stableStates" mainClass="fr.univmrs.tagc.GINsim.stableStates.GsStableStatesPlugin" load="false"/>
-		<plugin name="analyseStateTransition" mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicAnalyserPlugin" load="true"/>
-		<plugin name="export" mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin" load="true" depend=""/>
-		<plugin name="PNexport" mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsPetriNetExport" load="true" depend=""/>
-		<plugin mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSMVExport" load="true" depend="" name="SMVexport"/>
-		<plugin
-			name="HTMLExport"
-			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsHTMLExport"
-			load="true"/>
-		<plugin
-			name="CytoscapeExport"
-			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"
-			load="true"/>
-		<plugin
-			name="SnakesExport"
-			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"
-			load="true"/>
-		<plugin name="modelSimplifier" mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier.ModelSimplifierPlugin" load="true" depend=""/>
-		<plugin name="GNAexport" mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport" load="true" depend=""/>
-		<plugin name="GNAMLexport" mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAMLExport" load="true" depend=""/>
-		<plugin name="connectivity" mainClass="fr.univmrs.tagc.GINsim.connectivity.ConnectivityPlugin" load="true" depend=""/>
-		<plugin name="animate" mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin" load="true"/>
+		<!-- generic plugins -->
+		<plugin name="layout"					mainClass="fr.univmrs.tagc.GINsim.layout.GsLayoutPlugin"/>
+		<plugin name="layoutJGraph" load="false" mainClass="fr.univmrs.tagc.GINsim.jgraph.layout.GsJgraphLayout"/>
+		<plugin name="connectivity" 			mainClass="fr.univmrs.tagc.GINsim.connectivity.ConnectivityPlugin"/>
+
+		<!-- analysis plugins -->
+		<plugin name="simulation" 				mainClass="fr.univmrs.tagc.GINsim.reg2dyn.Reg2DynPlugin"/>
+		<plugin name="circuit"					mainClass="fr.univmrs.tagc.GINsim.circuit.GsCircuitPlugin"/>
+		<plugin name="stableStates" 			mainClass="fr.univmrs.tagc.GINsim.stableStates.GsStableStatesPlugin"/>
+		<plugin name="analyseStateTransition"	mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicAnalyserPlugin"/>
+		<plugin name="modelSimplifier" 			mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier.ModelSimplifierPlugin"/>
+		<plugin name="modelChecker" 			mainClass="fr.univmrs.tagc.GINsim.modelChecker.GsModelCheckerPlugin"/>
+
+		<!-- export plugins -->
+		<plugin name="export" 					mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin"/>
+		<plugin name="PNexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsPetriNetExport"/>
+		<plugin name="SMVexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSMVExport"/>
+		<plugin name="HTMLExport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsHTMLExport"/>
+		<plugin	name="CytoscapeExport" 			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"/>
+		<plugin name="SnakesExport"				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"/>
+		<plugin name="GNAexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport"/>
+		<plugin name="GNAMLexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAMLExport"/>
+
+		<!-- other plugins -->
+		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin"/>
 	</listOfPlugins>
 	
 	<listOfGraphType>
-		<graph name="regulatoryGraph" mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor" load="true"/>
-		<graph name="stateTransitionGraph" mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor" load="true"/>
-		<graph name="connectedComponentGraph" mainClass="fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphDescriptor" load="true"/>
+		<graph name="regulatoryGraph" 			mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor" load="true"/>
+		<graph name="stateTransitionGraph" 		mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor" load="true"/>
+		<graph name="connectedComponentGraph" 	mainClass="fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphDescriptor" load="true"/>
 	</listOfGraphType>
 	
-	<imagePath path="/fr/univmrs/tagc/GINsim/ressources/icons"/>
-	<messagesPath path="fr.univmrs.tagc.GINsim.ressources.messages"/>
-	<doap path="/fr/univmrs/tagc/GINsim/ressources/GINsim-about.rdf"/>
+	<imagePath 		path="/fr/univmrs/tagc/GINsim/ressources/icons"/>
+	<messagesPath 	path="fr.univmrs.tagc.GINsim.ressources.messages"/>
+	<doap 			path="/fr/univmrs/tagc/GINsim/ressources/GINsim-about.rdf"/>
 </GINsim-addon>
