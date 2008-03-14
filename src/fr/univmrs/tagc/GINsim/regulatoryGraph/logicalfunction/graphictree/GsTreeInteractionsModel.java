@@ -45,6 +45,13 @@ public class GsTreeInteractionsModel implements TreeModel {
   }
   public void setNode(GsRegulatoryVertex no) {
     node = no;
+    for (int i = 0; i < root.getChildCount(); i++) {
+        GsTreeValue val = (GsTreeValue)root.getChild(i);
+        for (int j = 0; j < val.getChildCount(); j++) {
+          GsTreeExpression exp = (GsTreeExpression)val.getChild(j);
+          exp.refreshRoot();
+  		}
+      }
   }
   public void removeEdge(GsRegulatoryMultiEdge multiEdge, int index) {
     GsTreeValue val;

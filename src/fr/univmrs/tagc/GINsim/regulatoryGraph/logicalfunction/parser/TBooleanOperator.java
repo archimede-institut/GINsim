@@ -7,6 +7,9 @@ public abstract class TBooleanOperator implements TBooleanTreeNode {
   public TBooleanOperator() {
     super();
   }
+  public String toString() {
+	  return toString(false);
+  }
   public void setReturnClass(String cl) {
     returnClassName = cl;
   }

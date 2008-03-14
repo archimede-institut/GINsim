@@ -32,7 +32,6 @@ public class GsTreeExpression extends GsTreeElement {
     normal = true;
     if (root != null) {
       setRoot(root);
-      userExpression = root.toString(false);
     }
     property.put("invalid", new Boolean(false));
     property.put("autoedit", new Boolean(false));
@@ -65,7 +64,11 @@ public class GsTreeExpression extends GsTreeElement {
   }
   public void setRoot(TBooleanTreeNode root) {
     this.root = root;
+    refreshRoot();
+  }
+  public void refreshRoot() {
     compactExpression = root.toString(false);
+    userExpression = root.toString(false);
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge) {
     root = remove(multiEdge.getSource().getId(), root);

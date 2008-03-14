@@ -36,7 +36,7 @@ public class AnnotationLink {
 		proto = ts[0].trim();
 		value = ts[1].trim();
 		String okey = (String)m_helper.get(proto);
-		if (okey != null) {
+		if (graph!= null && okey != null) {
 			helper = (OpenHelper)graph.getObject(okey, true);
 			if (helper != null) {
 				helper.add(proto, value);

@@ -23,4 +23,7 @@ public abstract class TBooleanOperand implements TBooleanTreeNode {
   public String getVal() {
     return value;
   }
+  public String toString() {
+	  return toString(false);
+  }
 }
