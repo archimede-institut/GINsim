@@ -85,8 +85,13 @@ public class SnakesExport extends GsAbstractExport  {
 			}
 			
 			out.write("\tdef update_"+getVertexNameForLevel(node_i, nodeOrder)+"("+arguments+"):\n");
-			exploreNode(nodes[node_i], null, node_i, "\t", nodeOrder);
-			out.write("\t\treturn 0\n\n");
+			OmddNode node = nodes[node_i];
+			exploreNode(node, null, node_i, "\t\t", nodeOrder);
+			if (node.next != null || node.value == 0) {
+				out.write("\t\treturn 0\n\n");
+			} else {
+				out.write("\n");
+			}
 		}
 		
 		//End
@@ -107,15 +112,23 @@ public class SnakesExport extends GsAbstractExport  {
 			if (current.value == 0) {
 				return;
 			}
-			out.write(indent+"if "+getVertexNameForLevel(parent.level, nodeOrder)+" == "+parent_value+":\n");
-			out.write(indent+"\treturn "+current.value+"\n");
+			if (parent != null) {
+				out.write(indent+"if "+getVertexNameForLevel(parent.level, nodeOrder)+" == "+parent_value+":\n");
+				out.write(indent+"\treturn "+current.value+"\n");
+			} else {
+				out.write(indent+"return "+current.value+"\n");
+			}
 			return;
 		}
+		String next_indent;
 		if (parent != null) {
 			out.write(indent+"if "+getVertexNameForLevel(parent.level, nodeOrder)+" == "+parent_value+":\n");
+			next_indent = indent+"\t";
+		} else {
+			next_indent = indent;
 		}
 		for (int node_i = 0; node_i < current.next.length; node_i++) {
-			exploreNode(current.next[node_i], current, node_i, indent+"\t", nodeOrder);
+			exploreNode(current.next[node_i], current, node_i, next_indent, nodeOrder);
 		}
 	}
 	
