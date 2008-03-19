@@ -1,37 +1,33 @@
 package fr.univmrs.tagc.common.document;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 
 public class XHTMLDocumentWriter extends DocumentWriter {
 
-	File file;
 	XMLWriter xmlw;
 	OutputStreamWriter writer;
 	
 	Map m_style = new HashMap();
 	Vector v_table = new Vector();
 	xHTMLTable curTable = null;
+	public String NEW_LINE = "<br />";
 		
-	public XHTMLDocumentWriter(File file) {
-		this.file = file;
+	public XHTMLDocumentWriter() {
 		registerForDocumentExtra("javascript");
 	}
-	
-	protected void startDocument() throws IOException {
-		writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+			
+	public void startDocument() throws IOException {
+		writer = new OutputStreamWriter(output, "UTF-8");
 		xmlw = new XMLWriter(writer, null);
 	
 		writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -75,16 +71,27 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		}
 	}
 	
-	protected void doWriteText(String text) throws IOException {
+	protected void doWriteText(String text, boolean newLine) throws IOException {
 		xmlw.addContent(text);
+		if (newLine) {
+			xmlw.addFormatedContent(newLine(), false);
+		}
 	}
 	
+	protected String newLine() {
+		return NEW_LINE;
+	}
+
 	protected void doOpenTable(String name, String style, String[] t_colStyle) throws IOException {
 		curTable = new xHTMLTable(name, style, t_colStyle);
 		v_table.add(curTable);
 		xmlw.openTag("table");
-		xmlw.addAttr("name", name);
-		xmlw.addAttr("class", style);
+		if (name != null) {
+			xmlw.addAttr("name", name);
+		}
+		if (style != null) {
+			xmlw.addAttr("class", style);
+		}
 	}
 	
 	protected void doCloseTable() throws IOException {
@@ -137,7 +144,43 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 	protected void doCloseTableRow() throws IOException {
 		xmlw.closeTag();
 	}
-		
+	
+	protected void doOpenHeader(int level, String content, String style) throws IOException {
+		if (level > 6) {
+			level = 6;
+		}
+		xmlw.openTag("h"+level);
+		if (style != null) {
+			xmlw.addAttr("class", style);
+		}
+		xmlw.addContent(content);
+		xmlw.closeTag();
+	}
+	
+	protected void doAddLink(String href, String content) throws IOException {
+		xmlw.openTag("a");
+		xmlw.addAttr("href", href);
+		xmlw.addContent(content);
+		xmlw.closeTag();
+	}
+	protected void doOpenList(int type) throws IOException {
+		if (type == DocumentWriter.LIST_STYLE_BULLET) {
+			xmlw.openTag("ul");
+		} else {
+			xmlw.openTag("ol");
+		}
+	}
+	protected void doOpenListItem() throws IOException {
+		xmlw.openTag("li");
+	}
+	protected void doCloseListItem() throws IOException {
+		xmlw.closeTag();
+	}
+	protected void doCloseList() throws IOException {
+		xmlw.closeTag();
+	}
+
+	
 	protected void doCreateMeta(String meta, String key) throws IOException {
 		if (documentProperties.containsKey(key)) {
 			xmlw.openTag("meta");
@@ -200,6 +243,6 @@ class xHTMLTable {
 		this.style = style;
 		this.t_colStyle = t_colStyle;
 		this.row = 0;
-		this.col = 0;//FIXME:
+		this.col = 0;
 	}
 }

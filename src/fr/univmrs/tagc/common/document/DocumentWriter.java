@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.common.document;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -48,9 +49,15 @@ public abstract class DocumentWriter {
 
 	public static final int POS_OUT = 0;
 	public static final int POS_PARAGRAPH = 1;
+	public static final int POS_HEADER = 2;
 	public static final int POS_TABLE = 10;
 	public static final int POS_TABLE_ROW = 11;
 	public static final int POS_TABLE_CELL = 12;
+	public static final int POS_LIST = 20;
+	public static final int POS_LIST_ITEM = 21;
+
+	public static final int LIST_STYLE_BULLET = 0;
+	public static final int LIST_STYLE_NUMBER = 1;
 
 	public static final String META_TITLE = "title";
 	public static final String META_AUTHOR = "author";
@@ -59,22 +66,30 @@ public abstract class DocumentWriter {
 	public static final String META_DESCRIPTION = "description";
 	public static final String META_GENERATOR = "generator";
 
-	DocumentPos pos = new DocumentPos();
-	protected Map documentProperties; //The metadata of the document
+	public String NEW_LINE = "\n";
+
+	private DocumentPos pos = new DocumentPos();
 	private Map documentExtras; //A list of all the extra (StringBuffer) the document can use.
+	protected Map documentProperties; //The metadata of the document
 	protected DocumentStyle documentStyles = null; //The style of the document.
+
+	protected OutputStream output;
 	
 	public DocumentWriter() {
 		documentProperties = new Hashtable();
 		documentExtras = new Hashtable();
 	}
 	
-	protected abstract void startDocument() throws IOException;
+	public void setOutput(OutputStream output) {
+		this.output = output;
+	}
+	
+	public abstract void startDocument() throws IOException;
 
 	public void newParagraph() throws IOException {
-		newParagraph(null);
+		openParagraph(null);
 	}
-	public void newParagraph(String style) throws IOException {
+	public void openParagraph(String style) throws IOException {
 		if (pos.pos == POS_PARAGRAPH) {
 			closeParagraph();
 		}
@@ -90,6 +105,17 @@ public abstract class DocumentWriter {
 		pos = pos.parent;
 	}
 
+	public void openHeader(int level, String content, String style) throws IOException {
+		if (pos.pos == POS_PARAGRAPH) {
+			closeParagraph();
+		}
+		doOpenHeader(level, content, style);
+	}
+	
+	public void addLink(String href, String content) throws IOException {
+		doAddLink(href, content);
+	}
+	
 	public void openTable(String name, String style, String[] t_colStyle) throws IOException {
 		while (pos.pos == POS_PARAGRAPH) {
 			closeParagraph();
@@ -154,12 +180,43 @@ public abstract class DocumentWriter {
 	public void openTableCell(String content) throws IOException {
 		openTableCell(1,1, content);
 	}
+
+	public void openList(int type) throws IOException {
+		while (pos.pos == POS_PARAGRAPH) {
+			closeParagraph();
+		}
+		doOpenList(type);
+		pos = new DocumentPos(pos, POS_LIST);
+	}
+	public void openListItem(String content) throws IOException {
+		if (pos.pos == POS_LIST_ITEM) {
+			closeListItem();
+		}
+		doOpenListItem();
+		pos = new DocumentPos(pos, POS_LIST_ITEM);
+		if (content != null) {
+			writeText(content);
+		}
+	}
+	public void closeListItem() throws IOException {
+		doCloseListItem();
+		pos = pos.parent;
+	}
+	public void closeList() throws IOException {
+		if (pos.pos == POS_LIST_ITEM) {
+			closeListItem();
+		}
+		doCloseList();
+		pos = pos.parent;
+	}
+
+	
 	
 	public void writeText(String text) throws IOException {
-		if (pos.pos != POS_PARAGRAPH) {
-			newParagraph(null);
-		}
-		doWriteText(text);
+		doWriteText(text, false);
+	}
+	public void writeTextln(String text) throws IOException {
+		doWriteText(text, true);
 	}
 	
 	public void addTableRow(String[] t_content) throws IOException {
@@ -180,6 +237,10 @@ public abstract class DocumentWriter {
 				case POS_TABLE_ROW:
 					closeTable();
 					break;
+				case POS_LIST_ITEM:
+				case POS_LIST:
+					closeList();
+					break;
 			}
 		}
 		doCloseDocument();
@@ -187,7 +248,7 @@ public abstract class DocumentWriter {
 	
 	protected abstract void doOpenParagraph(String style) throws IOException;
 	protected abstract void doCloseParagraph() throws IOException;
-	protected abstract void doWriteText(String text) throws IOException;
+	protected abstract void doWriteText(String text, boolean newLine) throws IOException;
 	protected abstract void doOpenTable(String name, String style,
 			String[] t_colStyle) throws IOException;
 	protected abstract void doCloseTable() throws IOException;
@@ -196,6 +257,21 @@ public abstract class DocumentWriter {
 	protected abstract void doOpenTableRow() throws IOException;
 	protected abstract void doOpenTableCell(int colspan, int rowspan) throws IOException;
 	protected abstract void doCloseDocument() throws IOException;
+	protected abstract void doOpenHeader(int level, String content, String style) throws IOException;
+	protected abstract void doAddLink(String href, String content) throws IOException;
+	protected abstract void doOpenList(int type) throws IOException;
+	protected abstract void doOpenListItem() throws IOException;
+	protected abstract void doCloseListItem() throws IOException;
+	protected abstract void doCloseList() throws IOException;
+
+	/*
+	 * return the code to add a new line.
+	 * @return the NEW_LINE constant
+	 * */
+	protected String newLine() {
+		return NEW_LINE;
+	}
+
 	
 	
 	/**

@@ -18,7 +18,7 @@ public class AnnotationLink {
 		m_helper.put(key, objectKey);
 	}
 	
-	OpenHelper helper = null;
+	private OpenHelper helper = null;
 	String proto;
 	String value;
 
@@ -38,14 +38,14 @@ public class AnnotationLink {
 		String okey = (String)m_helper.get(proto);
 		if (graph!= null && okey != null) {
 			helper = (OpenHelper)graph.getObject(okey, true);
-			if (helper != null) {
-				helper.add(proto, value);
+			if (getHelper() != null) {
+				getHelper().add(proto, value);
 			}
 		}
 	}
 	public void open() {
-		if (helper != null) {
-			helper.open(proto, value);
+		if (getHelper() != null) {
+			getHelper().open(proto, value);
 			return;
 		}
 		// no helper, use a generic open call
@@ -57,5 +57,15 @@ public class AnnotationLink {
 			return value;
 		}
 		return proto+": "+value;
+	}
+
+	public OpenHelper getHelper() {
+		return helper;
+	}
+	public String getProto() {
+		return proto;
+	}
+	public String getValue() {
+		return value;
 	}
 }

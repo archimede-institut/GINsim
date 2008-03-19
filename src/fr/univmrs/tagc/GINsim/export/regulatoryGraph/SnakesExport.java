@@ -66,6 +66,7 @@ public class SnakesExport extends GsAbstractExport  {
 		OmddNode[] nodes = graph.getAllTrees(true);
 		
 		out.write("class "+graph.getGraphName()+" (Module):\n");
+		int [][] parcours = new int[nodeOrder.size()][4];
 		for (int node_i = 0; node_i < nodes.length; node_i++) {
 			//generate the argument list from incoming edges : a, b, _a, _b
 			List incomingEdges = graph.getGraphManager().getIncomingEdges(nodeOrder.get(node_i));
@@ -85,9 +86,9 @@ public class SnakesExport extends GsAbstractExport  {
 			}
 			
 			out.write("\tdef update_"+getVertexNameForLevel(node_i, nodeOrder)+"("+arguments+"):\n");
-			OmddNode node = nodes[node_i];
-			exploreNode(node, null, node_i, "\t\t", nodeOrder);
-			if (node.next != null || node.value == 0) {
+			//exploreNode(nodes[node_i], null, node_i, "\t", nodeOrder);
+			exploreNode(parcours, 0 ,nodes[node_i], nodeOrder);
+			if (nodes[node_i].next != null) {//if it's not a leaf
 				out.write("\t\treturn 0\n\n");
 			} else {
 				out.write("\n");
@@ -98,40 +99,47 @@ public class SnakesExport extends GsAbstractExport  {
 		out.close(); //Close filewriter
 	}
 	
-	/**
-	 * Explore an OmddNode
-	 * @param current : The node to explore
-	 * @param parent : The parent of the node
-	 * @param parent_value : The value we use in to come from the parent
-	 * @param indent : A string containing a prefix of \t
-	 * @param nodeOrder : The node order (in the graph)
-	 * @throws IOException
-	 */
-	private void exploreNode(OmddNode current, OmddNode parent, int parent_value, String indent, List nodeOrder) throws IOException {
-		if (current.next == null) {
-			if (current.value == 0) {
-				return;
+	
+	protected void exploreNode(int[][] parcours, int deep, OmddNode node, List nodeOrder) throws IOException {
+		if (node.next == null) {
+			if (node.value > 0) {
+				String nodeName;
+				String indent = "\t\t";
+				boolean and;
+				for (int i = 0; i < deep; i++, indent+="\t") {
+					nodeName = getVertexNameForLevel(parcours[i][2], nodeOrder);//level
+					out.write(indent+"if ");
+					and = false;
+					if (parcours[i][0] > 0) {
+						out.write(nodeName+" >= "+parcours[i][0]);
+						and = true;
+					}
+					if (parcours[i][1] < parcours[i][3]) {
+						if (and) {
+							out.write(" and ");
+						}
+						out.write(nodeName+" < "+parcours[i][1]);
+					}
+					out.write(":\n");
+				}
+				out.write(indent+"return "+node.value+"\n");
 			}
-			if (parent != null) {
-				out.write(indent+"if "+getVertexNameForLevel(parent.level, nodeOrder)+" == "+parent_value+":\n");
-				out.write(indent+"\treturn "+current.value+"\n");
-			} else {
-				out.write(indent+"return "+current.value+"\n");
-			}
-			return;
+			return ;
 		}
-		String next_indent;
-		if (parent != null) {
-			out.write(indent+"if "+getVertexNameForLevel(parent.level, nodeOrder)+" == "+parent_value+":\n");
-			next_indent = indent+"\t";
-		} else {
-			next_indent = indent;
-		}
-		for (int node_i = 0; node_i < current.next.length; node_i++) {
-			exploreNode(current.next[node_i], current, node_i, next_indent, nodeOrder);
+		OmddNode currentChild;
+		for (int i = 0 ; i < node.next.length ; i++) {
+			currentChild = node.next[i];
+			int begin = i;
+			int end;
+			for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++);
+			parcours[deep][0] = begin;
+			parcours[deep][1] = end;
+			parcours[deep][2] = node.level;
+			parcours[deep][3] = node.next.length;
+			exploreNode(parcours, deep+1, node.next[begin], nodeOrder);
 		}
 	}
-	
+
 	/**
 	 * Return the ID of a node using his order and node order for the graph.
 	 * @param order : The order of the node

@@ -2,7 +2,6 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -124,69 +123,71 @@ public class GsGNAMLExport extends GsAbstractExport {
 		out.closeTag();//state-variable
 	}
 	
-	private void writeStateEquation(GsRegulatoryVertex node, int thresholdLevels, String id) throws IOException {
+	protected void writeStateEquation(GsRegulatoryVertex node, int thresholdLevels, String id) throws IOException {
 		out.openTag("math");
 		out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
 		out.openTag("apply");
 		out.addTag("minus");
+
+		out.openTag("apply"); //K*s*s + K*s*s + ...
+		out.addTag("plus");
+		List nodeOrder = graph.getNodeOrder();
+		int [][] parcours = new int[nodeOrder.size()][4];
+		exploreNode(parcours, 0, node.getId(), node.getTreeParameters(graph).reduce(), nodeOrder);
+		out.closeTag();//apply plus
 		
-		List pile = new ArrayList();
-		exploreNode(pile, node.getId(), node.getTreeParameters(graph).reduce(), graph.getNodeOrder());
-		Iterator it = pile.iterator();
-		while (it.hasNext()) {
-			String s = (String) it.next();
-			if (s.charAt(0) == 'k') {
-				fout.write("\n"+s+" * ");				
-			} else if (s.charAt(0) == 's') {
-				fout.write(s+"("+(String) it.next()+", "+(String) it.next()+") * ");				
-			}
-		}
-		
-		//- g_a * a
-		out.openTag("apply");
+		out.openTag("apply"); //- g_a * a
 		out.addTag("times");
 		out.addTagWithContent("ci", "g_"+id);
 		out.addTagWithContent("ci", id);
-		out.closeTag();//apply
+		out.closeTag();//apply times
 		
-		out.closeTag();//apply
+		out.closeTag();//apply minus
 		out.closeTag();//math
 	}
 	
-	private void exploreNode(List pile, String topNodeId, OmddNode node, List nodeOrder) throws IOException {
+	protected void exploreNode(int[][] parcours, int deep, String topNodeId, OmddNode node, List nodeOrder) throws IOException {
 		if (node.next == null) {
-			pile.add(0,"K_"+topNodeId+"_"+node.value);
+			if (node.value > 0) {
+				out.openTag("apply");
+				out.addTag("times");
+				out.addTagWithContent("ci", "K_"+topNodeId+"_"+node.value);
+				String nodeName;
+				for (int i = 0; i < deep; i++) {
+					nodeName = getVertexNameForLevel(parcours[i][2], nodeOrder);//level
+					if (parcours[i][0] > 0) {
+						stepPlus(nodeName, parcours[i][0]);
+					}
+					if (parcours[i][1] < parcours[i][3]) {
+						stepMinus(nodeName, parcours[i][1]);
+					}
+				}
+				out.closeTag();//apply times
+			}
 			return ;
 		}
-		String nodeName = getVertexNameForLevel(node.level, nodeOrder);
 		OmddNode currentChild;
-		for (int i = node.next.length-1; i > 0; i--) {//ICI
+		for (int i = 0 ; i < node.next.length ; i++) {
 			currentChild = node.next[i];
-			int begin = i-1;
-			int end = i;
-			for (begin=i-1 ; begin > 0 && currentChild == node.next[begin]; begin--, i--);
-			if (end < node.next.length) {
-				pile.add(0,"t_"+nodeName+"_"+end);
-				pile.add(0,nodeName);
-				pile.add(0,"s-");
-			}
-			if (begin > 0) {
-				pile.add(0,"t_"+nodeName+"_"+begin);
-				pile.add(0,nodeName);
-				pile.add(0,"s+");
-			}
-			exploreNode(pile, topNodeId, node.next[end], nodeOrder);
+			int begin = i;
+			int end;
+			for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++);
+			parcours[deep][0] = begin;
+			parcours[deep][1] = end;
+			parcours[deep][2] = node.level;
+			parcours[deep][3] = node.next.length;
+			exploreNode(parcours, deep+1, topNodeId, node.next[begin], nodeOrder);
 		}
 	}
 	
-	private void stepPlus(String id, int i) throws IOException {
+	protected void stepPlus(String id, int i) throws IOException {
 		out.openTag("apply");
 		out.addTag("csymbol", new String[] {"encoding", "text", "definitionURL", "http://www-gna.inrialpes.fr/gnaml/symbols/step-plus"}, "s+");
 		out.addTagWithContent("ci", id);
 		out.addTagWithContent("ci", "t_"+id+"_"+i);
 		out.closeTag();
 	}
-	private void stepMinus(String id, int i) throws IOException {
+	protected void stepMinus(String id, int i) throws IOException {
 		out.openTag("apply");
 		out.addTag("csymbol", new String[] {"encoding", "text", "definitionURL", "http://www-gna.inrialpes.fr/gnaml/symbols/step-minus"}, "s-");
 		out.addTagWithContent("ci", id);
@@ -194,7 +195,7 @@ public class GsGNAMLExport extends GsAbstractExport {
 		out.closeTag();
 	}
 	
-	private void writeParameterInequalities(GsRegulatoryVertex node, int thresholdLevels, String id) throws IOException {
+	protected void writeParameterInequalities(GsRegulatoryVertex node, int thresholdLevels, String id) throws IOException {
 		String g = "g_"+id;
 		String K = "K_"+id+"_";
 		String t = "t_"+id+"_";
@@ -217,67 +218,13 @@ public class GsGNAMLExport extends GsAbstractExport {
 		out.closeTag();//math
 	}
 
-
-	
-
-
-//			out.write("  degradation-parameters: g_" + id + "\n"
-//					+ "  state-equation:\n    d/dt " + id + " = "
-//					+ getGNAEq(node, nodeOrder)
-//					+ " - g_"+id+" * "+id+"\n");
-//			
-//			//threshold-inequalities:
-//			out.write("  threshold-inequalities: zero_"+id+" < ");
-//			tmp = new StringBuffer();
-//			for (int i = 1; i <= thresholdLevels; i++) {
-//				tmp.append("t_"+id+i+" < ");
-//				tmp.append("k_"+id+i+" / g_"+id+" < ");
-//			}
-//			out.write(tmp.toString());
-//			out.write("max_"+id+"\n\n");
-//		}
-//		out.close();
-//	}
-//
-//	private String getGNAEq(GsRegulatoryVertex node, List nodeOrder) {
-//		String s = exploreNode(node.getId(), node.getTreeParameters(graph).reduce(), nodeOrder);
-//		return s.substring(0, s.length()-3);
-//	}
-//
-//	private String exploreNode(String topNodeId, OmddNode node, List nodeOrder) {
-//		if (node.next == null) {
-//			return "k_"+topNodeId+node.value+" + ";
-//		} else {
-//			String res = "";
-//			String nodeName = getVertexNameForLevel(node.level, nodeOrder);
-//			OmddNode currentChild;
-//			for (int i = 0; i < node.next.length; i++) {
-//				currentChild = node.next[i];
-//				int begin = i;
-//				int end = i+1;
-//				for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++);
-//				if (begin > 0) {
-//					res += "s+("+nodeName+", t_"+nodeName+begin+")";
-//				}
-//				if (end < node.next.length) {
-//					if (res.length() > 0) {
-//						res += " * ";
-//					}
-//					res += "s-("+nodeName+", t_"+nodeName+end+")";
-//				}
-//				res += " * "+exploreNode(topNodeId, node.next[begin], nodeOrder);
-//			}
-//			return res;
-//		}
-//	}
-	
 	/**
 	 * Return the ID of a node using his order and node order for the graph.
 	 * @param order : The order of the node
 	 * @param nodeOrder : The node order (in the graph)
 	 * @return the ID as string
 	 */
-	private String getVertexNameForLevel(int order, List nodeOrder) {
-		return ((GsRegulatoryVertex) nodeOrder.get(order)).getId();
+	protected String getVertexNameForLevel(int level, List nodeOrder) {
+		return ((GsRegulatoryVertex) nodeOrder.get(level)).getId();
 	}
 }
