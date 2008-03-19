@@ -1,11 +1,8 @@
 package fr.univmrs.tagc.common.document;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
@@ -18,7 +15,6 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class OOoDocumentWriter extends DocumentWriter {
 
-	File file;
 	XMLWriter xmlw;
 	ZipOutputStream zo;
 	OutputStreamWriter writer;
@@ -26,12 +22,11 @@ public class OOoDocumentWriter extends DocumentWriter {
 	Vector v_table = new Vector();
 	OOoTable curTable = null;
 	
-	public OOoDocumentWriter(File file) {
-		this.file = file;
+	public OOoDocumentWriter() {
 	}
-	
-	protected void startDocument() throws ZipException, IOException {
-		zo = new ZipOutputStream(new FileOutputStream(file));
+		
+	public void startDocument() throws ZipException, IOException {
+		zo = new ZipOutputStream(output);
 		writer = new OutputStreamWriter(zo, "UTF-8");
 		
 		zo.putNextEntry(new ZipEntry("META-INF/manifest.xml"));
@@ -144,7 +139,7 @@ public class OOoDocumentWriter extends DocumentWriter {
 		xmlw.addAttr("text:style-name", style==null ? "Standard" : style);
 	}
 	
-	protected void doWriteText(String text) throws IOException {
+	protected void doWriteText(String text, boolean newLine) throws IOException {
 		xmlw.addContent(text);
 	}
 	
@@ -208,6 +203,40 @@ public class OOoDocumentWriter extends DocumentWriter {
 	}
 
 	protected void doCloseTableRow() throws IOException {
+		xmlw.closeTag();
+	}
+
+	protected void doOpenHeader(int level, String content, String style) throws IOException {
+		// TODO this method is a stub
+		doOpenParagraph("");
+		doWriteText(content, false);
+		doCloseParagraph();
+	}
+	protected void doAddLink(String href, String content) throws IOException {
+		// TODO this method is a stub
+		xmlw.openTag("a");
+		xmlw.addAttr("href", href);
+		xmlw.addContent(content);
+		xmlw.closeTag();
+	}
+	protected void doOpenList(int type) throws IOException {
+		// TODO this method is a stub
+		if (type == DocumentWriter.LIST_STYLE_BULLET) {
+			xmlw.openTag("ul");
+		} else {
+			xmlw.openTag("ol");
+		}
+	}
+	protected void doOpenListItem() throws IOException {
+		// TODO this method is a stub
+		xmlw.openTag("li");
+	}
+	protected void doCloseListItem() throws IOException {
+		// TODO this method is a stub
+		xmlw.closeTag();
+	}
+	protected void doCloseList() throws IOException {
+		// TODO this method is a stub
 		xmlw.closeTag();
 	}
 }

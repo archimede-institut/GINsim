@@ -3,6 +3,8 @@ package fr.univmrs.tagc.common.document;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,11 +20,16 @@ import junit.framework.TestCase;
 public class TestDocumentWriter extends TestCase {
 
 	List l;
-	public TestDocumentWriter() {
+	public TestDocumentWriter() throws FileNotFoundException {
 		l = new ArrayList(2);
 		File baseDir = TestTools.getTempDir();
-		l.add(new OOoDocumentWriter(new File(baseDir,"testme.odt")));
-		l.add(new XHTMLDocumentWriter(new File(baseDir,"testme.html")));
+		DocumentWriter doc = new OOoDocumentWriter();
+		doc.setOutput(new FileOutputStream(new File(baseDir,"testme.odt")));
+		l.add(doc);
+		
+		doc = new XHTMLDocumentWriter();
+		doc.setOutput(new FileOutputStream(new File(baseDir,"testme.html")));
+		l.add(doc);
 	}
 	
 	public void testDocumentWriters() {
@@ -98,7 +105,7 @@ public class TestDocumentWriter extends TestCase {
 			doc.startDocument();
 			doc.writeText("Il etait une fois, ... Blablabla");
 			
-			doc.newParagraph(null);
+			doc.openParagraph(null);
 			doc.writeText("un autre paragraphe");
 			
 			doc.openTable("t_1", "s_table", new String[] { "s1", "s2" });
@@ -109,7 +116,7 @@ public class TestDocumentWriter extends TestCase {
 			doc.addTableRow(new String[] {"2.2.2.2.2.", "Bye"});
 			doc.closeTable();
 
-			doc.newParagraph(null);
+			doc.openParagraph(null);
 			doc.writeText("et un dernier brin pour finir!");
 			doc.close();
 		} catch (ZipException e) {

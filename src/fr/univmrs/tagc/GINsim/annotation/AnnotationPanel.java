@@ -65,7 +65,7 @@ public class AnnotationPanel extends JPanel
         if (obj != null && obj instanceof Annotation) {
             listenChanges = false;
             currentNote = (Annotation)obj;
-            linkList.setData(currentNote.linkList);
+            linkList.setData(currentNote.getLinkList());
             jTextArea.setText(currentNote.getComment());
             listenChanges = true;
         }

@@ -14,7 +14,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
 public class Annotation implements XMLize
 {
     /** list of links  */
-	protected Vector linkList;
+	private Vector linkList;
 	private String comment;
 	
 	/**
@@ -30,19 +30,19 @@ public class Annotation implements XMLize
 	 * @return the vector of String (url).
 	 */
 	public String getLink(int index) {
-		return linkList.get(index).toString();
+		return getLinkList().get(index).toString();
 	}
 	public void openLink(int index) {
-		((AnnotationLink)linkList.get(index)).open();
+		((AnnotationLink)getLinkList().get(index)).open();
 	}
 	public void addLink(String s, GsGraph graph) {
-		setLink(s, linkList.size(), graph);
+		setLink(s, getLinkList().size(), graph);
 	}
 	public void setLink(String s, int index, GsGraph graph) {
-		if (index == linkList.size()) {
-			linkList.add(new AnnotationLink(s, graph));
+		if (index == getLinkList().size()) {
+			getLinkList().add(new AnnotationLink(s, graph));
 		} else {
-			((AnnotationLink)linkList.get(index)).setText(s, graph);
+			((AnnotationLink)getLinkList().get(index)).setText(s, graph);
 		}
 	}
 	/**
@@ -53,6 +53,11 @@ public class Annotation implements XMLize
 		return comment;
 	}
 
+	public Vector getLinkList() {
+		return linkList;
+	}
+
+	
 	/**
 	 * Set the string containing the comments.
 	 * @param comment the new comment
@@ -62,15 +67,15 @@ public class Annotation implements XMLize
 	}
 	
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
-			if (comment.equals("") && linkList.size()==0) {
+			if (comment.equals("") && getLinkList().size()==0) {
 			    return;         
             }
 			out.openTag("annotation");
-            if (linkList.size() > 0) {
+            if (getLinkList().size() > 0) {
                 out.openTag("linklist");
-                for (int i=0 ; i<linkList.size() ; i++) {
+                for (int i=0 ; i<getLinkList().size() ; i++) {
                     out.openTag("link");
-                    out.addAttr("xlink:href", linkList.elementAt(i).toString());
+                    out.addAttr("xlink:href", getLinkList().elementAt(i).toString());
                     out.closeTag();
                 }
                 out.closeTag();
@@ -90,7 +95,7 @@ public class Annotation implements XMLize
 	}
 
 	public void copyFrom(Annotation other) {
-		int len = other.linkList.size();
+		int len = other.getLinkList().size();
 		for (int i=0 ; i<len ; i++) {
 			addLink(other.getLink(i), null);
 		}
@@ -101,16 +106,16 @@ public class Annotation implements XMLize
      * @return true if the annotation is empty
      */
     public boolean isEmpty() {
-        return "".equals(comment) && linkList.size() == 0;
+        return "".equals(comment) && getLinkList().size() == 0;
     }
 
 	public String getHTMLComment() {
 		StringBuffer buf = new StringBuffer();
 		boolean hasLink = false;
-		for (Iterator it = linkList.iterator() ; it.hasNext() ; ) {
+		for (Iterator it = getLinkList().iterator() ; it.hasNext() ; ) {
 			AnnotationLink lnk = (AnnotationLink)it.next();
-			if (lnk.helper != null) {
-				String s = lnk.helper.getLink(lnk.proto, lnk.value);
+			if (lnk.getHelper() != null) {
+				String s = lnk.getHelper().getLink(lnk.proto, lnk.value);
 				if (s != null) {
 					if (!hasLink) {
 						hasLink = true;
