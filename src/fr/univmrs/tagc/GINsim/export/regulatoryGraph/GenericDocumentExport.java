@@ -19,6 +19,9 @@ import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.common.GsException;
@@ -40,11 +43,13 @@ public class GenericDocumentExport extends GsAbstractExport {
 		v_format.add(new GenericDocumentFormat(OOoDocumentWriter.class, "OpenOffice.org", new String[] {"odt"}, "OpenOffice.org files (.odt)", ".odt"));
 	}
 
-
 	private GsExportConfig config = null;
 	protected DocumentWriter doc = null;
 	protected Class documentWriterClass;
+
 	private GsRegulatoryGraph graph;
+	private List nodeOrder;
+	private int len;
 	
     public GenericDocumentExport() {
 		id = "Documentation";
@@ -97,9 +102,11 @@ public class GenericDocumentExport extends GsAbstractExport {
 	
 	protected synchronized void run() throws IOException {
 		this.graph = (GsRegulatoryGraph) config.getGraph();
-		
+		nodeOrder = graph.getNodeOrder();
+		len = nodeOrder.size();
 		setDocumentProperties();
 		setDocumentStyles();
+		// TODO: use a more precise config
 		writeDocument();
 	}
 
@@ -112,10 +119,49 @@ public class GenericDocumentExport extends GsAbstractExport {
 		writeAnnotation(graph.getAnnotation());
 		
 		// all nodes with comment and logical functions
-		doc.openHeader(2, "Nodes", null);
-		writeLogicalFunctionsTable();
+		if (true) {
+			doc.openHeader(2, "Nodes", null);
+			writeLogicalFunctionsTable();
+		}
+		
+		// initial states
+		if (true) {
+			doc.openHeader(2, "Initial States", null);
+			writeInitialStates();
+		}
+		// mutant description
+		if (true) {
+			doc.openHeader(2, "Dynamical Behaviour", null);
+			// TODO: export mutants as well
+		}
 
 		doc.close();//close the document		
+	}
+
+	private void writeInitialStates() throws IOException {
+		GsInitialStateList initStates = (GsInitialStateList) graph.getObject(
+				GsInitialStateManager.key, false);
+		if (initStates != null && initStates.getNbElements(null) > 0) {
+			GsInitStateTableModel model = new GsInitStateTableModel(nodeOrder, null, initStates, false);
+			String[] t_cols = new String[len+1];
+			for (int i=0 ; i<=len ; i++) {
+				t_cols[i] = "";
+			}
+			doc.openTable("initialStates", null, t_cols);
+			doc.openTableRow();
+			doc.openTableCell("Name");
+			for (int i = 0; i < len; i++) {
+				doc.openTableCell(""+nodeOrder.get(i));
+			}
+			for ( int i=0 ; i< initStates.getNbElements(null) ; i++ ) {
+				doc.openTableRow();
+				doc.openTableCell(""+model.getValueAt(i, 0));
+				for (int j = 0; j < len; j++) {
+					doc.openTableCell(""+model.getValueAt(i, j+2));
+				}
+			}
+			doc.closeTable();
+		}
 	}
 
 	private void writeLogicalFunctionsTable() throws IOException {

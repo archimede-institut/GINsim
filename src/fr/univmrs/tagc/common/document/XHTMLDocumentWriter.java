@@ -21,11 +21,19 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 	Vector v_table = new Vector();
 	xHTMLTable curTable = null;
 	public String NEW_LINE = "<br />";
-		
+	
+	static Map m_stylesWriters = new HashMap();
+	static {
+		m_stylesWriters.put(DocumentStyle.COLOR, new ColorStyleWriter("font-size: #", ";"));
+		m_stylesWriters.put(DocumentStyle.FONT_SIZE, new SimpleStyleWriter("color: #", "pt;"));
+		m_stylesWriters.put(DocumentStyle.HEIGHT, new SimpleStyleWriter("height: #", "px;"));
+		m_stylesWriters.put(DocumentStyle.WIDTH, new SimpleStyleWriter("width: #", "px;"));
+	}
+
 	public XHTMLDocumentWriter() {
 		registerForDocumentExtra("javascript");
 	}
-			
+
 	public void startDocument() throws IOException {
 		writer = new OutputStreamWriter(output, "UTF-8");
 		xmlw = new XMLWriter(writer, null);
@@ -214,10 +222,10 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 				Iterator propertiesIterator = documentStyles.getPropertiesIteratorForStyle(style);
 				while (propertiesIterator.hasNext()) {
 					String property = (String) propertiesIterator.next();
-					buf.append(property);
-					buf.append(':');
-					buf.append(getStyleValue(property, properties.get(property)));
-					buf.append(';');
+					StyleWriter sw = (StyleWriter)m_stylesWriters.get(property);
+					if (sw != null) {
+						buf.append(sw.getCSSStyle(properties.get(property)));
+					}
 				}
 				buf.append("}\n");
 				xmlw.addContent(buf.toString());
@@ -225,22 +233,32 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 			xmlw.closeTag();	
 		}
 	}
-
-	private String getStyleValue(String property, Object value) {
-		if (property.equals(DocumentStyle.COLOR)) {
-			return "#"+Tools.getColorCode((Color)value);
-		} else if (property.equals(DocumentStyle.FONT_SIZE)) {
-			return value.toString()+"pt";
-		} else if (property.equals(DocumentStyle.HEIGHT)) {
-			return value.toString()+"px";
-		} else if (property.equals(DocumentStyle.WIDTH)) {
-			return value.toString()+"px";
-		}
-		return value.toString();
-	}
-
 }
 
+interface StyleWriter{
+	String getCSSStyle(Object value);
+}
+
+class SimpleStyleWriter implements StyleWriter {
+	String prefix;
+	String suffix;
+	public SimpleStyleWriter(String prefix, String suffix) {
+		this.prefix = prefix;
+		this.suffix = suffix;
+	}
+	public String getCSSStyle(Object value) {
+		return prefix+value+suffix;
+	}
+}
+
+class ColorStyleWriter extends SimpleStyleWriter {
+	public ColorStyleWriter(String prefix, String suffix) {
+		super(prefix, suffix);
+	}
+	public String getCSSStyle(Object value) {
+		return prefix+Tools.getColorCode((Color)value)+suffix;
+	}
+}
 
 class xHTMLTable {
 	String name;
