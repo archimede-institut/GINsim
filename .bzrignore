@@ -16,3 +16,4 @@ doc
 testCase/tmp
 testCase/tmp/**/*
 *.cld
+*.DS_Store
