@@ -99,7 +99,7 @@ public class OOoDocumentWriter extends DocumentWriter {
 				String style = (String) styleIterator.next();
 				xmlw.openTag("style:style");
 				xmlw.addAttr("style:name", style);
-				xmlw.addAttr("style:family", "paragraph"); //FIXME:
+				xmlw.addAttr("style:family", "paragraph"); // FIXME:
 				
 //				StringBuffer buf = new StringBuffer(style);
 //				buf.append('{');
@@ -213,30 +213,22 @@ public class OOoDocumentWriter extends DocumentWriter {
 		doCloseParagraph();
 	}
 	protected void doAddLink(String href, String content) throws IOException {
-		// TODO this method is a stub
-		xmlw.openTag("a");
-		xmlw.addAttr("href", href);
+		xmlw.openTag("text:a");
+		xmlw.addAttr("xlink:type", "simple");
+		xmlw.addAttr("xlink:href", href);
 		xmlw.addContent(content);
 		xmlw.closeTag();
 	}
 	protected void doOpenList(int type) throws IOException {
-		// TODO this method is a stub
-		if (type == DocumentWriter.LIST_STYLE_BULLET) {
-			xmlw.openTag("ul");
-		} else {
-			xmlw.openTag("ol");
-		}
+		xmlw.openTag("text:list");
 	}
 	protected void doOpenListItem() throws IOException {
-		// TODO this method is a stub
-		xmlw.openTag("li");
+		xmlw.openTag("text:list-item");
 	}
 	protected void doCloseListItem() throws IOException {
-		// TODO this method is a stub
 		xmlw.closeTag();
 	}
 	protected void doCloseList() throws IOException {
-		// TODO this method is a stub
 		xmlw.closeTag();
 	}
 }
