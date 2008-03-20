@@ -163,11 +163,21 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		xmlw.addContent(content);
 		xmlw.closeTag();
 	}
-	protected void doOpenList(int type) throws IOException {
-		if (type == DocumentWriter.LIST_STYLE_BULLET) {
-			xmlw.openTag("ul");
-		} else {
+	protected void doOpenList(String style) throws IOException {
+		boolean numbered = false;
+		if (style != null) {
+			Map m_style = documentStyles.getPropertiesForStyle(style);
+			if (m_style != null) {
+				numbered = "O".equals(m_style.get(DocumentStyle.LIST_TYPE));
+			}
+		}
+		if (numbered) {
 			xmlw.openTag("ol");
+		} else {
+			xmlw.openTag("ul");
+		}
+		if (style != null) {
+			xmlw.addAttr("class", style);
 		}
 	}
 	protected void doOpenListItem() throws IOException {

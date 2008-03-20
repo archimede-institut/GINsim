@@ -56,9 +56,6 @@ public abstract class DocumentWriter {
 	public static final int POS_LIST = 20;
 	public static final int POS_LIST_ITEM = 21;
 
-	public static final int LIST_STYLE_BULLET = 0;
-	public static final int LIST_STYLE_NUMBER = 1;
-
 	public static final String META_TITLE = "title";
 	public static final String META_AUTHOR = "author";
 	public static final String META_DATE = "date";
@@ -106,9 +103,7 @@ public abstract class DocumentWriter {
 	}
 
 	public void openHeader(int level, String content, String style) throws IOException {
-		if (pos.pos == POS_PARAGRAPH) {
-			closeParagraph();
-		}
+		closeUntil(POS_OUT);
 		doOpenHeader(level, content, style);
 	}
 	
@@ -126,8 +121,8 @@ public abstract class DocumentWriter {
 	public void openTableCell(int colspan, int rowspan, String content) throws IOException {
 		if (pos.pos == POS_TABLE) {
 			openTableRow();
-		} else if (pos.pos != POS_TABLE_ROW) {
-			closeTableCell();
+		} else {
+			closeUntil(POS_TABLE_ROW);
 		}
 		doOpenTableCell(colspan, rowspan);
 		pos = new DocumentPos(pos, POS_TABLE_CELL);
@@ -144,21 +139,7 @@ public abstract class DocumentWriter {
 	}
 
 	public void closeTableCell() throws IOException {
-		while (pos.pos != POS_TABLE_CELL) {
-			switch (pos.pos) {
-				case POS_PARAGRAPH:
-					closeParagraph();
-					break;
-				case POS_TABLE:
-				case POS_TABLE_ROW:
-					closeTable();
-					break;
-				default:
-					// FIXME: error
-					// throw new Exception("incoherent position");
-			}
-			
-		}
+		closeUntil(POS_TABLE_CELL);
 		doCloseTableCell();
 		pos = pos.parent;
 	}
@@ -181,17 +162,15 @@ public abstract class DocumentWriter {
 		openTableCell(1,1, content);
 	}
 
-	public void openList(int type) throws IOException {
+	public void openList(String style) throws IOException {
 		while (pos.pos == POS_PARAGRAPH) {
 			closeParagraph();
 		}
-		doOpenList(type);
+		doOpenList(style);
 		pos = new DocumentPos(pos, POS_LIST);
 	}
 	public void openListItem(String content) throws IOException {
-		if (pos.pos == POS_LIST_ITEM) {
-			closeListItem();
-		}
+		closeUntil(POS_LIST);
 		doOpenListItem();
 		pos = new DocumentPos(pos, POS_LIST_ITEM);
 		if (content != null) {
@@ -203,15 +182,11 @@ public abstract class DocumentWriter {
 		pos = pos.parent;
 	}
 	public void closeList() throws IOException {
-		if (pos.pos == POS_LIST_ITEM) {
-			closeListItem();
-		}
+		closeUntil(POS_LIST);
 		doCloseList();
 		pos = pos.parent;
 	}
 
-	
-	
 	public void writeText(String text) throws IOException {
 		doWriteText(text, false);
 	}
@@ -227,22 +202,7 @@ public abstract class DocumentWriter {
 	}
 	
 	public void close() throws IOException {
-		while (pos.pos != POS_OUT) {
-			switch (pos.pos) {
-				case POS_PARAGRAPH:
-					closeParagraph();
-					break;
-				case POS_TABLE:
-				case POS_TABLE_CELL:
-				case POS_TABLE_ROW:
-					closeTable();
-					break;
-				case POS_LIST_ITEM:
-				case POS_LIST:
-					closeList();
-					break;
-			}
-		}
+		closeUntil(POS_OUT);
 		doCloseDocument();
 	}
 	
@@ -259,7 +219,7 @@ public abstract class DocumentWriter {
 	protected abstract void doCloseDocument() throws IOException;
 	protected abstract void doOpenHeader(int level, String content, String style) throws IOException;
 	protected abstract void doAddLink(String href, String content) throws IOException;
-	protected abstract void doOpenList(int type) throws IOException;
+	protected abstract void doOpenList(String style) throws IOException;
 	protected abstract void doOpenListItem() throws IOException;
 	protected abstract void doCloseListItem() throws IOException;
 	protected abstract void doCloseList() throws IOException;
@@ -346,6 +306,37 @@ public abstract class DocumentWriter {
 		DocumentStyle oldStyles = documentStyles;
 		documentStyles = newStyle;
 		return oldStyles;
+	}
+	
+	protected void ensureParagraph() throws IOException {
+		if (pos.pos != POS_PARAGRAPH) {
+			openParagraph(null);
+		}
+	}
+	
+	protected void closeUntil(int targetpos) throws IOException {
+		while (pos != null && pos.pos != POS_OUT && pos.pos != targetpos) {
+			switch (pos.pos) {
+				case POS_PARAGRAPH:
+					closeParagraph();
+					break;
+				case POS_TABLE:
+					closeTable();
+					break;
+				case POS_TABLE_CELL:
+					closeTableCell();
+					break;
+				case POS_TABLE_ROW:
+					closeTableRow();
+					break;
+				case POS_LIST_ITEM:
+					closeListItem();
+					break;
+				case POS_LIST:
+					closeList();
+					break;
+			}
+		}
 	}
 }
 

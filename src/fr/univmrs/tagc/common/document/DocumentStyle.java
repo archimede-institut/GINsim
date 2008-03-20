@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class DocumentStyle {
 	
+	public static final String LIST_TYPE = "list-type";
 	public static final String COLOR = "color";
 	public static final String WIDTH = "width";
 	public static final String HEIGHT = "height";

@@ -192,6 +192,13 @@ public class Tools {
 		return false;
 	}
 	
+	public static String getLink(Object protocol, Object value) {
+		OpenHelper helper = (OpenHelper)m_helper.get(protocol);
+		if (helper != null) {
+			return helper.getLink(protocol.toString(), value.toString());
+		}
+		return protocol+":"+value;
+	}
 	public static boolean open(Object protocol, Object value) {
 		OpenHelper helper = (OpenHelper)m_helper.get(protocol);
 		if (helper != null) {

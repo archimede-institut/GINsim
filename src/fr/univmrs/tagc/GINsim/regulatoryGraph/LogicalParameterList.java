@@ -115,6 +115,13 @@ public class LogicalParameterList extends AbstractList implements List {
 		return new LogicalParameterIterator(manual.iterator(), fromFunctions.iterator());
 	}
 
+	public Iterator iterator(boolean manual) {
+		if (manual) {
+			return this.manual.iterator();
+		}
+		return fromFunctions.iterator();
+	}
+
 
 	public void updateInteraction(int index, Vector edges) {
 		if (index >= manual.size()) {

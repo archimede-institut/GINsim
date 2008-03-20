@@ -159,7 +159,21 @@ public class BiblioList implements XMLize, OpenHelper {
 	}
 	
 	public String getLink(String proto, String value) {
-		// TODO Auto-generated method stub
+		if (!proto.equals("ref")) {
+			return null;
+		}
+		Ref ref = (Ref)m_references.get(value);
+		if (ref == null) {
+			return null;
+		}
+		// quick hack: take the first ignoring "file"
+		Iterator it = ref.links.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry e = (Entry)it.next();
+			if (!"file".equals(e.getKey())) {
+				return Tools.getLink(e.getKey(), e.getValue());
+			}
+		}
 		return null;
 	}
 

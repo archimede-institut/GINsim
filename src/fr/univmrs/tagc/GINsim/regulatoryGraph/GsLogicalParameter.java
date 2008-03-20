@@ -34,6 +34,10 @@ public class GsLogicalParameter implements XMLize {
 		edge_index = new ArrayList();
 	}
 
+	public boolean isDup() {
+		return isDup;
+	}
+	
 	/**
      * @param newEI
      * @param v

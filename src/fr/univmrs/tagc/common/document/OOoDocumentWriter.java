@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
@@ -23,6 +24,7 @@ public class OOoDocumentWriter extends DocumentWriter {
 	OOoTable curTable = null;
 	
 	public OOoDocumentWriter() {
+		NEW_LINE = "<text:line-break/>";
 	}
 		
 	public void startDocument() throws ZipException, IOException {
@@ -94,29 +96,50 @@ public class OOoDocumentWriter extends DocumentWriter {
 	protected void doWriteStyles() throws IOException {
 		if (documentStyles != null) {
 			xmlw.openTag("office:automatic-styles");
+			
 			Iterator styleIterator = documentStyles.getStyleIterator();
 			while (styleIterator.hasNext()) {
-				String style = (String) styleIterator.next();
-				xmlw.openTag("style:style");
-				xmlw.addAttr("style:name", style);
-				xmlw.addAttr("style:family", "paragraph"); // FIXME:
+				String style = (String)styleIterator.next();
+				Map m_style = documentStyles.getPropertiesForStyle(style);
 				
-//				StringBuffer buf = new StringBuffer(style);
-//				buf.append('{');
-//				Map properties = styles.getPropertiesForStyle(style);
-//				Iterator propertiesIterator = styles.getPropertiesIteratorForStyle(style);
-//				while (propertiesIterator.hasNext()) {
-//					String property = (String) propertiesIterator.next();
-//					buf.append(property);
-//					buf.append(':');
-//					buf.append(getStyleValue(property, properties.get(property)));
-//					buf.append(';');
-//				}
-//				buf.append('}');
-//				xmlw.addContent(buf.toString());
-				xmlw.closeTag();	
+				Object listtype = m_style.get(DocumentStyle.LIST_TYPE);
+				if (listtype != null) {
+					xmlw.openTag("text:list-style");
+					xmlw.addAttr("style:name", style);
+					double spacing = 0.5;
+					for (int i=0 ; i<10 ; i++) {
+						xmlw.openTag("text:list-level-style-bullet");
+						xmlw.addAttr("text:level", ""+i);
+						xmlw.addAttr("text:bullet-char", "●");
+						xmlw.openTag("style:list-level-properties");
+						xmlw.addAttr("text:space-before", (i-1)*spacing+"cm");
+						xmlw.addAttr("text:min-label-width", spacing+"cm");
+						xmlw.closeTag();
+						xmlw.closeTag();
+					}
+					xmlw.closeTag();	
+				} else {
+					xmlw.openTag("style:style");
+					xmlw.addAttr("style:name", style);
+					xmlw.addAttr("style:family", "paragraph"); // FIXME:
+				
+	//				StringBuffer buf = new StringBuffer(style);
+	//				buf.append('{');
+	//				Map properties = styles.getPropertiesForStyle(style);
+	//				Iterator propertiesIterator = styles.getPropertiesIteratorForStyle(style);
+	//				while (propertiesIterator.hasNext()) {
+	//					String property = (String) propertiesIterator.next();
+	//					buf.append(property);
+	//					buf.append(':');
+	//					buf.append(getStyleValue(property, properties.get(property)));
+	//					buf.append(';');
+	//				}
+	//				buf.append('}');
+	//				xmlw.addContent(buf.toString());
+					xmlw.closeTag();	
+				}
 			}
-			xmlw.closeTag();	
+			xmlw.closeTag();
 		}
 	}
 
@@ -140,7 +163,11 @@ public class OOoDocumentWriter extends DocumentWriter {
 	}
 	
 	protected void doWriteText(String text, boolean newLine) throws IOException {
+		ensureParagraph();
 		xmlw.addContent(text);
+		if (newLine) {
+			xmlw.addFormatedContent(newLine(), false);
+		}
 	}
 	
 	protected void doOpenTable(String name, String style, String[] t_colStyle) throws IOException {
@@ -178,10 +205,12 @@ public class OOoDocumentWriter extends DocumentWriter {
 	}
 	
 	protected void doOpenTableCell(int colspan, int rowspan) throws IOException {
-		// TODO: support rowspan
 		xmlw.openTag("table:table-cell");
 		if (colspan > 1) {
 			xmlw.addAttr("table:number-columns-spanned", ""+colspan);
+		}
+		if (rowspan > 1) {
+			xmlw.addAttr("table:number-rows-spanned", ""+rowspan);
 		}
 	}
 	
@@ -207,20 +236,29 @@ public class OOoDocumentWriter extends DocumentWriter {
 	}
 
 	protected void doOpenHeader(int level, String content, String style) throws IOException {
-		// TODO this method is a stub
-		doOpenParagraph("");
-		doWriteText(content, false);
-		doCloseParagraph();
+		xmlw.openTag("text:h");
+		xmlw.addAttr("text:outline-level", ""+level);
+		if (style != null) {
+			xmlw.addAttr("text:style-name", style);
+//		} else {
+//			xmlw.addAttr("text:style-name", "Heading_20_"+level);
+		}
+		xmlw.addContent(content);
+		xmlw.closeTag();
 	}
 	protected void doAddLink(String href, String content) throws IOException {
+		ensureParagraph();
 		xmlw.openTag("text:a");
 		xmlw.addAttr("xlink:type", "simple");
 		xmlw.addAttr("xlink:href", href);
 		xmlw.addContent(content);
 		xmlw.closeTag();
 	}
-	protected void doOpenList(int type) throws IOException {
+	protected void doOpenList(String style) throws IOException {
 		xmlw.openTag("text:list");
+		if (style != null) {
+			xmlw.addAttr("text:style-name", style);
+		}
 	}
 	protected void doOpenListItem() throws IOException {
 		xmlw.openTag("text:list-item");

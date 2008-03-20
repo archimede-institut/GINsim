@@ -23,7 +23,7 @@
 		<plugin name="SnakesExport"				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"/>
 		<plugin name="GNAexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport"/>
 		<plugin name="GNAMLexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAMLExport"/>
-		<plugin name="GenericDocumentexport"	mainClass="fr.univmrs.tagc.common.document.GenericDocumentExport"/>
+		<plugin name="GenericDocumentexport"	mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport"/>
 
 		<!-- other plugins -->
 		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin"/>
