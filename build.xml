@@ -27,7 +27,7 @@
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
 	
-	<property name="classpath"  value=".:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/tar.jar:lib/piccolo.jar"/>
+	<property name="classpath"  value=".:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/javabib-bin.jar"/>
 
 	<target name="init">
 		<!-- Create the time stamp -->
@@ -198,7 +198,7 @@
 		<_merge_jar jarfile="${dist}/lib/jgraph.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/jgrapht-0.6.0.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/jgraphaddons.jar" dest="${tmpdir}"/>
-		<_merge_jar jarfile="${dist}/lib/tar.jar" dest="${tmpdir}"/>
+		<_merge_jar jarfile="${dist}/lib/javabib-bin.jar" dest="${tmpdir}"/>
 	    	<copy todir="${tmpdir}"><fileset dir="${build}"/></copy>
 		<jar jarfile="${ginsim}-${version}.jar" basedir="${tmpdir}" manifest="MANIFEST.MF"/> 
 	 	<delete dir="${tmpdir}"/>
