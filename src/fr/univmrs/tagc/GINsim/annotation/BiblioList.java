@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.annotation;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -11,6 +12,10 @@ import javax.swing.JFileChooser;
 
 import org.xml.sax.Attributes;
 
+import bibtex.dom.BibtexAbstractValue;
+import bibtex.dom.BibtexEntry;
+import bibtex.dom.BibtexFile;
+import bibtex.parser.BibtexParser;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
@@ -182,8 +187,12 @@ public class BiblioList implements XMLize, OpenHelper {
 		
 		File f = new File(fileName);
 		if (f.exists()) {
-			// FIXME: add a mechanism to support other biblio parsers
-			new ReferencerParser(this, fileName);
+			// FIXME: add a proper mechanism choose the parser
+			if (fileName.endsWith(".bib")) {
+				new BibTexParser(this,fileName);
+			} else {
+				new ReferencerParser(this, fileName);
+			}
 		} else {
 			GsGraphNotificationAction action = new GsGraphNotificationAction() {
 				String[] t = {Translator.getString("STR_purge")};
@@ -244,22 +253,25 @@ class Ref {
 }
 
 
-
 class ReferencerParser extends XMLHelper {
 
 	String baseDir;
 	BiblioList bibList;
 	
+	String extra = null;
+	
 	static final int DOC = 0;
 	static final int KEY = 1;
 	static final int DOI = 2;
-	static final int FILENAME = 3;
+	static final int EXTRA = 3;
+	static final int FILENAME = 4;
 
 	static Map CALLMAP = new TreeMap();
 	static {
 		addCall("doc", DOC, CALLMAP, STARTONLY, false);
 		addCall("key", KEY, CALLMAP, ENDONLY, true);
 		addCall("bib_doi", DOI, CALLMAP, ENDONLY, true);
+		addCall("bib_extra", EXTRA, CALLMAP, BOTH, true);
 		addCall("relative_filename", FILENAME, CALLMAP, ENDONLY, true);
 		addCall("filename", FILENAME, CALLMAP, ENDONLY, true);
 	}
@@ -285,6 +297,9 @@ class ReferencerParser extends XMLHelper {
 			case DOC:
 				bibList.addRef(null);
 				break;
+			case EXTRA:
+				extra = attributes.getValue("key");
+				break;
 		}
 	}
 
@@ -296,6 +311,13 @@ class ReferencerParser extends XMLHelper {
 			case DOI:
 				if (curval.trim().length() > 0) {
 					bibList.addLinkToCurRef("doi", curval);
+				}
+				break;
+			case EXTRA:
+				if (curval.trim().length() > 0) {
+					if ("pmid".equals(extra)) {
+						bibList.addLinkToCurRef("pubmed", curval);
+					}
 				}
 				break;
 			case FILENAME:
@@ -317,6 +339,46 @@ class ReferencerParser extends XMLHelper {
 					System.out.println("  could not find file "+curval);
 				}
 				break;
+		}
+	}
+}
+
+class BibTexParser {
+	String baseDir;
+	
+	static final Map m_bibtextoginsim = new TreeMap();
+	static {
+		m_bibtextoginsim.put("doi", "doi");
+		m_bibtextoginsim.put("pmid", "pubmed");
+		m_bibtextoginsim.put("pdf", "file");
+		m_bibtextoginsim.put("ps", "file");
+	}
+
+	public BibTexParser(BiblioList biblist, String path) {
+		try {
+			File f = new File(path);
+			baseDir = f.getParent();
+			
+			BibtexFile bibtexFile = new BibtexFile();
+			BibtexParser parser = new BibtexParser(false);
+			parser.parse(bibtexFile, new FileReader(f));
+			
+			Iterator it = bibtexFile.getEntries().iterator();
+			while (it.hasNext()) {
+				BibtexEntry entry = (BibtexEntry)it.next();
+				biblist.addRef(entry.getEntryKey());
+				Iterator it_links = m_bibtextoginsim.entrySet().iterator();
+				while (it_links.hasNext()) {
+					Entry e = (Entry)it_links.next();
+					String k = (String)e.getKey();
+					BibtexAbstractValue v = entry.getFieldValue(k);
+					if (v != null) {
+						biblist.addLinkToCurRef((String)e.getValue(), v.toString());
+					}
+				}
+			}
+		} catch (Exception e) {
+			Tools.error(new GsException(GsException.GRAVITY_ERROR, e), null);
 		}
 	}
 }
