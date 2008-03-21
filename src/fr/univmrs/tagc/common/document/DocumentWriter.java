@@ -275,7 +275,7 @@ public abstract class DocumentWriter {
 	 * @param extra : The name of the extra to get
 	 * @return the document extra
 	 */
-	protected StringBuffer getDocumentExtra(String extra) {
+	public StringBuffer getDocumentExtra(String extra) {
 		return (StringBuffer)documentExtras.get(extra);
 	}
 	/**
