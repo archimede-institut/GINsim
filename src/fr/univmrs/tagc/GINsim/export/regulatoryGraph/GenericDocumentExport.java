@@ -25,6 +25,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
 import fr.univmrs.tagc.common.document.OOoDocumentWriter;
@@ -374,22 +375,25 @@ public class GenericDocumentExport extends GsAbstractExport {
 		}
 		while (it.hasNext()) {
 			AnnotationLink lnk = (AnnotationLink)it.next();
+			String s_link;
 			if (lnk.getHelper() != null) {
-				String s = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());
-				if (s == null) {
+				s_link = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());
+			} else {
+				s_link = Tools.getLink(lnk.getProto(), lnk.getValue());
+			}
+			if (s_link == null) {
+				doc.openListItem(null);
+				doc.writeText(lnk.toString());
+				doc.closeListItem();
+			} else {
+				if (s_link == lnk.toString() && s_link.length() >= 50) {
 					doc.openListItem(null);
-					doc.writeText(lnk.toString());
+					doc.addLink(s_link, s_link.substring(0, 45) + "...");
 					doc.closeListItem();
 				} else {
-					if (s == lnk.toString() && s.length() >= 50) {
-						doc.openListItem(null);
-						doc.addLink(s, s.substring(0, 45) + "...");
-						doc.closeListItem();
-					} else {
-						doc.openListItem(null);
-						doc.addLink(s, lnk.toString());
-						doc.closeListItem();
-					}
+					doc.openListItem(null);
+					doc.addLink(s_link, lnk.toString());
+					doc.closeListItem();
 				}
 			}
 		}
