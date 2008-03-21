@@ -28,6 +28,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		m_stylesWriters.put(DocumentStyle.FONT_SIZE, new SimpleStyleWriter("color: #", "pt;"));
 		m_stylesWriters.put(DocumentStyle.HEIGHT, new SimpleStyleWriter("height: #", "px;"));
 		m_stylesWriters.put(DocumentStyle.WIDTH, new SimpleStyleWriter("width: #", "px;"));
+		m_stylesWriters.put(DocumentStyle.TABLE_BORDER, new BorderStyleWriter());
 	}
 
 	public XHTMLDocumentWriter() {
@@ -63,7 +64,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		if (javascript.length() > 0) {
 			xmlw.openTag("script");
 			xmlw.addAttr("type", "text/javascript");
-			xmlw.addContent(javascript.toString());
+			xmlw.addFormatedContent(javascript.toString(), false);
 			xmlw.closeTag();
 		}
 		
@@ -212,12 +213,12 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		if (documentStyles != null) {
 			xmlw.openTag("style");
 			xmlw.addAttr("type", "text/css");
+			xmlw.addContent("\ntable {border-collapse: collapse;}\n");
 			Iterator styleIterator = documentStyles.getStyleIterator();
 			while (styleIterator.hasNext()) {
 				String style = (String) styleIterator.next();
-				StringBuffer buf = new StringBuffer("\n.");
-				buf.append(style);
-				buf.append('{');
+				StringBuffer buf = new StringBuffer();
+				StringBuffer bufHeader = new StringBuffer("\n."+style);
 				Map properties = documentStyles.getPropertiesForStyle(style);
 				Iterator propertiesIterator = documentStyles.getPropertiesIteratorForStyle(style);
 				while (propertiesIterator.hasNext()) {
@@ -225,10 +226,11 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 					StyleWriter sw = (StyleWriter)m_stylesWriters.get(property);
 					if (sw != null) {
 						buf.append(sw.getCSSStyle(properties.get(property)));
+						bufHeader.append(sw.getCSSStyleHeader(style));
 					}
 				}
 				buf.append("}\n");
-				xmlw.addContent(buf.toString());
+				xmlw.addContent(bufHeader.toString()+"{"+buf.toString());
 			}
 			xmlw.closeTag();	
 		}
@@ -237,6 +239,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 
 interface StyleWriter{
 	String getCSSStyle(Object value);
+	String getCSSStyleHeader(String style);
 }
 
 class SimpleStyleWriter implements StyleWriter {
@@ -249,6 +252,9 @@ class SimpleStyleWriter implements StyleWriter {
 	public String getCSSStyle(Object value) {
 		return prefix+value+suffix;
 	}
+	public String getCSSStyleHeader(String style) {
+		return null;
+	}
 }
 
 class ColorStyleWriter extends SimpleStyleWriter {
@@ -258,6 +264,17 @@ class ColorStyleWriter extends SimpleStyleWriter {
 	public String getCSSStyle(Object value) {
 		return prefix+Tools.getColorCode((Color)value)+suffix;
 	}
+}
+
+class BorderStyleWriter implements StyleWriter {
+	public String getCSSStyle(Object value) {
+		return "border: "+value.toString()+"px solid black";
+	}
+
+	public String getCSSStyleHeader(String style) {
+		return " th, "+style+" td";
+	}
+
 }
 
 class xHTMLTable {

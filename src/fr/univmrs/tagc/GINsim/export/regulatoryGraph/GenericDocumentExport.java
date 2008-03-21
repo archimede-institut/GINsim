@@ -1,7 +1,11 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -17,13 +21,19 @@ import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
+import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
@@ -54,7 +64,10 @@ public class GenericDocumentExport extends GsAbstractExport {
     public GenericDocumentExport() {
 		id = "Documentation";
     }
-    
+    /**
+     * Allow you to register a new document writer to support a new file type.
+     * @see GenericDocumentFormat
+     */
     protected static void addSubFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
     	v_format.add(new GenericDocumentFormat(documentWriterClass, id, filter, filterDescr, extension));
     }
@@ -106,6 +119,9 @@ public class GenericDocumentExport extends GsAbstractExport {
 		len = nodeOrder.size();
 		setDocumentProperties();
 		setDocumentStyles();
+		if (doc.doesDocumentSupportExtra("javascript")) {
+			setJavascript();
+		}
 		// TODO: use a more precise config
 		writeDocument();
 	}
@@ -132,12 +148,116 @@ public class GenericDocumentExport extends GsAbstractExport {
 		// mutant description
 		if (true) {
 			doc.openHeader(2, "Dynamical Behaviour", null);
-			// TODO: export mutants as well
+			writeMutants();
 		}
 
 		doc.close();//close the document		
 	}
 
+	private void writeMutants() throws IOException {
+		GsRegulatoryMutants mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
+		GsSearchStableStates stableSearcher = new GsSearchStableStates(config.getGraph(), null, null);
+		OmddNode stable;
+		
+		doc.openTable("mutants", "table", new String[] {"", "", "", "", "", ""});
+		doc.openTableRow();
+		doc.openTableCell("Mutants");
+		doc.openTableCell("Gene");
+		doc.openTableCell("Min");
+		doc.openTableCell("Max");
+		doc.openTableCell("Comment");
+		doc.openTableCell("Stable States");
+		
+		StableTableModel model = new StableTableModel(nodeOrder);
+		for (int i=-1 ; i<mutantList.getNbElements(null) ; i++) {
+			GsRegulatoryMutantDef mutant = 
+				i<0 ? null : (GsRegulatoryMutantDef)mutantList.getElement(null, i);
+			
+			stableSearcher.setMutant(mutant);
+			stable = stableSearcher.getStable();
+			((StableTableModel)model).setResult(stable);
+			int nbrow;
+			if (i<0) { // wild type
+				nbrow = 1;
+				doc.openTableRow();
+				doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type");
+				doc.openTableCell("-");
+				doc.openTableCell("-");
+				doc.openTableCell("-");
+				doc.openTableCell("");
+			} else {
+				nbrow = mutant.getNbChanges();
+				if (nbrow < 1) {
+					nbrow = 1;
+				}
+				doc.openTableRow();
+				doc.openTableCell(1, (nbrow+(model.getRowCount() > 0?1:0)), mutant.getName());
+				if (mutant.getNbChanges() == 0) {
+					doc.openTableCell("-");
+					doc.openTableCell("-");
+					doc.openTableCell("-");
+				} else {
+					doc.openTableCell(mutant.getName(0));
+					doc.openTableCell(""+mutant.getMin(0));
+					doc.openTableCell(""+mutant.getMax(0));
+				}
+				doc.openTableCell(1, nbrow, "");
+				writeAnnotation(mutant.getAnnotation());//BUG?
+			}
+			
+			// the common part: stable states
+			String s_tableID = "t_stable"+(mutant == null ? "" : "_"+mutant.getName());
+			if (model.getRowCount() > 0) {
+				doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states"); //TODO : add (<a href='javascript:ShowHide(\"" +s_tableID + "\")'>View</a>)</td></tr>\n"
+			} else {
+				doc.openTableCell(1, nbrow, "");
+			}
+
+			// more data on mutants:
+			if (mutant != null) {
+				for (int j=1 ; j<nbrow ; j++) {
+					doc.openTableRow();
+					doc.openTableCell(mutant.getName(j));
+					doc.openTableCell(""+mutant.getMin(j));
+					doc.openTableCell(""+mutant.getMax(j));
+				}
+			}
+			
+			// more data on stable states:
+			if (model.getRowCount() > 0) {
+				doc.openTableRow();
+				doc.openTableCell(5,1, null);
+				
+				
+//				out.openTag("div");
+//				out.addAttr("class", "stable");
+//				out.addAttr("id", s_tableID);
+
+				doc.openList("L1");
+				for (int k=0 ; k<model.getRowCount() ; k++) {
+					doc.openListItem(null);
+					boolean needPrev=false;
+					for (int j=0 ; j<len ; j++) {
+						Object val = model.getValueAt(k,j);
+						if (!val.toString().equals("0")) {
+							String s = needPrev ? " ; " : "";
+							needPrev = true;
+							if (val.toString().equals("1")) {
+								doc.writeText(s+nodeOrder.get(j));
+							} else {
+								doc.writeText(s+nodeOrder.get(j)+"="+val);
+							}
+						}
+					}
+					doc.closeListItem();
+				}
+				doc.closeList();
+			}
+		}
+		doc.closeTable();
+	}
+	
+	
 	private void writeInitialStates() throws IOException {
 		GsInitialStateList initStates = (GsInitialStateList) graph.getObject(
 				GsInitialStateManager.key, false);
@@ -147,7 +267,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			for (int i=0 ; i<=len ; i++) {
 				t_cols[i] = "";
 			}
-			doc.openTable("initialStates", null, t_cols);
+			doc.openTable("initialStates", "table", t_cols);
 			doc.openTableRow();
 			doc.openTableCell("Name");
 			for (int i = 0; i < len; i++) {
@@ -165,7 +285,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 	}
 
 	private void writeLogicalFunctionsTable() throws IOException {
-		doc.openTable(null, null, new String[] { "s1", "s2", "s3", "s4" });
+		doc.openTable(null, "table", new String[] { "", "", "", "" });
 		doc.openTableRow();
 		doc.openTableCell("ID");
 		doc.openTableCell("Val");
@@ -302,12 +422,27 @@ public class GenericDocumentExport extends GsAbstractExport {
 	}
 
 	/**
+	 * @throws IOException 
+	 * 
+	 */
+	private void setJavascript() throws IOException {
+		StringBuffer javascript = doc.getDocumentExtra("javascript");
+		BufferedReader in = new BufferedReader(new FileReader("src/fr/univmrs/tagc/GINsim/export/regulatoryGraph/makeStableStatesClickable.js"));
+		String s;
+		while ((s = in.readLine()) != null) {
+			javascript.append(s);
+			javascript.append("\n");
+		}
+	}
+	/**
 	 * Set the style for the document.
 	 */
 	private void setDocumentStyles() {
 		DocumentStyle styles = doc.getStyles();
 		styles.addStyle("L1");
 		styles.addProperty(DocumentStyle.LIST_TYPE, "U");	
+		styles.addStyle("table");
+		styles.addProperty(DocumentStyle.TABLE_BORDER, new Integer(1));	
 	}
 
 	/**
@@ -350,9 +485,19 @@ class GDExportConfigPanel extends JPanel {
     }
 }
 
+/**
+ * This class contain the informations 
+ */
 class GenericDocumentFormat extends GenericDocumentExport {
-	
-	GenericDocumentFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
+	/**
+	 * Define a new generic document format.
+	 * @param documentWriterClass : The DocumentWriter sub-class for the format
+	 * @param id : The name of the format (for the dropdown menu)
+	 * @param filter : an array of filter for the file extention the format can overwrite
+	 * @param fillterDescr : a description
+	 * @param extention : the extetion to add to the exported file
+	 */
+	public GenericDocumentFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
 		this.documentWriterClass = documentWriterClass;
 		this.id = id;
 		this.filter = filter;

@@ -11,6 +11,7 @@ public class DocumentStyle {
 	public static final String WIDTH = "width";
 	public static final String HEIGHT = "height";
 	public static final String FONT_SIZE = "font-size";
+	public static final String TABLE_BORDER = "table-border";
 	
 	private Map styles;
 	public String curStyle;
