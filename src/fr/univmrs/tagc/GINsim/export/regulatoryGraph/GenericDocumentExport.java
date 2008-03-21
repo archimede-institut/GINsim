@@ -1,12 +1,6 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,11 +14,7 @@ import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
@@ -175,7 +165,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			
 			stableSearcher.setMutant(mutant);
 			stable = stableSearcher.getStable();
-			((StableTableModel)model).setResult(stable);
+			model.setResult(stable);
 			int nbrow;
 			if (i<0) { // wild type
 				nbrow = 1;
@@ -206,9 +196,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 			}
 			
 			// the common part: stable states
-			String s_tableID = "t_stable"+(mutant == null ? "" : "_"+mutant.getName());
 			if (model.getRowCount() > 0) {
-				doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states"); //TODO : add (<a href='javascript:ShowHide(\"" +s_tableID + "\")'>View</a>)</td></tr>\n"
+				doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states");
 			} else {
 				doc.openTableCell(1, nbrow, "");
 			}
@@ -228,11 +217,6 @@ public class GenericDocumentExport extends GsAbstractExport {
 				doc.openTableRow();
 				doc.openTableCell(5,1, null);
 				
-				
-//				out.openTag("div");
-//				out.addAttr("class", "stable");
-//				out.addAttr("id", s_tableID);
-
 				doc.openList("L1");
 				for (int k=0 ; k<model.getRowCount() ; k++) {
 					doc.openListItem(null);

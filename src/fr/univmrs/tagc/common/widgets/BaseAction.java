@@ -12,8 +12,9 @@ import fr.univmrs.tagc.common.manageressources.Translator;
  * for the name and the tooltip
  */
 public abstract class BaseAction extends AbstractAction {
+	private static final long	serialVersionUID	= 6937495427962796865L;
 
-    /**
+	/**
      * 
      * @param name name of the action (menu entry)
      * @param icon for menu and toolbar

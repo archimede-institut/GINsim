@@ -274,7 +274,6 @@ class BorderStyleWriter implements StyleWriter {
 	public String getCSSStyleHeader(String style) {
 		return " th, "+style+" td";
 	}
-
 }
 
 class xHTMLTable {

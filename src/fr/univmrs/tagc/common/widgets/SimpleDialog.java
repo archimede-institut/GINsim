@@ -8,6 +8,7 @@ import javax.swing.*;
 import fr.univmrs.tagc.common.OptionStore;
 
 public abstract class SimpleDialog extends JDialog {
+	private static final long	serialVersionUID	= -460464845250055098L;
 
 	String id;
 	

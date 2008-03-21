@@ -5,7 +5,8 @@ import javax.swing.JFrame;
 import fr.univmrs.tagc.common.OptionStore;
 
 public abstract class Frame extends JFrame {
-
+	private static final long	serialVersionUID	= -9024470351150546630L;
+	
 	String id;
 	public Frame(String id, int w, int h) {
 		this.id = id;

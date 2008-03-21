@@ -11,6 +11,8 @@ import javax.swing.JTree;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 public abstract class GsBooleanFunctionTreePanel extends JPanel {
+  private static final long	serialVersionUID	= -1420693226899522868L;
+  
   protected static Font defaultFont = new Font("monospaced", Font.BOLD, 12);
   protected GsTreeElement treeElement;
   protected JTree tree = null;

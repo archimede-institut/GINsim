@@ -8,8 +8,9 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
  * All parameter panels must extend this abstract class to be updated on selection changes
  */
 public abstract class GsParameterPanel extends JPanel {
-
-    protected GsMainFrame mainFrame;
+	private static final long	serialVersionUID	= 8326061792159035277L;
+	
+	protected GsMainFrame mainFrame;
     protected GsGraph graph;
     
     /**
