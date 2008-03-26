@@ -352,6 +352,7 @@ class BibTexParser {
 		m_bibtextoginsim.put("pmid", "pubmed");
 		m_bibtextoginsim.put("pdf", "file");
 		m_bibtextoginsim.put("ps", "file");
+		m_bibtextoginsim.put("local-url", "file");
 	}
 
 	public BibTexParser(BiblioList biblist, String path) {
@@ -365,15 +366,18 @@ class BibTexParser {
 			
 			Iterator it = bibtexFile.getEntries().iterator();
 			while (it.hasNext()) {
-				BibtexEntry entry = (BibtexEntry)it.next();
-				biblist.addRef(entry.getEntryKey());
-				Iterator it_links = m_bibtextoginsim.entrySet().iterator();
-				while (it_links.hasNext()) {
-					Entry e = (Entry)it_links.next();
-					String k = (String)e.getKey();
-					BibtexAbstractValue v = entry.getFieldValue(k);
-					if (v != null) {
-						biblist.addLinkToCurRef((String)e.getValue(), v.toString());
+				Object next = it.next();
+				if (next instanceof BibtexEntry) {
+					BibtexEntry entry = (BibtexEntry)next;
+					biblist.addRef(entry.getEntryKey());
+					Iterator it_links = m_bibtextoginsim.entrySet().iterator();
+					while (it_links.hasNext()) {
+						Entry e = (Entry)it_links.next();
+						String k = (String)e.getKey();
+						BibtexAbstractValue v = entry.getFieldValue(k);
+						if (v != null) {
+							biblist.addLinkToCurRef((String)e.getValue(), v.toString());
+						}
 					}
 				}
 			}
