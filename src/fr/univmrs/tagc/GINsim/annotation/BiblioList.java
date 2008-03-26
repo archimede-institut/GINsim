@@ -321,7 +321,9 @@ class ReferencerParser extends XMLHelper {
 				}
 				break;
 			case FILENAME:
-				if (curval.startsWith("file:")) {
+				if (curval.startsWith("file://localhost")) {
+					curval = curval.substring(16);
+				} else if (curval.startsWith("file:")) {
 					curval = curval.substring(5);
 				} else {
 					curval = baseDir+File.separator+curval;
@@ -331,7 +333,6 @@ class ReferencerParser extends XMLHelper {
 					curval = URLDecoder.decode(curval, "utf8");
 				} catch (UnsupportedEncodingException e) {
 				}
-				
 				File f = new File(curval);
 				if (f.exists()) {
 					bibList.addLinkToCurRef("file", curval);
