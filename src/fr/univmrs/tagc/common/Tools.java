@@ -160,7 +160,12 @@ public class Tools {
 	 * @return true if it managed
 	 */
 	public static boolean openFile(String fileName) {
-		File f = new File(fileName);
+		File f;
+		if (fileName.startsWith("//localhost/")) {
+			f = new File(fileName.substring(12));
+		} else {
+			f = new File(fileName);
+		}
 		if (!f.exists()) {
 			return false;
 		}

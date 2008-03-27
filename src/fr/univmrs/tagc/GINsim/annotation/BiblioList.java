@@ -351,6 +351,7 @@ class BibTexParser {
 	static {
 		m_bibtextoginsim.put("doi", "doi");
 		m_bibtextoginsim.put("pmid", "pubmed");
+		m_bibtextoginsim.put("pubmed", "pubmed");
 		m_bibtextoginsim.put("pdf", "file");
 		m_bibtextoginsim.put("ps", "file");
 		m_bibtextoginsim.put("local-url", "file");
