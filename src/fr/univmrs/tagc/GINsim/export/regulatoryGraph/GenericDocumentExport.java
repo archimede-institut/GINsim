@@ -415,7 +415,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 	 */
 	private void setJavascript() throws IOException {
 		StringBuffer javascript = doc.getDocumentExtra("javascript");
-		InputStream stream = Tools.getStreamForPath("/fr/univmrs/tagc/GINsim/export/regulatoryGraph/makeStableStatesClickable.js");
+		InputStream stream = Tools.getStreamForPath("/fr/univmrs/tagc/GINsim/ressources/makeStableStatesClickable.js");
 		BufferedReader in = new BufferedReader(new InputStreamReader(stream));
 		String s;
 		while ((s = in.readLine()) != null) {
