@@ -1,10 +1,8 @@
 package fr.univmrs.tagc.common.xml;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,14 +16,18 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
-/**
- */
 abstract public class XMLHelper extends DefaultHandler implements EntityResolver {
 
 	protected static final int NOCALL = 0;
 	protected static final int ENDONLY = 1;
 	protected static final int STARTONLY = 2;
 	protected static final int BOTH = 3;
+	
+	static Map m_entities = new TreeMap();
+	
+	public static void addEntity(String url, String path) {
+		m_entities.put(url, path);
+	}
 	
 	protected static void addCall(String tag, int id, int constraint, Map m_call, 
 			int callmode, boolean readcontent) {
@@ -45,7 +47,6 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 		addCall(tag, id, -1, m_call, BOTH, false);
 	}
 
-	
     /** if set to other than null, characters will be stored here */
 	protected String curval;
 	protected String s_dtd;
@@ -53,8 +54,6 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	
 	protected XMLReader xr;
 	private boolean showError = true;
-    
-	private static Map m_dtdError = null;
 	
 	protected Map m_call = null;
 	
@@ -138,7 +137,6 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
      */
     public void startParsing(InputStream is, boolean validating) {
 
-        //s_filename = file.getAbsolutePath();
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		spf.setValidating(validating);
 		try {
@@ -147,7 +145,6 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 			xr.setContentHandler(this);
 			xr.setEntityResolver(this);
 			xr.setErrorHandler(this);
-			//FileReader r = new FileReader(file);
 			xr.parse(new InputSource(new InputStreamReader(is)));
 		} catch (FileNotFoundException e) { 
 		    Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
@@ -163,38 +160,8 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
     }
 
     /**
-     * get the local DTD file (full path, including the protocol (file://))
-     * @return an url path to the fallbackDTD
-     */
-    public String getFallBackDTD() {
-    	return null;
-    }
-    
-    /**
-     * when the entityresolver has choosen it's DTD, it will notify the parser using this function.
-     * overwrite me if you want it to do something...
-     * you can also read the value in the <code>s_dtd</code> field.
-     * 
-     * @param s_dtd
-     */
-    protected void setUsedDTD(String s_dtd) {
-        
-        // check if the DTD name/version is the same as the local one
-        String s = getFallBackDTD();
-        String lfilename = s.substring(s.lastIndexOf(File.separator)+1);
-        String sf = s_dtd.substring(s_dtd.lastIndexOf(File.separator)+1);
-        
-        // if filenames differs: use the local one instead (to avoid saving the file with a bad DTD field)
-        if (!lfilename.equals(sf)) {
-            this.s_dtd = s;
-        } else {
-            this.s_dtd = s_dtd;
-        }
-    }
-    
-    /**
-     * do the "entityresolver" job, a bit lazy, this needs some cleanups to become 
-     * more generalist, but it does the job for ginsim...
+     * do the "entity resolver" job, a bit lazy, this needs some cleanups to become 
+     * more generalist, but it does the job for GINsim...
      * 
      * @param publicId
      * @param systemId
@@ -203,83 +170,15 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
      */
 	public InputSource resolveEntity(String publicId, String systemId)
 	throws SAXException {
-		try {
-			if (testURL(systemId)) {
-	            setUsedDTD(systemId);
-			    return null;
-	        }
-	        
-			String s = getFallBackDTD();
-            if (s == null || s.length() <= 7) {
-                return null;
-            }
-            InputStream stream = ClassLoader.getSystemResourceAsStream(s.substring(7));
-            	if ( stream != null) {
-           			if (!s.equals(systemId) && !dtdErorExists(systemId)) {
-           				Tools.error(new GsException(GsException.GRAVITY_INFO, systemId+":\n "+Translator.getString("STR_revert2defaultDTD")), null);
-            			}
-            			setUsedDTD(s);
-            			return new InputSource(stream);
-            	}
-            	Tools.error(new GsException(GsException.GRAVITY_INFO, systemId+":\n "+Translator.getString("STR_revert2defaultDTD")+"\n\nFAILED to use the local DTD, please check your ginsim installation"), null);
-		} catch (IOException e) {}
+		String path = (String)m_entities.get(systemId);
+		if (path != null) {
+			try {
+				return new InputSource(Tools.getStreamForPath(path));
+			} catch (Exception e) {}
+		}
 		return null;
 	}
     
-    /**
-     * test if a DTD path is ok.
-     * @param s_url
-     * @return true if this DTD can be reached 
-     * @throws IOException
-     */    
-    private boolean testURL(String s_url) throws IOException {
-        File dtdFile = null;
-        URL url = new URL(s_url); // dtd path in ginml
-        
-        // "file://" in DOCTYPE element
-        if (url.getProtocol().compareTo("file") == 0) {
-            dtdFile = new File(url.getPath());
-            // If DTD file does not exist, return local dtd
-            if (dtdFile.exists()) {
-                try {
-                    new FileInputStream(dtdFile).close();
-                    return true;
-                } catch (FileNotFoundException e) {
-                    return false;
-                }
-            }
-        } else if (url.getProtocol().compareTo("http") == 0) {
-            try { // check if the specified host/port can be reached
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();    
-                connection.connect();
-                if (connection.getResponseCode() == 200) { // OK
-                    setUsedDTD(s_url);
-                    return true;
-                }
-            } catch (Exception e){ // if no internet connection
-                return false;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @param systemId
-     * @return true if an error has already been shown for this DTD
-     */
-    private static boolean dtdErorExists(String systemId) {
-        if (m_dtdError == null) {
-            m_dtdError = new HashMap();
-            m_dtdError.put(systemId, null);
-            return false;
-        }
-        if (!m_dtdError.containsKey(systemId)) {
-            m_dtdError.put(systemId, null);
-            return false;
-        }
-        return true;
-    }
-
     protected static String getAttributeValueWithDefault(Attributes attr, String key, String defValue) {
         String s = attr.getValue(key);
         if (s != null) {
@@ -322,7 +221,6 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	}
 	protected void endElement(int id) {
 	}
-    
 }
 
 class CallDescription {

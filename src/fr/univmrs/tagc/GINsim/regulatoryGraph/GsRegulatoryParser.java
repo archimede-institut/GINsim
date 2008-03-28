@@ -524,10 +524,6 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     public GsGraph getGraph() {
         return graph;
     }
-
-    public String getFallBackDTD() {
-        return GsGinmlHelper.LOCAL_URL_DTD_FILE;
-    }
 }
 
 class InteractionInconsistencyAction implements GsGraphNotificationAction {

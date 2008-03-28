@@ -1,5 +1,7 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -15,9 +17,7 @@ import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -45,6 +45,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 	}
 
 	private GsExportConfig config = null;
+	private DocumentExportConfig specConfig;
 	protected DocumentWriter doc = null;
 	protected Class documentWriterClass;
 
@@ -78,6 +79,11 @@ public class GenericDocumentExport extends GsAbstractExport {
 
 	protected void doExport(GsExportConfig config) {
 		this.config = config;
+		this.specConfig = (DocumentExportConfig)config.getSpecificConfig();
+		if (specConfig == null) {
+			specConfig = new DocumentExportConfig();
+			config.setSpecificConfig(specConfig);
+		}
 		try {
 			System.out.println(config.getFilename());
 			this.doc = (DocumentWriter) documentWriterClass.newInstance();
@@ -113,7 +119,6 @@ public class GenericDocumentExport extends GsAbstractExport {
 		if (doc.doesDocumentSupportExtra("javascript")) {
 			setJavascript();
 		}
-		// TODO: use a more precise config
 		writeDocument();
 	}
 
@@ -132,13 +137,13 @@ public class GenericDocumentExport extends GsAbstractExport {
 		}
 		
 		// initial states
-		if (true) {
+		if (specConfig.exportInitStates) {
 			doc.openHeader(2, "Initial States", null);
 			writeInitialStates();
 		}
 		// mutant description
-		if (true) {
-			doc.openHeader(2, "Dynamical Behaviour", null);
+		if (specConfig.exportMutants) {
+			doc.openHeader(2, "Mutants and Dynamical Behaviour", null);
 			writeMutants();
 		}
 
@@ -150,23 +155,33 @@ public class GenericDocumentExport extends GsAbstractExport {
 		GsSearchStableStates stableSearcher = new GsSearchStableStates(config.getGraph(), null, null);
 		OmddNode stable;
 		
-		doc.openTable("mutants", "table", new String[] {"", "", "", "", "", ""});
+		String[] cols;
+		if (specConfig.searchStableStates) {
+			cols = new String[] {"", "", "", "", "", ""};
+		} else {
+			cols = new String[] {"", "", "", "", ""};
+		}
+		doc.openTable("mutants", "table", cols);
 		doc.openTableRow();
 		doc.openTableCell("Mutants");
 		doc.openTableCell("Gene");
 		doc.openTableCell("Min");
 		doc.openTableCell("Max");
 		doc.openTableCell("Comment");
-		doc.openTableCell("Stable States");
+		if (specConfig.searchStableStates) {
+			doc.openTableCell("Stable States");
+		}
 		
 		StableTableModel model = new StableTableModel(nodeOrder);
 		for (int i=-1 ; i<mutantList.getNbElements(null) ; i++) {
 			GsRegulatoryMutantDef mutant = 
 				i<0 ? null : (GsRegulatoryMutantDef)mutantList.getElement(null, i);
 			
-			stableSearcher.setMutant(mutant);
-			stable = stableSearcher.getStable();
-			model.setResult(stable);
+			if (specConfig.searchStableStates) {
+				stableSearcher.setMutant(mutant);
+				stable = stableSearcher.getStable();
+				model.setResult(stable);
+			}
 			int nbrow;
 			if (i<0) { // wild type
 				nbrow = 1;
@@ -196,11 +211,13 @@ public class GenericDocumentExport extends GsAbstractExport {
 				writeAnnotation(mutant.getAnnotation());//BUG?
 			}
 			
-			// the common part: stable states
-			if (model.getRowCount() > 0) {
-				doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states");
-			} else {
-				doc.openTableCell(1, nbrow, "");
+			if (specConfig.searchStableStates) {
+				// the common part: stable states
+				if (model.getRowCount() > 0) {
+					doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states");
+				} else {
+					doc.openTableCell(1, nbrow, "");
+				}
 			}
 
 			// more data on mutants:
@@ -214,7 +231,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			}
 			
 			// more data on stable states:
-			if (model.getRowCount() > 0) {
+			if (specConfig.searchStableStates && model.getRowCount() > 0) {
 				doc.openTableRow();
 				doc.openTableCell(5,1, null);
 				
@@ -452,25 +469,38 @@ public class GenericDocumentExport extends GsAbstractExport {
 
 }
 
+class DocumentExportConfig implements GsInitialStateStore {
+	Map m_init = new HashMap();
+
+	boolean exportInitStates = true;
+	boolean exportMutants = true;
+	boolean searchStableStates = true;
+	
+	public Map getInitialState() {
+		return m_init;
+	}
+	
+}
+
 class GDExportConfigPanel extends JPanel {
     private static final long serialVersionUID = 9043565812912568136L;
    
     
 	protected GDExportConfigPanel (GsExportConfig config, StackDialog dialog) {
-//		setLayout( new FlowLayout(FlowLayout.LEFT));
-//		JLabel label = new JLabel("File type");
-//		add(label);
-//		
-//		//getting the formats ids
-//		String [] formatIDs = new String[GenericDocumentExport.v_format.size()];
-//		int i = 0;
-//		Iterator it = GenericDocumentExport.v_format.iterator();
-//		while (it.hasNext()) {
-//			Map e = (Map) it.next();
-//			formatIDs[i++] = (String)e.get(GenericDocumentExport.FORMAT_ID);
-//		}
-//		JComboBox format = new JComboBox(formatIDs);
-//		add(format);
+		DocumentExportConfig cfg = (DocumentExportConfig)config.getSpecificConfig();
+		if (cfg == null) {
+			cfg = new DocumentExportConfig();
+			config.setSpecificConfig(cfg);
+		}
+    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, config.getGraph(), false);
+    	initPanel.setParam(cfg);
+
+    	setLayout(new GridBagLayout());
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridx = c.gridy = 0;
+    	c.weightx = c.weighty = 1;
+    	c.fill = GridBagConstraints.BOTH;
+    	add(initPanel, c);
     }
 }
 

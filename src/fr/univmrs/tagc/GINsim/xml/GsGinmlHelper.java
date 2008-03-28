@@ -18,14 +18,8 @@ import fr.univmrs.tagc.common.Tools;
 public class GsGinmlHelper {
 	
     /** default URL of the DTD */
-    public static final String DEFAULT_URL_DTD_FILE=
-		"http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd";
-    /** default local path of the DTD */
-    public static final String LOCAL_URL_DTD_FILE;
+    public static final String DEFAULT_URL_DTD_FILE = "http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd";
 
-    static {
-        LOCAL_URL_DTD_FILE  = "file://fr/univmrs/tagc/GINsim/ressources/GINML_2_1.dtd";
-    }
     /**
      * we are reading node visual settings from a ginml file, apply them on
      * the current vertex.

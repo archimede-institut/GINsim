@@ -9,7 +9,6 @@ import org.xml.sax.SAXException;
 import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphParser;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryParser;
-import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
@@ -20,6 +19,16 @@ public final class GsGinmlParser extends XMLHelper {
     
     private Map map;
     private GsXMLHelper realParser = null;
+    
+    static {
+        String DTD = "/fr/univmrs/tagc/GINsim/ressources/GINML_2_1.dtd";
+        XMLHelper.addEntity("http://gin.univ-mrs.fr/GINsim/GINML_2_0.dtd", DTD);
+        XMLHelper.addEntity("http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd", DTD);
+        XMLHelper.addEntity("file://fr/univmrs/ibdm/GINsim/ressources/GINML_2_1.dtd", DTD);
+        XMLHelper.addEntity("file://fr/univmrs/ibdm/GINsim/ressources/GINML_2_0.dtd", DTD);
+        XMLHelper.addEntity("file://fr/univmrs/tagc/GINsim/ressources/GINML_2_1.dtd", DTD);
+        XMLHelper.addEntity("file://fr/univmrs/tagc/GINsim/ressources/GINML_2_0.dtd", DTD);
+    }
     
     /**
      * @param is from where to read
@@ -59,9 +68,5 @@ public final class GsGinmlParser extends XMLHelper {
 		    return null;
 		}
 		return realParser.getGraph();
-    }
-
-    public String getFallBackDTD() {
-        return GsGinmlHelper.LOCAL_URL_DTD_FILE;
     }
 }

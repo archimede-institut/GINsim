@@ -237,8 +237,4 @@ public class GsReducedGraphParser extends GsXMLHelper {
     public GsGraph getGraph() {
         return graph;
     }
-
-    public String getFallBackDTD() {
-        return GsGinmlHelper.LOCAL_URL_DTD_FILE;
-    }
 }
