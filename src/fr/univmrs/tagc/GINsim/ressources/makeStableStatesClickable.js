@@ -7,11 +7,11 @@ function getElementsByContent(content, tagName) {
 	return elements;
 }
 
-function nextSiblingOfType(node, nodeName) {
+function nextSiblingOfType(node, nodeName, validAttributes) {
+	if (validAttributes == null) validAttributes = function (node) {return true;};
 	node = node.nextSibling;
-	while (node.nodeName != nodeName && node.nextSibling != null) {
+	while ((node.nodeName != nodeName || (node.nodeName == nodeName && !validAttributes(node))) && node.nextSibling != null)
 		node = node.nextSibling;
-	}
 	return node;
 }
 
@@ -30,8 +30,12 @@ function makeStableStatesClickable() {
 		p.innerHTML += ')';
 		tables[i].replaceChild(p, tables[i].firstChild) ;
 
-		tr = nextSiblingOfType(tr, tr.nodeName)
-		var td_new = nextSiblingOfType(tr.firstChild, tables[i].nodeName);
+		tr = nextSiblingOfType(tr, tr.nodeName, function (node) {
+			node = nextSiblingOfType(node.firstChild, tables[i].nodeName, null);
+			if (node.getAttribute("colspan") != null && node.getAttribute("colspan") == "5") return true;
+			return false;
+		})
+		var td_new = nextSiblingOfType(tr.firstChild, tables[i].nodeName, null);
 		td = document.createElement('td');
 		td.setAttribute('colspan', '5');
 		p = document.createElement('p');
