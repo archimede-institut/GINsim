@@ -79,4 +79,8 @@ public class ModelSimplifierConfigList extends SimpleGenericList
 	public GsGraphEventCascade edgeUpdated(Object data) {
 		return null;
 	}
+
+
+	public void endParsing() {
+	}
 }

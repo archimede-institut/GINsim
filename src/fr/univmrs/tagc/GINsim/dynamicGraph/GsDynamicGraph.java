@@ -52,7 +52,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 * @param regGraph
 	 */
 	public GsDynamicGraph(List nodeOrder) {
-	    this((String)null);
+	    this((String)null, false);
 	    this.nodeOrder = new ArrayList(nodeOrder);
 	}
     protected String getGraphZipName() {
@@ -62,14 +62,14 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	/**
 	 */
 	public GsDynamicGraph() {
-	    this((String)null);
+	    this((String)null, false);
 
 	}
 	/**
 	 * @param filename
 	 */
-	public GsDynamicGraph(String filename) {
-        super(GsDynamicGraphDescriptor.getInstance(), filename);
+	public GsDynamicGraph(String filename, boolean parsing) {
+        super(GsDynamicGraphDescriptor.getInstance(), filename, parsing);
         dashpattern = eReader.getPattern(1);
 	}
 
@@ -78,7 +78,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 * @param file
 	 */
 	public GsDynamicGraph(Map map, File file) {
-	    this(file.getAbsolutePath());
+	    this(file.getAbsolutePath(), true);
         GsDynamicParser parser = new GsDynamicParser();
         parser.parse(file, map, this);
 		graphManager.ready();

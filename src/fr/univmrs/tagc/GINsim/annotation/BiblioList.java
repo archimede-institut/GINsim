@@ -16,9 +16,7 @@ import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
+import fr.univmrs.tagc.GINsim.graph.*;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;
@@ -28,7 +26,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
 
-public class BiblioList implements XMLize, OpenHelper {
+public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 
 	Map files = new TreeMap();
 	Map m_references = new HashMap();
@@ -38,6 +36,7 @@ public class BiblioList implements XMLize, OpenHelper {
 	
 	public BiblioList(GsGraph graph) {
 		this.graph = graph;
+		graph.addGraphListener(this);
 	}
 
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
@@ -117,7 +116,20 @@ public class BiblioList implements XMLize, OpenHelper {
 		return true;
 	}
 
+	public void endParsing() {
+		Iterator it_used = m_used.keySet().iterator();
+		while (it_used.hasNext()) {
+			Object ref = it_used.next();
+			if (!m_references.containsKey(ref)) {
+				addMissingRefWarning(ref.toString());
+				break;
+			}
+		}
+	}
 	public void addMissingRefWarning(String value) {
+		if (graph.isParsing()) {
+			return;
+		}
 		// just in case: check if one of the source file has been updated
 		Iterator it = files.entrySet().iterator();
 		while (it.hasNext()) {
@@ -193,6 +205,7 @@ public class BiblioList implements XMLize, OpenHelper {
 			} else {
 				new ReferencerParser(this, fileName);
 			}
+			endParsing();
 		} else {
 			GsGraphNotificationAction action = new GsGraphNotificationAction() {
 				String[] t = {Translator.getString("STR_purge")};
@@ -220,6 +233,34 @@ public class BiblioList implements XMLize, OpenHelper {
 	
 	public void removeFile(String fileName) {
 		files.remove(fileName);
+	}
+
+	public GsGraphEventCascade edgeAdded(Object data) {
+		return null;
+	}
+
+	public GsGraphEventCascade edgeRemoved(Object data) {
+		return null;
+	}
+
+	public GsGraphEventCascade edgeUpdated(Object data) {
+		return null;
+	}
+
+	public GsGraphEventCascade graphMerged(Object data) {
+		return null;
+	}
+
+	public GsGraphEventCascade vertexAdded(Object data) {
+		return null;
+	}
+
+	public GsGraphEventCascade vertexRemoved(Object data) {
+		return null;
+	}
+
+	public GsGraphEventCascade vertexUpdated(Object data) {
+		return null;
 	}
 }
 

@@ -140,4 +140,7 @@ public class GsSimulationParameterList extends SimpleGenericList
 	}
 	public void structureChanged() {
 	}
+
+	public void endParsing() {
+	}
 }

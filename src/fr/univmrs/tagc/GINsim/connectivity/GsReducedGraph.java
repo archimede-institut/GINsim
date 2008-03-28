@@ -32,7 +32,7 @@ public class GsReducedGraph extends GsGraph {
 	 * @param parent
 	 */
 	public GsReducedGraph(GsGraph parent) {
-	    this((String)null);
+	    this((String)null, false);
         setAssociatedGraph(parent);
 	}
 	
@@ -45,7 +45,7 @@ public class GsReducedGraph extends GsGraph {
 	 * @param file
 	 */
 	public GsReducedGraph(Map map, File file) {
-	    this(file.getAbsolutePath());
+	    this(file.getAbsolutePath(), true);
         GsReducedGraphParser parser = new GsReducedGraphParser();
         parser.parse(file, map, this);
         graphManager.ready();
@@ -54,14 +54,14 @@ public class GsReducedGraph extends GsGraph {
 	/**
 	 * @param filename
 	 */
-	public GsReducedGraph(String filename) {
-        super(GsReducedGraphDescriptor.getInstance(), filename);
+	public GsReducedGraph(String filename, boolean parsing) {
+        super(GsReducedGraphDescriptor.getInstance(), filename, parsing);
 	}
 	/**
      * 
      */
     public GsReducedGraph() {
-        this((String)null);
+        this((String)null, false);
     }
 
     /*

@@ -47,4 +47,6 @@ public interface GsGraphListener {
      * @return an object to describe/undo cascade event
      */
     public GsGraphEventCascade edgeUpdated(Object data);
+	/** graph parsing is finished */
+    public void endParsing();
 }

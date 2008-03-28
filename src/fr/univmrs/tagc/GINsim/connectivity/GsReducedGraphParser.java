@@ -50,7 +50,7 @@ public class GsReducedGraphParser extends GsXMLHelper {
      * @param s_filename
      */
     public GsReducedGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) {
-    	this.graph = new GsReducedGraph(s_filename);
+    	this.graph = new GsReducedGraph(s_filename, true);
     	this.map = map;
     	graph.setDTD(s_dtd);
 		vareader = graph.getGraphManager().getVertexAttributesReader();

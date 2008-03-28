@@ -69,6 +69,9 @@ public class GsModelCheckerList extends SimpleGenericList implements GsGraphList
 		GsModelChecker test = (GsModelChecker)v_data.get(index);
 		return test.getInfo(mutant);
 	}
+
+	public void endParsing() {
+	}
 }
 
 class modelCheckerTableModel extends DefaultTableModel {

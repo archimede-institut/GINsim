@@ -132,6 +132,9 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 		refresh(true);
 		return null;
 	}
+
+	public void endParsing() {
+	}
 }
 
 class GsGraphOrderList extends SimpleGenericList {

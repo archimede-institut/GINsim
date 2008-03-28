@@ -47,7 +47,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     /**
      */
     public GsRegulatoryGraph() {
-        this(null);
+        this(null, false);
     }
 
     protected String getGraphZipName() {
@@ -57,8 +57,8 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     /**
      * @param savefilename
      */
-    public GsRegulatoryGraph(String savefilename) {
-        super(GsRegulatoryGraphDescriptor.getInstance(), savefilename);
+    public GsRegulatoryGraph(String savefilename, boolean parsing) {
+        super(GsRegulatoryGraphDescriptor.getInstance(), savefilename, parsing);
         setDefaults();
     }
     /**
@@ -66,7 +66,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @param file
      */
     public GsRegulatoryGraph(Map map, File file) {
-        this(file.getAbsolutePath());
+        this(file.getAbsolutePath(), true);
         GsRegulatoryParser parser = new GsRegulatoryParser();
         parser.parse(file, map, this);
 		graphManager.ready();

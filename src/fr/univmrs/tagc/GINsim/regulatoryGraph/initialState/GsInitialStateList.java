@@ -108,6 +108,9 @@ public class GsInitialStateList extends SimpleGenericList implements GsGraphList
     	}
 		return null;
 	}
+
+	public void endParsing() {
+	}
 }
 
 class InitialStateCascadeUpdate implements GsGraphEventCascade {

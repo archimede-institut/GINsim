@@ -78,7 +78,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
      * @throws SAXException
      */
     public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws SAXException {
-        graph = new GsRegulatoryGraph(s_filename);
+        graph = new GsRegulatoryGraph(s_filename, true);
         graph.setDTD(s_dtd);
         this.map = map;
 		s_nodeOrder = attributes.getValue("nodeorder");

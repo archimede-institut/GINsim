@@ -52,7 +52,7 @@ public final class GsDynamicParser extends GsXMLHelper {
      * @param s_filename
      */
     public GsDynamicParser(Map map, Attributes attributes, String s_dtd, String s_filename) {
-        this.graph = new GsDynamicGraph(s_filename);
+        this.graph = new GsDynamicGraph(s_filename, true);
     	this.map = map;
     	graph.setDTD(s_dtd);
 		vareader = graph.getGraphManager().getVertexAttributesReader();

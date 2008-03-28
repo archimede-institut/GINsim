@@ -168,6 +168,9 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
         m.name = name;
 		return m;
 	}
+
+	public void endParsing() {
+	}
 }
 
 class MutantCascadeUpdate implements GsGraphEventCascade {

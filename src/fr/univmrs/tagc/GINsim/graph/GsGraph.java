@@ -42,9 +42,10 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     protected boolean canDelete = false;
     protected boolean opening = false;
     protected boolean saved = true;
+    protected boolean isParsing = false;
     protected List nodeOrder = new ArrayList();
     protected GsGraphDescriptor descriptor = null;
-    protected Vector listeners = new Vector();
+    protected List listeners = new ArrayList();
 
     protected String graphName = "default_name";
 
@@ -53,14 +54,14 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     protected Annotation gsAnnotation = null;
     protected String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 
-    private static Vector v_layout = null;
-    private static Vector v_export = null;
-    private static Vector v_action = null;
-    private static Vector v_OManager = null;
+    private static List v_layout = null;
+    private static List v_export = null;
+    private static List v_action = null;
+    private static List v_OManager = null;
 
-    private Vector v_notification = new Vector();
-    private Vector v_blockEdit = null;
-    private Vector v_blockClose = null;
+    private List v_notification = new ArrayList();
+    private List v_blockEdit = null;
+    private List v_blockClose = null;
 
     /**  an edged has been added */
     public static final int CHANGE_EDGEADDED = 0;
@@ -100,16 +101,17 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @param descriptor
      */
     public GsGraph(GsGraphDescriptor descriptor) {
-        this(descriptor, null);
+        this(descriptor, null, false);
     }
     /**
      *
      * @param descriptor
      * @param saveFileName
      */
-    public GsGraph(GsGraphDescriptor descriptor, String saveFileName) {
+    public GsGraph(GsGraphDescriptor descriptor, String saveFileName, boolean parsing) {
         this.descriptor = descriptor;
         this.saveFileName = saveFileName;
+        this.isParsing = parsing;
         if (saveFileName == null) {
             id = graphID++;
            GsEnv.registerGraph(this, "[UNSAVED-"+id+"]");
@@ -121,6 +123,17 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         eReader = graphManager.getEdgeAttributesReader();
     }
 
+    public void endParsing() {
+    	isParsing = false;
+    	Iterator it = listeners.iterator();
+    	while (it.hasNext()) {
+    		((GsGraphListener)it.next()).endParsing();
+    	}
+    }
+    
+    public boolean isParsing() {
+    	return isParsing;
+    }
     /**
      * set the save fileName.
      *
@@ -134,6 +147,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         } else if (saveFileName.endsWith(".ginml")) {
             extended = false;
         }
+        endParsing();
     }
     /**
      * set the save mode.
@@ -512,7 +526,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	/**
 	 * @return a list of avaible layouts.
 	 */
-	public Vector getLayout() {
+	public List getLayout() {
 		return v_layout;
 	}
 
@@ -529,7 +543,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	/**
 	 * @return a list of avaible export filters.
 	 */
-	public Vector getExport() {
+	public List getExport() {
 		return v_export;
 	}
 
@@ -546,7 +560,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	/**
 	 * @return a list of avaible actions.
 	 */
-	public Vector getAction() {
+	public List getAction() {
 		return v_action;
 	}
 
@@ -564,7 +578,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**
      * @return object managers
      */
-    public Vector getObjectManager() {
+    public List getObjectManager() {
         return v_OManager;
     }
 
@@ -651,67 +665,68 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		}
 
         // TODO: extend this to support undo/redo and more events!
-        Vector v_cascade = new Vector();
+        List l_cascade = new ArrayList();
+        Iterator it_listeners = listeners.iterator();
 		switch (change) {
 		case CHANGE_EDGEADDED:
-			for (int i=0 ; i<listeners.size() ; i++) {
-				GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).edgeAdded(data);
+			while (it_listeners.hasNext()) {
+				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).edgeAdded(data);
                 if (gec != null) {
-                    v_cascade.add(gec);
+                    l_cascade.add(gec);
                 }
 			}
 			break;
 		case CHANGE_EDGEREMOVED:
-			for (int i=0 ; i<listeners.size() ; i++) {
-                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).edgeRemoved(data);
+			while (it_listeners.hasNext()) {
+				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).edgeRemoved(data);
                 if (gec != null) {
-                    v_cascade.add(gec);
+                    l_cascade.add(gec);
                 }
 			}
 			break;
 		case CHANGE_VERTEXADDED:
-			for (int i=0 ; i<listeners.size() ; i++) {
-                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).vertexAdded(data);
+			while (it_listeners.hasNext()) {
+				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).vertexAdded(data);
                 if (gec != null) {
-                    v_cascade.add(gec);
+                    l_cascade.add(gec);
                 }
 			}
 			break;
         case CHANGE_VERTEXREMOVED:
-            for (int i=0 ; i<listeners.size() ; i++) {
-                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).vertexRemoved(data);
+        	while (it_listeners.hasNext()) {
+				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).vertexRemoved(data);
                 if (gec != null) {
-                    v_cascade.add(gec);
+                    l_cascade.add(gec);
                 }
             }
             break;
         case CHANGE_MERGED:
-            for (int i=0 ; i<listeners.size() ; i++) {
-                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).graphMerged(data);
+        	while (it_listeners.hasNext()) {
+				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).graphMerged(data);
                 if (gec != null) {
-                    v_cascade.add(gec);
+                    l_cascade.add(gec);
                 }
             }
             break;
         case CHANGE_VERTEXUPDATED:
-            for (int i=0 ; i<listeners.size() ; i++) {
-                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).vertexUpdated(data);
+        	while (it_listeners.hasNext()) {
+				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).vertexUpdated(data);
                 if (gec != null) {
-                    v_cascade.add(gec);
+                    l_cascade.add(gec);
                 }
             }
             break;
         case CHANGE_EDGEUPDATED:
-            for (int i=0 ; i<listeners.size() ; i++) {
-                GsGraphEventCascade gec = ((GsGraphListener)listeners.get(i)).edgeUpdated(data);
+        	while (it_listeners.hasNext()) {
+				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).edgeUpdated(data);
                 if (gec != null) {
-                    v_cascade.add(gec);
+                    l_cascade.add(gec);
                 }
             }
             break;
 		}
-        if (v_cascade.size() > 0) {
-            addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), v_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
+        if (l_cascade.size() > 0) {
+            addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
         }
 	}
 
