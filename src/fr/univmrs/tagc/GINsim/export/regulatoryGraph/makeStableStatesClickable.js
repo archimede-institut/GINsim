@@ -7,11 +7,11 @@ function getElementsByContent(content, tagName) {
 	return elements;
 }
 
-function nextSiblingOfType(node, nodeName) {
+function nextSiblingOfType(node, nodeName, validAttributes) {
+	if (validAttributes == null) validAttributes = function (node) {return true;};
 	node = node.nextSibling;
-	while (node.nodeName != nodeName && node.nextSibling != null) {
+	while ((node.nodeName != nodeName || (node.nodeName == nodeName && !validAttributes(node))) && node.nextSibling != null)
 		node = node.nextSibling;
-	}
 	return node;
 }
 
@@ -20,17 +20,22 @@ function makeStableStatesClickable() {
 	var i;
 	for (i = 0 ; i - tables.length != 0 ; i++) {
 		var td_stableState = tables[i];//the td containing Stable states
-		var tr = tables[0].parentNode;
+		var tr = tables[i].parentNode;
 		p = document.createElement('p');
-		p.innerHTML = 'Stable States';
+		p.innerHTML = 'Stable States (';
 		a = document.createElement('a');
-		a.setAttribute('href', 'javascript:toggle("stableState'+i+'")');
-		a.innerHTML = ' (View)';
+		a.setAttribute('href', 'javascript:toggle(this, "stableState'+i+'")');
+		a.innerHTML = 'View';
 		p.appendChild(a);
+		p.innerHTML += ')';
 		tables[i].replaceChild(p, tables[i].firstChild) ;
 
-		tr = nextSiblingOfType(tr, tr.nodeName)
-		var td_new = nextSiblingOfType(tr.firstChild, tables[i].nodeName);
+		tr = nextSiblingOfType(tr, tr.nodeName, function (node) {
+			node = nextSiblingOfType(node.firstChild, tables[i].nodeName, null);
+			if (node.getAttribute("colspan") != null && node.getAttribute("colspan") == "5") return true;
+			return false;
+		})
+		var td_new = nextSiblingOfType(tr.firstChild, tables[i].nodeName, null);
 		td = document.createElement('td');
 		td.setAttribute('colspan', '5');
 		p = document.createElement('p');
@@ -42,12 +47,14 @@ function makeStableStatesClickable() {
 	}
 }
 
-function toggle(id) {
+function toggle(a, id) {
 	elm = document.getElementById(id);
 	if (elm.style.display == 'none') {
-		elm.style.display = 'inline'
+		elm.style.display = 'inline';
+		a.innerHTML = 'Hide';
 	} else {
 		elm.style.display = 'none'
+		a.innerHTML = 'View';
 	}
 }
 
