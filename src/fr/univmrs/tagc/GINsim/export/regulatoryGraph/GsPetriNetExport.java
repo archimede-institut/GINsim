@@ -331,7 +331,6 @@ class PNExportConfigPanel extends JPanel {
     	c.weighty = 1;
     	c.fill = GridBagConstraints.BOTH;
     	add(initPanel, c);
-    	
     }
 }
 

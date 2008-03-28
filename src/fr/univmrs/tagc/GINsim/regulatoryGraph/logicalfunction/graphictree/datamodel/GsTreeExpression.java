@@ -67,8 +67,10 @@ public class GsTreeExpression extends GsTreeElement {
     refreshRoot();
   }
   public void refreshRoot() {
-    compactExpression = root.toString(false);
-    userExpression = root.toString(false);
+	if (root != null) {
+      compactExpression = root.toString(false);
+	  userExpression = root.toString(false);
+	}
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge) {
     root = remove(multiEdge.getSource().getId(), root);
