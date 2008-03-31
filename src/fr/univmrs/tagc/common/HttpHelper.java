@@ -7,7 +7,6 @@ import java.util.Map;
 public class HttpHelper implements OpenHelper {
 
 	static Map m_proto = new HashMap();
-	public static final String DOIBASE = "http://dx.doi.org/";
 	
 	public boolean open(String proto, String value) {
 		return Tools.openURI(getLink(proto, value));
@@ -16,10 +15,10 @@ public class HttpHelper implements OpenHelper {
 	}
 
 	public static void setup() {
-		m_proto.put("http", null);
+		m_proto.put("http", "http:");
 		m_proto.put("wp", "http://en.wikipedia.org/wiki/");
 
-		m_proto.put("doi", DOIBASE);
+		m_proto.put("doi", "http://dx.doi.org/");
 		m_proto.put("pubmed", "http://www.ncbi.nlm.nih.gov/sites/entrez?cmd=retrieve&db=pubmed&dopt=AbstractPlus&list_uids=");
 
 		m_proto.put("hugo", "http://www.genenames.org/data/hgnc_data.php?hgnc_id=");
