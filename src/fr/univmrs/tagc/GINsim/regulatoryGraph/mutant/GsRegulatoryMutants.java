@@ -268,6 +268,7 @@ class MutantPanel extends JPanel {
                 updateSelection();
             }
         });
+        updateSelection();
     }
 }
 
