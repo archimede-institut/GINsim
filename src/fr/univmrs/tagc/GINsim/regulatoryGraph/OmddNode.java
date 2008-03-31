@@ -39,6 +39,7 @@ public class OmddNode {
     public static final int AND = 1;
     /**  */
     public static final int CONSTRAINT = 2;
+    public static final int CONSTRAINTOR = 3;
     
     static {
     	MINUSONE = new OmddNode();
@@ -186,6 +187,22 @@ public class OmddNode {
                         ret.next[i] = merge(other.next[i], CONSTRAINT, m, t_key);
                     }
                     return ret;
+                case CONSTRAINTOR:
+                    if (other.next == null) {
+                        // just check that the constraint is verified
+                        if (other.min == -1 || value >= other.min && value <= other.max) {
+                            return this;
+                        }
+                        return other;
+                    }
+                    // the constraint is not yet clear, deploy it
+                    ret = new OmddNode();
+                    ret.level = other.level;
+                    ret.next = new OmddNode[other.next.length];
+                    for (int i=0 ; i<ret.next.length ; i++) {
+                        ret.next[i] = merge(other.next[i], CONSTRAINTOR, m, t_key);
+                    }
+                    return ret;
                 case OR:
                     switch (value) {
                         case 0:
@@ -234,6 +251,14 @@ public class OmddNode {
                     ret.next = new OmddNode[next.length];
                     for (int i=0 ; i<next.length ; i++) {
                         ret.next[i] = next[i].merge(other, CONSTRAINT, m, t_key);
+                    }
+                    return ret;
+                case CONSTRAINTOR:
+                    ret = new OmddNode();
+                    ret.level = level;
+                    ret.next = new OmddNode[next.length];
+                    for (int i=0 ; i<next.length ; i++) {
+                        ret.next[i] = next[i].merge(other, CONSTRAINTOR, m, t_key);
                     }
                     return ret;
                 case OR:
@@ -364,6 +389,9 @@ public class OmddNode {
      */
     public String toString() {
         if (this.next == null) {
+        	if (min != -1) {
+        		return "["+min+","+max+"]";
+        	}
             return ""+value;
         }
         

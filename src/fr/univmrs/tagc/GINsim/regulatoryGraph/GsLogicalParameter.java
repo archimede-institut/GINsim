@@ -215,7 +215,7 @@ public class GsLogicalParameter implements XMLize {
     public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
     	return buildTree(regGraph, node, OmddNode.TERMINALS[this.value]);
     }
-	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, OmddNode root) {
+	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, OmddNode valueNode) {
         short[][] t_ac = buildTac(regGraph, node);
         short[] t_tmp;
         
@@ -232,22 +232,49 @@ public class GsLogicalParameter implements XMLize {
                 }
             }
         }
-        OmddNode curNode;
+        OmddNode curNode, curRoot = valueNode;
         for (int i=t_ac.length-1 ; i>0 ; i--) {
-            curNode = new OmddNode();
             t_tmp = t_ac[i];
-            curNode.level = t_tmp[0];
-            curNode.next = new OmddNode[ t_tmp.length-1 ];
-            for (int j=1 ; j<t_tmp.length ; j++) {
-                if (t_tmp[j] != -1) {
-                    curNode.next[j-1] = root;
-                } else {
-                    curNode.next[j-1] = OmddNode.TERMINALS[0];
-                }
+            int curLevel = t_tmp[0];
+            if (curRoot.next == null || curLevel < curRoot.level) {
+                curNode = new OmddNode();
+                curNode.level = curLevel;
+	            curNode.next = new OmddNode[ t_tmp.length-1 ];
+	            for (int j=1 ; j<t_tmp.length ; j++) {
+	                if (t_tmp[j] != -1) {
+	                    curNode.next[j-1] = curRoot;
+	                } else {
+	                    curNode.next[j-1] = OmddNode.TERMINALS[0];
+	                }
+	            }
+	            curRoot = curNode;
+            } else {
+            	// we have a constraint on a higher priority node, take it first!
+            	OmddNode newNode = new OmddNode();
+            	newNode.level = curRoot.level;
+            	newNode.next = new OmddNode[curRoot.next.length];
+            	for (int v=0 ; v< newNode.next.length ; v++) {
+            		OmddNode curNext = curRoot.next[v];
+            		if (curNext == OmddNode.TERMINALS[0]) {
+            			newNode.next[v] = curNext;
+            		} else {
+            			curNode = new OmddNode();
+            			curNode.level = curLevel;
+			            curNode.next = new OmddNode[ t_tmp.length-1 ];
+			            for (int j=1 ; j<t_tmp.length ; j++) {
+			                if (t_tmp[j] != -1) {
+			                    curNode.next[j-1] = curNext;
+			                } else {
+			                    curNode.next[j-1] = OmddNode.TERMINALS[0];
+			                }
+			            }
+		                newNode.next[v] = curNode;
+            		}
+            	}
+            	curRoot = newNode;
             }
-            root = curNode;
         }
-        return root;
+        return curRoot;
     }
     
     public void toXML(XMLWriter out, Object param, int mode) throws IOException {

@@ -105,6 +105,7 @@ class GsRegulatoryMutantChange {
         }
         if (parser != null) {
         	OmddNode terminal = cst;
+        	cst = OmddNode.TERMINALS[0];
         	try {
         		GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
         		Iterator it = parser.getParams(functionList.getData()).iterator();
@@ -118,17 +119,13 @@ class GsRegulatoryMutantChange {
         				l.add(elem.getEdge().getEdge(elem.getIndex()));
         			}
         			GsLogicalParameter param = new GsLogicalParameter(l, 1);
-        			cst = param.buildTree(graph, vertex, terminal);
-        			System.out.println("  local cst: "+param+" -> "+cst);
+        			cst = cst.merge(param.buildTree(graph, vertex, terminal), OmddNode.CONSTRAINTOR);
         		}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
         }
-    	// FIXME: this won't always work if the mutant is not forced!!
         OmddNode result = node.merge(cst, OmddNode.CONSTRAINT);
-        System.out.println("new rule: "+result);
-        System.out.println();
         return result;
     }
 
@@ -137,6 +134,9 @@ class GsRegulatoryMutantChange {
         out.addAttr("target", vertex.getId());
         out.addAttr("min", ""+min);
         out.addAttr("max", ""+max);
+        if (parser != null && parser.getRoot() != null) {
+            out.addAttr("condition", parser.getRoot().toString());
+    	}
         out.closeTag();
     }
 }
