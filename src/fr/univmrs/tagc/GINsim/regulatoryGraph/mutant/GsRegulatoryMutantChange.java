@@ -1,7 +1,9 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.mutant;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -9,6 +11,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionListElement;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 class GsRegulatoryMutantChange {
@@ -65,9 +68,10 @@ class GsRegulatoryMutantChange {
 				return;
 			}
     	}
-    	System.out.println("ready to parse it");
     	boolean ret = parser.compile(condition, graph, vertex);
-    	System.out.println("result: "+ret);
+    	if (!ret) {
+    		System.out.println("error parsing the proposed condition");
+    	}
     }
     protected OmddNode apply(OmddNode node, GsRegulatoryGraph graph) {
         int maxValue = vertex.getMaxValue();
@@ -76,20 +80,6 @@ class GsRegulatoryMutantChange {
             return node;
         }
         int reflevel = graph.getNodeOrderForSimulation().indexOf(vertex);
-        // TODO: apply condition with mutant
-        if (parser != null) {
-        	try {
-        		GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
-        		Iterator it = functionList.getData().iterator();
-        		while (it.hasNext()) {
-        			GsLogicalParameter param = (GsLogicalParameter)it.next();
-        			param.buildTree(graph, vertex);
-        		}
-        		
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-        }
         OmddNode cst = new OmddNode();
         if (force) {
             cst.min = min;
@@ -113,7 +103,33 @@ class GsRegulatoryMutantChange {
 	            }
 	        }
         }
-        return node.merge(cst, OmddNode.CONSTRAINT);
+        if (parser != null) {
+        	OmddNode terminal = cst;
+        	try {
+        		GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
+        		Iterator it = parser.getParams(functionList.getData()).iterator();
+        		while (it.hasNext()) {
+        			// FIXME: the edge list is duplicated, this is far from clean...
+        			List lfunc = (List)it.next();
+        			List l = new ArrayList(lfunc.size());
+        			Iterator it2 = lfunc.iterator();
+        			while (it2.hasNext()) {
+        				GsLogicalFunctionListElement elem = (GsLogicalFunctionListElement)it2.next();
+        				l.add(elem.getEdge().getEdge(elem.getIndex()));
+        			}
+        			GsLogicalParameter param = new GsLogicalParameter(l, 1);
+        			cst = param.buildTree(graph, vertex, terminal);
+        			System.out.println("  local cst: "+param+" -> "+cst);
+        		}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
+    	// FIXME: this won't always work if the mutant is not forced!!
+        OmddNode result = node.merge(cst, OmddNode.CONSTRAINT);
+        System.out.println("new rule: "+result);
+        System.out.println();
+        return result;
     }
 
     public void toXML(XMLWriter out) throws IOException {

@@ -213,6 +213,9 @@ public class GsLogicalParameter implements XMLize {
      * @return the OmddNode representation of this logical parameter
      */
     public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
+    	return buildTree(regGraph, node, OmddNode.TERMINALS[this.value]);
+    }
+	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, OmddNode root) {
         short[][] t_ac = buildTac(regGraph, node);
         short[] t_tmp;
         
@@ -229,7 +232,6 @@ public class GsLogicalParameter implements XMLize {
                 }
             }
         }
-        OmddNode root = OmddNode.TERMINALS[this.value];
         OmddNode curNode;
         for (int i=t_ac.length-1 ; i>0 ; i--) {
             curNode = new OmddNode();
