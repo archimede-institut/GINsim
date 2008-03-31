@@ -54,7 +54,6 @@ public final class GsDynamicParser extends GsXMLHelper {
     public GsDynamicParser(Map map, Attributes attributes, String s_dtd, String s_filename) {
         this.graph = new GsDynamicGraph(s_filename, true);
     	this.map = map;
-    	graph.setDTD(s_dtd);
 		vareader = graph.getGraphManager().getVertexAttributesReader();
 		ereader = graph.getGraphManager().getEdgeAttributesReader();
 		
@@ -177,7 +176,6 @@ public final class GsDynamicParser extends GsXMLHelper {
             			}
             			try {
 							graph.setGraphName(attributes.getValue("id"));
-							graph.setDTD(s_dtd);
 						} catch (GsException e) {
 							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 						}

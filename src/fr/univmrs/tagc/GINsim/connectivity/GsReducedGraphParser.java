@@ -52,7 +52,6 @@ public class GsReducedGraphParser extends GsXMLHelper {
     public GsReducedGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) {
     	this.graph = new GsReducedGraph(s_filename, true);
     	this.map = map;
-    	graph.setDTD(s_dtd);
 		vareader = graph.getGraphManager().getVertexAttributesReader();
 		ereader = graph.getGraphManager().getEdgeAttributesReader();
 		
@@ -182,7 +181,6 @@ public class GsReducedGraphParser extends GsXMLHelper {
             			}
             			try {
 							graph.setGraphName(attributes.getValue("id"));
-							graph.setDTD(s_dtd);
 						} catch (GsException e) {
 							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 						}

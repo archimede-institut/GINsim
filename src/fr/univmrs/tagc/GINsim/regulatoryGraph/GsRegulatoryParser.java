@@ -79,7 +79,6 @@ public final class GsRegulatoryParser extends GsXMLHelper {
      */
     public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws SAXException {
         graph = new GsRegulatoryGraph(s_filename, true);
-        graph.setDTD(s_dtd);
         this.map = map;
 		s_nodeOrder = attributes.getValue("nodeorder");
         if (s_nodeOrder == null) {
@@ -214,7 +213,6 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                     s_nodeOrder = attributes.getValue("nodeorder");
                     try {
                         graph.setGraphName(attributes.getValue("id"));
-                        graph.setDTD(s_dtd);
                     } catch (GsException e) {
                         GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
                     }

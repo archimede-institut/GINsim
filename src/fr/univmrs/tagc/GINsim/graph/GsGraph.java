@@ -1071,14 +1071,6 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	public String getDTD() {
 		return dtdFile;
 	}
-	/**
-	 * changes the path to the ginml DTD.
-	 * @param DTD
-	 */
-	public void setDTD(String DTD) {
-		dtdFile = DTD;
-        fireGraphChange(CHANGE_METADATA, null);
-	}
 
     /**
      * get the label to display in the "selected item" tab
