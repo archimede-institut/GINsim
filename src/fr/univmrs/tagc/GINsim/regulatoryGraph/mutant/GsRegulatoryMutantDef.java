@@ -124,4 +124,11 @@ public class GsRegulatoryMutantDef implements NamedObject {
 	public Annotation getAnnotation() {
 		return annotation;
 	}
+
+	public boolean hasValidCondition(int index) {
+		if (index >= v_changes.size()) {
+			return true;
+		}
+		return ((GsRegulatoryMutantChange)v_changes.get(index)).s_condition == null;
+	}
 }

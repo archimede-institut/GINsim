@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.mutant;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -13,9 +14,11 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import fr.univmrs.tagc.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
@@ -218,6 +221,7 @@ class MutantPanel extends JPanel {
         add(sp, c);
         int[] maxcols = {0,150 , 1,40 , 2,40 , 3,40};
         table_change.setMaxCols(maxcols);
+        table_change.setDefaultRenderer(Object.class, new MutantTableRenderer());
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
@@ -391,7 +395,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
                 value = curMutant.getMax(rowIndex);
                 break;
             case 4:
-                return curMutant.getCondition(rowIndex); 
+                return curMutant.getCondition(rowIndex);
             default:
                 return null;
         }
@@ -459,5 +463,26 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         }
         fireTableCellUpdated(rowIndex, 1);
         fireTableCellUpdated(rowIndex, 2);
+    }
+
+	public boolean hasValidCondition(int row) {
+		return curMutant.hasValidCondition(row);
+	}
+}
+
+class MutantTableRenderer extends DefaultTableCellRenderer {
+    private static final long serialVersionUID = -2173326249965764544L;
+
+    public Component getTableCellRendererComponent( JTable table , Object value , boolean isSelected , boolean hasFocus ,
+            										int row , int column ) {
+        Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
+        cmp.setBackground(Color.WHITE);
+        if( table != null && column == 4) {
+        	GsRegulatoryMutantModel model = (GsRegulatoryMutantModel)table.getModel();
+        	if (!model.hasValidCondition(row)) {
+        		cmp.setBackground(Color.red);
+        	}
+        }
+        return cmp;
     }
 }

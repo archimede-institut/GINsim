@@ -21,6 +21,7 @@ class GsRegulatoryMutantChange {
     short max;
     boolean force = true;
     GsBooleanParser parser = null;
+    String s_condition = null;
     
     GsRegulatoryMutantChange(GsRegulatoryVertex vertex) {
         this.vertex = vertex;
@@ -53,6 +54,9 @@ class GsRegulatoryMutantChange {
     }
 
     public String getCondition() {
+		if (s_condition != null) {
+			return s_condition;
+		}
     	if (parser == null || parser.getRoot() == null) {
     		return "";
     	}
@@ -60,6 +64,11 @@ class GsRegulatoryMutantChange {
     }
     
     public void setCondition(String condition, GsRegulatoryGraph graph) {
+		s_condition = null;
+    	if (condition == null || condition.trim() == "") {
+    		parser = null;
+    		return;
+    	}
     	if (parser == null) {
     		try {
 				parser = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
@@ -68,9 +77,8 @@ class GsRegulatoryMutantChange {
 				return;
 			}
     	}
-    	boolean ret = parser.compile(condition, graph, vertex);
-    	if (!ret) {
-    		System.out.println("error parsing the proposed condition");
+    	if (!parser.compile(condition, graph, vertex)) {
+    		s_condition = condition;
     	}
     }
     protected OmddNode apply(OmddNode node, GsRegulatoryGraph graph) {
@@ -134,8 +142,9 @@ class GsRegulatoryMutantChange {
         out.addAttr("target", vertex.getId());
         out.addAttr("min", ""+min);
         out.addAttr("max", ""+max);
-        if (parser != null && parser.getRoot() != null) {
-            out.addAttr("condition", parser.getRoot().toString());
+        String condition = getCondition();
+        if (!"".equals(condition)) {
+            out.addAttr("condition", getCondition());
     	}
         out.closeTag();
     }
