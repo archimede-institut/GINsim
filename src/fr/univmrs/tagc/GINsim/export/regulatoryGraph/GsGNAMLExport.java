@@ -46,9 +46,7 @@ public class GsGNAMLExport extends GsAbstractExport {
 	protected void doExport(GsExportConfig config) {
 		this.config = config;
 		try {
-			long l = System.currentTimeMillis();
 			run();
-			System.out.println("gna export: done in "+(System.currentTimeMillis()-l)+"ms");
 		} catch (IOException e) {
 			e.printStackTrace();
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
@@ -171,7 +169,9 @@ public class GsGNAMLExport extends GsAbstractExport {
 			currentChild = node.next[i];
 			int begin = i;
 			int end;
-			for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++);
+			for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++) {
+				// nothing to do
+			}
 			parcours[deep][0] = begin;
 			parcours[deep][1] = end;
 			parcours[deep][2] = node.level;

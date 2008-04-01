@@ -71,7 +71,6 @@ public abstract class TestMDD extends TestCase {
 		MDDNode n_true = ddi.getLeaf(1);
 		MDDNode n_false = ddi.getLeaf(0);
 		long t = System.currentTimeMillis();
-		System.out.println("start");
 		ddi.reset();
 		for (int i=maxlevel ; i>-1 ; i--) {
 			t_v[i] = new Vector();
@@ -104,15 +103,11 @@ public abstract class TestMDD extends TestCase {
 				}
 			}
 		}
-		System.out.println("done: "+(System.currentTimeMillis()-t));
-		System.out.println("result: "+ddi.getNodeCount());
 	}
 	
 	public void testNQueens() {
 		n_true = ddi.getLeaf(1);
 		n_false = ddi.getLeaf(0);
-		long t = System.currentTimeMillis();
-		System.out.println("start "+N+" queens:");
 		ddi.reset();
 		
 		MDDNode queen = n_true;
@@ -139,10 +134,6 @@ public abstract class TestMDD extends TestCase {
 				queen = queen.merge(ddi, buildCst(i, j), DecisionDiagramAction.ACTION_AND);
 			}
 		}
-		
-		System.out.println("done: "+(System.currentTimeMillis()-t));
-		System.out.println("result: "+ddi.getNodeCount());
-		System.out.println("solution: "+queen);
 	}
 
 	private MDDNode buildCst(int r, int c) {
@@ -164,7 +155,6 @@ public abstract class TestMDD extends TestCase {
 			ret = ret.merge(ddi, ddi.getNewNode(i*N+j, nextFalse), DecisionDiagramAction.ACTION_AND);
 		}
 		ret = ret.merge(ddi, ddi.getNewNode(N*r+c, nextFalse), DecisionDiagramAction.ACTION_OR);
-//		System.out.println("cst en "+r+","+c+": "+ret);
 		return ret;
 	}
 

@@ -20,16 +20,13 @@ public class TempDir {
 	 */
 	public static File createGeneratedName(String prefix, File directory)
 			throws IOException {
-		File tempFile;
-		if (directory == null) {
-			tempFile = File.createTempFile(prefix, "");
-		} else {
-			tempFile = File.createTempFile(prefix, "", directory);
+		File tempFile = File.createTempFile(prefix, "", directory);
+		if (!tempFile.delete()) {
+			throw new IOException();
 		}
-		if (!tempFile.delete())
+		if (!tempFile.mkdir()) {
 			throw new IOException();
-		if (!tempFile.mkdir())
-			throw new IOException();
+		}
 		deleterThread.add(tempFile);
 		return tempFile;
 	}
@@ -41,8 +38,9 @@ public class TempDir {
 	public static File createNamed(String name, File directory)
 			throws IOException {
 		File tempFile = new File(directory, name);
-		if (!tempFile.mkdir())
+		if (!tempFile.mkdir()) {
 			throw new IOException();
+		}
 		deleterThread.add(tempFile);
 		return tempFile;
 	}
@@ -71,10 +69,11 @@ class DirDeleter extends Thread {
 
 		if (fileArray != null) {
 			for (int i = 0; i < fileArray.length; i++) {
-				if (fileArray[i].isDirectory())
+				if (fileArray[i].isDirectory()) {
 					deleteDirectory(fileArray[i]);
-				else
+				} else {
 					fileArray[i].delete();
+				}
 			}
 		}
 		dir.delete();

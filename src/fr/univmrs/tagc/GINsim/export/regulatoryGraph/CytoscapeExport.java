@@ -20,8 +20,8 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * CytoscapeExport is a plugin for GINsim to export a regulatory graph into XGMML format.
@@ -57,9 +57,7 @@ public class CytoscapeExport extends GsAbstractExport {
 	protected void doExport(GsExportConfig config) {
 		this.config = config;
 		try {
-			long l = System.currentTimeMillis();
 			run();
-			System.out.println("cytoscape export: done in "+(System.currentTimeMillis()-l)+"ms");
 		} catch (IOException e) {
 			e.printStackTrace();
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
@@ -121,7 +119,9 @@ public class CytoscapeExport extends GsAbstractExport {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
 			
 			String name = vertex.getName();//The complete name (label) of the edge
-			if (name.length() == 0) name = vertex.getId(); //if it isn't defined, set to id
+			if (name.length() == 0) {
+				name = vertex.getId(); //if it isn't defined, set to id
+			}
 			
 			Integer node_id = new Integer(current_index_of_node_id++); //Current cytoscape ID
 			gs2cyt_Ids.put(vertex.getId(), node_id);//Put the new ID into the map

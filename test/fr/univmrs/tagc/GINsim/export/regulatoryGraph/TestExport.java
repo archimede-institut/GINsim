@@ -13,8 +13,8 @@ import fr.univmrs.tagc.common.TestTools;
 
 public class TestExport extends TestCase {
 	GsGraph graph;
-	File tmpDir = TestTools.getTestDir(); //FIXME: replace TestTools.getTtestDir() by tmpDir
-	
+	File tmpDir = TestTools.getTempDir();
+
 	public TestExport() throws FileNotFoundException {
 		File file = new File(TestTools.getTestDir(), "graph.ginml");
 		GsGinmlParser parser = new GsGinmlParser();
@@ -23,19 +23,19 @@ public class TestExport extends TestCase {
 	public void testGNAML() throws IOException {
 		GsGNAMLExport export =  new GsGNAMLExport();
 		GsExportConfig config = new GsExportConfig(graph, export, 0);
-		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"tmp/graph.gnaml");
+		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.gnaml");
 		export.doExport(config);
 	}
 	public void testSNAKES() throws IOException {
 		SnakesExport export =  new SnakesExport();
 		GsExportConfig config = new GsExportConfig(graph, export, 0);
-		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"tmp/graph.py");
+		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.py");
 		export.doExport(config);
 	}
 	public void testCytoscape() throws IOException {
 		CytoscapeExport export =  new CytoscapeExport();
 		GsExportConfig config = new GsExportConfig(graph, export, 0);
-		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"tmp/graph.xgmml");
+		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.xgmml");
 		export.doExport(config);
 	}
 }
