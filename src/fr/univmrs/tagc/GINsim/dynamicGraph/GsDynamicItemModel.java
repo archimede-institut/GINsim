@@ -137,6 +137,10 @@ public class GsDynamicItemModel extends AbstractTableModel {
         }
         return ret;
     }
+
+	public boolean isOutgoing(int row) {
+		return row > 0 && row<=nbNext;
+	}
 }
 
 class Go2ActionListener implements ActionListener {

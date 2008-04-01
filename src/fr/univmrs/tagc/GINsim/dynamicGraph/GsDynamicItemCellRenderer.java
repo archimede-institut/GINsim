@@ -17,10 +17,15 @@ public class GsDynamicItemCellRenderer extends DefaultTableCellRenderer {
         Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
         cmp.setBackground(Color.WHITE);
         if( table != null && row >= 1) {
-            String s1 = table.getModel().getValueAt(0, column).toString(); 
-            String s2 = table.getModel().getValueAt(row, column).toString(); 
-            if (!(s1.compareToIgnoreCase(s2) == 0)) {
-                cmp.setBackground( Color.cyan );
+        	GsDynamicItemModel model = (GsDynamicItemModel)table.getModel();
+            String s1 = model.getValueAt(0, column).toString(); 
+            String s2 = model.getValueAt(row, column).toString(); 
+            if (!s1.equals(s2)) {
+            	if (model.isOutgoing(row)) {
+            		cmp.setBackground( Color.cyan );
+            	} else {
+            		cmp.setBackground( Color.green );
+            	}
             }
         }
         return cmp;
