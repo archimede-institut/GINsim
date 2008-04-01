@@ -16,6 +16,9 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.mdd.DecisionDiagramAction;
+import fr.univmrs.tagc.common.mdd.DecisionDiagramInfo;
+import fr.univmrs.tagc.common.mdd.MDDNode;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
@@ -235,6 +238,27 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
             curNode = gsi.buildTree(graph, this);
             if (curNode != null) {
                 root = root.merge(curNode, OmddNode.OR);
+            }
+        }
+        return root;
+    }
+
+    /**
+     * get the DAG representation of logical parameters.
+     *
+     * @param graph
+     * @return an OmddNode representing logical parameters associated to this vertex.
+     */
+    public MDDNode getMDD(GsRegulatoryGraph graph, DecisionDiagramInfo ddi) {
+        MDDNode root;
+        root = ddi.getLeaf(0);
+        MDDNode curNode;
+        Iterator it = v_logicalParameters.iterator();
+        while (it.hasNext()) {
+            GsLogicalParameter gsi = (GsLogicalParameter)it.next();
+            curNode = gsi.buildMDD(graph, this, null, ddi);
+            if (curNode != null) {
+                root = root.merge(ddi, curNode, DecisionDiagramAction.ACTION_OR);
             }
         }
         return root;

@@ -13,16 +13,16 @@ public class DecisionDiagramAction {
 		this.t = new int[MDDNode.NBSTATUS];
 	}
 
-	static final DecisionDiagramAction ACTION_MIN = new DecisionDiagramAction(new int[] {
+	public static final DecisionDiagramAction ACTION_MIN = new DecisionDiagramAction(new int[] {
 			MDDNode.MIN, MDDNode.CHILDOTHER, MDDNode.CHILDTHIS,
 			MDDNode.CHILDBOTH, MDDNode.CHILDTHIS, MDDNode.CHILDOTHER
 	});
-	static final DecisionDiagramAction ACTION_MAX = new DecisionDiagramAction(new int[] {
+	public static final DecisionDiagramAction ACTION_MAX = new DecisionDiagramAction(new int[] {
 			MDDNode.MAX, MDDNode.CHILDOTHER, MDDNode.CHILDTHIS,
 			MDDNode.CHILDBOTH, MDDNode.CHILDTHIS, MDDNode.CHILDOTHER
 	});
-	static final DecisionDiagramAction ACTION_AND = new AndAction();
-	static final DecisionDiagramAction ACTION_OR = new OrAction();
+	public static final DecisionDiagramAction ACTION_AND = new AndAction();
+	public static final DecisionDiagramAction ACTION_OR = new OrAction();
 
 	/**
 	 * if some cases need more info to be tested, put the ASKME value in the array t
