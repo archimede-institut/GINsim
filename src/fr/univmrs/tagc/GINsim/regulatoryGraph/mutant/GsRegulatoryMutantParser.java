@@ -12,20 +12,18 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
- * parser for simulation parameters file
+ * parser for mutants definition file
  */
 public class GsRegulatoryMutantParser extends XMLHelper {
 
 	private static Map CALLMAP = new TreeMap();
 	
-	private static final int LIST = 0;
 	private static final int MUTANT = 1;
 	private static final int CHANGE = 2;
 	private static final int COMMENT = 10;
 	private static final int LINK = 10;
 	
 	static {
-		addCall("mutantList", LIST, CALLMAP, STARTONLY, false);
 		addCall("mutant", MUTANT, CALLMAP, STARTONLY, false);
 		addCall("change", CHANGE, CALLMAP, STARTONLY, false);
 		addCall("link", LINK, CALLMAP, STARTONLY, false);
@@ -37,14 +35,16 @@ public class GsRegulatoryMutantParser extends XMLHelper {
     List nodeOrder;
     String[] t_order;
     GsRegulatoryMutantDef mutant;
+    Map mutants_names = new TreeMap();
     
     /**
-     * @param graph expected node order
+     * @param graph
      */
     public GsRegulatoryMutantParser(GsRegulatoryGraph graph) {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         this.m_call = CALLMAP;
+        mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
     }
 
     protected void endElement(int id) {
@@ -55,19 +55,15 @@ public class GsRegulatoryMutantParser extends XMLHelper {
 
 	protected void startElement(int id, Attributes attributes) {
 		switch (id) {
-			case LIST:
-	            mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
-				break;
 			case MUTANT:
 	            mutant = new GsRegulatoryMutantDef();
 	            mutant.name = attributes.getValue("name");
-	            for (int i=0 ; i<mutantList.getNbElements(null) ; i++) {
-	                if (mutantList.getElement(null, i).toString().equals(mutant.name)) {
-	                    // TODO: report error: duplicate ID entry
-	                    return;
-	                }
+	            if (mutants_names.containsKey(mutant.name)) {
+	            	// TODO: report duplicate entry
+	            } else {
+		            mutantList.v_data.add(mutant);
+	            	mutants_names.put(mutant.name, null);
 	            }
-	            mutantList.v_data.add(mutant);
 				break;
 
 			case CHANGE:
