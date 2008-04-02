@@ -634,6 +634,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         for (int i=0 ; i<nodeOrder.size() ; i++) {
         	GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
             t_tree[i] = vertex.getMDD(this, ddi);
+            // TODO: port "non-focal" to the new MDD
         }
         return t_tree;
     }

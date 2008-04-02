@@ -22,7 +22,6 @@ public abstract class MDDNode {
 	 *  <li>CUSTOM will call the <code>action.custom</code> function to perform
 	 *  	the operation</li>
 	 * </ul>
-	 *
 	 */
 	public static final int THIS=0, OTHER=1, NOTTHIS=2, NOTOTHER=3,
 		MULT=10, ADD=11, MIN=12, MAX=13, ISEQ=14, ISDIFF=15,

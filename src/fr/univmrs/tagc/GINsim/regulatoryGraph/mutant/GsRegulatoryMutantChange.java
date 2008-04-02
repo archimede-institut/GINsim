@@ -16,10 +16,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 
 class GsRegulatoryMutantChange {
     GsRegulatoryVertex vertex;
-    // for now, only set min/max, more powerfull tools coming later
     short min;
     short max;
-    boolean force = true;
     GsBooleanParser parser = null;
     String s_condition = null;
     
@@ -87,30 +85,9 @@ class GsRegulatoryMutantChange {
             // no change here!
             return node;
         }
-        int reflevel = graph.getNodeOrderForSimulation().indexOf(vertex);
         OmddNode cst = new OmddNode();
-        if (force) {
-            cst.min = min;
-            cst.max = max;
-        } else {
-	        cst.level = reflevel;
-	        cst.next = new OmddNode[maxValue+1];
-	        for (int i=0 ; i<cst.next.length ; i++) {
-	            if (i==min && i!=0) {
-	                OmddNode nMin = new OmddNode();
-	                nMin.min = min;
-	                nMin.max = max;
-	                cst.next[i] = nMin;
-	            } else if (i==max && max < maxValue) {
-	                OmddNode nMax = new OmddNode();
-	                nMax.min = min;
-	                nMax.max = max;
-	                cst.next[i] = nMax;
-	            } else {
-	                cst.next[i] = OmddNode.TERMINALS[0];
-	            }
-	        }
-        }
+        cst.min = min;
+        cst.max = max;
         if (parser != null) {
         	OmddNode terminal = cst;
         	cst = OmddNode.TERMINALS[0];

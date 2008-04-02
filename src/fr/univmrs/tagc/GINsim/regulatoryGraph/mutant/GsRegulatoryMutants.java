@@ -219,7 +219,7 @@ class MutantPanel extends JPanel {
         table_change = new EnhancedJTable(model);
         sp.setViewportView(table_change);
         add(sp, c);
-        int[] maxcols = {0,150 , 1,40 , 2,40 , 3,40};
+        int[] maxcols = {0,150 , 1,40 , 2,40};
         table_change.setMaxCols(maxcols);
         table_change.setDefaultRenderer(Object.class, new MutantTableRenderer());
         c = new GridBagConstraints();
@@ -317,7 +317,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
     }
 
     public int getColumnCount() {
-        return 5;
+        return 4;
     }
 
     public String getColumnName(int columnIndex) {
@@ -325,28 +325,27 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         case 0:
             return Translator.getString("STR_node");
         case 1:
-            return Translator.getString("STR_strict");
-        case 2:
             return Translator.getString("STR_min");
-        case 3:
+        case 2:
             return Translator.getString("STR_max");
-        case 4:
+        case 3:
             return Translator.getString("STR_condition");
         }
         return null;
     }
 
     public Class getColumnClass(int columnIndex) {
-        if (columnIndex == 0) {
-            return ValueList.class;
-        }
-        if (columnIndex == 1) {
-        	return Boolean.class;
-        }
-        if (columnIndex > 1 && columnIndex < 4) {
-            return String.class;
-        }
-        return Object.class;
+    	switch (columnIndex) {
+			case 0:
+				return ValueList.class;
+			case 1:
+			case 2:
+	            return Integer.class;
+			case 3:
+	            return String.class;
+			default:
+		        return Object.class;
+		}
     }
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -363,7 +362,6 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             case 1:
             case 2:
             case 3:
-            case 4:
                 return true;
         }
         return false;
@@ -378,23 +376,18 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             if (columnIndex == 0) {
                 return vlist;
             }
-            if (columnIndex == 1) {
-            	return Boolean.FALSE;
-            }
             return "";
         }
         switch (columnIndex) {
             case 0:
                 return curMutant.getName(rowIndex);
             case 1:
-                return curMutant.isStrict(rowIndex) ? Boolean.TRUE : Boolean.FALSE;
-            case 2:
                 value = curMutant.getMin(rowIndex);
                 break;
-            case 3:
+            case 2:
                 value = curMutant.getMax(rowIndex);
                 break;
-            case 4:
+            case 3:
                 return curMutant.getCondition(rowIndex);
             default:
                 return null;
@@ -419,15 +412,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             return;
         }
         
-        if (columnIndex == 1) {
-        	if (!(aValue instanceof Boolean)) {
-        		return;
-			}
-        	curMutant.setStrict(rowIndex, aValue == Boolean.TRUE);
-        	return;
-        }
-        
-        if (columnIndex == 4) {
+        if (columnIndex == 3) {
         	curMutant.setCondition(rowIndex, graph, (String)aValue);
         }
         
@@ -454,10 +439,10 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
             return;
         }
         switch (columnIndex) {
-            case 2:
+            case 1:
                 curMutant.setMin(rowIndex, val);
                 break;
-            case 3:
+            case 2:
                 curMutant.setMax(rowIndex, val);
                 break;
         }
@@ -477,7 +462,7 @@ class MutantTableRenderer extends DefaultTableCellRenderer {
             										int row , int column ) {
         Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
         cmp.setBackground(Color.WHITE);
-        if( table != null && column == 4) {
+        if( table != null && column == 3) {
         	GsRegulatoryMutantModel model = (GsRegulatoryMutantModel)table.getModel();
         	if (!model.hasValidCondition(row)) {
         		cmp.setBackground(Color.red);

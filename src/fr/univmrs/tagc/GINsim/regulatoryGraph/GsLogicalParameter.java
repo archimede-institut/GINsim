@@ -297,6 +297,7 @@ public class GsLogicalParameter implements XMLize {
             }
         }
         MDDNode curRoot = valueNode!=null ? valueNode : ddi.getLeaf(value);
+        // FIXME: check on the existing value is not yet done
         for (int i=t_ac.length-1 ; i>0 ; i--) {
             t_tmp = t_ac[i];
             int curLevel = t_tmp[0];

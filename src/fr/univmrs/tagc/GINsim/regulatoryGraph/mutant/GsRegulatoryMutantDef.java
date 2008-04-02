@@ -105,14 +105,6 @@ public class GsRegulatoryMutantDef implements NamedObject {
 		this.name = name;
 	}
 
-	public boolean isStrict(int index) {
-		return ((GsRegulatoryMutantChange)v_changes.get(index)).force;
-	}
-
-	public void setStrict(int index, boolean b) {
-		((GsRegulatoryMutantChange)v_changes.get(index)).force = b;
-	}
-	
 	public String getCondition(int index) {
 		return ((GsRegulatoryMutantChange)v_changes.get(index)).getCondition();
 	}
