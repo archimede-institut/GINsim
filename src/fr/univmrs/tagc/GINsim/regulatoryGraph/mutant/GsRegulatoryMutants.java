@@ -219,7 +219,7 @@ class MutantPanel extends JPanel {
         table_change = new EnhancedJTable(model);
         sp.setViewportView(table_change);
         add(sp, c);
-        int[] maxcols = {0,150 , 1,40 , 2,40};
+        int[] maxcols = {0,170 , 1,30 , 2,30};
         table_change.setMaxCols(maxcols);
         table_change.setDefaultRenderer(Object.class, new MutantTableRenderer());
         c = new GridBagConstraints();
