@@ -7,7 +7,6 @@ import java.util.List;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -21,15 +20,6 @@ import fr.univmrs.tagc.common.xml.XMLHelper;
  * parser for simulation parameters file
  */
 public class GsSimulationParametersParser extends XMLHelper {
-
-    public GsGraph getGraph() {
-        // doesn't create a graph!
-        return null;
-    }
-    public String getFallBackDTD() {
-        // doesn't use a DTD either
-        return null;
-    }
 
     private static final int POS_OUT = 0;
     private static final int POS_PARAM = 1;

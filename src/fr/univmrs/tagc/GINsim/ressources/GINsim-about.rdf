@@ -61,6 +61,12 @@
 <!-- previous contributors -->
     <helper>
       <foaf:Person>
+        <foaf:name>Duncan Berenguier</foaf:name>
+        <foaf:made>Exports and XML schema</foaf:made>
+      </foaf:Person>
+    </helper>
+    <helper>
+      <foaf:Person>
         <foaf:name>Frederic Cordeil</foaf:name>
         <foaf:made>Prototype development</foaf:made>
       </foaf:Person>

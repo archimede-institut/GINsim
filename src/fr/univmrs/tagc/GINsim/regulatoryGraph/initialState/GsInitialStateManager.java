@@ -106,12 +106,4 @@ class initStateParser extends XMLHelper {
 	public Object getParameters() {
 		return list;
 	}
-    public GsGraph getGraph() {
-        // doesn't create a graph!
-        return null;
-    }
-    public String getFallBackDTD() {
-        // doesn't use a DTD either
-        return null;
-    }
 }

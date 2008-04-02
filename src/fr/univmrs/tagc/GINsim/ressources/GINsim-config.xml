@@ -18,12 +18,11 @@
 		<plugin name="export" 					mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin"/>
 		<plugin name="PNexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsPetriNetExport"/>
 		<plugin name="SMVexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSMVExport"/>
-		<plugin name="HTMLExport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsHTMLExport" load="false"/>
 		<plugin	name="CytoscapeExport" 			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"/>
 		<plugin name="SnakesExport"				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"/>
 		<plugin name="GNAexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport"/>
 		<plugin name="GNAMLexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAMLExport"/>
-		<plugin name="GenericDocumentexport"	mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport"/>
+		<plugin name="GenericDocumentExport"	mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport"/>
 
 		<!-- other plugins -->
 		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin"/>
