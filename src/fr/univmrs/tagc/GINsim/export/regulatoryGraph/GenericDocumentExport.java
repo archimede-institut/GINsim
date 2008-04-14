@@ -33,9 +33,11 @@ import fr.univmrs.tagc.common.document.XHTMLDocumentWriter;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
- * Generic export for documents.
+ * GenericDocumentExport is a plugin to export the documentation of a model into multiples document format.
  * 
+ * It export using a documentWriter. You can add support for your own document writer using <u>addSubFormat</u>
  * 
+ * @see DocumentWriter
  */
 public class GenericDocumentExport extends GsAbstractExport {
 	static public Vector v_format = new Vector();
@@ -64,6 +66,9 @@ public class GenericDocumentExport extends GsAbstractExport {
     	v_format.add(new GenericDocumentFormat(documentWriterClass, id, filter, filterDescr, extension));
     }
    
+    /**
+     * get a vector of all the GenericDocumentFormat the genericDocument can use.
+     */
 	public Vector getSubFormat() {
 		return v_format;
 	}
@@ -427,6 +432,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 	}
 
 	/**
+	 * import the javascript (DocumentExtra) from js file. 
+	 * The javascript is use to allow the user to collapse/expand the stables states in the table.
 	 * @throws IOException 
 	 * 
 	 */
