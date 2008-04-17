@@ -26,10 +26,7 @@ import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.document.DocumentStyle;
-import fr.univmrs.tagc.common.document.DocumentWriter;
-import fr.univmrs.tagc.common.document.OOoDocumentWriter;
-import fr.univmrs.tagc.common.document.XHTMLDocumentWriter;
+import fr.univmrs.tagc.common.document.*;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
@@ -42,6 +39,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 	static {
 		v_format.add(new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", new String[] {"html"}, "xHTML files (.html)", ".html"));
 		v_format.add(new GenericDocumentFormat(OOoDocumentWriter.class, "OpenOffice.org", new String[] {"odt"}, "OpenOffice.org files (.odt)", ".odt"));
+		v_format.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", new String[] {"text"}, "Text files (.txt)", ".txt"));
 	}
 
 	private GsExportConfig config = null;
