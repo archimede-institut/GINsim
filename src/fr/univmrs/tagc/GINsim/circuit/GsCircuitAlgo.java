@@ -78,7 +78,7 @@ public class GsCircuitAlgo {
      * @param nextmin
      * @param nextmax
      *
-     * @return the functionnal context for this edge
+     * @return the functionality context for this edge
      */
     public OmsddNode checkEdge(GsRegulatoryEdge ei, int[] t_circuit, int nextmin, int nextmax) {
         me = ei.me;

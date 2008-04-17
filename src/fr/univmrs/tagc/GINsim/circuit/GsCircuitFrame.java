@@ -43,6 +43,8 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
 
+	protected static final boolean DO_CLEANUP	= true;
+    
     private AlgoConnectivity algoC = null;
     protected GsRegulatoryGraph graph;
 
@@ -664,12 +666,12 @@ class GsCircuitDescr {
     }
 
     /**
-     * check if this circuit is functionnal.
+     * check if this circuit is functional.
      * 
      * @param algo
      * @param nodeOrder 
      * 
-     * @return true if the circuit is functionnal
+     * @return true if the circuit is functional
      */
     public boolean check(GsCircuitAlgo algo, List nodeOrder) {
         t_pos = new int[t_me.length];
@@ -685,8 +687,6 @@ class GsCircuitDescr {
         for (int i=0 ; i< t_me.length ; i++) {
             t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(0);
         }
-//        GsEdgeIndex ei = new GsEdgeIndex(null, 0);
-//        GsEdgeIndex next_ei = new GsEdgeIndex(null, 0);
         GsRegulatoryEdge edge, next_edge;
         boolean goon;
         int sub = 0;
@@ -706,7 +706,11 @@ class GsCircuitDescr {
 
             GsCircuitDescrInTree cdtree = new GsCircuitDescrInTree(this, false, sub);
             v_all.add(cdtree);
-            t_context[sub] = context.cleanup(t_circuit).reduce();
+            if (GsCircuitFrame.DO_CLEANUP) {
+            	t_context[sub] = context.cleanup(t_circuit).reduce();
+            } else {
+            	t_context[sub] = context.reduce();
+            }
             t_mark[sub] = algo.score(t_context[sub]);
             t_sub[sub] = (int[])t_pos.clone();
             switch ((int)t_mark[sub][1]) {

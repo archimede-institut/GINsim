@@ -116,28 +116,31 @@ public class GsGNAExport extends GsAbstractExport {
 	private String exploreNode(String topNodeId, OmddNode node, List nodeOrder) {
 		if (node.next == null) {
 			return "k_"+topNodeId+node.value+" + ";
-		} else {
-			String res = "";
-			String nodeName = getVertexNameForLevel(node.level, nodeOrder);
-			OmddNode currentChild;
-			for (int i = 0; i < node.next.length; i++) {
-				currentChild = node.next[i];
-				int begin = i;
-				int end = i+1;
-				for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++);
-				if (begin > 0) {
-					res += "s+("+nodeName+", t_"+nodeName+begin+")";
-				}
-				if (end < node.next.length) {
-					if (res.length() > 0) {
-						res += " * ";
-					}
-					res += "s-("+nodeName+", t_"+nodeName+end+")";
-				}
-				res += " * "+exploreNode(topNodeId, node.next[begin], nodeOrder);
-			}
-			return res;
 		}
+		String res = "";
+		String nodeName = getVertexNameForLevel(node.level, nodeOrder);
+		OmddNode currentChild;
+		// FIXME: gna export isn't working: it should be 
+		//        "k_--- * [contraints]" and not "[contraints] * k_---"
+		for (int i = 0; i < node.next.length; i++) {
+			currentChild = node.next[i];
+			int begin = i;
+			int end = i+1;
+			for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++) {
+				;
+			}
+			if (begin > 0) {
+				res += "s+("+nodeName+", t_"+nodeName+begin+")";
+			}
+			if (end < node.next.length) {
+				if (res.length() > 0) {
+					res += " * ";
+				}
+				res += "s-("+nodeName+", t_"+nodeName+end+")";
+			}
+			res += " * "+exploreNode(topNodeId, node.next[begin], nodeOrder);
+		}
+		return res;
 	}
 	
 	/**
