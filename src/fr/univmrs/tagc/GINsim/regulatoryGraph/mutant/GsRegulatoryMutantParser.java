@@ -20,8 +20,8 @@ public class GsRegulatoryMutantParser extends XMLHelper {
 	
 	private static final int MUTANT = 1;
 	private static final int CHANGE = 2;
-	private static final int COMMENT = 10;
-	private static final int LINK = 10;
+	private static final int COMMENT = 11;
+	private static final int LINK = 12;
 	
 	static {
 		addCall("mutant", MUTANT, CALLMAP, STARTONLY, false);
