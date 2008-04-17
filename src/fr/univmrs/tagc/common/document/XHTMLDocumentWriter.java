@@ -11,7 +11,13 @@ import java.util.Vector;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-
+/**
+ * XHTMLDocumentWriter is a backend to write xHTML
+ * 
+ * @see DocumentWriter
+ * @author Berenguier duncan
+ *
+ */
 public class XHTMLDocumentWriter extends DocumentWriter {
 
 	XMLWriter xmlw;
@@ -24,10 +30,10 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 	
 	static Map m_stylesWriters = new HashMap();
 	static {
-		m_stylesWriters.put(DocumentStyle.COLOR, new ColorStyleWriter("font-size: #", ";"));
-		m_stylesWriters.put(DocumentStyle.FONT_SIZE, new SimpleStyleWriter("color: #", "pt;"));
-		m_stylesWriters.put(DocumentStyle.HEIGHT, new SimpleStyleWriter("height: #", "px;"));
-		m_stylesWriters.put(DocumentStyle.WIDTH, new SimpleStyleWriter("width: #", "px;"));
+		m_stylesWriters.put(DocumentStyle.COLOR, new ColorStyleWriter("color: #", ";"));
+		m_stylesWriters.put(DocumentStyle.FONT_SIZE, new SimpleStyleWriter("font-size: ", "pt;"));
+		m_stylesWriters.put(DocumentStyle.HEIGHT, new SimpleStyleWriter("height: ", "px;"));
+		m_stylesWriters.put(DocumentStyle.WIDTH, new SimpleStyleWriter("width: ", "px;"));
 		m_stylesWriters.put(DocumentStyle.TABLE_BORDER, new BorderStyleWriter());
 	}
 

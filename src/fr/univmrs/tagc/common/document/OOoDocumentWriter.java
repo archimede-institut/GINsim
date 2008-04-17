@@ -14,7 +14,13 @@ import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 
-public class OOoDocumentWriter extends DocumentWriter {
+/**
+ * OOoDocumentWriter is a backend to write openOffice.org (odt) documents
+ * 
+ * @see DocumentWriter
+ * @author Naldi Aurelien
+ *
+ */public class OOoDocumentWriter extends DocumentWriter {
 
 	XMLWriter xmlw;
 	ZipOutputStream zo;

@@ -6,18 +6,22 @@ import java.util.Hashtable;
 import java.util.Map;
 
 /**
+ * <p><b>DocumentWriter</b> is an abstract class designed to help writing documents. It contains all the methods to define the structure of a document such as startDocument, openParagraph...<br>
+ * To write a document, you must call <u>startDocument()</u> first. Then build the structure of the document using the openXXX or addXXX methods. End the document with <u>close()</u></p>
  * 
+ * <p>The openXXX and closeXXX deals with the tree structure of the document and call the corresponding doXXX methods.<br>
+ * The doXXX methods are implemented in the DocumentWriter's subclass and must write the structure in the document.<br>
+ * For example, openHeader make sure we are at the "out" level in the document's tree then it calls doOpenHeader which must write the header itself</p>
  * 
  * <b>DocumentProperties :</b>
  * <p>The protected instance variable documentProperties is a Map of properties (meta) that contains some informations about the document such as the title, the authors...<br>
- * There is a list of class constants beginning with META_* for commonly used properties</p>
+ * There is a list of class constants beginning with META_* for commonly used properties<br>They must be declared before the startDocument()</p>
  * <p>There is 3 methods to manipulate documentProperties : </p>
  * <ul>
  * 	<li>setDocumentProperty(Object name, Object value) to define a new property</li>
  * 	<li>setDocumentProperties(Map map) to define multiple properties</li>
- * 	<li>setDocumentProperties(Object[] table) to define multiple properties</li>
+ * 	<li>setDocumentProperties(Object[] table) to define multiple properties [name, value, name, value...]</li>
  * </ul>
- * 
  * 
  * <b>DocumentExtras :</b>
  * <p>DocumentExtra is a concept to allow to define content for a specific type of document.<br>
@@ -32,15 +36,18 @@ import java.util.Map;
  * 	<li>doesDocumentSupportExtra(String extra) to know if the current document support the extra</li>
  * </ul>
  * 
- * 
  * <b>DocumentStyles :</b>
- * <p>Allow you to set the style for the document.</p>
+ * <p>Allow you to set the style for the document.<br>They must be declared before the startDocument()</p>
  * <p>There is 2 methods to manipulate documentStyles : </p>
  * <ul>
  * 	<li>getStyles() get the styles of the document</li>
  * 	<li>setStyles(DocumentStyle newStyle) define anotherStyle for the document</li>
  * </ul>
- * @see fr.univmrs.tagc.common.document.DocumentStyle;
+ * 
+ * <b>New lines</b>
+ * <p>To append a generic new line, use the newLine() function.<br>
+ * When you subclass DocumentWriter, you can overwrite newLine() or simply set a new value for the NEW_LINE variable.</p>
+ * @see fr.univmrs.tagc.common.document.DocumentStyle
  * 
  * @author Naldi Aurelien, Berenguier Duncan
  *
@@ -83,9 +90,11 @@ public abstract class DocumentWriter {
 	
 	public abstract void startDocument() throws IOException;
 
-	public void newParagraph() throws IOException {
-		openParagraph(null);
-	}
+	/**
+	 * Open a paragraph with a style
+	 * @param style
+	 * @throws IOException
+	 */
 	public void openParagraph(String style) throws IOException {
 		if (pos.pos == POS_PARAGRAPH) {
 			closeParagraph();
@@ -93,6 +102,18 @@ public abstract class DocumentWriter {
 		doOpenParagraph(style);
 		pos = new DocumentPos(pos, POS_PARAGRAPH);
 	}
+	/**
+	 * Open a paragraph without a style
+	 * @throws IOException
+	 */
+	public void newParagraph() throws IOException {
+		openParagraph(null);
+	}
+	
+	/**
+	 * Close a paragraph
+	 * @throws IOException
+	 */
 	public void closeParagraph() throws IOException {
 		if (pos.pos != POS_PARAGRAPH) {
 			// FIXME: error
@@ -102,15 +123,37 @@ public abstract class DocumentWriter {
 		pos = pos.parent;
 	}
 
+	/**
+	 * Open a new header. Note the header can't be in another element.
+	 * @param level The header's level (1 = section, 2 = subsection, 3 = subsubsection...) 
+	 * @param content
+	 * @param style
+	 * @throws IOException
+	 */
 	public void openHeader(int level, String content, String style) throws IOException {
 		closeUntil(POS_OUT);
 		doOpenHeader(level, content, style);
 	}
 	
+	/**
+	 * add a new link into the document.
+	 * @param href the link's location (URI)
+	 * @param content the link's description
+	 * @throws IOException
+	 */
 	public void addLink(String href, String content) throws IOException {
 		doAddLink(href, content);
 	}
 	
+	/**
+	 * Open a new table. 
+	 * A table is made of table rows
+	 * 
+	 * @param name
+	 * @param style
+	 * @param t_colStyle a style for each column of the table. You must set the style, even if you do not use it. (use new String[] {"" , ""...} if you didn't want any style)
+	 * @throws IOException
+	 */
 	public void openTable(String name, String style, String[] t_colStyle) throws IOException {
 		while (pos.pos == POS_PARAGRAPH) {
 			closeParagraph();
@@ -118,6 +161,26 @@ public abstract class DocumentWriter {
 		doOpenTable(name, style, t_colStyle);
 		pos = new DocumentPos(pos, POS_TABLE);
 	}
+	
+	/**
+	 * Open a new row in the current table.
+	 * A row is made of table cells
+	 * @throws IOException
+	 */
+	public void openTableRow() throws IOException {
+		if (pos.pos != POS_TABLE) {
+			closeTableRow();
+		}
+		doOpenTableRow();
+		pos = new DocumentPos(pos, POS_TABLE_ROW);
+	}
+	/**
+	 * Open a new cell in the current table row
+	 * @param colspan the number of column to collapse together.
+	 * @param rowspan the number of rows to collapse together.
+	 * @param content the cell's content
+	 * @throws IOException
+	 */
 	public void openTableCell(int colspan, int rowspan, String content) throws IOException {
 		if (pos.pos == POS_TABLE) {
 			openTableRow();
@@ -130,19 +193,39 @@ public abstract class DocumentWriter {
 			writeText(content);
 		}
 	}
-	public void openTableRow() throws IOException {
-		if (pos.pos != POS_TABLE) {
-			closeTableRow();
+	/**
+	 * Open a new cell in the current table row with 1 colspan and rowspan
+	 * @param content the cell's content
+	 * @throws IOException
+	 */	public void openTableCell(String content) throws IOException {
+		openTableCell(1,1, content);
+	}
+	/**
+	 * Open a new table row and new table cells with the content of the array
+	 * @param t_content the content for the cells
+	 * @throws IOException
+	 */
+	public void addTableRow(String[] t_content) throws IOException {
+		openTableRow();
+		for (int i=0 ; i<t_content.length ; i++) {
+			openTableCell(1, 1, t_content[i]);
 		}
-		doOpenTableRow();
-		pos = new DocumentPos(pos, POS_TABLE_ROW);
 	}
 
+	/**
+	 * Close a table cell
+ 	 * @throws IOException
+	 */
 	public void closeTableCell() throws IOException {
 		closeUntil(POS_TABLE_CELL);
 		doCloseTableCell();
 		pos = pos.parent;
 	}
+
+	/**
+	 * Close a table row
+ 	 * @throws IOException
+	 */
 	public void closeTableRow() throws IOException {
 		if (pos.pos != POS_TABLE_ROW) {
 			closeTableCell();
@@ -150,18 +233,26 @@ public abstract class DocumentWriter {
 		doCloseTableRow();
 		pos = pos.parent;
 	}
+
+	/**
+	 * Close a table
+ 	 * @throws IOException
+	 */
 	public void closeTable() throws IOException {
 		if (pos.pos != POS_TABLE) {
 			closeTableRow();
 		}
 		doCloseTable();
 		pos = pos.parent;
-	}
-	
-	public void openTableCell(String content) throws IOException {
-		openTableCell(1,1, content);
-	}
+	}	
 
+	/**
+	 * Open a list element with a specific style
+	 * A list is made of ListItems
+	 * 
+	 * @param style
+	 * @throws IOException
+	 */
 	public void openList(String style) throws IOException {
 		while (pos.pos == POS_PARAGRAPH) {
 			closeParagraph();
@@ -169,6 +260,13 @@ public abstract class DocumentWriter {
 		doOpenList(style);
 		pos = new DocumentPos(pos, POS_LIST);
 	}
+	
+	/**
+	 * Open a new list item and write the content in.
+	 * You must be in a List to open list items. It close automatically previously opened list item. 
+	 * @param content
+	 * @throws IOException
+	 */
 	public void openListItem(String content) throws IOException {
 		closeUntil(POS_LIST);
 		doOpenListItem();
@@ -177,30 +275,48 @@ public abstract class DocumentWriter {
 			writeText(content);
 		}
 	}
+	
+	/**
+	 * Close a list item.
+	 * @throws IOException
+	 */
 	public void closeListItem() throws IOException {
 		doCloseListItem();
 		pos = pos.parent;
 	}
+	
+	/**
+	 * Close a list.
+	 * @throws IOException
+	 */
 	public void closeList() throws IOException {
 		closeUntil(POS_LIST);
 		doCloseList();
 		pos = pos.parent;
 	}
 
+	/**
+	 * Write the text into the current opened element.
+	 * @param text the text to write
+	 * @throws IOException
+	 */
 	public void writeText(String text) throws IOException {
 		doWriteText(text, false);
 	}
+
+	/**
+	 * Write the text into the current opened element and append a new line at the end.
+	 * @param text the text to write
+	 * @throws IOException
+	 */
 	public void writeTextln(String text) throws IOException {
 		doWriteText(text, true);
 	}
-	
-	public void addTableRow(String[] t_content) throws IOException {
-		openTableRow();
-		for (int i=0 ; i<t_content.length ; i++) {
-			openTableCell(1, 1, t_content[i]);
-		}
-	}
-	
+
+	/**
+	 * Close every element open then close the document
+	 * @throws IOException
+	 */
 	public void close() throws IOException {
 		closeUntil(POS_OUT);
 		doCloseDocument();
@@ -227,7 +343,7 @@ public abstract class DocumentWriter {
 	/*
 	 * return the code to add a new line.
 	 * @return the NEW_LINE constant
-	 * */
+	 */
 	protected String newLine() {
 		return NEW_LINE;
 	}
@@ -236,22 +352,22 @@ public abstract class DocumentWriter {
 	
 	/**
 	 * Set a property for the document.
-	 * @param name : the name of the property (use 'META' constant if possible)
-	 * @param value : the value of the property
+	 * @param name the name of the property (use 'META' constant if possible)
+	 * @param value the value of the property
 	 */
 	public void setDocumentProperty(Object name, Object value) {
 		documentProperties.put(name, value);
 	}
 	/**
 	 * Add a map of properties to the document.
-	 * @param map : the map of properties
+	 * @param map the map of properties
 	 */
 	public void setDocumentProperties(Map map) {
 		documentProperties.putAll(map);
 	}
 	/**
 	 * Add an array of properties to the document
-	 * @param table : A table that alternate the name then the value of properties
+	 * @param table A table that alternate the name then the value of properties
 	 * @throws ArrayIndexOutOfBoundsException if there is not the same number of name and values.
 	 */
 	public void setDocumentProperties(Object[] table) throws ArrayIndexOutOfBoundsException {
@@ -265,14 +381,14 @@ public abstract class DocumentWriter {
 	
 	/**
 	 * Register the current document for extra (initialize the StringBuffer)
-	 * @param extra : The name of the extra to create
+	 * @param extra The name of the extra to create
 	 */
 	protected void registerForDocumentExtra(String extra) {
 		documentExtras.put("javascript", new StringBuffer());
 	}
 	/**
 	 * Get a documentExtra
-	 * @param extra : The name of the extra to get
+	 * @param extra The name of the extra to get
 	 * @return the document extra
 	 */
 	public StringBuffer getDocumentExtra(String extra) {
@@ -280,7 +396,7 @@ public abstract class DocumentWriter {
 	}
 	/**
 	 * Indicate if the current document support a specific extra
-	 * @param extra : The name of the extra
+	 * @param extra The name of the extra
 	 * @return true if the document support the specified extra
 	 */
 	public boolean doesDocumentSupportExtra(String extra) {
@@ -299,7 +415,7 @@ public abstract class DocumentWriter {
 	}
 	/**
 	 * Define a new DocumentStyle for the document
-	 * @param newStyle : the new Style
+	 * @param newStyle the new Style
 	 * @return the old style
 	 */
 	public DocumentStyle setStyles(DocumentStyle newStyle) {
@@ -308,12 +424,22 @@ public abstract class DocumentWriter {
 		return oldStyles;
 	}
 	
+	/**
+	 * Open a new paragraph if we are in a paragraph.
+	 * @throws IOException
+	 */
 	protected void ensureParagraph() throws IOException {
 		if (pos.pos != POS_PARAGRAPH) {
 			openParagraph(null);
 		}
 	}
 	
+	/**
+	 * Close every opened element until we are in the correct position in the tree
+	 * 
+	 * @param targetpos the position
+	 * @throws IOException
+	 */
 	protected void closeUntil(int targetpos) throws IOException {
 		while (pos != null && pos.pos != POS_OUT && pos.pos != targetpos) {
 			switch (pos.pos) {
@@ -340,6 +466,10 @@ public abstract class DocumentWriter {
 	}
 }
 
+
+/**
+ * Represent the document's Tree view (like the DOM in HTML)
+ * */
 class DocumentPos {
 	
 	public DocumentPos parent;
