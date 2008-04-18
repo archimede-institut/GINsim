@@ -165,14 +165,14 @@ public class GenericDocumentExport extends GsAbstractExport {
 			cols = new String[] {"", "", "", "", ""};
 		}
 		doc.openTable("mutants", "table", cols);
-		doc.openTableRow();
-		doc.openTableCell("Mutants");
-		doc.openTableCell("Gene");
-		doc.openTableCell("Min");
-		doc.openTableCell("Max");
-		doc.openTableCell("Comment");
+		doc.openTableRow(null);
+		doc.openTableCell("Mutants", true);
+		doc.openTableCell("Gene", true);
+		doc.openTableCell("Min", true);
+		doc.openTableCell("Max", true);
+		doc.openTableCell("Comment", true);
 		if (specConfig.searchStableStates) {
-			doc.openTableCell("Stable States");
+			doc.openTableCell("Stable States", true);
 		}
 		
 		StableTableModel model = new StableTableModel(nodeOrder);
@@ -188,8 +188,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 			int nbrow;
 			if (i<0) { // wild type
 				nbrow = 1;
-				doc.openTableRow();
-				doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type");
+				doc.openTableRow(null);
+				doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type", true);
 				doc.openTableCell("-");
 				doc.openTableCell("-");
 				doc.openTableCell("-");
@@ -199,8 +199,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 				if (nbrow < 1) {
 					nbrow = 1;
 				}
-				doc.openTableRow();
-				doc.openTableCell(1, (nbrow+(model.getRowCount() > 0?1:0)), mutant.getName());
+				doc.openTableRow(null);
+				doc.openTableCell(1, (nbrow+(model.getRowCount() > 0?1:0)), mutant.getName(), true);
 				if (mutant.getNbChanges() == 0) {
 					doc.openTableCell("-");
 					doc.openTableCell("-");
@@ -210,23 +210,23 @@ public class GenericDocumentExport extends GsAbstractExport {
 					doc.openTableCell(""+mutant.getMin(0));
 					doc.openTableCell(""+mutant.getMax(0));
 				}
-				doc.openTableCell(1, nbrow, "");
+				doc.openTableCell(1, nbrow, "", false);
 				writeAnnotation(mutant.getAnnotation());//BUG?
 			}
 			
 			if (specConfig.searchStableStates) {
 				// the common part: stable states
 				if (model.getRowCount() > 0) {
-					doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states");
+					doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states", false);
 				} else {
-					doc.openTableCell(1, nbrow, "");
+					doc.openTableCell(1, nbrow, "", false);
 				}
 			}
 
 			// more data on mutants:
 			if (mutant != null) {
 				for (int j=1 ; j<nbrow ; j++) {
-					doc.openTableRow();
+					doc.openTableRow(null);
 					doc.openTableCell(mutant.getName(j));
 					doc.openTableCell(""+mutant.getMin(j));
 					doc.openTableCell(""+mutant.getMax(j));
@@ -235,8 +235,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 			
 			// more data on stable states:
 			if (specConfig.searchStableStates && model.getRowCount() > 0) {
-				doc.openTableRow();
-				doc.openTableCell(5,1, null);
+				doc.openTableRow(null);
+				doc.openTableCell(5,1, null, false);
 				
 				doc.openList("L1");
 				for (int k=0 ; k<model.getRowCount() ; k++) {
@@ -273,13 +273,13 @@ public class GenericDocumentExport extends GsAbstractExport {
 				t_cols[i] = "";
 			}
 			doc.openTable("initialStates", "table", t_cols);
-			doc.openTableRow();
+			doc.openTableRow(null);
 			doc.openTableCell("Name");
 			for (int i = 0; i < len; i++) {
 				doc.openTableCell(""+nodeOrder.get(i));
 			}
 			for ( int i=0 ; i< initStates.getNbElements(null) ; i++ ) {
-				doc.openTableRow();
+				doc.openTableRow(null);
 				doc.openTableCell(""+model.getValueAt(i, 0));
 				for (int j = 0; j < len; j++) {
 					doc.openTableCell(""+model.getValueAt(i, j+2));
@@ -291,11 +291,11 @@ public class GenericDocumentExport extends GsAbstractExport {
 
 	private void writeLogicalFunctionsTable() throws IOException {
 		doc.openTable(null, "table", new String[] { "", "", "", "" });
-		doc.openTableRow();
-		doc.openTableCell("ID");
-		doc.openTableCell("Val");
-		doc.openTableCell("Logicial function");
-		doc.openTableCell("Comment");
+		doc.openTableRow(null);
+		doc.openTableCell("ID", true);
+		doc.openTableCell("Val", true);
+		doc.openTableCell("Logicial function", true);
+		doc.openTableCell("Comment", true);
 		
 		for (Iterator it=graph.getNodeOrder().iterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
@@ -334,8 +334,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 					t_val[v].add(param);
 				}
 			}
-			doc.openTableRow();
-			doc.openTableCell(1, nbrows, vertex.getId()); //ID
+			doc.openTableRow(null);
+			doc.openTableCell(1, nbrows, vertex.getId(), true); //ID
 			int currentValue = 0;
 			if (nbrows > 0) {
 				for ( ; currentValue<t_val.length ; currentValue++) {
@@ -348,7 +348,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 				doc.openTableCell(null);//Values (empty)
 				doc.openTableCell("no function");//function
 			}
-			doc.openTableCell(1,nbrows, null);
+			doc.openTableCell(1,nbrows, null, false);
 			writeAnnotation(vertex.getAnnotation());
 			doc.closeTableRow();
 			
@@ -356,7 +356,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			if (nbrows > 1) {
 				for (currentValue++ ; currentValue<t_val.length ; currentValue++) {
 					if (t_val[currentValue] != null) {
-						doc.openTableRow();
+						doc.openTableRow(null);
 						doWriteParameters(currentValue, t_val[currentValue], lfunc);
 						doc.closeTableRow();
 					}

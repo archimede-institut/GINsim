@@ -206,11 +206,11 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 		}
 	}
 	
-	protected void doOpenTableRow() throws IOException {
+	protected void doOpenTableRow(String style) throws IOException {
 		xmlw.openTag("table:table-row");
 	}
 	
-	protected void doOpenTableCell(int colspan, int rowspan) throws IOException {
+	protected void doOpenTableCell(int colspan, int rowspan, boolean header, String style) throws IOException {
 		xmlw.openTag("table:table-cell");
 		if (colspan > 1) {
 			xmlw.addAttr("table:number-columns-spanned", ""+colspan);

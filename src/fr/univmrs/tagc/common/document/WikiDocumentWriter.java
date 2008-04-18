@@ -47,12 +47,23 @@ public class WikiDocumentWriter extends DocumentWriter {
 		writer.write("{{/table}}\n");
 	}
 	
-	protected void doOpenTableRow() throws IOException {
+	protected void doOpenTableRow(String style) throws IOException {
 		writer.write("|--------\n");
 	}
 	
-	protected void doOpenTableCell(int colspan, int rowspan) throws IOException {
-		writer.write("| ");
+	protected void doOpenTableCell(int colspan, int rowspan, boolean header, String style) throws IOException {
+		String c = header ? "!" : "|";
+		String s = c;
+		if (colspan > 1) {
+			s += "c:"+colspan+c;
+		}
+		if (rowspan > 1) {
+			s += "r:"+rowspan+c;
+		}
+		if (style != null) {
+			s += style+c;
+		}
+		writer.write(s+" ");
 	}
 	
 	protected void doCloseDocument() throws IOException {
@@ -92,12 +103,17 @@ public class WikiDocumentWriter extends DocumentWriter {
 			}
 		}
 		String c = numbered ? "#" : "*";
-		int len = lists.size();
+		int len;
+		if (curList == null) {
+			len = 1;
+		} else {
+			len = curList.length()+1;
+			lists.add(curList);
+		}
 		String s = "";
 		for (int i=0 ; i<len ; i++) {
 			s += c;
 		}
-		lists.add(s);
 		curList = s;
 	}
 	protected void doOpenListItem() throws IOException {
@@ -107,8 +123,11 @@ public class WikiDocumentWriter extends DocumentWriter {
 		writer.write("\n");
 	}
 	protected void doCloseList() throws IOException {
-		writer.write("\n");
-		lists.pop();
-		curList = (String)lists.lastElement();
+		if (lists.size() > 0) {
+			curList = (String)lists.pop();
+		} else {
+			curList = null;
+			writer.write("\n");
+		}
 	}
 }

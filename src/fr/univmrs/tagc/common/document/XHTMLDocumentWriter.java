@@ -119,17 +119,17 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		}
 	}
 	
-	protected void doOpenTableRow() throws IOException {
+	protected void doOpenTableRow(String style) throws IOException {
 		xmlw.openTag("tr");
 		curTable.row++;
 	}
 	
-	protected void doOpenTableCell(int colspan, int rowspan) throws IOException {
-		if (curTable.row == 1) {
+	protected void doOpenTableCell(int colspan, int rowspan, boolean header, String style) throws IOException {
+		if (curTable.row == 1 && curTable.t_colStyle != null && curTable.t_colStyle[curTable.col] != null) {
+			xmlw.addAttr("class", curTable.t_colStyle[curTable.col++]);
+		}
+		if (header) {
 			xmlw.openTag("th");
-			if (curTable.t_colStyle != null && curTable.t_colStyle[curTable.col] != null) {
-				xmlw.addAttr("class", curTable.t_colStyle[curTable.col++]);
-			}
 		} else {
 			xmlw.openTag("td");			
 		}

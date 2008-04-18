@@ -399,10 +399,10 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
     }
 
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (rowIndex >= getRowCount() || columnIndex < 0 || columnIndex > 4) {
+        if (rowIndex >= getRowCount() || columnIndex < 0 || columnIndex > 3) {
             return;
         }
-        
+
         if (rowIndex == curMutant.getNbChanges()) {
             if (columnIndex == 0) {
                     ValueList value = (ValueList)getValueAt(rowIndex, columnIndex);
@@ -425,10 +425,14 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         }
         
         short val;
-        try {
-            val = (short)Integer.parseInt((String)aValue);
-        } catch (Exception e) {
-            return;
+        if (aValue instanceof Integer) {
+        	val = ((Integer)aValue).shortValue();
+        } else {
+	        try {
+	            val = (short)Integer.parseInt(aValue.toString());
+	        } catch (Exception e) {
+	            return;
+	        }
         }
         
         if (val == -1) {

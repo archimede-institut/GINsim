@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
+import fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.TestTools;
@@ -24,7 +25,7 @@ public class TestGenericDocumentExport extends TestCase {
 		GenericDocumentExport export =  new GenericDocumentExport();
 		GsExportConfig config = new GsExportConfig(graph, export, 0);
 		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"tmp/graph.html");
-		export.doExport(config);
+		//export.doExport(config);
 	}
 }
 

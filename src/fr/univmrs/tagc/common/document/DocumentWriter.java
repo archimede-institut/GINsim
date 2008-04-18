@@ -168,10 +168,20 @@ public abstract class DocumentWriter {
 	 * @throws IOException
 	 */
 	public void openTableRow() throws IOException {
+		openTableRow(null);
+	}
+
+	/**
+	 * Open a new row in the current table.
+	 * A row is made of table cells
+	 * @param style TODO
+	 * @throws IOException
+	 */
+	public void openTableRow(String style) throws IOException {
 		if (pos.pos != POS_TABLE) {
 			closeTableRow();
 		}
-		doOpenTableRow();
+		doOpenTableRow(style);
 		pos = new DocumentPos(pos, POS_TABLE_ROW);
 	}
 	/**
@@ -182,12 +192,24 @@ public abstract class DocumentWriter {
 	 * @throws IOException
 	 */
 	public void openTableCell(int colspan, int rowspan, String content) throws IOException {
+		openTableCell(colspan, rowspan, content, false);
+	}
+
+	/**
+	 * Open a new cell in the current table row
+	 * @param colspan the number of column to collapse together.
+	 * @param rowspan the number of rows to collapse together.
+	 * @param content the cell's content
+	 * @param header if true the cell is an header
+	 * @throws IOException
+	 */
+	public void openTableCell(int colspan, int rowspan, String content, boolean header) throws IOException {
 		if (pos.pos == POS_TABLE) {
-			openTableRow();
+			openTableRow(null);
 		} else {
 			closeUntil(POS_TABLE_ROW);
 		}
-		doOpenTableCell(colspan, rowspan);
+		doOpenTableCell(colspan, rowspan, header, null);
 		pos = new DocumentPos(pos, POS_TABLE_CELL);
 		if (content != null) {
 			writeText(content);
@@ -198,7 +220,7 @@ public abstract class DocumentWriter {
 	 * @param content the cell's content
 	 * @throws IOException
 	 */	public void openTableCell(String content) throws IOException {
-		openTableCell(1,1, content);
+		openTableCell(1,1, content, false);
 	}
 	/**
 	 * Open a new table row and new table cells with the content of the array
@@ -206,9 +228,9 @@ public abstract class DocumentWriter {
 	 * @throws IOException
 	 */
 	public void addTableRow(String[] t_content) throws IOException {
-		openTableRow();
+		openTableRow(null);
 		for (int i=0 ; i<t_content.length ; i++) {
-			openTableCell(1, 1, t_content[i]);
+			openTableCell(1, 1, t_content[i], false);
 		}
 	}
 
@@ -330,8 +352,8 @@ public abstract class DocumentWriter {
 	protected abstract void doCloseTable() throws IOException;
 	protected abstract void doCloseTableRow() throws IOException;
 	protected abstract void doCloseTableCell() throws IOException;
-	protected abstract void doOpenTableRow() throws IOException;
-	protected abstract void doOpenTableCell(int colspan, int rowspan) throws IOException;
+	protected abstract void doOpenTableRow(String style) throws IOException;
+	protected abstract void doOpenTableCell(int colspan, int rowspan, boolean header, String style) throws IOException;
 	protected abstract void doCloseDocument() throws IOException;
 	protected abstract void doOpenHeader(int level, String content, String style) throws IOException;
 	protected abstract void doAddLink(String href, String content) throws IOException;
@@ -463,6 +485,10 @@ public abstract class DocumentWriter {
 					break;
 			}
 		}
+	}
+
+	public void openTableCell(String content, boolean header) throws IOException {
+		openTableCell(1, 1, content, header);
 	}
 }
 
