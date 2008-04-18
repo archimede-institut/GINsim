@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.graph;
 
+import java.awt.image.BufferedImage;
 import java.util.*;
 
 import javax.swing.JComponent;
@@ -389,4 +390,7 @@ abstract public class GsGraphManager {
      * @return true if the grid is visible
      */
     public abstract boolean isGridActive();
+	public BufferedImage getImage() {
+		return null;
+	}
 }

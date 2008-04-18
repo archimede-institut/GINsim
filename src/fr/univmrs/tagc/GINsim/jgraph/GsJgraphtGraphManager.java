@@ -1,6 +1,8 @@
 package fr.univmrs.tagc.GINsim.jgraph;
 
+import java.awt.Color;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -532,5 +534,12 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         } else {
             jgraph.addSelectionCell(m_jgAdapter.getVertexCell(obj));
         }
+    }
+    
+    public BufferedImage getImage() {
+    	if (jgraph != null) {
+    		return jgraph.getImage(Color.WHITE, 0);
+    	}
+    	return null;
     }
 }

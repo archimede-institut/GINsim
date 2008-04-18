@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import fr.univmrs.tagc.GINsim.export.generic.GsBioLayoutEncoder;
 import fr.univmrs.tagc.GINsim.export.generic.GsGraphvizEncoder;
 import fr.univmrs.tagc.GINsim.export.generic.GsSVGExport;
+import fr.univmrs.tagc.GINsim.export.generic.ImageExport;
 import fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSBMLExport;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -28,6 +29,7 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
     private static final int GRAPHVIZ = 0;
     private static final int BIOLAYOUT = 1;
     private static final int SVG = 2;
+    private static final int IMAGE = 3;
     private static final int SBML = 6;
     
 	public void registerPlugin() {
@@ -40,13 +42,15 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
               return new GsPluggableActionDescriptor[] {
                       new GsPluggableActionDescriptor("STR_graphviz", "STR_graphviz_descr", null, this, ACTION_EXPORT, GRAPHVIZ),
                       new GsPluggableActionDescriptor("STR_biolayout", "STR_biolayout_descr", null, this, ACTION_EXPORT, BIOLAYOUT),
-                      new GsPluggableActionDescriptor("STR_SVG", "STR_SVG_descr", null, this, ACTION_EXPORT, SVG)
+                      new GsPluggableActionDescriptor("STR_SVG", "STR_SVG_descr", null, this, ACTION_EXPORT, SVG),
+                      new GsPluggableActionDescriptor("STR_Image", "STR_Image_descr", null, this, ACTION_EXPORT, IMAGE)
               };
             }
             return new GsPluggableActionDescriptor[] {
                     new GsPluggableActionDescriptor("STR_graphviz", "STR_graphviz_descr", null, this, ACTION_EXPORT, GRAPHVIZ),
                     new GsPluggableActionDescriptor("STR_biolayout", "STR_biolayout_descr", null, this, ACTION_EXPORT, BIOLAYOUT),
-                    new GsPluggableActionDescriptor("STR_SVG", "STR_SVG_descr", null, this, ACTION_EXPORT, SVG)
+                    new GsPluggableActionDescriptor("STR_SVG", "STR_SVG_descr", null, this, ACTION_EXPORT, SVG),
+                    new GsPluggableActionDescriptor("STR_Image", "STR_Image_descr", null, this, ACTION_EXPORT, IMAGE)
             };
         }
 		return null;
@@ -72,6 +76,10 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 ffilter.setExtensionList(new String[] {"svg"}, "SVG files");
                 extension = ".svg";
                 break;
+            case IMAGE:
+                ffilter.setExtensionList(new String[] {"jpg", "jpeg"}, "JPEG files");
+                extension = ".jpeg";
+                break;
             case SBML:
                 ffilter.setExtensionList(new String[] {"sbml"}, "SBML files");
                 extension = ".sbml";
@@ -94,6 +102,9 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 break;
             case SVG:
                 GsSVGExport.exportSVG(graph, false, filename);
+                break;
+            case IMAGE:
+                ImageExport.exportImage(graph, false, filename);
                 break;
             case SBML:
                 GsSBMLExport.export(graph, filename);
