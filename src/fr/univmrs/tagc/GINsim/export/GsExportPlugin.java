@@ -77,8 +77,8 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 extension = ".svg";
                 break;
             case IMAGE:
-                ffilter.setExtensionList(new String[] {"jpg", "jpeg"}, "JPEG files");
-                extension = ".jpeg";
+                ffilter.setExtensionList(new String[] {"png"}, "PNG files");
+                extension = ".png";
                 break;
             case SBML:
                 ffilter.setExtensionList(new String[] {"sbml"}, "SBML files");

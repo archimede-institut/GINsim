@@ -1,12 +1,10 @@
 package fr.univmrs.tagc.GINsim.export.generic;
 
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 
-import com.ibm.jvm.util.ByteArrayOutputStream;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import javax.imageio.ImageIO;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 
@@ -23,18 +21,13 @@ public class ImageExport {
     public static void exportImage(GsGraph graph, boolean selectedOnly, String fileName) {
 
     	BufferedImage img = graph.getGraphManager().getImage();
+    	
     	if (img != null) {
-	    	ByteArrayOutputStream out = new ByteArrayOutputStream();
-	    	JPEGImageEncoder enc = JPEGCodec.createJPEGEncoder(out);
-	
-	    	try {
-	        	enc.encode(img);
-	    		FileOutputStream fimage = new FileOutputStream(fileName);
-	    		out.writeTo(fimage);
-	    		fimage.close();
+    			try {
+					ImageIO.write(img, "png", new File(fileName));
+				} catch (IOException e) {
+				}
 	    		return;
-	    	} catch (IOException e) {
-			}
     	}
     }
     
