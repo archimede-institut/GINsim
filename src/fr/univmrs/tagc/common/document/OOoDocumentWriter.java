@@ -1,14 +1,19 @@
 package fr.univmrs.tagc.common.document;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
+
+import javax.imageio.ImageIO;
 
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -28,6 +33,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 	
 	Vector v_table = new Vector();
 	OOoTable curTable = null;
+	
+	Map m_files = new TreeMap();
 	
 	public OOoDocumentWriter() {
 		NEW_LINE = "<text:line-break/>";
@@ -226,6 +233,19 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 		xmlw.closeTag(); // "office:document-content"
 		writer.flush();
 		zo.closeEntry();
+		
+		Iterator it = m_files.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry e = (Entry)it.next();
+			Object o = e.getValue();
+			if (o instanceof BufferedImage) {
+				zo.putNextEntry(new ZipEntry("Pictures/"+e.getKey()));
+				BufferedImage img = (BufferedImage)o;
+				ImageIO.write(img, "png", zo);
+				zo.closeEntry();
+			}
+		}
+		
 		zo.close();
 	}
 
@@ -274,6 +294,20 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 	}
 	protected void doCloseList() throws IOException {
 		xmlw.closeTag();
+	}
+
+	protected void doAddImage(BufferedImage img, String name) throws IOException {
+		// TODO image size is missing
+		xmlw.openTag("draw:frame");
+		xmlw.addAttr("text:anchor-type", "paragraph");
+		xmlw.openTag("draw:image");
+		xmlw.addAttr("xlink:href", "Pictures/"+name);
+		xmlw.addAttr("xlink:type", "simple");
+		xmlw.addAttr("xlink:show", "embed");
+		xmlw.addAttr("xlink:actuate", "onLoad");
+		xmlw.closeTag();
+		xmlw.closeTag();
+		m_files.put(name, img);
 	}
 }
 

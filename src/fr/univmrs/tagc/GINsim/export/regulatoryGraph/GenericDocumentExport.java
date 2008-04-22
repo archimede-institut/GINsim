@@ -90,7 +90,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 		try {
 			System.out.println(config.getFilename());
 			this.doc = (DocumentWriter) documentWriterClass.newInstance();
-			this.doc.setOutput(new FileOutputStream(new File(config.getFilename())));
+			this.doc.setOutput(new File(config.getFilename()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -132,6 +132,9 @@ public class GenericDocumentExport extends GsAbstractExport {
 		//Graph annotation
 		doc.openHeader(2, "Annotation", null);
 		writeAnnotation(graph.getAnnotation());
+		doc.openParagraph(null);
+		doc.addImage(graph.getGraphManager().getImage(), "model.png");
+		doc.closeParagraph();
 		
 		// all nodes with comment and logical functions
 		if (true) {
