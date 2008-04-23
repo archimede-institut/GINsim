@@ -1,7 +1,7 @@
 package fr.univmrs.tagc.common.document;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -77,7 +77,9 @@ public abstract class DocumentWriter {
 	protected Map documentProperties; //The metadata of the document
 	protected DocumentStyle documentStyles = null; //The style of the document.
 
-	protected OutputStream output;
+	protected OutputStream output = null;
+	protected File outputDir = null;
+	protected String	dirPrefix = null;
 	
 	public DocumentWriter() {
 		documentProperties = new Hashtable();
@@ -86,6 +88,13 @@ public abstract class DocumentWriter {
 	
 	public void setOutput(OutputStream output) {
 		this.output = output;
+		this.outputDir = null;
+		this.dirPrefix = null;
+	}
+	public void setOutput(File file) throws FileNotFoundException {
+		this.output = new FileOutputStream(file);
+		this.dirPrefix  = file.getName()+"_FILES";
+		this.outputDir = new File(file.getParentFile(), dirPrefix);
 	}
 	
 	public abstract void startDocument() throws IOException;
@@ -344,6 +353,10 @@ public abstract class DocumentWriter {
 		doCloseDocument();
 	}
 	
+	public void addImage(BufferedImage img, String name) throws IOException {
+		doAddImage(img, name);
+	}
+	
 	protected abstract void doOpenParagraph(String style) throws IOException;
 	protected abstract void doCloseParagraph() throws IOException;
 	protected abstract void doWriteText(String text, boolean newLine) throws IOException;
@@ -357,6 +370,7 @@ public abstract class DocumentWriter {
 	protected abstract void doCloseDocument() throws IOException;
 	protected abstract void doOpenHeader(int level, String content, String style) throws IOException;
 	protected abstract void doAddLink(String href, String content) throws IOException;
+	protected abstract void doAddImage(BufferedImage img, String name) throws IOException;
 	protected abstract void doOpenList(String style) throws IOException;
 	protected abstract void doOpenListItem() throws IOException;
 	protected abstract void doCloseListItem() throws IOException;

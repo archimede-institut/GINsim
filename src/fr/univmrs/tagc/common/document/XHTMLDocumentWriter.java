@@ -1,12 +1,16 @@
 package fr.univmrs.tagc.common.document;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.imageio.ImageIO;
 
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -239,6 +243,22 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 				xmlw.addContent(bufHeader.toString()+"{"+buf.toString());
 			}
 			xmlw.closeTag();	
+		}
+	}
+
+	protected void doAddImage(BufferedImage img, String name) throws IOException {
+		// TODO Auto-generated method stub
+		if (outputDir != null) {
+			if (!outputDir.exists()) {
+				outputDir.mkdir();
+			}
+			File fout = new File(outputDir, name);
+			ImageIO.write(img, "png", fout);
+			xmlw.openTag("img");
+			xmlw.addAttr("src", dirPrefix == null ? name : dirPrefix+"/"+name);
+			xmlw.closeTag();
+		} else {
+			// TODO: add an error message ?
 		}
 	}
 }

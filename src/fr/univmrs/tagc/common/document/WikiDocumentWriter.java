@@ -1,11 +1,15 @@
 package fr.univmrs.tagc.common.document;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 import java.util.Vector;
+
+import javax.imageio.ImageIO;
 
 
 public class WikiDocumentWriter extends DocumentWriter {
@@ -128,6 +132,19 @@ public class WikiDocumentWriter extends DocumentWriter {
 		} else {
 			curList = null;
 			writer.write("\n");
+		}
+	}
+
+	protected void doAddImage(BufferedImage img, String name) throws IOException {
+		if (outputDir != null) {
+			if (!outputDir.exists()) {
+				outputDir.mkdir();
+			}
+			File fout = new File(outputDir, name);
+			ImageIO.write(img, "png", fout);
+			writer.write("[[rel_img: "+name+"]]");
+		} else {
+			writer.write("[unable to add the image]");
 		}
 	}
 }

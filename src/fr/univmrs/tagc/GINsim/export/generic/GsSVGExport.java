@@ -79,8 +79,8 @@ public class GsSVGExport {
             case GsVertexAttributesReader.SHAPE_ELLIPSE:
                 out.write("    <ellipse " +
                         " id=\""+id+"_shape\"" +
-                        " rx=\""+(w/2)+"\"" +
-                        " ry=\""+(h/2)+"\"" +
+                        " rx=\""+w/2+"\"" +
+                        " ry=\""+h/2+"\"" +
                         " cx=\""+(x+w/2)+"\"" +
                         " cy=\""+(y+h/2)+"\"" +
                         " fill=\""+bgCol+"\"" +
@@ -101,7 +101,7 @@ public class GsSVGExport {
 	    out.write("    <text " +
 	    		" id=\""+id+"_text\" " +
 	            " x=\""+(x+w/2)+"\"" +
-	            " y=\""+(y+(h/2)+3)+"\"" +
+	            " y=\""+(y+h/2+3)+"\"" +
 	            " text-anchor=\"middle\"" +
 	            " fill=\""+fgCol+"\">" +
 	    		obj+
@@ -143,12 +143,12 @@ public class GsSVGExport {
         
         pt1 = (Point2D)l_point.get(0);
         out.write(" d=\"M "+pt1.getX()+" "+pt1.getY());
+        Iterator it = l_point.iterator();
         switch (ereader.getStyle()) {
 	    	case GsEdgeAttributesReader.STYLE_CURVE:
-                Object[] t = l_point.toArray();
-                Point2D[] p = new Point2D[t.length];
-                for (int i=0 ; i<t.length ; i++) {
-                    p[i] = (Point2D)t[i];
+                Point2D[] p = new Point2D[l_point.size()];
+                for (int i=0 ; it.hasNext() ; i++) {
+                    p[i] = (Point2D)it.next();
                 }
                 Point2D[] b = new Bezier(p).getPoints();
                 if (b != null && b.length > 1) {
@@ -167,10 +167,11 @@ public class GsSVGExport {
                 }
         		break;
         	default:
-	        for (int i=1 ; i<l_point.size() ; i++) {
-	            pt1 = (Point2D)l_point.get(i);
-	            out.write(" L "+pt1.getX()+" "+pt1.getY());
-	        }
+        		it.next();
+		        for (int i=1 ; it.hasNext() ; i++) {
+		            pt1 = (Point2D)it.next();
+		            out.write(" L "+pt1.getX()+" "+pt1.getY());
+		        }
         }        
     	out.write("\"/>\n");
     }
