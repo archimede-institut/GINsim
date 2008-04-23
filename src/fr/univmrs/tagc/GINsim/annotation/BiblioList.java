@@ -273,13 +273,15 @@ class Ref {
 	}
 
 	public void open() {
-		if (links.containsKey("file") && Tools.openFile((String)links.get("file"))) {
+		if (links.containsKey("file") && Tools.open("file", links.get("file"))) {
 			return;
 		}
 		Iterator it = links.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry e = (Entry)it.next();
-			Tools.open(e.getKey(), e.getValue());
+			if (Tools.open(e.getKey(), e.getValue())) {
+				return;
+			}
 		}
 	}
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {

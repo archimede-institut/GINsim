@@ -178,7 +178,6 @@ public class Tools {
 				met_browse.invoke(o_desktop, new Object[] {new URI(uri)});
 				return true;
 			} catch (Exception e) {
-				System.out.println("open failed");
 			}
 		}
 		if (OPEN_COMMAND == null) {

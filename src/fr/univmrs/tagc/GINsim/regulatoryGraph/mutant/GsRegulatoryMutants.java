@@ -32,6 +32,7 @@ import fr.univmrs.tagc.common.datastore.ValueList;
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.widgets.SplitPane;
 
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.
@@ -192,7 +193,7 @@ class MutantCascadeUpdate implements GsGraphEventCascade {
     }
 }
 
-class MutantPanel extends JPanel {
+class MutantPanel extends SplitPane {
     private static final long serialVersionUID = 2625670418830465925L;
     
     GenericListPanel lp;
@@ -205,9 +206,15 @@ class MutantPanel extends JPanel {
     AnnotationPanel ap;
 
     public MutantPanel() { 
-        setLayout(new GridBagLayout());
-        
+        setOrientation(VERTICAL_SPLIT);
+        setName("mutantdef");
         model = new GsRegulatoryMutantModel();
+        JPanel panel = new JPanel();
+        ap = new AnnotationPanel();
+        setBottomComponent(ap);
+        setTopComponent(panel);
+
+        panel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 2;
@@ -218,7 +225,7 @@ class MutantPanel extends JPanel {
         JScrollPane sp = new JScrollPane();
         table_change = new EnhancedJTable(model);
         sp.setViewportView(table_change);
-        add(sp, c);
+        panel.add(sp, c);
         int[] maxcols = {0,170 , 1,30 , 2,30};
         table_change.setMaxCols(maxcols);
         table_change.setDefaultRenderer(Object.class, new MutantTableRenderer());
@@ -232,16 +239,7 @@ class MutantPanel extends JPanel {
                 delete();
             }
         });
-        add(bdel,c);
-        c = new GridBagConstraints();
-        c.gridx = 1;
-        c.gridy = 3;
-        c.gridwidth = 2;
-        c.weightx = 1;
-        c.weighty = 1;
-        c.fill = GridBagConstraints.BOTH;
-        ap = new AnnotationPanel();
-        add(ap,c);
+        panel.add(bdel,c);
     }
     
     protected void delete() {
