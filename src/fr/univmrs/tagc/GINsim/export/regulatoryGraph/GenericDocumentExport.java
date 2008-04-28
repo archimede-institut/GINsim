@@ -139,7 +139,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 		// all nodes with comment and logical functions
 		if (true) {
 			doc.openHeader(2, "Nodes", null);
-			writeLogicalFunctionsTable();
+			writeLogicalFunctionsTable(specConfig.putComment);
 		}
 		
 		// initial states
@@ -292,13 +292,15 @@ public class GenericDocumentExport extends GsAbstractExport {
 		}
 	}
 
-	private void writeLogicalFunctionsTable() throws IOException {
+	private void writeLogicalFunctionsTable(boolean putcomment) throws IOException {
 		doc.openTable(null, "table", new String[] { "", "", "", "" });
 		doc.openTableRow(null);
 		doc.openTableCell("ID", true);
 		doc.openTableCell("Val", true);
-		doc.openTableCell("Logicial function", true);
-		doc.openTableCell("Comment", true);
+		doc.openTableCell("Logical function", true);
+		if (putcomment) {
+			doc.openTableCell("Comment", true);
+		}
 		
 		for (Iterator it=graph.getNodeOrder().iterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
@@ -341,6 +343,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			doc.openTableCell(1, nbrows, vertex.getId(), true); //ID
 			int currentValue = 0;
 			if (nbrows > 0) {
+				// TODO: put a "0" if nothing is defined
 				for ( ; currentValue<t_val.length ; currentValue++) {
 					if (t_val[currentValue] != null) {
 						doWriteParameters(currentValue, t_val[currentValue], lfunc);
@@ -351,8 +354,10 @@ public class GenericDocumentExport extends GsAbstractExport {
 				doc.openTableCell(null);//Values (empty)
 				doc.openTableCell("no function");//function
 			}
-			doc.openTableCell(1,nbrows, null, false);
-			writeAnnotation(vertex.getAnnotation());
+			if (putcomment) {
+				doc.openTableCell(1,nbrows, null, false);
+				writeAnnotation(vertex.getAnnotation());
+			}
 			doc.closeTableRow();
 			
 			// add the other functions
@@ -478,11 +483,13 @@ public class GenericDocumentExport extends GsAbstractExport {
 }
 
 class DocumentExportConfig implements GsInitialStateStore {
+
 	Map m_init = new HashMap();
 
 	boolean exportInitStates = true;
 	boolean exportMutants = true;
 	boolean searchStableStates = true;
+	boolean putComment = true;
 	
 	public Map getInitialState() {
 		return m_init;

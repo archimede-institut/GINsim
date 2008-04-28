@@ -22,7 +22,7 @@ function makeStableStatesClickable() {
 		var td_stableState = tables[i];//the td containing Stable states
 		var tr = tables[i].parentNode;
 		p = document.createElement('p');
-		p.innerHTML = 'Stable States (';
+		p.innerHTML = tables[i].innerHTML + ' (';
 		a = document.createElement('a');
 		a.setAttribute('href', 'javascript:toggle(this, "stableState'+i+'")');
 		a.innerHTML = 'View';
