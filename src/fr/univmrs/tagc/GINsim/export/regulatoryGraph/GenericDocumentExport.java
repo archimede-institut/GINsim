@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -41,7 +42,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 	static {
 		v_format.add(new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", new String[] {"html"}, "xHTML files (.html)", ".html"));
 		v_format.add(new GenericDocumentFormat(OOoDocumentWriter.class, "OpenOffice.org", new String[] {"odt"}, "OpenOffice.org files (.odt)", ".odt"));
-		v_format.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", new String[] {"text"}, "Text files (.txt)", ".txt"));
+		v_format.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", new String[] {"txt"}, "Text files (.txt)", ".txt"));
 	}
 
 	private GsExportConfig config = null;
@@ -162,18 +163,23 @@ public class GenericDocumentExport extends GsAbstractExport {
 		OmddNode stable;
 		
 		String[] cols;
-		if (specConfig.searchStableStates) {
+		if (specConfig.searchStableStates && specConfig.putComment) {
 			cols = new String[] {"", "", "", "", "", ""};
-		} else {
+		} else if (specConfig.searchStableStates || specConfig.putComment){
 			cols = new String[] {"", "", "", "", ""};
+		} else {
+			cols = new String[] {"", "", "", ""};
 		}
+		int nbcol = cols.length-1;
 		doc.openTable("mutants", "table", cols);
 		doc.openTableRow(null);
 		doc.openTableCell("Mutants", true);
 		doc.openTableCell("Gene", true);
 		doc.openTableCell("Min", true);
 		doc.openTableCell("Max", true);
-		doc.openTableCell("Comment", true);
+		if (specConfig.putComment) {
+			doc.openTableCell("Comment", true);
+		}
 		if (specConfig.searchStableStates) {
 			doc.openTableCell("Stable States", true);
 		}
@@ -189,6 +195,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 				model.setResult(stable);
 			}
 			int nbrow;
+			Iterator it_multicellularChanges = null;
 			if (i<0) { // wild type
 				nbrow = 1;
 				doc.openTableRow(null);
@@ -196,9 +203,26 @@ public class GenericDocumentExport extends GsAbstractExport {
 				doc.openTableCell("-");
 				doc.openTableCell("-");
 				doc.openTableCell("-");
-				doc.openTableCell("");
+				if (specConfig.putComment) {
+					doc.openTableCell("");
+				}
 			} else {
-				nbrow = mutant.getNbChanges();
+				if (!specConfig.multicellular) {
+					nbrow = mutant.getNbChanges();
+				} else {
+					nbrow = mutant.getNbChanges();
+					Map m_multicellularChanges = new HashMap();
+					for (int c=0 ; c<nbrow ; c++) {
+						String s = mutant.getName(c);
+						// TODO: check that the mutant is indeed the same everywhere before doing so ?
+						if (s.endsWith("1")) {
+							m_multicellularChanges.put(s.substring(0, s.length()-1), 
+									new int[] {mutant.getMin(c), mutant.getMax(c)});
+						}
+					}
+					nbrow = m_multicellularChanges.size();
+					it_multicellularChanges = m_multicellularChanges.entrySet().iterator();
+				}
 				if (nbrow < 1) {
 					nbrow = 1;
 				}
@@ -208,13 +232,21 @@ public class GenericDocumentExport extends GsAbstractExport {
 					doc.openTableCell("-");
 					doc.openTableCell("-");
 					doc.openTableCell("-");
-				} else {
+				} else if (it_multicellularChanges == null){
 					doc.openTableCell(mutant.getName(0));
 					doc.openTableCell(""+mutant.getMin(0));
 					doc.openTableCell(""+mutant.getMax(0));
+				} else {
+					Entry e = (Entry)it_multicellularChanges.next();
+					doc.openTableCell(e.getKey().toString());
+					int[] t_changes = (int[])e.getValue();
+					doc.openTableCell(""+t_changes[0]);
+					doc.openTableCell(""+t_changes[1]);
 				}
-				doc.openTableCell(1, nbrow, "", false);
-				writeAnnotation(mutant.getAnnotation());//BUG?
+				if (specConfig.putComment) {
+					doc.openTableCell(1, nbrow, "", false);
+					writeAnnotation(mutant.getAnnotation());//BUG?
+				}
 			}
 			
 			if (specConfig.searchStableStates) {
@@ -229,17 +261,26 @@ public class GenericDocumentExport extends GsAbstractExport {
 			// more data on mutants:
 			if (mutant != null) {
 				for (int j=1 ; j<nbrow ; j++) {
-					doc.openTableRow(null);
-					doc.openTableCell(mutant.getName(j));
-					doc.openTableCell(""+mutant.getMin(j));
-					doc.openTableCell(""+mutant.getMax(j));
+					if (it_multicellularChanges == null) {
+						doc.openTableRow(null);
+						doc.openTableCell(mutant.getName(j));
+						doc.openTableCell(""+mutant.getMin(j));
+						doc.openTableCell(""+mutant.getMax(j));
+					} else {
+						Entry e = (Entry)it_multicellularChanges.next();
+						doc.openTableRow(null);
+						doc.openTableCell(e.getKey().toString());
+						int[] t_changes = (int[])e.getValue();
+						doc.openTableCell(""+t_changes[0]);
+						doc.openTableCell(""+t_changes[1]);
+					}
 				}
 			}
 			
 			// more data on stable states:
 			if (specConfig.searchStableStates && model.getRowCount() > 0) {
 				doc.openTableRow(null);
-				doc.openTableCell(5,1, null, false);
+				doc.openTableCell(nbcol,1, null, false);
 				
 				doc.openList("L1");
 				for (int k=0 ; k<model.getRowCount() ; k++) {
@@ -293,7 +334,11 @@ public class GenericDocumentExport extends GsAbstractExport {
 	}
 
 	private void writeLogicalFunctionsTable(boolean putcomment) throws IOException {
-		doc.openTable(null, "table", new String[] { "", "", "", "" });
+		if (specConfig.putComment) {
+			doc.openTable(null, "table", new String[] { "", "", "", "" });
+		} else {
+			doc.openTable(null, "table", new String[] { "", "", "" });
+		}
 		doc.openTableRow(null);
 		doc.openTableCell("ID", true);
 		doc.openTableCell("Val", true);
@@ -484,12 +529,15 @@ public class GenericDocumentExport extends GsAbstractExport {
 
 class DocumentExportConfig implements GsInitialStateStore {
 
+
 	Map m_init = new HashMap();
 
 	boolean exportInitStates = true;
 	boolean exportMutants = true;
 	boolean searchStableStates = true;
 	boolean putComment = true;
+	// set to true to avoid generating redondant things for multicellular models
+	boolean multicellular = false;
 	
 	public Map getInitialState() {
 		return m_init;

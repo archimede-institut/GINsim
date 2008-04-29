@@ -32,7 +32,7 @@ function makeStableStatesClickable() {
 
 		tr = nextSiblingOfType(tr, tr.nodeName, function (node) {
 			node = nextSiblingOfType(node.firstChild, tables[i].nodeName, null);
-			if (node.getAttribute("colspan") != null && node.getAttribute("colspan") == "5") return true;
+			if (node.getAttribute("colspan") != null && node.getAttribute("colspan") > 3) return true;
 			return false;
 		})
 		var td_new = nextSiblingOfType(tr.firstChild, tables[i].nodeName, null);
