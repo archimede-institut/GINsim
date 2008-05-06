@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class GsGNAExport extends GsAbstractExport {
 	private GsExportConfig config = null;
 	private FileWriter out = null;
 	private GsRegulatoryGraph graph;
+	private GNAFunctionBrowser f_browser;
 
     public GsGNAExport() {
 		id = "GNA";
@@ -57,6 +59,7 @@ public class GsGNAExport extends GsAbstractExport {
 		this.graph = (GsRegulatoryGraph) config.getGraph();
 		this.out = new FileWriter(config.getFilename());
   		List nodeOrder = graph.getNodeOrder();
+  		f_browser = new GNAFunctionBrowser(nodeOrder, out);
 		Iterator it = nodeOrder.iterator();
 		while (it.hasNext()) {
 			GsRegulatoryVertex node = (GsRegulatoryVertex) it.next();
@@ -91,9 +94,9 @@ public class GsGNAExport extends GsAbstractExport {
 			out.write("\n");
 
 			out.write("  degradation-parameters: g_" + id + "\n"
-					+ "  state-equation:\n    d/dt " + id + " = "
-					+ getGNAEq(node, nodeOrder)
-					+ " - g_"+id+" * "+id+"\n");
+					+ "  state-equation:\n    d/dt " + id + " = ");
+			f_browser.browse(node.getTreeParameters(graph).reduce(), node.getId());
+			out.write(" - g_"+id+" * "+id+"\n");
 			
 			//threshold-inequalities:
 			out.write("  threshold-inequalities: zero_"+id+" < ");
@@ -107,49 +110,50 @@ public class GsGNAExport extends GsAbstractExport {
 		}
 		out.close();
 	}
+}
 
-	private String getGNAEq(GsRegulatoryVertex node, List nodeOrder) {
-		String s = exploreNode(node.getId(), node.getTreeParameters(graph).reduce(), nodeOrder);
-		return s.substring(0, s.length()-3);
+class GNAFunctionBrowser extends LogicalFunctionBrowser {
+	OutputStreamWriter out;
+	boolean first = true;
+	String nodeID;
+
+	public GNAFunctionBrowser(List nodeOrder, OutputStreamWriter out) {
+		super(nodeOrder);
+		this.out = out;
 	}
 
-	private String exploreNode(String topNodeId, OmddNode node, List nodeOrder) {
-		if (node.next == null) {
-			return "k_"+topNodeId+node.value+" + ";
+	public void browse(OmddNode node, String name) {
+		this.nodeID = name;
+		first = true;
+		browse(node);
+	}
+
+	protected void leafReached(OmddNode leaf) {
+		if (leaf.value == 0) {
+			return;
 		}
-		String res = "";
-		String nodeName = getVertexNameForLevel(node.level, nodeOrder);
-		OmddNode currentChild;
-		// FIXME: gna export isn't working: it should be 
-		//        "k_--- * [contraints]" and not "[contraints] * k_---"
-		for (int i = 0; i < node.next.length; i++) {
-			currentChild = node.next[i];
-			int begin = i;
-			int end = i+1;
-			for (end=i+1 ; end < node.next.length && currentChild == node.next[end]; end++, i++) {
-				;
+		try {
+			if (first) {
+				first = false;
+			} else {
+				out.write(" + ");
 			}
-			if (begin > 0) {
-				res += "s+("+nodeName+", t_"+nodeName+begin+")";
-			}
-			if (end < node.next.length) {
-				if (res.length() > 0) {
-					res += " * ";
+			out.write("k_"+nodeID+leaf.value);
+			for (int i=0 ; i<path.length ; i++) {
+				if (path[i][0] != -1) {
+					String nodeName = ((GsRegulatoryVertex)nodeOrder.get(i)).getId();
+					int begin = path[i][0];
+					int end = path[i][1]+1;
+					if (begin > 0) {
+						out.write(" * s+("+nodeName+",t_"+nodeName+begin+")");
+					}
+					if (end != -1 && end <= path[i][2]) {
+						out.write(" * s-("+nodeName+",t_"+nodeName+end+")");
+					}
 				}
-				res += "s-("+nodeName+", t_"+nodeName+end+")";
 			}
-			res += " * "+exploreNode(topNodeId, node.next[begin], nodeOrder);
+		} catch (IOException e) {
+			// TODO: error!
 		}
-		return res;
-	}
-	
-	/**
-	 * Return the ID of a node using his order and node order for the graph.
-	 * @param order : The order of the node
-	 * @param nodeOrder : The node order (in the graph)
-	 * @return the ID as string
-	 */
-	private String getVertexNameForLevel(int order, List nodeOrder) {
-		return ((GsRegulatoryVertex) nodeOrder.get(order)).getId();
 	}
 }
