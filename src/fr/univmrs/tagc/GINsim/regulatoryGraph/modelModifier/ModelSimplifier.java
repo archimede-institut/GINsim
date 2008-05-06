@@ -6,9 +6,11 @@ import java.util.Map.Entry;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.export.regulatoryGraph.LogicalFunctionBrowser;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -41,6 +43,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	Map m_edges = new HashMap();
 	Map copyMap = new HashMap();
 	Map m_removed;
+	ParameterGenerator pgen;
 
 	
 	public ModelSimplifier(GsRegulatoryGraph graph, ModelSimplifierConfig config, ModelSimplifierConfigDialog dialog) {
@@ -136,7 +139,27 @@ public class ModelSimplifier extends Thread implements Runnable {
 					simplified_ereader.copyFrom(ereader);
 				}
 			}
-	
+
+			// build a mapping between new nodes and old position
+			Map m_orderPos = new HashMap();
+			Iterator it_oldOrder = oldNodeOrder.iterator();
+			Iterator it_newOrder = simplified_nodeOrder.iterator();
+			int pos = -1;
+			while (it_newOrder.hasNext()) {;
+				GsRegulatoryVertex vertex = (GsRegulatoryVertex)it_newOrder.next();
+				String id = vertex.getId();
+				while (true) {
+					pos++;
+					GsRegulatoryVertex oldVertex = (GsRegulatoryVertex)it_oldOrder.next();
+					if (id.equals(oldVertex.getId())) {
+						m_orderPos.put(vertex, new Integer(pos));
+						break;
+					}
+				}
+			}
+			// create the parameter generator with it
+			pgen = new ParameterGenerator(oldNodeOrder, m_orderPos);
+
 			// copy parameters/logical functions on the unaffected nodes
 			it = oldNodeOrder.iterator();
 			while (it.hasNext()) {
@@ -154,7 +177,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				OmddNode newNode = (OmddNode)m_affected.get(vertex);
 	
 				// make sure that the needed edges target the affected node
-				m_edges.clear(); 
+				m_edges.clear();
 				extractEdgesFromNode(newNode);
 				GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(vertex);
 				Iterator it_newEdges = m_edges.entrySet().iterator();
@@ -172,7 +195,6 @@ public class ModelSimplifier extends Thread implements Runnable {
 					boolean[] t_required = (boolean[])e.getValue();
 					new_me.copyFrom(t_required);
 				}
-				
 				// rebuild the parameters
 				m_edges.clear();
 				List edges = simplifiedManager.getIncomingEdges(clone);
@@ -183,7 +205,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 					int[] t_val = {0, src.getMaxValue()};
 					m_edges.put(src, t_val);
 				}
-				buildParametersFromNode(edges, clone, newNode);
+				pgen.browse(edges, clone, newNode);
 			}
 			if (dialog != null) {
 				dialog.endSimu(simplifiedGraph, null);
@@ -226,38 +248,6 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 	}
 
-	/**
-	 * build the logical parameters corresponding to a given logical function.
-	 * @param node
-	 */
-	private void buildParametersFromNode(List edges, GsRegulatoryVertex targetVertex, OmddNode node) {
-		if (node.next == null) {
-			// this is a leaf: build the parameters if needed
-			if (node.value != 0) {
-				targetVertex.addParametersForMDDLeaf(node.value, edges, m_edges);
-			}
-			return;
-		}
-		// continue but remember the selected value for this node
-		GsRegulatoryVertex vertex = (GsRegulatoryVertex)copyMap.get(oldNodeOrder.get(node.level));
-		int[] t_val = (int[])m_edges.get(vertex);
-		int start = 0;
-		for (int i=1 ; i<node.next.length ; i++) {
-			if (node.next[start] != node.next[i]) {
-				t_val[0] = start;
-				t_val[1] = i-1;
-				buildParametersFromNode(edges, targetVertex, node.next[start]);
-				start = i;
-			}
-		}
-		t_val[0] = start;
-		t_val[1] = vertex.getMaxValue();
-		buildParametersFromNode(edges, targetVertex, node.next[start]);
-		t_val[0] = 0;
-		t_val[1] = vertex.getMaxValue();
-	}
-
-
 	/* *************************************************************
 	 *  
 	 *  The real algo is here
@@ -266,7 +256,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 *  function) from all of its targets
 	 *  
 	 ***************************************************************/
-	
+
 	/**
 	 * Remove <code>regulator</code> from its target <code>node</code>.
 	 * This is the first part of the algo: we have not yet found the 
@@ -432,5 +422,113 @@ class TargetEdgesIterator implements Iterator {
 			queue.addLast(((GsDirectedEdge)outgoingIterator.next()).getTargetVertex());
 		}
 		next();
+	}
+}
+
+class ParameterGenerator extends LogicalFunctionBrowser {
+	private ArrayList paramList;
+	private int[][] t_values;
+	private GsRegulatoryMultiEdge[] t_me;
+	private Map m_orderPos;
+	
+	public ParameterGenerator(List nodeOrder, Map m_orderPos) {
+		super(nodeOrder);
+		this.m_orderPos = m_orderPos;
+	}
+
+	public void browse(List edges, GsRegulatoryVertex targetVertex, OmddNode node) {
+		this.paramList = new ArrayList();
+		t_values = new int[edges.size()][4];
+		t_me = new GsRegulatoryMultiEdge[t_values.length];
+		
+		for (int i=0 ; i<t_values.length ; i++) {
+			GsDirectedEdge de = (GsDirectedEdge)edges.get(i);
+			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)de.getUserObject();
+			t_me[i] = me;
+			t_values[i][0] = ((Integer)m_orderPos.get(me.getSource())).intValue();
+		}
+
+		browse(node);
+		targetVertex.getV_logicalParameters().setManualParameters(paramList);
+	}
+	
+	protected void leafReached(OmddNode leaf) {
+		if (leaf.value == 0) {
+			return;
+		}
+		// transform constraints on values to constraints on edges
+		for (int i=0 ; i<t_values.length ; i++) {
+			int nb = t_values[i][0];
+			int begin = path[nb][0];
+			int end = path[nb][1];
+			GsRegulatoryMultiEdge me = t_me[i];
+			nb = me.getEdgeCount();
+			
+			if (begin == -1) {
+				// all values are allowed
+				t_values[i][1] = -1;
+				t_values[i][2] = nb-1;
+			} else {
+				// find the first edge
+				if (begin == 0) {
+					// start before the first edge
+					t_values[i][1] = -1;
+				} else {
+					// lookup the start
+					for (int j=0 ; j<nb ; j++) {
+						if (me.getMin(j) >= begin) {
+							t_values[i][1] = j;
+							break;
+						}
+					}
+				}
+				// find the last edge
+				for (int j=t_values[i][1] ; j<nb ; j++) {
+					if (j == -1) {
+						if (end < me.getMin(0)) {
+							t_values[i][2] = -1;
+							break;
+						}
+						continue;
+					}
+					int max = me.getMax(j);
+					if (max == -1 || end <= max) {
+						t_values[i][2] = j;
+						break;
+					}
+				}
+			}
+		}
+		
+		// prepare to iterate through logical parameters
+		for (int i=0 ; i<t_values.length ; i++) {
+			t_values[i][3] = t_values[i][1];
+		}
+		
+		while (true) {
+			List l = new ArrayList();
+			int lastIndex = -1;
+			for (int i=0 ; i<t_values.length ; i++) {
+				if (t_values[i][3] != -1) {
+					// add interaction to the vector
+					l.add(t_me[i].getEdge(t_values[i][3]));
+				}
+				if (t_values[i][3] < t_values[i][2]) {
+					lastIndex = i;
+				}
+			}
+			
+			paramList.add(new GsLogicalParameter(l, leaf.value));
+
+			// stop if no free value was found
+			if (lastIndex == -1) {
+				break;
+			}
+			// go to next step
+			t_values[lastIndex][3]++;
+			for (int i=lastIndex+1 ; i<t_values.length ; i++) {
+				t_values[i][3] = t_values[i][1];
+			}
+		}
 	}
 }

@@ -1,10 +1,13 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
@@ -399,67 +402,6 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
     public void incomingEdgeAdded(GsRegulatoryMultiEdge me) {
       interactionsModel.addEdge(me);
     }
-
-	public void addParametersForMDDLeaf(short value, List edges, Map m_edges) {
-		// use a more efficient and convenient representation
-		int[] t_curVal = new int[edges.size()];
-		int[][] t_values = new int[t_curVal.length][2];
-		GsRegulatoryMultiEdge[] t_me = new GsRegulatoryMultiEdge[t_curVal.length];
-		
-		// put the right value in the right place
-		for (int i=0 ; i<t_curVal.length ; i++) {
-			GsDirectedEdge de = (GsDirectedEdge)edges.get(i);
-			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)de.getUserObject();
-			t_me[i] = me;
-			
-			// transform values into edge indexes
-			int[] vals = (int[])m_edges.get(de.getSourceVertex());
-			int ei = 0;
-			for ( ; ei<me.getEdgeCount() ; ei++) {
-				if (vals[0] < me.getMin(ei)) {
-					t_values[i][0] = ei-1;
-					break;
-				}
-			}
-			for ( ; ei<me.getEdgeCount() ; ei++) {
-				if (vals[1] < me.getMin(ei)) {
-					t_values[i][1] = ei-1;
-					break;
-				}
-			}
-			if (ei > me.getEdgeCount()) {
-				t_values[i][1] = ei-1;
-			}
-			t_curVal[i] = t_values[i][0];
-		}
-		
-		// now do the real job
-		while (true) {
-			Vector v = new Vector();
-			int lastIndex = -1;
-			for (int i=0 ; i<t_curVal.length ; i++) {
-				if (t_curVal[i] != -1) {
-					// add interaction to the vector
-					v.add(t_me[i].getEdge(t_curVal[i]));
-				}
-				if (t_curVal[i] < t_values[i][1]) {
-					lastIndex = i;
-				}
-			}
-			
-			addLogicalParameter(new GsLogicalParameter(v, value), true);
-
-			// stop if no free value was found
-			if (lastIndex == -1) {
-				break;
-			}
-			// go to next step
-			t_curVal[lastIndex]++;
-			for (int i=lastIndex+1 ; i<t_curVal.length ; i++) {
-				t_curVal[i] = t_values[i][0];
-			}
-		}
-	}
 }
 
 class UpdateMaxBlockedAction implements GsGraphNotificationAction {

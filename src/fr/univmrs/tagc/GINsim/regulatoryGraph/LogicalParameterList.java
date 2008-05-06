@@ -91,6 +91,11 @@ public class LogicalParameterList extends AbstractList implements List {
 		refreshDupAndConflicts();
 	}
 	
+	public void setManualParameters(List logicalParameters) {
+		this.manual = logicalParameters;
+		refreshDupAndConflicts();
+	}
+	
 	/**
 	 * visit the two lists of logical parameters, looking for duplicates and conflicts
 	 */
