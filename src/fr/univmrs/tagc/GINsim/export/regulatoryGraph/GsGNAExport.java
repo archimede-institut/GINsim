@@ -18,8 +18,6 @@ import fr.univmrs.tagc.common.GsException;
 
 /**
  * Encode a graph to GNA format.
- * 
- * 
  */
 public class GsGNAExport extends GsAbstractExport {
 	private GsExportConfig config = null;
@@ -65,12 +63,13 @@ public class GsGNAExport extends GsAbstractExport {
 			GsRegulatoryVertex node = (GsRegulatoryVertex) it.next();
 			int thresholdLevels = node.getMaxValue();
 			String id = node.getId();
+			// TODO: use "input-variable" instead of "state-variable" for "constant" variables
+			// i.e. nodes that are only positively self-regulated
 			
 			out.write("state-variable: " + id + "\n"
 					+ "  zero-parameter: zero_" + id + "\n"
 					+ "  box-parameter: max_" + id + "\n"
 					+ "  threshold-parameters: ");
-			
 			//threshold-parameters: 
 			StringBuffer tmp = new StringBuffer();
 			for (int i = 1; i <= thresholdLevels; i++) {
@@ -84,6 +83,10 @@ public class GsGNAExport extends GsAbstractExport {
 			//synthesis-parameters:
 			out.write("\n  production-parameters: ");
 			tmp = new StringBuffer();
+			OmddNode mdd = node.getTreeParameters(graph).reduce();
+			if (mdd.next == null && mdd.value == 0) {
+				out.write("k_"+id+"0, ");
+			}
 			for (int i = 1; i <= thresholdLevels; i++) {
 				tmp.append("k_"+id+i);
 				if (i < thresholdLevels) {
@@ -95,11 +98,17 @@ public class GsGNAExport extends GsAbstractExport {
 
 			out.write("  degradation-parameters: g_" + id + "\n"
 					+ "  state-equation:\n    d/dt " + id + " = ");
-			f_browser.browse(node.getTreeParameters(graph).reduce(), node.getId());
-			out.write(" - g_"+id+" * "+id+"\n");
-			
-			//threshold-inequalities:
-			out.write("  threshold-inequalities: zero_"+id+" < ");
+			if (mdd.next == null && mdd.value == 0) {
+				out.write("k_"+id+"0");
+				out.write(" - g_"+id+" * "+id+"\n");
+				//threshold-inequalities:
+				out.write("  parameter-inequalities: zero_"+id+" < k_"+id+"0 < ");
+			} else {
+				f_browser.browse(mdd, node.getId());
+				out.write(" - g_"+id+" * "+id+"\n");
+				//threshold-inequalities:
+				out.write("  parameter-inequalities: zero_"+id+" < ");
+			}
 			tmp = new StringBuffer();
 			for (int i = 1; i <= thresholdLevels; i++) {
 				tmp.append("t_"+id+i+" < ");
