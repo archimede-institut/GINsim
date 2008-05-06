@@ -102,7 +102,7 @@ public class GsGNAExport extends GsAbstractExport {
 				out.write("k_"+id+"0");
 				out.write(" - g_"+id+" * "+id+"\n");
 				//threshold-inequalities:
-				out.write("  parameter-inequalities: zero_"+id+" < k_"+id+"0 < ");
+				out.write("  parameter-inequalities: zero_"+id+" < k_"+id+"0 / g_"+id+"< ");
 			} else {
 				f_browser.browse(mdd, node.getId());
 				out.write(" - g_"+id+" * "+id+"\n");
