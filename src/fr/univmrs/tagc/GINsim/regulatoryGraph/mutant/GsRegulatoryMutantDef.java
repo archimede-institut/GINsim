@@ -53,20 +53,20 @@ public class GsRegulatoryMutantDef implements NamedObject {
     public short getMax(int index) {
         return ((GsRegulatoryMutantChange)v_changes.get(index)).getMax();
     }
-    void setMin(int index, short val) {
+    public void setMin(int index, short val) {
         ((GsRegulatoryMutantChange)v_changes.get(index)).setMin(val);
     }
 
-    void setMax(int index, short val) {
+    public void setMax(int index, short val) {
         ((GsRegulatoryMutantChange)v_changes.get(index)).setMax(val);
     }
     
-    void addChange(GsRegulatoryVertex vertex) {
+    public void addChange(GsRegulatoryVertex vertex) {
         if (vertex != null) {
             addChange(vertex, (short)0, vertex.getMaxValue());
         }
     }
-    void addChange(GsRegulatoryVertex vertex, short min, short max) {
+    public void addChange(GsRegulatoryVertex vertex, short min, short max) {
         GsRegulatoryMutantChange change = new GsRegulatoryMutantChange(vertex);
         change.setMin(min);
         change.setMax(max);

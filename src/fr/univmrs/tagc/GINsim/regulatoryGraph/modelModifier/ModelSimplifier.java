@@ -11,10 +11,16 @@ import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.GsException;
 
 /**
@@ -207,6 +213,66 @@ public class ModelSimplifier extends Thread implements Runnable {
 				}
 				pgen.browse(edges, clone, newNode);
 			}
+			
+			// get as much of the associated data as possible
+			// mutants: only copy mutants that don't affect removed nodes
+			GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
+			if (mutants != null && mutants.getNbElements(null) > 0) {
+				GsRegulatoryMutants newMutants = (GsRegulatoryMutants)simplifiedGraph.getObject(GsMutantListManager.key, true);
+				GsRegulatoryMutantDef mutant, newMutant;
+				int mutantPos=0;
+				for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
+					mutant = (GsRegulatoryMutantDef)mutants.getElement(null, i);
+					mutantPos = newMutants.add();
+					newMutant = (GsRegulatoryMutantDef)newMutants.getElement(null, mutantPos);
+					newMutant.setName(mutant.getName());
+					boolean ok = true;
+					for (int j=0 ; j<mutant.getNbChanges() ; j++ ) {
+						String id = mutant.getName(j);
+						GsRegulatoryVertex vertex = null;
+						Iterator it_nodes = simplified_nodeOrder.iterator();
+						while (it_nodes.hasNext()) {
+							GsRegulatoryVertex v = (GsRegulatoryVertex)it_nodes.next();
+							if (id.equals(v.getId())) {
+								vertex = v;
+								break;
+							}
+						}
+						if (vertex == null) {
+							ok = false;
+							break;
+						}
+						newMutant.addChange(vertex, mutant.getMin(j), mutant.getMax(j));
+						// TODO: transfer condition only if it does not involve removed nodes
+						newMutant.setCondition(j, simplifiedGraph, mutant.getCondition(j));
+					}
+					if (!ok) {
+						newMutants.remove(null, new int[] {mutantPos});
+					}
+				}
+			}
+			
+			// initial states: should be pretty easy
+			GsInitialStateList init = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
+			if (init != null && init.getNbElements(null) > 0) {
+				GsInitialStateList newInit = (GsInitialStateList)simplifiedGraph.getObject(GsInitialStateManager.key, true);
+				for (int i=0 ; i<init.getNbElements(null) ; i++) {
+					GsInitialState istate = (GsInitialState)init.getElement(null, i);
+					int epos = newInit.add();
+					GsInitialState newIstate = (GsInitialState)newInit.getElement(null, epos);
+					newIstate.setName(istate.getName());
+					Map m_init = newIstate.getMap();
+					Iterator it_entry = istate.getMap().entrySet().iterator();
+					while (it_entry.hasNext()) {
+						Entry e = (Entry)it_entry.next();
+						Object o = copyMap.get(e.getKey());
+						if (o != null) {
+							m_init.put(o, e.getValue());
+						}
+					}
+				}
+			}
+			
 			if (dialog != null) {
 				dialog.endSimu(simplifiedGraph, null);
 			}
