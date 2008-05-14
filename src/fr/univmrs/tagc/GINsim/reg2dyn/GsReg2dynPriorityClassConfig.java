@@ -6,7 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -47,7 +50,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
 
     PriorityClassDefinition pcdef;
     
-    private JToggleButton but_group;
+    private JButton but_group;
 	private GenericListPanel pcpanel;
     
     private static final int AUTO_MANY = 1;
@@ -68,7 +71,6 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     }
     
     private void initialize() {
-        
         JPanel p_edit = new JPanel();
         p_edit.setLayout(new GridBagLayout());
 
@@ -169,9 +171,9 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         return but_remove;
     }
 
-    private JToggleButton getBut_group() {
+    private JButton getBut_group() {
         if (but_group == null) {
-            but_group = new JToggleButton("G");
+            but_group = new JButton("-");
             but_group.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     groupToggle();
@@ -286,16 +288,19 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         
         int[] ti = getSelection();
         int[][] selExtended = pcdef.getMovingRows(NONE, ti);
-        if (selExtended.length != 1) {
+        if (selExtended.length > 1) {
             but_group.setEnabled(true);
-            but_group.setSelected(false);
+            but_group.setText("G");
+            but_group.setToolTipText(Translator.getString("STR_group_descr"));
         } else {
-            if (selExtended[0][0] != selExtended[0][1]) {
-                but_group.setEnabled(true);
-                but_group.setSelected(true);
-            } else {
+            if (selExtended.length == 0 || selExtended[0][0] == selExtended[0][1]) {
                 but_group.setEnabled(false);
-                but_group.setSelected(false);
+                but_group.setText("-");
+                but_group.setToolTipText(null);
+            } else {
+                but_group.setEnabled(true);
+                but_group.setText("U");
+                but_group.setToolTipText(Translator.getString("STR_ungroup_descr"));
             }
         }
         
