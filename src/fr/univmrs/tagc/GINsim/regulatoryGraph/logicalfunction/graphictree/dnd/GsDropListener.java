@@ -99,8 +99,6 @@ public class GsDropListener implements DropTargetListener {
 						panel.pasteFunctionsInValue(te, move, (GsTreeValue)choosenElement);
 					} else if (choosen == GsTransferable.VALUE_FLAVOR && choosenElement == tree.getPathForRow(0).getLastPathComponent()) {
 						panel.pasteValuesInRoot(te, (GsTreeString)choosenElement);
-					} else if (choosen == GsTransferable.MANUAL_FLAVOR && choosenElement instanceof GsTreeValue) {
-						panel.pasteManualsInValue(te, move, (GsTreeValue)choosenElement);
 					} else if (choosen == GsTransferable.PARAM_FLAVOR && choosenElement instanceof GsTreeValue) {
 						panel.pasteParamsInValue(te, move, (GsTreeValue)choosenElement);
 					}
@@ -133,7 +131,6 @@ public class GsDropListener implements DropTargetListener {
 				previousDropable.setDropable(false);
 			}
 			if (choosen == GsTransferable.FUNCTION_FLAVOR && choosenElement instanceof GsTreeValue ||
-					choosen == GsTransferable.MANUAL_FLAVOR && choosenElement instanceof GsTreeValue ||
 					choosen == GsTransferable.PARAM_FLAVOR && choosenElement instanceof GsTreeValue) {
 				choosenElement.setDropable(true);
 				previousDropable = choosenElement;

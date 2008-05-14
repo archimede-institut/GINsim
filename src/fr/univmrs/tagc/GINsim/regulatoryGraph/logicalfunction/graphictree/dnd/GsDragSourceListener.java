@@ -56,7 +56,6 @@ public class GsDragSourceListener implements DragSourceListener {
       if (tp != null) {
         GsTreeElement choosenElement = (GsTreeElement)tp.getLastPathComponent();
         if (choosen == GsTransferable.FUNCTION_FLAVOR && choosenElement instanceof GsTreeValue ||
-        		choosen == GsTransferable.MANUAL_FLAVOR && choosenElement instanceof GsTreeValue ||
         		choosen == GsTransferable.PARAM_FLAVOR && choosenElement instanceof GsTreeValue) {
           if (action == DnDConstants.ACTION_COPY) {
 			dsde.getDragSourceContext().setCursor(DragSource.DefaultCopyDrop);

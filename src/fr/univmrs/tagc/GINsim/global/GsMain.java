@@ -179,7 +179,7 @@ class ReadConfig extends XMLHelper {
 		} else if ("messagesPath".equals(qName)) {
 			Translator.pushBundle(attributes.getValue("path"));
 		} else if ("doap".equals(qName)) {
-      AboutDialog.setDOAPFile(attributes.getValue("path"));
+                    AboutDialog.setDOAPFile(attributes.getValue("path"));
 		}
 	}
 }

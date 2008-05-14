@@ -16,9 +16,8 @@ public class GsTransferable implements Transferable {
   public static final DataFlavor VALUE_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Values");
   public static final DataFlavor PARAM_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Parameters");
   public static final DataFlavor MIXED_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Mixed elements");
-  public static final DataFlavor MANUAL_FLAVOR = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType, "Manual");
   public static final DataFlavor PLAIN_TEXT_FLAVOR = DataFlavor.getTextPlainUnicodeFlavor();
-  public static final DataFlavor[] dataFlavors = { FUNCTION_FLAVOR, VALUE_FLAVOR, PARAM_FLAVOR, MIXED_FLAVOR, MANUAL_FLAVOR, PLAIN_TEXT_FLAVOR };
+  public static final DataFlavor[] dataFlavors = { FUNCTION_FLAVOR, VALUE_FLAVOR, PARAM_FLAVOR, MIXED_FLAVOR, PLAIN_TEXT_FLAVOR };
   public static final List dataFlavorsList = Arrays.asList(dataFlavors);
 
   private GsTreeElement[] nodes;

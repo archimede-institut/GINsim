@@ -48,10 +48,10 @@ public class GsTreeInteractionsModel implements TreeModel {
     for (int i = 0; i < root.getChildCount(); i++) {
         GsTreeValue val = (GsTreeValue)root.getChild(i);
         for (int j = 0; j < val.getChildCount(); j++) {
-          GsTreeExpression exp = (GsTreeExpression)val.getChild(j);
-          exp.refreshRoot();
-  		}
-      }
+            GsTreeExpression exp = (GsTreeExpression)val.getChild(j);
+            exp.refreshRoot();
+        }
+    }
   }
   public void removeEdge(GsRegulatoryMultiEdge multiEdge, int index) {
     GsTreeValue val;
@@ -256,8 +256,8 @@ public class GsTreeInteractionsModel implements TreeModel {
   }
   private void setExpression(short val, GsTreeExpression exp) {
     if (exp.getRoot() != null) {
-		updateExpression(val, exp, exp.getRoot().toString(false));
-	}
+        updateExpression(val, exp, exp.getRoot().toString(false));
+    }
   }
 
   public void updateValue(short newVal, short oldVal) {
@@ -302,8 +302,8 @@ public class GsTreeInteractionsModel implements TreeModel {
           v.addElement(element.getEdge().getEdge(element.getIndex()));
         }
         if (v.size() > 0) {
-			setActivesEdges(v, val);
-		}
+            setActivesEdges(v, val);
+        }
         GsTreeParam param = new GsTreeParam(exp, v);
         exp.addChild(param, -1);
       }
@@ -329,21 +329,21 @@ public class GsTreeInteractionsModel implements TreeModel {
 
     parseFunctions();
     if (node != null) {
-      node.setInteractionsModel(this);
-      graph.getVertexEditor().setEditedObject(node);
-      for (int p = 0 ; p <= node.getMaxValue(); p++) {
-        dis = false;
-        for (int k = 0; k < root.getChildCount(); k++) {
-			if (((GsTreeValue) root.getChild(k)).getValue() == p) {
-			    dis = true;
-			    break;
-			  }
-		}
-        if (!dis) {
-			break;
-		}
-      }
-      root.setProperty("add", new Boolean(!dis));
+        node.setInteractionsModel(this);
+        graph.getVertexEditor().setEditedObject(node);
+        for (int p = 0 ; p <= node.getMaxValue(); p++) {
+            dis = false;
+            for (int k = 0; k < root.getChildCount(); k++) {
+                if (((GsTreeValue) root.getChild(k)).getValue() == p) {
+                    dis = true;
+                    break;
+                }
+            }
+            if (!dis) {
+                break;
+            }
+        }
+        root.setProperty("add", new Boolean(!dis));
     }
   }
   public List getLogicalParameters() {

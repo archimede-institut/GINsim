@@ -202,23 +202,26 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     ok = interactionsModel.updateExpression((short)((GsTreeValue)treeElement.getParent()).getValue(),
                                             (GsTreeExpression)treeElement, s);
     if (((GsTreeExpression)treeElement).getEditorModel() != null)
-		  ((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
-		    ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
-	  treeElement.getParent().setProperty("null function", new Boolean(treeElement.toString().equals("")));
-	  
-    if (ok) 
+        ((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getCurrentPosition(),
+                ((GsTreeExpression)treeElement).getEditorModel().getCurrentTerm().isNormal());
+    treeElement.getParent().setProperty("null function", new Boolean(treeElement.toString().equals("")));
+
+    if (ok)
     	((GsTreeExpression)treeElement).setText(((GsTreeExpression)treeElement).getRoot().toString(false));
-    else
-    	((GsTreeExpression)treeElement).setText(oldText);
+    else {
+        //((GsTreeExpression)treeElement).setText(oldText);
+        ((GsTreeExpression) treeElement).setText(s);
+        ((GsTreeExpression) treeElement).setRoot(null);
+    }
     treeElement.setProperty("invalid", new Boolean(!ok));
     if (!ok && !oldText.equals(""))
-		  tree.startEditingAtPath(sel_path);
-	  interactionsModel.setRootInfos();
+        tree.startEditingAtPath(sel_path);
+    interactionsModel.setRootInfos();
     interactionsModel.fireTreeStructureChanged((GsTreeElement)interactionsModel.getRoot());
     interactionsModel.refreshVertex();
     while (exp_path.hasMoreElements())
-		  tree.expandPath((TreePath)exp_path.nextElement());
-	  tree.setSelectionPath(sel_path);
+        tree.expandPath((TreePath)exp_path.nextElement());
+    tree.setSelectionPath(sel_path);
   }
   public void keyPressed(KeyEvent e) {
   }
