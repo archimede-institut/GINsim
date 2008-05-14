@@ -86,6 +86,7 @@ public abstract class TBooleanParser {
           }
         }
         root = (TBooleanTreeNode) operandStack.pop();
+        ret = operandStack.isEmpty();
       }
       catch (Exception ex) {
         ret = false;

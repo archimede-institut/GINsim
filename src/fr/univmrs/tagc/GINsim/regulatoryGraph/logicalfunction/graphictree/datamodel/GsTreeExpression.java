@@ -121,7 +121,7 @@ public class GsTreeExpression extends GsTreeElement {
       ex.printStackTrace();
     }
   }
-  public void incIndexes(TBooleanTreeNode node, GsRegulatoryMultiEdge multiEdge, int index) {
+  /*public void incIndexes(TBooleanTreeNode node, GsRegulatoryMultiEdge multiEdge, int index) {
     String oldId;
     int oldIndex, i;
 
@@ -149,7 +149,7 @@ public class GsTreeExpression extends GsTreeElement {
     catch (Exception ex) {
       ex.printStackTrace();
     }
-  }
+  }*/
 
   private TBooleanTreeNode remove(String id, TBooleanTreeNode node) {
     TBooleanTreeNode tn1, tn2;
