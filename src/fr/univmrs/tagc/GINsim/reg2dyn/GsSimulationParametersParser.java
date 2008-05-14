@@ -26,7 +26,6 @@ public class GsSimulationParametersParser extends XMLHelper {
     private static final int POS_PCLASS = 2;
     private static final int POS_INITSTATES = 3;
     
-    
     GsSimulationParameterList paramLists;
     GsInitialStateList initList = null;
     GsRegulatoryGraph graph;
@@ -74,12 +73,23 @@ public class GsSimulationParametersParser extends XMLHelper {
                     }
                 	param = (GsSimulationParameters)paramLists.getElement(null, index);
                     param.name = attributes.getValue("name");
+                    // read old mode description
                     String s = attributes.getValue("mode");
-                    for (int i=0 ; i<Simulation.MODE_NAMES.length ; i++) {
-                        if (Simulation.MODE_NAMES[i].equals(s)) {
-                            param.mode = i;
-                            break;
-                        }
+                    if (s != null) {
+                    	if ("asynchrone_df".equals(s)) {
+                    		param.breadthFirst = false;
+                    		param.store.setObject(GsSimulationParameters.PCLASS, paramLists.pcmanager.getElement(null, 0));
+                    	} else if ("asynchrone_bf".equals(s)) {
+                    		param.store.setObject(GsSimulationParameters.PCLASS, paramLists.pcmanager.getElement(null, 0));
+                    		param.breadthFirst = true;
+                    	} else if ("synchrone".equals(s)) {
+                    		param.store.setObject(GsSimulationParameters.PCLASS, paramLists.pcmanager.getElement(null, 1));
+                    		param.breadthFirst = false;
+                    	}
+                    } else {
+                        s = attributes.getValue("updating");
+                        param.store.setObject(GsSimulationParameters.PCLASS, paramLists.pcmanager.getElement(s));
+                        param.breadthFirst = "true".equals(attributes.getValue("breadthFirst"));
                     }
                     s = attributes.getValue("maxdepth");
                     param.maxdepth = Integer.parseInt(s);

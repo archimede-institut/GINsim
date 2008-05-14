@@ -18,13 +18,13 @@ abstract public class GenericListSelectionPanel extends JPanel implements Action
 	protected StackDialog dialog;
 	GenericListCombo combo;
 	
-	public GenericListSelectionPanel(StackDialog dialog, GenericList list, String name) {
+	public GenericListSelectionPanel(StackDialog dialog, GenericList list, String name, boolean hasEmptyChoice) {
 		this.dialog = dialog;
 		if (name != null) {
 			setBorder(BorderFactory.createTitledBorder(name));
 		}
 		setLayout(new GridBagLayout());
-		combo = new GenericListCombo(list);
+		combo = new GenericListCombo(list, hasEmptyChoice);
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
@@ -63,8 +63,8 @@ class GenericListCombo extends JComboBox {
 	private static final long serialVersionUID = -7848606073222946763L;
 
 	GenericListComboModel model;
-	public GenericListCombo(GenericList list) {
-		model = new GenericListComboModel(list);
+	public GenericListCombo(GenericList list, boolean hasEmptyChoice) {
+		model = new GenericListComboModel(list, hasEmptyChoice);
 		setModel(model);
 	}
 	
@@ -84,9 +84,11 @@ class GenericListComboModel extends DefaultComboBoxModel implements ComboBoxMode
     GenericList list;
     ObjectStore store = null;
     int id;
+    boolean hasEmptyChoice = true;
     
-    public GenericListComboModel(GenericList list) {
+    public GenericListComboModel(GenericList list, boolean hasEmptyChoice) {
     	setMutantList(list);
+    	this.hasEmptyChoice = hasEmptyChoice;
     	refresh();
     }
     
@@ -122,16 +124,22 @@ class GenericListComboModel extends DefaultComboBoxModel implements ComboBoxMode
     }
 
     public Object getElementAt(int index) {
-        if (index == 0 || list == null) {
+        if (index == 0 && hasEmptyChoice || list == null) {
             return "--";
         }
-        return list.getElement(null, index-1);
+        if (hasEmptyChoice) {
+        	return list.getElement(null, index-1);
+        }
+    	return list.getElement(null, index);
     }
 
     public int getSize() {
         if (list == null) {
             return 1;
         }
-        return list.getNbElements(null)+1;
+        if (hasEmptyChoice) {
+        	return list.getNbElements(null)+1;
+        }
+    	return list.getNbElements(null);
     }
 }

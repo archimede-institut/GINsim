@@ -16,7 +16,7 @@ public class GsReg2dynPriorityClass implements MultiColObject, NamedObject {
     public static final int ASYNCHRONOUS = 1;
     /** rank of this class */
     public int rank;
-    
+    private boolean locked = false;
     private String name;
     private int mode;
     
@@ -45,7 +45,7 @@ public class GsReg2dynPriorityClass implements MultiColObject, NamedObject {
      * @param mode
      */
     public void setMode(int mode) {
-        if (mode == SYNCHRONOUS || mode == ASYNCHRONOUS) {
+        if (!locked && (mode == SYNCHRONOUS || mode == ASYNCHRONOUS)) {
             this.mode = mode;
         }
     }
@@ -62,7 +62,9 @@ public class GsReg2dynPriorityClass implements MultiColObject, NamedObject {
      * @param name
      */
     public void setName(String name) {
-        this.name = name;
+    	if (!locked) {
+    		this.name = name;
+    	}
     }
     
     /**
@@ -95,6 +97,9 @@ public class GsReg2dynPriorityClass implements MultiColObject, NamedObject {
 	}
     
 	public boolean setVal(int index, Object val) {
+		if (locked) {
+			return false;
+		}
 		switch (index) {
 			case 1:
 				if (val == Boolean.TRUE) {
@@ -109,5 +114,7 @@ public class GsReg2dynPriorityClass implements MultiColObject, NamedObject {
 		}
 		return false;
 	}
-    
+    public void lock() {
+    	this.locked = true;
+    }
 }

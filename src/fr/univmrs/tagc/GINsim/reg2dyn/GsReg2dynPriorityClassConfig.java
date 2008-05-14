@@ -374,6 +374,9 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     }
     
     protected void applyAuto() {
+    	if (pcdef.locked) {
+    		return;
+    	}
         // first delete all classes
         while (pcdef.v_data.size() > 1) {
         	pcdef.v_data.remove(1);

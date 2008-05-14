@@ -14,7 +14,7 @@ public class MutantSelectionPanel extends GenericListSelectionPanel {
 	GsRegulatoryGraph graph;
 	
 	public MutantSelectionPanel(StackDialog dialog, GsRegulatoryGraph graph, ObjectStore store) {
-		super(dialog, (GenericList)graph.getObject(GsMutantListManager.key, false), Translator.getString("STR_mutants"));
+		super(dialog, (GenericList)graph.getObject(GsMutantListManager.key, false), Translator.getString("STR_mutants"), true);
 		this.graph = graph;
 		setStore(store);
 	}

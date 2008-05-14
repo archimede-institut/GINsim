@@ -23,12 +23,6 @@ import fr.univmrs.tagc.common.manageressources.Translator;
  */
 public final class Simulation extends Thread implements Runnable {
 
-	protected static final int SEARCH_SYNCHRONE = 0;
-	protected static final int SEARCH_ASYNCHRONE_DF = 1;
-	protected static final int SEARCH_ASYNCHRONE_BF = 2;
-    protected static final int SEARCH_BYPRIORITYCLASS = 3;
-    protected static final String[] MODE_NAMES = new String[] { "synchrone", "asynchrone_df", "asynchrone_bf", "priorityClass" };
-
 	private LinkedList queue = new LinkedList(); // exploration queue
 
 	private GsReg2dynFrame frame;
@@ -36,7 +30,7 @@ public final class Simulation extends Thread implements Runnable {
 	private SimulationHelper helper;
 	SimulationUpdater updater;
 
-	private boolean breathFirst = false;
+	private boolean breadthFirst = false;
 	int nbnode = 0;
 	private boolean ready = false;
 	
@@ -54,7 +48,7 @@ public final class Simulation extends Thread implements Runnable {
 		if (params.buildSTG) {
 			helper = new DynGraphHelper(regGraph, params);
 		}
-		breathFirst = params.mode == SEARCH_ASYNCHRONE_BF;
+		breadthFirst = params.breadthFirst;
    		updater = SimulationUpdater.getInstance(regGraph, params);
         start();
 	}
@@ -79,7 +73,7 @@ public final class Simulation extends Thread implements Runnable {
 				// do the simulation itself
 				while (!queue.isEmpty()) {
 					SimulationQueuedState item = (SimulationQueuedState)(
-							breathFirst ? queue.removeFirst() 
+							breadthFirst ? queue.removeFirst() 
 										: queue.removeLast());
 
 					if (helper.addNode(item)) {

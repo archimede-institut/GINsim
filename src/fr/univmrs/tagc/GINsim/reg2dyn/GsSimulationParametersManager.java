@@ -42,7 +42,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
             out.addAttr("nodeOrder", s_nodeOrder);
             // add priority class definition
             if (paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 0) {
-                for (int i=0 ; i<paramList.pcmanager.getNbElements(null) ; i++) {
+                for (int i=2 ; i<paramList.pcmanager.getNbElements(null) ; i++) {
                 	((XMLize)paramList.pcmanager.getElement(null, i)).toXML(out, null, 0);
                 }
             }
@@ -64,7 +64,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
     public boolean needSaving(GsGraph graph) {
         GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
         return paramList != null && (paramList.getNbElements(null) > 0 || 
-        		paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 0);
+        		paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 2);
     }
 
 	public Object doCreate(GsGraph graph) {

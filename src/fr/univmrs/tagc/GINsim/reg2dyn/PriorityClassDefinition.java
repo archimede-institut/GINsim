@@ -14,6 +14,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 
 	Map m_elt;
 	String name;
+	boolean locked;
 
 	public PriorityClassDefinition(Iterator it, String name) {
 		canAdd = true;
@@ -35,6 +36,9 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 	}
 	
 	public void setName(String name) {
+		if (locked) {
+			return;
+		}
 		this.name = name;
 	}
 	public String getName() {
@@ -45,9 +49,15 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 	}
 
 	public void moveElementAt(int j, int pos) {
+		if (locked) {
+			return;
+		}
 		moveElement(j, pos);
 	}
 	public Object doCreate(String name, int pos) {
+		if (locked) {
+			return null;
+		}
 		int priority;
 		int i = pos;
 		int len = getNbElements(null);
@@ -82,7 +92,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 	}
 
 	public boolean remove(String filter, int[] t_index) {
-		if (t_index.length >= v_data.size()) {
+		if (locked || t_index.length >= v_data.size()) {
 			return false;
 		}
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
@@ -132,6 +142,9 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
      * if some selected class are part of a group, the whole group will move with it.
      */
     protected void doMoveUp(int[] selection, int diff) {
+		if (locked) {
+			return;
+		}
         int[][] index = getMovingRows(GsReg2dynPriorityClassConfig.UP, selection);
         if (index == null) {
             return;
@@ -168,6 +181,9 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
      * if some selected class are part of a group, the whole group will move with it.
      */
     protected void doMoveDown(int[] selection, int diff) {
+		if (locked) {
+			return;
+		}
         int[][] index = getMovingRows(GsReg2dynPriorityClassConfig.DOWN, selection);
         if (index == null) {
             return;
@@ -377,4 +393,11 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
         }
         return pclass;
     }
+
+	public void lock() {
+		this.locked = true;
+		for (Iterator it=v_data.iterator() ; it.hasNext() ;) {
+			((GsReg2dynPriorityClass)it.next()).lock();
+		}
+	}
 }

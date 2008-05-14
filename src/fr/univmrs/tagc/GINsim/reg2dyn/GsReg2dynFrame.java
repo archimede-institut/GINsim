@@ -43,10 +43,6 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
     
     private JFrame frame;
     
-    private ButtonGroup syncGrp = new ButtonGroup();
-    private JRadioButton radioAsynchrone = null;
-    private JRadioButton radioSynchrone = null;
-    private JRadioButton radioPriorityClass;
     private ChangeListener radioChangeListener = null;
     
     private ButtonGroup depthGrp = new ButtonGroup();
@@ -113,50 +109,36 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
             c.weightx = 0.4;
             mainPanel.add(panel, c);
 
-            panel.setLayout(new GridBagLayout());
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 0;
-            c.anchor = GridBagConstraints.WEST;
-            panel.add(getRadioSynchrone(), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 1;
-            c.anchor = GridBagConstraints.WEST;
-            panel.add(getRadioAsynchrone(), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 2;
-            c.anchor = GridBagConstraints.WEST;
-            c.insets = indentInset;
-            panel.add(getRadioBreadthFirst(), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 3;
-            c.anchor = GridBagConstraints.WEST;
-            c.insets = indentInset;
-            panel.add(getRadioDephtFirst(), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 4;
-            c.anchor = GridBagConstraints.WEST;
-            panel.add(getRadioPriorityClass(), c);
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 5;
-            c.anchor = GridBagConstraints.WEST;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.weightx = 1;
-            c.insets = indentInset;
-            panel.add(getPriorityClassSelector(), c);
+			panel.setLayout(new GridBagLayout());
+			c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			c.anchor = GridBagConstraints.WEST;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.weightx = 1;
+			panel.add(getPriorityClassSelector(), c);
+
+			c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 2;
+			c.anchor = GridBagConstraints.WEST;
+			c.insets = indentInset;
+			panel.add(getRadioBreadthFirst(), c);
+			c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 3;
+			c.anchor = GridBagConstraints.WEST;
+			c.insets = indentInset;
+			panel.add(getRadioDephtFirst(), c);
+
             
-            // the top-right part with number limit
+            // size limits
             panel = new JPanel();
             panel.setLayout(new GridBagLayout());
             panel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_sizeLimits")));
             c = new GridBagConstraints();
             c.gridx = 1;
-            c.gridy = 0;
+            c.gridy = 1;
             c.fill = GridBagConstraints.BOTH;
             c.weightx = 0.4;
             mainPanel.add(panel, c);
@@ -194,7 +176,7 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
             // bottom-right part with mutants
             c = new GridBagConstraints();
             c.gridx = 1;
-            c.gridy = 1;
+            c.gridy = 0;
             c.fill = GridBagConstraints.BOTH;
             c.weightx = 0.6;
             ObjectStore store = currentParameter == null ? null : currentParameter.store;
@@ -224,11 +206,8 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         bcancel.setText(Translator.getString("STR_abort"));
 
         // nearly everything should be disabled
-        radioSynchrone.setEnabled(false);
-        radioAsynchrone.setEnabled(false);
         radioBreadthFirst.setEnabled(false);
         radioDephtFirst.setEnabled(false);
-        radioPriorityClass.setEnabled(false);
         selectPriorityClass.setEnabled(false);
 
         initStatePanel.setEnabled(false);
@@ -277,20 +256,6 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         super.cancel();
     }
 
-    /**
-     * This method initializes radioAsynchrone
-     * 
-     * @return javax.swing.JRadioButton
-     */
-    private javax.swing.JRadioButton getRadioAsynchrone() {
-        if(radioAsynchrone == null) {
-            radioAsynchrone = new javax.swing.JRadioButton(Translator.getString("STR_asynchrone"));
-            radioAsynchrone.addChangeListener(getRadioChangeListener());
-            syncGrp.add(radioAsynchrone);
-            radioAsynchrone.setSelected(true);
-        }
-        return radioAsynchrone;
-    }
     private ChangeListener getRadioChangeListener() {
         if (radioChangeListener == null) {
             radioChangeListener = new ChangeListener() {
@@ -315,51 +280,7 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
         if (!((JRadioButton)e.getSource()).isSelected()) {
             return;
         }
-        if (radioAsynchrone.isSelected()) {
-            currentParameter.mode = radioBreadthFirst.isSelected() ? Simulation.SEARCH_ASYNCHRONE_BF : Simulation.SEARCH_ASYNCHRONE_DF;
-            getRadioBreadthFirst().setEnabled(true);
-            getRadioDephtFirst().setEnabled(true);
-            selectPriorityClass.setEnabled(false);
-        } else {
-            getRadioBreadthFirst().setEnabled(false);
-            getRadioDephtFirst().setEnabled(false);
-            if (radioPriorityClass.isSelected()) {
-                currentParameter.mode = Simulation.SEARCH_BYPRIORITYCLASS;
-                selectPriorityClass.setEnabled(true);
-            } else {
-                selectPriorityClass.setEnabled(false);
-                currentParameter.mode = Simulation.SEARCH_SYNCHRONE;
-            }
-        }
-    }
-
-    /**
-     * This method initializes radioSynchrone
-     * 
-     * @return javax.swing.JRadioButton
-     */
-    private javax.swing.JRadioButton getRadioSynchrone() {
-        if(radioSynchrone == null) {
-            radioSynchrone = new javax.swing.JRadioButton(Translator.getString("STR_synchrone"));
-            syncGrp.add(radioSynchrone);
-            radioSynchrone.setSelected(true);
-            radioSynchrone.addChangeListener(getRadioChangeListener());
-        }
-        return radioSynchrone;
-    }
-    /**
-     * This method initializes radioPriority
-     * 
-     * @return javax.swing.JRadioButton
-     */
-    private javax.swing.JRadioButton getRadioPriorityClass() {
-        if(radioPriorityClass == null) {
-            radioPriorityClass = new javax.swing.JRadioButton(Translator.getString("STR_bypriorityclass"));
-            radioPriorityClass.addChangeListener(getRadioChangeListener());
-            syncGrp.add(radioPriorityClass);
-            radioPriorityClass.setSelected(true);
-        }
-        return radioPriorityClass;
+        currentParameter.breadthFirst = radioBreadthFirst.isSelected();
     }
 
     /**
@@ -373,7 +294,6 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
             radioDephtFirst.setSelected(true);
             depthGrp.add(radioDephtFirst);
             radioDephtFirst.addChangeListener(getRadioChangeListener());
-
         }
         return radioDephtFirst;
     }
@@ -491,6 +411,11 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
             mutantPanel.setStore(currentParameter.store);
             initStatePanel.setParam(currentParameter);
     		selectPriorityClass.setStore(currentParameter.store, GsSimulationParameters.PCLASS);
+    		if (currentParameter.breadthFirst) {
+    			radioBreadthFirst.setSelected(true);
+    		} else {
+    			radioDephtFirst.setSelected(true);
+    		}
         }
         refresh();
     }
@@ -498,52 +423,11 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
     private void refresh() {
         refreshing = true;
         if (currentParameter == null) {
-            // disable everything
-            radioAsynchrone.setEnabled(false);
-            radioSynchrone.setEnabled(false);
-            radioPriorityClass.setEnabled(false);
-            radioBreadthFirst.setEnabled(false);
-            radioDephtFirst.setEnabled(false);
-            selectPriorityClass.setEnabled(false);
-
             mutantPanel.setEnabled(false);
             textMaxDepth.setEnabled(false);
             textMaxNodes.setEnabled(false);
             initStatePanel.setEnabled(false);
         } else {
-            // enable and refresh everything
-            radioAsynchrone.setEnabled(true);
-            radioSynchrone.setEnabled(true);
-            radioPriorityClass.setEnabled(true);
-            initStatePanel.setEnabled(true);
-            switch (currentParameter.mode) {
-            case Simulation.SEARCH_ASYNCHRONE_BF:
-                radioAsynchrone.setSelected(true);
-                radioBreadthFirst.setEnabled(true);
-                radioDephtFirst.setEnabled(true);
-                radioBreadthFirst.setSelected(true);
-                selectPriorityClass.setEnabled(false);
-                break;
-            case Simulation.SEARCH_ASYNCHRONE_DF:
-                radioAsynchrone.setSelected(true);
-                radioBreadthFirst.setEnabled(true);
-                radioDephtFirst.setEnabled(true);
-                radioDephtFirst.setSelected(true);
-                selectPriorityClass.setEnabled(false);
-                break;
-            case Simulation.SEARCH_SYNCHRONE:
-                radioSynchrone.setSelected(true);
-                radioBreadthFirst.setEnabled(false);
-                radioDephtFirst.setEnabled(false);
-                selectPriorityClass.setEnabled(false);
-                break;
-            case Simulation.SEARCH_BYPRIORITYCLASS:
-                radioPriorityClass.setSelected(true);
-                radioBreadthFirst.setEnabled(false);
-                radioDephtFirst.setEnabled(false);
-                selectPriorityClass.setEnabled(true);
-                break;
-            }
             mutantPanel.setEnabled(true);
             mutantPanel.refresh();
             textMaxDepth.setText(currentParameter.maxdepth > 0 ? ""+currentParameter.maxdepth : "");

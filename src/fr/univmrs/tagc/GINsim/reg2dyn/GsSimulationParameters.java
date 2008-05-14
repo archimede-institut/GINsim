@@ -26,14 +26,12 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
     String name = "new_parameter";
     List nodeOrder;
 
-    int mode = Simulation.SEARCH_ASYNCHRONE_DF;
-
     int maxdepth;
     int maxnodes;
     boolean buildSTG = true;
+    boolean breadthFirst = false;
 
     ObjectStore store = new ObjectStore(2);
-
     Map m_initState = new HashMap();
 	GsSimulationParameterList param_list;
 
@@ -44,6 +42,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
     public GsSimulationParameters(GsSimulationParameterList param_list) {
     	this.param_list = param_list;
         this.nodeOrder = param_list.graph.getNodeOrder();
+        store.setObject(PCLASS, param_list.pcmanager.getElement(null, 0));
     }
 
     public String toString() {
@@ -58,7 +57,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
      * see also <code>getMelt</code> to get association between nodes and classes
      */
     public List getVclass() {
-    	PriorityClassDefinition pcdef = getPriorityClassDefinition(true);
+    	PriorityClassDefinition pcdef = getPriorityClassDefinition();
     	return pcdef.v_data;
     }
 
@@ -69,33 +68,23 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
      */
     public String getDescr() {
         String s;
-        switch (mode) {
-            case Simulation.SEARCH_ASYNCHRONE_BF:
-                s = "asynchronous (BF)\n";
-                break;
-            case Simulation.SEARCH_ASYNCHRONE_DF:
-                s = "asynchronous (DF)\n";
-                break;
-            case Simulation.SEARCH_BYPRIORITYCLASS:
-                s = "by priority class\n";
-                int[][] pclass = getPriorityClassDefinition(true).getPclass(nodeOrder);
-                for (int i=0 ; i<pclass.length ; i++) {
-                    int[] cl = pclass[i];
-                    s += "   "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
-                    for (int j=2;j<cl.length ; j+=2) {
-                        if (j>2) {
-                            s += ", ";
-                        }
-                        s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":cl[j+1]==1?"+":"-");
+		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
+        if (pcdef.getNbElements(null) > 1) {
+            s = "by priority class\n";
+            int[][] pclass = getPriorityClassDefinition().getPclass(nodeOrder);
+            for (int i=0 ; i<pclass.length ; i++) {
+                int[] cl = pclass[i];
+                s += "   "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
+                for (int j=2;j<cl.length ; j+=2) {
+                    if (j>2) {
+                        s += ", ";
                     }
-                    s += "\n";
+                    s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":cl[j+1]==1?"+":"-");
                 }
-                break;
-            case Simulation.SEARCH_SYNCHRONE:
-                s = "synchronous\n";
-                break;
-            default:
-                s = "";
+                s += "\n";
+            }
+        } else {
+        	s = pcdef.toString();
         }
         // FIXME: descr initial states
         if (m_initState == null || m_initState.size()==0) {
@@ -128,16 +117,20 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
     }
 
 	public void toXML(XMLWriter out, Object param, int xmlmode) throws IOException {
+		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
 		out.openTag("parameter");
 		out.addAttr("name", name);
-		out.addAttr("mode", Simulation.MODE_NAMES[mode]);
+		out.addAttr("updating", pcdef.name);
+		out.addAttr("breadthFirst", ""+breadthFirst);
 		out.addAttr("maxdepth", ""+maxdepth);
 		out.addAttr("maxnodes", ""+maxnodes);
 
-		if (mode == Simulation.SEARCH_BYPRIORITYCLASS) {
+		if (pcdef.getNbElements(null) > 1) {
 			out.openTag("priorityClass");
-			out.addAttr("ref", ((NamedObject)store.getObject(PCLASS)).getName());
+			out.addAttr("ref", pcdef.getName());
 			out.closeTag();
+		} else {
+			
 		}
 		if (m_initState != null && m_initState.keySet().size() > 0) {
 			out.openTag("initstates");
@@ -160,7 +153,6 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
     public Object clone() {
     	GsSimulationParameters newp = new GsSimulationParameters(param_list);
     	newp.name = name;
-    	newp.mode = mode;
     	newp.maxdepth = maxdepth;
     	newp.maxnodes = maxnodes;
     	newp.store.setObject(MUTANT, store.getObject(MUTANT));
@@ -188,11 +180,10 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 		return m_initState;
 	}
 
-	public PriorityClassDefinition getPriorityClassDefinition(boolean b) {
+	public PriorityClassDefinition getPriorityClassDefinition() {
 		PriorityClassDefinition pcd = (PriorityClassDefinition)store.getObject(PCLASS);
-		if (b && pcd == null) {
-			int index = param_list.pcmanager.add();
-			pcd = (PriorityClassDefinition)param_list.pcmanager.getElement(null, index);
+		if (pcd == null) {
+			pcd = (PriorityClassDefinition)param_list.pcmanager.getElement(null, 0);
 			store.setObject(PCLASS, pcd);
 		}
 		return pcd;

@@ -92,14 +92,15 @@ abstract public class SimulationUpdater implements Iterator {
 	}
 	
 	static public SimulationUpdater getInstance(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
-		switch (params.mode) {
-			case Simulation.SEARCH_SYNCHRONE:
+		PriorityClassDefinition pcdef = params.getPriorityClassDefinition();
+		if (pcdef.getNbElements(null) < 2) {
+			GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null,0);
+			if (pc.getMode() == GsReg2dynPriorityClass.SYNCHRONOUS) {
 				return new SynchronousSimulationUpdater(regGraph, params);
-			case Simulation.SEARCH_BYPRIORITYCLASS:
-				return new PrioritySimulationUpdater(regGraph, params);
-			default:
-				return new AsynchronousSimulationUpdater(regGraph, params);
+			}
+			return new AsynchronousSimulationUpdater(regGraph, params);
 		}
+		return new PrioritySimulationUpdater(regGraph, params);
 	}
 }
 
@@ -212,7 +213,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
 	
     public PrioritySimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		super(regGraph, params);
-		pclass = params.getPriorityClassDefinition(true).getPclass(params.nodeOrder);
+		pclass = params.getPriorityClassDefinition().getPclass(params.nodeOrder);
 	}
 
 	protected void doBuildNext() {
