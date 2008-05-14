@@ -392,6 +392,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
           exp = val.getChild(j);
           if (exp instanceof GsTreeExpression) {
             out.openTag("exp");
+            ((GsTreeExpression)exp).refreshRoot();
             out.addAttr("str", exp.toString());
             out.closeTag();
           }
@@ -407,11 +408,11 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 class UpdateMaxBlockedAction implements GsGraphNotificationAction {
 
 	String[] t_action;
-	
+
 	GsRegulatoryVertex vertex;
 	short max;
 	List l_fixable, l_conflict, l_parameters;
-	
+
 	public UpdateMaxBlockedAction(GsRegulatoryVertex vertex,
 			short max, List l_fixable, List l_conflict, List l_parameters) {
 		this.vertex = vertex;
@@ -448,7 +449,7 @@ class UpdateMaxBlockedAction implements GsGraphNotificationAction {
 			vertex.setMaxValue(max, (GsRegulatoryGraph)graph);
 			return true;
 		}
-		
+
 		// TODO Auto-generated method stub
 		return true;
 	}
@@ -456,5 +457,5 @@ class UpdateMaxBlockedAction implements GsGraphNotificationAction {
 	public boolean timeout(GsGraph graph, Object data) {
 		return true;
 	}
-	
+
 }

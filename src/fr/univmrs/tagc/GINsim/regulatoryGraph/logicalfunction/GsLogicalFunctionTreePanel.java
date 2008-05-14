@@ -283,11 +283,11 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
         else if (transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR && node instanceof GsTreeString) {
           pasteValuesInRoot(transferable.getNodes(), (GsTreeString) node);
         }
-        else if (transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR && node instanceof GsTreeValue) {
+        /*else if (transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR && node instanceof GsTreeValue) {
           pasteManualsInValue(transferable.getNodes(),
                               ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
                               (GsTreeValue) node);
-        }
+        }*/
         else if (transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR && node instanceof GsTreeValue) {
           pasteParamsInValue(transferable.getNodes(),
                              ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
@@ -329,8 +329,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
       menu.setEnabled(GsTreeMenu.PASTE, false);
     }
     else {
-      if (current_transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR ||
-          current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR) {
+      if (current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR) {
         menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, true);
         menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, true);
       }
@@ -339,10 +338,8 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
         menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, false);
       }
       if (transferable != null && tree.getSelectionCount() == 1) {
-        if (current_transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR ||
-            current_transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR) {
+        if (current_transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR) {
           if (transferable.getCurrentFlavor() == GsTransferable.FUNCTION_FLAVOR ||
-              transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR ||
               transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR) {
             menu.setEnabled(GsTreeMenu.PASTE, true);
           }
@@ -439,7 +436,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
 //    }
 //  }
 
-  public void pasteManualsInValue(GsTreeElement[] manuals, boolean remove, GsTreeValue value) {
+/*  public void pasteManualsInValue(GsTreeElement[] manuals, boolean remove, GsTreeValue value) {
     Enumeration enu, enu2;
     GsTreeParam param;
     TreePath tp;
@@ -462,7 +459,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements
       tree.expandPath(tp);
     }
   }
-
+*/
   public void pasteParamsInValue(GsTreeElement[] params, boolean remove, GsTreeValue value) {
     Enumeration enu;
     TreePath tp;
