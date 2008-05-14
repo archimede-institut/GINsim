@@ -1,12 +1,9 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -153,6 +150,7 @@ class EdgeList extends GenericList {
 	
 	EdgeList(GsRegulatoryGraph graph) {
 		this.graph = graph;
+		addOptions = new ArrayList();
 		canAdd = true;
 		canEdit = true;
 		canRemove = true;
@@ -162,42 +160,35 @@ class EdgeList extends GenericList {
 	
 	void setMEdge(GsRegulatoryMultiEdge medge) {
 		this.medge = medge;
+		addOptions.clear();
+	    int[] t = medge.getFreeValues();
+	    for (int i=0 ; i<t.length ; i++) {
+	    	int th = t[i];
+	    	if (th != -1) {
+	    		addOptions.add(new Integer(t[i]));
+	    	}
+	    }
 		refresh();
 	}
 
     protected void addEdge(int value) {
 		int index = medge.addEdge(GsRegulatoryMultiEdge.SIGN_POSITIVE, value, graph);
 		if (index != -1) {
-			refresh();
+			setMEdge(medge);
 		}
     }
     
-	public int add(int position, int x, int y) {
-	    if (!graph.isEditAllowed()) {
-	        return -1;
-	    }
-	    int[] t = medge.getFreeValues();
-	    if (t[0] == -1) {
-	    	GsGraphNotificationAction notifAction = new AddEdgeNotificationAction(this);
+	public int add(int position, int mode) {
+		if (mode == -1 || mode >= addOptions.size()) {
+			GsGraphNotificationAction notifAction = new AddEdgeNotificationAction(this);
 	    	graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
 	    			Translator.getString("STR_noMoreValueForInteraction"),
 	    			notifAction,
 	    			medge,
 	    			GsGraphNotificationMessage.NOTIFICATION_WARNING));
-	    } else if (t[1] == -1) {
-	    	addEdge(t[0]);
-	    } else {
-	    	JPopupMenu menu = new JPopupMenu("select value");
-	    	for (int i=0 ; i<t.length ; i++) {
-	    		if (t[i] == -1) {
-	    			break;
-	    		}
-	    		JMenuItem item = new JMenuItem(new AddEdgeMenuAction(this, t[i]));
-	    		menu.add(item);
-	    	}
-	    	menu.setLocation(x, y);
-	    	menu.setVisible(true);
-	    }
+	    	return -1;
+		}
+		this.addEdge(((Integer)addOptions.get(mode)).intValue());
 		return 0;
 	}
 
@@ -247,19 +238,5 @@ class AddEdgeNotificationAction implements GsGraphNotificationAction {
 	public String[] getActionName() {
 		String[] t = {"add value"};
 		return t;
-	}
-}
-
-class AddEdgeMenuAction extends AbstractAction {
-	private static final long serialVersionUID = -7038482131591956858L;
-	int value;
-	EdgeList edgeList;
-	AddEdgeMenuAction(EdgeList edgeList, int value) {
-		this.value = value;
-		this.edgeList = edgeList;
-		this.putValue( Action.NAME, ""+value);
-	}
-	public void actionPerformed(ActionEvent e) {
-		edgeList.addEdge(value);
 	}
 }

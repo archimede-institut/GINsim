@@ -23,7 +23,7 @@ public class GsModelCheckerList extends SimpleGenericList implements GsGraphList
 		canEdit = true;
 	}
 
-	public Object doCreate(String name) {
+	public Object doCreate(String name, int mode) {
 		return ((GsModelCheckerDescr)GsModelCheckerPlugin.v_checker.get(0)).createNew(name, graph);
 	}
 

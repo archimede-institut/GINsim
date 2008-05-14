@@ -17,10 +17,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
 import fr.univmrs.tagc.common.datastore.*;
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
-import fr.univmrs.tagc.common.widgets.SplitPane;
-import fr.univmrs.tagc.common.widgets.StatusTextField;
-import fr.univmrs.tagc.common.widgets.StockButton;
+import fr.univmrs.tagc.common.widgets.*;
 
 /**
  * Generic UI to display the content of a list.
@@ -28,7 +25,7 @@ import fr.univmrs.tagc.common.widgets.StockButton;
  * using the GenericList interface as a backend.
  */
 public class GenericListPanel extends JPanel 
-	implements KeyListener, ObjectPropertyEditorUI, ListSelectionListener {
+	implements KeyListener, ObjectPropertyEditorUI, ListSelectionListener, MultiActionListener {
     private static final long serialVersionUID = -4236977685092639157L;
     
     JScrollPane sp = new JScrollPane();
@@ -40,7 +37,7 @@ public class GenericListPanel extends JPanel
     
     JButton b_up;
     JButton b_down;
-    JButton b_add;
+    ButtonPopup b_add;
     JButton b_del;
     StatusTextField t_filter;
     JLabel l_title = new JLabel();
@@ -125,12 +122,8 @@ public class GenericListPanel extends JPanel
         c = new GridBagConstraints();
         c.gridx = 2;
         c.gridy = 2;
-        b_add = new StockButton("list-add.png", true);
-        b_add.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                doAdd();
-            }
-        });
+        b_add = new ButtonPopup("list-add.png", true, null);
+        b_add.addActionListener(this);
         targetpanel.add(b_add, c);
         
         c = new GridBagConstraints();
@@ -213,6 +206,9 @@ public class GenericListPanel extends JPanel
         b_up.setVisible(list.canOrder());
         b_down.setVisible(list.canOrder());
         b_add.setVisible(list.canAdd() && !list.doInlineAddRemove());
+        if (b_add.isVisible()) {
+        	b_add.setOptions(list.addOptions);
+        }
         b_del.setVisible(list.canRemove() && !list.doInlineAddRemove());
         if (list.getNbElements(null) > 0) {
             jl.getSelectionModel().setSelectionInterval(0, 0);
@@ -278,12 +274,11 @@ public class GenericListPanel extends JPanel
         
     }
     
-    protected void doAdd() {
+    protected void doAdd(int mode) {
         if (list == null) {
             return;
         }
-        Point b = b_add.getLocationOnScreen();
-        int n = list.add(jl.getSelectedRow(), b.x, b.y);
+        int n = list.add(jl.getSelectedRow(), mode);
         if (n != -1) {
             refresh();
             jl.getSelectionModel().setSelectionInterval(n, n);
@@ -324,6 +319,7 @@ public class GenericListPanel extends JPanel
     public void refresh() {
         model.fireTableDataChanged();
         refreshHide();
+        b_add.refresh();
     }
     
     private void refreshHide() {
@@ -412,6 +408,9 @@ public class GenericListPanel extends JPanel
 	    		cards.show(p_right, "empty");
 	    	}
     	}
+	}
+	public void actionPerformed(ActionEvent e, int mode) {
+		doAdd(mode);
 	}
 }
 

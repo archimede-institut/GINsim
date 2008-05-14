@@ -148,7 +148,7 @@ class LinkList extends SimpleGenericList {
 		canEdit = true;
 		doInlineAddRemove = true;
 	}
-	public Object doCreate(String name) {
+	public Object doCreate(String name, int pos) {
 		return new AnnotationLink(name, graph);
 	}
 	public boolean doEdit(Object data, Object value) {

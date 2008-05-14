@@ -54,7 +54,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 		}
 		moveElement(j, pos);
 	}
-	public Object doCreate(String name, int pos) {
+	public Object doCreate(String name, int pos, int mode) {
 		if (locked) {
 			return null;
 		}

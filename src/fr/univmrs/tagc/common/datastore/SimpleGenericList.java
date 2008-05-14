@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SimpleGenericList extends GenericList {
-
 	public List		v_data;
 	protected String	prefix			= "name_";
 	protected String	pattern			= "^[a-zA-Z0-9_-]+$";
@@ -28,7 +27,7 @@ public class SimpleGenericList extends GenericList {
 		refresh();
 	}
 
-	public int add(int position, int x, int y) {
+	public int add(int position, int mode) {
 		if (!canAdd) {
 			return -1;
 		}
@@ -39,7 +38,7 @@ public class SimpleGenericList extends GenericList {
 			t[j] = true;
 		}
 		if (v_data.size() > 0 && !(v_data.get(0) instanceof NamedObject)) {
-			return triggerAdd(wrapCreate(s, position), position);
+			return triggerAdd(wrapCreate(s, position, mode), position);
 		}
 		for (int j = 0 ; j < t.length ; j++) {
 			NamedObject obj = (NamedObject)v_data.get(j);
@@ -64,7 +63,7 @@ public class SimpleGenericList extends GenericList {
 			s = prefix + (t.length + 1);
 		}
 
-		return triggerAdd(wrapCreate(s, position), position);
+		return triggerAdd(wrapCreate(s, position, mode), position);
 	}
 
 	private int triggerAdd(Object item, int position) {
@@ -119,7 +118,7 @@ public class SimpleGenericList extends GenericList {
 			if (!doInlineAddRemove || "".equals(o)) {
 				return false;
 			}
-			Object newObj = wrapCreate((String)o, pos);
+			Object newObj = wrapCreate((String)o, pos, -1);
 			if (newObj != null) {
 				triggerAdd(newObj, pos);
 				return true;
@@ -259,19 +258,19 @@ public class SimpleGenericList extends GenericList {
 		return o.toString().toLowerCase().contains(filter.toLowerCase());
 	}
 
-	protected Object doCreate(String name) {
+	protected Object doCreate(String name, int mode) {
 		System.out.println("you should override this if you plan to use it");
 		return null;
 	}
-	protected Object doCreate(String name, int pos) {
+	protected Object doCreate(String name, int pos, int mode) {
 		System.out.println("you should override this if you plan to use it");
 		return null;
 	}
-	protected Object wrapCreate(String name, int pos) {
+	protected Object wrapCreate(String name, int pos, int mode) {
 		if (addWithPosition) {
-			return doCreate(name, pos);
+			return doCreate(name, pos, mode);
 		}
-		return doCreate(name);
+		return doCreate(name, mode);
 	}
 
 	protected void doRun(int row, int col) {

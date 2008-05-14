@@ -22,7 +22,7 @@ public class GsInitialStateList extends SimpleGenericList implements GsGraphList
         graph.addGraphListener(this);
     }
 
-	protected Object doCreate(String name) {
+	protected Object doCreate(String name, int mode) {
 		GsInitialState i = new GsInitialState();
 		i.setName(name);
 		return i;

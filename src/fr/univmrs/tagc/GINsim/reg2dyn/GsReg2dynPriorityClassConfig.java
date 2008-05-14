@@ -55,7 +55,6 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     
     private static final int AUTO_MANY = 1;
     private static final int AUTO_PLUS_MINUS = 2;
-    private static final String[] t_sauto = { "One unique class", "One class for each node", "Splitting transitions – one unique class" };
     
     /**
      * @param frame
@@ -125,12 +124,6 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         c.gridy = 7;
         c.anchor = GridBagConstraints.NORTH;
         targetpanel.add(getBut_group(), c);
-        c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 9;
-	    c.gridwidth = 3;
-        c.fill = GridBagConstraints.HORIZONTAL;
-        targetpanel.add(getCb_auto(), c);
     }
     
     protected GenericListPanel getContentPanel() {
@@ -363,57 +356,6 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         availableList.refresh();
     }
     
-    private JComboBox getCb_auto() {
-        if (cb_auto == null) {
-            cb_auto = new JComboBox();
-            for (int i=0 ; i<t_sauto.length ; i++) {
-                cb_auto.addItem(t_sauto[i]);
-            }
-            cb_auto.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    applyAuto();
-                }
-            });
-        }
-        return cb_auto;
-    }
-    
-    protected void applyAuto() {
-    	if (pcdef.locked) {
-    		return;
-    	}
-        // first delete all classes
-        while (pcdef.v_data.size() > 1) {
-        	pcdef.v_data.remove(1);
-        }
-        Object lastClass = pcdef.v_data.get(0);
-        ((GsReg2dynPriorityClass)lastClass).setName("new class");
-        for (int i=0 ; i<nodeOrder.size() ; i++) {
-        	pcdef.m_elt.put(nodeOrder.get(i), lastClass);
-        }
-        switch (cb_auto.getSelectedIndex()) {
-            case AUTO_MANY:
-                // should be equivalent to the old priority system: add one class per node
-            	pcdef.v_data.clear();
-            	pcdef.m_elt.clear();
-                for (int i=0 ; i<nodeOrder.size() ; i++) {
-                    currentClass = new GsReg2dynPriorityClass();
-                    pcdef.v_data.add(i, currentClass);
-                    pcdef.m_elt.put(nodeOrder.get(i), currentClass);
-                    currentClass.setName(""+nodeOrder.get(i));
-                }
-                break;
-            case AUTO_PLUS_MINUS:
-                for (int i=0 ; i<nodeOrder.size() ; i++) {
-                    Object[] t = {lastClass, lastClass};
-                    pcdef.m_elt.put(nodeOrder.get(i), t);
-                }
-                break;
-        }
-        pcdef.refresh();
-        getSelectionModel().setSelectionInterval(0, 0);
-    }
-
 	public void setClassPanel(GenericListPanel pcpanel) {
 		this.pcpanel = pcpanel;
 		pcpanel.addSelectionListener(this);

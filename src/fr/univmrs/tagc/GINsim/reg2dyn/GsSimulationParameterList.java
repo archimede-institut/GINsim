@@ -118,7 +118,7 @@ public class GsSimulationParameterList extends SimpleGenericList
         }
     }
 
-	protected Object doCreate(String name) {
+	protected Object doCreate(String name, int mode) {
         GsSimulationParameters parameter = new GsSimulationParameters(this);
         parameter.name = name;
 		return parameter;
@@ -140,7 +140,6 @@ public class GsSimulationParameterList extends SimpleGenericList
 	}
 	public void structureChanged() {
 	}
-
 	public void endParsing() {
 	}
 }

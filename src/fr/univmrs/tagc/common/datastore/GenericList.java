@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.common.datastore;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -14,10 +15,12 @@ abstract public class GenericList {
 	public boolean canOrder = false;
 	public boolean canEdit = false;
 	public boolean canAdd = false;
+	public boolean canCopy = false;
 	public boolean canRemove = false;
 	public boolean doInlineAddRemove = false;
 	public int nbAction = 0;
 	public int nbcol = 1;
+	public List addOptions = null;
 	
 	protected String title = "";
 	
@@ -27,7 +30,9 @@ abstract public class GenericList {
 	public MultiColHelper mcolHelper = null;
 	protected Vector v_listeners = new Vector();
 	
-	
+	public List getAddOptions() {
+		return addOptions;
+	}
     /**
      * can elements of this list be reordered interactively ?
      * @return true if it is reorder-friendly
@@ -41,6 +46,13 @@ abstract public class GenericList {
      */
     public boolean canEdit() {
     	return canEdit;
+    }
+    /**
+     * can new elements of this list be obtained by copying existing ones ?
+     * @return true if one can copy elements
+     */
+    public boolean canCopy() {
+    	return canCopy;
     }
     /**
      * can elements of this list be added interactively ?
@@ -109,15 +121,14 @@ abstract public class GenericList {
     abstract public boolean edit(String filter, int row, int col, Object o);
     
     public int add() {
-    	return add(getNbElements(null), 0, 0);
+    	return add(getNbElements(null), 0);
     }
     /**
      * add an element.
-     * @param x TODO
-     * @param y TODO
+     * @param mode
      * @return the index of the added element, or -1 if none
      */
-    abstract public int add(int position, int x, int y);
+    abstract public int add(int position, int mode);
     
     /**
      * add an element.

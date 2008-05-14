@@ -48,7 +48,7 @@ public class ModelSimplifierConfigList extends SimpleGenericList
     	return null;
     }
 
-	protected Object doCreate(String name) {
+	protected Object doCreate(String name, int pos) {
 		ModelSimplifierConfig config = new ModelSimplifierConfig();
 		config.setName(name);
 		return config;
