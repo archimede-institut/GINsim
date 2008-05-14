@@ -6,7 +6,21 @@ Definition of the regulatory graph:
 * change in the definition of interactions: now it uses only one threshold (instead of a range with min and max).
 * removal of the "basal value": it is now a regular logical parameter
 * Model "Simplification"
+  Select a set of nodes for removal, a new model will be created with the remaining nodes
+* Improve model documentation: links can now be opened and shortcuts have been introduced:
+  pubmed, hugo, ref (relying on a bibtex file, allows to open pdf/doi of refs within GINsim)
 
+Simulation module:
+* remove radio buttons for (a)synchronous/priorities: 
+  (a)synchronous and priority definitions are all available in a single combo-box
+* refactor the simulation module to share more code
+As a result of these two changes, breadth first is now available for simulations by priority.
+  
+Exports:
+* GNA export
+* Cytoscape export
+* Documentation export: build a document with the description of the model and stable states for every mutants.
+  Two backends are available: "xhtml" and "open document"
 ---------------------------------------------------------------------------------------------------------------------
 Version 2.3.
 Changes since version 2.2:
