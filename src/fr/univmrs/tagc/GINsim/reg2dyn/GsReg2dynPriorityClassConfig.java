@@ -284,15 +284,14 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         int[] ti = getSelection();
         int[][] selExtended = pcdef.getMovingRows(NONE, ti);
         if (selExtended.length > 1) {
-            but_group.setEnabled(true);
+            but_group.setVisible(true);
             but_group.setStockIcon("group.png");
             but_group.setToolTipText(Translator.getString("STR_group_descr"));
         } else {
             if (selExtended.length == 0 || selExtended[0][0] == selExtended[0][1]) {
-                but_group.setEnabled(false);
-                but_group.setToolTipText(null);
+                but_group.setVisible(false);
             } else {
-                but_group.setEnabled(true);
+                but_group.setVisible(true);
                 but_group.setStockIcon("ungroup.png");
                 but_group.setToolTipText(Translator.getString("STR_ungroup_descr"));
             }
