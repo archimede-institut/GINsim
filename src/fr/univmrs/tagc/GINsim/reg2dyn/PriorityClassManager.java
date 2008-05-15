@@ -70,9 +70,6 @@ public class PriorityClassManager extends SimpleGenericList {
         return pcdef;
     }
 
-
-	
-	
 	public Object doCreate(String name, int pos, int mode) {
 		return doCreate(name, mode);
 	}

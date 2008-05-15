@@ -12,7 +12,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
 
 public class PriorityClassDefinition extends SimpleGenericList implements NamedObject, XMLize {
 
-	Map m_elt;
+	public Map m_elt;
 	String name;
 	boolean locked;
 

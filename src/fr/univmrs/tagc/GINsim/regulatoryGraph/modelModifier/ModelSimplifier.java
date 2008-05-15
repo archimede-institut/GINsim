@@ -10,6 +10,7 @@ import fr.univmrs.tagc.GINsim.export.regulatoryGraph.LogicalFunctionBrowser;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.GINsim.reg2dyn.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
@@ -264,7 +265,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				}
 			}
 			
-			// initial states: should be pretty easy
+			// initial states
 			GsInitialStateList init = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
 			if (init != null && init.getNbElements(null) > 0) {
 				GsInitialStateList newInit = (GsInitialStateList)simplifiedGraph.getObject(GsInitialStateManager.key, true);
@@ -280,6 +281,43 @@ public class ModelSimplifier extends Thread implements Runnable {
 						Object o = copyMap.get(e.getKey());
 						if (o != null) {
 							m_init.put(o, e.getValue());
+						}
+					}
+				}
+			}
+			
+			// priority classes definition
+			GsSimulationParameterList params = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, false);
+			if (params != null) {
+				PriorityClassManager pcman = params.pcmanager;
+				GsSimulationParameterList new_params = (GsSimulationParameterList)simplifiedGraph.getObject(GsSimulationParametersManager.key, true);
+				PriorityClassManager new_pcman = new_params.pcmanager;
+				for (int i=2 ; i<pcman.getNbElements(null) ; i++) {
+					PriorityClassDefinition pcdef = (PriorityClassDefinition)pcman.getElement(null, i);
+					int index = new_pcman.add();
+					PriorityClassDefinition new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, index);
+					new_pcdef.setName(pcdef.getName());
+					Map m_pclass = new HashMap();
+					// copy all priority classes
+					for (int j=0 ; j<pcdef.getNbElements(null) ; j++) {
+						GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, j);
+						if (j>0) {
+							new_pcdef.add();
+						}
+						GsReg2dynPriorityClass new_pc = (GsReg2dynPriorityClass)new_pcdef.getElement(null, j);
+						new_pc.setName(pc.getName());
+						new_pc.rank = pc.rank;
+						new_pc.setMode(pc.getMode());
+						m_pclass.put(pc, new_pc);
+					}
+					
+					// properly place nodes
+					Iterator it_entry = pcdef.m_elt.entrySet().iterator();
+					while (it_entry.hasNext()) {
+						Entry e = (Entry)it_entry.next();
+						Object vertex = copyMap.get(e.getKey());
+						if (vertex != null) {
+							new_pcdef.m_elt.put(vertex,	m_pclass.get(e.getValue()));
 						}
 					}
 				}
