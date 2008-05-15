@@ -10,12 +10,7 @@ import fr.univmrs.tagc.GINsim.export.regulatoryGraph.LogicalFunctionBrowser;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
@@ -69,6 +64,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			String s_comment = "";
 			it = m_removed.entrySet().iterator();
 			TargetEdgesIterator it_targets = new TargetEdgesIterator(m_removed);
+			List l_removed = new ArrayList();
 			while (it.hasNext()) {
 				Entry entry = (Entry)it.next();
 				List targets = new ArrayList();
@@ -80,20 +76,36 @@ public class ModelSimplifier extends Thread implements Runnable {
 				int pos = graph.getNodeOrder().indexOf(vertex);
 				s_comment += ", "+vertex.getId();
 				
-				// mark all its targets as affected
-				it_targets.setOutgoingList(manager.getOutgoingEdges(vertex));
-				while (it_targets.hasNext()) {
-					GsRegulatoryVertex target = (GsRegulatoryVertex)it_targets.next();
-					if (!target.equals(vertex)) {
-						targets.add(target);
-						OmddNode targetNode = (OmddNode)m_affected.get(target);
-						if (targetNode == null) {
-							targetNode = target.getTreeParameters(graph);
+				try {
+					// mark all its targets as affected
+					it_targets.setOutgoingList(manager.getOutgoingEdges(vertex));
+					while (it_targets.hasNext()) {
+						GsRegulatoryVertex target = (GsRegulatoryVertex)it_targets.next();
+						if (!target.equals(vertex)) {
+							targets.add(target);
+							OmddNode targetNode = (OmddNode)m_affected.get(target);
+							if (targetNode == null) {
+								targetNode = target.getTreeParameters(graph);
+							}
+							m_affected.put(target, remove(targetNode, deleted, pos).reduce());
 						}
-						m_affected.put(target, remove(targetNode, deleted, pos).reduce());
 					}
+					entry.setValue(new ArrayList(targets));
+					l_removed.add(vertex);
+				} catch (GsException e) {
+					e.addMessage("Error occured while removing "+vertex);
+					StringBuffer sb = new StringBuffer();
+					for (Iterator it_done = l_removed.iterator() ; it_done.hasNext() ; ) {
+						sb.append(" "+it_done.next());
+					}
+					e.addMessage("already removed:"+sb);
+					sb = new StringBuffer();
+					for (; it.hasNext() ; ) {
+						sb.append(" "+it.next());
+					}
+					e.addMessage("remaining:"+sb);
+					throw e;
 				}
-				entry.setValue(new ArrayList(targets));
 			}
 			
 			// create the new regulatory graph
@@ -277,9 +289,10 @@ public class ModelSimplifier extends Thread implements Runnable {
 				dialog.endSimu(simplifiedGraph, null);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (dialog != null) {
 				dialog.endSimu(null, e);
+			} else {
+				e.printStackTrace();
 			}
 		}
 	}
@@ -344,7 +357,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 				return node.next[regulator.value];
 			}
 			if (regulator.level == level) {
-				throw new GsException(GsException.GRAVITY_ERROR, "Can not continue the simplification: a circuit would get lost");
+				throw new GsException(GsException.GRAVITY_ERROR, 
+						"Can not continue the simplification: a circuit would get lost");
 			}
 			return remove(node.next, regulator);
 		}

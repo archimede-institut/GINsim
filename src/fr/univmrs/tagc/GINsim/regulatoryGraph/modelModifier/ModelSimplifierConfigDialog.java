@@ -49,7 +49,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		if (!isRunning && lp.getSelectedItem() != null) {
 			isRunning = true;
 			new ModelSimplifier(graph, (ModelSimplifierConfig)lp.getSelectedItem(), this);
-		} else {
+	        brun.setEnabled(false);
 		}
 	}
 	
@@ -57,6 +57,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
     	isRunning = false;
         if (null == graph) {
             Tools.error(e.getMessage(), this.graph.getGraphManager().getMainFrame());
+            brun.setEnabled(true);
         } else {
             GsEnv.whatToDoWithGraph(this.graph.getGraphManager().getMainFrame(), graph, false);
             cancel();

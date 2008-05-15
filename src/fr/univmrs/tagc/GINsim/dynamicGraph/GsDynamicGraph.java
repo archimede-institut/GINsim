@@ -419,7 +419,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
     protected void viewStable() {
         JFrame frame = new JFrame("stables");
         frame.setSize(Math.min(30*(nodeOrder.size()+1), 800),
-        		Math.min(25*(v_stables.size()+1), 600));
+        		Math.min(25*(v_stables.size()+2), 600));
         JScrollPane scroll = new JScrollPane();
         StableTableModel model = new StableTableModel(nodeOrder);
         model.setResult(v_stables);

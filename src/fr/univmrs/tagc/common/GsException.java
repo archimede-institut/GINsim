@@ -64,4 +64,7 @@ public class GsException extends Exception {
     public String getTitle() {
         return Translator.getString("STR_error_occured");
     }
+	public void addMessage(String message) {
+		this.message += "\n"+message;
+	}
 }
