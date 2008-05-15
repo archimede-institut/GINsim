@@ -9,6 +9,8 @@ import java.awt.event.WindowListener;
 
 import javax.swing.*;
 
+import fr.univmrs.tagc.common.manageressources.Translator;
+
 /**
  * UI for the animator plugin.
  * it helps you contructing a path on the dynamic graph and to run/export the animation.
@@ -129,7 +131,8 @@ public class GsAnimatorUI extends JDialog {
     }
     private JButton getBGP() {
         if (bGP == null) {
-            bGP = new JButton("GP");
+            bGP = new JButton("gnuplot");
+            bGP.setToolTipText(Translator.getString("STR_gnuplot_descr"));
             bGP.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     gnuplot();

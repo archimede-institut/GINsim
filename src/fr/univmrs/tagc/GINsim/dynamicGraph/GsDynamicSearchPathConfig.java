@@ -14,6 +14,7 @@ import javax.swing.table.TableColumn;
 import fr.univmrs.tagc.GINsim.aRegGraph.GsAReg2GPConfig;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 /**
  * UI to search a path in the dynamic graph.
@@ -293,7 +294,8 @@ public class GsDynamicSearchPathConfig extends JDialog {
     }
     private JButton getBut_gp() {
         if (but_gp == null) {
-            but_gp = new JButton("GP");
+            but_gp = new JButton("gnuplot");
+            but_gp.setToolTipText(Translator.getString("STR_gnuplot_descr"));
             but_gp.setEnabled(false);
             but_gp.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -328,11 +330,11 @@ public class GsDynamicSearchPathConfig extends JDialog {
     }
     private JTable getTableConstraint() {
         if (tableConstraint == null) {
-            tableConstraint = new JTable();
+            tableConstraint = new EnhancedJTable();
             List v_inPath = new ArrayList(2);
             model = new GsDynamicAnalyserPathModel(graph, v_pathConstraints, v_inPath, this);
             tableConstraint.setModel(model);
-            tableConstraint.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            tableConstraint.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
             tableConstraint.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
             tableConstraint.getTableHeader().setReorderingAllowed(false);
             tableConstraint.setDefaultRenderer(Object.class, new GsDynamicPathItemCellRenderer(v_inPath));
