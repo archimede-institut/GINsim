@@ -202,6 +202,7 @@ class EdgeList extends GenericList {
 	public boolean remove(String filter, int[] t_index) {
 		if (medge.getEdgeCount() > 1 && t_index.length == 1) {
 			medge.removeEdge(t_index[0], graph);
+			setMEdge(medge);
 			return true;
 		}
 		return false;

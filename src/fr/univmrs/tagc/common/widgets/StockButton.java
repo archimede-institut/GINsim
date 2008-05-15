@@ -37,10 +37,7 @@ public class StockButton extends JButton {
 	}
 	public StockButton(String text, boolean isStock) {
 		if (isStock) {
-			URL url = getURL(text);
-			if (url != null) {
-				setAll(null, new ImageIcon(url));
-			}
+			setStockIcon(text);
 		} else {
 			setAll(null, ImageLoader.getImageIcon(text));
 		}
@@ -57,6 +54,12 @@ public class StockButton extends JButton {
         	}
         }
         return url;
+	}
+	public void setStockIcon(String iconname) {
+		URL url = getURL(iconname);
+		if (url != null) {
+			setAll(null, new ImageIcon(url));
+		}
 	}
 	private void setAll(String text, Icon icon) {
 		if (text != null) {

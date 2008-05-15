@@ -260,10 +260,12 @@ public class SimpleGenericList extends GenericList {
 
 	protected Object doCreate(String name, int mode) {
 		System.out.println("you should override this if you plan to use it");
+		new Exception().printStackTrace();
 		return null;
 	}
 	protected Object doCreate(String name, int pos, int mode) {
 		System.out.println("you should override this if you plan to use it");
+		new Exception().printStackTrace();
 		return null;
 	}
 	protected Object wrapCreate(String name, int pos, int mode) {

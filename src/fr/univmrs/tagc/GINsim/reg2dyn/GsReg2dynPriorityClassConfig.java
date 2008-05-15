@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -50,7 +51,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
 
     PriorityClassDefinition pcdef;
     
-    private JButton but_group;
+    private StockButton but_group;
 	private GenericListPanel pcpanel;
     
     private static final int AUTO_MANY = 1;
@@ -166,7 +167,8 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
 
     private JButton getBut_group() {
         if (but_group == null) {
-            but_group = new JButton("-");
+            but_group = new StockButton("group.png",true);
+            but_group.setMinimumSize(new Dimension(35,25));
             but_group.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     groupToggle();
@@ -283,16 +285,15 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
         int[][] selExtended = pcdef.getMovingRows(NONE, ti);
         if (selExtended.length > 1) {
             but_group.setEnabled(true);
-            but_group.setText("G");
+            but_group.setStockIcon("group.png");
             but_group.setToolTipText(Translator.getString("STR_group_descr"));
         } else {
             if (selExtended.length == 0 || selExtended[0][0] == selExtended[0][1]) {
                 but_group.setEnabled(false);
-                but_group.setText("-");
                 but_group.setToolTipText(null);
             } else {
                 but_group.setEnabled(true);
-                but_group.setText("U");
+                but_group.setStockIcon("ungroup.png");
                 but_group.setToolTipText(Translator.getString("STR_ungroup_descr"));
             }
         }

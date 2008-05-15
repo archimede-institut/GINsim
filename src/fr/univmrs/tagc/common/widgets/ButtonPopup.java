@@ -50,7 +50,9 @@ public class ButtonPopup extends JPanel implements ActionListener {
 		}
 		if (options == null) {
 			dropdown.setVisible(false);
+			button.setMinimumSize(new Dimension(30, 25));
 		} else {
+			button.setMinimumSize(new Dimension(18, 25));
 			dropdown.setVisible(true);
 			if (options.size() > 1) {
 				dropdown.setEnabled(true);
@@ -74,6 +76,7 @@ public class ButtonPopup extends JPanel implements ActionListener {
 			Point p = dropdown.getLocationOnScreen();
 			menu.setLocation(p.x, p.y+dropdown.getHeight());
 			menu.setVisible(!menu.isVisible());
+			menu.requestFocus();
 			return;
 		}
 		int ref = -1;

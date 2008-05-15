@@ -167,7 +167,7 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
         return null;
     }
 
-	protected Object doCreate(String name) {
+	protected Object doCreate(String name, int mode) {
         GsRegulatoryMutantDef m = new GsRegulatoryMutantDef();
         m.name = name;
 		return m;
