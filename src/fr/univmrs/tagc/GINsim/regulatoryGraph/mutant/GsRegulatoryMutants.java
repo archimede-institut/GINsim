@@ -33,6 +33,7 @@ import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.widgets.SplitPane;
+import fr.univmrs.tagc.common.widgets.StockButton;
 
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.
@@ -232,8 +233,7 @@ class MutantPanel extends SplitPane {
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 1;
-        JButton bdel = new JButton("X");
-        bdel.setForeground(Color.RED);
+        JButton bdel = new StockButton("list-remove.png", true);
         bdel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 delete();

@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.initialState;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -21,6 +20,7 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.widgets.Label;
 import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.widgets.StockButton;
 
 public class GsInitialStatePanel extends JPanel {
 	private static final long serialVersionUID = -572201856207494392L;
@@ -80,12 +80,9 @@ public class GsInitialStatePanel extends JPanel {
         c.gridy = 1;
         add(getButtonDelStateRow(), c);
         c = new GridBagConstraints();
-        c.gridx = 2;
+        c.gridx = 0;
         c.gridy = 1;
-        add(getButtonResetStateRow(), c);
-        c = new GridBagConstraints();
-        c.gridx = 3;
-        c.gridy = 1;
+        c.anchor = GridBagConstraints.WEST;
         add(getButtonCopyStateRow(), c);
 	}
 	
@@ -152,8 +149,7 @@ public class GsInitialStatePanel extends JPanel {
     
     private JButton getButtonDelStateRow() {
         if (buttonDelStateRow == null) {
-            buttonDelStateRow = new JButton("X");
-            buttonDelStateRow.setForeground(Color.RED);
+            buttonDelStateRow = new StockButton("list-remove.png", true);
             buttonDelStateRow.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     deleteStateRow();
@@ -164,7 +160,8 @@ public class GsInitialStatePanel extends JPanel {
     }
     private JButton getButtonCopyStateRow() {
         if (buttonCopyStateRow == null) {
-        	buttonCopyStateRow = new JButton("CP");
+        	buttonCopyStateRow = new StockButton("edit-copy.png", true);
+        	buttonCopyStateRow.setToolTipText(Translator.getString("STR_duplicate_rows"));
         	buttonCopyStateRow.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     copyStateRow();
@@ -172,21 +169,6 @@ public class GsInitialStatePanel extends JPanel {
             });
         }
         return buttonCopyStateRow;
-    }
-
-    protected void resetStateRow() {
-        model.reset();
-    }
-    private JButton getButtonResetStateRow() {
-        if (buttonResetStateRow == null) {
-            buttonResetStateRow = new JButton(Translator.getString("STR_reset"));
-            buttonResetStateRow.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    resetStateRow();
-                }
-            });
-        }
-        return buttonResetStateRow;
     }
 
 	public void setParam(GsInitialStateStore currentParameter) {
