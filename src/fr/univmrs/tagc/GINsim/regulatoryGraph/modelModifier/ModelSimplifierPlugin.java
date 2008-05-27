@@ -154,6 +154,12 @@ class ModelSimplifierConfigParser extends XMLHelper {
         if (qName.equals("simplificationConfig")) {
         	ModelSimplifierConfig cfg = (ModelSimplifierConfig)paramList.getElement(null, paramList.add());
         	cfg.name = attributes.getValue("name");
+        	String s_strict = attributes.getValue("strict");
+        	if (s_strict != null) {
+        		cfg.strict = "true".equals(s_strict);
+        	} else {
+        		cfg.strict = true;
+        	}
         	String[] t_remove = attributes.getValue("removeList").split(" ");
         	for (int i=0 ; i<t_remove.length ; i++) {
         		Iterator it = nodeOrder.iterator();

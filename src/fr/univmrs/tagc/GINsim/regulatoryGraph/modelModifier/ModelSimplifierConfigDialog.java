@@ -1,9 +1,13 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
+import java.awt.GridBagConstraints;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JCheckBox;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -11,6 +15,8 @@ import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.datastore.GenericList;
+import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.common.widgets.StackDialog;
@@ -34,7 +40,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 			cfgList.add();
 		}
 		ctlist = new SimplifierConfigContentList(graph.getNodeOrder());
-		GenericListPanel panel = new GenericListPanel();
+		SimplifierConfigConfigurePanel panel = new SimplifierConfigConfigurePanel();
         panel.setList(ctlist);
         Map m = new HashMap();
         m.put(ModelSimplifierConfig.class, panel);
@@ -81,5 +87,42 @@ class SimplifierConfigContentList extends SimpleGenericList {
 		t_type = new Class[2];
 		t_type[0] = String.class;
 		t_type[1] = Boolean.class;
+	}
+}
+
+class SimplifierConfigConfigurePanel extends GenericListPanel 
+	implements GenericListListener, ChangeListener {
+	JCheckBox checkbox;
+	SimplifierConfigConfigurePanel() {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 1;
+		c.gridy = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		this.checkbox = new JCheckBox("Strict (do not try to remove self-regulated nodes)");
+		add(this.checkbox, c);
+		this.checkbox.addChangeListener(this);
+	}
+	
+    public void setList(GenericList list) {
+    	super.setList(list);
+    	list.addListListener(this);
+    }
+
+	public void contentChanged() {
+    	if (list.mcolHelper != null) {
+    		checkbox.setSelected(((ModelSimplifierConfig)list.mcolHelper).strict);
+    	}
+	}
+	public void itemAdded(Object item, int pos) {
+	}
+	public void itemRemoved(Object item, int pos) {
+	}
+	public void structureChanged() {
+	}
+
+	public void stateChanged(ChangeEvent e) {
+    	if (list.mcolHelper != null) {
+    		((ModelSimplifierConfig)list.mcolHelper).strict = checkbox.isSelected();
+    	}
 	}
 }

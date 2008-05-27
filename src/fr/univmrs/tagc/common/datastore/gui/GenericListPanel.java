@@ -29,7 +29,7 @@ public class GenericListPanel extends JPanel
     private static final long serialVersionUID = -4236977685092639157L;
     
     JScrollPane sp = new JScrollPane();
-    GenericList list;
+    protected GenericList list;
     listModel model = new listModel();
     EnhancedJTable jl = new EnhancedJTable(model);
     boolean rendererInstalled = false;

@@ -4,15 +4,14 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 /**
- * store all simulation parameters and offer a mean to access them.
+ * store all simplification parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
 public class ModelSimplifierConfigList extends SimpleGenericList 
-	implements GsGraphListener, GenericListListener {
+	implements GsGraphListener {
 
     String s_current;
     GsRegulatoryGraph graph;
@@ -27,11 +26,9 @@ public class ModelSimplifierConfigList extends SimpleGenericList
         graph.addGraphListener(this);
     }
 
-
     public GsGraphEventCascade vertexAdded(Object data) {
         return null;
     }
-
 	public GsGraphEventCascade graphMerged(Object data) {
 		return null;
 	}
@@ -53,34 +50,15 @@ public class ModelSimplifierConfigList extends SimpleGenericList
 		config.setName(name);
 		return config;
 	}
-
-	public void itemAdded(Object item, int pos) {
-	}
-
-	public void itemRemoved(Object item, int pos) {
-	}
-
-	public void contentChanged() {
-	}
-	public void structureChanged() {
-	}
-
-
 	public GsGraphEventCascade edgeAdded(Object data) {
 		return null;
 	}
-
-
 	public GsGraphEventCascade edgeRemoved(Object data) {
 		return null;
 	}
-
-
 	public GsGraphEventCascade edgeUpdated(Object data) {
 		return null;
 	}
-
-
 	public void endParsing() {
 	}
 }

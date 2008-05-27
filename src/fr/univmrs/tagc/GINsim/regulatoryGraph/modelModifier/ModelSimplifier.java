@@ -45,6 +45,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	Map m_edges = new HashMap();
 	Map copyMap = new HashMap();
 	Map m_removed;
+	boolean strict;
 	ParameterGenerator pgen;
 
 	
@@ -53,6 +54,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 		this.oldNodeOrder = graph.getNodeOrder();
 		this.dialog = dialog;
 		this.m_removed = new HashMap(config.m_removed);
+		this.strict = config.strict;
 		manager = graph.getGraphManager();
 		start();
 	}
@@ -75,9 +77,14 @@ public class ModelSimplifier extends Thread implements Runnable {
 					deleted = vertex.getTreeParameters(graph);
 				}
 				int pos = graph.getNodeOrder().indexOf(vertex);
-				s_comment += ", "+vertex.getId();
-				
 				try {
+
+					if (strict) {
+						// check that the node is not self-regulated
+						checkNoSelfReg(deleted, pos);
+					}
+					s_comment += ", "+vertex.getId();
+				
 					// mark all its targets as affected
 					it_targets.setOutgoingList(manager.getOutgoingEdges(vertex));
 					while (it_targets.hasNext()) {
@@ -374,6 +381,20 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 *  
 	 ***************************************************************/
 
+	/**
+	 * Preliminary check: a node should not be self-regulated: check it
+	 */
+	private void checkNoSelfReg(OmddNode node, int level) throws GsException {
+		if (node.next == null || node.level > level) {
+			return;
+		}
+		if (node.level == level) {
+			throw new GsException(GsException.GRAVITY_ERROR, "self regulated node");
+		}
+		for (int i=0 ; i<node.next.length ; i++) {
+			checkNoSelfReg(node.next[i], level);
+		}
+	}
 	/**
 	 * Remove <code>regulator</code> from its target <code>node</code>.
 	 * This is the first part of the algo: we have not yet found the 

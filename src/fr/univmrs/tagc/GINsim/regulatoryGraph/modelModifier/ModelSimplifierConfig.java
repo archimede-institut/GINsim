@@ -1,9 +1,9 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.HashMap;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.common.datastore.MultiColHelper;
@@ -16,6 +16,7 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 	String name;
 	Annotation note = new Annotation();
 	Map m_removed = new HashMap();
+	boolean	strict = true;
 	
 	public String getName() {
 		return name;
@@ -40,6 +41,7 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 		}
 		out.openTag("simplificationConfig");
 		out.addAttr("name", this.name);
+		out.addAttr("strict", ""+this.strict);
 		out.addAttr("removeList", s_removed.substring(1));
 		note.toXML(out, param, mode);
 		out.closeTag();
