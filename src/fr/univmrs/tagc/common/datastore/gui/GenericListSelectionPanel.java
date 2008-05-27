@@ -17,6 +17,7 @@ abstract public class GenericListSelectionPanel extends JPanel implements Action
 	
 	protected StackDialog dialog;
 	GenericListCombo combo;
+	JLabel label;
 	
 	public GenericListSelectionPanel(StackDialog dialog, GenericList list, String name, boolean hasEmptyChoice) {
 		this.dialog = dialog;
@@ -31,6 +32,12 @@ abstract public class GenericListSelectionPanel extends JPanel implements Action
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		add(combo, c);
+		label = new JLabel();
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		add(label, c);
 		if (dialog != null) {
 	        JButton but_configure = new JButton(Translator.getString("STR_configure"));
 	        but_configure.addActionListener(this);
@@ -56,6 +63,12 @@ abstract public class GenericListSelectionPanel extends JPanel implements Action
 	}
 	public void setStore(ObjectStore store, int id) {
 		combo.setStore(store, id);
+	}
+	public void addActionListener(ActionListener l) {
+		combo.addActionListener(l);
+	}
+	public void setText(String text) {
+		label.setText(text);
 	}
 }
 

@@ -25,9 +25,7 @@ public class PrioritySelectionPanel extends GenericListSelectionPanel {
     		m.put(PriorityClassDefinition.class, p);
     		pcpanel = new GenericListPanel(m, "pclassList");
     		p.setClassPanel(pcpanel);
-    		if (pcmanager.getNbElements(null) == 0) {
-    			pcmanager.add();
-    		}
+    		pcpanel.setStartIndex(2);
     		pcpanel.setList(pcmanager);
     	}
         dialog.addTempPanel(pcpanel);

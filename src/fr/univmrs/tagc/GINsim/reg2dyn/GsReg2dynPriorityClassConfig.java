@@ -54,9 +54,6 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     private StockButton but_group;
 	private GenericListPanel pcpanel;
     
-    private static final int AUTO_MANY = 1;
-    private static final int AUTO_PLUS_MINUS = 2;
-    
     /**
      * @param frame
      * @param nodeOrder

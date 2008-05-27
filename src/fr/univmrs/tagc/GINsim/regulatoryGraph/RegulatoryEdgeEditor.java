@@ -192,14 +192,14 @@ class EdgeList extends GenericList {
 		return 0;
 	}
 
-	public Object getElement(String filter, int i) {
+	public Object getElement(String filter, int startIndex, int i) {
 		return medge.getEdge(i);
 	}
 
-	public int getNbElements(String filter) {
+	public int getNbElements(String filter, int startIndex) {
 		return medge.getEdgeCount();
 	}
-	public boolean remove(String filter, int[] t_index) {
+	public boolean remove(String filter, int startIndex, int[] t_index) {
 		if (medge.getEdgeCount() > 1 && t_index.length == 1) {
 			medge.removeEdge(t_index[0], graph);
 			setMEdge(medge);
@@ -208,13 +208,13 @@ class EdgeList extends GenericList {
 		return false;
 	}
 
-	public boolean edit(String filter, int i, int col, Object o) {
+	public boolean edit(String filter, int startIndex, int i, int col, Object o) {
 		return false;
 	}
 	public boolean move(int[] sel, int diff) {
 		return false;
 	}
-	public void run(String filter, int row, int col) {
+	public void run(String filter, int startIndex, int row, int col) {
 	}
 }
 

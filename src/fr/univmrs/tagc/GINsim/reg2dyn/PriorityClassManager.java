@@ -25,8 +25,6 @@ public class PriorityClassManager extends SimpleGenericList {
 		addOptions.add("One class for each node");
 		addOptions.add("Splitting transitions – one unique class");
 
-		
-		
 		// add default priority classes
 		int index = add();
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)getElement(null, index);

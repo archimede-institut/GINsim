@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 
 import javax.swing.JComponent;
@@ -11,10 +13,7 @@ import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
-import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParametersManager;
-import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassDefinition;
-import fr.univmrs.tagc.GINsim.reg2dyn.PrioritySelectionPanel;
+import fr.univmrs.tagc.GINsim.reg2dyn.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -291,17 +290,17 @@ class TransitionData {
 	
 }
 
-class PNExportConfigPanel extends JPanel {
+class PNExportConfigPanel extends JPanel implements ActionListener {
     private static final long serialVersionUID = 9043565812912568136L;
-   
-    
+
+	PrioritySelectionPanel priorityPanel = null;
+	PNConfig specConfig = new PNConfig();
+
 	protected PNExportConfigPanel (GsExportConfig config, StackDialog dialog) {
-    	PNConfig specConfig = new PNConfig();
     	config.setSpecificConfig(specConfig);
     	
     	GsGraph graph = config.getGraph();
     	MutantSelectionPanel mutantPanel = null;
-    	PrioritySelectionPanel priorityPanel = null;
     	
     	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
     	initPanel.setParam(specConfig);
@@ -322,6 +321,7 @@ class PNExportConfigPanel extends JPanel {
 		c.gridy = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(priorityPanel, c);
+		priorityPanel.addActionListener(this);
 
 		c = new GridBagConstraints();
     	c.gridx = 0;
@@ -332,6 +332,25 @@ class PNExportConfigPanel extends JPanel {
     	c.fill = GridBagConstraints.BOTH;
     	add(initPanel, c);
     }
+
+
+	public void actionPerformed(ActionEvent e) {
+		PriorityClassDefinition pcdef = (PriorityClassDefinition)specConfig.store.getObject(1);
+		int l = pcdef.getNbElements();
+		boolean hasSync = false;
+		for (int i=0 ; i<l ; i++) {
+			GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, i);
+			if (pc.getMode() == GsReg2dynPriorityClass.SYNCHRONOUS) {
+				hasSync = true;
+				break;
+			}
+		}
+		if (hasSync) {
+			priorityPanel.setText("contains synchronous classes: will not be properly applied");
+		} else {
+			priorityPanel.setText("");
+		}
+	}
 }
 
 class PNConfig implements GsInitialStateStore {

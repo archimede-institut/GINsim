@@ -33,7 +33,7 @@ public class SimpleGenericList extends GenericList {
 		}
 		// find an unused name
 		String s = null;
-		boolean[] t = new boolean[getNbElements(null)];
+		boolean[] t = new boolean[getNbElements(null,0)];
 		for (int j = 0 ; j < t.length ; j++) {
 			t[j] = true;
 		}
@@ -85,20 +85,20 @@ public class SimpleGenericList extends GenericList {
 		return pos;
 	}
 
-	public void run(String filter, int row, int col) {
+	public void run(String filter, int startIndex, int row, int col) {
 		if (nbAction < col) {
 			return;
 		}
-		int index = getRealIndex(filter, row);
+		int index = getRealIndex(filter, startIndex, row);
 		doRun(index, col);
 	}
 
-	public int getRealIndex(String filter, int i) {
+	public int getRealIndex(String filter, int startIndex, int i) {
 		if (filter == null) {
-			return i;
+			return i+startIndex;
 		}
 		int c = 0;
-		for (int j = 0 ; j < v_data.size() ; j++) {
+		for (int j = startIndex ; j < v_data.size() ; j++) {
 			if (match(filter, v_data.get(j))) {
 				if (c == i) {
 					return j;
@@ -109,11 +109,11 @@ public class SimpleGenericList extends GenericList {
 		return -1;
 	}
 
-	public boolean edit(String filter, int pos, int col, Object o) {
+	public boolean edit(String filter, int startIndex, int pos, int col, Object o) {
 		if (!canEdit) {
 			return false;
 		}
-		int index = getRealIndex(filter, pos);
+		int index = getRealIndex(filter, startIndex, pos);
 		if (index == v_data.size()) {
 			if (!doInlineAddRemove || "".equals(o)) {
 				return false;
@@ -128,7 +128,7 @@ public class SimpleGenericList extends GenericList {
 		if ("".equals(o) && doInlineAddRemove) {
 			int[] t = new int[1];
 			t[0] = pos;
-			remove(null, t);
+			remove(null, 0, t);
 			return true;
 		}
 		Object data = v_data.get(index);
@@ -173,16 +173,16 @@ public class SimpleGenericList extends GenericList {
 		return false;
 	}
 
-	public Object getElement(String filter, int i) {
-		return v_data.get(getRealIndex(filter, i));
+	public Object getElement(String filter, int startIndex, int i) {
+		return v_data.get(getRealIndex(filter, startIndex, i));
 	}
 
-	public int getNbElements(String filter) {
+	public int getNbElements(String filter, int startIndex) {
 		if (filter == null) {
-			return v_data.size();
+			return v_data.size()-startIndex;
 		}
 		int c = 0;
-		for (int i = 0 ; i < v_data.size() ; i++) {
+		for (int i = startIndex ; i < v_data.size() ; i++) {
 			if (match(filter, v_data.get(i))) {
 				c++;
 			}
@@ -236,12 +236,12 @@ public class SimpleGenericList extends GenericList {
 		return true;
 	}
 
-	public boolean remove(String filter, int[] t_index) {
+	public boolean remove(String filter, int startIndex, int[] t_index) {
 		if (!canRemove) {
 			return false;
 		}
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
-			int index = getRealIndex(filter, t_index[i]);
+			int index = getRealIndex(filter, startIndex, t_index[i]);
 			Object item = v_data.remove(index);
 			if (v_listeners != null) {
 				Iterator it = v_listeners.iterator();

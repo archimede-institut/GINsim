@@ -100,15 +100,23 @@ abstract public class GenericList {
      * @param filter TODO
      * @return the size of the list
      */
-    abstract public int getNbElements(String filter);
+    abstract public int getNbElements(String filter, int startIndex);
+    public int getNbElements(String filter) {
+    	return getNbElements(filter, 0);
+    }
+    public int getNbElements() {
+    	return getNbElements(null, 0);
+    }
     
     /**
      * @param filter TODO
      * @param i
      * @return the ith element of the list
      */
-    abstract public Object getElement(String filter, int i);
-    
+    abstract public Object getElement(String filter, int startIndex, int i);
+    public Object getElement(String filter, int i) {
+    	return getElement(filter, 0, i);
+    }
     
     /**
      * edit an element.
@@ -118,10 +126,13 @@ abstract public class GenericList {
      * @param o the result of the edit
      * @return true if the list has changed
      */
-    abstract public boolean edit(String filter, int row, int col, Object o);
+    abstract public boolean edit(String filter, int startIndex, int row, int col, Object o);
+    public boolean edit(String filter, int row, int col, Object o) {
+    	return edit(filter, 0, row, col, o);
+    }
     
     public int add() {
-    	return add(getNbElements(null), 0);
+    	return add(getNbElements(null,0), 0);
     }
     /**
      * add an element.
@@ -136,7 +147,10 @@ abstract public class GenericList {
      * @param t_index the elements to remove
      * @return true if the list has changed
      */
-    abstract public boolean remove(String filter, int[] t_index);
+    abstract public boolean remove(String filter, int startIndex, int[] t_index);
+    public boolean remove(String filter, int[] t_index) {
+    	return remove(filter, 0, t_index);
+    }
     
     /**
      * move a set of elements.
@@ -150,7 +164,10 @@ abstract public class GenericList {
 	 * @param row index of the entry
 	 * @param col index of the action
 	 */
-	abstract public void run(String filter, int row, int col);
+	abstract public void run(String filter, int startIndex, int row, int col);
+	public void run(String filter, int row, int col) {
+		run(filter, 0, row, col);
+	}
 	
 	public String getTitle() {
 		return title;
@@ -161,8 +178,11 @@ abstract public class GenericList {
     public int getNbCol() {
     	return nbcol+nbAction;
     }
-	public Object getAction(String filter, int row, int col) {
+	public Object getAction(String filter, int startIndex, int row, int col) {
 		return "->";
+	}
+	public Object getAction(String filter, int row, int col) {
+		return getAction(filter, 0, row, col);
 	}
 	public void refresh() {
 		if (v_listeners == null) {
@@ -174,11 +194,14 @@ abstract public class GenericList {
 		}
 	}
 	public int getRealIndex(String filter, int i) {
-		return i;
+		return getRealIndex(filter, 0, i);
+	}
+	public int getRealIndex(String filter, int startIndex, int i) {
+		return i-startIndex;
 	}
 	public int indexOf(Object anItem) {
-		for (int i=0 ; i<getNbElements(null) ; i++) {
-			if (getElement(null, i).equals(anItem)) {
+		for (int i=0 ; i<getNbElements(null,0) ; i++) {
+			if (getElement(null, 0, i).equals(anItem)) {
 				return i;
 			}
 		}
