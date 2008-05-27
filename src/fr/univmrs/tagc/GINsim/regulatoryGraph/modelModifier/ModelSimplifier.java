@@ -19,6 +19,18 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.GsException;
 
+class RemovedInfo {
+	GsRegulatoryVertex vertex;
+	int pos;
+	List targets;
+	public RemovedInfo(GsRegulatoryVertex vertex, int pos, List targets) {
+		super();
+		this.vertex = vertex;
+		this.pos = pos;
+		this.targets = targets;
+	}
+}
+
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.
  * 
@@ -48,7 +60,6 @@ public class ModelSimplifier extends Thread implements Runnable {
 	boolean strict;
 	ParameterGenerator pgen;
 
-	
 	public ModelSimplifier(GsRegulatoryGraph graph, ModelSimplifierConfig config, ModelSimplifierConfigDialog dialog) {
 		this.graph = graph;
 		this.oldNodeOrder = graph.getNodeOrder();
@@ -68,52 +79,70 @@ public class ModelSimplifier extends Thread implements Runnable {
 			it = m_removed.entrySet().iterator();
 			TargetEdgesIterator it_targets = new TargetEdgesIterator(m_removed);
 			List l_removed = new ArrayList();
+			List l_todo = new ArrayList();
 			while (it.hasNext()) {
 				Entry entry = (Entry)it.next();
-				List targets = new ArrayList();
 				GsRegulatoryVertex vertex = (GsRegulatoryVertex)entry.getKey();
-				OmddNode deleted = (OmddNode)m_affected.get(vertex);
-				if (deleted == null) {
-					deleted = vertex.getTreeParameters(graph);
-				}
-				int pos = graph.getNodeOrder().indexOf(vertex);
-				try {
-
-					if (strict) {
-						// check that the node is not self-regulated
-						checkNoSelfReg(deleted, pos);
+				l_todo.add(new RemovedInfo(vertex, graph.getNodeOrder().indexOf(vertex),
+						manager.getOutgoingEdges(vertex)));
+			}
+			boolean tryagain = true;
+			while (tryagain && l_todo.size() > 0) {
+				tryagain = false;
+				it = l_todo.iterator();
+				l_todo = new ArrayList();
+				while (it.hasNext()) {
+					RemovedInfo ri = (RemovedInfo)it.next();
+					GsRegulatoryVertex vertex = ri.vertex;
+					List targets = new ArrayList();
+					OmddNode deleted = (OmddNode)m_affected.get(vertex);
+					if (deleted == null) {
+						deleted = vertex.getTreeParameters(graph);
 					}
-					s_comment += ", "+vertex.getId();
-				
-					// mark all its targets as affected
-					it_targets.setOutgoingList(manager.getOutgoingEdges(vertex));
-					while (it_targets.hasNext()) {
-						GsRegulatoryVertex target = (GsRegulatoryVertex)it_targets.next();
-						if (!target.equals(vertex)) {
-							targets.add(target);
-							OmddNode targetNode = (OmddNode)m_affected.get(target);
-							if (targetNode == null) {
-								targetNode = target.getTreeParameters(graph);
-							}
-							m_affected.put(target, remove(targetNode, deleted, pos).reduce());
+					try {
+						if (strict) {
+							// check that the node is not self-regulated
+							checkNoSelfReg(deleted, ri.pos);
 						}
+						s_comment += ", "+vertex.getId();
+					
+						// mark all its targets as affected
+						it_targets.setOutgoingList(ri.targets);
+						while (it_targets.hasNext()) {
+							GsRegulatoryVertex target = (GsRegulatoryVertex)it_targets.next();
+							if (!target.equals(vertex)) {
+								targets.add(target);
+								OmddNode targetNode = (OmddNode)m_affected.get(target);
+								if (targetNode == null) {
+									targetNode = target.getTreeParameters(graph);
+								}
+								m_affected.put(target, remove(targetNode, deleted, ri.pos).reduce());
+							}
+						}
+						m_removed.put(ri.vertex, new ArrayList(targets));
+						l_removed.add(vertex);
+						tryagain = true;
+					} catch (GsException e) {
+						// this removal failed, remember that we may get a second chance
+						l_todo.add(ri);
 					}
-					entry.setValue(new ArrayList(targets));
-					l_removed.add(vertex);
-				} catch (GsException e) {
-					e.addMessage("Error occured while removing "+vertex);
-					StringBuffer sb = new StringBuffer();
-					for (Iterator it_done = l_removed.iterator() ; it_done.hasNext() ; ) {
-						sb.append(" "+it_done.next());
-					}
-					e.addMessage("already removed:"+sb);
-					sb = new StringBuffer();
-					for (; it.hasNext() ; ) {
-						sb.append(" "+it.next());
-					}
-					e.addMessage("remaining:"+sb);
-					throw e;
 				}
+			}
+			// the "main" part is done, did it finish or fail ?
+			if (l_todo.size() > 0) {
+				// it failed, trigger an error message
+				GsException e = new GsException(GsException.GRAVITY_ERROR, "Removal failed.");
+				StringBuffer sb = new StringBuffer();
+				for (Iterator it_done = l_removed.iterator() ; it_done.hasNext() ; ) {
+					sb.append(" "+it_done.next());
+				}
+				e.addMessage("already removed:"+sb);
+				sb = new StringBuffer();
+				for (it=l_todo.iterator(); it.hasNext() ; ) {
+					sb.append(" "+((RemovedInfo)it.next()).vertex);
+				}
+				e.addMessage("remaining:"+sb);
+				throw e;
 			}
 			
 			// create the new regulatory graph
