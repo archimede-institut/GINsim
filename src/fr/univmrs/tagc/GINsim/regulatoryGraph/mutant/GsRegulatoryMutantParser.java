@@ -86,7 +86,7 @@ public class GsRegulatoryMutantParser extends XMLHelper {
 			case LINK:
 				String lnk = attributes.getValue("xlink:href");
 				if (lnk != null) {
-			      		mutant.annotation.addLink(lnk, null);
+			      		mutant.annotation.addLink(lnk, graph);
 				}
 				break;
 		}
