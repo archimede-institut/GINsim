@@ -264,6 +264,7 @@ class MutantPanel extends SplitPane {
     	this.lp = lp;
         this.mutants = mutants;
         this.graph = graph;
+        ap.setGraph(graph);
         
         lp.addSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {

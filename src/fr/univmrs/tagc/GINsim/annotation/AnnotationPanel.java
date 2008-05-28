@@ -133,9 +133,14 @@ public class AnnotationPanel extends JPanel
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
-		linkList.graph = (GsGraph)pinfo.editor.getMasterObject();
+		this.setGraph((GsGraph)pinfo.editor.getMasterObject());
 		panel.addField(this, pinfo, 0);
 	}
+	public void setGraph(GsGraph graph) {
+		this.graph = graph;
+		linkList.graph = graph;
+	}
+
 }
 
 class LinkList extends SimpleGenericList {
