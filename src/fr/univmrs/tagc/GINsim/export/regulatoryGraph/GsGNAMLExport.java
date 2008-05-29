@@ -68,10 +68,9 @@ public class GsGNAMLExport extends GsAbstractExport {
   		writeStatesVariables(out, graph);
   		out.closeTag();//model
   		
-  		out.openTag("initial-conditions");
-  		out.addAttr("id", "??");	//TODO: set the id
-  		
-  		out.closeTag();//initial-conditions
+//  		out.openTag("initial-conditions");
+//  		out.addAttr("id", "??");	//TODO: set the id
+//  		out.closeTag();//initial-conditions
   		
   		out.closeTag();//gnaml
   		
@@ -90,6 +89,7 @@ public class GsGNAMLExport extends GsAbstractExport {
 		int thresholdLevels = node.getMaxValue();
 		String id = node.getId();
 		out.openTag("state-variable");
+		out.addAttr("id", id);
 		
 		out.addTag("zero-parameter", new String[] {"id", "zero_"+id});
 		out.addTag("box-parameter", new String[] {"id", "max_"+id});
@@ -101,8 +101,8 @@ public class GsGNAMLExport extends GsAbstractExport {
 		out.closeTag();//list-of-threshold-parameters
 		
 		out.openTag("list-of-synthesis-parameters");
-		for (int i = 1; i <= thresholdLevels; i++) {
-			out.addTag("synthesis-parameter", new String[] {"id", "K_"+id+"_"+i});
+		for (int i = 0; i <= thresholdLevels; i++) {
+			out.addTag("synthesis-parameter", new String[] {"id", "k_"+id+"_"+i});
 		}
 		out.closeTag();//list-of-synthesis-parameters
 		
@@ -127,12 +127,24 @@ public class GsGNAMLExport extends GsAbstractExport {
 		out.openTag("apply");
 		out.addTag("minus");
 
-		out.openTag("apply"); //K*s*s + K*s*s + ...
-		out.addTag("plus");
-		List nodeOrder = graph.getNodeOrder();
-		int [][] parcours = new int[nodeOrder.size()][4];
-		exploreNode(parcours, 0, node.getId(), node.getTreeParameters(graph).reduce(), nodeOrder);
-		out.closeTag();//apply plus
+		OmddNode mdd = node.getTreeParameters(graph).reduce();
+		if (mdd.next != null) {
+			List nodeOrder = graph.getNodeOrder();
+			int [][] parcours = new int[nodeOrder.size()][4];
+			boolean hasMoreThanOne = countNonZeroPath(mdd) > 1;
+			if (hasMoreThanOne) {
+				out.openTag("apply"); //K*s*s + K*s*s + ...
+				out.addTag("plus");
+				exploreNode(parcours, 0, id, mdd, nodeOrder);
+				out.closeTag();//apply plus
+			} else {
+				exploreNode(parcours, 0, id, mdd, nodeOrder);
+			}
+		} else {
+			out.openTag("ci");
+			out.addContent("k_"+id+"_"+mdd.value);
+			out.closeTag();
+		}
 		
 		out.openTag("apply"); //- g_a * a
 		out.addTag("times");
@@ -143,13 +155,27 @@ public class GsGNAMLExport extends GsAbstractExport {
 		out.closeTag();//apply minus
 		out.closeTag();//math
 	}
-	
+	private int countNonZeroPath(OmddNode mdd) {
+		if (mdd.next == null) {
+			if (mdd.value > 0) {
+				return 1;
+			}
+			return 0;
+		}
+		int ret = 0;
+		for (int i=0 ; i<mdd.next.length ; i++) {
+			ret += countNonZeroPath(mdd.next[i]);
+		}
+		return ret;
+	}
 	protected void exploreNode(int[][] parcours, int deep, String topNodeId, OmddNode node, List nodeOrder) throws IOException {
 		if (node.next == null) {
 			if (node.value > 0) {
-				out.openTag("apply");
-				out.addTag("times");
-				out.addTagWithContent("ci", "K_"+topNodeId+"_"+node.value);
+				if (deep > 0) {
+					out.openTag("apply");
+					out.addTag("times");
+				}
+				out.addTagWithContent("ci", "k_"+topNodeId+"_"+node.value);
 				String nodeName;
 				for (int i = 0; i < deep; i++) {
 					nodeName = getVertexNameForLevel(parcours[i][2], nodeOrder);//level
@@ -160,7 +186,9 @@ public class GsGNAMLExport extends GsAbstractExport {
 						stepMinus(nodeName, parcours[i][1]);
 					}
 				}
-				out.closeTag();//apply times
+				if (deep > 0) {
+					out.closeTag();//apply times
+				}
 			}
 			return ;
 		}
@@ -197,7 +225,7 @@ public class GsGNAMLExport extends GsAbstractExport {
 	
 	protected void writeParameterInequalities(GsRegulatoryVertex node, int thresholdLevels, String id) throws IOException {
 		String g = "g_"+id;
-		String K = "K_"+id+"_";
+		String K = "k_"+id+"_";
 		String t = "t_"+id+"_";
 		
 		out.openTag("math");
@@ -205,8 +233,10 @@ public class GsGNAMLExport extends GsAbstractExport {
 		out.openTag("apply");
 		out.addTag("lt");
 		out.addTagWithContent("ci", "zero_"+id);
-		for (int i = 1; i <= thresholdLevels; i++) {
-			out.addTagWithContent("ci", t+i);
+		for (int i = 0; i <= thresholdLevels; i++) {
+			if (i>0) {
+				out.addTagWithContent("ci", t+i);
+			}
 			out.openTag("apply");
 			out.addTag("divide");
 			out.addTagWithContent("ci", K+i);
