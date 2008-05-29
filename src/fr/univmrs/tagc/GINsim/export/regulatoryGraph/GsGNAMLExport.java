@@ -163,8 +163,13 @@ public class GsGNAMLExport extends GsAbstractExport {
 			return 0;
 		}
 		int ret = 0;
+		OmddNode refNode = null;
 		for (int i=0 ; i<mdd.next.length ; i++) {
-			ret += countNonZeroPath(mdd.next[i]);
+			OmddNode nextNode = mdd.next[i];
+			if (nextNode != refNode) {
+				refNode = nextNode;
+				ret += countNonZeroPath(mdd.next[i]);
+			}
 		}
 		return ret;
 	}
