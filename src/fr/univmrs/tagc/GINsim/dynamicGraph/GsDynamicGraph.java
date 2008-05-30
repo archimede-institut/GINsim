@@ -422,7 +422,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         		Math.min(25*(v_stables.size()+2), 600));
         JScrollPane scroll = new JScrollPane();
         StableTableModel model = new StableTableModel(nodeOrder);
-        model.setResult(v_stables);
+        model.setResult(v_stables, this);
         scroll.setViewportView(new EnhancedJTable(model));
         frame.setContentPane(scroll);
         frame.setVisible(true);

@@ -1,12 +1,10 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.initialState;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.datastore.NamedObject;
 
 public class GsInitialState implements NamedObject {
@@ -68,5 +66,28 @@ public class GsInitialState implements NamedObject {
 	}
 	public Map getMap() {
 		return m;
+	}
+	public OmddNode getMDD(List nodeOrder) {
+		OmddNode falseNode = OmddNode.TERMINALS[0];
+		OmddNode ret = OmddNode.TERMINALS[1];
+		for (int i=nodeOrder.size()-1 ; i>-1 ; i--) {
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+			Object o = m.get(vertex);
+			if (o != null) {
+				OmddNode newNode = new OmddNode();
+				newNode.level = i;
+				newNode.next = new OmddNode[vertex.getMaxValue()+1];
+				
+				for (int v=0 ; v<newNode.next.length ; v++) {
+					newNode.next[v] = falseNode;
+				}
+				List l_val = (List)m.get(vertex);
+				for (Iterator it = l_val.iterator() ; it.hasNext() ;) {
+					newNode.next[((Integer)it.next()).intValue()] = ret;
+				}
+				ret = newNode;
+			}
+		}
+		return ret;
 	}
 }

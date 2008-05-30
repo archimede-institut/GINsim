@@ -169,7 +169,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 	}
 	
 	public void setResult(OmddNode stable) {
-		tableModel.setResult(stable);
+		tableModel.setResult(stable, config.getGraph());
 	}
 }
 

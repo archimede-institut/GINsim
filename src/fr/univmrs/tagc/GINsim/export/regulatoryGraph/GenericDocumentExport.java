@@ -192,7 +192,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			if (specConfig.searchStableStates) {
 				stableSearcher.setMutant(mutant);
 				stable = stableSearcher.getStable();
-				model.setResult(stable);
+				model.setResult(stable, graph);
 			}
 			int nbrow;
 			Iterator it_multicellularChanges = null;

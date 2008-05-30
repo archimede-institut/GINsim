@@ -62,7 +62,7 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	}
 	
 	public void setResult(OmddNode stable) {
-		tableModel.setResult(stable);
+		tableModel.setResult(stable, graph);
 		setRunning(false);
 	}
 	

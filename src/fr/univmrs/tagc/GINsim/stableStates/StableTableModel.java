@@ -5,13 +5,18 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 
 public class StableTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 3483674324331745743L;
 	
 	List nodeOrder;
 	List v_stable;
+	String[] matches;
 	
 	boolean checkbox;
 	List checklist;
@@ -29,7 +34,7 @@ public class StableTableModel extends AbstractTableModel {
 	}
 	
 	public int getColumnCount() {
-		return checkbox ? nodeOrder.size()+1 : nodeOrder.size();
+		return checkbox ? nodeOrder.size()+2 : nodeOrder.size()+1;
 	}
 
 	public int getRowCount() {
@@ -63,21 +68,25 @@ public class StableTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int[] t_state = (int[])v_stable.get(rowIndex);
 		int val;
+		int column = columnIndex;
 		if (checkbox) {
-			if (columnIndex == 0) {
+			if (column == 0) {
 				return rowIndex == checkIndex ? Boolean.TRUE : Boolean.FALSE;
 			}
-			val = t_state[columnIndex-1];
-		} else {
-			val = t_state[columnIndex];
+			column--;
 		}
+		if (column == 0) {
+			return matches == null ? "" : matches[rowIndex];
+		}
+		column--;
+		val = t_state[column];
 		if (val == -1) {
 			return "*";
 		}
 		return ""+val;
 	}
 
-	public void setResult(OmddNode stable) {
+	public void setResult(OmddNode stable, GsGraph graph) {
 		v_stable.clear();
 		
 		int[] state = new int[nodeOrder.size()];
@@ -89,21 +98,72 @@ public class StableTableModel extends AbstractTableModel {
 		checkIndex = -1;
 		checklist = new ArrayList();
 		checklist.clear();
+		updateMatches(graph);
 	}
-	
-	public void setResult(List v_stable) {
+	public void setResult(List v_stable, GsGraph graph) {
 		this.v_stable = v_stable;
 		fireTableDataChanged();
+		updateMatches(graph);
+	}
+	private void updateMatches(GsGraph graph) {
+		GsInitialStateList initstates = null;
+		if (graph != null) {
+			initstates = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
+		}
+		if (initstates == null) {
+			matches = null;
+			return;
+		}
+		int len = v_stable.size();
+		matches = new String[len];
+		int nbinit = initstates.getNbElements();
+		OmddNode[] t_initMDD = new OmddNode[nbinit];
+		for (int init=0 ; init<nbinit ; init++) {
+			t_initMDD[init] = ((GsInitialState)initstates.getElement(null, init)).getMDD(nodeOrder);
+		}
+		for (int line=0 ; line<len ; line++) {
+			int[] curstate = (int[])v_stable.get(line);
+			for (int i=0 ; i<nbinit ; i++) {
+				OmddNode node = t_initMDD[i];
+				while (node.next != null) {
+					int value = curstate[node.level];
+					if (value == -1) {
+						OmddNode next = node.next[0];
+						for (int val=0 ; val<node.next.length ; val++) {
+							OmddNode maybenext = node.next[val];
+							if (maybenext.next != null || maybenext.value != 0) {
+								next = maybenext;
+								break;
+							}
+						}
+						node = next;
+					} else {
+						node = node.next[value];
+					}
+				}
+				if (node.value == 1) {
+					String name = ((GsInitialState)initstates.getElement(null, i)).getName();
+					if (matches[line] != null) {
+						matches[line] += " ; "+name; 
+					}
+					matches[line] = name;
+				}
+			}
+		}
 	}
 	
-	public String getColumnName(int column) {
+	public String getColumnName(int columnIndex) {
+		int column = columnIndex;
 		if (checkbox) {
 			if (column == 0) {
 				return "check";
 			}
-			return nodeOrder.get(column-1).toString();
+			column--;
 		}
-		return nodeOrder.get(column).toString();
+		if (column == 0) {
+			return "match";
+		}
+		return nodeOrder.get(column-1).toString();
 	}
 
 	private void findStableState(int[] state, OmddNode stable) {
