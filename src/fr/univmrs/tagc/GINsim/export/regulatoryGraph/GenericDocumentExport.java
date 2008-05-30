@@ -286,7 +286,11 @@ public class GenericDocumentExport extends GsAbstractExport {
 				for (int k=0 ; k<model.getRowCount() ; k++) {
 					doc.openListItem(null);
 					boolean needPrev=false;
-					for (int j=0 ; j<len ; j++) {
+					String name = (String)model.getValueAt(k,0);
+					if (name != null) {
+						doc.writeText(name+": ");
+					}
+					for (int j=1 ; j<len ; j++) {
 						Object val = model.getValueAt(k,j);
 						if (!val.toString().equals("0")) {
 							String s = needPrev ? " ; " : "";
