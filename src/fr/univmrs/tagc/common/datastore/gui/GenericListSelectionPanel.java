@@ -70,6 +70,9 @@ abstract public class GenericListSelectionPanel extends JPanel implements Action
 	public void setText(String text) {
 		label.setText(text);
 	}
+    public void setFilter(String filter) {
+    	combo.model.setFilter(filter);
+    }
 }
 
 class GenericListCombo extends JComboBox {
@@ -97,6 +100,7 @@ class GenericListComboModel extends DefaultComboBoxModel implements ComboBoxMode
     GenericList list;
     ObjectStore store = null;
     int id;
+    String filter = null;
     boolean hasEmptyChoice = true;
     
     public GenericListComboModel(GenericList list, boolean hasEmptyChoice) {
@@ -104,7 +108,10 @@ class GenericListComboModel extends DefaultComboBoxModel implements ComboBoxMode
     	this.hasEmptyChoice = hasEmptyChoice;
     	refresh();
     }
-    
+    protected void setFilter(String filter) {
+    	this.filter = filter;
+    	refresh();
+    }
     public void setStore(ObjectStore store, int id) {
 		this.store = store;
 		this.id = id;
@@ -141,9 +148,9 @@ class GenericListComboModel extends DefaultComboBoxModel implements ComboBoxMode
             return "--";
         }
         if (hasEmptyChoice) {
-        	return list.getElement(null, index-1);
+        	return list.getElement(filter, index-1);
         }
-    	return list.getElement(null, index);
+    	return list.getElement(filter, index);
     }
 
     public int getSize() {
@@ -151,8 +158,8 @@ class GenericListComboModel extends DefaultComboBoxModel implements ComboBoxMode
             return 1;
         }
         if (hasEmptyChoice) {
-        	return list.getNbElements(null)+1;
+        	return list.getNbElements(filter)+1;
         }
-    	return list.getNbElements(null);
+    	return list.getNbElements(filter);
     }
 }

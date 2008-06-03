@@ -2,8 +2,6 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.*;
 
 import javax.swing.JComponent;
@@ -290,7 +288,7 @@ class TransitionData {
 	
 }
 
-class PNExportConfigPanel extends JPanel implements ActionListener {
+class PNExportConfigPanel extends JPanel {
     private static final long serialVersionUID = 9043565812912568136L;
 
 	PrioritySelectionPanel priorityPanel = null;
@@ -321,7 +319,7 @@ class PNExportConfigPanel extends JPanel implements ActionListener {
 		c.gridy = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(priorityPanel, c);
-		priorityPanel.addActionListener(this);
+		priorityPanel.setFilter(PriorityClassManager.FILTER_NO_SYNCHRONOUS);
 
 		c = new GridBagConstraints();
     	c.gridx = 0;
@@ -332,25 +330,6 @@ class PNExportConfigPanel extends JPanel implements ActionListener {
     	c.fill = GridBagConstraints.BOTH;
     	add(initPanel, c);
     }
-
-
-	public void actionPerformed(ActionEvent e) {
-		PriorityClassDefinition pcdef = (PriorityClassDefinition)specConfig.store.getObject(1);
-		int l = pcdef.getNbElements();
-		boolean hasSync = false;
-		for (int i=0 ; i<l ; i++) {
-			GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, i);
-			if (pc.getMode() == GsReg2dynPriorityClass.SYNCHRONOUS) {
-				hasSync = true;
-				break;
-			}
-		}
-		if (hasSync) {
-			priorityPanel.setText("contains synchronous classes: will not be properly applied");
-		} else {
-			priorityPanel.setText("");
-		}
-	}
 }
 
 class PNConfig implements GsInitialStateStore {

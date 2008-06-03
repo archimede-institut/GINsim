@@ -11,6 +11,7 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 public class PriorityClassManager extends SimpleGenericList {
 
 	List nodeOrder;
+	public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
 	
 	public PriorityClassManager(GsRegulatoryGraph graph) {
 		this.nodeOrder = graph.getNodeOrder();
@@ -90,4 +91,28 @@ public class PriorityClassManager extends SimpleGenericList {
     	}
     	super.doMoveDown(selection, diff);
     }
+	public boolean match(String filter, Object o) {
+		if (filter != null && filter.startsWith(FILTER_NO_SYNCHRONOUS)) {
+			PriorityClassDefinition pcdef = (PriorityClassDefinition)o;
+			
+			int l = pcdef.getNbElements();
+			boolean hasSync = false;
+			for (int i=0 ; i<l ; i++) {
+				GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, i);
+				if (pc.getMode() == GsReg2dynPriorityClass.SYNCHRONOUS) {
+					hasSync = true;
+					break;
+				}
+			}
+			if (hasSync) {
+				return false;
+			}
+			String realfilter = filter.substring(FILTER_NO_SYNCHRONOUS.length()).trim();
+			if (realfilter.length() == 0) {
+				return true;
+			}
+			return super.match(realfilter, o);
+		}
+		return super.match(filter, o);
+	}
 }
