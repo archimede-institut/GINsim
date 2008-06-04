@@ -38,7 +38,7 @@
  * maintenance of any nuclear facility.
  */
 
-package fr.univmrs.tagc.common.datastore.gui.treetable;
+package fr.univmrs.tagc.common.widgets.treetable;
 
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TreeModelEvent;

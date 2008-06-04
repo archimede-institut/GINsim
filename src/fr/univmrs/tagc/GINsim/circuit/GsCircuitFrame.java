@@ -30,13 +30,13 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.datastore.gui.treetable.AbstractTreeTableModel;
-import fr.univmrs.tagc.common.datastore.gui.treetable.JTreeTable;
-import fr.univmrs.tagc.common.datastore.gui.treetable.TreeTableModel;
-import fr.univmrs.tagc.common.datastore.gui.treetable.TreeTableModelAdapter;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.Label;
 import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.widgets.treetable.AbstractTreeTableModel;
+import fr.univmrs.tagc.common.widgets.treetable.JTreeTable;
+import fr.univmrs.tagc.common.widgets.treetable.TreeTableModel;
+import fr.univmrs.tagc.common.widgets.treetable.TreeTableModelAdapter;
 
 /**
  * configuration/status frame for circuit search/analyse

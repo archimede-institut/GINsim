@@ -38,7 +38,7 @@
  * maintenance of any nuclear facility.
  */
 
-package fr.univmrs.tagc.common.datastore.gui.treetable;
+package fr.univmrs.tagc.common.widgets.treetable;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -52,6 +52,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeModel;
 
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
+
 /**
  * This example shows how to create a simple JTreeTable component, 
  * by using a JTree as a renderer (and editor) for the cells in a 
@@ -63,7 +65,7 @@ import javax.swing.tree.TreeModel;
  * @author Scott Violet
  */
 
-public class JTreeTable extends JTable {
+public class JTreeTable extends EnhancedJTable {
 	private static final long	serialVersionUID	= 5970043592153390983L;
 
 	protected TreeTableCellRenderer tree;
