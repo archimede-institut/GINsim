@@ -9,11 +9,10 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -31,8 +30,11 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.datastore.gui.treetable.AbstractTreeTableModel;
+import fr.univmrs.tagc.common.datastore.gui.treetable.JTreeTable;
+import fr.univmrs.tagc.common.datastore.gui.treetable.TreeTableModel;
+import fr.univmrs.tagc.common.datastore.gui.treetable.TreeTableModelAdapter;
 import fr.univmrs.tagc.common.manageressources.Translator;
-import fr.univmrs.tagc.common.widgets.EnhancedListCellRenderer;
 import fr.univmrs.tagc.common.widgets.Label;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -56,7 +58,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     private int status = STATUS_NONE;
 
     private Vector v_circuit = new Vector();
-    protected JTree tree = null;
+    protected JTreeTable tree = null;
     private GsCircuitTreeModel treemodel = null;
     private JPanel configDialog = null;
     private JPanel resultPanel = null;
@@ -287,8 +289,8 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
                 searchCircuitInSCC(v_cc);
             }
             if (config == null || config.minlen < 2) { // search
-                                                        // autoregulation-like
-                                                        // circuits
+                                                       // autoregulation-like
+                                                       // circuits
             	if (config.minMust < 2) {
 	                for (int i = 0; i < graph.getNodeOrder().size(); i++) {
 	                    GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph
@@ -460,19 +462,17 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         updateStatus(STATUS_SHOW_CIRCUIT);
         if (tree == null) {
         	treemodel = new GsCircuitTreeModel(v_circuit);
-            tree = new JTree(treemodel);
+            tree = new JTreeTable(treemodel);
         	cards.show(jContentPane, "result");
             
             getSp().setViewportView(tree);
-            tree.setCellRenderer(new EnhancedListCellRenderer());
-
             tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-            
-            tree.addTreeSelectionListener(new TreeSelectionListener() {
-                public void valueChanged(TreeSelectionEvent e) {
-                    showInfo(tree.getLastSelectedPathComponent());
-                }
-            });
+            tree.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+				public void valueChanged(ListSelectionEvent e) {
+					showInfo(((TreeTableModelAdapter)tree.getModel()).nodeForRow(tree.getSelectedRow()));
+				}
+			});
         }
     }
 
@@ -573,7 +573,6 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
 	        int h = splitPane.getHeight();
 	        splitPane.setDividerLocation(h - 100);
         }
-        
         treemodel.reload(this);
     }
 
@@ -803,7 +802,7 @@ class GsCircuitDescr {
 	}
 }
 
-class GsCircuitTreeModel implements TreeModel {
+class GsCircuitTreeModel extends AbstractTreeTableModel {
 
     Vector v_listeners = new Vector();
     Vector v_circuit;
@@ -811,11 +810,13 @@ class GsCircuitTreeModel implements TreeModel {
     Map m_parent = new HashMap();
 
     private static final String s_root = "circuits";
+    static protected Class[]  cTypes = {TreeTableModel.class, String.class, String.class};
 
     /**
      * @param v_circuit
      */
     public GsCircuitTreeModel(Vector v_circuit) {
+    	super(s_root);
         v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.ALL]);
         this.v_circuit = v_circuit;
         m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.ALL], v_circuit);
@@ -906,10 +907,6 @@ class GsCircuitTreeModel implements TreeModel {
         v.add(cdescr);
     }
 
-    public Object getRoot() {
-        return s_root;
-    }
-
     public Object getChild(Object parent, int index) {
         Vector v = (Vector) m_parent.get(parent);
         if (v != null && v.size() > index) {
@@ -924,10 +921,6 @@ class GsCircuitTreeModel implements TreeModel {
             return v.size();
         }
         return 0;
-    }
-
-    public boolean isLeaf(Object node) {
-        return !m_parent.containsKey(node);
     }
 
     public void valueForPathChanged(TreePath path, Object newValue) {
@@ -959,6 +952,72 @@ class GsCircuitTreeModel implements TreeModel {
                             new Object[] { getRoot() }));
         }
     }
+
+	public int getColumnCount() {
+		return 2;
+	}
+
+	public String getColumnName(int column) {
+		switch (column) {
+			case 0:
+				return "Circuit";
+			case 1:
+				return "Sign/children";
+		}
+		return "";
+	}
+
+	public Object getValueAt(Object node, int column) {
+		switch (column) {
+			case 0:
+				return node.toString();
+			case 1:
+				if (!(node instanceof GsCircuitDescrInTree)) {
+					return "";
+				}
+		        GsCircuitDescrInTree cdtree = (GsCircuitDescrInTree)node;
+                int count = getChildCount(cdtree);
+	            if (count != 0) {
+	                return count+" sub-circuits";
+	            }
+	            
+	            int index = 0;
+	            if (cdtree.summary) {
+	                switch (cdtree.key) {
+	                    case GsCircuitDescr.ALL:
+	                        index = 0;
+	                        break;
+	                    case GsCircuitDescr.FUNCTIONNAL:
+	                        index = ((GsCircuitDescrInTree)cdtree.circuit.v_functionnal.get(0)).key;
+	                        break;
+	                    case GsCircuitDescr.POSITIVE:
+	                        index = ((GsCircuitDescrInTree)cdtree.circuit.v_positive.get(0)).key;
+	                        break;
+	                    case GsCircuitDescr.NEGATIVE:
+	                        index = ((GsCircuitDescrInTree)cdtree.circuit.v_negative.get(0)).key;
+	                        break;
+	                    case GsCircuitDescr.DUAL:
+	                        index = ((GsCircuitDescrInTree)cdtree.circuit.v_dual.get(0)).key;
+	                        break;
+	                }
+	            } else if (cdtree.key >= cdtree.circuit.t_context.length) {
+	                index = 0;
+	            } else {
+	                index = cdtree.key;
+	            }
+	            if (cdtree.circuit.t_mark != null 
+	            	&& cdtree.circuit.t_mark.length > index 
+	            	&& cdtree.circuit.t_mark[index] != null) {
+	            	return GsCircuitDescr.SIGNE_NAME[(int)cdtree.circuit.t_mark[index][1]];
+	            }
+				return "??";
+		}
+		return "";
+	}
+
+	public Class getColumnClass(int column) {
+    	return cTypes[column];
+    }	
 }
 
 class GsCircuitDescrInTree {
