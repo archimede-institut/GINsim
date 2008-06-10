@@ -461,7 +461,7 @@ public class GsInteractionPanel extends GsParameterPanel
 
 	private javax.swing.JButton getChaosButton() {
       if(chaosButton == null) {
-        chaosButton = new StockButton("chaos.png", false);
+        chaosButton = new StockButton("edit-copy.png", true);
         chaosButton.setName("chaosButton");
         chaosButton.setToolTipText("Are you sure ?");
         chaosButton.addActionListener(new java.awt.event.ActionListener() {

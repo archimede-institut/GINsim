@@ -20,8 +20,8 @@ import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
 import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**
  * descriptor for regulatoryGraph.
@@ -119,9 +119,9 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 	public ImageIcon getGraphIcon(int mode) {
 	    switch (mode) {
 	    	case GsOpenAction.MODE_OPEN:
-	    	    return ImageLoader.getImageIcon("open.gif");
+	    	    return BaseAction.getIcon("document-open.png");
 	    	case GsOpenAction.MODE_NEW:
-	    	    return ImageLoader.getImageIcon("new.gif");
+	    	    return BaseAction.getIcon("document-new.png");
 	    }
 		return null;
 	}

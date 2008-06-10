@@ -12,8 +12,10 @@ import javax.swing.*;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.*;
 import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.ImageLoader;
 import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.widgets.AboutDialog;
 import fr.univmrs.tagc.common.widgets.BaseAction;
 
 
@@ -50,7 +52,6 @@ public class GsActions implements GraphChangeListener {
 	protected GsFileCallBack	filecallback;
 	protected GsEditCallBack	editcallback;
 	protected GsViewCallBack	viewcallback;
-	protected GsHelpCallBack	helpcallback;
 
 	// Menus
 	private JMenu				fileMenu			= null;
@@ -70,8 +71,8 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionClose;
 	private AbstractAction		actionSave;
 	private AbstractAction		actionSaveAs;
-	private AbstractAction		actionOpen			= null;
-	private AbstractAction		actionNew			= null;
+	private AbstractAction		actionOpen;
+	private AbstractAction		actionNew;
 	private AbstractAction		actionSaveSubGraph;
 	private AbstractAction		actionMergeGraph;
 	private AbstractAction		actionQuit;
@@ -151,10 +152,8 @@ public class GsActions implements GraphChangeListener {
 		filecallback = new GsFileCallBack(mainFrame);
 		editcallback = new GsEditCallBack(mainFrame);
 		viewcallback = new GsViewCallBack(mainFrame);
-		helpcallback = new GsHelpCallBack();
 
-		actionClose = new BaseAction("STR_close", ImageLoader
-				.getImageIcon("close.gif"), "STR_close_descr", KeyStroke
+		actionClose = new BaseAction("STR_close", "window-close.png", "STR_close_descr", KeyStroke
 				.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK),
 				new Integer(KeyEvent.VK_C)) {
 
@@ -165,8 +164,7 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionSave = new BaseAction("STR_save", ImageLoader
-				.getImageIcon("save.gif"), "STR_save_descr", KeyStroke
+		actionSave = new BaseAction("STR_save", "document-save.png", "STR_save_descr", KeyStroke
 				.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK),
 				new Integer(KeyEvent.VK_S)) {
 
@@ -177,9 +175,9 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionSaveAs = new BaseAction("STR_saveAs", null, "STR_saveAs_descr",
+		actionSaveAs = new BaseAction("STR_saveAs", "document-save-as.png", "STR_saveAs_descr",
 				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.SHIFT_MASK
-						+ ActionEvent.CTRL_MASK)) {
+						+ ActionEvent.CTRL_MASK), null) {
 
 			private static final long	serialVersionUID	= -7021395742832737524L;
 
@@ -208,7 +206,7 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionQuit = new BaseAction("STR_quit", null, "STR_quit_descr",
+		actionQuit = new BaseAction("STR_quit", "exit.png", "STR_quit_descr",
 				KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK),
 				new Integer(KeyEvent.VK_Q)) {
 
@@ -219,28 +217,28 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionHelp = new BaseAction("STR_help", null, "STR_help_descr", null,
+		actionHelp = new BaseAction("STR_help", "help-contents.png", "STR_help_descr", null,
 				new Integer(KeyEvent.VK_H)) {
 
 			private static final long	serialVersionUID	= 6430521053940787968L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				helpcallback.help();
+	            Tools.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
 			}
 		};
 
-		actionAbout = new BaseAction("STR_about", null, "STR_about_descr",
+		actionAbout = new BaseAction("STR_about", "help-about.png", "STR_about_descr",
 				null, new Integer(KeyEvent.VK_C)) {
 
 			private static final long	serialVersionUID	= -4657616921932268806L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				helpcallback.about();
+				new AboutDialog().setVisible(true);
 			}
 		};
 
-		actionCopy = new BaseAction("STR_copy", null, "STR_copy_descr",
-				KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK)) {
+		actionCopy = new BaseAction("STR_copy", "edit-copy.png", "STR_copy_descr",
+				KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK), null) {
 
 			private static final long	serialVersionUID	= -3723793530677676142L;
 
@@ -249,8 +247,8 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionPaste = new BaseAction("STR_paste", null, "STR_paste_descr",
-				KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK)) {
+		actionPaste = new BaseAction("STR_paste", "edit-paste.png", "STR_paste_descr",
+				KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK), null) {
 
 			private static final long	serialVersionUID	= -5367472052019947472L;
 
@@ -280,8 +278,7 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionUndo = new BaseAction("STR_undo", ImageLoader
-				.getImageIcon("undo.gif"), "STR_undo_descr", null) {
+		actionUndo = new BaseAction("STR_undo", "undo.png", "STR_undo_descr", null, null) {
 
 			private static final long	serialVersionUID	= 3241742636297115171L;
 
@@ -290,8 +287,7 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionRedo = new BaseAction("STR_redo", ImageLoader
-				.getImageIcon("redo.gif"), "STR_redo_descr", null) {
+		actionRedo = new BaseAction("STR_redo", "redo.png", "STR_redo_descr", null, null) {
 
 			private static final long	serialVersionUID	= 2613112142063032508L;
 
@@ -300,8 +296,7 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionDelete = new BaseAction("STR_delete", ImageLoader
-				.getImageIcon("deletemode.gif"), "STR_delete_descr", null) {
+		actionDelete = new BaseAction("STR_delete", "edit-delete.png", "STR_delete_descr", null, null) {
 
 			private static final long	serialVersionUID	= -3283938108975661376L;
 
@@ -317,8 +312,8 @@ public class GsActions implements GraphChangeListener {
 				GsActions.MODE_DEFAULT, 0);
 		mi_edit = new JMenuItem(actionEditDefault);
 
-		actionZoomIn = new BaseAction("STR_zoomIn", null, "STR_zoomIn_descr",
-				KeyStroke.getKeyStroke(KeyEvent.VK_ADD, ActionEvent.CTRL_MASK)) {
+		actionZoomIn = new BaseAction("STR_zoomIn", "zoom-in.png", "STR_zoomIn_descr",
+				KeyStroke.getKeyStroke(KeyEvent.VK_ADD, ActionEvent.CTRL_MASK), null) {
 
 			private static final long	serialVersionUID	= 7767720724191732506L;
 
@@ -327,9 +322,9 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionZoomOut = new BaseAction("STR_zoomOut", null,
+		actionZoomOut = new BaseAction("STR_zoomOut", "zoom-out.png",
 				"STR_zoomOut_descr", KeyStroke.getKeyStroke(
-						KeyEvent.VK_SUBTRACT, ActionEvent.CTRL_MASK)) {
+						KeyEvent.VK_SUBTRACT, ActionEvent.CTRL_MASK), null) {
 
 			private static final long	serialVersionUID	= 4121075965026762863L;
 
@@ -338,9 +333,9 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionNormalSize = new BaseAction("STR_Normalsize", null,
+		actionNormalSize = new BaseAction("STR_Normalsize", "zoom-original.png",
 				"STR_NormalSize_descr", KeyStroke.getKeyStroke(
-						KeyEvent.VK_EQUALS, ActionEvent.CTRL_MASK)) {
+						KeyEvent.VK_EQUALS, ActionEvent.CTRL_MASK), null) {
 
 			private static final long	serialVersionUID	= 6710461629856502102L;
 
