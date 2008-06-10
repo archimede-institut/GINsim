@@ -47,7 +47,7 @@ div.toc span.sect1 a {
 h1, h2, h3, h4 {
         font-family: serif;
         font-weight: bold;
-        padding-left: 0.8em;
+//        padding-left: 0.8em;
 }
 
 p.newline {
@@ -56,16 +56,16 @@ p.newline {
 }
 
 div.titlepage h2, div.titlepage h3 {
-        background: #CCB;
+//        background: #CCB;
+//        border: 1px solid #333;
+//        border-bottom: 3px solid #363;
         color: #040;
-        border: 1px solid #333;
-        border-bottom: 3px solid #363;
         padding-top: 3px;
         padding-bottom: 3px;
 }
 
 div.section {
-    padding-left: 1.5em;
+//    padding-left: 1.5em;
 }
 
 div.figure, div.table {

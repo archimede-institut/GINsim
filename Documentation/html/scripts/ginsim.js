@@ -27,8 +27,9 @@ function show(id) {
    var p = document.getElementById(id).parentNode;
    obj = getChildIgnoreText(p, 1);
 
-   p = p.parentNode;
-   l = getChildIgnoreText(p, 3);
+   l = getChildIgnoreText(p, 2);
+   l = getChildIgnoreText(l, 0);
+   l = getChildIgnoreText(l, 0);
 
    if (memory[id] == true) {
        obj.src = obj.src.replace(/.gif$/, ".png");

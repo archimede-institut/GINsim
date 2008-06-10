@@ -1,14 +1,5 @@
 body {
     background: #fff;
-    color: #000;
-}
-
-table {
-	border: solid 1px;
-}
-
-.navheader table, .navfooter table {
-	border: none;
 }
 
 .navheader, .navfooter {
@@ -26,65 +17,10 @@ table {
 	color: #000;
 }
 
-div.toc span a {
-	color: #321;
-}
-
-div.toc span.sect1 a {
-	font-weight: bold;
-	color: #F60;
-}
-
-h1, h2, h3, h4 {
-        font-family: serif;
-        font-weight: bold;
-        padding-left: 0.8em;
-}
-
 div.titlepage h2, div.titlepage h3 {
         background: #eee;
-        color: #040;
-        border: 1px solid #333;
-        border-bottom: 3px solid #363;
-        padding-top: 3px;
-        padding-bottom: 3px;
 }
 
-div.section {
-    padding-left: 1.5em;
-}
-
-div.mediaobject, p {
-    padding-left: 0.6em;
-}
-
-div.mediaobject {
-    display: none;
- }
-div.figure div.mediaobject {
-    display: block;
-}
-div.figure, div.mediaobject {
-    text-align: center;
-    margin-bottom: 1em;
-}
-
-pre.programlisting {
-	border: solid;
-}
-
-img {
-    border: 0;
-}
-
-div.note, div.caution, div.important, div.tip, div.warning {
-    margin-top: 1em;
-    margin-bottom: 1em;
-}
 div.note table, div.caution table, div.important table, div.tip table, div.warning table {
     background: #FFe;
-}
-
-.center {
-    text-align: center;
 }
