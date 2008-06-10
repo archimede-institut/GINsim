@@ -167,9 +167,10 @@ public class Tools {
 			f = new File(fileName);
 		}
 		if (!f.exists()) {
+			System.out.println("no such file");
 			return false;
 		}
-		return openURI(fileName);
+		return openURI("file://"+fileName);
 	}
 
 	public static boolean openURI(String uri) {
@@ -178,9 +179,12 @@ public class Tools {
 				met_browse.invoke(o_desktop, new Object[] {new URI(uri)});
 				return true;
 			} catch (Exception e) {
+				System.out.println("open call failed!");
+				e.printStackTrace();
 			}
 		}
 		if (OPEN_COMMAND == null) {
+			System.out.println("no open command is defined");
 			return false;
 		}
 		try {

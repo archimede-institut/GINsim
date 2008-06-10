@@ -223,7 +223,11 @@ public class GsActions implements GraphChangeListener {
 			private static final long	serialVersionUID	= 6430521053940787968L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-	            Tools.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
+				String path = GsEnv.getGinsimDir()+"Documentation/html/index.html";
+				// TODO: better URL on the web site ?
+				if (!Tools.openFile(path)) {
+					Tools.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
+				}
 			}
 		};
 
