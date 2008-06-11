@@ -8,7 +8,7 @@
   <Project>
     <name>GINsim</name>
     <description>A computer tool for the modeling and simulation of genetic regulatory networks</description>
-    <homepage rdf:resource="http://gin.univ-mrs.fr/GINsim/download.html" />
+    <homepage rdf:resource="http://gin.univ-mrs.fr/GINsim" />
     <logo>gs1.gif</logo>
     <license rdf:resource="http://usefulinc.com/doap/licenses/gpl">GPL</license>
     <version>2.4</version>
