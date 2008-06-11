@@ -8,13 +8,14 @@
 <xsl:param name="GINsim.version"/> <!-- give it a value at run time  -->
 
 <xsl:template match="*">
-  <xsl:copy-of select=".">
-   <xsl:apply-templates/>
-  </xsl:copy-of>
+ <xsl:copy>
+  <xsl:copy-of select="@*"/>
+  <xsl:apply-templates/>
+ </xsl:copy>
 </xsl:template> 
 
 <xsl:template match="doap:version">
- <xsl:copy-of select=".">
+ <xsl:copy>
   <xsl:choose>
    <xsl:when test="$GINsim.version != ''">
     <xsl:value-of select="$GINsim.version"/>
@@ -23,7 +24,7 @@
     <xsl:apply-templates/>
    </xsl:otherwise>
   </xsl:choose>
- </xsl:copy-of>
+ </xsl:copy>
 </xsl:template> 
 
 </xsl:stylesheet>
