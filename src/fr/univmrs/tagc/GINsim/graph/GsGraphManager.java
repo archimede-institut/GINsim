@@ -75,9 +75,9 @@ abstract public class GsGraphManager {
     abstract public void selectAll();
     /**
      * select some objects (vertices and edges).
-     * @param v the vector of objects to select
+     * @param l the list of objects to select
      */
-    abstract public void select(Vector v);
+    abstract public void select(List l);
     /** 
      * select a single item.
      * 

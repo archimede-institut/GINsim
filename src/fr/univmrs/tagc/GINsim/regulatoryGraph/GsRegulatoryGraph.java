@@ -187,39 +187,39 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @throws IOException
      */
     private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-        	Iterator it;
-        	if (selectedOnly) {
-        		it = graphManager.getSelectedVertexIterator();
-        	} else {
-        		it = graphManager.getVertexIterator();
-        	}
-        	if ( mode >=0) {
-        	}
+    	Iterator it;
+    	if (selectedOnly) {
+    		it = graphManager.getSelectedVertexIterator();
+    	} else {
+    		it = graphManager.getVertexIterator();
+    	}
+    	if ( mode >=0) {
+    	}
 
-        	switch (mode) {
-        		case 1:
-        	        while (it.hasNext()) {
-        	            Object vertex = it.next();
-        	            String svs = "";
-    	                vReader.setVertex(vertex);
-    	                svs = GsGinmlHelper.getShortNodeVS(vReader);
-        	            ((GsRegulatoryVertex)vertex).toXML(out, svs, mode);
-        	        }
-        			break;
-        		case 2:
-        	        while (it.hasNext()) {
-        	            Object vertex = it.next();
-        	            String svs = "";
-    	                vReader.setVertex(vertex);
-    	                svs = GsGinmlHelper.getFullNodeVS(vReader);
-        	            ((GsRegulatoryVertex)vertex).toXML(out, svs, mode);
-        	        }
-        			break;
-        		default:
-        	        while (it.hasNext()) {
-        	            Object vertex = it.next();
-        	            ((GsRegulatoryVertex)vertex).toXML(out, "", mode);
-        	        }
+    	switch (mode) {
+    		case 1:
+    	        while (it.hasNext()) {
+    	            Object vertex = it.next();
+    	            String svs = "";
+	                vReader.setVertex(vertex);
+	                svs = GsGinmlHelper.getShortNodeVS(vReader);
+    	            ((GsRegulatoryVertex)vertex).toXML(out, svs, mode);
+    	        }
+    			break;
+    		case 2:
+    	        while (it.hasNext()) {
+    	            Object vertex = it.next();
+    	            String svs = "";
+	                vReader.setVertex(vertex);
+	                svs = GsGinmlHelper.getFullNodeVS(vReader);
+    	            ((GsRegulatoryVertex)vertex).toXML(out, svs, mode);
+    	        }
+    			break;
+    		default:
+    	        while (it.hasNext()) {
+    	            Object vertex = it.next();
+    	            ((GsRegulatoryVertex)vertex).toXML(out, "", mode);
+    	        }
         }
     }
 
@@ -471,7 +471,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         if (!(otherGraph instanceof GsRegulatoryGraph)) {
             return null;
         }
-        Vector ret = new Vector();
+        List ret = new ArrayList();
         HashMap copyMap = new HashMap();
         Iterator it = otherGraph.getGraphManager().getVertexIterator();
         GsVertexAttributesReader cvreader = otherGraph.getGraphManager().getVertexAttributesReader();
@@ -535,7 +535,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
             for (int i=0 ; i<v_vertex.size() ; i++) {
                 GsRegulatoryVertex vertexOri = (GsRegulatoryVertex)v_vertex.get(i);
                 GsRegulatoryVertex vertex = (GsRegulatoryVertex)vertexOri.clone();
-                copiedGraph.getGraphManager().addVertex(vertex);
+                copiedGraph.addVertexWithNewId(vertex);
                 vReader.setVertex(vertexOri);
                 cvreader.setVertex(vertex);
                 cvreader.copyFrom(vReader);

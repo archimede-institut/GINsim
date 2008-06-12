@@ -213,6 +213,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	    GsGraph subGraph = doCopySelection( mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges() );
 	    if (subGraph != null) {
 	        subGraph.saveAs();
+	        subGraph.saveMode = saveMode;
 	    }
 	}
 
@@ -881,11 +882,12 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 * open a graph from a file and merge it with the current one.
 	 */
 	public void merge() {
-	    GsGraph graph = GsOpenAction.open(descriptor, null);
+	    GsGraph graph = GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(), null);
 	    if (graph != null) {
 	    	List v = doMerge(graph);
 	        if (v != null) {
 	        	fireGraphChange(CHANGE_MERGED, v);
+	        	graphManager.select(v);
 	        }
 	    }
 	}

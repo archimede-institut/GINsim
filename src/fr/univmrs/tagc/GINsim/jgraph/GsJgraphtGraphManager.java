@@ -168,13 +168,13 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         jgraph.setSelectionCells(jgraph.getRoots());
     }
 
-    public void select(Vector v) {
+    public void select(List l) {
         jgraph.setSelectionCells( new Object[0]);
-        if (v == null) {
+        if (l == null) {
             return;
         }
-        for (int i=0 ; i<v.size() ; i++) {
-            Object o = v.get(i);
+        for (int i=0 ; i<l.size() ; i++) {
+            Object o = l.get(i);
             if (o instanceof GsDirectedEdge) {
                 jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)o));
             } else {
