@@ -20,6 +20,14 @@ abstract public class GenericListSelectionPanel extends JPanel implements Action
 	JLabel label;
 	
 	public GenericListSelectionPanel(StackDialog dialog, GenericList list, String name, boolean hasEmptyChoice) {
+		this(dialog, list, name, hasEmptyChoice, Translator.getString("STR_configure"), null);
+	}
+	public GenericListSelectionPanel(StackDialog dialog, GenericList list, 
+			String name, boolean hasEmptyChoice, String s_config_tooltip) {
+		this(dialog, list, name, hasEmptyChoice, Translator.getString("STR_configure"), s_config_tooltip);
+	}
+	public GenericListSelectionPanel(StackDialog dialog, GenericList list, 
+			String name, boolean hasEmptyChoice, String s_config, String s_config_tooltip) {
 		this.dialog = dialog;
 		if (name != null) {
 			setBorder(BorderFactory.createTitledBorder(name));
@@ -39,7 +47,8 @@ abstract public class GenericListSelectionPanel extends JPanel implements Action
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(label, c);
 		if (dialog != null) {
-	        JButton but_configure = new JButton(Translator.getString("STR_configure"));
+	        JButton but_configure = new JButton(s_config);
+	        but_configure.setToolTipText(s_config_tooltip);
 	        but_configure.addActionListener(this);
 	        c = new GridBagConstraints();
 			c.gridx = 1;

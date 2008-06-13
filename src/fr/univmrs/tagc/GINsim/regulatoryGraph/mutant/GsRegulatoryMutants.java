@@ -11,10 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -217,6 +214,11 @@ class MutantPanel extends SplitPane {
 
         panel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.gridwidth = 2;
+        panel.add(new JLabel(Translator.getString("STR_perturbation_definition")), c);
+        c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 2;
         c.weightx = 1;

@@ -48,7 +48,6 @@ abstract public class StackDialog extends SimpleDialog {
         c.weighty = 1;
         c.weightx = 1;
         contentPane.add(mainPanel, c);
-        //contentPane.add(new JLabel("salut"));
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 1;
@@ -63,7 +62,6 @@ abstract public class StackDialog extends SimpleDialog {
     public void setMessage(String message) {
     	setMessage(message, 0);
     }
-    
 
     public void setMessage(String message, int timeout) {
         if (messageLabel != null) {
@@ -73,7 +71,12 @@ abstract public class StackDialog extends SimpleDialog {
             // TODO: implement timeout!
         }
     }
-    
+
+    public void setRunText(String text, String tooltip) {
+    	brun.setText(text);
+    	brun.setToolTipText(tooltip);
+    }
+
     public void setMainPanel(Component panel) {
         mainPanel.add(panel, s_mainkey);
         cards.show(mainPanel, s_mainkey);
@@ -126,8 +129,9 @@ abstract public class StackDialog extends SimpleDialog {
      */
     private javax.swing.JButton getBcancel() {
         if(bcancel == null) {
-        	bcancel = new javax.swing.JButton(Translator.getString("STR_cancel"));
-        	// TODO: get some nice default mnemonices everywhere 
+        	bcancel = new javax.swing.JButton(Translator.getString("STR_close"));
+        	bcancel.setToolTipText(Translator.getString("STR_closedialog_descr"));
+        	// TODO: get some nice default mnemonics everywhere 
         	bcancel.getModel().setMnemonic(KeyEvent.VK_N);
         	bcancel.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -139,7 +143,8 @@ abstract public class StackDialog extends SimpleDialog {
     }
     private javax.swing.JButton getBclose() {
         if(bclose == null) {
-        	bclose = new javax.swing.JButton(Translator.getString("STR_close"));
+        	bclose = new javax.swing.JButton(Translator.getString("STR_back"));
+        	bclose.setToolTipText(Translator.getString("STR_back_descr"));
         	bclose.getModel().setMnemonic(KeyEvent.VK_E);
         	bclose.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {

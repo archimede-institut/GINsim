@@ -86,6 +86,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
 		}
         this.graph = (GsRegulatoryGraph) graph;
         initialize();
+        updateStatus(STATUS_NONE);
     }
 
     /**
@@ -259,19 +260,19 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         switch (status) {
         case STATUS_NONE:
             this.status = status;
-            brun.setText(Translator.getString("STR_run"));
+            setRunText(Translator.getString("STR_circuit_search"),Translator.getString("STR_circuit_search_descr"));
             break;
         case STATUS_SCC:
             this.status = status;
             cards.show(jContentPane, "result");
-            brun.setText(Translator.getString("STR_cancel"));
+            setRunText(Translator.getString("STR_cancel"), null);
             break;
         case STATUS_SEARCH_CIRCUIT:
             break;
         case STATUS_SHOW_CIRCUIT:
             this.status = status;
-            setProgressText(v_circuit.size() + " circuit found:");
-            brun.setText(Translator.getString("STR_circuit_analyse"));
+            setProgressText("Number of circuits satisfying the requirements: "+ v_circuit.size());
+            setRunText(Translator.getString("STR_circuit_analyse"), Translator.getString("STR_circuit_analyse_tooltip"));
             break;
         }
     }
@@ -526,14 +527,14 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         }
 
         if (circuit.t_context[index] == OmsddNode.FALSE) {
-            jta.setText(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.FALSE]);
+            jta.setText(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.FALSE]);
             return;
         }
         String s = circuit.t_context[index].getString(0, graph.getNodeOrder()).trim();
         if (s.equals("")) {
             jta.setText("empty data");
         } else {
-            jta.setText(GsCircuitDescr.SIGNE_NAME[(int)circuit.t_mark[index][1]] + ", score: " + circuit.t_mark[index][0]
+            jta.setText(GsCircuitDescr.SIGN_NAME[(int)circuit.t_mark[index][1]] + ", score: " + circuit.t_mark[index][0]
                     + "\n" + s);
         }
     }
@@ -591,7 +592,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
      */
     public javax.swing.JLabel getLabelProgression() {
         if (labelProgression == null) {
-            labelProgression = new Label("STR_circuit_ask", Label.MESSAGE_NORMAL);
+            labelProgression = new Label("", Label.MESSAGE_NORMAL);
         }
         return labelProgression;
     }
@@ -610,7 +611,7 @@ class GsCircuitDescr {
     protected static final int NEGATIVE = 4;
     protected static final int DUAL = 5;
     
-    protected static final String[] SIGNE_NAME = {
+    protected static final String[] SIGN_NAME = {
     	Translator.getString("STR_not-functional"),
     	Translator.getString("STR_all"),
     	Translator.getString("STR_functional"),
@@ -817,9 +818,9 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
      */
     public GsCircuitTreeModel(Vector v_circuit) {
     	super(s_root);
-        v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.ALL]);
+        v_root.add(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.ALL]);
         this.v_circuit = v_circuit;
-        m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.ALL], v_circuit);
+        m_parent.put(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.ALL], v_circuit);
         m_parent.put(s_root, v_root);
     }
 
@@ -878,19 +879,19 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
             }
         }
         if (v_functionnal.size() > 0) {
-            v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.FUNCTIONNAL]);
-            m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.FUNCTIONNAL], v_functionnal);
+            v_root.add(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.FUNCTIONNAL]);
+            m_parent.put(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.FUNCTIONNAL], v_functionnal);
             if (v_positive.size() > 0) {
-                v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.POSITIVE]);
-                m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.POSITIVE], v_positive);
+                v_root.add(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.POSITIVE]);
+                m_parent.put(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.POSITIVE], v_positive);
             }
             if (v_negative.size() > 0) {
-                v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.NEGATIVE]);
-                m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.NEGATIVE], v_negative);
+                v_root.add(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.NEGATIVE]);
+                m_parent.put(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.NEGATIVE], v_negative);
             }
             if (v_dual.size() > 0) {
-                v_root.add(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.DUAL]);
-                m_parent.put(GsCircuitDescr.SIGNE_NAME[GsCircuitDescr.DUAL], v_dual);
+                v_root.add(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.DUAL]);
+                m_parent.put(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.DUAL], v_dual);
             }
         }
         // TODO: add a sorting by context!
@@ -1008,7 +1009,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
 	            if (cdtree.circuit.t_mark != null 
 	            	&& cdtree.circuit.t_mark.length > index 
 	            	&& cdtree.circuit.t_mark[index] != null) {
-	            	return GsCircuitDescr.SIGNE_NAME[(int)cdtree.circuit.t_mark[index][1]];
+	            	return GsCircuitDescr.SIGN_NAME[(int)cdtree.circuit.t_mark[index][1]];
 	            }
 				return "??";
 		}

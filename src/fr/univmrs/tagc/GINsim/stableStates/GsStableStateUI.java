@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -35,12 +36,15 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
+		panel.add(new JLabel(Translator.getString("STR_stableStates_title")), c);
+		c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 1;		mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
 		panel.add(mutantPanel, c);
 
 		c = new GridBagConstraints();
 		c.gridx = 0;
-		c.gridy = 1;
+		c.gridy = 2;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
 		c.weighty = 1;
