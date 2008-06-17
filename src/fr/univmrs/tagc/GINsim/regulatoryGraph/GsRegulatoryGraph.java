@@ -426,7 +426,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
             Object[] t_mode = { Translator.getString("STR_saveNone"),
                     Translator.getString("STR_savePosition"),
                     Translator.getString("STR_saveComplet") };
-			optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
+			optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, this.saveMode);
 		}
 		return optionPanel;
 	}

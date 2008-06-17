@@ -5,6 +5,7 @@ import java.util.Map;
 
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
+import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class PrioritySelectionPanel extends GenericListSelectionPanel {
@@ -14,7 +15,7 @@ public class PrioritySelectionPanel extends GenericListSelectionPanel {
 	private PriorityClassManager pcmanager;
 
 	public PrioritySelectionPanel(StackDialog dialog, PriorityClassManager pcmanager) {
-		super(dialog, pcmanager, null, false);
+		super(dialog, pcmanager, null, false, Translator.getString("STR_configure_priorities"));
 		this.pcmanager = pcmanager;
 	}
 	

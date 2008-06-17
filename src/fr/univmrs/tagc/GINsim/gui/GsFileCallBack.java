@@ -2,7 +2,6 @@ package fr.univmrs.tagc.GINsim.gui;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * Here are the callback for entry in the "file" menu
@@ -35,7 +34,6 @@ public class GsFileCallBack {
 	public void save() {
 	    try {
             main.getGraph().save();
-            OptionStore.addRecent(main.getGraph().getSaveFileName());
         } catch (GsException e) {
             GsEnv.error(e, main);
         }

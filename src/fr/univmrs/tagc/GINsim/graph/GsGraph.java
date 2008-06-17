@@ -21,6 +21,7 @@ import fr.univmrs.tagc.GINsim.jgraph.GsJgraphtGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
@@ -34,7 +35,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /** name of the file in which we save */
     protected String saveFileName = null;
     /** the save mode, maybe unused... */
-    protected int saveMode = 0;
+    protected int saveMode = 2;
     /** the frame containing the graph */
     protected GsMainFrame mainFrame;
     protected GsFileFilter defaultFileFilter = null;
@@ -369,6 +370,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
                 	}
             	}
             }
+            OptionStore.addRecent(fileName);
         } catch (Exception e) {
             if (mainFrame != null) {
                 addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
