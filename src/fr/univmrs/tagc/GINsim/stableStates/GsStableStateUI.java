@@ -39,7 +39,10 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 		panel.add(new JLabel(Translator.getString("STR_stableStates_title")), c);
 		c = new GridBagConstraints();
 		c.gridx = 0;
-		c.gridy = 1;		mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
+		c.gridy = 1;
+		c.weightx = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
 		panel.add(mutantPanel, c);
 
 		c = new GridBagConstraints();

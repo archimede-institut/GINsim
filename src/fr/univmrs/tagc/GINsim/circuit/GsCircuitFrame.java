@@ -534,8 +534,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         if (s.equals("")) {
             jta.setText("empty data");
         } else {
-            jta.setText(GsCircuitDescr.SIGN_NAME[(int)circuit.t_mark[index][1]] + ", score: " + circuit.t_mark[index][0]
-                    + "\n" + s);
+            jta.setText(s);
         }
     }
 
