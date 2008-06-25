@@ -5,7 +5,6 @@ import java.util.List;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
-import fr.univmrs.tagc.common.manageressources.Translator;
 
 
 public class PriorityClassManager extends SimpleGenericList {
@@ -29,14 +28,14 @@ public class PriorityClassManager extends SimpleGenericList {
 		// add default priority classes
 		int index = add();
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)getElement(null, index);
-		pcdef.setName(Translator.getString("STR_asynchrone"));
+		pcdef.setName("Asynchronous");
 		GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, 0);
 		pc.setName("all");
 		pc.setMode(GsReg2dynPriorityClass.ASYNCHRONOUS);
 		pcdef.lock();
 		index = add();
 		pcdef = (PriorityClassDefinition)getElement(null, index);
-		pcdef.setName(Translator.getString("STR_synchrone"));
+		pcdef.setName("Synchronous");
 		pc = (GsReg2dynPriorityClass)pcdef.getElement(null, 0);
 		pc.setName("all");
 		pc.setMode(GsReg2dynPriorityClass.SYNCHRONOUS);

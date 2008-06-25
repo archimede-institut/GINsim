@@ -88,7 +88,11 @@ public class GsSimulationParametersParser extends XMLHelper {
                     	}
                     } else {
                         s = attributes.getValue("updating");
-                        param.store.setObject(GsSimulationParameters.PCLASS, paramLists.pcmanager.getElement(s));
+                        Object o = paramLists.pcmanager.getElement(s);
+                        if (o == null) {
+                        	o = paramLists.pcmanager.getElement("Asynchronous");
+                        }
+                        param.store.setObject(GsSimulationParameters.PCLASS, o);
                         param.breadthFirst = "true".equals(attributes.getValue("breadthFirst"));
                     }
                     s = attributes.getValue("maxdepth");
