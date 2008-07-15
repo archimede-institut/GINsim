@@ -10,6 +10,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class StableTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 3483674324331745743L;
@@ -161,7 +162,7 @@ public class StableTableModel extends AbstractTableModel {
 			column--;
 		}
 		if (column == 0) {
-			return "match";
+			return Translator.getString("STR_name");
 		}
 		return nodeOrder.get(column-1).toString();
 	}

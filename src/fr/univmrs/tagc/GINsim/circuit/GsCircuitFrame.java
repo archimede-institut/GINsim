@@ -3,10 +3,9 @@ package fr.univmrs.tagc.GINsim.circuit;
 import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -72,6 +71,8 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     private GsCircuitSearchStoreConfig config = null;
     ObjectStore mutantstore = new ObjectStore();
     MutantSelectionPanel mutantPanel;
+
+	private JButton	but_pyexport;
 
     /**
      * This is the default constructor
@@ -159,10 +160,81 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         	c.weighty = 1;
         	c.fill = GridBagConstraints.BOTH;
         	resultPanel.add(getSplitPane(), c);
+        	
+        	// python button
+        	c = new GridBagConstraints();
+        	c.gridx = 0;
+        	c.gridy = 3;
+        	resultPanel.add(get_pythonPanel(), c);
         }
         return resultPanel;
     }
     
+    private JButton get_pythonPanel() {
+    	if (but_pyexport == null) {
+    		but_pyexport = new JButton("to python");
+    		but_pyexport.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					pyExport();
+				}
+			});
+    	}
+    	return but_pyexport;
+    }
+    
+    protected void pyExport() {
+    	List no = graph.getNodeOrder();
+    	List l_func = (List)treemodel.m_parent.get(GsCircuitDescr.SIGN_NAME[GsCircuitDescr.FUNCTIONNAL]);
+    	if (l_func == null) {
+    		System.out.println("no func...");
+    		return;
+    	}
+    	StringBuffer s = new StringBuffer("#!/usr/bin/env python\n"
+    			+ "import circuittest\n"
+    			+ "if __name__ == \"__main__\":\n"
+    			+ "    ct = circuittest.CircuitTester()\n");
+    	Iterator it = l_func.iterator();
+    	while (it.hasNext()) {
+    		GsCircuitDescrInTree cit = (GsCircuitDescrInTree)it.next();
+			// FIXME: we are using reg graph's sign, we should not rely on it!
+			if (treemodel.isLeaf(cit)) {
+				circuitToPython(no, s, cit);
+			} else {
+				// TODO: call it for all sub-circuit!
+			}
+    	}
+    	JFrame f = new JFrame("functional circuits in python");
+    	f.add(new JTextArea(s.toString()));
+    	f.setSize(400, 300);
+    	f.setVisible(true);
+    }
+    
+    protected void circuitToPython(List no, StringBuffer s, GsCircuitDescrInTree cit) {
+    	s.append("    ct.add_circuit((");
+    	for (int i=0 ; i<cit.circuit.t_me.length ; i++) {
+    		int idx = 0; // FIXME: get the right edge!
+    		GsRegulatoryMultiEdge me = cit.circuit.t_me[i];
+    		int src = no.indexOf(me.getSource());
+    		int dst = no.indexOf(me.getTarget());
+        	s.append("("+src+","+dst+","
+        		     + me.getMin(idx)+","
+        			 + (me.getSign(idx)==GsRegulatoryMultiEdge.SIGN_NEGATIVE?"-1":"1")
+        			 + "),");
+    	}
+    	s.append("), ");
+    	s.append(mdd2py(cit.circuit.t_context[0]));
+    	s.append(")\n");
+    }
+    protected String mdd2py(OmsddNode node) {
+    	if (node.next == null) {
+    		return node.value == 0 ? "False" : "True";
+    	}
+    	String s = "("+node.level;
+    	for (int i=0 ; i<node.next.length ; i++) {
+    		s += "," + mdd2py(node.next[i]);
+    	}
+    	return s + ")";
+    }
     /**
      * Verify if the specified String is an integer
      * 
@@ -482,7 +554,11 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
             return;
         }
         if (!(selected instanceof GsCircuitDescrInTree)) {
-            jta.setText("no data");
+        	if (selected == null || GsCircuitTreeModel.s_root.equals(selected)) {
+    			jta.setText("");
+    			return;
+			}
+			jta.setText("no data");
             int count = treemodel.getChildCount(selected);
             if (count > 0) {
                 jta.setText("contains "+count+" circuits");
@@ -494,7 +570,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         if (cdtree.summary) {
             if (!treemodel.isLeaf(selected)) {
                 int count = treemodel.getChildCount(selected);
-                jta.setText("contains "+count+" sub-circuits");
+                jta.setText("contains "+count+" layered-circuits");
                 return;
             }
             switch (cdtree.key) {
@@ -809,7 +885,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     Vector v_root = new Vector();
     Map m_parent = new HashMap();
 
-    private static final String s_root = "circuits";
+    protected static final String s_root = "Circuits";
     static protected Class[]  cTypes = {TreeTableModel.class, String.class, String.class};
 
     /**
@@ -832,9 +908,9 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
 
         // first some cleanups, to allow running it several times in a row, with different mutants
         v_root.clear();
-        v_root.add("all");
+        v_root.add("All");
         m_parent.clear();
-        m_parent.put("all", v_circuit);
+        m_parent.put("All", v_circuit);
         m_parent.put(s_root, v_root);
         for (int i = 0; i < v_circuit.size(); i++) {
         	GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).circuit;
