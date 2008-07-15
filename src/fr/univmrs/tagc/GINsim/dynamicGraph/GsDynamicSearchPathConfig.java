@@ -307,7 +307,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
     }
     private JButton getBut_view() {
         if (but_view == null) {
-            but_view = new JButton(Translator.getString("STR_view"));
+            but_view = new JButton(Translator.getString("STR_View"));
             but_view.setEnabled(false);
             but_view.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {

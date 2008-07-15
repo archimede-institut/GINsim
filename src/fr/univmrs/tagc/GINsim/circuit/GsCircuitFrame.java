@@ -165,6 +165,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         	c = new GridBagConstraints();
         	c.gridx = 0;
         	c.gridy = 3;
+        	c.anchor = GridBagConstraints.WEST;
         	resultPanel.add(get_pythonPanel(), c);
         }
         return resultPanel;
@@ -203,8 +204,14 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
 				// TODO: call it for all sub-circuit!
 			}
     	}
+    	s.append("\n\n    ct.do_analyse((\n"
+    			+ "        # TODO: add path definition here\n"
+    			+ "        \n"
+    			+ "    ))\n");
     	JFrame f = new JFrame("functional circuits in python");
-    	f.add(new JTextArea(s.toString()));
+    	JScrollPane sp = new JScrollPane();
+    	sp.setViewportView(new JTextArea(s.toString()));
+    	f.add(sp);
     	f.setSize(400, 300);
     	f.setVisible(true);
     }

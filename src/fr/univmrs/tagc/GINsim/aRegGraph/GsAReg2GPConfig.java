@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.*;
@@ -123,7 +124,10 @@ public class GsAReg2GPConfig extends JDialog {
 	 * do the export.
 	 */
 	protected void export() {
-        
+		if (combo_choice.getSelectedIndex() == 2) {
+			doSavePathAsPython(path);
+			return;
+		}
 	    String gnuplotsFilename;
         try {
             gnuplotsFilename  = GsOpenAction.selectSaveFile(null, null, null, ".gnuplot");
@@ -147,9 +151,28 @@ public class GsAReg2GPConfig extends JDialog {
 	    dispose();
 	}
 	
-	
-    /**
-     * @param scriptfile
+    private void doSavePathAsPython(List path) {
+		String s = "";
+		Iterator it = path.iterator();
+		while (it.hasNext()) {
+			GsDynamicNode state = (GsDynamicNode)it.next();
+			s += "        (";
+			for (int i=0 ; i<state.state.length ; i++) {
+				s += state.state[i]+",";
+			}
+			s += "),\n";
+		}
+		JFrame f = new JFrame("path in python");
+		JScrollPane sp = new JScrollPane();
+		sp.setViewportView(new JTextArea(s));
+		f.add(sp);
+		f.setSize(400, 300);
+		f.setVisible(true);
+	}
+
+
+	/**
+	 * @param scriptfile
      * @param datafile
      * @param path the path to follow
      * @param nodeOrder
@@ -317,6 +340,7 @@ public class GsAReg2GPConfig extends JDialog {
             combo_choice = new JComboBox();
             combo_choice.addItem("arrow");
             combo_choice.addItem("multi");
+            combo_choice.addItem("python");
         }
         return combo_choice;
     }
