@@ -494,7 +494,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
             GsDirectedEdge de = (GsDirectedEdge) doInteractiveAddEdge(copyMap.get(deOri.getSourceVertex()), copyMap.get(deOri.getTargetVertex()), 0);
             GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)de.getUserObject();
             edge.copyFrom((GsRegulatoryMultiEdge)deOri.getUserObject());
-            cereader.setEdge(deOri);
+            cereader.setEdge(deOri.getUserObject());
             eReader.setEdge(de);
             eReader.copyFrom(cereader);
             eReader.refresh();
@@ -553,7 +553,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 	            edge.copyFrom(edgeOri);
 	            copyMap.put(edgeOri, edge);
                 eReader.setEdge(deOri);
-                cereader.setEdge(de);
+                cereader.setEdge(edge);
                 cereader.copyFrom(eReader);
 	        }
         }
