@@ -142,6 +142,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     private JButton getBut_insert() {
         if (but_insert == null) {
             but_insert = new StockButton("go-previous.png", true);
+            but_insert.setToolTipText(Translator.getString("STR_pclass_insert"));
             but_insert.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     insert();
@@ -153,6 +154,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     private JButton getBut_remove() {
         if (but_remove == null) {
             but_remove = new StockButton("go-next.png", true);
+            but_remove.setToolTipText(Translator.getString("STR_pclass_remove"));
             but_remove.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     remove();

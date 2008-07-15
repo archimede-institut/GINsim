@@ -161,7 +161,7 @@ class DynGraphHelper extends SimulationHelper {
         vreader = dynGraph.getGraphManager().getVertexAttributesReader();
 	    vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         // add some default comments to the state transition graph
-        dynGraph.getAnnotation().setComment(params.getDescr());
+        dynGraph.getAnnotation().setComment(params.getDescr()+"\n");
 	}
 
 	public boolean addNode(SimulationQueuedState item) {

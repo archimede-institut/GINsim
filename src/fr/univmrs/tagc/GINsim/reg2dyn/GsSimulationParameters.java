@@ -66,15 +66,16 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
      * It shows the full content of this simu parameters, used to add a usefull comment to the state transition graph.
      * @return a human readable description of the parameter
      */
+
     public String getDescr() {
-        String s;
+        String s = "STG construction parameters:\n    Updating policy: ";
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
         if (pcdef.getNbElements(null) > 1) {
-            s = "by priority class\n";
+            s += "by priority class\n";
             int[][] pclass = getPriorityClassDefinition().getPclass(nodeOrder);
             for (int i=0 ; i<pclass.length ; i++) {
                 int[] cl = pclass[i];
-                s += "   "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
+                s += "        "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
                 for (int j=2;j<cl.length ; j+=2) {
                     if (j>2) {
                         s += ", ";
@@ -84,34 +85,32 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
                 s += "\n";
             }
         } else {
-        	s = pcdef.toString();
+        	s += pcdef.toString()+"\n";
         }
-        // FIXME: descr initial states
+        s += "    Initial states: ";
         if (m_initState == null || m_initState.size()==0) {
-            s += "full graph";
+            s += "ALL\n";
         } else {
-            s += "initial states:\n";
             Iterator it = m_initState.keySet().iterator();
             while (it.hasNext()) {
-            	// FIXME: get REAL initstate
                 Map m_init = ((GsInitialState)it.next()).getMap();
+                s += "\n      ";
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
                     s += "  "+GsInitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
                 }
-                s += "\n";
             }
+            s += "\n";
         }
 
         if (store.getObject(MUTANT) != null) {
-            s += "\nMutant:\n"+store.getObject(MUTANT).toString();
+            s += "    Mutant: "+store.getObject(MUTANT).toString()+"\n";
         }
-
         if (maxdepth != 0) {
-            s += "max depth: "+maxdepth+"\n";
+            s += "    Max depth: "+maxdepth+"\n";
         }
         if (maxnodes != 0) {
-            s += "max nodes: "+maxnodes+"\n";
+            s += "    Max nodes: "+maxnodes+"\n";
         }
         return s;
     }
