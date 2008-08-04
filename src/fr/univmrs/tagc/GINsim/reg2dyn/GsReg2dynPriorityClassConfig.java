@@ -5,10 +5,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
@@ -33,8 +36,6 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     
     protected static final String[] t_typeName = {" [+]", " [-]", ""};
     
-    private JComboBox cb_auto;
-
     private JButton but_insert;
     private JButton but_remove;
     

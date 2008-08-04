@@ -289,9 +289,9 @@ public class GenericListPanel extends JPanel
             return;
         }
         int[] sel = jl.getSelectedRows();
-        if (sel.length > 0 && list.remove(null, 0, sel)) {
+        if (sel.length > 0 && list.remove(null, model.startIndex, sel)) {
             int i = sel[0];
-            i = i>=list.getNbElements(null,0) ? list.getNbElements(null,0)-1 : i;
+            i = i>=list.getNbElements(null,model.startIndex) ? list.getNbElements(null,0)-1 : i;
             refresh();
             jl.getSelectionModel().setSelectionInterval(i,i);
         }
