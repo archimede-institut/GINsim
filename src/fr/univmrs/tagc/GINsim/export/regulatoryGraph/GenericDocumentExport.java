@@ -290,15 +290,15 @@ public class GenericDocumentExport extends GsAbstractExport {
 					if (name != null) {
 						doc.writeText(name+": ");
 					}
-					for (int j=1 ; j<len ; j++) {
+					for (int j=1 ; j<=len ; j++) {
 						Object val = model.getValueAt(k,j);
 						if (!val.toString().equals("0")) {
 							String s = needPrev ? " ; " : "";
 							needPrev = true;
 							if (val.toString().equals("1")) {
-								doc.writeText(s+nodeOrder.get(j));
+								doc.writeText(s+nodeOrder.get(j-1));
 							} else {
-								doc.writeText(s+nodeOrder.get(j)+"="+val);
+								doc.writeText(s+nodeOrder.get(j-1)+"="+val);
 							}
 						}
 					}
