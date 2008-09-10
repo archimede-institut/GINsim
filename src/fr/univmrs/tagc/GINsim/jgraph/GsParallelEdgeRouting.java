@@ -2,7 +2,6 @@ package fr.univmrs.tagc.GINsim.jgraph;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 import org.jgraph.graph.*;
@@ -16,7 +15,7 @@ public class GsParallelEdgeRouting extends DefaultEdge.DefaultRouting {
 	
     private static final long serialVersionUID = 97867454338056365L;
     
-	protected List routeEdge(EdgeView edge) {
+	protected List routeEdge(GraphLayoutCache cache, EdgeView edge) {
         if (edge.isLoop()) {
             return null;
         }
@@ -29,14 +28,14 @@ public class GsParallelEdgeRouting extends DefaultEdge.DefaultRouting {
         if (isdouble) {
             Point2D from;
             Point2D to;
-            if (edge.getSource() instanceof PortView)
+            if (edge.getSource() instanceof PortView) {
                 from = ((PortView)edge.getSource()).getLocation();
-            else {
+            } else {
                 from = edge.getPoint(0);
             }
-            if (edge.getTarget() instanceof PortView)
+            if (edge.getTarget() instanceof PortView) {
                 to = ((PortView)edge.getTarget()).getLocation();
-            else {
+            } else {
                 to = edge.getPoint(edge.getPointCount() - 1);    
             }
     
@@ -46,8 +45,8 @@ public class GsParallelEdgeRouting extends DefaultEdge.DefaultRouting {
                 double dx = to.getX()-from.getX();
                 double dy = to.getY()-from.getY();
                 double D  = Math.sqrt(dx*dx+dy*dy);
-                double ex = (D < 20) ? dy/2 : 15*(dy/D);  
-                double ey = (D < 20) ? dx/2 : 15*(dx/D);  
+                double ex = D < 20 ? dy/2 : 15*dy/D;  
+                double ey = D < 20 ? dx/2 : 15*dx/D;  
                 dx /= 2;
                 dy /= 2;
                 
@@ -65,40 +64,6 @@ public class GsParallelEdgeRouting extends DefaultEdge.DefaultRouting {
             }
         }
         return edge.getPoints();
-    }
-    protected List routeLoop(EdgeView edge) {
-        if (!edge.isLoop()) {
-            return null;
-        }
-        
-        List newPoints = edge.getPoints();
-        if (newPoints.size() > 5) {
-            return newPoints;
-        }
-        newPoints.clear();
-        newPoints.add(edge.getSource());
-        CellView sourceParent = (edge.getSource() != null) ? edge
-                .getSource().getParentView() : edge.getSourceParentView();
-        if (sourceParent != null) {
-            Point2D from = AbstractCellView.getCenterPoint(sourceParent);
-            Rectangle2D rect = sourceParent.getBounds();
-            double width = rect.getWidth();
-            double height2 = rect.getHeight() / 2;
-            double loopWidth = Math.min(20, Math.max(10, width / 8));
-            double loopHeight = Math.min(30, Math.max(12, Math.max(
-                    loopWidth + 4, height2 / 2)));
-            newPoints.add(edge.getAttributes().createPoint(
-                    from.getX() - loopWidth,
-                    from.getY() - height2 - loopHeight * 1.2));
-            newPoints.add(edge.getAttributes().createPoint(from.getX(),
-                    from.getY() - height2 - 1.5 * loopHeight));
-            newPoints.add(edge.getAttributes().createPoint(
-                    from.getX() + loopWidth,
-                    from.getY() - height2 - loopHeight * 1.2));
-            newPoints.add(edge.getTarget());
-            return newPoints;
-        }
-        return null;
     }
 }
 
