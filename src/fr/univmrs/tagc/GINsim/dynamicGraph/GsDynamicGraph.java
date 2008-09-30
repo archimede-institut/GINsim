@@ -40,7 +40,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	private GsRegulatoryGraphOptionPanel optionPanel;
 
-    protected List v_stables = new Vector();
+    protected List v_stables = null;
     private ObjectEditor graphEditor = null;
     private GsParameterPanel vertexPanel = null;
     private GsParameterPanel edgePanel;
@@ -384,19 +384,29 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
     }
 
     /**
+     * browse the graph, looking for stable states
+     * @return the list of stable states found
+     */
+    public List getStableStates() {
+        if (v_stables == null) {
+            v_stables = new ArrayList();
+            Iterator it = graphManager.getVertexIterator();
+            while (it.hasNext()) {
+                GsDynamicNode node = (GsDynamicNode)it.next();
+                if (node.isStable()) {
+                    v_stables.add(node.state);
+                }
+            }
+        }
+        return v_stables;
+    }
+    /**
      * override getInfoPanel to show stable states.
      * @return the info panel for the "whattodo" frame
      */
     public JPanel getInfoPanel() {
         JPanel pinfo = new JPanel();
-        // look for stable states
-        Iterator it = graphManager.getVertexIterator();
-        while (it.hasNext()) {
-            GsDynamicNode node = (GsDynamicNode)it.next();
-            if (node.isStable()) {
-                v_stables.add(node.state);
-            }
-        }
+        getStableStates();
 
         // just display the number of stable states here and a "show more" button
         if (v_stables.size() > 0) {

@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
@@ -25,8 +27,9 @@ public final class Simulation extends Thread implements Runnable {
 
 	private LinkedList queue = new LinkedList(); // exploration queue
 
-	private GsReg2dynFrame frame;
-	private GsSimulationParameters	params;
+	private BaseReg2DynFrame frame;
+	private int maxnodes, maxdepth;
+	private Iterator initStatesIterator;
 	private SimulationHelper helper;
 	SimulationUpdater updater;
 
@@ -41,18 +44,28 @@ public final class Simulation extends Thread implements Runnable {
 	 * @param frame
 	 * @param params
 	 */
-	protected Simulation(GsRegulatoryGraph regGraph, GsReg2dynFrame frame, GsSimulationParameters params) {
+    protected Simulation(GsRegulatoryGraph regGraph, BaseReg2DynFrame frame, GsSimulationParameters params) {
+        this(regGraph, frame, params, true);
+    }
+    protected Simulation(GsRegulatoryGraph regGraph, BaseReg2DynFrame frame, GsSimulationParameters params, boolean runNow) {
 		this.frame = frame;
-		this.params = params;
-		
+		this.maxdepth = params.maxdepth;
+		this.maxnodes = params.maxnodes;
+
 		if (params.buildSTG) {
 			helper = new DynGraphHelper(regGraph, params);
 		}
 		breadthFirst = params.breadthFirst;
    		updater = SimulationUpdater.getInstance(regGraph, params);
-        start();
+   		if (runNow) {
+   		    startSimulation(params.nodeOrder, params.m_initState);
+   		}
 	}
 
+	protected void startSimulation(List nodeOrder, Map m_initState) {
+        initStatesIterator = new InitialStatesIterator(nodeOrder, m_initState);
+        start();
+    }
 	public void interrupt() {
 		ready = false;
 	}
@@ -65,10 +78,9 @@ public final class Simulation extends Thread implements Runnable {
 		boolean maxDepthReached = false;
 		try {
 			// iterate through initial states and run the simulation from each of them
-	        Iterator iterator = new InitialStatesIterator(params.nodeOrder, params.m_initState);
-			while(iterator.hasNext()) {
+			while(initStatesIterator.hasNext()) {
 				// add the next proposed state
-				queue.add(new SimulationQueuedState((int[])iterator.next(), 0, null, false));
+				queue.add(new SimulationQueuedState((int[])initStatesIterator.next(), 0, null, false));
 				
 				// do the simulation itself
 				while (!queue.isEmpty()) {
@@ -84,8 +96,8 @@ public final class Simulation extends Thread implements Runnable {
 				                frame.setProgress(nbnode);
 				            }
 						}
-						if (params.maxnodes != 0 && nbnode >= params.maxnodes){
-						    System.out.println("maxnodes reached: "+params.maxnodes);
+						if (maxnodes != 0 && nbnode >= maxnodes){
+						    System.out.println("maxnodes reached: " + maxnodes);
 						    throw new GsException(GsException.GRAVITY_NORMAL, (String)null);
 						}
 
@@ -108,13 +120,13 @@ public final class Simulation extends Thread implements Runnable {
 						updater.setState(item.state, item.depth, helper.node);
 						if (!updater.hasNext()) {
 							helper.setStable();
-							System.out.print("stable (depth "+item.depth+"): ");
+							frame.addStableState(item);
 							for (int i=0 ; i<item.state.length ; i++ ) {
 								System.out.print(item.state[i]+" ");
 							}
 							System.out.println();
 						} else {
-							if (params.maxdepth == 0 || item.depth < params.maxdepth) {
+							if (maxdepth == 0 || item.depth < maxdepth) {
 								while (updater.hasNext()) {
 									queue.addLast(updater.next());
 								}

@@ -16,4 +16,7 @@ public class ObjectStore {
 	public void setObject(int id, Object object) {
 		t[id] = object;
 	}
+	public int getSize() {
+	    return t.length;
+	}
 }

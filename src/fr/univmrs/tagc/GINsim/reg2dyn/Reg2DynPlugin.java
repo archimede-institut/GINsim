@@ -40,9 +40,11 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
             return null;
         }
         if (t_action == null) {
-            t_action = new GsPluggableActionDescriptor[1];
+            t_action = new GsPluggableActionDescriptor[2];
             t_action[0] = new GsPluggableActionDescriptor("STR_reg2dyn",
                     "STR_reg2dyn_descr", null, this, ACTION_ACTION, 0);
+            t_action[1] = new GsPluggableActionDescriptor("STR_batchreg2dyn",
+                    "STR_batchreg2dyn_descr", null, this, ACTION_ACTION, 1);
         }
         return t_action;
     }
@@ -57,7 +59,7 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
             		GsGraphNotificationMessage.NOTIFICATION_WARNING));
             return;
         }
-		if (ref == 0) {
+		if (ref == 0 || ref == 1) {
 //            Map m_params = (Map)graph.getObject("reg2dyn_parameters");
 //            if (m_params == null) {
 //                m_params = new HashMap();
@@ -67,7 +69,11 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
             graph.getGraphManager().getMainFrame().getGsAction().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
 
             GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
-            new GsReg2dynFrame(frame, paramList).setVisible(true);
+            if (ref == 0) {
+                new GsReg2dynFrame(frame, paramList).setVisible(true);
+            } else {
+                new BatchReg2dynFrame(frame, paramList).setVisible(true);
+            }
 		}
 	}
 }

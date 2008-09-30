@@ -91,7 +91,7 @@ abstract public class SimulationUpdater implements Iterator {
 		return 0;
 	}
 	
-	static public SimulationUpdater getInstance(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
+    static public SimulationUpdater getInstance(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		PriorityClassDefinition pcdef = params.getPriorityClassDefinition();
 		if (pcdef.getNbElements(null) < 2) {
 			GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null,0);
@@ -103,7 +103,6 @@ abstract public class SimulationUpdater implements Iterator {
 		return new PrioritySimulationUpdater(regGraph, params);
 	}
 }
-
 
 /* **************************** Synchronous ***********************************/
 

@@ -146,8 +146,9 @@ public class StableTableModel extends AbstractTableModel {
 					String name = ((GsInitialState)initstates.getElement(null, i)).getName();
 					if (matches[line] != null) {
 						matches[line] += " ; "+name; 
+					} else {
+					    matches[line] = name;
 					}
-					matches[line] = name;
 				}
 			}
 		}

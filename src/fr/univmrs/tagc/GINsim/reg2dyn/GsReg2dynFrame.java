@@ -25,12 +25,11 @@ import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.SplitPane;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * frame to set up the simulation
  */
-public class GsReg2dynFrame extends StackDialog implements ListSelectionListener {
+public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionListener {
     private static final long serialVersionUID = -4386183125281770860L;
     
     GsSimulationParameterList paramList;
@@ -219,16 +218,6 @@ public class GsReg2dynFrame extends StackDialog implements ListSelectionListener
 
         isrunning = true;
         sim = new Simulation(paramList.graph, this, currentParameter);
-    }
-
-    /**
-     * set the progress level, to give the user some feedback
-     * @param n
-     */
-    public void setProgress(int n) {
-        if (isrunning) {
-            setMessage(""+n);
-        }
     }
 
     /**
