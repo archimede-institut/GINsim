@@ -51,8 +51,8 @@ public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
         }
         if (t_action == null) {
             t_action = new GsPluggableActionDescriptor[1];
-            t_action[0] = new GsPluggableActionDescriptor("STR_simplify",
-                    "STR_simplify_descr", null, this, ACTION_ACTION, 0);
+            t_action[0] = new GsPluggableActionDescriptor("STR_reduce",
+                    "STR_reduce_descr", null, this, ACTION_ACTION, 0);
         }
         return t_action;
     }

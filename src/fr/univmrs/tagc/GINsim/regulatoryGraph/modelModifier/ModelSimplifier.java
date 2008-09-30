@@ -264,6 +264,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			}
 			
 			// get as much of the associated data as possible
+			Map m_alldata = new HashMap();
 			// mutants: only copy mutants that don't affect removed nodes
 			GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
 			if (mutants != null && mutants.getNbElements(null) > 0) {
@@ -297,6 +298,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 					}
 					if (!ok) {
 						newMutants.remove(null, new int[] {mutantPos});
+					} else {
+	                    m_alldata.put(mutant, newMutant);
 					}
 				}
 			}
@@ -310,6 +313,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 					int epos = newInit.add();
 					GsInitialState newIstate = (GsInitialState)newInit.getElement(null, epos);
 					newIstate.setName(istate.getName());
+					m_alldata.put(istate, newIstate);
 					Map m_init = newIstate.getMap();
 					Iterator it_entry = istate.getMap().entrySet().iterator();
 					while (it_entry.hasNext()) {
@@ -322,7 +326,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				}
 			}
 			
-			// priority classes definition
+			// priority classes definition and simulation parameters
 			GsSimulationParameterList params = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, false);
 			if (params != null) {
 				PriorityClassManager pcman = params.pcmanager;
@@ -333,6 +337,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 					int index = new_pcman.add();
 					PriorityClassDefinition new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, index);
 					new_pcdef.setName(pcdef.getName());
+					m_alldata.put(pcdef, new_pcdef);
 					Map m_pclass = new HashMap();
 					// copy all priority classes
 					for (int j=0 ; j<pcdef.getNbElements(null) ; j++) {
@@ -356,6 +361,17 @@ public class ModelSimplifier extends Thread implements Runnable {
 							new_pcdef.m_elt.put(vertex,	m_pclass.get(e.getValue()));
 						}
 					}
+				}
+				int[] t_index = {0};
+				new_pcman.remove(null, t_index);
+				
+				// simulation parameters
+				for (int i=0 ; i<params.getNbElements() ; i++) {
+				    GsSimulationParameters param = (GsSimulationParameters)params.getElement(null, i);
+				    int index = new_params.add();
+				    GsSimulationParameters new_param = (GsSimulationParameters)new_params.getElement(null, index);
+				    m_alldata.put("", new_pcman);
+				    param.copy_to(new_param, m_alldata);
 				}
 			}
 			

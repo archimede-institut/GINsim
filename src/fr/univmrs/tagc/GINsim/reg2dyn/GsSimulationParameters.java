@@ -187,4 +187,34 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 		}
 		return pcd;
 	}
+
+    public void copy_to(GsSimulationParameters other, Map mapping) {
+        other.buildSTG = this.buildSTG;
+        other.breadthFirst = this.breadthFirst;
+        other.maxdepth = this.maxdepth;
+        other.maxnodes = this.maxnodes;
+        other.name = this.name;
+        Iterator it = m_initState.keySet().iterator();
+        while (it.hasNext()) {
+            other.m_initState.put(mapping.get(it.next()), null);
+        }
+        other.store.setObject(MUTANT, mapping.get(store.getObject(MUTANT)));
+        PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
+        PriorityClassDefinition new_pcdef = (PriorityClassDefinition)mapping.get(pcdef);
+        if (new_pcdef == null) {
+            PriorityClassManager new_pcman = (PriorityClassManager)mapping.get("");
+            if (pcdef.getNbElements(null) < 2) {
+                GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null,0);
+                if (pc.getMode() == GsReg2dynPriorityClass.SYNCHRONOUS) {
+                    new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, 1);
+                } else {
+                    new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, 0);
+                }
+            } else {
+                System.out.println("[BUG] complex pcdef not transposed in the reduced model");
+                new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, 0);
+            }
+        }
+        other.store.setObject(PCLASS, new_pcdef);
+    }
 }
