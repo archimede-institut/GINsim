@@ -26,8 +26,11 @@
 	<property name="pdfdoc" location="${doc}/pdf"/>
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
+	<property name="tbjar" location="/cobelix/naldi/Bureau/tbrowser.jar"/>
+	<property name="jfjar" location="/cobelix/naldi/Bureau/jfreechart-1.0.11.jar"/>
+	<property name="jcjar" location="/cobelix/naldi/Bureau/jcommon-1.0.14.jar"/>
 	
-	<property name="classpath"  value=".:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/javabib-bin.jar"/>
+	<property name="classpath"  value=".:${tbjar}:${jfjar}:${jcjar}:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/javabib-bin.jar"/>
 
 	<target name="init">
 		<!-- Create the time stamp -->
@@ -199,7 +202,7 @@
 		<_merge_jar jarfile="${dist}/lib/jgrapht-0.6.0.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/jgraphaddons.jar" dest="${tmpdir}"/>
 		<_merge_jar jarfile="${dist}/lib/javabib-bin.jar" dest="${tmpdir}"/>
-	    	<copy todir="${tmpdir}"><fileset dir="${build}"/></copy>
+	   	<copy todir="${tmpdir}"><fileset dir="${build}"/></copy>
 		<jar jarfile="${ginsim}-${version}.jar" basedir="${tmpdir}" manifest="MANIFEST.MF"/> 
 	 	<delete dir="${tmpdir}"/>
 	</target>

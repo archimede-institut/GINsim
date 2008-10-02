@@ -103,7 +103,7 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
     moduleList = new JList();
     moduleList.setFont(new Font("monospaced", Font.PLAIN, 12));
     JScrollPane jsp = new JScrollPane(moduleList);
-    jsp.getViewport().setMinimumSize(new Dimension(800, 0));
+    jsp.getViewport().setMinimumSize(new Dimension(80, 0));
     resultsModulesPanel.addComponent(jsp, 0, 0, 1, 1, 1.0, 1.0, WEST, BOTH, 5, 5, 5, 0, 0, 0);
     TBPanel moduleInfoPanel = new TBPanel();
     moduleInfoPanel.addComponent(resultsModulesPanel, 0, 0, 1, 1, 0.0, 1.0, WEST, BOTH, 5, 5, 5, 0, 0, 0);
