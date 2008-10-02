@@ -36,9 +36,9 @@ public class GsEnv extends Env {
 	private static String dtdDir = null;
 	private static String pluginDir = null;
 	private static Vector allFrames = new Vector(1);
-	
-    private static final Map m_graphs = new HashMap(); 
-    
+
+    private static final Map m_graphs = new HashMap();
+
     public static final Integer[] t_integers = new Integer[] {
     	new Integer(0),
     	new Integer(1),
@@ -51,33 +51,34 @@ public class GsEnv extends Env {
     	new Integer(8),
     	new Integer(9)
     };
-    
+
 	/** for doubleclick sensibility */
 	public static final long TIMEOUT = 400;
-	
+
 	private static Vector v_graph = new Vector(0);
-    
-	
+
+
 	/**
 	 * add a frame to the list of avaible frames
 	 *   => called by GsMainFrame constructor
-	 * 
+	 *
 	 * @param frame the frame to add
 	 */
 	public static void addFrame(GsMainFrame frame) {
 		allFrames.add(frame);
 	}
-	
+
 	/**
 	 * remove a frame from the list of avaible frames
 	 * and exit when closing the last frame.
 	 *   => called when closing a GsMainFrame
-	 * 
+	 *
 	 * @param frame the frame to remove
 	 */
 	public static void delFrame (GsMainFrame frame) {
 		allFrames.remove(frame);
-		if (allFrames.size() == 0) {
+
+                if (allFrames.size() == 0) {
             OptionStore.saveOptions();
 			System.exit(0);
 		}
@@ -93,29 +94,29 @@ public class GsEnv extends Env {
 			((GsMainFrame)allFrames.get(i)).closeEvent();
 		}
 	}
-	
+
 	/**
 	 * @return a string containing the path to ginsim install dir
 	 */
 	public static String getGinsimDir() {
 		return ginsimDir;
 	}
-	
+
 	/**
 	 * @return a string containing the path to ginsim dtd dir
 	 */
 	public static String getGinsimDTDdir() {
 		return dtdDir;
 	}
-	
+
 	/**
 	 * set the ginsim install directory
 	 * it HAS to be called once before running anything else
-	 * 
+	 *
 	 * @param dir the path to ginsim install dir
 	 */
 	public static void setGinsimDir(String dir) {
-		
+
 		if (dir.equals(".")) {
 			ginsimDir =  System.getProperty("user.dir") + File.separator;
 		} else if (dir.startsWith("."+File.separator)) {
@@ -123,10 +124,10 @@ public class GsEnv extends Env {
 		} else {
 			ginsimDir = dir + File.separator;
 		}
-		
+
 		pluginDir = ginsimDir + "plugins" + File.separator;
 		dtdDir= ginsimDir + "data" + File.separator + "ginml" + File.separator;
-		
+
 		// look for other plugins
 		String[] t_files = new File(pluginDir).list();
 		if (t_files != null) {
@@ -143,7 +144,7 @@ public class GsEnv extends Env {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param cloader
 	 * @param jf the jarfile to open
 	 * @throws GsException if en error occur
@@ -182,7 +183,7 @@ public class GsEnv extends Env {
 	public static int getNbFrame() {
 	    return allFrames.size();
 	}
-	
+
     /**
      * create a new frame.
      * @return the new mainFrame
@@ -193,10 +194,10 @@ public class GsEnv extends Env {
 		addFrame(m);
 		return m;
     }
-    
+
     /**
      * open an existing graph in a new frame
-     *  
+     *
      * @param graph
      * @return the new frame
      */
@@ -206,7 +207,7 @@ public class GsEnv extends Env {
 		addFrame(m);
 		return m;
     }
-    
+
     /**
      * create a new default graph in frame m.
      * @param m
@@ -214,7 +215,7 @@ public class GsEnv extends Env {
     public static void newGraph(GsMainFrame m) {
         newGraph(m, 0);
     }
-    
+
     /**
      * create a new graph of type graphType in the frame m.
      * @param m
@@ -226,12 +227,12 @@ public class GsEnv extends Env {
             error(new GsException(GsException.GRAVITY_ERROR, "STR_noSuchGraphType"), m);
             return;
         }
-        
+
         GsGraph myGraph = ((GsGraphDescriptor)v_graph.get(graphType)).getNew(m);
         myGraph.getGraphManager().ready();
 		m.getEventDispatcher().fireGraphChange(null, null, myGraph, false);
     }
-    
+
     /**
      * add a new type of graph.
      * @param gd
@@ -252,17 +253,17 @@ public class GsEnv extends Env {
         }
     	return null;
     }
-    
+
     /**
      * @return the list of registred graph types (as a Vector of GsGraphDescriptor)
      */
     public static Vector getGraphType() {
     	return v_graph;
     }
-    
+
     /**
      * an error occured, give the user some feedback.
-     * 
+     *
      * @param e
      * @param main
      */
@@ -291,12 +292,12 @@ public class GsEnv extends Env {
 	public static void whatToDoWithGraph(JFrame frame, GsGraph graph, boolean needLayout) {
 		new GsWhatToDoFrame(frame, graph, needLayout);
 	}
-    
+
     /**
      * register a graph.
-     * 
-     * @param graph 
-     * @param id 
+     *
+     * @param graph
+     * @param id
      * @return ths id under which the graph is registred
      */
     public static String registerGraph(GsGraph graph, String id) {
@@ -319,7 +320,7 @@ public class GsEnv extends Env {
 
     /**
      * change a graph's registration.
-     * 
+     *
      * @param oldId
      * @param newId
      */
@@ -330,10 +331,10 @@ public class GsEnv extends Env {
             m_graphs.put(newId, graph);
         }
     }
-    
+
     /**
      * get a previously registred graph.
-     * 
+     *
      * @param id
      * @return the corresponding graph (null if no such id)
      */

@@ -15,6 +15,7 @@ import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.manageressources.ImageLoader;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.BaseAction;
+import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
 
 
 /**
@@ -111,7 +112,7 @@ public class GsActions implements GraphChangeListener {
 
 	/**
 	 * create a new menu/toolbar manager.
-	 * 
+	 *
 	 * @param m the mainFrame for which we create it
 	 */
 	public GsActions(GsMainFrame m) {
@@ -565,7 +566,7 @@ public class GsActions implements GraphChangeListener {
 
 	/**
 	 * get the menu bar
-	 * 
+	 *
 	 * @return the main menubar
 	 */
 	public javax.swing.JMenuBar getMenuBar() {
@@ -574,7 +575,7 @@ public class GsActions implements GraphChangeListener {
 
 	/**
 	 * get the tools bar
-	 * 
+	 *
 	 * @return the main toolbar
 	 */
 	public javax.swing.JToolBar getToolBar() {
@@ -583,7 +584,7 @@ public class GsActions implements GraphChangeListener {
 
 	/**
 	 * Check/uncheck the divide windows menu
-	 * 
+	 *
 	 * @param b
 	 */
 	public void setSelectedDivideCheckBox(boolean b) {
@@ -592,7 +593,7 @@ public class GsActions implements GraphChangeListener {
 
 	/**
 	 * get the file callback
-	 * 
+	 *
 	 * @return the file callback
 	 */
 	public GsFileCallBack getFilecallback() {
@@ -720,16 +721,23 @@ public class GsActions implements GraphChangeListener {
 			for (int i = 0 ; i < v_actions.size() ; i++) {
 				Object obj = v_actions.get(i);
 				if (obj instanceof GsPluggableActionDescriptor) {
+                  //if (!((GsPluggableActionDescriptor)obj).isCheckbox())
 					menu.add(new GsPluggableAction(
 							(GsPluggableActionDescriptor)obj, mainFrame));
+       //else
+         //menu.add(new JCheckBoxMenuItem(new GsPluggableAction((GsPluggableActionDescriptor)obj, mainFrame)));
 				} else if (obj instanceof GsActionProvider) {
 					GsPluggableActionDescriptor[] t_action = null;
 					t_action = ((GsActionProvider)obj).getT_action(actionCode,
 							graph);
 					if (t_action != null) {
 						for (int j = 0 ; j < t_action.length ; j++) {
+                          ////if (!t_action[j].isCheckbox())
 							menu.add(new GsPluggableAction(t_action[j],
 									mainFrame));
+                             // else
+                                //menu.add(new JCheckBoxMenuItem(new GsPluggableAction(t_action[j],
+				//					mainFrame)));
 						}
 					}
 				}
@@ -754,7 +762,7 @@ public class GsActions implements GraphChangeListener {
 	 * choose the new mode and submode. the submode is an option that will be
 	 * passed to newly created vertices/edges (different kinds of fully graph
 	 * dependant objects just one click away).
-	 * 
+	 *
 	 * @param mode the new editing mode: should be on of MODE_DEFAULT,
 	 *        MODE_ADD_VERTEX, MODE_ADD_EDGE or MODE_ADD_EDGE_POINT/
 	 * @param submode the submode, ie option for the object.

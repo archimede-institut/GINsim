@@ -130,7 +130,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     		((GsGraphListener)it.next()).endParsing();
     	}
     }
-    
+
     public boolean isParsing() {
     	return isParsing;
     }
@@ -443,7 +443,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     public GsParameterPanel getVertexAttributePanel() {
     	return null;
     }
-    
+
     // TODO: deprecate get----AttributePanel to promote get---Editor
     public ObjectEditor getEdgeEditor() {
     	return null;

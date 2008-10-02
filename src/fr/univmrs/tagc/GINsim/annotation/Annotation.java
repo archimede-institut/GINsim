@@ -38,12 +38,19 @@ public class Annotation implements XMLize
 	public void addLink(String s, GsGraph graph) {
 		setLink(s, getLinkList().size(), graph);
 	}
+	public void delLink(String s, GsGraph graph) {
+		while (getLinkList().removeElement(new AnnotationLink(s, graph))) ;
+	}
 	public void setLink(String s, int index, GsGraph graph) {
 		if (index == getLinkList().size()) {
-			getLinkList().add(new AnnotationLink(s, graph));
+			AnnotationLink al = new AnnotationLink(s, graph);
+			if (!containsLink(al)) getLinkList().add(al);
 		} else {
 			((AnnotationLink)getLinkList().get(index)).setText(s, graph);
 		}
+	}
+	public boolean containsLink(AnnotationLink al) {
+		return getLinkList().contains(al);
 	}
 	/**
 	 * return the String containing the comments.
