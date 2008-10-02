@@ -31,17 +31,17 @@ public class GsOpenAction extends BaseAction {
 	public static final int MODE_NEW = 2;
     /** open a recent file */
     public static final int MODE_RECENT = 1;
-	
+
 	private GsGraphDescriptor gd;
 	private GsMainFrame main;
     private String path = null;
 	private int mode;
-	
+
 	private static JFileChooser jfc;
-	
+
 	/**
 	 * create a new action to open a graph from a file or create a new one.
-	 * 
+	 *
 	 * @param gd the graphDescriptor for the kind of graph to open
 	 * @param mode open or create ? (one of MODE_OPEN, MODE_NEW, MODE_NEWFRAME)
 	 * @param main the frame in which we want to open it (can be null)
@@ -55,7 +55,7 @@ public class GsOpenAction extends BaseAction {
 
 	/**
 	 * create a new action to open a graph from a file or create a new one.
-	 * 
+	 *
 	 * @param gd the graphDescriptor for the kind of graph to open
 	 * @param mode open or create ? (one of MODE_OPEN, MODE_NEW, MODE_NEWFRAME)
 	 * @param main the frame in which we want to open it (can be null)
@@ -69,10 +69,10 @@ public class GsOpenAction extends BaseAction {
 		this.main = main;
 		this.mode = mode;
 	}
-	
+
     /**
      * action for recent files
-     * 
+     *
      * @param gd
      * @param main
      * @param path path to the recent file
@@ -100,7 +100,7 @@ public class GsOpenAction extends BaseAction {
             break;
         case MODE_NEW:
             if (main.getGraph().isEmpty()) {
-                newGraph(gd, main);
+                //newGraph(gd, main);
             } else {
                 newFrame(gd);
             }
@@ -120,7 +120,7 @@ public class GsOpenAction extends BaseAction {
 
     /**
      * open a new graph from a file.
-     * 
+     *
      * @param gd the graphDescriptor for the kind of graph to open
      * @param main the frame in which we want to open it (can be null)
      * @return the opened graph (or null if canceled or an error happened)
@@ -130,7 +130,7 @@ public class GsOpenAction extends BaseAction {
     }
     /**
      * open in a new frame a new graph from a file.
-     * 
+     *
      * @param gd the graphDescriptor for the kind of graph to open
      * @return the opened graph (or null if canceled or an error happened)
      */
@@ -143,7 +143,7 @@ public class GsOpenAction extends BaseAction {
     }
 	/**
 	 * open a new graph from a file.
-	 * 
+	 *
 	 * @param gd the graphDescriptor for the kind of graph to open
 	 * @param filter
 	 * @param main the frame in which we want to open it (can be null)
@@ -154,7 +154,7 @@ public class GsOpenAction extends BaseAction {
 	}
 	/**
 	 * open a new graph from a file.
-	 * 
+	 *
 	 * @param gd the graphDescriptor for the kind of graph to open
 	 * @param main the frame in which we want to open it (can be null)
 	 * @param filter if not null, only nodes listed in this Map will be created
@@ -164,9 +164,9 @@ public class GsOpenAction extends BaseAction {
         return open(gd, main, filter, null);
     }
     /**
-     * 
+     *
      * open a new graph from a file.
-     * 
+     *
      * @param gd the graphDescriptor for the kind of graph to open
      * @param main the frame in which we want to open it (can be null)
      * @param filter if not null, only nodes listed in this Map will be created
@@ -177,7 +177,7 @@ public class GsOpenAction extends BaseAction {
 	    if (gd == null) {
 	        return null;
 	    }
-	    
+
 	    if (main != null) {
 			if (!main.confirmCloseGraph()) {
 				return null;
@@ -220,9 +220,9 @@ public class GsOpenAction extends BaseAction {
 		}
 		return null;
 	}
-	
+
 	/**
-     * 
+     *
      */
     private static void getJfc() {
         File curDir = null;
@@ -242,7 +242,7 @@ public class GsOpenAction extends BaseAction {
 
     /**
 	 * open a new graph from a file.
-	 * 
+	 *
 	 * @param gd the graphDescriptor for the kind of graph to open
 	 * @return the opened graph (or null if canceled or an error happened)
 	 */
@@ -255,7 +255,7 @@ public class GsOpenAction extends BaseAction {
 	}
 	/**
 	 * open a new graph from a file.
-	 * 
+	 *
 	 * @param gd the graphDescriptor for the kind of graph to open
 	 * @param filter
 	 * @return the opened graph (or null if canceled or an error happened)
@@ -267,10 +267,10 @@ public class GsOpenAction extends BaseAction {
 	    }
 	    return graph;
 	}
-	
+
 	/**
 	 * create a new graph.
-	 * 
+	 *
 	 * @param gd the graphDescriptor for the kind of graph to open
 	 * @param main the frame in which we want to open it (can be null)
 	 * @return the opened graph (or null if canceled or an error happened)
@@ -286,10 +286,10 @@ public class GsOpenAction extends BaseAction {
 
 		return graph;
 	}
-	
+
 	/**
 	 * create a new graph in another frame.
-	 * 
+	 *
 	 * @param gd the graphDescriptor for the kind of graph to open
 	 * @return the opened graph (or null if canceled or an error happened)
 	 */
@@ -298,10 +298,10 @@ public class GsOpenAction extends BaseAction {
 		GsEnv.newMainFrame(graph);
 		return graph;
 	}
-	
+
 	/**
 	 * run a fileChooser in save mode, with filter and accessory... :)
-	 * 
+	 *
 	 * @param frame
 	 * @param filter
 	 * @param accessory
@@ -315,7 +315,7 @@ public class GsOpenAction extends BaseAction {
 		jfc.setFileFilter(filter);
 		jfc.setAccessory(accessory);
 		int ret = jfc.showSaveDialog(frame);
-		
+
         if (null != jfc.getSelectedFile() && ret == JFileChooser.APPROVE_OPTION) {
             OptionStore.setOption("currentDirectory", jfc.getCurrentDirectory());
             	String filename = jfc.getSelectedFile().getPath();
@@ -335,14 +335,14 @@ public class GsOpenAction extends BaseAction {
 
     /**
      * just select a file somewhere.
-     * 
+     *
      * @param frame
      * @return the path to the selected file
      */
     public static String selectFile(JFrame frame) {
         getJfc();
         int ret = jfc.showSaveDialog(frame);
-        
+
         if (null != jfc.getSelectedFile() && ret == JFileChooser.APPROVE_OPTION) {
             String filename = jfc.getSelectedFile().getPath();
             return filename;

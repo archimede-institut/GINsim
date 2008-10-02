@@ -68,4 +68,7 @@ public class AnnotationLink {
 	public String getValue() {
 		return value;
 	}
+	public boolean equals(Object o) {
+		return toString().equals(o.toString());
+	}
 }

@@ -26,14 +26,15 @@
 
 		<!-- other plugins -->
 		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin"/>
+                <plugin name="tb" 					mainClass="fr.univmrs.tagc.GINsim.gui.tbclient.GsTBPlugin"/>
 	</listOfPlugins>
-	
+
 	<listOfGraphType>
 		<graph name="regulatoryGraph" 			mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor" load="true"/>
 		<graph name="stateTransitionGraph" 		mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor" load="true"/>
 		<graph name="connectedComponentGraph" 	mainClass="fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphDescriptor" load="true"/>
 	</listOfGraphType>
-	
+
 	<imagePath 		path="/fr/univmrs/tagc/GINsim/ressources/icons"/>
 	<messagesPath 	path="fr.univmrs.tagc.GINsim.ressources.messages"/>
 	<doap 			path="/fr/univmrs/tagc/GINsim/ressources/GINsim-about.rdf"/>

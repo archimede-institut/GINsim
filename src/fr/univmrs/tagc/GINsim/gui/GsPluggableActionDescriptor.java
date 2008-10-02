@@ -22,7 +22,9 @@ public class GsPluggableActionDescriptor {
     public final int param;
     /** type of action (one of GsActionProvider;ACTION_*) */
     public final int type;
-	
+
+//    public boolean checkbox;
+
 	/**
 	 * @param name name of the action (ie menu text)
 	 * @param descr description of the action (ie tooltip)
@@ -38,9 +40,17 @@ public class GsPluggableActionDescriptor {
 		this.ap = ap;
         this.type = type;
 		this.param = param;
+//        checkbox = false;
 	}
-	
+
+//  public GsPluggableActionDescriptor(String name, String descr, ImageIcon icon, GsActionProvider ap, int type, int param, boolean cb) {
+//    this(name, descr, icon, ap, type, param);
+//    checkbox = cb;
+//  }
 	public String toString() {
 		return Translator.getString(name);
 	}
+//    public boolean isCheckbox() {
+//      return checkbox;
+//    }
 }

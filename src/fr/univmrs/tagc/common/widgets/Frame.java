@@ -6,7 +6,7 @@ import fr.univmrs.tagc.common.OptionStore;
 
 public abstract class Frame extends JFrame {
 	private static final long	serialVersionUID	= -9024470351150546630L;
-	
+
 	String id;
 	public Frame(String id, int w, int h) {
 		this.id = id;
@@ -16,18 +16,18 @@ public abstract class Frame extends JFrame {
 				closeEvent();
 			}
 		});
-		
+
 		this.setSize(((Integer)OptionStore.getOption(id+".width", new Integer(w))).intValue(),
         		((Integer)OptionStore.getOption(id+".height", new Integer(h))).intValue());
 
 	}
-	
+
 	public void closeEvent() {
 		// TODO: save maximised state
 		OptionStore.setOption(id+".width", new Integer(getWidth()));
 		OptionStore.setOption(id+".height", new Integer(getHeight()));
 		doClose();
 	}
-	
+
 	abstract public void doClose();
 }
