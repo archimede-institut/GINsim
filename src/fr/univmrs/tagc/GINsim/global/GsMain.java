@@ -163,7 +163,7 @@ class ReadConfig extends XMLHelper {
 					Class cl = cloader.loadClass(s);
 					GsPlugin plugin = (GsPlugin)cl.newInstance();
 					plugin.registerPlugin();
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					System.out.println("unable to load plugin from class: "+s);
 				}
 			}
