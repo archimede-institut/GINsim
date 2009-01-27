@@ -120,15 +120,7 @@ public final class AlgoConnectivity extends Thread {
             GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
             	
             if (nbCompo > 1) {
-		        if (true) { //FIXME: keep the old algorithm for performance testing. Should be removed at some time.
-		        	long before = (new Date()).getTime();//measuring the time spend for this algorithm
-		        	createSCCGraphByOutgoingEdges(nbCompo, component, gm, vreader);
-		        	System.out.println("Time for createSCCGraphByOutgoingEdges : "+((new Date()).getTime()-before)+"ms");
-		        } else {
-		        	long before = (new Date()).getTime();//measuring the time spend for this algorithm
-		        	createSCCGraphByPathSearching(nbCompo, component, gm, vreader);
-		        	System.out.println("Time for createSCCGraphByPathSearching : "+((new Date()).getTime()-before)+"ms");
-		        }
+	        	createSCCGraphByOutgoingEdges(nbCompo, component, gm, vreader);
             }
             
         } catch (InterruptedException e) {
@@ -137,7 +129,6 @@ public final class AlgoConnectivity extends Thread {
             }
         }
         frame.setResult(reducedGraph);
-        //TODO:  tp here
    }
 
 	private void createSCCGraphByOutgoingEdges(int nbCompo, List component, GsGraphManager gm, GsVertexAttributesReader vreader) throws InterruptedException {
@@ -187,23 +178,6 @@ public final class AlgoConnectivity extends Thread {
 				
 			}
         }
-//		for (int scc_i=0 ; scc_i<nbCompo; scc_i++) {															//for each SCC
-//            if (canceled) {
-//                break;
-//            }
-//            GsNodeReducedData currentSCCNode = (GsNodeReducedData)component.get(scc_i);
-//            Vector nodeInSCC = currentSCCNode.getContent();
-//            for (Iterator it = nodeInSCC.iterator(); it.hasNext();) {											//  for each nodes in the SCC
-//            	if (canceled) {
-//                    throw new InterruptedException();
-//                }
-//				Object targetNode = (Object) it.next();
-//				Object sourceNode = targets.get(targetNode.toString());											//    try to get the SCC targeting the current SCC
-//				if (sourceNode != null) {																		//    if it exist
-//					reducedGraph.addEdge(sourceNode, currentSCCNode);											//       add the arc
-//				}
-//            }
-//		}
             
     	for (int scc_i=0 ; scc_i<nbCompo; scc_i++) {															//for each SCC
             if (canceled) {
@@ -212,56 +186,6 @@ public final class AlgoConnectivity extends Thread {
             GsNodeReducedData currentSCCNode = (GsNodeReducedData)component.get(scc_i);
             if (gm.getOutgoingEdges(currentSCCNode).size() == 0) {												//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
             	vreader.setVertex(currentSCCNode);
-                vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
-            }
-        }
-	}
-	
-	private void createSCCGraphByPathSearching(int nbCompo, List component, GsGraphManager gm, GsVertexAttributesReader vreader) throws InterruptedException {
-		//Complexity = O(#node^2)
-        // search a path between CC, and try to not spend too much time at it.
-        // it's quite stupid but aims at being not as slow as it could...
-		if (nbCompo == 1) return;																				//The graph is already created, no edges to add.
-       for (int i=0 ; i<nbCompo; i++) {																			//For each component A [0 N]
-            if (canceled) {
-                break;
-            }
-            GsNodeReducedData currentNode = (GsNodeReducedData)component.get(i);
-            for (int j=i+1 ; j<nbCompo; j++) {																	//  For each component B [A+1 N]
-                GsNodeReducedData otherNode = (GsNodeReducedData)component.get(j);
-                
-                Vector v_source = currentNode.getContent();
-                Vector v_target = otherNode.getContent();
-                boolean b1 = true;
-                boolean b2 = true;
-                for (int k=0 ; k< v_source.size() ; k++) {														//    For each node in component A [0 n]
-                    if (canceled) {
-                        throw new InterruptedException();
-                    }
-                    Object o_source = v_source.get(k);
-                    for (int l=0 ; l<v_target.size() ; l++) {													//        For each node in component B [0 n']
-                        if (b1 && graphModel.getEdge(o_source, v_target.get(l)) != null) {
-                            reducedGraph.addEdge(currentNode, otherNode);
-                            b1 = false;
-                            if (!b2) {
-                                break;
-                            }
-                        }
-                        if (b2 && graphModel.getEdge(v_target.get(l), o_source) != null) {
-                            reducedGraph.addEdge(otherNode, currentNode);
-                            b2 = false;
-                            if (!b1) {
-                                break;
-                            }
-                        }
-                    }
-                    if (!b1 && !b2) {
-                        break;
-                    }
-                }
-            }
-            if (gm.getOutgoingEdges(currentNode).size() == 0) {
-                vreader.setVertex(currentNode);
                 vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
             }
         }
