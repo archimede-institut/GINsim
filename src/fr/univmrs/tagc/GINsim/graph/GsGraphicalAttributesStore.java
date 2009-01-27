@@ -18,12 +18,14 @@ public class GsGraphicalAttributesStore {
 	
 	GsGraph graph;
 	
-	public GsGraphicalAttributesStore(GsGraph graph) {
-		this.graph = graph;
-		this.ereader = graph.getGraphManager().getEdgeAttributesReader();
-		this.vreader = graph.getGraphManager().getVertexAttributesReader();
+	public GsGraphicalAttributesStore(GsGraphManager graphManager) {
+		this.ereader = graphManager.getEdgeAttributesReader();
+		this.vreader = graphManager.getVertexAttributesReader();
 	}
 
+	public GsGraphicalAttributesStore(GsGraph graph) {
+		this(graph.getGraphManager());
+	}
 	
 	public void storeAll() {
         Iterator it = graph.getGraphManager().getVertexIterator();

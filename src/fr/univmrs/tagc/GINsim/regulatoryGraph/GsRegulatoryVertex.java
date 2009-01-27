@@ -457,5 +457,4 @@ class UpdateMaxBlockedAction implements GsGraphNotificationAction {
 	public boolean timeout(GsGraph graph, Object data) {
 		return true;
 	}
-
 }
