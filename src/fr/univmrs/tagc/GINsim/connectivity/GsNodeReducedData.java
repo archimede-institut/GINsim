@@ -4,7 +4,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * this object represents nodes in the reduced graph : the graph of strong connected components
@@ -14,6 +16,10 @@ public class GsNodeReducedData {
 	//all vertices that are in the strongest connected component together 
 	private Vector content;
 	private String id;
+	
+	public static final int SCC_TYPE_UNIQUE_NODE = 0;
+	public static final int SCC_TYPE_SIMPLE_CYCLE = 1;
+	public static final int SCC_TYPE_COMPLEX_COMPONENT = 2;
 	
 	/**
 	 * @param id Id of the new node.
@@ -72,6 +78,13 @@ public class GsNodeReducedData {
 		return content;
 	}
 
+	/**
+	 * @return the id of the connected component.
+	 */
+	public String getId() {
+		return id;
+	}
+
 	public int hashCode() {
 		return id.hashCode();
 	}
@@ -95,5 +108,27 @@ public class GsNodeReducedData {
 			ret += ","+content.get(i);
 		}
 		return ret;
+	}
+	
+	/**
+	 * Indicates the type of component. Unique node, elementaty cycle or complex component.
+	 * @return the type. (see constants)
+	 */
+	public int getType(GsGraphManager gm) {
+		if (content.size() == 1) return SCC_TYPE_UNIQUE_NODE;
+		for (Iterator it = content.iterator(); it.hasNext();) {
+			Object currentNode = (Object) it.next();
+			if (gm.getOutgoingEdges(currentNode).size() != 1) return SCC_TYPE_COMPLEX_COMPONENT;
+		}
+		return SCC_TYPE_SIMPLE_CYCLE;
+	}
+	
+	public String getTypeName(GsGraphManager gm) {
+		switch (getType(gm)) {
+			case SCC_TYPE_UNIQUE_NODE: 		return Translator.getString("STR_connectivity_unique_node"); 
+			case SCC_TYPE_SIMPLE_CYCLE: 	return Translator.getString("STR_connectivity_simple_cycle");
+			case SCC_TYPE_COMPLEX_COMPONENT:return Translator.getString("STR_connectivity_complex_component");
+		}
+		return null; //Useless, but eclipse want it.
 	}
 }
