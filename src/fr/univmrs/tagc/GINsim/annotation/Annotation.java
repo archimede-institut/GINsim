@@ -72,7 +72,15 @@ public class Annotation implements XMLize
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
+	/**
+	 * Add the string containing the comments to the end of the actual comments.
+	 * @param comment the new comment
+	 */
+	public void appendToComment(String comment) {
+		this.comment += comment;
+	}
+
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
 			if (comment.equals("") && getLinkList().size()==0) {
 			    return;         

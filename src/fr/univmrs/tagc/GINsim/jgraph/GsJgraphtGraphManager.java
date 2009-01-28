@@ -64,7 +64,7 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         
         // use a lighter implementation of a directedGraph!
         g = new ListenableDirectedGraph(new GsJGraphtBaseGraph(new GsJgraphtEdgeFactory()) );
-        
+
         // and keep the standard one not too far away...
         // g = new ListenableDirectedGraph(new DefaultDirectedGraph(new GsJgraphtEdgeFactory()) );
 

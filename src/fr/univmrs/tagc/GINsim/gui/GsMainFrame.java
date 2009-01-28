@@ -293,7 +293,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
     public boolean removeTab(String name) {
       int i = jTabbedPane.indexOfTab(name);
       if (i != -1) {
-        Component c = jTabbedPane.getTabComponentAt(i);
+        Component c = jTabbedPane.getComponentAt(i); //I change getTabComponentAt to getComponentAt just to be able to compile.
         jTabbedPane.removeTabAt(i);
         if (c instanceof GraphChangeListener) eventDispatcher.removeGraphChangeListener((GraphChangeListener)c);
         if (selectedPanel == i) selectedPanel = -1;
@@ -409,7 +409,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 
         jTabbedPane.setEnabledAt(0, false);
         jTabbedPane.setEnabledAt(1, false);
-        if (jTabbedPane.getSelectedIndex() != 2) {
+        if (jTabbedPane.getSelectedIndex() != 2 && jTabbedPane.getTabCount() > 2) { //FIXME: unexpected crash here, java.lang.IndexOutOfBoundsException: Index: 2, Tab count: 2
           jTabbedPane.setSelectedIndex(2);
         }
         // replace jSplitPane, only if this is the first graph in this frame
