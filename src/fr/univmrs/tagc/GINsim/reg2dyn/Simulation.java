@@ -27,7 +27,7 @@ public final class Simulation extends Thread implements Runnable {
 
 	private LinkedList queue = new LinkedList(); // exploration queue
 
-	private BaseReg2DynFrame frame;
+	private SimulationManager frame;
 	private int maxnodes, maxdepth;
 	private Iterator initStatesIterator;
 	private SimulationHelper helper;
@@ -44,10 +44,10 @@ public final class Simulation extends Thread implements Runnable {
 	 * @param frame
 	 * @param params
 	 */
-    protected Simulation(GsRegulatoryGraph regGraph, BaseReg2DynFrame frame, GsSimulationParameters params) {
+    protected Simulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params) {
         this(regGraph, frame, params, true);
     }
-    protected Simulation(GsRegulatoryGraph regGraph, BaseReg2DynFrame frame, GsSimulationParameters params, boolean runNow) {
+    protected Simulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow) {
 		this.frame = frame;
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
