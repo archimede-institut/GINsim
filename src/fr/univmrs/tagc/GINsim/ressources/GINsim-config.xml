@@ -26,7 +26,8 @@
 
 		<!-- other plugins -->
 		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin"/>
-		<plugin name="tb" 					mainClass="fr.univmrs.tagc.GINsim.gui.tbclient.GsTBPlugin"/>
+		<plugin name="tb" 						mainClass="fr.univmrs.tagc.GINsim.gui.tbclient.GsTBPlugin"/>
+		<plugin name="jython" 					mainClass="fr.univmrs.tagc.GINsim.jython.JythonPlugin"/>
 	</listOfPlugins>
 
 	<listOfGraphType>
