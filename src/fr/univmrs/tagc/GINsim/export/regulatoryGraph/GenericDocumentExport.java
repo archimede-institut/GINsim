@@ -164,11 +164,11 @@ public class GenericDocumentExport extends GsAbstractExport {
 		
 		String[] cols;
 		if (specConfig.searchStableStates && specConfig.putComment) {
-			cols = new String[] {"", "", "", "", "", ""};
+			cols = new String[] {"", "", "", "", "", "", ""};
 		} else if (specConfig.searchStableStates || specConfig.putComment){
-			cols = new String[] {"", "", "", "", ""};
+			cols = new String[] {"", "", "", "", "", ""};
 		} else {
-			cols = new String[] {"", "", "", ""};
+			cols = new String[] {"", "", "", "", ""};
 		}
 		int nbcol = cols.length-1;
 		doc.openTable("mutants", "table", cols);
@@ -176,7 +176,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 		doc.openTableCell("Mutants", true);
 		doc.openTableCell("Gene", true);
 		doc.openTableCell("Min", true);
-		doc.openTableCell("Max", true);
+        doc.openTableCell("Max", true);
+        doc.openTableCell("Condition", true);
 		if (specConfig.putComment) {
 			doc.openTableCell("Comment", true);
 		}
@@ -202,7 +203,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 				doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type", true);
 				doc.openTableCell("-");
 				doc.openTableCell("-");
-				doc.openTableCell("-");
+                doc.openTableCell("-");
+                doc.openTableCell("");
 				if (specConfig.putComment) {
 					doc.openTableCell("");
 				}
@@ -231,7 +233,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 				if (mutant.getNbChanges() == 0) {
 					doc.openTableCell("-");
 					doc.openTableCell("-");
-					doc.openTableCell("-");
+                    doc.openTableCell("-");
 				} else if (it_multicellularChanges == null){
 					doc.openTableCell(mutant.getName(0));
 					doc.openTableCell(""+mutant.getMin(0));
@@ -243,6 +245,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 					doc.openTableCell(""+t_changes[0]);
 					doc.openTableCell(""+t_changes[1]);
 				}
+                doc.openTableCell(mutant.getCondition(0));
 				if (specConfig.putComment) {
 					doc.openTableCell(1, nbrow, "", false);
 					writeAnnotation(mutant.getAnnotation());//BUG?
@@ -274,6 +277,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 						doc.openTableCell(""+t_changes[0]);
 						doc.openTableCell(""+t_changes[1]);
 					}
+                    doc.openTableCell(""+mutant.getCondition(j));
 				}
 			}
 			
