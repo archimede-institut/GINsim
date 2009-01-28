@@ -1,6 +1,9 @@
 package fr.univmrs.tagc.common.mdd;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -201,5 +204,182 @@ class BalancedDDI extends DecisionDiagramInfo {
 
 
 	public void reset() {
+	}
+}
+
+class SimpleHashDDI {
+	public static final int MAXTERM = 10;
+
+	Map m_nodes = new HashMap();
+	List nodes = new ArrayList();
+	int size = 0;
+
+	SimpleHashDDI(int maxlevel) {
+		for (short i=0 ; i<MAXTERM ; i++) {
+			nodes.add(new int[] {-1,i});
+		}
+		nodes.add(new int[] {-1,-1});
+	}
+
+	public SimpleNode node(int level, SimpleNode[] next) {
+		int[] key = new int[next.length+1];
+		key[0] = level;
+		for (short i=0 ; i<next.length ; i++) {
+			key[i+1] = next[i].idx;
+		}
+		return new SimpleNode(this, node(key));
+	}
+	public int node(int level, int[] next) {
+		int[] key = new int[next.length+1];
+		key[0] = level;
+		for (short i=0 ; i<next.length ; i++) {
+			key[i+1] = next[i];
+		}
+		return node(key);
+	}
+	public int node(int[] key) {
+		int idx;
+		try {
+			idx = ((Integer)m_nodes.get(key)).intValue();
+			System.out.println("reuse");
+		} catch (Exception e) {
+			// create and add the node
+			idx = nodes.size();
+			m_nodes.put(key, new Integer(idx));
+			nodes.add(key);
+			size++;
+			System.out.println("create: "+key + " -->" + m_nodes.get(key));
+		}
+		return idx;
+	}
+	public SimpleNode leaf(int value) {
+		return new SimpleNode(this,leaf_idx(value));
+	}
+	public int leaf_idx(int value) {
+		if (value == -1) {
+			return MAXTERM;
+		}
+		if (value > -1 && value<MAXTERM) {
+			return value;
+		}
+		System.out.println("DEBUG: unknown terminal DD node");
+		return -1;
+	}
+	
+	protected int do_and(int node1, int node2) {
+		if (node1 <= MAXTERM) {
+			switch (node1) {
+			case 0:
+				return node1;
+			default:
+				return node2;
+			}
+		}
+		if (node2 <= MAXTERM) {
+			switch (node2) {
+			case 0:
+				return node2;
+			default:
+				return node1;
+			}
+		}
+		int[] t1 = (int[])nodes.get(node1);
+		int[] t2 = (int[])nodes.get(node2);
+		if (t1[0] == t2[0]) {
+			int[] key = new int[t1.length];
+			key[0] = t1[0];
+			for (short i=0 ; i<key.length ; i++) {
+				key[i] = do_and(t1[i], t2[i]);
+			}
+			return node(key);
+		}
+		if (t1[0] < t2[0]) {
+			int[] tmp = t1;
+			t1 = t2;
+			t2 = tmp;
+		}
+		int[] key = new int[t1.length];
+		key[0] = t1[0];
+		for (short i=0 ; i<key.length ; i++) {
+			key[i] = do_and(t1[i], node2);
+		}
+		return node(key);
+	}
+	protected int do_or(int node1, int node2) {
+		if (node1 <= MAXTERM) {
+			switch (node1) {
+			case 0:
+				return node2;
+			default:
+				return node1;
+			}
+		}
+		if (node2 <= MAXTERM) {
+			switch (node2) {
+			case 0:
+				return node1;
+			default:
+				return node2;
+			}
+		}
+		int[] t1 = (int[])nodes.get(node1);
+		int[] t2 = (int[])nodes.get(node2);
+		if (t1[0] == t2[0]) {
+			int[] key = new int[t1.length];
+			key[0] = t1[0];
+			for (short i=0 ; i<key.length ; i++) {
+				key[i] = do_or(t1[i], t2[i]);
+			}
+			return node(key);
+		}
+		if (t1[0] < t2[0]) {
+			int[] tmp = t1;
+			t1 = t2;
+			t2 = tmp;
+		}
+		int[] key = new int[t1.length];
+		key[0] = t1[0];
+		for (short i=0 ; i<key.length ; i++) {
+			key[i] = do_or(t1[i], node2);
+		}
+		return node(key);
+	}
+	protected int do_not(int node) {
+		if (node <= MAXTERM) {
+			switch (node) {
+			case 0:
+				return 1;
+			default:
+				return 0;
+			}
+		}
+		int[] t1 = (int[])nodes.get(node);
+		int[] key = new int[t1.length];
+		key[0] = t1[0];
+		for (short i=0 ; i<key.length ; i++) {
+			key[i] = do_not(t1[i]);
+		}
+		return node(key);
+	}
+
+	public int getNodeCount() {
+		return size;
+	}
+}
+
+class SimpleNode {
+	int idx;
+	SimpleHashDDI ddi;
+	
+	protected SimpleNode(SimpleHashDDI ddi, int idx) {
+		this.ddi = ddi;
+		this.idx = idx;
+	}
+
+	public SimpleNode or(SimpleNode other) {
+		return new SimpleNode(ddi, ddi.do_or(idx, other.idx));
+	}
+	public SimpleNode and(SimpleNode other) {
+		return new SimpleNode(ddi, ddi.do_and(idx, other.idx));
 	}
 }
