@@ -26,11 +26,11 @@
 	<property name="pdfdoc" location="${doc}/pdf"/>
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
-	<property name="home" location="/home/aurelien"/>
-	<property name="tbjar" location="${home}/Bureau/tb/tbrowser.jar"/>
-	<property name="jfjar" location="${home}/Bureau/tb/jfreechart-1.0.11.jar"/>
-	<property name="jcjar" location="${home}/Bureau/tb/jcommon-1.0.14.jar"/>
-	<property name="jythonjar" location="${home}/Bureau/jython.jar"/>
+	<property name="extlib" location="${user.home}/Bureau/GINsim"/>
+	<property name="tbjar" location="${extlib}/tb/tbrowser.jar"/>
+	<property name="jfjar" location="${extlib}/tb/jfreechart-1.0.11.jar"/>
+	<property name="jcjar" location="${extlib}/tb/jcommon-1.0.14.jar"/>
+	<property name="jythonjar" location="${extlib}/jython.jar"/>
 	
 	<property name="classpath"  value=".:${tbjar}:${jfjar}:${jcjar}:${jythonjar}:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/javabib-bin.jar"/>
 

@@ -183,6 +183,30 @@ public class SearchNonFunctionalInteractions {
 		log.append(s);
 	}
 	/**
+	 * append the boolean b to the log
+	 * @param b
+	 */
+	private void log(boolean b) {
+		log.append(b);
+	}
+
+	/**
+	 * append the long l to the log
+	 * @param l
+	 */
+	private void log(long l) {
+		log.append(l);
+	}
+
+	/**
+	 * append the int i to the log
+	 * @param i
+	 */
+	private void log(int i) {
+		log.append(i);
+	}
+
+	/**
 	 * append the object 'o' to the log
 	 * @param o
 	 */
