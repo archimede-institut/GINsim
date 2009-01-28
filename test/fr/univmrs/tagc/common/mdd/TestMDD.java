@@ -10,6 +10,7 @@ public class TestMDD extends TestCase {
 	static final int maxlevel = 70;
 	static final int maxchildtest = 20;
 
+	protected DecisionDiagramInfo ddi;
 	// for the N Queens test
 	int N = 3;
 	
