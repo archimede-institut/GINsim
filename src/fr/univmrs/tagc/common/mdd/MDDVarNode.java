@@ -167,5 +167,4 @@ public class MDDVarNode extends MDDNode {
         	return null;
         }
 	}
-
 }

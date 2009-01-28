@@ -56,7 +56,7 @@ public class AnnotationLink {
 		if (proto == null || proto.equals("")) {
 			return value;
 		}
-		return proto+": "+value;
+		return proto+":"+value;
 	}
 
 	public OpenHelper getHelper() {

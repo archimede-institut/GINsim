@@ -645,5 +645,4 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 	public OmddNode[] getParametersForSimulation(boolean focal) {
 		return getAllTrees(focal);
 	}
-
 }

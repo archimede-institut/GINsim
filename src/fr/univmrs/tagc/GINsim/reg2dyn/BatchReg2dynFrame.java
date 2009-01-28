@@ -101,7 +101,7 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
      */
     public void endSimu(GsGraph graph) {
         if (graph != null) {
-            // TODO: present the results instead of printing them!
+            // TODO: add other anlyses (SCC,... ?)
         }
         if (initIterator != null && initIterator.hasNext()) {
             GsInitialState o_init = (GsInitialState)initIterator.next();

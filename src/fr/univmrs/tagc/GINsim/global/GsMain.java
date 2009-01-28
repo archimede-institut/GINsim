@@ -34,8 +34,6 @@ public class GsMain {
         Vector commands = new Vector(0);
         Vector open = new Vector(0);
 
-        boolean tb = false;
-
         try {
         	GsEnv.readConfig("/fr/univmrs/tagc/GINsim/ressources/GINsim-config.xml");
         } catch (Exception e) {

@@ -6,6 +6,7 @@ import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.gui.GsActions;
+import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
@@ -66,7 +67,10 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
 //                graph.addObject("reg2dyn_parameters", m_params);
 //            }
 //            new Reg2dynFrame(frame, (GsRegulatoryGraph)graph, m_params).setVisible(true);
-            graph.getGraphManager().getMainFrame().getGsAction().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
+            GsMainFrame mainFrame = graph.getGraphManager().getMainFrame();
+            if (mainFrame != null) {
+            	mainFrame.getGsAction().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
+            }
 
             GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
             if (ref == 0) {

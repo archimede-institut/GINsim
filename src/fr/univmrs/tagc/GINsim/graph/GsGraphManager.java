@@ -209,12 +209,12 @@ abstract public class GsGraphManager {
     
     /**
      * @return an helper to read/change visual info on this graph's edges
-     * @see GsEdgeAttributesReader
+     * @see GsVertexAttributesReader
      */
     abstract public GsVertexAttributesReader getVertexAttributesReader();
     /**
      * @return an helper to read/change visual info on this graph's vertices
-     * @see GsVertexAttributesReader
+     * @see GsEdgeAttributesReader
      */
     abstract public GsEdgeAttributesReader getEdgeAttributesReader();
     

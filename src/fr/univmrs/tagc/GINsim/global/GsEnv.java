@@ -59,7 +59,7 @@ public class GsEnv extends Env {
 
 
 	/**
-	 * add a frame to the list of avaible frames
+	 * add a frame to the list of available frames
 	 *   => called by GsMainFrame constructor
 	 *
 	 * @param frame the frame to add
@@ -69,7 +69,7 @@ public class GsEnv extends Env {
 	}
 
 	/**
-	 * remove a frame from the list of avaible frames
+	 * remove a frame from the list of available frames
 	 * and exit when closing the last frame.
 	 *   => called when closing a GsMainFrame
 	 *
@@ -341,6 +341,15 @@ public class GsEnv extends Env {
     public static GsGraph getRegistredGraph(String id) {
         return (GsGraph)m_graphs.get(id);
     }
+    
+    /**
+     * get the HashMap of containing all the registered graphs
+     * @return 
+     * 
+     */
+    public static Map getAllGraphs() {
+		return m_graphs;
+	}
 
     /**
      * ask all GINsim frames to update their recent menus

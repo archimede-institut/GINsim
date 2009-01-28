@@ -18,7 +18,7 @@ public interface GsActionProvider {
     public static final int ACTION_ACTION = 2;
 
 	/**
-     * get actions avaible within this provider.
+     * get actions available within this provider.
      *
 	 * @param actionType the type of action (one of ACTION_ACTION, ACTION_EXPORT or ACTION_LAYOUT)
 	 * @param graph the graph for which we are adding it
