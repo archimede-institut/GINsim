@@ -8,7 +8,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 
-public abstract class BaseReg2DynFrame extends StackDialog {
+public abstract class BaseReg2DynFrame extends StackDialog implements SimulationManager {
     /**  */
     private static final long serialVersionUID = 8275117764047606650L;
 
@@ -22,10 +22,6 @@ public abstract class BaseReg2DynFrame extends StackDialog {
         super(parent, id, w, h);
     }
 
-    /**
-     * set the progress level, to give the user some feedback
-     * @param n
-     */
     public void setProgress(int n) {
         if (isrunning) {
             setMessage(""+n);
