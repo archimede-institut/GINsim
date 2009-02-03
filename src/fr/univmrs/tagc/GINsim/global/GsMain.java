@@ -1,6 +1,11 @@
 package fr.univmrs.tagc.GINsim.global;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -11,7 +16,6 @@ import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
-import fr.univmrs.tagc.GINsim.plugin.GsClassLoader;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.common.manageressources.ImageLoader;
 import fr.univmrs.tagc.common.manageressources.Translator;
@@ -23,23 +27,31 @@ import fr.univmrs.tagc.common.xml.XMLHelper;
  */
 public class GsMain {
 
+    public static void loadCore() {
+        // update classpath
+        // hacky for now, dynamic stuff later on
+        String[] dirs = {"/cobelix/naldi/Bureau/tb"};
+        updateClassPath(dirs);
+        
+        try {
+            GsEnv.readConfig("/fr/univmrs/tagc/GINsim/ressources/GINsim-config.xml");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
     /**
      * @param args
      * try to run it with --help for more info
      */
     public static void main(String[] args) {
+        loadCore();
 
         String gsdir = ".";
         boolean startui = true;
         Vector commands = new Vector(0);
         Vector open = new Vector(0);
 
-        try {
-        	GsEnv.readConfig("/fr/univmrs/tagc/GINsim/ressources/GINsim-config.xml");
-        } catch (Exception e) {
-        	e.printStackTrace();
-        	System.exit(1);
-        }
         /*
          * parse args: - run without GUI - set ginsim dir - choose locale - give
          * some help
@@ -131,18 +143,49 @@ public class GsMain {
             }
         }
     }
+    
+    
+    private static List l = new ArrayList();
+    URLClassLoader cloader = new URLClassLoader(new URL[] {}, ClassLoader.getSystemClassLoader());
+    public static ClassLoader getClassLoader() {
+        URL[] t = new URL[l.size()];
+        for (int i=0 ; i<t.length ; i++) {
+            File f = new File((String)l.get(i));
+            if (!(f.exists() && f.canRead())) {
+                continue;
+            }
+            try {
+                t[i] = f.toURI().toURL();
+            } catch (MalformedURLException e) {}
+        }
+        return new URLClassLoader(t);
+    }
+    
+    public static void updateClassPath(String[] files) {
+        for (int i=0 ; i<files.length ; i++) {
+            File f = new File(files[i]);
+            if (!(f.exists() && f.canRead())) {
+                continue;
+            }
+            if (f.isDirectory()) {
+                String[] content = f.list();
+                for (int j=0 ; j<content.length ; j++) {
+                    if (content[j].endsWith(".jar")) {
+                        l.add(f + File.pathSeparator + content[j]);
+                    }
+                }
+            } else {
+                l.add(files[i]);
+            }
+        }
+    }
+
 }
 
 /**
  * This class reads GINsim's generic config file, loads plugins and so on.
  */
 class ReadConfig extends XMLHelper {
-
-	GsClassLoader cloader;
-
-	protected ReadConfig(GsClassLoader cloader) {
-		this.cloader = cloader;
-	}
 
 	public String getFallBackDTD() {
 		return null;
@@ -151,14 +194,16 @@ class ReadConfig extends XMLHelper {
 	public GsGraph getGraph() {
 		return null;
 	}
-
+	
+	ClassLoader cloader = GsMain.getClassLoader();
+	
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if ("plugin".equals(qName)) {
 			String s = attributes.getValue("load");
 			if (null == s || "true".equals(s)) {
 				s = attributes.getValue("mainClass");
 				try {
-					Class cl = cloader.loadClass(s);
+					Class cl = Class.forName(s, true, cloader);
 					GsPlugin plugin = (GsPlugin)cl.newInstance();
 					plugin.registerPlugin();
 				} catch (Throwable e) {
@@ -170,7 +215,7 @@ class ReadConfig extends XMLHelper {
 			if ("true".equals(s)) {
 				s = attributes.getValue("mainClass");
 				try {
-					Class cl = cloader.loadClass(s);
+					Class cl = Class.forName(s, true, cloader);
 					GsEnv.addGraphType((GsGraphDescriptor)cl.newInstance());
 				} catch (Exception e) {
 					System.out.println("unable to add graphType from class: "+s);

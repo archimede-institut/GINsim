@@ -4,10 +4,10 @@ import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 
 
 public class SimulationQueuedState {
-	int[] state;
-	GsDynamicNode previous = null;
-	boolean multiple = false;
-	int depth;
+	public int[] state;
+	public GsDynamicNode previous = null;
+	public boolean multiple = false;
+	public int depth;
 	
 	SimulationQueuedState(int[] state, int depth, GsDynamicNode previous, boolean multiple) {
 		this.state = state;
