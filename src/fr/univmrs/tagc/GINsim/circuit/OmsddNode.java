@@ -345,10 +345,12 @@ public class OmsddNode {
         		}
 	            String s2 = next[i].getString(ilevel+1, names);
 	            if (s2 != null) {
-	                if (s2.equals("1") || s2.equals("-1")) {
-	                    s += prefix+names.get(level)+"="+curval+" ==> "+s2+"\n";
-	                } else {
-	                    s += prefix+names.get(level)+"="+curval+"\n"+s2;
+                    if (s2.equals("1")) {
+                        s += prefix+names.get(level)+"="+curval+" ==> POSITIVE\n";
+                    } else if (s2.equals("-1")) {
+                        s += prefix+names.get(level)+"="+curval+" ==> NEGATIVE\n";
+                    } else {
+                        s += prefix+names.get(level)+"="+curval+"\n"+s2;
 	                }
 	            }
         	}

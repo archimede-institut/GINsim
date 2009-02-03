@@ -990,7 +990,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     }
 
     /**
-     * plugins/algo/anything may want to associate objects witha graph to retrieve them later.
+     * plugins/algo/anything may want to associate objects with a graph to retrieve them later.
      * this (and <code>addObject(key, obj)</code>) makes it easy.
      *
      * @see #addObject(Object, Object)
@@ -1021,7 +1021,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     }
 
     /**
-     * plugins/algo/anything may want to associate objects witha graph to retrieve them later.
+     * plugins/algo/anything may want to associate objects with a graph to retrieve them later.
      * this (and <code>getObject(key)</code>) makes it easy.
      *
      * @see #getObject(Object)
@@ -1116,7 +1116,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
             } else {
                 File f = new File(associatedID);
                 if (f.exists()) {
-                    ag = GsRegulatoryGraphDescriptor.getInstance().open(f);
+                    ag = GsGinsimGraphDescriptor.getInstance().open(f);
                     GsEnv.newMainFrame(ag);
                     setAssociatedGraph(ag);
                 } else {

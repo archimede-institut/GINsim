@@ -1,11 +1,6 @@
 package fr.univmrs.tagc.GINsim.connectivity;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -78,27 +73,37 @@ public final class AlgoConnectivity extends Thread {
 
             List component;
             if (graphModel instanceof GsJgraphtGraphManager) {
-                System.out.println("use jgrapht SCC search");
-                 List jcp = ((GsJgraphtGraphManager)graphModel).getStrongComponent();
-                 component = new Vector();
-                 if (mode == MODE_FULL) {
-                     String sid;
-                     int id = 0;
-                     reducedGraph = new GsReducedGraph(g);
-                     for (int i=0 ; i<jcp.size(); i++) {
-                         Set set = (Set)jcp.get(i);
-                         if (set.size() == 1) {
-                             sid = null;
-                         } else {
-                             sid = "cc-"+id++;
-                         }
-                         GsNodeReducedData node = new GsNodeReducedData(sid, (Set)jcp.get(i));
-                         component.add(node);
-                         reducedGraph.addVertex(node);
-                     }
-                     nbCompo = component.size();
+                List jcp = ((GsJgraphtGraphManager)graphModel).getStrongComponent();
+                nbCompo = jcp.size();
+                component = new ArrayList();
+                String sid;
+                int id = 0;
+                if (mode == MODE_FULL) {
+                    reducedGraph = new GsReducedGraph(g);
+                    for (int i=0 ; i<nbCompo; i++) {
+                        Set set = (Set)jcp.get(i);
+                        if (set.size() == 1) {
+                            sid = null;
+                        } else {
+                            sid = "cc-"+id++;
+                        }
+                        GsNodeReducedData node = new GsNodeReducedData(sid, set);
+                        component.add(node);
+                        reducedGraph.addVertex(node);
+                    }
+                } else {
+                    for (int i=0 ; i<nbCompo; i++) {
+                        Set set = (Set)jcp.get(i);
+                        if (set.size() == 1) {
+                            sid = null;
+                        } else {
+                            sid = "cc-"+id++;
+                        }
+                        GsNodeReducedData node = new GsNodeReducedData(sid, set);
+                        component.add(node);
+                    }
                 }
-            } else {
+           } else {
                 component = findConnectedComponent();
                 if (mode == MODE_FULL) {
                     reducedGraph = new GsReducedGraph(g);
@@ -133,7 +138,9 @@ public final class AlgoConnectivity extends Thread {
 
 	private void createSCCGraphByOutgoingEdges(int nbCompo, List component, GsGraphManager gm, GsVertexAttributesReader vreader) throws InterruptedException {
 		//Complexity = #nodes + #edges + #component => O(3n+1)
-		if (nbCompo == 1) return;																				//The graph is already created, no edges to add.
+		if (nbCompo == 1) {
+            return;																				//The graph is already created, no edges to add.
+        }
 		HashMap nodeParentSCC = new HashMap(); //Map the a node to its parent SCC
 		
 		for (int scc_i=0 ; scc_i<nbCompo; scc_i++) {															//for each SCC
@@ -161,7 +168,7 @@ public final class AlgoConnectivity extends Thread {
             	if (canceled) {
                     throw new InterruptedException();
                 }
-				Object currentNode = (Object) it.next();
+				Object currentNode = it.next();
 				List outgoingEdges = graphModel.getOutgoingEdges(currentNode);
 				for (Iterator it_out = outgoingEdges.iterator(); it_out.hasNext();) {							//    for each edge outgoing from this node
                 	if (canceled) {
