@@ -131,14 +131,6 @@ public class GsMain {
                             GsEnv.newMainFrame(), null, (String) open.get(i));
                 }
             } else {
-                //                try {
-                //                    //UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                //                    //System.out.println(UIManager.getSystemLookAndFeelClassName());
-                //                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-                //                } catch (Exception e) {
-                //                    e.printStackTrace();
-                //                }
-
                 GsEnv.newMainFrame();
             }
         }

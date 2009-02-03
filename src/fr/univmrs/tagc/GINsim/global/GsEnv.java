@@ -31,7 +31,6 @@ import fr.univmrs.tagc.common.widgets.Frame;
  */
 public class GsEnv extends Env {
 
-	protected static GsClassLoader cloader = new GsClassLoader();
 	private static String ginsimDir = null;
 	private static String dtdDir = null;
 	private static String pluginDir = null;
@@ -125,9 +124,10 @@ public class GsEnv extends Env {
 			ginsimDir = dir + File.separator;
 		}
 
-		pluginDir = ginsimDir + "plugins" + File.separator;
 		dtdDir= ginsimDir + "data" + File.separator + "ginml" + File.separator;
 
+		pluginDir = ginsimDir + "plugins" + File.separator;
+		GsClassLoader cloader = new GsClassLoader();
 		// look for other plugins
 		String[] t_files = new File(pluginDir).list();
 		if (t_files != null) {
@@ -147,7 +147,7 @@ public class GsEnv extends Env {
 	 *
 	 * @param cloader
 	 * @param jf the jarfile to open
-	 * @throws GsException if en error occur
+	 * @throws GsException if an error occurs
 	 */
 	private static void loadPlugin(GsClassLoader cloader, JarFile jf) throws GsException {
 		if (jf == null) {
@@ -363,6 +363,6 @@ public class GsEnv extends Env {
 
 	public static void readConfig(String path) throws IOException, FileNotFoundException {
 		InputStream stream = Tools.getStreamForPath(path);
-    	new ReadConfig(GsEnv.cloader).startParsing(stream, false);
+    	new ReadConfig().startParsing(stream, false);
 	}
 }
