@@ -7,6 +7,7 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -31,16 +32,18 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
-public class SearchNonFunctionalInteractionsFrame extends StackDialog implements MouseListener {
+public class SearchNonFunctionalInteractionsFrame extends StackDialog implements MouseListener, ActionListener {
 	private JFrame frame;
 	private GsGraph graph;
 	private Container mainPanel;
 	private JCheckBox[] runOptions;
 	private Color option_lineColor = Color.red;
 	private JTextArea resultsPane;
+	private JButton deleteInteractionButton, colorizeButton;
 	
 	private SearchNonFunctionalInteractions fii;
 	private JPanel colorPanel;
+	private boolean isColorized = false;
 	
 	private static final long serialVersionUID = -9126723853606423085L;
 
@@ -108,22 +111,17 @@ public class SearchNonFunctionalInteractionsFrame extends StackDialog implements
 			c.ipadx = 0;
 			c.ipady = 0;
 			c.gridwidth = 3;
-		    runOptions[2] = new JCheckBox(Translator.getString("STR_snfi_opt_annotate"));
-		    runOptions[2].setMnemonic(KeyEvent.VK_A); 
-		    runOptions[2].setSelected(true);
-		    mainPanel.add(runOptions[2], c);
-
-		    c.gridy++;
-		    runOptions[1] = new JCheckBox(Translator.getString("STR_snfi_opt_simplify"));
-		    runOptions[1].setMnemonic(KeyEvent.VK_S); 
-		    //runOptions[1].setSelected(true);
+		    runOptions[1] = new JCheckBox(Translator.getString("STR_snfi_opt_annotate"));
+		    runOptions[1].setMnemonic(KeyEvent.VK_A); 
+		    runOptions[1].setSelected(true);
 		    mainPanel.add(runOptions[1], c);
-		    c.gridy++;
-		    runOptions[3] = new JCheckBox(Translator.getString("STR_snfi_opt_verbose"));
-		    runOptions[3].setMnemonic(KeyEvent.VK_V); 
-		    //runOptions[3].setSelected(true);
-		    mainPanel.add(runOptions[3], c);
 
+		    c.gridy++;
+		    runOptions[2] = new JCheckBox(Translator.getString("STR_snfi_opt_verbose"));
+		    runOptions[2].setMnemonic(KeyEvent.VK_V); 
+		    //runOptions[3].setSelected(true);
+		    mainPanel.add(runOptions[2], c);
+		    
 			c.gridy++;
 			c.ipady = 20;
 			mainPanel.add(new JLabel(""), c);
@@ -137,19 +135,58 @@ public class SearchNonFunctionalInteractionsFrame extends StackDialog implements
 	        JScrollPane resultsScrollPane = new JScrollPane(resultsPane);
 	        resultsScrollPane.setPreferredSize(new Dimension(250, 250));
 			mainPanel.add(resultsScrollPane, c);
+			
+		    c.gridy++;
+			c.fill = GridBagConstraints.NONE;
+			c.anchor = GridBagConstraints.EAST;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.gridwidth = 3;
+			JPanel buttonsPanel = new JPanel();
+		    deleteInteractionButton = new JButton(Translator.getString("STR_snfi_simplify"));
+		    buttonsPanel.add(deleteInteractionButton);
+		    deleteInteractionButton.addActionListener(this);
+		    colorizeButton = new JButton(Translator.getString("STR_snfi_do_colorize"));
+		    colorizeButton.setEnabled(false);
+		    buttonsPanel.add(colorizeButton);
+		    colorizeButton.addActionListener(this);
+
+		    mainPanel.add(buttonsPanel, c);
+
 		}
 		return mainPanel;
 	}
 
 	protected void run() {
-		fii = new SearchNonFunctionalInteractions((GsRegulatoryGraph)graph, getOption(0), getOption(1), getOption(2), getOption(3), option_lineColor);
+		fii = new SearchNonFunctionalInteractions((GsRegulatoryGraph)graph, getOption(0), getOption(1), getOption(2), option_lineColor);
 		resultsPane.setText(fii.getLog().toString());
+		isColorized = getOption(0);
+		if (isColorized) colorizeButton.setText(Translator.getString("STR_snfi_undo_colorize"));
+		else Translator.getString("STR_snfi_do_colorize");
+		colorizeButton.setEnabled(true);
 	}
 	
 	private boolean getOption(int i) {
 		return runOptions[i].getSelectedObjects() != null;
 	}
-
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == deleteInteractionButton) {
+			if (fii.getNonFunctionalInteractions() != null)	fii.removeNonFunctionalInteractions();
+		} else if (e.getSource() == colorizeButton) {
+			if (fii.getNonFunctionalInteractions() != null) {	
+				if (isColorized ) {
+					fii.undoColorize();
+					colorizeButton.setText(Translator.getString("STR_snfi_do_colorize"));
+					isColorized = false;
+				} else {
+					fii.doColorize();
+					colorizeButton.setText(Translator.getString("STR_snfi_undo_colorize"));
+					isColorized = true;
+				}
+			}
+		}
+	}
+	
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == colorPanel) {
 			option_lineColor = JColorChooser.showDialog(
