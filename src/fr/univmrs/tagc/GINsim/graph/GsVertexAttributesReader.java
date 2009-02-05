@@ -9,7 +9,7 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 /**
  * extract from graph graphic info on a vertex.
  */
-public abstract class GsVertexAttributesReader {
+public abstract class GsVertexAttributesReader implements GsAttributesReader {
 
     public static Color bg = new Color(((Integer)OptionStore.getOption("vs.vertexbg", new Integer(-26368))).intValue());
     public static Color fg = new Color(((Integer)OptionStore.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
