@@ -2,10 +2,15 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import java.awt.Color;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import fr.univmrs.tagc.GINsim.css.CascadingStyle;
+import fr.univmrs.tagc.GINsim.css.EdgeStyle;
+import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
@@ -20,13 +25,15 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
  * 
  */
 public class SearchNonFunctionalInteractions {
-	private boolean opt_simplify, opt_color, opt_annotate, opt_verbose;
+	private boolean opt_color, opt_annotate, opt_verbose;
 	private Color opt_color_inactive = Color.red;
 	private StringBuffer log; //to output the results
 
 	private GsRegulatoryGraph g;
 	private GsGraphManager gm;
 	private HashMap m;
+	private Set nonFunctionalInteractions = null;
+	private CascadingStyle cs = null;
 	
 	private long before; //to know the time elapsed in the algorithm
 	
@@ -41,15 +48,13 @@ public class SearchNonFunctionalInteractions {
 	 * @param opt_verbose boolean indicating if we output more information like node order and logical functions.
 	 * @param opt_color_inactive the Color for the non functional edges.
 	 */
-	public SearchNonFunctionalInteractions(GsRegulatoryGraph  g, boolean opt_color, boolean opt_simplify, boolean opt_annotate, boolean opt_verbose , Color opt_color_inactive) {
-		this.opt_simplify 		= opt_simplify;
+	public SearchNonFunctionalInteractions(GsRegulatoryGraph  g, boolean opt_color, boolean opt_annotate, boolean opt_verbose , Color opt_color_inactive) {
 		this.opt_annotate 		= opt_annotate;
 		this.opt_verbose 		= opt_verbose;
 		this.opt_color    		= opt_color;
 		this.opt_color_inactive = opt_color_inactive;
 		this.g = g;
 		this.gm = g.getGraphManager();
-		//if (opt_simplify) this.g_sim = (GsRegulatoryGraph ) g.clone();
 		
 		log = new StringBuffer(1024);
 		log("Find inactive interactions on ");
@@ -58,8 +63,6 @@ public class SearchNonFunctionalInteractions {
 		log(gm.getVertexCount());
 		log(" vertices)");
 		log("\n    simplify inactive edges : ");
-		log(opt_simplify);
-		log("\n    annotate inactive edges : ");
 		log(opt_annotate);
 		log("\n    color inactive edges : ");
 		log(opt_color);
@@ -97,7 +100,21 @@ public class SearchNonFunctionalInteractions {
 		
 		int[] visited = new int[gm.getVertexCount()];											//@see scannOmdd
 		
+		nonFunctionalInteractions = new HashSet();
 		
+		//Prepare colorisation
+		EdgeStyle style = null;
+		InteractionAnalysisSelector sel = (InteractionAnalysisSelector) Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER);
+		if (sel == null) {
+			sel = new InteractionAnalysisSelector();
+			Selector.registerSelector(sel);
+		}
+		sel.setCache(nonFunctionalInteractions);
+		style = (EdgeStyle)sel.getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+		if (opt_color_inactive != null) style.lineColor = opt_color_inactive;
+		if (opt_color) cs = new CascadingStyle(true);
+
+			
 		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
 		i = 1;
 		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {								//  For each vertex v in the graph
@@ -118,19 +135,16 @@ public class SearchNonFunctionalInteractions {
 							log(omdd);
 						}
 						log("\n");
+						nonFunctionalInteractions.add(me);										//      cache the vertex for deletion.
 						if (opt_color) {
 							ereader.setEdge(me);
-							ereader.setLineColor(opt_color_inactive);
-							ereader.refresh();
+							cs.applyOnEdge(style, me, ereader);
 						}
 						if (opt_annotate) {
 							String comment = "This edge is non functional\n";
 							for (int j = 0; j < ((GsRegulatoryMultiEdge) me.getUserObject()).getEdgeCount(); j++) {
 								((GsRegulatoryMultiEdge) me.getUserObject()).getGsAnnotation(j).appendToComment(comment);
 							}
-						}
-						if (opt_simplify) {
-		//					gm.removeEdge(vs, v); TODO : supress one edge and get java.util.ConcurrentModificationException ?
 						}
 					}
 				}
@@ -143,6 +157,45 @@ public class SearchNonFunctionalInteractions {
 
 	private int vertex_level(GsRegulatoryVertex v) {
 		return ((Integer)m.get(v)).intValue();
+	}
+	
+	/**
+	 * 
+	 * @return the Set of nonFunctionalInteractions or null if it has not been computed
+	 */
+	public Set getNonFunctionalInteractions() {
+		return nonFunctionalInteractions;
+	}
+	
+	/**
+	 * Remove all the non functional interactions from the graph.
+	 */
+	public void removeNonFunctionalInteractions() {
+		for (Iterator it = nonFunctionalInteractions.iterator(); it.hasNext();) {
+			GsJgraphDirectedEdge me = (GsJgraphDirectedEdge) it.next();
+			gm.removeEdge(me.getSourceVertex(), me.getTargetVertex());
+		}
+		nonFunctionalInteractions = null;
+	}
+	
+	/**
+	 * Colorize the edges in the Set nonFunctionalInteractions.
+	 */
+	public void doColorize() {
+		if (nonFunctionalInteractions == null) return;
+		if (cs == null) cs = new CascadingStyle(true);
+		GsEdgeAttributesReader areader = gm.getEdgeAttributesReader();
+		EdgeStyle style = (EdgeStyle)Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER).getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+
+		for (Iterator it = nonFunctionalInteractions.iterator(); it.hasNext();) {
+			GsJgraphDirectedEdge me = (GsJgraphDirectedEdge) it.next();
+			areader.setEdge(me);
+			cs.applyOnEdge(style, me, areader);
+		}
+	}
+	
+	public void undoColorize() {
+		cs.restoreAllEdges(nonFunctionalInteractions, gm.getEdgeAttributesReader());
 	}
 
 	/**
@@ -218,6 +271,13 @@ public class SearchNonFunctionalInteractions {
 	 */
 	public StringBuffer getLog() {
 		return log;
+	}
+	
+	protected void finalize() {
+		if (nonFunctionalInteractions != null) {
+			Selector sel = Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER);
+			if (sel != null) sel.flush(); //remove nonFunctionalInteractions from the cache.
+		}
 	}
 	
 //	private void print_t(int[] t) {

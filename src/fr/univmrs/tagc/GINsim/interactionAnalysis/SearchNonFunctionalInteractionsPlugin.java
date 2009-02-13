@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import javax.swing.JFrame;
 
+import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
@@ -14,6 +15,7 @@ public class SearchNonFunctionalInteractionsPlugin implements GsActionProvider, 
 
 	public void registerPlugin() {
 		GsGraph.registerActionProvider(this);
+		Selector.registerSelector(new InteractionAnalysisSelector());
 	}
 
 	

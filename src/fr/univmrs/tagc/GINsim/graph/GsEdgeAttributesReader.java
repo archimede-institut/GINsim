@@ -12,7 +12,7 @@ import fr.univmrs.tagc.common.manageressources.Translator;
  * this extension of the GsGraphManager is used to get or change visual info on edges objects.
  * It can also change default value (but they aren't persistant yet).
  */
-public abstract class GsEdgeAttributesReader {
+public abstract class GsEdgeAttributesReader implements GsAttributesReader {
 
     protected static Color color = new Color(((Integer)OptionStore.getOption("vs.edgecolor", new Integer(-13395457))).intValue());
     // we don't want to remember other options for now

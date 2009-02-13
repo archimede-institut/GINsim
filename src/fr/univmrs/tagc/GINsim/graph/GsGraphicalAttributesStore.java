@@ -71,16 +71,19 @@ public class GsGraphicalAttributesStore {
             oldColors.put(edge, new StoreColor(ereader));
         }
 	}
+	
+	public void restore(Object o) {
+		vreader.setVertex(o);
+        StoreColor oc = (StoreColor)oldColors.get(o);
+        if (oc != null ) oc.restore(ereader);
+	}	
 }
 
 class StoreColor {
     private final Color background;
     private final Color foreGround;
     private final int border;
-    
-    protected static final int VERTEX = 0;
-    protected static final int EDGE = 1;
-    
+       
     /**
      * @param vreader
      */

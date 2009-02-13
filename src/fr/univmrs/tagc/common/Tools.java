@@ -149,7 +149,7 @@ public class Tools {
 	 * @param code the hexadecimal color code
 	 * @return the corresponding Color
 	 */
-	public static Color getColorFromCode(String code) {
+	public static Color getColorFromCode(String code) throws NumberFormatException {
 		return Color.decode(code);
 	}
 	
