@@ -383,8 +383,6 @@ public abstract class DocumentWriter {
 	protected String newLine() {
 		return NEW_LINE;
 	}
-
-	
 	
 	/**
 	 * Set a property for the document.

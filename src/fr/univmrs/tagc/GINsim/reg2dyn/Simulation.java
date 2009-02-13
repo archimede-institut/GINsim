@@ -62,18 +62,24 @@ public final class Simulation extends Thread implements Runnable {
    		}
 	}
 
-	public void startSimulation(List nodeOrder, Map m_initState) {
-        initStatesIterator = new InitialStatesIterator(nodeOrder, m_initState);
+    public void startSimulation(List nodeOrder, Map m_initState) {
+        set_initialStates(nodeOrder, m_initState);
         start();
+    }
+    public void set_initialStates(List nodeOrder, Map m_initState) {
+        initStatesIterator = new InitialStatesIterator(nodeOrder, m_initState);
     }
 	public void interrupt() {
 		ready = false;
 	}
 
-	/**
-	 * run the simulation in a new thread.
-	 */
-	public void run() {
+    /**
+     * run the simulation in a new thread.
+     */
+    public void run() {
+        frame.endSimu(do_simulation());
+    }
+	public GsGraph do_simulation() {
         ready = true;
 		boolean maxDepthReached = false;
 		try {
@@ -141,14 +147,14 @@ public final class Simulation extends Thread implements Runnable {
 			System.out.println("simulation was interrupted");
 		} catch (OutOfMemoryError e) {
 		    Tools.error("Out Of Memory", null);
-		    return;
+		    return null;
 		} finally {
 			if (maxDepthReached) {
 				Tools.error("Reached the max depth", null);
 				//TODO: explain what happened and give some hints
 			}
 			// return the result
-			frame.endSimu(helper.endSimulation());
+			return helper.endSimulation();
 		}
 	}
 }

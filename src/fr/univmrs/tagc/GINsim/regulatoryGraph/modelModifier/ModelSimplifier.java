@@ -60,17 +60,25 @@ public class ModelSimplifier extends Thread implements Runnable {
 	boolean strict;
 	ParameterGenerator pgen;
 
-	public ModelSimplifier(GsRegulatoryGraph graph, ModelSimplifierConfig config, ModelSimplifierConfigDialog dialog) {
+	public ModelSimplifier(GsRegulatoryGraph graph, ModelSimplifierConfig config, ModelSimplifierConfigDialog dialog, boolean start) {
 		this.graph = graph;
 		this.oldNodeOrder = graph.getNodeOrder();
 		this.dialog = dialog;
 		this.m_removed = new HashMap(config.m_removed);
 		this.strict = config.strict;
 		manager = graph.getGraphManager();
-		start();
+		if (start) {
+		    start();
+		}
 	}
 
-	public void run() {
+    public void run() {
+        GsRegulatoryGraph simplifiedGraph = do_reduction();
+        if (dialog != null) {
+            dialog.endSimu(simplifiedGraph, null);
+        }
+    }
+    public GsRegulatoryGraph do_reduction() {
 		Iterator it;
 		try {
 			// first do the "real" simplification work
@@ -374,16 +382,10 @@ public class ModelSimplifier extends Thread implements Runnable {
 				    param.copy_to(new_param, m_alldata);
 				}
 			}
-			
-			if (dialog != null) {
-				dialog.endSimu(simplifiedGraph, null);
-			}
+			return simplifiedGraph;
 		} catch (Exception e) {
-			if (dialog != null) {
-				dialog.endSimu(null, e);
-			} else {
-				e.printStackTrace();
-			}
+		    e.printStackTrace();
+		    return null;
 		}
 	}
 	

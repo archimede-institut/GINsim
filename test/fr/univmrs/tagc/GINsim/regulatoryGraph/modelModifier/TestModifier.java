@@ -1,15 +1,15 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
+import junit.framework.TestCase;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
-import junit.framework.TestCase;
 
 public class TestModifier extends TestCase {
 
 	GsRegulatoryGraph graph = new GsRegulatoryGraph();
 	ModelSimplifierConfig cfg = new ModelSimplifierConfig();
-	ModelSimplifier simplifier = new ModelSimplifier(graph, cfg, null);
+	ModelSimplifier simplifier = new ModelSimplifier(graph, cfg, null, true);
 
 	/**
 	 * basic test of model simplification, without funny stuff
@@ -59,7 +59,7 @@ public class TestModifier extends TestCase {
     	ori.next[0] = tmp2;
     	ori.next[1] = tmp;
 
-    	ModelSimplifier simplifier = new ModelSimplifier(graph, cfg, null);
+    	ModelSimplifier simplifier = new ModelSimplifier(graph, cfg, null, true);
     	OmddNode result = simplifier.remove(ori, deleted, 3);
     	
     	/*  expected result:

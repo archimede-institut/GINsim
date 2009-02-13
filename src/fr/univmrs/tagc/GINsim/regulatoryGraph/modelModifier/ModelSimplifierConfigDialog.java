@@ -54,7 +54,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 	protected void run() {
 		if (!isRunning && lp.getSelectedItem() != null) {
 			isRunning = true;
-			new ModelSimplifier(graph, (ModelSimplifierConfig)lp.getSelectedItem(), this);
+			new ModelSimplifier(graph, (ModelSimplifierConfig)lp.getSelectedItem(), this, true);
 	        brun.setEnabled(false);
 		}
 	}
