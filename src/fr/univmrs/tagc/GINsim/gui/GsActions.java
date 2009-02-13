@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.gui;
 
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -17,7 +18,6 @@ import fr.univmrs.tagc.common.manageressources.ImageLoader;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.AboutDialog;
 import fr.univmrs.tagc.common.widgets.BaseAction;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
 
 
 /**
@@ -104,6 +104,8 @@ public class GsActions implements GraphChangeListener {
 	private JCheckBoxMenuItem	btt_gridActive;
 	private JCheckBoxMenuItem	btt_displayMiniMap;
 
+	private static final int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	
 	// other menuItems
 	JMenuItem					mi_edit;
 	JMenuItem					mi_delete;
@@ -155,7 +157,7 @@ public class GsActions implements GraphChangeListener {
 		viewcallback = new GsViewCallBack(mainFrame);
 
 		actionClose = new BaseAction("STR_close", "window-close.png", "STR_close_descr", KeyStroke
-				.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK),
+				.getKeyStroke(KeyEvent.VK_W, mask),
 				new Integer(KeyEvent.VK_C)) {
 
 			private static final long	serialVersionUID	= 5310411143622306390L;
@@ -166,7 +168,7 @@ public class GsActions implements GraphChangeListener {
 		};
 
 		actionSave = new BaseAction("STR_save", "document-save.png", "STR_save_descr", KeyStroke
-				.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK),
+				.getKeyStroke(KeyEvent.VK_S, mask),
 				new Integer(KeyEvent.VK_S)) {
 
 			private static final long	serialVersionUID	= -5505221251989246299L;
@@ -178,7 +180,7 @@ public class GsActions implements GraphChangeListener {
 
 		actionSaveAs = new BaseAction("STR_saveAs", "document-save-as.png", "STR_saveAs_descr",
 				KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.SHIFT_MASK
-						+ ActionEvent.CTRL_MASK), null) {
+						+ mask), null) {
 
 			private static final long	serialVersionUID	= -7021395742832737524L;
 
@@ -208,7 +210,7 @@ public class GsActions implements GraphChangeListener {
 		};
 
 		actionQuit = new BaseAction("STR_quit", "exit.png", "STR_quit_descr",
-				KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK),
+				KeyStroke.getKeyStroke(KeyEvent.VK_Q, mask),
 				new Integer(KeyEvent.VK_Q)) {
 
 			private static final long	serialVersionUID	= 4215659230452329435L;
@@ -243,7 +245,7 @@ public class GsActions implements GraphChangeListener {
 		};
 
 		actionCopy = new BaseAction("STR_copy", "edit-copy.png", "STR_copy_descr",
-				KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK), null) {
+				KeyStroke.getKeyStroke(KeyEvent.VK_C, mask), null) {
 
 			private static final long	serialVersionUID	= -3723793530677676142L;
 
@@ -253,7 +255,7 @@ public class GsActions implements GraphChangeListener {
 		};
 
 		actionPaste = new BaseAction("STR_paste", "edit-paste.png", "STR_paste_descr",
-				KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK), null) {
+				KeyStroke.getKeyStroke(KeyEvent.VK_V, mask), null) {
 
 			private static final long	serialVersionUID	= -5367472052019947472L;
 
@@ -264,7 +266,7 @@ public class GsActions implements GraphChangeListener {
 
 		actionSelectAll = new BaseAction("STR_selectAll", null,
 				"STR_selectAll_descr", KeyStroke.getKeyStroke(KeyEvent.VK_A,
-						ActionEvent.CTRL_MASK)) {
+						mask)) {
 
 			private static final long	serialVersionUID	= 8225661783758969807L;
 
@@ -318,7 +320,7 @@ public class GsActions implements GraphChangeListener {
 		mi_edit = new JMenuItem(actionEditDefault);
 
 		actionZoomIn = new BaseAction("STR_zoomIn", "zoom-in.png", "STR_zoomIn_descr",
-				KeyStroke.getKeyStroke(KeyEvent.VK_ADD, ActionEvent.CTRL_MASK), null) {
+				KeyStroke.getKeyStroke(KeyEvent.VK_ADD, mask), null) {
 
 			private static final long	serialVersionUID	= 7767720724191732506L;
 
@@ -329,7 +331,7 @@ public class GsActions implements GraphChangeListener {
 
 		actionZoomOut = new BaseAction("STR_zoomOut", "zoom-out.png",
 				"STR_zoomOut_descr", KeyStroke.getKeyStroke(
-						KeyEvent.VK_SUBTRACT, ActionEvent.CTRL_MASK), null) {
+						KeyEvent.VK_SUBTRACT, mask), null) {
 
 			private static final long	serialVersionUID	= 4121075965026762863L;
 
@@ -340,7 +342,7 @@ public class GsActions implements GraphChangeListener {
 
 		actionNormalSize = new BaseAction("STR_Normalsize", "zoom-original.png",
 				"STR_NormalSize_descr", KeyStroke.getKeyStroke(
-						KeyEvent.VK_EQUALS, ActionEvent.CTRL_MASK), null) {
+						KeyEvent.VK_EQUALS, mask), null) {
 
 			private static final long	serialVersionUID	= 6710461629856502102L;
 
@@ -444,11 +446,11 @@ public class GsActions implements GraphChangeListener {
 			GsGraphDescriptor gd = GsGinsimGraphDescriptor.getInstance();
 			actionNew = new GsOpenAction(gd, GsOpenAction.MODE_NEW, mainFrame,
 					"STR_new", "STR_new_descr", KeyStroke.getKeyStroke(
-							KeyEvent.VK_N, ActionEvent.CTRL_MASK));
+							KeyEvent.VK_N, mask));
 			fileMenu.add(actionNew);
 			actionOpen = new GsOpenAction(gd, GsOpenAction.MODE_OPEN,
 					mainFrame, "STR_open", "STR_open_descr", KeyStroke
-							.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+							.getKeyStroke(KeyEvent.VK_O, mask));
 			fileMenu.add(actionOpen);
 		}
 
