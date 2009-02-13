@@ -58,6 +58,10 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	protected Map m_call = null;
 	
 	public void error(SAXParseException e) throws SAXException {
+	    //FIXME: once logical functions become part of the DTD, remove this hack
+        if (e.getMessage().startsWith("Element type \"value\"")) {
+            showError = false;
+        }
 	    if (!showError) {
 	        return;
 	    }
