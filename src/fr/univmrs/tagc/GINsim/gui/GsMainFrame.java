@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -20,8 +22,6 @@ import fr.univmrs.tagc.common.manageressources.ImageLoader;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 import fr.univmrs.tagc.common.widgets.SplitPane;
-import fr.univmrs.tagc.GINsim.gui.tbclient.GsTBClientPanel;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
 
 /**
  * GINsim's main frame
@@ -62,14 +62,27 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
     private GsParameterPanel vertexPanel = null;
     private GsParameterPanel edgePanel = null;
 
-    private int selectedPanel = 0;
-
 	private boolean alwaysForceClose = false;
 
 	private Vector v_edge;
 	private Vector v_vertex;
     private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
 
+    public static final int TAB_CHECK = -1;
+    public static final int TAB_SINGLE = 0;
+    public static final int TAB_MULTIPLE = 1;
+    public static final int TAB_NONE = 2;
+    
+    public static final int[] FLAGS =  {1,2,4};
+    public static final int FLAG_NONE = FLAGS[TAB_NONE];
+    public static final int FLAG_SINGLE = FLAGS[TAB_SINGLE];
+    public static final int FLAG_MULTIPLE = FLAGS[TAB_MULTIPLE];
+
+    public static final int FLAG_SELECTION = FLAG_SINGLE | FLAG_MULTIPLE;
+    public static final int FLAG_ANY = FLAG_SELECTION | FLAG_NONE;
+
+    private Map m_tabs = new HashMap();
+    
 	/**
 	 * This method initializes a new MainFrame
 	 *
@@ -275,31 +288,100 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 	 * @return javax.swing.JTabbedPane
 	 */
 	private JTabbedPane getJTabbedPane() {
-		if (jTabbedPane == null) {
+	    if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
-                        jTabbedPane.addTab(Translator.getString("STR_tab_selection"), null, getJPanel1(), null);
-			jTabbedPane.addTab(Translator.getString("STR_tab_graphicAttributes"), null, getGsGraphicAttributePanel(), null);
-                }
-		return jTabbedPane;
+			addTab(Translator.getString("STR_tab_selection"), getJPanel1(), true, FLAG_SINGLE);
+			addTab(Translator.getString("STR_tab_graphicAttributes"), getGsGraphicAttributePanel(), true, FLAG_SELECTION);
+		}
+	    return jTabbedPane;
 	}
 
-    public void addTab(String name, JPanel panel, boolean enabled) {
-      if (jTabbedPane.indexOfTab(name) == -1) {
+    public void addTab(String name, JPanel panel, boolean enabled, int constraint) {
+        if (m_tabs.containsKey(name)) {
+            // TODO: error
+            return;
+        }
         jTabbedPane.addTab(name, null, panel, null);
-        jTabbedPane.setEnabledAt(jTabbedPane.getTabCount() - 1, enabled);
-        if (panel instanceof GraphChangeListener) eventDispatcher.addGraphChangedListener((GraphChangeListener) panel);
-      }
+        m_tabs.put(name, new Integer(constraint));
+        if (panel instanceof GraphChangeListener) {
+            eventDispatcher.addGraphChangedListener((GraphChangeListener) panel);
+        }
+        updateTabs(TAB_CHECK);
     }
-    public boolean removeTab(String name) {
-      int i = jTabbedPane.indexOfTab(name);
-      if (i != -1) {
-        Component c = jTabbedPane.getComponentAt(i); //I change getTabComponentAt to getComponentAt just to be able to compile.
-        jTabbedPane.removeTabAt(i);
-        if (c instanceof GraphChangeListener) eventDispatcher.removeGraphChangeListener((GraphChangeListener)c);
-        if (selectedPanel == i) selectedPanel = -1;
-        return true;
-      }
-      return false;
+    public boolean hasTab(String name) {
+        return m_tabs.containsKey(name);
+    }
+    /**
+     * enable/disable tabs depending on the constraint
+     * if the selected tab becomes inactive, select another one
+     */
+    public void updateTabs(int constraint) {
+        int cst = constraint;
+        if (constraint == TAB_CHECK) {
+            int nb_edges = v_edge == null ? 0 : v_edge.size();
+            int nb_vertices = v_vertex == null ? 0 : v_vertex.size();
+            if (nb_edges == 0) {
+                switch (nb_vertices) {
+                    case 0:
+                        cst = TAB_NONE;
+                        break;
+                    case 1:
+                        cst = TAB_SINGLE;
+                        break;
+                    default:
+                        cst = TAB_MULTIPLE;
+                }
+            } else if (nb_vertices == 0) {
+                if (nb_edges == 1) {
+                    cst = TAB_SINGLE;
+                } else {
+                    cst = TAB_MULTIPLE;
+                }
+            } else {
+                cst = TAB_MULTIPLE;
+            }
+        }
+
+        int selected = jTabbedPane.getSelectedIndex();
+        boolean need_change = true;
+        if (selected != -1) {
+            Integer i_sel = (Integer)m_tabs.get(jTabbedPane.getTitleAt(selected));
+            int sel = 0;
+            if (i_sel != null) {
+                sel = i_sel.intValue();
+            }
+            need_change = (sel & FLAGS[cst]) == 0;
+        }
+        int nbtabs = jTabbedPane.getTabCount();
+        for (int i=0 ; i<nbtabs ; i++) {
+            Integer curCst = (Integer)m_tabs.get(jTabbedPane.getTitleAt(i));
+            int cur_cst = 0;
+            if (curCst != null) {
+                cur_cst = curCst.intValue();
+            }
+
+            if ((cur_cst & FLAGS[cst]) > 0) {
+                jTabbedPane.setEnabledAt(i, true);
+                if (need_change) {
+                    jTabbedPane.setSelectedIndex(i);
+                    need_change = false;
+                }
+            } else {
+                jTabbedPane.setEnabledAt(i, false);
+            }
+        }
+    }
+    public void removeTab(String name) {
+        int i = jTabbedPane.indexOfTab(name);
+        if (i != -1) {
+            Component c = jTabbedPane.getTabComponentAt(i);
+            jTabbedPane.removeTabAt(i);
+            if (c instanceof GraphChangeListener) {
+                eventDispatcher.removeGraphChangeListener((GraphChangeListener)c);
+            }
+            m_tabs.remove(name);
+            updateTabs(TAB_CHECK);
+        }
     }
 	/**
 	 * This method initializes gsGraphMapPanel
@@ -352,7 +434,10 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
             graph.close();
         }
         graph = event.getNewGraph();
+        // hack to update selection constraint for the tab after name change
+        Object cst = m_tabs.get(jTabbedPane.getTitleAt(0));
         jTabbedPane.setTitleAt(0, Translator.getString(graph.getTabLabel()));
+        m_tabs.put(jTabbedPane.getTitleAt(0), cst);
         graph.setMainFrame(this);
         graphScrollPane.setViewportView(graph.getGraphManager().getGraphPanel());
         jPanel1.removeAll();
@@ -370,7 +455,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
         jSplitPane1.setRightComponent(gsGraphMapPanel);
 
         if (graphParameterPanel != null) {
-        	jTabbedPane.remove(graphParameterPanel);
+        	removeTab(Translator.getString("STR_tab_graphParameter"));
         }
         graphEditor = graph.getGraphEditor();
         if (graphEditor != null) {
@@ -380,7 +465,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
         	graphParameterPanel = graph.getGraphParameterPanel();
         }
         if (graphParameterPanel != null) {
-        	jTabbedPane.insertTab(Translator.getString("STR_tab_graphParameter"), null, graphParameterPanel, null, 2);
+        	addTab(Translator.getString("STR_tab_graphParameter"), graphParameterPanel, true, FLAG_NONE);
         }
         gsActions.setDefaults();
 
@@ -407,11 +492,6 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
         gsGraphicAttributePanel.setMainFrame(this);
         jSplitPane.setTopComponent(getGraphPanel());
 
-        jTabbedPane.setEnabledAt(0, false);
-        jTabbedPane.setEnabledAt(1, false);
-        if (jTabbedPane.getSelectedIndex() != 2 && jTabbedPane.getTabCount() > 2) { //FIXME: unexpected crash here, java.lang.IndexOutOfBoundsException: Index: 2, Tab count: 2
-          jTabbedPane.setSelectedIndex(2);
-        }
         // replace jSplitPane, only if this is the first graph in this frame
         if (event.getOldGraph() != null) {
             int md = jSplitPane.getHeight()-jTabbedPane.getMinimumSize().height;
@@ -426,6 +506,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 
         updateTitle();
         updateGraphNotificationMessage(graph);
+        updateTabs(TAB_CHECK);
     }
     /**
      * @return an empty jPanel (to be displayed when nothing is selected or when no parameter panel is avaible)
@@ -453,7 +534,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
      * this will exit if it is the last window
      */
     public void doClose() {
-    	    doClose(true);
+        doClose(true);
     }
     /**
      * close the window without exiting:
@@ -474,32 +555,32 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
         if (!graph.canClose()) {
             return false;
         }
-        	if (!graph.isSaved()) {
-                // this _should_ avoid FUD when showing the save asking dialog but does it work at all ?
-                this.toFront();
-                String s_add = graph.getSaveFileName();
-                if (s_add == null) {
-                    s_add = "unnamed";
-                } else {
-                    s_add = s_add.substring(s_add.lastIndexOf(File.separator)+1);
-                }
-
-                int aw = JOptionPane.showConfirmDialog(this, Translator.getString("STR_saveQuestion1")+ s_add +Translator.getString("STR_saveQuestion2"),
-                        Translator.getString("STR_closeConfirm"),
-                        JOptionPane.YES_NO_CANCEL_OPTION);
-                switch (aw) {
-                	case JOptionPane.CANCEL_OPTION:
-                		return false;
-                	case JOptionPane.YES_OPTION:
-                	    try {
-    						graph.save();
-    					} catch (GsException e) {
-    						GsEnv.error(e, this);
-    						return false;
-    					}
-                }
-        	}
-        	return true;
+        if (!graph.isSaved()) {
+            // this _should_ avoid FUD when showing the save asking dialog but does it work at all ?
+            this.toFront();
+            String s_add = graph.getSaveFileName();
+            if (s_add == null) {
+                s_add = "unnamed";
+            } else {
+                s_add = s_add.substring(s_add.lastIndexOf(File.separator)+1);
+            }
+            
+            int aw = JOptionPane.showConfirmDialog(this, Translator.getString("STR_saveQuestion1")+ s_add +Translator.getString("STR_saveQuestion2"),
+                    Translator.getString("STR_closeConfirm"),
+                    JOptionPane.YES_NO_CANCEL_OPTION);
+            switch (aw) {
+                case JOptionPane.CANCEL_OPTION:
+                    return false;
+                case JOptionPane.YES_OPTION:
+                    try {
+                        graph.save();
+                    } catch (GsException e) {
+                        GsEnv.error(e, this);
+                        return false;
+                    }
+            }
+        }
+        return true;
     }
     /**
      * close the window without exiting:
@@ -507,6 +588,10 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
      * @param force
      */
     private void doClose(boolean force) {
+        
+        // FIXME: graph not always really closed
+        // --> GsEnv.m_graphs pas vide
+        
     	if (confirmCloseGraph()) {
             if (gsGraphMapPanel.isVisible()) {
                 mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
@@ -579,23 +664,19 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
      *
      * tons of tests to activate/select the right tab depending on the context.
      * overview:
-     *   - if nothing is selected (ie the background): edit graph properties if avaible
+     *   - if nothing is selected (ie the background): edit graph properties if available
      *   - if ONE SINGLE node or edge is selected: edit this object's properties or graphical settings (let the user choose)
      *   - if several items of the same type are selected: edit graphical settings
-     *   - if the selection is heterogenous: don't edit anything
+     *   - if the selection is heterogeneous: don't edit anything
      *   - to make it funnier: always come back to the right tab when only ONE item is selected
      */
     public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
-        	v_edge = event.getV_edge();
-        	v_vertex = event.getV_vertex();
-        int selected = jTabbedPane.getSelectedIndex();
+        v_edge = event.getV_edge();
+        v_vertex = event.getV_vertex();
 
         if (event.getNbEdge() > 0 && event.getNbVertex() == 0) {
-            jTabbedPane.setEnabledAt(1, true);
-            jTabbedPane.setEnabledAt(2, false);
             // if multi-selection: force it on the graphic attribute panel otherwise let it free
             if (event.getNbEdge() == 1) {
-                jTabbedPane.setEnabledAt(0, true);
                 cards.show(jPanel1, "edge");
                 if (edgeEditor != null) {
                 	edgeEditor.setEditedObject(v_edge.get(0));
@@ -603,24 +684,14 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
                     edgePanel.setEditedObject(v_edge.get(0));
                 }
                 gsGraphicAttributePanel.setEditedObject(v_edge.get(0));
-                if (selectedPanel != -1) {
-                    jTabbedPane.setSelectedIndex(selectedPanel);
-                    selectedPanel = -1;
-                }
+                updateTabs(TAB_SINGLE);
             } else {
-                jTabbedPane.setEnabledAt(0, false);
                 cards.show(jPanel1, "empty");
-                if (selectedPanel == -1) {
-                    selectedPanel = selected;
-                }
-                jTabbedPane.setSelectedIndex(1);
                 gsGraphicAttributePanel.setEditedObject(v_edge);
+                updateTabs(TAB_MULTIPLE);
             }
         } else if (event.getNbEdge() == 0 && event.getNbVertex() > 0) {
-            jTabbedPane.setEnabledAt(1, true);
-            jTabbedPane.setEnabledAt(2, false);
             if (event.getNbVertex() == 1) {
-                jTabbedPane.setEnabledAt(0, true);
                 cards.show(jPanel1, "vertex");
                 if (vertexEditor != null) {
                 	vertexEditor.setEditedObject(v_vertex.get(0));
@@ -628,38 +699,16 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
                     vertexPanel.setEditedObject(v_vertex.get(0));
                 }
                 gsGraphicAttributePanel.setEditedObject(v_vertex.get(0));
-                if (selectedPanel != -1) {
-                    jTabbedPane.setSelectedIndex(selectedPanel);
-                    selectedPanel = -1;
-                }
+                updateTabs(TAB_SINGLE);
             } else {
-                jTabbedPane.setEnabledAt(0, false);
                 cards.show(jPanel1, "empty");
-                if (selectedPanel == -1) {
-                    selectedPanel = selected;
-                }
-                jTabbedPane.setSelectedIndex(1);
                 gsGraphicAttributePanel.setEditedObject(v_vertex);
+                updateTabs(TAB_MULTIPLE);
             }
         } else {
-            jTabbedPane.setEnabledAt(0, false);
-            jTabbedPane.setEnabledAt(1, false);
             cards.show(jPanel1, "empty");
             gsGraphicAttributePanel.setEditedObject(null);
-            if (event.getNbEdge() > 0) {
-                    jTabbedPane.setEnabledAt(2, false);
-                    if (selected == 2) {
-                        jTabbedPane.setSelectedIndex(0);
-                    }
-
-            } else {
-                   jTabbedPane.setEnabledAt(2, true);
-                   jTabbedPane.setSelectedIndex(2);
-                    if (selectedPanel == -1) {
-                        selectedPanel = selected;
-                    }
-
-            }
+            updateTabs(TAB_NONE);
         }
     }
 
