@@ -45,7 +45,7 @@ public class GsMain {
      * try to run it with --help for more info
      */
     public static void main(String[] args) {
-        loadCore();
+    	loadCore();
 
         String gsdir = ".";
         boolean startui = true;
@@ -136,7 +136,7 @@ public class GsMain {
         }
     }
     
-    
+   
     private static List l = new ArrayList();
     URLClassLoader cloader = new URLClassLoader(new URL[] {}, ClassLoader.getSystemClassLoader());
     public static ClassLoader getClassLoader() {
@@ -171,7 +171,6 @@ public class GsMain {
             }
         }
     }
-
 }
 
 /**
@@ -221,4 +220,5 @@ class ReadConfig extends XMLHelper {
                     AboutDialog.setDOAPFile(attributes.getValue("path"));
 		}
 	}
+	
 }

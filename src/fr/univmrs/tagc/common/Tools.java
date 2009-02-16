@@ -25,6 +25,13 @@ public class Tools {
 
 	public static final Integer IZ = new Integer(0);
 
+	public final static int os;
+	public final static int SYS_UNKNOWN = 0;
+	public final static int SYS_LINUX = 1;
+	public final static int SYS_MACOSX = 2;
+	public final static int SYS_WINDOWS = 3;
+	
+
 	public static String OPEN_COMMAND = null;
 	public static Object o_desktop = null;
 	protected static Method met_browse = null;
@@ -39,7 +46,7 @@ public class Tools {
 
 	
 	static {
-		String os = System.getProperty("os.name").toLowerCase();
+		String os_name = System.getProperty("os.name").toLowerCase();
 		Class cl_desktop;
 		boolean supported = false;
 		try {
@@ -55,13 +62,22 @@ public class Tools {
 		}
 		if (!supported) {
 			System.out.println("open will use dirty hacks, consider upgrading to java6");
-			if (os.startsWith("windows")) {
+			if (os_name.startsWith("windows")) {
 				OPEN_COMMAND = "open";
-			} else if (os.startsWith("mac")) {
+			} else if (os_name.startsWith("mac")) {
 				OPEN_COMMAND = "open";
-			} else if (os.startsWith("linux")) {
+			} else if (os_name.startsWith("linux")) {
 				OPEN_COMMAND = "xdg-open";
 			}
+		}
+		if (os_name.startsWith("windows")) {
+			os = SYS_WINDOWS; 
+		} else if (os_name.startsWith("mac")) {
+			os = SYS_MACOSX; 
+		} else if (os_name.startsWith("linux")) {
+			os = SYS_LINUX; 
+		} else {
+			os = SYS_UNKNOWN;
 		}
 	}
 	

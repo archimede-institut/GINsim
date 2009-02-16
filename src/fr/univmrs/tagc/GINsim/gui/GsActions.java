@@ -12,6 +12,7 @@ import javax.swing.*;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.*;
+import fr.univmrs.tagc.common.OSXAdapter;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.ImageLoader;
@@ -104,7 +105,7 @@ public class GsActions implements GraphChangeListener {
 	private JCheckBoxMenuItem	btt_gridActive;
 	private JCheckBoxMenuItem	btt_displayMiniMap;
 
-	private static final int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	protected static final int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
 	// other menuItems
 	JMenuItem					mi_edit;
@@ -209,17 +210,14 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionQuit = new BaseAction("STR_quit", "exit.png", "STR_quit_descr",
-				KeyStroke.getKeyStroke(KeyEvent.VK_Q, mask),
-				new Integer(KeyEvent.VK_Q)) {
-
+		actionQuit = new BaseAction("STR_quit", "exit.png", "STR_quit_descr", KeyStroke.getKeyStroke(KeyEvent.VK_Q, GsActions.mask), new Integer(KeyEvent.VK_Q)) {
 			private static final long	serialVersionUID	= 4215659230452329435L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				filecallback.quit();
+				quit();
 			}
+			
 		};
-
 		actionHelp = new BaseAction("STR_help", "help-contents.png", "STR_help_descr", null,
 				new Integer(KeyEvent.VK_H)) {
 
@@ -234,16 +232,13 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionAbout = new BaseAction("STR_about", "help-about.png", "STR_about_descr",
-				null, new Integer(KeyEvent.VK_C)) {
-
+		actionAbout = new BaseAction("STR_about", "help-about.png", "STR_about_descr", null, new Integer(KeyEvent.VK_C)) {
 			private static final long	serialVersionUID	= -4657616921932268806L;
-
+			
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				new AboutDialog().setVisible(true);
-			}
+				about();
+			}			
 		};
-
 		actionCopy = new BaseAction("STR_copy", "edit-copy.png", "STR_copy_descr",
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, mask), null) {
 
@@ -506,6 +501,8 @@ public class GsActions implements GraphChangeListener {
 		viewMenu.add(btt_displayGrid);
 		viewMenu.add(btt_gridActive);
 		viewMenu.add(btt_displayMiniMap);
+		
+		registerForMacOSXEvents();
 	}
 
 	/**
@@ -840,5 +837,30 @@ public class GsActions implements GraphChangeListener {
 
 	public void updateGraphNotificationMessage(GsGraph graph) {
 	}
-
+	
+    // Generic registration with the Mac OS X application menu
+    // Checks the platform, then attempts to register with the Apple EAWT
+    // See OSXAdapter.java to see how this is done without directly referencing any Apple APIs
+    public void registerForMacOSXEvents() {
+        if (Tools.os == Tools.SYS_MACOSX) {
+            try {
+                // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
+                // use as delegates for various com.apple.eawt.ApplicationListener methods
+                OSXAdapter.setQuitHandler(this, this.getClass().getDeclaredMethod("quit", (Class[])null));
+                OSXAdapter.setAboutHandler(this, this.getClass().getDeclaredMethod("about", (Class[])null));
+            } catch (Exception e) {
+                System.err.println("Error while loading the OSXAdapter:"); //FIXME
+                e.printStackTrace();
+            }
+        }
+    }
+	public void about() {
+		new AboutDialog().setVisible(true);
+	}
+	public Object quit() {
+		this.filecallback.quit();
+		return Boolean.FALSE;
+	}
 }
+
+

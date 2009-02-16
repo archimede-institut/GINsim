@@ -16,6 +16,7 @@
 	<property name="dist"  location="dist"/>
 	
 	<property name="docsrc" location="Documentation"/>
+	<property name="icons" location="fr/univmrs/tagc/GINsim/ressources/icons"/>
 
 	<!-- ************************************************** -->
 	<!--		change path to docbook XSL in ginsimdoc.xsl		-->
@@ -26,7 +27,7 @@
 	<property name="pdfdoc" location="${doc}/pdf"/>
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
-	<property name="extlib" location="${user.home}/Bureau/GINsim"/>
+	<property name="extlib" location="${user.home}/Programmation/Eclipse/GINsim.libs"/>
 	<property name="tbjar" location="${extlib}/tb/tbrowser.jar"/>
 	<property name="jfjar" location="${extlib}/tb/jfreechart-1.0.11.jar"/>
 	<property name="jcjar" location="${extlib}/tb/jcommon-1.0.14.jar"/>
@@ -209,6 +210,44 @@
 	   	<copy todir="${tmpdir}"><fileset dir="${build}"/></copy>
 		<jar jarfile="${ginsim}-${version}.jar" basedir="${tmpdir}" manifest="MANIFEST.MF"/> 
 	 	<delete dir="${tmpdir}"/>
+	</target>
+	
+	<!-- ************************************************** -->
+	<!--	  	Build an application bundle for Mac OS X	-->
+	<!-- ************************************************** -->
+	<target name="macbundle" depends="jardist" description="Build an application for mac">
+		<!--Fetch jarbundler at http://informagen.com/JarBundler/ and install it in /usr/share/ant/lib/ (default)  -->
+		<taskdef name="jarbundler" classpath="/usr/share/ant/lib/jarbundler-2.1.0.jar"  classname="net.sourceforge.jarbundler.JarBundler"/>
+
+	    <jarbundler dir="" verbose="true" showPlist="false"
+	                name="GINsim"
+	                shortname="GINsim"
+	                signature="????"
+	                stubfile="ginsim"
+	                mainclass="fr.univmrs.tagc.GINsim.global.GsMain"
+	                jar="${ginsim}-${version}.jar"
+	                jvmversion="1.4+"
+	                version="${baseversion}"
+       			    build="${CURDATE}" 
+	                infostring="GINsim (Gene Interaction Network simulation) is a computer tool for the modeling and simulation of genetic regulatory networks. See http://gin.univ-mrs.fr/"
+	                bundleid="fr.univmrs.tagc.GINsim" > 
+		      <!-- FIXME: add icon="icons/GINsim.icns" -->
+
+	    	<!-- Adjust the look, feel and behavior -->
+	      <javaproperty name="apple.laf.useScreenMenuBar" value="true"/>
+	      <javaproperty name="apple.awt.brushMetal" value="false"/>
+	      <javaproperty name="apple.awt.showGrowBox" value="false"/>
+
+	      <!-- Associate document types with this application -->
+	      <!-- FIXME: add iconFile="${icons}/ginml.icns" -->
+	      <documenttype name="GINML document"
+	                    extensions="ginml" 
+	                    role="Editor"/>
+	                    
+	      <documenttype name="zGINML document"
+	                    extensions="zginml" 
+	                    role="Editor"/>
+	    </jarbundler>
 	</target>
 	
 	<target name="clean"

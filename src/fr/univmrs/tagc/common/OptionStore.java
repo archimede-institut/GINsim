@@ -30,7 +30,15 @@ public class OptionStore extends DefaultHandler {
     private static Vector v_recent = new Vector();
     
     static {
-        optionFile = System.getProperty("user.home") + File.separator + ".ginsimrc";
+    	switch (Tools.os) {
+		case Tools.SYS_MACOSX:
+	        optionFile = System.getProperty("user.home")+"/Library/Preferences/fr.univmrs.tagc.GINsim.xml";
+			break;
+		default:
+	        optionFile = System.getProperty("user.home") + File.separator + ".ginsimrc";
+			break;
+		}
+    	
         File f_option = new File(optionFile);
         if (f_option.exists()) {
             SAXParserFactory spf = SAXParserFactory.newInstance();

@@ -374,7 +374,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
     public void removeTab(String name) {
         int i = jTabbedPane.indexOfTab(name);
         if (i != -1) {
-            Component c = jTabbedPane.getTabComponentAt(i);
+            Component c = jTabbedPane.getComponentAt(i);
             jTabbedPane.removeTabAt(i);
             if (c instanceof GraphChangeListener) {
                 eventDispatcher.removeGraphChangeListener((GraphChangeListener)c);
