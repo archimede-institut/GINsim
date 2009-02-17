@@ -14,7 +14,7 @@ public class GsInitialState implements NamedObject {
     public void setState(int[] state, List nodeOrder) {
         String[] t_s = new String[state.length];
         for (int i=0 ; i<t_s.length ; i++) {
-            t_s[i] = "" + state[i];
+            t_s[i] = nodeOrder.get(i) + ";" + state[i];
         }
         setData(t_s, nodeOrder);
     }

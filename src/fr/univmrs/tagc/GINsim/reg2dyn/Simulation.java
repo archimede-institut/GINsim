@@ -57,8 +57,9 @@ public final class Simulation extends Thread implements Runnable {
 		}
 		breadthFirst = params.breadthFirst;
    		updater = SimulationUpdater.getInstance(regGraph, params);
+   		initStatesIterator = new InitialStatesIterator(params.nodeOrder, params.m_initState);
    		if (runNow) {
-   		    startSimulation(params.nodeOrder, params.m_initState);
+   		    start();
    		}
 	}
 
