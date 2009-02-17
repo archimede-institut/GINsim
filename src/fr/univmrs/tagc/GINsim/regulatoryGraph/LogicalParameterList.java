@@ -8,7 +8,7 @@ public class LogicalParameterList extends AbstractList implements List {
 	private List manual = new ArrayList();
 	int nbDup = 0;
 	boolean updateDup = true;
-	
+
 	public boolean addLogicalParameter (GsLogicalParameter newParam, boolean isManual) {
 		List l, l2;
 		if (isManual) {
@@ -29,9 +29,9 @@ public class LogicalParameterList extends AbstractList implements List {
 		return true;
 	}
 
-	
+
 	/**
-	 * Cleanup duplicated parameters: find them and 
+	 * Cleanup duplicated parameters: find them and
 	 * remove them from the list of manually entered parameters.
 	 * This is used by the parser to avoid some mess.
 	 */
@@ -62,11 +62,11 @@ public class LogicalParameterList extends AbstractList implements List {
 		}
 		updateDup = true;
 	}
-	
+
 	public int size() {
 		return manual.size() + fromFunctions.size();
 	}
-	
+
 	public Object get(int index) {
 		int s1 = manual.size();
 		if (index < s1) {
@@ -74,7 +74,7 @@ public class LogicalParameterList extends AbstractList implements List {
 		}
 		return fromFunctions.get(index-s1);
 	}
-	
+
 	public Object remove(int index) {
 		if (index < manual.size()) {
 			GsLogicalParameter param = (GsLogicalParameter)manual.remove(index);
@@ -90,12 +90,12 @@ public class LogicalParameterList extends AbstractList implements List {
 		this.fromFunctions = logicalParameters;
 		refreshDupAndConflicts();
 	}
-	
+
 	public void setManualParameters(List logicalParameters) {
 		this.manual = logicalParameters;
 		refreshDupAndConflicts();
 	}
-	
+
 	/**
 	 * visit the two lists of logical parameters, looking for duplicates and conflicts
 	 */
@@ -115,7 +115,7 @@ public class LogicalParameterList extends AbstractList implements List {
 			findDup((GsLogicalParameter)it.next(), manual);
 		}
 	}
-	
+
 	public Iterator iterator() {
 		return new LogicalParameterIterator(manual.iterator(), fromFunctions.iterator());
 	}
@@ -143,7 +143,7 @@ public class LogicalParameterList extends AbstractList implements List {
 		}
 		refreshDupAndConflicts();
 	}
-	
+
 	private void findDup(GsLogicalParameter param, List l) {
 		if (!updateDup) {
 			return;
@@ -204,7 +204,7 @@ public class LogicalParameterList extends AbstractList implements List {
 			findDup(param, fromFunctions);
 		}
 	}
-	
+
 	public void setUpdateDup(boolean updateDup) {
 		this.updateDup = updateDup;
 		refreshDupAndConflicts();
@@ -226,8 +226,8 @@ class LogicalParameterIterator implements Iterator {
 	Object next = null;
 	Iterator it_manual;
 	Iterator it_func;
-	
-	
+
+
 	public LogicalParameterIterator(Iterator it_manual, Iterator it_func) {
 		this.it_manual = it_manual;
 		this.it_func = it_func;

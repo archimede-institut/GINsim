@@ -11,8 +11,8 @@ import javax.swing.JTree;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 
 public abstract class GsBooleanFunctionTreePanel extends JPanel {
-  private static final long	serialVersionUID	= -1420693226899522868L;
-  
+  private static final long serialVersionUID = -1420693226899522868L;
+
   protected static Font defaultFont = new Font("monospaced", Font.BOLD, 12);
   protected GsTreeElement treeElement;
   protected JTree tree = null;
@@ -65,7 +65,7 @@ public abstract class GsBooleanFunctionTreePanel extends JPanel {
     return mouseMotionListener;
   }
   public Insets getInsets() {
-          return new Insets(2, 2, 2, 2);
+    return new Insets(2, 2, 2, 2);
   }
   public void updateSize() {
 

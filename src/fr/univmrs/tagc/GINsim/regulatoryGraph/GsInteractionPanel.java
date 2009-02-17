@@ -478,15 +478,17 @@ public class GsInteractionPanel extends GsParameterPanel
       GsFunctionsCreator c = null;
       Vector v = new Vector();
       List interactions = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
-      //int[] sel;
-
-      //if (jTable.getSelectionModel().isSelectionEmpty())
+      
+      GsTreeInteractionsModel interactionsModel = currentVertex.getInteractionsModel();
+      if ((jTable.getSelectedRows().length == 0) || ((jTable.getSelectedRows().length == 1) && (jTable.getSelectedRow() == jTable.getRowCount()))){
         c = new GsFunctionsCreator(graph, interactions, currentVertex);
-      //else {
-      //  sel = jTable.getSelectedRows();
-      //  for (int i = 0; i < sel.length; i++) v.addElement(interactions.elementAt(sel[i]));
-      //  c = new GsFunctionsCreator(graph.getGraphManager(), v, currentVertex);
-      //}
+        interactionsModel.clear();
+      }
+      else {
+      	int[] sel = jTable.getSelectedRows();
+        for (int i = 0; i < sel.length; i++) v.addElement(interactions.get(sel[i]));
+        c = new GsFunctionsCreator(graph, v, currentVertex);
+      }
 
       Hashtable h = c.doIt();
 
@@ -494,15 +496,13 @@ public class GsInteractionPanel extends GsParameterPanel
       Integer key;
       String s;
 
-      GsTreeInteractionsModel interactionsModel = currentVertex.getInteractionsModel();
-      interactionsModel.clear();
       while (enu.hasMoreElements()) {
         key = (Integer)enu.nextElement();
         v = (Vector)h.get(key);
         for (Enumeration enu2 = v.elements(); enu2.hasMoreElements(); ) {
           s = (String)enu2.nextElement();
           try {
-            interactionsModel.addExpression(null, key.shortValue(), currentVertex, s);
+          	interactionsModel.addExpression(null, key.shortValue(), currentVertex, s);
           }
           catch (Exception ex) {
             ex.printStackTrace();
