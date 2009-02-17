@@ -371,7 +371,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
             }
         }
     }
-    public void removeTab(String name) {
+    public boolean removeTab(String name) {
         int i = jTabbedPane.indexOfTab(name);
         if (i != -1) {
             Component c = jTabbedPane.getComponentAt(i);
@@ -381,7 +381,9 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
             }
             m_tabs.remove(name);
             updateTabs(TAB_CHECK);
+            return true;
         }
+        return false;
     }
 	/**
 	 * This method initializes gsGraphMapPanel
