@@ -223,7 +223,7 @@ class MutantPanel extends SplitPane {
         c.gridy = 2;
         c.weightx = 1;
         c.weighty = 1;
-        c.gridwidth = 2;
+        c.gridwidth = 4;
         c.fill = GridBagConstraints.BOTH;
         JScrollPane sp = new JScrollPane();
         table_change = new EnhancedJTable(model);
@@ -242,6 +242,30 @@ class MutantPanel extends SplitPane {
             }
         });
         panel.add(bdel,c);
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 1;
+        c.weightx = 0;
+        c.fill = GridBagConstraints.NONE;
+        JButton bup = new StockButton("go-up.png", true);
+        bup.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                doMoveUp();
+            }
+        });
+        panel.add(bup,c);
+        c = new GridBagConstraints();
+        c.gridx = 3;
+        c.gridy = 1;
+        c.weightx = 0;
+        c.fill = GridBagConstraints.NONE;
+        JButton bdown = new StockButton("go-down.png", true);
+        bdown.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                doMoveDown();
+            }
+        });
+        panel.add(bdown,c);
     }
     
     protected void delete() {
@@ -274,6 +298,62 @@ class MutantPanel extends SplitPane {
             }
         });
         updateSelection();
+    }
+    
+    
+    protected void doMoveUp() {
+        if (curMutant == null) {
+            return;
+        }
+        int[] index = table_change.getSelectedRows();
+        if (!curMutant.move(index, -1)) {
+            return;
+        }
+
+        DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)table_change.getSelectionModel();
+        selectionModel.clearSelection();
+        int min, max;
+        int i=0;
+        while (i<index.length) {
+            min = index[i++];
+            max = min;
+            while (i<index.length) {
+                if (index[i] == max+1) {
+                    i++;
+                    max++;
+                } else {
+                    break;
+                }
+            }
+            selectionModel.addSelectionInterval(min, max);
+        }
+    }
+    protected void doMoveDown() {
+        if (curMutant == null) {
+            return;
+        }
+        int[] index=table_change.getSelectedRows();
+        if (!curMutant.move(index, 1)) {
+            return;
+        }
+
+        DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)table_change.getSelectionModel();
+        selectionModel.clearSelection();
+        int min, max;
+        int i=0;
+        while (i<index.length) {
+            min = index[i++];
+            max = min;
+            while (i<index.length) {
+                if (index[i] == max+1) {
+                    i++;
+                    max++;
+                } else {
+                    break;
+                }
+            }
+            selectionModel.addSelectionInterval(min, max);
+        }   
     }
 }
 

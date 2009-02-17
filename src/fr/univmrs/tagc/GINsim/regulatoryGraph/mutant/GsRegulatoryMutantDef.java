@@ -33,6 +33,48 @@ public class GsRegulatoryMutantDef implements NamedObject {
         return true;
     }
     
+    public boolean move(int[] sel, int diff) {
+
+        if (diff == 0 || sel == null || sel.length == 0 || 
+                diff < 0 && sel[0] <= -(diff+1) ||
+                diff > 0 && sel[sel.length-1] >= v_changes.size() - diff) {
+            return false;
+        }
+        if (diff > 0) {
+            doMoveDown(sel, diff);
+        } else {
+            doMoveUp(sel, diff);
+        }
+        return true;
+    }
+    protected void doMoveUp(int[] sel, int diff) {
+        for (int i=0 ; i<sel.length ; i++) {
+            int a = sel[i];
+            if (a >= diff) {
+                moveElement(a, a+diff);
+                sel[i] += diff;
+            }
+        }
+    }
+    protected void doMoveDown(int[] sel, int diff) {
+        for (int i=sel.length-1 ; i>=0 ; i--) {
+            int a = sel[i];
+            if (a < v_changes.size()+diff) {
+                moveElement(a, a+diff);
+                sel[i] += diff;
+            }
+        }
+    }
+    protected boolean moveElement(int src, int dst) {
+        if (src < 0 || dst < 0 || src >= v_changes.size() || dst >= v_changes.size()) {
+            return false;
+        }
+        Object o = v_changes.remove(src);
+        v_changes.add(dst, o);
+        return true;
+    }
+
+
     public String toString() {
         return name;
     }
