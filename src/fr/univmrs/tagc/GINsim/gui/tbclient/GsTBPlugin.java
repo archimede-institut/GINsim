@@ -36,29 +36,22 @@ public class GsTBPlugin implements GsPlugin, GsActionProvider {
   }
 
   public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
-      if (frame == null || !(frame instanceof GsMainFrame)) {
-          return;
-      }
-      GsMainFrame mainFrame = (GsMainFrame)frame;
-      if (mainFrame.hasTab("TBrowser")) {
-          mainFrame.removeTab("TBrowser");  
-          clientPanel.closeTBConnexion();
-          clientPanel = null;
-         // t_action[0] = new GsPluggableActionDescriptor("Show TBrowser tab", "Open a socket connexion with a running instance of TBrowser", null, this, ACTION_ACTION, 0/*, true*/);
-         // ((GsMainFrame)frame).getEventDispatcher().fireGraphChange(frame, graph, graph, false);
-      } else {
-          clientPanel = new GsTBClientPanel();
-          ((GsMainFrame) frame).addTab("TBrowser", clientPanel, true, GsMainFrame.FLAG_ANY);
-          WindowListener[] wl = frame.getWindowListeners();
-          for (int i = 0; i < wl.length; i++) {
-            frame.removeWindowListener(wl[i]);
-          }
-          frame.addWindowListener(clientPanel);
-          for (int i = 0; i < wl.length; i++) {
-              frame.addWindowListener(wl[i]);
-          //t_action[0] = new GsPluggableActionDescriptor("Hide TBrowser tab", "Close a socket connexion with a running instance of TBrowser", null, this, ACTION_ACTION, 0/*, true*/);
-          //((GsMainFrame)frame).getEventDispatcher().fireGraphChange(frame, graph, graph, false);
-          }
-      }
+    if (!((GsMainFrame)frame).removeTab("TBrowser")) {
+      clientPanel = new GsTBClientPanel(graph);
+      ((GsMainFrame) frame).addTab("TBrowser", clientPanel, true);
+      WindowListener[] wl = frame.getWindowListeners();
+      for (int i = 0; i < wl.length; i++) frame.removeWindowListener(wl[i]);
+      frame.addWindowListener(clientPanel);
+      for (int i = 0; i < wl.length; i++) frame.addWindowListener(wl[i]);
+      //t_action[0] = new GsPluggableActionDescriptor("Hide TBrowser tab", "Close a socket connexion with a running instance of TBrowser", null, this, ACTION_ACTION, 0/*, true*/);
+      //((GsMainFrame)frame).getEventDispatcher().fireGraphChange(frame, graph, graph, false);
+    }
+    else {
+      clientPanel.closeTBConnexion();
+      clientPanel = null;
+     // t_action[0] = new GsPluggableActionDescriptor("Show TBrowser tab", "Open a socket connexion with a running instance of TBrowser", null, this, ACTION_ACTION, 0/*, true*/);
+     // ((GsMainFrame)frame).getEventDispatcher().fireGraphChange(frame, graph, graph, false);
+    }
   }
+
 }

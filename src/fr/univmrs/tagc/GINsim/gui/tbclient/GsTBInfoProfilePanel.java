@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.*;
@@ -12,19 +13,28 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.xy.*;
 import org.jfree.ui.RectangleInsets;
+
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import tbrowser.data.*;
 import tbrowser.data.module.TBModule;
 import tbrowser.ihm.widget.TBPanel;
+
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Paint;
+import java.awt.Stroke;
+
 import javax.swing.table.TableCellRenderer;
 import java.awt.Component;
 import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import tbrowser.ihm.widget.TBButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListener, ActionListener {
+public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListener, ActionListener, ListSelectionListener {
   class ProfileTableModel extends DefaultTableModel {
     private final String[] columns = { "", "Gene | Probe", "Value" };
     private Object[][] data;
@@ -100,12 +110,14 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
   private ChartPanel chartPanel = new ChartPanel(null);
   private JTable profileTable;
   private ProfileTableModel profileTableModel;
-  private TBButton colorizeButton;
-  private double min, max;
+  private GsTBClientPanel clientPanel;
+  private boolean chartProgressLock;
 
-  public GsTBInfoProfilePanel() {
+  public GsTBInfoProfilePanel(GsTBClientPanel p) {
     super("Profile");
+    chartProgressLock = false;
     initGraphic();
+    clientPanel = p;
   }
   private void initGraphic() {
     JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -127,13 +139,12 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
     profileTableModel = new ProfileTableModel(new Vector(), new Vector(), new Vector());
     profileTable = new JTable(profileTableModel);
     profileTable.getColumnModel().getColumn(0).setCellRenderer(new ColorRenderer());
+    profileTable.getColumnModel().getColumn(0).setMaxWidth(25);
+    profileTable.getColumnModel().getColumn(0).setMinWidth(25);
+    profileTable.getSelectionModel().addListSelectionListener(this);
 
     TBPanel profileTablePanel = new TBPanel();
     profileTablePanel.addComponent(new JScrollPane(profileTable), 0, 0, 1, 1, 1.0, 1.0, WEST, BOTH, 5, 5, 0, 5, 0, 0);
-    colorizeButton = new TBButton("Colorize nodes");
-    colorizeButton.setInsets(3, 2, 3, 2);
-    colorizeButton.addActionListener(this);
-    profileTablePanel.addComponent(colorizeButton, 0, 1, 1, 1, 0.0, 0.0, CENTER, NONE, 5, 5, 5, 5, 0, 0);
     jsp.add(profileTablePanel, JSplitPane.RIGHT);
     addComponent(jsp, 0, 0, 1, 1, 1.0, 1.0, WEST, BOTH, 5, 5, 5, 5, 0, 0);
   }
@@ -143,8 +154,6 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
     String symb;
     XYSeries xys;
 
-    min = m.getData().getMin();
-    max = m.getData().getMax();
     dataSet.removeAllSeries();
     ticks = new String[m.getNbSamples()];
     for (int i = 0; i < m.getNbSamples(); i++) ticks[i] = ((TBSample)m.getData().getSamples().elementAt(i)).toString();
@@ -168,7 +177,8 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
     plot.setDataset(dataSet);
   }
   public void chartProgress(ChartProgressEvent event) {
-    int old = xAxis.getLabelToDraw();
+  	if (!chartProgressLock) {
+    	int old = xAxis.getLabelToDraw();
     Vector v_genes = new Vector();
     Vector v_values = new Vector();
     Vector v_colors = new Vector();
@@ -178,18 +188,42 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
       v_genes.addElement(dataSet.getSeries(i).getKey().toString());
       v_values.addElement(new Double(dataSet.getSeries(i).getY(xAxis.getLabelToDraw()).doubleValue()));
     }
+    int sel[] = profileTable.getSelectedRows();
     profileTableModel.init(v_colors, v_genes, v_values);
+    for (int i = 0; i < sel.length; i++) profileTable.getSelectionModel().addSelectionInterval(sel[i], sel[i]);
     if (old != xAxis.getLabelToDraw()) repaint();
+  	}
   }
 
   public void actionPerformed(ActionEvent actionEvent) {
-    int[] sel = profileTable.getSelectedRows();
+  	int[] sel = profileTable.getSelectedRows();
     double val = 0;
     if (sel.length > 0) {
       for (int i = 0; i < sel.length; i++)
         val += dataSet.getSeries(i).getY(xAxis.getLabelToDraw()).doubleValue();
       val /= sel.length;
-
+      if (clientPanel != null) {
+        GsVertexAttributesReader vReader = clientPanel.getGraph().getGraphManager().getVertexAttributesReader();
+        Vector genes = clientPanel.getSelectedGenes();
+        for (Iterator it = genes.iterator(); it.hasNext(); ) {
+        	vReader.setVertex(it.next());
+        	vReader.setBackgroundColor(Color.green);
+        }
+  		  vReader.refresh();
+      }
     }
   }
+	public void valueChanged(ListSelectionEvent e) {
+		if (!e.getValueIsAdjusting()) {
+			chartProgressLock = true;
+			Stroke s1 = new BasicStroke(1);
+			Stroke s2 = new BasicStroke(3);
+			for (int i = 0; i < profileTable.getRowCount(); i++)
+				if (profileTable.isRowSelected(i))
+					plot.getRenderer().setSeriesStroke(i, s2);
+				else
+					plot.getRenderer().setSeriesStroke(i, s1);
+			chartProgressLock = false;
+		}
+	}
 }

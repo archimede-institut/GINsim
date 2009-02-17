@@ -3,30 +3,29 @@ package fr.univmrs.tagc.GINsim.gui.tbclient;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.net.Socket;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.net.*;
+import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 
 import fr.univmrs.tagc.GINsim.graph.*;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.*;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
+import fr.univmrs.tagc.GINsim.jgraph.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import tbrowser.data.module.*;
-import tbrowser.ihm.widget.TBButton;
-import tbrowser.ihm.widget.TBPanel;
-import tbrowser.io.remote.client.TBClient;
+import tbrowser.ihm.widget.*;
+import tbrowser.io.remote.client.*;
+import fr.univmrs.tagc.common.widgets.GsPanel;
 
-public class GsTBClientPanel extends TBPanel implements GraphChangeListener, WindowListener {
-  private TBPanel connexionPanel, queryPanel, /*resultsPanel,*/ resultsGenesPanel, resultsModulesPanel, resultsInfoPanel, infoPanel;
-  private JTextField hostTextField;
-  private TBButton openCloseButton;
+public class GsTBClientPanel extends GsPanel implements GraphChangeListener, WindowListener {
+  private TBPanel connexionPanel, queryPanel, infoPanel;
+	private GsInteractionsPanel interactionsPanel;
+  private JTextField hostTextField, queryTextField;
+  private TBButton openCloseButton, sendButton, updateGenesInfoButton;
   private JLabel portLabel;
   private TBClient client;
   private JProgressBar progressBar;
-  private TBButton sendButton;
   private Socket socket = null;
   private GsTBSendThread t;
   private GsTBClientPanel instance;
@@ -34,23 +33,27 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
   private GeneTreeModel geneTreeModel;
   private Vector selectedGenes = null;
   private JList moduleList;
-  private TBButton updateGenesInfoButton;
-  private JTextField queryTextField;
-  private JTable profileTable;
+  private GsRegulatoryGraph graph;
+	private JTabbedPane toolsPane;
 
-  public GsTBClientPanel() {
+	private TBButton testButton = new TBButton("TEST");
+
+  public GsTBClientPanel(GsGraph g) {
     super();
     initGraphic();
     initListeners();
     instance = this;
+    graph = (GsRegulatoryGraph)g;
+		interactionsPanel.init(graph);
   }
 
   private void initGraphic() {
+		// Connexion panel
     connexionPanel = new TBPanel("Connexion");
     connexionPanel.addComponent(new JLabel("Host :"), 0, 0, 1, 1, 0.0, 0.0, EAST, NONE, 5, 5, 5, 0, 0, 0);
     hostTextField = new JTextField("localhost");
     connexionPanel.addComponent(hostTextField, 1, 0, 1, 1, 1.0, 0.0, EAST, HORIZONTAL, 5, 5, 5, 0, 0, 0);
-    openCloseButton = new TBButton("Open");
+    openCloseButton = new TBButton("Connect");
     openCloseButton.setInsets(2, 3, 2, 3);
     connexionPanel.addComponent(openCloseButton, 2, 0, 1, 1, 0.0, 0.0, EAST, NONE, 5, 20, 5, 0, 0, 0);
     connexionPanel.addComponent(new JLabel("Port :"), 3, 0, 1, 1, 0.0, 0.0, EAST, NONE, 5, 20, 5, 0, 0, 0);
@@ -65,59 +68,86 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
     portLabel.setHorizontalAlignment(JLabel.CENTER);
     connexionPanel.addComponent(portLabel, 4, 0, 1, 1, 0.0, 0.0, EAST, NONE, 5, 5, 5, 5, 0, 0);
     connexionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), connexionPanel.getTitle()));
-    addComponent(connexionPanel, 0, 0, 1, 1, 1.0, 0.0, NORTHEAST, HORIZONTAL, 5, 5, 0, 0, 0, 0);
 
-    queryPanel = new TBPanel("Query");
-    updateGenesInfoButton = new TBButton("Update genes info");
-    updateGenesInfoButton.setInsets(2, 3, 2, 3);
-    queryPanel.addComponent(updateGenesInfoButton, 0, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
-    queryTextField = new JTextField(30);
-    queryPanel.addComponent(queryTextField, 1, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
-    sendButton = new TBButton();
-    resetSendButton();
-    sendButton.setInsets(2, 5, 2, 5);
-    sendButton.setEnabled(false);
-    queryPanel.addComponent(sendButton, 2, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
-    progressBar = new JProgressBar(0, 100);
-    progressBar.setStringPainted(true);
-    queryPanel.addComponent(progressBar, 3, 0, 1, 1, 1.0, 0.0, WEST, HORIZONTAL, 5, 5, 5, 5, 0, 0);
-    addComponent(queryPanel, 0, 1, 2, 1, 1.0, 0.0, NORTHEAST, HORIZONTAL, 5, 5, 0, 5, 0, 0);
-
-    JSplitPane resultsPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-    resultsGenesPanel = new TBPanel("Genes");
-    resultsGenesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), resultsGenesPanel.getTitle()));
-    geneTreeModel = new GeneTreeModel(new TreeElementNode(new TreeElement("Nodes")));
-    geneTree = new JTree(geneTreeModel);
-    geneTree.setShowsRootHandles(true);
-    GeneTreeCellRenderer gtcr = new GeneTreeCellRenderer();
-    geneTree.setCellRenderer(gtcr);
-    GeneTreeCellEditor gtce = new GeneTreeCellEditor(geneTree, gtcr);
-    geneTree.setCellEditor(gtce);
-    geneTree.setBackground(Color.white);
+		//geneTree
+		AbstractTreeElement root = new TreeElement("Nodes");
+		root = new TreeElementNode(root);
+		geneTreeModel = new GeneTreeModel(root);
+		geneTree = new JTree(geneTreeModel);
+		GeneTreeCellRenderer renderer = new GeneTreeCellRenderer();
+		GeneTreeCellEditor editor = new GeneTreeCellEditor(geneTree, renderer);
+		geneTree.setCellEditor(editor);
+		geneTree.setCellRenderer(renderer);
+		geneTree.setRootVisible(true);
+		geneTree.setShowsRootHandles(true);
     geneTree.setEditable(true);
 
-    resultsGenesPanel.addComponent(new JScrollPane(geneTree), 0, 0, 1, 1, 1.0, 1.0, WEST, BOTH, 5, 5, 5, 0, 0, 0);
-    resultsPanel.add(resultsGenesPanel, JSplitPane.LEFT);
-    resultsModulesPanel = new TBPanel("Modules");
-    resultsModulesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), resultsModulesPanel.getTitle()));
-    moduleList = new JList();
-    moduleList.setFont(new Font("monospaced", Font.PLAIN, 12));
-    JScrollPane jsp = new JScrollPane(moduleList);
-    jsp.getViewport().setMinimumSize(new Dimension(80, 0));
-    resultsModulesPanel.addComponent(jsp, 0, 0, 1, 1, 1.0, 1.0, WEST, BOTH, 5, 5, 5, 0, 0, 0);
-    TBPanel moduleInfoPanel = new TBPanel();
-    moduleInfoPanel.addComponent(resultsModulesPanel, 0, 0, 1, 1, 0.0, 1.0, WEST, BOTH, 5, 5, 5, 0, 0, 0);
-    infoPanel = new GsTBInfoPanel();
-    moduleInfoPanel.addComponent(infoPanel, 1, 0, 1, 1, 1.0, 1.0, WEST, BOTH, 5, 5, 5, 5, 0, 0);
-    resultsPanel.add(moduleInfoPanel, JSplitPane.RIGHT);
-    addComponent(resultsPanel, 0, 2, 1, 1, 1.0, 1.0, NORTHEAST, BOTH, 5, 5, 5, 5, 0, 0);
+		// Modules panel
+		TBPanel modulesPanel = new TBPanel("Signatures");
+		modulesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), modulesPanel.getTitle()));
+		moduleList = new JList();
+		moduleList.setFont(new Font("monospaced", Font.PLAIN, 12));
+		JScrollPane jsp = new JScrollPane(moduleList);
+		jsp.getViewport().setMinimumSize(new Dimension(80, 0));
+    modulesPanel.addComponent(jsp, 0, 0, 1, 1, 1.0, 1.0, WEST, BOTH, 5, 5, 5, 0, 0, 0);
+
+	  // infosPanel
+		infoPanel = new GsTBInfoPanel(this);
+
+	  // query panel
+	  queryPanel = new TBPanel();
+		updateGenesInfoButton = new TBButton("Update");
+		queryPanel.addComponent(updateGenesInfoButton, 0, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
+		queryPanel.addComponent(new JLabel("Query : "), 1, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
+		queryTextField = new JTextField();
+		queryPanel.addComponent(queryTextField, 2, 0, 1, 1, 1.0, 0.0, WEST, HORIZONTAL, 5, 5, 5, 0, 0, 0);
+		sendButton = new TBButton();
+		resetSendButton();
+		sendButton.setInsets(2, 5, 2, 5);
+		sendButton.setEnabled(false);
+		queryPanel.addComponent(sendButton, 3, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
+		progressBar = new JProgressBar(0, 100);
+		progressBar.setStringPainted(true);
+		progressBar.setPreferredSize(new Dimension(100, 25));
+		queryPanel.addComponent(progressBar, 4, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 5, 0, 0);
+
+    // interactions panel
+		interactionsPanel = new GsInteractionsPanel(this);
+
+	  // toolsPanel
+		toolsPane = new JTabbedPane();
+		toolsPane.add("Query", queryPanel);
+		toolsPane.add("Interactions", interactionsPanel);
+		toolsPane.add("Genes", new JPanel());
+
+	  // rightCommonPanel
+		TBPanel rightCommonPanel = new TBPanel();
+		rightCommonPanel.addComponent(modulesPanel, 0, 0, 1, 1, 0.0, 1.0, NORTH, VERTICAL, 0, 0, 0, 0, 0, 0);
+		rightCommonPanel.addComponent(infoPanel, 1, 0, 1, 1, 1.0, 1.0, WEST, BOTH, 0, 0, 0, 0, 0, 0);
+
+	  // common panel
+		JSplitPane commonPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		commonPane.add(new JScrollPane(geneTree), JSplitPane.LEFT);
+		commonPane.add(rightCommonPanel, JSplitPane.RIGHT);
+
+	  // main panel
+		TBPanel mainPane = new TBPanel();
+		mainPane.addComponent(connexionPanel, 0, 0, 1, 1, 1.0, 0.0, NORTH, HORIZONTAL, 0, 0, 0, 0, 0, 0);
+		mainPane.addComponent(commonPane, 0, 1, 1, 1, 1.0, 1.0, NORTH, BOTH, 0, 0, 0, 0, 0, 0);
+
+    // root panel
+		JSplitPane rootPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+    rootPanel.add(mainPane, JSplitPane.RIGHT);
+		rootPanel.add(toolsPane, JSplitPane.LEFT);
+
+		addComponent(rootPanel, 0, 0, 1, 1, 1.0, 1.0, NORTHEAST, BOTH, 0, 0, 0, 0, 0, 0);
   }
   private void initListeners() {
     openCloseButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         String s = hostTextField.getText();
         int ipadr = 20173;
-        if (e.getActionCommand().equals("Open")) {
+        if (e.getActionCommand().equals("Connect")) {
         	if (hostTextField.getText().indexOf(':') != -1) {
         		s = hostTextField.getText().substring(0, hostTextField.getText().indexOf(':'));
         		ipadr = Integer.decode(hostTextField.getText().substring(hostTextField.getText().indexOf(':') + 1)).intValue();
@@ -129,6 +159,7 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
             openCloseButton.setText("Close");
             hostTextField.setEditable(false);
             updateGenesInfoButton.setEnabled(true);
+						interactionsPanel.initOrganisms(client.getOrganisms());
           }
           else
             JOptionPane.showMessageDialog(null, "Connexion refused !", "Error", JOptionPane.ERROR_MESSAGE);
@@ -137,7 +168,7 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
           client.closeConnexion();
           client = null;
           portLabel.setText(" ");
-          openCloseButton.setText("Open");
+          openCloseButton.setText("Connect");
           hostTextField.setEditable(true);
           updateGenesInfoButton.setEnabled(false);
           sendButton.setEnabled(false);
@@ -185,18 +216,37 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
     });
     updateGenesInfoButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        Vector nodes;
-        Hashtable h = new Hashtable();
-        if (selectedGenes != null)
-          for (int i = 0; i < selectedGenes.size(); i++) {
-            nodes = (Vector)getClient().getGeneInfos(selectedGenes.elementAt(i).toString());
-            h.put(selectedGenes.elementAt(i), nodes);
-          }
-        geneTreeModel.init(h);
-        geneTreeModel.fireTreeStructureChanged((AbstractTreeElement)geneTreeModel.getRoot());
-        sendButton.setEnabled(true);
+      	updateGeneTree(selectedGenes);
       }
     });
+		/*testButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Vector v_plugins = getClient().getAvailablePlugins();
+				Vector v_functions;
+				String pluginName, functionName;
+				Object o;
+				Vector v_params = new Vector();
+				v_params.addElement("GPL96");
+				v_params.addElement("GATA3");
+				for (Enumeration enu_plugins = v_plugins.elements(); enu_plugins.hasMoreElements(); ) {
+					pluginName = enu_plugins.nextElement().toString();
+					System.err.println(pluginName);
+					v_functions = getClient().getPluginFunctions(pluginName);
+					for (Enumeration enu_functions = v_functions.elements(); enu_functions.hasMoreElements(); ) {
+						functionName = enu_functions.nextElement().toString();
+						System.err.println("  " + functionName);
+						o = getClient().callPlugin(pluginName, functionName, v_params);
+						System.err.println("    " + o.getClass() + " : " + o.toString());
+						if (o instanceof String[]) {
+							String[] s = (String[]) o;
+							for (int i = 0; i < 10; i++) System.err.println("      " + s[i]);
+						}
+						else if (o instanceof String)
+							System.err.println("      " + o);
+					}
+				}
+			}
+		});*/
   }
   public void closeTBConnexion() {
     if (client != null) client.closeConnexion();
@@ -215,8 +265,6 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
   }
   public void setModuleList(TBModules m) {
     moduleList.setListData(m.getModules());
-    resultsModulesPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
-        resultsModulesPanel.getTitle() + " (" + m.getSize() + ")"));
   }
   public void setGenes(Vector v) {
     selectedGenes = v;
@@ -229,6 +277,8 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
   }
 
   public void graphChanged(GsNewGraphEvent event) {
+		graph = (GsRegulatoryGraph)event.getNewGraph();
+		interactionsPanel.init(graph);
   }
 
   public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
@@ -247,8 +297,28 @@ public class GsTBClientPanel extends TBPanel implements GraphChangeListener, Win
         v.addElement(e.getTargetVertex());
     }
     setGenes(v);
+    if (v.size() > 0)
+    	graph = ((GsRegulatoryVertex)v.firstElement()).getInteractionsModel().getGraph();
+    else
+    	graph = null;
   }
-
+  public GsRegulatoryGraph getGraph() {
+  	return graph;
+  }
+	public void updateGeneTree(Vector v) {
+		GsRegulatoryVertex vertex;
+		Vector par;
+		Hashtable genes = new Hashtable();
+		if (v != null)
+			for (int i = 0; i < v.size(); i++) {
+				vertex = (GsRegulatoryVertex)v.elementAt(i);
+				par = (Vector)getClient().getGeneInfos(v.elementAt(i).toString());
+				genes.put(vertex, par);
+			}
+		geneTreeModel.init(genes);
+		geneTreeModel.fireTreeStructureChanged((AbstractTreeElement)geneTreeModel.getRoot());
+		sendButton.setEnabled(true);
+	}
   public void graphClosed(GsGraph graph) {
   }
 

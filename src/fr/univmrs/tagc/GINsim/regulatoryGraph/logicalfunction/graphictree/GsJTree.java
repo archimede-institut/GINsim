@@ -10,26 +10,22 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 public class GsJTree extends JTree implements Autoscroll {
-  /**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 5256095746552134049L;
-private int margin = 15;
-  
+  private static final long serialVersionUID = 5256095746552134049L;
+  private int margin = 15;
+
   public GsJTree(TreeModel m) {
     super(m);
   }
   public void setSelectionPath(TreePath path) {
     if (!isPathSelected(path)) {
-		super.setSelectionPath(path);
-	}
+      super.setSelectionPath(path);
+    }
   }
   public void autoscroll(Point p) {
     int realrow = getRowForLocation(p.x, p.y);
     if (realrow != -1) {
       Rectangle outer = getBounds();
-      realrow = p.y + outer.y <= margin ? realrow < 1 ? 0 : realrow - 1 :
-                 realrow < getRowCount() - 1 ? realrow + 1 : realrow;
+      realrow = p.y + outer.y <= margin ? realrow < 1 ? 0 : realrow - 1 : realrow < getRowCount() - 1 ? realrow + 1 : realrow;
       scrollRowToVisible(realrow);
     }
   }

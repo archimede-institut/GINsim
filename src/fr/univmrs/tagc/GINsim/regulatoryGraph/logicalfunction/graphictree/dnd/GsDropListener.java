@@ -12,6 +12,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionT
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 
 public class GsDropListener implements DropTargetListener {
 	private GsTransferable transferable;
@@ -97,10 +98,15 @@ public class GsDropListener implements DropTargetListener {
 					//transfert d'une fonction dans une valeur (= changement de valeur pour une fonction)
 					if (choosen == GsTransferable.FUNCTION_FLAVOR && choosenElement instanceof GsTreeValue) {
 						panel.pasteFunctionsInValue(te, move, (GsTreeValue)choosenElement);
-					} else if (choosen == GsTransferable.VALUE_FLAVOR && choosenElement == tree.getPathForRow(0).getLastPathComponent()) {
+					}
+					else if (choosen == GsTransferable.VALUE_FLAVOR && choosenElement == tree.getPathForRow(0).getLastPathComponent()) {
 						panel.pasteValuesInRoot(te, (GsTreeString)choosenElement);
-					} else if (choosen == GsTransferable.PARAM_FLAVOR && choosenElement instanceof GsTreeValue) {
+					}
+					/*else if (choosen == GsTransferable.PARAM_FLAVOR && choosenElement instanceof GsTreeValue) {
 						panel.pasteParamsInValue(te, move, (GsTreeValue)choosenElement);
+					}*/
+				  else if (choosen == GsTransferable.FUNCTION_FLAVOR && choosenElement instanceof GsTreeExpression) {
+						panel.pasteExpressionsInExpression(te, move, (GsTreeExpression)choosenElement);
 					}
 					if (previousDropable != null) {
 						previousDropable.setDropable(false);
@@ -130,11 +136,31 @@ public class GsDropListener implements DropTargetListener {
 			if (previousDropable != null) {
 				previousDropable.setDropable(false);
 			}
-			if (choosen == GsTransferable.FUNCTION_FLAVOR && choosenElement instanceof GsTreeValue ||
-					choosen == GsTransferable.PARAM_FLAVOR && choosenElement instanceof GsTreeValue) {
+			if (choosen == GsTransferable.FUNCTION_FLAVOR && choosenElement instanceof GsTreeValue) {
 				choosenElement.setDropable(true);
 				previousDropable = choosenElement;
 				return true;
+			}
+			else if (choosen == GsTransferable.FUNCTION_FLAVOR && choosenElement instanceof GsTreeExpression) {
+				try {
+					int choosenValue = ((GsTreeValue) choosenElement.getParent()).getValue();
+					GsTreeElement[] dragElements = (GsTreeElement[])transferable.getTransferData(choosen);
+					int dragValue = ((GsTreeValue)dragElements[0].getParent()).getValue();
+					boolean ok = true;
+					for (int i = 0; i < dragElements.length; i++)
+						if (dragElements[i] == choosenElement) {
+							ok = false;
+							break;
+						}
+					if ((choosenValue == dragValue) && ok) {
+						choosenElement.setDropable(true);
+						previousDropable = choosenElement;
+						return true;
+					}
+				}
+				catch (Throwable t) {
+					t.printStackTrace();
+				}
 			}
 		}
 		return false;

@@ -25,52 +25,29 @@ public class GsTBSendThread extends Thread {
     toKill = true;
   }
   public void run() {
-  		Hashtable ez = clientPanel.getGeneTreeModel().getSelectedEntrezIDs();
-  		String node, s, exp = "";
-  		Vector v;
-  		for (Enumeration enu = ez.keys(); enu.hasMoreElements(); ) {
-  			node = (String)enu.nextElement();
-  			v = (Vector)ez.get(node);
-  			s = makeOrExpression(v);
-  			if (!s.equals("")) {
-      	  if (s.indexOf("|") != -1) s = "(" + s + ")";
-          if (exp.equals(""))
-              exp = s;
-          else
-              exp += " & " + s;
-        }
-  		}
-			TBModules modules = null;
-      
-      /*Vector genes = new Vector();
-      Vector symbol = clientPanel.getSelectedGenes();
-      Hashtable h = new Hashtable();
-      for (int i = 0; i < symbol.size(); i++) {
-        v = (Vector)clientPanel.getClient().getGeneInfos(symbol.elementAt(i).toString());
-        genes.addAll(v);
-        h.put(symbol.elementAt(i), v);
-      }
-      exp = "";
-      if (genes.size() > 0) {
-          for (int i = 0; i < symbol.size(); i++) {
-              s = makeOrExpression(symbol.elementAt(i).toString(), genes);
-              if (!s.equals("")) {
-            	  if (s.indexOf("|") != -1) s = "(" + s + ")";
-                if (exp.equals(""))
-                    exp = s;
-                else
-                    exp += " & " + s;
-            }
-          }
-      }*/
-      clientPanel.setQuery(exp);
-      modules = (TBModules)clientPanel.getClient().getModulesFromEntrezIDsExpression(exp, true, true);
-      if (!toKill) {
-          clientPanel.clearResults();
-          clientPanel.setModuleList(modules);
-      }
-      if (toKill) progressBar.setValue(0);
-      clientPanel.resetSendButton();
+		Hashtable ez = clientPanel.getGeneTreeModel().getSelectedEntrezIDs();
+		String node, s, exp = "";
+		Vector v;
+		for (Enumeration enu = ez.keys(); enu.hasMoreElements(); ) {
+			node = (String)enu.nextElement();
+			v = (Vector)ez.get(node);
+			s = makeOrExpression(v);
+			if (!s.equals("")) {
+				if (s.indexOf("|") != -1) s = "(" + s + ")";
+				if (exp.equals(""))
+					exp = s;
+				else
+					exp += " & " + s;
+			}
+		}
+		clientPanel.setQuery(exp);
+		clientPanel.clearResults();
+		if (!exp.equals("")) {
+			TBModules modules = (TBModules)clientPanel.getClient().getModulesFromEntrezIDsExpression(exp, true, true);
+			if (!toKill) clientPanel.setModuleList(modules);
+		}
+		if (toKill) progressBar.setValue(0);
+		clientPanel.resetSendButton();
   }
 
   private String makeOrExpression(Vector v) {

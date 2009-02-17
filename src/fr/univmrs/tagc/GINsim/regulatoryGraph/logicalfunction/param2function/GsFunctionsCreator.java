@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTreeLeafPattern;
@@ -16,6 +17,11 @@ public class GsFunctionsCreator {
   private GsRegulatoryVertex currentVertex;
 
   public GsFunctionsCreator(GsRegulatoryGraph graph, List interactions, GsRegulatoryVertex currentVertex) {
+    this.graph = graph;
+    this.interactions = interactions;
+    this.currentVertex = currentVertex;
+  }
+  public GsFunctionsCreator(GsRegulatoryGraph graph, Vector interactions, GsRegulatoryVertex currentVertex) {
     this.graph = graph;
     this.interactions = interactions;
     this.currentVertex = currentVertex;
@@ -65,6 +71,7 @@ public class GsFunctionsCreator {
     while (it.hasNext()) {
       e = (Entry)it.next();
       v = (GsRegulatoryVertex)e.getKey();
+      //System.err.println(v.getId());
       e.setValue(((GsDirectedEdge)graph.getGraphManager().getEdge(v, currentVertex)).getUserObject());
     }
     return new GsParamTree(as, 1234);

@@ -5,30 +5,25 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionListElement;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.functioneditor.model.GsFunctionEditorModel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.GsFunctionEditorModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBinaryOperator;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperator;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TUnaryOperator;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
 
 public class GsTreeExpression extends GsTreeElement {
-  private String compactExpression, userExpression, dnfExpression;
+  private String userExpression;
   private TBooleanTreeNode root;
-  private boolean showCompactExpression, showDNFExpression, normal;
+  private boolean normal;
   private GsFunctionEditorModel editorModel;
   private GsFunctionsCreator functionsCreator;
   private Point selection;
+	private GsFunctionPanel graphicPanel;
 
   public GsTreeExpression(GsTreeElement parent, TBooleanTreeNode root, GsFunctionsCreator fc) {
     super(parent);
-    compactExpression = dnfExpression = userExpression = "";
-    showCompactExpression = showDNFExpression = false;
+    userExpression = "";
     normal = true;
     if (root != null) {
       setRoot(root);
@@ -40,15 +35,19 @@ public class GsTreeExpression extends GsTreeElement {
   }
   public GsTreeExpression(GsTreeElement parent, String s, GsFunctionsCreator fc) {
   	super(parent);
-  	compactExpression = dnfExpression = "";
   	userExpression = s;
-    showCompactExpression = showDNFExpression = false;
     normal = true;
     property.put("invalid", new Boolean(true));
     property.put("autoedit", new Boolean(false));
     functionsCreator = fc;
     selection = null;
   }
+	public void setGraphicPanel(GsFunctionPanel p) {
+		graphicPanel = p;
+	}
+	public GsFunctionPanel getGraphicPanel() {
+		return graphicPanel;
+	}
   public void setEditorModel(GsFunctionEditorModel em) {
     editorModel = em;
   }
@@ -68,27 +67,21 @@ public class GsTreeExpression extends GsTreeElement {
   }
   public void refreshRoot() {
       if (root != null) {
-          compactExpression = root.toString(false);
           userExpression = root.toString(false);
       }
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge) {
-    root = remove(multiEdge.getSource().getId(), root);
-    if (root != null) {
-      compactExpression = root.toString(false);
-      //dnfExpression = userExpression = root.toDNF();
-    }
-    else {
-      compactExpression = userExpression = dnfExpression = "";
-    }
+  	if (root != null) {
+  		root = remove(multiEdge.getSource().getId(), root);
+  		userExpression = "";
+  	}
     return root;
   }
   public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge, int index) {
     root = remove(multiEdge.getSource().getId() + ":" + (index + 1), root);
     if (root != null) {
       decIndexes(root, multiEdge, index);
-      userExpression = compactExpression = root.toString(false);
-      //dnfExpression = userExpression = root.toDNF();
+      userExpression = root.toString(false);
     }
     return root;
   }
@@ -121,36 +114,6 @@ public class GsTreeExpression extends GsTreeElement {
       ex.printStackTrace();
     }
   }
-  /*public void incIndexes(TBooleanTreeNode node, GsRegulatoryMultiEdge multiEdge, int index) {
-    String oldId;
-    int oldIndex, i;
-
-    try {
-      if (node.isLeaf()) {
-        i = ((GsBooleanGene)node).getVal().lastIndexOf(":");
-        oldId = ((GsBooleanGene)node).getVal();
-        oldIndex = -1;
-        if (i >= 0) {
-          oldIndex = Integer.parseInt(oldId.substring(i + 1));
-          oldId = oldId.substring(0, i);
-        }
-        if (oldIndex > index + 1) {
-          oldIndex++;
-          ((GsBooleanGene)node).setValue(oldId + ":" + oldIndex);
-        }
-      }
-      else {
-        incIndexes(((TBooleanOperator)node).getArgs()[0], multiEdge, index);
-        if (((TBooleanOperator)node).getNbArgs() == 2) {
-          incIndexes(((TBooleanOperator)node).getArgs()[1], multiEdge, index);
-        }
-      }
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }*/
-
   private TBooleanTreeNode remove(String id, TBooleanTreeNode node) {
     TBooleanTreeNode tn1, tn2;
     String testString;
@@ -194,11 +157,6 @@ public class GsTreeExpression extends GsTreeElement {
     return null;
   }
   public String toString() {
-    if (showCompactExpression) {
-		return compactExpression;
-	} else if (showDNFExpression) {
-		return dnfExpression;
-	}
     return userExpression;
   }
   private void makeDNFString() throws Exception {
