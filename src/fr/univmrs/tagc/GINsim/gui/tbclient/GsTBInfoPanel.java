@@ -7,9 +7,9 @@ import java.util.Vector;
 public class GsTBInfoPanel extends TBInfoPanel {
   GsTBInfoProfilePanel profilePanel;
 
-  public GsTBInfoPanel() {
+  public GsTBInfoPanel(GsTBClientPanel p) {
     super("Info");
-    profilePanel = new GsTBInfoProfilePanel();
+    profilePanel = new GsTBInfoProfilePanel(p);
     addTab(profilePanel);
   }
   public void initModule(TBModule m, Vector g) {

@@ -13,6 +13,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 import java.awt.Color;
 import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementNode;
 
 public class GeneTreeModel implements TreeModel {
   private AbstractTreeElement root;
@@ -35,6 +36,7 @@ public class GeneTreeModel implements TreeModel {
     int i, j;
     boolean ezSel = false;
 
+		((TreeElementNode)root).sons.clear();
     try {
       for (Enumeration enu = genes.keys(); enu.hasMoreElements(); ) {
         vertex = (GsRegulatoryVertex)enu.nextElement();
@@ -171,23 +173,23 @@ public class GeneTreeModel implements TreeModel {
     return root;
   }
   public Hashtable getSelectedEntrezIDs() {
-  	Hashtable h = new Hashtable();
-  	Vector v;
-  	AbstractTreeElement node, symbol, entrez;
+    Hashtable h = new Hashtable();
+    Vector v;
+    AbstractTreeElement node, symbol, entrez;
 
-  	for (int in = 0; in < root.getChildCount(); in++) {
-  		node = (AbstractTreeElement)root.getChild(in);
-  		v = new Vector();
-  		for (int is = 0; is < node.getChildCount(); is++) {
-  			symbol = (AbstractTreeElement)node.getChild(is);
-  			for (int iz = 0; iz < symbol.getChildCount(); iz++) {
-  				entrez = (AbstractTreeElement)symbol.getChild(iz);
-  				if (entrez.isSelected()) v.addElement(entrez.getValue());
-  			}
-  		}
-  		if (v.size() > 0) h.put(node.toString(), v);
-  	}
-  	return h;
+    for (int in = 0; in < root.getChildCount(); in++) {
+      node = (AbstractTreeElement)root.getChild(in);
+      v = new Vector();
+      for (int is = 0; is < node.getChildCount(); is++) {
+        symbol = (AbstractTreeElement)node.getChild(is);
+        for (int iz = 0; iz < symbol.getChildCount(); iz++) {
+          entrez = (AbstractTreeElement)symbol.getChild(iz);
+          if (entrez.isSelected()) v.addElement(entrez.getValue());
+        }
+      }
+      if (v.size() > 0) h.put(node.toString(), v);
+    }
+    return h;
   }
 
   public Object getChild(Object object, int _int) {
