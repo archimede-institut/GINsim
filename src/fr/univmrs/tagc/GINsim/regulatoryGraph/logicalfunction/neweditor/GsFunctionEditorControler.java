@@ -149,6 +149,8 @@ public class GsFunctionEditorControler {
 					par = ((Boolean)((Vector)p).lastElement()).booleanValue();
 					not = ((Boolean)((Vector)p).elementAt(2)).booleanValue();
 					editorModel.addOpTerm((action == AND), v, op, par, not);
+					editorModel.refreshInteractionList();
+					editPanel.updateSelectionTable();
 				}
 				break;
 			case CLEAR :

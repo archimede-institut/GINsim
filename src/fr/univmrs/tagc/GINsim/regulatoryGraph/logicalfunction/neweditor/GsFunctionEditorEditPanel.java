@@ -367,17 +367,6 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
 		if ((e.getSource() == andButton)  || (e.getSource() == orButton)) {
 			v = new Vector();
 			Vector i = new Vector();
-			AbstractDTreeElement root = (AbstractDTreeElement)logicalParametersTable.getTree().getModel().getRoot();
-			GsListInteraction li;
-
-			for (int k = 0; k < root.getChildCount(); k++) {
-				li = (GsListInteraction)root.getChild(k).getUserObject();
-				if (li.isSelected()) i.addElement(li);
-				for (int p = 0; p < root.getChild(k).getChildCount(); p++) {
-					li = (GsListInteraction)root.getChild(k).getChild(p).getUserObject();
-					if (li.isSelected()) i.addElement(li);
-				}
-			}
 
 			v.addElement(i);
 			v.addElement(andRadioButton.isSelected() ? "&" : "|");
