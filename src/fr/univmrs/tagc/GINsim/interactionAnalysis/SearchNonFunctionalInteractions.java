@@ -2,15 +2,14 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import java.awt.Color;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
@@ -34,6 +33,7 @@ public class SearchNonFunctionalInteractions {
 	private HashMap m;
 	private Set nonFunctionalInteractions = null;
 	private CascadingStyle cs = null;
+	private InteractionAnalysisSelector selector = null;
 	
 	private long before; //to know the time elapsed in the algorithm
 	
@@ -104,13 +104,9 @@ public class SearchNonFunctionalInteractions {
 		
 		//Prepare colorisation
 		EdgeStyle style = null;
-		InteractionAnalysisSelector sel = (InteractionAnalysisSelector) Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER);
-		if (sel == null) {
-			sel = new InteractionAnalysisSelector();
-			Selector.registerSelector(sel);
-		}
-		sel.setCache(nonFunctionalInteractions);
-		style = (EdgeStyle)sel.getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+		selector = new InteractionAnalysisSelector();
+		selector.setCache(nonFunctionalInteractions);
+		style = (EdgeStyle)selector.getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
 		if (opt_color_inactive != null) style.lineColor = opt_color_inactive;
 		if (opt_color) cs = new CascadingStyle(true);
 
@@ -182,10 +178,17 @@ public class SearchNonFunctionalInteractions {
 	 * Colorize the edges in the Set nonFunctionalInteractions.
 	 */
 	public void doColorize() {
+		doColorize(EdgeStyle.NULL_LINECOLOR);
+	}
+	
+	public void doColorize(Color col) {
 		if (nonFunctionalInteractions == null) return;
 		if (cs == null) cs = new CascadingStyle(true);
 		GsEdgeAttributesReader areader = gm.getEdgeAttributesReader();
-		EdgeStyle style = (EdgeStyle)Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER).getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+		EdgeStyle style = (EdgeStyle) selector.getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+		if (col != null) opt_color_inactive = col;
+		style.lineColor = opt_color_inactive;
+		
 
 		for (Iterator it = nonFunctionalInteractions.iterator(); it.hasNext();) {
 			GsJgraphDirectedEdge me = (GsJgraphDirectedEdge) it.next();
@@ -275,8 +278,7 @@ public class SearchNonFunctionalInteractions {
 	
 	protected void finalize() {
 		if (nonFunctionalInteractions != null) {
-			Selector sel = Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER);
-			if (sel != null) sel.flush(); //remove nonFunctionalInteractions from the cache.
+			if (selector != null) selector.flush(); //remove nonFunctionalInteractions from the cache.
 		}
 	}
 	

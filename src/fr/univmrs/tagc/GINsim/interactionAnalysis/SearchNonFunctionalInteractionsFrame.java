@@ -179,7 +179,7 @@ public class SearchNonFunctionalInteractionsFrame extends StackDialog implements
 					colorizeButton.setText(Translator.getString("STR_snfi_do_colorize"));
 					isColorized = false;
 				} else {
-					fii.doColorize();
+					fii.doColorize(option_lineColor);
 					colorizeButton.setText(Translator.getString("STR_snfi_undo_colorize"));
 					isColorized = true;
 				}

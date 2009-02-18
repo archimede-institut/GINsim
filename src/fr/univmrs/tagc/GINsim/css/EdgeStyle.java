@@ -21,6 +21,7 @@ public class EdgeStyle implements Style {
 	public final static Color NULL_LINECOLOR = null;
 	public final static int NULL_SHAPE = -99;
 	public final static int NULL_LINEEND = -99;
+	public final static float NULL_BORDER = -99;
 
 	public final static String CSS_LINECOLOR		= "line-color";
 	public final static String CSS_SHAPE			= "shape";
@@ -31,11 +32,12 @@ public class EdgeStyle implements Style {
 	public final static String CSS_LINEEND_NEGATIVE	= "negative";
 	public final static String CSS_LINEEND_DOUBLE	= "double";
 	public final static String CSS_LINEEND_UNKNOWN	= "unknown";
-
+	public final static String CSS_BORDER			= "border";
 	
 	public Color lineColor;
 	public int shape; //to prevent the use of the word style
 	public int lineEnd;
+	public float border;
 	
 	
 	static Pattern parserPattern = null;
@@ -45,8 +47,9 @@ public class EdgeStyle implements Style {
 	 */
 	public EdgeStyle() {
 		this.lineColor 	= NULL_LINECOLOR;
-		this.shape 		= NULL_SHAPE;
 		this.lineEnd 	= NULL_LINEEND;
+		this.shape 		= NULL_SHAPE;
+		this.border		= NULL_BORDER;
 	}
 
 	
@@ -58,10 +61,11 @@ public class EdgeStyle implements Style {
 	 * 
 	 * @see GsEdgeAttributesReader
 	 */
-	public EdgeStyle(Color lineColor, int shape, int lineEnd) {
+	public EdgeStyle(Color lineColor, int lineEnd, int shape, float border) {
 		this.lineColor	= lineColor;
-		this.shape 		= shape;
 		this.lineEnd 	= lineEnd;
+		this.shape 		= shape;
+		this.border 	= border;
 	}
 
 	/**
@@ -72,6 +76,7 @@ public class EdgeStyle implements Style {
 		lineColor 	= ((GsEdgeAttributesReader) areader).getLineColor();
 		shape 		= ((GsEdgeAttributesReader) areader).getStyle();
 		lineEnd 	= ((GsEdgeAttributesReader) areader).getLineEnd();
+		border	 	= ((GsEdgeAttributesReader) areader).getLineWidth();
 	}
 	
 	/**
@@ -82,6 +87,7 @@ public class EdgeStyle implements Style {
 		lineColor 	= ((EdgeStyle) s).lineColor;
 		shape 		= ((EdgeStyle) s).shape;
 		lineEnd 	= ((EdgeStyle) s).lineEnd;
+		border	 	= ((EdgeStyle) s).border;
 	}
 	
 	public void merge(Style s) {
@@ -89,12 +95,14 @@ public class EdgeStyle implements Style {
 		if (((EdgeStyle) s).lineColor != NULL_LINECOLOR)	lineColor 	= ((EdgeStyle) s).lineColor;
 		if (((EdgeStyle) s).shape != NULL_SHAPE)			shape 		= ((EdgeStyle) s).shape;
 		if (((EdgeStyle) s).lineEnd != NULL_LINEEND)		lineEnd 	= ((EdgeStyle) s).lineEnd;		
+		if (((EdgeStyle) s).border != NULL_BORDER)			border 		= ((EdgeStyle) s).border;		
 	}
 
 	public void apply(GsAttributesReader areader) {
 		if (lineColor != NULL_LINECOLOR)	((GsEdgeAttributesReader) areader).setLineColor(lineColor);
 		if (shape != NULL_SHAPE) 			((GsEdgeAttributesReader) areader).setStyle(shape);
 		if (lineEnd != NULL_LINEEND) 		((GsEdgeAttributesReader) areader).setLineEnd(lineEnd);
+		if (border != NULL_BORDER) 			((GsEdgeAttributesReader) areader).setLineWidth(border);
 		areader.refresh();
 	}
 
@@ -116,6 +124,7 @@ public class EdgeStyle implements Style {
 		}
 		if (lineColor!= NULL_LINECOLOR) s += tabs+CSS_LINECOLOR+": "+Tools.getColorCode(lineColor)+"\n";
 		if (shape != NULL_SHAPE) s += tabs+CSS_SHAPE+": "+(shape == GsEdgeAttributesReader.STYLE_CURVE?CSS_SHAPE_CURVE:CSS_SHAPE_STRAIGHT)+"\n";
+		if (border != NULL_BORDER) s += tabs+CSS_BORDER+": "+border+"\n";
 		if (lineEnd != NULL_LINEEND) {
 			s += tabs+CSS_LINEEND+": ";
 			switch (lineEnd) {
@@ -149,6 +158,7 @@ public class EdgeStyle implements Style {
 		Color lineColor = NULL_LINECOLOR;
 		int shape = NULL_SHAPE;
 		int lineEnd = NULL_LINEEND;
+		float border = NULL_BORDER;
 		
 		if (parserPattern == null) parserPattern = Pattern.compile("([a-zA-Z0-9\\-_]+):\\s*#?([a-zA-Z0-9\\-_]+);");
 		
@@ -177,7 +187,7 @@ public class EdgeStyle implements Style {
 				throw new GsCSSSyntaxException("Edge has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_LINECOLOR+", "+CSS_SHAPE+" or "+CSS_LINEEND);
 			}
 		}
-		return new EdgeStyle(lineColor, shape, lineEnd);
+		return new EdgeStyle(lineColor, lineEnd, shape, border);
 	}
 
 	public Object clone() {

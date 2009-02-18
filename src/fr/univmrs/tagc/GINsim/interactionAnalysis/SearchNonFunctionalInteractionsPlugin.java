@@ -15,7 +15,7 @@ public class SearchNonFunctionalInteractionsPlugin implements GsActionProvider, 
 
 	public void registerPlugin() {
 		GsGraph.registerActionProvider(this);
-		Selector.registerSelector(new InteractionAnalysisSelector());
+		Selector.registerSelector(InteractionAnalysisSelector.IDENTIFIER, InteractionAnalysisSelector.class);
 	}
 
 	
