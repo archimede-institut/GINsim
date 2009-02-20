@@ -51,14 +51,17 @@ AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
 STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
-Copyright © 2003-2007 Apple, Inc., All Rights Reserved
+Copyright 2003-2007 Apple, Inc., All Rights Reserved
 
 */
 
 package fr.univmrs.tagc.common;
 
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 
 public class OSXAdapter implements InvocationHandler {
@@ -78,7 +81,7 @@ public class OSXAdapter implements InvocationHandler {
     // Pass this method an Object and Method equipped to display application info
     // They will be called when the About menu item is selected from the application menu
     public static void setAboutHandler(Object target, Method aboutHandler) {
-        boolean enableAboutMenu = (target != null && aboutHandler != null);
+        boolean enableAboutMenu = target != null && aboutHandler != null;
         if (enableAboutMenu) {
             setHandler(new OSXAdapter("handleAbout", target, aboutHandler));
         }
@@ -96,7 +99,7 @@ public class OSXAdapter implements InvocationHandler {
     // Pass this method an Object and a Method equipped to display application options
     // They will be called when the Preferences menu item is selected from the application menu
     public static void setPreferencesHandler(Object target, Method prefsHandler) {
-        boolean enablePrefsMenu = (target != null && prefsHandler != null);
+        boolean enablePrefsMenu = target != null && prefsHandler != null;
         if (enablePrefsMenu) {
             setHandler(new OSXAdapter("handlePreferences", target, prefsHandler));
         }
@@ -186,7 +189,7 @@ public class OSXAdapter implements InvocationHandler {
     // Compare the method that was called to the intended method when the OSXAdapter instance was created
     // (e.g. handleAbout, handleQuit, handleOpenFile, etc.)
     protected boolean isCorrectMethod(Method method, Object[] args) {
-        return (targetMethod != null && proxySignature.equals(method.getName()) && args.length == 1);
+        return targetMethod != null && proxySignature.equals(method.getName()) && args.length == 1;
     }
     
     // It is important to mark the ApplicationEvent as handled and cancel the default behavior

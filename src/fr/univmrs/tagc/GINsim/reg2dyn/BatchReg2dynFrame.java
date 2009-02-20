@@ -144,7 +144,7 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
         result.append("\n");
     }
 
-    public String nameState(int[] state, GsGraph graph) {
+    public static String nameState(int[] state, GsGraph graph) {
         GsInitialStateList init = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
         if (init != null && init.getNbElements(null) > 0) {
             List no = graph.getNodeOrder();

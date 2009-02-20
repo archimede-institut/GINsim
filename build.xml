@@ -27,10 +27,9 @@
 	<property name="pdfdoc" location="${doc}/pdf"/>
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
-	<property name="extlib" location="${user.home}/Programmation/Eclipse/GINsim.libs"/>
-	<property name="tbjar" location="${extlib}/tb/tbrowser.jar"/>
-	<property name="jfjar" location="${extlib}/tb/jfreechart-1.0.11.jar"/>
-	<property name="jcjar" location="${extlib}/tb/jcommon-1.0.14.jar"/>
+	<property name="tbjar" location="${extlib}/tbrowser.jar"/>
+	<property name="jfjar" location="${extlib}/jfreechart-1.0.11.jar"/>
+	<property name="jcjar" location="${extlib}/jcommon-1.0.14.jar"/>
 	<property name="jythonjar" location="${extlib}/jython.jar"/>
 	
 	<property name="classpath"  value=".:${tbjar}:${jfjar}:${jcjar}:${jythonjar}:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/javabib-bin.jar"/>

@@ -45,9 +45,12 @@ public final class Simulation extends Thread implements Runnable {
 	 * @param params
 	 */
     public Simulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params) {
-        this(regGraph, frame, params, true);
+        this(regGraph, frame, params, true, true);
     }
     public Simulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow) {
+        this(regGraph, frame, params, runNow, true);
+    }
+    public Simulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow, boolean useInit) {
 		this.frame = frame;
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
@@ -57,7 +60,9 @@ public final class Simulation extends Thread implements Runnable {
 		}
 		breadthFirst = params.breadthFirst;
    		updater = SimulationUpdater.getInstance(regGraph, params);
-   		initStatesIterator = new InitialStatesIterator(params.nodeOrder, params.m_initState);
+   		if (useInit) {
+   		    initStatesIterator = new InitialStatesIterator(params.nodeOrder, params.m_initState);
+   		}
    		if (runNow) {
    		    start();
    		}
