@@ -7,7 +7,6 @@ import java.util.Map;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsAttributesReader;
-import fr.univmrs.tagc.GINsim.interactionAnalysis.InteractionAnalysisSelector;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -30,27 +29,32 @@ public abstract class Selector {
 	
 	/**
 	 * Register your selector to enable parsing it.
-	 * @param selector
+	 * @param identifier the identifier of the selector
+	 * @param cla the selector's class
 	 */
-	public static void registerSelector(Selector selector) {
-		selectors.put(selector.getIdentifer(), selector);
+	public static void registerSelector(String identifier, Class cla) {
+		selectors.put(identifier, cla);
 	}
 	
+	/**
+	 * return a new selector corresponding to an identifier
+	 * @param id the identifier
+	 * @return a new selector with identifier id or null if the class doesn't exists or can't be instantiated.
+	 */
+	public static Selector getNewSelector(String identifier) {
+		try {
+			return (Selector)((Class)selectors.get(identifier)).newInstance();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 	/**
 	 * Return the identifier for this selector
 	 * @return identifier
 	 */
 	public String getIdentifer() {
 		return identifier;
-	}
-
-	/**
-	 * return the selector corresponding to an identifier
-	 * @param id the identifier
-	 * @return the selector with identifier id
-	 */
-	public static Selector getSelector(String id) {
-		return (Selector)selectors.get(id);
 	}
 
 	/**
@@ -91,7 +95,7 @@ public abstract class Selector {
 	 * @return the default style for this object
 	 */	
 	public Style getStyleForNode(Object obj) {
-		return getStyleForNode(getCategory(obj));
+		return getStyle(getCategoryForNode(obj));
 	}
 	
 	/**
@@ -100,7 +104,7 @@ public abstract class Selector {
 	 * @return the default style for this object
 	 */	
 	public Style getStyleForEdge(Object obj) {
-		return getStyleForEdge(getCategory(obj));
+		return getStyle(getCategoryForEdge(obj));
 	}
 	
 	/**
@@ -132,7 +136,7 @@ public abstract class Selector {
 	 * @return the default style for this object
 	 */	
 	public boolean setStyleForNode(Object obj, Style style) {
-		return setStyleForNode(getCategory(obj), style);
+		return setStyle(getCategoryForNode(obj), style);
 	}
 	
 	/**
@@ -141,7 +145,7 @@ public abstract class Selector {
 	 * @return the default style for this object
 	 */	
 	public boolean setStyleForEdge(Object obj, Style style) {
-		return setStyleForEdge(getCategory(obj), style);
+		return setStyle(getCategoryForEdge(obj), style);
 	}
 	
 	/**
@@ -316,6 +320,6 @@ public abstract class Selector {
 	}
 	
 	public String toString(String category) {
-		return identifier+"."+category;
+		return identifier+category;
 	}
 }

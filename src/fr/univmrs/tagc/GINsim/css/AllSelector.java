@@ -8,6 +8,8 @@ package fr.univmrs.tagc.GINsim.css;
  *
  */
 public class AllSelector extends Selector {
+	public static final String IDENTIFIER = "all";
+	
 	public static final String CAT_NODES = "nodes";
 	public static final String CAT_EDGES = "edges";
 	
@@ -15,7 +17,7 @@ public class AllSelector extends Selector {
 	public static final EdgeStyle   STYLE_EDGES = new EdgeStyle();
 
 	public AllSelector() {
-		super("*");
+		super(IDENTIFIER);
 	}
 
 	public void resetDefaultStyle() {
@@ -24,13 +26,11 @@ public class AllSelector extends Selector {
 	}
 
 	public String getCategoryForEdge(Object obj) {
-		if (isEdge(obj)) return CAT_EDGES;
-		return null;
+		return CAT_EDGES;
 	}
 
 	public String getCategoryForNode(Object obj) {
-		if (isNode(obj)) return CAT_NODES;
-		return null;
+		return CAT_NODES;
 	}
 
 	public boolean requireCategory() {

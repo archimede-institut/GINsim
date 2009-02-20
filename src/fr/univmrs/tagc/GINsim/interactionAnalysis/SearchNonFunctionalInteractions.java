@@ -2,15 +2,14 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import java.awt.Color;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
@@ -18,6 +17,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 /**
  * 
@@ -28,12 +28,14 @@ public class SearchNonFunctionalInteractions {
 	private boolean opt_color, opt_annotate, opt_verbose;
 	private Color opt_color_inactive = Color.red;
 	private StringBuffer log; //to output the results
+	private GsRegulatoryMutantDef mutant;
 
 	private GsRegulatoryGraph g;
 	private GsGraphManager gm;
 	private HashMap m;
 	private Set nonFunctionalInteractions = null;
 	private CascadingStyle cs = null;
+	private InteractionAnalysisSelector selector = null;
 	
 	private long before; //to know the time elapsed in the algorithm
 	
@@ -48,11 +50,12 @@ public class SearchNonFunctionalInteractions {
 	 * @param opt_verbose boolean indicating if we output more information like node order and logical functions.
 	 * @param opt_color_inactive the Color for the non functional edges.
 	 */
-	public SearchNonFunctionalInteractions(GsRegulatoryGraph  g, boolean opt_color, boolean opt_annotate, boolean opt_verbose , Color opt_color_inactive) {
+	public SearchNonFunctionalInteractions(GsRegulatoryGraph  g, boolean opt_color, boolean opt_annotate, boolean opt_verbose , Color opt_color_inactive, GsRegulatoryMutantDef mutant) {
 		this.opt_annotate 		= opt_annotate;
 		this.opt_verbose 		= opt_verbose;
 		this.opt_color    		= opt_color;
 		this.opt_color_inactive = opt_color_inactive;
+		this.mutant = mutant;
 		this.g = g;
 		this.gm = g.getGraphManager();
 		
@@ -81,6 +84,11 @@ public class SearchNonFunctionalInteractions {
 	private void run() {
 		before = (new Date()).getTime();//measuring the time spend for this algorithm
 
+		OmddNode[] t_tree =  g.getAllTrees(true);
+		if (mutant != null) {
+			mutant.apply(t_tree, g);
+		}
+		
 		List nodeOrder = g.getNodeOrder();
 		if (opt_verbose) {
 			log("Node order : ");
@@ -104,23 +112,19 @@ public class SearchNonFunctionalInteractions {
 		
 		//Prepare colorisation
 		EdgeStyle style = null;
-		InteractionAnalysisSelector sel = (InteractionAnalysisSelector) Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER);
-		if (sel == null) {
-			sel = new InteractionAnalysisSelector();
-			Selector.registerSelector(sel);
-		}
-		sel.setCache(nonFunctionalInteractions);
-		style = (EdgeStyle)sel.getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+		selector = new InteractionAnalysisSelector();
+		selector.setCache(nonFunctionalInteractions);
+		style = (EdgeStyle)selector.getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
 		if (opt_color_inactive != null) style.lineColor = opt_color_inactive;
 		if (opt_color) cs = new CascadingStyle(true);
 
 			
 		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
 		i = 1;
-		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {								//  For each vertex v in the graph
+		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {						//  For each vertex v in the graph
 			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
 			List l = gm.getIncomingEdges(v);													//  get the list l of incoming edges
-			OmddNode omdd = v.getTreeParameters(g).reduce();
+			OmddNode omdd = t_tree[i-1].reduce();
 			int res = scannOmdd(omdd, 0, l.size(), visited, i++);								//  scan the logical function of v (update the visit map) and return the number of node found
 			if (res != l.size()) {																//  if we haven't found all the incoming nodes, there must be some non functional edges.
 				for (Iterator it2 = l.iterator(); it2.hasNext();) {								//    For each edge e in l
@@ -150,6 +154,7 @@ public class SearchNonFunctionalInteractions {
 				}
 			}
 		}
+			
 		log("\nTime elapsed : ");
 		log((new Date()).getTime()-before);
 		log(" milliseconds.");
@@ -182,10 +187,18 @@ public class SearchNonFunctionalInteractions {
 	 * Colorize the edges in the Set nonFunctionalInteractions.
 	 */
 	public void doColorize() {
+		doColorize(EdgeStyle.NULL_LINECOLOR);
+	}
+	
+	public void doColorize(Color col) {
 		if (nonFunctionalInteractions == null) return;
 		if (cs == null) cs = new CascadingStyle(true);
+		else cs.shouldStoreOldStyle = false; //Don't store the previous new color, but keep the original one.
 		GsEdgeAttributesReader areader = gm.getEdgeAttributesReader();
-		EdgeStyle style = (EdgeStyle)Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER).getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+		EdgeStyle style = (EdgeStyle) selector.getStyle(InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+		if (col != null) opt_color_inactive = col;
+		style.lineColor = opt_color_inactive;
+		
 
 		for (Iterator it = nonFunctionalInteractions.iterator(); it.hasNext();) {
 			GsJgraphDirectedEdge me = (GsJgraphDirectedEdge) it.next();
@@ -275,8 +288,7 @@ public class SearchNonFunctionalInteractions {
 	
 	protected void finalize() {
 		if (nonFunctionalInteractions != null) {
-			Selector sel = Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER);
-			if (sel != null) sel.flush(); //remove nonFunctionalInteractions from the cache.
+			if (selector != null) selector.flush(); //remove nonFunctionalInteractions from the cache.
 		}
 	}
 	

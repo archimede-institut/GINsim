@@ -7,12 +7,15 @@ import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 public class InteractionAnalysisSelector extends Selector {
 	public static final String IDENTIFIER = "interaction-analysis";
 	public static final String CAT_NONFUNCTIONNAL = "non-functionnal";
+	public static final String CAT_FUNCTIONNAL = "functionnal";
 	
-	public static final EdgeStyle STYLE_NONFUNCTIONNAL = new EdgeStyle(Color.red, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND);
+	public static final EdgeStyle STYLE_NONFUNCTIONNAL = new EdgeStyle(Color.red, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_BORDER);
+	public static final EdgeStyle STYLE_FUNCTIONNAL = null;
 	
 	private Set cache = null;
 
@@ -22,6 +25,7 @@ public class InteractionAnalysisSelector extends Selector {
 
 	public void resetDefaultStyle() {
 		addCategory(CAT_NONFUNCTIONNAL, (Style)STYLE_NONFUNCTIONNAL.clone());
+		addCategory(CAT_FUNCTIONNAL, (Style)STYLE_FUNCTIONNAL);
 	}
 	
 	public boolean respondToNodes() {
@@ -30,7 +34,7 @@ public class InteractionAnalysisSelector extends Selector {
 	
 	public String getCategoryForEdge(Object obj) {
 		if (cache.contains(obj)) return CAT_NONFUNCTIONNAL; //Note because cache is a Set, contains is in constant time.
-		return null;
+		return CAT_FUNCTIONNAL;
 	}
 
 	public String getCategoryForNode(Object obj) {return null;} //Doesn't respond to, but must be overridden.
@@ -44,13 +48,14 @@ public class InteractionAnalysisSelector extends Selector {
 	}
 	
 	public Set initCache(GsRegulatoryGraph g) {
-		return initCache(g, false, false, false, null);
+		this.cache = initCache(g, false, false, false, null, null);
+		return this.cache;
 	}
 	
-	public Set initCache(GsRegulatoryGraph g, boolean opt_color, boolean opt_annotate, boolean opt_verbose , Color opt_color_inactive) {
-		SearchNonFunctionalInteractions fii = new SearchNonFunctionalInteractions(g, opt_color, opt_annotate, opt_verbose, opt_color_inactive);
-		cache = fii.getNonFunctionalInteractions();
-		return cache;
+	public Set initCache(GsRegulatoryGraph g, boolean opt_color, boolean opt_annotate, boolean opt_verbose , Color opt_color_inactive, GsRegulatoryMutantDef mutant) {
+		SearchNonFunctionalInteractions fii = new SearchNonFunctionalInteractions(g, opt_color, opt_annotate, opt_verbose, opt_color_inactive, mutant);
+		this.cache = fii.getNonFunctionalInteractions();
+		return this.cache;
 	}
 	
 	public void flush() {

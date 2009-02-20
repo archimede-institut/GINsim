@@ -22,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -29,6 +30,9 @@ import javax.swing.KeyStroke;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -44,6 +48,8 @@ public class SearchNonFunctionalInteractionsFrame extends StackDialog implements
 	private SearchNonFunctionalInteractions fii;
 	private JPanel colorPanel;
 	private boolean isColorized = false;
+	private MutantSelectionPanel mutantSelectionPanel;
+	private ObjectStore mutantStore;
 	
 	private static final long serialVersionUID = -9126723853606423085L;
 
@@ -122,6 +128,12 @@ public class SearchNonFunctionalInteractionsFrame extends StackDialog implements
 		    //runOptions[3].setSelected(true);
 		    mainPanel.add(runOptions[2], c);
 		    
+		    c.gridy++;
+		    mutantStore = new ObjectStore();
+			mutantSelectionPanel = new MutantSelectionPanel(this, (GsRegulatoryGraph) graph, mutantStore);
+			mainPanel.add(mutantSelectionPanel, c);
+
+		    
 			c.gridy++;
 			c.ipady = 20;
 			mainPanel.add(new JLabel(""), c);
@@ -151,13 +163,19 @@ public class SearchNonFunctionalInteractionsFrame extends StackDialog implements
 		    colorizeButton.addActionListener(this);
 
 		    mainPanel.add(buttonsPanel, c);
+		    
+		    bcancel.addActionListener(new java.awt.event.ActionListener() { //have a proper quit method
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    doClose();
+                }
+            });
 
 		}
 		return mainPanel;
 	}
 
 	protected void run() {
-		fii = new SearchNonFunctionalInteractions((GsRegulatoryGraph)graph, getOption(0), getOption(1), getOption(2), option_lineColor);
+		fii = new SearchNonFunctionalInteractions((GsRegulatoryGraph)graph, getOption(0), getOption(1), getOption(2), option_lineColor, (GsRegulatoryMutantDef) mutantStore.getObject(0));
 		resultsPane.setText(fii.getLog().toString());
 		isColorized = getOption(0);
 		if (isColorized) colorizeButton.setText(Translator.getString("STR_snfi_undo_colorize"));
@@ -174,16 +192,24 @@ public class SearchNonFunctionalInteractionsFrame extends StackDialog implements
 			if (fii.getNonFunctionalInteractions() != null)	fii.removeNonFunctionalInteractions();
 		} else if (e.getSource() == colorizeButton) {
 			if (fii.getNonFunctionalInteractions() != null) {	
-				if (isColorized ) {
+				if (isColorized) {
 					fii.undoColorize();
 					colorizeButton.setText(Translator.getString("STR_snfi_do_colorize"));
 					isColorized = false;
 				} else {
-					fii.doColorize();
+					fii.doColorize(option_lineColor);
 					colorizeButton.setText(Translator.getString("STR_snfi_undo_colorize"));
 					isColorized = true;
 				}
 			}
+		}
+	}
+	
+	public void doClose() {
+		if (isColorized) {
+			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_snfi_sure_close"));
+			if (res == JOptionPane.OK_OPTION) fii.undoColorize();
+			else if (res == JOptionPane.CANCEL_OPTION) return;
 		}
 	}
 	
