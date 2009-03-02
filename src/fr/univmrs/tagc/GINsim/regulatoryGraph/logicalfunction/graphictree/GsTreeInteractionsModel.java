@@ -259,13 +259,13 @@ public class GsTreeInteractionsModel implements TreeModel {
   public boolean updateExpression(short val, GsTreeExpression exp, String newExp) {
     try {
       TBooleanTreeNode root = exp.getRoot();
-      GsBooleanParser parser = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(node));
       if (newExp.equals("")) {
         exp.clearChilds();
         fireTreeStructureChanged(this.root);
         graph.getVertexEditor().setEditedObject(node);
         return true;
       }
+			GsBooleanParser parser = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(node));
       if (!parser.compile(newExp.trim(), graph, node)) {
         graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula : " + newExp,
             GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));

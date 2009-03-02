@@ -1,38 +1,34 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-import org.jfree.chart.*;
-import org.jfree.chart.axis.*;
-import org.jfree.chart.event.*;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYSplineRenderer;
-import org.jfree.data.xy.*;
-import org.jfree.ui.RectangleInsets;
-
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import tbrowser.data.*;
-import tbrowser.data.module.TBModule;
-import tbrowser.ihm.widget.TBPanel;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Paint;
-import java.awt.Stroke;
-
-import javax.swing.table.TableCellRenderer;
-import java.awt.Component;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
-import tbrowser.ihm.widget.TBButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.event.ChartProgressEvent;
+import org.jfree.chart.event.ChartProgressListener;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYSplineRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.RectangleInsets;
+import tbrowser.data.TBProbe;
+import tbrowser.data.TBSample;
+import tbrowser.data.module.TBModule;
+import tbrowser.ihm.widget.TBPanel;
 
 public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListener, ActionListener, ListSelectionListener {
   class ProfileTableModel extends DefaultTableModel {

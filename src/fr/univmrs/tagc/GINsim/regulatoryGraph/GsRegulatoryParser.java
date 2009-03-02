@@ -391,7 +391,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     		String s_interactions = (String) v_waitingInteractions.get(i+2);
     		if (s_interactions != null) {
 	    		String[] t_interactions = s_interactions.split(" ");
-	
+
 	    		for (int j=0 ; j<t_interactions.length ; j++) {
 	    			GsRegulatoryEdge e = (GsRegulatoryEdge) m_edges.get(t_interactions[j]);
 	    			if (e == null) {

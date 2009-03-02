@@ -11,6 +11,8 @@ import fr.univmrs.tagc.common.mdd.DecisionDiagramInfo;
 import fr.univmrs.tagc.common.mdd.MDDNode;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 /**
  * the Class in which we store biological data for logical parameters
@@ -25,10 +27,10 @@ public class GsLogicalParameter implements XMLize {
 
 	protected boolean isDup = false;
 	protected boolean hasConflict = false;
-	
+
 	/**
 	 * Constructs an empty vector and set the value
-	 * 
+	 *
 	 * @param v of the interaction
 	 */
 	public GsLogicalParameter(int v) {
@@ -39,7 +41,7 @@ public class GsLogicalParameter implements XMLize {
 	public boolean isDup() {
 		return isDup;
 	}
-	
+
 	/**
      * @param newEI
      * @param v
@@ -76,7 +78,7 @@ public class GsLogicalParameter implements XMLize {
 	public void addEdge(GsRegulatoryEdge edge) {
 		edge_index.add(edge);
 	}
-	
+
 	public boolean isDurty() {
 		for (int i=0 ; i<edge_index.size() ; i++) {
 			if (((GsRegulatoryEdge)edge_index.get(i)).index == -1) {
@@ -88,7 +90,7 @@ public class GsLogicalParameter implements XMLize {
 
 	/**
 	 * @param index
-	 * @return the GsEdgeIndex at the specified position index in the parameter. 
+	 * @return the GsEdgeIndex at the specified position index in the parameter.
 	 */
 	public GsRegulatoryEdge getEdge(int index) {
 		try{
@@ -103,7 +105,7 @@ public class GsLogicalParameter implements XMLize {
 	public int EdgeCount() {
 		return edge_index.size();
 	}
-	
+
 	/**
 	 * @return all the GsEdgeIndex
 	 */
@@ -123,19 +125,19 @@ public class GsLogicalParameter implements XMLize {
      * build a structure reflecting expression constraints of the parameter
      * that should be faster to test.
      * call it before beginning the simulation!
-     * 
+     *
      * details: the t_ac is a simple int[][].
      * each line represent allowed values for a gene:
      * <ul>
      *  <li> the first int is the index of this gene in the nodeOrder</li>
      *  <li> all other are either 0 or -1, -1 meaning that the value is forbidden</li>
      * </ul>
-     *  
+     *
      *  the first line is special and only contains the value for this interaction
-     *  
+     *
      *  <p>example: [ 3, 0, -1, -1, 0, 0, -1 ]
      *  the third gene can take the values 0, 3 or 4 ; values 1, 2 and 5 are forbidden
-     * 
+     *
      * @param regGraph
      * @param node
      * @return the t_ac
@@ -198,7 +200,7 @@ public class GsLogicalParameter implements XMLize {
     }
 
     /**
-     * 
+     *
      * @param regGraph
      * @param node
      * @return true if this logical parameter is activable
@@ -209,7 +211,7 @@ public class GsLogicalParameter implements XMLize {
 
     /**
      * build a tree of condition of activation for this logical parameter
-     * 
+     *
      * @param regGraph
      * @param node
      * @return the OmddNode representation of this logical parameter
@@ -220,7 +222,7 @@ public class GsLogicalParameter implements XMLize {
 	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, OmddNode valueNode) {
         short[][] t_ac = buildTac(regGraph, node);
         short[] t_tmp;
-        
+
         if (t_ac == null) {
             return null;
         }
@@ -282,7 +284,7 @@ public class GsLogicalParameter implements XMLize {
 	public MDDNode buildMDD(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, MDDNode valueNode, DecisionDiagramInfo ddi) {
         short[][] t_ac = buildTac(regGraph, node);
         short[] t_tmp;
-        
+
         if (t_ac == null) {
             return null;
         }
@@ -328,7 +330,7 @@ public class GsLogicalParameter implements XMLize {
     	out.addAttr("val", ""+value);
     	out.closeTag();
 	}
-	
+
 	public boolean equals(Object obj) {
 		if (obj == null || !(obj instanceof GsLogicalParameter)) {
 			return false;
@@ -338,6 +340,20 @@ public class GsLogicalParameter implements XMLize {
 			return false;
 		}
 		return true;
+	}
+
+	public int hashCode() {
+		Iterator it = edge_index.iterator();
+		GsRegulatoryEdge ed;
+		StringBuffer sb = new StringBuffer();
+		TreeSet ts = new TreeSet();
+		while (it.hasNext()) {
+			ed = (GsRegulatoryEdge)it.next();
+			ts.add(ed.getShortInfo());
+		}
+		it = ts.iterator();
+		while (it.hasNext()) sb.append(it.next().toString());
+		return sb.toString().hashCode();
 	}
 
     /**
@@ -358,7 +374,7 @@ public class GsLogicalParameter implements XMLize {
         }
         clone.addLogicalParameter(new GsLogicalParameter(newEI, value), true);
     }
-    
+
     public String toString() {
         if (edge_index.size() == 0) {
             return "(basal value)";

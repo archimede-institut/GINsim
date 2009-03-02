@@ -18,3 +18,4 @@ testCase/tmp/**/*
 *.cld
 *.DS_Store
 .svn
+build.xml

@@ -2,57 +2,101 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.util.*;
 
-public class LogicalParameterList extends AbstractList implements List {
-
-	private List fromFunctions = new ArrayList();
-	private List manual = new ArrayList();
-	int nbDup = 0;
+public class LogicalParameterList extends ArrayList {
+	private HashSet manualp, functionp;
 	boolean updateDup = true;
+	int nbDup = 0;
 
-	public boolean addLogicalParameter (GsLogicalParameter newParam, boolean isManual) {
-		List l, l2;
-		if (isManual) {
-			l = manual;
-			l2 = fromFunctions;
-		} else {
-			l = fromFunctions;
-			l2 = manual;
-		}
-		Iterator it = l.iterator();
-		while (it.hasNext()) {
-			if (it.next().equals(newParam)) {
-				return false;
+	public Object remove(int index) {
+		int i;
+		Iterator it;
+		GsLogicalParameter lp = (GsLogicalParameter)get(index), lp2;
+		if (manualp.contains(lp)) {
+			manualp.remove(lp);
+			lp.isDup = lp.hasConflict = false;
+			if (!functionp.contains(lp))
+				super.remove(index);
+			else {
+				i = indexOf(lp);
+				remove(lp);
+				it = functionp.iterator();
+				while (it.hasNext()) {
+					lp2 = (GsLogicalParameter)it.next();
+					if (lp.equals(lp2)) {
+						add(i, lp2);
+						break;
+					}
+				}
 			}
+			refreshDupAndConflicts();
 		}
-		l.add(newParam);
-		findDup(newParam, l2);
-		return true;
+		return lp;
 	}
 
-
-	/**
-	 * Cleanup duplicated parameters: find them and
-	 * remove them from the list of manually entered parameters.
-	 * This is used by the parser to avoid some mess.
-	 */
+	public LogicalParameterList() {
+		super();
+		manualp = new HashSet();
+		functionp = new HashSet();
+	}
+	public boolean isManual(int i) {
+		if (i < size()) {
+			Object o = get(i);
+			return manualp.contains(o);
+		}
+		return false;
+	}
+	public boolean isFunction(int i) {
+		if (i < size()) {
+			Object o = get(i);
+			return functionp.contains(o);
+		}
+		return false;
+	}
+	public boolean addLogicalParameter(GsLogicalParameter newParam, boolean manual) {
+		boolean r = false;
+		int i;
+		if (!contains(newParam)) {
+			r = add(newParam);
+			if (manual)
+				manualp.add(newParam);
+			else
+				functionp.add(newParam);
+			findDup(newParam, manual ? functionp : manualp);
+		}
+		else if (manualp.contains(newParam) && !manual) {
+			i = indexOf(newParam);
+			newParam = (GsLogicalParameter)get(i);
+			functionp.add(newParam);
+			findDup(newParam, manual ? functionp : manualp);
+		}
+		else if (functionp.contains(newParam) && manual) {
+			i = indexOf(newParam);
+			newParam = (GsLogicalParameter)get(i);
+			manualp.add(newParam);
+			findDup(newParam, manual ? functionp : manualp);
+		}
+		return r;
+  }
 	public void cleanupDup() {
-		Iterator it = fromFunctions.iterator();
+		Iterator it = functionp.iterator(), it2;
 		while (it.hasNext()) {
 			GsLogicalParameter param = (GsLogicalParameter)it.next();
 			param.isDup = false;
 			param.hasConflict = false;
 		}
-		for (int i=manual.size()-1 ; i>=0 ; i--) {
-			GsLogicalParameter param = (GsLogicalParameter)manual.get(i);
+		it = manualp.iterator();
+		while (it.hasNext()) {
+			GsLogicalParameter param = (GsLogicalParameter) it.next();
 			param.isDup = false;
 			param.hasConflict = false;
-			it = fromFunctions.iterator();
-			while (it.hasNext()) {
-				GsLogicalParameter other = (GsLogicalParameter)it.next();
+			it2 = functionp.iterator();
+			while (it2.hasNext()) {
+				GsLogicalParameter other = (GsLogicalParameter) it2.next();
 				if (param.equals(other)) {
 					if (other.getValue() == param.getValue()) {
-						manual.remove(i);
-					} else {
+						manualp.remove(param);
+					}
+					else {
 						param.hasConflict = true;
 						other.hasConflict = true;
 					}
@@ -62,92 +106,93 @@ public class LogicalParameterList extends AbstractList implements List {
 		}
 		updateDup = true;
 	}
-
-	public int size() {
-		return manual.size() + fromFunctions.size();
-	}
-
-	public Object get(int index) {
-		int s1 = manual.size();
-		if (index < s1) {
-			return manual.get(index);
-		}
-		return fromFunctions.get(index-s1);
-	}
-
-	public Object remove(int index) {
-		if (index < manual.size()) {
-			GsLogicalParameter param = (GsLogicalParameter)manual.remove(index);
-			if (param != null && (param.isDup || param.hasConflict)) {
-				refreshDupAndConflicts();
-			}
-			return param;
-		}
-		return null;
-	}
-
-	public void setFunctionParameters(List logicalParameters) {
-		this.fromFunctions = logicalParameters;
-		refreshDupAndConflicts();
-	}
-
-	public void setManualParameters(List logicalParameters) {
-		this.manual = logicalParameters;
-		refreshDupAndConflicts();
-	}
-
-	/**
-	 * visit the two lists of logical parameters, looking for duplicates and conflicts
-	 */
-	private void refreshDupAndConflicts() {
-		if (!updateDup) {
-			return;
-		}
-		nbDup = 0;
-		Iterator it = manual.iterator();
+	private void setParameters(List logicalParameters, boolean manual) {
+		HashSet hs1 = manual ? manualp : functionp;
+		HashSet hs2 = manual ? functionp : manualp;
+		Iterator it = logicalParameters.iterator();
+		GsLogicalParameter o;
+		int i;
+		HashSet hs;
 		while (it.hasNext()) {
-			GsLogicalParameter param = (GsLogicalParameter)it.next();
+			o = (GsLogicalParameter)it.next();
+			if (!contains(o)) {
+				hs1.add(o);
+				add(o);
+			}
+			else if (hs2.contains(o) && !hs1.contains(o))
+				hs1.add(o);
+			else if (hs1.contains(o) && !hs2.contains(o)) {
+				i = indexOf(o);
+				if (o.getValue() != ((GsLogicalParameter)get(i)).getValue()) {
+					remove(o);
+					add(i, o);
+					hs1.remove(o);
+					hs1.add(o);
+				}
+			}
+			else if (hs1.contains(o) && hs2.contains(o)) {
+				hs1.remove(o);
+				hs1.add(o);
+			}
+		}
+		it = hs1.iterator();
+		hs = new HashSet();
+		while (it.hasNext()) {
+			o = (GsLogicalParameter)it.next();
+			if (!logicalParameters.contains(o))
+				if (!hs2.contains(o)) {
+					hs.add(o);
+					remove(o);
+				}
+				else
+					hs.add(o);
+		}
+		hs1.removeAll(hs);
+		refreshDupAndConflicts();
+	}
+	public void setFunctionParameters(List logicalParameters) {
+		setParameters(logicalParameters, false);
+	}
+	public void setManualParameters(List logicalParameters) {
+		setParameters(logicalParameters, true);
+	}
+	private void refreshDupAndConflicts() {
+		if (!updateDup) return;
+		nbDup = 0;
+		Iterator it = manualp.iterator();
+		GsLogicalParameter param;
+		while (it.hasNext()) {
+			param = (GsLogicalParameter)it.next();
 			param.isDup = false;
 			param.hasConflict = false;
 		}
-		it = fromFunctions.iterator();
+		it = functionp.iterator();
 		while (it.hasNext()) {
-			findDup((GsLogicalParameter)it.next(), manual);
+			param = (GsLogicalParameter)it.next();
+			findDup(param, manualp);
 		}
 	}
-
-	public Iterator iterator() {
-		return new LogicalParameterIterator(manual.iterator(), fromFunctions.iterator());
-	}
-
 	public Iterator iterator(boolean manual) {
-		if (manual) {
-			return this.manual.iterator();
-		}
-		return fromFunctions.iterator();
+		return manualp.iterator();
 	}
-
-
 	public void updateInteraction(int index, Vector edges) {
-		if (index >= manual.size()) {
+		Object o = get(index);
+		if (functionp.contains(o)) {
 			return;
 		}
-	    GsLogicalParameter I = (GsLogicalParameter)manual.get(index);
-	    List oldList = I.getEdges();
-	    I.setEdges(edges);
-		for (int i=0 ; i<manual.size() ; i++) {
-			if ( i!= index && manual.get(i).equals(I)) {
-			    I.setEdges(oldList);
+		GsLogicalParameter I = (GsLogicalParameter)o;
+		List oldList = I.getEdges();
+		I.setEdges(edges);
+		for (int i=0 ; i<size() ; i++) {
+			if ( i!= index && get(i).equals(I)) {
+				I.setEdges(oldList);
 				return;
 			}
 		}
 		refreshDupAndConflicts();
 	}
-
-	private void findDup(GsLogicalParameter param, List l) {
-		if (!updateDup) {
-			return;
-		}
+	private void findDup(GsLogicalParameter param, HashSet l) {
+		if (!updateDup) return;
 		param.isDup = false;
 		param.hasConflict = false;
 		Iterator it = l.iterator();
@@ -164,27 +209,26 @@ public class LogicalParameterList extends AbstractList implements List {
 			}
 		}
 	}
-
-
 	public int getRealSize() {
-		return size()-nbDup;
+		return size();
 	}
-
 	public int getManualSize() {
-		return manual.size();
+		return manualp.size();
 	}
-
-
 	public void cleanupInteraction() {
-		for (int i=manual.size()-1 ; i>=0 ; i--) {
-			if (((GsLogicalParameter)manual.get(i)).isDurty()) {
-				manual.remove(i);
+		GsLogicalParameter lp;
+		for (int i=size()-1 ; i>=0 ; i--) {
+			lp = (GsLogicalParameter)get(i);
+			if (lp.isDurty()) {
+				manualp.remove(lp);
+				functionp.remove(lp);
+				remove(lp);
 			}
 		}
+		refreshDupAndConflicts();
 	}
-
 	public void applyNewMaxValue(short max, GsRegulatoryGraph graph, List l) {
-		Iterator it = manual.iterator();
+		Iterator it = manualp.iterator();
 		while (it.hasNext()) {
 			GsLogicalParameter param = (GsLogicalParameter)it.next();
 			if (param.getValue() > max) {
@@ -192,80 +236,24 @@ public class LogicalParameterList extends AbstractList implements List {
 			}
 		}
 	}
-
-	public void setParameterValue(int rowIndex, int value,
-			GsRegulatoryGraph graph) {
-		if (rowIndex >= manual.size()) {
-			return;
-		}
-		GsLogicalParameter param = (GsLogicalParameter)manual.get(rowIndex);
+	public void setParameterValue(int rowIndex, int value, GsRegulatoryGraph graph) {
+		GsLogicalParameter param = (GsLogicalParameter)get(rowIndex);
 		param.setValue(value, graph);
 		if (param.hasConflict || param.isDup) {
-			findDup(param, fromFunctions);
+			findDup(param, functionp);
 		}
 	}
-
 	public void setUpdateDup(boolean updateDup) {
 		this.updateDup = updateDup;
 		refreshDupAndConflicts();
 	}
-
 	public boolean moveElement(int index, int to) {
-		if (index < 0 || index > manual.size() || to < 0 || to >= manual.size()) {
+		if (index < 0 || to < 0) {
 			return false;
 		}
-        Object obj=manual.remove(index);
-        manual.add(to, obj);
+		Object obj=remove(index);
+		add(to, obj);
 
 		return true;
-	}
-}
-
-class LogicalParameterIterator implements Iterator {
-
-	Object next = null;
-	Iterator it_manual;
-	Iterator it_func;
-
-
-	public LogicalParameterIterator(Iterator it_manual, Iterator it_func) {
-		this.it_manual = it_manual;
-		this.it_func = it_func;
-		if (it_manual.hasNext()) {
-			next = it_manual.next();
-		} else {
-			while (it_func.hasNext()) {
-				GsLogicalParameter p = (GsLogicalParameter)it_func.next();
-				if (!p.hasConflict && !p.isDup) {
-					next = p;
-					break;
-				}
-			}
-		}
-	}
-
-	public boolean hasNext() {
-		return next != null;
-	}
-
-	public Object next() {
-		Object ret = next;
-		if (it_manual.hasNext()) {
-			next = it_manual.next();
-		} else {
-			next = null;
-			while (it_func.hasNext()) {
-				GsLogicalParameter p = (GsLogicalParameter)it_func.next();
-				if (!p.hasConflict && !p.isDup) {
-					next = p;
-					break;
-				}
-			}
-		}
-		return ret;
-	}
-
-	public void remove() {
-		throw new UnsupportedOperationException();
 	}
 }

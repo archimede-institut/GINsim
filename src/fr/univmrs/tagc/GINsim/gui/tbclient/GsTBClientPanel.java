@@ -44,7 +44,8 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
     initListeners();
     instance = this;
     graph = (GsRegulatoryGraph)g;
-		interactionsPanel.init(graph);
+		interactionsPanel.init(graph, true);
+		interactionsPanel.resizeColumns();
   }
 
   private void initGraphic() {
@@ -266,7 +267,10 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
   public void setModuleList(TBModules m) {
     moduleList.setListData(m.getModules());
   }
-  public void setGenes(Vector v) {
+	public void setModuleList(Vector v) {
+		moduleList.setListData(v);
+	}
+	public void setGenes(Vector v) {
     selectedGenes = v;
   }
   public Vector getSelectedGenes() {
@@ -278,7 +282,7 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 
   public void graphChanged(GsNewGraphEvent event) {
 		graph = (GsRegulatoryGraph)event.getNewGraph();
-		interactionsPanel.init(graph);
+		interactionsPanel.init(graph, false);
   }
 
   public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
@@ -312,7 +316,7 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 		if (v != null)
 			for (int i = 0; i < v.size(); i++) {
 				vertex = (GsRegulatoryVertex)v.elementAt(i);
-				par = (Vector)getClient().getGeneInfos(v.elementAt(i).toString());
+				par = (Vector)getClient().getGeneInfos(vertex.getName().equals("") ? vertex.getId() : vertex.getName());
 				genes.put(vertex, par);
 			}
 		geneTreeModel.init(genes);

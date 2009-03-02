@@ -71,7 +71,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 */
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
 		//only the first column is editable, except on the last line
-		if (columnIndex == 0 && rowIndex < interactions.getManualSize()) {
+		if ((columnIndex == 0) && (!interactions.isFunction(rowIndex))) {
 		    return true;
 		}
 		return false;
@@ -108,19 +108,19 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 		if (interactions == null) {
 			return;
 		}
-        if (columnIndex == 0 && rowIndex >= 0 && rowIndex < interactions.getManualSize()) {
-            //the first column
-            int value = 1;
-            if (aValue instanceof Integer) {
+		if (columnIndex == 0 && rowIndex >= 0 /*&& rowIndex < interactions.getManualSize()*/) {
+  		//the first column
+			int value = 1;
+			if (aValue instanceof Integer) {
 				value = ((Integer) aValue).intValue();
 			}
-            if (aValue instanceof String) {
+			if (aValue instanceof String) {
 				value = Integer.parseInt((String) aValue);
 			}
-            if (value <= node.getMaxValue() && value >= 0) {
+			if (value <= node.getMaxValue() && value >= 0) {
 				interactions.setParameterValue(rowIndex, value, graph);
 			}
-            fireTableCellUpdated(rowIndex, columnIndex);
+			fireTableCellUpdated(rowIndex, columnIndex);
 		}
 	}
 

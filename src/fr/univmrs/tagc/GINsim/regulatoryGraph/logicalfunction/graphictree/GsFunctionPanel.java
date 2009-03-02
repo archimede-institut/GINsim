@@ -158,6 +158,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
   }
 
   public void validateText(String s) {
+		s = s.trim();
     GsTreeInteractionsModel interactionsModel;
     boolean ok;
     Enumeration exp_path = tree.getExpandedDescendants(tree.getPathForRow(0));
@@ -171,7 +172,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
       ((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getSelectedArea(), true);
     treeElement.getParent().setProperty("null function", new Boolean(treeElement.toString().equals("")));
 
-    if (ok)
+    if (ok && ((GsTreeExpression)treeElement).getRoot() != null)
     	((GsTreeExpression)treeElement).setText(((GsTreeExpression)treeElement).getRoot().toString(false));
     else {
         //((GsTreeExpression)treeElement).setText(oldText);
