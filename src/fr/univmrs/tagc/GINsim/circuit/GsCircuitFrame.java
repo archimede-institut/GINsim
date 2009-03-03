@@ -193,8 +193,13 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     	StringBuffer s = new StringBuffer("#!/usr/bin/env python\n"
     			+ "import circuittest\n"
     			+ "if __name__ == \"__main__\":\n"
-    			+ "    ct = circuittest.CircuitTester()\n");
-    	Iterator it = l_func.iterator();
+    			+ "    ct = circuittest.CircuitTester(node_order=[");
+        Iterator it = no.iterator();
+        while (it.hasNext()) {
+            s.append("\""+((GsRegulatoryVertex)it.next()).getId()+"\",");
+        }
+    	s.append("])\n");
+    	it = l_func.iterator();
     	while (it.hasNext()) {
     		GsCircuitDescrInTree cit = (GsCircuitDescrInTree)it.next();
 			// FIXME: we are using reg graph's sign, we should not rely on it!
@@ -217,20 +222,25 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     }
     
     protected void circuitToPython(List no, StringBuffer s, GsCircuitDescrInTree cit) {
-    	s.append("    ct.add_circuit((");
-    	for (int i=0 ; i<cit.circuit.t_me.length ; i++) {
-    		int idx = 0; // FIXME: get the right edge!
-    		GsRegulatoryMultiEdge me = cit.circuit.t_me[i];
-    		int src = no.indexOf(me.getSource());
-    		int dst = no.indexOf(me.getTarget());
-        	s.append("("+src+","+dst+","
-        		     + me.getMin(idx)+","
-        			 + (me.getSign(idx)==GsRegulatoryMultiEdge.SIGN_NEGATIVE?"-1":"1")
-        			 + "),");
+    	for (int i=0 ; i<cit.circuit.t_context.length ; i++) {
+    	    if (cit.circuit.t_context[i].next != null) {
+    	        s.append("    ct.add_circuit((");
+
+    	        for (int j=0 ; j<cit.circuit.t_me.length ; j++) {
+    	            int idx = 0; // FIXME: get the right edge!
+    	            GsRegulatoryMultiEdge me = cit.circuit.t_me[j];
+    	            int src = no.indexOf(me.getSource());
+    	            int dst = no.indexOf(me.getTarget());
+    	            s.append("("+src+","+dst+","
+    	                     + me.getMin(idx)+","
+    	                     + (me.getSign(idx)==GsRegulatoryMultiEdge.SIGN_NEGATIVE?"-1":"1")
+    	                     + "),");
+    	        }
+    	        s.append("), ");
+        	    s.append(mdd2py(cit.circuit.t_context[i]));
+                s.append(")\n");
+    	    }
     	}
-    	s.append("), ");
-    	s.append(mdd2py(cit.circuit.t_context[0]));
-    	s.append(")\n");
     }
     protected String mdd2py(OmsddNode node) {
     	if (node.next == null) {
