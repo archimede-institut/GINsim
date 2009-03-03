@@ -160,7 +160,7 @@ public class GsTreeExpression extends GsTreeElement {
     return userExpression;
   }
   private void makeDNFString() throws Exception {
-    GsParamTree tr = functionsCreator.makeTree();
+    GsParamTree tr = functionsCreator.makeTree(1234);
     GsBooleanParser parser = new GsBooleanParser(functionsCreator.getGraph().getGraphManager().getIncomingEdges(functionsCreator.getCurrentVertex()));
     parser.compile(userExpression, functionsCreator.getGraph(), functionsCreator.getCurrentVertex());
     root = parser.getRoot();

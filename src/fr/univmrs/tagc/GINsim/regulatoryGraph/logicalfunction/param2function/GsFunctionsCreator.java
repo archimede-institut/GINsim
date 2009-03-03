@@ -32,7 +32,7 @@ public class GsFunctionsCreator {
   public GsRegulatoryVertex getCurrentVertex() {
     return currentVertex;
   }
-  public GsParamTree makeTree() {
+  public GsParamTree makeTree(int def) {
     List l = graph.getGraphManager().getIncomingEdges(currentVertex);
     Iterator it = l.iterator();
     GsDirectedEdge de;
@@ -71,19 +71,22 @@ public class GsFunctionsCreator {
     while (it.hasNext()) {
       e = (Entry)it.next();
       v = (GsRegulatoryVertex)e.getKey();
-      //System.err.println(v.getId());
       e.setValue(((GsDirectedEdge)graph.getGraphManager().getEdge(v, currentVertex)).getUserObject());
     }
-    return new GsParamTree(as, 1234);
+    return new GsParamTree(as, def);
   }
-  public Hashtable doIt() {
+  public Hashtable doIt(boolean comp) {
     Hashtable functions, hash;
     Vector vector;
     String s, s2;
     Object key, key2;
 
-    GsParamTree tree = makeTree();
-    tree.init(interactions);
+    GsParamTree tree = null;
+	  if (!comp)
+			tree	= makeTree(1234);
+		else
+			tree = makeTree(0);
+    tree.init(interactions, comp);
     tree.process();
     tree.findPatterns();
     functions = tree.getFunctions();
@@ -135,8 +138,8 @@ public class GsFunctionsCreator {
   }
   public String makeDNFExpression(int value) {
     String s = "";
-    GsParamTree tree = makeTree();
-    tree.init(interactions);
+    GsParamTree tree = makeTree(1234);
+    tree.init(interactions, false);
     tree.process();
     s = tree.getDNFForm(value, null);
     return s;

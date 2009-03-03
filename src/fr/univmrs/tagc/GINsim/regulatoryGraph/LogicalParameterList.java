@@ -251,7 +251,7 @@ public class LogicalParameterList extends ArrayList {
 		if (index < 0 || to < 0) {
 			return false;
 		}
-		Object obj=remove(index);
+		Object obj=super.remove(index);
 		add(to, obj);
 
 		return true;
