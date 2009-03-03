@@ -69,8 +69,8 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 extension = ".dot";
                 break;
             case BIOLAYOUT:
-                ffilter.setExtensionList(new String[] {"biolayout"}, "biolayout files");
-                extension = ".biolayout";
+                ffilter.setExtensionList(new String[] {"layout"}, "biolayout files");
+                extension = ".layout";
                 break;
             case SVG:
                 ffilter.setExtensionList(new String[] {"svg"}, "SVG files");
