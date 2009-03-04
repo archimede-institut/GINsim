@@ -51,12 +51,14 @@ public class GsCircuitAlgo {
     long fullPhaseSpace;
     long score;
     OmddNode[] t_parameters;
+    boolean do_cleanup;
 
     /**
      * @param graph the studied graph
      * @param t_constraint constraints on the nodes
      */
-    public GsCircuitAlgo(GsRegulatoryGraph graph, short[][] t_constraint, GsRegulatoryMutantDef mutant) {
+    public GsCircuitAlgo(GsRegulatoryGraph graph, short[][] t_constraint, GsRegulatoryMutantDef mutant, boolean do_cleanup) {
+        this.do_cleanup = do_cleanup;
         this.t_constraint = t_constraint;
         t_parameters = graph.getAllTrees(true);
         this.nodeOrder = graph.getNodeOrder();

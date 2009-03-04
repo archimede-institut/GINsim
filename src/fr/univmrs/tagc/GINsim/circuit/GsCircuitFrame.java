@@ -44,8 +44,6 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
 
-	protected static final boolean DO_CLEANUP	= true;
-    
     private AlgoConnectivity algoC = null;
     protected GsRegulatoryGraph graph;
 
@@ -69,6 +67,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     private JScrollPane sp2 = null;
     private JTextArea jta = null;
     private GsCircuitSearchStoreConfig config = null;
+    private JCheckBox cb_cleanup = null;
     ObjectStore mutantstore = new ObjectStore();
     MutantSelectionPanel mutantPanel;
 
@@ -155,18 +154,27 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         	
         	c = new GridBagConstraints();
         	c.gridx = 0;
-        	c.gridy = 2;
+        	c.gridy = 3;
         	c.weightx = 1;
         	c.weighty = 1;
         	c.fill = GridBagConstraints.BOTH;
         	resultPanel.add(getSplitPane(), c);
         	
-        	// python button
-        	c = new GridBagConstraints();
-        	c.gridx = 0;
-        	c.gridy = 3;
-        	c.anchor = GridBagConstraints.WEST;
-        	resultPanel.add(get_pythonPanel(), c);
+            // python button
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 4;
+            c.anchor = GridBagConstraints.WEST;
+            resultPanel.add(get_pythonPanel(), c);
+
+            // cleanup checkbox
+            c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 2;
+            c.anchor = GridBagConstraints.WEST;
+            cb_cleanup = new JCheckBox(Translator.getString("STR_do_cleanup"));
+            cb_cleanup.setSelected(true);           // FIXME: remember this as a setting
+            resultPanel.add(cb_cleanup, c);
         }
         return resultPanel;
     }
@@ -656,7 +664,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
 
     protected void runAnalyse() {
     	brun.setEnabled(false);
-        treemodel.analyse(graph, config, (GsRegulatoryMutantDef)mutantstore.getObject(0));
+        treemodel.analyse(graph, config, (GsRegulatoryMutantDef)mutantstore.getObject(0), cb_cleanup.isSelected());
         brun.setEnabled(true);
 
         if (sp2 == null) {
@@ -798,7 +806,7 @@ class GsCircuitDescr {
 
             GsCircuitDescrInTree cdtree = new GsCircuitDescrInTree(this, false, sub);
             v_all.add(cdtree);
-            if (GsCircuitFrame.DO_CLEANUP) {
+            if (algo.do_cleanup) {
             	t_context[sub] = context.cleanup(t_circuit).reduce();
             } else {
             	t_context[sub] = context.reduce();
@@ -916,8 +924,8 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
         m_parent.put(s_root, v_root);
     }
 
-    protected void analyse(GsRegulatoryGraph graph, GsCircuitSearchStoreConfig config, GsRegulatoryMutantDef mutant) {
-        GsCircuitAlgo circuitAlgo = new GsCircuitAlgo(graph, config == null ? null : config.t_constraint, mutant);
+    protected void analyse(GsRegulatoryGraph graph, GsCircuitSearchStoreConfig config, GsRegulatoryMutantDef mutant, boolean do_cleanup) {
+        GsCircuitAlgo circuitAlgo = new GsCircuitAlgo(graph, config == null ? null : config.t_constraint, mutant, do_cleanup);
         Vector v_functionnal = new Vector();
         Vector v_positive = new Vector();
         Vector v_negative = new Vector();
