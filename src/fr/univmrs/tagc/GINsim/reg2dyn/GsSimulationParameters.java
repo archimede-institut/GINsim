@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,7 +69,18 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
      */
 
     public String getDescr() {
-        String s = "STG construction parameters:\n    Updating policy: ";
+        String name = param_list.graph.getGraphName();
+        String saveName = param_list.graph.getSaveFileName();
+        if (saveName != null) {
+            int pos = saveName.lastIndexOf(File.separatorChar);
+            if (pos != -1) {
+                saveName = saveName.substring(pos+1);
+            }
+            name += " ("+saveName+")";
+        }
+        String s = "STG construction parameters:\n";
+        s += "    Regulatory graph: " + name + "\n";
+        s += "    Updating policy: ";
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
         if (pcdef.getNbElements(null) > 1) {
             s += "by priority class\n";
