@@ -9,8 +9,6 @@ public class TBCascadingStyle extends CascadingStyle {
 	}
 	public void applyOnEdge(EdgeStyle style, Object edge, GsAttributesReader areader) {
 		if (shouldStoreOldStyle) getOldEdges().put(edge, new TBEdgeStyle(areader));
-		System.err.println("applyOnEdge : " + edge.toString() + " " + edge.hashCode());
 		style.apply(areader);
 	}
-
 }

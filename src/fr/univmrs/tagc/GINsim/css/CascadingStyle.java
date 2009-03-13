@@ -179,7 +179,6 @@ public class CascadingStyle {
 			Object edge = (Object) it_edges.next();
 			areader.setEdge(edge);
 			((Style)old_edges.get(edge)).apply(areader);
-			System.err.println("restoreAllEdges : " + edge.toString() + " " + edge.hashCode());
 		}
 	}
 

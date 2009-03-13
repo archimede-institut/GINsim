@@ -47,7 +47,4 @@ public class GsJgraphDirectedEdge extends DirectedEdge implements GsDirectedEdge
     public void setUserObject(Object obj) {
         userObject = obj;
     }
-		public int hashCode() {
-			return toString().hashCode();
-		}
 }
