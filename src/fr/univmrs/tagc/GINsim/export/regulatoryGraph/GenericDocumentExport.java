@@ -7,8 +7,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
@@ -245,7 +248,11 @@ public class GenericDocumentExport extends GsAbstractExport {
 					doc.openTableCell(""+t_changes[0]);
 					doc.openTableCell(""+t_changes[1]);
 				}
-                doc.openTableCell(mutant.getCondition(0));
+				if (mutant.getNbChanges() > 0) {
+				    doc.openTableCell(mutant.getCondition(0));
+				} else {
+				    doc.openTableCell("");
+				}
 				if (specConfig.putComment) {
 					doc.openTableCell(1, nbrow, "", false);
 					writeAnnotation(mutant.getAnnotation());//BUG?
@@ -555,10 +562,12 @@ class DocumentExportConfig implements GsInitialStateStore {
 
 class GDExportConfigPanel extends JPanel {
     private static final long serialVersionUID = 9043565812912568136L;
-   
+    
+    protected DocumentExportConfig cfg;
+    JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
     
 	protected GDExportConfigPanel (GsExportConfig config, StackDialog dialog) {
-		DocumentExportConfig cfg = (DocumentExportConfig)config.getSpecificConfig();
+		cfg = (DocumentExportConfig)config.getSpecificConfig();
 		if (cfg == null) {
 			cfg = new DocumentExportConfig();
 			config.setSpecificConfig(cfg);
@@ -568,11 +577,56 @@ class GDExportConfigPanel extends JPanel {
 
     	setLayout(new GridBagLayout());
     	GridBagConstraints c = new GridBagConstraints();
-    	c.gridx = c.gridy = 0;
-    	c.weightx = c.weighty = 1;
-    	c.fill = GridBagConstraints.BOTH;
-    	add(initPanel, c);
+        c.gridx = c.gridy = 0;
+        c.weightx = c.weighty = 1;
+        c.fill = GridBagConstraints.BOTH;
+        add(initPanel, c);
+        
+        c.weightx = c.weighty = 0;
+        ChangeListener listener = new MyListener();
+
+        cb_stable = new JCheckBox("stable");
+        cb_stable.addChangeListener(listener);
+        cb_stable.setSelected(cfg.searchStableStates);
+        c.gridy++;
+        add(cb_stable, c);
+        cb_init = new JCheckBox("initial states");
+        cb_init.addChangeListener(listener);
+        cb_init.setSelected(cfg.exportInitStates);
+        c.gridy++;
+        add(cb_init, c);
+        cb_mutants = new JCheckBox("mutants");
+        cb_mutants.addChangeListener(listener);
+        cb_mutants.setSelected(cfg.exportMutants);
+        c.gridy++;
+        add(cb_mutants, c);
+        cb_multicellular = new JCheckBox("multicellular");
+        cb_multicellular.addChangeListener(listener);
+        cb_multicellular.setSelected(cfg.multicellular);
+        c.gridy++;
+        add(cb_multicellular, c);
+        cb_comment = new JCheckBox("comments");
+        cb_comment.addChangeListener(listener);
+        cb_comment.setSelected(cfg.putComment);
+        c.gridy++;
+        add(cb_comment, c);
     }
+	class MyListener implements ChangeListener {
+        public void stateChanged(ChangeEvent e) {
+            JCheckBox src = (JCheckBox)e.getSource();
+            if (src == cb_stable) {
+                cfg.searchStableStates = src.isSelected();
+            } else if (src == cb_comment) {
+                cfg.putComment = src.isSelected();
+            } else if (src == cb_multicellular) {
+                cfg.multicellular = src.isSelected();
+            } else if (src == cb_init) {
+                cfg.exportInitStates = src.isSelected();
+            } else if (src == cb_mutants) {
+                cfg.exportMutants = src.isSelected();
+            }
+        }
+	}
 }
 
 /**
