@@ -192,7 +192,7 @@ public class SimpleGenericList extends GenericList {
 
 	public boolean move(int[] sel, int diff) {
 
-		if (diff == 0 || sel == null || sel.length == 0 || 
+		if (diff == 0 || sel == null || sel.length == 0 ||
 				diff < 0 && sel[0] <= -(diff+1) ||
 				diff > 0 && sel[sel.length-1] >= v_data.size() - diff) {
 			return false;
@@ -204,7 +204,7 @@ public class SimpleGenericList extends GenericList {
 		}
 	    return true;
 	}
-	
+
 	protected void doMoveUp(int[] sel, int diff) {
 	    for (int i=0 ; i<sel.length ; i++) {
 		    int a = sel[i];
@@ -223,7 +223,7 @@ public class SimpleGenericList extends GenericList {
 		    }
 	    }
 	}
-	
+
 	protected boolean moveElement(int src, int dst) {
 		if (!canOrder) {
 			return false;
@@ -255,7 +255,8 @@ public class SimpleGenericList extends GenericList {
 	}
 
 	public boolean match(String filter, Object o) {
-		return o.toString().toLowerCase().contains(filter.toLowerCase());
+		return o.toString().toLowerCase().indexOf(filter.toLowerCase()) != -1;
+		//return o.toString().toLowerCase().contains(filter.toLowerCase());
 	}
 
 	protected Object doCreate(String name, int mode) {
@@ -279,7 +280,7 @@ public class SimpleGenericList extends GenericList {
 		System.out.println("you should override this if you plan to use it");
 		return;
 	}
-	
+
 	public Object getElement(String name) {
 		Iterator it = v_data.iterator();
 		while (it.hasNext()) {

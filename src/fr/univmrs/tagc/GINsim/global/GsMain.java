@@ -32,7 +32,7 @@ public class GsMain {
         // hacky for now, dynamic stuff later on
         String[] dirs = {"/cobelix/naldi/Bureau/tb"};
         updateClassPath(dirs);
-        
+
         try {
             GsEnv.readConfig("/fr/univmrs/tagc/GINsim/ressources/GINsim-config.xml");
         } catch (Exception e) {
@@ -135,8 +135,8 @@ public class GsMain {
             }
         }
     }
-    
-   
+
+
     private static List l = new ArrayList();
     URLClassLoader cloader = new URLClassLoader(new URL[] {}, ClassLoader.getSystemClassLoader());
     public static ClassLoader getClassLoader() {
@@ -152,7 +152,7 @@ public class GsMain {
         }
         return new URLClassLoader(t);
     }
-    
+
     public static void updateClassPath(String[] files) {
         for (int i=0 ; i<files.length ; i++) {
             File f = new File(files[i]);
@@ -185,9 +185,9 @@ class ReadConfig extends XMLHelper {
 	public GsGraph getGraph() {
 		return null;
 	}
-	
+
 	ClassLoader cloader = GsMain.getClassLoader();
-	
+
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if ("plugin".equals(qName)) {
 			String s = attributes.getValue("load");
@@ -220,5 +220,5 @@ class ReadConfig extends XMLHelper {
                     AboutDialog.setDOAPFile(attributes.getValue("path"));
 		}
 	}
-	
+
 }

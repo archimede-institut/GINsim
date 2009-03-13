@@ -166,7 +166,7 @@ public class GsInteractionPanel extends GsParameterPanel
         }
         if (obj != null && obj instanceof GsRegulatoryVertex) {
             currentVertex = (GsRegulatoryVertex)obj;
-            edgeList.setEdge(graph.getGraphManager().getIncomingEdges(currentVertex));
+						edgeList.setEdge(graph.getGraphManager().getIncomingEdges(currentVertex));
             interactionList.setNode(currentVertex);
             cellRenderer.setVertex(currentVertex);
             if (jTable.getSelectedRow() == -1) {

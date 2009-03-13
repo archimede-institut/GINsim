@@ -17,6 +17,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.common.widgets.*;
 import tbrowser.data.*;
 import tbrowser.data.module.*;
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 public class GsInteractionsPanel extends GsPanel implements ItemListener, ActionListener {
 	class InteractionsTableRenderer extends DefaultTableCellRenderer {
@@ -106,7 +107,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 	private GsTBClientPanel clientPanel;
 	private JComboBox orgComboBox;
 	private JCheckBox selectAllCheckBox;
-	private GsButton sigButton, scoreButton;
+	private GsButton sigButton, resetButton, scoreButton;
 	private Hashtable taxId, signatures;
 
 	public GsInteractionsPanel(GsTBClientPanel p) {
@@ -165,8 +166,10 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 		p2.addComponent(selectAllCheckBox, 0, 0, 1, 1, 0.0, 0.0, GsPanel.WEST, GsPanel.NONE, 0, 0, 0, 0, 0, 0);
 		sigButton = new GsButton("Sig");
 		p2.addComponent(sigButton, 1, 0, 1, 1, 0.0, 0.0, GsPanel.WEST, GsPanel.NONE, 0, 5, 0, 0, 0, 0);
+		resetButton = new GsButton("Reset");
+		p2.addComponent(resetButton, 2, 0, 1, 1, 0.0, 0.0, GsPanel.WEST, GsPanel.NONE, 0, 5, 0, 0, 0, 0);
 		scoreButton = new GsButton("Score");
-		p2.addComponent(scoreButton, 2, 0, 1, 1, 0.0, 0.0, GsPanel.WEST, GsPanel.NONE, 0, 5, 0, 0, 0, 0);
+		p2.addComponent(scoreButton, 3, 0, 1, 1, 0.0, 0.0, GsPanel.WEST, GsPanel.NONE, 0, 5, 0, 0, 0, 0);
 		commandPanel.addComponent(p2, 0, 1, 1, 1, 0.0, 0.0, GsPanel.CENTER, GsPanel.NONE, 2, 2, 2, 2, 0, 0);
 		addComponent(treePanel, 0, 0, 1, 1, 1.0, 1.0, NORTH, BOTH, 0, 0, 0, 0, 0, 0);
 		addComponent(commandPanel, 0, 1, 1, 1, 1.0, 0.0, NORTH, HORIZONTAL, 0, 0, 0, 0, 0, 0);
@@ -178,35 +181,70 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 				AbstractDTreeElement node;
 				Vector v;
 				SigKey sk;
-				TBModules mods;
 				String org, gene1, gene2;
+				GsRegulatoryVertex v1, v2, tmp;
+				int ns, w;
 
 				table.clearSelection();
 				org = orgComboBox.getSelectedItem().toString();
 				for (int i = 0; i < root.getChildCount(); i++) {
 					node = root.getChild(i);
-					gene1 = ((GsRegulatoryVertex)node.getUserObject()).getName();
-					if (gene1.equals("")) gene1 = ((GsRegulatoryVertex)node.getUserObject()).getId();
+					v1 = (GsRegulatoryVertex)node.getUserObject();
+					gene1 = v1.getName();
+					if (gene1.equals("")) gene1 = v1.getId();
 					for (int j = 0; j < node.getChildCount(); j++)
 						if (node.getChild(j).isSelected()) {
-							gene2 = ((GsRegulatoryVertex)node.getChild(j).getUserObject()).getName();
-							if (gene2.equals("")) gene2 = ((GsRegulatoryVertex)node.getChild(j).getUserObject()).getId();
+							v2 = (GsRegulatoryVertex)node.getChild(j).getUserObject();
+							gene2 = v2.getName();
+							if (gene2.equals("")) gene2 = v2.getId();
 							sk = new SigKey(org, gene1, gene2);
 							if (!signatures.containsKey(sk)) {
 								v = new Vector();
 								v.addElement(gene1);
 								v.addElement(gene2);
-								//mods = clientPanel.getClient().getSignatures(v, org);
 								v = (Vector)clientPanel.getClient().getSignatures(v, org);
-								signatures.put(sk, /*mods*/v);
+								signatures.put(sk, v);
 							}
 							else
-								//mods = (TBModules)signatures.get(sk);
 								v = (Vector)signatures.get(sk);
-							node.getChild(j).getValues().setValueAt(3, (/*mods*/v == null ? "?" : String.valueOf(/*mods.getSize()*/((Vector)v.firstElement()).size())), false);
+							if (((DTreeElementToggleButton)root).isSelected()) {
+								tmp = v1;
+								v1 = v2;
+								v2 = tmp;
+							}
+							ns = 0;
+							if (v.size() > 0) {
+								ns = ((Vector) v.firstElement()).size();
+								w = 1;
+								if (ns >= 100)
+									w = 10;
+								else if (ns >= 50)
+									w = 9;
+								else if (ns >= 40)
+									w = 8;
+								else if (ns >= 30)
+									w = 7;
+								else if (ns >= 20)
+									w = 6;
+								else if (ns >= 15)
+									w = 5;
+								else if (ns >= 10)
+									w = 4;
+								else if (ns >= 5)
+									w = 3;
+								else if (ns >= 1)
+									w = 2;
+								clientPanel.applyEdgeStyle((GsJgraphDirectedEdge) graph.getGraphManager().getEdge(v1, v2), w);
+							}
+							node.getChild(j).getValues().setValueAt(3, (v == null ? "?" : v.size() == 0 ? "?" : String.valueOf(ns)), false);
 						}
 				}
 				table.repaint();
+			}
+		});
+		resetButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				clientPanel.restoreEdgeStyle();
 			}
 		});
 		scoreButton.addActionListener(new ActionListener() {
@@ -317,7 +355,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 							nb.setSelectable(false, this);
 						}
 						nb.addValue(GsRegulatoryMultiEdge.SIGN_SHORT[edge.getSign(k)], false);
-						nb.addValue(Integer.valueOf(edge.getEdge(k).getMin()), false);
+						nb.addValue(new Integer(edge.getEdge(k).getMin()), false);
 						nb.addValue(edge.getEdge(k).getMaxAsString(), false);
 						nb.addValue("?", false);
 						nb.addValue("?", false);
@@ -338,7 +376,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 							nb.setSelectable(false, this);
 						}
 						nb.addValue(GsRegulatoryMultiEdge.SIGN_SHORT[edge.getSign(k)], false);
-						nb.addValue(Integer.valueOf(edge.getEdge(k).getMin()), false);
+						nb.addValue(new Integer(edge.getEdge(k).getMin()), false);
 						nb.addValue(edge.getEdge(k).getMaxAsString(), false);
 						nb.addValue("?", false);
 						nb.addValue("?", false);

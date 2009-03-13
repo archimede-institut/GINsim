@@ -12,10 +12,10 @@ public class GsJgraphDirectedEdge extends DirectedEdge implements GsDirectedEdge
 
     private static final long serialVersionUID = 796467546398764L;
 	private Object userObject;
-    
+
 	/**
 	 * create a directedEdge.
-	 * 
+	 *
 	 * @param source the source vertex.
 	 * @param target the target vertex.
 	 * @param obj data to attach to th edge.
@@ -24,7 +24,7 @@ public class GsJgraphDirectedEdge extends DirectedEdge implements GsDirectedEdge
        super(source, target);
        userObject = obj;
     }
-    
+
     public Object getUserObject() {
         return userObject;
     }
@@ -47,4 +47,7 @@ public class GsJgraphDirectedEdge extends DirectedEdge implements GsDirectedEdge
     public void setUserObject(Object obj) {
         userObject = obj;
     }
+		public int hashCode() {
+			return toString().hashCode();
+		}
 }

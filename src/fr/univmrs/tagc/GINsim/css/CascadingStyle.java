@@ -13,13 +13,13 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 public class CascadingStyle {
 	private Map old_nodes, old_edges;
 	public boolean shouldStoreOldStyle;
-	
+
 	public CascadingStyle(boolean shouldStoreOldStyle) {
 		old_nodes = new HashMap();
 		old_edges = new HashMap();
 		this.shouldStoreOldStyle = shouldStoreOldStyle;
 	}
-	
+
 	/**
 	 * Apply a selector on an edge using its attribute reader.
 	 * If shouldStoreOldStyle is true it save the old style too.
@@ -71,9 +71,9 @@ public class CascadingStyle {
 
 	/**
 	 * Apply all the selectors in cascade on each edges
-	 * 
+	 *
 	 * If you want to apply only one selector, use applySelectorOnEdges instead.
-	 * 
+	 *
 	 * @param selectors an ordered list of selector to apply on each edges
 	 * @param edges a collection of edges to apply the selectors on
 	 * @param ereader an edge AttributesReader
@@ -94,9 +94,9 @@ public class CascadingStyle {
 
 	/**
 	 * Apply all the selectors in cascade on each nodes
-	 * 
+	 *
 	 * If you want to apply only one selector, use applySelectorOnNodes instead.
-	 * 
+	 *
 	 * @param selectors an ordered list of selector to apply on each nodes
 	 * @param nodes a collection of nodes to apply the selectors on
 	 * @param vreader a vertex AttributesReader
@@ -114,12 +114,12 @@ public class CascadingStyle {
 			style.apply(vreader);													//  apply the style to the node.
 		}
 	}
-	
+
 	/**
 	 * Apply one selector on each edges from a collection
-	 * 
+	 *
 	 * If you want to apply several selector, use applySelectorsOnEdges instead.
-	 * 
+	 *
 	 * @param sel the selector to apply on each edges
 	 * @param edges a collection of edges to apply the selectors on
 	 * @param ereader an edge AttributesReader
@@ -134,9 +134,9 @@ public class CascadingStyle {
 
 	/**
 	 * Apply one selector on each nodes from a collection
-	 * 
+	 *
 	 * If you want to apply several selector, use applySelectorsOnNodes instead.
-	 * 
+	 *
 	 * @param sel the selector to apply on each nodes
 	 * @param edges a collection of nodes to apply the selectors on
 	 * @param vreader an vertex AttributesReader
@@ -148,7 +148,7 @@ public class CascadingStyle {
 			((VertexStyle)sel.getStyleForNode(node)).apply(vreader);	//  apply the style to the node.
 		}
 	}
-	
+
 	/**
 	 * Restore an edge if it has been previously saved.
 	 * @param edge
@@ -158,7 +158,7 @@ public class CascadingStyle {
 		if (!shouldStoreOldStyle) return;
 		((Style)old_edges.get(edge)).apply(areader);
 	}
-	
+
 	/**
 	 * Restore a node if it has been previously saved.
 	 * @param node
@@ -166,7 +166,7 @@ public class CascadingStyle {
 	 */
 	public void restoreNode(Object node, GsVertexAttributesReader areader) {
 		if (!shouldStoreOldStyle) return;
-		((Style)old_nodes.get(node)).apply(areader);		
+		((Style)old_nodes.get(node)).apply(areader);
 	}
 
 	/**
@@ -179,6 +179,7 @@ public class CascadingStyle {
 			Object edge = (Object) it_edges.next();
 			areader.setEdge(edge);
 			((Style)old_edges.get(edge)).apply(areader);
+			System.err.println("restoreAllEdges : " + edge.toString() + " " + edge.hashCode());
 		}
 	}
 
@@ -209,7 +210,7 @@ public class CascadingStyle {
 			if (style != null) style.apply(areader);
 		}
 	}
-	
+
 	/**
 	 * Restore all the nodes from the collection nodes.
 	 * @param nodes a collection of nodes to restore
@@ -225,4 +226,10 @@ public class CascadingStyle {
 		}
 	}
 
+	public Map getOldNodes() {
+		return old_nodes;
+	}
+	public Map getOldEdges() {
+		return old_edges;
+	}
 }

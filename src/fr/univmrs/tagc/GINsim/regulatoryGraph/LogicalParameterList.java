@@ -85,8 +85,9 @@ public class LogicalParameterList extends ArrayList {
 			param.hasConflict = false;
 		}
 		it = manualp.iterator();
+		Vector toremove = new Vector();
 		while (it.hasNext()) {
-			GsLogicalParameter param = (GsLogicalParameter) it.next();
+			GsLogicalParameter param = (GsLogicalParameter)it.next();
 			param.isDup = false;
 			param.hasConflict = false;
 			it2 = functionp.iterator();
@@ -94,7 +95,7 @@ public class LogicalParameterList extends ArrayList {
 				GsLogicalParameter other = (GsLogicalParameter) it2.next();
 				if (param.equals(other)) {
 					if (other.getValue() == param.getValue()) {
-						manualp.remove(param);
+						toremove.addElement(param);
 					}
 					else {
 						param.hasConflict = true;
@@ -104,6 +105,7 @@ public class LogicalParameterList extends ArrayList {
 				}
 			}
 		}
+		manualp.removeAll(toremove);
 		updateDup = true;
 	}
 	private void setParameters(List logicalParameters, boolean manual) {

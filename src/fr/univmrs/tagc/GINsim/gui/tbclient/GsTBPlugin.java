@@ -21,7 +21,7 @@ public class GsTBPlugin implements GsPlugin, GsActionProvider {
   public GsTBPlugin() {
     super();
 		TBrowser.getInstance();
-  }
+	}
 
   public void registerPlugin() {
     GsRegulatoryGraphDescriptor.registerActionProvider(this);

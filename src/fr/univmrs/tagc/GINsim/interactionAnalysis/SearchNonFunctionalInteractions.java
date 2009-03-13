@@ -20,9 +20,9 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 /**
- * 
+ *
  * Search all the non functional interactions in the graph 'g' and do some actions on them depending on the options (opt_*).
- * 
+ *
  */
 public class SearchNonFunctionalInteractions {
 	private boolean opt_color, opt_annotate, opt_verbose;
@@ -34,13 +34,13 @@ public class SearchNonFunctionalInteractions {
 	private HashMap m;
 	private Set nonFunctionalInteractions = null;
 	private CascadingStyle cs = null;
-	
+
 	private long before; //to know the time elapsed in the algorithm
-	
+
 	/**
-	 * 
+	 *
 	 * Search all the non functional interactions in the graph 'g' and do some actions on them depending on the options (opt_*).
-	 * 
+	 *
 	 * @param g the graph where to search the non functional interactions.
 	 * @param opt_color boolean indicating if the non functional edges should be colored in 'opt_color_inactive'.
 	 * @param opt_simplify boolean indicating if the non functional edges should be removed from the graph.
@@ -55,7 +55,7 @@ public class SearchNonFunctionalInteractions {
 		this.opt_color_inactive = opt_color_inactive;
 		this.g = g;
 		this.gm = g.getGraphManager();
-		
+
 		log = new StringBuffer(1024);
 		log("Find inactive interactions on ");
 		log(g.getGraphName());
@@ -74,9 +74,9 @@ public class SearchNonFunctionalInteractions {
 
 	/**
 	 * Search all the non functional interactions in the graph 'g' and do some actions on them depending on the options (opt_*).
-	 * 
+	 *
 	 * For each vertices, scan the reduced Omdd representation of the vertex logical function to know which vertices are effective (<=>present). If an edge source vertex incoming on this vertex is not in the Omdd, then its non functional.
-	 * 
+	 *
 	 */
 	private void run() {
 		before = (new Date()).getTime();//measuring the time spend for this algorithm
@@ -95,13 +95,13 @@ public class SearchNonFunctionalInteractions {
 		m = new HashMap((int) (gm.getVertexCount()*1.5));										//m.get(vertex) => its position in the nodeOrder as an Integer.
 		int i = 0;
 		for (Iterator it = nodeOrder.iterator(); it.hasNext();) {								//Build the map m
-			m.put(it.next(), Integer.valueOf(i++));
+			m.put(it.next(), new Integer(i++));
 		}
-		
+
 		int[] visited = new int[gm.getVertexCount()];											//@see scannOmdd
-		
+
 		nonFunctionalInteractions = new HashSet();
-		
+
 		//Prepare colorisation
 		EdgeStyle style = null;
 		InteractionAnalysisSelector sel = (InteractionAnalysisSelector) Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER);
@@ -114,7 +114,7 @@ public class SearchNonFunctionalInteractions {
 		if (opt_color_inactive != null) style.lineColor = opt_color_inactive;
 		if (opt_color) cs = new CascadingStyle(true);
 
-			
+
 		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
 		i = 1;
 		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {								//  For each vertex v in the graph
@@ -125,7 +125,7 @@ public class SearchNonFunctionalInteractions {
 			if (res != l.size()) {																//  if we haven't found all the incoming nodes, there must be some non functional edges.
 				for (Iterator it2 = l.iterator(); it2.hasNext();) {								//    For each edge e in l
 					GsJgraphDirectedEdge me = (GsJgraphDirectedEdge) it2.next();
-					GsRegulatoryVertex vs = (GsRegulatoryVertex) me.getSourceVertex();			//      get the source vertex vs 
+					GsRegulatoryVertex vs = (GsRegulatoryVertex) me.getSourceVertex();			//      get the source vertex vs
 					if (visited[vertex_level(vs)] != i-1) {										//      if the vertex vs not been visited by the scan, the edge vs->v is inactive. (i-1 because we do i++ before)
 						log("  The edge ");
 						log(me.toString());
@@ -158,15 +158,15 @@ public class SearchNonFunctionalInteractions {
 	private int vertex_level(GsRegulatoryVertex v) {
 		return ((Integer)m.get(v)).intValue();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return the Set of nonFunctionalInteractions or null if it has not been computed
 	 */
 	public Set getNonFunctionalInteractions() {
 		return nonFunctionalInteractions;
 	}
-	
+
 	/**
 	 * Remove all the non functional interactions from the graph.
 	 */
@@ -177,7 +177,7 @@ public class SearchNonFunctionalInteractions {
 		}
 		nonFunctionalInteractions = null;
 	}
-	
+
 	/**
 	 * Colorize the edges in the Set nonFunctionalInteractions.
 	 */
@@ -193,7 +193,7 @@ public class SearchNonFunctionalInteractions {
 			cs.applyOnEdge(style, me, areader);
 		}
 	}
-	
+
 	public void undoColorize() {
 		cs.restoreAllEdges(nonFunctionalInteractions, gm.getEdgeAttributesReader());
 	}
@@ -202,10 +202,10 @@ public class SearchNonFunctionalInteractions {
 	 * Recursive function scanning an OmddNode 'omdd' and call itself on the 'omdd' children.
 	 * When the function end, in the array 'visited' each element with value 'current_node' is present in the logical formula 'omdd'.
 	 *     visited[i] = current_node => the node 'i' (in nodeOrder sense) has been scanned by this function.
-	 * 
+	 *
 	 * If the node is not a leaf, mark the 'visited' array corresponding to 'omdd.level' to 'current_node'
 	 * The function stop when it has scanned all the tree or all the nodes (that is 'nodeFound' = 'nodeCount')
-	 * 
+	 *
 	 * @param omdd the current OmddNode to scan. Should be the root at the first call.
 	 * @param nodeFound indicates how many node have been found at this call
 	 * @param nodeCount indicates the maximum number of node that can be found (to return prematurely)
@@ -227,7 +227,7 @@ public class SearchNonFunctionalInteractions {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * append the string 's' to the log
 	 * @param s
@@ -272,14 +272,14 @@ public class SearchNonFunctionalInteractions {
 	public StringBuffer getLog() {
 		return log;
 	}
-	
+
 	protected void finalize() {
 		if (nonFunctionalInteractions != null) {
 			Selector sel = Selector.getSelector(InteractionAnalysisSelector.IDENTIFIER);
 			if (sel != null) sel.flush(); //remove nonFunctionalInteractions from the cache.
 		}
 	}
-	
+
 //	private void print_t(int[] t) {
 //		log("[");
 //		for (int i = 0; i < t.length; i++) {

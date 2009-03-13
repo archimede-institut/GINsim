@@ -57,7 +57,8 @@ public class LogicalParameter {
 		return s;
 	}
 	public int getCardinality() {
-		return Integer.bitCount(boolBitSet);
+		return Integer.toBinaryString(boolBitSet).length();
+		//return Integer.bitCount(boolBitSet);
 	}
 	public void setPremier() {
 		premier = true;
@@ -87,8 +88,10 @@ public class LogicalParameter {
 
 		if (getXBitSet() == lp.getXBitSet()) {
 			p = getBoolBitSet() ^ lp.getBoolBitSet();
-			if (Integer.bitCount(p) == 1) {
-				xb = xBitSet | Integer.rotateLeft(1, Integer.numberOfTrailingZeros(p));
+			if (Integer.toBinaryString(p).length() == 1) {
+			//if (Integer.bitCount(p) == 1) {
+			  xb = xBitSet | (int)Math.pow(1, Integer.toBinaryString(p).length() - Integer.toBinaryString(p).lastIndexOf("1") - 1);
+				//xb = xBitSet | Integer.rotateLeft(1, Integer.numberOfTrailingZeros(p));
 				bb = boolBitSet & lp.getBoolBitSet();
 				b = (BitSet)id.clone();
 				b.or(lp.getId());
