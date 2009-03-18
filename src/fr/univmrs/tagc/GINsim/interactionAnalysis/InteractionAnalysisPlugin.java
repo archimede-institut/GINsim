@@ -17,7 +17,7 @@ public class InteractionAnalysisPlugin implements GsActionProvider, GsPlugin {
 		GsGraph.registerActionProvider(this);
 		Selector.registerSelector(InteractionAnalysisSelector.IDENTIFIER, InteractionAnalysisSelector.class);
 	}
-
+	
 	
 	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
 		if (actionType != ACTION_ACTION) {

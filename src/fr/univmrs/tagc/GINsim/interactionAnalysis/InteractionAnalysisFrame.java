@@ -21,11 +21,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
@@ -46,6 +49,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 	private ObjectStore mutantStore;
 	
 	private static final long serialVersionUID = -9126723853606423085L;
+	private static final String OPT_COLORBYDEFAULT = "functionalityAnalysis.colorByDefault";
 
 	public InteractionAnalysisFrame(JFrame parent, String id, int w, int h) {
 		super(parent, id, w, h);
@@ -67,9 +71,6 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 
 	public void initialize() {
 		setMainPanel(getMainPanel());
-		setMinimumSize(new Dimension(640,480));
-		Dimension preferredSize = getPreferredSize();
-		setSize(preferredSize.width+20, preferredSize.height+20); //Padding 10px;
 	}
 	
 	private Container getMainPanel() {
@@ -85,7 +86,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			c.ipadx = 10;
 			mainPanel.add(new JLabel(Translator.getString("STR_function_ask")), c);
 			
-			runOptions = new JCheckBox[2];
+			runOptions = new JCheckBox[3];
 			
 			c.gridy++;
 			c.gridx = 0;
@@ -101,6 +102,19 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 		    runOptions[1].setMnemonic(KeyEvent.VK_V); 
 		    runOptions[1].setSelected(false);
 		    mainPanel.add(runOptions[1], c);
+		    
+			c.gridy++;
+		    runOptions[2] = new JCheckBox(Translator.getString("STR_function_opt_color_by_default"));
+		    runOptions[2].setMnemonic(KeyEvent.VK_C); 
+		    runOptions[2].setSelected(((Boolean)OptionStore.getOption(OPT_COLORBYDEFAULT, Boolean.FALSE)).booleanValue());
+		    runOptions[2].addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					boolean b = runOptions[2].isSelected();
+					OptionStore.setOption(OPT_COLORBYDEFAULT, Boolean.valueOf(b));
+					if (b && !isColorized) forceColorize();
+				}
+		    });
+		    mainPanel.add(runOptions[2], c);
 		    
 		    c.gridy++;
 		    mutantStore = new ObjectStore();
@@ -132,13 +146,6 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 		    colorizeButton.setEnabled(false);
 		    mainPanel.add(colorizeButton, c);
 		    colorizeButton.addActionListener(this);
-		    
-		    bcancel.addActionListener(new java.awt.event.ActionListener() { //have a proper quit method
-                public void actionPerformed(java.awt.event.ActionEvent e) {
-                    doClose();
-                }
-            });
-
 		}
 		return mainPanel;
 	}
@@ -152,7 +159,11 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 		fii = new InteractionAnalysis((GsRegulatoryGraph)graph, getOption(0), getOption(1), (GsRegulatoryMutantDef) mutantStore.getObject(0));
 		resultsPane.setText(fii.getLog().toString());
 		colorizeButton.setEnabled(true);
-		isColorized = false;
+		if (getOption(2)) {
+			doColorize();
+		} else {
+			isColorized = false;
+		}
 	}
 	
 	private boolean getOption(int i) {
@@ -163,24 +174,42 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 		if (e.getSource() == colorizeButton) {
 			if (fii.getFunctionality() != null) {	
 				if (isColorized) {
-					fii.undoColorize();
-					colorizeButton.setText(Translator.getString("STR_function_do_colorize"));
-					isColorized = false;
+					undoColorize();
 				} else {
-					fii.doColorize();
-					colorizeButton.setText(Translator.getString("STR_function_undo_colorize"));
-					isColorized = true;
+					doColorize();
 				}
 			}
 		}
 	}
 	
-	public void doClose() {
+	private void doColorize() {
+		if (fii != null) {
+			fii.doColorize();
+			colorizeButton.setText(Translator.getString("STR_function_undo_colorize"));
+			isColorized = true;
+		}
+	}
+	
+	private void undoColorize() {
+		if (fii != null) {
+			fii.undoColorize();
+			colorizeButton.setText(Translator.getString("STR_function_do_colorize"));
+			isColorized = false;
+		}
+	}
+	
+	private void forceColorize() {
+		if (isColorized) undoColorize();
+		doColorize();
+	}
+
+	public void cancel() {
 		if (isColorized) {
 			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_function_sure_close"));
 			if (res == JOptionPane.OK_OPTION) fii.undoColorize();
 			else if (res == JOptionPane.CANCEL_OPTION) return;
 		}
+		super.cancel();
 	}
 	
 	public void mouseClicked(MouseEvent e) {
