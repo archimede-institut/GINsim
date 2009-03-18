@@ -17,3 +17,5 @@ testCase/tmp
 testCase/tmp/**/*
 *.cld
 *.DS_Store
+GINsim.app
+GINsim-*.jar

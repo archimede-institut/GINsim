@@ -41,7 +41,7 @@ public class CascadingStyle {
 	 */
 	public void applyOnNode(Selector sel, Object node, GsAttributesReader areader) {
 		if (shouldStoreOldStyle) old_nodes.put(node, new VertexStyle(areader));
-		sel.applyStyleForEdge(node, areader);
+		sel.applyStyleForNode(node, areader);
 	}
 
 	/**
@@ -128,6 +128,8 @@ public class CascadingStyle {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {			//For each edge
 			Object edge = (Object) it_edges.next();
 			ereader.setEdge(edge);
+			EdgeStyle style = new EdgeStyle(ereader);								//  get the style
+			if (shouldStoreOldStyle) old_edges.put(edge, style.clone());					//  save a copy if needed
 			((EdgeStyle)sel.getStyleForEdge(edge)).apply(ereader);		//  apply the style to the edge.
 		}
 	}
@@ -145,6 +147,8 @@ public class CascadingStyle {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each edge
 			Object node = (Object) it_nodes.next();
 			vreader.setVertex(node);
+			VertexStyle style = new VertexStyle(vreader);								//  get the style
+			if (shouldStoreOldStyle) old_nodes.put(node, style.clone());					//  save a copy if needed
 			((VertexStyle)sel.getStyleForNode(node)).apply(vreader);	//  apply the style to the node.
 		}
 	}
@@ -155,7 +159,6 @@ public class CascadingStyle {
 	 * @param areader a edge attributesReader (must be set to the right edge)
 	 */
 	public void restoreEdge(Object edge, GsEdgeAttributesReader areader) {
-		if (!shouldStoreOldStyle) return;
 		((Style)old_edges.get(edge)).apply(areader);
 	}
 	
@@ -165,7 +168,6 @@ public class CascadingStyle {
 	 * @param areader a vertex attributesReader (must be set to the right vertex)
 	 */
 	public void restoreNode(Object node, GsVertexAttributesReader areader) {
-		if (!shouldStoreOldStyle) return;
 		((Style)old_nodes.get(node)).apply(areader);		
 	}
 
@@ -174,7 +176,6 @@ public class CascadingStyle {
 	 * @param areader an edge attributesReader
 	 */
 	public void restoreAllEdges(GsEdgeAttributesReader areader) {
-		if (!shouldStoreOldStyle) return;
 		for (Iterator it_edges = old_edges.keySet().iterator(); it_edges.hasNext();) {
 			Object edge = (Object) it_edges.next();
 			areader.setEdge(edge);
@@ -187,7 +188,6 @@ public class CascadingStyle {
 	 * @param areader a vertex attributesReader
 	 */
 	public void restoreAllNodes(GsVertexAttributesReader areader) {
-		if (!shouldStoreOldStyle) return;
 		for (Iterator it_nodes = old_nodes.keySet().iterator(); it_nodes.hasNext();) {
 			Object node = (Object) it_nodes.next();
 			areader.setVertex(node);
@@ -201,7 +201,6 @@ public class CascadingStyle {
 	 * @param areader a edge attributesReader
 	 */
 	public void restoreAllEdges(Collection edges, GsEdgeAttributesReader areader) {
-		if (!shouldStoreOldStyle) return;
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {
 			Object edge = (Object) it_edges.next();
 			areader.setEdge(edge);
@@ -216,7 +215,6 @@ public class CascadingStyle {
 	 * @param areader a vertex attributesReader
 	 */
 	public void restoreAllNodes(Collection nodes, GsVertexAttributesReader areader) {
-		if (!shouldStoreOldStyle) return;
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = (Object) it_nodes.next();
 			areader.setVertex(node);
