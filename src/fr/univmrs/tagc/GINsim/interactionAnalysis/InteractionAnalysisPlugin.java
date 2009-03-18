@@ -9,7 +9,7 @@ import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.common.GsException;
 
-public class SearchNonFunctionalInteractionsPlugin implements GsActionProvider, GsPlugin {
+public class InteractionAnalysisPlugin implements GsActionProvider, GsPlugin {
 
 	private GsPluggableActionDescriptor[] t_action = null;
 
@@ -25,7 +25,7 @@ public class SearchNonFunctionalInteractionsPlugin implements GsActionProvider, 
 		}
 		if (t_action == null) {
 			t_action = new GsPluggableActionDescriptor[1];
-			t_action[0] = new GsPluggableActionDescriptor("STR_snfi", "STR_snfi_descr", null, this, ACTION_ACTION, 0);
+			t_action[0] = new GsPluggableActionDescriptor("STR_function", "STR_function_descr", null, this, ACTION_ACTION, 0);
 		}
 		return t_action;
 	}
@@ -35,7 +35,7 @@ public class SearchNonFunctionalInteractionsPlugin implements GsActionProvider, 
 			return;
 		}
 		if (ref == 0) {
-           new SearchNonFunctionalInteractionsFrame(frame, graph);
+           new InteractionAnalysisFrame(frame, graph);
 		}
 	}
 }
