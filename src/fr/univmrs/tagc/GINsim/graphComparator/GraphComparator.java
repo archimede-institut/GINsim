@@ -2,8 +2,13 @@ package fr.univmrs.tagc.GINsim.graphComparator;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
+import fr.univmrs.tagc.GINsim.css.EdgeStyle;
+import fr.univmrs.tagc.GINsim.css.Style;
+import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -19,23 +24,33 @@ import fr.univmrs.tagc.common.GsException;
  */
 public abstract class GraphComparator {
 	protected GsGraphManager gm, g1m, g2m;
-	protected HashMap verticesMap;
+	protected HashMap stylesMap;
+	protected Set verticesIdsSet;
 	protected GsGraphicalAttributesStore g1gas, g2gas;
 	
 	public static Color SPECIFIC_G1_COLOR = new Color(0, 255, 0); //green
 	public static Color SPECIFIC_G2_COLOR = new Color(255, 0, 0); //red
 	public static Color COMMON_COLOR = new Color(51, 153, 255);   //blue
 
-	protected GraphComparator() {}
+	protected GraphComparator() {
+		verticesIdsSet = new HashSet();
+	}
 
 	/**
-	 * Return an HashMap containing all the vertices from both graphs. 
-	 * With the IDs as a key and the corresponding color (SPECIFIC_G1_COLOR, SPECIFIC_G2_COLOR or COMMON_COLOR) as a value. 
+	 * Return an HashMap containing all the styles for all the elements (vertices and edges) from both graphs. 
+	 * With the IDs as a key and a ItemStore (private class) as value. 
 	 * 
-	 * @return the verticesMap
+	 * @return the stylesMap
 	 */	
-	public HashMap getVerticesMap() {
-		return verticesMap;
+	public HashMap getStyleMap() {
+		return stylesMap;
+	}
+	
+	/**
+	 * Indicates if a vertex corresponding to the id is common to both hraphs.
+	 */
+	public boolean isCommonVertex(String id) {
+		return ((VertexStyle)((ItemStore)stylesMap.get(id)).v).background == COMMON_COLOR;
 	}
 	
 	/**
@@ -54,9 +69,9 @@ public abstract class GraphComparator {
 		setVerticesColor();
 		
 		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
-		for (Iterator it = verticesMap.keySet().iterator(); it.hasNext();) { 		//For all edges
+		for (Iterator it = verticesIdsSet.iterator(); it.hasNext();) { 		//For all edges
 			String id = (String) it.next();
-			Color col = (Color) verticesMap.get(id);
+			Color col = ((VertexStyle)((ItemStore)stylesMap.get(id)).v).background;
 			
 			addEdgesFromGraph(g1m, g2m, id, col, SPECIFIC_G1_COLOR, ereader);
 			addEdgesFromGraph(g2m, g1m, id, col, SPECIFIC_G2_COLOR, ereader);
@@ -72,14 +87,21 @@ public abstract class GraphComparator {
 	 * @param vsourcereader a vertexAttributesReader for the old graph
 	 * @param col the color to apply to its background
 	 */
-	protected void mergeVertexAttributes(Object v, Object source, GsVertexAttributesReader vreader, GsVertexAttributesReader vsourcereader, Color col) {
+	protected void mergeVertexAttributes(String id, Object v, Object source, Object aux, GsVertexAttributesReader vreader, GsVertexAttributesReader vsourcereader, GsVertexAttributesReader vauxreader, Color col) {
 		vreader.setVertex(v);
 		if (source != null) {
 			vsourcereader.setVertex(source);
 			vreader.copyFrom(vsourcereader);
 		}
 		vreader.setBackgroundColor(col);
-		vreader.refresh();			
+		vreader.refresh();
+
+		if (col == SPECIFIC_G1_COLOR) stylesMap.put(id, new ItemStore(new VertexStyle(vsourcereader), null, new VertexStyle(vreader)));
+		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(id, new ItemStore(new VertexStyle(vsourcereader), null, new VertexStyle(vreader)));
+		else {
+			vauxreader.setVertex(aux);
+			stylesMap.put(id, new ItemStore(new VertexStyle(vsourcereader), new VertexStyle(vauxreader), new VertexStyle(vreader)));
+		}
 	}
 
 	/**
@@ -91,12 +113,19 @@ public abstract class GraphComparator {
 	 * @param esourcereader a vertexAttributesReader for the graph to copy from
 	 * @param col the color to apply to its lineColor
 	 */
-	protected void mergeEdgeAttributes(Object e, Object source, Color col, GsEdgeAttributesReader ereader, GsEdgeAttributesReader esourcereader) {
+	protected void mergeEdgeAttributes(String id, Object e, Object source, Object aux, Color col, GsEdgeAttributesReader ereader, GsEdgeAttributesReader esourcereader, GsEdgeAttributesReader eauxreader) {
 		ereader.setEdge(e);
 		esourcereader.setEdge(source);
 		ereader.copyFrom(esourcereader);
 		ereader.setLineColor(col);
 		ereader.refresh();			
+		
+		if (col == SPECIFIC_G1_COLOR) stylesMap.put(id, new ItemStore(new EdgeStyle(esourcereader), null, new EdgeStyle(ereader)));
+		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(id, new ItemStore(new EdgeStyle(esourcereader), null, new EdgeStyle(ereader)));
+		else {
+			eauxreader.setEdge(aux);
+			stylesMap.put(id, new ItemStore(new EdgeStyle(esourcereader), new EdgeStyle(eauxreader), new EdgeStyle(ereader)));
+		}
 	}
 	/**
 	 * define the name of the diff graph
@@ -126,12 +155,12 @@ public abstract class GraphComparator {
 	 * @param gm the graph manager for the studied graph
 	 * @param gm_aux a graph manager for the other graph
 	 * @param id the vertex id's 
-	 * @param vcol the vertex color (parent)
+	 * @param col the vertex color (parent)
 	 * @param pcol the color corresponding to the studied graph (gm).
 	 * @param ereader an edge attribute reader for the diff graph.
 	 * 
 	 */
-	abstract protected void addEdgesFromGraph(GsGraphManager gm, GsGraphManager gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader);
+	abstract protected void addEdgesFromGraph(GsGraphManager gm, GsGraphManager gm_aux, String id, Color col, Color pcol, GsEdgeAttributesReader ereader);
 	
 	/**
 	 * Return a merge graph colored to indicates vertices and edges parent graph.
@@ -148,4 +177,18 @@ public abstract class GraphComparator {
 	 * @return the graph
 	 */
 	abstract public GsGraph getG2();
+}
+
+
+class ItemStore
+{
+	protected Style v1;
+	protected Style v2;
+	protected Style v;
+	
+	protected ItemStore(Style v1, Style v2, Style v) {
+		this.v1 = v1;
+		this.v2 = v2;
+		this.v = v;
+	}
 }
