@@ -62,31 +62,47 @@ public class SnakesExport extends GsAbstractExport  {
 		List nodeOrder = graph.getNodeOrder();
 		OmddNode[] nodes = graph.getAllTrees(true);
 		
-		out.write("class "+graph.getGraphName()+" (Module):\n");
+		out.write("class Toy(Module):\n");
 		int [][] parcours = new int[nodeOrder.size()][4];
 		for (int node_i = 0; node_i < nodes.length; node_i++) {
 			//generate the argument list from incoming edges : a, b, _a, _b
-			List incomingEdges = graph.getGraphManager().getIncomingEdges(nodeOrder.get(node_i));
+			GsRegulatoryVertex current_node = (GsRegulatoryVertex) nodeOrder.get(node_i);
+			List incomingEdges = graph.getGraphManager().getIncomingEdges(current_node);
+			String current_node_name = getVertexNameForLevel(node_i, nodeOrder);
+			if (incomingEdges.size() == 0) {
+				out.write("    # specification of component \""+current_node_name+"\"\n");
+				out.write("    range_"+current_node_name+"=(0, "+current_node.getMaxValue()+")\n");
+				out.write("    def update_"+current_node_name+"(self, "+current_node_name+"):\n        return "+nodes[node_i].value+"\n");	
+				continue;
+			}
+			
 			StringBuffer s = new StringBuffer();
-			Iterator it = incomingEdges.iterator();
-			while (it.hasNext()) {
-				GsDirectedEdge edge = (GsDirectedEdge)it.next();
+			for (Iterator it = incomingEdges.iterator(); it.hasNext();) {
+				GsDirectedEdge edge = (GsDirectedEdge) it.next();
 				GsRegulatoryVertex source = (GsRegulatoryVertex) edge.getSourceVertex();
 				s.append(source.getId());
 				s.append(", ");
 			}
+
+			//Add autoregulation everywhere. //FIXME is that right ?
+			if (s.indexOf(current_node_name) == -1) {
+				if (s.length() > 0) s.append(", ");
+				s.append(current_node_name);
+			}
+			
 			String arguments;
 			if (s.length() == 0) {
 				arguments = "";
 			} else {
 				arguments = s.substring(0, s.length()-2);
 			}
-			
-			out.write("\tdef update_"+getVertexNameForLevel(node_i, nodeOrder)+"("+arguments+"):\n");
-			//exploreNode(nodes[node_i], null, node_i, "\t", nodeOrder);
+			out.write("    # specification of component \""+current_node_name+"\"\n");
+			out.write("    range_"+current_node_name+"=(0, "+current_node.getMaxValue()+")\n");
+			out.write("    def update_"+current_node_name+"(self, "+arguments+"):\n");
+			//exploreNode(nodes[node_i], null, node_i, "    ", nodeOrder);
 			exploreNode(parcours, 0 ,nodes[node_i], nodeOrder);
 			if (nodes[node_i].next != null) {//if it's not a leaf
-				out.write("\t\treturn 0\n\n");
+				out.write("        return 0\n\n");
 			} else {
 				out.write("\n");
 			}
@@ -96,28 +112,26 @@ public class SnakesExport extends GsAbstractExport  {
 		out.close(); //Close filewriter
 	}
 	
-	
 	protected void exploreNode(int[][] parcours, int deep, OmddNode node, List nodeOrder) throws IOException {
 		if (node.next == null) {
 			if (node.value > 0) {
 				String nodeName;
-				String indent = "\t\t";
+				String indent = "        ";
 				boolean and;
-				for (int i = 0; i < deep; i++, indent+="\t") {
+				for (int i = 0; i < deep; i++, indent+="    ") {
 					nodeName = getVertexNameForLevel(parcours[i][2], nodeOrder);//level
 					out.write(indent+"if ");
 					and = false;
 					if (parcours[i][0] > 0) {
-						out.write(nodeName+" >= "+parcours[i][0]);
+						out.write(nodeName+" >= "+parcours[i][0]+":\n");
 						and = true;
 					}
 					if (parcours[i][1] < parcours[i][3]) {
 						if (and) {
 							out.write(" and ");
 						}
-						out.write(nodeName+" < "+parcours[i][1]);
+						out.write(nodeName+" < "+parcours[i][1]+":\n");
 					}
-					out.write(":\n");
 				}
 				out.write(indent+"return "+node.value+"\n");
 			}
