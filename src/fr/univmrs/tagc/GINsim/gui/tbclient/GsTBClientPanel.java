@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
-import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -17,6 +17,13 @@ import tbrowser.data.module.*;
 import tbrowser.ihm.widget.*;
 import tbrowser.io.remote.client.*;
 import fr.univmrs.tagc.common.widgets.GsPanel;
+import fr.univmrs.tagc.GINsim.css.Selector;
+import fr.univmrs.tagc.GINsim.css.CascadingStyle;
+import java.util.Vector;
+import java.util.Iterator;
+import java.util.Hashtable;
+import fr.univmrs.tagc.GINsim.interactionAnalysis.InteractionAnalysisSelector;
+import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 
 public class GsTBClientPanel extends GsPanel implements GraphChangeListener, WindowListener {
   private TBPanel connexionPanel, queryPanel, infoPanel;
@@ -35,8 +42,11 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
   private JList moduleList;
   private GsRegulatoryGraph graph;
 	private JTabbedPane toolsPane;
-
+  private TBSelector sel;
+	private TBCascadingStyle cs;
 	private TBButton testButton = new TBButton("TEST");
+	private GsEdgeAttributesReader ereader;
+	private GsGraphManager gm;
 
   public GsTBClientPanel(GsGraph g) {
     super();
@@ -44,9 +54,50 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
     initListeners();
     instance = this;
     graph = (GsRegulatoryGraph)g;
-		interactionsPanel.init(graph);
-  }
+		interactionsPanel.init(graph, true);
+		interactionsPanel.resizeColumns();
+		sel = (TBSelector)Selector.getSelector(TBSelector.IDENTIFIER);
+		if (sel == null) {
+			sel = new TBSelector();
+			Selector.registerSelector(sel);
+		}
+		cs = new TBCascadingStyle(true);
+		gm = graph.getGraphManager();
+		ereader = gm.getEdgeAttributesReader();
+	}
 
+	private void applyEdgeStyle() {
+		TBEdgeStyle	style = (TBEdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
+		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
+			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+			List l = gm.getIncomingEdges(v);
+			for (Iterator it2 = l.iterator(); it2.hasNext(); ) {
+				GsJgraphDirectedEdge me = (GsJgraphDirectedEdge)it2.next();
+				ereader.setEdge(me);
+				cs.applyOnEdge(style, me, ereader);
+			}
+		}
+	}
+
+	public void applyEdgeStyle(GsJgraphDirectedEdge me, float w) {
+		TBEdgeStyle	style = (TBEdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
+		//cs = new CascadingStyle(true);
+		style.setWidth(w);
+		ereader.setEdge(me);
+		cs.applyOnEdge(style, me, ereader);
+	}
+	public void restoreEdgeStyle() {
+		cs.restoreAllEdges(ereader);
+/*		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
+			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+			List l = gm.getIncomingEdges(v);
+			for (Iterator it2 = l.iterator(); it2.hasNext(); ) {
+				GsJgraphDirectedEdge me = (GsJgraphDirectedEdge)it2.next();
+				ereader.setEdge(me);
+				cs.restoreEdge(me, ereader);
+			}
+		}*/
+	}
   private void initGraphic() {
 		// Connexion panel
     connexionPanel = new TBPanel("Connexion");
@@ -266,7 +317,10 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
   public void setModuleList(TBModules m) {
     moduleList.setListData(m.getModules());
   }
-  public void setGenes(Vector v) {
+	public void setModuleList(Vector v) {
+		moduleList.setListData(v);
+	}
+	public void setGenes(Vector v) {
     selectedGenes = v;
   }
   public Vector getSelectedGenes() {
@@ -278,7 +332,7 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 
   public void graphChanged(GsNewGraphEvent event) {
 		graph = (GsRegulatoryGraph)event.getNewGraph();
-		interactionsPanel.init(graph);
+		interactionsPanel.init(graph, false);
   }
 
   public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
@@ -312,7 +366,7 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 		if (v != null)
 			for (int i = 0; i < v.size(); i++) {
 				vertex = (GsRegulatoryVertex)v.elementAt(i);
-				par = (Vector)getClient().getGeneInfos(v.elementAt(i).toString());
+				par = (Vector)getClient().getGeneInfos(vertex.getName().equals("") ? vertex.getId() : vertex.getName());
 				genes.put(vertex, par);
 			}
 		geneTreeModel.init(genes);

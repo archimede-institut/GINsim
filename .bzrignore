@@ -19,3 +19,5 @@ testCase/tmp/**/*
 *.DS_Store
 GINsim.app
 GINsim-*.jar
+.svn
+build.xml

@@ -21,7 +21,7 @@ public class GsParamTree {
     while (it.hasNext()) {
       e = (Entry)it.next();
       if (e.getValue() != null) {
-		addLevel(++depth, (GsRegulatoryVertex)e.getKey(), (GsRegulatoryMultiEdge)e.getValue());
+				addLevel(++depth, (GsRegulatoryVertex)e.getKey(), (GsRegulatoryMultiEdge)e.getValue());
       }
     }
     addLeaves(dv);
@@ -68,14 +68,15 @@ public class GsParamTree {
       }
     }
   }
-  public void init(List interactions) {
+  public void init(List interactions, boolean comp) {
 	  Iterator it = interactions.iterator();
-	  while (it.hasNext()) {
-		  init((GsLogicalParameter)it.next());
+		if (comp) defaultValue = 1234;
+		while (it.hasNext()) {
+	    init((GsLogicalParameter)it.next(), comp);
 	  }
   }
-  private void init(GsLogicalParameter lp) {
-    getLeaf(lp).setValue(new Integer(lp.getValue()));
+  private void init(GsLogicalParameter lp, boolean comp) {
+    getLeaf(lp).setValue(new Integer(comp ? 1234 : lp.getValue()));
   }
   private GsParamTreeLeaf getLeaf(GsLogicalParameter lp) {
     GsParamTreeElement currentNode = root;

@@ -240,35 +240,40 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
     logicalParametersTable.setSelectionBackground(Color.yellow.brighter());
     JScrollPane sp = new JScrollPane(logicalParametersTable);
     sp.getViewport().setPreferredSize(logicalParametersTable.getPreferredSize());
-    mainPane.addComponent(sp, 0, 0, 1, 1, 1.0, 1.0, NORTH, BOTH, 5, 5, 0, 5, 0, 0);
+    mainPane.addComponent(sp, 0, 0, 1, 1, 1.0, 1.0, NORTH, BOTH, 5, 2, 0, 0, 0, 0);
 
     GsPanel editionPanel = new GsPanel();
     editionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Edition"));
     GsPanel modePanel = new GsPanel();
-    modePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+    //modePanel.setBorder(BorderFactory.createLineBorder(Color.black));
     JLabel modeLabel = new JLabel("Mode :");
-    modePanel.addComponent(modeLabel, 0, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
-    andRadioButton = new JRadioButton("&", true);
-    modePanel.addComponent(andRadioButton, 1, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
-    orRadioButton = new JRadioButton("|");
-    modePanel.addComponent(orRadioButton, 2, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 5, 0, 0);
+    //modePanel.addComponent(modeLabel, 0, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
+    andRadioButton = new JRadioButton("And", true);
+    modePanel.addComponent(andRadioButton, 0, 0, 1, 1, 0.0, 0.0, WEST, NONE, 0, 0, 0, 0, 0, 0);
+    orRadioButton = new JRadioButton("Or");
+    modePanel.addComponent(orRadioButton, 1, 0, 1, 1, 0.0, 0.0, WEST, NONE, 0, 5, 0, 0, 0, 0);
 		ButtonGroup bg = new ButtonGroup();
 		bg.add(andRadioButton);
 		bg.add(orRadioButton);
     GsPanel flagsPanel = new GsPanel();
-    flagsPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+    //flagsPanel.setBorder(BorderFactory.createLineBorder(Color.black));
     JLabel flagsLabel = new JLabel("Flags :");
-    flagsPanel.addComponent(flagsLabel, 0, 0, 1, 1, 0.0, 0.0, EAST, NONE, 5, 5, 5, 0, 0, 0);
+    //flagsPanel.addComponent(flagsLabel, 0, 0, 1, 1, 0.0, 0.0, EAST, NONE, 5, 5, 5, 0, 0, 0);
     parCheckBox = new JCheckBox("Par", true);
-    flagsPanel.addComponent(parCheckBox, 1, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 0, 0, 0);
+    flagsPanel.addComponent(parCheckBox, 0, 0, 1, 1, 0.0, 0.0, WEST, NONE, 0, 0, 0, 0, 0, 0);
     notCheckBox = new JCheckBox("Not");
-    flagsPanel.addComponent(notCheckBox, 2, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 5, 0, 0);
+    flagsPanel.addComponent(notCheckBox, 1, 0, 1, 1, 0.0, 0.0, WEST, NONE, 0, 5, 0, 0, 0, 0);
 
     GsPanel p1 = new GsPanel();
-    p1.addComponent(modePanel, 0, 0, 1, 1, 0.0, 0.0, NORTH, NONE, 0, 0, 0, 0, 0, 0);
-    p1.addComponent(flagsPanel, 1, 0, 1, 1, 0.0, 0.0, NORTH, NONE, 0, 5, 0, 0, 0, 0);
+		p1.setBorder(BorderFactory.createLineBorder(Color.black));
+		p1.addComponent(modeLabel, 0, 0, 1, 1, 0.0, 0.0, EAST, NONE, 2, 2, 0, 0, 0, 0);
+    p1.addComponent(modePanel, 1, 0, 1, 1, 0.0, 0.0, WEST, NONE, 2, 5, 0, 2, 0, 0);
+		p1.addComponent(flagsLabel, 0, 1, 1, 1, 0.0, 0.0, EAST, NONE, 2, 2, 2, 0, 0, 0);
+    p1.addComponent(flagsPanel, 1, 1, 1, 1, 0.0, 0.0, WEST, NONE, 2, 5, 2, 2, 0, 0);
 
-    editionPanel.addComponent(p1, 0, 0, 1, 1, 0.0, 0.0, WEST, HORIZONTAL, 5, 5, 0, 5, 0, 0);
+    //editionPanel.addComponent(modePanel, 0, 0, 1, 1, 0.0, 0.0, WEST, HORIZONTAL, 2, 2, 0, 2, 0, 0);
+		//editionPanel.addComponent(flagsPanel, 0, 1, 1, 1, 0.0, 0.0, WEST, HORIZONTAL, 2, 2, 0, 2, 0, 0);
+		editionPanel.addComponent(p1, 0, 0, 1, 1, 0.0, 0.0, WEST, HORIZONTAL, 2, 2, 0, 2, 0, 0);
 
     GsPanel andOrPanel = new GsPanel();
     andOrPanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -293,13 +298,12 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
     deleteButton = new GsButton("suppr.gif", 4, 4, 2, 2);
     paramsButtonsPanel.addComponent(deleteButton, 2, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 5, 0, 0);
 
-    GsPanel p2 = new GsPanel();
-    p2.addComponent(andOrPanel, 0, 0, 1, 1, 0.0, 0.0, NORTH, NONE, 0, 0, 0, 0, 0, 0);
-    p2.addComponent(paramsButtonsPanel, 1, 0, 1, 1, 0.0, 0.0, NORTH, NONE, 0, 5, 0, 0, 0, 0);
+    //GsPanel p2 = new GsPanel();
+    //p2.addComponent(andOrPanel, 0, 0, 1, 1, 0.0, 0.0, NORTH, NONE, 0, 0, 0, 0, 0, 0);
+    //p2.addComponent(paramsButtonsPanel, 1, 0, 1, 1, 0.0, 0.0, NORTH, NONE, 0, 5, 0, 0, 0, 0);
 
-    editionPanel.addComponent(p2, 0, 1, 1, 1, 0.0, 0.0, WEST, HORIZONTAL, 5, 5, 0, 5, 0, 0);
-
-    mainPane.addComponent(editionPanel, 0, 1, 1, 1, 0.0, 0.0, CENTER, NONE, 10, 5, 5, 5, 0, 0);
+    editionPanel.addComponent(andOrPanel, 0, 2, 1, 1, 0.0, 0.0, WEST, HORIZONTAL, 2, 2, 0, 2, 0, 0);
+		editionPanel.addComponent(paramsButtonsPanel, 0, 3, 1, 1, 0.0, 0.0, WEST, HORIZONTAL, 2, 2, 0, 2, 0, 0);
 
     GsPanel okCancelPanel = new GsPanel();
     cancelButton = new GsButton("Cancel");
@@ -308,7 +312,9 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
     okButton = new GsButton("OK");
     okButton.setInsets(4, 4, 2, 2);
     okCancelPanel.addComponent(okButton, 1, 0, 1, 1, 0.0, 0.0, WEST, NONE, 5, 5, 5, 5, 0, 0);
-    mainPane.addComponent(okCancelPanel, 0, 2, 1, 1, 0.0, 0.0, CENTER, NONE, 10, 5, 5, 5, 0, 0);
+    editionPanel.addComponent(okCancelPanel, 0, 4, 1, 1, 0.0, 0.0, CENTER, NONE, 10, 2, 2, 2, 0, 0);
+
+		mainPane.addComponent(editionPanel, 1, 0, 1, 1, 0.0, 0.0, NORTH, NONE, 5, 5, 2, 2, 0, 0);
 	}
 	private void initListeners() {
 		parCheckBox.addItemListener(this);
@@ -367,17 +373,6 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
 		if ((e.getSource() == andButton)  || (e.getSource() == orButton)) {
 			v = new Vector();
 			Vector i = new Vector();
-			AbstractDTreeElement root = (AbstractDTreeElement)logicalParametersTable.getTree().getModel().getRoot();
-			GsListInteraction li;
-
-			for (int k = 0; k < root.getChildCount(); k++) {
-				li = (GsListInteraction)root.getChild(k).getUserObject();
-				if (li.isSelected()) i.addElement(li);
-				for (int p = 0; p < root.getChild(k).getChildCount(); p++) {
-					li = (GsListInteraction)root.getChild(k).getChild(p).getUserObject();
-					if (li.isSelected()) i.addElement(li);
-				}
-			}
 
 			v.addElement(i);
 			v.addElement(andRadioButton.isSelected() ? "&" : "|");

@@ -11,6 +11,7 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeE
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreePanel;
 
 import java.awt.Rectangle;
+import java.awt.AWTEvent;
 
 public class DTreeTableCellEditor extends DefaultCellEditor {
 	protected int visibleRow;

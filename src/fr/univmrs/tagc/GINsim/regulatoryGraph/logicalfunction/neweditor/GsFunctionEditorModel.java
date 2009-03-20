@@ -25,6 +25,7 @@ public class GsFunctionEditorModel {
   	controler = c;
 		selectedArea = new Point(-1, -2);
 		allowedTerms = new Vector();
+		oldExp = "";
   }
   public void init(GsTreeInteractionsModel m, GsFunctionPanel p) {
   	Object o;

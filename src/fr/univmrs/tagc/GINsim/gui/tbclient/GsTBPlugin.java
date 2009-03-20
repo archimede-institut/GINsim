@@ -12,13 +12,16 @@ import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.common.GsException;
 
+import tbrowser.TBrowser;
+
 public class GsTBPlugin implements GsPlugin, GsActionProvider {
   private GsPluggableActionDescriptor[] t_action = null;
   private GsTBClientPanel clientPanel;
 
   public GsTBPlugin() {
     super();
-  }
+		TBrowser.getInstance();
+	}
 
   public void registerPlugin() {
     GsRegulatoryGraphDescriptor.registerActionProvider(this);

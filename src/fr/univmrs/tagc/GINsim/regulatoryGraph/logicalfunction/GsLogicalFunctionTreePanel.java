@@ -475,7 +475,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
     }
     c = new GsFunctionsCreator((GsRegulatoryGraph)graph, v, interactionList.getVertex());
 
-    Hashtable h = c.doIt();
+    Hashtable h = c.doIt(false);
 
     Enumeration enu = h.keys(), enu2;
     Integer key;

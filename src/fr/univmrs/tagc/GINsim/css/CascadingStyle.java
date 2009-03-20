@@ -223,4 +223,10 @@ public class CascadingStyle {
 		}
 	}
 
+	public Map getOldNodes() {
+		return old_nodes;
+	}
+	public Map getOldEdges() {
+		return old_edges;
+	}
 }

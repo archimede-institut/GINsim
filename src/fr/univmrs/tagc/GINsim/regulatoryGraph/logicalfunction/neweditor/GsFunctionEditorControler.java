@@ -149,6 +149,8 @@ public class GsFunctionEditorControler {
 					par = ((Boolean)((Vector)p).lastElement()).booleanValue();
 					not = ((Boolean)((Vector)p).elementAt(2)).booleanValue();
 					editorModel.addOpTerm((action == AND), v, op, par, not);
+					editorModel.refreshInteractionList();
+					editPanel.updateSelectionTable();
 				}
 				break;
 			case CLEAR :
@@ -234,7 +236,7 @@ public class GsFunctionEditorControler {
 					v.addElement(lp);
 				}
 				c = new GsFunctionsCreator(graph, v, vertex);
-				Hashtable h = c.doIt();
+				Hashtable h = c.doIt(false);
 				s = "";
 				if (h.size() > 0) {
 					v = (Vector)h.elements().nextElement();
