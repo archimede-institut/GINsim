@@ -1,11 +1,13 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
-import fr.univmrs.tagc.GINsim.css.*;
+import fr.univmrs.tagc.GINsim.css.EdgeStyle;
+import fr.univmrs.tagc.GINsim.css.Selector;
+import fr.univmrs.tagc.GINsim.css.Style;
 
 public class TBSelector extends Selector {
 	public static final String IDENTIFIER = "TBLinkValidator";
 	public static final String CAT_DEFAULT = "default";
-	public static final TBEdgeStyle STYLE_NOSIGNATURES = new TBEdgeStyle(EdgeStyle.NULL_LINECOLOR, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, TBEdgeStyle.DEFAULT_WIDTH);
+	public static final EdgeStyle STYLE_NOSIGNATURES = new EdgeStyle(EdgeStyle.NULL_LINECOLOR, EdgeStyle.NULL_LINEEND,  EdgeStyle.NULL_SHAPE,  EdgeStyle.NULL_BORDER);
 
 	public TBSelector() {
 		super(IDENTIFIER);

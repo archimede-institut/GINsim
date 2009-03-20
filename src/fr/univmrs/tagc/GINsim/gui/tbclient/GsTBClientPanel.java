@@ -1,33 +1,44 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
+import tbrowser.data.module.TBModule;
+import tbrowser.data.module.TBModuleData;
+import tbrowser.data.module.TBModules;
+import tbrowser.ihm.widget.TBButton;
+import tbrowser.ihm.widget.TBPanel;
+import tbrowser.io.remote.client.TBClient;
+import fr.univmrs.tagc.GINsim.css.EdgeStyle;
+import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.graph.*;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.*;
-import fr.univmrs.tagc.GINsim.jgraph.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
-import tbrowser.data.module.*;
-import tbrowser.ihm.widget.*;
-import tbrowser.io.remote.client.*;
+import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.widgets.GsPanel;
-import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import java.util.Vector;
-import java.util.Iterator;
-import java.util.Hashtable;
-import fr.univmrs.tagc.GINsim.interactionAnalysis.InteractionAnalysisSelector;
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 
 public class GsTBClientPanel extends GsPanel implements GraphChangeListener, WindowListener {
+  private static final long serialVersionUID = 787313901857354026L;
   private TBPanel connexionPanel, queryPanel, infoPanel;
-	private GsInteractionsPanel interactionsPanel;
+  private GsInteractionsPanel interactionsPanel;
   private JTextField hostTextField, queryTextField;
   private TBButton openCloseButton, sendButton, updateGenesInfoButton;
   private JLabel portLabel;
@@ -41,12 +52,12 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
   private Vector selectedGenes = null;
   private JList moduleList;
   private GsRegulatoryGraph graph;
-	private JTabbedPane toolsPane;
+  private JTabbedPane toolsPane;
   private TBSelector sel;
-	private TBCascadingStyle cs;
-	private TBButton testButton = new TBButton("TEST");
-	private GsEdgeAttributesReader ereader;
-	private GsGraphManager gm;
+  private TBCascadingStyle cs;
+  private TBButton testButton = new TBButton("TEST");
+  private GsEdgeAttributesReader ereader;
+  private GsGraphManager gm;
 
   public GsTBClientPanel(GsGraph g) {
     super();
@@ -56,10 +67,10 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
     graph = (GsRegulatoryGraph)g;
 		interactionsPanel.init(graph, true);
 		interactionsPanel.resizeColumns();
-		sel = (TBSelector)Selector.getSelector(TBSelector.IDENTIFIER);
+		sel = (TBSelector)Selector.getNewSelector(TBSelector.IDENTIFIER);
 		if (sel == null) {
 			sel = new TBSelector();
-			Selector.registerSelector(sel);
+			Selector.registerSelector(TBSelector.IDENTIFIER, TBSelector.class);
 		}
 		cs = new TBCascadingStyle(true);
 		gm = graph.getGraphManager();
@@ -67,7 +78,7 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 	}
 
 	private void applyEdgeStyle() {
-		TBEdgeStyle	style = (TBEdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
+	    EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
 		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
 			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
 			List l = gm.getIncomingEdges(v);
@@ -80,9 +91,9 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 	}
 
 	public void applyEdgeStyle(GsJgraphDirectedEdge me, float w) {
-		TBEdgeStyle	style = (TBEdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
+	    EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
 		//cs = new CascadingStyle(true);
-		style.setWidth(w);
+		style.border = w;
 		ereader.setEdge(me);
 		cs.applyOnEdge(style, me, ereader);
 	}
@@ -211,9 +222,9 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
             hostTextField.setEditable(false);
             updateGenesInfoButton.setEnabled(true);
 						interactionsPanel.initOrganisms(client.getOrganisms());
-          }
-          else
+          } else {
             JOptionPane.showMessageDialog(null, "Connexion refused !", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         }
         else if (e.getActionCommand().equals("Close")) {
           client.closeConnexion();
@@ -259,9 +270,9 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
               mod.setData(d);
             }
             ((GsTBInfoPanel)infoPanel).initModule(mod, geneTreeModel.getGeneSymbols());
-          }
-          else
+          } else {
             ((GsTBInfoPanel)infoPanel).clear();
+        }
         }
       }
     });
@@ -300,7 +311,9 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 		});*/
   }
   public void closeTBConnexion() {
-    if (client != null) client.closeConnexion();
+    if (client != null) {
+        client.closeConnexion();
+    }
   }
   public TBClient getClient() {
     return client;
@@ -340,21 +353,26 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
     Vector v_vertex = event.getV_vertex();
 
     Vector v = new Vector();
-    for (int i = 0; i < v_vertex.size(); i++)
-      if (!v.contains(v_vertex.elementAt(i)))
-        v.addElement(v_vertex.elementAt(i));
+    for (int i = 0; i < v_vertex.size(); i++) {
+        if (!v.contains(v_vertex.elementAt(i))) {
+            v.addElement(v_vertex.elementAt(i));
+        }
+    }
     for (int i = 0; i < v_edge.size(); i++) {
       GsJgraphDirectedEdge e = (GsJgraphDirectedEdge) v_edge.elementAt(i);
-      if (!v.contains(e.getSourceVertex()))
+      if (!v.contains(e.getSourceVertex())) {
         v.addElement(e.getSourceVertex());
-      if (!v.contains(e.getTargetVertex()))
+    }
+      if (!v.contains(e.getTargetVertex())) {
         v.addElement(e.getTargetVertex());
     }
+    }
     setGenes(v);
-    if (v.size() > 0)
-    	graph = ((GsRegulatoryVertex)v.firstElement()).getInteractionsModel().getGraph();
-    else
-    	graph = null;
+    if (v.size() > 0) {
+        graph = ((GsRegulatoryVertex)v.firstElement()).getInteractionsModel().getGraph();
+    } else {
+        graph = null;
+    }
   }
   public GsRegulatoryGraph getGraph() {
   	return graph;
@@ -363,12 +381,13 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 		GsRegulatoryVertex vertex;
 		Vector par;
 		Hashtable genes = new Hashtable();
-		if (v != null)
-			for (int i = 0; i < v.size(); i++) {
+		if (v != null) {
+            for (int i = 0; i < v.size(); i++) {
 				vertex = (GsRegulatoryVertex)v.elementAt(i);
 				par = (Vector)getClient().getGeneInfos(vertex.getName().equals("") ? vertex.getId() : vertex.getName());
 				genes.put(vertex, par);
 			}
+        }
 		geneTreeModel.init(genes);
 		geneTreeModel.fireTreeStructureChanged((AbstractTreeElement)geneTreeModel.getRoot());
 		sendButton.setEnabled(true);

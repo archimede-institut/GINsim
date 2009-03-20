@@ -35,7 +35,7 @@ public abstract class Selector {
 	public static void registerSelector(String identifier, Class cla) {
 		selectors.put(identifier, cla);
 	}
-	
+
 	/**
 	 * return a new selector corresponding to an identifier
 	 * @param id the identifier
@@ -113,7 +113,9 @@ public abstract class Selector {
 	 * @return false if the category doesn't exists
 	 */
 	public boolean setStyle(String category, Style style) {
-		if (!m.containsKey(category)) return missingCategory(category, style);
+		if (!m.containsKey(category)) {
+            return missingCategory(category, style);
+        }
 		m.put(category, style);
 		return true;
 	}
@@ -155,8 +157,11 @@ public abstract class Selector {
 	 */
 	public boolean applyStyle(String category, GsAttributesReader areader) {
 		Style s = (Style) m.get(category);
-		if (s != null) s.apply(areader);
-		else return missingCategory(category, areader);
+		if (s != null) {
+            s.apply(areader);
+        } else {
+            return missingCategory(category, areader);
+        }
 		return true;
 	}
 
@@ -266,8 +271,12 @@ public abstract class Selector {
 	 * @return
 	 */
 	public String getCategory(Object obj) {
-		if (isNode(obj)) return getCategoryForNode(obj);
-		if (isEdge(obj)) return getCategoryForEdge(obj);
+		if (isNode(obj)) {
+            return getCategoryForNode(obj);
+        }
+		if (isEdge(obj)) {
+            return getCategoryForEdge(obj);
+        }
 		return null;
 	}
 
@@ -293,8 +302,12 @@ public abstract class Selector {
 	 * @return true if obj is a node
 	 */
 	protected boolean isNode(Object obj) {
-		if (obj instanceof GsRegulatoryVertex) 	return true;
-		if (obj instanceof GsDynamicNode) 		return true;
+		if (obj instanceof GsRegulatoryVertex) {
+            return true;
+        }
+		if (obj instanceof GsDynamicNode) {
+            return true;
+        }
 		return false;
 	}
 
@@ -303,9 +316,15 @@ public abstract class Selector {
 	 * @return true if obj is an edge
 	 */
 	protected boolean isEdge(Object obj) {
-		if (obj instanceof GsDirectedEdge) 			return true;
-		if (obj instanceof GsRegulatoryEdge) 		return true;
-		if (obj instanceof GsRegulatoryMultiEdge) 	return true;
+		if (obj instanceof GsDirectedEdge) {
+            return true;
+        }
+		if (obj instanceof GsRegulatoryEdge) {
+            return true;
+        }
+		if (obj instanceof GsRegulatoryMultiEdge) {
+            return true;
+        }
 		return false;
 	}
 
