@@ -10,6 +10,7 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
@@ -23,6 +24,8 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
  *
  */
 public class RegulatoryGraphComparator extends GraphComparator {
+	private static final Color COMMON_COLOR_DIFF_FUNCTIONS = new Color(0, 0, 255);
+	private static final Color COMMON_COLOR_DIFF_MAXVALUES = new Color(127, 0, 255);
 	private GsRegulatoryGraph g, g1, g2; //g is the graph merging g1 and g2, the graphs to compare.
 	/**
 	 * indicates if the node order of both graph is the same.
@@ -38,13 +41,14 @@ public class RegulatoryGraphComparator extends GraphComparator {
        	this.g2 = (GsRegulatoryGraph)g2;
        	
 		g1m = g1.getGraphManager(); g2m = g2.getGraphManager(); gm = g.getGraphManager();
-		verticesMap = new HashMap();
+		stylesMap = new HashMap();
 		sameNodeOrder = compareNodeOrder();
-		System.out.println("The node order is the same for both graph : "+sameNodeOrder);
 		if (!sameNodeOrder) {
-			g.getAnnotation().appendToComment("diff: The node order is the same for both graph");
-			System.out.println(((GsRegulatoryGraph) g1).getNodeOrder());
-			System.out.println(((GsRegulatoryGraph) g2).getNodeOrder());
+			String comment = "diff: The node order is the same for both graph";
+			log(comment+"\n");
+			g.getAnnotation().appendToComment(comment);
+			log(((GsRegulatoryGraph) g1).getNodeOrder()+"\n");
+			log(((GsRegulatoryGraph) g2).getNodeOrder()+"\n");
 		}
 		buildDiffGraph();
 	}
@@ -66,23 +70,22 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			GsDirectedEdge e1 = (GsDirectedEdge) g1m.getEdge((GsRegulatoryVertex) g1m.getVertexByName(sid), (GsRegulatoryVertex) g1m.getVertexByName(tid));
 			GsDirectedEdge e2 = (GsDirectedEdge) g2m.getEdge((GsRegulatoryVertex) g2m.getVertexByName(sid), (GsRegulatoryVertex) g2m.getVertexByName(tid));
 			
-			String comment = "This edge : ";
+			String comment = "The edge "+me.toToolTip()+" ";
 			ereader.setEdge(me);
 			Color col = ereader.getLineColor();
 			if (col == SPECIFIC_G1_COLOR) comment+= "is specific to g1";
 			else if (col == SPECIFIC_G2_COLOR) comment+= "is specific to g2";
 			else comment+= "is common to both graphs";
-			//System.out.println(" color : "+col);
 			for (int j = 0; j < ((GsRegulatoryMultiEdge) me.getUserObject()).getEdgeCount(); j++) {
 				((GsRegulatoryMultiEdge) me.getUserObject()).getGsAnnotation(j).appendToComment(comment);
 			}
-			System.out.println(comment+" ("+me.toToolTip()+")");
+			log(comment+"\n");
 			if (e1 != null && e2 != null) compareEdges((GsRegulatoryMultiEdge)e1.getUserObject(), (GsRegulatoryMultiEdge)e2.getUserObject());
 		}
 	}
 	
 	protected void setVerticesColor() {
-		for (Iterator it=verticesMap.keySet().iterator() ; it.hasNext() ;) {	//For all the vertices
+		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
 			GsRegulatoryVertex v, v1, v2;
 			String id = (String)it.next();
 			v1 = (GsRegulatoryVertex)g1m.getVertexByName(id);
@@ -91,26 +94,20 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			
 			//Check which graph own the vertex, set the appropriate color to it and if it is owned by both graph, compare its attributes.
 			if (v1 == null) {
-				System.out.println("vertex: "+id+" is specific to g2");
-				comment = "diff: this vertex is specific to "+g2.getGraphName()+"\n";
+				comment = "The vertex "+id+" is specific to "+g2.getGraphName()+"\n";
 				v = g.addNewVertex(id, v2.getName(), v2.getMaxValue());
-				mergeVertexAttributes(v, v2, gm.getVertexAttributesReader(), g2m.getVertexAttributesReader(), SPECIFIC_G2_COLOR);
-				verticesMap.put(id, SPECIFIC_G2_COLOR);
+				mergeVertexAttributes(v, v2, null, gm.getVertexAttributesReader(), g2m.getVertexAttributesReader(), null, SPECIFIC_G2_COLOR);
 				setLogicalFunction(v, v2, g2);
 			} else if (v2 == null) {
-				System.out.println("vertex: "+id+" is specific to g1");
-				comment = "diff: this vertex is specific to "+g1.getGraphName()+"\n";
+				comment = "The vertex "+id+" is specific to "+g1.getGraphName()+"\n";
 				v = g.addNewVertex(id, v1.getName(), v1.getMaxValue());
-				mergeVertexAttributes(v, v1, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), SPECIFIC_G1_COLOR);
-				verticesMap.put(id, SPECIFIC_G1_COLOR);
+				mergeVertexAttributes(v, v1, null, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), null, SPECIFIC_G1_COLOR);
 				setLogicalFunction(v, v1, g1);
 			} else {
-				System.out.println("vertex: "+id+" is common to both g1 and g2");
-				comment = "diff: this vertex is common to both graphs\n";
+				comment = "The vertex "+id+" is common to both graphs\n";
 				v = g.addNewVertex(id, v1.getName(), v1.getMaxValue());
-				mergeVertexAttributes(v, v1, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), COMMON_COLOR);
-				verticesMap.put(id, COMMON_COLOR);
 				comment += compareVertices(v ,v1, v2);
+				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), g2m.getVertexAttributesReader(), COMMON_COLOR);
 				setLogicalFunction(v, v1, g1);
 			}
 			Annotation gsa;
@@ -120,13 +117,14 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			else gsa = new Annotation();
 			gsa.appendToComment(comment);
 			v.setGsa(gsa);
+			log(comment);
 		}		
 	}
 
 	protected void addVerticesFromGraph(GsGraphManager gm) {
 		for (Iterator it=gm.getVertexIterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
-			verticesMap.put(vertex.getId(), null);
+			verticesIdsSet.add(vertex.getId());
 		}
 	}
 
@@ -136,22 +134,24 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		GsRegulatoryEdge e = null;
 		GsDirectedEdge e1, e2;
 		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributesReader();
+		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributesReader();
 
 		if (v != null) { //If v is a vertex from the studied graph, we look at its edges
 			for (Iterator edge_it = gm_main.getOutgoingEdges(v).iterator(); edge_it.hasNext();) {
 				e1 = (GsDirectedEdge) edge_it.next();
 				GsRegulatoryMultiEdge me1 = (GsRegulatoryMultiEdge)e1.getUserObject();
 				String tid = ((GsRegulatoryVertex)e1.getTargetVertex()).getId();
+				GsRegulatoryVertex target = (GsRegulatoryVertex) gm.getVertexByName(tid);
 			
 				for (int i = 0; i < me1.getEdgeCount(); i++) {
 					e = g.addNewEdge(id, tid, (short)me1.getMax(i) , (short)me1.getSign(i));
 				}
-				//Note : no need to test if its G1 or G2 specific because e1 is in g1 => source is common and target is g1 or source is g1 and target is common or both from g1.
-				if (vcol != COMMON_COLOR || (Color)verticesMap.get(tid) != COMMON_COLOR) { //The edge's vertices are specific to a graph therefore the edge is specific, and we add it with the right color.
-					mergeEdgeAttributes(e.me, me1, pcol, ereader, e1reader);
+				if (vcol != COMMON_COLOR || !isCommonVertex(target)) { //The edge's vertices are specific to a graph therefore the edge is specific, and we add it with the right color.
+					mergeEdgeAttributes(e.me, me1, null, pcol, ereader, e1reader, null);
 				} else { //source and target are common to both graph.
 					e2 = (GsDirectedEdge) gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
-					mergeEdgeAttributes(e.me, me1, (e2 != null ? vcol : pcol), ereader, e1reader);
+					if (e2 != null)	mergeEdgeAttributes(e.me, me1, (GsRegulatoryMultiEdge)e2.getUserObject(), vcol, ereader, e1reader, e2reader);
+					else			mergeEdgeAttributes(e.me, me1, null, pcol, ereader, e1reader, null);
 				}
 			}
 		}
@@ -160,6 +160,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 
 	public String compareVertices(GsRegulatoryVertex v, GsRegulatoryVertex v1, GsRegulatoryVertex v2) {
 		String comment = "";
+		GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
+		vreader.setVertex(v);
 		if (!v1.getName().equals(v2.getName())) {
 			String n1 = v1.getName();
 			String n2 = v2.getName();
@@ -174,9 +176,10 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			short mv1 = v1.getMaxValue();
 			short mv2 = v2.getMaxValue();
 			if (mv1 < mv2) v.setMaxValue(mv2, g);
-		
 			comment += "   max values are differents : "+mv1+" and "+mv2+"\n";
-		} else if (sameNodeOrder) comment += compareLogicalFunction(v1, v2); //Compare logical function only if they have the same maxValue.
+			vreader.setBackgroundColor(COMMON_COLOR_DIFF_MAXVALUES);
+			vreader.refresh();
+		} else if (sameNodeOrder) comment += compareLogicalFunction(v1, v2, vreader); //Compare logical function only if they have the same maxValue.
 		return comment;
 	}
 
@@ -186,12 +189,14 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 * @param v1 
 	 * @param v2
 	 */
-	private String compareLogicalFunction(GsRegulatoryVertex v1, GsRegulatoryVertex v2) {
+	private String compareLogicalFunction(GsRegulatoryVertex v1, GsRegulatoryVertex v2, GsVertexAttributesReader vreader) {
 		String comment = "";
 		OmddNode omdd1 = v1.getTreeParameters(g1);
 		OmddNode omdd2 = v2.getTreeParameters(g2);
 		if (!compareLogicalFunction(omdd1, omdd2)) {
 			comment = "   logical functions are differents : \n      "+omdd1+"\n      "+omdd2;
+			vreader.setBackgroundColor(COMMON_COLOR_DIFF_FUNCTIONS);
+			vreader.refresh();
 		}
 		return comment;
 	}
@@ -218,9 +223,9 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 * @param v_source
 	 * @param g_source
 	 */
-	private void setLogicalFunction(GsRegulatoryVertex v, GsRegulatoryVertex v_source, GsGraph g_source) { //TODO : 
-		OmddNode omdd = v.getTreeParameters(g);
-		OmddNode omdd1 = (OmddNode) v_source.getTreeParameters((GsRegulatoryGraph) g_source).clone();
+	private void setLogicalFunction(GsRegulatoryVertex v, GsRegulatoryVertex v_source, GsGraph g_source) { //TODO : do we really want to do that ?
+//		OmddNode omdd = v.getTreeParameters(g);
+//		OmddNode omdd1 = (OmddNode) v_source.getTreeParameters((GsRegulatoryGraph) g_source).clone();
 //		omdd.level = omdd1.level;
 //		omdd.min = omdd1.min;
 //		omdd.max = omdd1.max;

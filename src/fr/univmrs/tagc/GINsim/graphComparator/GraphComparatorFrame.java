@@ -191,7 +191,6 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 	}
 
 	protected void run() {
-		System.out.println(graphList);
 		GsGraph g1 = getGraph(g1_modelComboBox, g1_filepath);
 		GsGraph g2 = getGraph(g2_modelComboBox, g2_filepath);		
 		opt_display_graph = displayGraphCheckBox.getSelectedObjects() != null;//display the graph if displayGraphCheckBox is checked
@@ -218,8 +217,11 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 	        break;
 		}
 		doClose();
-		if (opt_display_graph) new GraphComparatorCaptionFrame(frame, gc.getDiffGraph(), mainFrame);
-		else GsEnv.whatToDoWithGraph(frame, gc.getDiffGraph(), false);
+		if (opt_display_graph) {
+			new GraphComparatorCaptionFrame(frame, gc.getDiffGraph(), mainFrame, gc);
+		} else {
+			GsEnv.whatToDoWithGraph(frame, gc.getDiffGraph(), false);
+		}
 	}
 	
 	
@@ -240,31 +242,24 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		GsGraph g = null;
 		int index = comboBox.getSelectedIndex() ;
 		if (index == 0) { // get from filepath
-			System.out.println("try to open the file :"+filepath.getText());
 			g = GsGinsimGraphDescriptor.getInstance().open(new File(filepath.getText()));
 		} else if (index == 1) { //has choose blank element
-			System.out.println("Choose the blank line... Useless user !");
             Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_blankComboBox")), this.frame);
 		} else {
 			g = (GsGraph) graphList.get(index-2);
-			System.out.println("Choose the model : "+comboBoxEntries[index]);
 		}
 		return g;
 	}
 
 	private void chooseFile(JTextField textField) throws IOException {
        int returnVal = getJfc().showOpenDialog(this);
-       System.out.println(returnVal);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jfc.getSelectedFile();
             textField.setText(file.getCanonicalPath().toString());
         }
 	}
 	
-	/**
-    *
-    */
-   private JFileChooser getJfc() {
+	private JFileChooser getJfc() {
        File curDir = null;
        if (jfc != null) {
            curDir = jfc.getCurrentDirectory();

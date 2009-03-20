@@ -29,7 +29,7 @@ public class DynamicGraphComparator extends GraphComparator {
 		this.g2 = (GsDynamicGraph)g2;
 		
 		g1m = g1.getGraphManager(); g2m = g2.getGraphManager(); gm = g.getGraphManager();
-		verticesMap = new HashMap();
+		stylesMap = new HashMap();
 		buildDiffGraph();
 	}
 	
@@ -42,30 +42,27 @@ public class DynamicGraphComparator extends GraphComparator {
 	}
 
 	protected void setVerticesColor() {
-		for (Iterator it=verticesMap.keySet().iterator() ; it.hasNext() ;) {	//For all the vertices
+		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
 			GsDynamicNode v, v1, v2;
 			String id = (String)it.next();
 			v1 = (GsDynamicNode)g1m.getVertexByName(id);
 			v2 = (GsDynamicNode)g2m.getVertexByName(id);
 			//Check which graph own the vertex, set the appropriate color to it and if it is owned by both graph, compare its attributes.
 			if (v1 == null) {
-				System.out.println("vertex: "+id+" is specific to g2");
+				log("The vertex "+id+" is specific to g2\n");
 				v = new GsDynamicNode(v2.state);
 				gm.addVertex(v);
-				mergeVertexAttributes(v, v2, gm.getVertexAttributesReader(), g2m.getVertexAttributesReader(), SPECIFIC_G2_COLOR);
-				verticesMap.put(id, SPECIFIC_G2_COLOR);
+				mergeVertexAttributes(v, v2, null, gm.getVertexAttributesReader(), g2m.getVertexAttributesReader(), null, SPECIFIC_G2_COLOR);
 			} else if (v2 == null) {
-				System.out.println("vertex: "+id+" is specific to g1");
+				log("The vertex "+id+" is specific to g1\n");
 				v = new GsDynamicNode(v1.state);
 				gm.addVertex(v);
-				mergeVertexAttributes(v, v1, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), SPECIFIC_G1_COLOR);
-				verticesMap.put(id, SPECIFIC_G1_COLOR);
+				mergeVertexAttributes(v, v1, null, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), null, SPECIFIC_G1_COLOR);
 			} else {
-				System.out.println("vertex: "+id+" is common to both g1 and g2");
-				v = new GsDynamicNode(v2.state);
+				log("The vertex "+id+" is common to both g1 and g2\n");
+				v = new GsDynamicNode(v1.state);
 				gm.addVertex(v);
-				mergeVertexAttributes(v, v2, gm.getVertexAttributesReader(), g2m.getVertexAttributesReader(), COMMON_COLOR);
-				verticesMap.put(id, COMMON_COLOR);
+				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), g2m.getVertexAttributesReader(), COMMON_COLOR);
 				//compareVertices(v ,v1, v2);
 			}
 		}
@@ -74,7 +71,7 @@ public class DynamicGraphComparator extends GraphComparator {
 	protected void addVerticesFromGraph(GsGraphManager gm) {
 		for (Iterator it=gm.getVertexIterator() ; it.hasNext() ;) {
 			GsDynamicNode vertex = (GsDynamicNode)it.next();
-			verticesMap.put(vertex.toString(), null); //Beware, the real node id is not getId, but toString
+			verticesIdsSet.add(vertex.toString()); //Beware, the real node id is not getId, but toString
 		}
 	}
 
@@ -83,12 +80,15 @@ public class DynamicGraphComparator extends GraphComparator {
 		GsDirectedEdge e = null;
 		GsDirectedEdge e1, e2;
 		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributesReader();
+		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributesReader();
 		
 		if (v != null) { //If v is a vertex from the studied graph, we look at its edges
 			for (Iterator edge_it = gm_main.getOutgoingEdges(v).iterator(); edge_it.hasNext();) {
 				e1 = (GsDirectedEdge) edge_it.next();
 				String tid = ((GsDynamicNode)e1.getTargetVertex()).toString();
-				e2 = (GsDirectedEdge) gm.getEdge(gm.getVertexByName(id), gm.getVertexByName(tid));
+				GsDynamicNode source = (GsDynamicNode) gm.getVertexByName(id);
+				GsDynamicNode target = (GsDynamicNode) gm.getVertexByName(tid);
+				e2 = (GsDirectedEdge) gm.getEdge(source, target);
 				
 				if (e2 == null) //The edge doesn't not already exists.
 					e = (GsDirectedEdge)g.addEdge(v, e1.getTargetVertex(), false);
@@ -96,21 +96,20 @@ public class DynamicGraphComparator extends GraphComparator {
 					continue;
 				
 				String comment = "This edge ";
-				if (vcol != COMMON_COLOR || (Color)verticesMap.get(tid) != COMMON_COLOR) { //The edge's vertices are specific to one graph therefore the edge is specific, and we add it with the right color.
+				if (vcol != COMMON_COLOR || !isCommonVertex(target)) { //The edge's vertices are specific to one graph therefore the edge is specific, and we add it with the right color.
 					comment+= "is specific to "+(pcol == SPECIFIC_G1_COLOR ? "g1":"g2");
-					mergeEdgeAttributes(e, e1, pcol, ereader, e1reader);
+					mergeEdgeAttributes(e, e1, null, pcol, ereader, e1reader, null);
 				} else {
 					e2 = (GsDirectedEdge) gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
 					if (e2 != null) {
 						comment+= "is common to both graphs";
-						mergeEdgeAttributes(e, e1, vcol, ereader, e1reader);
+						mergeEdgeAttributes(e, e1, e2, vcol, ereader, e1reader, e2reader);
 					} else {
 						comment+= "is specific to "+(pcol == SPECIFIC_G1_COLOR ? "g1":"g2");
-						mergeEdgeAttributes(e, e1, pcol, ereader, e1reader);
+						mergeEdgeAttributes(e, e1, null, pcol, ereader, e1reader, null);
 					}				
 				}
-				//((GsJgraphDirectedEdge)e.getUserObject()).getGsAnnotation().appendToComment(comment); //TODO :possible ?
-				System.out.println(comment+" ("+e+")");
+				log(comment+" ("+e+")\n");
 			}
 		}
 	}
