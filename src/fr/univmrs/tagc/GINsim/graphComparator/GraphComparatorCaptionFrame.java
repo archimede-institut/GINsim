@@ -36,8 +36,8 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -3613649496687281647L;
-	private GsMainFrame mainFrame;
-	private JFrame frame;
+//	private GsMainFrame mainFrame;
+//	private JFrame frame;
 	private GsGraph g;
 	private JPanel mainPanel;
 	private JTextArea resultsPane;
@@ -53,8 +53,8 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	public GraphComparatorCaptionFrame(JFrame frame, GsGraph g, GsMainFrame mainFrame, GraphComparator gc) {
         this.g = g;
         this.gc = gc;
-        this.mainFrame = mainFrame;
-        this.frame = frame;
+//        this.mainFrame = mainFrame;
+//        this.frame = frame;
         this.cs = new CascadingStyle(false);
 
         initialize();

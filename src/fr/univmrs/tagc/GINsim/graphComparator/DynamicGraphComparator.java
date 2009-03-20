@@ -1,8 +1,10 @@
 package fr.univmrs.tagc.GINsim.graphComparator;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
@@ -37,9 +39,6 @@ public class DynamicGraphComparator extends GraphComparator {
 		this(g1, g2, new GsDynamicGraph());
 	}
 
-	public void buildDiffGraph() {
-		super.buildDiffGraph();
-	}
 
 	protected void setVerticesColor() {
 		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
@@ -71,7 +70,8 @@ public class DynamicGraphComparator extends GraphComparator {
 	protected void addVerticesFromGraph(GsGraphManager gm) {
 		for (Iterator it=gm.getVertexIterator() ; it.hasNext() ;) {
 			GsDynamicNode vertex = (GsDynamicNode)it.next();
-			verticesIdsSet.add(vertex.toString()); //Beware, the real node id is not getId, but toString
+			String id = vertex.toString(); //Beware, the real node id is not getId, but toString
+			verticesIdsSet.add(id); 
 		}
 	}
 
@@ -124,5 +124,34 @@ public class DynamicGraphComparator extends GraphComparator {
 	}
 	public GsGraph getG2() {
 		return g2;
+	}
+
+	/**
+	 * Return a common nodeOrder for g1 and g2.
+	 * Return null if there is any kind of incompatibility between both nodeOrder (different sizes, different nodes...) 
+	 * 
+	 * @param g1 a graph (in any order)
+	 * @param g2 another graph (in any order)
+	 * @return a node order or null if incompatible.
+	 */
+	public static List getNodeOrder(GsGraph g1, GsGraph g2) {
+		List no1 = g1.getNodeOrder();
+		List no2 = g2.getNodeOrder();
+		List gNodeOrder = new ArrayList();
+		
+		if (no1.size() == no2.size()) {
+			for (Iterator it1 = no1.iterator(), it2 = no2.iterator(); it1.hasNext();) {
+				String v1 = (String) it1.next();
+				String v2 = (String) it2.next();
+				gNodeOrder.add(v1);
+				
+				if (!v1.equals(v2)) {
+					gNodeOrder = null;
+					break;
+				}
+			}			
+		}
+	
+		return gNodeOrder;
 	}
 }

@@ -211,9 +211,16 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			gc = new RegulatoryGraphComparator(g1, g2, g);
 	        break;
 		case GRAPH_TYPE_DYNAMIC:
-			g = new GsDynamicGraph();
-			if (opt_display_graph) mainFrame = GsEnv.newMainFrame(g);
-			gc = new DynamicGraphComparator(g1, g2, g);
+			List nodeOrder = DynamicGraphComparator.getNodeOrder(g1, g2);
+			if (nodeOrder != null) {
+				g = new GsDynamicGraph(nodeOrder);
+				if (opt_display_graph) mainFrame = GsEnv.newMainFrame(g);
+				gc = new DynamicGraphComparator(g1, g2, g);
+			} else {
+				Tools.error("The node orders are different, therefore the comparaison would surelly not make senses.", null);
+				doClose();
+				return;
+			}
 	        break;
 		}
 		doClose();
