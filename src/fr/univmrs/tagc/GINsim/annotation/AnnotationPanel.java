@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
@@ -100,11 +102,17 @@ public class AnnotationPanel extends JPanel
 			jTextArea = new JTextArea();
             jTextArea.setLineWrap(true);
             jTextArea.setWrapStyleWord(true);
-			jTextArea.addFocusListener(new java.awt.event.FocusAdapter() { 
-				public void focusLost(java.awt.event.FocusEvent e) {
-				    applyComment();
-				}
-			});
+            jTextArea.getDocument().addDocumentListener(new DocumentListener() {
+                public void removeUpdate(DocumentEvent e) {
+                    applyComment();
+                }
+                public void insertUpdate(DocumentEvent e) {
+                    applyComment();
+                }
+                public void changedUpdate(DocumentEvent e) {
+                    applyComment();
+                }
+            });
 		}
 		return jTextArea;
 	}
@@ -112,8 +120,9 @@ public class AnnotationPanel extends JPanel
     	if (currentNote == null) {
     		return;
     	}
-        if (!currentNote.getComment().equals(jTextArea.getText())) {
-        		currentNote.setComment(jTextArea.getText());
+    	String new_text = jTextArea.getText();
+        if (!currentNote.getComment().equals(new_text)) {
+        		currentNote.setComment(new_text);
             if (listenChanges && graph != null) {
                 graph.fireMetaChange();
             }
@@ -140,7 +149,6 @@ public class AnnotationPanel extends JPanel
 		this.graph = graph;
 		linkList.graph = graph;
 	}
-
 }
 
 class LinkList extends SimpleGenericList {
