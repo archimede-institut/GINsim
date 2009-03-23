@@ -697,6 +697,7 @@ public class GsActions implements GraphChangeListener {
 		actionMenu.add(layoutMenu);
 		addToMenu(actionMenu, graph.getAction(),
 				GsActionProvider.ACTION_ACTION, graph);
+		actionMenu.add(new JSeparator());
 		addToMenu(actionMenu, graph.getSpecificAction(),
 				GsActionProvider.ACTION_ACTION, graph);
 		addToMenu(actionMenu, graphManager.getAction(),

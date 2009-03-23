@@ -56,12 +56,12 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 	}
 
 	public InteractionAnalysisFrame(JFrame frame, GsGraph graph) {
-		super(frame, Translator.getString("STR_function"), 800, 600);
+		super(frame, Translator.getString("STR_interactionAnalysis"), 800, 600);
 		this.frame = frame;
 		this.graph = graph;
         this.frame = frame;
         initialize();
-        this.setTitle(Translator.getString("STR_function"));
+        this.setTitle(Translator.getString("STR_interactionAnalysis"));
         this.addWindowListener(new java.awt.event.WindowAdapter() { 
             public void windowClosing(java.awt.event.WindowEvent e) {
                 cancel();
@@ -84,7 +84,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			c.gridy = 0;
 			c.fill = GridBagConstraints.BOTH;
 			c.ipadx = 10;
-			mainPanel.add(new JLabel(Translator.getString("STR_function_ask")), c);
+			mainPanel.add(new JLabel(Translator.getString("STR_interactionAnalysis_ask")), c);
 			
 			runOptions = new JCheckBox[3];
 			
@@ -92,19 +92,19 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			c.gridx = 0;
 			c.ipadx = 0;
 			c.ipady = 0;
-		    runOptions[0] = new JCheckBox(Translator.getString("STR_function_opt_annotate"));
+		    runOptions[0] = new JCheckBox(Translator.getString("STR_interactionAnalysis_opt_annotate"));
 		    runOptions[0].setMnemonic(KeyEvent.VK_A); 
 		    runOptions[0].setSelected(true);
 		    mainPanel.add(runOptions[0], c);
 		    
 			c.gridy++;
-		    runOptions[1] = new JCheckBox(Translator.getString("STR_function_opt_verbose"));
+		    runOptions[1] = new JCheckBox(Translator.getString("STR_interactionAnalysis_opt_verbose"));
 		    runOptions[1].setMnemonic(KeyEvent.VK_V); 
 		    runOptions[1].setSelected(false);
 		    mainPanel.add(runOptions[1], c);
 		    
 			c.gridy++;
-		    runOptions[2] = new JCheckBox(Translator.getString("STR_function_opt_color_by_default"));
+		    runOptions[2] = new JCheckBox(Translator.getString("STR_interactionAnalysis_opt_color_by_default"));
 		    runOptions[2].setMnemonic(KeyEvent.VK_C); 
 		    runOptions[2].setSelected(((Boolean)OptionStore.getOption(OPT_COLORBYDEFAULT, Boolean.FALSE)).booleanValue());
 		    runOptions[2].addChangeListener(new ChangeListener() {
@@ -128,7 +128,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 
 			c.gridy++;
 			c.ipady = 0;
-			mainPanel.add(new JLabel(Translator.getString("STR_function_results")), c);
+			mainPanel.add(new JLabel(Translator.getString("STR_interactionAnalysis_results")), c);
 			
 			c.gridy++;
 			c.weightx = 2.0;
@@ -142,7 +142,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 		    c.gridy++;
 			c.weightx = 0;
 			c.weighty = 0;
-		    colorizeButton = new JButton(Translator.getString("STR_function_do_colorize"));
+		    colorizeButton = new JButton(Translator.getString("STR_interactionAnalysis_do_colorize"));
 		    colorizeButton.setEnabled(false);
 		    mainPanel.add(colorizeButton, c);
 		    colorizeButton.addActionListener(this);
@@ -153,7 +153,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 	protected void run() {
 		if (isColorized) {
 			fii.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_function_do_colorize"));
+			colorizeButton.setText(Translator.getString("STR_interactionAnalysis_do_colorize"));
 			isColorized = false;
 		}
 		fii = new InteractionAnalysis((GsRegulatoryGraph)graph, getOption(0), getOption(1), (GsRegulatoryMutantDef) mutantStore.getObject(0));
@@ -185,7 +185,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 	private void doColorize() {
 		if (fii != null) {
 			fii.doColorize();
-			colorizeButton.setText(Translator.getString("STR_function_undo_colorize"));
+			colorizeButton.setText(Translator.getString("STR_interactionAnalysis_undo_colorize"));
 			isColorized = true;
 		}
 	}
@@ -193,7 +193,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 	private void undoColorize() {
 		if (fii != null) {
 			fii.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_function_do_colorize"));
+			colorizeButton.setText(Translator.getString("STR_interactionAnalysis_do_colorize"));
 			isColorized = false;
 		}
 	}
@@ -205,7 +205,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 
 	public void cancel() {
 		if (isColorized) {
-			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_function_sure_close"));
+			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_interactionAnalysis_sure_close"));
 			if (res == JOptionPane.OK_OPTION) fii.undoColorize();
 			else if (res == JOptionPane.CANCEL_OPTION) return;
 		}
@@ -216,7 +216,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 		if (e.getSource() == colorPanel) {
 			option_lineColor = JColorChooser.showDialog(
 			            frame,
-			            Translator.getString("STR_function_opt_color_chooser"),
+			            Translator.getString("STR_interactionAnalysis_opt_color_chooser"),
 			            option_lineColor);
 			if (option_lineColor == null) option_lineColor = Color.red;
 			colorPanel.setBackground(option_lineColor);

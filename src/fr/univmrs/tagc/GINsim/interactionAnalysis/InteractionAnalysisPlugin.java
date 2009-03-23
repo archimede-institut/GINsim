@@ -7,6 +7,7 @@ import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.common.GsException;
 
 public class InteractionAnalysisPlugin implements GsActionProvider, GsPlugin {
@@ -14,7 +15,7 @@ public class InteractionAnalysisPlugin implements GsActionProvider, GsPlugin {
 	private GsPluggableActionDescriptor[] t_action = null;
 
 	public void registerPlugin() {
-		GsGraph.registerActionProvider(this);
+		GsRegulatoryGraphDescriptor.registerActionProvider(this);
 		Selector.registerSelector(InteractionAnalysisSelector.IDENTIFIER, InteractionAnalysisSelector.class);
 	}
 	
@@ -25,7 +26,7 @@ public class InteractionAnalysisPlugin implements GsActionProvider, GsPlugin {
 		}
 		if (t_action == null) {
 			t_action = new GsPluggableActionDescriptor[1];
-			t_action[0] = new GsPluggableActionDescriptor("STR_function", "STR_function_descr", null, this, ACTION_ACTION, 0);
+			t_action[0] = new GsPluggableActionDescriptor("STR_interactionAnalysis", "STR_interactionAnalysis_descr", null, this, ACTION_ACTION, 0);
 		}
 		return t_action;
 	}

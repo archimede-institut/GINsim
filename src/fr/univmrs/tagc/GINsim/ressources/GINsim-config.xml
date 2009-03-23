@@ -2,34 +2,34 @@
 <GINsim-addon>
 	<listOfPlugins>
 		<!-- generic plugins -->
-		<plugin name="layout"					mainClass="fr.univmrs.tagc.GINsim.layout.GsLayoutPlugin"/>
+		<plugin name="layout"					 mainClass="fr.univmrs.tagc.GINsim.layout.GsLayoutPlugin"/>
 		<plugin name="layoutJGraph" load="false" mainClass="fr.univmrs.tagc.GINsim.jgraph.layout.GsJgraphLayout"/>
-		<plugin name="connectivity" 			mainClass="fr.univmrs.tagc.GINsim.connectivity.ConnectivityPlugin"/>
+		<plugin name="connectivity" 			 mainClass="fr.univmrs.tagc.GINsim.connectivity.ConnectivityPlugin"/>
 
 		<!-- analysis plugins -->
 		<plugin name="simulation" 				mainClass="fr.univmrs.tagc.GINsim.reg2dyn.Reg2DynPlugin"/>
 		<plugin name="circuit"					mainClass="fr.univmrs.tagc.GINsim.circuit.GsCircuitPlugin"/>
+		<plugin name="interactionAnalysis" 		mainClass="fr.univmrs.tagc.GINsim.interactionAnalysis.InteractionAnalysisPlugin"/>
 		<plugin name="stableStates" 			mainClass="fr.univmrs.tagc.GINsim.stableStates.GsStableStatesPlugin"/>
 		<plugin name="analyseStateTransition"	mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicAnalyserPlugin"/>
 		<plugin name="modelSimplifier" 			mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier.ModelSimplifierPlugin"/>
 		<plugin name="modelChecker" 			mainClass="fr.univmrs.tagc.GINsim.modelChecker.GsModelCheckerPlugin"/>
 		<plugin name="graphComparator" 			mainClass="fr.univmrs.tagc.GINsim.graphComparator.GraphComparatorPlugin"/>
-		<plugin name="interactionAnalysis" 		mainClass="fr.univmrs.tagc.GINsim.interactionAnalysis.InteractionAnalysisPlugin"/>
 
 		<!-- export plugins -->
 		<plugin name="export" 					mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin"/>
+		<plugin name="GenericDocumentExport"	mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport"/>
+		<plugin	name="CytoscapeExport" 			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"/>
 		<plugin name="PNexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsPetriNetExport"/>
 		<plugin name="SMVexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSMVExport"/>
-		<plugin	name="CytoscapeExport" 			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"/>
-		<plugin name="SnakesExport"				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"/>
 		<plugin name="GNAexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport"/>
 		<plugin name="GNAMLexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAMLExport"/>
-		<plugin name="GenericDocumentExport"	mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport"/>
+		<plugin name="SnakesExport"				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"/>
 
 		<!-- other plugins -->
 		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin"/>
 		<plugin name="tb" 						mainClass="fr.univmrs.tagc.GINsim.gui.tbclient.GsTBPlugin"/>
-		<plugin name="jython" 					mainClass="fr.univmrs.tagc.GINsim.jython.JythonPlugin"/>
+		<plugin name="jython" load="fase"		mainClass="fr.univmrs.tagc.GINsim.jython.JythonPlugin"/>
 	</listOfPlugins>
 
 	<listOfGraphType>
