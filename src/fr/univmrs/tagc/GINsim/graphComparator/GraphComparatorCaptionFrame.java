@@ -13,6 +13,7 @@ import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,11 +42,10 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private GsGraph g;
 	private JPanel mainPanel;
 	private JTextArea resultsPane;
-	private JRadioButton diffColor;
-	private JRadioButton specG1Color;
-	private JRadioButton specG2Color;
+	private JRadioButton diffColor, specG1Color, specG2Color, intersectColor, exclusionColor;
 	private GraphComparator gc;
 	private CascadingStyle cs;
+	private JButton automaticRoutingButton;
 	
 	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, 1);
 	private static final VertexStyle clearVertexStyle = new VertexStyle(Color.white, Color.gray, 1, VertexStyle.NULL_SHAPE);
@@ -80,7 +80,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		Dimension preferredSize = getPreferredSize();
 		setSize(preferredSize.width+20, preferredSize.height+20); //Padding 10px;
 		setVisible(true);
-		setResizable(false);
+		//setResizable(false);
 	}
 
 	private JPanel getMainPanel() {
@@ -90,7 +90,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	
 		c.gridx = 0;
 		c.gridy = 0;
-		c.anchor = GridBagConstraints.LINE_START;
+		c.anchor = GridBagConstraints.CENTER;
 		c.ipady = 20;
 		mainPanel.add(getCaptionPanel(), c);
 
@@ -105,6 +105,16 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = c.weighty = 0.0;
 		mainPanel.add(getRadioPanel(), c);
+		
+		c.gridy++;
+		c.anchor = GridBagConstraints.EAST;
+		automaticRoutingButton = new JButton(Translator.getString("STR_gcmp_automaticRouting"));
+		automaticRoutingButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+		    	gc.setEdgeAutomatingRouting();
+			}
+		});
+		mainPanel.add(automaticRoutingButton, c);
 		
 		return mainPanel;
 	}
@@ -129,8 +139,30 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_diffGraph")), c);
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_commonColor")), c);
 		
+		//COMMON_COLOR_DIFF_MAXVALUES
+		c.gridx = 0;
+		c.gridy++;
+		p = new JPanel();
+		p.setBackground(RegulatoryGraphComparator.COMMON_COLOR_DIFF_MAXVALUES);
+		p.setBorder(BorderFactory.createLineBorder(Color.black));
+		captionPanel.add(p, c);
+		
+		c.gridx++;
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_diffmaxvalues")), c);
+
+		//COMMON_COLOR_DIFF_FUNCTIONS
+		c.gridx = 0;
+		c.gridy++;
+		p = new JPanel();
+		p.setBackground(RegulatoryGraphComparator.COMMON_COLOR_DIFF_FUNCTIONS);
+		p.setBorder(BorderFactory.createLineBorder(Color.black));
+		captionPanel.add(p, c);
+		
+		c.gridx++;
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_difffunctions")), c);
+
 		//SPECIFIC_G1_COLOR
 		c.gridx = 0;
 		c.gridy++;
@@ -140,7 +172,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(gc.g1m.getGsGraph().getGraphName()), c);
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gc.g1m.getGsGraph().getGraphName()), c);
 
 		//SPECIFIC_G2_COLOR
 		c.gridx = 0;
@@ -151,16 +183,25 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(gc.g2m.getGsGraph().getGraphName()), c);
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gc.g2m.getGsGraph().getGraphName()), c);
+		
 		return captionPanel;
 	}
 	
 	private Component getResultsPanel() {
 		JPanel resultPanel = new JPanel();
-		mainPanel.setLayout(new GridBagLayout());
+		resultPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.ipadx = 8;
+		c.ipady = 8;		
+		resultPanel.add(new JLabel(Translator.getString("STR_function_results")+" : "), c);
+		
+		c.gridy++;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = c.weighty = 2.0;
+
 		resultsPane = new JTextArea(gc.getLog().toString());
         JScrollPane resultsScrollPane = new JScrollPane(resultsPane);
         resultsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -191,16 +232,30 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	    specG2Color.setActionCommand(name);
 	    radioPanel.add(specG2Color);
 
+		name = Translator.getString("STR_gcmp_intersection");
+	    intersectColor = new JRadioButton(name);
+	    intersectColor.setActionCommand(name);
+	    radioPanel.add(intersectColor);
+
+		name = Translator.getString("STR_gcmp_exclusion");
+		exclusionColor = new JRadioButton(name);
+		exclusionColor.setActionCommand(name);
+	    radioPanel.add(exclusionColor);
+
 	    //Group the radio buttons.
 	    ButtonGroup group = new ButtonGroup();
 	    group.add(diffColor);
 	    group.add(specG1Color);
 	    group.add(specG2Color);
+	    group.add(intersectColor);
+	    group.add(exclusionColor);
 
 	    //Register a listener for the radio buttons.
 	    diffColor.addActionListener(this);
 	    specG1Color.addActionListener(this);
 	    specG2Color.addActionListener(this);
+	    intersectColor.addActionListener(this);
+	    exclusionColor.addActionListener(this);
 
 		return radioPanel;
 	}
@@ -217,14 +272,21 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
     	
     	for (Iterator it = styleMap.keySet().iterator(); it.hasNext();) {
 			Object o = it.next();
-			Style style;
+			Style style = null;
+			ItemStore is = (ItemStore)styleMap.get(o);
 			if (source == diffColor) {
-				style = ((ItemStore)styleMap.get(o)).v;
+				style = is.v;
 			} else if (source == specG1Color) {
-				style = ((ItemStore)styleMap.get(o)).v1;
-			} else {
-				style = ((ItemStore)styleMap.get(o)).v2;
-			}			
+				style = is.v1;
+			} else if (source == specG2Color) {
+				style = is.v2;
+			} else if (source == exclusionColor){
+				style = is.v1;
+				if (style == null) style = is.v2;
+				else if (is.v2 != null) style = null;
+			} else if (source == intersectColor){
+				if (is.v1 != null && is.v2 != null) style = is.v1;
+			}
 			if (o.getClass() == GsRegulatoryMultiEdge.class || o.getClass() == GsJgraphDirectedEdge.class || o.getClass() == GsDirectedEdge.class ) { 	//edge
 				ereader.setEdge(o);
 				if (style != null) {
@@ -244,7 +306,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 			}
 		}
 	}
-
+    
 	public void doClose() {
     	cancel();
     }
