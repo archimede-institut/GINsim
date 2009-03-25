@@ -135,7 +135,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			c.weighty = 2.0;
 			resultsPane = new JTextArea("");
 	        JScrollPane resultsScrollPane = new JScrollPane(resultsPane);
-	        resultsPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
+	        resultsPane.setFont(new Font("Courrier", Font.PLAIN, 11));
 	        resultsScrollPane.setPreferredSize(new Dimension(250, 250));
 			mainPanel.add(resultsScrollPane, c);
 			

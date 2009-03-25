@@ -145,6 +145,16 @@ public abstract class GraphComparator {
 		} catch (GsException e) {} //Could not append normally, the g1 and g2 graph name can't be invalid at this point
 	}
 	
+	public void setEdgeAutomatingRouting() {
+		for (Iterator it = gm.getEdgeIterator(); it.hasNext();) {
+			Object e = (Object) it.next();
+			GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
+			ereader.setEdge(e);
+			ereader.setRouting(GsEdgeAttributesReader.ROUTING_AUTO);
+			ereader.refresh();
+		}
+	}
+	
 	/**
 	 * Add all the vertices from a graph to the verticeMap.
 	 * The key of the map should be the vertex ID
