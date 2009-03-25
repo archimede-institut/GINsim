@@ -16,9 +16,10 @@ public class GsGraphicalAttributesStore {
 
 	Map oldColors = new HashMap();
 	
-	GsGraph graph;
+	GsGraphManager graphManager;
 	
 	public GsGraphicalAttributesStore(GsGraphManager graphManager) {
+	    this.graphManager = graphManager;
 		this.ereader = graphManager.getEdgeAttributesReader();
 		this.vreader = graphManager.getVertexAttributesReader();
 	}
@@ -28,13 +29,13 @@ public class GsGraphicalAttributesStore {
 	}
 	
 	public void storeAll() {
-        Iterator it = graph.getGraphManager().getVertexIterator();
+        Iterator it = graphManager.getVertexIterator();
         while (it.hasNext()) {
             Object vertex = it.next();
             vreader.setVertex(vertex);
             oldColors.put(vertex, new StoreColor(vreader));
 
-            List l_edge = graph.getGraphManager().getOutgoingEdges(vertex);
+            List l_edge = graphManager.getOutgoingEdges(vertex);
             for (int j=0 ; j<l_edge.size() ; j++) {
                 Object edge = ((GsDirectedEdge)l_edge.get(j)).getUserObject();
                 ereader.setEdge(l_edge.get(j));
@@ -75,7 +76,9 @@ public class GsGraphicalAttributesStore {
 	public void restore(Object o) {
 		vreader.setVertex(o);
         StoreColor oc = (StoreColor)oldColors.get(o);
-        if (oc != null ) oc.restore(ereader);
+        if (oc != null ) {
+            oc.restore(ereader);
+        }
 	}	
 }
 
