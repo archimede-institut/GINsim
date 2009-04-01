@@ -40,7 +40,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	private GsRegulatoryGraphOptionPanel optionPanel;
 
-    protected List v_stables = null;
+	protected List v_stables = null;
     private ObjectEditor graphEditor = null;
     private GsParameterPanel vertexPanel = null;
     private GsParameterPanel edgePanel;

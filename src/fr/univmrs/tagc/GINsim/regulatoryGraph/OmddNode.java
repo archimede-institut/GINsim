@@ -141,7 +141,7 @@ public class OmddNode {
 //        return other;
     }
     
-    private OmddNode merge(OmddNode other, int op, Map m, int[] t_key) {
+    public OmddNode merge(OmddNode other, int op, Map m, int[] t_key) {
         
 //        // previous value caching doesn't seems too efficient in this special case
 //        // context trees are not (yet) reduced, this might help... 
@@ -337,6 +337,18 @@ public class OmddNode {
             return ret;
         }
     }
+    
+    /**
+     * Merge an array
+     */
+    public OmddNode mergeMultiple(OmddNode[] others, int op) {
+    	OmddNode newNode = others[0];
+    	for (int i = 1; i < others.length; i++) {
+			newNode = newNode.merge(others[i], op);
+		}
+		return this.merge(newNode, op);
+    }
+    
     
     /**
      * should be unused for now: nodes are never modified so they don't need to be cloned, just reused.

@@ -24,12 +24,16 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 	static final int MUTANT = 0;
 	static final int PCLASS = 1;
 	
+	static final int BUILD_NOTHING = 0;
+	static final int BUILD_FULL_STG = 1;
+	static final int BUILD_DHG = 2;
+	
     String name = "new_parameter";
     List nodeOrder;
 
     int maxdepth;
     int maxnodes;
-    boolean buildSTG = true;
+    int buildSTG = BUILD_FULL_STG;
     boolean breadthFirst = false;
 
     ObjectStore store = new ObjectStore(2);
@@ -78,8 +82,9 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
             }
             name += " ("+saveName+")";
         }
-        String s = "STG construction parameters:\n";
+        String s = "construction parameters:\n";
         s += "    Regulatory graph: " + name + "\n";
+        s += "    Graph building strategy: " + buildSTG + "\n";
         s += "    Updating policy: ";
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
         if (pcdef.getNbElements(null) > 1) {
@@ -135,6 +140,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 		out.addAttr("breadthFirst", ""+breadthFirst);
 		out.addAttr("maxdepth", ""+maxdepth);
 		out.addAttr("maxnodes", ""+maxnodes);
+		out.addAttr("buildSTG", ""+buildSTG);
 
 		if (pcdef.getNbElements(null) > 1) {
 			out.openTag("priorityClass");
@@ -163,6 +169,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 
     public Object clone() {
     	GsSimulationParameters newp = new GsSimulationParameters(param_list);
+    	newp.buildSTG = buildSTG;
     	newp.name = name;
     	newp.maxdepth = maxdepth;
     	newp.maxnodes = maxnodes;

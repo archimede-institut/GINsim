@@ -74,7 +74,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     /**
      * @param frame
      * @param regGraph
-     * @param dynGraph
+     * @param dynHieGraph
      */
     private GsRegulatoryAnimator(JFrame frame, GsRegulatoryGraph regGraph, GsDynamicGraph dynGraph) {
         this.frame = frame;

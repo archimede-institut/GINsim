@@ -584,7 +584,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * for exemple the state transition graph could have higher max value for one of the node.
      *
      * @param regGraph
-     * @param dynGraph
+     * @param dynHieGraph
      * @return true if the two graph can be associated
      */
     public static boolean associationValid(GsRegulatoryGraph regGraph, GsDynamicGraph dynGraph) {
