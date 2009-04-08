@@ -262,6 +262,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
        int returnVal = getJfc().showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jfc.getSelectedFile();
+            OptionStore.setOption("currentDirectory", file.getParent());
             textField.setText(file.getCanonicalPath().toString());
         }
 	}
