@@ -19,7 +19,8 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NAME = 1;
-	public static final int PROP_MAX = 2;
+    public static final int PROP_MAX = 2;
+    public static final int PROP_INPUT = 3;
 	public static final int PROP_ANNOTATION = 5;
 	public static final int PROP_RAW = 10;
 	private List l_prop = new ArrayList();
@@ -47,6 +48,8 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		pinfo.addPosition(0, 2);
 		pinfo.addPosition(1, 2);
 		l_prop.add(pinfo);
+        pinfo = new GenericPropertyInfo(this, PROP_INPUT, Translator.getString("STR_input"), Boolean.class);
+        l_prop.add(pinfo);
 
 		// build the group [note, parameter, function]
 		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
@@ -75,8 +78,10 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	
 	public int getIntValue(int prop) {
 		switch (prop) {
-			case PROP_MAX:
-				return vertex.getMaxValue();
+            case PROP_MAX:
+                return vertex.getMaxValue();
+            case PROP_INPUT:
+                return vertex.isInput() ? 1 : 0;
 		}
 		return 0;
 	}
@@ -93,6 +98,8 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 				return vertex.getName();
 			case PROP_MAX:
 				return ""+vertex.getMaxValue();
+            case PROP_INPUT:
+                return ""+vertex.isInput();
 		}
 		return null;
 	}
@@ -104,7 +111,6 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 					return Tools.isValidId(value) && !graph.idExists(value);
 				case PROP_NAME:
 					return true;
-				case PROP_MAX:
 			}
 		} catch (Exception e) {
 		}
@@ -115,6 +121,8 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		switch (prop) {
 			case PROP_MAX:
 				return value>0 && value<10;
+            case PROP_INPUT:
+                return value== 0 || value==1;
 		}
 		return false;
 	}
@@ -139,6 +147,10 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 			case PROP_MAX:
 				vertex.setMaxValue((short)value, graph);
 				return vertex.getMaxValue() == value;
+            case PROP_INPUT:
+                boolean nv = value != 0;
+                vertex.setInput(nv);
+                return vertex.isInput() == nv;
 		}
 		return false;
 	}
@@ -149,6 +161,8 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 				return vertex.getAnnotation();
 			case PROP_RAW:
 				return vertex;
+            case PROP_INPUT:
+                return vertex.isInput() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return null;
 	}

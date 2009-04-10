@@ -232,9 +232,10 @@ public abstract class GsEdgeAttributesReader implements GsAttributesReader {
     abstract public float[] getDash();
     public String getDashID() {
     	Iterator it = m_pattern.entrySet().iterator();
+    	float[] dash = getDash();
     	while (it.hasNext()) {
     		Entry e = (Entry)it.next();
-    		if (e.getValue() == getDash()) {
+    		if (e.getValue() == dash) {
     			return (String)e.getKey();
     		}
     	}

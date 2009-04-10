@@ -68,6 +68,13 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		doCreateMeta("description", META_DESCRIPTION);
 		doCreateMeta("generator", META_GENERATOR);
 		
+        if (documentProperties.containsKey("css")) {
+            // <link rel="stylesheet" href="style.css" type="text/css" />
+            xmlw.openTag("link");
+            xmlw.addAttr("rel", "stylesheet");
+            xmlw.addAttr("type", "text/css");
+            xmlw.addAttr("href", (String)documentProperties.get("css"));
+        }
 		doWriteStyles();
 		
 		StringBuffer javascript = getDocumentExtra("javascript");
@@ -142,6 +149,9 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		}
 		if (rowspan > 1) {
 			xmlw.addAttr("rowspan", ""+rowspan);
+		}
+		if (style != null) {
+		    xmlw.addAttr("class", style);
 		}
 	}
 	

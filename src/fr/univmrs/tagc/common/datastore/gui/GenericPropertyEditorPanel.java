@@ -16,6 +16,7 @@ import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.models.MinMaxSpinModel;
 import fr.univmrs.tagc.common.datastore.models.SpinModel;
+import fr.univmrs.tagc.common.widgets.BooleanEditor;
 import fr.univmrs.tagc.common.widgets.StatusTextField;
 
 /**
@@ -28,7 +29,8 @@ public class GenericPropertyEditorPanel extends JPanel implements GenericPropert
 	private static Insets insets = new Insets(2,5, 2, 5);
 	
 	static {
-		m_class.put(String.class, StatusTextField.class);
+        m_class.put(String.class, StatusTextField.class);
+        m_class.put(Boolean.class, BooleanEditor.class);
 		m_class.put(GenericPropertyInfo[].class, PropertySwitch.class);
 		m_class.put(MinMaxSpinModel.class, MinMaxEditor.class);
 		m_class.put(SpinModel.class, SpinEditor.class);

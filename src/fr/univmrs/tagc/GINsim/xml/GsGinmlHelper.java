@@ -93,6 +93,12 @@ public class GsGinmlHelper {
 			        Tools.error("invalid points", null);
 			    }
 			}
+			
+	         s = attributes.getValue("pattern");
+	         if (s != null) {
+	             ereader.setDash(ereader.getPattern(1));
+	         }
+
 			ereader.refresh();
 		}
 	}
@@ -122,6 +128,10 @@ public class GsGinmlHelper {
         }
         svs += " line_style=\""+s+"\"";
         svs += " line_color=\"#"+Tools.getColorCode(eReader.getLineColor())+"\"";
+        float[] pattern = eReader.getDash();
+        if (pattern != null) {
+            svs += " pattern=\"dash\"";
+        }
         switch (eReader.getRouting()) {
         	case GsEdgeAttributesReader.ROUTING_AUTO:
         	    s = "auto";

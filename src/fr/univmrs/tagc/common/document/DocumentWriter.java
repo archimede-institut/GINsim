@@ -201,7 +201,7 @@ public abstract class DocumentWriter {
 	 * @throws IOException
 	 */
 	public void openTableCell(int colspan, int rowspan, String content) throws IOException {
-		openTableCell(colspan, rowspan, content, false);
+		openTableCell(colspan, rowspan, content, null, false);
 	}
 
 	/**
@@ -212,24 +212,28 @@ public abstract class DocumentWriter {
 	 * @param header if true the cell is an header
 	 * @throws IOException
 	 */
-	public void openTableCell(int colspan, int rowspan, String content, boolean header) throws IOException {
-		if (pos.pos == POS_TABLE) {
-			openTableRow(null);
-		} else {
-			closeUntil(POS_TABLE_ROW);
-		}
-		doOpenTableCell(colspan, rowspan, header, null);
-		pos = new DocumentPos(pos, POS_TABLE_CELL);
-		if (content != null) {
-			writeText(content);
-		}
-	}
+    public void openTableCell(int colspan, int rowspan, String content, boolean header) throws IOException {
+        openTableCell(colspan, rowspan, content, null, header);
+    }
+
+	public void openTableCell(int colspan, int rowspan, String content, String cl, boolean header) throws IOException {
+        if (pos.pos == POS_TABLE) {
+            openTableRow(null);
+        } else {
+            closeUntil(POS_TABLE_ROW);
+        }
+        doOpenTableCell(colspan, rowspan, header, cl);
+        pos = new DocumentPos(pos, POS_TABLE_CELL);
+        if (content != null) {
+            writeText(content);
+        }
+    }
 	/**
 	 * Open a new cell in the current table row with 1 colspan and rowspan
 	 * @param content the cell's content
 	 * @throws IOException
 	 */	public void openTableCell(String content) throws IOException {
-		openTableCell(1,1, content, false);
+		openTableCell(1,1, content, null, false);
 	}
 	/**
 	 * Open a new table row and new table cells with the content of the array
@@ -239,7 +243,7 @@ public abstract class DocumentWriter {
 	public void addTableRow(String[] t_content) throws IOException {
 		openTableRow(null);
 		for (int i=0 ; i<t_content.length ; i++) {
-			openTableCell(1, 1, t_content[i], false);
+			openTableCell(1, 1, t_content[i], null, false);
 		}
 	}
 

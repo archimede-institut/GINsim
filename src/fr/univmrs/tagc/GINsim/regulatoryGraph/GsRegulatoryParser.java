@@ -236,6 +236,10 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                         			vertex.addLogicalParameter(new GsLogicalParameter(basevalue), true);
                         		}
                         	}
+                        	String input = attributes.getValue("input");
+                        	if (input != null) {
+                        	    vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"));
+                        	}
                             values.put(vertex, new Hashtable());
                         } catch (NumberFormatException e) { throw new SAXException("malformed node's parameters"); }
                     } else {

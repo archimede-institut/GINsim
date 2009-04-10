@@ -1,11 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
@@ -39,12 +35,13 @@ import fr.univmrs.tagc.common.xml.XMLize;
  */
 public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 
-	private short 			maxValue;
-	private final LogicalParameterList v_logicalParameters;
+	private short 	maxValue = 1;
+	private boolean isInput = false;
+	private final LogicalParameterList v_logicalParameters = new LogicalParameterList();
 
-	private String 			name;
-	private Annotation	gsa;
-	private String 			id;
+	private String 		name = "";
+	private Annotation	gsa = new Annotation();
+	private String 		id;
 
 	private GsTreeInteractionsModel interactionsModel;
 	private GsRegulatoryGraph graph;
@@ -61,10 +58,6 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 	 */
 	public GsRegulatoryVertex(String id, GsRegulatoryGraph graph) {
 		super();
-		name			= "";
-		maxValue 		= 1;
-		gsa				= new Annotation();
-		v_logicalParameters 	= new LogicalParameterList();
 		this.id = id;
 		this.graph = graph;
 		interactionsModel = new GsTreeInteractionsModel(graph);
@@ -75,15 +68,17 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 	 */
 	public GsRegulatoryVertex(int num, GsRegulatoryGraph graph) {
 		super();
-		name			= "";
-		maxValue 		= 1;
-		gsa				= new Annotation();
-		v_logicalParameters 	= new LogicalParameterList();
 		this.id = "G"+num;
 		this.graph = graph;
 		interactionsModel = new GsTreeInteractionsModel(graph);
 	}
 
+    public boolean isInput() {
+        return isInput;
+    }
+    public void setInput(boolean input) {
+        this.isInput = input;
+    }
 	/**
 	 * @return the max value of the node
 	 */
@@ -233,14 +228,23 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
      */
     public OmddNode getTreeParameters(GsRegulatoryGraph graph) {
         OmddNode root;
-        root = OmddNode.TERMINALS[0];
-        OmddNode curNode;
-        Iterator it = v_logicalParameters.iterator();
-        while (it.hasNext()) {
-            GsLogicalParameter gsi = (GsLogicalParameter)it.next();
-            curNode = gsi.buildTree(graph, this);
-            if (curNode != null) {
-                root = root.merge(curNode, OmddNode.OR);
+        if (isInput) {
+            root = new OmddNode();
+            root.level = graph.getNodeOrder().indexOf(this);
+            root.next = new OmddNode[maxValue+1];
+            for (int i=0 ; i<root.next.length ; i++) {
+                root.next[i] = OmddNode.TERMINALS[i];
+            }
+        } else {
+            root = OmddNode.TERMINALS[0];
+            OmddNode curNode;
+            Iterator it = v_logicalParameters.iterator();
+            while (it.hasNext()) {
+                GsLogicalParameter gsi = (GsLogicalParameter)it.next();
+                curNode = gsi.buildTree(graph, this);
+                if (curNode != null) {
+                    root = root.merge(curNode, OmddNode.OR);
+                }
             }
         }
         return root;
@@ -281,7 +285,10 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 			    out.addAttr("name", name);
 			}
 		    out.addAttr("maxvalue", ""+maxValue);
-
+		    
+		    if (isInput) {
+	            out.addAttr("input", ""+isInput);
+		    }
 			// TODO: at some point stop saving logical parameters
 		    Iterator it = v_logicalParameters.iterator();
 		    while (it.hasNext()) {
