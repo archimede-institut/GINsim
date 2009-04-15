@@ -111,7 +111,8 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
             m_init.put(o_init, null);
             sim = new Simulation(paramList.graph, this, param, false);
             result.append(param.name + " ; " + s_init+"\n");
-            sim.startSimulation(paramList.graph.getNodeOrder(), m_init);
+            // FIXME: adapt to input definitions
+            sim.startSimulation(paramList.graph.getNodeOrder(), null, m_init);
         } else if (curParam < nbParam) {
             param = (GsSimulationParameters)paramList.getElement(null, curParam);
             initIterator = param.m_initState.keySet().iterator();

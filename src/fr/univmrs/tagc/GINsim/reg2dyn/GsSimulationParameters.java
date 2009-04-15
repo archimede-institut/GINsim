@@ -240,6 +240,10 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
         while (it.hasNext()) {
             other.m_initState.put(mapping.get(it.next()), null);
         }
+        it = m_input.keySet().iterator();
+        while (it.hasNext()) {
+            other.m_input.put(mapping.get(it.next()), null);
+        }
         other.store.setObject(MUTANT, mapping.get(store.getObject(MUTANT)));
         PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
         PriorityClassDefinition new_pcdef = (PriorityClassDefinition)mapping.get(pcdef);

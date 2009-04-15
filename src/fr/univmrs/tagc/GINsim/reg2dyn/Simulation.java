@@ -68,13 +68,12 @@ public final class Simulation extends Thread implements Runnable {
    		}
 	}
 
-    public void startSimulation(List nodeOrder, Map m_initState) {
-        set_initialStates(nodeOrder, m_initState);
+    public void startSimulation(List nodeOrder, Map inputs, Map m_initState) {
+        set_initialStates(nodeOrder, inputs, m_initState);
         start();
     }
-    public void set_initialStates(List nodeOrder, Map m_initState) {
-        // FIXME: also allow to set input states
-        initStatesIterator = new InitialStatesIterator(nodeOrder, null, m_initState);
+    public void set_initialStates(List nodeOrder, Map inputs, Map m_initState) {
+        initStatesIterator = new InitialStatesIterator(nodeOrder, inputs, m_initState);
     }
 	public void interrupt() {
 		ready = false;

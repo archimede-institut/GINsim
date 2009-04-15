@@ -328,6 +328,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 		clone.maxValue = maxValue;
 		clone.name = name;
 		clone.setGsa((Annotation)gsa.clone());
+		clone.isInput = isInput;
 		return clone;
 	}
 
