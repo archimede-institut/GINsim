@@ -4,5 +4,6 @@ import java.util.Map;
 
 public interface GsInitialStateStore {
 
-	public Map getInitialState();
+    public Map getInitialState();
+    public Map getInputState();
 }

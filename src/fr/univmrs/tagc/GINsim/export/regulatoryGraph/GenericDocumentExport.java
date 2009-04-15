@@ -323,10 +323,10 @@ public class GenericDocumentExport extends GsAbstractExport {
 	
 	
 	private void writeInitialStates() throws IOException {
-		GsInitialStateList initStates = (GsInitialStateList) graph.getObject(
-				GsInitialStateManager.key, false);
+		InitialStateList initStates = ((GsInitialStateList) graph.getObject(
+				GsInitialStateManager.key, false)).getInitialStates();
 		if (initStates != null && initStates.getNbElements(null) > 0) {
-			GsInitStateTableModel model = new GsInitStateTableModel(nodeOrder, null, initStates, false);
+			GsInitStateTableModel model = new GsInitStateTableModel(null, initStates, false);
 			String[] t_cols = new String[len+1];
 			for (int i=0 ; i<=len ; i++) {
 				t_cols[i] = "";
@@ -543,9 +543,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 }
 
 class DocumentExportConfig implements GsInitialStateStore {
-
-
-	Map m_init = new HashMap();
+    Map m_init = new HashMap();
+    Map m_input = new HashMap();
 
 	boolean exportInitStates = true;
 	boolean exportMutants = true;
@@ -554,9 +553,12 @@ class DocumentExportConfig implements GsInitialStateStore {
 	// set to true to avoid generating redondant things for multicellular models
 	boolean multicellular = false;
 	
-	public Map getInitialState() {
-		return m_init;
-	}
+    public Map getInitialState() {
+        return m_init;
+    }
+    public Map getInputState() {
+        return m_input;
+    }
 	
 }
 

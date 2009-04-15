@@ -34,6 +34,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 
     ObjectStore store = new ObjectStore(2);
     Map m_initState = new HashMap();
+    Map m_input = new HashMap();
 	GsSimulationParameterList param_list;
 
     /**
@@ -114,6 +115,22 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
             }
             s += "\n";
         }
+        // FIXME: proper input/initial states reporting
+        s += "    Inputs: ";
+        if (m_input == null || m_input.size()==0) {
+            s += "ALL\n";
+        } else {
+            Iterator it = m_input.keySet().iterator();
+            while (it.hasNext()) {
+                Map m_init = ((GsInitialState)it.next()).getMap();
+                s += "\n      ";
+                for (int j=0 ; j<nodeOrder.size() ; j++) {
+                    GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
+                    s += "  "+GsInitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
+                }
+            }
+            s += "\n";
+        }
 
         if (store.getObject(MUTANT) != null) {
             s += "    Mutant: "+store.getObject(MUTANT).toString()+"\n";
@@ -143,16 +160,26 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 		} else {
 			
 		}
-		if (m_initState != null && m_initState.keySet().size() > 0) {
-			out.openTag("initstates");
-			Iterator it = m_initState.keySet().iterator();
-			while(it.hasNext()) {
-				out.openTag("row");
-				out.addAttr("name", ((GsInitialState)it.next()).getName());
+        if (m_initState != null && m_initState.keySet().size() > 0) {
+            out.openTag("initstates");
+            Iterator it = m_initState.keySet().iterator();
+            while(it.hasNext()) {
+                out.openTag("row");
+                out.addAttr("name", ((GsInitialState)it.next()).getName());
                 out.closeTag();
-			}
-			out.closeTag();
-		}
+            }
+            out.closeTag();
+        }
+        if (m_input != null && m_input.keySet().size() > 0) {
+            out.openTag("inputs");
+            Iterator it = m_input.keySet().iterator();
+            while(it.hasNext()) {
+                out.openTag("row");
+                out.addAttr("name", ((GsInitialState)it.next()).getName());
+                out.closeTag();
+            }
+            out.closeTag();
+        }
 		if (store.getObject(MUTANT) != null) {
             out.openTag("mutant");
             out.addAttr("value", store.getObject(MUTANT).toString());
@@ -190,6 +217,9 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 	public Map getInitialState() {
 		return m_initState;
 	}
+    public Map getInputState() {
+        return m_input;
+    }
 
 	public PriorityClassDefinition getPriorityClassDefinition() {
 		PriorityClassDefinition pcd = (PriorityClassDefinition)store.getObject(PCLASS);

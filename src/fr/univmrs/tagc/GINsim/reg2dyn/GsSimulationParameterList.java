@@ -35,7 +35,8 @@ public class GsSimulationParameterList extends SimpleGenericList
     public GsSimulationParameterList(GsGraph graph, GsSimulationParameters param) {
         this.graph = (GsRegulatoryGraph)graph;
         imanager = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
-        imanager.addListListener(this);
+        imanager.getInitialStates().addListListener(this);
+        imanager.getInputConfigs().addListListener(this);
         pcmanager = new PriorityClassManager(this.graph);
     	prefix = "parameter_";
     	canAdd = true;

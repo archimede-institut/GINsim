@@ -149,7 +149,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 				return vertex.getMaxValue() == value;
             case PROP_INPUT:
                 boolean nv = value != 0;
-                vertex.setInput(nv);
+                vertex.setInput(nv, graph);
                 return vertex.isInput() == nv;
 		}
 		return false;

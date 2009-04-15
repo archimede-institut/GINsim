@@ -1,6 +1,6 @@
 package fr.univmrs.tagc.GINsim.graph;
 
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -17,7 +17,7 @@ public class GsGraphEventCascadeNotificationAction implements GsGraphNotificatio
     }
 
     public boolean perform(GsGraph graph, Object data, int index) {
-        Vector v = (Vector)data;
+        List v = (List)data;
         StringBuffer s = new StringBuffer();
         for (int i=0 ; i<v.size() ; i++) {
         	s.append(v.get(i).toString());

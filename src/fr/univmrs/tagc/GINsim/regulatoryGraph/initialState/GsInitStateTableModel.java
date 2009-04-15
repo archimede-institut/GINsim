@@ -21,7 +21,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -1553864043658960569L;
 	private List nodeOrder;
     private Map m_initState = null;
-    private GsInitialStateList imanager;
+    private InitialStateList imanager;
 	private int nbCol;
     private StackDialog frame;
     private boolean several;
@@ -34,12 +34,12 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	 * @param nodeOrder
      * @param frame
 	 */	
-	public GsInitStateTableModel(List nodeOrder, StackDialog frame, GsInitialStateList imanager, boolean several) {
+    public GsInitStateTableModel(StackDialog frame, InitialStateList imanager, boolean several) {
 		super();
-		this.nodeOrder = nodeOrder;
         this.frame = frame;
         this.imanager = imanager;
         this.several = several;
+        nodeOrder = imanager.nodeOrder;
 		nbCol = nodeOrder.size();
 	}
 
@@ -350,8 +350,8 @@ public class GsInitStateTableModel extends AbstractTableModel {
      * reverse job of the "getContent" method
      * @param param
      */
-    public void setParam(GsInitialStateStore param) {
-        this.m_initState = param.getInitialState();
+    public void setParam(Map param) {
+        this.m_initState = param;
         fireTableStructureChanged();
     }
 

@@ -6,7 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -23,39 +23,60 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
 import fr.univmrs.tagc.common.widgets.StockButton;
 
 public class GsInitialStatePanel extends JPanel {
-	private static final long serialVersionUID = -572201856207494392L;
-	
-	private JScrollPane jScrollPane = null;
+    private static final long serialVersionUID = -572201856207494392L;
+    
+    private StateListPanel initPanel;
+    private StateListPanel inputPanel;
+    
+	public GsInitialStatePanel(StackDialog dialog, GsInitialStateList imanager, boolean several) {
+	    initPanel = new StateListPanel(dialog, imanager.getInitialStates(), several, Translator.getString("STR_Initial_state"));
+	    inputPanel = new StateListPanel(dialog, imanager.getInputConfigs(), several, Translator.getString("STR_Inputs"));
+	    setLayout(new GridBagLayout());
+	    GridBagConstraints c = new GridBagConstraints();
+	    c.weightx = c.weighty = 1;
+	    c.fill = GridBagConstraints.BOTH;
+	    if (imanager.normalNodes.size() > 0) {
+	        add(initPanel, c);
+	    }
+        c.gridy = 1;
+        if (imanager.inputNodes.size() > 0) {
+            add(inputPanel, c);
+        }
+	}
+    public GsInitialStatePanel(StackDialog dialog, GsGraph graph, boolean several) {
+        this(dialog, (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true), several);
+    }
+    public void setParam(GsInitialStateStore currentParameter) {
+        initPanel.setParam(currentParameter.getInitialState());
+        inputPanel.setParam(currentParameter.getInputState());
+    }
+}
+
+class StateListPanel extends JPanel {
+    private static final long serialVersionUID = -7273296658666786369L;
+
+    private JScrollPane jScrollPane = null;
     private EnhancedJTable tableInitStates = null;
     private GsInitStateTableModel model = null;
     private JButton buttonDelStateRow = null;
     private JButton buttonCopyStateRow = null;
-    private JButton buttonResetStateRow = null;
-   
 
     GsSimulationParameterList paramList;
 
     Insets topInset = new Insets(20,0,0,0);
-	private List nodeOrder;
-	private GsInitialStateList imanager;
+	private InitialStateList stateList;
 	private StackDialog dialog;
 	private boolean several;
 	
-    public GsInitialStatePanel(StackDialog dialog, GsGraph graph, boolean several) {
-    	this(dialog, graph.getNodeOrder(), 
-    			(GsInitialStateList)graph.getObject(GsInitialStateManager.key, true),
-    			several);
-    }
-    public GsInitialStatePanel(StackDialog dialog, List nodeOrder, GsInitialStateList imanager, boolean several) {
+    public StateListPanel(StackDialog dialog, InitialStateList stateList, boolean several, String title) {
     	this.dialog = dialog;
-    	this.nodeOrder = nodeOrder;
-    	this.imanager = imanager;
-    	this.several = several;
+        this.several = several;
+    	this.stateList = stateList;
+        setBorder(BorderFactory.createTitledBorder(title));
     	initialize();
     }
     
 	private void initialize() {
-		setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_Initial_state")));
 		setLayout(new GridBagLayout());
         GridBagConstraints c;
         if (!several) {
@@ -94,7 +115,7 @@ public class GsInitialStatePanel extends JPanel {
     private javax.swing.JTable getTableInitStates() {
         if(tableInitStates == null) {
             tableInitStates = new EnhancedJTable();
-            model = new GsInitStateTableModel(nodeOrder, dialog, imanager, several);
+            model = new GsInitStateTableModel(dialog, stateList, several);
             tableInitStates.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
             tableInitStates.setModel(model);
             tableInitStates.getTableHeader().setReorderingAllowed(false);
@@ -171,9 +192,7 @@ public class GsInitialStatePanel extends JPanel {
         return buttonCopyStateRow;
     }
 
-	public void setParam(GsInitialStateStore currentParameter) {
+	public void setParam(Map currentParameter) {
 		model.setParam(currentParameter);
 	}
-
-	
 }

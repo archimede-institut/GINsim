@@ -13,6 +13,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
@@ -25,9 +26,12 @@ public class GsSimulationParametersParser extends XMLHelper {
     private static final int POS_PARAM = 1;
     private static final int POS_PCLASS = 2;
     private static final int POS_INITSTATES = 3;
+    private static final int POS_INPUTS = 4;
     
     GsSimulationParameterList paramLists;
-    GsInitialStateList initList = null;
+    GsInitialStateList imanager = null;
+    InitialStateList initList = null;
+    InitialStateList inputList = null;
     GsRegulatoryGraph graph;
     List nodeOrder;
     String[] t_order;
@@ -45,7 +49,9 @@ public class GsSimulationParametersParser extends XMLHelper {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         paramLists = new GsSimulationParameterList(graph);
-        initList = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
+        imanager = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
+        initList = imanager.getInitialStates();
+        inputList = imanager.getInputConfigs();
     }
     
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -114,6 +120,9 @@ public class GsSimulationParametersParser extends XMLHelper {
                 if (qName.equals("initstates")) {
                     pos = POS_INITSTATES;
                     param.m_initState = new HashMap();
+                } else if (qName.equals("inputs")) {
+                    pos = POS_INPUTS;
+                    param.m_input = new HashMap();
                 } else if (qName.equals("mutant")) {
                     String s = attributes.getValue("value");
                     if (!s.trim().equals("")) {
@@ -145,17 +154,29 @@ public class GsSimulationParametersParser extends XMLHelper {
                 }
                 break;
             case POS_INITSTATES:
+            case POS_INPUTS:
                 if ("row".equals(qName)) {
                     String s = attributes.getValue("name");
                     if (s == null) {
                     	// old file, do some cleanup
-                    	int index = initList.add();
-                    	GsInitialState istate = (GsInitialState)initList.getElement(null, index);
-                    	istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
-                    	param.m_initState.put(istate, null);
+                    	if (pos == POS_INITSTATES) {
+                            int index = initList.add();
+                            GsInitialState istate = (GsInitialState)initList.getElement(null, index);
+                            istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
+                    	    param.m_initState.put(istate, null);
+                    	} else {
+                            int index = inputList.add();
+                            GsInitialState istate = (GsInitialState)inputList.getElement(null, index);
+                            istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
+                            param.m_input.put(istate, null);
+                    	}
                     } else {
-                    	// associate with the existing object
-                    	param.m_initState.put(initList.getInitState(s), null);
+                        // associate with the existing object
+                        if (pos == POS_INITSTATES) {
+                            param.m_initState.put(initList.getInitState(s), null);
+                        } else {
+                            param.m_input.put(inputList.getInitState(s), null);
+                        }
                     }
                 }
                 break;
@@ -183,6 +204,10 @@ public class GsSimulationParametersParser extends XMLHelper {
                     pos = POS_PARAM;
                 }
                 break;
+            case POS_INPUTS:
+                if (qName.equals("inputs")) {
+                    pos = POS_PARAM;
+                }
         }
     }
     /**

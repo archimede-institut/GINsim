@@ -76,8 +76,11 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
     public boolean isInput() {
         return isInput;
     }
-    public void setInput(boolean input) {
-        this.isInput = input;
+    public void setInput(boolean input, GsGraph graph) {
+        if (input != this.isInput) {
+            this.isInput = input;
+            graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
+        }
     }
 	/**
 	 * @return the max value of the node

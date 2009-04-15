@@ -15,6 +15,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.datastore.ValueList;
@@ -29,7 +30,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 	GsRegulatoryGraph graph;
 	Map m_info = new HashMap();
 	GsSMVexportConfig cfg;
-	GsInitialStateList initList;
+	InitialStateList initList;
 	
 	GsSMVExportConfigPanel editPanel = null;
 	private static final String RUNCMD = "NuSMV -dynamic ";
@@ -37,7 +38,7 @@ public class GsNuSMVChecker implements GsModelChecker {
 	public GsNuSMVChecker(String name, GsRegulatoryGraph graph) {
 		this.name = name;
 		this.graph = graph;
-	    this.initList = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
+	    this.initList = ((GsInitialStateList)graph.getObject(GsInitialStateManager.key, true)).getInitialStates();
 		this.cfg = new GsSMVexportConfig(graph);
 	}
 	

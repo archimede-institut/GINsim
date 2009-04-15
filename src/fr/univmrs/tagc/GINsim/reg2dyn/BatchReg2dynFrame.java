@@ -13,6 +13,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
@@ -145,7 +146,8 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
     }
 
     public static String nameState(int[] state, GsGraph graph) {
-        GsInitialStateList init = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
+        InitialStateList init = ((GsInitialStateList)graph.getObject(GsInitialStateManager.key, false)).getInitialStates();
+        // FIXME: adapt it to deal with input configs !!
         if (init != null && init.getNbElements(null) > 0) {
             List no = graph.getNodeOrder();
             for (int i=0 ; i<init.getNbElements(null) ; i++) {

@@ -20,6 +20,7 @@ public class GsSMVexportConfig implements GsInitialStateStore {
 
     GsRegulatoryGraph graph;
     Map m_initStates;
+    Map m_input;
     ObjectStore store = new ObjectStore();
     public GsRegulatoryMutantDef mutant;
     public int type;
@@ -47,5 +48,9 @@ public class GsSMVexportConfig implements GsInitialStateStore {
 
 	public Map getInitialState() {
 		return m_initStates;
-	}	
+	}
+
+    public Map getInputState() {
+        return m_input;
+    }	
 }

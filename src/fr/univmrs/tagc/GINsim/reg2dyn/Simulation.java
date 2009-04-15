@@ -61,7 +61,7 @@ public final class Simulation extends Thread implements Runnable {
 		breadthFirst = params.breadthFirst;
    		updater = SimulationUpdater.getInstance(regGraph, params);
    		if (useInit) {
-   		    initStatesIterator = new InitialStatesIterator(params.nodeOrder, params.m_initState);
+   		    initStatesIterator = new InitialStatesIterator(params.nodeOrder, params);
    		}
    		if (runNow) {
    		    start();
@@ -73,7 +73,8 @@ public final class Simulation extends Thread implements Runnable {
         start();
     }
     public void set_initialStates(List nodeOrder, Map m_initState) {
-        initStatesIterator = new InitialStatesIterator(nodeOrder, m_initState);
+        // FIXME: also allow to set input states
+        initStatesIterator = new InitialStatesIterator(nodeOrder, null, m_initState);
     }
 	public void interrupt() {
 		ready = false;

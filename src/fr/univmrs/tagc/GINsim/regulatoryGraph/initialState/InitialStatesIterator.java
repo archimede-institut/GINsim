@@ -9,23 +9,65 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 public class InitialStatesIterator implements Iterator {
 
-	Iterator helper;
-	Iterator helperIterator = null;
+	StatesIterator it_states;
+	Iterator it_input = null;
 	List nodeOrder;
-	
-	public InitialStatesIterator(List nodeOrder, Map m_initstates) {
+
+        
+	public InitialStatesIterator(List nodeOrder, GsInitialStateStore store) {
+	    this(nodeOrder, store.getInputState(), store.getInitialState());
+	}
+    public InitialStatesIterator(List nodeOrder, Map m_input, Map m_init) {
+        it_input = new StatesIterator(nodeOrder, m_input, null);
+        if (!it_input.hasNext()) {
+            System.out.println("input should at least one next!!");
+        }
+        it_states = new StatesIterator(nodeOrder, m_init, (int[])it_input.next());
+	}
+
+   public boolean hasNext() {
+        return it_states.hasNext();
+    }
+
+    public Object next() {
+        Object ret = it_states.next();
+        if (!it_states.hasNext() && it_input.hasNext()) {
+            it_states.reset((int[])it_input.next());
+        }
+        return ret;
+    }
+
+    public void remove() {
+        // not supported
+    }
+}
+
+class StatesIterator implements Iterator {
+    Iterator helper;
+    Iterator helperIterator = null;
+    List nodeOrder;
+    Map m_init;
+    int[] refLine;
+
+    public StatesIterator(List nodeOrder, Map m_initstates, int[] refLine) {
 		this.nodeOrder = nodeOrder;
-		if (m_initstates == null || m_initstates.size() < 1) {
-			List v = new ArrayList();
-			v.add(new GsInitialState());
-			helperIterator = v.iterator();
-		} else {
-			helperIterator = m_initstates.keySet().iterator();
-		}
-		helper = new Reg2DynStatesIterator(nodeOrder, 
-				((GsInitialState)helperIterator.next()).getMap());
+		this.m_init = m_initstates;
+		reset(refLine);
 	}
 	
+    public void reset(int[] refLine) {
+        this.refLine = refLine;
+        if (m_init == null || m_init.size() < 1) {
+            List v = new ArrayList();
+            v.add(new GsInitialState());
+            helperIterator = v.iterator();
+        } else {
+            helperIterator = m_init.keySet().iterator();
+        }
+        helper = new Reg2DynStatesIterator(nodeOrder, 
+                ((GsInitialState)helperIterator.next()).getMap(), refLine);
+    }
+    
 	public boolean hasNext() {
 		return helper.hasNext();
 	}
@@ -34,7 +76,7 @@ public class InitialStatesIterator implements Iterator {
 		Object ret = helper.next();
 		if (!helper.hasNext() && helperIterator != null && helperIterator.hasNext()) {
 			helper = new Reg2DynStatesIterator(nodeOrder,
-					((GsInitialState)helperIterator.next()).getMap());
+					((GsInitialState)helperIterator.next()).getMap(), refLine);
 		}
 		return ret;
 	}
@@ -58,7 +100,7 @@ final class Reg2DynStatesIterator implements Iterator {
 	int[][] line;
 	boolean goon;
 
-	public Reg2DynStatesIterator(List nodeOrder, Map m_line) {
+    public Reg2DynStatesIterator(List nodeOrder, Map m_line, int[] refLine) {
 		this.nodeOrder = nodeOrder;
         
 		line = new int[nodeOrder.size()][];
@@ -66,10 +108,15 @@ final class Reg2DynStatesIterator implements Iterator {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
 			List v_val = (List)m_line.get(vertex);
 			if (v_val == null || v_val.size() == 0) {
-				line[i] = new int[vertex.getMaxValue()+1];
-				for (int j=0 ; j<line[i].length ; j++) {
-					line[i][j] = j;
-				}
+			    if (refLine != null && refLine[i] == -1) {
+    				line[i] = new int[vertex.getMaxValue()+1];
+    				for (int j=0 ; j<line[i].length ; j++) {
+    					line[i][j] = j;
+    				}
+			    } else {
+                    line[i] = new int[1];
+                    line[i][0] = refLine == null ? -1 : refLine[i];
+                } 
 			} else {
 				line[i] = new int[v_val.size()];
 				for (int j=0 ; j<line[i].length ; j++) {

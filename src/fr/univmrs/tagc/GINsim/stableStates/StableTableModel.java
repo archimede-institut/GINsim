@@ -10,6 +10,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class StableTableModel extends AbstractTableModel {
@@ -107,9 +108,9 @@ public class StableTableModel extends AbstractTableModel {
 		updateMatches(graph);
 	}
 	private void updateMatches(GsGraph graph) {
-		GsInitialStateList initstates = null;
+		InitialStateList initstates = null;
 		if (graph != null) {
-			initstates = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
+			initstates = ((GsInitialStateList)graph.getObject(GsInitialStateManager.key, false)).getInitialStates();
 		}
 		if (initstates == null) {
 			matches = null;

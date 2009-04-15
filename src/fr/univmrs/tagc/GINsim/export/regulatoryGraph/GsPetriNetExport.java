@@ -193,8 +193,7 @@ public class GsPetriNetExport extends GsAbstractExport {
     	List nodeOrder = config.getGraph().getNodeOrder();
 		int len = nodeOrder.size();
 		// get the selected initial state
-		Iterator it_state = new InitialStatesIterator(nodeOrder,
-				((GsInitialStateStore)config.getSpecificConfig()).getInitialState());
+		Iterator it_state = new InitialStatesIterator(nodeOrder, ((GsInitialStateStore)config.getSpecificConfig()));
 		int[] t_state = (int[])it_state.next();
 
 		PNConfig specConfig = (PNConfig)config.getSpecificConfig();
@@ -334,10 +333,15 @@ class PNExportConfigPanel extends JPanel {
 
 class PNConfig implements GsInitialStateStore {
 
-	Map m_init = new HashMap();
+    Map m_init = new HashMap();
+    Map m_input = new HashMap();
 	ObjectStore store = new ObjectStore(2);
 
 	public Map getInitialState() {
 		return m_init;
 	}
+
+    public Map getInputState() {
+        return m_input;
+    }
 }

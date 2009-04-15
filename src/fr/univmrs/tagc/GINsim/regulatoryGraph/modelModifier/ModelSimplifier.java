@@ -15,6 +15,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.GsException;
@@ -313,25 +314,34 @@ public class ModelSimplifier extends Thread implements Runnable {
 			}
 			
 			// initial states
-			GsInitialStateList init = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
-			if (init != null && init.getNbElements(null) > 0) {
-				GsInitialStateList newInit = (GsInitialStateList)simplifiedGraph.getObject(GsInitialStateManager.key, true);
-				for (int i=0 ; i<init.getNbElements(null) ; i++) {
-					GsInitialState istate = (GsInitialState)init.getElement(null, i);
-					int epos = newInit.add();
-					GsInitialState newIstate = (GsInitialState)newInit.getElement(null, epos);
-					newIstate.setName(istate.getName());
-					m_alldata.put(istate, newIstate);
-					Map m_init = newIstate.getMap();
-					Iterator it_entry = istate.getMap().entrySet().iterator();
-					while (it_entry.hasNext()) {
-						Entry e = (Entry)it_entry.next();
-						Object o = copyMap.get(e.getKey());
-						if (o != null) {
-							m_init.put(o, e.getValue());
-						}
-					}
-				}
+            GsInitialStateList linit = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
+			if (!linit.isEmpty()) {
+    			GsInitialStateList newLinit = (GsInitialStateList)simplifiedGraph.getObject(GsInitialStateManager.key, true);
+                InitialStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
+                InitialStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};
+    
+    			for (int i=0 ; i<inits.length ; i++) {
+                    InitialStateList init = inits[i];
+                    InitialStateList newInit = newInits[i];
+        			if (init != null && init.getNbElements(null) > 0) {
+        				for (int j=0 ; j<init.getNbElements(null) ; j++) {
+        					GsInitialState istate = (GsInitialState)init.getElement(null, j);
+        					int epos = newInit.add();
+        					GsInitialState newIstate = (GsInitialState)newInit.getElement(null, epos);
+        					newIstate.setName(istate.getName());
+        					m_alldata.put(istate, newIstate);
+        					Map m_init = newIstate.getMap();
+        					Iterator it_entry = istate.getMap().entrySet().iterator();
+        					while (it_entry.hasNext()) {
+        						Entry e = (Entry)it_entry.next();
+        						Object o = copyMap.get(e.getKey());
+        						if (o != null) {
+        							m_init.put(o, e.getValue());
+        						}
+        					}
+        				}
+        			}
+    			}
 			}
 			
 			// priority classes definition and simulation parameters

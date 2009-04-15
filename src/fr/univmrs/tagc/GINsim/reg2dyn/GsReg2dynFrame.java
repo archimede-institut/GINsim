@@ -183,7 +183,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
             mainPanel.add(mutantPanel, c);
             
             // initial state
-            initStatePanel = new GsInitialStatePanel(this, paramList.graph.getNodeOrder(), paramList.imanager, true);
+            initStatePanel = new GsInitialStatePanel(this, paramList.graph, true);
             c = new GridBagConstraints();
             c.gridx = 0;
             c.gridy = 2;

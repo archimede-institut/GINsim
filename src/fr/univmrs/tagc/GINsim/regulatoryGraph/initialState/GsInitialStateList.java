@@ -1,31 +1,47 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.initialState;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
-public class GsInitialStateList extends SimpleGenericList implements GsGraphListener {
+public class GsInitialStateList implements GsGraphListener {
 	GsRegulatoryGraph graph;
-	
+
+	List nodeOrder;
+    List inputNodes = new ArrayList();
+    List normalNodes = new ArrayList();
+
+    final InitialStateList initialStates;
+    final InitialStateList inputConfigs;
+    
     public GsInitialStateList(GsGraph graph) {
         this.graph = (GsRegulatoryGraph)graph;
-    	prefix = "initState_";
-    	canAdd = true;
-    	canEdit = true;
-    	canRemove = true;
-    	canOrder = true;
+    	nodeOrder = graph.getNodeOrder();
         graph.addGraphListener(this);
+        updateLists();
+        
+        initialStates = new InitialStateList(normalNodes, false);
+        inputConfigs = new InitialStateList(inputNodes, true);
     }
 
-	protected Object doCreate(String name, int mode) {
-		GsInitialState i = new GsInitialState();
-		i.setName(name);
-		return i;
+	private void updateLists() {
+	    inputNodes.clear();
+	    normalNodes.clear();
+	    Iterator it = nodeOrder.iterator();
+	    while (it.hasNext()) {
+	        GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+	        if (vertex.isInput()) {
+	            inputNodes.add(vertex);
+	        } else {
+	            normalNodes.add(vertex);
+	        }
+	    }
 	}
 
 	public GsGraphEventCascade edgeAdded(Object data) {
@@ -41,6 +57,11 @@ public class GsInitialStateList extends SimpleGenericList implements GsGraphList
 	}
 
 	public GsGraphEventCascade vertexAdded(Object data) {
+	    if (((GsRegulatoryVertex)data).isInput()) {
+            inputNodes.add(data);
+        } else {
+            normalNodes.add(data);
+        }
 		return null;
 	}
 
@@ -49,75 +70,59 @@ public class GsInitialStateList extends SimpleGenericList implements GsGraphList
 	}
 
 	public GsGraphEventCascade vertexRemoved(Object data) {
-        // remove it from initial states
-    	Vector v = null;
-        for (int i=0 ; i<v_data.size() ; i++) {
-        	GsInitialState is = (GsInitialState)v_data.get(i);
-        	if (is.m.containsKey(data)) {
-        		is.m.remove(data);
-        		if (v == null) {
-        			v = new Vector();
-        		}
-        		v.add(is);
-            }
-        }
-        if (v != null) {
-        	return new InitialStateCascadeUpdate(v);
+	    // update lists
+        inputNodes.remove(data);
+        normalNodes.remove(data);
+        
+        List l_changes = new ArrayList();
+        initialStates.vertexRemoved(data, l_changes);
+        inputConfigs.vertexRemoved(data, l_changes);
+        if (l_changes.size() > 0) {
+            return new InitialStateCascadeUpdate(l_changes);
         }
         return null;
 	}
 
 	public GsGraphEventCascade vertexUpdated(Object data) {
-        // remove unavailable values from initial states
-        GsRegulatoryVertex vertex = (GsRegulatoryVertex)data;
-    	Vector v = null;
-        for (int i=0 ; i<v_data.size() ; i++) {
-        	GsInitialState is = (GsInitialState)v_data.get(i);
-            Vector v_val = (Vector)is.m.get(data);
-            if (v_val != null) {
-                for (int k=v_val.size()-1 ; k>-1 ; k--) {
-                    Integer val = (Integer)v_val.get(k);
-                    if (val.intValue() > vertex.getMaxValue()) {
-                        v_val.remove(k);
-                        if (v_val.size() == 0) {
-                        	is.m.remove(data);
-                        	if (is.m.isEmpty()) {
-                        		remove(null, new int[] {i});
-                        	}
-                        }
-                		if (v == null) {
-                			v = new Vector();
-                		}
-                		v.add(is);
-                    }
-                }
-            }
-        }
-        if (v != null) {
-        	return new InitialStateCascadeUpdate(v);
+        List l_changes = new ArrayList();
+	    // update lists
+	    if (((GsRegulatoryVertex)data).isInput() ? normalNodes.contains(data) : inputNodes.contains(data)) {
+	        updateLists();
+	        if (((GsRegulatoryVertex)data).isInput()) {
+	            initialStates.vertexRemoved(data, l_changes);
+	        } else {
+                inputConfigs.vertexRemoved(data, l_changes);
+	        }
+	    }
+        initialStates.vertexUpdated(data, l_changes);
+        inputConfigs.vertexUpdated(data, l_changes);
+        if (l_changes.size() > 0) {
+            return new InitialStateCascadeUpdate(l_changes);
         }
         return null;
 	}
 
-	public Object getInitState(String s) {
-    	for (int i=0 ; i<getNbElements(null) ; i++) {
-    		GsInitialState istate = (GsInitialState)getElement(null, i);
-    		if (istate.getName().equals(s)) {
-    			return istate;
-    		}
-    	}
-		return null;
-	}
-
 	public void endParsing() {
 	}
+
+    public boolean isEmpty() {
+        return inputConfigs.getNbElements() == 0 && initialStates.getNbElements() == 0;
+    }
+
+    public InitialStateList getInitialStates() {
+        return initialStates;
+    }
+
+    public InitialStateList getInputConfigs() {
+        return inputConfigs;
+    }
 }
 
 class InitialStateCascadeUpdate implements GsGraphEventCascade {
-    protected InitialStateCascadeUpdate(Vector v) {
+    protected InitialStateCascadeUpdate(List v) {
         this.v = v;
     }
-    Vector v;
+    List v;
 
     public String toString() {
         StringBuffer s = new StringBuffer("updated initial states:");
