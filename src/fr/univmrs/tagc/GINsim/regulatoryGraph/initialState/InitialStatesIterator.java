@@ -19,9 +19,6 @@ public class InitialStatesIterator implements Iterator {
 	}
     public InitialStatesIterator(List nodeOrder, Map m_input, Map m_init) {
         it_input = new StatesIterator(nodeOrder, m_input, null);
-        if (!it_input.hasNext()) {
-            System.out.println("input should at least one next!!");
-        }
         it_states = new StatesIterator(nodeOrder, m_init, (int[])it_input.next());
 	}
 

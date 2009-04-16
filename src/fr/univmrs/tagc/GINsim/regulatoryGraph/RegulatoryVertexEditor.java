@@ -48,7 +48,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		pinfo.addPosition(0, 2);
 		pinfo.addPosition(1, 2);
 		l_prop.add(pinfo);
-        pinfo = new GenericPropertyInfo(this, PROP_INPUT, Translator.getString("STR_input"), Boolean.class);
+        pinfo = new GenericPropertyInfo(this, PROP_INPUT, Translator.getString("STR_Fixed_input"), Boolean.class);
         l_prop.add(pinfo);
 
 		// build the group [note, parameter, function]

@@ -30,7 +30,7 @@ public class GsInitialStatePanel extends JPanel {
     
 	public GsInitialStatePanel(StackDialog dialog, GsInitialStateList imanager, boolean several) {
 	    initPanel = new StateListPanel(dialog, imanager.getInitialStates(), several, Translator.getString("STR_Initial_state"));
-	    inputPanel = new StateListPanel(dialog, imanager.getInputConfigs(), several, Translator.getString("STR_Inputs"));
+	    inputPanel = new StateListPanel(dialog, imanager.getInputConfigs(), several, Translator.getString("STR_Fixed_inputs"));
 	    setLayout(new GridBagLayout());
 	    GridBagConstraints c = new GridBagConstraints();
 	    c.weightx = c.weighty = 1;
