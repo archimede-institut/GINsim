@@ -1,8 +1,11 @@
 package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
+import java.awt.Color;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +19,9 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.common.document.DocumentStyle;
+import fr.univmrs.tagc.common.document.DocumentWriter;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * 
@@ -24,8 +30,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
  */
 public class InteractionAnalysis {
 	private boolean opt_annotate;
-	private boolean opt_verbose;
-	private StringBuffer log; //to output the results
 	private GsRegulatoryMutantDef mutant;
 
 	private GsRegulatoryGraph g;
@@ -37,6 +41,9 @@ public class InteractionAnalysis {
 	
 	private long before; //to know the time elapsed in the algorithm
 	private int i_leafs;
+	
+	private Report report;
+	private List currentPath, currentSource;
 	
 	static final int FUNC_NON = 1;
 	static final int FUNC_POSITIVE = 2;
@@ -52,22 +59,15 @@ public class InteractionAnalysis {
 	 * @param opt_color boolean indicating if the non functional edges should be colored in 'opt_color_inactive'.
 	 * @param opt_simplify boolean indicating if the non functional edges should be removed from the graph.
 	 * @param opt_annotate boolean indicating if the non functional edges should be annotated.
-	 * @param opt_verbose boolean indicating if we output more information like node order and logical functions.
+	 * @param opt_verbose boolean indicating if we out more information like node order and logical functions.
 	 * @param opt_color_inactive the Color for the non functional edges.
 	 */
-	public InteractionAnalysis(GsRegulatoryGraph  g, boolean opt_annotate, boolean opt_debug, GsRegulatoryMutantDef mutant) {
+	public InteractionAnalysis(GsRegulatoryGraph  g, boolean opt_annotate, GsRegulatoryMutantDef mutant) {
 		this.opt_annotate 		= opt_annotate;
-		this.opt_verbose 		= opt_debug;
 		this.mutant = mutant;
 		this.g = g;
 		this.gm = g.getGraphManager();
-		
-		log = new StringBuffer(1024);
-		log("Find inactive interactions on ");
-		log(g.getGraphName());
-		log(" (");
-		log(gm.getVertexCount());
-		log(" vertices)\n\n");
+		this.report = new Report();
 		run();
 	}
 
@@ -106,27 +106,27 @@ public class InteractionAnalysis {
 		selector = new InteractionAnalysisSelector();
 		selector.setCache(functionalityMap);
 	
-		if (opt_verbose) {
-			i = 0;
-			log("Node order : ");
-			for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {				//  For each vertex v in the graph
-				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-				log(v.getId()+"["+(i++)+"]:"+v.getMaxValue()+"  ");
-			}
-			log("\n\n");			
-		}
+//		if (opt_verbose) {
+//			i = 0;
+//			log("Node order : ");
+//			for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {				//  For each vertex v in the graph
+//				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+//				log(v.getId()+"["+(i++)+"]:"+v.getMaxValue()+"  ");
+//			}
+//			log("\n\n");			
+//		}
 		
 		node_in_subtree = new HashMap();
 		i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {					//  For each vertex v in the graph
-			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-			List l = gm.getIncomingEdges(v);												//  get the list l of incoming edges
+			GsRegulatoryVertex target = (GsRegulatoryVertex) it.next();
+			List l = gm.getIncomingEdges(target);												//  get the list l of incoming edges
 			OmddNode omdd = t_tree[i++];
 			
 			total_level = 1;																//  Compute the total number of level in the omdd tree
 			for (Iterator it2 = l.iterator(); it2.hasNext();) {
-				GsRegulatoryVertex vs = (GsRegulatoryVertex) ((GsJgraphDirectedEdge) it2.next()).getSourceVertex();
-				total_level *= vs.getMaxValue()+1;
+				GsRegulatoryVertex source = (GsRegulatoryVertex) ((GsJgraphDirectedEdge) it2.next()).getSourceVertex();
+				total_level *= source.getMaxValue()+1;
 			}
 			leafs = new int[total_level];
 			i_leafs = 0;
@@ -137,14 +137,14 @@ public class InteractionAnalysis {
 			small_node_order_level = new int[l.size()];
 			int m = 0;
 			for (Iterator it2 = nodeOrder.iterator(); it2.hasNext();) {
-				GsRegulatoryVertex vs = (GsRegulatoryVertex) it2.next();				
-				if (gm.getEdge(vs, v) != null) {
-					node_in_subtree.put(vs, new Integer(m));
+				GsRegulatoryVertex source = (GsRegulatoryVertex) it2.next();				
+				if (gm.getEdge(source, target) != null) {
+					node_in_subtree.put(source, new Integer(m));
 					subtree_size[m+1] = 1;
-					small_node_order_vertex[m] = vs;
-					small_node_order_level[m] = ((Integer)node_to_position.get(vs)).intValue();
+					small_node_order_vertex[m] = source;
+					small_node_order_level[m] = ((Integer)node_to_position.get(source)).intValue();
 					for (int n = 0; n < m; n++) {
-						subtree_size[n+1] *= (vs.getMaxValue()+1);
+						subtree_size[n+1] *= (source.getMaxValue()+1);
 					}
 					m++;
 				}
@@ -154,14 +154,13 @@ public class InteractionAnalysis {
 
 			for (Iterator it2 = l.iterator(); it2.hasNext();) {									//	For each incoming edge
 				GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge) ((GsJgraphDirectedEdge)it2.next()).getUserObject();
-				GsRegulatoryVertex vs = (GsRegulatoryVertex) me.getSourceVertex();
+				GsRegulatoryVertex source = (GsRegulatoryVertex) me.getSourceVertex();
 				for (int k = 0; k < me.getEdgeCount(); k++) {									// 		For each sub-edge of the multiedge
 					GsRegulatoryEdge e = me.getEdge(k);
-					if (opt_verbose) {
-						log(e.getShortInfo()+"->"+v.getId()+" : \n");
-						log("  Decision diagram :  "+omdd+"\n");
-					}
-					int functionality = computeFunctionality(vs.getMaxValue()+1, ((Integer)node_in_subtree.get(vs)).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
+					SourceItem sourceItem = report.reportFor(target, source, e.threshold);
+					currentSource = sourceItem.reportItems;
+					int functionality = computeFunctionality(source.getMaxValue()+1, ((Integer)node_in_subtree.get(source)).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
+					sourceItem.sign = (short) functionality;
 					String res;
 					if (functionality == FUNC_POSITIVE) {
 						res = "positive";
@@ -180,11 +179,6 @@ public class InteractionAnalysis {
 						functionalityMap.put(e.me, InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
 
 					}
-					if (opt_verbose) {
-						log("is "+res+"\n\n");
-					} else {
-						log(e.getShortInfo()+"->"+v.getId()+" is "+res+"\n");
-					}
 					if (opt_annotate) {
 						for (int j = 0; j < ((GsRegulatoryMultiEdge) e.me.getUserObject()).getEdgeCount(); j++) {
 							((GsRegulatoryMultiEdge) e.me.getUserObject()).getGsAnnotation(j).appendToComment("This edge is "+res+"\n");
@@ -195,11 +189,7 @@ public class InteractionAnalysis {
 			}
 		}
 				
-		if (opt_verbose) {
-			log("\nTime elapsed : ");
-			log((new Date()).getTime()-before);
-			log(" milliseconds.");
-		}
+		report.timeSpent = ((new Date()).getTime()-before);
 	}
 	/**
 	 * 
@@ -307,35 +297,41 @@ public class InteractionAnalysis {
 	private int computeFunctionality(int count_childs, int node_index, int[] leafs, int[] subtree_size_t, GsRegulatoryVertex[] small_node_order) {
 		int size_of_subtree = subtree_size_t[node_index+1];
 		
-		if (opt_verbose) {
-			log("  Leafs ");
-			print_t(leafs);
-		}		
+		ReportItem ri = null;
 		int res = FUNC_NON;
+		boolean containsPositive = false, containsNegative = false;
+		
 		int index = 0;
 		while (index+size_of_subtree < leafs.length) {
 			for (int i_childs = 0; i_childs < count_childs - 1; i_childs++) {
 				for (int i_subtree = 0; i_subtree < size_of_subtree; i_subtree++) {
 					int low = leafs[index];
 					int high = leafs[index+size_of_subtree];
-					if (opt_verbose) {
-						log("  "+(low==high?"=":(low>high?"-":"+"))+" ("+low+"/"+high+", "+index+"/"+(index+size_of_subtree)+") for state ");
-						log_path(index, node_index, subtree_size_t, small_node_order);
-						log("\n");
-					}
+					
+					ri = new ReportItem();
+					ri.valL = (short) low;
+					ri.valR = (short) high;
+					currentPath = new LinkedList();
+					log_path(index, node_index, subtree_size_t, small_node_order);
+					
 					if (low < high) {
-						if (res == FUNC_NEGATIVE) return FUNC_DUAL;
-						else res = FUNC_POSITIVE;
+						containsPositive = true;
+						res = FUNC_POSITIVE;
 					} else if (low > high) {
-						if (res == FUNC_POSITIVE) return FUNC_DUAL;
-						else res = FUNC_NEGATIVE;
+						containsNegative = true;
+						res = FUNC_NEGATIVE;
+					} else {
+						res = FUNC_NON;
 					}
 					index++;
+					ri.sign = (short) res;
+					ri.path = currentPath;
+					currentSource.add(ri);
 				}
 			}
 			index+=size_of_subtree;
 		}
-
+		if (containsNegative && containsPositive) res = FUNC_DUAL;
 		return res;
 	}
 
@@ -352,55 +348,174 @@ public class InteractionAnalysis {
 		while (k >= 0) {
 			GsRegulatoryVertex v = small_node_order[k];
 			int count = index/subtree_size_t[k+1]%(v.getMaxValue()+1);
-			if (k == node_index) log(v.getId()+":"+count+"/"+(count+1)+" ");
-			else log(v.getId()+":"+count+" ");
+			PathItem pi = new PathItem();
+			pi.valL = (short) count;
+			pi.vertex = v;
+			if (k == node_index) {
+				pi.valR = (short) (count+1);
+			} 
+			currentPath.add(pi);
 			k--;
 		}
 	}
 
-	/**
-	 * append the string 's' to the log
-	 * @param s
-	 */
-	private void log(String s) {
-		log.append(s);
-	}
-
-	/**
-	 * append the long l to the log
-	 * @param l
-	 */
-	private void log(long l) {
-		log.append(l);
-	}
-
-	/**
-	 * append the int i to the log
-	 * @param i
-	 */
-	private void log(int i) {
-		log.append(i);
-	}
-
-	/**
-	 * get the content of the log
-	 */
-	public StringBuffer getLog() {
-		return log;
-	}
 	
 	protected void finalize() {
 		if (functionalityMap != null) {
 			if (selector != null) selector.flush(); //remove nonFunctionalInteractions from the cache.
 		}
 	}
-	
-	private void print_t(int[] t) {
-		log("[");
-		for (int i = 0; i < t.length - 1; i++) {
-			log(t[i]+", ");
-		}
-		log(t[t.length - 1]+"]\n");
+
+	public void saveReport(DocumentWriter dw) throws IOException {	
+		final String STYLE_POSITIVE = "positive"; 
+		final String STYLE_NEGATIVE = "negative"; 
+		final String STYLE_NONFUNCTIONAL = "nonFunctional"; 
+		final String STYLE_DUAL = "dual"; 
+		
+		DocumentStyle style = new DocumentStyle();
+		style.addStyle(STYLE_POSITIVE);
+		style.addProperty(DocumentStyle.COLOR, new Color(67, 200, 75));
+		style.addStyle(STYLE_NEGATIVE);
+		style.addProperty(DocumentStyle.COLOR, new Color(246, 57, 53));
+		style.addStyle(STYLE_NONFUNCTIONAL);
+		style.addProperty(DocumentStyle.COLOR, new Color(230, 230, 0));
+		style.addStyle(STYLE_DUAL);
+		style.addProperty(DocumentStyle.COLOR, new Color(16, 0, 255));
+		dw.setStyles(style);
+		
+		dw.startDocument();
+			dw.openHeader(1, Translator.getString("STR_interactionAnalysis"), null);
+			dw.openParagraph(null);
+				dw.writeTextln("Analizing interactions of "+g.getGraphName()+" ("+gm.getVertexCount()+" vertices)");
+			dw.closeParagraph();
+			dw.openHeader(2, "Report", null);
+			dw.openList(null);
+			for (Iterator it_target = report.iterator(); it_target.hasNext();) {
+				GsRegulatoryVertex target = (GsRegulatoryVertex) it_target.next();
+				dw.openListItem(null);
+				dw.openParagraph(null);
+				dw.writeText(target.getName());
+				dw.closeParagraph();
+				dw.openList(null);
+				for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
+					SourceItem sourceItem = (SourceItem) it_sources.next();
+					dw.openListItem(null);
+					if (sourceItem.sign == InteractionAnalysis.FUNC_NON) {
+						dw.openParagraph(STYLE_NONFUNCTIONAL);
+						dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+						dw.writeText("non functional.");
+					} else if (sourceItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
+						dw.openParagraph(STYLE_POSITIVE);
+						dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+						dw.writeText("positive.");
+					} else if (sourceItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
+						dw.openParagraph(STYLE_NEGATIVE);
+						dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+						dw.writeText("negative.");
+					} else {
+						dw.openParagraph(STYLE_DUAL);
+						dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+						dw.writeText("dual.");
+					}
+					dw.closeParagraph();
+					dw.openList(null);
+					for (Iterator it_report = sourceItem.reportItems.iterator(); it_report.hasNext();) {
+						ReportItem reportItem = (ReportItem) it_report.next();
+						dw.openListItem(null);
+						if (reportItem.sign == InteractionAnalysis.FUNC_NON) {
+							dw.openParagraph(STYLE_NONFUNCTIONAL);
+							dw.writeText("Non functional ");
+						} else if (reportItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
+							dw.openParagraph(STYLE_POSITIVE);
+							dw.writeText("Positive       ");
+						} else if (reportItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
+							dw.openParagraph(STYLE_NEGATIVE);
+							dw.writeText("Negative       ");
+						} else {
+							dw.openParagraph(STYLE_DUAL);
+							dw.writeText("Dual           ");
+						}
+						dw.writeText(" : the level of "+sourceItem.source.getName()+" goes from "+reportItem.valL+" to "+reportItem.valR+" for path ");
+						for (Iterator it_path = reportItem.path.iterator(); it_path.hasNext();) {
+							PathItem pathItem = (PathItem) it_path.next();
+							if (pathItem.valR == -1) {
+								dw.writeText(pathItem.vertex.getName()+"="+pathItem.valL+" ");
+							} else {
+								dw.writeText(pathItem.vertex.getName()+"="+pathItem.valL+"/"+pathItem.valR+" ");
+							}
+						}
+						dw.closeParagraph();
+					}
+					dw.closeList();
+				}
+				dw.closeList();
+			}
+			dw.closeList();	
+		dw.close();
 	}
 
+}
+
+class SourceItem {
+	List reportItems = new LinkedList();
+	GsRegulatoryVertex source;
+	short level;
+	short sign;
+}
+
+class PathItem {
+	short valL, valR = -1;
+	GsRegulatoryVertex vertex;
+}
+
+class ReportItem {
+	short valL, valR, sign;
+	List path;
+}
+
+
+/**
+ * {
+ *   target :=> [
+ *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....),
+ *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....),
+ *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....)
+ *              ],
+ *   target :=> [
+ *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....),
+ *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....),
+ *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....)
+ *              ]
+ * }
+ * 
+ * 
+ *
+ */
+class Report {
+	public long timeSpent;
+	private Map report;
+	public Report() {
+		report = new HashMap();
+	}
+	
+	public Iterator iterator() {
+		return report.keySet().iterator();
+	}
+
+	public SourceItem reportFor(GsRegulatoryVertex target, GsRegulatoryVertex source, short level) {
+		List l = (List) report.get(target);
+		if (l == null) {
+			l = new LinkedList();
+			report.put(target, l);
+		}
+		SourceItem si = new SourceItem();
+		si.source = source;
+		si.level = level;
+		l.add(si);
+		return si;
+	}
+	
+	public List get(GsRegulatoryVertex target) {
+		return (List) report.get(target);
+	}
 }

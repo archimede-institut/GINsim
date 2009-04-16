@@ -8,14 +8,14 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
  */
 public final class GsDynamicNode {
 	/** each int is the state of the corresponding gene in the regulatory graph (according to nodeOrder). */
-	public final int[] state;
+	public final short[] state;
 	/** if this is a stable node, default to false */
 	private boolean stable = false;
 
 	/**
 	 * @param state
 	 */
-	public GsDynamicNode(int[] state) {
+	public GsDynamicNode(short[] state) {
 		this.state = state;
 	}
 	/**
@@ -24,9 +24,9 @@ public final class GsDynamicNode {
 	 * @param value
 	 */
 	public GsDynamicNode (String value) {
-		state = new int[value.length()-1];
+		state = new short[value.length()-1];
 		for (int i=0 ; i<state.length ; i++) {
-			state[i] = value.charAt(i+1) - '0';
+			state[i] = (short) (value.charAt(i+1) - '0');
 		}
 	}
 	/**
@@ -66,7 +66,7 @@ public final class GsDynamicNode {
 		if (!(obj instanceof GsDynamicNode)) {
 			return false;
 		}
-		int[] ostate = ((GsDynamicNode)obj).state;
+		short[] ostate = ((GsDynamicNode)obj).state;
 		if (ostate.length != state.length) {
 			return false;
 		}

@@ -4,8 +4,8 @@ import fr.univmrs.tagc.GINsim.annotation.Annotation;
 
 
 public class GsRegulatoryEdge {
-	short threshold;
-	short sign;
+	public short threshold;
+	public short sign;
 	
 	public short index;
 	public GsRegulatoryMultiEdge me;

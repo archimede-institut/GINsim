@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.dynamicGraph;
+package fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph;
 
 import java.io.File;
 import java.util.Map;
@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
-
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
@@ -16,55 +15,73 @@ import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
- * descriptor for dynamic (state transition) graphs.
+ * descriptor for dynamic hierarchical graphs.
  */
-public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
-
-    private static Vector v_layout = null;
-    private static Vector v_export = null;
-    private static Vector v_action = null;
+public class GsDynamicalHierarchicalGraphDescriptor implements GsGraphDescriptor {
     private static GsFileFilter ffilter = null;
-
-    private static GsDynamicGraphDescriptor instance = null;
-    private static Vector v_OManager;
+    private static GsDynamicalHierarchicalGraphDescriptor instance = null;
     
-    public String getGraphType() {
-        return "dynamic";
-    }
+	private static Vector v_layout = null;
+	private static Vector v_export = null;
+	private static Vector v_action = null;
+	private static Vector v_OManager = null;
 
-    public String getGraphName() {
-        return "STR_dynamic";
-    }
-
-    public String getGraphDescription() {
-        return Translator.getString("STR_dynamic graph");
-    }
-
-    public boolean canCreate() {
-        return false;
-    }
-
-    /**
-     * @see fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor#getNew(fr.univmrs.tagc.GINsim.gui.GsMainFrame)
-     * 
-     * can't interactively create a dynamic graph => disabled
-     */
-    public GsGraph getNew(GsMainFrame m) {
-    		return null;
-    }
-
-	public GsGraph open(File file) {
-		return new GsDynamicGraph(null, file);
+	public boolean canCreate() {
+		return false;
 	}
 
 	public FileFilter getFileFilter() {
 	    if (ffilter == null) {
 	        ffilter = new GsFileFilter();
-	        ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
+	        ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
 	    }
 		return ffilter;
 	}
 
+	public String getGraphDescription() {
+		return Translator.getString("STR_dynamicalHierarchical graph");
+	}
+
+	public ImageIcon getGraphIcon(int mode) {
+		return null;
+	}
+
+	public String getGraphName() {
+        return "STR_dynamicalHierarchical";
+	}
+
+	public String getGraphType() {
+		return "dynamicalHierarchicalGraph";
+	}
+
+    /**
+     * @see fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor#getNew(fr.univmrs.tagc.GINsim.gui.GsMainFrame)
+     * 
+     * can't interactively create a dynamic hierarchical graph => disabled
+     */
+	public GsGraph getNew(GsMainFrame m) {
+		return null;
+	}
+
+	public GsGraph open(File file) {
+		return new GsDynamicalHierarchicalGraph(null, file);
+	}
+
+	public GsGraph open(Map map, File file) {
+		return new GsDynamicalHierarchicalGraph(map, file);
+
+	}
+	
+	/**
+     * @return an instance of this graphDescriptor.
+     */
+    public static GsGraphDescriptor getInstance() {
+        if (instance == null) {
+            instance = new GsDynamicalHierarchicalGraphDescriptor();
+        }
+        return instance;
+    }
+    
 	/**
 	 * @param layout
 	 */
@@ -75,7 +92,7 @@ public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
 		v_layout.add(layout);
 	}
 	/**
-	 * @return a list of avaible layouts.
+	 * @return a list of available layouts.
 	 */
 	public static Vector getLayout() {
 		return v_layout;
@@ -91,13 +108,14 @@ public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
 		v_export.add(export);
 	}
 	/**
-	 * @return a list of avaible export filters.
+	 * @return a list of available export filters.
 	 */
 	public static Vector getExport() {
 		return v_export;
 	}
 
 	/**
+	 * 
 	 * @param action
 	 */
 	public static void registerActionProvider(GsActionProvider action) {
@@ -107,7 +125,7 @@ public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
 		v_action.add(action);
 	}
 	/**
-	 * @return a list of avaible actions.
+	 * @return a list of available actions.
 	 */
 	public static Vector getAction() {
 		return v_action;
@@ -122,27 +140,11 @@ public class GsDynamicGraphDescriptor implements GsGraphDescriptor {
         v_OManager.add(manager);
     }
     /**
-     * @return associated object manager
+     * @return associates object managers
      */
     public static Vector getObjectManager() {
         return v_OManager;
     }
 
-	public ImageIcon getGraphIcon(int mode) {
-		return null;
-	}
 
-    /**
-     * @return an instance of this graphDescriptor.
-     */
-    public static GsGraphDescriptor getInstance() {
-        if (instance == null) {
-            instance = new GsDynamicGraphDescriptor();
-        }
-        return instance;
-    }
-
-    public GsGraph open(Map map, File file) {
-		return new GsDynamicGraph(map, file);
-    }
 }

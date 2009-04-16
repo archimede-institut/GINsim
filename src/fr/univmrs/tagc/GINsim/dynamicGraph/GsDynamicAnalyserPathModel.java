@@ -39,9 +39,9 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
             v = new ArrayList(2);
         }
         if (v.size() == 0 ) {
-            v.add(new int[len]);
-            v.add(new int[len]);
-            if (gmanager.containsVertex(new GsDynamicNode((int[])v.get(0)))) {
+            v.add(new short[len]);
+            v.add(new short[len]);
+            if (gmanager.containsVertex(new GsDynamicNode((short[])v.get(0)))) {
                 v_in.add(Boolean.TRUE);
                 v_in.add(Boolean.TRUE);
                 nbBad = 0;
@@ -64,15 +64,15 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
     }
     public Object getValueAt(int row, int column) {
         if (row < v.size() && column < len) {
-            return ""+((int[])v.get(row))[column];
+            return ""+((short[])v.get(row))[column];
         }
         return null;
     }
     public void setValueAt(Object aValue, int row, int column) {
         if (aValue != null && aValue instanceof String && row < v.size() && column < len) {
-            int[] t = (int[])v.get(row);
+        	short[] t = (short[])v.get(row);
             try {
-                t[column] = Integer.parseInt((String)aValue);
+                t[column] = Short.parseShort((String)aValue);
                 if (gmanager.containsVertex(new GsDynamicNode(t))) {
                     if (v_in.get(row).equals(Boolean.FALSE)) {
                         nbBad--;
@@ -106,7 +106,7 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
             return;
         }
 
-        v.add(index+1, ((int[])v.get(index)).clone());
+        v.add(index+1, ((short[])v.get(index)).clone());
         v_in.add(index+1, v_in.get(index));
         if (v_in.get(index).equals(Boolean.FALSE)) {
             nbBad++;

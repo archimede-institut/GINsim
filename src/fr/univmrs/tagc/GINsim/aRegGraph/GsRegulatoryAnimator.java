@@ -74,7 +74,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     /**
      * @param frame
      * @param regGraph
-     * @param dynGraph
+     * @param dynHieGraph
      */
     private GsRegulatoryAnimator(JFrame frame, GsRegulatoryGraph regGraph, GsDynamicGraph dynGraph) {
         this.frame = frame;
@@ -185,7 +185,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
      * 
      * @param state
      */
-    protected void colorizeGraph(int[] state) {
+    protected void colorizeGraph(short[] state) {
         if (state == null || state.length != nodeOrder.size()) {
             return;
         }

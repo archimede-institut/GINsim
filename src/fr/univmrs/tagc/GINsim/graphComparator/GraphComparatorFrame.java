@@ -64,7 +64,6 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 
 	public GraphComparatorFrame(JFrame frame, GsGraph graph) {
 		super(frame, Translator.getString("STR_gcmp"), 800, 600);
-		this.frame = frame;
 		this.graph = graph;
         this.frame = frame;
         initialize();
@@ -262,6 +261,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
        int returnVal = getJfc().showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jfc.getSelectedFile();
+            OptionStore.setOption("currentDirectory", file.getParent());
             textField.setText(file.getCanonicalPath().toString());
         }
 	}

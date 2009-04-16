@@ -258,4 +258,16 @@ public class LogicalParameterList extends ArrayList {
 
 		return true;
 	}
+	
+	/**
+	 * Apply all the logical parameters from this list to the clone vertex (from the new graph)
+	 * @param clone the vertex from the new graph
+	 * @param copyMap a map of multi-edge from the old graph to the new one.
+	 */
+	public void applyNewGraph(GsRegulatoryVertex clone, Map copyMap) {
+		for (Iterator it = iterator(); it.hasNext();) {
+			GsLogicalParameter param = (GsLogicalParameter)it.next();
+			param.applyNewGraph(clone, copyMap);
+		}
+	}
 }

@@ -42,7 +42,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private GsGraph g;
 	private JPanel mainPanel;
 	private JTextArea resultsPane;
-	private JRadioButton diffColor, specG1Color, specG2Color, intersectColor, exclusionColor;
+	private JRadioButton diffColor, specG1Color, specG2Color, intersectColor, exclusionColor, fusionColor1, fusionColor2;
 	private GraphComparator gc;
 	private CascadingStyle cs;
 	private JButton automaticRoutingButton;
@@ -216,18 +216,18 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		
 		radioPanel.add(new JLabel(Translator.getString("STR_gcmp_captionRadio")+" : "));
 
-		String name = Translator.getString("STR_gcmp_setcolor_before")+Translator.getString("STR_gcmp_diffGraph")+".";
+		String name = Translator.getString("STR_gcmp_legendColor")+".";
 	    diffColor = new JRadioButton(name);
 	    diffColor.setActionCommand(name);
 	    diffColor.setSelected(true);
 	    radioPanel.add(diffColor);
 
-		name = Translator.getString("STR_gcmp_setcolor_before")+gc.g1m.getGsGraph().getGraphName()+".";
+		name = Translator.getString("STR_gcmp_specificTo")+gc.g1m.getGsGraph().getGraphName()+".";
 	    specG1Color = new JRadioButton(name);
 	    specG1Color.setActionCommand(name);
 	    radioPanel.add(specG1Color);
 
-		name = Translator.getString("STR_gcmp_setcolor_before")+gc.g2m.getGsGraph().getGraphName()+".";
+		name = Translator.getString("STR_gcmp_specificTo")+gc.g2m.getGsGraph().getGraphName()+".";
 	    specG2Color = new JRadioButton(name);
 	    specG2Color.setActionCommand(name);
 	    radioPanel.add(specG2Color);
@@ -242,6 +242,16 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		exclusionColor.setActionCommand(name);
 	    radioPanel.add(exclusionColor);
 
+		name = Translator.getString("STR_gcmp_fusion1");
+		fusionColor1 = new JRadioButton(name);
+		fusionColor1.setActionCommand(name);
+	    radioPanel.add(fusionColor1);
+
+		name = Translator.getString("STR_gcmp_fusion2");
+		fusionColor2 = new JRadioButton(name);
+		fusionColor2.setActionCommand(name);
+	    radioPanel.add(fusionColor2);
+
 	    //Group the radio buttons.
 	    ButtonGroup group = new ButtonGroup();
 	    group.add(diffColor);
@@ -249,6 +259,8 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	    group.add(specG2Color);
 	    group.add(intersectColor);
 	    group.add(exclusionColor);
+	    group.add(fusionColor1);
+	    group.add(fusionColor2);
 
 	    //Register a listener for the radio buttons.
 	    diffColor.addActionListener(this);
@@ -256,6 +268,8 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	    specG2Color.addActionListener(this);
 	    intersectColor.addActionListener(this);
 	    exclusionColor.addActionListener(this);
+	    fusionColor1.addActionListener(this);
+	    fusionColor2.addActionListener(this);
 
 		return radioPanel;
 	}
@@ -286,6 +300,12 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 				else if (is.v2 != null) style = null;
 			} else if (source == intersectColor){
 				if (is.v1 != null && is.v2 != null) style = is.v1;
+			} else if (source == fusionColor1) {
+				style = is.v1;
+				if (style == null) style = is.v2;
+			} else if (source == fusionColor2) {
+				style = is.v2;
+				if (style == null) style = is.v1;
 			}
 			if (o.getClass() == GsRegulatoryMultiEdge.class || o.getClass() == GsJgraphDirectedEdge.class || o.getClass() == GsDirectedEdge.class ) { 	//edge
 				ereader.setEdge(o);

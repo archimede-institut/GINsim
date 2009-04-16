@@ -91,7 +91,6 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
         setMessage(Translator.getString("STR_wait_msg"));
         bcancel.setText(Translator.getString("STR_abort"));
 
-        isrunning = true;
         curParam = 0;
         endSimu(null);
     }
@@ -119,7 +118,6 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
             curParam++;
             endSimu(null);
         } else {
-            isrunning = false;
             bcancel.setText(Translator.getString("STR_close"));
         }
     }
@@ -128,7 +126,7 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
      * close the frame, eventually end the simulation first 
      */
     protected void cancel() {
-        if (isrunning  && sim != null) {
+        if (sim != null) {
             sim.interrupt();    
         }
         paramList.graph.removeBlockEdit(this);
@@ -137,7 +135,7 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
     
     public void addStableState(SimulationQueuedState item) {
         super.addStableState(item);
-        int[] stable = item.state;
+        short[] stable = item.state;
         String name = nameState(stable, paramList.graph);
         result.append("   " + name + ": ");
         for (int i=0 ; i<stable.length ; i++) {
@@ -146,7 +144,7 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
         result.append("\n");
     }
 
-    public static String nameState(int[] state, GsGraph graph) {
+    public static String nameState(short[] state, GsGraph graph) {
         InitialStateList init = ((GsInitialStateList)graph.getObject(GsInitialStateManager.key, false)).getInitialStates();
         // FIXME: adapt it to deal with input configs !!
         if (init != null && init.getNbElements(null) > 0) {

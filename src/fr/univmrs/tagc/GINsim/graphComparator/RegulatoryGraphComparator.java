@@ -1,9 +1,11 @@
 package fr.univmrs.tagc.GINsim.graphComparator;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
@@ -11,11 +13,11 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 /**
@@ -26,12 +28,14 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
  */
 public class RegulatoryGraphComparator extends GraphComparator {
 	public static final Color COMMON_COLOR_DIFF_FUNCTIONS = new Color(0, 0, 255);
-	public static final Color COMMON_COLOR_DIFF_MAXVALUES = new Color(115, 194, 251);
+	public static final Color COMMON_COLOR_DIFF_MAXVALUES = new Color(115, 194, 220);
 	private GsRegulatoryGraph g, g1, g2; //g is the graph merging g1 and g2, the graphs to compare.
 	/**
 	 * indicates if the node order of both graph is the same.
 	 */
 	private boolean sameNodeOrder;
+	private List logicalFunctionPending;
+	private Map meMap;
 
 	public RegulatoryGraphComparator(GsGraph g1, GsGraph g2, GsGraph g) {
         if (g  == null || !(g  instanceof GsRegulatoryGraph))  return;
@@ -43,6 +47,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
        	
 		g1m = g1.getGraphManager(); g2m = g2.getGraphManager(); gm = g.getGraphManager();
 		stylesMap = new HashMap();
+		logicalFunctionPending = new ArrayList();
+		
 		sameNodeOrder = compareNodeOrder();
 		if (!sameNodeOrder) {
 			String comment = "diff: The node order is the same for both graph";
@@ -66,6 +72,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	public void buildDiffGraph() {
 		super.buildDiffGraph();
 		
+		meMap = new HashMap();
 		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
 		for (Iterator it = gm.getEdgeIterator(); it.hasNext();) {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();
@@ -89,7 +96,12 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			}
 			log(comment+"\n");
 			if (e1 != null && e2 != null) compareEdges((GsRegulatoryMultiEdge)e1.getUserObject(), (GsRegulatoryMultiEdge)e2.getUserObject());
+			if (e1 != null) meMap.put((GsRegulatoryMultiEdge)e1.getUserObject(),me);
+			else if (e2 != null) meMap.put((GsRegulatoryMultiEdge)e2.getUserObject(),me);
 		}
+		setAllLogicalFunctions();
+		meMap = null;
+		logicalFunctionPending = null;
 	}
 	
 	protected void setVerticesColor() {
@@ -151,7 +163,11 @@ public class RegulatoryGraphComparator extends GraphComparator {
 				GsRegulatoryMultiEdge me1 = (GsRegulatoryMultiEdge)e1.getUserObject();
 				String tid = ((GsRegulatoryVertex)e1.getTargetVertex()).getId();
 				GsRegulatoryVertex target = (GsRegulatoryVertex) gm.getVertexByName(tid);
-			
+				GsRegulatoryVertex source = (GsRegulatoryVertex) gm.getVertexByName(id);
+				
+				if (gm.getEdge(source, target) != null) {
+					continue;
+				}
 				for (int i = 0; i < me1.getEdgeCount(); i++) {
 					e = g.addNewEdge(id, tid, (short)me1.getMin(i) , (short)me1.getSign(i));
 				}
@@ -228,16 +244,18 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 * @param g_source
 	 */
 	private void setLogicalFunction(GsRegulatoryVertex v, GsRegulatoryVertex v_source, GsGraph g_source) { //TODO : do we really want to do that ?
-//		OmddNode omdd = v.getTreeParameters(g);
-//		OmddNode omdd1 = (OmddNode) v_source.getTreeParameters((GsRegulatoryGraph) g_source).clone();
-//		omdd.level = omdd1.level;
-//		omdd.min = omdd1.min;
-//		omdd.max = omdd1.max;
-//		omdd.value = omdd1.value;
-//		System.out.println(omdd);
-//		omdd.merge(omdd1, OmddNode.OR);
-//		System.out.println(omdd);
-//		System.out.println(omdd1);
+		GsRegulatoryVertex[] t = new GsRegulatoryVertex[2];
+		t[0] = v;
+		t[1] = v_source;
+		logicalFunctionPending.add(t);
+	}
+	
+	private void setAllLogicalFunctions() {
+		for (Iterator it = logicalFunctionPending.iterator(); it.hasNext();) {
+			GsRegulatoryVertex[] t = (GsRegulatoryVertex[]) it.next();
+			LogicalParameterList lpl = t[1].getV_logicalParameters();
+			lpl.applyNewGraph(t[0], meMap);			
+		}
 	}
 	
 

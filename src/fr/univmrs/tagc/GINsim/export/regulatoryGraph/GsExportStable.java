@@ -93,13 +93,13 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 	    		
 	    		int i;
 	    		List v_no = cfg.graph.getNodeOrder();
-	    		int[] checked = tableModel.getCheckedRow();
+	    		short[] checked = tableModel.getCheckedRow();
 	    		s.append("SPEC EF ( AG (");
 	    		for ( i=0; i<checked.length-1 ;i++) {
-	    		s.append(v_no.get(i));
-	    		s.append(".level = ");
-	    		s.append(checked[i]);
-	    		s.append(" & ");
+		    		s.append(v_no.get(i));
+		    		s.append(".level = ");
+		    		s.append(checked[i]);
+		    		s.append(" & ");
 	    		}
 	    		s.append(v_no.get(i));
 	    		s.append(".level = ");
@@ -113,10 +113,10 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 		    	checked = tableModel.getCheckedRow();
 		    	s.append("SPEC EF ( AG (");
 		    	for ( i=0; i<checked.length-1 ;i++) {
-		    	s.append(v_no.get(i));
-		    	s.append(" = ");
-		    	s.append(checked[i]);
-		    	s.append(" & ");
+			    	s.append(v_no.get(i));
+			    	s.append(" = ");
+			    	s.append(checked[i]);
+			    	s.append(" & ");
 		    	}
 		    	s.append(v_no.get(i));
 		    	s.append(" = ");
@@ -130,10 +130,10 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 		    	checked = tableModel.getCheckedRow();
 		    	s.append("SPEC EF ( AG (");
 		    	for ( i=0; i<checked.length-1 ;i++) {
-		    	s.append(v_no.get(i));
-		    	s.append(" = ");
-		    	s.append(checked[i]);
-		    	s.append(" & ");
+			    	s.append(v_no.get(i));
+			    	s.append(" = ");
+			    	s.append(checked[i]);
+			    	s.append(" & ");
 		    	}
 		    	s.append(v_no.get(i));
 		    	s.append(" = ");

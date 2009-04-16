@@ -23,19 +23,19 @@ import fr.univmrs.tagc.common.manageressources.Translator;
  * to generate the following states and to switch from building a full
  * state transition graph to a "simple" reachability set.
  */
-public final class Simulation extends Thread implements Runnable {
+public class Simulation extends Thread implements Runnable {
 
-	private LinkedList queue = new LinkedList(); // exploration queue
+	protected LinkedList queue = new LinkedList(); // exploration queue
 
-	private SimulationManager frame;
-	private int maxnodes, maxdepth;
-	private Iterator initStatesIterator;
-	private SimulationHelper helper;
-	SimulationUpdater updater;
+	protected SimulationManager frame;
+	protected int maxnodes, maxdepth;
+	protected Iterator initStatesIterator;
+	protected SimulationHelper helper;
+	protected SimulationUpdater updater;
 
-	private boolean breadthFirst = false;
-	int nbnode = 0;
-	private boolean ready = false;
+	protected boolean breadthFirst = false;
+	public int nbnode = 0;
+	protected boolean ready = false;
 	
 	/**
 	 * Constructs an empty dynamic graph
@@ -55,7 +55,7 @@ public final class Simulation extends Thread implements Runnable {
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
 
-		if (params.buildSTG) {
+		if (params.buildSTG == GsSimulationParameters.BUILD_FULL_STG) {
 			helper = new DynGraphHelper(regGraph, params);
 		}
 		breadthFirst = params.breadthFirst;
@@ -92,7 +92,7 @@ public final class Simulation extends Thread implements Runnable {
 			// iterate through initial states and run the simulation from each of them
 			while(initStatesIterator.hasNext()) {
 				// add the next proposed state
-				queue.add(new SimulationQueuedState((int[])initStatesIterator.next(), 0, null, false));
+				queue.add(new SimulationQueuedState((short[])initStatesIterator.next(), 0, null, false));
 				
 				// do the simulation itself
 				while (!queue.isEmpty()) {
@@ -129,7 +129,7 @@ public final class Simulation extends Thread implements Runnable {
 						}
 
 						// run the simulation on the new node
-						updater.setState(item.state, item.depth, helper.node);
+						updater.setState(item.state, item.depth, (GsDynamicNode) helper.getNode());
 						if (!updater.hasNext()) {
 							helper.setStable();
 							frame.addStableState(item);
@@ -165,17 +165,10 @@ public final class Simulation extends Thread implements Runnable {
 	}
 }
 
-abstract class SimulationHelper {
-	GsDynamicNode node;
-	abstract boolean addNode(SimulationQueuedState item);
-	abstract GsGraph endSimulation();
-	abstract void setStable();
-}
-
 class DynGraphHelper extends SimulationHelper {
-
-	GsDynamicGraph dynGraph;
-	GsVertexAttributesReader vreader;
+	protected GsDynamicNode node;
+	protected GsDynamicGraph dynGraph;
+	protected GsVertexAttributesReader vreader;
 	
 	DynGraphHelper(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
 		dynGraph = new GsDynamicGraph(params.nodeOrder);
@@ -204,13 +197,21 @@ class DynGraphHelper extends SimulationHelper {
 	public void setStable() {
 		node.setStable(true, vreader);
 	}
+	
+	public Object getNode() {
+		return node;
+	}
+	
+	public void setNode(Object node) {
+		this.node = (GsDynamicNode) node;
+	}
 }
 
 class ReachabilitySetHelper extends SimulationHelper {
-
-	private int[] t_max;
-	private int length;
-	private OmddNode dd_reachable = OmddNode.TERMINALS[0];
+	protected GsDynamicNode node;
+	protected int[] t_max;
+	protected int length;
+	protected OmddNode dd_reachable = OmddNode.TERMINALS[0];
 	
 	ReachabilitySetHelper(GsSimulationParameters params) {
 		length = params.nodeOrder.size();
@@ -244,14 +245,15 @@ class ReachabilitySetHelper extends SimulationHelper {
 
 	public void setStable() {
 	}
-	private OmddNode addReachable(OmddNode reachable, int[] vstate, int depth) {
+	
+	protected OmddNode addReachable(OmddNode reachable, short[] vstate, int depth) {
 		if (depth == vstate.length) {
 			if (reachable.equals(OmddNode.TERMINALS[1])) {
 				return null;
 			}
 			return OmddNode.TERMINALS[1];
 		}
-		int curval = vstate[depth];
+		short curval = vstate[depth];
 		if (reachable.next == null) {
 			if (reachable.value == 1) {
 				return null;
@@ -289,5 +291,13 @@ class ReachabilitySetHelper extends SimulationHelper {
 			return ret;
 		}
 		return null;
+	}
+	
+	public Object getNode() {
+		return node;
+	}
+	
+	public void setNode(Object node) {
+		this.node = (GsDynamicNode) node;
 	}
 }
