@@ -6,9 +6,6 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
-
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
@@ -24,10 +21,10 @@ public class GsDynamicalHierarchicalGraphDescriptor implements GsGraphDescriptor
     private static GsFileFilter ffilter = null;
     private static GsDynamicalHierarchicalGraphDescriptor instance = null;
     
-	private static Vector v_layout;
-	private static Vector v_export;
-	private static Vector v_action;
-	private static Vector v_OManager;
+	private static Vector v_layout = null;
+	private static Vector v_export = null;
+	private static Vector v_action = null;
+	private static Vector v_OManager = null;
 
 	public boolean canCreate() {
 		return false;
@@ -54,7 +51,7 @@ public class GsDynamicalHierarchicalGraphDescriptor implements GsGraphDescriptor
 	}
 
 	public String getGraphType() {
-		return "dynamicalHierarchical";
+		return "dynamicalHierarchicalGraph";
 	}
 
     /**

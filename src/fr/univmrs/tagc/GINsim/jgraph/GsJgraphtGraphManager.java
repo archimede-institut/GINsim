@@ -290,6 +290,7 @@ public class GsJgraphtGraphManager extends GsGraphManager {
     public void removeVertex(Object obj) {
         g.removeVertex(obj);
         vertexCount--;
+        vertexRemoved(obj);
     }
 
     public Object getEdge(Object source, Object target) {
@@ -344,8 +345,8 @@ public class GsJgraphtGraphManager extends GsGraphManager {
     }
 
     public void removeEdge(Object source, Object target) {
+		Edge edge = g.getEdge(target, source);
 		if (visible) {
-			Edge edge = g.getEdge(target, source);
 			DefaultEdge de = m_jgAdapter.getEdgeCell(edge);
 	    		if ( edge != null && GraphConstants.getRouting(de.getAttributes()) == pedgerouting) {
 	    			AttributeMap attr = de.getAttributes();
@@ -362,6 +363,7 @@ public class GsJgraphtGraphManager extends GsGraphManager {
 	    		}
 		}
         g.removeEdge(source, target);
+        edgeRemoved(edge);
     }
 
     public void ready() {

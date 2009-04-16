@@ -10,43 +10,22 @@ public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 2922634659695976653L;
 	
 	private List content = null;
-	int rowCount = 0;
-	int lastcolCount = 0;
-	int colCount = 0;
-	int maxrow = 10;
-
-	private GsGraph g;
+	private int colCount;
+	
+	private GsDynamicalHierarchicalGraph g;
 
 	public GsDynamicalHierarchicalTableModel(GsGraph g) {
 		super();
-		this.g = g;
+		this.g = (GsDynamicalHierarchicalGraph) g;
+		colCount = g.getNodeOrder().size();
 	}
 	
-	
-	/**
-	 * set the content of the table model
-	 *  
-	 * @param content the List containing values
-	 */
-	public void setContent (List content) {
-		this.content = content;
-		int size = content.size();
-		if (size >maxrow) {
-			colCount = maxrow;
-			rowCount = size / maxrow + 1;
-			lastcolCount = size % maxrow;
-		} else {
-			colCount = lastcolCount = size;
-			rowCount = 1;
-		}
-		fireTableStructureChanged();
-	}
-
 	/**
 	 * @return the number of row
 	 */
 	public int getRowCount() {
-		return rowCount;
+		if (content == null) return 0;
+		return content.size();
 	}
 
 	/**
@@ -56,7 +35,6 @@ public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 		return colCount;
 	}
 
-
 	/**
 	 * @param rowIndex
 	 * @param columnIndex
@@ -64,15 +42,12 @@ public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 	 * @return the value at the specified position
 	 */
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (rowIndex >= rowCount || columnIndex >= colCount) {
+		if (rowIndex >= getRowCount() || columnIndex >= colCount) {
 			return null;
 		}
-		
-		if (rowIndex == rowCount-1 && columnIndex >= lastcolCount) {
-			return "-";
-		}
-		
-		return String.valueOf(((String)content.get(rowIndex)).charAt(columnIndex)); // FIXME : rowIndex*maxrow ?
+		int i = ((short[])content.get(rowIndex))[columnIndex];
+		if (i == -1 ) return "*";
+		return String.valueOf(i);
 	}
 
 	/**
@@ -81,7 +56,12 @@ public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 	 * @return the name of this column
 	 */	
 	public String getColumnName(int column) {
-			return g.getNodeOrder().get(column).toString();
+		return g.getNodeOrder().get(column).toString();
+	}
+
+	public void setContent(GsDynamicalHierarchicalNode dhnode) {
+		this.content = dhnode.statesToList(g.getGraphManager().getVertexCount());
+        fireTableStructureChanged();
 	}
 
 }

@@ -86,7 +86,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 	protected void doOpenParagraph(String style) throws IOException {
 		xmlw.openTag("p");
 		if (style != null) {
-			xmlw.addAttr("style", style);
+			xmlw.addAttr("class", style);
 		}
 	}
 	
@@ -279,7 +279,7 @@ class SimpleStyleWriter implements StyleWriter {
 		return prefix+value+suffix;
 	}
 	public String getCSSStyleHeader(String style) {
-		return null;
+		return "";
 	}
 }
 

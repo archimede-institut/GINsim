@@ -61,7 +61,7 @@ public class InteractionAnalysisSelector extends Selector {
 	}
 	
 	public Map initCache(GsRegulatoryGraph g, boolean opt_annotate, boolean opt_verbose, GsRegulatoryMutantDef mutant) {
-		InteractionAnalysis fii = new InteractionAnalysis(g, opt_annotate, opt_verbose, mutant);
+		InteractionAnalysis fii = new InteractionAnalysis(g, opt_annotate, mutant);
 		this.cache = fii.getFunctionality();
 		return this.cache;
 	}

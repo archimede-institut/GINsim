@@ -128,7 +128,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
             case POS_VERTEX_STATES_S:
                 if (qName.equals("string")) {
                     pos = POS_VERTEX_STATES;
-                    vertex.parse(curval);
+                    vertex.parse(curval, graph.getChildsCount());
                 	curval = null;
                 }
                 break; // POS_VERTEX_STATES_S
@@ -166,7 +166,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
                     String id = attributes.getValue("id");
                     if (map == null || map.containsKey(id)) {
                         pos = POS_VERTEX;
-                        vertex = new GsDynamicalHierarchicalNode(graph);
+                        vertex = new GsDynamicalHierarchicalNode();
                         graph.addVertex(vertex);
                     } else {
                         pos = POS_FILTERED;
@@ -176,7 +176,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
                     String s_to = attributes.getValue("to");
                     if (map == null || map.containsKey(s_from) && map.containsKey(s_to)) {
                         pos = POS_EDGE;
-                        graph.addEdge(new GsDynamicalHierarchicalNode(graph), new GsDynamicalHierarchicalNode(graph));
+                        graph.addEdge(new GsDynamicalHierarchicalNode(), new GsDynamicalHierarchicalNode());
                     } else {
                         pos = POS_FILTERED;
                     }

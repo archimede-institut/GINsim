@@ -92,7 +92,7 @@ public class Simulation extends Thread implements Runnable {
 			// iterate through initial states and run the simulation from each of them
 			while(initStatesIterator.hasNext()) {
 				// add the next proposed state
-				queue.add(new SimulationQueuedState((int[])initStatesIterator.next(), 0, null, false));
+				queue.add(new SimulationQueuedState((short[])initStatesIterator.next(), 0, null, false));
 				
 				// do the simulation itself
 				while (!queue.isEmpty()) {
@@ -246,14 +246,14 @@ class ReachabilitySetHelper extends SimulationHelper {
 	public void setStable() {
 	}
 	
-	protected OmddNode addReachable(OmddNode reachable, int[] vstate, int depth) {
+	protected OmddNode addReachable(OmddNode reachable, short[] vstate, int depth) {
 		if (depth == vstate.length) {
 			if (reachable.equals(OmddNode.TERMINALS[1])) {
 				return null;
 			}
 			return OmddNode.TERMINALS[1];
 		}
-		int curval = vstate[depth];
+		short curval = vstate[depth];
 		if (reachable.next == null) {
 			if (reachable.value == 1) {
 				return null;

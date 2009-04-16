@@ -51,8 +51,8 @@ public class InitialStatesIterator implements Iterator {
  */
 final class Reg2DynStatesIterator implements Iterator {
 	
-	int[] state;
-	int[] using;
+	short[] state;
+	short[] using;
 	int nbGenes;
 	List nodeOrder;
 	int[][] line;
@@ -73,7 +73,7 @@ final class Reg2DynStatesIterator implements Iterator {
 			} else {
 				line[i] = new int[v_val.size()];
 				for (int j=0 ; j<line[i].length ; j++) {
-					line[i][j] = ((Integer)v_val.get(j)).intValue();
+					line[i][j] = ((Integer)v_val.get(j)).shortValue();
 				}
 			}
 		}
@@ -85,11 +85,11 @@ final class Reg2DynStatesIterator implements Iterator {
 		}
 		goon = true;
 		
-		state = new int[nbGenes];
-		using = new int[nbGenes];
+		state = new short[nbGenes];
+		using = new short[nbGenes];
 		for(int i=0 ; i<nbGenes ; i++){
 		    // initialize all genes on their first value
-		    state[i] = line[i][0];
+		    state[i] = (short) line[i][0];
 		}
 	}
 	
@@ -110,7 +110,7 @@ final class Reg2DynStatesIterator implements Iterator {
 			return null;
 		}
 
-        int[] ret = new int[nbGenes];
+		short[] ret = new short[nbGenes];
         for (int i=0 ; i<nbGenes ; i++) {
             ret[i] = state[i];
         }
@@ -121,10 +121,10 @@ final class Reg2DynStatesIterator implements Iterator {
 				
 			if (using[i] < line[i].length-1) {
 				using[i]++;
-				state[i] = line[i][using[i]];
+				state[i] = (short) line[i][using[i]];
 				for (int j=0 ; j<i ; j++) {
 					using[j] = 0;
-                    state[j] = line[j][using[j]];
+                    state[j] = (short) line[j][using[j]];
 				}
 				goon = true;
 				break;

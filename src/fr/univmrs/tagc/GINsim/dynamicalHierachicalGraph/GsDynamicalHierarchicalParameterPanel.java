@@ -11,14 +11,13 @@ public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 
 	private javax.swing.JScrollPane jScrollPane = null;
 	private javax.swing.JTable jTable = null;
-	public GsGraph g;
 	
 	/**
 	 */
 	public GsDynamicalHierarchicalParameterPanel(GsGraph g) {
 		super();
+		this.graph = g;
 		initialize();
-		this.g = g;
 	}
 	
 	/*
@@ -26,7 +25,7 @@ public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 	 */
 	public void setEditedObject(Object obj) {
 		if (obj instanceof GsDynamicalHierarchicalNode) {
-			((GsDynamicalHierarchicalTableModel)getJTable().getModel()).setContent(((GsDynamicalHierarchicalNode)obj).statesToList() );
+			((GsDynamicalHierarchicalTableModel)getJTable().getModel()).setContent((GsDynamicalHierarchicalNode)obj );
 		}
 	}
 
@@ -47,7 +46,7 @@ public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 		if(jTable == null) {
 			jTable = new javax.swing.JTable();
 			jTable.setDefaultRenderer(Object.class, new GsDynamicalHierarchicalCellRenderer());
-			jTable.setModel( new GsDynamicalHierarchicalTableModel(g));
+			jTable.setModel( new GsDynamicalHierarchicalTableModel(graph));
             jTable.getTableHeader().setReorderingAllowed(false);
 		}
 		return jTable;

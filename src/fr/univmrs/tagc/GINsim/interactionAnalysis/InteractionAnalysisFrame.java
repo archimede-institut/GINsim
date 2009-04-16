@@ -2,8 +2,6 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -11,25 +9,30 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.document.DocumentWriter;
+import fr.univmrs.tagc.common.document.XHTMLDocumentWriter;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -39,8 +42,9 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 	private Container mainPanel;
 	private JCheckBox[] runOptions;
 	private Color option_lineColor = Color.red;
-	private JTextArea resultsPane;
-	private JButton colorizeButton;
+//	private JTextArea resultsPane;
+	private JButton colorizeButton, saveReportButton;
+	private JFileChooser jfc = null;
 	
 	private InteractionAnalysis fii;
 	private JPanel colorPanel;
@@ -62,11 +66,6 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
         this.frame = frame;
         initialize();
         this.setTitle(Translator.getString("STR_interactionAnalysis"));
-        this.addWindowListener(new java.awt.event.WindowAdapter() { 
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                cancel();
-            }
-        });	
     }
 
 	public void initialize() {
@@ -79,7 +78,6 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			mainPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
 		
-		//Label
 			c.gridx = 0;
 			c.gridy = 0;
 			c.fill = GridBagConstraints.BOTH;
@@ -94,14 +92,8 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			c.ipady = 0;
 		    runOptions[0] = new JCheckBox(Translator.getString("STR_interactionAnalysis_opt_annotate"));
 		    runOptions[0].setMnemonic(KeyEvent.VK_A); 
-		    runOptions[0].setSelected(true);
+		    runOptions[0].setSelected(false);
 		    mainPanel.add(runOptions[0], c);
-		    
-			c.gridy++;
-		    runOptions[1] = new JCheckBox(Translator.getString("STR_interactionAnalysis_opt_verbose"));
-		    runOptions[1].setMnemonic(KeyEvent.VK_V); 
-		    runOptions[1].setSelected(false);
-		    mainPanel.add(runOptions[1], c);
 		    
 			c.gridy++;
 		    runOptions[2] = new JCheckBox(Translator.getString("STR_interactionAnalysis_opt_color_by_default"));
@@ -126,22 +118,14 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			c.ipady = 20;
 			mainPanel.add(new JLabel(""), c);
 
-			c.gridy++;
-			c.ipady = 0;
-			mainPanel.add(new JLabel(Translator.getString("STR_interactionAnalysis_results")), c);
-			
-			c.gridy++;
-			c.weightx = 2.0;
-			c.weighty = 2.0;
-			resultsPane = new JTextArea("");
-	        JScrollPane resultsScrollPane = new JScrollPane(resultsPane);
-	        resultsPane.setFont(new Font("Courrier", Font.PLAIN, 11));
-	        resultsScrollPane.setPreferredSize(new Dimension(250, 250));
-			mainPanel.add(resultsScrollPane, c);
-			
 		    c.gridy++;
 			c.weightx = 0;
 			c.weighty = 0;
+		    saveReportButton = new JButton(Translator.getString("STR_interactionAnalysis_saveReport"));
+		    mainPanel.add(saveReportButton, c);
+		    saveReportButton.addActionListener(this);
+		   
+		    c.gridy++;
 		    colorizeButton = new JButton(Translator.getString("STR_interactionAnalysis_do_colorize"));
 		    colorizeButton.setEnabled(false);
 		    mainPanel.add(colorizeButton, c);
@@ -156,8 +140,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			colorizeButton.setText(Translator.getString("STR_interactionAnalysis_do_colorize"));
 			isColorized = false;
 		}
-		fii = new InteractionAnalysis((GsRegulatoryGraph)graph, getOption(0), getOption(1), (GsRegulatoryMutantDef) mutantStore.getObject(0));
-		resultsPane.setText(fii.getLog().toString());
+		fii = new InteractionAnalysis((GsRegulatoryGraph)graph, getOption(0), (GsRegulatoryMutantDef) mutantStore.getObject(0));
 		colorizeButton.setEnabled(true);
 		if (getOption(2)) {
 			doColorize();
@@ -178,6 +161,18 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 				} else {
 					doColorize();
 				}
+			}
+		} else if (e.getSource() == saveReportButton){
+			File f;
+			try {
+				f = chooseFile();
+				if (f != null) {
+					DocumentWriter doc = new XHTMLDocumentWriter();
+					doc.setOutput(f);
+					if (fii != null) fii.saveReport(doc);
+				}
+			} catch (IOException e1) {
+				Tools.error("An error has occured while saving", this.frame);
 			}
 		}
 	}
@@ -211,6 +206,37 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 		}
 		super.cancel();
 	}
+	
+	private File chooseFile() throws IOException {
+        int returnVal = getJfc().showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = jfc.getSelectedFile();
+            OptionStore.setOption("currentDirectory", file.getParent());
+            return file;
+        }
+        return null;
+	}
+	
+	private JFileChooser getJfc() {
+       File curDir = null;
+       if (jfc != null) {
+           curDir = jfc.getCurrentDirectory();
+       } else {
+           String path = (String)OptionStore.getOption("currentDirectory");
+           if (path != null) {
+               curDir = new File(path);
+           }
+       }
+       if (curDir != null && !curDir.exists()) {
+           curDir = null;
+       }
+       jfc = new JFileChooser(curDir);
+       GsFileFilter ffilter = new GsFileFilter();
+       ffilter.setExtensionList(new String[] {"html"}, "html files");
+       jfc.setFileFilter(ffilter);
+       return jfc;
+   }
+
 	
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == colorPanel) {

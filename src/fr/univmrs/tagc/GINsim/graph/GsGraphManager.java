@@ -160,6 +160,17 @@ abstract public class GsGraphManager {
      * @param obj
      */
     abstract public void removeVertex(Object obj);
+    
+    protected void vertexRemoved(Object vertex) {
+    	if (vvsmap != null) {
+    		vvsmap.remove(vertex);
+    	}
+    }
+    protected void edgeRemoved(Object edge) {
+    	if (evsmap != null) {
+    		evsmap.remove(edge);
+    	}
+    }
 
     /**
      * @param source

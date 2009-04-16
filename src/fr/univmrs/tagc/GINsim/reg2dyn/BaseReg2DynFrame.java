@@ -13,7 +13,7 @@ public abstract class BaseReg2DynFrame extends StackDialog implements Simulation
     private static final long serialVersionUID = 8275117764047606650L;
 
     Insets indentInset = new Insets(0, 30, 0, 0);
-    protected boolean isrunning = false;
+//    protected boolean isrunning = false;
 
     public abstract void endSimu(GsGraph graph);
 
@@ -23,9 +23,9 @@ public abstract class BaseReg2DynFrame extends StackDialog implements Simulation
     }
 
     public void setProgress(int n) {
-        if (isrunning) {
+//        if (isrunning) {
             setMessage(""+n);
-        }
+//        }
     }
 
     public void addStableState(SimulationQueuedState item) {

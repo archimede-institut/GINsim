@@ -67,7 +67,7 @@ public class StableTableModel extends AbstractTableModel {
 	}
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		int[] t_state = (int[])v_stable.get(rowIndex);
+		short[] t_state = (short[])v_stable.get(rowIndex);
 		int val;
 		int column = columnIndex;
 		if (checkbox) {
@@ -90,7 +90,7 @@ public class StableTableModel extends AbstractTableModel {
 	public void setResult(OmddNode stable, GsGraph graph) {
 		v_stable.clear();
 		
-		int[] state = new int[nodeOrder.size()];
+		short[] state = new short[nodeOrder.size()];
 		for (int i=0 ; i<state.length ; i++) {
 			state[i] = -1;
 		}
@@ -123,11 +123,11 @@ public class StableTableModel extends AbstractTableModel {
 			t_initMDD[init] = ((GsInitialState)initstates.getElement(null, init)).getMDD(nodeOrder);
 		}
 		for (int line=0 ; line<len ; line++) {
-			int[] curstate = (int[])v_stable.get(line);
+			short[] curstate = (short[])v_stable.get(line);
 			for (int i=0 ; i<nbinit ; i++) {
 				OmddNode node = t_initMDD[i];
 				while (node.next != null) {
-					int value = curstate[node.level];
+					short value = curstate[node.level];
 					if (value == -1) {
 						OmddNode next = node.next[0];
 						for (int val=0 ; val<node.next.length ; val++) {
@@ -168,24 +168,24 @@ public class StableTableModel extends AbstractTableModel {
 		return nodeOrder.get(column-1).toString();
 	}
 
-	private void findStableState(int[] state, OmddNode stable) {
+	private void findStableState(short[] state, OmddNode stable) {
 		if (stable.next == null) {
 			if (stable.value == 1) {
 				v_stable.add(state.clone());
 			}
 			return;
 		}
-		for (int i=0 ; i<stable.next.length ; i++) {
+		for (short i=0 ; i<stable.next.length ; i++) {
 			state[stable.level] = i;
 			findStableState(state, stable.next[i]);
 		}
 		state[stable.level] = -1;
 	}
 	
-	public int[] getCheckedRow() {
+	public short[] getCheckedRow() {
 		if (checkIndex == -1 || checkIndex >= getRowCount()) {
 			return null;
 		}
-		return (int[])v_stable.get(checkIndex);
+		return (short[])v_stable.get(checkIndex);
 	}
 }

@@ -15,6 +15,7 @@
 		<plugin name="modelSimplifier" 			mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier.ModelSimplifierPlugin"/>
 		<plugin name="modelChecker" 			mainClass="fr.univmrs.tagc.GINsim.modelChecker.GsModelCheckerPlugin"/>
 		<plugin name="graphComparator" 			mainClass="fr.univmrs.tagc.GINsim.graphComparator.GraphComparatorPlugin"/>
+		<plugin name="DHgraphSimplifier" 		mainClass="fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalSimplifierPlugin"/>
 
 		<!-- export plugins -->
 		<plugin name="export" 					mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin"/>
@@ -36,6 +37,7 @@
 		<graph name="regulatoryGraph" 			mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor" load="true"/>
 		<graph name="stateTransitionGraph" 		mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor" load="true"/>
 		<graph name="connectedComponentGraph" 	mainClass="fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphDescriptor" load="true"/>
+		<graph name="dynamicalHierarchicalGraph" 	mainClass="fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraphDescriptor" load="true"/>
 	</listOfGraphType>
 
 	<imagePath 		path="/fr/univmrs/tagc/GINsim/ressources/icons"/>

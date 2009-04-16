@@ -14,9 +14,11 @@ import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicItemAttributePanel;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
+import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
@@ -31,7 +33,8 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	private JPanel optionPanel = null;
 	
 	
-	private int[] childsCount = null;
+	private short[] childsCount = null;
+	private GsDynamicalHierarchicalParameterPanel vertexPanel = null;
 
 	/**
 	 * create a new GsDynamicalHierarchicalGraph with a nodeOrder.
@@ -169,7 +172,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	                	GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode)it.next();
 	                    out.write("\t\t<node id=\""+vertex+"\">\n");
                         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
-                        out.write("<attr name=\"states\"><string>"+vertex.statesToString()+"</string></attr>");
+                        out.write("<attr name=\"states\"><string>"+vertex.statesToString(graphManager.getVertexCount())+"</string></attr>");
 	                    out.write(GsGinmlHelper.getShortNodeVS(vReader));
 	                    out.write("\t\t</node>\n");
 	                }
@@ -181,7 +184,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	                    vReader.setVertex(vertex);
 	                    out.write("\t\t<node id=\""+vertex+"\">\n");
                         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
-                        out.write("<attr name=\"states\"><string>"+vertex.statesToString()+"</string></attr>");
+                        out.write("<attr name=\"states\"><string>"+vertex.statesToString(graphManager.getVertexCount())+"</string></attr>");
 	                    out.write(GsGinmlHelper.getFullNodeVS(vReader));
 	                    out.write("\t\t</node>\n");
 	                }
@@ -189,13 +192,27 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
         		default:
         	        while (it.hasNext()) {
         	            Object vertex = it.next();
-	                    String content = ((GsNodeReducedData)vertex).getContentString();
+	                    String content = "";//FIXME ((GsDynamicalHierarchicalNode)vertex).getContentString();
 	                    out.write("\t\t<node id=\""+vertex+"\">\n");
                         out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
                         out.write("</node>");
         	        }
         }
     }
+    
+    /* edge and vertex panels */
+    
+	public GsParameterPanel getEdgeAttributePanel() {
+		return null;
+	}
+
+	public GsParameterPanel getVertexAttributePanel() {
+	    if (vertexPanel == null) {
+	        vertexPanel  = new GsDynamicalHierarchicalParameterPanel(this);
+	    }
+		return vertexPanel;
+	}
+
 
 	
 	/* adding edge and vertex */
@@ -224,13 +241,13 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	/**
 	 * return an array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
-	public int[] getChildsCount() {
+	public short[] getChildsCount() {
 		if (childsCount == null) {
-			childsCount = new int[nodeOrder.size()];
+			childsCount = new short[nodeOrder.size()];
 			int i = 0;
 			for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
 				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-				childsCount[i++] = v.getMaxValue();
+				childsCount[i++] = (short) (v.getMaxValue()+1);
 			}			
 		}
 		return childsCount;

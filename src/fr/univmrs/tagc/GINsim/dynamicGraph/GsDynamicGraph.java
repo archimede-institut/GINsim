@@ -266,7 +266,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 * @param state the state we want to add
 	 * @return the new GsDynamicNode.
 	 */
-	public boolean addVertex(int[] state) {
+	public boolean addVertex(short[] state) {
 		return graphManager.addVertex(new GsDynamicNode(state));
 	}
 	/**
@@ -452,7 +452,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
      * @param target
      * @return the List describing the path or null if none is found
      */
-    public List shortestPath(int[] source, int[] target) {
+    public List shortestPath(short[] source, short[] target) {
         GsDynamicNode n = new GsDynamicNode(source);
         GsDynamicNode n2 = new GsDynamicNode(target);
         if (graphManager.containsVertex(n) && graphManager.containsVertex(n2)) {

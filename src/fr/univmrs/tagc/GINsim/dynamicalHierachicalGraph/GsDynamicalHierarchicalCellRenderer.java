@@ -15,9 +15,9 @@ public class GsDynamicalHierarchicalCellRenderer extends DefaultTableCellRendere
             										int row , int column ) {
         Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
         cmp.setBackground(Color.WHITE);
-        if( table != null && row >= 1) {
+        if(table != null) {
             String state = (String)table.getModel().getValueAt(row, column); 
-            if (!state.equals("*")) {
+            if (state.equals("*")) {
             	cmp.setBackground( Color.green );
             }
         }

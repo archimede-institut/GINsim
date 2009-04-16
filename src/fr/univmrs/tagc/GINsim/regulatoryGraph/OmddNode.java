@@ -1,5 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -106,7 +108,7 @@ public class OmddNode {
      * @param status
      * @return true if the state is OK.
      */
-    public short testStatus (int[] status) {
+    public short testStatus (short[] status) {
         
         if (next == null) {
             return value;
@@ -122,7 +124,7 @@ public class OmddNode {
      * this will create new nodes, as existing one might be merged with different part, they can't be reused.
      * 
      * @param other
-     * @param op boolean operation to apply (avaible: AND, OR)
+     * @param op boolean operation to apply (available: AND, OR)
      *
      * @return the merged tree
      */
@@ -347,6 +349,18 @@ public class OmddNode {
 			newNode = newNode.merge(others[i], op);
 		}
 		return this.merge(newNode, op);
+    }
+    /**
+     * Merge an collection
+     */
+    public OmddNode mergeMultiple(Collection others, int op) {
+    	Iterator it = others.iterator();
+    	if (!it.hasNext()) return this;
+    	OmddNode newNode = (OmddNode) it.next();
+    	for (; it.hasNext();) {
+			newNode = newNode.merge((OmddNode) it.next(), op);
+		}
+   		return this.merge(newNode, op);
     }
     
     

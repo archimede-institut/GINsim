@@ -185,7 +185,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
      * 
      * @param state
      */
-    protected void colorizeGraph(int[] state) {
+    protected void colorizeGraph(short[] state) {
         if (state == null || state.length != nodeOrder.size()) {
             return;
         }
