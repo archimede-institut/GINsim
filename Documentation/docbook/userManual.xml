@@ -9,24 +9,22 @@
 		<title>Introduction</title>
 		<section id="sec_about">
 			<title>About GINsim</title>
-			<para>GINsim is a tool supporting the definition, the simulation and the analysis of
-				regulatory graphs, based on a <emphasis role="strong">multilevel logical
-				formalism</emphasis>. This formalism leans on the definition of two types of graphs:
+			<para>GINsim is a software supporting the definition, the simulation and the analysis of
+				regulatory graphs. The underlying <emphasis role="strong">multilevel logical
+				formalism</emphasis> leans on the definition of two types of graphs:
 					<emphasis role="strong">regulatory graphs</emphasis>, which model regulatory
 				networks, and <emphasis role="strong">state transition graphs</emphasis>, which
-				represent their dynamical behaviour, for given initial state(s) and under specific
-				updating assumptions.</para>
+				represent their dynamical behaviour.</para>
 		</section>
 		<section id="sec_availability">
 			<title>Availability</title>
-			<para>GINsim 2.3 is freely available, under the terms of the <emphasis>General Public
-					License</emphasis>. The GINsim website (<ulink
-					url="http://gin.univ-mrs.fr/GINsim"/>) contains up to date informations, along
-				with the latest official version of the software and its documentation.</para>
+			<para>GINsim 2.3 is freely available for academic users, please contact us for other uses.
+			The GINsim website (<ulink url="http://gin.univ-mrs.fr/GINsim"/>) provides the latest official
+			version of the software, documentation, as well as a model library.</para>
 		</section>
 		<section id="sec_running">
 			<title>Running GINsim</title>
-			<para>GINsim is a Java application and thus should run on any system offering a Java
+			<para>GINsim is a Java application and should thus run on any system offering a Java
 				virtual machine (version 1.4 or later). If Java is not already installed on your
 				computer, it can be downloaded:<itemizedlist>
 					<listitem>
@@ -41,7 +39,7 @@
 						<simpara>from <ulink
 								url="http://www-128.ibm.com/developerworks/java/jdk/index.html">IBM
 								Java page</ulink> for some other systems (AIX,
-						linux-powerpc).</simpara>
+						linux-PPC).</simpara>
 					</listitem>
 				</itemizedlist></para>
 			<para>Other system requirements depend heavily on model size. To work confortably, a
@@ -56,7 +54,7 @@
 					</listitem>
 					<listitem>
 						<simpara><emphasis role="bold">An archive</emphasis> (zip or tar.gz format).
-							Uncompress it and run the included launcher script: runginsim.bat for
+							Uncompress it and run the relevant launcher script: runginsim.bat for
 							windows, runginsim.sh for UNIX-like systems, and runginsim.command for
 							Mac OS X. This version includes the documentation (tutorial and user
 							manual) and can be extended through plugins.</simpara>
@@ -103,15 +101,18 @@
 					</listitem>
 				</itemizedlist> New features:<itemizedlist>
 					<listitem>
-						<simpara><xref linkend="sec_pn" xrefstyle="select:label"/>;</simpara>
+						<simpara>export in several <xref linkend="sec_pn" xrefstyle="select:label"/> formats;</simpara>
 					</listitem>
 					<listitem>
-						<simpara>analytic determination of the <xref linkend="sec_stableStates"
+						<simpara>efficient determination of the <xref linkend="sec_stableStates"
 								xrefstyle="select:label"/> of a regulatory graph;</simpara>
 					</listitem>
 					<listitem>
-						<simpara>analysis of the <xref linkend="sec_circuits"
+						<simpara>identification of the <xref linkend="sec_circuits"
 								xrefstyle="select:label"/>.</simpara>
+					</listitem>
+					<listitem>
+						<simpara><xref linkend="sec_cytoscape" xrefstyle="select:label"/>.</simpara>
 					</listitem>
 				</itemizedlist></para>
 		</section>
@@ -135,13 +136,13 @@
 					</listitem>
 				</itemizedlist></para>
 			<figure id="sc_mainWindow">
-				<title>The main window of GINsim</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="../figures/mainWindow.png"/>
 					</imageobject>
-					<caption>The main window of GINsim, featuring an empty model.</caption>
 				</mediaobject>
+				<title>The main window of GINsim</title>
+				<caption>The main window of GINsim, featuring an empty model.</caption>
 			</figure>
 			<para>In the following, the contents of the menus are described.</para>
 		</section>
@@ -159,16 +160,16 @@
 			</figure>
 			<para> The File menu provides the following options: <itemizedlist>
 					<listitem>
-						<simpara><emphasis>New</emphasis>: to create a new graph. This will open a new window unless the
+						<simpara><emphasis>New</emphasis>: to create a new graph. This opens a new window unless the
 							current graph is empty.</simpara>
 					</listitem>
 					<listitem>
-						<simpara><emphasis>Open</emphasis>: to load a graph from a file. This will open a new window
+						<simpara><emphasis>Open</emphasis>: to load a graph from a file. This opens a new window
 							unless the current graph is empty.</simpara>
 					</listitem>
 					<listitem>
 						<simpara><emphasis>Recent Files</emphasis>: to open a recently used graph. This submenu lists the
-							more recently opened graphs.</simpara>
+							last opened graphs.</simpara>
 					</listitem>
 					<listitem>
 						<simpara><emphasis>Merge graph</emphasis>: to open a graph and merge it with the current one.
@@ -201,8 +202,8 @@
 						graph.</simpara>
 					</listitem>
 					<listitem>
-						<simpara><emphasis>Export</emphasis>: to save the current graph, using another format. GINsim
-							can export all kinds of graphs using several generic visualisation formats.
+						<simpara><emphasis>Export</emphasis>: to save the current graph in another format. GINsim
+							can export regulatory and state transition graphs using several generic visualisation formats.
 							These exports only retain the graph structure and
 							visual appearance. The following export formats are available under the
 							File/export submenu: </simpara>
@@ -219,7 +220,7 @@
 							<listitem>
 								<simpara role="newline"><emphasis>BioLayout:</emphasis> graphs can also be exported to
 									the BioLayout format (<ulink url="http://www.biolayout.org"
-										>http://www.biolayout.org</ulink>). Like in graphviz format,
+										>http://www.biolayout.org</ulink>). As in the case of graphviz,
 									graphical attributes are lost.</simpara>
 							</listitem>
 							<listitem>
@@ -232,8 +233,8 @@
 									and export SVG files to virtually any image format.</simpara>
 							</listitem>
 						</itemizedlist>
-						<simpara>The regulatory graph can additionally be exported to <xref
-								linkend="sec_pn"/>.</simpara>
+						<simpara>The regulatory graph can additionally be exported into different <xref
+								linkend="sec_pn"/> formats.</simpara>
 					</listitem>
 					<listitem>
 						<simpara><emphasis>Quit</emphasis>: close all graphs and exit the GINsim application.</simpara>
@@ -250,10 +251,10 @@
 						<simpara>The Java <emphasis>Save</emphasis> dialog allows to browse and
 							create folders, as well as to choose their location. By default, only
 							folders and GINML files are shown; other files can be seen by removing
-							the <emphasis>GINML Files</emphasis> filter. The choice list box on the
-							right side allows to choose which graphical attributes to save. The
+							the <emphasis>GINML Files</emphasis> filter. The drop-down list 
+							on the right side allows to select the graphical attributes to save. The
 								<emphasis>ExtendedSave</emphasis> checkbox allows to enable or
-							disable extended save (save as archive containing the graph and related
+							disable extended save (which generates an archive containing the graph and related
 							data).</simpara>
 					</caption>
 				</mediaobject>
@@ -293,12 +294,11 @@
 				</note>
 				<itemizedlist>
 					<listitem>
-						<simpara>Graph elements can be copied and pasted from one GINsim window to
+						<simpara>Regulatory graph elements can be copied and pasted from one GINsim window to
 							another.</simpara>
 					</listitem>
 					<listitem>
-						<simpara>Pasted elements are automatically selected to ease their
-						move.</simpara>
+						<simpara>Pasted elements are automatically selected to ease their move.</simpara>
 					</listitem>
 					<listitem>
 						<simpara>The <emphasis>Copy</emphasis> action does not test selected
@@ -306,13 +306,12 @@
 							selected genes.</simpara>
 					</listitem>
 					<listitem>
-						<simpara>To avoid naming conflict, the identifiers of pasted genes will be
-							changed by adding ".1", ".2"...</simpara>
+						<simpara>The identifiers of pasted genes are postfixed to avoid naming conflicts</simpara>
 					</listitem>
 					<listitem>
 						<simpara>Logical parameters are also copied and cleaned up: logical
 							parameters involving not-copied nodes are suppressed. The resulting graph
-							is consistent but these new parameters may need to be checked.</simpara>
+							is consistent but the new parameters may need to be checked.</simpara>
 					</listitem>
 				</itemizedlist>
 			</section>
@@ -329,7 +328,7 @@
 						</listitem>
 						<listitem>
 							<simpara><emphasis>Add Node</emphasis>: to add a node. This submenu
-								lists the node insertion modes. When one of these modes is selected,
+								lists the node insertion modes. When this mode is selected,
 								clicking in the graph panel creates a new node.</simpara>
 						</listitem>
 						<listitem>
@@ -373,7 +372,7 @@
 				</mediaobject>
 			</figure>
 			<para/>
-			<para>The View menu contains:</para>
+			<para>The View menu encompasses the following items:</para>
 			<itemizedlist>
 				<listitem>
 					<simpara><emphasis>Zoom In/Out</emphasis> and <emphasis>Normal Size</emphasis>:
@@ -417,7 +416,7 @@
 					<caption>The Action menu for a regulatory graph.</caption>
 				</mediaobject>
 			</figure>
-			<para>Some actions can be performed from this menu, depending on the type of graph.
+			<para>Different actions can be performed from this menu, depending on the type of graph.
 				Individual actions are detailed in the relevant part of this manual. Currently
 				available actions are:</para>
 			<itemizedlist>
@@ -437,7 +436,7 @@
 					<simpara role="newline">for regulatory graphs:</simpara>
 					<itemizedlist>
 						<listitem>
-							<simpara role="newline"><xref linkend="sec_simulation"/> (<emphasis>i.e.</emphasis> determination of the state transition graph);</simpara>
+							<simpara role="newline"><xref linkend="sec_simulation"/> (<emphasis>i.e.</emphasis> computation of a state transition graph);</simpara>
 						</listitem>
 						<listitem><simpara role="newline">analyse of the <xref linkend="sec_circuits"/>;</simpara></listitem>
 						<listitem><simpara role="newline">determination of <xref linkend="sec_stableStates"/>;</simpara></listitem>
@@ -461,13 +460,12 @@
 			</itemizedlist>
 			<section id="sec_layout" xreflabel="layout algorithms">
 				<title>Layout algorithms</title>
-				<para>Elements of the graph can be placed automatically (mainly useful for graphs
+				<para>Elements of the graph can be placed automatically (useful for graphs
 					constructed by GINsim, like state transition graphs).</para>
 				<itemizedlist>
 					<listitem>
 						<simpara>Level layout: nodes are placed on rows, nodes without any incoming
-							arc being placed on top and nodes without any outgoing arc at the
-							bottom.</simpara>
+							arc being placed at the top and nodes without any outgoing arc at the bottom.</simpara>
 						<figure id="fig_levelLayout">
 							<title>Level layout example</title>
 							<mediaobject>
@@ -512,7 +510,7 @@
 			<para>The <emphasis>Modelling Attributes</emphasis> and <emphasis>Graph
 				Attributes</emphasis> tabs are specific to the type of graph and will be detailed
 				later on.</para>
-			<para>Active tab change, depending on the current selection:</para>
+			<para>Different tabs are activated depending on the current selection:</para>
 			<itemizedlist>
 				<listitem>
 					<simpara>if nothing is selected, only the <emphasis>Graph Attributes</emphasis>
@@ -649,7 +647,7 @@
 		<?dbhtml filename="editRegulatoryGraph.html"?>
 		<title>Editing the regulatory graph</title>
 		<para> Regulatory graphs can be interactively modified: genes and interactions can be added,
-			removed and their properties defined. Elements can be added, depending on the current
+			removed and their properties redefined. Elements can be added, depending on the current
 			editing mode: <informaltable>
 				<tgroup cols="2">
 					<colspec colname="c1"/>
@@ -679,9 +677,15 @@
 						</tbody>
 				</tgroup>
 			</informaltable></para>
+			<note><simpara>The terms <emphasis>gene</emphasis> and <emphasis>interaction</emphasis>
+			are used through this document, but nodes of the regulatory graph can represent other types of 
+			<emphasis>regulatory components</emphasis>, <emphasis>e.g.</emphasis> proteins,
+			 or yet global cellular characteristics such as cell mass. 
+			Similarly, arcs can denote transcriptional regulations but also protein phosphorylation, degradation, 
+			complex formation...</simpara></note>
 		<section id="sec_notes">
-			<title id="notes">Notes</title>
-			<para>Notes can be attached to the different components of the regulatory graph:</para>
+			<title id="notes">Annotations</title>
+			<para>Annotations can be attached to the different components of the regulatory graph:</para>
 			<itemizedlist>
 				<listitem>
 					<simpara>the graph itself,</simpara>
@@ -693,9 +697,9 @@
 					<simpara>interactions.</simpara>
 				</listitem>
 			</itemizedlist>
-			<para>A note is composed of a textual comment and a list of URLs.</para>
+			<para>An annotation is composed of a textual comment and a list of URLs.</para>
 			<figure id="fig_notes">
-				<title>Notes</title>
+				<title>Annotations</title>
 				<mediaobject>
 					<imageobject><imagedata fileref="../figures/annotation.png"/></imageobject>
 					<caption>
@@ -708,10 +712,10 @@
 		</section>
 		<section id="sec_geneOrder">
 			<title>Gene order</title>
-			<para>Genes are ordered in the regulatory graph. This order has no effect on the regulatory 
+			<para>Genes are always ordered in GINsim. This order has no effect on the regulatory 
 			graph itself but may affect the (partial) simulation and the state transition graph (the same 
-			order being used in the states names). The gene order can be modified on the left side of the 
-			<emphasis>Graph Attributes</emphasis> tab.</para>
+			order being used in the states names). The default order follows the chronology of node additions.
+			This order can be modified using the arrows on the left side of the <emphasis>Graph Attributes</emphasis> tab.</para>
 			<figure id="fig_geneOrder">
 				<title>Changing gene order</title>
 				<mediaobject>
@@ -728,8 +732,8 @@
 			</figure>
 			<tip>
 				<para>In all lists, several elements can be selected using the
-					<emphasis>ctrl</emphasis> (<emphasis>apple</emphasis> on Mac OS X)
-					 or <emphasis>shift</emphasis> keys.</para>
+					<emphasis>ctrl</emphasis> key (<emphasis>apple/cmd</emphasis> key on Mac OS X)
+					 or <emphasis>shift</emphasis> key.</para>
 				<para>Several lists can be reordered using the "up" and "down" buttons.</para>
 			</tip>
 		</section>
@@ -747,7 +751,7 @@
 				</listitem>
 				<listitem>
 					<simpara><emphasis>Max value</emphasis>: the maximal expression level of the
-						gene. The default value is 1 (boolean case) and it can be increased for
+						gene. The default value is 1 (boolean case). It can be increased to generate
 						multi-valued genes.</simpara>
 				</listitem>
 				<listitem>
@@ -769,21 +773,22 @@
 					</imageobject>
 					<caption>
 						<para>Properties of the gene Cro, as defined in the
-							<emphasis>lambda4</emphasis> model.</para>
+							<emphasis>lambda4</emphasis> model (used in the 
+							<olink targetdoc="tutorial">tutorial</olink> and available in the 
+							<ulink url="http://gin.univ-mrs.fr/GINsim/model_repository.html">model repository</ulink>.</para>
 					</caption>
 				</mediaobject>
 			</figure>
 			<note>
 				<simpara>The <emphasis>Modelling Attributes</emphasis> tab is divided into two
-					parts. The <emphasis>Notes</emphasis> and <emphasis>Parameters</emphasis>
-					buttons (bottom left) respectively select <link linkend="notes">notes</link> and
-						<link linkend="sec_logicalParameters">logical parameters</link>
-				editing.</simpara>
+					parts. The <emphasis>Annotations</emphasis> and <emphasis>Parameters</emphasis>
+					buttons (bottom left) respectively select <link linkend="notes">annotations</link> and
+						<link linkend="sec_logicalParameters">logical parameters</link> editing.</simpara>
 			</note>
 			<section id="sec_logicalParameters">
 				<title>Logical parameters</title>
 				<para>When a gene is selected, <emphasis role="strong">logical parameters</emphasis>
-					defined for this gene can be configured in the right part of the
+					for this gene can be defined in the right part of the
 						<emphasis>Modelling Attribute</emphasis> tab. The panel dedicated to the
 					definition of logical parameters is divided into three parts: <itemizedlist>
 						<listitem>
@@ -830,7 +835,7 @@
 					<itemizedlist>
 						<listitem>
 							<simpara>While logical parameters can be numerous, usually many of them
-								take the value zero. To shorten parameter definition, only non-zero
+								take the value zero. To ease parameter definition, only non-zero
 								parameters have to be defined in GINsim.</simpara>
 						</listitem>
 						<listitem>
@@ -868,8 +873,8 @@
 					</caption>
 				</mediaobject>
 			</figure>
-			<para> As a gene can have different effects on another one, depending on its activity
-				level, an arc can contain several interactions, listed on the left. <itemizedlist>
+			<para> Depending on its activity level, a gene may have different effects on another one.
+			The corresponding arc then contains several interactions, listed on the left. <itemizedlist>
 					<listitem>
 						<simpara>The "+" button adds an interaction.</simpara>
 					</listitem>
@@ -887,11 +892,11 @@
 								range.</simpara>
 							</listitem>
 							<listitem>
-								<simpara role="newline"><emphasis>Sign</emphasis>: is this
-									interaction an activation, an inhibition or unknown ? This is
-									only a visual hint, the real effect of interactions is defined
+								<simpara role="newline"><emphasis>Sign</emphasis>: 
+									an interaction can be labelled as an activation, an inhibition or unknown.
+									This is only a visual hint, as the real effects of interactions are defined
 									through <link linkend="sec_logicalParameters">logical
-										parameters.</link></simpara>
+									parameters.</link></simpara>
 							</listitem>
 						</itemizedlist>
 					</listitem>
@@ -921,9 +926,9 @@
 				of logical parameters is left to the user as adding more controls generates more
 				annoyances than real help. Invalid logical parameters are highlighted to ease their
 				detection. Keep in mind that a change in the activation-range of one of the
-				interactions can turn a valid logical parameter into an impossible one. A parameter
-				involving interactions from the same source with disjoint activity ranges would
-				never be used and thus should not be defined.</para>
+				interactions can turn a valid logical parameter into an ill-defined one. Parameters
+				involving interactions from the same source with disjoint activity ranges 
+				are also ill-defined and thus highlighted for correction.</para>
 		</section>
 	</section>
 	<section id="sec_simulation" xreflabel="simulation">
@@ -946,125 +951,35 @@
 		</figure>
 		<section id="sec_simulationSettings">
 			<title>Simulation Parameters</title>
-			<para>The left part of this dialog allows to manage a set of simulation settings:
-				several simulation settings can be created, allowing to switch quickly from one to
-				another. These settings will be saved and restored with the graph <emphasis>if the
-					extended save is selected</emphasis>, otherwise they are lost when opening
-				again.</para>
-			<para>The right part of the dialog box enables the definition of the selected
-			setting.</para>
-		</section>
-		<section id="sec_constructionStrategy">
-			<title>Construction Strategy</title>
-			<para>In a given state of the system, one or several genes are called to change their
-				values. When several changes are pending, different construction strategies lead to
-				different successor states and thus to different state transition graphs.</para>
-			<section id="sec_synchronous">
-				<title>Synchronous mode</title>
-				<para>In this mode, all changes are performed simultaneously. This simplification
-					may generate artefacts in the state transition graph.</para>
-				<para>Each state has at most one successor state, which encompass all updating calls
-					on gene activity levels.</para>
-			</section>
-			<section id="sec_asynchronous">
-				<title>Asynchronous mode</title>
-				<para>In this mode, all changes are performed independantly. It will generate a
-					state transition graph taking into account any possible trajectories. This mode
-					is chosen by default.</para>
-				<para>Each state can have several successor states, each of them encompassing a
-					single updating on one gene activity level.</para>
-				<para>In this mode, the graph transition state can be generated "depth first" or
-					"breadth first". The same state transition graph will be built, except if
-					interrupted (for illustration, see <link linkend="sec_dslimit">depth and size
-						limitation</link>).</para>
-				<figure id="fig_syncvsasync">
-					<title>Construction strategy: synchronous versus asynchronous</title>
-					<mediaobject>
-						<imageobject>
-							<imagedata fileref="../figures/a-sync.png"/>
-						</imageobject>
-						<caption>Samples of simulation results for the lambda4 model, applying
-							synchronous and asynchronous strategies to the same initial states (all
-							states where C1=0 and Cro&gt;0). Dotted arcs denote that several
-							transitions are triggered simultaneously.</caption>
-					</mediaobject>
-				</figure>
-			</section>
-			<section id="sec_pclass">
-				<title>Priority classes</title>
-				<para>This strategy allows the user to group components into different classes, and
-					to assign a priority level to each of these classes. In case of concurrent
-					transition calls, GINsim first updates the gene(s) belonging to the class with
-					the highest ranking. For each class, the user can further specify the desired
-					updating assumption, which then determines the treatment of concurrent
-					transition calls inside that class. When several classes have the same ranking,
-					concurrent transitions are treated under an asynchronous assumption (no
-					priority).</para>
-				<para>By default, all transitions belong to the same asynchronous class. Running a
-					simulation without further configuration is thus the same as using the
-					asynchronous assumption.</para>
-				<para>The left part of the configuration dialog box shows a list of priority classes
-					(see <xref linkend="fig_pclass" xrefstyle="select:label"/>). The name of a class
-					can be edited and a checkbox allows to change its internal mode from
-					asynchronous (unchecked) to synchronous (checked). Buttons enable to add (+),
-					delete (X), order (using the arrows) and group/ungroup (G) them.</para>
-				<para>The central column lists transitions that belong to the currently selected
-					class and the column on the right lists all other transitions (belonging to
-					other classes). To add transitions to the selected class, choose them in the
-					right list an click on the "&lt;&lt;" button. The "&gt;&gt;" button removes the
-					transition selected in the central list from the current class (and add them to
-					the first class in the list).</para>
-				<para>Finally, a choice list on the bottom left, allows to apply some predefined
-					settings.</para>
-				<figure id="fig_pclass">
-					<title>Definition of Priority classes</title>
-					<mediaobject id="pclass">
-						<imageobject>
-							<imagedata fileref="../figures/priorityClass.png"/>
-						</imageobject>
-						<caption>
-							<para condition="html"><ulink url="javascript:show('pclass')">Show
-									animation</ulink></para>
-						</caption>
-					</mediaobject>
-				</figure>
-				<figure id="fig_dynpclass">
-					<title>Priority Class: example result</title>
-					<mediaobject>
-						<imageobject>
-							<imagedata fileref="../figures/dyn_pclass.png"/>
-						</imageobject>
-						<caption>
-							<para>Example of simulation by priority classes. Two priority classes
-								have been created, the highest ranked one is synchronous and
-								contains C1, C2 and Cro. The other class contains only N. The
-								resulting state transition graph is splited into two parts: N
-								expressed vs. N not expressed.</para>
-						</caption>
-					</mediaobject>
-				</figure>
-			</section>
+			<para>This dialog box allows to define a set of simulation settings:
+				several simulation settings can be created, saved and restored with the graph, <emphasis>provided that the
+					extended save is selected</emphasis>.</para>
+			<para>The right part of the dialog box enables the definition of the current simulation setting.</para>
+			<para>The left part of the dialog box enables to add, remove or switch between simulations settings.</para>
 		</section>
 		<section id="sec_initialStates">
 			<title>Initial states</title>
 			<para>The bottom part of the dialog box is dedicated to the definition and the selection
 				of the initial states of the simulation (see <xref linkend="fig_configSimulation"
-					xrefstyle="select:label"/>). The main part is a table allowing to define initial
-				states. Note that initial states are defined outside of the simulation setting and
-				can thus be shared between several simulation settings.</para>
-			<para>Each row of the table corresponds to a set of states. This set is defined by the
-				specification of allowed expression levels for each gene, in the corresponding table
-				cell. Allowed expression levels are defined as semicolon (;) separated list of
-				values or intervals (denoted by a dash). The special value "m" denotes the max value
-				of the gene. examples: "0;2-4" means "0 or values between 2 and 4"; "0-m" means "any
-				expression level". The default, denoted by a "*", is to not define any set ; it is
-				thus the same as "0-m".</para>
-			<para>To be used for the current simulation setting, a line must be selected (using
-				checkboxes in the second column). If no line is selected, all possible states are considered 
-				(resulting to the <emphasis>full</emphasis> state transition graph),
-				otherwise only the states corresponding to the selected line(s) are considered.</para>
+				xrefstyle="select:label"/>). A table lists and enables the definition of additional
+				initial states. Note that the definition of initial states is shared between all simulation settings.
+			</para>
+			<para>Each row of the table corresponds to a set of states. Gene levels are 
+				specified in the corresponding table cell. 
+				Multiple expression levels can be defined using semicolon (;) or in terms of list of values
+				or intervals (denoted by a dash). The special value "m" denotes the maximal value
+				of the gene. For example, "0;2-4" means "0 or values between 2 and 4"; "0-m" means
+				"any	expression level". The default, denoted by a "*", covers all possible values (it is
+				thus the same as "0-m").</para>
+			<tip>A value can be entered in a set of selected cells at once.</tip>
+			<para>To be used for the current simulation setting, a row must be selected (using
+				checkboxes in the second column). Only the states corresponding to the selected 
+				row(s) are considered for the simulations. If no row is selected, all possible states
+				are considered generating a complete state transition graph.</para>
+<!--
 			<para>The simulation will start with every selected initial states, unless they have
-				already been reached by a previous simulation (i.e. from another initial states).</para>
+				already been reached by a previous simulation (<emphasis>i.e.</emphasis> from another initial state).</para>
+-->
 			<note>
 				<simpara>The "X" button deletes the selected row of initial states. The "reset"
 					button unselects all selected rows.</simpara>
@@ -1072,22 +987,22 @@
 		</section>
 		<section id="sec_mutants" xreflabel="mutants definition">
 			<title>Mutant Definition</title>
-			<para>GINsim allows the definition of <emphasis>mutants</emphasis>, which can then be
-				selected before running the simulation. A mutant is a set of restrictions on the
-				evolution of the activity levels. The <emphasis>Configure</emphasis> button of the
-					<emphasis>Mutant</emphasis> panel (in the simulation dialog box but also in some
-				other places) opens a dialog box, allowing to specify minimal and maximal activity
+			<para>GINsim facilitates the definition of <emphasis>mutants</emphasis>, which can then be
+				selected before running a simulation. A mutant is a set of restrictions on the
+				evolution of gene activity levels. The <emphasis>Configure</emphasis> button of the
+				<emphasis>Mutant</emphasis> panel (in the simulation dialog box, but also in some
+				panels) opens a dialog box, allowing to specify minimal and maximal activity
 				levels for some genes. Once the activity level of a gene enters the specified
 				interval, it can not leave it anymore, i.e. transitions pushing the gene outside of
-				the interval are ignored. This enables the definition of common mutants (knockouts
+				the interval are ignored. This enables the definition of different perturbations (knockouts
 				or ectopic expressions for one or several genes) as an extension of the model. The
 				simulation of more subtle mutants (conditional knockouts...) still requires
 				modifications of the logical parameters.</para>
 			<warning>
 				<simpara>These representation of mutants blocks some transitions, but does not
 					affect trajectories where the activity level of the gene is outside of this
-					range. Completely locking the expression level of a gene requires to set its
-					initial values properly.</simpara>
+					range. Completely locking the expression level of a gene requires to properly
+					set its initial values.</simpara>
 			</warning>
 			<figure id="fig_mutantDef">
 				<title>Mutant definition</title>
@@ -1113,10 +1028,100 @@
 				</mediaobject>
 			</figure>
 		</section>
+		<section id="sec_constructionStrategy">
+			<title>Construction Strategy</title>
+			<para>In a given state of the system, one or several genes are called to update their
+				values. When several changes are pending, different construction strategies lead to
+				different successor states and thus to different state transition graphs.</para>
+			<section id="sec_synchronous">
+				<title>Synchronous mode</title>
+				<para>In this mode, all updating calls are performed simultaneously. This simplification
+					may generate artefacts in the state transition graph.</para>
+				<para>Each state has then at most one successor state, which encompasses fully
+					updated gene levels.</para>
+			</section>
+			<section id="sec_asynchronous">
+				<title>Asynchronous mode</title>
+				<para>In this mode, all changes are performed independantly. It will generate a
+					state transition graph taking into account any possible trajectories. This mode
+					is chosen by default.</para>
+				<para>A given state may have several successor states, each of them corresponding to a
+					single updating of one gene level.</para>
+				<para>In this mode, the graph transition state can be generated "depth first" or
+					"breadth first". The same state transition graph will be built, except if
+					interrupted (for illustration, see <link linkend="sec_dslimit">depth and size
+						limitation</link>).</para>
+				<figure id="fig_syncvsasync">
+					<title>Construction strategy: synchronous versus asynchronous</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../figures/a-sync.png"/>
+						</imageobject>
+						<caption>Samples of simulation results for the lambda4 model, applying
+							asynchronous and synchronous strategies to the same initial states (all
+							states where C1=0 and Cro&gt;0). Dotted arcs denote multiple,
+							simultaneous transitions.</caption>
+					</mediaobject>
+				</figure>
+			</section>
+			<section id="sec_pclass">
+				<title>Priority classes</title>
+				<para>This strategy allows the user to group components into different classes, and
+					to assign a priority level to each of these classes. In case of concurrent
+					transition calls, GINsim first updates the gene(s) belonging to the class with
+					the highest ranking. For each class, the user can further specify the desired
+					updating assumption, which then determines the treatment of concurrent
+					transition calls inside that class. When several classes have the same ranking,
+					concurrent transitions are treated under an asynchronous assumption (no
+					priority).</para>
+				<para>By default, all transitions belong to the same asynchronous class. Running a
+					simulation without further configuration is thus the same as using the
+					asynchronous assumption.</para>
+				<para>The left part of the configuration dialog box shows a list of priority classes
+					(see <xref linkend="fig_pclass" xrefstyle="select:label"/>). The name of a class
+					can be edited and a checkbox allows to change its internal mode from
+					asynchronous (unchecked) to synchronous (checked). Buttons enable to add (+),
+					delete (X), order (using the arrows) and group/ungroup (G) priority classes.</para>
+				<para>The central column lists transitions that belong to the currently selected
+					class, while the column on the right displays all other transitions (<emphasis>i.e.</emphasis> belonging to
+					other classes). To add transitions to the selected class, choose them in the
+					right list an click on the "&lt;&lt;" button. The "&gt;&gt;" button removes the
+					transition selected in the central list from the current class and add them to
+					the first class in the list.</para>
+				<para>Finally, a drop-down list on the bottom left, allows to apply some predefined settings.</para>
+				<figure id="fig_pclass">
+					<title>Definition of Priority classes</title>
+					<mediaobject id="pclass">
+						<imageobject>
+							<imagedata fileref="../figures/priorityClass.png"/>
+						</imageobject>
+						<caption>
+							<para condition="html"><ulink url="javascript:show('pclass')">Show
+									animation</ulink></para>
+						</caption>
+					</mediaobject>
+				</figure>
+				<figure id="fig_dynpclass">
+					<title>Priority Class: example result</title>
+					<mediaobject>
+						<imageobject>
+							<imagedata fileref="../figures/dyn_pclass.png"/>
+						</imageobject>
+						<caption>
+							<para>Example of simulation by priority classes. Two priority classes
+								have been created. The highest ranked one is synchronous and
+								contains C1, C2 and Cro. The other class contains only N. The
+								resulting state transition graph is splited into two parts: N
+								expressed <emphasis>versus</emphasis> N not expressed.</para>
+						</caption>
+					</mediaobject>
+				</figure>
+			</section>
+		</section>
 		<section id="sec_dslimit">
 			<title>Depth and size limitations</title>
 			<para>An option is also offered to limit the search depth and/or the total number of
-				states generated.</para>
+				states generated in a simulation.</para>
 			<para>The limit on depth applies to all simulation modes, excepting the asynchronous
 				breadth first one (where no information on depth is stored). </para>
 			<warning>
@@ -1163,12 +1168,8 @@
 				generated state transition graph. The simulation can be interrupted, using the
 					<emphasis>Cancel</emphasis> button, without loosing the calculated part of the
 				state transition graph.</para>
-			<para>At the end of the simulation, the user can choose what he wants to do with the
-				resulting state transition graph (see <xref linkend="sec_whattodo"
-					xreflabel="select:label"/>). The result are shown in a table the same dialog,
-				allowing to launch the analysis again for another mutant. A "*" in the result table
-				denotes that the state is stable for every value of the corresponding
-			variable.</para>
+			<para>At the end of a simulation, several options are available to save, display or analyse the
+				resulting state transition graph (see <xref linkend="sec_whattodo" xreflabel="select:label"/>).</para>
 		</section>
 	</section>
 	<section id="sec_analyseRegGraph">
@@ -1177,14 +1178,15 @@
 		<section id="sec_stableStates" xreflabel="stable states">
 			<title>Stable State Search</title>
 			<para>The <emphasis>Stable States</emphasis> option of the <emphasis>Actions</emphasis>
-				menu allows the analytic (i.e. without running a simulation) determination of stable
+				menu allows the analytic (<emphasis>i.e.</emphasis> without running a simulation) determination of stable
 				states of the model. All stable states are determined, regardless of their
 				reachability, using an algorithm described in <xref linkend="Naldi2007"/>. The
 				stable states dialog box (see <xref linkend="fig_stableStates"
 					xrefstyle="select:label"/>) allows to run the analysis after the optional
-				selection of a mutant. The result is shown in a table in the same dialog, allowing
-				to launch it again for another mutant. A "*" in the table denotes that the state is
-				stable for every value of the corresponding variable.</para>
+				selection of a mutant. The result is shown in a table in the same dialog box, allowing
+				to launch a novel analysis for another mutant. A "*" in the table denotes that
+				each of the values of this component gives rise to a stable state (or several if another
+				"*" appears in the same row).</para>
 			<figure id="fig_stableStates">
 				<title>The stable states dialog box, showing the result of the analysis</title>
 				<mediaobject>
@@ -1195,14 +1197,15 @@
 				</mediaobject>
 			</figure>
 		</section>
-		<section id="sec_circuits" xreflabel="functionality of regulatory circuits">
+		<section id="sec_circuits" xreflabel="functionality domains of regulatory circuits">
 			<title>Functionality of Regulatory Circuits</title>
-			<para> Regulatory circuits have a crucial role in the dynamical behaviour of a system.
-				In particular, positive circuits are required for the existence of several attractors and negative
-				circuits for the presence of cyclic attractors. We presented in <xref linkend="Naldi2007"/> a 
-				method to analyse circuits of the regulatory graph. An implementation, described in <xref linkend="fig_circuits" xrefstyle="select:label"/>, of this analysis is available
-				in GINsim in the <emphasis>Circuits Functionality</emphasis> option of the 
-				<emphasis>Action</emphasis> menu.
+			<para> Regulatory circuits play crucial roles in the dynamical behaviour of a system.
+				Indeed, positive circuits are required for the existence of several attractors, whereas negative
+				circuits may generate cyclic attractors <xref linkend="Thieffry2007"/>. In <xref linkend="Naldi2007"/>, we 
+				describe a method to analyse the dynamical roles of regulatory circuits.
+				An implementation of this analysis is available in GINsim using the
+				<emphasis>Circuits Functionality</emphasis> option of the <emphasis>Action</emphasis>
+				menu (see <xref linkend="fig_circuits" xrefstyle="select:label"/>).
 			</para>
 			<figure id="fig_circuits">
 				<title>Finding and analysing regulatory circuits</title>
@@ -1210,7 +1213,7 @@
 					<imageobject>
 						<imagedata fileref="../figures/circuitsConfig.png"/>
 					</imageobject>
-					<caption>The first dialog enables to select which circuits will be analysed, by specifying
+					<caption>A first dialog enables to select which circuits will be analysed, by specifying
 						constraints on the length of the circuits or on the involved actors. By default all
 						circuits are considered.
 					</caption>
@@ -1220,10 +1223,10 @@
 						<imagedata fileref="../figures/circuits.png"/>
 					</imageobject>
 					<caption>When this first step is completed, the second dialog shows the list of circuits and
-						enables to run the analysis. When the analysis is completed, new categories appear 
-						to show which circuits are functional (or more specifically positive or negative). When
-						a circuit is selected, its functionality context is shown in the bottom panel of the dialog.
-						The analysis can be performed on the wild type or on any defined mutant.
+						enables to run the analysis. When the analysis is completed, new branches then displays 
+						the functional circuits, classified according to their signs.
+						When a circuit is selected, its functionality context is shown at the bottom of the dialog box.
+						The analysis can be performed for the wild type model or for any predefined mutant.
 					</caption>
 				</mediaobject>
 			</figure>
@@ -1231,7 +1234,8 @@
 		<section id="sec_pn" xreflabel="Petri net">
 			<title>Petri Net Export</title>
 			<para>
-				Regulatory graphs can be exported into Petri net using the method described in <xref linkend="Chaouiya2006"/>.
+				Regulatory graphs can be exported into discrete <!-- TODO: check nomenclature with claudine -->
+				Petri net using the rewriting method described in <xref linkend="Chaouiya2006"/>.
 			</para>
 			<figure>
 				<title>The Petri Net export dialog</title>
@@ -1239,27 +1243,36 @@
 					<imageobject>
 						<imagedata fileref="../figures/pnexport.png"/>
 					</imageobject>
-					<caption>The Petri Net export dialog allows to select the export format, the initial markup and the 
-						mutant to apply before exporting. The initial markup can be taken from an existing initial state
+					<caption>The Petri Net export dialog box allows to select the export format, the initial markup and the 
+						mutant to apply before exporting. The initial markup can be generated from an existing initial state
 						of the model  (modifications made in this dialog are also applied to the simulation settings); only the 
-						first state is used.
+						first selected state is used.
 					</caption>
 				</mediaobject>
 			</figure>
+		</section>
+		<section id="sec_cytoscape" xreflabel="Cytoscape export">
+			<title>Cytoscape Export</title>
+			<para>
+				Regulatory graphs can be exported to the <ulink url="http://www.cytoscape.org/">cytoscape</ulink> format.
+				As cytoscape is not a modelling tool, this export only preserves the structure and appareance of the graph,
+				not the logical parameters.
+				An experimental cytoscape plugin is available on request to perform the complementary operation
+				(i.e. export a cytoscape model into GINML).
+			</para>
 		</section>
 	</section>
 	<section id="sec_analyseSTGraph">
 		<?dbhtml filename="analyseDynamicGraph.html"?>
 		<title>Analysing the state transition graph</title>
 		<section id="sec_scc">
-			<title>Strongly connected component</title>
+			<title>Strongly connected components</title>
 			<para>GINsim allows to compute the graph of the Strongly Connected Components (SCC
-				graph, see <ulink url="http://en.wikipedia.org/wiki/Strongly_connected_component"/>)
+				graph, <emphasis>cf.</emphasis> <ulink url="http://en.wikipedia.org/wiki/Strongly_connected_component"/>)
 				of an existing graph, through the <emphasis>SCC graph</emphasis> option of the
-					<emphasis>Actions</emphasis> menu. The SCC graph is an acyclic graph abstracted
-				from the original one: each node of the SCC graph is a cycle or a set of intertwined
-				cycles of the original graph. This makes it easier to follow trajectories as the
-				resulting graph is more compact.</para>
+				<emphasis>Actions</emphasis> menu. The SCC graph is an acyclic graph abstracted
+				from the original one: each node of the SCC graph corresponds to a cycle or a set of intertwined
+				cycles of the original graph. The resulting graph is thus usually much more compact.</para>
 			<figure id="fig_scc">
 				<title>Strongly Connected Components graph</title>
 				<mediaobject>
@@ -1267,10 +1280,11 @@
 						<imagedata fileref="../figures/scc.png"/>
 					</imageobject>
 					<caption>
-						<simpara>Example of Strongly Connected Component Graph. The original state
-							transition graph is on top. The <emphasis>Selection Attribute</emphasis>
-							tab in the bottom panel shows the content of the selected SCC (i.e. the
-							list of nodes in the original graph).</simpara>
+						<simpara>Example of Strongly Connected Component Graph (bottom right) and
+						the corresponding statetransition graph (top left). 
+						The <emphasis>Selection Attribute</emphasis> tab in the bottom panel shows
+						the content of the selected SCC (<emphasis>i.e.</emphasis> the list of nodes
+						in the original graph).</simpara>
 					</caption>
 				</mediaobject>
 			</figure>
@@ -1279,11 +1293,11 @@
 		</section>
 		<section id="sec_pathFinder">
 			<title>Path finder</title>
-			<para>The "search path" action allows to find a path between different states of the state transition graph.
-			Selecting the "search a path" action in the action menu opens the configuration dialog. This dialog allows to specify
-			the starting state, the target state , and intermediate states (using the "+" and "X" buttons to add/remove them).
-			GINsim then performs a shortest path search (If several paths exist between these states, the result is thus the first
-			encountered shortest path).</para>
+			<para>The "search path" action enables the determination of paths between pairs of states of the state transition graph.
+			Selecting the "search a path" action in the action menu opens a configuration dialog box, which allows the specification
+			of a starting state, a target state , and optional intermediate states (using the "+" and "X" buttons to add/remove them).
+			GINsim then performs a shortest path search. If several paths exist between these states, the first encountered shortest
+			path is returned.</para>
 			<figure id="fig_pathFinder">
 				<title>Search for a path in the state transition graph</title>
 				<mediaobject>
@@ -1303,7 +1317,8 @@
 			<para>The animation tool is launched through the <emphasis>Animate</emphasis> option of
 				the <emphasis>Action</emphasis> menu of a state transition graph. It allows to
 				interactively follow a trajectory in the state transition graph. Genes of the
-				regulatory graph are highlited, according to the selected state.</para>
+				regulatory graph are highlighted, to display the corresponding activity levels (<emphasis>cf.</emphasis>
+				<xref linkend="fig_animation" xrefstyle="select:label" />).</para>
 			<figure id="fig_animator">
 				<title>The animation plugin</title>
 				<mediaobject id="animator">
@@ -1311,51 +1326,48 @@
 						<imagedata fileref="../figures/animator.png"/>
 					</imageobject>
 					<caption>
-						<para condition="html"><ulink url="javascript:show('animator')">Show
-								animation</ulink></para>
+						<para condition="html"><ulink url="javascript:show('animator')">Show animation</ulink></para>
 					</caption>
 				</mediaobject>
 			</figure>
 			<para>To follow a trajectory in the state transition graph, select a starting state. It
 				is then colorized in blue and added to the trajectory (listed in the animation
 				dialog box). Its successor states are highlited, and can be added to the
-				trajectory upon selection (which changes the available successors).</para>
+				trajectory upon selection, which in turns changes the available successor states.</para>
 			<para>To build another trajectory, select a state in the dialog and press the "&lt;&lt;"
 				button to remove it and all of its successors.</para>
 			<para>To view the defined trajectory, select the starting state and press the "|&gt;"
 				button.</para>
 		</section>
 		<section id="sec_gnuplot">
-			<title>Trajectory visualization with gnuplot</title>
-			<para><phrase id="gnuplot"/>Path created with the animation plugin or found by the path
-				finder can be visualized using <ulink url="http://www.gnuplot.info/"
-				>gnuplot</ulink>. The "GP" button (in the path finder and in the animator box) opens
-				the gnuplot export box.</para>
+			<title>Trajectory visualisation with gnuplot</title>
+			<para><phrase id="gnuplot"/>A path created with the animation plugin or found by the path
+				finder can be visualized using <ulink url="http://www.gnuplot.info/">gnuplot</ulink>.
+				The "GP" button (in the path finder and in the animator box) opens the gnuplot export box 
+				(<xref linkend="fig_gnuplot" xrefstyle="select:label" />).
+			</para>
 			<figure id="fig_gnuplot">
 				<title>Gnuplot export box</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="../figures/gnuplotExport.png"/>
 					</imageobject>
-					<caption>The gnuplot export box allows to select genes that should appear on the
-						graph.</caption>
+					<caption>The gnuplot export box enables the selection of the kind of graph to create
+					as well as the genes to display.</caption>
 				</mediaobject>
 			</figure>
-			<para>First select nodes that should appear in the graph, selecting many nodes badly
-				affects the graphs.</para>
-			<para>Then select the kind of graph to create (see bellow).</para>
-			<para>Finally, click "export" and choose a place to save your plot. Note that two files
-				will be created but only the first file name will be asked to the user.</para>
-			<para>If you saved it as "myplot.gnuplot" (the second file will then be named
-				"myplot.data"), the graph can be obtained by running gnuplot and typing the
-					<emphasis>load "mygraph.gnuplot"</emphasis> command at the gnuplot prompt.</para>
+			<para>After selecting the kind of output and the genes to display, click "export" and choose a place to save the plot.
+			Note that two files are created but only the first file name is prompted for.
+			If this filename is "myplot.gnuplot", the second file will then be named	"myplot.data".
+			The actual graph can then be displayed using the command
+			<emphasis>load "mygraph.gnuplot"</emphasis> at the gnuplot prompt.</para>
 			<figure id="fig_gnuplotResults">
 				<title>gnuplot export examples</title>
 				<mediaobject>
 					<imageobject>
 						<imagedata fileref="../figures/gnuplot.png"/>
 					</imageobject>
-					<caption>Examples of the two kinds of gnuplot graphs available. The first one
+					<caption>Examples of the two kinds of gnuplot graphs. The first one
 						uses arrows of different colors to show changes in the expression levels.
 						The second one show separate subgraphs for each gene.</caption>
 				</mediaobject>
@@ -1414,6 +1426,16 @@
 			<volumenum>4695/2007</volumenum>
 			<pagenums>233-247</pagenums>
 			<biblioid class="doi">10.1007/978-3-540-75140-3_16</biblioid>
+		</biblioentry>
+		<biblioentry id="Thieffry2007"><authorgroup> <!-- TODO: fill the right ref -->
+				<author><firstname>Denis</firstname><surname>Thieffry</surname></author>
+			</authorgroup>
+			<title>Dynamical roles of biological regulatory circuits</title>
+			<publisher><publishername>Briefings in Bioinformatics</publishername></publisher>
+			<pubdate>2007</pubdate>
+			<volumenum>8(4)</volumenum>
+			<pagenums>220-5</pagenums>
+			<biblioid class="doi">10.1093/bib/bbm028</biblioid>
 		</biblioentry>
 	</bibliography>
 </article>
