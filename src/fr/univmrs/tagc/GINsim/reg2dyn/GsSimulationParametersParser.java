@@ -173,9 +173,9 @@ public class GsSimulationParametersParser extends XMLHelper {
                     } else {
                         // associate with the existing object
                         if (pos == POS_INITSTATES) {
-                            param.m_initState.put(initList.getInitState(s), null);
+                            initList.addInitState(s, param.m_initState);
                         } else {
-                            param.m_input.put(inputList.getInitState(s), null);
+                            inputList.addInitState(s, param.m_input);
                         }
                     }
                 }

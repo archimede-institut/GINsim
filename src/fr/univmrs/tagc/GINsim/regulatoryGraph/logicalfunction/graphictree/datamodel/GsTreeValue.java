@@ -2,9 +2,9 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datam
 
 
 public class GsTreeValue extends GsTreeElement {
-  private short value;
+  private byte value;
 
-  public GsTreeValue(GsTreeElement parent, short value) {
+  public GsTreeValue(GsTreeElement parent, byte value) {
     super(parent);
     this.value = value;
   }
@@ -14,7 +14,7 @@ public class GsTreeValue extends GsTreeElement {
   public int getValue() {
     return value;
   }
-  public void setValue(short v) {
+  public void setValue(byte v) {
     value = v;
   }
   public void remove() {

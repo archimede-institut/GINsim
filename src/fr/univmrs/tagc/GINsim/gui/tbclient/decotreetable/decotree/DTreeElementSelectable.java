@@ -2,18 +2,14 @@ package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 
 import javax.swing.Icon;
-import javax.swing.plaf.IconUIResource;
 
 public class DTreeElementSelectable extends DTreeElementDeco implements ActionListener {
 	public class JCB extends JCheckBox {

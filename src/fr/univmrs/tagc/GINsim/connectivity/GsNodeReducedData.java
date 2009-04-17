@@ -117,7 +117,7 @@ public class GsNodeReducedData {
 	public int getType(GsGraphManager gm) {
 		if (content.size() == 1) return SCC_TYPE_UNIQUE_NODE;
 		for (Iterator it = content.iterator(); it.hasNext();) {
-			Object currentNode = (Object) it.next();
+			Object currentNode = it.next();
 			if (gm.getOutgoingEdges(currentNode).size() != 1) return SCC_TYPE_COMPLEX_COMPONENT;
 		}
 		return SCC_TYPE_SIMPLE_CYCLE;

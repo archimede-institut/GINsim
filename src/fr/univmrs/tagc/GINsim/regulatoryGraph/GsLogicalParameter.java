@@ -142,12 +142,12 @@ public class GsLogicalParameter implements XMLize {
      * @param node
      * @return the t_ac
      */
-	private short[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
+	private byte[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
 	    List incEdges = regGraph.getGraphManager().getIncomingEdges(node);
 	    List nodeOrder = regGraph.getNodeOrder();
-        short[][] t_ac = new short[incEdges.size()+1][];
-        t_ac[0] = new short[1];
-        t_ac[0][0] = (short)value;
+        byte[][] t_ac = new byte[incEdges.size()+1][];
+        t_ac[0] = new byte[1];
+        t_ac[0][0] = (byte)value;
         if (incEdges.size() == 0 && edge_index.size() == 0) {
         	// special case for the old "basal value"
         	return t_ac;
@@ -156,8 +156,8 @@ public class GsLogicalParameter implements XMLize {
         for (int i=incEdges.size() ; i>0 ; i--) {
             GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)incEdges.get(i-1)).getUserObject();
             GsRegulatoryVertex vertex = me.getSource();
-            short[] t_val = new short[vertex.getMaxValue()+2];
-            t_val[0] = (short)nodeOrder.indexOf(vertex);
+            byte[] t_val = new byte[vertex.getMaxValue()+2];
+            t_val[0] = (byte)nodeOrder.indexOf(vertex);
             t_ac[i] = t_val;
             int nbedges = me.getEdgeCount();
             int m = vertex.getMaxValue();
@@ -220,8 +220,8 @@ public class GsLogicalParameter implements XMLize {
     	return buildTree(regGraph, node, OmddNode.TERMINALS[this.value]);
     }
 	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, OmddNode valueNode) {
-        short[][] t_ac = buildTac(regGraph, node);
-        short[] t_tmp;
+        byte[][] t_ac = buildTac(regGraph, node);
+        byte[] t_tmp;
 
         if (t_ac == null) {
             return null;
@@ -282,8 +282,8 @@ public class GsLogicalParameter implements XMLize {
     }
 
 	public MDDNode buildMDD(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, MDDNode valueNode, DecisionDiagramInfo ddi) {
-        short[][] t_ac = buildTac(regGraph, node);
-        short[] t_tmp;
+        byte[][] t_ac = buildTac(regGraph, node);
+        byte[] t_tmp;
 
         if (t_ac == null) {
             return null;

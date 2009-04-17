@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.initialState;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
@@ -61,15 +62,24 @@ public class InitialStateList extends SimpleGenericList {
         }
 	}
 
-	public Object getInitState(String s) {
-    	for (int i=0 ; i<getNbElements(null) ; i++) {
-    		GsInitialState istate = (GsInitialState)getElement(null, i);
-    		if (istate.getName().equals(s)) {
-    			return istate;
-    		}
-    	}
-		return null;
-	}
+    public Object getInitState(String s) {
+        for (int i=0 ; i<getNbElements(null) ; i++) {
+            GsInitialState istate = (GsInitialState)getElement(null, i);
+            if (istate.getName().equals(s)) {
+                return istate;
+            }
+        }
+        return null;
+    }
+    public void addInitState(String s, Map m) {
+        for (int i=0 ; i<getNbElements(null) ; i++) {
+            GsInitialState istate = (GsInitialState)getElement(null, i);
+            if (istate.getName().equals(s)) {
+                m.put(istate, null);
+                return;
+            }
+        }
+    }
 
     public void toXML(XMLWriter out, String tag) throws IOException {
         for (int i=0 ; i<getNbElements(null) ; i++) {

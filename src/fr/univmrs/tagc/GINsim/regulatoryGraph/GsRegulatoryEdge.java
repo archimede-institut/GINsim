@@ -4,10 +4,10 @@ import fr.univmrs.tagc.GINsim.annotation.Annotation;
 
 
 public class GsRegulatoryEdge {
-	public short threshold;
-	public short sign;
+	public byte threshold;
+	public byte sign;
 	
-	public short index;
+	public byte index;
 	public GsRegulatoryMultiEdge me;
 	
 	Annotation annotation = new Annotation();
@@ -25,11 +25,11 @@ public class GsRegulatoryEdge {
 		return clone;
 	}
 	
-	public short getMin() {
+	public byte getMin() {
 		return threshold;
 	}
 	
-	public short getMax() {
+	public byte getMax() {
 		return me.getMax(index);
 	}
 

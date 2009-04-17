@@ -229,7 +229,7 @@ public class LogicalParameterList extends ArrayList {
 		}
 		refreshDupAndConflicts();
 	}
-	public void applyNewMaxValue(short max, GsRegulatoryGraph graph, List l) {
+	public void applyNewMaxValue(byte max, GsRegulatoryGraph graph, List l) {
 		Iterator it = manualp.iterator();
 		while (it.hasNext()) {
 			GsLogicalParameter param = (GsLogicalParameter)it.next();

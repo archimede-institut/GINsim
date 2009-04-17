@@ -6,14 +6,14 @@ import java.util.List;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 
 public class DynamicalHierarchicalSimulationQueuedState {
-	public short[] state;
+	public byte[] state;
 	public long state_l = -1;
 	public DynamicalHierarchicalSimulationQueuedState previous = null;
 	public int depth;
 	public List childs = null;
 	public int totalChild = -1;
 
-	public DynamicalHierarchicalSimulationQueuedState(short[] state, int depth, DynamicalHierarchicalSimulationQueuedState previous) {
+	public DynamicalHierarchicalSimulationQueuedState(byte[] state, int depth, DynamicalHierarchicalSimulationQueuedState previous) {
 		this.state = state;
 		this.depth = depth;
 		this.previous = previous;

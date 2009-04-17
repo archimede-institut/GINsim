@@ -62,8 +62,8 @@ public class GsDynamicSearchPathConfig extends JDialog {
         
         Object o = graph.getObject("reg2dyn_firstState", false);
         if (o != null && o instanceof int[]) {
-        	short[] t1 = (short[])o;
-        	short[] t2 = new short[t1.length];
+        	byte[] t1 = (byte[])o;
+        	byte[] t2 = new byte[t1.length];
             for (int i=0 ; i<t1.length ; i++) {
                 t2[i] = t1[i];
             }
@@ -178,7 +178,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
             path.clear();
         }
         for (int i=1 ; i<v_pathConstraints.size() ; i++) {
-            List l = graph.shortestPath((short[])v_pathConstraints.get(i-1), (short[])v_pathConstraints.get(i));
+            List l = graph.byteestPath((byte[])v_pathConstraints.get(i-1), (byte[])v_pathConstraints.get(i));
             isPath = true;
             if (l == null) {
                 isPath = false;

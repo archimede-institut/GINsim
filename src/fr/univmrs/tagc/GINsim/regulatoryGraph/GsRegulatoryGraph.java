@@ -327,7 +327,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @param max
      * @return the new vertex.
      */
-    public GsRegulatoryVertex addNewVertex(String id, String name, short max) {
+    public GsRegulatoryVertex addNewVertex(String id, String name, byte max) {
         GsRegulatoryVertex vertex = new GsRegulatoryVertex(id, (GsRegulatoryGraph)graphManager.getGsGraph());
         if (name != null) {
             vertex.setName(name);
@@ -348,9 +348,9 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @param sign
      * @return the new edge
      */
-    public GsRegulatoryEdge addNewEdge(String from, String to, short minvalue, String sign) {
-    	short vsign = GsRegulatoryMultiEdge.SIGN_UNKNOWN;
-    	for (short i=0 ; i<GsRegulatoryMultiEdge.SIGN.length ; i++) {
+    public GsRegulatoryEdge addNewEdge(String from, String to, byte minvalue, String sign) {
+    	byte vsign = GsRegulatoryMultiEdge.SIGN_UNKNOWN;
+    	for (byte i=0 ; i<GsRegulatoryMultiEdge.SIGN.length ; i++) {
     		if (GsRegulatoryMultiEdge.SIGN[i].equals(sign)) {
     			vsign = i;
     			break;
@@ -367,7 +367,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @param sign
      * @return the new edge.
      */
-    public GsRegulatoryEdge addNewEdge(String from, String to, short minvalue, short sign) {
+    public GsRegulatoryEdge addNewEdge(String from, String to, byte minvalue, byte sign) {
         GsRegulatoryVertex source = null;
         GsRegulatoryVertex target = null;
 
@@ -400,7 +400,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 	 * @param vertex
      * @return a warning string if necessary
 	 */
-	public void canApplyNewMaxValue(GsRegulatoryVertex vertex, short newMax, List l_fixable, List l_conflict) {
+	public void canApplyNewMaxValue(GsRegulatoryVertex vertex, byte newMax, List l_fixable, List l_conflict) {
 		Iterator it = graphManager.getOutgoingEdges(vertex).iterator();
 		while (it.hasNext()) {
 			Object next = it.next();

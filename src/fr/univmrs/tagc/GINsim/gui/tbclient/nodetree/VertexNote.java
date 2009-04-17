@@ -42,7 +42,7 @@ public class VertexNote extends DTreeElementToggleButton {
     else
       vertex.getAnnotation().delLink(toString(), vertex.getInteractionsModel().getGraph());
     for (int i = 0; i < getChildCount(); i++)
-      ((AbstractDTreeElement)getChild(i)).check(b);
+      (getChild(i)).check(b);
   }
 	public String toString() {
   	return proto + ":" + value;

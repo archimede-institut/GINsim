@@ -1,18 +1,13 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.nodetree;
 
 import java.awt.Color;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeBuilder;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.ImageLoader;
 
 public class NodeTreeModel extends DTreeModel {

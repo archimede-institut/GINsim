@@ -19,7 +19,7 @@ public class InitialStatesIterator implements Iterator {
 	}
     public InitialStatesIterator(List nodeOrder, Map m_input, Map m_init) {
         it_input = new StatesIterator(nodeOrder, m_input, null);
-        it_states = new StatesIterator(nodeOrder, m_init, (short[])it_input.next());
+        it_states = new StatesIterator(nodeOrder, m_init, (byte[])it_input.next());
 	}
 
    public boolean hasNext() {
@@ -29,7 +29,7 @@ public class InitialStatesIterator implements Iterator {
     public Object next() {
         Object ret = it_states.next();
         if (!it_states.hasNext() && it_input.hasNext()) {
-            it_states.reset((short[])it_input.next());
+            it_states.reset((byte[])it_input.next());
         }
         return ret;
     }
@@ -44,15 +44,15 @@ class StatesIterator implements Iterator {
     Iterator helperIterator = null;
     List nodeOrder;
     Map m_init;
-    short[] refLine;
+    byte[] refLine;
 
-    public StatesIterator(List nodeOrder, Map m_initstates, short[] refLine) {
+    public StatesIterator(List nodeOrder, Map m_initstates, byte[] refLine) {
 		this.nodeOrder = nodeOrder;
 		this.m_init = m_initstates;
 		reset(refLine);
 	}
 	
-    public void reset(short[] refLine) {
+    public void reset(byte[] refLine) {
         this.refLine = refLine;
         if (m_init == null || m_init.size() < 1) {
             List v = new ArrayList();
@@ -61,12 +61,18 @@ class StatesIterator implements Iterator {
         } else {
             helperIterator = m_init.keySet().iterator();
         }
-        helper = new Reg2DynStatesIterator(nodeOrder, 
-                ((GsInitialState)helperIterator.next()).getMap(), refLine);
+        GsInitialState next = (GsInitialState)helperIterator.next();
+        while (next == null && helperIterator.hasNext()) {
+            System.out.println("next input is null");
+            next = (GsInitialState)helperIterator.next();
+        }
+        if (next != null) {
+            helper = new Reg2DynStatesIterator(nodeOrder, next.getMap(), refLine);
+        }
     }
     
 	public boolean hasNext() {
-		return helper.hasNext();
+		return helper != null && helper.hasNext();
 	}
 
 	public Object next() {
@@ -90,14 +96,14 @@ class StatesIterator implements Iterator {
  */
 final class Reg2DynStatesIterator implements Iterator {
 	
-	short[] state;
-	short[] using;
+	byte[] state;
+	byte[] using;
 	int nbGenes;
 	List nodeOrder;
 	int[][] line;
 	boolean goon;
 
-    public Reg2DynStatesIterator(List nodeOrder, Map m_line, short[] refLine) {
+    public Reg2DynStatesIterator(List nodeOrder, Map m_line, byte[] refLine) {
 		this.nodeOrder = nodeOrder;
         
 		line = new int[nodeOrder.size()][];
@@ -117,7 +123,7 @@ final class Reg2DynStatesIterator implements Iterator {
 			} else {
 				line[i] = new int[v_val.size()];
 				for (int j=0 ; j<line[i].length ; j++) {
-					line[i][j] = ((Integer)v_val.get(j)).shortValue();
+					line[i][j] = ((Integer)v_val.get(j)).byteValue();
 				}
 			}
 		}
@@ -129,11 +135,11 @@ final class Reg2DynStatesIterator implements Iterator {
 		}
 		goon = true;
 		
-		state = new short[nbGenes];
-		using = new short[nbGenes];
+		state = new byte[nbGenes];
+		using = new byte[nbGenes];
 		for(int i=0 ; i<nbGenes ; i++){
 		    // initialize all genes on their first value
-		    state[i] = (short) line[i][0];
+		    state[i] = (byte) line[i][0];
 		}
 	}
 	
@@ -154,7 +160,7 @@ final class Reg2DynStatesIterator implements Iterator {
 			return null;
 		}
 
-		short[] ret = new short[nbGenes];
+		byte[] ret = new byte[nbGenes];
         for (int i=0 ; i<nbGenes ; i++) {
             ret[i] = state[i];
         }
@@ -165,10 +171,10 @@ final class Reg2DynStatesIterator implements Iterator {
 				
 			if (using[i] < line[i].length-1) {
 				using[i]++;
-				state[i] = (short) line[i][using[i]];
+				state[i] = (byte) line[i][using[i]];
 				for (int j=0 ; j<i ; j++) {
 					using[j] = 0;
-                    state[j] = (short) line[j][using[j]];
+                    state[j] = (byte) line[j][using[j]];
 				}
 				goon = true;
 				break;

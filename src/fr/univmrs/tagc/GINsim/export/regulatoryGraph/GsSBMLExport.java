@@ -37,7 +37,7 @@ public class GsSBMLExport {
         List v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
-        short[][] t_markup = new short[len][2];
+        byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
             GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_no.get(i);
             if (graph.getGraphManager().getIncomingEdges(vertex).size() == 0) {
@@ -46,7 +46,7 @@ public class GsSBMLExport {
             	// TODO: put back max value ?
             	
 //                t_markup[i][0] = vertex.getBaseValue();
-//                t_markup[i][1] = (short)(vertex.getMaxValue() - vertex.getBaseValue());
+//                t_markup[i][1] = (byte)(vertex.getMaxValue() - vertex.getBaseValue());
             } else {
                 // normal node, initial markup = 0
                 t_markup[i][0] = 0;
@@ -234,7 +234,7 @@ class SBMLExportConfigPanel extends JPanel {
 
     private SBMLmarkupModel model;
     
-    protected SBMLExportConfigPanel (List nodeOrder, short[][] t_markup) {
+    protected SBMLExportConfigPanel (List nodeOrder, byte[][] t_markup) {
         model = new SBMLmarkupModel(nodeOrder, t_markup);
         initialize();
     }
@@ -251,9 +251,9 @@ class SBMLmarkupModel extends DefaultTableModel {
     private static final long serialVersionUID = -4867567086739357065L;
 
     private List nodeOrder;
-    private short[][] t_markup;
+    private byte[][] t_markup;
     
-    protected SBMLmarkupModel (List nodeorder, short[][] t_markup) {
+    protected SBMLmarkupModel (List nodeorder, byte[][] t_markup) {
         this.nodeOrder = nodeorder;
         this.t_markup = t_markup;
     }

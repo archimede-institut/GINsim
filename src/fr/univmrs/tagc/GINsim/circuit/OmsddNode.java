@@ -19,7 +19,7 @@ public class OmsddNode {
     /** leaves reachable from this one (only for non-terminal nodes, null otherwise) */
     public OmsddNode[] next;
     /** value of the terminal node */
-    public short value;
+    public byte value;
     /** cache for the key, should always be null except while reducing */
     String key = null;
 
@@ -61,7 +61,7 @@ public class OmsddNode {
      * @param status
      * @return true if the state is OK.
      */
-    public short testStatus (int[] status) {
+    public byte testStatus (int[] status) {
 
         if (next == null) {
             return value;
@@ -395,7 +395,7 @@ public class OmsddNode {
      *   special case: terminals nodes will just return their value (ie "-1", "0" or "1"), these values
      *   should then be prefilled in the Map.
      *
-     * @param m the hashmap to store temporary (long) and unique (shorter) keys
+     * @param m the hashmap to store temporary (long) and unique (byteer) keys
      * @param t_key int[1]: value of the next unique key
      * @return the unique key of this node
      */

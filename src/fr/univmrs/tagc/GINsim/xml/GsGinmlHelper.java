@@ -27,7 +27,7 @@ public class GsGinmlHelper {
      * @param vareader
      * @param qName
      * @param attributes
-     * @return 1 if short VS, 2 otherwise
+     * @return 1 if byte VS, 2 otherwise
      */
 	public static int applyNodeVisualSettings(GsVertexAttributesReader vareader, String qName, Attributes attributes) {
         if (qName.equals("point")) {

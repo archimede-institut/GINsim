@@ -89,7 +89,7 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
   }
   public void addButtonAction() {
     try {
-      ((GsTreeInteractionsModel)tree.getModel()).addEmptyExpression((short)((GsTreeValue)treeElement).getValue(),
+      ((GsTreeInteractionsModel)tree.getModel()).addEmptyExpression((byte)((GsTreeValue)treeElement).getValue(),
         ((GsTreeInteractionsModel)tree.getModel()).getVertex());
       ((GsTreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((GsTreeElement)tree.getModel().getRoot());
       treeElement.setProperty("null function", new Boolean(true));
@@ -134,7 +134,7 @@ public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionLi
 			model.refreshVertex();
 		}
 	} else {
-		model.updateValue((short)val, (short)oldValue);
+		model.updateValue((byte)val, (byte)oldValue);
 	}
   }
   public void mouseClicked(MouseEvent e) {

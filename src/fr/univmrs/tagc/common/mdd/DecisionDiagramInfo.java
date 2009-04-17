@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.common.mdd;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -215,7 +214,7 @@ class SimpleHashDDI {
 	int size = 0;
 
 	SimpleHashDDI(int maxlevel) {
-		for (short i=0 ; i<MAXTERM ; i++) {
+		for (byte i=0 ; i<MAXTERM ; i++) {
 			nodes.add(new int[] {-1,i});
 		}
 		nodes.add(new int[] {-1,-1});
@@ -224,7 +223,7 @@ class SimpleHashDDI {
 	public SimpleNode node(int level, SimpleNode[] next) {
 		int[] key = new int[next.length+1];
 		key[0] = level;
-		for (short i=0 ; i<next.length ; i++) {
+		for (byte i=0 ; i<next.length ; i++) {
 			key[i+1] = next[i].idx;
 		}
 		return new SimpleNode(this, node(key));
@@ -232,7 +231,7 @@ class SimpleHashDDI {
 	public int node(int level, int[] next) {
 		int[] key = new int[next.length+1];
 		key[0] = level;
-		for (short i=0 ; i<next.length ; i++) {
+		for (byte i=0 ; i<next.length ; i++) {
 			key[i+1] = next[i];
 		}
 		return node(key);
@@ -288,7 +287,7 @@ class SimpleHashDDI {
 		if (t1[0] == t2[0]) {
 			int[] key = new int[t1.length];
 			key[0] = t1[0];
-			for (short i=0 ; i<key.length ; i++) {
+			for (byte i=0 ; i<key.length ; i++) {
 				key[i] = do_and(t1[i], t2[i]);
 			}
 			return node(key);
@@ -300,7 +299,7 @@ class SimpleHashDDI {
 		}
 		int[] key = new int[t1.length];
 		key[0] = t1[0];
-		for (short i=0 ; i<key.length ; i++) {
+		for (byte i=0 ; i<key.length ; i++) {
 			key[i] = do_and(t1[i], node2);
 		}
 		return node(key);
@@ -327,7 +326,7 @@ class SimpleHashDDI {
 		if (t1[0] == t2[0]) {
 			int[] key = new int[t1.length];
 			key[0] = t1[0];
-			for (short i=0 ; i<key.length ; i++) {
+			for (byte i=0 ; i<key.length ; i++) {
 				key[i] = do_or(t1[i], t2[i]);
 			}
 			return node(key);
@@ -339,7 +338,7 @@ class SimpleHashDDI {
 		}
 		int[] key = new int[t1.length];
 		key[0] = t1[0];
-		for (short i=0 ; i<key.length ; i++) {
+		for (byte i=0 ; i<key.length ; i++) {
 			key[i] = do_or(t1[i], node2);
 		}
 		return node(key);
@@ -356,7 +355,7 @@ class SimpleHashDDI {
 		int[] t1 = (int[])nodes.get(node);
 		int[] key = new int[t1.length];
 		key[0] = t1[0];
-		for (short i=0 ; i<key.length ; i++) {
+		for (byte i=0 ; i<key.length ; i++) {
 			key[i] = do_not(t1[i]);
 		}
 		return node(key);

@@ -166,7 +166,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     tree.stopEditing();
     interactionsModel = (GsTreeInteractionsModel)tree.getModel();
     String oldText = s;
-    ok = interactionsModel.updateExpression((short)((GsTreeValue)treeElement.getParent()).getValue(),
+    ok = interactionsModel.updateExpression((byte)((GsTreeValue)treeElement.getParent()).getValue(),
                                             (GsTreeExpression)treeElement, s);
     if (((GsTreeExpression)treeElement).getEditorModel() != null)
       ((GsTreeExpression)treeElement).setSelection(((GsTreeExpression)treeElement).getEditorModel().getSelectedArea(), true);

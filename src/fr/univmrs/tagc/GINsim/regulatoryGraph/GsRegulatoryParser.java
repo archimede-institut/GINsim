@@ -225,13 +225,13 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                     if (map == null || map.containsKey(id)) {
                         pos = POS_VERTEX;
                         try {
-                            short maxvalue = (short)Integer.parseInt(attributes.getValue("maxvalue"));
+                            byte maxvalue = (byte)Integer.parseInt(attributes.getValue("maxvalue"));
                             String name = attributes.getValue("name");
                             vertex = graph.addNewVertex(id, name, maxvalue);
                             vertex.getV_logicalParameters().setUpdateDup(false);
                         	String s_basal = attributes.getValue("basevalue");
                         	if (s_basal != null) {
-                        		short basevalue = (short)Integer.parseInt(s_basal);
+                        		byte basevalue = (byte)Integer.parseInt(s_basal);
                         		if (basevalue != 0) {
                         			vertex.addLogicalParameter(new GsLogicalParameter(basevalue), true);
                         		}
@@ -252,15 +252,15 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                         pos = POS_EDGE;
                         try {
                             String id = attributes.getValue("id");
-                            short minvalue = (short)Integer.parseInt(getAttributeValueWithDefault(attributes,"minvalue", "1"));
+                            byte minvalue = (byte)Integer.parseInt(getAttributeValueWithDefault(attributes,"minvalue", "1"));
                             String smax = getAttributeValueWithDefault(attributes,"maxvalue", "-1");
-                            short maxvalue = -2;
+                            byte maxvalue = -2;
                             String sign = attributes.getValue("sign");
                             edge = graph.addNewEdge(from, to, minvalue, sign);
                             if (smax.startsWith("m")) {
                             	maxvalue = -1;
                             } else {
-                            	maxvalue = (short)Integer.parseInt(smax);
+                            	maxvalue = (byte)Integer.parseInt(smax);
                             }
                         	storeMaxValueForCheck(edge, maxvalue);
                             m_edges.put(id, edge);
@@ -349,7 +349,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         }
     }
 
-    private void storeMaxValueForCheck(GsRegulatoryEdge key, short maxvalue) {
+    private void storeMaxValueForCheck(GsRegulatoryEdge key, byte maxvalue) {
     	if (m_checkMaxValue == null) {
     		m_checkMaxValue = new HashMap();
     	}
@@ -366,9 +366,9 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     		Iterator it = m_checkMaxValue.entrySet().iterator();
     		while (it.hasNext()) {
     			Entry entry = (Entry)it.next();
-    			short m1 = ((GsRegulatoryEdge)entry.getKey()).getMax();
-    			short m2 = ((Integer)entry.getValue()).shortValue();
-    			short max = ((GsRegulatoryEdge)entry.getKey()).me.getSource().getMaxValue();
+    			byte m1 = ((GsRegulatoryEdge)entry.getKey()).getMax();
+    			byte m2 = ((Integer)entry.getValue()).byteValue();
+    			byte max = ((GsRegulatoryEdge)entry.getKey()).me.getSource().getMaxValue();
     			if ( m1 != m2 ) {
 					if (m == null) {
     					m = new HashMap();
@@ -458,7 +458,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
               value = (String)enu_values.nextElement();
               for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
                 exp = (String)enu_exp.nextElement();
-                addExpression(Short.parseShort(value), vertex, exp);
+                addExpression(Byte.parseByte(value), vertex, exp);
               }
             }
             vertex.getInteractionsModel().parseFunctions();
@@ -473,7 +473,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       }
     }
 
-    public void addExpression(short val, GsRegulatoryVertex vertex, String exp) {
+    public void addExpression(byte val, GsRegulatoryVertex vertex, String exp) {
     	try {
         GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
         GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
@@ -494,7 +494,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         ex.printStackTrace();
       }
     }
-    public void addParam(short val, GsRegulatoryVertex vertex, String par) throws Exception {
+    public void addParam(byte val, GsRegulatoryVertex vertex, String par) throws Exception {
       GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
       List l = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
       GsTreeParam param = interactionList.addEmptyParameter(val, vertex);
@@ -559,7 +559,7 @@ class InvalidFunctionNotificationAction implements GsGraphNotificationAction {
 
 	public boolean perform(GsGraph graph, Object data, int index) {
 		Vector v = (Vector)data;
-		short value = ((Short)v.elementAt(0)).shortValue();
+		byte value = ((Short)v.elementAt(0)).byteValue();
 		GsRegulatoryVertex vertex = (GsRegulatoryVertex)v.elementAt(1);
 		String exp = (String)v.elementAt(2);
 		boolean ok = true;
@@ -614,7 +614,7 @@ class InteractionInconsistencyDialog extends StackDialog {
 				Entry entry = (Entry)it.next();
 				Entry e2 = (Entry)entry.getKey();
 				GsRegulatoryEdge edge = (GsRegulatoryEdge)e2.getKey();
-				short oldmax = ((Integer)e2.getValue()).shortValue();
+				byte oldmax = ((Integer)e2.getValue()).byteValue();
 				if (entry.getValue() == null) {
 					s1 += edge.getLongDetail(" ")+": max should be "+(oldmax == -1 ? "max" : ""+oldmax)+"\n";
 				} else {

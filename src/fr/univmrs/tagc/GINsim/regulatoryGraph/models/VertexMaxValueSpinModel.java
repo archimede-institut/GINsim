@@ -33,7 +33,7 @@ public class VertexMaxValueSpinModel extends SpinModel {
 		if (!graph.isEditAllowed()) {
 			return new Integer(vertex.getMaxValue());
 		}
-		vertex.setMaxValue((short) (vertex.getMaxValue()+1), graph);
+		vertex.setMaxValue((byte) (vertex.getMaxValue()+1), graph);
 		return new Integer(vertex.getMaxValue());
 	}
 
@@ -45,7 +45,7 @@ public class VertexMaxValueSpinModel extends SpinModel {
 	    if (!graph.isEditAllowed()) {
 	        return new Integer(vertex.getMaxValue());
 	    }
-	    vertex.setMaxValue((short) (vertex.getMaxValue()-1), graph);
+	    vertex.setMaxValue((byte) (vertex.getMaxValue()-1), graph);
 	    return new Integer(vertex.getMaxValue());
 	}
 
@@ -63,11 +63,11 @@ public class VertexMaxValueSpinModel extends SpinModel {
             return;
         }
         if (value instanceof Integer ){
-            vertex.setMaxValue(((Integer)value).shortValue(), graph);
+            vertex.setMaxValue(((Integer)value).byteValue(), graph);
         }
         if (value instanceof String) {
             try {
-                vertex.setMaxValue((short)Integer.parseInt(value.toString()), graph);
+                vertex.setMaxValue((byte)Integer.parseInt(value.toString()), graph);
             } catch (NumberFormatException e) {}
         }
 	}

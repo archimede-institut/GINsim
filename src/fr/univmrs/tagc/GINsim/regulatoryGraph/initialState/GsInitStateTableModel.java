@@ -208,7 +208,8 @@ public class GsInitStateTableModel extends AbstractTableModel {
 					m_initState.clear();
 					//fireTableDataChanged();
 				}
-				m_initState.put(imanager.getElement(null, rowIndex), null);
+				Object o = imanager.getElement(null, rowIndex);
+                m_initState.put(o, null);
 			} else {
 				m_initState.remove(imanager.getElement(null, rowIndex));
 				// set it to null if empty ? probably _not_ a good idea

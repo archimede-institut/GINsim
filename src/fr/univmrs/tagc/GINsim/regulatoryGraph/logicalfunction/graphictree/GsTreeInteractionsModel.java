@@ -65,7 +65,7 @@ public class GsTreeInteractionsModel implements TreeModel {
             j--;
           }
           else
-            setExpression((short)val.getValue(), (GsTreeExpression)exp);
+            setExpression((byte)val.getValue(), (GsTreeExpression)exp);
       }
       fireTreeStructureChanged(root);
     }
@@ -86,7 +86,7 @@ public class GsTreeInteractionsModel implements TreeModel {
               j--;
             }
             else
-              setExpression((short)val.getValue(), (GsTreeExpression)exp);
+              setExpression((byte)val.getValue(), (GsTreeExpression)exp);
           fireTreeStructureChanged(root);
         }
         if (val.getChildCount() == 0) {
@@ -105,7 +105,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         for (int j = 0; j < val.getChildCount(); j++) {
           exp = val.getChild(j);
           if (exp instanceof GsTreeExpression) {
-            setExpression((short)val.getValue(), (GsTreeExpression)exp);
+            setExpression((byte)val.getValue(), (GsTreeExpression)exp);
             fireTreeStructureChanged(root);
           }
         }
@@ -118,7 +118,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     fireTreeStructureChanged(root);
   }
 
-  public void addValue(short v) {
+  public void addValue(byte v) {
     GsTreeValue val = new GsTreeValue(root, v);
     root.addChild(val, -1);
   }
@@ -128,7 +128,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     v.setParent(root);
   }
 
-  public void removeNullFunction(short v) {
+  public void removeNullFunction(byte v) {
     GsTreeValue value;
     GsTreeElement expression;
     for (int i = 0; i < root.getChildCount(); i++) {
@@ -145,7 +145,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     }
   }
 
-  private GsTreeExpression addExpression(short v, TBooleanTreeNode boolRoot) {
+  private GsTreeExpression addExpression(byte v, TBooleanTreeNode boolRoot) {
     GsTreeValue value;
     GsTreeExpression expression;
     for (int i = 0; i < root.getChildCount(); i++) {
@@ -159,7 +159,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     return null;
   }
 
-  public void addExpression(short val, GsRegulatoryVertex currentVertex, GsBooleanParser parser) throws Exception {
+  public void addExpression(byte val, GsRegulatoryVertex currentVertex, GsBooleanParser parser) throws Exception {
 
     TBooleanTreeNode root = parser.getRoot();
     GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
@@ -210,7 +210,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     }
     return n;
   }
-  public void addExpression(JTree tree, short val, GsRegulatoryVertex currentVertex, String expression) throws Exception {
+  public void addExpression(JTree tree, byte val, GsRegulatoryVertex currentVertex, String expression) throws Exception {
     GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(currentVertex));
     if (!tbp.compile(expression, graph, currentVertex))
       graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
@@ -227,28 +227,28 @@ public class GsTreeInteractionsModel implements TreeModel {
     if (isBasalValueDefined()) s = s + ", basal value defined";
     root.setString(s);
   }
-  public GsTreeExpression addEmptyExpression(short val, GsRegulatoryVertex currentVertex) throws Exception {
+  public GsTreeExpression addEmptyExpression(byte val, GsRegulatoryVertex currentVertex) throws Exception {
     setNode(currentVertex);
     addValue(val);
     currentVertex.setInteractionsModel(this);
     return addExpression(val, (TBooleanTreeNode)null);
   }
-  public GsTreeParam addEmptyParameter(short val, GsRegulatoryVertex currentVertex) throws Exception {
+  public GsTreeParam addEmptyParameter(byte val, GsRegulatoryVertex currentVertex) throws Exception {
     GsTreeParam param = null;
 
     setNode(currentVertex);
     addValue(val);
     return param;
   }
-  private void setExpression(short val, GsTreeExpression exp) {
+  private void setExpression(byte val, GsTreeExpression exp) {
     if (exp.getRoot() != null) updateExpression(val, exp, exp.getRoot().toString(false));
   }
 
-  public void updateValue(short newVal, short oldVal) {
+  public void updateValue(byte newVal, byte oldVal) {
     GsTreeValue value;
     for (int i = 0; i < root.getChildCount(); i++) {
       value = (GsTreeValue)root.getChild(i);
-      if ((short)value.getValue() == oldVal) {
+      if ((byte)value.getValue() == oldVal) {
         value.setValue(newVal);
         break;
       }
@@ -256,7 +256,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     refreshVertex();
   }
 
-  public boolean updateExpression(short val, GsTreeExpression exp, String newExp) {
+  public boolean updateExpression(byte val, GsTreeExpression exp, String newExp) {
     try {
       TBooleanTreeNode root = exp.getRoot();
       if (newExp.equals("")) {
@@ -400,7 +400,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     }
   }
 
-  public TreePath getPath(short v, String e) {
+  public TreePath getPath(byte v, String e) {
     Object [] path = new Object[3];
     GsTreeValue tval;
     GsTreeElement texp;
@@ -408,7 +408,7 @@ public class GsTreeInteractionsModel implements TreeModel {
     path[0] = root;
     for (int i = 0; i < root.getChildCount(); i++) {
       tval = (GsTreeValue)root.getChild(i);
-      if ((short)tval.getValue() == v) path[1] = tval;
+      if ((byte)tval.getValue() == v) path[1] = tval;
       for (int j = 0; j < tval.getChildCount(); j++) {
         texp = tval.getChild(j);
         if (texp.toString().equals(e)) path[2] = texp;

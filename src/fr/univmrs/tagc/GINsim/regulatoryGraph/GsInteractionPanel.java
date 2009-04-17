@@ -499,7 +499,7 @@ public class GsInteractionPanel extends GsParameterPanel
         for (Enumeration enu2 = v.elements(); enu2.hasMoreElements(); ) {
           s = (String)enu2.nextElement();
           try {
-          	interactionsModel.addExpression(null, key.shortValue(), currentVertex, s);
+          	interactionsModel.addExpression(null, key.byteValue(), currentVertex, s);
           }
           catch (Exception ex) {
             ex.printStackTrace();

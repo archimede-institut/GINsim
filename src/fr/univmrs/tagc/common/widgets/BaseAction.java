@@ -31,7 +31,7 @@ public abstract class BaseAction extends AbstractAction {
      * @param name name of the action (menu entry)
      * @param icon for menu and toolbar
      * @param tooltip
-     * @param accelerator (ie keyboard shortcut)
+     * @param accelerator (ie keyboard bytecut)
      */
 	public BaseAction(String name,
 			   ImageIcon icon,

@@ -14,20 +14,20 @@ public class GsGraphNotificationMessage implements TimeoutObject {
 	private GsGraph graph;
     protected GsGraphNotificationAction action;
     private Object data;
-    private short type;
+    private byte type;
 
     /** info, disappear quickly (7s) */
-    public static final short NOTIFICATION_INFO = 0;
+    public static final byte NOTIFICATION_INFO = 0;
     /** info, stay longer (12s) */
-    public static final short NOTIFICATION_INFO_LONG = 1;
+    public static final byte NOTIFICATION_INFO_LONG = 1;
     /** warning, disappear quickly (10s) */
-    public static final short NOTIFICATION_WARNING = 2;
+    public static final byte NOTIFICATION_WARNING = 2;
     /** warning, disappear quickly (15s) */
-    public static final short NOTIFICATION_WARNING_LONG = 3;
+    public static final byte NOTIFICATION_WARNING_LONG = 3;
     /** error, disappear quickly (20s) */
-    public static final short NOTIFICATION_ERROR = 4;
+    public static final byte NOTIFICATION_ERROR = 4;
     /** error, disappear quickly (30s) */
-    public static final short NOTIFICATION_ERROR_LONG = 5;
+    public static final byte NOTIFICATION_ERROR_LONG = 5;
     
     
     /**
@@ -36,7 +36,7 @@ public class GsGraphNotificationMessage implements TimeoutObject {
      * @param message
      * @param type
      */
-    public GsGraphNotificationMessage (GsGraph graph, String message, short type) {
+    public GsGraphNotificationMessage (GsGraph graph, String message, byte type) {
         this(graph, message, null, null, type);
     }
 
@@ -48,7 +48,7 @@ public class GsGraphNotificationMessage implements TimeoutObject {
      * @param data
 	 * @param type seconds after which the message will vanish (never = 0)
 	 */
-	public GsGraphNotificationMessage (GsGraph graph, String message, GsGraphNotificationAction action, Object data, short type) {
+	public GsGraphNotificationMessage (GsGraph graph, String message, GsGraphNotificationAction action, Object data, byte type) {
 		this.graph = graph;
 		this.message = message;
         this.action = action;
@@ -129,7 +129,7 @@ public class GsGraphNotificationMessage implements TimeoutObject {
     /**
      * @return the type of this notification.
      */
-    public short getType() {
+    public byte getType() {
         return type;
     }
     

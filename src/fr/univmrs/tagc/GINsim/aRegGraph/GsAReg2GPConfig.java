@@ -197,9 +197,9 @@ public class GsAReg2GPConfig extends JDialog {
             
             out = new FileWriter(datafile);
             // write data to feed the gnuplot script
-            short[] prevState = ((GsDynamicNode)path.get(0)).state;
+            byte[] prevState = ((GsDynamicNode)path.get(0)).state;
             for (i=1 ; i<path.size() ; i++) {
-            	short[] state = ((GsDynamicNode)path.get(i)).state;
+            	byte[] state = ((GsDynamicNode)path.get(i)).state;
                 out.write(i+"\t");
                 for (int j=0 ; j<nbExported ; j++) {
                     int index = exported[j];
@@ -268,7 +268,7 @@ public class GsAReg2GPConfig extends JDialog {
             // write data to feed the gnuplot script
             out = new FileWriter(datafile);
             for (i=0 ; i<path.size() ; i++) {
-            	short[] state = ((GsDynamicNode)path.get(i)).state;
+            	byte[] state = ((GsDynamicNode)path.get(i)).state;
                 String s = "";
                 for (int j=0 ; j<nbExported ; j++) {
                     int value = state[exported[j]];

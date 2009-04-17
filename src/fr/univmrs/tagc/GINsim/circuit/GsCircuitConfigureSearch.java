@@ -133,8 +133,8 @@ class GsCircuitConfigModel extends DefaultTableModel {
     private static final long serialVersionUID = -8900180159435512429L;
  
     private List v_list;
-    private short[] t_status;
-    private short[][] t_constraint;
+    private byte[] t_status;
+    private byte[][] t_constraint;
     private GsCircuitFrame frame;
     
     /**
@@ -144,7 +144,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
      * @param t_status
      * @param t_constraint 
      */
-    public GsCircuitConfigModel(GsCircuitFrame frame, List v_list, short[] t_status, short[][] t_constraint) {
+    public GsCircuitConfigModel(GsCircuitFrame frame, List v_list, byte[] t_status, byte[][] t_constraint) {
         this.frame = frame;
         this.v_list = v_list;
         this.t_status = t_status;
@@ -219,14 +219,14 @@ class GsCircuitConfigModel extends DefaultTableModel {
     
     public void setValueAt(Object aValue, int row, int column) {
         if (column > 0 && column <= 3) {
-            t_status[row] = (short)column;
+            t_status[row] = (byte)column;
             fireTableRowsUpdated(row, row);
             frame.updateStatus(GsCircuitFrame.STATUS_NONE);
         } else if (column == 4) {
             if (aValue == null) {
                 t_constraint[row][0] = 0;
             } else {
-                short val = ((Integer)aValue).shortValue();
+                byte val = ((Integer)aValue).byteValue();
                 if (val > 0 && val <= ((GsRegulatoryVertex)v_list.get(row)).getMaxValue()) {
                     t_constraint[row][0] = val;
                     if (t_constraint[row][0] > t_constraint[row][1]) {
@@ -240,7 +240,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
             if (aValue == null) {
                 t_constraint[row][1] = ((GsRegulatoryVertex)v_list.get(row)).getMaxValue();
             } else {
-                short val = ((Integer)aValue).shortValue();
+                byte val = ((Integer)aValue).byteValue();
                 if (val > 0 && val <= ((GsRegulatoryVertex)v_list.get(row)).getMaxValue()) {
                     t_constraint[row][1] = val;
                     if (t_constraint[row][0] > t_constraint[row][1]) {
@@ -301,7 +301,7 @@ class GsCircuitSpinModel implements MinMaxSpinModel {
     public void setMaxValue(Object value) {
         if (value instanceof String) {
             try {
-                 int val = (short)Integer.parseInt(value.toString());
+                 int val = (byte)Integer.parseInt(value.toString());
                  if (val > 0 && val <= config.v_list.size()) {
                      config.maxlen = val;
                      if (val < config.minlen) {
@@ -341,7 +341,7 @@ class GsCircuitSpinModel implements MinMaxSpinModel {
     public void setMinValue(Object value) {
         if (value instanceof String) {
             try {
-                 int val = (short)Integer.parseInt(value.toString());
+                 int val = (byte)Integer.parseInt(value.toString());
                  if (val > 0 && val <= config.v_list.size()) {
                      config.minlen = val;
                      if (val > config.maxlen) {

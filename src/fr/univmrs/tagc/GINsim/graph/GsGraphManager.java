@@ -362,7 +362,7 @@ abstract public class GsGraphManager {
     }
     
     /**
-     * find the shortestPath between two nodes
+     * find the byteestPath between two nodes
      * 
      * @param source starting point
      * @param target ending point

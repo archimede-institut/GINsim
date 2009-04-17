@@ -36,7 +36,7 @@ public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionLis
   public void actionPerformed(ActionEvent e) {
     GsRegulatoryVertex vertex;
     boolean ok = true;
-    short i;
+    byte i;
 
     if (e.getSource() == button) {
       try {

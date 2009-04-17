@@ -74,7 +74,7 @@ public class GsPetriNetExportINA extends GsAbstractExport {
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
         List[] t_transition = new List[len];
-        short[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
+        byte[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 
         try {
 	        FileWriter out = new FileWriter(config.getFilename());
