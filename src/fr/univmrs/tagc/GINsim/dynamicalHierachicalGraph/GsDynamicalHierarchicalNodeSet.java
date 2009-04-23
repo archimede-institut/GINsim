@@ -4,12 +4,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public class GsDynamicalHierarchicalNodeSet extends HashSet {
-	
+	private static final long serialVersionUID = -6542206623359579872L;
+
 	public GsDynamicalHierarchicalNodeSet() {
 		super();
 	}
 	
-	public GsDynamicalHierarchicalNode get(short[] state) {
+	public GsDynamicalHierarchicalNode getDHNodeForState(short[] state) {
 		GsDynamicalHierarchicalNode dhnode = null;
 		int i = 0;
 		boolean found = false;

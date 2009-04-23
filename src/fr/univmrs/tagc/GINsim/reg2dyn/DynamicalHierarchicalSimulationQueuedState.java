@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
+import fr.univmrs.tagc.common.GsException;
 
 public class DynamicalHierarchicalSimulationQueuedState {
 	public short[] state;
@@ -12,15 +13,17 @@ public class DynamicalHierarchicalSimulationQueuedState {
 	public int depth;
 	public List childs = null;
 	public int totalChild = -1;
+	private int processedChilds;
 
 	public DynamicalHierarchicalSimulationQueuedState(short[] state, int depth, DynamicalHierarchicalSimulationQueuedState previous) {
 		this.state = state;
 		this.depth = depth;
 		this.previous = previous;
+		processedChilds = 0;
 	}
 	
 	public String toString() {
-		return "{state:"+state_l+"="+DynamicalHierarchicalSimulation.print_t(state)+", depth:"+depth+", previous:"+(previous!=null?""+previous.depth:"None")+", childs"+(childs!=null?""+childs.size():"0")+"/"+totalChild+"}";
+		return "{state:"+state_l+"="+DynamicalHierarchicalSimulation.print_t(state)+", depth:"+depth+", previous:"+(previous!=null?""+previous.depth:"None")+", childs"+processedChilds+"/"+totalChild+"}";
 	}
 	
 	public boolean equals(Object other) {
@@ -79,5 +82,18 @@ public class DynamicalHierarchicalSimulationQueuedState {
 			l <<= 3;
 		}
 		state_l = Math.abs(l);
+	}
+
+	public void tellParentOneChildIsProcess(int processedChilds) {
+		if (previous != null) {
+			previous.processedChilds += processedChilds;
+		}
+	}
+	
+	public boolean isProcessed() throws GsException {
+		if ( processedChilds > totalChild && totalChild != -1) {
+			throw new GsException(1, "Error  processedChilds > totalChild : "+this);
+		}
+		return processedChilds == totalChild;
 	}
 }

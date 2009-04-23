@@ -1,25 +1,20 @@
 package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -36,18 +31,15 @@ import fr.univmrs.tagc.common.document.XHTMLDocumentWriter;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
-public class InteractionAnalysisFrame extends StackDialog implements MouseListener, ActionListener {
+public class InteractionAnalysisFrame extends StackDialog implements ActionListener {
 	private JFrame frame;
 	private GsGraph graph;
 	private Container mainPanel;
 	private JCheckBox[] runOptions;
-	private Color option_lineColor = Color.red;
-//	private JTextArea resultsPane;
 	private JButton colorizeButton, saveReportButton;
 	private JFileChooser jfc = null;
 	
 	private InteractionAnalysis fii;
-	private JPanel colorPanel;
 	private boolean isColorized = false;
 	private MutantSelectionPanel mutantSelectionPanel;
 	private ObjectStore mutantStore;
@@ -236,21 +228,4 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
        jfc.setFileFilter(ffilter);
        return jfc;
    }
-
-	
-	public void mouseClicked(MouseEvent e) {
-		if (e.getSource() == colorPanel) {
-			option_lineColor = JColorChooser.showDialog(
-			            frame,
-			            Translator.getString("STR_interactionAnalysis_opt_color_chooser"),
-			            option_lineColor);
-			if (option_lineColor == null) option_lineColor = Color.red;
-			colorPanel.setBackground(option_lineColor);
-		}     
-	}
-
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
-	public void mousePressed(MouseEvent e) {}
-	public void mouseReleased(MouseEvent e) {}
 }

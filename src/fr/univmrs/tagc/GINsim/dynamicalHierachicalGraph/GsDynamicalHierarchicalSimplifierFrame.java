@@ -102,13 +102,14 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 	 */
     public void simplify_through_merge(GsDynamicalHierarchicalGraph graph) {
 		GsGraphManager gm = graph.getGraphManager();
+		GsGraphManager rgm = graph.getAssociatedGraph().getGraphManager();
 		Set vertexSet = new HashSet(); //cause can't remove and iterate on the same structure.
+		
 		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
 			vertexSet.add(it.next());
 		}
 		for (Iterator it = vertexSet.iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode source = (GsDynamicalHierarchicalNode) it.next();
-			if (source.isAlias()) continue; //Don't treat a slave node, cause we will treat his master.
 			if (source.getType() == GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT) {
 				Set childs = new HashSet();
 				for (Iterator itc = gm.getOutgoingEdges(source).iterator(); itc.hasNext();) {
@@ -123,7 +124,7 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 							gm.addEdge(source, e.getSource(), null);
 						}
 						gm.removeVertex(target);
-						source.merge(target, null);
+						source.merge(target, null, rgm.getVertexCount());
 					}					
 				}
 			}

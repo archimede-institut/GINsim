@@ -141,8 +141,8 @@ public class DynamicGraphComparator extends GraphComparator {
 		
 		if (no1.size() == no2.size()) {
 			for (Iterator it1 = no1.iterator(), it2 = no2.iterator(); it1.hasNext();) {
-				String v1 = (String) it1.next();
-				String v2 = (String) it2.next();
+				String v1 = it1.next().toString();
+				String v2 = it2.next().toString();
 				gNodeOrder.add(v1);
 				
 				if (!v1.equals(v2)) {

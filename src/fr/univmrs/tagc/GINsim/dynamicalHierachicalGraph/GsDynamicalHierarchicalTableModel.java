@@ -60,7 +60,7 @@ public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 	}
 
 	public void setContent(GsDynamicalHierarchicalNode dhnode) {
-		this.content = dhnode.statesToList(g.getGraphManager().getVertexCount());
+		this.content = dhnode.statesToList(colCount);
         fireTableStructureChanged();
 	}
 

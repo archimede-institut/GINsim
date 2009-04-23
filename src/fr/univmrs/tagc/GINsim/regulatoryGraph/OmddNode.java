@@ -7,9 +7,9 @@ import java.util.Vector;
 
 /**
  * Ordered Binary Decision Diagram (OBDD) is a tree representation of boolean functions.
- * Ordered Multivalued Decidion Diagram (OMDD) is based on this representation but adapted 
+ * Ordered Multivalued Decision Diagram (OMDD) is based on this representation but adapted 
  * for a (limited) use of non-boolean functions:
- *   - non-terminal nodes can have more than two childs (actually they have an array of childs)
+ *   - non-terminal nodes can have more than two children (actually they have an array of children)
  *   - terminal nodes are digits: ie can take the values 0, 1, ..., 9
  *
  * this is designed to represent logical parameters in a quickly tested way!
@@ -18,7 +18,7 @@ public class OmddNode {
 
     /** level of this node (only for non-terminal nodes) */
     public int level = -1;
-    /** leaves reacheable from this one (only for non-terminal nodes, null otherwise) */
+    /** leaves reachable from this one (only for non-terminal nodes, null otherwise) */
     public OmddNode[] next;
     /** value of the terminal node */
     public short value;
@@ -42,6 +42,8 @@ public class OmddNode {
     /**  */
     public static final int CONSTRAINT = 2;
     public static final int CONSTRAINTOR = 3;
+
+    public static final int MAX = 5;
     
     static {
     	MINUSONE = new OmddNode();
@@ -119,6 +121,7 @@ public class OmddNode {
         return next[ status[level] ].testStatus(status);
     }
     
+     
     /**
      * merge two trees into a (new?) one.
      * this will create new nodes, as existing one might be merged with different part, they can't be reused.
@@ -243,6 +246,20 @@ public class OmddNode {
                         default:
                             return null;
                     }
+                case MAX:
+                	if (other.next == null) {
+                		if (other.value > this.value) {
+                			return other;
+                		}
+                		return this;
+                	}
+                    ret = new OmddNode();
+                    ret.level = other.level;
+                    ret.next = new OmddNode[other.next.length];
+                    for (int i=0 ; i<ret.next.length ; i++) {
+                        ret.next[i] = merge(other.next[i], op, m, t_key);
+                    }
+                    return ret;
             }
         }
         if (other.next == null) {
@@ -268,7 +285,7 @@ public class OmddNode {
                         case 0:
                             return this;
                         case 1:    
-                        case 2:    // if evereything is fine, 1/-1 should ONLY get merged with 0 => no problem
+                        case 2:    // if everything is fine, 1/-1 should ONLY get merged with 0 => no problem
                         case 3:
                         case 4:
                         case 5:
@@ -301,10 +318,18 @@ public class OmddNode {
                         default:
                             return null;
                     }
+                case MAX:
+                    ret = new OmddNode();
+                    ret.level = this.level;
+                    ret.next = new OmddNode[this.next.length];
+                    for (int i=0 ; i<ret.next.length ; i++) {
+                        ret.next[i] = this.next[i].merge(other, op, m, t_key);
+                    }
+                    return ret;
             }
         }
         
-        if (level == other.level) { // merge all childs together
+        if (level == other.level) { // merge all children together
             if (next.length != other.next.length) {
                 return null;
             }

@@ -1,9 +1,7 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
@@ -20,7 +18,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 	public DynamicalHierarchicalSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		this.regGraph = regGraph;
 		dynHieGraph = new GsDynamicalHierarchicalGraph(params.nodeOrder);
-		if (regGraph instanceof GsGraph) {
+		if (regGraph instanceof GsRegulatoryGraph) {
 			dynHieGraph.setAssociatedGraph((GsGraph)regGraph);
 		}
 		GsVertexAttributesReader vreader = dynHieGraph.getGraphManager().getVertexAttributesReader();
@@ -54,16 +52,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 	}
 
 	public void addEdge(GsDynamicalHierarchicalNode from, GsDynamicalHierarchicalNode to) {
-		Set s = (Set) arcs.get(from);
-		if (s == null) {
-			s = new HashSet();
-			arcs.put(from, s);
-		}
-		s.add(to);
+		from.getOutgoingEdges().add(to);
+		to.getIncomingEdges().add(from);
 	}
-
-	public Set arcsFrom(GsDynamicalHierarchicalNode from) {
-		return (Set) arcs.get(from);
-	}
-
 }
