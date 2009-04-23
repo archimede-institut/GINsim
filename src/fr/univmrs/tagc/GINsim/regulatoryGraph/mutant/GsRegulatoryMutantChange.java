@@ -16,8 +16,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 
 class GsRegulatoryMutantChange {
     GsRegulatoryVertex vertex;
-    short min;
-    short max;
+    byte min;
+    byte max;
     GsBooleanParser parser = null;
     String s_condition = null;
     
@@ -26,13 +26,13 @@ class GsRegulatoryMutantChange {
         this.min = this.max = -1;
     }
     
-    short getMin() {
+    byte getMin() {
         return min;
     }
-    short getMax() {
+    byte getMax() {
         return max;
     }
-    void setMin(short min) {
+    void setMin(byte min) {
         if (min>vertex.getMaxValue()) {
             return;
         }
@@ -41,7 +41,7 @@ class GsRegulatoryMutantChange {
             max = min;
         }
     }
-    void setMax(short max) {
+    void setMax(byte max) {
         if (max>vertex.getMaxValue()) {
             return;
         }

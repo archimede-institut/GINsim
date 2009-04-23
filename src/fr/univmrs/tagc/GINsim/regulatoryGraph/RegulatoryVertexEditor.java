@@ -145,7 +145,7 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	public boolean setValue(int prop, int value) {
 		switch (prop) {
 			case PROP_MAX:
-				vertex.setMaxValue((short)value, graph);
+				vertex.setMaxValue((byte)value, graph);
 				return vertex.getMaxValue() == value;
             case PROP_INPUT:
                 boolean nv = value != 0;

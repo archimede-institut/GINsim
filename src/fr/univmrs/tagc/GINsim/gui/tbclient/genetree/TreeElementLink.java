@@ -7,10 +7,7 @@ import tbrowser.control.netbrowser.TBNetBrowser;
 import tbrowser.ihm.widget.TBButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.Box;
-
 import fr.univmrs.tagc.common.manageressources.ImageLoader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 public class TreeElementLink extends TreeElementDeco {
   protected URL url;

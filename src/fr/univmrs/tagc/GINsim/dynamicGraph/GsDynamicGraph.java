@@ -266,7 +266,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 * @param state the state we want to add
 	 * @return the new GsDynamicNode.
 	 */
-	public boolean addVertex(short[] state) {
+	public boolean addVertex(byte[] state) {
 		return graphManager.addVertex(new GsDynamicNode(state));
 	}
 	/**
@@ -447,12 +447,12 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
     }
 
     /**
-     * look for the shortest path between two states.
+     * look for the byteest path between two states.
      * @param source
      * @param target
      * @return the List describing the path or null if none is found
      */
-    public List shortestPath(short[] source, short[] target) {
+    public List byteestPath(byte[] source, byte[] target) {
         GsDynamicNode n = new GsDynamicNode(source);
         GsDynamicNode n2 = new GsDynamicNode(target);
         if (graphManager.containsVertex(n) && graphManager.containsVertex(n2)) {

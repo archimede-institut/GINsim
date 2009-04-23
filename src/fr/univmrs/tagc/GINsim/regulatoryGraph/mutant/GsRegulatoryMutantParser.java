@@ -72,8 +72,8 @@ public class GsRegulatoryMutantParser extends XMLHelper {
 	                GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
 	                if (vertex.getId().equals(s_vertex)) {
 	                    GsRegulatoryMutantChange change = new GsRegulatoryMutantChange(vertex);
-	                    change.setMin((short)Integer.parseInt(attributes.getValue("min")));
-	                    change.setMax((short)Integer.parseInt(attributes.getValue("max")));
+	                    change.setMin((byte)Integer.parseInt(attributes.getValue("min")));
+	                    change.setMax((byte)Integer.parseInt(attributes.getValue("max")));
 	                    String condition = attributes.getValue("condition");
 	                    if (condition != null && condition.trim().length() > 0) {
 	                    	change.setCondition(condition, graph);

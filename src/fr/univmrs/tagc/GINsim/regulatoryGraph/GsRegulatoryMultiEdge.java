@@ -18,14 +18,14 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 
 	/** array of sign's names */
 	static public final String[] SIGN = {"positive","negative","unknown"};
-	/** array of sign's short names */
+	/** array of sign's byte names */
 	static public final String[] SIGN_SHORT = {"+","-","?"};
 	/** a positive edge */
-	static public final short SIGN_POSITIVE = 0;
+	static public final byte SIGN_POSITIVE = 0;
 	/** a negative edge */
-	static public final short SIGN_NEGATIVE = 1;
+	static public final byte SIGN_NEGATIVE = 1;
 	/** an unknown edge */
-	static public final short SIGN_UNKNOWN = 2;
+	static public final byte SIGN_UNKNOWN = 2;
 
 	private GsRegulatoryEdge[] edges = new GsRegulatoryEdge[GsRegulatoryVertex.MAXVALUE+1];
 	private int edgecount = 0;
@@ -38,13 +38,13 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
      * @param param
      */
     public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param) {
-    	this(source, target, param, (short)1);
+    	this(source, target, param, (byte)1);
     }
-    public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param, short threshold) {
+    public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param, byte threshold) {
         this.source = source;
         this.target = target;
         GsRegulatoryEdge edge = new GsRegulatoryEdge(this);
-        edge.sign = (short)param;
+        edge.sign = (byte)param;
         if (threshold <= source.getMaxValue()) {
         	edge.threshold = threshold;
         } else {
@@ -60,7 +60,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
      *
      */
     public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target) {
-    	this(source, target, 0, (short)1);
+    	this(source, target, 0, (byte)1);
     }
 
     public void addEdge(GsGraph graph) {
@@ -82,8 +82,8 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
     		return -1;
     	}
     	GsRegulatoryEdge edge = new GsRegulatoryEdge(this);
-    	edge.sign = (short)sign;
-    	edge.threshold = (short)threshold;
+    	edge.sign = (byte)sign;
+    	edge.threshold = (byte)threshold;
     	for (int i=0 ; i<edgecount ; i++) {
     		if (threshold < edges[i].threshold) {
     			for (int j=edgecount-1 ; j>=i ; j--) {
@@ -92,11 +92,11 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
     			}
     			edgecount++;
     			edges[i] = edge;
-    			edge.index = (short)i;
+    			edge.index = (byte)i;
     			return i;
     		}
     	}
-    	edge.index = (short)edgecount;
+    	edge.index = (byte)edgecount;
     	edges[edgecount] = edge;
     	return edgecount++;
     }
@@ -133,7 +133,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
     }
     /**
      * get the id of the corresponding subedge.
-     * warning: this will return a shortened ID to put in the table, to get the real (full) id,
+     * warning: this will return a byteened ID to put in the table, to get the real (full) id,
      * use <code>getFullId</code> instead.
      * @param index index of an edge of this multiEdge
      * @return the id of the given sub edge.
@@ -193,7 +193,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 	 * @param index
 	 * @return the sign of this subedge
 	 */
-	public short getSign(int index) {
+	public byte getSign(int index) {
 		if (index >= edgecount) {
 			return 0;
 		}
@@ -206,7 +206,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 	 * @param sign the new sign
 	 * @param graph
 	 */
-	public void setSign(int index, short sign, GsGraph graph) {
+	public void setSign(int index, byte sign, GsGraph graph) {
 		if (index >= edgecount) {
 			return;
 		}
@@ -235,14 +235,14 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 	/**
 	 * @param vertex
 	 */
-	public void applyNewMaxValue(short max) {
+	public void applyNewMaxValue(byte max) {
 		for (int i=0 ; i<edgecount ; i++) {
 			if (edges[i].threshold > max) {
 				edges[i].threshold = max;
 			}
 		}
 	}
-	public void canApplyNewMaxValue(short max, List l_fixable, List l_conflict) {
+	public void canApplyNewMaxValue(byte max, List l_fixable, List l_conflict) {
 		for (int i=0 ; i<edgecount ; i++) {
 			if (edges[i].threshold > max) {
 				if (i == edgecount-1 && (i == 0 || edges[i-1].threshold < max)) {
@@ -257,7 +257,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 	 * @param index index of a sub edge.
 	 * @return the min value of the source vertex for which this sub edge is active
 	 */
-	public short getMin(int index) {
+	public byte getMin(int index) {
 		if (index >= edgecount) {
 			return 0;
 		}
@@ -267,21 +267,21 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 	 * @param index index of a sub edge.
 	 * @return the max value of the source vertex for which this sub edge is active
 	 */
-	public short getMax(int index) {
+	public byte getMax(int index) {
 		if (index >= edgecount) {
 			return 0;
 		}
 		if (index == edgecount-1) {
 			return -1;
 		}
-		return (short)(edges[index+1].threshold - 1);
+		return (byte)(edges[index+1].threshold - 1);
 	}
 	/**
 	 * change a sub edge's min value.
 	 * @param index index of a sub edge.
 	 * @param min the new min value.
 	 */
-	public void setMin(int index, short min) {
+	public void setMin(int index, byte min) {
 		if (index >= edgecount || min < 1 || min > source.getMaxValue() ||
 				edges[index].threshold == min) {
 			return;
@@ -389,8 +389,8 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
     	for (int i=0 ; i<t_required.length ; i++) {
     		if (t_required[i]) {
     			GsRegulatoryEdge edge = new GsRegulatoryEdge(this);
-    			edge.index = (short)edgecount;
-    			edge.threshold = (short)i;
+    			edge.index = (byte)edgecount;
+    			edge.threshold = (byte)i;
     			edge.sign = SIGN_UNKNOWN;
         		edges[edgecount++] = edge;
     		}
@@ -417,7 +417,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 		int cur = 1;
 		int index = 0;
 		for (int i=0 ; i<=edgecount ; i++) {
-			short nextval = i>=edgecount ? (short)(source.getMaxValue()+1) : edges[i].threshold;
+			byte nextval = i>=edgecount ? (byte)(source.getMaxValue()+1) : edges[i].threshold;
 			if (nextval > cur) {
 				for ( ; cur<nextval ; cur++) {
 					t[index++] = cur;

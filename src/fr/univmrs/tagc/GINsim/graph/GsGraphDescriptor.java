@@ -19,7 +19,7 @@ public interface GsGraphDescriptor {
      */
     public String getGraphType();
     /**
-     * @return the short name of this kind of graph (translatable).
+     * @return the byte name of this kind of graph (translatable).
      */
     public String getGraphName();
     /**

@@ -12,9 +12,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicItemAttributePanel;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -33,7 +31,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	private JPanel optionPanel = null;
 	
 	
-	private short[] childsCount = null;
+	private byte[] childsCount = null;
 	private GsDynamicalHierarchicalParameterPanel vertexPanel = null;
 
 	/**
@@ -241,13 +239,13 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	/**
 	 * return an array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
-	public short[] getChildsCount() {
+	public byte[] getChildsCount() {
 		if (childsCount == null) {
-			childsCount = new short[nodeOrder.size()];
+			childsCount = new byte[nodeOrder.size()];
 			int i = 0;
 			for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
 				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-				childsCount[i++] = (short) (v.getMaxValue()+1);
+				childsCount[i++] = (byte) (v.getMaxValue()+1);
 			}			
 		}
 		return childsCount;

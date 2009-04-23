@@ -37,7 +37,7 @@ public class GsCircuitAlgo {
 	private static final boolean testOutLimit = false;
 
     private Map m_report = new HashMap();
-    private short[][] t_constraint;
+    private byte[][] t_constraint;
 
     // some context data
     GsRegulatoryVertex target;
@@ -57,7 +57,7 @@ public class GsCircuitAlgo {
      * @param graph the studied graph
      * @param t_constraint constraints on the nodes
      */
-    public GsCircuitAlgo(GsRegulatoryGraph graph, short[][] t_constraint, GsRegulatoryMutantDef mutant, boolean do_cleanup) {
+    public GsCircuitAlgo(GsRegulatoryGraph graph, byte[][] t_constraint, GsRegulatoryMutantDef mutant, boolean do_cleanup) {
         this.do_cleanup = do_cleanup;
         this.t_constraint = t_constraint;
         t_parameters = graph.getAllTrees(true);
@@ -113,9 +113,9 @@ public class GsCircuitAlgo {
         GsRegulatoryVertex source = me.getSource();
         target = me.getTarget();
 
-        short min = me.getMin(ei.index);
-        short max = me.getMax(ei.index);
-        short smax = source.getMaxValue();
+        byte min = me.getMin(ei.index);
+        byte max = me.getMax(ei.index);
+        byte smax = source.getMaxValue();
         if (max == -1) {
 			max = smax;
 		}
@@ -124,20 +124,20 @@ public class GsCircuitAlgo {
         //   * 2 if only the down limit to test ==> under, inside
         //   * 3 if min == max  ==> under, inside, out
         //   * 4 if min != max  ==> under, inside bottom, inside top, out
-        short[] t_lc;
+        byte[] t_lc;
         if (max < smax) {
             if (max > min) {
-                t_lc = new short[4];
+                t_lc = new byte[4];
                 t_lc[2] = max;
-                t_lc[3] = (short) (max+1);
+                t_lc[3] = (byte) (max+1);
             } else {
-                t_lc = new short[3];
-                t_lc[2] = (short) (max+1);
+                t_lc = new byte[3];
+                t_lc[2] = (byte) (max+1);
             }
         } else {
-            t_lc = new short[2];
+            t_lc = new byte[2];
         }
-        t_lc[0] = (short) (min-1);
+        t_lc[0] = (byte) (min-1);
         t_lc[1] = min;
 
         Vector[] t_ei = new Vector[t_lc.length];
@@ -311,7 +311,7 @@ public class GsCircuitAlgo {
     	ret[0] = score;  // FIXME: still need a better, "scaled", score
     	return ret;
     }
-    private short score (OmsddNode node, int[] state) {
+    private byte score (OmsddNode node, int[] state) {
         if (node.next == null) {
             if (node == OmsddNode.FALSE) {
                 return GsCircuitDescr.FALSE;
@@ -323,13 +323,13 @@ public class GsCircuitAlgo {
             	}
             }
             score -= addScore;
-            return (short)(node == OmsddNode.POSITIVE ? GsCircuitDescr.POSITIVE : GsCircuitDescr.NEGATIVE);
+            return (byte)(node == OmsddNode.POSITIVE ? GsCircuitDescr.POSITIVE : GsCircuitDescr.NEGATIVE);
         }
 
-        short sign = GsCircuitDescr.FALSE;
+        byte sign = GsCircuitDescr.FALSE;
         for (int i=0 ; i<node.next.length ; i++) {
         	state[node.level] = i;
-            short tmp = score(node.next[i], state);
+            byte tmp = score(node.next[i], state);
         	if (sign == GsCircuitDescr.FALSE) {
         		sign = tmp;
         	} else if (tmp == GsCircuitDescr.FALSE) {

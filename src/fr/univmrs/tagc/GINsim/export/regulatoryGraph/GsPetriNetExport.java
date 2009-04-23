@@ -189,7 +189,7 @@ public class GsPetriNetExport extends GsAbstractExport {
 	 * @param t_tree
 	 * @return the initial markup
 	 */
-    protected static short[][] prepareExport(GsExportConfig config, List[] t_transition, OmddNode[] t_tree) {
+    protected static byte[][] prepareExport(GsExportConfig config, List[] t_transition, OmddNode[] t_tree) {
     	List nodeOrder = config.getGraph().getNodeOrder();
 		int len = nodeOrder.size();
 		// get the selected initial state
@@ -229,7 +229,7 @@ public class GsPetriNetExport extends GsAbstractExport {
 			}
 		}
 		
-		short[][] t_markup = new short[len][2];
+		byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
             OmddNode node = t_tree[i];
             GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
@@ -237,11 +237,11 @@ public class GsPetriNetExport extends GsAbstractExport {
 //            if (manager.getIncomingEdges(vertex).size() == 0) {
 //                // input node: no regulator, use basal value as initial markup ??
 //                t_markup[i][0] = vertex.getBaseValue();
-//                t_markup[i][1] = (short)(vertex.getMaxValue() - vertex.getBaseValue());
+//                t_markup[i][1] = (byte)(vertex.getMaxValue() - vertex.getBaseValue());
 //            } else {
                 // normal node, initial markup = 0
-                t_markup[i][0] = (short)t_state[i];
-                t_markup[i][1] = (short)(vertex.getMaxValue()-t_state[i]);
+                t_markup[i][0] = (byte)t_state[i];
+                t_markup[i][1] = (byte)(vertex.getMaxValue()-t_state[i]);
                 Vector v_transition = new Vector();
                 t_transition[i] = v_transition;
                 GsPetriNetExport.browse(v_transition, node, t_priorities, i, nodeOrder, len);

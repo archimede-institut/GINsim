@@ -1,7 +1,5 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.nodetree;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;

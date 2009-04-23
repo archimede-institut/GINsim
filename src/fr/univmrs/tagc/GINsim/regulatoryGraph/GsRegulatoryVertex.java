@@ -35,7 +35,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
  */
 public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 
-	private short 	maxValue = 1;
+	private byte 	maxValue = 1;
 	private boolean isInput = false;
 	private final LogicalParameterList v_logicalParameters = new LogicalParameterList();
 
@@ -85,7 +85,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 	/**
 	 * @return the max value of the node
 	 */
-	public short getMaxValue() {
+	public byte getMaxValue() {
 		return maxValue;
 	}
 
@@ -94,9 +94,9 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 	 * @param max the new max value
 	 * @param graph the graph (to propagate changes if needed)
 	 */
-	public void setMaxValue(short max, GsRegulatoryGraph graph) {
+	public void setMaxValue(byte max, GsRegulatoryGraph graph) {
 	    if (max>0 && max<= MAXVALUE && max != maxValue) {
-	    	short oldmax = maxValue;
+	    	byte oldmax = maxValue;
 	    	if (oldmax > max) {
 	    		List l_fixable = new ArrayList();
 	    		List l_conflict = new ArrayList();
@@ -421,11 +421,11 @@ class UpdateMaxBlockedAction implements GsGraphNotificationAction {
 	String[] t_action;
 
 	GsRegulatoryVertex vertex;
-	short max;
+	byte max;
 	List l_fixable, l_conflict, l_parameters;
 
 	public UpdateMaxBlockedAction(GsRegulatoryVertex vertex,
-			short max, List l_fixable, List l_conflict, List l_parameters) {
+			byte max, List l_fixable, List l_conflict, List l_parameters) {
 		this.vertex = vertex;
 		this.max = max;
 		this.l_conflict = l_conflict;

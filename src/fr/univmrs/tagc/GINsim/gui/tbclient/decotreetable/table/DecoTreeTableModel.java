@@ -43,10 +43,10 @@ public class DecoTreeTableModel extends DefaultTableModel implements TreeModel  
 		});
 	}
 	public void fireTreeStructureChanged(AbstractDTreeElement element) {
-		((DTreeModel)treeModel).fireTreeStructureChanged(element);
+		(treeModel).fireTreeStructureChanged(element);
 	}
 	public void fireTreeNodesChanged(AbstractDTreeElement element) {
-		((DTreeModel)treeModel).fireTreeNodesChanged(element);
+		(treeModel).fireTreeNodesChanged(element);
 	}
 	public void fireTableStructureChanged() {
 		super.fireTableStructureChanged();

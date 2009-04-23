@@ -25,8 +25,8 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 abstract public class SimulationUpdater implements Iterator {
 	private OmddNode[] t_tree;
 	int length;
-	short[] cur_state;
-	short[] next = null;
+	byte[] cur_state;
+	byte[] next = null;
 	int depth;
 	Object node;
 	boolean multiple;
@@ -59,7 +59,7 @@ abstract public class SimulationUpdater implements Iterator {
 	 * 
 	 * @param t_tree
 	 */
-	void setState(short[] state, int depth, Object node) {
+	void setState(byte[] state, int depth, Object node) {
 		this.cur_state = state;
 		this.depth = depth;
 		this.node = node;
@@ -77,9 +77,9 @@ abstract public class SimulationUpdater implements Iterator {
 	 * @param i index of the gene to test
 	 * @return the direction in which the gene want to change: 0 for no change, 1 for increase and -1 for decrease
 	 */
-	protected int nodeChange(short[] initState, int i) {
-		short curState = initState[i];
-		short nextState = t_tree[i].testStatus(initState);
+	protected int nodeChange(byte[] initState, int i) {
+		byte curState = initState[i];
+		byte nextState = t_tree[i].testStatus(initState);
 
 		// now see if the node is willing to change it's state
 		if (nextState > curState){
@@ -116,17 +116,17 @@ class SynchronousSimulationUpdater extends SimulationUpdater {
 	}
 
 	protected void doSetState() {
-		next = new short[length];
+		next = new byte[length];
 		boolean hasChange = false;
 		// for each node
 		for (int i=0 ; i<length ; i++){
-		    short change = (short) nodeChange(cur_state, i);
+		    byte change = (byte) nodeChange(cur_state, i);
 		    if (change != 0) {
 		    	if (hasChange) {
 		    		multiple = true;
 		    	}
 		    	hasChange = true;
-		    	next[i] = (short) (cur_state[i] + change);
+		    	next[i] = (byte) (cur_state[i] + change);
 		    } else {
 		    	next[i] = cur_state[i];
 		    }
@@ -154,7 +154,7 @@ class AsynchronousSimulationUpdater extends SimulationUpdater {
 			next = null;
 			return;
 		}
-		next = (short[])cur_state.clone();
+		next = (byte[])cur_state.clone();
 		next[nextChange] += nextUpdate;
 		int i = nextChange + 1;
 		nextChange = -1;
@@ -169,7 +169,7 @@ class AsynchronousSimulationUpdater extends SimulationUpdater {
 	}
 
 	protected void doSetState() {
-		next = (short[])cur_state.clone();
+		next = (byte[])cur_state.clone();
 		nextChange = -1;
 		int i = 0;
 		for ( ; i<length ; i++){
@@ -218,7 +218,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
 		
 		if (classChangesList != null && nextIndex < classChangesList.length) {
 			// we are processing an asynchronous class, continue this
-	        next = (short[])cur_state.clone();
+	        next = (byte[])cur_state.clone();
 	        next[classChangesList[nextIndex++]] += classChangesList[nextIndex++];
 	        return;
 		}
@@ -257,7 +257,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         	next = null;
         	return;
         }
-        next = (short[])cur_state.clone();
+        next = (byte[])cur_state.clone();
         nextIndex = 1;
         if (classChangesList[0] == GsReg2dynPriorityClass.SYNCHRONOUS) {
         	for ( ; nextIndex<classChangesList.length ; nextIndex++) {
@@ -330,7 +330,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         	next = null;
         	return;
         }
-        next = (short[])cur_state.clone();
+        next = (byte[])cur_state.clone();
         nextIndex = 1;
         if (classChangesList[0] == GsReg2dynPriorityClass.SYNCHRONOUS) {
         	for ( ; nextIndex<classChangesList.length ; nextIndex++) {

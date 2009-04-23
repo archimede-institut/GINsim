@@ -86,7 +86,13 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 	public void run() {
 		//GsDynamicalHierarchicalGraph graph = graph;
 		//if (duplicateGraph.isSelected()) graph = (GsDynamicalHierarchicalGraph) graph.clone();
-		if (actionMerge.isSelected()) simplify_through_merge(graph);
+		if (actionMerge.isSelected())
+			try {
+				simplify_through_merge(graph);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		else if (actionDelete.isSelected()) simplify_through_delete(graph);
 		cancel();
 	}
@@ -99,8 +105,9 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 	 * 
 	 * @param frame a parent frame for the whatToDoFrame
 	 * @param graph the graph that will be altered
+	 * @throws Exception 
 	 */
-    public void simplify_through_merge(GsDynamicalHierarchicalGraph graph) {
+    public void simplify_through_merge(GsDynamicalHierarchicalGraph graph) throws Exception {
 		GsGraphManager gm = graph.getGraphManager();
 		GsGraphManager rgm = graph.getAssociatedGraph().getGraphManager();
 		Set vertexSet = new HashSet(); //cause can't remove and iterate on the same structure.

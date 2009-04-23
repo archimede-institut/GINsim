@@ -160,7 +160,7 @@ public class InteractionAnalysis {
 					SourceItem sourceItem = report.reportFor(target, source, e.threshold);
 					currentSource = sourceItem.reportItems;
 					int functionality = computeFunctionality(source.getMaxValue()+1, ((Integer)node_in_subtree.get(source)).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
-					sourceItem.sign = (short) functionality;
+					sourceItem.sign = (byte) functionality;
 					String res;
 					if (functionality == FUNC_POSITIVE) {
 						res = "positive";
@@ -309,8 +309,8 @@ public class InteractionAnalysis {
 					int high = leafs[index+size_of_subtree];
 					
 					ri = new ReportItem();
-					ri.valL = (short) low;
-					ri.valR = (short) high;
+					ri.valL = (byte) low;
+					ri.valR = (byte) high;
 					currentPath = new LinkedList();
 					log_path(index, node_index, subtree_size_t, small_node_order);
 					
@@ -324,7 +324,7 @@ public class InteractionAnalysis {
 						res = FUNC_NON;
 					}
 					index++;
-					ri.sign = (short) res;
+					ri.sign = (byte) res;
 					ri.path = currentPath;
 					currentSource.add(ri);
 				}
@@ -349,10 +349,10 @@ public class InteractionAnalysis {
 			GsRegulatoryVertex v = small_node_order[k];
 			int count = index/subtree_size_t[k+1]%(v.getMaxValue()+1);
 			PathItem pi = new PathItem();
-			pi.valL = (short) count;
+			pi.valL = (byte) count;
 			pi.vertex = v;
 			if (k == node_index) {
-				pi.valR = (short) (count+1);
+				pi.valR = (byte) (count+1);
 			} 
 			currentPath.add(pi);
 			k--;
@@ -459,17 +459,17 @@ public class InteractionAnalysis {
 class SourceItem {
 	List reportItems = new LinkedList();
 	GsRegulatoryVertex source;
-	short level;
-	short sign;
+	byte level;
+	byte sign;
 }
 
 class PathItem {
-	short valL, valR = -1;
+	byte valL, valR = -1;
 	GsRegulatoryVertex vertex;
 }
 
 class ReportItem {
-	short valL, valR, sign;
+	byte valL, valR, sign;
 	List path;
 }
 
@@ -502,7 +502,7 @@ class Report {
 		return report.keySet().iterator();
 	}
 
-	public SourceItem reportFor(GsRegulatoryVertex target, GsRegulatoryVertex source, short level) {
+	public SourceItem reportFor(GsRegulatoryVertex target, GsRegulatoryVertex source, byte level) {
 		List l = (List) report.get(target);
 		if (l == null) {
 			l = new LinkedList();

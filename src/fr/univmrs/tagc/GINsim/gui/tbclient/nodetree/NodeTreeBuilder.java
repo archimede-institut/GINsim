@@ -5,7 +5,6 @@ import java.awt.Color;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DecoTree;
 
 public class NodeTreeBuilder extends DTreeBuilder {

@@ -10,7 +10,7 @@ public class GsDynamicalHierarchicalNodeSet extends HashSet {
 		super();
 	}
 	
-	public GsDynamicalHierarchicalNode getDHNodeForState(short[] state) {
+	public GsDynamicalHierarchicalNode getDHNodeForState(byte[] state) {
 		GsDynamicalHierarchicalNode dhnode = null;
 		int i = 0;
 		boolean found = false;

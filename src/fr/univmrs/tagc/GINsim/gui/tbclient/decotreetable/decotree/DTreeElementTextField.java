@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.Vector;

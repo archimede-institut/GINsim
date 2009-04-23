@@ -6,9 +6,9 @@ import java.util.List;
  */
 public class GsCircuitSearchStoreConfig {
     /**  */
-    public short[] t_status;
+    public byte[] t_status;
     /**  */
-    public short[][] t_constraint;
+    public byte[][] t_constraint;
     /**  */
     public List v_list;
     /**  */

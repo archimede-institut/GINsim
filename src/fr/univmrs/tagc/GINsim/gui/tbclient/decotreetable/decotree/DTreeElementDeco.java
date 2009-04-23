@@ -8,7 +8,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JTree;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DataValues;
-import javax.swing.JCheckBox;
 
 
 public abstract class DTreeElementDeco extends AbstractDTreeElement {

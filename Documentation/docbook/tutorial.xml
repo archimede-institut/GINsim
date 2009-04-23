@@ -18,7 +18,11 @@
 			</section>
 		<section id="sec_availability">
 			<title>Availability</title>
-			<para>GINsim 2.3 is freely available, under the terms of the <emphasis>General Public License</emphasis>. The GINsim website (<ulink url="http://gin.univ-mrs.fr/GINsim"/>) contains up to date informations, along with the latest official version of GINsim and of this documentation. To get started with GINsim, download the  .jar file from the website and launch it (either by double-click or with the command <emphasis>java -jar GINsim-$version.jar</emphasis>).</para>
+			<para>GINsim 2.3 is freely available for academic users, please contact us for other uses.
+			The GINsim website (<ulink url="http://gin.univ-mrs.fr/GINsim"/>) provides the latest official
+			version of the software, documentation, as well as a model library.
+            To get started with GINsim, download the  .jar file from the website and launch it (either by double-click
+            or with the command <emphasis>java -jar GINsim-$version.jar</emphasis>).</para>
 		</section>
 		<section id="overview">
 			<title>Overview of this tutorial</title>

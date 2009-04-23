@@ -44,9 +44,9 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
     public void init(Vector colors, Vector genes, Vector values) {
       data = new Object[genes.size()][columns.length];
       for (int i = 0; i < genes.size(); i++) {
-        data[i][0] = (Paint)colors.elementAt(i);
-        data[i][1] = (String)genes.elementAt(i);
-        data[i][2] = (Double)values.elementAt(i);
+        data[i][0] = colors.elementAt(i);
+        data[i][1] = genes.elementAt(i);
+        data[i][2] = values.elementAt(i);
       }
       nbRows = genes.size();
       fireTableDataChanged();

@@ -13,7 +13,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 import java.awt.Color;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementNode;
 
 public class GeneTreeModel implements TreeModel {
   private AbstractTreeElement root;

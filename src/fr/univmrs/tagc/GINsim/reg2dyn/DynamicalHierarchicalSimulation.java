@@ -28,7 +28,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private GsDynamicalHierarchicalNode dhnode;
 	private GsDynamicalHierarchicalNodeSet nodeSet;
 	
-	private final short debug = 11; //FIXME : set debug to 0
+	private final byte debug = 11; //FIXME : set debug to 0
 	private PrintStream debug_o = System.err;
 	private GsDynamicalHierarchicalGraph dynGraph;
 	private GsGraphManager rgm;
@@ -90,7 +90,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 */
 	private void runSimulationOnInitialStates() throws Exception {
 		while(initStatesIterator.hasNext()) { 										//For each initial states
-			short[] state = (short[])initStatesIterator.next();						//  fetch the current initial state.
+			byte[] state = (byte[])initStatesIterator.next();						//  fetch the current initial state.
 			updateProgess();														//  Update the GUI to indicates the progress (ie. one node processed)
 			log(5,"\nInit queue with state :"+print_t(state));
 			
@@ -530,7 +530,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		return (DynamicalHierarchicalSimulationQueuedState)queue.peekLast();
 	}
 
-	public static String print_t(short[] t) {
+	public static String print_t(byte[] t) {
 		StringBuffer s = new StringBuffer();
 		for (int i = 0 ; i < t.length ; i++){
 			s.append(" "+t[i]);

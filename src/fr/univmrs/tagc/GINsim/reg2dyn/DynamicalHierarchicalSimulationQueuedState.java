@@ -7,7 +7,7 @@ import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalN
 import fr.univmrs.tagc.common.GsException;
 
 public class DynamicalHierarchicalSimulationQueuedState {
-	public short[] state;
+	public byte[] state;
 	public long state_l = -1;
 	public DynamicalHierarchicalSimulationQueuedState previous = null;
 	public int depth;
@@ -15,7 +15,7 @@ public class DynamicalHierarchicalSimulationQueuedState {
 	public int totalChild = -1;
 	private int processedChilds;
 
-	public DynamicalHierarchicalSimulationQueuedState(short[] state, int depth, DynamicalHierarchicalSimulationQueuedState previous) {
+	public DynamicalHierarchicalSimulationQueuedState(byte[] state, int depth, DynamicalHierarchicalSimulationQueuedState previous) {
 		this.state = state;
 		this.depth = depth;
 		this.previous = previous;

@@ -321,7 +321,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
      *    the "transition filter" is a bit hacky: add it to your transition (which should be either +1 or -1)
      *    and if the result is zero (0), then this transition shouldn't be followed.
      *
-     * shortly: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
+     * bytely: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
      */
     public int[][] getPclass(List nodeOrder) {
 

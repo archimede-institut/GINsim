@@ -230,7 +230,7 @@ class AddEdgeNotificationAction implements GsGraphNotificationAction {
 	public boolean perform(GsGraph graph, Object data, int index) {
 		if (edgeList.medge == data) {
 			GsRegulatoryVertex vertex = ((GsRegulatoryMultiEdge)data).getSource();
-			vertex.setMaxValue((short)(vertex.getMaxValue()+1), (GsRegulatoryGraph)graph);
+			vertex.setMaxValue((byte)(vertex.getMaxValue()+1), (GsRegulatoryGraph)graph);
 			edgeList.add();
 			return true;
 		}

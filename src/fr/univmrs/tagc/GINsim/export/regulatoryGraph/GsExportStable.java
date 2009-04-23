@@ -93,7 +93,7 @@ public class GsExportStable extends JPanel implements GenericStableStateUI {
 	    		
 	    		int i;
 	    		List v_no = cfg.graph.getNodeOrder();
-	    		short[] checked = tableModel.getCheckedRow();
+	    		byte[] checked = tableModel.getCheckedRow();
 	    		s.append("SPEC EF ( AG (");
 	    		for ( i=0; i<checked.length-1 ;i++) {
 		    		s.append(v_no.get(i));

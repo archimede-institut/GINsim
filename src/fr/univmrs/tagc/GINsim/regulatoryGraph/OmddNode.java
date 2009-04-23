@@ -21,14 +21,14 @@ public class OmddNode {
     /** leaves reachable from this one (only for non-terminal nodes, null otherwise) */
     public OmddNode[] next;
     /** value of the terminal node */
-    public short value;
+    public byte value;
     /** cache for the key, should always be null except while reducing */
     String key = null;
     
     /** constraint: min allowed value */
-    public short min=-1;
+    public byte min=-1;
     /** constraint: max allowed value */
-    public short max=-1;
+    public byte max=-1;
     
     // create once for all the terminals nodes.
     /** all terminal nodes */
@@ -110,7 +110,7 @@ public class OmddNode {
      * @param status
      * @return true if the state is OK.
      */
-    public short testStatus (short[] status) {
+    public byte testStatus (byte[] status) {
         
         if (next == null) {
             return value;
@@ -403,7 +403,7 @@ public class OmddNode {
         
         OmddNode copy = new OmddNode();
         copy.level = level;
-//        copy.t_order = (short[])t_order.clone();
+//        copy.t_order = (byte[])t_order.clone();
         copy.next = new OmddNode[next.length];
         for (int i=0 ; i<next.length ; i++) {
             if (next[i] != null) {
@@ -424,7 +424,7 @@ public class OmddNode {
         
         OmddNode copy = new OmddNode();
         copy.level = level;
-//        copy.t_order = (short[])t_order.clone();
+//        copy.t_order = (byte[])t_order.clone();
         copy.next = new OmddNode[next.length];
         for (int i=0 ; i<next.length ; i++) {
             if (next[i] != null) {
@@ -522,7 +522,7 @@ public class OmddNode {
      *   special case: terminals nodes will just return their value (ie "-1", "0" or "1"), these values 
      *   should then be prefilled in the Map.
      *      
-     * @param m the hashmap to store temporary (long) and uniq (shorter) keys
+     * @param m the hashmap to store temporary (long) and uniq (byteer) keys
      * @param t_key int[1]: value of the next uniq key
      * @return the uniq key of this node
      */

@@ -312,9 +312,9 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       for (int i = 0; i < functions.length; i++)
         if (((GsTreeValue) functions[i].getParent()).getValue() != value.getValue()) {
-          interactionList.addExpression(tree, (short) value.getValue(), interactionList.getVertex(), functions[i].toString());
+          interactionList.addExpression(tree, (byte) value.getValue(), interactionList.getVertex(), functions[i].toString());
           if (remove) functions[i].remove(false);
-          interactionList.removeNullFunction((short) value.getValue());
+          interactionList.removeNullFunction((byte) value.getValue());
         }
       interactionList.fireTreeStructureChanged((GsTreeElement) tree.getPathForRow(0).getLastPathComponent());
       interactionList.refreshVertex();
@@ -488,7 +488,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
         for (enu2 = v.elements(); enu2.hasMoreElements(); ) {
           s = (String) enu2.nextElement();
           try {
-            interactionList.addExpression(null, key.shortValue(), interactionList.getVertex(), s);
+            interactionList.addExpression(null, key.byteValue(), interactionList.getVertex(), s);
           }
           catch (Exception ex) {
             ex.printStackTrace();
@@ -504,7 +504,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
         s = (String) enu2.nextElement();
         while (enu2.hasMoreElements()) s = s + " | (" + (String)enu2.nextElement() + ")";
         try {
-          interactionList.addExpression(null, key.shortValue(), interactionList.getVertex(), s);
+          interactionList.addExpression(null, key.byteValue(), interactionList.getVertex(), s);
         }
         catch (Exception ex) {
           ex.printStackTrace();

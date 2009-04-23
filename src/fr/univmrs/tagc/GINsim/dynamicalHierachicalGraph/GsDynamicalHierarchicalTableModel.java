@@ -45,7 +45,7 @@ public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 		if (rowIndex >= getRowCount() || columnIndex >= colCount) {
 			return null;
 		}
-		int i = ((short[])content.get(rowIndex))[columnIndex];
+		int i = ((byte[])content.get(rowIndex))[columnIndex];
 		if (i == -1 ) return "*";
 		return String.valueOf(i);
 	}

@@ -498,27 +498,27 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         }
         
         if ("".equals(aValue) || "-".equals(aValue)) {
-            curMutant.setMin(rowIndex, (short)-1);
-            curMutant.setMax(rowIndex, (short)-1);
+            curMutant.setMin(rowIndex, (byte)-1);
+            curMutant.setMax(rowIndex, (byte)-1);
             fireTableCellUpdated(rowIndex, 1);
             fireTableCellUpdated(rowIndex, 2);
             return;
         }
         
-        short val;
+        byte val;
         if (aValue instanceof Integer) {
-        	val = ((Integer)aValue).shortValue();
+        	val = ((Integer)aValue).byteValue();
         } else {
 	        try {
-	            val = (short)Integer.parseInt(aValue.toString());
+	            val = (byte)Integer.parseInt(aValue.toString());
 	        } catch (Exception e) {
 	            return;
 	        }
         }
         
         if (val == -1) {
-            curMutant.setMin(rowIndex, (short)-1);
-            curMutant.setMax(rowIndex, (short)-1);
+            curMutant.setMin(rowIndex, (byte)-1);
+            curMutant.setMax(rowIndex, (byte)-1);
             fireTableCellUpdated(rowIndex, 1);
             fireTableCellUpdated(rowIndex, 2);
             return;

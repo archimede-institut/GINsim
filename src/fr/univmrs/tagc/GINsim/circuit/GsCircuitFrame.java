@@ -283,11 +283,11 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
                 config.v_list = graph.getNodeOrder();
                 config.minlen = 1;
                 config.maxlen = config.v_list.size();
-                config.t_status = new short[graph.getNodeOrder().size()];
-                config.t_constraint = new short[graph.getNodeOrder().size()][3];
+                config.t_status = new byte[graph.getNodeOrder().size()];
+                config.t_constraint = new byte[graph.getNodeOrder().size()][3];
                 for (int i = 0; i < config.t_status.length; i++) {
                     config.t_status[i] = 3;
-                    short max = ((GsRegulatoryVertex) graph.getNodeOrder().get(
+                    byte max = ((GsRegulatoryVertex) graph.getNodeOrder().get(
                             i)).getMaxValue();
                     config.t_constraint[i][0] = 0;
                     config.t_constraint[i][1] = max;
@@ -423,18 +423,18 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         if (v_cc.size() < 2) {
             return;
         }
-        short[][] t_cc = buildTCC(graphm, v_cc); // int[][] giving edges in
+        byte[][] t_cc = buildTCC(graphm, v_cc); // int[][] giving edges in
                                                     // the current SCC
-        short[] t_visited = new short[t_cc.length]; // remember visited nodes
+        byte[] t_visited = new byte[t_cc.length]; // remember visited nodes
                                                     // and their position
-        short[][] t_path = new short[t_cc.length][3]; // remember the followed
+        byte[][] t_path = new byte[t_cc.length][3]; // remember the followed
                                                         // path: series of
                                                         // nodes, index of the
                                                         // followed edge and
                                                         // score
-        short[] t_map = new short[t_cc.length];
-        short cur = 0; // num of the current node
-        short pos = 0; // position of the current node in the current path
+        byte[] t_map = new byte[t_cc.length];
+        byte cur = 0; // num of the current node
+        byte pos = 0; // position of the current node in the current path
         boolean[] t_history = new boolean[t_cc.length]; // avoid refinding
                                                         // cycles not starting
                                                         // at the first gene
@@ -443,14 +443,14 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         t_path[0][1] = 0;
         int score = 0; // score of the current circuit (to know if it can be
                         // accepted)
-        t_map[0] = (short) graph.getNodeOrder().indexOf(v_cc.get(0));
+        t_map[0] = (byte) graph.getNodeOrder().indexOf(v_cc.get(0));
         if (config != null && config.t_status[t_map[0]] == 1) {
             score++;
         }
         for (int j = 1; j < t_visited.length; j++) {
             t_visited[j] = -1;
             t_history[j] = false;
-            t_map[j] = (short) graph.getNodeOrder().indexOf(v_cc.get(j));
+            t_map[j] = (byte) graph.getNodeOrder().indexOf(v_cc.get(j));
             if (config != null && config.t_status[t_map[j]] == 1) {
                 score++;
             }
@@ -639,20 +639,20 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         }
     }
 
-    private short[][] buildTCC(GsGraphManager graphm, Vector v_cc) {
-        short[][] t_cc = new short[v_cc.size()][];
-        for (short i = 0; i < t_cc.length; i++) {
-            short[] t = new short[t_cc.length - 1];
+    private byte[][] buildTCC(GsGraphManager graphm, Vector v_cc) {
+        byte[][] t_cc = new byte[v_cc.size()][];
+        for (byte i = 0; i < t_cc.length; i++) {
+            byte[] t = new byte[t_cc.length - 1];
             int last = 0;
             Object source = v_cc.get(i);
-            for (short j = 0; j < t_cc.length; j++) {
+            for (byte j = 0; j < t_cc.length; j++) {
                 if (i != j && graphm.containsEdge(source, v_cc.get(j))) {
                     t[last++] = j;
                 }
             }
             if (t.length != last) {
-                short[] t2 = new short[last];
-                for (short j = 0; j < last; j++) {
+                byte[] t2 = new byte[last];
+                for (byte j = 0; j < last; j++) {
                     t2[j] = t[j];
                 }
                 t = t2;

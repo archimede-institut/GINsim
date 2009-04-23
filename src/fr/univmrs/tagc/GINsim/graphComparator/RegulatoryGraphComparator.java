@@ -80,8 +80,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			String sid = ((GsRegulatoryVertex) e.getSourceVertex()).getId();
 			String tid = ((GsRegulatoryVertex) e.getTargetVertex()).getId();
 			
-			GsDirectedEdge e1 = (GsDirectedEdge) g1m.getEdge((GsRegulatoryVertex) g1m.getVertexByName(sid), (GsRegulatoryVertex) g1m.getVertexByName(tid));
-			GsDirectedEdge e2 = (GsDirectedEdge) g2m.getEdge((GsRegulatoryVertex) g2m.getVertexByName(sid), (GsRegulatoryVertex) g2m.getVertexByName(tid));
+			GsDirectedEdge e1 = (GsDirectedEdge) g1m.getEdge(g1m.getVertexByName(sid), g1m.getVertexByName(tid));
+			GsDirectedEdge e2 = (GsDirectedEdge) g2m.getEdge(g2m.getVertexByName(sid), g2m.getVertexByName(tid));
 			
 			String comment = "The edge "+me.toToolTip()+" ";
 			ereader.setEdge(me);
@@ -96,8 +96,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			}
 			log(comment+"\n");
 			if (e1 != null && e2 != null) compareEdges((GsRegulatoryMultiEdge)e1.getUserObject(), (GsRegulatoryMultiEdge)e2.getUserObject());
-			if (e1 != null) meMap.put((GsRegulatoryMultiEdge)e1.getUserObject(),me);
-			else if (e2 != null) meMap.put((GsRegulatoryMultiEdge)e2.getUserObject(),me);
+			if (e1 != null) meMap.put(e1.getUserObject(),me);
+			else if (e2 != null) meMap.put(e2.getUserObject(),me);
 		}
 		setAllLogicalFunctions();
 		meMap = null;
@@ -125,7 +125,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 				setLogicalFunction(v, v1, g1);
 			} else {
 				comment = "The vertex "+id+" is common to both graphs\n";
-				v = g.addNewVertex(id, v1.getName(), (short) Math.max(v1.getMaxValue(), v2.getMaxValue()));
+				v = g.addNewVertex(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
 				Color[] color = {COMMON_COLOR};
 				comment += compareVertices(v ,v1, v2, color);
 				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), g2m.getVertexAttributesReader(), color[0]);
@@ -169,13 +169,13 @@ public class RegulatoryGraphComparator extends GraphComparator {
 					continue;
 				}
 				for (int i = 0; i < me1.getEdgeCount(); i++) {
-					e = g.addNewEdge(id, tid, (short)me1.getMin(i) , (short)me1.getSign(i));
+					e = g.addNewEdge(id, tid, me1.getMin(i) , me1.getSign(i));
 				}
 				if (vcol == SPECIFIC_G1_COLOR || vcol == SPECIFIC_G2_COLOR|| !isCommonVertex(target)) { //The edge's vertices are specific to a graph therefore the edge is specific, and we add it with the right color.
 					mergeEdgeAttributes(e.me, me1, null, pcol, ereader, e1reader, null);
 				} else { //source and target are common to both graph.
 					e2 = (GsDirectedEdge) gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
-					if (e2 != null)	mergeEdgeAttributes(e.me, me1, (GsRegulatoryMultiEdge)e2.getUserObject(), vcol, ereader, e1reader, e2reader);
+					if (e2 != null)	mergeEdgeAttributes(e.me, me1, e2.getUserObject(), vcol, ereader, e1reader, e2reader);
 					else			mergeEdgeAttributes(e.me, me1, null, pcol, ereader, e1reader, null);
 				}
 			}
@@ -196,8 +196,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			comment += "   names are differents : "+n1+" and "+n2+"\n";
 		}
 		if (v1.getMaxValue() != v2.getMaxValue()) {
-			short mv1 = v1.getMaxValue();
-			short mv2 = v2.getMaxValue();
+			byte mv1 = v1.getMaxValue();
+			byte mv2 = v2.getMaxValue();
 			comment += "   max values are differents : "+mv1+" and "+mv2+"\n";
 			color[0] = COMMON_COLOR_DIFF_MAXVALUES;
 		} else if (sameNodeOrder) comment += compareLogicalFunction(v1, v2, color); //Compare logical function only if they have the same maxValue.

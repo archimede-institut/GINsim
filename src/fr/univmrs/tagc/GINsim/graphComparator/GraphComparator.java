@@ -147,7 +147,7 @@ public abstract class GraphComparator {
 	
 	public void setEdgeAutomatingRouting() {
 		for (Iterator it = gm.getEdgeIterator(); it.hasNext();) {
-			Object e = (Object) it.next();
+			Object e = it.next();
 			GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
 			ereader.setEdge(e);
 			ereader.setRouting(GsEdgeAttributesReader.ROUTING_AUTO);

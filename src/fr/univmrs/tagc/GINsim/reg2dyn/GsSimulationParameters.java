@@ -127,11 +127,14 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
         } else {
             Iterator it = m_input.keySet().iterator();
             while (it.hasNext()) {
-                Map m_init = ((GsInitialState)it.next()).getMap();
-                s += "\n      ";
-                for (int j=0 ; j<nodeOrder.size() ; j++) {
-                    GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
-                    s += "  "+GsInitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
+                GsInitialState init = (GsInitialState)it.next();
+                if (init != null) {
+                    Map m_init = init.getMap();
+                    s += "\n      ";
+                    for (int j=0 ; j<nodeOrder.size() ; j++) {
+                        GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(j);
+                        s += "  "+GsInitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
+                    }
                 }
             }
             s += "\n";

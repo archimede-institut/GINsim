@@ -19,7 +19,7 @@ public class GsDynamicItemModel extends AbstractTableModel {
     private List nodeOrder;
     GsDynamicGraph graph;
     GsGraphManager graphManager;
-    private short[] state;
+    private byte[] state;
     private GsDynamicNode[] nextState;
     private GsDynamicNode[] prevState;
     private JButton[] go2Next;

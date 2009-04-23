@@ -315,7 +315,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			
 			// initial states
             GsInitialStateList linit = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
-			if (!linit.isEmpty()) {
+			if (linit != null && !linit.isEmpty()) {
     			GsInitialStateList newLinit = (GsInitialStateList)simplifiedGraph.getObject(GsInitialStateManager.key, true);
                 InitialStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
                 InitialStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};

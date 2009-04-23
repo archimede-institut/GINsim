@@ -17,7 +17,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.common.widgets.*;
 import tbrowser.data.*;
 import tbrowser.data.module.*;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 public class GsInteractionsPanel extends GsPanel implements ItemListener, ActionListener {
 	class InteractionsTableRenderer extends DefaultTableCellRenderer {
@@ -202,7 +201,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 								v = new Vector();
 								v.addElement(gene1);
 								v.addElement(gene2);
-								v = (Vector)clientPanel.getClient().getSignatures(v, org);
+								v = clientPanel.getClient().getSignatures(v, org);
 								signatures.put(sk, v);
 							}
 							else
@@ -275,7 +274,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 								v.addElement(gene1);
 								v.addElement(gene2);
 								//mods = clientPanel.getClient().getSignatures(v, org);
-								v = (Vector)clientPanel.getClient().getSignatures(v, org);
+								v = clientPanel.getClient().getSignatures(v, org);
 								signatures.put(sk, /*mods*/v);
 							}
 							else

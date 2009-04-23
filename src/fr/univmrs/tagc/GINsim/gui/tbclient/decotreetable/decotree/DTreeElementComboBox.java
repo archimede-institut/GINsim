@@ -4,7 +4,6 @@ import java.util.Vector;
 
 import javax.swing.JComboBox;
 
-import java.awt.Component;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 

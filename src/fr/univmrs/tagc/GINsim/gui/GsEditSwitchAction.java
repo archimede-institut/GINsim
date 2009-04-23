@@ -25,7 +25,7 @@ public class GsEditSwitchAction extends BaseAction {
      * @param name name of the action (menu entry)
      * @param icon for menu and toolbar
      * @param tooltip
-     * @param accelerator (ie keyboard shortcut)
+     * @param accelerator (ie keyboard bytecut)
      * @param gsa where does it lands
      * @param mode the real info: to which mode should it switch
      */
@@ -42,7 +42,7 @@ public class GsEditSwitchAction extends BaseAction {
      * @param name name of the action (menu entry)
      * @param icon for menu and toolbar
      * @param tooltip
-     * @param accelerator (ie keyboard shortcut)
+     * @param accelerator (ie keyboard bytecut)
      * @param gsa where does it lands
      * @param mode the real info: to which mode should it switch
      * @param subMode option for this edit mode

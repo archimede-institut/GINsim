@@ -135,7 +135,7 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
     
     public void addStableState(SimulationQueuedState item) {
         super.addStableState(item);
-        short[] stable = item.state;
+        byte[] stable = item.state;
         String name = nameState(stable, paramList.graph);
         result.append("   " + name + ": ");
         for (int i=0 ; i<stable.length ; i++) {
@@ -144,7 +144,7 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
         result.append("\n");
     }
 
-    public static String nameState(short[] state, GsGraph graph) {
+    public static String nameState(byte[] state, GsGraph graph) {
         InitialStateList init = ((GsInitialStateList)graph.getObject(GsInitialStateManager.key, false)).getInitialStates();
         // FIXME: adapt it to deal with input configs !!
         if (init != null && init.getNbElements(null) > 0) {

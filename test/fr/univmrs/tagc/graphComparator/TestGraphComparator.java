@@ -116,18 +116,18 @@ class GraphExamples {
 		GsRegulatoryGraph g = new GsRegulatoryGraph(); 
 		try { g.setGraphName("regulatory_graph_A");} catch (GsException e) {}
 		
-		g.addNewVertex("A", "A", (short)1);
-		g.addNewVertex("B", "B", (short)1);
-		g.addNewVertex("C", "C", (short)1);
-		g.addNewVertex("D", "D", (short)1);
-		g.addNewVertex("E", "E", (short)1);
+		g.addNewVertex("A", "A", (byte)1);
+		g.addNewVertex("B", "B", (byte)1);
+		g.addNewVertex("C", "C", (byte)1);
+		g.addNewVertex("D", "D", (byte)1);
+		g.addNewVertex("E", "E", (byte)1);
 		
-		g.addNewEdge("A", "B", (short)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
-		g.addNewEdge("A", "C", (short)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);  //added
-		g.addNewEdge("B", "C", (short)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-		g.addNewEdge("C", "D", (short)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-		g.addNewEdge("D", "A", (short)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-		g.addNewEdge("C", "E", (short)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);  //added
+		g.addNewEdge("A", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
+		g.addNewEdge("A", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);  //added
+		g.addNewEdge("B", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
+		g.addNewEdge("C", "D", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
+		g.addNewEdge("D", "A", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
+		g.addNewEdge("C", "E", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);  //added
 		return g;
 	}
 	
@@ -144,21 +144,21 @@ class GraphExamples {
 		GsRegulatoryGraph g = new GsRegulatoryGraph(); 
 		try { g.setGraphName("regulatory_graph_B");} catch (GsException e) {}
 		
-		g.addNewVertex("A", "A", (short)1);
-		g.addNewVertex("B", "B", (short)1);
-		g.addNewVertex("C", "C", (short)1);
-		g.addNewVertex("D", "D", (short)2); //different maxValue
-		g.addNewVertex("F", "F", (short)1); //added
-		g.addNewVertex("G", "G", (short)1); //added
+		g.addNewVertex("A", "A", (byte)1);
+		g.addNewVertex("B", "B", (byte)1);
+		g.addNewVertex("C", "C", (byte)1);
+		g.addNewVertex("D", "D", (byte)2); //different maxValue
+		g.addNewVertex("F", "F", (byte)1); //added
+		g.addNewVertex("G", "G", (byte)1); //added
 		
-		g.addNewEdge("A", "B", (short)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
-		g.addNewEdge("B", "C", (short)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //different sign
-		g.addNewEdge("C", "D", (short)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //multiarc
-		g.addNewEdge("C", "D", (short)1, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //multiarc
-		g.addNewEdge("D", "A", (short)1, GsRegulatoryMultiEdge.SIGN_POSITIVE); //different minvalue
-		g.addNewEdge("C", "F", (short)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
-		g.addNewEdge("F", "B", (short)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
-		g.addNewEdge("F", "G", (short)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
+		g.addNewEdge("A", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
+		g.addNewEdge("B", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //different sign
+		g.addNewEdge("C", "D", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //multiarc
+		g.addNewEdge("C", "D", (byte)1, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //multiarc
+		g.addNewEdge("D", "A", (byte)1, GsRegulatoryMultiEdge.SIGN_POSITIVE); //different minvalue
+		g.addNewEdge("C", "F", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
+		g.addNewEdge("F", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
+		g.addNewEdge("F", "G", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
 		return g;
 	}
 	

@@ -9,7 +9,7 @@ abstract public class GsGraphManagerDescriptor {
 
 	
     /**
-     * @return the short name of this kind of graph.
+     * @return the byte name of this kind of graph.
      */
     abstract public String getGraphManagerName();
     

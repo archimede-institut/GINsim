@@ -57,7 +57,7 @@ public class RegulatoryEdgeEditPanel extends JPanel
 		signcombo.setSelectedIndex(edge.sign);
 	}
 	public void actionPerformed(ActionEvent e) {
-		short s = (short)signcombo.getSelectedIndex();
+		byte s = (byte)signcombo.getSelectedIndex();
 		if (s != edge.sign && s >= 0 && s<GsRegulatoryMultiEdge.SIGN_SHORT.length) {
 			edge.me.setSign(edge.index, s, graph);
 		}
@@ -85,7 +85,7 @@ class EdgeThresholdModel extends AbstractSpinnerModel {
 	
 	public Object getNextValue() {
 		if (edge != null) {
-			edge.me.setMin(edge.index, (short)(edge.getMin()+1));
+			edge.me.setMin(edge.index, (byte)(edge.getMin()+1));
 			fireStateChanged();
 		}
 		return getValue();
@@ -93,7 +93,7 @@ class EdgeThresholdModel extends AbstractSpinnerModel {
 
 	public Object getPreviousValue() {
 		if (edge != null) {
-			edge.me.setMin(edge.index, (short)(edge.getMin()-1));
+			edge.me.setMin(edge.index, (byte)(edge.getMin()-1));
 			fireStateChanged();
 		}
 		return getValue();
@@ -112,7 +112,7 @@ class EdgeThresholdModel extends AbstractSpinnerModel {
 				return;
 			}
 			if (value instanceof Integer) {
-				edge.me.setMin(edge.index, ((Integer)value).shortValue());
+				edge.me.setMin(edge.index, ((Integer)value).byteValue());
 				fireStateChanged();
 			}
 		}

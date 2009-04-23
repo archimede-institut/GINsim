@@ -92,7 +92,7 @@ public class Simulation extends Thread implements Runnable {
 			// iterate through initial states and run the simulation from each of them
 			while(initStatesIterator.hasNext()) {
 				// add the next proposed state
-				queue.add(new SimulationQueuedState((short[])initStatesIterator.next(), 0, null, false));
+				queue.add(new SimulationQueuedState((byte[])initStatesIterator.next(), 0, null, false));
 				
 				// do the simulation itself
 				while (!queue.isEmpty()) {
@@ -129,7 +129,7 @@ public class Simulation extends Thread implements Runnable {
 						}
 
 						// run the simulation on the new node
-						updater.setState(item.state, item.depth, (GsDynamicNode) helper.getNode());
+						updater.setState(item.state, item.depth, helper.getNode());
 						if (!updater.hasNext()) {
 							helper.setStable();
 							frame.addStableState(item);
@@ -246,14 +246,14 @@ class ReachabilitySetHelper extends SimulationHelper {
 	public void setStable() {
 	}
 	
-	protected OmddNode addReachable(OmddNode reachable, short[] vstate, int depth) {
+	protected OmddNode addReachable(OmddNode reachable, byte[] vstate, int depth) {
 		if (depth == vstate.length) {
 			if (reachable.equals(OmddNode.TERMINALS[1])) {
 				return null;
 			}
 			return OmddNode.TERMINALS[1];
 		}
-		short curval = vstate[depth];
+		byte curval = vstate[depth];
 		if (reachable.next == null) {
 			if (reachable.value == 1) {
 				return null;
