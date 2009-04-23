@@ -12,9 +12,17 @@ public class GsInitialState implements NamedObject {
 	Map m = new HashMap();
 	
     public void setState(int[] state, List nodeOrder) {
+        setState(state, nodeOrder, false);
+    }
+    public void setState(int[] state, List nodeOrder, boolean input) {
         String[] t_s = new String[state.length];
         for (int i=0 ; i<t_s.length ; i++) {
-            t_s[i] = nodeOrder.get(i) + ";" + state[i];
+            GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+            if (vertex.isInput() == input) {
+                t_s[i] = vertex + ";" + state[i];
+            } else {
+                t_s[i] = "";
+            }
         }
         setData(t_s, nodeOrder);
     }
