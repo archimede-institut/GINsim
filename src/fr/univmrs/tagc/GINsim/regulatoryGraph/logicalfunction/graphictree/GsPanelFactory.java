@@ -9,13 +9,13 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 
 public class GsPanelFactory {
-	private static GsLogicalFunctionPanel panel;
+	private GsLogicalFunctionPanel panel;
 
 	public GsPanelFactory(GsLogicalFunctionPanel p) {
     super();
     panel = p;
   }
-  public static GsBooleanFunctionTreePanel getPanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean edit) {
+  public GsBooleanFunctionTreePanel getPanel(GsTreeElement value, JTree tree, boolean sel, int width, boolean edit) {
     GsBooleanFunctionTreePanel p = null;
     switch (value.getDepth()) {
       case 0 :
@@ -30,7 +30,7 @@ public class GsPanelFactory {
 					((GsTreeExpression)value).setGraphicPanel((GsFunctionPanel)p);
           Point pt =((GsTreeExpression)value).getSelection();
           if (pt != null) {
-            ((GsFunctionPanel)p).selectText(pt);
+						((GsFunctionPanel)p).selectText(pt);
           }
         }
         break;

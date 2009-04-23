@@ -1,39 +1,24 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.*;
 
-import tbrowser.data.module.TBModule;
-import tbrowser.data.module.TBModuleData;
-import tbrowser.data.module.TBModules;
-import tbrowser.ihm.widget.TBButton;
-import tbrowser.ihm.widget.TBPanel;
-import tbrowser.io.remote.client.TBClient;
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Selector;
+import fr.univmrs.tagc.GINsim.css.*;
 import fr.univmrs.tagc.GINsim.graph.*;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.*;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.common.widgets.GsPanel;
+import fr.univmrs.tagc.GINsim.jgraph.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
+import fr.univmrs.tagc.common.widgets.*;
+import tbrowser.data.module.*;
+import tbrowser.ihm.widget.*;
+import tbrowser.io.remote.client.*;
 
 public class GsTBClientPanel extends GsPanel implements GraphChangeListener, WindowListener {
   private static final long serialVersionUID = 787313901857354026L;
@@ -91,23 +76,13 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 	}
 
 	public void applyEdgeStyle(GsJgraphDirectedEdge me, float w) {
-	    EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
-		//cs = new CascadingStyle(true);
+		EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
 		style.border = w;
 		ereader.setEdge(me);
 		cs.applyOnEdge(style, me, ereader);
 	}
 	public void restoreEdgeStyle() {
 		cs.restoreAllEdges(ereader);
-/*		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
-			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-			List l = gm.getIncomingEdges(v);
-			for (Iterator it2 = l.iterator(); it2.hasNext(); ) {
-				GsJgraphDirectedEdge me = (GsJgraphDirectedEdge)it2.next();
-				ereader.setEdge(me);
-				cs.restoreEdge(me, ereader);
-			}
-		}*/
 	}
   private void initGraphic() {
 		// Connexion panel

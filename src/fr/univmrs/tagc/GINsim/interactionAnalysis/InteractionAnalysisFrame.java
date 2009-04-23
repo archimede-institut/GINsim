@@ -41,13 +41,13 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 	private Color option_lineColor = Color.red;
 	private JTextArea resultsPane;
 	private JButton colorizeButton;
-	
+
 	private InteractionAnalysis fii;
 	private JPanel colorPanel;
 	private boolean isColorized = false;
 	private MutantSelectionPanel mutantSelectionPanel;
 	private ObjectStore mutantStore;
-	
+
 	private static final long serialVersionUID = -9126723853606423085L;
 	private static final String OPT_COLORBYDEFAULT = "functionalityAnalysis.colorByDefault";
 
@@ -62,50 +62,50 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
         this.frame = frame;
         initialize();
         this.setTitle(Translator.getString("STR_function"));
-        this.addWindowListener(new java.awt.event.WindowAdapter() { 
+        this.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 cancel();
             }
-        });	
+        });
     }
 
 	public void initialize() {
 		setMainPanel(getMainPanel());
 	}
-	
+
 	private Container getMainPanel() {
 		if (mainPanel == null) {
 			mainPanel = new javax.swing.JPanel();
 			mainPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
-		
+
 		//Label
 			c.gridx = 0;
 			c.gridy = 0;
 			c.fill = GridBagConstraints.BOTH;
 			c.ipadx = 10;
 			mainPanel.add(new JLabel(Translator.getString("STR_function_ask")), c);
-			
+
 			runOptions = new JCheckBox[3];
-			
+
 			c.gridy++;
 			c.gridx = 0;
 			c.ipadx = 0;
 			c.ipady = 0;
 		    runOptions[0] = new JCheckBox(Translator.getString("STR_function_opt_annotate"));
-		    runOptions[0].setMnemonic(KeyEvent.VK_A); 
+		    runOptions[0].setMnemonic(KeyEvent.VK_A);
 		    runOptions[0].setSelected(true);
 		    mainPanel.add(runOptions[0], c);
-		    
+
 			c.gridy++;
 		    runOptions[1] = new JCheckBox(Translator.getString("STR_function_opt_verbose"));
-		    runOptions[1].setMnemonic(KeyEvent.VK_V); 
+		    runOptions[1].setMnemonic(KeyEvent.VK_V);
 		    runOptions[1].setSelected(false);
 		    mainPanel.add(runOptions[1], c);
-		    
+
 			c.gridy++;
 		    runOptions[2] = new JCheckBox(Translator.getString("STR_function_opt_color_by_default"));
-		    runOptions[2].setMnemonic(KeyEvent.VK_C); 
+		    runOptions[2].setMnemonic(KeyEvent.VK_C);
 		    runOptions[2].setSelected(((Boolean)OptionStore.getOption(OPT_COLORBYDEFAULT, Boolean.FALSE)).booleanValue());
 		    runOptions[2].addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent e) {
@@ -115,13 +115,13 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 				}
 		    });
 		    mainPanel.add(runOptions[2], c);
-		    
+
 		    c.gridy++;
 		    mutantStore = new ObjectStore();
 			mutantSelectionPanel = new MutantSelectionPanel(this, (GsRegulatoryGraph) graph, mutantStore);
 			mainPanel.add(mutantSelectionPanel, c);
 
-		    
+
 			c.gridy++;
 			c.ipady = 20;
 			mainPanel.add(new JLabel(""), c);
@@ -129,16 +129,16 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			c.gridy++;
 			c.ipady = 0;
 			mainPanel.add(new JLabel(Translator.getString("STR_function_results")), c);
-			
+
 			c.gridy++;
 			c.weightx = 2.0;
 			c.weighty = 2.0;
 			resultsPane = new JTextArea("");
 	        JScrollPane resultsScrollPane = new JScrollPane(resultsPane);
-	        resultsPane.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 11));
+	        resultsPane.setFont(new Font("monospaced", Font.PLAIN, 11));
 	        resultsScrollPane.setPreferredSize(new Dimension(250, 250));
 			mainPanel.add(resultsScrollPane, c);
-			
+
 		    c.gridy++;
 			c.weightx = 0;
 			c.weighty = 0;
@@ -165,14 +165,14 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			isColorized = false;
 		}
 	}
-	
+
 	private boolean getOption(int i) {
 		return runOptions[i].getSelectedObjects() != null;
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == colorizeButton) {
-			if (fii.getFunctionality() != null) {	
+			if (fii.getFunctionality() != null) {
 				if (isColorized) {
 					undoColorize();
 				} else {
@@ -181,7 +181,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			}
 		}
 	}
-	
+
 	private void doColorize() {
 		if (fii != null) {
 			fii.doColorize();
@@ -189,7 +189,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			isColorized = true;
 		}
 	}
-	
+
 	private void undoColorize() {
 		if (fii != null) {
 			fii.undoColorize();
@@ -197,7 +197,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			isColorized = false;
 		}
 	}
-	
+
 	private void forceColorize() {
 		if (isColorized) undoColorize();
 		doColorize();
@@ -211,7 +211,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 		}
 		super.cancel();
 	}
-	
+
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == colorPanel) {
 			option_lineColor = JColorChooser.showDialog(
@@ -220,7 +220,7 @@ public class InteractionAnalysisFrame extends StackDialog implements MouseListen
 			            option_lineColor);
 			if (option_lineColor == null) option_lineColor = Color.red;
 			colorPanel.setBackground(option_lineColor);
-		}     
+		}
 	}
 
 	public void mouseEntered(MouseEvent e) {}

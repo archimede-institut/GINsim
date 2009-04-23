@@ -16,10 +16,12 @@ private static final long serialVersionUID = 3456841880209526024L;
 private int width;
   private JTree tree = null;
   private static final int leftmargin = 90;
+	private GsPanelFactory panelFactory;
 
-  public GsBooleanFunctionTreeRenderer(int totalWidth) {
+  public GsBooleanFunctionTreeRenderer(int totalWidth, GsPanelFactory pf) {
     super();
     width = totalWidth - leftmargin;
+		panelFactory = pf;
   }
   public int getWidth() {
     return width;
@@ -29,7 +31,7 @@ private int width;
     this.tree = tree;
     ((GsTreeElement)value).setSelected(sel);
     ((GsTreeElement)value).setEdited(false);
-    GsBooleanFunctionTreePanel p = GsPanelFactory.getPanel((GsTreeElement)value, tree, sel, width, false);
+    GsBooleanFunctionTreePanel p = panelFactory.getPanel((GsTreeElement)value, tree, sel, width, false);
     p.updateSize();
     return p;
   }
@@ -51,4 +53,7 @@ private int width;
     }
   }
   public void componentShown(ComponentEvent e) {}
+	public GsPanelFactory getPanelFactory() {
+		return panelFactory;
+	}
 }

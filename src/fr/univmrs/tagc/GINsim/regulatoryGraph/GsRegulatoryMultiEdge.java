@@ -380,7 +380,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
     }
 
     /**
-     * 
+     *
      * @param t_required
      */
     public void copyFrom(boolean[] t_required) {

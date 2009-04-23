@@ -95,13 +95,14 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
   private GsDropListener dropListener;
   private GsTreeMenu menu;
   private GsTransferable transferable = null, current_transferable = null;
+	private GsPanelFactory panelFactory;
 
   public GsLogicalFunctionTreePanel(GsRegulatoryGraph graph, GsLogicalFunctionPanel p) {
     super();
+		panelFactory = new GsPanelFactory(p);
     setLayout(new BorderLayout());
     add(new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
     this.graph = graph;
-    new GsPanelFactory(p);
     menu = new GsTreeMenu(this);
     tree.addMouseListener(this);
     tree.getSelectionModel().addTreeSelectionListener(this);
@@ -125,7 +126,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       interactionList = new GsTreeInteractionsModel(graph);
       tree = new JTree(interactionList);
       tree.setShowsRootHandles(true);
-      GsBooleanFunctionTreeRenderer cr = new GsBooleanFunctionTreeRenderer(getPreferredSize().width);
+      GsBooleanFunctionTreeRenderer cr = new GsBooleanFunctionTreeRenderer(getPreferredSize().width, panelFactory);
       tree.setCellRenderer(cr);
       tree.setCellEditor(new GsBooleanFunctionTreeEditor(tree, cr));
       tree.setEditable(true);
