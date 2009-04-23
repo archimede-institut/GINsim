@@ -29,7 +29,7 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
   }
   public GsLogicalFunctionPanel(GsRegulatoryGraph graph) {
     super();
-    this.graph = graph;
+		this.graph = graph;
     initialize();
   }
 

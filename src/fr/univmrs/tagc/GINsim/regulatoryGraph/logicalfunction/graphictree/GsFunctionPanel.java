@@ -107,7 +107,8 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
     try {
       textArea.getHighlighter().removeAllHighlights();
       textArea.getHighlighter().addHighlight(pt.x, pt.y + 1, new DefaultHighlightPainter(col));
-			int r = pt.x / textArea.getColumns();
+			int r = 0;
+			if (textArea.getColumns() > 0) r = pt.x / textArea.getColumns();
       int sbValue = jsp.getVerticalScrollBar().getValue();
       jsp.getVerticalScrollBar().setMaximum(charHeight * (textArea.getDocument().getLength() / textArea.getColumns() - 2));
       if (!(sbValue < r * charHeight && r * charHeight < sbValue + 40 * charHeight))
