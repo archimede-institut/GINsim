@@ -2,22 +2,13 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
@@ -45,10 +36,10 @@ public class InteractionAnalysis {
 	private Report report;
 	private List currentPath, currentSource;
 	
-	static final int FUNC_NON = 1;
-	static final int FUNC_POSITIVE = 2;
-	static final int FUNC_NEGATIVE = 3;
-	static final int FUNC_DUAL = 4;
+	static final byte FUNC_NON = 1;
+	static final byte FUNC_POSITIVE = 2;
+	static final byte FUNC_NEGATIVE = 3;
+	static final byte FUNC_DUAL = 4;
 	
 	
 	/**
@@ -78,7 +69,7 @@ public class InteractionAnalysis {
 	 * 
 	 */
 	private void run() {
-		before = (new Date()).getTime();//measuring the time spend for this algorithm
+		before = new Date().getTime();//measuring the time spend for this algorithm
 		
 		int total_level;		//The total number of node in a complete omdd tree. (products of levels of each interactor)
 		int [] leafs;			//The values of all the leafs for a complete omdd from all the node to 0, to all the node to max.
@@ -106,22 +97,16 @@ public class InteractionAnalysis {
 		selector = new InteractionAnalysisSelector();
 		selector.setCache(functionalityMap);
 	
-//		if (opt_verbose) {
-//			i = 0;
-//			log("Node order : ");
-//			for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {				//  For each vertex v in the graph
-//				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-//				log(v.getId()+"["+(i++)+"]:"+v.getMaxValue()+"  ");
-//			}
-//			log("\n\n");			
-//		}
-		
 		node_in_subtree = new HashMap();
-		i = 0;
+		i = -1;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {					//  For each vertex v in the graph
+		    i++;
 			GsRegulatoryVertex target = (GsRegulatoryVertex) it.next();
+			if (target.isInput()) {
+			    continue;
+			}
 			List l = gm.getIncomingEdges(target);												//  get the list l of incoming edges
-			OmddNode omdd = t_tree[i++];
+			OmddNode omdd = t_tree[i];
 			
 			total_level = 1;																//  Compute the total number of level in the omdd tree
 			for (Iterator it2 = l.iterator(); it2.hasNext();) {
@@ -144,13 +129,12 @@ public class InteractionAnalysis {
 					small_node_order_vertex[m] = source;
 					small_node_order_level[m] = ((Integer)node_to_position.get(source)).intValue();
 					for (int n = 0; n < m; n++) {
-						subtree_size[n+1] *= (source.getMaxValue()+1);
+						subtree_size[n+1] *= source.getMaxValue()+1;
 					}
 					m++;
 				}
 			}
-
-			scannOmdd(omdd, 0, leafs, subtree_size, small_node_order_vertex, small_node_order_level);												//  scan the logical function of v
+		    scannOmdd(omdd, 0, leafs, subtree_size, small_node_order_vertex, small_node_order_level);												//  scan the logical function of v
 
 			for (Iterator it2 = l.iterator(); it2.hasNext();) {									//	For each incoming edge
 				GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge) ((GsJgraphDirectedEdge)it2.next()).getUserObject();
@@ -189,7 +173,7 @@ public class InteractionAnalysis {
 			}
 		}
 				
-		report.timeSpent = ((new Date()).getTime()-before);
+		report.timeSpent = new Date().getTime()-before;
 	}
 	/**
 	 * 
@@ -203,9 +187,14 @@ public class InteractionAnalysis {
 	 * Colorize the edges in the Set nonFunctionalInteractions.
 	 */
 	public void doColorize() {
-		if (functionalityMap == null) return;
-		if (cs == null) cs = new CascadingStyle(true);
-		else cs.shouldStoreOldStyle = false;
+		if (functionalityMap == null) {
+            return;
+        }
+		if (cs == null) {
+            cs = new CascadingStyle(true);
+        } else {
+            cs.shouldStoreOldStyle = false;
+        }
 		
 		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
 		for (Iterator iterator = functionalityMap.keySet().iterator(); iterator.hasNext();) {
@@ -222,7 +211,6 @@ public class InteractionAnalysis {
 			}
 		}
 		
-//		cs.applySelectorOnEdges(selector, nonFunctionalInteractions.keySet(), gm.getEdgeAttributesReader());
 	}
 	
 	public void undoColorize() {
@@ -244,23 +232,20 @@ public class InteractionAnalysis {
 			if (subtree_size[deep] == 1) { 							//a real leaf, ie. all the inputs are present in the branch
 				leafs[i_leafs++] = omdd.value;							//Save the current value.
 				return i_leafs;
-			} else {												//not real, ie. some inputs are not present in the branch
-				if (omdd.value == 0) {
-					i_leafs += subtree_size[deep];		//if value is 0, skip them because the array is initialized to 0
-				} else {													//else add the unreal leaf value to each of the real leafs 
-					for (int i = 0; i < subtree_size[deep]; i++) {
-						leafs[i_leafs++] = omdd.value;
-					}
+			} // else
+			if (omdd.value == 0) {
+				i_leafs += subtree_size[deep];		//if value is 0, skip them because the array is initialized to 0
+			} else {													//else add the unreal leaf value to each of the real leafs 
+				for (int i = 0; i < subtree_size[deep]; i++) {
+					leafs[i_leafs++] = omdd.value;
 				}
-				//log(" small jump of "+small_node_order_vertex[deep].getId()+"="+omdd.value+" "+(i_leafs-subtree_size[deep])+"->"+i_leafs+" ("+subtree_size[deep]+")\n");
-				return subtree_size[deep];
 			}
+			return subtree_size[deep];
 		}
 		
 		boolean hasJumpedNode = false;
 		int current_i = i_leafs, current_deep = deep;
 		while (omdd.level != small_node_order_levels[deep]) {
-			//log(" jump for "+small_node_order_vertex[deep].getId()+" @ "+i_leafs+"\n");
 			deep++;
 			hasJumpedNode = true;
 		}
@@ -268,7 +253,9 @@ public class InteractionAnalysis {
 		int res = -1, max = 0;
 		for (int i = 0; i < omdd.next.length; i++) {		//Scan all the childs
 			res = scannOmdd(omdd.next[i], deep+1, leafs, subtree_size, small_node_order_vertex, small_node_order_levels);
-			if (res > max) max = res;
+			if (res > max) {
+                max = res;
+            }
 		}
 		if (hasJumpedNode) {
 			int added = i_leafs-current_i;
@@ -294,11 +281,11 @@ public class InteractionAnalysis {
 	 * @param small_node_order the node order in the subtree
 	 * @return
 	 */
-	private int computeFunctionality(int count_childs, int node_index, int[] leafs, int[] subtree_size_t, GsRegulatoryVertex[] small_node_order) {
+	private byte computeFunctionality(int count_childs, int node_index, int[] leafs, int[] subtree_size_t, GsRegulatoryVertex[] small_node_order) {
 		int size_of_subtree = subtree_size_t[node_index+1];
 		
 		ReportItem ri = null;
-		int res = FUNC_NON;
+		byte res = FUNC_NON;
 		boolean containsPositive = false, containsNegative = false;
 		
 		int index = 0;
@@ -324,15 +311,24 @@ public class InteractionAnalysis {
 						res = FUNC_NON;
 					}
 					index++;
-					ri.sign = (byte) res;
+					ri.sign = res;
 					ri.path = currentPath;
 					currentSource.add(ri);
 				}
 			}
 			index+=size_of_subtree;
 		}
-		if (containsNegative && containsPositive) res = FUNC_DUAL;
-		return res;
+		if (containsNegative) {
+	        if (containsPositive) {
+	            return FUNC_DUAL;
+	        }
+	        return FUNC_NEGATIVE;
+		    
+		}
+		if (containsPositive) {
+		    return FUNC_POSITIVE;
+		}
+		return FUNC_NON;
 	}
 
 	/**
@@ -362,7 +358,9 @@ public class InteractionAnalysis {
 	
 	protected void finalize() {
 		if (functionalityMap != null) {
-			if (selector != null) selector.flush(); //remove nonFunctionalInteractions from the cache.
+			if (selector != null) {
+                selector.flush(); //remove nonFunctionalInteractions from the cache.
+            }
 		}
 	}
 
@@ -384,73 +382,73 @@ public class InteractionAnalysis {
 		dw.setStyles(style);
 		
 		dw.startDocument();
-			dw.openHeader(1, Translator.getString("STR_interactionAnalysis"), null);
+		dw.openHeader(1, Translator.getString("STR_interactionAnalysis"), null);
+		dw.openParagraph(null);
+		dw.writeTextln("Analizing interactions of "+g.getGraphName()+" ("+gm.getVertexCount()+" vertices)");
+		dw.closeParagraph();
+		dw.openHeader(2, "Report", null);
+		dw.openList(null);
+		for (Iterator it_target = report.iterator(); it_target.hasNext();) {
+			GsRegulatoryVertex target = (GsRegulatoryVertex) it_target.next();
+			dw.openListItem(null);
 			dw.openParagraph(null);
-				dw.writeTextln("Analizing interactions of "+g.getGraphName()+" ("+gm.getVertexCount()+" vertices)");
+			dw.writeText(target.getName());
 			dw.closeParagraph();
-			dw.openHeader(2, "Report", null);
 			dw.openList(null);
-			for (Iterator it_target = report.iterator(); it_target.hasNext();) {
-				GsRegulatoryVertex target = (GsRegulatoryVertex) it_target.next();
+			for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
+				SourceItem sourceItem = (SourceItem) it_sources.next();
 				dw.openListItem(null);
-				dw.openParagraph(null);
-				dw.writeText(target.getName());
+				if (sourceItem.sign == InteractionAnalysis.FUNC_NON) {
+					dw.openParagraph(STYLE_NONFUNCTIONAL);
+					dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+					dw.writeText("non functional.");
+				} else if (sourceItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
+					dw.openParagraph(STYLE_POSITIVE);
+					dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+					dw.writeText("positive.");
+				} else if (sourceItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
+					dw.openParagraph(STYLE_NEGATIVE);
+					dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+					dw.writeText("negative.");
+				} else {
+					dw.openParagraph(STYLE_DUAL);
+					dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+					dw.writeText("dual.");
+				}
 				dw.closeParagraph();
 				dw.openList(null);
-				for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
-					SourceItem sourceItem = (SourceItem) it_sources.next();
+				for (Iterator it_report = sourceItem.reportItems.iterator(); it_report.hasNext();) {
+					ReportItem reportItem = (ReportItem) it_report.next();
 					dw.openListItem(null);
-					if (sourceItem.sign == InteractionAnalysis.FUNC_NON) {
+					if (reportItem.sign == InteractionAnalysis.FUNC_NON) {
 						dw.openParagraph(STYLE_NONFUNCTIONAL);
-						dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
-						dw.writeText("non functional.");
-					} else if (sourceItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
+						dw.writeText("Non functional ");
+					} else if (reportItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
 						dw.openParagraph(STYLE_POSITIVE);
-						dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
-						dw.writeText("positive.");
-					} else if (sourceItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
+						dw.writeText("Positive       ");
+					} else if (reportItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
 						dw.openParagraph(STYLE_NEGATIVE);
-						dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
-						dw.writeText("negative.");
+						dw.writeText("Negative       ");
 					} else {
 						dw.openParagraph(STYLE_DUAL);
-						dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
-						dw.writeText("dual.");
+						dw.writeText("Dual           ");
+					}
+					dw.writeText(" : the level of "+sourceItem.source.getName()+" goes from "+reportItem.valL+" to "+reportItem.valR+" for path ");
+					for (Iterator it_path = reportItem.path.iterator(); it_path.hasNext();) {
+						PathItem pathItem = (PathItem) it_path.next();
+						if (pathItem.valR == -1) {
+							dw.writeText(pathItem.vertex.getName()+"="+pathItem.valL+" ");
+						} else {
+							dw.writeText(pathItem.vertex.getName()+"="+pathItem.valL+"/"+pathItem.valR+" ");
+						}
 					}
 					dw.closeParagraph();
-					dw.openList(null);
-					for (Iterator it_report = sourceItem.reportItems.iterator(); it_report.hasNext();) {
-						ReportItem reportItem = (ReportItem) it_report.next();
-						dw.openListItem(null);
-						if (reportItem.sign == InteractionAnalysis.FUNC_NON) {
-							dw.openParagraph(STYLE_NONFUNCTIONAL);
-							dw.writeText("Non functional ");
-						} else if (reportItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
-							dw.openParagraph(STYLE_POSITIVE);
-							dw.writeText("Positive       ");
-						} else if (reportItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
-							dw.openParagraph(STYLE_NEGATIVE);
-							dw.writeText("Negative       ");
-						} else {
-							dw.openParagraph(STYLE_DUAL);
-							dw.writeText("Dual           ");
-						}
-						dw.writeText(" : the level of "+sourceItem.source.getName()+" goes from "+reportItem.valL+" to "+reportItem.valR+" for path ");
-						for (Iterator it_path = reportItem.path.iterator(); it_path.hasNext();) {
-							PathItem pathItem = (PathItem) it_path.next();
-							if (pathItem.valR == -1) {
-								dw.writeText(pathItem.vertex.getName()+"="+pathItem.valL+" ");
-							} else {
-								dw.writeText(pathItem.vertex.getName()+"="+pathItem.valL+"/"+pathItem.valR+" ");
-							}
-						}
-						dw.closeParagraph();
-					}
-					dw.closeList();
 				}
 				dw.closeList();
 			}
-			dw.closeList();	
+			dw.closeList();
+		}
+		dw.closeList();	
 		dw.close();
 	}
 
