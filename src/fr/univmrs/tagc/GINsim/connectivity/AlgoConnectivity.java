@@ -59,8 +59,12 @@ public final class AlgoConnectivity extends Thread {
         this.g = graphm;
         this.mode = searchMode;
 	}
-	
-    public void run() {
+
+   public void run() {
+       frame.setResult(compute());
+   }
+
+   public Object compute() {
         reducedGraph = null;
         int nbCompo = 0;
         try {
@@ -108,7 +112,9 @@ public final class AlgoConnectivity extends Thread {
                 if (mode == MODE_FULL) {
                     reducedGraph = new GsReducedGraph(g);
                     nbCompo = component.size();
-                    frame.setProgressText("Number of component : "+nbCompo+", creating the new graph");
+                    if (frame != null) {
+                        frame.setProgressText("Number of component : "+nbCompo+", creating the new graph");
+                    }
                     for (int i=0 ; i<nbCompo && canceled == false; i++) {
                         reducedGraph.addVertex((GsNodeReducedData)component.get(i));
                     }
@@ -116,11 +122,11 @@ public final class AlgoConnectivity extends Thread {
             }
             
             if (mode == MODE_COMPO) {
-                frame.setResult(component);
-                return;
+                return component;
             }
-            
-            frame.setProgressText( Translator.getString("STR_connectivity_nbcompo") + " : "+nbCompo+" ; "+Translator.getString("STR_connectivity_finalize"));
+            if (frame != null) {
+                frame.setProgressText( Translator.getString("STR_connectivity_nbcompo") + " : "+nbCompo+" ; "+Translator.getString("STR_connectivity_finalize"));
+            }
             GsGraphManager gm = reducedGraph.getGraphManager();
             GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
             	
@@ -133,7 +139,7 @@ public final class AlgoConnectivity extends Thread {
                 reducedGraph = null;
             }
         }
-        frame.setResult(reducedGraph);
+        return reducedGraph;
    }
 
 	private void createSCCGraphByOutgoingEdges(int nbCompo, List component, GsGraphManager gm, GsVertexAttributesReader vreader) throws InterruptedException {

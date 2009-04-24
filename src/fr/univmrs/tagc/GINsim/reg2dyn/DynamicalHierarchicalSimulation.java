@@ -13,7 +13,6 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.Translator;
@@ -40,15 +39,12 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	}
 
     public DynamicalHierarchicalSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow, boolean useInit) {
-		super(regGraph, frame, params, false, false);
+		super(regGraph, frame, params, false, useInit);
 		
 		if (params.buildSTG == GsSimulationParameters.BUILD_DHG) {
 			helper = new DynamicalHierarchicalSimulationHelper(regGraph, params);
 		}
    		updater = SimulationUpdater.getInstance(regGraph, params);
-   		if (useInit) {
-   		    initStatesIterator = new InitialStatesIterator(params.nodeOrder, params);
-   		}
    		if (runNow) {
    		    start();
    		}

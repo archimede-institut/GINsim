@@ -33,7 +33,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 
     int maxdepth;
     int maxnodes;
-    int buildSTG = BUILD_FULL_STG;
+    public int buildSTG = BUILD_FULL_STG;
     boolean breadthFirst = false;
 
     ObjectStore store = new ObjectStore(2);
