@@ -44,7 +44,7 @@ public class OmddNode {
     public static final int CONSTRAINTOR = 3;
 
     public static final int MAX = 5;
-    
+
     static {
     	MINUSONE = new OmddNode();
     	MINUSONE.next = null;
@@ -653,4 +653,9 @@ public class OmddNode {
     	}
     	return ret;
     }
+
+
+	public int remove(byte[] state) {
+		return 0;
+	}
 }

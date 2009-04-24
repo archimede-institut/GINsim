@@ -29,14 +29,14 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 	private JPanel mainPanel;
 	private JRadioButton actionMerge, actionDelete;
 	private ButtonGroup actions;
-	private JCheckBox duplicateGraph;
+//	private JCheckBox duplicateGraph;
 
 	public GsDynamicalHierarchicalSimplifierFrame(JFrame frame, GsDynamicalHierarchicalGraph graph) {
-		super(frame, Translator.getString("STR_gcmp"), 800, 600);
+		super(frame, Translator.getString("STR_dynHier_simplify"), 800, 600);
 		this.frame = frame;
 		this.graph = graph;
         initialize();
-        this.setTitle(Translator.getString("STR_gcmp"));
+//        this.setTitle(Translator.getString("STR_dynHier_simplify"));
         this.addWindowListener(new java.awt.event.WindowAdapter() { 
             public void windowClosing(java.awt.event.WindowEvent e) {
                 cancel();
@@ -61,7 +61,7 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 			c.gridx = 0;
 			c.gridy = 0;
 			c.fill = GridBagConstraints.HORIZONTAL;
-			String name = Translator.getString("STR_DH_simplifier_merge")+".";
+			String name = Translator.getString("STR_dynHier_simplify_merge");
 		    actionMerge = new JRadioButton(name);
 		    actionMerge.setActionCommand(name);
 		    actionMerge.setSelected(true);
@@ -69,17 +69,17 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 		    mainPanel.add(actionMerge);
 		    
 			c.gridy++;
-		    name = Translator.getString("STR_DH_simplifier_delete")+".";
+		    name = Translator.getString("STR_dynHier_simplify_delete");
 		    actionDelete = new JRadioButton(name);
 		    actionDelete.setActionCommand(name);
 		    actions.add(actionDelete);
 		    mainPanel.add(actionDelete);
 
-			c.gridy++;
-		    duplicateGraph = new JCheckBox(Translator.getString("STR_DH_simplifier_create_new_graph"));
-		    duplicateGraph.setSelected(true);
-		    mainPanel.add(duplicateGraph);
-}
+//			c.gridy++;
+//		    duplicateGraph = new JCheckBox(Translator.getString("STR_DH_simplifier_create_new_graph"));
+//		    duplicateGraph.setSelected(true);
+//		    mainPanel.add(duplicateGraph);
+		}
 		return mainPanel;
 	}
 	
@@ -99,7 +99,7 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 
 	/**
 	 * Will merge all the linked transients components.
-	 * In other words, each transient childs of a transient component will be merge with it. 
+	 * In other words, each transient children of a transient component will be merge with it. 
 	 * 
 	 * Careful : the graph will change
 	 * 
@@ -109,33 +109,32 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 	 */
     public void simplify_through_merge(GsDynamicalHierarchicalGraph graph) throws Exception {
 		GsGraphManager gm = graph.getGraphManager();
-		GsGraphManager rgm = graph.getAssociatedGraph().getGraphManager();
 		Set vertexSet = new HashSet(); //cause can't remove and iterate on the same structure.
-		
-		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
-			vertexSet.add(it.next());
-		}
-		for (Iterator it = vertexSet.iterator(); it.hasNext();) {
-			GsDynamicalHierarchicalNode source = (GsDynamicalHierarchicalNode) it.next();
-			if (source.getType() == GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT) {
-				Set childs = new HashSet();
-				for (Iterator itc = gm.getOutgoingEdges(source).iterator(); itc.hasNext();) {
-					DirectedEdge e = (DirectedEdge) itc.next();
-					childs.add(e.getTarget());					
-				}
-				for (Iterator itc2 = childs.iterator(); itc2.hasNext();) {
-					GsDynamicalHierarchicalNode target = (GsDynamicalHierarchicalNode) itc2.next();
-					if (target.getType() == GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT) {
-						for (Iterator itc3 = gm.getOutgoingEdges(target).iterator(); itc3.hasNext();) {
-							DirectedEdge e = (DirectedEdge) itc3.next();
-							gm.addEdge(source, e.getSource(), null);
-						}
-						gm.removeVertex(target);
-						source.merge(target, null, rgm.getVertexCount());
-					}					
-				}
-			}
-		}
+//		
+//		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
+//			vertexSet.add(it.next());
+//		}
+//		for (Iterator it = vertexSet.iterator(); it.hasNext();) {
+//			GsDynamicalHierarchicalNode source = (GsDynamicalHierarchicalNode) it.next();
+//			if (source.getType() == GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT) {
+//				Set childs = new HashSet();
+//				for (Iterator itc = gm.getOutgoingEdges(source).iterator(); itc.hasNext();) {
+//					DirectedEdge e = (DirectedEdge) itc.next();
+//					childs.add(e.getTarget());					
+//				}
+//				for (Iterator itc2 = childs.iterator(); itc2.hasNext();) {
+//					GsDynamicalHierarchicalNode target = (GsDynamicalHierarchicalNode) itc2.next();
+//					if (target.getType() == GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT) {
+//						for (Iterator itc3 = gm.getOutgoingEdges(target).iterator(); itc3.hasNext();) {
+//							DirectedEdge e = (DirectedEdge) itc3.next();
+//							gm.addEdge(source, e.getSource(), null);
+//						}
+//						gm.removeVertex(target);
+//						source.merge(target, new HashSet(), graph.getNodeOrder().size());
+//					}					
+//				}
+//			}
+//		}
 		GsEnv.whatToDoWithGraph(frame, graph, true);
 	}
     
