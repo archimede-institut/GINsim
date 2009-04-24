@@ -22,7 +22,7 @@ public class GsDynamicalHierarchicalSimplifierPlugin implements GsPlugin, GsActi
         }
 		if (t_actions == null) {
 			t_actions = new GsPluggableActionDescriptor[1];
-			t_actions[0] = new GsPluggableActionDescriptor("STR_DH_simplifier", "STR_DH_simplifier_descr", null, this, ACTION_ACTION, 0);
+			t_actions[0] = new GsPluggableActionDescriptor("STR_dynHier_simplify", "STR_dynHier_simplify_descr", null, this, ACTION_ACTION, 0);
 		}
 		return t_actions;
 	}

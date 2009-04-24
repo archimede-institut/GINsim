@@ -48,9 +48,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
     private JRadioButton radioDephtFirst = null;
     private JRadioButton radioBreadthFirst = null;
 
-    private ButtonGroup strategyGrp = new ButtonGroup();
-    private JRadioButton radioFullSTG = null;
-    private JRadioButton radioDHG = null;
+    private JCheckBox doHierarchicalSimulation= null;
 
     private JTextField textMaxDepth = null;
     private JTextField textMaxNodes = null;
@@ -118,43 +116,25 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
 			c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 0;
-			c.anchor = GridBagConstraints.WEST;
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.weightx = 0.4;
-			c.insets = smallIndentInset;
-			panel.add(new JLabel(Translator.getString("STR_generer_un_graphe")+" : "), c);
 			c.weightx = 1;
-			c.insets = noIndentInset;
-			c.gridx++;
-			panel.add(getRadioFullSTG(), c);
-			c.gridx++;
-			panel.add(getRadioDHG(), c);
-			
-			c.gridx = 0;
-			c.gridy++;
-			c.weightx = 0.4;
-			c.insets = smallIndentInset;
-			panel.add(new JLabel(Translator.getString("STR_avec_les_priorites")+" : "), c);
-			c.weightx = 1;
-			c.insets = noIndentInset;
-			c.gridx++;
+            c.insets = indentInset;
+			c.fill = GridBagConstraints.BOTH;
             c.gridwidth = 2;
 			panel.add(getPriorityClassSelector(), c);
 
 			c.gridx = 0;
-			c.gridy += 2;
+			c.gridy++;
             c.gridwidth = 1;
-			c.weightx = 0.4;
-			c.insets = smallIndentInset;
-			panel.add(new JLabel(Translator.getString("STR_et_l_ordre")+" : "), c);
-			c.weightx = 1;
-			c.insets = noIndentInset;
-			c.gridx++;
 			panel.add(getRadioBreadthFirst(), c);
 			c.gridx++;
 			panel.add(getRadioDephtFirst(), c);
 
-            
+			c.gridx = 0;
+			c.gridy++;
+            c.gridwidth = 2;
+			panel.add(getDoHierarchicalSimulation(), c);
+
+			       
             // size limits
             panel = new JPanel();
             panel.setLayout(new GridBagLayout());
@@ -229,8 +209,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
         bcancel.setText(Translator.getString("STR_abort"));
 
         // nearly everything should be disabled
-        radioFullSTG.setEnabled(false);
-        radioDHG.setEnabled(false);
+        doHierarchicalSimulation.setEnabled(false);
         radioBreadthFirst.setEnabled(false);
         radioDephtFirst.setEnabled(false);
         selectPriorityClass.setEnabled(false);
@@ -286,6 +265,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
         return radioChangeListener;
     }
     /**
+     * 
      * @param e the original event 
      */
     protected void radioChanged(ChangeEvent e) {
@@ -300,11 +280,6 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
             return;
         }
         currentParameter.breadthFirst = radioBreadthFirst.isSelected();
-        if (radioDHG.isSelected()) {
-        	currentParameter.buildSTG = GsSimulationParameters.BUILD_DHG;
-        } else if (radioFullSTG.isSelected()) {
-        	currentParameter.buildSTG = GsSimulationParameters.BUILD_FULL_STG;
-        }
     }
 
     /**
@@ -334,38 +309,34 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
         }
         return radioBreadthFirst;
     }
-
+  
     /**
-     * This method initializes radioBreadthFirst
+     * This method initializes doHierarchicalSimulation
      * 
      * @return javax.swing.JRadioButton
      */
-    private javax.swing.JRadioButton getRadioFullSTG() {
-        if(radioFullSTG == null) {
-            radioFullSTG = new javax.swing.JRadioButton(Translator.getString("STR_strategy_full_stg"));
-            radioFullSTG.setSelected(true);
-            strategyGrp.add(radioFullSTG);
-            radioFullSTG.addChangeListener(getRadioChangeListener());
+    private JCheckBox getDoHierarchicalSimulation() {
+        if(doHierarchicalSimulation == null) {
+        	doHierarchicalSimulation = new JCheckBox(Translator.getString("STR_dynHier_simulation_descr"));
+        	doHierarchicalSimulation.setSelected(false);
+        	doHierarchicalSimulation.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    if (doHierarchicalSimulation.isSelected()) {
+                    	currentParameter.buildSTG = GsSimulationParameters.BUILD_DHG;
+                    	radioDephtFirst.setEnabled(false);
+                    	radioBreadthFirst.setEnabled(false);
+                    } else {
+                    	currentParameter.buildSTG = GsSimulationParameters.BUILD_FULL_STG;
+                    	radioDephtFirst.setEnabled(true);
+                    	radioBreadthFirst.setEnabled(true);
+                   }
+                }       		
+        	});
         }
-        return radioFullSTG;
+        return doHierarchicalSimulation;
     }
-
     
-    /**
-     * This method initializes radioBreadthFirst
-     * 
-     * @return javax.swing.JRadioButton
-     */
-    private javax.swing.JRadioButton getRadioDHG() {
-        if(radioDHG == null) {
-            radioDHG = new javax.swing.JRadioButton(Translator.getString("STR_strategy_dhg"));
-            strategyGrp.add(radioDHG);
-            radioDHG.addChangeListener(getRadioChangeListener());
-        }
-        return radioDHG;
-    }
-
-    /**
+	/**
      * This method initializes textMaxDepth
      * 
      * @return javax.swing.JTextField

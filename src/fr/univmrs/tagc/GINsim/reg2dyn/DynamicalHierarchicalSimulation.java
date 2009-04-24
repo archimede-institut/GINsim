@@ -13,6 +13,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.Translator;
@@ -25,7 +26,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private GsDynamicalHierarchicalNode dhnode;
 	private GsDynamicalHierarchicalNodeSet nodeSet;
 	
-	private final byte debug = 11; //FIXME : set debug to 0
+	private final byte debug = -128; //FIXME : set debug to -1
 	private PrintStream debug_o = System.err;
 	private GsDynamicalHierarchicalGraph dynGraph;
 	private GsGraphManager rgm;
@@ -41,12 +42,12 @@ public class DynamicalHierarchicalSimulation extends Simulation {
     public DynamicalHierarchicalSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow, boolean useInit) {
 		super(regGraph, frame, params, false, useInit);
 		
-		if (params.buildSTG == GsSimulationParameters.BUILD_DHG) {
-			helper = new DynamicalHierarchicalSimulationHelper(regGraph, params);
-		}
+		helper = new DynamicalHierarchicalSimulationHelper(regGraph, params);
    		updater = SimulationUpdater.getInstance(regGraph, params);
    		if (runNow) {
+   			long time = System.currentTimeMillis();
    		    start();
+   		    log(-100, "Total time : "+(System.currentTimeMillis()-time)+"ms");
    		}
 	}
     
@@ -64,6 +65,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			runSimulationOnInitialStates();									// run the simulation for each initial states
 						
 		} catch (GsException e) {
+			debug_o.println("Error : "+e.getMessage());
             debug_o.println("simulation was interrupted");
 		} catch (OutOfMemoryError e) {
 		    Tools.error("Out Of Memory", null);
@@ -141,7 +143,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		dhnode = nodeSet.getDHNodeForState(e.state);												//Get the dhnode associated to e
 		if (dhnode == null) {														//If it has no dhnode associated
 			log(1,"      => Stable state, no next");
-			dhnode = createNodefrom(e);													// - create a new node
+			dhnode = createNodefrom(e, 2);													// - create a new node
 			dhnode.setType(GsDynamicalHierarchicalNode.TYPE_STABLE_STATE);				// - its type is STABLE_STATE
 			nodeSet.add(dhnode);														// - add the dhnode to the set of all dhnode.
 		} else {																	//Else
@@ -149,7 +151,6 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		}
 		e.setParentNextChild(dhnode);												//add this dhnode to the childs list of the parent of e
 		e.tellParentOneChildIsProcess(1);
-		dhnode.processState(e.state, dynGraph.getChildsCount());					//indicate to the dhnode that one of its element has been processed
 		removeLastInQueue();														//Remove it from the queue
 	}
 	
@@ -169,32 +170,33 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private void queueNextStatesOf() throws Exception {
 		log(10,"      &Queueing successors...");
 		boolean shouldIncreaseDepth = false;
-		if (e.totalChild == -1) {
-            e.totalChild = 0;
-        }
-		while (updater.hasNext()) {													//For each children of qs
-			e.totalChild++;															//  increase the count of child of qs
-																					//  create a new QueuedState
+		if (e.totalChild == -1) e.totalChild = 0;
+		while (updater.hasNext()) {														//For each children of qs
+			e.totalChild++;																//  increase the count of child of qs
+																						//  create a new QueuedState
+			GsDynamicalHierarchicalNode master = nodeSet.getDHNodeForState(e.state);
 			DynamicalHierarchicalSimulationQueuedState newqs = new DynamicalHierarchicalSimulationQueuedState(((SimulationQueuedState)updater.next()).state, depth, e);
 			dhnode = nodeSet.getDHNodeForState(newqs.state);										//  get the associated dhnode for the state
-			if (dhnode != null) {													//  if the state is associated with a dhnode
-				if (!dhnode.isProcessed()) {										//      if the state has not already been processed
+			if (dhnode != null) {														//  if the state is associated with a dhnode
+				if (!dhnode.isProcessed()) {											//      if the state has not already been processed
 					log(10,"        ?next is in a cycle building => add current path to this cycle");
-					addToTheBuildingCycle(newqs);								//          add it in the cycle
-				} else {															//      else if the state is associated with a building cycle
+					if (!dhnode.equals(master)) {										// 			if the parent is not already in the cycle
+						addToTheBuildingCycle(master);									//          	add it in the cycle
+					} else {
+						log(10, "            the parent is already in the cycle.");
+					}
+				} else {																//      else if the state is associated with a building cycle
 					log(10,"        $already procedded : not queueing "+newqs+" : "+dhnode);
 				}
-				newqs.setParentNextChild(dhnode);									//     add this dhnode to the children list of the parent of e
+				newqs.setParentNextChild(dhnode);										//     add this dhnode to the children list of the parent of e
 				newqs.tellParentOneChildIsProcess(1);
-			} else {																//  else it is not associated
-				queue.add(newqs);													//     add the child to the queue 
+			} else {																	//  else it is not associated
+				queue.add(newqs);														//     add the child to the queue 
 				shouldIncreaseDepth = true;
 				log(10,"        $queueing "+newqs);
 			}
 		}
-		if (shouldIncreaseDepth) {
-            depth++;											//  increase the depth of the queue if there is at least on children added to the queue
-        }
+		if (shouldIncreaseDepth) depth++;												//  increase the depth of the queue if there is at least on children added to the queue
 	}
 	
 	/**
@@ -205,24 +207,12 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @param cycleqs one of its children
 	 * @throws Exception 
 	 */
-	private void addToTheBuildingCycle(DynamicalHierarchicalSimulationQueuedState cycleqs) throws Exception {
+	private void addToTheBuildingCycle(GsDynamicalHierarchicalNode master) throws Exception {
 		DynamicalHierarchicalSimulationQueuedState cur = e;
-		GsDynamicalHierarchicalNode master = nodeSet.getDHNodeForState(cur.state);
-
-		if (dhnode.equals(master)) {													// if the parent is  already in the cycle
-			log(10, "            the parent is already in the cycle.");
-		}
-		
-		while (cur != null && !cur.equals(next) && !dhnode.equals(master)) {			// for state from parentqs from parent to parent, while the state is not in the cycle
-			if (master != null) {														//     If the current state is in a cycle
+		while (cur != null && !dhnode.equals(master)) {									// for state from e from parent to parent, while the state is not in the cycle
+			if (master != null) {														//     If the current state is associated with a node
 				log(10,"            cur "+cur+" is in another cycle merging : "+master);
-				
-				if (master.isStable()) {
-					throw new GsException(1,"Error : cannot merge with a stable state. master: "+master+" dhnode: "+dhnode);
-				}
-				
-				master.setType(GsDynamicalHierarchicalNode.TYPE_CYCLE);					//			set transient type to cycle. //FIXME remove line when removing the throw in merge
-				dhnode.merge(master, nodeSet, rgm.getVertexCount(), helper);			//			merge the current building cycle (dhnode) with the cycle of cur
+				encounterANodeInACycle(cur, master);
 			} else {
 				if (!dhnode.contains(cur.state)) {										//     if the cycle does not contain the current state	
 					dhnode.addStateToThePile(cur.state, dynGraph.getChildsCount());		//         add the state to the cycle
@@ -246,9 +236,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @throws Exception
 	 */
 	private void runOnNext() throws Exception {
-		if (next.previous != e) {
-            throw new GsException(1, "FAIL next.previous != e");
-        }
+		if (next.previous != e) throw new Exception("FAIL next.previous != e");
 		GsDynamicalHierarchicalNode master = null;
 		if (alreadyInTheQueue(next)) { 													// If 'next' is already in the queue : there is a path from 'next' to ... to 'next' => its a cycle
 			log(10,"        ?alreadyInTheQueue==true => creating a cycle");
@@ -275,8 +263,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			DynamicalHierarchicalSimulationQueuedState cur = e;
 			while (cur != null && !cur.equals(next)) {									//		For each queued state from 'e' to 'next' in the queue (going up)
 				if (master != null) {													//		If cur is already in a cycle
-					master.merge(dhnode, nodeSet, rgm.getVertexCount(), helper);		//			merge the current building cycle (dhnode) with the cycle of cur
-					dhnode = master;													//			dhnode is the result of the merge
+					encounterANodeInACycle(cur, master);
 				} else if (master == null || master.equals(dhnode)){					//		Else if cur is not already in a cycle or if both cycle are the same
 					nodeSet.add(dhnode);												//			add them to the list of dhnode
 				}
@@ -287,17 +274,44 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 					log(10,"            adding state"+print_t(cur.state));
 				}
 				cur = cur.previous;
-				if (cur == null) {
-                    break;
-                }
+				if (cur == null) break;
 				master = nodeSet.getDHNodeForState(cur.state);
 			}//while
 			dhnode.addPileToOmdd(dynGraph.getChildsCount());
 			dhnode.reduce();
 			dhnode.updateSize(dynGraph.getChildsCount());
-			removeLastInQueue();
+			removeLastInQueue();														//	Remove the last item in the queue
 		}//alreadyInTheQueue(next)
 	}
+	
+	/**
+	 * IN : the current state is already associated with a node.
+	 * DURING : depending on the kind of node, they will be a merge, or a split...
+	 * OUT : dhnode is updated and contains the current state
+	 * 
+	 * @param cur
+	 * @param master
+	 * @throws Exception
+	 */
+	private void encounterANodeInACycle(DynamicalHierarchicalSimulationQueuedState cur, GsDynamicalHierarchicalNode master) throws Exception {
+		if (master.isCycle()) {													//			If the node is a cycle
+			dhnode.merge(master, nodeSet, rgm.getVertexCount(), helper);		//				merge the current building cycle (dhnode) with the cycle of cur
+		} else if (master.isTransient()) {										//			else if the node is transient
+			throw new Exception("Error : transient "+master+" "+dhnode+" "+cur);
+//			master.remove(cur.state, nodeSet);											//				remove the current state from the transient node
+//			if (!dhnode.contains(cur.state)) {									//    			if the cycle does not contain the current state	
+//				dhnode.addStateToThePile(cur.state, dynGraph.getChildsCount());	//        	 		add the state to the cycle
+//				log(10,"            adding state"+print_t(cur.state));
+//			} else {															//     			else
+//				log(10,"            state already in"+print_t(cur.state));		//        	 		do nothing
+//			}
+		} else if (master.isStable()) {
+			throw new Exception("Error : cannot merge with a stable state. master: "+master+" dhnode: "+dhnode);
+		} else {
+			throw new Exception("Error : unexpected type. master: "+master+" dhnode: "+dhnode);
+		}
+	}
+
 	
 	private void simplifyQueue() throws Exception {
 		while (e != null && e.isProcessed()) { 																		//While all the successors of the state have been visited.
@@ -305,10 +319,11 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			if (dhnode == null) { 																					//    	If the state is not processed
 				log(10,"      }all  childs of e have been processed"+e);
 				//TODO : merge if ....
-				dhnode = createNodefrom(e);																			//			Create a new node from the current state
+				dhnode = createNodefrom(e, 2);																			//			Create a new node from the current state
 				nodeSet.add(dhnode);																				//			Add this node to the nodeSet
 				log(10,"      }e "+e+" has a lot of transient childs "+dhnode.toLongString(rgm.getVertexCount()));
 			} else {
+				dhnode.processState(e.state, dynGraph.getChildsCount());												//		Process the current state in the current node
 				log(10,"      }e "+e+" is already processed in "+dhnode.toLongString(rgm.getVertexCount()));
 			}
 			for (Iterator it = e.childs.iterator(); it.hasNext();) {												//		For each children of the current set
@@ -321,9 +336,17 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				e.setParentNextChild(dhnode);																		//			Add the current node to the set of children of the previous of e
 				e.tellParentOneChildIsProcess(1);
 			}
-			dhnode.processState(e.state, dynGraph.getChildsCount());												//		Process the current state in the current node
+			if (!e.isProcessed()) {
+				throw new Exception("Error : a state is not fully processed "+e+" (("+dhnode.toLongString(rgm.getVertexCount())+"))");
+			}
+			if (dhnode.root.testStatus(e.state) != 2) {
+				throw new Exception("Error : a node is not fully processed for state "+e+" "+dhnode.toLongString(rgm.getVertexCount())+"\n"+dhnode.statesToString(rgm.getVertexCount(), true));
+			}
 			removeLastInQueue();																					//		Remove the last item in the queue
 			e = getLastInQueue();																					//		e is set to the next last item in the queue
+			if (e == null && !dhnode.isProcessed()) {
+				throw new Exception("Error : a node is not fully processed "+dhnode.toLongString(rgm.getVertexCount())+"\n"+dhnode.statesToString(rgm.getVertexCount(), true));
+			}
 		}
 		log(2,"      }set e @["+queue.size()+"]:"+e);
 	}	
@@ -332,7 +355,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		Set transientComponants = new HashSet();	
 		GsDynamicalHierarchicalNode child = null;
 		for (Iterator it = e.childs.iterator(); it.hasNext();) {
-			child = (GsDynamicalHierarchicalNode) it.next();
+			child = ((GsDynamicalHierarchicalNode) it.next());
 			if (child.isTransient()) {
 				transientComponants.add(child);
 			}
@@ -346,7 +369,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				Set fromEdgesSet = from.getOutgoingEdges();
 				if (fromEdgesSet != null) {
 					for (Iterator it = e.childs.iterator(); it.hasNext();) { 							//For each outgoing edges 'to' of 'from'
-						GsDynamicalHierarchicalNode to = (GsDynamicalHierarchicalNode) it.next();
+						GsDynamicalHierarchicalNode to = ((GsDynamicalHierarchicalNode) it.next());
 						if (to.equals(from) || !to.isTransient()) {//If to equals from or 'to' is not transient
                             continue;																			//Skip 'to'
                         }
@@ -371,14 +394,14 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			}
 			if (mergedChilds != null) {											//If we have merged some transient childs, remove them from the transient list.
 				for (Iterator it = mergedChilds.iterator(); it.hasNext();) {
-					child = (GsDynamicalHierarchicalNode) it.next();
+					child = ((GsDynamicalHierarchicalNode) it.next());
 					transientComponants.remove(child);
 				}
 			}
 		} 
 		if (transientComponants.size() == 1) { //There is only one TRANSIENT child, then merge the current node in the child
 			dhnode = (GsDynamicalHierarchicalNode) transientComponants.iterator().next();
-			dhnode.addState(e.state, dynGraph.getChildsCount());
+			dhnode.addState(e.state, dynGraph.getChildsCount(), 1); //FIXME here not 1
 			dhnode.reduce();
 			log(15,"      }e "+e+" has only one transient child "+dhnode.toLongString(rgm.getVertexCount()));
 		} else {
@@ -400,7 +423,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		} else if (queue.size() == 1) {
 			depth--;
 		}
-		queue.removeLast();
+		queue.pollLast();
 	}
 	
 	/**
@@ -409,7 +432,16 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @return
 	 */
 	private GsDynamicalHierarchicalNode createNodefrom(DynamicalHierarchicalSimulationQueuedState qs) {
-		GsDynamicalHierarchicalNode dhnode = new GsDynamicalHierarchicalNode(qs.state, dynGraph.getChildsCount()); //TODO: more complex merge
+		return createNodefrom(qs, 1);
+	}
+	
+	/**
+	 * Create a node from the QueuedState qs, and add it to the list.
+	 * @param qs
+	 * @return
+	 */
+	private GsDynamicalHierarchicalNode createNodefrom(DynamicalHierarchicalSimulationQueuedState qs, int childValue) {
+		GsDynamicalHierarchicalNode dhnode = new GsDynamicalHierarchicalNode(qs.state, dynGraph.getChildsCount(), childValue); //TODO: more complex merge
 		nodeSet.add(dhnode);
 		log(10,"        %create a new node from state "+qs+" dhnode: "+dhnode);
 		return dhnode;
@@ -480,9 +512,9 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode from = (GsDynamicalHierarchicalNode) it.next();
 			log(15,"  from "+from);
-			Set targets = from.getOutgoingEdges();
+			Set targets = (Set)from.getOutgoingEdges();
 			for (Iterator it2 = targets.iterator(); it2.hasNext();) {
-				GsDynamicalHierarchicalNode target = (GsDynamicalHierarchicalNode) it2.next();
+				GsDynamicalHierarchicalNode target = ((GsDynamicalHierarchicalNode) it2.next());
 				if (!from.equals(target)) {
                     graph.addEdge(from, target);
                     nbarc++;
@@ -529,7 +561,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @return the last item in 'queue'
 	 */
 	private DynamicalHierarchicalSimulationQueuedState getLastInQueue() {
-		return (DynamicalHierarchicalSimulationQueuedState)queue.getLast();
+		return (DynamicalHierarchicalSimulationQueuedState)queue.peekLast();
 	}
 
 	public static String print_t(byte[] t) {
@@ -541,9 +573,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	}
 	
 	public void log(int level, String msg) {
-		if (debug >= level) {
-            debug_o.println(msg);
-        }
+		if (debug >= level) debug_o.println(msg);
 	}
 	
 	private void logQueue(int level) {
@@ -561,9 +591,9 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * if max depth reached
 	 * if the Interrupt button has been pushed.
 	 * 
-	 * @throws GsException
+	 * @throws Exception
 	 */
-	private void checkStopConditions() throws GsException {
+	private void checkStopConditions() throws Exception {
 		if (maxnodes != 0 && nbnode >= maxnodes){
 		    debug_o.println("maxnodes reached: " + maxnodes);
 		    throw new GsException(GsException.GRAVITY_NORMAL, "Reached the maximum count of node");
@@ -580,9 +610,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private void updateProgess() {
 		nbnode++;
 	    if (frame != null) {
-	    	if (nbnode % 10 == 0) {
-                frame.setProgress(nbnode); 
-	    	}
+            frame.setProgress(nbnode); 
 		}
 	}
 }
