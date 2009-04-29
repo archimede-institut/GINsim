@@ -87,6 +87,7 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionDelete;
 	private AbstractAction		actionUndo;
 	private AbstractAction		actionRedo;
+	private AbstractAction		actionSearchNode;
 	private AbstractAction		actionZoomIn;
 	private AbstractAction		actionZoomOut;
 	private AbstractAction		actionNormalSize;
@@ -307,6 +308,18 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 		mi_delete = new JMenuItem(actionDelete);
+		
+
+		actionSearchNode = new BaseAction("STR_searchNode", null,
+				"STR_searchNode_descr", KeyStroke.getKeyStroke(KeyEvent.VK_F,
+						mask | ActionEvent.SHIFT_MASK)) {
+
+			private static final long serialVersionUID = 9114560394293685735L;
+			
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.searchNode();
+			}
+		};
 
 		actionEditDefault = new GsEditSwitchAction("STR_edit", ImageLoader
 				.getImageIcon("editmode.gif"), "STR_edit_descr", KeyStroke
@@ -475,6 +488,7 @@ public class GsActions implements GraphChangeListener {
 		editMenu.add(sepEdit);
 		editMenu.add(addVertexMenu);
 		editMenu.add(addEdgeMenu);
+		editMenu.add(actionSearchNode);
 		editMenu.add(new JSeparator());
 		editMenu.add(actionSelectAll);
 		editMenu.add(actionInvertSelection);

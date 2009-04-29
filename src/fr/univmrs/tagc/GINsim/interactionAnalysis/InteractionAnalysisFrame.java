@@ -52,12 +52,10 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	}
 
 	public InteractionAnalysisFrame(JFrame frame, GsGraph graph) {
-		super(frame, Translator.getString("STR_interactionAnalysis"), 800, 600);
+		super(frame, Translator.getString("STR_interactionAnalysis"), 420, 260);
 		this.frame = frame;
 		this.graph = graph;
-        this.frame = frame;
         initialize();
-        this.setTitle(Translator.getString("STR_interactionAnalysis"));
     }
 
 	public void initialize() {
@@ -113,6 +111,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		    c.gridy++;
 			c.weightx = 0;
 			c.weighty = 0;
+			c.ipady = 0;
 		    saveReportButton = new JButton(Translator.getString("STR_interactionAnalysis_saveReport"));
 		    mainPanel.add(saveReportButton, c);
 		    saveReportButton.addActionListener(this);

@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
@@ -324,6 +326,36 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
     }
 
 
+	public Vector searchNodes(String regexp) {
+		Vector v = new Vector();
+		
+		StringBuffer s = new StringBuffer();
+		for (int i = 0; i < regexp.length(); i++) {
+			char c = regexp.charAt(i);
+			if (c == '\\') {
+				s.append(regexp.charAt(++i));
+			} else if (c == '*') {
+				s.append("[0-9\\*]");
+			} else if (c == '0' || (c >= '1' && c <= '9')){
+				s.append("["+c+"\\*]");
+			} else if (c == ' ' || c == '\t') {
+				//pass
+			} else {
+				s.append(c);
+			}
+		}
+		Pattern pattern = Pattern.compile(s.toString(), Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher("");
+		
+		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
+			GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode) it.next();
+			matcher.reset(vertex.statesToString(this.getNodeOrder().size()));
+			if (matcher.find()) {
+				v.add(vertex);
+			}
+		}
+		return v;
+	}
 
 
 
