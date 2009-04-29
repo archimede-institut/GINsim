@@ -568,7 +568,11 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @return the last item in 'queue'
 	 */
 	private DynamicalHierarchicalSimulationQueuedState getLastInQueue() {
-		return (DynamicalHierarchicalSimulationQueuedState)queue.getLast();
+		if (queue.size() > 0) {
+			return (DynamicalHierarchicalSimulationQueuedState)queue.getLast();
+		} else {
+			return null;
+		}
 	}
 
 	public static String print_t(byte[] t) {
