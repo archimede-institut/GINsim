@@ -356,6 +356,14 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 		}
 		return v;
 	}
+	
+	public GsDynamicalHierarchicalNode getNodeForState(byte[] state) {
+		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
+			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
+			if (v.contains(state)) return v;
+		}
+		return null;
+	}
 
 
 

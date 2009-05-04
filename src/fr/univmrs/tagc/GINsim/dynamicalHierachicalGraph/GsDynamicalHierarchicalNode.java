@@ -561,6 +561,10 @@ public class GsDynamicalHierarchicalNode {
 			processed++;
 		}
 	}
+	
+	public int getSize() {
+		return size;
+	}
 }
 
 
