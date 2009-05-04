@@ -168,7 +168,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 	    	    GsEdgeAttributesReader ereader = graphManager.getEdgeAttributesReader();
 		        while (it.hasNext()) {
 		            GsDirectedEdge edge = (GsDirectedEdge) it.next();
-		            ereader.setEdge(edge);
+		            ereader.setEdge(edge.getUserObject());
 		            ((GsRegulatoryMultiEdge)edge.getUserObject()).toXML(out, GsGinmlHelper.getEdgeVS(ereader), mode);
 		        }
 		        break;

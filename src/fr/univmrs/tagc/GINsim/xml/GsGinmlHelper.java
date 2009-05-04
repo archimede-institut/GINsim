@@ -2,8 +2,8 @@ package fr.univmrs.tagc.GINsim.xml;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.xml.sax.Attributes;
 
@@ -79,25 +79,29 @@ public class GsGinmlHelper {
 			}
 			ereader.setRouting(i);
 			
-			s = attributes.getValue("points").trim();
-			if (!s.equals("")) {
-				String[] ts = s.split(" ");
-			    try {
-					List l = new Vector();
-					for (int j=0 ; j<ts.length ; j++) {
-					    String[] t_point = ts[j].split(",");
-				        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
-					}
-					ereader.setPoints(l);
-			    } catch (Exception e) {
-			        Tools.error("invalid points", null);
-			    }
+			s = attributes.getValue("points");
+			if (s != null) {
+    			s = s.trim();
+    			if (!s.equals("")) {
+    			    
+    				String[] ts = s.split(" ");
+    			    try {
+    					List l = new ArrayList();
+    					for (int j=0 ; j<ts.length ; j++) {
+    					    String[] t_point = ts[j].split(",");
+    				        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
+    					}
+    					ereader.setPoints(l);
+    			    } catch (Exception e) {
+    			        Tools.error("invalid points", null);
+    			    }
+    			}
 			}
 			
-	         s = attributes.getValue("pattern");
-	         if (s != null) {
-	             ereader.setDash(ereader.getPattern(1));
-	         }
+			s = attributes.getValue("pattern");
+			if (s != null) {
+			    ereader.setDash(ereader.getPattern(1));
+			}
 
 			ereader.refresh();
 		}
@@ -112,12 +116,14 @@ public class GsGinmlHelper {
         svs += "\t\t\t\t<polyline";
         String s = "";
         List l_point = eReader.getPoints(false);
-        for (int i=0 ; i<l_point.size() ; i++) {
-            Point2D pt = (Point2D)l_point.get(i); 
-            s += (int)pt.getX()+","+(int)pt.getY()+" ";
-        }
-        if (s.length() > 1) {
-            svs += " points=\""+s.substring(0, s.length()-1)+"\"";
+        if (l_point != null) {
+            for (int i=0 ; i<l_point.size() ; i++) {
+                Point2D pt = (Point2D)l_point.get(i); 
+                s += (int)pt.getX()+","+(int)pt.getY()+" ";
+            }
+            if (s.length() > 1) {
+                svs += " points=\""+s.substring(0, s.length()-1)+"\"";
+            }
         }
         switch (eReader.getStyle()) {
 	    	case GsEdgeAttributesReader.STYLE_CURVE:
