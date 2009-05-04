@@ -44,6 +44,7 @@ public class Tools {
 		m_helper.put(key, helper);
 	}
 
+	public static boolean HASGUI = true;
 	
 	static {
 		String os_name = System.getProperty("os.name").toLowerCase();
@@ -353,7 +354,7 @@ public class Tools {
 	}
 
     /**
-     * an error occured, give the user some feedback.
+     * an error occurred, give the user some feedback.
      * 
      * @param e
      * @param main
@@ -368,17 +369,26 @@ public class Tools {
         	default:
                 i = JOptionPane.ERROR_MESSAGE;
         }
-        JOptionPane.showMessageDialog(main, e.getMessage()+"\n", e.getTitle(),i);
+        if (HASGUI) {
+            JOptionPane.showMessageDialog(main, e.getMessage()+"\n", e.getTitle(),i);
+        } else {
+            System.err.println(e.getTitle());
+            System.err.println(e.getMessage());
+        }
     }
 
     /**
-     * an error occured, give the user some feedback.
+     * an error occurred, give the user some feedback.
      * 
      * @param s
      * @param main
      */
     public static void error(String s, JFrame main) {
-        JOptionPane.showMessageDialog(main, s+"\n", "error",JOptionPane.ERROR_MESSAGE);
+        if (HASGUI) {
+            JOptionPane.showMessageDialog(main, s+"\n", "error",JOptionPane.ERROR_MESSAGE);
+        } else {
+            System.err.println("error: "+s);
+        }
     }
 
 	public static InputStream getStreamForPath(String path) throws IOException, FileNotFoundException {
