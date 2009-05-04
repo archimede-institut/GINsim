@@ -21,6 +21,8 @@
 	<!-- ************************************************** -->
 	<!--		change path to docbook XSL in ginsimdoc.xsl		-->
 	<!-- ************************************************** -->
+	<property name="extlib" location="/cobelix/naldi/GINsim/libs"/>
+	<available file="${GSLib}" type="dir" property="extlib" value="${GSLib}" />
 	<property name="doc" location="${dist}/Documentation"/>
 	<property name="javadoc" location="${doc}/javadoc"/>
 	<property name="htmldoc" location="${doc}/html"/>
@@ -116,8 +118,7 @@
 		    author="true"
 		    version="true"
 		    use="true"
-		    windowtitle="API documentation for the Gene Interaction Network simulator (GINsim)"
-			overview="doc/javadoc-overview.html">
+			windowtitle="API documentation for the Gene Interaction Network simulator (GINsim)">
 
 			<packageset dir="${src}" defaultexcludes="yes">
 	    		<include name="fr/univmrs/tagc/**" />
