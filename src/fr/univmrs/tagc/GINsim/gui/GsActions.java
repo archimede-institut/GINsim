@@ -272,7 +272,8 @@ public class GsActions implements GraphChangeListener {
 		};
 
 		actionInvertSelection = new BaseAction("STR_invertSelection", null,
-				"STR_invertSelection_descr", null) {
+				"STR_invertSelection_descr",  KeyStroke.getKeyStroke(KeyEvent.VK_A,
+						mask | ActionEvent.SHIFT_MASK)) {
 
 			private static final long	serialVersionUID	= -2792926833599149035L;
 
@@ -299,7 +300,8 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionDelete = new BaseAction("STR_delete", "edit-delete.png", "STR_delete_descr", null, null) {
+		actionDelete = new BaseAction("STR_delete", "edit-delete.png", "STR_delete_descr", KeyStroke.getKeyStroke(KeyEvent.VK_F,
+				mask | ActionEvent.SHIFT_MASK), null) {
 
 			private static final long	serialVersionUID	= -3283938108975661376L;
 
@@ -488,10 +490,10 @@ public class GsActions implements GraphChangeListener {
 		editMenu.add(sepEdit);
 		editMenu.add(addVertexMenu);
 		editMenu.add(addEdgeMenu);
-		editMenu.add(actionSearchNode);
 		editMenu.add(new JSeparator());
 		editMenu.add(actionSelectAll);
 		editMenu.add(actionInvertSelection);
+		editMenu.add(actionSearchNode);
 
 		actionMenu.add(layoutMenu);
 

@@ -46,7 +46,7 @@ public class GsSearchFrame extends SimpleDialog {
 	private MyTableModel tableModel;
 	
 	public GsSearchFrame(GsMainFrame main) {
-		super(main, Translator.getString("STR_searchNode"),300,400);
+		super(main, Translator.getString("STR_searchNode_title"),300,400);
 		this.g = main.getGraph();
         initialize();
 	}
