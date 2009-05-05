@@ -31,7 +31,7 @@ public class InteractionAnalysis {
 	private InteractionAnalysisSelector selector = null;
 	
 	private long before; //to know the time elapsed in the algorithm
-	private int i_leafs;
+	private byte i_leafs;
 	
 	private Report report;
 	private List currentPath, currentSource;
@@ -72,7 +72,7 @@ public class InteractionAnalysis {
 		before = new Date().getTime();//measuring the time spend for this algorithm
 		
 		int total_level;		//The total number of node in a complete omdd tree. (products of levels of each interactor)
-		int [] leafs;			//The values of all the leafs for a complete omdd from all the node to 0, to all the node to max.
+		byte [] leafs;			//The values of all the leafs for a complete omdd from all the node to 0, to all the node to max.
 		int [] subtree_size;	//The size of all the complete subtree (tree of a child) of the current node
 		HashMap node_in_subtree;//The level of each node in the subtree regarding the nodeOrder
 
@@ -113,7 +113,7 @@ public class InteractionAnalysis {
 				GsRegulatoryVertex source = (GsRegulatoryVertex) ((GsJgraphDirectedEdge) it2.next()).getSourceVertex();
 				total_level *= source.getMaxValue()+1;
 			}
-			leafs = new int[total_level];
+			leafs = new byte[total_level];
 			i_leafs = 0;
 						
 			subtree_size = new int[l.size()+1];											//Compute the size of the subtrees
@@ -139,36 +139,36 @@ public class InteractionAnalysis {
 			for (Iterator it2 = l.iterator(); it2.hasNext();) {									//	For each incoming edge
 				GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge) ((GsJgraphDirectedEdge)it2.next()).getUserObject();
 				GsRegulatoryVertex source = (GsRegulatoryVertex) me.getSourceVertex();
-				for (int k = 0; k < me.getEdgeCount(); k++) {									// 		For each sub-edge of the multiedge
-					GsRegulatoryEdge e = me.getEdge(k);
-					SourceItem sourceItem = report.reportFor(target, source, e.threshold);
+//				for (int k = 0; k < me.getEdgeCount(); k++) {									// 		For each sub-edge of the multiedge
+//					GsRegulatoryEdge e = me.getEdge(k);
+					SourceItem sourceItem = report.reportFor(target, source);
 					currentSource = sourceItem.reportItems;
 					int functionality = computeFunctionality(source.getMaxValue()+1, ((Integer)node_in_subtree.get(source)).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
 					sourceItem.sign = (byte) functionality;
 					String res;
 					if (functionality == FUNC_POSITIVE) {
 						res = "positive";
-						functionalityMap.put(e.me, InteractionAnalysisSelector.CAT_POSITIVE);
+						functionalityMap.put(me, InteractionAnalysisSelector.CAT_POSITIVE);
 					}
 					else if (functionality == FUNC_NEGATIVE) {
 						res = "negative";
-						functionalityMap.put(e.me, InteractionAnalysisSelector.CAT_NEGATIVE);
+						functionalityMap.put(me, InteractionAnalysisSelector.CAT_NEGATIVE);
 					}
 					else if (functionality == FUNC_DUAL) {
 						res = "dual";
-						functionalityMap.put(e.me, InteractionAnalysisSelector.CAT_DUAL);
+						functionalityMap.put(me, InteractionAnalysisSelector.CAT_DUAL);
 					}
 					else {
 						res = "non functional";
-						functionalityMap.put(e.me, InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+						functionalityMap.put(me, InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
 
 					}
 					if (opt_annotate) {
-						for (int j = 0; j < ((GsRegulatoryMultiEdge) e.me.getUserObject()).getEdgeCount(); j++) {
-							((GsRegulatoryMultiEdge) e.me.getUserObject()).getGsAnnotation(j).appendToComment("This edge is "+res+"\n");
+						for (int j = 0; j < ((GsRegulatoryMultiEdge) me.getUserObject()).getEdgeCount(); j++) {
+							((GsRegulatoryMultiEdge) me.getUserObject()).getGsAnnotation(j).appendToComment("This edge is "+res+"\n");
 						}
 					}
-				}
+	//			}
 
 			}
 		}
@@ -227,7 +227,7 @@ public class InteractionAnalysis {
 	 * @param small_node_order 
 	 * @param subtree_size 
 	 */
-	private int scannOmdd(OmddNode omdd, int deep, int [] leafs, int[] subtree_size, GsRegulatoryVertex[] small_node_order_vertex, int[] small_node_order_levels) {
+	private int scannOmdd(OmddNode omdd, int deep, byte [] leafs, int[] subtree_size, GsRegulatoryVertex[] small_node_order_vertex, int[] small_node_order_levels) {
 		if (omdd.next == null) { 								//If the current node is leaf
 			if (subtree_size[deep] == 1) { 							//a real leaf, ie. all the inputs are present in the branch
 				leafs[i_leafs++] = omdd.value;							//Save the current value.
@@ -281,7 +281,7 @@ public class InteractionAnalysis {
 	 * @param small_node_order the node order in the subtree
 	 * @return
 	 */
-	private byte computeFunctionality(int count_childs, int node_index, int[] leafs, int[] subtree_size_t, GsRegulatoryVertex[] small_node_order) {
+	private byte computeFunctionality(int count_childs, int node_index, byte[] leafs, int[] subtree_size_t, GsRegulatoryVertex[] small_node_order) {
 		int size_of_subtree = subtree_size_t[node_index+1];
 		
 		ReportItem ri = null;
@@ -299,7 +299,7 @@ public class InteractionAnalysis {
 					ri.valL = (byte) low;
 					ri.valR = (byte) high;
 					currentPath = new LinkedList();
-					log_path(index, node_index, subtree_size_t, small_node_order);
+					log_path(index, node_index, ri, subtree_size_t, small_node_order);
 					
 					if (low < high) {
 						containsPositive = true;
@@ -323,7 +323,6 @@ public class InteractionAnalysis {
 	            return FUNC_DUAL;
 	        }
 	        return FUNC_NEGATIVE;
-		    
 		}
 		if (containsPositive) {
 		    return FUNC_POSITIVE;
@@ -339,19 +338,19 @@ public class InteractionAnalysis {
 	 * @param subtree_size_t a table of all the subtree size.
 	 * @param small_node_order the node order in the subtree.
 	 */
-	private void log_path(int index, int node_index, int[] subtree_size_t, GsRegulatoryVertex[] small_node_order) {
-		int k = small_node_order.length - 1; //The last node
-		while (k >= 0) {
+	private void log_path(int index, int node_index, ReportItem ri, int[] subtree_size_t, GsRegulatoryVertex[] small_node_order) {
+		for (int k = 0; k < small_node_order.length; k++) {
 			GsRegulatoryVertex v = small_node_order[k];
-			int count = index/subtree_size_t[k+1]%(v.getMaxValue()+1);
-			PathItem pi = new PathItem();
-			pi.valL = (byte) count;
-			pi.vertex = v;
-			if (k == node_index) {
-				pi.valR = (byte) (count+1);
-			} 
-			currentPath.add(pi);
-			k--;
+			byte count = (byte) (index/subtree_size_t[k+1]%(v.getMaxValue()+1));
+			if (k != node_index) {
+				PathItem pi = new PathItem();
+				pi.valL = count;
+				pi.vertex = v;
+				currentPath.add(pi);
+			} else {
+				ri.svalL = count;
+				ri.svalR = (byte) (count+1);
+			}
 		}
 	}
 
@@ -392,7 +391,7 @@ public class InteractionAnalysis {
 			GsRegulatoryVertex target = (GsRegulatoryVertex) it_target.next();
 			dw.openListItem(null);
 			dw.openParagraph(null);
-			dw.writeText(target.getName());
+			dw.writeText(target.getId());
 			dw.closeParagraph();
 			dw.openList(null);
 			for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
@@ -400,19 +399,19 @@ public class InteractionAnalysis {
 				dw.openListItem(null);
 				if (sourceItem.sign == InteractionAnalysis.FUNC_NON) {
 					dw.openParagraph(STYLE_NONFUNCTIONAL);
-					dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+					dw.writeText(sourceItem.source.getId()+" -> "+target.getId()+" is ");
 					dw.writeText("non functional.");
 				} else if (sourceItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
 					dw.openParagraph(STYLE_POSITIVE);
-					dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+					dw.writeText(sourceItem.source.getId()+" -> "+target.getId()+" is ");
 					dw.writeText("positive.");
 				} else if (sourceItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
 					dw.openParagraph(STYLE_NEGATIVE);
-					dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+					dw.writeText(sourceItem.source.getId()+" -> "+target.getId()+" is ");
 					dw.writeText("negative.");
 				} else {
 					dw.openParagraph(STYLE_DUAL);
-					dw.writeText(sourceItem.source.getName()+"["+sourceItem.level+"] -> "+target.getName()+" is ");
+					dw.writeText(sourceItem.source.getId()+" -> "+target.getId()+" is ");
 					dw.writeText("dual.");
 				}
 				dw.closeParagraph();
@@ -433,13 +432,13 @@ public class InteractionAnalysis {
 						dw.openParagraph(STYLE_DUAL);
 						dw.writeText("Dual           ");
 					}
-					dw.writeText(" : the level of "+sourceItem.source.getName()+" goes from "+reportItem.valL+" to "+reportItem.valR+" for path ");
+					dw.writeText(" : "+target.getId()+" level goes from "+reportItem.valL+" to "+reportItem.valR+" when "+sourceItem.source.getId()+" level goes from "+reportItem.svalL+" to "+reportItem.svalR+" for condition ");
 					for (Iterator it_path = reportItem.path.iterator(); it_path.hasNext();) {
 						PathItem pathItem = (PathItem) it_path.next();
 						if (pathItem.valR == -1) {
-							dw.writeText(pathItem.vertex.getName()+"="+pathItem.valL+" ");
+							dw.writeText(pathItem.vertex.getId()+"="+pathItem.valL+" ");
 						} else {
-							dw.writeText(pathItem.vertex.getName()+"="+pathItem.valL+"/"+pathItem.valR+" ");
+							dw.writeText(pathItem.vertex.getId()+"="+pathItem.valL+"/"+pathItem.valR+" ");
 						}
 					}
 					dw.closeParagraph();
@@ -457,7 +456,6 @@ public class InteractionAnalysis {
 class SourceItem {
 	List reportItems = new LinkedList();
 	GsRegulatoryVertex source;
-	byte level;
 	byte sign;
 }
 
@@ -467,7 +465,7 @@ class PathItem {
 }
 
 class ReportItem {
-	byte valL, valR, sign;
+	byte valL, valR, svalL, svalR, sign;
 	List path;
 }
 
@@ -500,7 +498,7 @@ class Report {
 		return report.keySet().iterator();
 	}
 
-	public SourceItem reportFor(GsRegulatoryVertex target, GsRegulatoryVertex source, byte level) {
+	public SourceItem reportFor(GsRegulatoryVertex target, GsRegulatoryVertex source) {
 		List l = (List) report.get(target);
 		if (l == null) {
 			l = new LinkedList();
@@ -508,7 +506,6 @@ class Report {
 		}
 		SourceItem si = new SourceItem();
 		si.source = source;
-		si.level = level;
 		l.add(si);
 		return si;
 	}

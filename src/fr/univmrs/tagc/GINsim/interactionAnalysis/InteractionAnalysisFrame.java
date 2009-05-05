@@ -113,6 +113,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			c.weighty = 0;
 			c.ipady = 0;
 		    saveReportButton = new JButton(Translator.getString("STR_interactionAnalysis_saveReport"));
+		    saveReportButton.setEnabled(false);
 		    mainPanel.add(saveReportButton, c);
 		    saveReportButton.addActionListener(this);
 		   
@@ -132,6 +133,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			isColorized = false;
 		}
 		fii = new InteractionAnalysis((GsRegulatoryGraph)graph, getOption(0), (GsRegulatoryMutantDef) mutantStore.getObject(0));
+	    saveReportButton.setEnabled(true);
 		colorizeButton.setEnabled(true);
 		if (getOption(2)) {
 			doColorize();
