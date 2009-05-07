@@ -30,7 +30,7 @@
 		<!-- other plugins -->
 		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin"/>
 		<plugin name="tb" 						mainClass="fr.univmrs.tagc.GINsim.gui.tbclient.GsTBPlugin"/>
-		<plugin name="jython" load="fase"		mainClass="fr.univmrs.tagc.GINsim.jython.JythonPlugin"/>
+		<plugin name="jython" load="false"		mainClass="fr.univmrs.tagc.GINsim.jython.JythonPlugin"/>
 	</listOfPlugins>
 
 	<listOfGraphType>

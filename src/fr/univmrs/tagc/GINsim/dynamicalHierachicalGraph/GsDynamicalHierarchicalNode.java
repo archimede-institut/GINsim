@@ -51,8 +51,9 @@ public class GsDynamicalHierarchicalNode {
 	
 	/**
 	 * A new node with a certain initial state.
-	 * @param g a DynamicalHierarchicalGraph
 	 * @param state an initial state to add in the graph
+	 * @param childsCount
+	 * @param childValue the value to add at the end of the omdd (default 1).
 	 */
 	public GsDynamicalHierarchicalNode(byte[] state, byte[] childsCount, int childValue) {
 		root = stateFromArray(state, childsCount, childValue);
@@ -64,8 +65,8 @@ public class GsDynamicalHierarchicalNode {
 	
 	/**
 	 * A new node with a certain initial state.
-	 * @param g a DynamicalHierarchicalGraph
 	 * @param state an initial state to add in the graph
+	 * @param childsCount
 	 */
 	public GsDynamicalHierarchicalNode(byte[] state, byte[]childsCount) {
 		this(state, childsCount, 1);
@@ -73,7 +74,6 @@ public class GsDynamicalHierarchicalNode {
 
 	/**
 	 * A new node.
-	 * @param g a DynamicalHierarchicalGraph
 	 */
 	public GsDynamicalHierarchicalNode() {
 		root = OmddNode.TERMINALS[0];
@@ -81,9 +81,9 @@ public class GsDynamicalHierarchicalNode {
 
 	/**
 	 * A new node from a string written with the stateToString() method
-	 * @param g a DynamicalHierarchicalGraph
 	 * @param parse the string from stateToString()
 	 * @param type a string representation of the type
+	 * @param childsCount
 	 * 
 	 */
 	public GsDynamicalHierarchicalNode(String parse, String type, byte[] childsCount) {
@@ -93,8 +93,8 @@ public class GsDynamicalHierarchicalNode {
 	
 	/**
 	 * A new node from a string written with the stateToString() method
-	 * @param g a DynamicalHierarchicalGraph
 	 * @param parse the string
+	 * @param childsCount
 	 */
 	public GsDynamicalHierarchicalNode(String parse, byte[] childsCount) {
 		root = OmddNode.TERMINALS[0];
@@ -103,6 +103,7 @@ public class GsDynamicalHierarchicalNode {
 
 	/**
 	 * Perform a mergeMultiple on all the omdd in the pile and the root.
+	 * @param childsCount
 	 */
 	public void addPileToOmdd(byte[] childsCount) {
 		if (statePile == null) return;
@@ -117,8 +118,8 @@ public class GsDynamicalHierarchicalNode {
 	 * 
 	 * @see addPileToOmdd()
 	 * 
-	 * @param g the graph (for the regulatory node order)
 	 * @param state the state to add
+	 * @param childsCount
 	 */
 	public void addStateToThePile(String state, byte[] childsCount) {
 		if (statePile == null) statePile = new LinkedList();
@@ -131,8 +132,8 @@ public class GsDynamicalHierarchicalNode {
 	 * 
 	 * @see addPileToOmdd()
 	 * 
-	 * @param g the graph (for the regulatory node order)
 	 * @param state the state to add
+	 * @param childsCount
 	 */
 	public void addStateToThePile(byte[] state, byte[] childsCount) {
 		if (statePile == null) statePile = new LinkedList();
@@ -143,8 +144,8 @@ public class GsDynamicalHierarchicalNode {
 	/**
 	 * Generate a new omdd for a given state (a byte) and add it to the omdd.
 	 *  
-	 * @param g the graph (for the regulatory node order)
 	 * @param state the state to add
+	 * @param childsCount
 	 */
 	public void addState(String state, byte[] childsCount) {
 		root = root.merge(stateFromString(state, childsCount), OmddNode.OR);		
@@ -154,42 +155,41 @@ public class GsDynamicalHierarchicalNode {
 	/**
 	 * Generate a new omdd for a given state (a byte) and add it to the omdd.
 	 *  
-	 * @param g the graph (for the regulatory node order)
 	 * @param state the state to add
+	 * @param childsCount
 	 */
 	public void addState(byte[] state, byte[] childsCount, int childValue) {
 		root = root.merge(stateFromArray(state, childsCount, childValue), OmddNode.OR);		
 		size++;
 	}
 	
-	/**
-	 * remove a state from the omdd
-	 * @param state
-	 * @return true if the link should be updated (ie. the omdd is affected and this size > 0)
-	 */
-	public boolean remove(byte[] state, Set nodeSet) {
-		int res = root.remove(state);
-		if (res >= 1) {
-			size--;
-			if (res == 2) {
-				processed--;
-			}
-			if (size == 0) {
-				nodeSet.remove(this);
-				return false;
-			} else {
-				return true;
-			}
-		}
-		return false;
-	}
-
+//	/**
+//	 * remove a state from the omdd
+//	 * @param state the state to remove
+//	 * @return true if the link should be updated (ie. the omdd is affected and this size > 0)
+//	 */
+//	public boolean remove(byte[] state, Set nodeSet) {
+//		int res = root.remove(state);
+//		if (res >= 1) {
+//			size--;
+//			if (res == 2) {
+//				processed--;
+//			}
+//			if (size == 0) {
+//				nodeSet.remove(this);
+//				return false;
+//			} else {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 
 
 	/**
 	 * Generate a new omdd with a child 1 for a given state and return it
-	 * @param g the graph (for the regulatory node order)
 	 * @param state the state to add
+	 * @param childsCount
 	 * @return the omdd
 	 */
 	public OmddNode stateFromArray(byte[] state, byte[] childsCount) {
@@ -199,9 +199,9 @@ public class GsDynamicalHierarchicalNode {
 	/**
 	 * Generate a new omdd for a given state and return it
 	 * 
-	 * @param g the graph (for the regulatory node order)
 	 * @param state the state to add
-	 * @param child the value to append at the leaf.
+	 * @param childsCount
+	 * @param child_value the value to append at the leaf.
 	 * @return the omdd
 	 */
 	public OmddNode stateFromArray(byte[] state, byte[] childsCount, int child_value) {
@@ -224,8 +224,8 @@ public class GsDynamicalHierarchicalNode {
 
 	/**
 	 * Generate a new omdd for a given state and return it
-	 * @param g the graph (for the regulatory node order)
 	 * @param state the state to add
+	 * @param childsCount
 	 * @return the omdd
 	 */
 	public OmddNode stateFromString(String state, byte[] childsCount) {
@@ -262,14 +262,6 @@ public class GsDynamicalHierarchicalNode {
 	}
 
 	public String toString() {
-		if (size == 1) {
-			StringBuffer s = new StringBuffer();
-			byte[] t = (byte[]) ((List)statesToListbyte(4)).get(0);
-			for (int i = 0; i < t.length; i++) {
-				s.append(String.valueOf(t[i]).charAt(0));
-			}
-			return s.toString();
-		}
 		return "#"+size;
 	}
 	public String toString(int nbNodes) {
@@ -303,6 +295,7 @@ public class GsDynamicalHierarchicalNode {
 	/**
 	 * A new node from a string written with the stateToString() method
 	 * @param parse
+	 * @param childsCount
 	 */
 	public void parse(String parse, byte[] childsCount) {
 		String[] schemas = parse.split("\n");
@@ -313,35 +306,43 @@ public class GsDynamicalHierarchicalNode {
 	}
 		
 	public String statesToString(int nbNodes) {
-		StringBuffer s = new StringBuffer();
-		statesToString(root, s, 0, nbNodes, false);
-		return s.toString();
+		return statesToString(nbNodes, false);
 	}
 	
 	public String statesToString(int nbNodes, boolean addValue) {
-		StringBuffer s = new StringBuffer();
-		statesToString(root, s, 0, nbNodes, addValue);
-		return s.toString();
+		int length = nbNodes+(addValue?3:1);
+		StringBuffer s = new StringBuffer(length);
+		for (int i = 0; i < length; i++) {
+			s.append('.');
+		}
+		StringBuffer res = new StringBuffer();
+		statesToString(root, s, res, 0, nbNodes, addValue);
+		return res.toString();
 	}
 		
-	private void statesToString(OmddNode omdd, StringBuffer s, int last_depth, int nbNodes, boolean addValue) { //FIXME : test before use
+	private void statesToString(OmddNode omdd, StringBuffer s, StringBuffer res, int last_depth, int nbNodes, boolean addValue) { //FIXME : test before use
         if (omdd.next == null) {
+        	if (omdd.value == 0) return;
         	for (int i = last_depth+1; i < nbNodes; i++) {
-        		s.append('*');
+        		s.setCharAt(i, '*');
 			}
         	if (addValue) {
-	            s.append("-"+omdd.value);
+        		s.setCharAt(nbNodes, '-');
+        		s.setCharAt(nbNodes+1, String.valueOf(omdd.value).charAt(0));
+        		s.setCharAt(nbNodes+2, '\n');
+        	} else {
+        		s.setCharAt(nbNodes, '\n');
         	}
-        	s.append("\n");
+        	res.append(s);
         	return;
         }
         
     	for (int i = last_depth+1; i < omdd.level; i++) {
-    		s.append('*');
+    		s.setCharAt(i, '*');
 		}
         for (int i = 0 ; i < omdd.next.length ; i++) {
-        	s.append(String.valueOf(i).charAt(0));
-        	statesToString(omdd.next[i], s, omdd.level, nbNodes, addValue);
+        	s.setCharAt(omdd.level, String.valueOf(i).charAt(0));
+        	statesToString(omdd.next[i], s, res, omdd.level, nbNodes, addValue);
         }
         return;
 	}
@@ -375,39 +376,6 @@ public class GsDynamicalHierarchicalNode {
         for (int i = 0 ; i < omdd.next.length ; i++) {
 	    	t[omdd.level] = (byte) i;
         	statesToList(omdd.next[i], v ,t, omdd.level, nbNodes);
-        }
-
-	}
-
-	/**
-	 * Generate a list of all the states in the node
-	 * Each item of the returned list is a string representation using wildcard *.
-	 * Note the order in the list is relative to the omdd structure.
-	 * @return
-	 */
-	public List statesToListbyte(int maxNodes) {
-		List v = new LinkedList();
-		byte[] t = new byte[maxNodes];
-		statesToListbyte(root, v, t, 0, maxNodes);
-		return v;
-	}
-	
-	private void statesToListbyte(OmddNode omdd, List v, byte[] t, int last_depth, int maxNodes) { //FIXME : test before use
-        if (omdd.next == null) {
-        	if (omdd.value == 0) return;
-        	for (int i = last_depth+1; i < maxNodes; i++) {
-				t[i] = -1;
-			}
-			v.add(t.clone());
-        	return;
-        }
-        
-    	for (int i = last_depth+1; i < omdd.level && i < maxNodes; i++) {
-			t[i] = -1;
-		}
-        for (int i = 0 ; i < omdd.next.length ; i++) {
-	    	if (omdd.level < maxNodes) t[omdd.level] = (byte) i;
-	    	statesToListbyte(omdd.next[i], v ,t, omdd.level, maxNodes);
         }
 
 	}
@@ -592,6 +560,10 @@ public class GsDynamicalHierarchicalNode {
 			root = root.merge(stateFromArray(state, childsCount, 2), OmddNode.MAX);
 			processed++;
 		}
+	}
+	
+	public int getSize() {
+		return size;
 	}
 }
 

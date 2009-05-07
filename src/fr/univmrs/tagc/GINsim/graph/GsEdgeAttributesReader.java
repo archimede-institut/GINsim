@@ -182,10 +182,10 @@ public abstract class GsEdgeAttributesReader implements GsAttributesReader {
 	public abstract void setLineEnd(int index);
 	
 	/**
-	 * @param border if true, returns corrected points instead of real ones
 	 * @return the list of points used by this edge.
 	 */
-	public abstract List getPoints(boolean border);
+	public abstract List getPoints();
+
     /**
      * set points used by this edge
      * @param l
@@ -198,7 +198,7 @@ public abstract class GsEdgeAttributesReader implements GsAttributesReader {
         setLineColor(fereader.getLineColor());
         setStyle(fereader.getStyle());
         setRouting(fereader.getRouting());
-        setPoints(fereader.getPoints(false));
+        setPoints(fereader.getPoints());
         setLineEnd(fereader.getLineEnd());
         setLineWidth(fereader.getLineWidth());
         setDash(fereader.getDash());

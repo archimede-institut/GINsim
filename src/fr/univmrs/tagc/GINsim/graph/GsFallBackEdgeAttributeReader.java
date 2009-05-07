@@ -127,7 +127,7 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
         return evsd.end;
     }
 
-    public List getPoints(boolean border) {
+    public List getPoints() {
         if ( evsd == null ) {
             return null;
         }

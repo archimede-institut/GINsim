@@ -69,4 +69,11 @@ public class GsEditCallBack {
 	    main.getGraph().getGraphManager().delete();
 	}
 	
+	/**
+	 * search a node
+	 */
+	public void searchNode() {
+		new GsSearchFrame(main);
+	}
+	
 }

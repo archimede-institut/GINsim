@@ -1,7 +1,6 @@
 package fr.univmrs.tagc.GINsim.jgraph;
 
 import java.awt.Color;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -212,48 +211,17 @@ public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
         }
     }
     
-    public List getPoints(boolean border) {
+    public List getPoints() {
         EdgeView cv = (EdgeView)glc.getMapping(cell, true);
         List pt = cv.getPoints();
         List list = new ArrayList();
-        Point2D previousPoint = null;
-        VertexView previous = null;
         Iterator it = pt.iterator();
         for ( ; it.hasNext() ; ) {
             Object point = it.next();
-            if (previous != null) {
-	            if (point instanceof PortView) {
-	                VertexView parent = (VertexView) ((PortView)point).getParentView();
-                    list.add(previous.getPerimeterPoint(cv, previousPoint, ((PortView)point).getLocation()));
-                    list.add(parent.getPerimeterPoint(cv, ((PortView)point).getLocation(), previousPoint));
-                    previousPoint = ((PortView)point).getLocation();
-	            } else {
-                    list.add(previous.getPerimeterPoint(cv, previousPoint, (Point2D)point));
-	                previousPoint = (Point2D)point;
-	                list.add(point);
-	            }
-	            
-	            // remove the "wait" status
-                previous = null;
+            if (point instanceof PortView) {
+                list.add(((PortView)point).getLocation());
             } else {
-	            if (point instanceof PortView) {
-	                if (border) {
-	                    VertexView parent = (VertexView) ((PortView)point).getParentView();
-	                    if (previousPoint != null) {
-                            list.add(parent.getPerimeterPoint(cv, ((PortView)point).getLocation(), previousPoint));
-	                    } else {
-	                        previousPoint = ((PortView)point).getLocation();
-	                        previous = parent;
-	                    }
-	                    previousPoint = ((PortView)point).getLocation();
-	                } else {
-	                    previousPoint = ((PortView)point).getLocation();
-	                    list.add(previousPoint);
-	                }
-	            } else {
-	                previousPoint = (Point2D)point;
-	                list.add(point);
-	            }
+                list.add(point);
             }
         }
         return list;

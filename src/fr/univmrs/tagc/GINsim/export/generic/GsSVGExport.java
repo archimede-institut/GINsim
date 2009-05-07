@@ -1,6 +1,9 @@
 package fr.univmrs.tagc.GINsim.export.generic;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,6 +13,7 @@ import java.util.Map;
 
 import org.jgraph.util.Bezier;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -33,6 +37,7 @@ public class GsSVGExport {
 	        out.write("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20001102//EN\" \"http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd\">\n");
 	        out.write("<svg width=\"100%\" height=\"100%\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
 	        
+	        Map boxes = new HashMap();
 	        Map m_marker = new HashMap();
 	        Iterator it;
 	        if (selectedOnly) {
@@ -45,6 +50,7 @@ public class GsSVGExport {
 	            Object obj = it.next();
 	            vreader.setVertex(obj);
 	            writeVertex(out, obj, vreader);
+	            boxes.put(obj, new Rectangle(vreader.getX(), vreader.getY(), vreader.getWidth(), vreader.getHeight()));
 	        }
 	        
 	        GsEdgeAttributesReader ereader = graph.getGraphManager().getEdgeAttributesReader();
@@ -55,8 +61,14 @@ public class GsSVGExport {
 	        }
 	        while (it.hasNext()) {
 	            Object obj = it.next();
+	            Rectangle2D box1=null,  box2=null;
+	            if (obj instanceof GsDirectedEdge) {
+	                GsDirectedEdge e = (GsDirectedEdge)obj;
+                    box1 = (Rectangle2D)boxes.get(e.getSourceVertex());
+                    box2 = (Rectangle2D)boxes.get(e.getTargetVertex());
+	            }
 	            ereader.setEdge(obj);
-	            writeEdge(out, ereader, m_marker);
+	            writeEdge(out, box1, box2, ereader, m_marker);
 	        }
 	        
 	        out.write("</svg>");
@@ -110,8 +122,16 @@ public class GsSVGExport {
         
     }
     
-    private static void writeEdge(FileWriter out, GsEdgeAttributesReader ereader, Map markers) throws IOException {
-        List l_point = ereader.getPoints(true);
+    private static void writeEdge(FileWriter out, Rectangle2D box1, Rectangle2D box2, GsEdgeAttributesReader ereader, Map markers) throws IOException {
+        List l_point = ereader.getPoints();
+        boolean intersect = l_point.size() < 3 || ereader.getStyle() == GsEdgeAttributesReader.STYLE_CURVE;
+        // replace first and last points by bounding box points
+        if (box1 != null) {
+            l_point.set(0, getIntersection(box1, (Point2D)l_point.get(1), intersect));
+        }
+        if (box2 != null) {
+            l_point.set(l_point.size()-1, getIntersection(box2, (Point2D)l_point.get(l_point.size()-2), intersect));
+        }
         String color = "#"+Tools.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
@@ -175,6 +195,68 @@ public class GsSVGExport {
         }        
     	out.write("\"/>\n");
     }
+    
+    private static Point2D getIntersection(Rectangle2D box, Point2D point, boolean intersect) {
+        if (box == null || box.contains(point)) {
+            return point;
+        }
+        
+        double minx, miny, maxx, maxy, px, py, resultx, resulty;
+        minx = box.getMinX();
+        miny = box.getMinY();
+        maxx = box.getMaxX();
+        maxy = box.getMaxY();
+        px = point.getX();
+        py = point.getY();
+
+        if (intersect) {        // compute intersection of the box with the line from its center to the point
+            double centerx = box.getCenterX(), centery = box.getCenterY();
+            double dx = px-centerx, dy = py-centery;
+            if (dy == 0) {
+                resulty = centery;
+                resultx = dx > 0 ? minx : maxx;
+            }
+            double ratio = Math.abs(dx/dy);
+            double boxRatio = Math.abs(box.getWidth() / box.getHeight());
+            if (ratio > boxRatio) {     // crosses on one of the vertical sides
+                if (dx > 0) {
+                    resultx = maxx;
+                    resulty = centery + (maxx-centerx)/ratio;
+                } else {
+                    resultx = minx;
+                    resulty = centery - (maxx-centerx)/ratio;
+                }
+            } else {                    // crosses on one of the horizontal sides
+                if (dy > 0) {
+                    resulty = maxy;
+                    resultx = centerx + (maxy-centery)*ratio;
+                } else {
+                    resulty = miny;
+                    resultx = centerx - (maxy-centery)*ratio;
+                }
+            }
+            
+        } else {                        // find the closest point in the bounding box
+            if (px > maxx) {
+                resultx = maxx;
+            } else if (px < minx) {
+                resultx = minx;
+            } else {
+                resultx = px;
+            }
+    
+            if (py > maxy) {
+                resulty = maxy;
+            } else if (py < miny) {
+                resulty = miny;
+            } else {
+                resulty = py;
+            }
+        }
+        Point r = new Point((int)resultx, (int)resulty);
+        return r;
+    }
+
     
     /**
      * ensure the definition of a marker corresponding to our needs and return it's id.

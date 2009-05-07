@@ -1,7 +1,9 @@
 package fr.univmrs.tagc.GINsim.gui;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
@@ -66,6 +68,11 @@ public class GsEditSwitchAction extends BaseAction {
         this.mode = descriptor.mode;
         this.subMode = descriptor.submode;
         this.gsa = gsa;
+        
+        if (descriptor.key != KeyEvent.VK_UNDEFINED) {
+        	this.putValue( Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(descriptor.key, GsActions.mask | KeyEvent.ALT_MASK));
+        }
+
     }
 
     /**

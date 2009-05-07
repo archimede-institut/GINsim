@@ -9,12 +9,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-
-import org._3pq.jgrapht.edge.DirectedEdge;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;

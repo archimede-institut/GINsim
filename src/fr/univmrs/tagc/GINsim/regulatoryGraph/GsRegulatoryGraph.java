@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -252,10 +253,10 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     }
     public Vector getEditingModes() {
         Vector v_mode = new Vector();
-        v_mode.add(new GsEditModeDescriptor("STR_addGene", "STR_addGene_descr", ImageLoader.getImageIcon("insertsquare.gif"), GsActions.MODE_ADD_VERTEX, 0));
-        v_mode.add(new GsEditModeDescriptor("STR_addPositivInteraction", "STR_addPositivInteraction_descr", ImageLoader.getImageIcon("insertpositiveedge.gif"), GsActions.MODE_ADD_EDGE, 0));
-        v_mode.add(new GsEditModeDescriptor("STR_addNegativInteraction", "STR_addNegativInteraction_descr", ImageLoader.getImageIcon("insertnegativeedge.gif"), GsActions.MODE_ADD_EDGE, 1));
-        v_mode.add(new GsEditModeDescriptor("STR_addUnknownInteraction", "STR_addUnknownInteraction_descr", ImageLoader.getImageIcon("insertunknownedge.gif"), GsActions.MODE_ADD_EDGE, 2));
+        v_mode.add(new GsEditModeDescriptor("STR_addGene", "STR_addGene_descr", ImageLoader.getImageIcon("insertsquare.gif"), GsActions.MODE_ADD_VERTEX, 0, KeyEvent.VK_G));
+        v_mode.add(new GsEditModeDescriptor("STR_addPositivInteraction", "STR_addPositivInteraction_descr", ImageLoader.getImageIcon("insertpositiveedge.gif"), GsActions.MODE_ADD_EDGE, 0, KeyEvent.VK_A));
+        v_mode.add(new GsEditModeDescriptor("STR_addNegativInteraction", "STR_addNegativInteraction_descr", ImageLoader.getImageIcon("insertnegativeedge.gif"), GsActions.MODE_ADD_EDGE, 1, KeyEvent.VK_I));
+        v_mode.add(new GsEditModeDescriptor("STR_addUnknownInteraction", "STR_addUnknownInteraction_descr", ImageLoader.getImageIcon("insertunknownedge.gif"), GsActions.MODE_ADD_EDGE, 2, KeyEvent.VK_U));
         v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", ImageLoader.getImageIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
         return v_mode;
     }

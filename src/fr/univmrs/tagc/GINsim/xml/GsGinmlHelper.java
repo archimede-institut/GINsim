@@ -115,7 +115,7 @@ public class GsGinmlHelper {
         String svs = "\t\t\t<edgevisualsetting>\n";
         svs += "\t\t\t\t<polyline";
         String s = "";
-        List l_point = eReader.getPoints(false);
+        List l_point = eReader.getPoints();
         if (l_point != null) {
             for (int i=0 ; i<l_point.size() ; i++) {
                 Point2D pt = (Point2D)l_point.get(i); 

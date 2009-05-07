@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -1320,5 +1322,26 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		if (mainFrame != null) {
 			updateGraphNotificationMessage(this);
 		}
+	}
+	
+	/**
+	 * Search the nodes ID matching the regexp. 
+	 * Other kind of graph could overwrite this method. 
+	 * @param regexp
+	 * @return
+	 */
+	public Vector searchNodes(String regexp) {
+		Vector v = new Vector();
+		
+		Pattern pattern = Pattern.compile(regexp, Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
+		
+		for (Iterator it = getGraphManager().getVertexIterator(); it.hasNext();) {
+			Object vertex = (Object) it.next();
+			Matcher matcher = pattern.matcher(vertex.toString());
+			if (matcher.find()) {
+				v.add(vertex);
+			}
+		}
+		return v;
 	}
 }
