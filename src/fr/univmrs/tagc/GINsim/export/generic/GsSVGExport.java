@@ -29,35 +29,41 @@ public class GsSVGExport {
     public static void exportSVG(GsGraph graph, boolean selectedOnly, String fileName) {
 		try {
 	        FileWriter out = new FileWriter(fileName);
-	        
+
+	        Iterator itNodes, itEdges;
+            GsVertexAttributesReader vreader = graph.getGraphManager().getVertexAttributesReader();
+            GsEdgeAttributesReader ereader = graph.getGraphManager().getEdgeAttributesReader();
+            if (selectedOnly) {
+                itNodes = graph.getGraphManager().getSelectedVertexIterator();
+                itEdges = graph.getGraphManager().getSelectedEdgeIterator();
+            } else {
+                itNodes = graph.getGraphManager().getVertexIterator();
+                itEdges = graph.getGraphManager().getEdgeIterator();
+            }
+            int[] tmax = getmax(itNodes, itEdges, vreader, ereader);
+
 	        out.write("<?xml version='1.0' encoding='iso-8859-1' ?>\n");
 	        out.write("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20001102//EN\" \"http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd\">\n");
-	        out.write("<svg width=\"100%\" height=\"100%\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
+	        out.write("<svg width=\""+tmax[0]+"\" height=\""+tmax[1]+"\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
 	        
 	        Map boxes = new HashMap();
 	        Map m_marker = new HashMap();
-	        Iterator it;
-	        if (selectedOnly) {
-	            it = graph.getGraphManager().getSelectedVertexIterator();
-	        } else {
-	            it = graph.getGraphManager().getVertexIterator();
-	        }
-	        GsVertexAttributesReader vreader = graph.getGraphManager().getVertexAttributesReader();
-	        while (it.hasNext()) {
-	            Object obj = it.next();
+            if (selectedOnly) {
+                itNodes = graph.getGraphManager().getSelectedVertexIterator();
+                itEdges = graph.getGraphManager().getSelectedEdgeIterator();
+            } else {
+                itNodes = graph.getGraphManager().getVertexIterator();
+                itEdges = graph.getGraphManager().getEdgeIterator();
+            }
+	        while (itNodes.hasNext()) {
+	            Object obj = itNodes.next();
 	            vreader.setVertex(obj);
 	            writeVertex(out, obj, vreader);
 	            boxes.put(obj, new Rectangle(vreader.getX(), vreader.getY(), vreader.getWidth(), vreader.getHeight()));
 	        }
 	        
-	        GsEdgeAttributesReader ereader = graph.getGraphManager().getEdgeAttributesReader();
-	        if (selectedOnly) {
-	            it = graph.getGraphManager().getSelectedEdgeIterator();
-	        } else {
-	            it = graph.getGraphManager().getEdgeIterator();
-	        }
-	        while (it.hasNext()) {
-	            Object obj = it.next();
+	        while (itEdges.hasNext()) {
+	            Object obj = itEdges.next();
 	            Rectangle2D box1=null,  box2=null;
 	            if (obj instanceof GsDirectedEdge) {
 	                GsDirectedEdge e = (GsDirectedEdge)obj;
@@ -71,6 +77,51 @@ public class GsSVGExport {
 	        out.write("</svg>");
 	        out.close();
 		} catch (IOException e) {}
+    }
+
+    /**
+     * Browse the graph to find max coordinates.
+     * 
+     * @param itNodes nodes iterator
+     * @param itEdges edges iterator
+     * @param vreader vertex attribute reader
+     * @param ereader edge attribute reader
+     * @return a integer array containing x,y max coordinates
+     */
+    public static int[] getmax(Iterator itNodes, Iterator itEdges, GsVertexAttributesReader vreader, GsEdgeAttributesReader ereader) {
+        int[] tmax = new int[2];
+        int value;
+        while (itNodes.hasNext()) {
+            vreader.setVertex(itNodes.next());
+            value = vreader.getX() + vreader.getWidth();
+            if (value > tmax[0]) {
+                tmax[0] = value;
+            }
+            value = vreader.getY() + vreader.getHeight();
+            if (value > tmax[1]) {
+                tmax[1] = value;
+            }
+        }
+    
+        while (itEdges.hasNext()) {
+            ereader.setEdge(itEdges.next());
+            List points = ereader.getPoints();
+            if (points == null) {
+                continue;
+            }
+            for (Iterator itp=points.iterator() ; itp.hasNext() ; ) {
+                Point2D pt = (Point2D)itp.next();
+                value = (int)pt.getX();
+                if (value > tmax[0]) {
+                    tmax[0] = value;
+                }
+                value = (int)pt.getY();
+                if (value > tmax[1]) {
+                    tmax[1] = value;
+                }
+            }
+        }
+        return tmax;
     }
     
     private static void writeVertex(FileWriter out, Object obj, GsVertexAttributesReader vreader) throws IOException {
@@ -281,7 +332,7 @@ public class GsSVGExport {
             switch (markerType) {
 	        	case GsEdgeAttributesReader.ARROW_NEGATIVE:
 			        out.write("      orient=\"auto\">\n"+
-			                  "      <path stroke=\""+color+"\" fill=\""+color+"\" d=\"M 0 -4 L 0 4 z\"/>\n");
+			                  "      <path stroke=\""+color+"\" fill=\""+color+"\" d=\"M -2 -4 L -2 4 z\"/>\n");
 			        break;
 	        	case GsEdgeAttributesReader.ARROW_UNKNOWN:
 			        out.write("      orient=\"auto\">\n"+
