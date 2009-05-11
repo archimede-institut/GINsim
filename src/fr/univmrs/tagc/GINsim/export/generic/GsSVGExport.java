@@ -6,10 +6,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.jgraph.util.Bezier;
 
@@ -123,15 +120,6 @@ public class GsSVGExport {
     }
     
     private static void writeEdge(FileWriter out, Rectangle2D box1, Rectangle2D box2, GsEdgeAttributesReader ereader, Map markers) throws IOException {
-        List l_point = ereader.getPoints();
-        boolean intersect = l_point.size() < 3 || ereader.getStyle() == GsEdgeAttributesReader.STYLE_CURVE;
-        // replace first and last points by bounding box points
-        if (box1 != null) {
-            l_point.set(0, getIntersection(box1, (Point2D)l_point.get(1), intersect));
-        }
-        if (box2 != null) {
-            l_point.set(l_point.size()-1, getIntersection(box2, (Point2D)l_point.get(l_point.size()-2), intersect));
-        }
         String color = "#"+Tools.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
@@ -151,6 +139,20 @@ public class GsSVGExport {
             out.write(s);
         }
         
+        List l_point = ereader.getPoints();
+        if (l_point == null) {
+            l_point = new ArrayList();
+            l_point.add(0, new Point((int)box1.getCenterX(), (int)box1.getCenterY()));
+            l_point.add(new Point((int)box2.getCenterX(), (int)box2.getCenterY()));
+        }
+        boolean intersect = l_point.size() < 3 || ereader.getStyle() == GsEdgeAttributesReader.STYLE_CURVE;
+        // replace first and last points by bounding box points
+        if (box1 != null) {
+            l_point.set(0, getIntersection(box1, (Point2D)l_point.get(1), intersect));
+        }
+        if (box2 != null) {
+            l_point.set(l_point.size()-1, getIntersection(box2, (Point2D)l_point.get(l_point.size()-2), intersect));
+        }
         Point2D pt1 = (Point2D)l_point.get(l_point.size()-2);
         Point2D pt2 = (Point2D)l_point.get(l_point.size()-1);
         
@@ -216,9 +218,9 @@ public class GsSVGExport {
                 resulty = centery;
                 resultx = dx > 0 ? minx : maxx;
             }
-            double ratio = Math.abs(dx/dy);
-            double boxRatio = Math.abs(box.getWidth() / box.getHeight());
-            if (ratio > boxRatio) {     // crosses on one of the vertical sides
+            double ratio = dx/dy;
+            double boxRatio = box.getWidth() / box.getHeight();
+            if (Math.abs(ratio) > boxRatio) {     // crosses on one of the vertical sides
                 if (dx > 0) {
                     resultx = maxx;
                     resulty = centery + (maxx-centerx)/ratio;
