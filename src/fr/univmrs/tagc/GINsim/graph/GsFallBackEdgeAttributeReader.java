@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+
 /**
  * a generic edgeAttributeReader storing data into a dedicated hashmap
  */
@@ -55,6 +57,9 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
 
     public void setEdge(Object obj) {
         evsd = (EdgeVSdata)dataMap.get(obj);
+        if (evsd == null && obj instanceof GsDirectedEdge) {
+            evsd = (EdgeVSdata)dataMap.get(((GsDirectedEdge)obj).getUserObject());
+        }
         if (evsd == null) {
             evsd = new EdgeVSdata();
             
