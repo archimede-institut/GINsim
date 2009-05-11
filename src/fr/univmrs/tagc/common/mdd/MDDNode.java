@@ -30,10 +30,11 @@ public abstract class MDDNode {
 
 	/**
 	 * possible status of the two merged nodes:
-	 * FF = 2 leaves;
+	 * LL = 2 leaves;
 	 * LN = Leave + Node;
+	 * NN: 2 nodes of the same level
 	 * NNn = 2 nodes, the second comes next;
-	 * NNp = 2 nodes, the second comes first;
+	 * NNf = 2 nodes, the second comes first;
 	 */
 	public static final int LL=0, LN=1, NL=2, NN=3, NNn=4, NNf=5;
 
