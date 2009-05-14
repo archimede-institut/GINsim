@@ -2,15 +2,25 @@ package fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 	private static final long serialVersionUID = 3342245591953494375L;
 
-	private javax.swing.JScrollPane jScrollPane = null;
-	private javax.swing.JTable jTable = null;
+	private GsDynamicalHierarchicalNode node;
+	private JScrollPane jScrollPane = null;
+	private JTable jTable = null;
 	
 	/**
 	 */
@@ -25,7 +35,8 @@ public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 	 */
 	public void setEditedObject(Object obj) {
 		if (obj instanceof GsDynamicalHierarchicalNode) {
-			((GsDynamicalHierarchicalTableModel)getJTable().getModel()).setContent((GsDynamicalHierarchicalNode)obj );
+			node = (GsDynamicalHierarchicalNode)obj;
+			((GsDynamicalHierarchicalTableModel)getJTable().getModel()).setContent(node);
 		}
 	}
 
@@ -37,6 +48,7 @@ public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
         this.add(getJScrollPane(), null);
         this.setMinimumSize(new Dimension(20,20));
 	}
+
 	/**
 	 * This method initializes jTable
 	 * 
@@ -65,4 +77,4 @@ public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 		}
 		return jScrollPane;
 	}
-}
+	}
