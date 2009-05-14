@@ -1,7 +1,9 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -367,6 +369,8 @@ public class OmddNode {
     
     /**
      * Merge an array
+     * @deprecated
+     * @see multi_or
      */
     public OmddNode mergeMultiple(OmddNode[] others, int op) {
     	OmddNode newNode = others[0];
@@ -377,6 +381,8 @@ public class OmddNode {
     }
     /**
      * Merge an collection
+     * @deprecated
+     * @see multi_or
      */
     public OmddNode mergeMultiple(Collection others, int op) {
     	Iterator it = others.iterator();
@@ -657,5 +663,125 @@ public class OmddNode {
 
 	public int remove(byte[] state) {
 		return 0;
+	}
+	
+	/**
+	 * Perform an or between a list of states
+	 * @param nodes an array of states (byte[][])
+	 * @return an OmddNode
+	 */
+	public static OmddNode multi_or(byte[][] states, byte[] childsCount)  {
+		return multi_or(states, childsCount, 0);
+	}
+	private static OmddNode multi_or(byte[][] states, byte[] childsCount, int depth)  {
+		if (states == null || states.length == 0) {
+			return OmddNode.TERMINALS[0];
+		}
+		if (depth == childsCount.length) {
+			return OmddNode.TERMINALS[1];
+		}
+
+		int[] nbnexts = new int[childsCount[depth]];
+		for (int i=0 ; i<states.length ; i++) {
+			nbnexts[states[i][depth]]++;
+		}
+		OmddNode[] next = new OmddNode[childsCount[depth]];
+		for (byte value=0 ; value<next.length ; value++) {
+			byte[][] next_states = new byte[nbnexts[value]][];
+			int c = 0;
+			for (int i=0 ; i<states.length ; i++) {
+				if (states[i][depth] == value) {
+					next_states[c++] = states[i];
+				}
+			}
+			next[value] = multi_or(next_states, childsCount, depth+1);
+		}
+		OmddNode ret = new OmddNode();
+		ret.level = depth;
+		ret.next = next;
+		return ret;
+	}
+	/**
+	 * Perform an or between a list of states
+	 * @param nodes a list of state (byte[])
+	 * @return an OmddNode
+	 */
+	public static OmddNode multi_or(List states, byte[] childsCount)  {
+		if (states == null || states.size() == 0) {
+			return OmddNode.TERMINALS[0];
+		}
+		if (0 == childsCount.length) {
+			return OmddNode.TERMINALS[1];
+		}
+
+		int[] nbnexts = new int[childsCount[0]];
+		for (Iterator it = states.iterator(); it.hasNext();) {
+			byte[] state = (byte[]) it.next();
+			nbnexts[state[0]]++;
+		}
+		OmddNode[] next = new OmddNode[childsCount[0]];
+		for (byte value=0 ; value<next.length ; value++) {
+			byte[][] next_states = new byte[nbnexts[value]][];
+			int c = 0;
+			for (Iterator it = states.iterator(); it.hasNext();) {
+				byte[] state = (byte[]) it.next();
+				if (state[0] == value) {
+					next_states[c++] = state;
+				}
+			}
+			next[value] = multi_or(next_states, childsCount, 1);
+		}
+		OmddNode ret = new OmddNode();
+		ret.level = 0;
+		ret.next = next;
+		return ret;
+	}
+
+	 /**
+	  * Perform an or between a list of OmddNode
+	  * @param nodes a list of OmddNode
+	  * @return an OmddNode
+	  */
+	public static OmddNode multi_or(List nodes)  {
+		 int nbnodes = nodes.size();
+		 if (nbnodes == 0) {
+			 return null;
+		 }
+		 if (nbnodes == 1) {
+			 return (OmddNode)nodes.get(0);
+		 }
+		 OmddNode ref = null;
+		 for (Iterator it=nodes.iterator() ; it.hasNext() ; ) {
+			 OmddNode node = (OmddNode)it.next();
+			 if (node.next == null) {
+				 if (node.value > 0) {
+					 return node;
+				 }
+			 } else if (ref == null || node.level < ref.level ) {
+				 ref = node;
+			 }
+		 }
+		 if (ref == null) {
+			 return OmddNode.TERMINALS[0];
+		 }
+		 OmddNode ret = new OmddNode();
+		 ret.level = ref.level;
+		 ret.next = new OmddNode[ref.next.length];
+		 List next_nodes = new ArrayList();
+		 for (int value=0 ; value<ref.next.length ; value++) {
+			 next_nodes.clear();
+			 for (Iterator it=nodes.iterator() ; it.hasNext() ; ) {
+				 OmddNode node = (OmddNode)it.next();
+				 if (node.next != null) {
+					 if (node.level == ref.level) {
+						 next_nodes.add(node.next[value]);
+					 } else {
+						 next_nodes.add(node);
+					 }
+				 }
+			 }
+			 ret.next[value] = multi_or(next_nodes);
+		 }
+		 return ret;
 	}
 }

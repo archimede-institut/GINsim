@@ -56,18 +56,20 @@ public class GsActions implements GraphChangeListener {
 	protected GsViewCallBack	viewcallback;
 
 	// Menus
-	private JMenu				fileMenu			= null;
-	private JMenu				editMenu			= null;
-	private JMenu				viewMenu			= null;
-	private JMenu				helpMenu			= null;
-	private JMenu				actionMenu			= null;
-	private JMenu				exportMenu			= null;
-	private JMenu				layoutMenu			= null;
-	private JMenu				openMenu			= null;
-	private JMenu				newMenu				= null;
-	private JMenu				addEdgeMenu			= null;
-	private JMenu				addVertexMenu		= null;
-	private JMenu				recentMenu			= null;
+	private JMenu				fileMenu					= null;
+	private JMenu				editMenu					= null;
+	private JMenu				viewMenu					= null;
+	private JMenu				helpMenu					= null;
+	private JMenu				actionMenu					= null;
+	private JMenu				exportMenu					= null;
+	private JMenu				layoutMenu					= null;
+	private JMenu				openMenu					= null;
+	private JMenu				newMenu						= null;
+	private JMenu				addEdgeMenu					= null;
+	private JMenu				addVertexMenu				= null;
+	private JMenu				recentMenu					= null;
+	private JMenu				editSelectMenu				= null;
+	private JMenu				editExtendSelecttionMenu	= null;
 
 	// Actions
 	private AbstractAction		actionClose;
@@ -97,6 +99,14 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionDisplayGrid;
 	private AbstractAction		actionGridActive;
 	private AbstractAction		actionDisplayMiniMap;
+	private AbstractAction		actionSelectIncomingArcs;
+	private AbstractAction		actionSelectOutgoingArcs;
+	private AbstractAction		actionSelectIncomingVertices;
+	private AbstractAction		actionSelectOutgoingVertices;
+	private AbstractAction		actionExtendSelectionToIncomingArcs;
+	private AbstractAction		actionExtendSelectionToOutgoingArcs;
+	private AbstractAction		actionExtendSelectionToIncomingVertices;
+	private AbstractAction		actionExtendSelectionToOutgoingVertices;
 
 	// Check Box Menu Item
 	private JCheckBoxMenuItem	btt_divideWindow;
@@ -152,6 +162,8 @@ public class GsActions implements GraphChangeListener {
 		exportMenu = new JMenu(Translator.getString("STR_export"));
 		addVertexMenu = new JMenu(Translator.getString("STR_addVertex"));
 		addEdgeMenu = new JMenu(Translator.getString("STR_addEdge"));
+		editSelectMenu = new JMenu(Translator.getString("STR_editSelectMenu"));
+		editExtendSelecttionMenu = new JMenu(Translator.getString("STR_editExtendSelecttionMenu"));
 
 		// create calbacks
 		filecallback = new GsFileCallBack(mainFrame);
@@ -435,6 +447,82 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
+		actionExtendSelectionToIncomingVertices = new BaseAction("STR_extendSelectionToIncomingVertices", null,
+				"STR_extendSelectionToIncomingVertices_descr", null) {
+
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.extendSelectionToIncomingVertices();
+			}
+		};
+		actionExtendSelectionToOutgoingVertices = new BaseAction("STR_extendSelectionToOutgoingVertices", null,
+				"STR_extendSelectionToOutgoingVertices_descr", null) {
+
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.extendSelectionToOutgoingVertices();
+			}
+		};
+		actionExtendSelectionToIncomingArcs = new BaseAction("STR_extendSelectionToIncomingArcs", null,
+				"STR_extendSelectionToIncomingArcs_descr", null) {
+
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.extendSelectionToIncomingArcs();
+			}
+		};
+		actionExtendSelectionToOutgoingArcs = new BaseAction("STR_extendSelectionToOutgoingArcs", null,
+				"STR_extendSelectionToOutgoingArcs_descr", null) {
+
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.extendSelectionToOutgoingArcs();
+			}
+		};
+		
+		actionSelectIncomingVertices = new BaseAction("STR_selectIncomingVertices", null,
+				"STR_selectIncomingVertices_descr", null) {
+
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.selectIncomingVertices();
+			}
+		};
+		actionSelectOutgoingVertices = new BaseAction("STR_selectOutgoingVertices", null,
+				"STR_selectOutgoingVertices_descr", null) {
+
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.selectOutgoingVertices();
+			}
+		};
+		actionSelectIncomingArcs = new BaseAction("STR_selectIncomingArcs", null,
+				"STR_selectIncomingArcs_descr", null) {
+
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.selectIncomingArcs();
+			}
+		};
+		actionSelectOutgoingArcs = new BaseAction("STR_selectOutgoingArcs", null,
+				"STR_selectOutgoingArcs_descr", null) {
+
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.selectOutgoingArcs();
+			}
+		};
+
+
+		
 		// we could have auto-generated open/new menu, but we don't want it now!
 		if (false) {
 			// add menuentry / toolbar buttons for those actions
@@ -494,7 +582,20 @@ public class GsActions implements GraphChangeListener {
 		editMenu.add(actionSelectAll);
 		editMenu.add(actionInvertSelection);
 		editMenu.add(actionSearchNode);
-
+		editMenu.add(new JSeparator());
+		editMenu.add(editSelectMenu);
+		editMenu.add(editExtendSelecttionMenu);
+		
+		editSelectMenu.add(actionSelectIncomingVertices);
+		editSelectMenu.add(actionSelectOutgoingVertices);
+		editSelectMenu.add(actionSelectIncomingArcs);
+		editSelectMenu.add(actionSelectOutgoingArcs);
+		
+		editExtendSelecttionMenu.add(actionExtendSelectionToIncomingVertices);
+		editExtendSelecttionMenu.add(actionExtendSelectionToOutgoingVertices);
+		editExtendSelecttionMenu.add(actionExtendSelectionToIncomingArcs);
+		editExtendSelecttionMenu.add(actionExtendSelectionToOutgoingArcs);
+		
 		actionMenu.add(layoutMenu);
 
 		btt_divideWindow = new JCheckBoxMenuItem(actionDivideWindow);

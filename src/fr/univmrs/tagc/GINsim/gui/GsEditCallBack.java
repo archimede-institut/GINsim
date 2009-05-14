@@ -1,5 +1,12 @@
 package fr.univmrs.tagc.GINsim.gui;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+
 
 /**
  * Here are the callback for entry in the "edit" menu
@@ -74,6 +81,118 @@ public class GsEditCallBack {
 	 */
 	public void searchNode() {
 		new GsSearchFrame(main);
+	}
+
+	public void selectOutgoingArcs() {
+		Set edges = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			edges.addAll(gm.getOutgoingEdges(v));
+		}
+		gm.select(edges);
+	}
+
+	public void selectIncomingArcs() {
+		Set edges = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			edges.addAll(gm.getIncomingEdges(v));
+		}
+		gm.select(edges);
+	}
+
+	public void selectOutgoingVertices() {
+		Set vertices = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			for (Iterator it2 = gm.getOutgoingEdges(v).iterator(); it2.hasNext();) {
+				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
+				vertices.add(edge.getTargetVertex());
+			}
+		}
+		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
+			GsDirectedEdge e = (GsDirectedEdge) it.next();
+			vertices.add(e.getTargetVertex());
+		}
+		gm.select(vertices);		
+	}
+
+	public void selectIncomingVertices() {
+		Set vertices = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			for (Iterator it2 = gm.getIncomingEdges(v).iterator(); it2.hasNext();) {
+				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
+				vertices.add(edge.getSourceVertex());
+			}
+		}
+		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
+			GsDirectedEdge e = (GsDirectedEdge) it.next();
+			vertices.add(e.getSourceVertex());
+		}
+		gm.select(vertices);		
+	}
+
+	public void extendSelectionToOutgoingArcs() {
+		Set edges = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			edges.addAll(gm.getOutgoingEdges(v));
+		}
+		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
+			Object e = (Object) it.next();
+			edges.add(e);
+		}
+		gm.addSelection(edges);		
+	}
+
+	public void extendSelectionToIncomingArcs() {
+		Set edges = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			edges.addAll(gm.getIncomingEdges(v));
+		}
+		gm.addSelection(edges);		
+	}
+
+	public void extendSelectionToOutgoingVertices() {
+		Set vertices = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			for (Iterator it2 = gm.getOutgoingEdges(v).iterator(); it2.hasNext();) {
+				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
+				vertices.add(edge.getTargetVertex());
+			}
+		}
+		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
+			GsDirectedEdge e = (GsDirectedEdge) it.next();
+			vertices.add(e.getTargetVertex());
+		}
+		gm.addSelection(vertices);		
+	}
+
+	public void extendSelectionToIncomingVertices() {
+		Set vertices = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			for (Iterator it2 = gm.getIncomingEdges(v).iterator(); it2.hasNext();) {
+				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
+				vertices.add(edge.getSourceVertex());
+			}
+		}
+		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
+			GsDirectedEdge e = (GsDirectedEdge) it.next();
+			vertices.add(e.getSourceVertex());
+		}
+		gm.addSelection(vertices);		
 	}
 	
 }

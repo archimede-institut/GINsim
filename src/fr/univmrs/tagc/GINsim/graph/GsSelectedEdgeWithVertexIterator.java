@@ -6,9 +6,9 @@ import java.util.Vector;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 /**
- * browse selected edges: very usefull to save a subgraph, or copy/paste
+ * browse selected edges: very useful to save a subgraph, or copy/paste
  */
-public class GsSelectedEdgeIterator implements Iterator {
+public class GsSelectedEdgeWithVertexIterator implements Iterator {
 
 	Vector v_edge;
 	Vector v_vertex;
@@ -19,7 +19,7 @@ public class GsSelectedEdgeIterator implements Iterator {
 	 * @param v_vertex
 	 * @param v_edge
 	 */
-	public GsSelectedEdgeIterator(Vector v_vertex, Vector v_edge) {
+	public GsSelectedEdgeWithVertexIterator(Vector v_vertex, Vector v_edge) {
 		this.v_vertex = v_vertex;
 		this.v_edge = v_edge;
 		if ( v_vertex == null || v_edge == null) {

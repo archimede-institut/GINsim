@@ -6,11 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.reg2dyn.DynamicalHierarchicalSimulationHelper;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
 
 public class GsDynamicalHierarchicalNode {
+	public static GsGraphManager rgm;
 		
 	public static final int TYPE_TRANSIENT_COMPONENT = 0;
 	public static final int TYPE_CYCLE = 10;
@@ -56,10 +58,13 @@ public class GsDynamicalHierarchicalNode {
 	 * @param childValue the value to add at the end of the omdd (default 1).
 	 */
 	public GsDynamicalHierarchicalNode(byte[] state, byte[] childsCount, int childValue) {
-		root = stateFromArray(state, childsCount, childValue);
 		this.size = 1;
 		if (childValue == 2) {
 			processed = 1;
+			root = stateFromArray(state, childsCount, childValue);
+		} else {
+			root = null;
+			addStateToThePile(state);
 		}
 	}
 	
@@ -76,30 +81,30 @@ public class GsDynamicalHierarchicalNode {
 	 * A new node.
 	 */
 	public GsDynamicalHierarchicalNode() {
-		root = OmddNode.TERMINALS[0];
+		root = null;
 	}
 
-	/**
-	 * A new node from a string written with the stateToString() method
-	 * @param parse the string from stateToString()
-	 * @param type a string representation of the type
-	 * @param childsCount
-	 * 
-	 */
-	public GsDynamicalHierarchicalNode(String parse, String type, byte[] childsCount) {
-		this(parse, childsCount);
-		setTypeFromString(type);
-	}
+//	/**
+//	 * A new node from a string written with the stateToString() method
+//	 * @param parse the string from stateToString()
+//	 * @param type a string representation of the type
+//	 * @param childsCount
+//	 * 
+//	 */
+//	public GsDynamicalHierarchicalNode(String parse, String type, byte[] childsCount) {
+//		this(parse, childsCount);
+//		setTypeFromString(type);
+//	}
 	
-	/**
-	 * A new node from a string written with the stateToString() method
-	 * @param parse the string
-	 * @param childsCount
-	 */
-	public GsDynamicalHierarchicalNode(String parse, byte[] childsCount) {
-		root = OmddNode.TERMINALS[0];
-		parse(parse, childsCount);
-	}
+//	/**
+//	 * A new node from a string written with the stateToString() method
+//	 * @param parse the string
+//	 * @param childsCount
+//	 */
+//	public GsDynamicalHierarchicalNode(String parse, byte[] childsCount) {
+//		root = OmddNode.TERMINALS[0];
+//		parse(parse, childsCount);
+//	}
 
 	/**
 	 * Perform a mergeMultiple on all the omdd in the pile and the root.
@@ -107,24 +112,28 @@ public class GsDynamicalHierarchicalNode {
 	 */
 	public void addPileToOmdd(byte[] childsCount) {
 		if (statePile == null) return;
-		root = root.mergeMultiple(statePile, OmddNode.OR);
+		if (root == null) {
+			root = OmddNode.multi_or(statePile, childsCount);
+		} else {
+			root = root.merge(OmddNode.multi_or(statePile, childsCount), OmddNode.OR);			
+		}
 		statePile = null;
 		updateSize(childsCount);
 	}
-	
-	/**
-	 * Generate a new omdd for a given state (a string) and add it to the pile.
-	 * Note the new state omdd is not added to the GsDynamicalHierarchicalNode omdd aiming to add several omdd at the same time.
-	 * 
-	 * @see addPileToOmdd()
-	 * 
-	 * @param state the state to add
-	 * @param childsCount
-	 */
-	public void addStateToThePile(String state, byte[] childsCount) {
-		if (statePile == null) statePile = new LinkedList();
-		statePile.add(stateFromString(state, childsCount));
-	}
+//	
+//	/**
+//	 * Generate a new omdd for a given state (a string) and add it to the pile.
+//	 * Note the new state omdd is not added to the GsDynamicalHierarchicalNode omdd aiming to add several omdd at the same time.
+//	 * 
+//	 * @see addPileToOmdd()
+//	 * 
+//	 * @param state the state to add
+//	 * @param childsCount
+//	 */
+//	public void addStateToThePile(String state, byte[] childsCount) {
+//		if (statePile == null) statePile = new LinkedList();
+//		statePile.add(stateFromString(state, childsCount));
+//	}
 	
 	/**
 	 * Generate a new omdd for a given state and add it to the pile.
@@ -135,9 +144,9 @@ public class GsDynamicalHierarchicalNode {
 	 * @param state the state to add
 	 * @param childsCount
 	 */
-	public void addStateToThePile(byte[] state, byte[] childsCount) {
+	public void addStateToThePile(byte[] state) {
 		if (statePile == null) statePile = new LinkedList();
-		statePile.add(stateFromArray(state, childsCount));
+		statePile.add(state);
 	}
 	
 	
@@ -148,7 +157,11 @@ public class GsDynamicalHierarchicalNode {
 	 * @param childsCount
 	 */
 	public void addState(String state, byte[] childsCount) {
-		root = root.merge(stateFromString(state, childsCount), OmddNode.OR);		
+		if (root == null) {
+			root = stateFromString(state, childsCount);
+		} else {
+			root = root.merge(stateFromString(state, childsCount), OmddNode.OR);		
+		}
 		size++;
 	}
 	
@@ -159,7 +172,11 @@ public class GsDynamicalHierarchicalNode {
 	 * @param childsCount
 	 */
 	public void addState(byte[] state, byte[] childsCount, int childValue) {
-		root = root.merge(stateFromArray(state, childsCount, childValue), OmddNode.OR);		
+		if (root == null) {
+			root = stateFromArray(state, childsCount, childValue);
+		} else {
+			root = root.merge(stateFromArray(state, childsCount, childValue), OmddNode.OR);
+		}
 		size++;
 	}
 	
@@ -251,6 +268,22 @@ public class GsDynamicalHierarchicalNode {
 	 * @return if it contains the state
 	 */
 	public boolean contains(byte [] state) {
+		if (statePile != null) {
+			for (Iterator it = statePile.iterator(); it.hasNext();) {
+				byte[] stateInPile = (byte[]) it.next();
+				boolean found = true;
+				for (int i = 0; i < stateInPile.length; i++) {
+					if (state[i] != stateInPile[i]) {
+						found = false;
+						break;
+					}
+				}
+				if (found) {
+					return true;
+				}
+			}
+			return root != null && root.testStatus(state) != 0;
+		}
 		return root.testStatus(state) != 0;
 	}
 	
@@ -258,10 +291,15 @@ public class GsDynamicalHierarchicalNode {
 	 * Reduce the omdd
 	 */
 	public void reduce() {
-		root.reduce();
+		if (root != null) {
+			root.reduce();			
+		}
 	}
 
 	public String toString() {
+		if (rgm != null) {
+			return this.toString(rgm.getVertexCount());
+		}
 		return "#"+size;
 	}
 	public String toString(int nbNodes) {
@@ -291,32 +329,55 @@ public class GsDynamicalHierarchicalNode {
 	public String getId() {
 		return toString();
 	}
-	
-	/**
-	 * A new node from a string written with the stateToString() method
-	 * @param parse
-	 * @param childsCount
-	 */
-	public void parse(String parse, byte[] childsCount) {
-		String[] schemas = parse.split("\n");
-		for (int i = 0; i < schemas.length; i++) {
-			addStateToThePile(schemas[i], childsCount);
+	public String getShortId() {
+		if (size == 1) {
+			return ""+hashCode();
+		} else {
+			return ""+hashCode()+"{"+processed+"/"+size+"}";
 		}
-		addPileToOmdd(childsCount);		
 	}
+	
+	
+//	/**
+//	 * A new node from a string written with the stateToString() method
+//	 * @param parse
+//	 * @param childsCount
+//	 */
+//	public void parse(String parse, byte[] childsCount) {
+//		String[] schemas = parse.split("\n");
+//		for (int i = 0; i < schemas.length; i++) {
+//			addStateToThePile(schemas[i], childsCount);
+//		}
+//		addPileToOmdd(childsCount);		
+//	}
 		
 	public String statesToString(int nbNodes) {
 		return statesToString(nbNodes, false);
 	}
 	
 	public String statesToString(int nbNodes, boolean addValue) {
-		int length = nbNodes+(addValue?3:1);
-		StringBuffer s = new StringBuffer(length);
-		for (int i = 0; i < length; i++) {
-			s.append('.');
-		}
 		StringBuffer res = new StringBuffer();
-		statesToString(root, s, res, 0, nbNodes, addValue);
+		if (statePile != null) {
+			for (Iterator it = statePile.iterator(); it.hasNext();) {
+				byte[] stateInPile = (byte[]) it.next();
+				for (int i = 0; i < stateInPile.length; i++) {
+					res.append(stateInPile[i]);
+				}
+	        	if (addValue) {
+	        		res.append("-1\n");
+	        	} else {
+	        		res.append("\n");
+	        	}
+			}
+		} else {
+			int length = nbNodes+(addValue?3:1);
+			StringBuffer s = new StringBuffer(length);
+			
+			for (int i = 0; i < length; i++) {
+				s.append('.');
+			}
+			statesToString(root, s, res, 0, nbNodes, addValue);	
+		}
 		return res.toString();
 	}
 		
@@ -354,9 +415,12 @@ public class GsDynamicalHierarchicalNode {
 	 * @return
 	 */
 	public List statesToList(int nbNodes) {
+		if (statePile != null) {
+			return statePile;
+		}
 		List v = new LinkedList();
 		byte[] t = new byte[nbNodes];
-		statesToList(root, v, t, 0, nbNodes);
+		statesToList(root, v, t, 0, nbNodes);	
 		return v;
 	}
 	
@@ -438,22 +502,23 @@ public class GsDynamicalHierarchicalNode {
 		if (slaveNode.type != this.type) {
 			throw new Exception("Error merging two node of different types : "+slaveNode.toLongString(nbNodes)+" in "+this.toLongString(nbNodes)); //FIXME : remove me
 		}
-		
-		this.root = this.root.merge(slaveNode.root, OmddNode.OR);
+		if (this.root != null && slaveNode.root != null) {
+			this.root = this.root.merge(slaveNode.root, OmddNode.OR);
+		}
 		
 		if (helper != null) { //Merge the arcs;
 			if (slaveNode.in != null) {
 				for (Iterator it = slaveNode.in.iterator(); it.hasNext();) {
 					GsDynamicalHierarchicalNode node = (GsDynamicalHierarchicalNode) it.next();
 					node.out.remove(slaveNode);
-					helper.addEdge(node, this);
+//					helper.addEdge(node, this);FIXME
 				}				
 			}
 			if (slaveNode.out != null) {
 				for (Iterator it = slaveNode.out.iterator(); it.hasNext();) {
 					GsDynamicalHierarchicalNode node = (GsDynamicalHierarchicalNode) it.next();
 					node.in.remove(slaveNode);
-					helper.addEdge(this, node);
+//					helper.addEdge(this, node);FIXME
 				}
 			}
 		}
@@ -497,6 +562,9 @@ public class GsDynamicalHierarchicalNode {
 	public void updateSize(byte[] childsCount) {
 		size = 0;
 		processed = 0;
+		if (statePile != null) {
+			size = statePile.size();
+		}
 		updateSize(root, 0, 1, childsCount);
 	}
 	

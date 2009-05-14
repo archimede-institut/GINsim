@@ -128,7 +128,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
             case POS_VERTEX_STATES_S:
                 if (qName.equals("string")) {
                     pos = POS_VERTEX_STATES;
-                    vertex.parse(curval, graph.getChildsCount());
+                  // vertex.parse(curval, graph.getChildsCount()); FIXME
                 	curval = null;
                 }
                 break; // POS_VERTEX_STATES_S
