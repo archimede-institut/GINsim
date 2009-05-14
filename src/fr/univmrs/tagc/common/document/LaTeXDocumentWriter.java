@@ -33,22 +33,22 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	}
 
 	public void startDocument() throws IOException {
+        writer = new OutputStreamWriter(output, "UTF-8");
 	    if (documentProperties.get(PROP_SUBDOCUMENT) == null) {
-    		writer = new OutputStreamWriter(output, "UTF-8");
             writer.write("\\documentclass{article}\n");
     		String[] packages = {"fontenc", "inputenc", "color","xcolor",
     							 "array","multirow","colortbl","graphicx"};
             for (int i=0 ; i<packages.length ; i++) {
             	writer.write("\\usepackage{"+packages[i]+"}\n");
             }
-    
+            
             doWriteStyles();
             writer.write("\n\\makeatletter\n\\makeatother\n");
             writer.write("\n\\begin{document}\n");
             
-    		if (documentProperties.containsKey(META_TITLE)) {
-    			writer.write("\n\\title{"+escape(documentProperties.get(META_TITLE))+"}\n");
-    		}
+            if (documentProperties.containsKey(META_TITLE)) {
+                writer.write("\n\\title{"+escape(documentProperties.get(META_TITLE))+"}\n");
+            }
     
     		doCreateMeta("author", META_AUTHOR);
     		doCreateMeta("created-at", META_DATE);
@@ -60,9 +60,12 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	    }
 	}
 
-	protected String escape(Object text) throws IOException {
-		// FIXME: escape for LaTeX
-	    return text.toString().replace("_", "\\_");
+	protected String escape(Object o) throws IOException {
+	    String text = o.toString();
+        text = text.replace("\\", "\\\\");
+	    text = text.replace("_", "\\_");
+        text = text.replace("&", "\\&");
+	    return text;
 	}
 	protected void writeEscaped(String text) throws IOException {
 		writer.write(escape(text));
@@ -77,7 +80,6 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	
 	protected void doWriteText(String text, boolean newLine) throws IOException {
 		writeEscaped(text);
-		writer.write("\n");
 		if (newLine) {
 			writer.write(NEW_LINE);
 		}
@@ -227,12 +229,13 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	    // TODO
 	}
 	protected void doOpenList(String style) throws IOException {
-		writer.write("\\begin{itemize}\n");
+		writer.write("\n\\begin{itemize}\n");
 	}
 	protected void doOpenListItem() throws IOException {
 	    writer.write("\\item ");
 	}
 	protected void doCloseListItem() throws IOException {
+	    writer.write("\n");
 	}
 	protected void doCloseList() throws IOException {
         writer.write("\\end{itemize}\n");
@@ -245,7 +248,11 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	}
 	
 	protected void doWriteStyles() throws IOException {
-		if (documentStyles != null) {
+        if (documentProperties.containsKey("sty")) {
+            writer.write("\n\\usepackage{"+documentProperties.get("sty")+"}\n");
+        }
+
+	    if (documentStyles != null) {
 
 		    Iterator styleIterator = documentStyles.getStyleIterator();
 			while (styleIterator.hasNext()) {

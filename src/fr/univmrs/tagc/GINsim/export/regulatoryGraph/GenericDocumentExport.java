@@ -45,7 +45,9 @@ public class GenericDocumentExport extends GsAbstractExport {
 	static {
 		v_format.add(new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", new String[] {"html"}, "xHTML files (.html)", ".html"));
 		v_format.add(new GenericDocumentFormat(OOoDocumentWriter.class, "OpenOffice.org", new String[] {"odt"}, "OpenOffice.org files (.odt)", ".odt"));
-		v_format.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", new String[] {"txt"}, "Text files (.txt)", ".txt"));
+        v_format.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", new String[] {"txt"}, "Text files (.txt)", ".txt"));
+        // LaTeX export disabled as it is not ready for complex documents with large tables
+        // v_format.add(new GenericDocumentFormat(LaTeXDocumentWriter.class, "LaTeX", new String[] {"tex"}, "LaTeX files (.tex)", ".tex"));
 	}
 
 	private GsExportConfig config = null;
@@ -340,8 +342,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 			for ( int i=0 ; i< initStates.getNbElements(null) ; i++ ) {
 				doc.openTableRow(null);
 				doc.openTableCell(""+model.getValueAt(i, 0));
-				for (int j = 0; j < len; j++) {
-					doc.openTableCell(""+model.getValueAt(i, j+2));
+				for (int j = 2; j < model.getColumnCount(); j++) {
+					doc.openTableCell(""+model.getValueAt(i, j));
 				}
 			}
 			doc.closeTable();
