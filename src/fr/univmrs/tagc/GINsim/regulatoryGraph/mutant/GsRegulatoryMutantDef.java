@@ -14,7 +14,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * store the definition of a mutant
  */
-public class GsRegulatoryMutantDef implements NamedObject {
+public class GsRegulatoryMutantDef implements NamedObject, Perturbation {
     String name;
     Vector v_changes = new Vector();
     Annotation annotation = new Annotation();
@@ -115,12 +115,6 @@ public class GsRegulatoryMutantDef implements NamedObject {
         v_changes.add(change);
     }
 
-    /**
-     * apply this mutant on the OMDD.
-     * 
-     * @param t_tree OMDD for all genes of the model
-     * @param graph the regulatory graph
-     */
     public void apply(OmddNode[] t_tree, GsRegulatoryGraph graph) {
         for (int i=0 ; i<v_changes.size() ; i++) {
             GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)v_changes.get(i);

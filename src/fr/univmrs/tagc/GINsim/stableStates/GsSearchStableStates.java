@@ -10,6 +10,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
 
 /**
  * This implements an analytic search of stable states. A state "x" is stable if, for every gene "i",
@@ -29,7 +30,7 @@ public class GsSearchStableStates extends Thread {
 	List nodeOrder;
 	OmddNode[] t_param;
 	OmddNode dd_stable;
-	GsRegulatoryMutantDef mutant;
+	Perturbation mutant;
 	boolean[][] t_reg;
 	int[][] t_newreg;
 	
@@ -39,7 +40,7 @@ public class GsSearchStableStates extends Thread {
 	int bestIndex, bestValue;
 	int nbgene, nbremain;
 
-	public GsSearchStableStates(GsGraph regGraph, GsRegulatoryMutantDef mutant, GenericStableStateUI ui) {
+	public GsSearchStableStates(GsGraph regGraph, Perturbation mutant, GenericStableStateUI ui) {
 		this.regGraph = (GsRegulatoryGraph)regGraph;
 		this.nodeOrder = regGraph.getNodeOrder();
 		this.mutant = mutant;
