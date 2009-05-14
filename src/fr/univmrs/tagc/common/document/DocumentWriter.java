@@ -69,10 +69,12 @@ public abstract class DocumentWriter {
 	public static final String META_KEYWORDS = "keywords";
 	public static final String META_DESCRIPTION = "description";
 	public static final String META_GENERATOR = "generator";
+	
+	public static final String PROP_SUBDOCUMENT = "subdoc";
 
 	public String NEW_LINE = "\n";
 
-	private DocumentPos pos = new DocumentPos();
+	protected DocumentPos pos = new DocumentPos();
 	private Map documentExtras; //A list of all the extra (StringBuffer) the document can use.
 	protected Map documentProperties; //The metadata of the document
 	protected DocumentStyle documentStyles = null; //The style of the document.
@@ -109,7 +111,7 @@ public abstract class DocumentWriter {
 			closeParagraph();
 		}
 		doOpenParagraph(style);
-		pos = new DocumentPos(pos, POS_PARAGRAPH);
+		pos = new DocumentPos(pos, POS_PARAGRAPH, style);
 	}
 	/**
 	 * Open a paragraph without a style
@@ -168,7 +170,7 @@ public abstract class DocumentWriter {
 			closeParagraph();
 		}
 		doOpenTable(name, style, t_colStyle);
-		pos = new DocumentPos(pos, POS_TABLE);
+		pos = new DocumentPos(pos, POS_TABLE, style);
 	}
 	
 	/**
@@ -191,7 +193,7 @@ public abstract class DocumentWriter {
 			closeTableRow();
 		}
 		doOpenTableRow(style);
-		pos = new DocumentPos(pos, POS_TABLE_ROW);
+		pos = new DocumentPos(pos, POS_TABLE_ROW, style);
 	}
 	/**
 	 * Open a new cell in the current table row
@@ -223,7 +225,7 @@ public abstract class DocumentWriter {
             closeUntil(POS_TABLE_ROW);
         }
         doOpenTableCell(colspan, rowspan, header, cl);
-        pos = new DocumentPos(pos, POS_TABLE_CELL);
+        pos = new DocumentPos(pos, POS_TABLE_CELL, null);
         if (content != null) {
             writeText(content);
         }
@@ -293,7 +295,7 @@ public abstract class DocumentWriter {
 			closeParagraph();
 		}
 		doOpenList(style);
-		pos = new DocumentPos(pos, POS_LIST);
+		pos = new DocumentPos(pos, POS_LIST, style);
 	}
 	
 	/**
@@ -305,7 +307,7 @@ public abstract class DocumentWriter {
 	public void openListItem(String content) throws IOException {
 		closeUntil(POS_LIST);
 		doOpenListItem();
-		pos = new DocumentPos(pos, POS_LIST_ITEM);
+		pos = new DocumentPos(pos, POS_LIST_ITEM, null);
 		if (content != null) {
 			writeText(content);
 		}
@@ -516,19 +518,23 @@ class DocumentPos {
 	
 	public DocumentPos parent;
 	public Object data;
+	public String style;
 	public int pos;
 	
 	public DocumentPos() {
-		this(null, DocumentWriter.POS_OUT, null);
+		this(null, DocumentWriter.POS_OUT, null, null);
 	}
-	
-	public DocumentPos(DocumentPos parent, int pos) {
-		this(parent, pos, null);
+	public DocumentPos(DocumentPos parent, int pos, String style) {
+		this(parent, pos, null, null);
 	}
+    public DocumentPos(DocumentPos parent, int pos, Object data) {
+        this(parent, pos, data, null);
+    }
 	
-	public DocumentPos(DocumentPos parent, int pos, Object data) {
+	public DocumentPos(DocumentPos parent, int pos, Object data, String style) {
 		this.parent = parent;
 		this.data = data;
 		this.pos = pos;
+		this.style = style;
 	}
 }

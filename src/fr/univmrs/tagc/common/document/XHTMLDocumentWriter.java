@@ -49,45 +49,50 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		writer = new OutputStreamWriter(output, "UTF-8");
 		xmlw = new XMLWriter(writer, null);
 	
-		writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-					+"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n"
-					+"   \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n");
-		writer.flush();
+        if (documentProperties.get(PROP_SUBDOCUMENT) == null) {
 		
-		xmlw.openTag("html");
-		xmlw.addAttr("xmlns", "http://www.w3.org/1999/xhtml");
-		xmlw.addAttr("xml:lang", "en");
-		
-		xmlw.openTag("head");
-		if (documentProperties.containsKey(META_TITLE)) {
-			xmlw.addTagWithContent("title", (String)documentProperties.get(META_TITLE));
-		}
-		doCreateMeta("author", META_AUTHOR);
-		doCreateMeta("created-at", META_DATE);
-		doCreateMeta("keywords", META_KEYWORDS);
-		doCreateMeta("description", META_DESCRIPTION);
-		doCreateMeta("generator", META_GENERATOR);
-		
-        if (documentProperties.containsKey("css")) {
-            // <link rel="stylesheet" href="style.css" type="text/css" />
-            xmlw.openTag("link");
-            xmlw.addAttr("rel", "stylesheet");
-            xmlw.addAttr("type", "text/css");
-            xmlw.addAttr("href", (String)documentProperties.get("css"));
+    		writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+    					+"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n"
+    					+"   \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n");
+    		writer.flush();
+    		
+    		xmlw.openTag("html");
+    		xmlw.addAttr("xmlns", "http://www.w3.org/1999/xhtml");
+    		xmlw.addAttr("xml:lang", "en");
+    		
+    		xmlw.openTag("head");
+    		if (documentProperties.containsKey(META_TITLE)) {
+    			xmlw.addTagWithContent("title", (String)documentProperties.get(META_TITLE));
+    		}
+    		doCreateMeta("author", META_AUTHOR);
+    		doCreateMeta("created-at", META_DATE);
+    		doCreateMeta("keywords", META_KEYWORDS);
+    		doCreateMeta("description", META_DESCRIPTION);
+    		doCreateMeta("generator", META_GENERATOR);
+    		
+            if (documentProperties.containsKey("css")) {
+                // <link rel="stylesheet" href="style.css" type="text/css" />
+                xmlw.openTag("link");
+                xmlw.addAttr("rel", "stylesheet");
+                xmlw.addAttr("type", "text/css");
+                xmlw.addAttr("href", (String)documentProperties.get("css"));
+            }
+    		doWriteStyles();
+    		
+    		StringBuffer javascript = getDocumentExtra("javascript");
+    		if (javascript.length() > 0) {
+    			xmlw.openTag("script");
+    			xmlw.addAttr("type", "text/javascript");
+    			xmlw.addFormatedContent(javascript.toString(), false);
+    			xmlw.closeTag();
+    		}
+    		
+    		xmlw.closeTag();//head
+    
+    		xmlw.openTag("body");
+        } else {
+            xmlw.openTag("div");
         }
-		doWriteStyles();
-		
-		StringBuffer javascript = getDocumentExtra("javascript");
-		if (javascript.length() > 0) {
-			xmlw.openTag("script");
-			xmlw.addAttr("type", "text/javascript");
-			xmlw.addFormatedContent(javascript.toString(), false);
-			xmlw.closeTag();
-		}
-		
-		xmlw.closeTag();//head
-
-		xmlw.openTag("body");
 	}
 	
 	protected void doOpenParagraph(String style) throws IOException {
@@ -133,6 +138,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 	protected void doOpenTableRow(String style) throws IOException {
 		xmlw.openTag("tr");
 		curTable.row++;
+		curTable.col = 0;
 	}
 	
 	protected void doOpenTableCell(int colspan, int rowspan, boolean header, String style) throws IOException {
@@ -156,8 +162,12 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 	}
 	
 	protected void doCloseDocument() throws IOException {
-		xmlw.closeTag(); // body
-		xmlw.closeTag(); // html
+        if (documentProperties.get(PROP_SUBDOCUMENT) == null) {
+            xmlw.closeTag(); // body
+            xmlw.closeTag(); // html
+        } else {
+            xmlw.closeTag(); // div
+        }
 		writer.flush();
 		writer.close();
 	}

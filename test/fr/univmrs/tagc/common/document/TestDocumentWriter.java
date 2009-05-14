@@ -13,9 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipException;
 
-import fr.univmrs.tagc.common.TestTools;
-
 import junit.framework.TestCase;
+import fr.univmrs.tagc.common.TestTools;
 
 public class TestDocumentWriter extends TestCase {
 
@@ -27,9 +26,13 @@ public class TestDocumentWriter extends TestCase {
 		doc.setOutput(new FileOutputStream(new File(baseDir,"testme.odt")));
 		l.add(doc);
 		
-		doc = new XHTMLDocumentWriter();
-		doc.setOutput(new FileOutputStream(new File(baseDir,"testme.html")));
-		l.add(doc);
+        doc = new XHTMLDocumentWriter();
+        doc.setOutput(new FileOutputStream(new File(baseDir,"testme.html")));
+        l.add(doc);
+
+        doc = new LaTeXDocumentWriter();
+        doc.setOutput(new FileOutputStream(new File(baseDir,"testme.tex")));
+        l.add(doc);
 	}
 	
 	public void testDocumentWriters() {
@@ -118,6 +121,11 @@ public class TestDocumentWriter extends TestCase {
 
 			doc.openParagraph(null);
 			doc.writeText("et un dernier brin pour finir!");
+			doc.openList(null);
+            doc.openListItem("first");
+            doc.openListItem("first");
+            doc.openListItem("first");
+            doc.closeList();
 			doc.close();
 		} catch (ZipException e) {
 			e.printStackTrace();
