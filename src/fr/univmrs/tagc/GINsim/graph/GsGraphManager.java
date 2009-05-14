@@ -78,6 +78,21 @@ abstract public class GsGraphManager {
      * @param l the list of objects to select
      */
     abstract public void select(List l);
+    /**
+     * select some objects (vertices and edges).
+     * @param s the Set of objects to select
+     */
+    abstract public void select(Set s);
+    /**
+     * select some objects (vertices and edges) and keep the previous selection.
+     * @param l the list of objects to select
+     */
+    abstract public void addSelection(List l);
+    /**
+     * select some objects (vertices and edges) and keep the previous selection.
+     * @param s the Set of objects to select
+     */
+    abstract public void addSelection(Set s);
     /** 
      * select a single item.
      * 
@@ -189,11 +204,11 @@ abstract public class GsGraphManager {
     abstract public Iterator getEdgeIterator();
 
     /**
-     * @return an iterator to velected edges.
+     * @return an iterator to selected edges.
      */
 	abstract public Iterator getSelectedEdgeIterator();
     /**
-     * @return an iterator to velected vertices.
+     * @return an iterator to selected vertices.
      */
 	abstract public Iterator getSelectedVertexIterator();
 

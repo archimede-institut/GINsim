@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JComponent;
@@ -170,11 +171,20 @@ public class GsJgraphtGraphManager extends GsGraphManager {
 
     public void select(List l) {
         jgraph.setSelectionCells( new Object[0]);
+        addSelection(l);
+    }
+    
+    public void select(Set s) {
+        jgraph.setSelectionCells( new Object[0]);
+        addSelection(s);
+    }
+
+    public void addSelection(List l) {
         if (l == null) {
             return;
         }
-        for (int i=0 ; i<l.size() ; i++) {
-            Object o = l.get(i);
+        for (Iterator it = l.iterator(); it.hasNext();) {
+			Object o = (Object) it.next();
             if (o instanceof GsDirectedEdge) {
                 jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)o));
             } else {
@@ -183,6 +193,20 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         }
     }
     
+    public void addSelection(Set s) {
+        if (s == null) {
+            return;
+        }
+        for (Iterator it = s.iterator(); it.hasNext();) {
+			Object o = (Object) it.next();
+            if (o instanceof GsDirectedEdge) {
+                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)o));
+            } else {
+                jgraph.addSelectionCell(m_jgAdapter.getVertexCell(o));
+            }
+        }
+    }
+
     public void vertexToFront(boolean b) {
         if (!visible) {
             return;
@@ -309,9 +333,14 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         return g.edgeSet().iterator();
     }
 
+    /**
+     * Return an iterator on the selected edges if their source and target vertices are also selected.
+     * 
+     * @see GsMainFrame#getSelectedEdges()
+     */
 	public Iterator getSelectedEdgeIterator() {
 		if (visible) {
-			return new GsSelectedEdgeIterator(mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges());
+			return new GsSelectedEdgeWithVertexIterator(mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges());
 		}
         return g.edgeSet().iterator();
 	}
