@@ -109,7 +109,8 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	            XMLWriter out = new XMLWriter(os, dtdFile);
 		  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 				out.write("\t<graph id=\"" + graphName + "\"");
-				out.write(" class=\"dynamicalHierarchical\">\n");
+				out.write(" class=\"dynamicalHierarchical\"");
+				out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
 				saveNode(out, mode, selectedOnly);
 				saveEdge(out, mode, selectedOnly);
 	            if (gsAnnotation != null) {
@@ -136,18 +137,14 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
         } else {
         		it = graphManager.getEdgeIterator();
         }
-        switch (mode) {
-        	default:
-		        while (it.hasNext()) {
-		        	Object o_edge = it.next();
-		        	if (o_edge instanceof GsDirectedEdge) {
-		        		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-			            String source = edge.getSourceVertex().toString();
-			            String target = edge.getTargetVertex().toString();
-			            out.write("\t\t<edge id=\""+ source +"_"+target+"\" from=\""+source+"\" to=\""+target+"\"/>\n");
-		        	}
-		        }
-		        break;
+        while (it.hasNext()) {
+        	Object o_edge = it.next();
+        	if (o_edge instanceof GsDirectedEdge) {
+        		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
+	            String source = ""+((GsDynamicalHierarchicalNode)edge.getSourceVertex()).getUniqueId();
+	            String target =""+((GsDynamicalHierarchicalNode) edge.getTargetVertex()).getUniqueId();
+	            out.write("\t\t<edge id=\"e"+ source +"_"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
+        	}
         }
     }
     
@@ -164,41 +161,30 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
     	} else {
     		it = graphManager.getVertexIterator();
     	}
-        	GsVertexAttributesReader vReader = null;
-        	switch (mode) {
-	    		case 1:
-	    			vReader = graphManager.getVertexAttributesReader();
-	                while (it.hasNext()) {
-	                	GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode)it.next();
-	                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                        out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
-                        out.write("<attr name=\"states\"><string>"+vertex.statesToString(graphManager.getVertexCount())+"</string></attr>");
-	                    out.write(GsGinmlHelper.getShortNodeVS(vReader));
-	                    out.write("\t\t</node>\n");
-	                }
-	    			break;
-				case 2:
-					vReader = graphManager.getVertexAttributesReader();
-	                while (it.hasNext()) {
-	                	GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode)it.next();
-	                    vReader.setVertex(vertex);
-	                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                        out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
-                        out.write("<attr name=\"states\"><string>"+vertex.statesToString(graphManager.getVertexCount())+"</string></attr>");
-	                    out.write(GsGinmlHelper.getFullNodeVS(vReader));
-	                    out.write("\t\t</node>\n");
-	                }
-	    			break;
-        		default:
-        	        while (it.hasNext()) {
-        	            Object vertex = it.next();
-	                    String content = "";//FIXME ((GsDynamicalHierarchicalNode)vertex).getContentString();
-	                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                        out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-                        out.write("</node>");
-        	        }
+    	GsVertexAttributesReader vReader = graphManager.getVertexAttributesReader();
+        while (it.hasNext()) {
+        	GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode)it.next();
+            vReader.setVertex(vertex);
+            out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
+            out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
+            out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");
+            out.write(GsGinmlHelper.getFullNodeVS(vReader));
+            out.write("\t\t</node>\n");
         }
     }
+    
+	private String stringNodeOrder() {
+		String s = "";
+		for (int i=0 ; i<nodeOrder.size() ; i++) {
+			GsRegulatoryVertex v = (GsRegulatoryVertex) nodeOrder.get(i);
+			s += v+":"+v.getMaxValue()+" ";
+		}
+		if (s.length() > 0) {
+			return s.substring(0, s.length()-1);
+		}
+		return s;
+	}
+
     
     /* edge and vertex panels */
     
@@ -244,6 +230,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	public byte[] getChildsCount() {
 		if (childsCount == null) {
 			childsCount = new byte[nodeOrder.size()];
+			System.out.println("SIze of cc:"+nodeOrder.size());
 			int i = 0;
 			for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
 				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
@@ -251,6 +238,10 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 			}			
 		}
 		return childsCount;
+	}
+	
+	public void setChildsCount(byte[] cc) {
+		childsCount = cc;
 	}
 	
 	/* Not used methods */
@@ -361,6 +352,20 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
 			if (v.contains(state)) return v;
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param sid a string representation of the id with a letter in first position eg. "s102"
+	 * @return the node with the corresponding id. eg. 102.
+	 */
+	public GsDynamicalHierarchicalNode getNodeById(String sid) {
+		int id = Integer.parseInt(sid.substring(1));
+		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
+			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
+			if (v.getUniqueId() == id) return v;
 		}
 		return null;
 	}

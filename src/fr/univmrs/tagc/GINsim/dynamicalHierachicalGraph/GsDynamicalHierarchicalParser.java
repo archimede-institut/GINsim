@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Vector;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -57,7 +58,21 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
 		} catch (GsException e) {
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 		}
-    }
+		try {
+			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
+			Vector nodeOrder = new Vector(t_nodeOrder.length);
+			byte[] childCount = new byte[t_nodeOrder.length];
+			for (int i=0 ; i<t_nodeOrder.length ; i++) {
+				String[] args = t_nodeOrder[i].split(":");
+			    nodeOrder.add(args[0]);
+			    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
+			}
+			graph.setNodeOrder(nodeOrder);
+			graph.setChildsCount(childCount);
+		} catch (NumberFormatException e) {
+			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
+		}
+	}
 
     /**
      * 
@@ -128,7 +143,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
             case POS_VERTEX_STATES_S:
                 if (qName.equals("string")) {
                     pos = POS_VERTEX_STATES;
-                  // vertex.parse(curval, graph.getChildsCount()); FIXME
+                    vertex.parse(curval, graph.getChildsCount());
                 	curval = null;
                 }
                 break; // POS_VERTEX_STATES_S
@@ -159,14 +174,14 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
-        
+
         switch(pos) {
         	case POS_OUT:
                 if (qName.equals("node")) {
                     String id = attributes.getValue("id");
                     if (map == null || map.containsKey(id)) {
                         pos = POS_VERTEX;
-                        vertex = new GsDynamicalHierarchicalNode();
+                        vertex = new GsDynamicalHierarchicalNode(id);
                         graph.addVertex(vertex);
                     } else {
                         pos = POS_FILTERED;
@@ -176,18 +191,32 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
                     String s_to = attributes.getValue("to");
                     if (map == null || map.containsKey(s_from) && map.containsKey(s_to)) {
                         pos = POS_EDGE;
-                        graph.addEdge(new GsDynamicalHierarchicalNode(), new GsDynamicalHierarchicalNode());
+                        graph.addEdge(graph.getNodeById(s_from), graph.getNodeById(s_to));
                     } else {
                         pos = POS_FILTERED;
                     }
                 } else if (qName.equals("graph")) {
-            			if (!"reduced".equals(attributes.getValue("class"))) {
-            				throw new SAXException("not a reduced graph");
+            			if (!"dynamicalHierarchical".equals(attributes.getValue("class"))) {
+            				throw new SAXException("not a dynamicalHierarchical graph");
             			}
             			try {
 							graph.setGraphName(attributes.getValue("id"));
 						} catch (GsException e) {
 							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+						}
+						try {
+							String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
+							Vector nodeOrder = new Vector(t_nodeOrder.length);
+							byte[] childCount = new byte[t_nodeOrder.length];
+							for (int i=0 ; i<t_nodeOrder.length ; i++) {
+								String[] args = t_nodeOrder[i].split(":");
+							    nodeOrder.add(args[0]);
+							    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
+							}
+							graph.setNodeOrder(nodeOrder);
+							graph.setChildsCount(childCount);
+						} catch (NumberFormatException e) {
+							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
 						}
                 } else if (qName.equals("link")) {
                     graph.setAssociatedGraphID(attributes.getValue("xlink:href"));

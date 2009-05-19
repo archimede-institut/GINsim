@@ -8,6 +8,7 @@ import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphParser;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicParser;
+import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryParser;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 import fr.univmrs.tagc.common.xml.XMLHelper;
@@ -56,13 +57,15 @@ public final class GsGinmlParser extends XMLHelper {
                 realParser = new GsDynamicParser(map, attributes, s_dtd, s_filename);
             } else if ("reduced".equals(s_class)) {
                 realParser = new GsReducedGraphParser(map, attributes, s_dtd, s_filename);
+            } else if ("dynamicalHierarchical".equals(s_class)) {
+                realParser = new GsDynamicalHierarchicalParser(map, attributes, s_dtd, s_filename);
             } else {
                 throw new SAXException("bad type of graph");
             }
             xr.setContentHandler(realParser);
         }
     }
-
+    
     public GsGraph getGraph() {
 		if (realParser == null) {
 		    return null;

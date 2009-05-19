@@ -12,7 +12,6 @@ public class GsDynamicalHierarchicalNodeSet extends HashSet {
 	
 	public GsDynamicalHierarchicalNode getDHNodeForState(byte[] state) {
 		GsDynamicalHierarchicalNode dhnode = null;
-		int i = 0;
 		boolean found = false;
 		for (Iterator it = iterator(); it.hasNext();) {
 			dhnode = (GsDynamicalHierarchicalNode) it.next();
@@ -20,12 +19,8 @@ public class GsDynamicalHierarchicalNodeSet extends HashSet {
 				found = true;
 				break;
 			}
-			i++;
 		}
-		if (!found || dhnode == null) return null;
-//		if (i != 0) { //kindof optimisation on list, if a node is matching it will be read first next time
-//			set.addFirst(set.remove(i));
-//		}
+		if (!found) return null;
 		return dhnode;
 	}
 }

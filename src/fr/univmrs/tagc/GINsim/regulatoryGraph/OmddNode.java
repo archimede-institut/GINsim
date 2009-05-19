@@ -1,10 +1,12 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.Vector;
 
 /**
@@ -25,7 +27,7 @@ public class OmddNode {
     /** value of the terminal node */
     public byte value;
     /** cache for the key, should always be null except while reducing */
-    String key = null;
+    private String key = null;
     
     /** constraint: min allowed value */
     public byte min=-1;
@@ -105,7 +107,7 @@ public class OmddNode {
         TERMINALS[9].value = 9;
         TERMINALS[9].key = "N";
     }
-    
+        
     /**
      * test if a state is OK.
      * 
@@ -492,6 +494,168 @@ public class OmddNode {
     }
 
     /**
+     * @param ilevel the indentation level
+     * @param names vector of node name
+     * @return a printed form of the tree
+     */
+    public String getString(int ilevel) {
+        if (this.next == null) {
+            if (value == 0) {
+                return null;
+            }
+            return ""+value;
+        }
+        
+        String prefix = "";
+        for (int i=0 ; i<ilevel ; i++) {
+            prefix += "  ";
+        }
+        String s = "";
+        for (int i=0 ; i<next.length ; i++) {
+            String s2 = next[i].getString(ilevel+1);
+            if (s2 != null) {
+                if (s2.length() < 3) {
+                    s += prefix+level+"="+i+" ==> "+s2+"\n";
+                } else {
+                    s += prefix+level+"="+i+"\n"+s2;
+                }
+            }
+        }
+        return s;
+    }
+    
+    public StringBuffer write() {
+        StringBuffer s = new StringBuffer();
+        if (next == null) {
+    		s.append(value);
+    		return s;
+    	}
+        s.append('(');
+        s.append(level);
+        s.append(',');
+        for (int i=0 ; i<next.length-1 ; i++) {
+            if (next[i] != null) s.append(next[i].write());
+            else s.append("&");
+            s.append(',');
+        }
+        if (next[next.length-1] != null)s.append(next[next.length-1].write());
+        else s.append("&");
+        s.append(')');
+        return s;
+    }
+    
+    public static OmddNode read(String s, byte[] childCount) throws ParseException {
+    	if (s.length() == 1) {
+    		return TERMINALS[Byte.parseByte(s)];
+    	}
+    	
+    	int length = s.length();
+    	int deep = -1;
+    	
+    	byte[] childVisited = new byte[childCount.length];
+    	Stack heap = new Stack();
+    	OmddNode o = null, op;
+    	int i = 0;
+    	while (i < length) {
+    		char c = s.charAt(i);
+    		if (c == '(') {
+       			o = new OmddNode();
+    			heap.add(o);
+    			deep++;
+    			i = readLevel(s, o, i+1, length);
+    			if (i >= length || s.charAt(i) != ',') {
+    				throw new ParseException("Missing , after opening a new node", i-1);
+    			}
+    		} else if (c == ')') {
+    			if (childVisited[deep] != childCount[deep]) {
+    				throw new ParseException("Wrong number of child found", i);
+    			}
+    			childVisited[deep] = 0;
+    			deep--;
+        		op = (OmddNode) heap.pop();
+        		if (heap.size() > 0) {
+            		o = (OmddNode) heap.peek();
+            		if (o.next == null) {
+            			o.next = new OmddNode[childCount[deep]];
+            		}       			
+            		o.next[childVisited[deep]++] = op;
+        		}
+    			if (deep == -2) {
+    				throw new ParseException("Opening parenthese missing", i);
+    			}
+    		} else if (c == ',') { 
+    		} else {
+    			readTerminal(s, (OmddNode) heap.peek(), i, deep, childVisited, childCount, length);
+   		}
+    		i++;
+    	}
+    	if (deep != -1) {
+			throw new ParseException("End of string reached too early", i);
+    	}
+    	return o;
+    }
+
+
+
+	private static void readTerminal(String s, OmddNode o, int i, int deep, byte[] childVisited, byte[] childCount, int length) throws ParseException {
+		byte val;
+		switch (s.charAt(i)) {
+		case '0': val = 0; break;
+		case '1': val = 1; break;
+		case '2': val = 2; break;
+		case '3': val = 3; break;
+		case '4': val = 4; break;
+		case '5': val = 5; break;
+		case '6': val = 6; break;
+		case '7': val = 7; break;
+		default:
+			throw new ParseException("Missing terminal value", i);
+		}
+		if (o.next == null) {
+			o.next = new OmddNode[childCount[deep]];
+		}
+		int k = childVisited[deep]++;
+		if (k >= childCount[deep]) {
+			throw new ParseException("Too much child at depth "+deep+" - "+k+" - "+childCount[deep]+" - "+childVisited[deep], i);
+		}
+		o.next[k] = TERMINALS[val];
+	}
+
+
+	/**
+     * 
+     * @param s the string
+     * @param o current OmddNode to fill with level
+     * @param i current index in s
+     * @param length the length of s
+     * @return the index of the next non number character
+     */
+    private static int readLevel(String s, OmddNode o, int i, int length) {
+    	int res = 0;
+    	char c = s.charAt(i++);
+    	do {
+			switch (c) {
+			case '0': break;
+			case '1': res += 1; break;
+			case '2': res += 2; break;
+			case '3': res += 3; break;
+			case '4': res += 4; break;
+			case '5': res += 5; break;
+			case '6': res += 6; break;
+			case '7': res += 7; break;
+			case '8': res += 8; break;
+			case '9': res += 9; break;
+			default:
+				o.level = res/10;
+				return i-1;
+			}
+    		res *= 10;
+    		c = s.charAt(i++);
+    	} while (i < length);
+		return length+1; //FAIL in the while
+	}
+    
+    /**
      * reduce this tree
      * will use the getKey() function, and will probably need two traversals of the tree,
      * or is it doable in one only? (the second one is on the reduced tree and used to clean up cache)
@@ -501,7 +665,7 @@ public class OmddNode {
      * @return the reduced tree
      */
     public OmddNode reduce() {
-        int[] t_key = {0};
+        long[] t_key = {0};
         Map m = new HashMap();
         for (int i=0 ; i<TERMINALS.length ; i++) {
             m.put(TERMINALS[i].key, TERMINALS[i]);
@@ -532,7 +696,7 @@ public class OmddNode {
      * @param t_key int[1]: value of the next uniq key
      * @return the uniq key of this node
      */
-    private String getKey(Map m, int[] t_key) {
+    private String getKey(Map m, long[] t_key) {
         if (key != null) {
             return key;
         }
@@ -540,7 +704,7 @@ public class OmddNode {
         String tempKey = level+"("+skey;
         for (int i=1 ; i<next.length;i++) {
             String skey2 = next[i].getKey(m, t_key);
-            // test if all childs are equals
+            // test if all children are equals
             if (skey != null && !skey.equals(skey2)) {
                 skey = null;
             }
@@ -548,7 +712,7 @@ public class OmddNode {
         }
         tempKey += ")";
 
-        // if all childs are equals, we ARE the child
+        // if all children are equals, this IS the child
         if (skey != null) {
             return skey;
         }
@@ -559,13 +723,17 @@ public class OmddNode {
             for (int i=0 ; i<next.length ; i++) {
                 OmddNode nnext = (OmddNode)m.get(next[i].getKey(m, t_key)); 
                 if (nnext != null) {
-                    next[i] = nnext;
+                	next[i] = nnext;
                 }
             }
 
             key = ""+t_key[0]++;
             m.put(tempKey, key);
             m.put(key, this);
+        } else {
+        	tempKey = key;
+        	key = null;
+        	return tempKey;
         }
         return key;
     }
@@ -574,9 +742,10 @@ public class OmddNode {
      */
     public void cleanKey() {
         // don't clean terminal nodes or already cleaned trees
+    	// is the "key != null" test a good one ?
         if (key != null && next != null) {
             for (int i=0 ; i<next.length ; i++) {
-                if (next [i] != null) {
+                if (next[i] != null) {
                     next[i].cleanKey();
                 }
             }
@@ -585,10 +754,10 @@ public class OmddNode {
     }
 
     /**
-     * test if two diagramms conflict: usefull to store logical parameters as diagramms and detect conflicts
+     * test if two diagrams conflict: useful to store logical parameters as diagrams and detect conflicts
      * 
      * @param node
-     * @return true if these diagramm should not be mixed
+     * @return true if these diagram should not be mixed
      */
     public boolean conflict (OmddNode node) {
         if (next == null) {

@@ -22,7 +22,17 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class DynamicalHierarchicalSimulation extends Simulation {
 	
-	private final boolean reduce = true;
+	/** Merge nothing **/
+	private static final byte MERGING_NONE = 1;
+	/** Merge all the transient excluding transient cycle **/
+	private static final byte MERGING_ALL = 2;
+	/** Merge only transient node with one child, transient too **/
+	private static final byte MERGING_SYNCHRONOUS = 3;
+	/** Merge only if all the children are transient **/
+	private static final byte MERGING_FULLTRANSIENT = 4;
+	/** Merge all the transient including transient cycle **/
+	private static final byte MERGING_ALLTRANSIENT = 5;
+	private final byte mergingMethod = MERGING_ALL;
 	
 	protected DynamicalHierarchicalSimulationHelper helper;
 	private int depth = 0;
@@ -30,7 +40,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private GsDynamicalHierarchicalNode dhnode;
 	private GsDynamicalHierarchicalNodeSet nodeSet;
 	
-	private final byte debug = -127; //FIXME : set debug to -1
+	private final byte debug = -1; //FIXME : set debug to -1
 	private PrintStream debug_o = System.err;
 	private int totalNode = 0;
 	private GsDynamicalHierarchicalGraph dynGraph;
@@ -298,6 +308,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
                 }
 				master = nodeSet.getDHNodeForState(cur.state);
 			}//while
+
 			dhnode.addPileToOmdd(childsCount);
 			dhnode.reduce();
 			dhnode.updateSize(childsCount);
@@ -316,7 +327,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 */
 	private void encounterANodeInACycle(DynamicalHierarchicalSimulationQueuedState cur, GsDynamicalHierarchicalNode master) throws Exception {
 		if (master.isCycle()) {													//			If the node is a cycle
-			dhnode.merge(master, nodeSet, vertexCount, helper);		//				merge the current building cycle (dhnode) with the cycle of cur
+			dhnode.merge(master, nodeSet, vertexCount, childsCount);		//				merge the current building cycle (dhnode) with the cycle of cur
 		} else if (master.isTransient()) {										//			else if the node is transient
 			throw new Exception("Error : transient "+master+" "+dhnode+" "+cur);
 //			master.remove(cur.state, nodeSet);											//				remove the current state from the transient node
@@ -339,7 +350,6 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			dhnode = nodeSet.getDHNodeForState(e.state);
 			if (dhnode == null) { 																					//    	If the state is not processed
 				log(10,"      }all  childs of e have been processed"+e);
-				//TODO : merge if ....
 				dhnode = createNodefrom(e, 2);																			//			Create a new node from the current state
 				nodeSet.add(dhnode);																				//			Add this node to the nodeSet
 				log(10,"      }e "+e+" has a lot of transient childs "+dhnode.toLongString(vertexCount));
@@ -347,7 +357,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				dhnode.processState(e.state, childsCount);												//		Process the current state in the current node
 				log(10,"      }e "+e+" is already processed in "+dhnode.toLongString(vertexCount));
 			}
-			if (reduce) reduce();
+			mergeTransient();
 			for (Iterator it = e.childs.iterator(); it.hasNext();) {												//		For each children of the current set
 				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) it.next();						
 				if (!child.equals(dhnode)) {																		//			If the child is not the current node
@@ -373,79 +383,140 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		log(2,"      }set e @["+queue.size()+"]:"+e);
 	}	
 	
-	private void reduce() throws Exception {
-		int size = e.childs.size();
-		boolean merge = size == 1;
-		if (size > 1) {
-			mergeTransientChilds();
-		}		
-		if (merge) {//There is only one child or there are all the same (does work ?)
-			GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) e.childs.get(0);
-			if (child.isTransient() && dhnode.isTransient()) {
-				log(-127,"         }merging e with its only child "+e+" :: "+child.toLongString(vertexCount));
-				child.merge(dhnode, nodeSet, vertexCount, helper);
-				child.reduce();
-				child.updateSize(childsCount);
+	private void mergeTransient() throws Exception {
+		GsDynamicalHierarchicalNode dh;
+		switch (mergingMethod) {
+		case MERGING_NONE:
+			break;
+		case MERGING_FULLTRANSIENT:
+			boolean merge = true;
+			for (Iterator it = e.childs.iterator(); it.hasNext();) {
+				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) it.next();
+				if (!child.isTransient()) {
+					merge = false;
+					break;
+				}
 			}
+			if (!merge) {
+				break;
+			}
+			//else MERGING_ALL
+		case MERGING_ALL: //Merge all the transient child+e
+			dh = null;
+			if (dhnode.isTransient()) {
+				dh = dhnode;
+			}
+			for (Iterator it = e.childs.iterator(); it.hasNext();) {
+				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) it.next();
+				if (child.isTransient()) {
+					if (dh == null) {
+						dh = child;
+					} else {
+						dh.merge(child, nodeSet, vertexCount, childsCount);
+					}
+				}
+			}
+			if (dh != null) {
+				dh.reduce();
+				dh.updateSize(childsCount);				
+			}
+			break;
+		case MERGING_ALLTRANSIENT: //Merge all the transient child+e
+			dh = null;
+			if (!dhnode.isTerminal()) {
+				dh = dhnode;
+				dh.setType(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+			}
+			for (Iterator it = e.childs.iterator(); it.hasNext();) {
+				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) it.next();
+				if (!child.isTerminal()) {
+					if (dh == null) {
+						dh = child;
+						dh.setType(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+					} else {
+						child.setType(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+						dh.merge(child, nodeSet, vertexCount, childsCount);
+					}
+				}
+			}
+			if (dh != null) {
+				dh.reduce();
+				dh.updateSize(childsCount);				
+			}
+			break;
+		case MERGING_SYNCHRONOUS:
+			if (e.childs.size() == 1) {
+				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) e.childs.get(0);
+				if (child.isTransient() && dhnode.isTransient()) {
+					log(5,"         }merging e with its only child "+e+" :: "+child.toLongString(vertexCount));
+					child.merge(dhnode, nodeSet, vertexCount, childsCount);
+					child.reduce();
+					child.updateSize(childsCount);
+				}
+			}
+			break;
+		default:
+			break;
 		}
-		
-//		
-//		Set transientComponants = new HashSet();	
-//		GsDynamicalHierarchicalNode child = null;
-//		for (Iterator it = e.childs.iterator(); it.hasNext();) {
-//			child = (GsDynamicalHierarchicalNode) it.next();
-//			if (child.isTransient()) {
-//				transientComponants.add(child);
-//			}
-//		}
-//		if (transientComponants.size() > 1) {															//IF there is more than one transient child
-//																											//::Merge transient childs going one to another with same other childs
-//			Set mergedChilds = null;
-//			for (Iterator it_comp = transientComponants.iterator(); it_comp.hasNext();) {				//For each transient child 'from'
-//				GsDynamicalHierarchicalNode from = (GsDynamicalHierarchicalNode) it_comp.next();
-//				
-//				Set fromEdgesSet = from.getOutgoingEdges();
-//				if (fromEdgesSet != null) {
-//					for (Iterator it = e.childs.iterator(); it.hasNext();) { 							//For each outgoing edges 'to' of 'from'
-//						GsDynamicalHierarchicalNode to = (GsDynamicalHierarchicalNode) it.next();
-//						if (to.equals(from) || !to.isTransient()) {//If to equals from or 'to' is not transient
-//                            continue;																			//Skip 'to'
-//                        }
-//						Set toEdgesSet = to.getOutgoingEdges();
-//						if (toEdgesSet != null) {
-//							toEdgesSet.add(to);
-//							if (fromEdgesSet.containsAll(toEdgesSet)) {
-//								toEdgesSet.remove(to);
-//								log(10,"      } merging (inclusion) "+from.toLongString(vertexCount)+" and "+to.toLongString(vertexCount));
-//								if (mergedChilds == null) {
-//									mergedChilds = new HashSet();
-//								}
-//								mergedChilds.add(to);
-//								from.merge(to, nodeSet, vertexCount, helper);
-//								from.reduce();
-//							} else {
-//								toEdgesSet.remove(to);
-//							}
-//						}
-//					}
-//				}
-//			}
-//			if (mergedChilds != null) {											//If we have merged some transient childs, remove them from the transient list.
-//				for (Iterator it = mergedChilds.iterator(); it.hasNext();) {
-//					child = (GsDynamicalHierarchicalNode) it.next();
-//					transientComponants.remove(child);
-//				}
-//			}
-//		} 
-//		if (transientComponants.size() == 1) { //There is only one TRANSIENT child, then merge the current node in the child
-//			dhnode = (GsDynamicalHierarchicalNode) transientComponants.iterator().next();
-//			dhnode.addState(e.state, childsCount, 1); //FIXME here not 1
-//			dhnode.reduce();
-//			log(15,"      }e "+e+" has only one transient child "+dhnode.toLongString(vertexCount));
-//		} else {
-//		}
 	}
 	
+	private HashMap getBassinForTerminals() throws Exception {
+		HashMap level1 = new HashMap(e.childs.size());
+		HashMap terminals = new HashMap(2);
+		GsDynamicalHierarchicalNode c1,c2;
+		Set s, s1, tmp;
+		
+		for (Iterator it = e.childs.iterator(); it.hasNext();) {			//Fetch level 1 nodes
+			c1 = (GsDynamicalHierarchicalNode) it.next();
+			level1.put(c1, voidSet);
+		}
+		for (Iterator it = e.childs.iterator(); it.hasNext();) { 			//Fetch direct path to level 2 nodes
+			c1 = (GsDynamicalHierarchicalNode) it.next();
+			if (c1.isTransient()) {
+				for (Iterator it2 = c1.getOutgoingEdges().iterator(); it2.hasNext();) {
+					c2 = (GsDynamicalHierarchicalNode) it2.next();
+					s = (Set) level1.get(c2);
+					if (s != null) { //If c2 is a level1 node 
+						if (s == voidSet) {
+							s = new HashSetForSet(1);
+							level1.put(c2, s);
+						}
+						s.add(c1);
+					} else {
+						s = (Set) terminals.get(c2);
+						if (s == null) {
+							s = new HashSetForSet(1);
+							terminals.put(c2, s);
+						}
+						s.add(c1);
+					}
+				}
+			}
+		}
+		for (Iterator it = terminals.keySet().iterator(); it.hasNext();) {	//Fetch indirect path to level 2 nodes
+			c2 = (GsDynamicalHierarchicalNode) it.next();
+			s = (Set) terminals.get(c2);
+			if (s != null) {
+				tmp = new HashSet(2);
+				for (Iterator it2 = s.iterator(); it2.hasNext();) {
+					c1 = (GsDynamicalHierarchicalNode) it2.next();
+					s1 = (Set) level1.get(c1);
+					if (s1 != null && s1 != voidSet) {
+						tmp.add(s1);
+					}
+				}
+				for (Iterator it2 = tmp.iterator(); it2.hasNext();) {
+					s1 = (Set) it2.next();
+					for (Iterator it3 = s1.iterator(); it3.hasNext();) {
+						c1 = (GsDynamicalHierarchicalNode) it3.next();
+						s.add(c1);						
+					}
+				}
+			}
+		}
+		return terminals;
+	}
+
 	/**
 	 * 
 	 * 
@@ -562,7 +633,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				while (it2.hasNext()) {
 					GsDynamicalHierarchicalNode n1 = (GsDynamicalHierarchicalNode) it2.next();
 					log(-127, "   merging "+n0.getShortId()+" et "+n1.getShortId());
-					n0.merge(n1, nodeSet, vertexCount, helper);
+					n0.merge(n1, nodeSet, vertexCount, childsCount);
 				}
 				n0.reduce();
 				n0.updateSize(childsCount);
@@ -609,7 +680,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @return
 	 */
 	private GsDynamicalHierarchicalNode createNodefrom(DynamicalHierarchicalSimulationQueuedState qs, int childValue) {
-		GsDynamicalHierarchicalNode dhnode = new GsDynamicalHierarchicalNode(qs.state, childsCount, childValue); //TODO: more complex merge
+		GsDynamicalHierarchicalNode dhnode = new GsDynamicalHierarchicalNode(qs.state, childsCount, childValue);
 		nodeSet.add(dhnode);
 		log(10,"        %create a new node from state "+qs+" dhnode: "+dhnode);
 		return dhnode;
@@ -636,25 +707,6 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			cur = cur.previous;
 		}
 		return false;
-	}
-	
-	/**
-	 * Remove the processed items in the queue of the 'queue' and mark their previous and add the right arcs.
-	 */
-	private void processNextAlreadyProcessed(DynamicalHierarchicalSimulationQueuedState e, DynamicalHierarchicalSimulationQueuedState from) {
-//		GsDynamicalHierarchicalNode tmp_dhnode = nodeSet.get(from.state);
-//		while(tmp_dhnode != null) { //FIXME : !from.previous.equals(e) && 
-//			if (debug > 10) {
-//                debug_o.println("        processNextAlreadyProcessed::from : ["+from.state_l+"]"+print_t(from.state)+" tmp_dhnode::"+tmp_dhnode.toLongString(vertexCount));
-//            }
-//			from.setParentNextChild(tmp_dhnode);
-//			queue.pollLast();
-//			from = getLastInQueue();
-//			if (from == null) {
-//                return;
-//            }
-//			tmp_dhnode = nodeSet.get(from.state);
-//		}
 	}
 
 
@@ -694,10 +746,15 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	}
 
 	private void addAllNodeTo(GsDynamicalHierarchicalGraph graph) {
+		int n = 0;
 		log(1,"Adding all nodes to the graph... ("+nodeSet.size()+")");
 		GsVertexAttributesReader vreader = graph.getGraphManager().getVertexAttributesReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
+			n++;
 			GsDynamicalHierarchicalNode dhnode = (GsDynamicalHierarchicalNode) it.next();
+			dhnode.addPileToOmdd(childsCount);
+			dhnode.reduce();
+			dhnode.updateSize(childsCount);
 			graph.addVertex(dhnode);
 			vreader.setVertex(dhnode);
 			switch (dhnode.getType()) {
@@ -720,8 +777,9 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				break;
 			}
 			vreader.refresh();			
-			log(15,dhnode+" added.");
+			log(-127,dhnode+" added.");
 		}
+		log(-127," total of node added : "+n);
 		log(1," done");
 	}
 	
