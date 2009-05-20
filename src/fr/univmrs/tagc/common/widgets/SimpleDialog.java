@@ -19,6 +19,13 @@ public abstract class SimpleDialog extends JDialog {
 		}
 	};
       
+    /**
+     * 
+     * @param parent
+     * @param id an id to store the windows size (will be "id.width" and "id.height")
+     * @param w
+     * @param h
+     */
 	public SimpleDialog(Frame parent, String id, int w, int h) {
 		super(parent);
 		this.id = id;

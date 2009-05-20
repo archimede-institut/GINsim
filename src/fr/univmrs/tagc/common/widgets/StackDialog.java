@@ -33,6 +33,13 @@ abstract public class StackDialog extends SimpleDialog {
     protected JButton bcancel;
     protected JButton bclose;
     
+    /**
+     * 
+     * @param parent
+     * @param id an id to store the windows size (will be "id.width" and "id.height")
+     * @param w
+     * @param h
+     */
     public StackDialog(JFrame parent, String id, int w, int h) {
         super(parent, id, w, h);
         JPanel contentPane = (JPanel)getContentPane();

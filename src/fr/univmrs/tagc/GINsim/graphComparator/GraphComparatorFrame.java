@@ -63,7 +63,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 	}
 
 	public GraphComparatorFrame(JFrame frame, GsGraph graph) {
-		super(frame, Translator.getString("STR_gcmp"), 800, 600);
+		super(frame, "graphComparator", 800, 600);
 		this.graph = graph;
         this.frame = frame;
         initialize();

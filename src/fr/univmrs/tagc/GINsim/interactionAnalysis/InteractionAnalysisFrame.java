@@ -52,7 +52,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	}
 
 	public InteractionAnalysisFrame(JFrame frame, GsGraph graph) {
-		super(frame, Translator.getString("STR_interactionAnalysis"), 420, 260);
+		super(frame, "functionalityAnalysis", 420, 260);
 		this.frame = frame;
 		this.graph = graph;
         initialize();
