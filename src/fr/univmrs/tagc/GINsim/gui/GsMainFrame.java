@@ -147,7 +147,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 			jSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 			jSplitPane.setTopComponent(getGraphPanel());
 			jSplitPane.setBottomComponent(getJSplitPane1());
-			jSplitPane.setResizeWeight(1.0D);
+			jSplitPane.setResizeWeight(1.0);
 			jSplitPane.setName("mainFrameSeparator");
 			jSplitPane.setOneTouchExpandable(true);
 		}
@@ -290,6 +290,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 	private JTabbedPane getJTabbedPane() {
 	    if (jTabbedPane == null) {
 			jTabbedPane = new JTabbedPane();
+			jTabbedPane.setMinimumSize(new Dimension(0, 0));
 			addTab(Translator.getString("STR_tab_selection"), getJPanel1(), true, FLAG_SINGLE);
 			addTab(Translator.getString("STR_tab_graphicAttributes"), getGsGraphicAttributePanel(), true, FLAG_SELECTION);
 		}

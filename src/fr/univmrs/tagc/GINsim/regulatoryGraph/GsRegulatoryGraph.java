@@ -36,7 +36,6 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 
 	private int nextid=0;
 
-    GsParameterPanel edgePanel = null;
     ObjectEditor vertexEditor = null;
 	private ObjectEditor edgeEditor;
 
