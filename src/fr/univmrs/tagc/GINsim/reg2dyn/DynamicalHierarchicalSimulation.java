@@ -110,12 +110,12 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private void runSimulationOnInitialStates() throws Exception {
 		while(initStatesIterator.hasNext()) { 										//For each initial states
 			byte[] state = (byte[])initStatesIterator.next();						//  fetch the current initial state.
-			updateProgess();														//  Update the GUI to indicates the progress (ie. one node processed)
 			log(5,"\nInit queue with state :"+print_t(state));
 			
-			depth = 0;
-			e = new DynamicalHierarchicalSimulationQueuedState(state, depth, null);	// +set 'e' is a new queuedState for this initial state.
 			if (nodeSet.getDHNodeForState(state) == null) { 										//  If the new state has not been processed
+				updateProgess();														//  Update the GUI to indicates the progress (ie. one node processed)
+				depth = 0;
+				e = new DynamicalHierarchicalSimulationQueuedState(state, depth, null);	// +set 'e' is a new queuedState for this initial state.
 				queue.add(e);														//		queue this state
 				runOnQueue();														//		run the simulation on the queue.
 			} else {																//  else
@@ -196,34 +196,38 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		if (e.totalChild == -1) {
             e.totalChild = 0;
         }
-		while (updater.hasNext()) {														//For each children of qs
-			e.totalChild++;																//  increase the count of child of qs
-																						//  create a new QueuedState
+
+		if (updater.hasNext()) {
 			GsDynamicalHierarchicalNode master = nodeSet.getDHNodeForState(e.state);
-			DynamicalHierarchicalSimulationQueuedState newqs = new DynamicalHierarchicalSimulationQueuedState(((SimulationQueuedState)updater.next()).state, depth, e);
-			dhnode = nodeSet.getDHNodeForState(newqs.state);										//  get the associated dhnode for the state
-			if (dhnode != null) {														//  if the state is associated with a dhnode
-				if (!dhnode.isProcessed()) {											//      if the state has not already been processed
-					log(10,"        ?next is in a cycle building => add current path to this cycle");
-					if (!dhnode.equals(master)) {										// 			if the parent is not already in the cycle
-						addToTheBuildingCycle(master);									//          	add it in the cycle
-					} else {
-						log(10, "            the parent is already in the cycle.");
+			do {
+				e.totalChild++;																//  increase the count of child of qs
+								//  create a new QueuedState
+				DynamicalHierarchicalSimulationQueuedState newqs = new DynamicalHierarchicalSimulationQueuedState(((SimulationQueuedState)updater.next()).state, depth, e);
+				dhnode = nodeSet.getDHNodeForState(newqs.state);										//  get the associated dhnode for the state
+				if (dhnode != null) {														//  if the state is associated with a dhnode
+					if (!dhnode.isProcessed()) {											//      if the state has not already been processed
+						log(10,"        ?next is in a cycle building => add current path to this cycle");
+						if (!dhnode.equals(master)) {										// 			if the parent is not already in the cycle
+							addToTheBuildingCycle(master);									//          	add it in the cycle
+						} else {
+							log(10, "            the parent is already in the cycle.");
+						}
+					} else {																//      else if the state is associated with a building cycle
+						log(10,"        $already procedded : not queueing "+newqs+" : "+dhnode);
 					}
-				} else {																//      else if the state is associated with a building cycle
-					log(10,"        $already procedded : not queueing "+newqs+" : "+dhnode);
+					newqs.setParentNextChild(dhnode);										//     add this dhnode to the children list of the parent of e
+					newqs.tellParentOneChildIsProcess(1);
+				} else {																	//  else it is not associated
+					queue.add(newqs);														//     add the child to the queue 
+					shouldIncreaseDepth = true;
+					log(10,"        $queueing "+newqs);
 				}
-				newqs.setParentNextChild(dhnode);										//     add this dhnode to the children list of the parent of e
-				newqs.tellParentOneChildIsProcess(1);
-			} else {																	//  else it is not associated
-				queue.add(newqs);														//     add the child to the queue 
-				shouldIncreaseDepth = true;
-				log(10,"        $queueing "+newqs);
-			}
+			} while (updater.hasNext());												//For each children of qs
+			if (shouldIncreaseDepth) {
+	            depth++;												//  increase the depth of the queue if there is at least on children added to the queue
+	        }
+
 		}
-		if (shouldIncreaseDepth) {
-            depth++;												//  increase the depth of the queue if there is at least on children added to the queue
-        }
 	}
 	
 	/**
@@ -840,7 +844,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		if (debug == -127) {
 			int ptotalNode = totalNode;
 			totalNode = nodeSet.size();
-			if (totalNode > ptotalNode &&  totalNode%100 == 0) debug_o.println("totalNode = "+totalNode);
+			if (totalNode > ptotalNode &&  totalNode%16 == 0) debug_o.println("totalNode = "+totalNode);
 		}
 	}
 	

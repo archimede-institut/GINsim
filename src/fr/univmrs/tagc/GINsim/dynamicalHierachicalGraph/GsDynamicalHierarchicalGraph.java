@@ -230,7 +230,6 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	public byte[] getChildsCount() {
 		if (childsCount == null) {
 			childsCount = new byte[nodeOrder.size()];
-			System.out.println("SIze of cc:"+nodeOrder.size());
 			int i = 0;
 			for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
 				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();

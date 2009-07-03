@@ -9,6 +9,7 @@ import java.util.Set;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -146,12 +147,17 @@ public abstract class GraphComparator {
 	}
 	
 	public void setEdgeAutomatingRouting() {
+		GsGraphManager gm1 = getG1().getGraphManager();
 		for (Iterator it = gm.getEdgeIterator(); it.hasNext();) {
-			Object e = it.next();
-			GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
-			ereader.setEdge(e);
-			ereader.setRouting(GsEdgeAttributesReader.ROUTING_AUTO);
-			ereader.refresh();
+			GsDirectedEdge e = (GsDirectedEdge) it.next();
+			
+			GsDirectedEdge e1 = (GsDirectedEdge) gm1.getEdge(gm1.getVertexByName(e.getSourceVertex().toString()), gm1.getVertexByName(e.getTargetVertex().toString()));
+			if (e1 == null) {//The edge is (only or not) in the first graph. So its intermediary point are right.
+				GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
+				ereader.setEdge(e);
+				ereader.setRouting(GsEdgeAttributesReader.ROUTING_AUTO);
+				ereader.refresh();
+			}
 		}
 	}
 	

@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph;
 
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,12 +16,12 @@ import fr.univmrs.tagc.common.GsException;
 
 public class GsDynamicalHierarchicalNode {
 	public static GsGraphManager rgm;
-	private static int nextId = 0;
+	private static long nextId = 0;
 		
-	public static final int TYPE_TRANSIENT_COMPONENT = 0;
-	public static final int TYPE_CYCLE = 10;
-	public static final int TYPE_TERMINAL_CYCLE = 11;
-	public static final int TYPE_STABLE_STATE = 20;
+	public static final byte TYPE_TRANSIENT_COMPONENT = 0;
+	public static final byte TYPE_CYCLE = 1;
+	public static final byte TYPE_TERMINAL_CYCLE = 2;
+	public static final byte TYPE_STABLE_STATE = 3;
 	
 	public static final String TYPE_TRANSIENT_COMPONENT_STRING = "transientComponent";
 	public static final String TYPE_TERMINAL_CYCLE_STRING = "terminalCycle";
@@ -35,7 +36,7 @@ public class GsDynamicalHierarchicalNode {
 	/**
 	 * The type (transient, terminal cycle or stable state) of the component.
 	 */
-	private int type = TYPE_TRANSIENT_COMPONENT;
+	private byte type = TYPE_TRANSIENT_COMPONENT;
 	
 	private List statePile = null;
 	
@@ -57,7 +58,7 @@ public class GsDynamicalHierarchicalNode {
 	/**
 	 * The unique id 
 	 */
-	private int uid;
+	private long uid;
 	
 	/**
 	 * A new node with a certain initial state.
@@ -454,7 +455,7 @@ public class GsDynamicalHierarchicalNode {
 	 * @param type is either TYPE_STABLE_STATE_STRING or TYPE_TERMINAL_CYCLE_STRING or TYPE_TRANSIENT_COMPONENT_STRING
 	 * @return
 	 */
-	public static int typeFromString(String type) {
+	public static byte typeFromString(String type) {
 		if (type.equals(TYPE_STABLE_STATE_STRING)) return TYPE_STABLE_STATE;
 		if (type.equals(TYPE_TERMINAL_CYCLE_STRING)) return TYPE_TERMINAL_CYCLE;
 		if (type.equals(TYPE_CYCLE_STRING)) return TYPE_CYCLE;
@@ -473,10 +474,10 @@ public class GsDynamicalHierarchicalNode {
 	 * @param childsCount 
 	 * @param helper 
 	 */
-//	public void merge(GsDynamicalHierarchicalNode slaveNode, Set nodeSet, int nbNodes) throws Exception {
+//	public void merge(GsDynamicalHierarchicalNode slaveNode, Collection nodeSet, int nbNodes) throws Exception {
 //		merge(slaveNode, nodeSet, nbNodes, null, null);
 //	}
-	public void merge(GsDynamicalHierarchicalNode slaveNode, Set nodeSet, int nbNodes, byte[] childsCount) throws Exception {
+	public void merge(GsDynamicalHierarchicalNode slaveNode, Collection nodeSet, int nbNodes, byte[] childsCount) throws Exception {
 		if (slaveNode == this) return;
 		if (slaveNode.type != this.type) {
 			throw new Exception("Error merging two node of different types : "+slaveNode.toLongString(nbNodes)+" in "+this.toLongString(nbNodes)); //FIXME : remove me
@@ -526,11 +527,11 @@ public class GsDynamicalHierarchicalNode {
 	}
 
 	
-	public void setType(int type) {
+	public void setType(byte type) {
 		this.type = type;
 	}
 
-	public int getType() {
+	public byte getType() {
 		return type;
 	}
 
@@ -628,8 +629,12 @@ public class GsDynamicalHierarchicalNode {
 		return size;
 	}
 
-	public int getUniqueId() {
+	public long getUniqueId() {
 		return uid;
+	}
+	
+	public int hashcode() {
+		return (int)uid;
 	}
 
 	public void parse(String parse, byte[] childCount) throws SAXException {
