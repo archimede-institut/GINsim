@@ -31,10 +31,11 @@ public class InteractionAnalysis {
 	private InteractionAnalysisSelector selector = null;
 	
 	private long before; //to know the time elapsed in the algorithm
-	private byte i_leafs;
+	private int i_leafs;
 	
 	private Report report;
 	private List currentPath, currentSource;
+	private Set selectedNodes;
 	
 	static final byte FUNC_NON = 1;
 	static final byte FUNC_POSITIVE = 2;
@@ -47,19 +48,22 @@ public class InteractionAnalysis {
 	 * Search all the non functional interactions in the graph 'g' and do some actions on them depending on the options (opt_*).
 	 * 
 	 * @param g the graph where to search the non functional interactions.
-	 * @param opt_color boolean indicating if the non functional edges should be colored in 'opt_color_inactive'.
-	 * @param opt_simplify boolean indicating if the non functional edges should be removed from the graph.
 	 * @param opt_annotate boolean indicating if the non functional edges should be annotated.
-	 * @param opt_verbose boolean indicating if we out more information like node order and logical functions.
-	 * @param opt_color_inactive the Color for the non functional edges.
+	 * @param mutant the mutant definition
+	 * @param selectedNodes the set of selected nodes to run the analysis on.
+	 * 
 	 */
-	public InteractionAnalysis(GsRegulatoryGraph  g, boolean opt_annotate, GsRegulatoryMutantDef mutant) {
+	public InteractionAnalysis(GsRegulatoryGraph  g, boolean opt_annotate, GsRegulatoryMutantDef mutant, HashSet selectedNodes) {
 		this.opt_annotate 		= opt_annotate;
 		this.mutant = mutant;
 		this.g = g;
 		this.gm = g.getGraphManager();
 		this.report = new Report();
+		this.selectedNodes = selectedNodes;
 		run();
+	}
+	public InteractionAnalysis(GsRegulatoryGraph  g, boolean opt_annotate, GsRegulatoryMutantDef mutant) {
+		this(g, opt_annotate, mutant, null);
 	}
 
 	/**
@@ -84,10 +88,9 @@ public class InteractionAnalysis {
 			mutant.apply(t_tree, g);
 		}
 		
-		List nodeOrder = g.getNodeOrder();
 		node_to_position = new HashMap((int) (gm.getVertexCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
 		int i = 0;
-		for (Iterator it = nodeOrder.iterator(); it.hasNext();) {							//Build the map m
+		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {							//Build the map m
 			node_to_position.put(it.next(), Integer.valueOf(i++));
 		}
 				
@@ -102,7 +105,7 @@ public class InteractionAnalysis {
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {					//  For each vertex v in the graph
 		    i++;
 			GsRegulatoryVertex target = (GsRegulatoryVertex) it.next();
-			if (target.isInput()) {
+			if (target.isInput() || (selectedNodes != null && !selectedNodes.contains(target))) { 	//skip the inputs or unselected nodes
 			    continue;
 			}
 			List l = gm.getIncomingEdges(target);												//  get the list l of incoming edges
@@ -121,7 +124,7 @@ public class InteractionAnalysis {
 			small_node_order_vertex = new GsRegulatoryVertex[l.size()];
 			small_node_order_level = new int[l.size()];
 			int m = 0;
-			for (Iterator it2 = nodeOrder.iterator(); it2.hasNext();) {
+			for (Iterator it2 = g.getNodeOrder().iterator(); it2.hasNext();) {
 				GsRegulatoryVertex source = (GsRegulatoryVertex) it2.next();				
 				if (gm.getEdge(source, target) != null) {
 					node_in_subtree.put(source, new Integer(m));
@@ -177,7 +180,7 @@ public class InteractionAnalysis {
 	}
 	/**
 	 * 
-	 * @return the Set of nonFunctionalInteractions or null if it has not been computed
+	 * @return the Map of functionality or null if it has not been computed
 	 */
 	public Map getFunctionality() {
 		return functionalityMap;
@@ -259,8 +262,7 @@ public class InteractionAnalysis {
 		}
 		if (hasJumpedNode) {
 			int added = i_leafs-current_i;
-			//log(" jump of "+current_i+"->"+i_leafs+" "+added+"  "+current_deep+" "+subtree_size[current_deep]+"\n");
-			for (int i = 0; i < subtree_size[current_deep]/added-1; i++) {
+			for (int i = 0; i < subtree_size[current_deep]/added-1; i++) { //The first pass has ben computed, copy the results for the others
 				for (int j = i_leafs; j < i_leafs+added; j++) {
 					leafs[j] = leafs[j-added];
 				}
@@ -375,7 +377,7 @@ public class InteractionAnalysis {
 		style.addStyle(STYLE_NEGATIVE);
 		style.addProperty(DocumentStyle.COLOR, new Color(246, 57, 53));
 		style.addStyle(STYLE_NONFUNCTIONAL);
-		style.addProperty(DocumentStyle.COLOR, new Color(230, 230, 0));
+		style.addProperty(DocumentStyle.COLOR, new Color(255, 255, 255));
 		style.addStyle(STYLE_DUAL);
 		style.addProperty(DocumentStyle.COLOR, new Color(16, 0, 255));
 		dw.setStyles(style);

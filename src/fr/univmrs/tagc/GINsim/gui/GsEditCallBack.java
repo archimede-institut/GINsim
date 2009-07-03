@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.gui;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -40,10 +41,29 @@ public class GsEditCallBack {
 	}
 	
 	/**
-	 * select all nodes
+	 * select all elements
 	 */
 	public void selectAll() {
 	    main.getGraph().getGraphManager().selectAll();
+	}
+	
+	/**
+	 * select all nodes
+	 */
+	public void selectAllNodes() {
+	    main.getGraph().getGraphManager().select(main.getGraph().getNodeOrder());
+	}
+	
+	/**
+	 * select all edges
+	 */
+	public void selectAllEdges() {
+		Set sel = new HashSet();
+		for (Iterator it = main.getGraph().getGraphManager().getEdgeIterator(); it.hasNext();) {
+			Object e = (Object) it.next();
+			sel.add(e);
+		}
+	    main.getGraph().getGraphManager().select(sel);
 	}
 	
 	/**
@@ -51,6 +71,40 @@ public class GsEditCallBack {
 	 */
 	public void invertSelection() {
 	    main.getGraph().getGraphManager().invertSelection();
+	}
+	
+	/**
+	 * select all previously unselected nodes and vice-versa
+	 */
+	public void invertEdgeSelection() {
+		Set sel, edges = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedEdgeIterator(); it.hasNext();) {
+			Object e = (Object) it.next();
+			edges.add(e);
+		}
+		sel = new HashSet();
+		for (Iterator it = main.getGraph().getGraphManager().getEdgeIterator(); it.hasNext();) {
+			Object e = (Object) it.next();
+			sel.add(e);
+		}
+		sel.removeAll(edges);
+		gm.select(sel);	
+	}
+	
+	/**
+	 * select all previously unselected nodes and vice-versa
+	 */
+	public void invertVertexSelection() {
+		Set sel, vertices = new HashSet();
+		GsGraphManager gm = main.getGraph().getGraphManager();
+		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+			Object v = (Object) it.next();
+			vertices.add(v);
+		}
+		sel = new HashSet(main.getGraph().getNodeOrder());
+		sel.removeAll(vertices);
+		gm.select(sel);	
 	}
 	
 	/**
