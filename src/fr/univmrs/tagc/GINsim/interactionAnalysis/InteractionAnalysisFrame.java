@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -18,7 +20,9 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -132,7 +136,14 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			colorizeButton.setText(Translator.getString("STR_interactionAnalysis_do_colorize"));
 			isColorized = false;
 		}
-		fii = new InteractionAnalysis((GsRegulatoryGraph)graph, getOption(0), (GsRegulatoryMutantDef) mutantStore.getObject(0));
+		HashSet selectedNodes = new HashSet();
+		for (Iterator it = graph.getGraphManager().getSelectedVertexIterator(); it.hasNext();) {
+			selectedNodes.add(it.next());
+		}
+		if (selectedNodes.size() == 0) {
+			selectedNodes = null;
+		}
+		fii = new InteractionAnalysis((GsRegulatoryGraph)graph, getOption(0), (GsRegulatoryMutantDef) mutantStore.getObject(0), selectedNodes);
 	    saveReportButton.setEnabled(true);
 		colorizeButton.setEnabled(true);
 		if (getOption(2)) {

@@ -69,7 +69,10 @@ public class GsActions implements GraphChangeListener {
 	private JMenu				addVertexMenu				= null;
 	private JMenu				recentMenu					= null;
 	private JMenu				editSelectMenu				= null;
-	private JMenu				editExtendSelecttionMenu	= null;
+	private JMenu				editExtendSelectionMenu		= null;
+	private JMenu				invertSelectionMenu			= null;
+	private JMenu				selectAllMenu				= null;
+
 
 	// Actions
 	private AbstractAction		actionClose;
@@ -85,7 +88,11 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionCopy;
 	private AbstractAction		actionPaste;
 	private AbstractAction		actionSelectAll;
+	private AbstractAction		actionSelectAllNodes;
+	private AbstractAction		actionSelectAllEdges;
 	private AbstractAction		actionInvertSelection;
+	private AbstractAction		actionInvertEdgeSelection;
+	private AbstractAction		actionInvertVertexSelection;
 	private AbstractAction		actionDelete;
 	private AbstractAction		actionUndo;
 	private AbstractAction		actionRedo;
@@ -163,7 +170,9 @@ public class GsActions implements GraphChangeListener {
 		addVertexMenu = new JMenu(Translator.getString("STR_addVertex"));
 		addEdgeMenu = new JMenu(Translator.getString("STR_addEdge"));
 		editSelectMenu = new JMenu(Translator.getString("STR_editSelectMenu"));
-		editExtendSelecttionMenu = new JMenu(Translator.getString("STR_editExtendSelecttionMenu"));
+		editExtendSelectionMenu = new JMenu(Translator.getString("STR_editExtendSelecttionMenu"));
+		invertSelectionMenu = new JMenu(Translator.getString("STR_invertSelectionMenu"));
+		selectAllMenu = new JMenu(Translator.getString("STR_selectAllMenu"));
 
 		// create calbacks
 		filecallback = new GsFileCallBack(mainFrame);
@@ -283,6 +292,26 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
+		actionSelectAllNodes = new BaseAction("STR_selectAllNodes", null,
+				"STR_selectAllNodes_descr", null) {
+
+			private static final long	serialVersionUID	= 8225661783758969807L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.selectAllNodes();
+			}
+		};
+
+		actionSelectAllEdges = new BaseAction("STR_selectAllEdges", null,
+				"STR_selectAllEdges_descr", null) {
+
+			private static final long	serialVersionUID	= 8225661783758969807L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.selectAllEdges();
+			}
+		};
+
 		actionInvertSelection = new BaseAction("STR_invertSelection", null,
 				"STR_invertSelection_descr",  KeyStroke.getKeyStroke(KeyEvent.VK_A,
 						mask | ActionEvent.SHIFT_MASK)) {
@@ -291,6 +320,26 @@ public class GsActions implements GraphChangeListener {
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
 				editcallback.invertSelection();
+			}
+		};
+
+		actionInvertEdgeSelection = new BaseAction("STR_invertEdgeSelection", null,
+				"STR_invertEdgeSelection_descr",  null) {
+
+			private static final long	serialVersionUID	= -2792926833599149035L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.invertEdgeSelection();
+			}
+		};
+
+		actionInvertVertexSelection = new BaseAction("STR_invertVertexSelection", null,
+				"STR_invertEdgeSelection_descr",  null) {
+
+			private static final long	serialVersionUID	= -2792926833599149035L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				editcallback.invertVertexSelection();
 			}
 		};
 
@@ -579,22 +628,30 @@ public class GsActions implements GraphChangeListener {
 		editMenu.add(addVertexMenu);
 		editMenu.add(addEdgeMenu);
 		editMenu.add(new JSeparator());
-		editMenu.add(actionSelectAll);
-		editMenu.add(actionInvertSelection);
 		editMenu.add(actionSearchNode);
 		editMenu.add(new JSeparator());
 		editMenu.add(editSelectMenu);
-		editMenu.add(editExtendSelecttionMenu);
-		
+		editMenu.add(selectAllMenu);
+		editMenu.add(editExtendSelectionMenu);
+		editMenu.add(invertSelectionMenu);
+
+		invertSelectionMenu.add(actionInvertSelection);
+		invertSelectionMenu.add(actionInvertVertexSelection);
+		invertSelectionMenu.add(actionInvertEdgeSelection);
+
+		selectAllMenu.add(actionSelectAll);
+		selectAllMenu.add(actionSelectAllNodes);
+		selectAllMenu.add(actionSelectAllEdges);
+
 		editSelectMenu.add(actionSelectIncomingVertices);
 		editSelectMenu.add(actionSelectOutgoingVertices);
 		editSelectMenu.add(actionSelectIncomingArcs);
 		editSelectMenu.add(actionSelectOutgoingArcs);
 		
-		editExtendSelecttionMenu.add(actionExtendSelectionToIncomingVertices);
-		editExtendSelecttionMenu.add(actionExtendSelectionToOutgoingVertices);
-		editExtendSelecttionMenu.add(actionExtendSelectionToIncomingArcs);
-		editExtendSelecttionMenu.add(actionExtendSelectionToOutgoingArcs);
+		editExtendSelectionMenu.add(actionExtendSelectionToIncomingVertices);
+		editExtendSelectionMenu.add(actionExtendSelectionToOutgoingVertices);
+		editExtendSelectionMenu.add(actionExtendSelectionToIncomingArcs);
+		editExtendSelectionMenu.add(actionExtendSelectionToOutgoingArcs);
 		
 		actionMenu.add(layoutMenu);
 
