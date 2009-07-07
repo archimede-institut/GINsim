@@ -7,23 +7,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
@@ -31,7 +26,8 @@ import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.document.DocumentWriter;
-import fr.univmrs.tagc.common.document.XHTMLDocumentWriter;
+import fr.univmrs.tagc.common.document.GenericDocumentFileChooser;
+import fr.univmrs.tagc.common.document.GenericDocumentFormat;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -41,7 +37,6 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	private Container mainPanel;
 	private JCheckBox[] runOptions;
 	private JButton colorizeButton, saveReportButton;
-	private JFileChooser jfc = null;
 	
 	private InteractionAnalysis fii;
 	private boolean isColorized = false;
@@ -50,6 +45,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	
 	private static final long serialVersionUID = -9126723853606423085L;
 	private static final String OPT_COLORBYDEFAULT = "functionalityAnalysis.colorByDefault";
+	private static final String OPT_REPORTDIRECTORY = "functionalityAnalysis.reportDirectory";
 
 	public InteractionAnalysisFrame(JFrame parent, String id, int w, int h) {
 		super(parent, id, w, h);
@@ -167,15 +163,14 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 				}
 			}
 		} else if (e.getSource() == saveReportButton){
-			File f;
 			try {
-				f = chooseFile();
-				if (f != null) {
-					DocumentWriter doc = new XHTMLDocumentWriter();
-					doc.setOutput(f);
+				Object[] fileAndFormat = GenericDocumentFileChooser.saveDialog(OPT_REPORTDIRECTORY, this);
+				if (fileAndFormat != null) {
+					DocumentWriter doc = (DocumentWriter)((GenericDocumentFormat)fileAndFormat[1]).documentWriterClass.newInstance();
+					doc.setOutput((File)fileAndFormat[0]);
 					if (fii != null) fii.saveReport(doc);
 				}
-			} catch (IOException e1) {
+			} catch (Exception ex) {
 				Tools.error("An error has occured while saving", this.frame);
 			}
 		}
@@ -210,34 +205,4 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		}
 		super.cancel();
 	}
-	
-	private File chooseFile() throws IOException {
-        int returnVal = getJfc().showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = jfc.getSelectedFile();
-            OptionStore.setOption("currentDirectory", file.getParent());
-            return file;
-        }
-        return null;
-	}
-	
-	private JFileChooser getJfc() {
-       File curDir = null;
-       if (jfc != null) {
-           curDir = jfc.getCurrentDirectory();
-       } else {
-           String path = (String)OptionStore.getOption("currentDirectory");
-           if (path != null) {
-               curDir = new File(path);
-           }
-       }
-       if (curDir != null && !curDir.exists()) {
-           curDir = null;
-       }
-       jfc = new JFileChooser(curDir);
-       GsFileFilter ffilter = new GsFileFilter();
-       ffilter.setExtensionList(new String[] {"html"}, "html files");
-       jfc.setFileFilter(ffilter);
-       return jfc;
-   }
 }

@@ -43,11 +43,10 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
 public class GenericDocumentExport extends GsAbstractExport {
 	static public Vector v_format = new Vector();
 	static {
-		v_format.add(new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", new String[] {"html"}, "xHTML files (.html)", ".html"));
-		v_format.add(new GenericDocumentFormat(OOoDocumentWriter.class, "OpenOffice.org", new String[] {"odt"}, "OpenOffice.org files (.odt)", ".odt"));
-        v_format.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", new String[] {"txt"}, "Text files (.txt)", ".txt"));
-        // LaTeX export disabled as it is not ready for complex documents with large tables
-        // v_format.add(new GenericDocumentFormat(LaTeXDocumentWriter.class, "LaTeX", new String[] {"tex"}, "LaTeX files (.tex)", ".tex"));
+		for (Iterator it = GenericDocumentFormat.getAllFormats().iterator(); it.hasNext();) {
+			GenericDocumentFormat format = (GenericDocumentFormat) it.next();
+			v_format.add(GenericDocumentExportFormat.createFrom(format));
+		}
 	}
 
 	private GsExportConfig config = null;
@@ -62,14 +61,7 @@ public class GenericDocumentExport extends GsAbstractExport {
     public GenericDocumentExport() {
 		id = "Documentation";
     }
-    /**
-     * Allow you to register a new document writer to support a new file type.
-     * @see GenericDocumentFormat
-     */
-    protected static void addSubFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
-    	v_format.add(new GenericDocumentFormat(documentWriterClass, id, filter, filterDescr, extension));
-    }
-   
+
     /**
      * get a vector of all the GenericDocumentFormat the genericDocument can use.
      */
@@ -94,7 +86,6 @@ public class GenericDocumentExport extends GsAbstractExport {
 			config.setSpecificConfig(specConfig);
 		}
 		try {
-			System.out.println(config.getFilename());
 			this.doc = (DocumentWriter) documentWriterClass.newInstance();
 			this.doc.setOutput(new File(config.getFilename()));
 		} catch (Exception e) {
@@ -636,7 +627,7 @@ class GDExportConfigPanel extends JPanel {
 /**
  * This class contain the informations 
  */
-class GenericDocumentFormat extends GenericDocumentExport {
+class GenericDocumentExportFormat extends GenericDocumentExport {
 	/**
 	 * Define a new generic document format.
 	 * @param documentWriterClass : The DocumentWriter sub-class for the format
@@ -645,7 +636,7 @@ class GenericDocumentFormat extends GenericDocumentExport {
 	 * @param fillterDescr : a description
 	 * @param extention : the extetion to add to the exported file
 	 */
-	public GenericDocumentFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
+	public GenericDocumentExportFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
 		this.documentWriterClass = documentWriterClass;
 		this.id = id;
 		this.filter = filter;
@@ -653,6 +644,10 @@ class GenericDocumentFormat extends GenericDocumentExport {
 		this.extension = extension;		
 	}
 	
+	public static GenericDocumentExportFormat createFrom(GenericDocumentFormat format) {
+		return new GenericDocumentExportFormat(format.documentWriterClass, format.id, format.extensionArray, format.filterDescr, format.defaultExtension);
+	}
+
 	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
 		return null;
 	}

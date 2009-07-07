@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.common;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.jgraph.util.BrowserLauncher;
@@ -254,7 +254,7 @@ public class Tools {
 	 * @return true if we can create this file or if the user accepts to overwrite it
 	 * @throws GsException if an error occured
 	 */
-	public static boolean isFileWritable(String string, JFrame frame) throws GsException {
+	public static boolean isFileWritable(String string, Component frame) throws GsException {
 		if (string == null || string.equals("")) {
 			return false;
 		}
@@ -359,7 +359,7 @@ public class Tools {
      * @param e
      * @param main
      */
-    public static void error(GsException e, JFrame main) {
+    public static void error(GsException e, Component main) {
         int i = -1;
         switch (e.getGravity()) {
             case GsException.GRAVITY_INFO:
@@ -383,7 +383,7 @@ public class Tools {
      * @param s
      * @param main
      */
-    public static void error(String s, JFrame main) {
+    public static void error(String s, Component main) {
         if (HASGUI) {
             JOptionPane.showMessageDialog(main, s+"\n", "error",JOptionPane.ERROR_MESSAGE);
         } else {
