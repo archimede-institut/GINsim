@@ -10,11 +10,12 @@ import java.util.Set;
 
 import org.xml.sax.SAXException;
 
+import fr.univmrs.tagc.GINsim.export.generic.Dotify;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
 
-public class GsDynamicalHierarchicalNode {
+public class GsDynamicalHierarchicalNode implements Dotify {
 	public static GsGraphManager rgm;
 	private static long nextId = 0;
 		
@@ -646,4 +647,18 @@ public class GsDynamicalHierarchicalNode {
 			throw new SAXException(e);
 		}
 	}
+
+	public String toDot() {
+		String options;
+    	if (this.getType() == GsDynamicalHierarchicalNode.TYPE_CYCLE) 				options = "shape=ellipse,style=filled,color=\"#C8E4A5\"";
+    	else if (this.getType() == GsDynamicalHierarchicalNode.TYPE_STABLE_STATE) 	options = "shape=box,style=filled, width=\"1.1\", height=\"1.1\",color=\"#9CBAEB\"";
+    	else if (this.getType() == GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE) options = "shape=circle,style=filled, width=\"1.1\", height=\"1.1\",color=\"#F5AC6F\"";
+    	else 																		options = "shape=point,style=filled,color=\"#00FF00\"";
+		return  this.getUniqueId()+" [label=\""+this.toString()+"\", "+options+"];";
+	}
+	
+	public String toDot(Object to) {
+		return  this.getUniqueId()+" -> "+((GsDynamicalHierarchicalNode) to).getUniqueId()+";";
+	}
+	
 }

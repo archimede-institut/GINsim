@@ -45,10 +45,12 @@ public class GsGraphvizEncoder {
             // Process Nodes
 	        while (it.hasNext()) {
 	        	Object vertex = it.next();
-	        	out.write("\n\t" +
-               vertex +
-			   " [label=\"" + vertex + "\", " +
-			   "shape=\"box\"];");
+	        	if (vertex instanceof Dotify) {
+	        		out.write(((Dotify) vertex).toDot());
+	        	} else {
+		        	out.write("\n\t"+vertex+" [label=\"" + vertex + "\", shape=\"box\"];");
+	        	}
+
 	        }
 
 	        // Process Edges
@@ -62,9 +64,13 @@ public class GsGraphvizEncoder {
 	        	Object from = null;
 	        	Object to = null;
 	        	if (edge instanceof GsDirectedEdge) {
-                  from = ((GsDirectedEdge)edge).getSourceVertex();
-                  to = ((GsDirectedEdge)edge).getTargetVertex();
-                  out.write("\n\t" + from + " -> " + to + ";");
+        			from = ((GsDirectedEdge)edge).getSourceVertex();
+                	to = ((GsDirectedEdge)edge).getTargetVertex();	        			
+	        		if (from instanceof Dotify) {
+	                    out.write("\n\t"+((Dotify) from).toDot(to));
+	        		} else {
+	                    out.write("\n\t" + from + " -> " + to + ";");
+	        		}
 	        	}
 	        }
 	
