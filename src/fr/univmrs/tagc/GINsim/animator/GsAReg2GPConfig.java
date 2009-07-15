@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.aRegGraph;
+package fr.univmrs.tagc.GINsim.animator;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

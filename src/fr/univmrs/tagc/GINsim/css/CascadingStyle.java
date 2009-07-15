@@ -223,6 +223,34 @@ public class CascadingStyle {
 		}
 	}
 
+	/**
+	 * store all the nodes from the collection nodes.
+	 * @param nodes a collection of nodes to store
+	 * @param areader a vertex attributesReader
+	 */
+	public void storeAllNodes(Collection nodes, GsVertexAttributesReader areader) {
+		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
+			Object node = it_nodes.next();
+			areader.setVertex(node);
+			VertexStyle style = new VertexStyle(areader);
+			old_nodes.put(node, style);
+		}
+	}
+
+	/**
+	 * store all the nodes from the collection nodes.
+	 * @param nodes a collection of nodes to store
+	 * @param areader a vertex attributesReader
+	 */
+	public void storeAllEdges(Collection edges, GsEdgeAttributesReader areader) {
+		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {
+			Object edge = it_edges.next();
+			areader.setEdge(edge);
+			EdgeStyle style = new EdgeStyle(areader);
+			old_edges.put(edge, style);
+		}
+	}
+
 	public Map getOldNodes() {
 		return old_nodes;
 	}

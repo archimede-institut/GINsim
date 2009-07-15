@@ -11,7 +11,7 @@ import java.util.Vector;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 
-import fr.univmrs.tagc.GINsim.aRegGraph.GsAReg2GPConfig;
+import fr.univmrs.tagc.GINsim.animator.GsAReg2GPConfig;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;

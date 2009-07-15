@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.jgraph;
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -573,4 +574,12 @@ public class GsJgraphtGraphManager extends GsGraphManager {
     	}
     	return null;
     }
+
+	public Collection getAllEdges() {
+		return g.edgeSet();
+	}
+
+	public Collection getAllVertex() {
+		return g.vertexSet();
+	}
 }

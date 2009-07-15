@@ -28,7 +28,7 @@
 		<plugin name="SnakesExport"				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"/>
 
 		<!-- other plugins -->
-		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.aRegGraph.GsARegGraphPlugin"/>
+		<plugin name="animate" 					mainClass="fr.univmrs.tagc.GINsim.animator.GsARegGraphPlugin"/>
 		<plugin name="tb" 						mainClass="fr.univmrs.tagc.GINsim.gui.tbclient.GsTBPlugin"/>
 		<plugin name="jython" load="false"		mainClass="fr.univmrs.tagc.GINsim.jython.JythonPlugin"/>
 	</listOfPlugins>

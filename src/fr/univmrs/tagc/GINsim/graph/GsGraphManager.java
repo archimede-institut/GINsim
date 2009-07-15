@@ -419,4 +419,7 @@ abstract public class GsGraphManager {
 	public BufferedImage getImage() {
 		return null;
 	}
+	
+	abstract public Collection getAllEdges();
+	abstract public Collection getAllVertex();
 }
