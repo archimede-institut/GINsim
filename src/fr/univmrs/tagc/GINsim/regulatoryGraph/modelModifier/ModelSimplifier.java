@@ -60,6 +60,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 	Map m_removed;
 	boolean strict;
 	ParameterGenerator pgen;
+	
+	long cplx_counter;
 
 	public ModelSimplifier(GsRegulatoryGraph graph, ModelSimplifierConfig config, ModelSimplifierConfigDialog dialog, boolean start) {
 		this.graph = graph;
@@ -80,6 +82,7 @@ public class ModelSimplifier extends Thread implements Runnable {
         }
     }
     public GsRegulatoryGraph do_reduction() {
+        cplx_counter = 0;
 		Iterator it;
 		try {
 			// first do the "real" simplification work
@@ -392,6 +395,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				    param.copy_to(new_param, m_alldata);
 				}
 			}
+			System.out.println("cplx counter: "+cplx_counter);
 			return simplifiedGraph;
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -464,7 +468,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * @return
 	 */
 	public OmddNode remove(OmddNode node, OmddNode regulator, int level) throws GsException {
-		
+		cplx_counter++;
 		if (node.next == null || node.level > level) {
 			return node;
 		}
@@ -514,6 +518,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * @return
 	 */
 	public OmddNode remove(OmddNode[] t_ori, OmddNode regulator) {
+	    cplx_counter++;
 		if (regulator.next == null) {
 			return t_ori[regulator.value];
 		}

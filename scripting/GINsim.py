@@ -12,6 +12,7 @@ from fr.univmrs.tagc.GINsim.reg2dyn import  BatchReg2dynFrame
 from fr.univmrs.tagc.GINsim.reg2dyn import GsSimulationParametersManager
 from fr.univmrs.tagc.GINsim.regulatoryGraph.initialState import GsInitialState
 from fr.univmrs.tagc.GINsim.connectivity import AlgoConnectivity
+from fr.univmrs.tagc.GINsim.animator import GsRegulatoryAnimator
 
 # initial states
 from fr.univmrs.tagc.GINsim.regulatoryGraph.initialState import GsInitialStateManager
@@ -169,6 +170,9 @@ def name_state(state, graph):
     name = BatchReg2dynFrame.nameState(state, graph)
     return name
 
+def get_graph_coloriser(graph):
+    "get a graph coloriser: colorise acording to states. Don't forget to call endColorization() when you are done"
+    return GsRegulatoryAnimator(graph)
 if __name__ == "__main__":
     # quick tests / examples
     

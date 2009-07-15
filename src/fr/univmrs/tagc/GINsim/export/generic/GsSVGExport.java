@@ -173,7 +173,7 @@ public class GsSVGExport {
     private static void writeEdge(FileWriter out, Rectangle2D box1, Rectangle2D box2, GsEdgeAttributesReader ereader, Map markers) throws IOException {
         String color = "#"+Tools.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
-        String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
+        String marker = addMarker(out, markers, ereader.getLineEnd(), color, true, w);
         out.write("    <path " +
                 " stroke=\""+color+"\""+
                 " stroke-width=\""+w+"\""+
@@ -199,10 +199,10 @@ public class GsSVGExport {
         boolean intersect = l_point.size() < 3 || ereader.getStyle() == GsEdgeAttributesReader.STYLE_CURVE;
         // replace first and last points by bounding box points
         if (box1 != null) {
-            l_point.set(0, getIntersection(box1, (Point2D)l_point.get(1), intersect));
+            l_point.set(0, getIntersection(box1, (Point2D)l_point.get(1), intersect, w));
         }
         if (box2 != null) {
-            l_point.set(l_point.size()-1, getIntersection(box2, (Point2D)l_point.get(l_point.size()-2), intersect));
+            l_point.set(l_point.size()-1, getIntersection(box2, (Point2D)l_point.get(l_point.size()-2), intersect, w));
         }
         Point2D pt1 = (Point2D)l_point.get(l_point.size()-2);
         Point2D pt2 = (Point2D)l_point.get(l_point.size()-1);
@@ -249,7 +249,7 @@ public class GsSVGExport {
     	out.write("\"/>\n");
     }
     
-    private static Point2D getIntersection(Rectangle2D box, Point2D point, boolean intersect) {
+    private static Point2D getIntersection(Rectangle2D box, Point2D point, boolean intersect, float width) {
         if (box == null || box.contains(point)) {
             return point;
         }
@@ -261,6 +261,7 @@ public class GsSVGExport {
         maxy = box.getMaxY();
         px = point.getX();
         py = point.getY();
+        double offset = width/2 + 2;
 
         if (intersect) {        // compute intersection of the box with the line from its center to the point
             double centerx = box.getCenterX(), centery = box.getCenterY();
@@ -273,37 +274,37 @@ public class GsSVGExport {
             double boxRatio = box.getWidth() / box.getHeight();
             if (Math.abs(ratio) > boxRatio) {     // crosses on one of the vertical sides
                 if (dx > 0) {
-                    resultx = maxx;
+                    resultx = maxx + offset;
                     resulty = centery + (maxx-centerx)/ratio;
                 } else {
-                    resultx = minx;
+                    resultx = minx - offset;
                     resulty = centery - (maxx-centerx)/ratio;
                 }
             } else {                    // crosses on one of the horizontal sides
                 if (dy > 0) {
-                    resulty = maxy;
+                    resulty = maxy + offset;
                     resultx = centerx + (maxy-centery)*ratio;
                 } else {
-                    resulty = miny;
+                    resulty = miny - offset;
                     resultx = centerx - (maxy-centery)*ratio;
                 }
             }
             
         } else {                        // find the closest point in the bounding box
             if (px > maxx) {
-                resultx = maxx;
+                resultx = maxx + offset;
             } else if (px < minx) {
-                resultx = minx;
+                resultx = minx - offset;
             } else {
-                resultx = px;
+                resultx = px;   // FIXME: slip by a few pixels ?
             }
     
             if (py > maxy) {
-                resulty = maxy;
+                resulty = maxy + offset;
             } else if (py < miny) {
-                resulty = miny;
+                resulty = miny - offset;
             } else {
-                resulty = py;
+                resulty = py;  // FIXME: slip by a few pixels ?
             }
         }
         Point r = new Point((int)resultx, (int)resulty);
@@ -321,30 +322,36 @@ public class GsSVGExport {
      * @return the id of the corresponding marker
      * @throws IOException
      */
-    private static String addMarker(FileWriter out, Map m_marker, int markerType, String color, boolean fill) throws IOException {
-        String id = "Marker_"+markerType+"_"+color.substring(1)+"_"+fill;
+    private static String addMarker(FileWriter out, Map m_marker, int markerType, String color, boolean fill, float stroke) throws IOException {
+        String id = "Marker_"+markerType+"_"+color.substring(1)+"_"+fill+"_"+stroke;
         if (!m_marker.containsKey(id)) {
 	        out.write("  <defs>\n");
 	        out.write("    <marker\n"+
                       "      markerWidth=\"2\""+
                       "      markerHeight=\"2\""+
-	                  "      id=\""+id+"\"\n");
+                      "      markerUnits=\"userSpaceOnUse\"" +
+	                  "      id=\""+id+"\"" +
+	                  "      orient=\"auto\">\n" +
+	                  "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
+	        double v,w;
+            float offset = stroke/2;
             switch (markerType) {
 	        	case GsEdgeAttributesReader.ARROW_NEGATIVE:
-			        out.write("      orient=\"auto\">\n"+
-			                  "      <path stroke=\""+color+"\" fill=\""+color+"\" d=\"M -2 -4 L -2 4 z\"/>\n");
+	        	    v = stroke<3 ? 5 : 1.8*stroke;
+			        out.write("stroke-width=\""+stroke+"\" d=\"M 0 -"+v+" L 0 "+v+" z\"/>\n");
 			        break;
 	        	case GsEdgeAttributesReader.ARROW_UNKNOWN:
-			        out.write("      orient=\"auto\">\n"+
-                              "      <path stroke=\""+color+"\" fill=\""+color+"\" d=\"M -4,0 a2,2 -30 1,0 0,-0.1\"/>\n");
+                    v = stroke<3 ? 4 : 1.5*stroke;
+			        out.write("d=\"M -4,0 a2,2 -30 1,0 0,-0.1\"/>\n");
 			        break;
                 case GsEdgeAttributesReader.ARROW_DOUBLE:
-                    out.write("      orient=\"auto\">\n"+
-                              "      <path stroke=\""+color+"\" fill=\""+color+"\" d=\"M -7 -4 L -7 4  -7 0 -5 0 -5 -3 L 0 0 L -5 3 -5 0 z\"/>\n");
+                    v = stroke<3 ? 4 : 1.5*stroke;
+                    out.write("d=\"M -7 -"+v+" L -7 "+v+"  -7 0 -5 0 -5 -3 L 0 0 L -5 3 -5 0 z\"/>\n");
                     break;
             	default:
-			        out.write("      orient=\"auto\">\n"+
-			                  "      <path stroke=\""+color+"\" fill=\""+color+"\" d=\"M -5 -3 L 0 0 L -5 3 z\"/>\n");
+                    v = (stroke<3 ? 6 : 2.2*stroke) - offset;
+            	    w = stroke<3 ? 4.5 : 1.3*stroke;
+			        out.write("d=\"M -"+v+" -"+w+" L "+offset+" 0 L -"+v+" "+w+" L -"+0.2*v+" 0 z\"/>\n");
             }
 	        out.write("    </marker>\n");
 	        out.write("  </defs>\n");

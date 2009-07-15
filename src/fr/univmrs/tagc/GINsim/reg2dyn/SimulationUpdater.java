@@ -49,6 +49,12 @@ abstract public class SimulationUpdater implements Iterator {
 		doBuildNext();
 		return ret;
 	}
+    public byte[] nextState() {
+        byte[] ret = next;
+        doBuildNext();
+        return ret;
+    }
+	
 	public void remove() {
 	}
 
