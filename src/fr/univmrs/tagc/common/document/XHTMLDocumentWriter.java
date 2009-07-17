@@ -76,6 +76,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
                 xmlw.addAttr("rel", "stylesheet");
                 xmlw.addAttr("type", "text/css");
                 xmlw.addAttr("href", (String)documentProperties.get("css"));
+        		xmlw.closeTag();//link
             }
     		doWriteStyles();
     		
@@ -202,6 +203,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		xmlw.addContent(content);
 		xmlw.closeTag();
 	}
+
 	protected void doOpenList(String style) throws IOException {
 		boolean numbered = false;
 		if (style != null) {
