@@ -193,4 +193,8 @@ public class StableTableModel extends AbstractTableModel {
 		}
 		return (byte[])v_stable.get(checkIndex);
 	}
+
+	public byte[] getState(int selectedRow) {
+		return (byte[])v_stable.get(selectedRow);
+	}
 }

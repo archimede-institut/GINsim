@@ -16,6 +16,8 @@ import fr.univmrs.tagc.GINsim.graph.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraph;
+import fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraphSelector;
 
 /**
  * Main class of the animator plugin.
@@ -41,9 +43,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
 
     private JFrame frame;
 
-	private GsAnimatorSelector selector;
-
-	private CascadingStyle cs;
+	private GsStateInRegGraph colorizer;
     
     /**
      * @param frame
@@ -91,7 +91,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         this.regGraph = regGraph;
         this.dynGraph = null;
         nodeOrder = regGraph.getNodeOrder();
-        initColorization();
+        colorizer = new GsStateInRegGraph(regGraph);
     }
 
     /**
@@ -103,7 +103,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         regGraph.addBlockEdit(this);
         dynGraph.addBlockClose(this);
         dynGraph.addBlockEdit(this);
-        initColorization();
+        colorizer = new GsStateInRegGraph(regGraph);
         dynGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
         ui = new GsAnimatorUI(frame, this);
     }
@@ -118,7 +118,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         
         dynGraph.getGraphManager().getEventDispatcher().removeGraphChangeListener(this);
         revertPath(0);
-        endColorization();
+        colorizer.restoreColorization();
         
         regGraph.removeBlockClose(this);
         regGraph.removeBlockEdit(this);
@@ -128,27 +128,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
             pathPlayer.notify();
         }
     }
-    
-    /**
-     * Must be called before using colorizeGraph()
-     */
-    public void initColorization() {
-        cs = new CascadingStyle(false);  //Create a cs and save the current color manually
-        cs.storeAllEdges(regGraph.getGraphManager().getAllEdges(), regGraph.getGraphManager().getEdgeAttributesReader());
-        cs.storeAllNodes(regGraph.getNodeOrder(), regGraph.getGraphManager().getVertexAttributesReader());
-		selector = new GsAnimatorSelector(regGraph);		
-	}
-
-    /**
-     * Must be called after using colorizeGraph()
-     */
-   public void endColorization() {
-        cs.restoreAllEdges(regGraph.getGraphManager().getEdgeAttributesReader());  //Restore the original color of the regulatory graph
-        cs.restoreAllNodes(regGraph.getGraphManager().getVertexAttributesReader());
-	}
-
-
-    
+        
     protected void add2path (Object vertex) {
         if (vertex == null || !(vertex instanceof GsDynamicNode)) {
             return;
@@ -207,40 +187,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
             dynGas.ereader.refresh();
         }
     }
-    
-    /**
-     * colorize the regulatory graph according to a given state (node of the dynamic graph).
-     * 
-     * @param state
-     */
-    protected void colorizeGraph(byte[] state) {
-        if (state == null || state.length != nodeOrder.size()) {
-            return;
-        }
-        selector.setState(state);
         
-        GsVertexAttributesReader vreader = regGraph.getGraphManager().getVertexAttributesReader();
-        GsEdgeAttributesReader ereader = regGraph.getGraphManager().getEdgeAttributesReader();
-        
-        cs.restoreAllEdges(regGraph.getGraphManager().getAllEdges(), ereader);
-        for (int i=0 ; i<state.length ; i++) {
-            GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
-                        
-            // apply the vertex's color
-            
-            vreader.setVertex(vertex);
-            cs.applyOnNode(selector, vertex, vreader);
-            
-            // colorize edges
-            List l_edge = regGraph.getGraphManager().getOutgoingEdges(vertex);
-            for (int j=0 ; j<l_edge.size() ; j++) {
-                GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)l_edge.get(j)).getUserObject();
-                ereader.setEdge(edge);
-                cs.applyOnEdge(selector, edge, ereader);
-            }
-        }
-    }
-    
     /**
      * rewind the path.
      * basically revert all color changes made on the dyngraph and eventually apply back
@@ -272,7 +219,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     }
     public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
         if (event.getNbEdge() == 0 && event.getNbVertex() == 1) {
-            colorizeGraph( ((GsDynamicNode)event.getV_vertex().get(0)).state );
+            colorizer.colorizeGraph( ((GsDynamicNode)event.getV_vertex().get(0)).state );
             add2path(event.getV_vertex().get(0));
         }
     }
@@ -349,7 +296,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
      * @param i index of the selected element in the path list
      */
     public void colorizeGraph(int i) {
-        colorizeGraph(((GsDynamicNode)path.get(i)).state);
+        colorizer.colorizeGraph(((GsDynamicNode)path.get(i)).state);
         ui.setSelected(i);
     }
     

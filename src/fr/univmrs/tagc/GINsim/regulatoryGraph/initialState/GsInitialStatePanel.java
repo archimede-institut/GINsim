@@ -22,6 +22,7 @@ import fr.univmrs.tagc.common.widgets.Label;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 import fr.univmrs.tagc.common.widgets.StockButton;
 
+
 public class GsInitialStatePanel extends JPanel {
     private static final long serialVersionUID = -572201856207494392L;
     

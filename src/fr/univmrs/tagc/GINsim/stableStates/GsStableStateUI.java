@@ -30,6 +30,7 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 		super(graph.getGraphManager().getMainFrame(), "display.stableStates", 200, 100);
 		this.graph = graph;
 		setTitle(Translator.getString("STR_stableStates"));
+
 		Container panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		
