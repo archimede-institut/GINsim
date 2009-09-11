@@ -171,6 +171,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 					if (fii != null) fii.saveReport(doc);
 				}
 			} catch (Exception ex) {
+				ex.printStackTrace();
 				Tools.error("An error has occured while saving", this.frame);
 			}
 		}

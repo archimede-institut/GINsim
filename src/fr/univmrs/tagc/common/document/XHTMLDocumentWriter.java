@@ -43,6 +43,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 
 	public XHTMLDocumentWriter() {
 		registerForDocumentExtra("javascript");
+		registerForDocumentExtra("css");
 	}
 
 	public void startDocument() throws IOException {
@@ -85,6 +86,14 @@ public class XHTMLDocumentWriter extends DocumentWriter {
     			xmlw.openTag("script");
     			xmlw.addAttr("type", "text/javascript");
     			xmlw.addFormatedContent(javascript.toString(), false);
+    			xmlw.closeTag();
+    		}
+    		
+    		StringBuffer css = getDocumentExtra("css");
+    		if (javascript.length() > 0) {
+    			xmlw.openTag("style");
+    			xmlw.addAttr("type", "text/css");
+    			xmlw.addFormatedContent(css.toString(), false);
     			xmlw.closeTag();
     		}
     		

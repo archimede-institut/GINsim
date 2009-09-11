@@ -10,6 +10,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
 import fr.univmrs.tagc.common.manageressources.Translator;
@@ -41,7 +42,10 @@ public class InteractionAnalysis {
 	static final byte FUNC_POSITIVE = 2;
 	static final byte FUNC_NEGATIVE = 3;
 	static final byte FUNC_DUAL = 4;
-	
+	static final String STYLE_POSITIVE = "positive"; 
+	static final String STYLE_NEGATIVE = "negative"; 
+	static final String STYLE_NONFUNCTIONAL = "nonFunctional"; 
+	static final String STYLE_DUAL = "dual"; 	
 	
 	/**
 	 * 
@@ -146,8 +150,8 @@ public class InteractionAnalysis {
 //					GsRegulatoryEdge e = me.getEdge(k);
 					SourceItem sourceItem = report.reportFor(target, source);
 					currentSource = sourceItem.reportItems;
-					int functionality = computeFunctionality(source.getMaxValue()+1, ((Integer)node_in_subtree.get(source)).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
-					sourceItem.sign = (byte) functionality;
+					byte functionality = computeFunctionality(source.getMaxValue()+1, ((Integer)node_in_subtree.get(source)).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
+					sourceItem.sign = functionality;
 					String res;
 					if (functionality == FUNC_POSITIVE) {
 						res = "positive";
@@ -298,8 +302,8 @@ public class InteractionAnalysis {
 					int high = leafs[index+size_of_subtree];
 					
 					ri = new ReportItem();
-					ri.valL = (byte) low;
-					ri.valR = (byte) high;
+					ri.targetValue_low = (byte) low;
+					ri.targetValue_high = (byte) high;
 					currentPath = new LinkedList();
 					log_path(index, node_index, ri, subtree_size_t, small_node_order);
 					
@@ -346,12 +350,11 @@ public class InteractionAnalysis {
 			byte count = (byte) (index/subtree_size_t[k+1]%(v.getMaxValue()+1));
 			if (k != node_index) {
 				PathItem pi = new PathItem();
-				pi.valL = count;
+				pi.targetValue_low = count;
 				pi.vertex = v;
 				currentPath.add(pi);
 			} else {
-				ri.svalL = count;
-				ri.svalR = (byte) (count+1);
+				ri.sourceValue_low = count;
 			}
 		}
 	}
@@ -365,92 +368,157 @@ public class InteractionAnalysis {
 		}
 	}
 
-	public void saveReport(DocumentWriter dw) throws IOException {	
-		final String STYLE_POSITIVE = "positive"; 
-		final String STYLE_NEGATIVE = "negative"; 
-		final String STYLE_NONFUNCTIONAL = "nonFunctional"; 
-		final String STYLE_DUAL = "dual"; 
-		
+	public void saveReport(DocumentWriter dw) throws IOException {			
 		DocumentStyle style = new DocumentStyle();
 		style.addStyle(STYLE_POSITIVE);
 		style.addProperty(DocumentStyle.COLOR, new Color(67, 200, 75));
 		style.addStyle(STYLE_NEGATIVE);
 		style.addProperty(DocumentStyle.COLOR, new Color(246, 57, 53));
 		style.addStyle(STYLE_NONFUNCTIONAL);
-		style.addProperty(DocumentStyle.COLOR, new Color(255, 255, 255));
+		style.addProperty(DocumentStyle.COLOR, new Color(0, 0, 0));
 		style.addStyle(STYLE_DUAL);
 		style.addProperty(DocumentStyle.COLOR, new Color(16, 0, 255));
 		dw.setStyles(style);
+		
+		StringBuffer css = dw.getDocumentExtra("css");
+		css.append("  h2,h3,h4 {display:none;}\n" +
+			"  th, td, tr {border: 1px solid black;}\n" +
+			"  table {width: auto; margin: 2px;}\n" +
+			"  .summary>tbody>tr>th {background-color: blue; color: white}\n" +
+			"  .summary td {background-color: lightblue}\n" +
+			"  .summary td table, .summary td table td {background-color: lightgreen}\n" +
+			"  .summary table th {background-color: green; color: white}\n" +
+			"  th span {font-size: 60%;}"
+		);
+		
+		
+		StringBuffer javascript = dw.getDocumentExtra("javascript");
+		javascript.append(Tools.readFromFile("src/fr/univmrs/tagc/GINsim/interactionAnalysis/interactionAnalysis.js"));
 		
 		dw.startDocument();
 		dw.openHeader(1, Translator.getString("STR_interactionAnalysis"), null);
 		dw.openParagraph(null);
 		dw.writeTextln("Analizing interactions of "+g.getGraphName()+" ("+gm.getVertexCount()+" vertices)");
-		dw.closeParagraph();
+		dw.closeParagraph();		
+		
+		writeSummary(dw);
+				
 		dw.openHeader(2, "Report", null);
-		dw.openList(null);
 		for (Iterator it_target = report.iterator(); it_target.hasNext();) {
 			GsRegulatoryVertex target = (GsRegulatoryVertex) it_target.next();
-			dw.openListItem(null);
-			dw.openParagraph(null);
-			dw.writeText(target.getId());
-			dw.closeParagraph();
-			dw.openList(null);
+			dw.openHeader(3, target.getId(), null);
+
 			for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
 				SourceItem sourceItem = (SourceItem) it_sources.next();
-				dw.openListItem(null);
+				
 				if (sourceItem.sign == InteractionAnalysis.FUNC_NON) {
-					dw.openParagraph(STYLE_NONFUNCTIONAL);
-					dw.writeText(sourceItem.source.getId()+" -> "+target.getId()+" is ");
-					dw.writeText("non functional.");
+					dw.openHeader(4,sourceItem.source.getId()+" -> "+target.getId()+" is non functional.", STYLE_NONFUNCTIONAL);
 				} else if (sourceItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
-					dw.openParagraph(STYLE_POSITIVE);
-					dw.writeText(sourceItem.source.getId()+" -> "+target.getId()+" is ");
-					dw.writeText("positive.");
+					dw.openHeader(4,sourceItem.source.getId()+" -> "+target.getId()+" is positive.", STYLE_POSITIVE);
 				} else if (sourceItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
-					dw.openParagraph(STYLE_NEGATIVE);
-					dw.writeText(sourceItem.source.getId()+" -> "+target.getId()+" is ");
-					dw.writeText("negative.");
+					dw.openHeader(4,sourceItem.source.getId()+" -> "+target.getId()+" is negative.", STYLE_NEGATIVE);
 				} else {
-					dw.openParagraph(STYLE_DUAL);
-					dw.writeText(sourceItem.source.getId()+" -> "+target.getId()+" is ");
-					dw.writeText("dual.");
+					dw.openHeader(4,sourceItem.source.getId()+" -> "+target.getId()+" is dual.", STYLE_DUAL);
 				}
-				dw.closeParagraph();
-				dw.openList(null);
+				
+				dw.openTable(null, null, null);
+				dw.openTableRow();
+				if (dw.doesDocumentSupportExtra("javascript")) {
+					dw.openTableCell("Id", true);
+				}
+				dw.openTableCell("Result", true);
+				dw.openTableCell("Source level", true);
+				dw.openTableCell("Target level", true);
+				ReportItem r0 = (ReportItem)sourceItem.reportItems.get(0);
+				for (Iterator it_path = r0.path.iterator(); it_path.hasNext();) {
+					PathItem pathItem = (PathItem) it_path.next();
+					dw.openTableCell(pathItem.vertex.getId(), true);
+				}
+				dw.closeTableRow();			
+				
+				
+				int i = 0;
 				for (Iterator it_report = sourceItem.reportItems.iterator(); it_report.hasNext();) {
 					ReportItem reportItem = (ReportItem) it_report.next();
-					dw.openListItem(null);
-					if (reportItem.sign == InteractionAnalysis.FUNC_NON) {
-						dw.openParagraph(STYLE_NONFUNCTIONAL);
-						dw.writeText("Non functional ");
-					} else if (reportItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
-						dw.openParagraph(STYLE_POSITIVE);
-						dw.writeText("Positive       ");
-					} else if (reportItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
-						dw.openParagraph(STYLE_NEGATIVE);
-						dw.writeText("Negative       ");
-					} else {
-						dw.openParagraph(STYLE_DUAL);
-						dw.writeText("Dual           ");
+					if (dw.doesDocumentSupportExtra("javascript")) {
+						dw.openTableCell(""+i++);
 					}
-					dw.writeText(" : "+target.getId()+" level goes from "+reportItem.valL+" to "+reportItem.valR+" when "+sourceItem.source.getId()+" level goes from "+reportItem.svalL+" to "+reportItem.svalR+" for condition ");
+					if (reportItem.sign == InteractionAnalysis.FUNC_NON) {
+						dw.openTableCell(1, 1, "=", STYLE_NONFUNCTIONAL, false);
+					} else if (reportItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
+						dw.openTableCell(1, 1, "+", STYLE_POSITIVE, false);
+					} else if (reportItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
+						dw.openTableCell(1, 1, "-", STYLE_NEGATIVE, false);
+					}
+					dw.openTableCell(reportItem.sourceValue_low+"/"+(reportItem.sourceValue_low+1));
+					dw.openTableCell(reportItem.targetValue_low+"/"+reportItem.targetValue_high);
 					for (Iterator it_path = reportItem.path.iterator(); it_path.hasNext();) {
 						PathItem pathItem = (PathItem) it_path.next();
-						if (pathItem.valR == -1) {
-							dw.writeText(pathItem.vertex.getId()+"="+pathItem.valL+" ");
+						if (pathItem.targetValue_high == -1) {
+							dw.openTableCell(""+pathItem.targetValue_low);
 						} else {
-							dw.writeText(pathItem.vertex.getId()+"="+pathItem.valL+"/"+pathItem.valR+" ");
+							dw.openTableCell(pathItem.targetValue_low+"/"+pathItem.targetValue_high+" ");
 						}
 					}
-					dw.closeParagraph();
+					dw.closeTableRow();
 				}
-				dw.closeList();
+				dw.closeTable();
 			}
-			dw.closeList();
+			
 		}
-		dw.closeList();	
 		dw.close();
+	}
+	private void writeSummary(DocumentWriter dw) throws IOException {
+		dw.openHeader(2, "Summary", null);
+		
+		dw.openTable("Summary", null, null);
+		dw.openTableRow();
+		dw.openTableCell("Source", true);
+		dw.openTableCell("Target", true);
+		dw.openTableCell("User's sign", true);
+		dw.openTableCell("Computed sign", true);
+		if (dw.doesDocumentSupportExtra("javascript")) {
+			dw.openTableCell("View", true);
+		}
+		dw.closeTableRow();
+		
+		
+		for (Iterator it_target = report.iterator(); it_target.hasNext();) {
+			GsRegulatoryVertex target = (GsRegulatoryVertex) it_target.next();
+			for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
+				SourceItem sourceItem = (SourceItem) it_sources.next();
+								
+				GsRegulatoryMultiEdge e = (GsRegulatoryMultiEdge) ((GsJgraphDirectedEdge)gm.getEdge(sourceItem.source, target)).getUserObject();
+				dw.openTableRow();
+				dw.openTableCell(sourceItem.source.getId());
+				dw.openTableCell(target.getId());
+				if (e.getSign() == GsRegulatoryMultiEdge.SIGN_UNKNOWN) {
+					dw.openTableCell(1, 1, "unknown", STYLE_NONFUNCTIONAL, false);
+				} else if (e.getSign() == GsRegulatoryMultiEdge.SIGN_POSITIVE) {
+					dw.openTableCell(1, 1, "positive", STYLE_POSITIVE, false);
+				} else if (e.getSign() == GsRegulatoryMultiEdge.SIGN_NEGATIVE) {
+					dw.openTableCell(1, 1, "negative", STYLE_NEGATIVE, false);
+				} else {
+					dw.openTableCell(1, 1, "dual", STYLE_DUAL, false);
+				}
+				if (sourceItem.sign == InteractionAnalysis.FUNC_NON) {
+					dw.openTableCell(1, 1, "non functional", STYLE_NONFUNCTIONAL, false);
+				} else if (sourceItem.sign == InteractionAnalysis.FUNC_POSITIVE) {
+					dw.openTableCell(1, 1, "positive", STYLE_POSITIVE, false);
+				} else if (sourceItem.sign == InteractionAnalysis.FUNC_NEGATIVE) {
+					dw.openTableCell(1, 1, "negative", STYLE_NEGATIVE, false);
+				} else {
+					dw.openTableCell(1, 1, "dual", STYLE_DUAL, false);
+				}
+				if (dw.doesDocumentSupportExtra("javascript")) {
+					dw.openTableCell(null);
+					dw.addLink("#"+sourceItem.source.getId()+"__"+target.getId(), "view");
+				}
+				dw.closeTableRow();
+			}
+		}
+		
+		dw.closeTable();		
 	}
 
 }
@@ -462,27 +530,33 @@ class SourceItem {
 }
 
 class PathItem {
-	byte valL, valR = -1;
+	byte targetValue_low, targetValue_high = -1;
 	GsRegulatoryVertex vertex;
 }
 
+/**
+ * targetValue_low : value of the target for a low source
+ * targetValue_high : value of the target for a high source
+ * sourceValue_low : value of the low source, the high value is the low+1
+ * sign : represent the sign of the interaction (-1, 0, +1)
+ */
 class ReportItem {
-	byte valL, valR, svalL, svalR, sign;
+	byte targetValue_low, targetValue_high, sourceValue_low, sign;
 	List path;
 }
 
 
 /**
- * {
- *   target :=> [
- *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....),
- *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....),
- *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....)
+ * Map{
+ *   target :=> List[
+ *                SourceItem(source, level, reportItem(List[pathItem, pathItem, ....]), reportItem(List[pathItem, pathItem, ....]), ....),
+ *                SourceItem(source, level, reportItem(List[pathItem, pathItem, ....]), reportItem(List[pathItem, pathItem, ....]), ....),
+ *                SourceItem(source, level, reportItem(List[pathItem, pathItem, ....]), reportItem(List[pathItem, pathItem, ....]), ....)
  *              ],
- *   target :=> [
- *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....),
- *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....),
- *                SourceItem(source, level, reportItem([pathItem, pathItem, ....]), reportItem([pathItem, pathItem, ....]), ....)
+ *   target :=> List[
+ *                SourceItem(source, level, reportItem(List[pathItem, pathItem, ....]), reportItem(List[pathItem, pathItem, ....]), ....),
+ *                SourceItem(source, level, reportItem(List[pathItem, pathItem, ....]), reportItem(List[pathItem, pathItem, ....]), ....),
+ *                SourceItem(source, level, reportItem(List[pathItem, pathItem, ....]), reportItem(List[pathItem, pathItem, ....]), ....)
  *              ]
  * }
  * 

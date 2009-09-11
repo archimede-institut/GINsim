@@ -424,7 +424,7 @@ public abstract class DocumentWriter {
 	 * @param extra The name of the extra to create
 	 */
 	protected void registerForDocumentExtra(String extra) {
-		documentExtras.put("javascript", new StringBuffer());
+		documentExtras.put(extra, new StringBuffer());
 	}
 	/**
 	 * Get a documentExtra

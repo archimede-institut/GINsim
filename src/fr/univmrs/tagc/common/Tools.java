@@ -398,4 +398,19 @@ public class Tools {
         }
         return new FileInputStream(path);
 	}
+
+	public static StringBuffer readFromFile(String file_path) throws IOException {
+		StringBuffer sb = new StringBuffer(1024);
+		readFromFile(file_path, sb);
+		return sb;
+	}
+	public static void readFromFile(String file_path, StringBuffer sb) throws IOException {
+        BufferedReader reader = new BufferedReader( new FileReader(file_path));
+        char[] buf = new char[1024];
+        int numRead=0;
+        while((numRead=reader.read(buf)) != -1){
+            sb.append(buf, 0, numRead);
+        }
+        reader.close();
+	}
 }
