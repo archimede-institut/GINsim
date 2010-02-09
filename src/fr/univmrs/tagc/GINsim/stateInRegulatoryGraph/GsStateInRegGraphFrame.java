@@ -93,7 +93,7 @@ public class GsStateInRegGraphFrame extends StackDialog implements ActionListene
 			c.gridy++;
 			c.ipady = 0;
 			c.fill = GridBagConstraints.BASELINE;
-			colorizeButton = new JButton(Translator.getString("STR_interactionAnalysis_undo_colorize"));
+			colorizeButton = new JButton(Translator.getString("STR_undo_colorize"));
 			colorizeButton.setEnabled(false);
 			mainPanel.add(colorizeButton, c);
 			colorizeButton.addActionListener(this);
@@ -129,7 +129,7 @@ public class GsStateInRegGraphFrame extends StackDialog implements ActionListene
 
 	public void cancel() {
 		if (isColorized) {
-			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_interactionAnalysis_sure_close"));
+			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
 			if (res == JOptionPane.OK_OPTION) sirg.restoreColorization();
 			else if (res == JOptionPane.CANCEL_OPTION) return;			
 		}

@@ -1,8 +1,11 @@
 package fr.univmrs.tagc.GINsim.connectivity;
 
+import java.awt.Color;
 import java.util.*;
 
+import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -26,6 +29,8 @@ public final class AlgoConnectivity extends Thread {
     public static final int MODE_FULL = 0;
     /** only find SCC */
     public static final int MODE_COMPO = 1;
+    /** only find SCC and colorize */
+    public static final int MODE_COLORIZE = 2;
     
     /** find SCC using an algorithm searching the edges between the components from the outgoing edges of each component*/
     public static final int SCC_GRAPH_BY_OUTGOING_EDGES = 0;
@@ -120,18 +125,24 @@ public final class AlgoConnectivity extends Thread {
                     }
                 }
             }
-            
+           
             if (mode == MODE_COMPO) {
                 return component;
             }
             if (frame != null) {
                 frame.setProgressText( Translator.getString("STR_connectivity_nbcompo") + " : "+nbCompo+" ; "+Translator.getString("STR_connectivity_finalize"));
             }
-            GsGraphManager gm = reducedGraph.getGraphManager();
-            GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
-            	
-            if (nbCompo > 1) {
-	        	createSCCGraphByOutgoingEdges(nbCompo, component, gm, vreader);
+            if (mode == MODE_FULL) {
+            	GsGraphManager gm = reducedGraph.getGraphManager();
+                GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
+                	
+                if (nbCompo > 1) {
+    	        	createSCCGraphByOutgoingEdges(nbCompo, component, gm, vreader);
+                }           	
+            } else if (mode == MODE_COLORIZE) {
+            	((ConnectivityFrame)frame).setComponents(component);
+            	((ConnectivityFrame)frame).colorize();
+            	return component;
             }
             
         } catch (InterruptedException e) {

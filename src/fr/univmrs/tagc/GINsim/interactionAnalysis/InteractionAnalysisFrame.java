@@ -118,7 +118,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		    saveReportButton.addActionListener(this);
 		   
 		    c.gridy++;
-		    colorizeButton = new JButton(Translator.getString("STR_interactionAnalysis_do_colorize"));
+		    colorizeButton = new JButton(Translator.getString("STR_do_colorize"));
 		    colorizeButton.setEnabled(false);
 		    mainPanel.add(colorizeButton, c);
 		    colorizeButton.addActionListener(this);
@@ -129,7 +129,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	protected void run() {
 		if (isColorized) {
 			fii.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_interactionAnalysis_do_colorize"));
+			colorizeButton.setText(Translator.getString("STR_do_colorize"));
 			isColorized = false;
 		}
 		HashSet selectedNodes = new HashSet();
@@ -180,7 +180,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	private void doColorize() {
 		if (fii != null) {
 			fii.doColorize();
-			colorizeButton.setText(Translator.getString("STR_interactionAnalysis_undo_colorize"));
+			colorizeButton.setText(Translator.getString("STR_undo_colorize"));
 			isColorized = true;
 		}
 	}
@@ -188,7 +188,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	private void undoColorize() {
 		if (fii != null) {
 			fii.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_interactionAnalysis_do_colorize"));
+			colorizeButton.setText(Translator.getString("STR_do_colorize"));
 			isColorized = false;
 		}
 	}
@@ -200,7 +200,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 
 	public void cancel() {
 		if (isColorized) {
-			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_interactionAnalysis_sure_close"));
+			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
 			if (res == JOptionPane.OK_OPTION) fii.undoColorize();
 			else if (res == JOptionPane.CANCEL_OPTION) return;
 		}
