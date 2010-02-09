@@ -79,6 +79,7 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionSave;
 	private AbstractAction		actionSaveAs;
 	private AbstractAction		actionOpen;
+	private AbstractAction		actionOpenAndDo;
 	private AbstractAction		actionNew;
 	private AbstractAction		actionSaveSubGraph;
 	private AbstractAction		actionMergeGraph;
@@ -599,6 +600,10 @@ public class GsActions implements GraphChangeListener {
 					mainFrame, "STR_open", "STR_open_descr", KeyStroke
 							.getKeyStroke(KeyEvent.VK_O, mask));
 			fileMenu.add(actionOpen);
+			actionOpenAndDo = new GsOpenAction(gd, GsOpenAction.MODE_OPEN_AND_DO,
+					mainFrame, "STR_open_and_do", "STR_open_and_do_descr", KeyStroke
+							.getKeyStroke(KeyEvent.VK_O, mask | KeyEvent.SHIFT_DOWN_MASK));
+			fileMenu.add(actionOpenAndDo);
 		}
 
 		recentMenu = new JMenu(Translator.getString("STR_openRecent"));

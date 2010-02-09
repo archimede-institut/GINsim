@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
+import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphOptionPanel;
@@ -27,10 +28,12 @@ public class GsOpenAction extends BaseAction {
 
     /** open a new graph from file */
     public static final int MODE_OPEN = 0;
+    /** open a new graph from file and pass it directly to whattodo */
+    public static final int MODE_OPEN_AND_DO = 1;
 	/** create a new graph in the same frame */
 	public static final int MODE_NEW = 2;
     /** open a recent file */
-    public static final int MODE_RECENT = 1;
+    public static final int MODE_RECENT = 3;
 
 	private GsGraphDescriptor gd;
 	private GsMainFrame main;
@@ -115,6 +118,10 @@ public class GsOpenAction extends BaseAction {
                     GsEnv.newMainFrame(graph);
                 }
             }
+            break;
+       case MODE_OPEN_AND_DO:
+           GsGraph g = open(gd, (GsMainFrame)null, null);
+    	   new GsWhatToDoFrame(main, g, false);
 		}
 	}
 
