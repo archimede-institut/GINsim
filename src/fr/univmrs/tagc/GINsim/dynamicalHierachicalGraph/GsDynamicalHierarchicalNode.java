@@ -422,7 +422,6 @@ public class GsDynamicalHierarchicalNode implements Dotify {
         }
 
 	}
-
 	
 	/**
 	 * Return a string representation for the type of this node.

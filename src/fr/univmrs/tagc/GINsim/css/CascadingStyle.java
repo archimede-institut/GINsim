@@ -64,7 +64,7 @@ public class CascadingStyle {
 	 * @param areader
 	 */
 	public void applyOnNode(VertexStyle style, Object node, GsAttributesReader areader) {
-		if (shouldStoreOldStyle) old_edges.put(node, new EdgeStyle(areader));
+		if (shouldStoreOldStyle) old_nodes.put(node, new VertexStyle(areader));
 		style.apply(areader);
 	}
 
