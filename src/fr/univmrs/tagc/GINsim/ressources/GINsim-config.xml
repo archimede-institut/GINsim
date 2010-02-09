@@ -3,6 +3,7 @@
 	<listOfPlugins>
 		<!-- generic plugins -->
 		<plugin name="layout"					 mainClass="fr.univmrs.tagc.GINsim.layout.GsLayoutPlugin"/>
+		<plugin name="layoutmulti"				 mainClass="fr.univmrs.tagc.GINsim.layout.GsMultidimentionLayout"/>
 		<plugin name="layoutJGraph" load="false" mainClass="fr.univmrs.tagc.GINsim.jgraph.layout.GsJgraphLayout"/>
 		<plugin name="connectivity" 			 mainClass="fr.univmrs.tagc.GINsim.connectivity.ConnectivityPlugin"/>
 

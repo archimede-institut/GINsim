@@ -29,7 +29,7 @@ public class GsLayoutPlugin implements GsPlugin, GsActionProvider {
             new GsPluggableActionDescriptor("STR_level_placement", "STR_level_placement_descr", null, this, ACTION_LAYOUT, LEVEL),
             new GsPluggableActionDescriptor("STR_level_placement_inv", "STR_level_placement_inv_descr", null, this, ACTION_LAYOUT, LEVEL_INV),
             new GsPluggableActionDescriptor("STR_ring_placement", "STR_ring_placement_descr", null, this, ACTION_LAYOUT, RING),
-            new GsPluggableActionDescriptor("STR_ring_placement_inv", "STR_ring_placement_inv_descr", null, this, ACTION_LAYOUT, RING_INV)
+            new GsPluggableActionDescriptor("STR_ring_placement_inv", "STR_ring_placement_inv_descr", null, this, ACTION_LAYOUT, RING_INV),
     };
 	
     public void registerPlugin() {
