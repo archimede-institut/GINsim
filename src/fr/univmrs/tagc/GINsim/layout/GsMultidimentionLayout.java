@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -149,7 +150,7 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
 		
 		c.gridy++;
 		c.anchor = GridBagConstraints.EAST;
-		JButton closeButton = new JButton("Close");
+		JButton closeButton = new JButton(Translator.getString("STR_close"));
 		closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
             	close();
@@ -157,8 +158,8 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
         });
 		frame.add(closeButton, c);
 		c.gridx++;
-		JButton runButton = new JButton("Run");
-		runButton.setMnemonic('R');
+		JButton runButton = new JButton(Translator.getString("STR_run"));
+		runButton.setMnemonic(KeyEvent.VK_R);
 		runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
             	run();

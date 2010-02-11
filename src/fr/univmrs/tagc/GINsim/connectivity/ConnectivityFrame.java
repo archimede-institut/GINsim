@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
@@ -87,7 +88,12 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
             algo.cancel();
         }
         graph = null;
-        dispose();
+		if (isColored) {
+			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
+			if (res == JOptionPane.OK_OPTION) undoColorize();
+			else if (res == JOptionPane.CANCEL_OPTION) return;
+		}
+		dispose();
     }
     /**
 	 * This method initializes jContentPane
@@ -284,7 +290,6 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
  	}
 	
 	public void undoColorize() {
-		System.out.println("coucou");
 		cs.restoreAllNodes(graph.getGraphManager().getVertexAttributesReader());
     	buttonColorize.setText(Translator.getString("STR_do_colorize"));
     	isColored = false;
