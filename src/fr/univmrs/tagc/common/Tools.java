@@ -62,7 +62,6 @@ public class Tools {
 		} catch (Exception e) {
 		}
 		if (!supported) {
-			System.out.println("open will use dirty hacks, consider upgrading to java6");
 			if (os_name.startsWith("windows")) {
 				OPEN_COMMAND = "open";
 			} else if (os_name.startsWith("mac")) {

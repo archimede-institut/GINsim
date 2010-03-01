@@ -198,7 +198,9 @@ class ReadConfig extends XMLHelper {
 					GsPlugin plugin = (GsPlugin)cl.newInstance();
 					plugin.registerPlugin();
 				} catch (Throwable e) {
-					System.out.println("unable to load plugin from class: "+s);
+				    if (!"fr.univmrs.tagc.GINsim.gui.tbclient.GsTBPlugin".equals(s)) {
+    					System.err.println("unable to load plugin from class: "+s);
+    				}
 				}
 			}
 		} else if ("graph".equals(qName)) {
@@ -209,7 +211,7 @@ class ReadConfig extends XMLHelper {
 					Class cl = Class.forName(s, true, cloader);
 					GsEnv.addGraphType((GsGraphDescriptor)cl.newInstance());
 				} catch (Exception e) {
-					System.out.println("unable to add graphType from class: "+s);
+					System.err.println("unable to add graphType from class: "+s);
 				}
 			}
 		} else if ("imagePath".equals(qName)) {
