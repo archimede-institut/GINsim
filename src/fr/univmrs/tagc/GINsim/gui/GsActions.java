@@ -171,7 +171,7 @@ public class GsActions implements GraphChangeListener {
 		addVertexMenu = new JMenu(Translator.getString("STR_addVertex"));
 		addEdgeMenu = new JMenu(Translator.getString("STR_addEdge"));
 		editSelectMenu = new JMenu(Translator.getString("STR_editSelectMenu"));
-		editExtendSelectionMenu = new JMenu(Translator.getString("STR_editExtendSelecttionMenu"));
+		editExtendSelectionMenu = new JMenu(Translator.getString("STR_editExtendSelectionMenu"));
 		invertSelectionMenu = new JMenu(Translator.getString("STR_invertSelectionMenu"));
 		selectAllMenu = new JMenu(Translator.getString("STR_selectAllMenu"));
 
