@@ -129,10 +129,10 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
 			c.gridx++;
 			panel.add(getRadioDephtFirst(), c);
 
-			c.gridx = 0;
-			c.gridy++;
-            c.gridwidth = 2;
-			panel.add(getDoHierarchicalSimulation(), c);
+//			c.gridx = 0;
+//			c.gridy++;
+//          c.gridwidth = 2;
+//			panel.add(getDoHierarchicalSimulation(), c);
 
 			       
             // size limits

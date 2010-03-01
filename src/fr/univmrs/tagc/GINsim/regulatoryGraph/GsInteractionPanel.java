@@ -147,12 +147,11 @@ public class GsInteractionPanel extends GsParameterPanel
             jPanel.add(getUpButton(), c_up);
             jPanel.add(getDownButton(), c_down);
 
-
-            GridBagConstraints c_chaos = new GridBagConstraints();
-            c_chaos.gridx = 2;
-            c_chaos.gridy = 5;
-            c_chaos.insets = new Insets(10, 5, 3, 5);
-            jPanel.add(getChaosButton(), c_chaos);
+//            GridBagConstraints c_chaos = new GridBagConstraints();
+//            c_chaos.gridx = 2;
+//            c_chaos.gridy = 5;
+//            c_chaos.insets = new Insets(10, 5, 3, 5);
+//            jPanel.add(getChaosButton(), c_chaos);
 		}
 		return jPanel;
 	}

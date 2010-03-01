@@ -52,15 +52,15 @@ public class RegulatoryVertexEditor extends ObjectEditor {
         l_prop.add(pinfo);
 
 		// build the group [note, parameter, function]
-		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
+		GenericPropertyInfo[] t = new GenericPropertyInfo[2];
 		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
 		t[0] = pinfo;
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_parameters"), GsRegulatoryVertex.class);
 		pinfo.data = graph;
 		t[1] = pinfo;
-		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_function"), GsLogicalFunctionPanel.class);
-		pinfo.data = graph;
-		t[2] = pinfo;
+//		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_function"), GsLogicalFunctionPanel.class);
+//		pinfo.data = graph;
+//		t[2] = pinfo;
 		
 		// and add the group
 		pinfo = new GenericPropertyInfo(this, -1, null, GenericPropertyInfo[].class);
