@@ -419,7 +419,8 @@ public class GsInteractionPanel extends GsParameterPanel
 	    }
 		if (jTable.getSelectedRowCount()<=1) {
 			int selectedrow = jTable.getSelectedRow();
-            if (interactionList.getInteractions().isFunction(selectedrow)) {
+            if (selectedrow ==  jTable.getRowCount()-1 ||
+                interactionList.getInteractions().isFunction(selectedrow)) {
                 selectedrow = -1;
             }
 			int[] indices=jList.getSelectedIndices();
