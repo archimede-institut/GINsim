@@ -183,6 +183,7 @@ public class LogicalParameterList extends ArrayList {
 			return;
 		}
 		GsLogicalParameter I = (GsLogicalParameter)o;
+		manualp.remove(I);
 		List oldList = I.getEdges();
 		I.setEdges(edges);
 		for (int i=0 ; i<size() ; i++) {
@@ -191,6 +192,7 @@ public class LogicalParameterList extends ArrayList {
 				return;
 			}
 		}
+		manualp.add(I);
 		refreshDupAndConflicts();
 	}
 	private void findDup(GsLogicalParameter param, HashSet l) {
