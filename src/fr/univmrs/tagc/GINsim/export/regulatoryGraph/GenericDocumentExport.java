@@ -94,7 +94,6 @@ public class GenericDocumentExport extends GsAbstractExport {
 		try {
 			long l = System.currentTimeMillis();
 			run();
-			System.out.println("Generic export: done in "+(System.currentTimeMillis()-l)+"ms");
 		} catch (IOException e) {
 			e.printStackTrace();
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
@@ -632,9 +631,9 @@ class GenericDocumentExportFormat extends GenericDocumentExport {
 	 * Define a new generic document format.
 	 * @param documentWriterClass : The DocumentWriter sub-class for the format
 	 * @param id : The name of the format (for the dropdown menu)
-	 * @param filter : an array of filter for the file extention the format can overwrite
+	 * @param filter : an array of filter for the file extension the format can overwrite
 	 * @param fillterDescr : a description
-	 * @param extention : the extetion to add to the exported file
+	 * @param extention : the extension to add to the exported file
 	 */
 	public GenericDocumentExportFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
 		this.documentWriterClass = documentWriterClass;

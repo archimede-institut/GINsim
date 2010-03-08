@@ -326,7 +326,12 @@ public class GsOpenAction extends BaseAction {
         if (null != jfc.getSelectedFile() && ret == JFileChooser.APPROVE_OPTION) {
             OptionStore.setOption("currentDirectory", jfc.getCurrentDirectory());
             	String filename = jfc.getSelectedFile().getPath();
-            	String extension = autoExtension;
+        		String extension;
+            	if (autoExtension.startsWith(".")) { 
+            		 extension = autoExtension;
+            	} else {
+            		extension = "." + autoExtension;
+            	}
                 if (accessory instanceof GsGraphOptionPanel) {
                     extension = ((GsGraphOptionPanel)accessory).getExtension();
                 }
