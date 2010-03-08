@@ -209,7 +209,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
         bcancel.setText(Translator.getString("STR_abort"));
 
         // nearly everything should be disabled
-        doHierarchicalSimulation.setEnabled(false);
+        // doHierarchicalSimulation.setEnabled(false);
         radioBreadthFirst.setEnabled(false);
         radioDephtFirst.setEnabled(false);
         selectPriorityClass.setEnabled(false);
