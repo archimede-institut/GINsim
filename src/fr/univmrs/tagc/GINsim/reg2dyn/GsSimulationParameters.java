@@ -23,18 +23,15 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 
 	static final int MUTANT = 0;
 	static final int PCLASS = 1;
-	
-	static final int BUILD_NOTHING = 0;
-	static final int BUILD_FULL_STG = 1;
-	static final int BUILD_DHG = 2;
-	
-    String name = "new_parameter";
-    List nodeOrder;
+		
+	public String name = "new_parameter";
+    public List nodeOrder;
 
-    int maxdepth;
-    int maxnodes;
-    public int buildSTG = BUILD_FULL_STG;
-    boolean breadthFirst = false;
+    public int maxdepth;
+    public int maxnodes;
+    public boolean buildSTG = true;
+    public boolean breadthFirst = false;
+    public int hierarchicalStrategies = 0;
 
     ObjectStore store = new ObjectStore(2);
     Map m_initState = new HashMap();

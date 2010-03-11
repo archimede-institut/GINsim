@@ -1,11 +1,7 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
-import java.awt.Color;
 import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
@@ -17,41 +13,38 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.datastore.HashSetForSet;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class DynamicalHierarchicalSimulation extends Simulation {
 	
 	/** Merge nothing **/
-	private static final byte MERGING_NONE = 1;
+	private static final byte MERGING_NONE = 0;
 	/** Merge all the transient excluding transient cycle **/
-	private static final byte MERGING_ALL = 2;
+	private static final byte MERGING_ALL = 1;
 	/** Merge only transient node with one child, transient too **/
-	private static final byte MERGING_SYNCHRONOUS = 3;
+	private static final byte MERGING_STRICT = 3;
 	/** Merge only if all the children are transient **/
-	private static final byte MERGING_FULLTRANSIENT = 4;
+	private static final byte MERGING_FULLTRANSIENT = 2;
 	/** Merge all the transient including transient cycle **/
-	private static final byte MERGING_ALLTRANSIENT = 5;
-	private final byte mergingMethod = MERGING_ALL;
-	
+	//private static final byte MERGING_ALLTRANSIENT = 4;
+	private byte mergingStrategy = MERGING_ALL;
+		
 	protected DynamicalHierarchicalSimulationHelper helper;
 	private int depth = 0;
 	private DynamicalHierarchicalSimulationQueuedState e, next;
 	private GsDynamicalHierarchicalNode dhnode;
 	private GsDynamicalHierarchicalNodeSet nodeSet;
 	
-	private final byte debug = -1; //FIXME : set debug to -1
+	private final byte debug = -1; //FIXME : set debug to -1 for deployment
 	private PrintStream debug_o = System.err;
 	private int totalNode = 0;
 	private GsDynamicalHierarchicalGraph dynGraph;
 	private GsGraphManager rgm;
 	
-	private final Set voidSet = new HashSet(1); //A set to bypass the null value problem in mergeTransientChilds
-
 	private byte[] childsCount;
 
 	private int vertexCount;
-
+	
 	public DynamicalHierarchicalSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params) {
 		this(regGraph, frame, params, true, true);
 	}
@@ -66,9 +59,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		helper = new DynamicalHierarchicalSimulationHelper(regGraph, params);
    		updater = SimulationUpdater.getInstance(regGraph, params);
    		if (runNow) {
-   			long time = System.currentTimeMillis();
    		    start();
-   		    log(-100, "Total time : "+(System.currentTimeMillis()-time)+"ms");
    		}
 	}
     
@@ -77,9 +68,10 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * Run the simulation, handle exception and build the graph.
 	 */
 	public GsGraph do_simulation() {
+		long time = System.currentTimeMillis();
 		this.dynGraph = helper.dynHieGraph;
 		this.rgm = helper.regGraph.getGraphManager();
-		GsDynamicalHierarchicalNode.rgm = rgm; //FIXME : remove me
+		this.mergingStrategy = helper.mergingStrategy; 
 		ready = true;
 		try {
 			nodeSet = new GsDynamicalHierarchicalNodeSet();
@@ -100,6 +92,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		addAllNodeTo(helper.getGraph());									// add all nodes to the graph
 		addAllEdgesTo(helper.getGraph());									// add all the edges to the graph
 		updateTerminalCycles(helper.getGraph());							// indicates if a cycle is terminal
+		log(-100, "Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		return helper.endSimulation();
 	}
 	
@@ -389,7 +382,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	
 	private void mergeTransient() throws Exception {
 		GsDynamicalHierarchicalNode dh;
-		switch (mergingMethod) {
+		switch (mergingStrategy) {
 		case MERGING_NONE:
 			break;
 		case MERGING_FULLTRANSIENT:
@@ -404,7 +397,6 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			if (!merge) {
 				break;
 			}
-			//else MERGING_ALL
 		case MERGING_ALL: //Merge all the transient child+e
 			dh = null;
 			if (dhnode.isTransient()) {
@@ -425,7 +417,8 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				dh.updateSize(childsCount);				
 			}
 			break;
-		case MERGING_ALLTRANSIENT: //Merge all the transient child+e
+	/*	crash because of encounterANodeInACycle() who encounter a transient cycle.
+	   case MERGING_ALLTRANSIENT: //Merge all the transient child+e
 			dh = null;
 			if (!dhnode.isTerminal()) {
 				dh = dhnode;
@@ -447,8 +440,8 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				dh.reduce();
 				dh.updateSize(childsCount);				
 			}
-			break;
-		case MERGING_SYNCHRONOUS:
+			break;*/
+		case MERGING_STRICT:
 			if (e.childs.size() == 1) {
 				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) e.childs.get(0);
 				if (child.isTransient() && dhnode.isTransient()) {
@@ -462,9 +455,9 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		default:
 			break;
 		}
-	}
+	} 
 	
-	private HashMap getBassinForTerminals() throws Exception {
+/*	private HashMap getBassinForTerminals() throws Exception {
 		HashMap level1 = new HashMap(e.childs.size());
 		HashMap terminals = new HashMap(2);
 		GsDynamicalHierarchicalNode c1,c2;
@@ -519,15 +512,15 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			}
 		}
 		return terminals;
-	}
+	} */
 
-	/**
+	/** mergeTransientChilds
 	 * 
 	 * 
 	 * 
 	 * @return true if there is only one remaining child
 	 * @throws Exception 
-	 */
+	 *
 	private boolean mergeTransientChilds() throws Exception {
 		Map terminals;
 		HashSetForSet results, s, sprime, s1,s2;
@@ -559,7 +552,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				GsDynamicalHierarchicalNode node = (GsDynamicalHierarchicalNode) it3.next();
 				log(-127, "     "+node.getShortId());
 			}
-		}
+		} 
 				
 		results = new HashSetForSet(2);
 		s = null;
@@ -649,7 +642,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			return true;
 		}
 		return false;
-	}
+	} */
 	
 	
 
@@ -723,7 +716,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				dhnode.setType(GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE);
 				vreader.setVertex(dhnode);
 				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
-				vreader.setBackgroundColor(Color.BLUE);
+				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 				vreader.refresh();
 			}
 		}
@@ -764,26 +757,26 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			switch (dhnode.getType()) {
 			case GsDynamicalHierarchicalNode.TYPE_STABLE_STATE:
 				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
-				vreader.setBackgroundColor(Color.RED);
+				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_STABLE_STATE_COLOR);
 				break;
 			case GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE:
 				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
-				vreader.setBackgroundColor(Color.BLUE);
+				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 				break;
 			case GsDynamicalHierarchicalNode.TYPE_CYCLE:
-				vreader.setBackgroundColor(Color.CYAN);
+				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_CYCLE_COLOR);
 				break;
 			case GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT:
-				vreader.setBackgroundColor(Color.GREEN);
+				if (dhnode.size() > 1) vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR);
+				else vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR);
 				break;
-
 			default:
 				break;
 			}
 			vreader.refresh();			
-			log(-127,dhnode+" added.");
+			log(10,dhnode+" added.");
 		}
-		log(-127," total of node added : "+n);
+		log(1," total of node added : "+n);
 		log(1," done");
 	}
 	

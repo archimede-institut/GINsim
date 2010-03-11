@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph;
 
+import java.awt.Color;
 import java.text.ParseException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,14 +12,10 @@ import java.util.Set;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.export.generic.Dotify;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
 
 public class GsDynamicalHierarchicalNode implements Dotify {
-	public static GsGraphManager rgm;
-	private static long nextId = 0;
-		
 	public static final byte TYPE_TRANSIENT_COMPONENT = 0;
 	public static final byte TYPE_CYCLE = 1;
 	public static final byte TYPE_TERMINAL_CYCLE = 2;
@@ -28,6 +25,14 @@ public class GsDynamicalHierarchicalNode implements Dotify {
 	public static final String TYPE_TERMINAL_CYCLE_STRING = "terminalCycle";
 	public static final String TYPE_CYCLE_STRING = "cycle";
 	public static final String TYPE_STABLE_STATE_STRING = "stableState";
+	
+	public static final Color TYPE_TRANSIENT_COMPONENT_COLOR = new Color(78, 154, 6);
+	public static final Color TYPE_CYCLE_COLOR = new Color(114, 159, 207);
+	public static final Color TYPE_TERMINAL_CYCLE_COLOR = new Color(32, 74, 135);
+	public static final Color TYPE_STABLE_STATE_COLOR = new Color(164, 0, 0);
+	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(109, 179, 43);
+
+	private static long nextId = 0;
 	
 	/**
 	 * The root of the decision diagram storing the states.
@@ -285,8 +290,8 @@ public class GsDynamicalHierarchicalNode implements Dotify {
 	}
 
 	public String toString() {
-		if (rgm != null) {
-			return this.toString(rgm.getVertexCount());
+		if (size == 1) {
+			return firstStatesToString().toString();
 		}
 		return "#"+size;
 	}
@@ -311,7 +316,6 @@ public class GsDynamicalHierarchicalNode implements Dotify {
 			}
 			name = ",name: "+s.toString();
 		}
-		
 		return "{"+processed+"/"+size+name+", type:"+typeToString()+"}";
 	}
 	public String getId() {
@@ -327,8 +331,6 @@ public class GsDynamicalHierarchicalNode implements Dotify {
 	public StringBuffer write() {
 		return root.write();
 	}
-
-	
 		
 	public String statesToString(int nbNodes) {
 		return statesToString(nbNodes, false);
@@ -424,6 +426,41 @@ public class GsDynamicalHierarchicalNode implements Dotify {
 	}
 	
 	/**
+	 * Return a string representation of the first state in the node.
+	 */
+	public StringBuffer firstStatesToString() {
+		StringBuffer s = new StringBuffer();
+		if (statePile != null) {
+			byte[] stateInPile = (byte[]) statePile.get(0);
+			for (int i = 0; i < stateInPile.length; i++) {
+				s.append(stateInPile[i]);
+			}
+		} else {
+			firstStatesToString(root, s, 0);
+		}
+		return s;
+	}
+	private boolean firstStatesToString(OmddNode omdd, StringBuffer s, int last_depth) {
+        if (omdd.next == null) {
+        	if (omdd.value == 0) return false;
+        	return true;
+        }
+        if (s.length() <= omdd.level) {
+    		for (int j = s.length(); j <= omdd.level; j++) {
+    			s.append('*');
+			}
+    	}
+        for (int i = 0 ; i < omdd.next.length ; i++) {
+        	s.setCharAt(omdd.level, String.valueOf(i).charAt(0));
+        	boolean res = firstStatesToString(omdd.next[i], s, omdd.level);
+        	if (res) return true;
+        }
+        return false;
+	}
+
+
+	
+	/**
 	 * Return a string representation for the type of this node.
 	 * @return
 	 */
@@ -474,9 +511,6 @@ public class GsDynamicalHierarchicalNode implements Dotify {
 	 * @param childsCount 
 	 * @param helper 
 	 */
-//	public void merge(GsDynamicalHierarchicalNode slaveNode, Collection nodeSet, int nbNodes) throws Exception {
-//		merge(slaveNode, nodeSet, nbNodes, null, null);
-//	}
 	public void merge(GsDynamicalHierarchicalNode slaveNode, Collection nodeSet, int nbNodes, byte[] childsCount) throws Exception {
 		if (slaveNode == this) return;
 		if (slaveNode.type != this.type) {

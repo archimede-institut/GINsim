@@ -2,18 +2,12 @@ package fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 	private static final long serialVersionUID = 3342245591953494375L;

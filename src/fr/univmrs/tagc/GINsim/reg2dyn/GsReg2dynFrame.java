@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -48,7 +50,11 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
     private JRadioButton radioDephtFirst = null;
     private JRadioButton radioBreadthFirst = null;
 
-    private JCheckBox doHierarchicalSimulation= null;
+    private ButtonGroup simuMethodGrp = new ButtonGroup();
+    private JRadioButton radioSTGSimulation = null;
+    private JRadioButton radioHierarchicalSimulation = null;
+
+	private JComboBox hierarchicalStrategiesTypesComboBox;
 
     private JTextField textMaxDepth = null;
     private JTextField textMaxNodes = null;
@@ -59,6 +65,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
     Insets noIndentInset = new Insets(0, 0, 0, 0);
     GsInitialStatePanel initStatePanel = null;
     private JPanel mainPanel;
+
 
     /**
      * @param frame
@@ -119,6 +126,15 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
 			c.weightx = 1;
             c.insets = indentInset;
 			c.fill = GridBagConstraints.BOTH;
+			
+			c.gridx = 0;
+			c.gridy++;
+			panel.add(getRadioSTGSimulation(), c);
+			c.gridx++;
+			panel.add(getRadioHierarchicalSimulation(), c);
+			
+			c.gridx = 0;
+			c.gridy++;
             c.gridwidth = 2;
 			panel.add(getPriorityClassSelector(), c);
 
@@ -128,12 +144,11 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
 			panel.add(getRadioBreadthFirst(), c);
 			c.gridx++;
 			panel.add(getRadioDephtFirst(), c);
-
+			
 			c.gridx = 0;
 			c.gridy++;
             c.gridwidth = 2;
-			panel.add(getDoHierarchicalSimulation(), c);
-
+			panel.add(getHierarchicalTypeComboBox(), c);
 			       
             // size limits
             panel = new JPanel();
@@ -209,7 +224,8 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
         bcancel.setText(Translator.getString("STR_abort"));
 
         // nearly everything should be disabled
-        doHierarchicalSimulation.setEnabled(false);
+        radioSTGSimulation.setEnabled(false);
+        radioHierarchicalSimulation.setEnabled(false);
         radioBreadthFirst.setEnabled(false);
         radioDephtFirst.setEnabled(false);
         selectPriorityClass.setEnabled(false);
@@ -222,7 +238,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
         textMaxNodes.setEnabled(false);
 
         isrunning = true;
-        if (currentParameter.buildSTG == GsSimulationParameters.BUILD_FULL_STG) {
+        if (currentParameter.buildSTG) {
         	sim = new Simulation(paramList.graph, this, currentParameter);
         } else {
         	sim = new DynamicalHierarchicalSimulation(paramList.graph, this, currentParameter);
@@ -280,6 +296,20 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
             return;
         }
         currentParameter.breadthFirst = radioBreadthFirst.isSelected();
+        currentParameter.buildSTG = radioSTGSimulation.isSelected();
+        updateStrategyOptions();
+    }
+    
+    public void updateStrategyOptions() {
+        if (currentParameter.buildSTG) {
+        	radioDephtFirst.setVisible(true);
+        	radioBreadthFirst.setVisible(true);
+			hierarchicalStrategiesTypesComboBox.setVisible(false);
+        } else {
+        	radioDephtFirst.setVisible(false);
+        	radioBreadthFirst.setVisible(false);
+			hierarchicalStrategiesTypesComboBox.setVisible(true);
+       }
     }
 
     /**
@@ -287,7 +317,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
      * 
      * @return javax.swing.JRadioButton
      */
-    private javax.swing.JRadioButton getRadioDephtFirst() {
+    private JRadioButton getRadioDephtFirst() {
         if(radioDephtFirst == null) {
             radioDephtFirst = new javax.swing.JRadioButton(Translator.getString("STR_depth_first"));
             radioDephtFirst.setSelected(true);
@@ -301,7 +331,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
      * 
      * @return javax.swing.JRadioButton
      */
-    private javax.swing.JRadioButton getRadioBreadthFirst() {
+    private JRadioButton getRadioBreadthFirst() {
         if(radioBreadthFirst == null) {
             radioBreadthFirst = new javax.swing.JRadioButton(Translator.getString("STR_breadth_first"));
             depthGrp.add(radioBreadthFirst);
@@ -311,31 +341,56 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
     }
   
     /**
-     * This method initializes doHierarchicalSimulation
+     * This method initializes radioSTGSimulation
      * 
      * @return javax.swing.JRadioButton
      */
-    private JCheckBox getDoHierarchicalSimulation() {
-        if(doHierarchicalSimulation == null) {
-        	doHierarchicalSimulation = new JCheckBox(Translator.getString("STR_dynHier_simulation_descr"));
-        	doHierarchicalSimulation.setSelected(false);
-        	doHierarchicalSimulation.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    if (doHierarchicalSimulation.isSelected()) {
-                    	currentParameter.buildSTG = GsSimulationParameters.BUILD_DHG;
-                    	radioDephtFirst.setEnabled(false);
-                    	radioBreadthFirst.setEnabled(false);
-                    } else {
-                    	currentParameter.buildSTG = GsSimulationParameters.BUILD_FULL_STG;
-                    	radioDephtFirst.setEnabled(true);
-                    	radioBreadthFirst.setEnabled(true);
-                   }
-                }       		
-        	});
+    private JRadioButton getRadioSTGSimulation() {
+        if(radioSTGSimulation == null) {
+        	radioSTGSimulation = new JRadioButton(Translator.getString("STR_dynstg_simulation_descr"), true);
+        	simuMethodGrp.add(radioSTGSimulation);
+        	radioSTGSimulation.addChangeListener(getRadioChangeListener());
         }
-        return doHierarchicalSimulation;
+        return radioSTGSimulation;
     }
     
+    
+   /** This method initializes radioHierarchicalSimulation
+    * 
+    * @return javax.swing.JRadioButton
+    */
+    private JRadioButton getRadioHierarchicalSimulation() {
+        if(radioHierarchicalSimulation == null) {
+        	radioHierarchicalSimulation = new JRadioButton(Translator.getString("STR_dynHier_simulation_descr"), false);
+	      	simuMethodGrp.add(radioHierarchicalSimulation);
+	      	radioHierarchicalSimulation.addChangeListener(getRadioChangeListener());
+        }
+        return radioHierarchicalSimulation;
+     }
+  
+   /** This method initializes hierarchicalTypeComboBox
+    * 
+    * @return javax.swing.JComboBox
+    */
+	private JComboBox getHierarchicalTypeComboBox() {
+		if(hierarchicalStrategiesTypesComboBox == null) {
+				String[] titles = new String[4];
+				titles[0] = Translator.getString("STR_dynHier_merge_scc"); //MERGING_NONE
+				//titles[1] = Translator.getString("STR_dynHier_merge_compact_with_cycles"); //MERGING_ALLTRANSIENT
+				titles[1] = Translator.getString("STR_dynHier_merge_compact"); //MERGING_ALL
+				titles[2] = Translator.getString("STR_dynHier_merge_semi_strict"); //MERGING_FULLTRANSIENT
+				titles[3] = Translator.getString("STR_dynHier_merge_strict");//MERGING_STRICT
+				hierarchicalStrategiesTypesComboBox = new JComboBox(titles);
+				hierarchicalStrategiesTypesComboBox.setVisible(false);
+				hierarchicalStrategiesTypesComboBox.addItemListener(new ItemListener() {
+					public void itemStateChanged(ItemEvent e) {
+						currentParameter.hierarchicalStrategies = hierarchicalStrategiesTypesComboBox.getSelectedIndex();
+					}
+				});
+		}
+		return hierarchicalStrategiesTypesComboBox;	   
+	}
+   
 	/**
      * This method initializes textMaxDepth
      * 
@@ -460,7 +515,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
             textMaxNodes.setText(currentParameter.maxnodes > 0 ? ""+currentParameter.maxnodes : "");
             textMaxDepth.setEnabled(true);
             textMaxNodes.setEnabled(true);
-        }
+        } //TODO something here for hierarchical ?
         refreshing = false;
     }
 }

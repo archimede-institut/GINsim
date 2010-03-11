@@ -55,7 +55,7 @@ public class Simulation extends Thread implements Runnable {
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
 
-		if (params.buildSTG == GsSimulationParameters.BUILD_FULL_STG) {
+		if (!params.buildSTG) {
 			helper = new DynGraphHelper(regGraph, params);
 		}
 		breadthFirst = params.breadthFirst;

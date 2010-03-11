@@ -2,7 +2,6 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;

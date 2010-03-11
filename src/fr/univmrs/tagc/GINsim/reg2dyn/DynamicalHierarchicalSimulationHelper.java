@@ -14,16 +14,17 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 	protected GsDynamicalHierarchicalGraph dynHieGraph;
 	public Map arcs;
 	protected GsRegulatoryGraph regGraph;
+	protected byte mergingStrategy;
 	
 	public DynamicalHierarchicalSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		this.regGraph = regGraph;
-		dynHieGraph = new GsDynamicalHierarchicalGraph(params.nodeOrder);
+		this.dynHieGraph = new GsDynamicalHierarchicalGraph(params.nodeOrder);
+		this.mergingStrategy = (byte) params.hierarchicalStrategies;
 		if (regGraph instanceof GsRegulatoryGraph) {
 			dynHieGraph.setAssociatedGraph(regGraph);
 		}
 		GsVertexAttributesReader vreader = dynHieGraph.getGraphManager().getVertexAttributesReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
-        // add some default comments to the state transition graph
         dynHieGraph.getAnnotation().setComment(params.getDescr()+"\n");
         arcs = new HashMap();
 	}
