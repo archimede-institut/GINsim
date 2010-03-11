@@ -325,19 +325,19 @@ public class GsOpenAction extends BaseAction {
 
         if (null != jfc.getSelectedFile() && ret == JFileChooser.APPROVE_OPTION) {
             OptionStore.setOption("currentDirectory", jfc.getCurrentDirectory());
-            	String filename = jfc.getSelectedFile().getPath();
-        		String extension;
-            	if (autoExtension.startsWith(".")) { 
-            		 extension = autoExtension;
-            	} else {
-            		extension = "." + autoExtension;
-            	}
-                if (accessory instanceof GsGraphOptionPanel) {
-                    extension = ((GsGraphOptionPanel)accessory).getExtension();
-                }
-            	if (extension != null && ! filename.endsWith(extension)) {
+            String filename = jfc.getSelectedFile().getPath();
+    		String extension = autoExtension;
+            if (accessory instanceof GsGraphOptionPanel) {
+                extension = ((GsGraphOptionPanel)accessory).getExtension();
+            }
+        	if (extension != null) {
+   	            if (!extension.startsWith(".")) { 
+        	    	extension = "." + autoExtension;
+        	    }
+        	    if (!filename.endsWith(extension)) {
             		filename += extension;
             	}
+        	}
             if (Tools.isFileWritable(filename, frame)) {
                 return filename;
             }
