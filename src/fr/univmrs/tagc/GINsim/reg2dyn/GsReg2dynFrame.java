@@ -149,6 +149,7 @@ public class GsReg2dynFrame extends BaseReg2DynFrame implements ListSelectionLis
 			c.gridy++;
             c.gridwidth = 2;
 			panel.add(getHierarchicalTypeComboBox(), c);
+
 			       
             // size limits
             panel = new JPanel();

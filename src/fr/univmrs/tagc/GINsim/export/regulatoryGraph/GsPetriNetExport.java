@@ -194,7 +194,7 @@ public class GsPetriNetExport extends GsAbstractExport {
 		int len = nodeOrder.size();
 		// get the selected initial state
 		Iterator it_state = new InitialStatesIterator(nodeOrder, ((GsInitialStateStore)config.getSpecificConfig()));
-		int[] t_state = (int[])it_state.next();
+		byte[] t_state = (byte[])it_state.next();
 
 		PNConfig specConfig = (PNConfig)config.getSpecificConfig();
 		// apply mutant

@@ -41,11 +41,11 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
             return null;
         }
         if (t_action == null) {
-            t_action = new GsPluggableActionDescriptor[2];
+            t_action = new GsPluggableActionDescriptor[1];
             t_action[0] = new GsPluggableActionDescriptor("STR_reg2dyn",
                     "STR_reg2dyn_descr", null, this, ACTION_ACTION, 0);
-            t_action[1] = new GsPluggableActionDescriptor("STR_batchreg2dyn",
-                    "STR_batchreg2dyn_descr", null, this, ACTION_ACTION, 1);
+//            t_action[1] = new GsPluggableActionDescriptor("STR_batchreg2dyn",
+//                    "STR_batchreg2dyn_descr", null, this, ACTION_ACTION, 1);
         }
         return t_action;
     }

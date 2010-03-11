@@ -213,6 +213,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         catch (Exception ex) {
           ex.printStackTrace();
         }
+        if (false) { // FIXME: disable edit mode
         ((GsTreeExpression)treeElement).setEditorModel(panel.getFunctionEditor().getModel());
 				panel.setEditEditorVisible(true);
 				setText(textArea.getText(), textArea.getCaretPosition());
@@ -222,6 +223,7 @@ public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements Actio
         panel.initEditor(model, this);
 				tree.setSelectionPath(null);;
         treeElement.setProperty("autoedit", new Boolean(false));
+        }
       }
       else {
         text = textArea.getText();

@@ -14,9 +14,9 @@ public class GenericDocumentFormat {
 	private static Vector formats = new Vector();
 	static {
 		formats.add(new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", "xHTML files (.html, .xhtml)", "html", new String[] {"html", "xhtml"}));
-		formats.add(new GenericDocumentFormat(OOoDocumentWriter.class, "OpenOffice.org", "OpenOffice.org files (.odt)", "odt", new String[] {"odt"}));
-        formats.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", "Text files (.txt)", "txt", new String[] {"txt"}));
-        //FIXME: LaTeX export disabled as it is not ready for complex documents with large tables
+		formats.add(new GenericDocumentFormat(OOoDocumentWriter.class, "OpenDocument", "OpenDocument Text files (.odt)", "odt", new String[] {"odt"}));
+        //FIXME: WIKI and LaTeX formats are disabled
+        //formats.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", "Text files (.txt)", "txt", new String[] {"txt"}));
         // formats.add(new GenericDocumentFormat(LaTeXDocumentWriter.class, "LaTeX", "LaTeX files (.tex)", "tex", new String[] {"tex"})); 			
 	}
 	
@@ -46,9 +46,9 @@ public class GenericDocumentFormat {
 	 * Define a new generic document format.
 	 * @param documentWriterClass : The DocumentWriter sub-class for the format
 	 * @param id : The name of the format (for the dropdown menu)
-	 * @param filter : an array of filter for the file extention the format can overwrite
+	 * @param filter : an array of filter for the file extension the format can overwrite
 	 * @param fillterDescr : a description
-	 * @param extention : the extetion to add to the exported file
+	 * @param extension : the extension to add to the exported file
 	 */
 	public GenericDocumentFormat(Class documentWriterClass, String id, String filterDescr, String defaultExtension, String[] extensionArray) {
 		this.documentWriterClass = documentWriterClass;
@@ -66,7 +66,7 @@ public class GenericDocumentFormat {
 		return null;
 	}
 	
-	public static GenericDocumentFormat getFormatByExtention(String defaultExtension) {
+	public static GenericDocumentFormat getFormatByExtension(String defaultExtension) {
 		for (Iterator iterator = formats.iterator(); iterator.hasNext();) {
 			GenericDocumentFormat format = (GenericDocumentFormat) iterator.next();
 			if (format.defaultExtension.equals(defaultExtension)) return format;
@@ -99,6 +99,5 @@ public class GenericDocumentFormat {
 		
 	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
 		return null;
-	}
-	
+	}	
 }

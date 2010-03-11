@@ -50,11 +50,13 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
     edgeList = new GsIncomingEdgeListModel();
   }
   public void setEditEditorVisible(boolean b) {
+		b = false;  // FIXME: disable editors
 		eastPanel.setVisible(b);
 		if (b)
 			((CardLayout)eastPanel.getLayout()).show(eastPanel, "edit");
   }
 	public void setDisplayEditorVisible(boolean b) {
+		b = false;  // FIXME: disable editors
 		eastPanel.setVisible(b);
 		if (b)
 			((CardLayout)eastPanel.getLayout()).show(eastPanel, "display");
