@@ -55,7 +55,7 @@ public class Simulation extends Thread implements Runnable {
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
 
-		if (!params.buildSTG) {
+		if (params.buildSTG) {
 			helper = new DynGraphHelper(regGraph, params);
 		}
 		breadthFirst = params.breadthFirst;
@@ -159,9 +159,8 @@ public class Simulation extends Thread implements Runnable {
 				Tools.error("Reached the max depth", null);
 				//TODO: explain what happened and give some hints
 			}
-			// return the result
-			return helper.endSimulation();
 		}
+		return helper.endSimulation();
 	}
 }
 
