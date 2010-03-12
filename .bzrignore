@@ -21,3 +21,5 @@ GINsim.app
 GINsim-*.jar
 .svn
 build.xml
+autoexec.ginml
+autoexec.zginml
