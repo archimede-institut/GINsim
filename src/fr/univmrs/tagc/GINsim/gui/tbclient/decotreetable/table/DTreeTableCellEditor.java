@@ -13,6 +13,7 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreePanel;
 import java.awt.Rectangle;
 
 public class DTreeTableCellEditor extends DefaultCellEditor {
+	private static final long serialVersionUID = 4908136333623167309L;
 	protected int visibleRow;
 	private DTreeTableCellRenderer treeTableRenderer;
 

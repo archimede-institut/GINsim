@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.util.*;
 
 public class LogicalParameterList extends ArrayList {
+	private static final long serialVersionUID = 5768653095418077753L;
 	private HashSet manualp, functionp;
 	boolean updateDup = true;
 	int nbDup = 0;

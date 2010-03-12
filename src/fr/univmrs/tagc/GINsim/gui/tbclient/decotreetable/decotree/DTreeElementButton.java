@@ -27,6 +27,7 @@ public class DTreeElementButton extends DTreeElementDeco {
 	public Vector getRenderingComponents(boolean sel) {
 		Vector v = treeElement.getRenderingComponents(sel);
 		b = new JButton(title, imageIcon) {
+			private static final long serialVersionUID = 912401509744434658L;
 			public Insets getInsets() {
 				return new Insets(0, 0, 0, 0);
 			}

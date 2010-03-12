@@ -31,8 +31,10 @@ import tbrowser.data.module.TBModule;
 import tbrowser.ihm.widget.TBPanel;
 
 public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListener, ActionListener, ListSelectionListener {
+  private static final long serialVersionUID = 7691970870575102225L;
   class ProfileTableModel extends DefaultTableModel {
-    private final String[] columns = { "", "Gene | Probe", "Value" };
+	private static final long serialVersionUID = -4717631575549064932L;
+	private final String[] columns = { "", "Gene | Probe", "Value" };
     private Object[][] data;
     private int nbRows;
 
@@ -85,7 +87,8 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
     }
   }
   class ColorRenderer extends JLabel implements TableCellRenderer {
-    public ColorRenderer() {
+ 	private static final long serialVersionUID = -1083651294027720671L;
+	public ColorRenderer() {
       setOpaque(true);
     }
     public Component getTableCellRendererComponent(JTable table, Object color,

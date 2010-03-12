@@ -92,7 +92,6 @@ public class GenericDocumentExport extends GsAbstractExport {
 			e.printStackTrace();
 		}
 		try {
-			long l = System.currentTimeMillis();
 			run();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -8,16 +8,18 @@ import java.util.Vector;
 import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
-import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-import fr.univmrs.tagc.GINsim.graph.*;
+import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
+import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
+import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
+import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraph;
-import fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraphSelector;
 
 /**
  * Main class of the animator plugin.

@@ -13,6 +13,7 @@ import javax.swing.Icon;
 
 public class DTreeElementSelectable extends DTreeElementDeco implements ActionListener {
 	public class JCB extends JCheckBox {
+		private static final long serialVersionUID = 1796211813329393241L;
 		private DTreeElementSelectable dTreeElement;
 
 		public JCB(DTreeElementSelectable e, boolean b) {

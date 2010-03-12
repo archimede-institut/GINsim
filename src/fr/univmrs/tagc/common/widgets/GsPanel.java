@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 public class GsPanel extends JPanel {
+  private static final long serialVersionUID = -2899156169561371789L;
   public static Color shCol = UIManager.getColor("TextField.darkShadow");
   public static final int WEST = GridBagConstraints.WEST;
   public static final int NORTHWEST = GridBagConstraints.NORTHWEST;

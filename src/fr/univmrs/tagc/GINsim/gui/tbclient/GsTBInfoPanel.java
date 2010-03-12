@@ -5,6 +5,7 @@ import tbrowser.data.module.TBModule;
 import java.util.Vector;
 
 public class GsTBInfoPanel extends TBInfoPanel {
+  private static final long serialVersionUID = -5932617499905893848L;
   GsTBInfoProfilePanel profilePanel;
 
   public GsTBInfoPanel(GsTBClientPanel p) {

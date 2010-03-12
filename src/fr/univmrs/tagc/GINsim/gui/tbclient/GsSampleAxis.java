@@ -13,6 +13,7 @@ import org.jfree.chart.axis.TickType;
 import java.awt.geom.Line2D;
 
 public class GsSampleAxis extends SymbolAxis {
+  private static final long serialVersionUID = -379568994220035468L;
   private int labelToDraw = -1;
   String[] tickValues;
 

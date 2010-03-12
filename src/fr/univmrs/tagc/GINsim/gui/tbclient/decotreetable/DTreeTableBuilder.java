@@ -74,8 +74,8 @@ public class DTreeTableBuilder {
 		t = dtt;
 		columns = ((DecoTreeTableModel)dtt.getModel()).getColumnNames();
 		root = (AbstractDTreeElement)dtt.getTree().getModel().getRoot();
-		String title = root.toString();
-		Color fgc = root.getFgColor();
+		//String title = root.toString();
+		//Color fgc = root.getFgColor();
 
 		model = new DTreeModel();
 		cr = (TableDecoTree)dtt.getTree();

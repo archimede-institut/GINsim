@@ -17,6 +17,7 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeE
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 
 public class DecoTreeTableModel extends DefaultTableModel implements TreeModel  {
+	private static final long serialVersionUID = 2271557040284252693L;
 	private Vector tableModelListeners;
 	private JTree tree;
 	private Vector columnNames;

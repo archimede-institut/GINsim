@@ -92,6 +92,7 @@ class JythonConsole extends Thread {
 }
 
 class JythonFrame extends JFrame {
+	private static final long serialVersionUID = -3652232265843777029L;
 	JScrollPane consoleScrollPanel = new JScrollPane();
 	
 	public JythonFrame() {

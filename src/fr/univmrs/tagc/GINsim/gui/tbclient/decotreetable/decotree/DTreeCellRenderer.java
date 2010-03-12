@@ -6,6 +6,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.Component;
 
 public class DTreeCellRenderer extends DefaultTreeCellRenderer {
+	private static final long serialVersionUID = -3839683140995761773L;
 	public DTreeCellRenderer() {
 		super();
 	}

@@ -11,7 +11,8 @@ public class TreeElementSelectable extends TreeElementDeco implements ActionList
   private GeneTreeModel model;
 
   private JCheckBox cb = new JCheckBox("", false) {
-    public Insets getInsets() {
+    private static final long serialVersionUID = 3441730857578215072L;
+	public Insets getInsets() {
       return new Insets(0, 0, 0, 0);
     }
   };

@@ -6,6 +6,7 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DecoTree;
 
 public class TableDecoTree extends DecoTree implements TableTree {
+	private static final long serialVersionUID = 1495859310903175881L;
 	protected int visibleRow;
 	
 	public TableDecoTree(DTreeModel model, int h) {

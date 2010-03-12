@@ -92,6 +92,7 @@ class SimplifierConfigContentList extends SimpleGenericList {
 
 class SimplifierConfigConfigurePanel extends GenericListPanel 
 	implements GenericListListener, ChangeListener {
+	private static final long serialVersionUID = -2219030309910143737L;
 	JCheckBox checkbox;
 	SimplifierConfigConfigurePanel() {
 		GridBagConstraints c = new GridBagConstraints();

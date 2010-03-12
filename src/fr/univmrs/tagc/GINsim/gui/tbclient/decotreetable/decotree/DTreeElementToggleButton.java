@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 public class DTreeElementToggleButton extends DTreeElementDeco implements ActionListener {
 
 	public class TBToggleButton extends JToggleButton {
+		private static final long serialVersionUID = -5254426961700408614L;
 		private Insets insets;
 
 	  public TBToggleButton() {

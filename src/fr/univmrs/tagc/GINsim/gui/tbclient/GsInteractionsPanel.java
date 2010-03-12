@@ -19,7 +19,10 @@ import tbrowser.data.*;
 import tbrowser.data.module.*;
 
 public class GsInteractionsPanel extends GsPanel implements ItemListener, ActionListener {
+	private static final long serialVersionUID = 6871206109510696996L;
 	class InteractionsTableRenderer extends DefaultTableCellRenderer {
+		private static final long serialVersionUID = 2148184469971239501L;
+
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (column != 0) {

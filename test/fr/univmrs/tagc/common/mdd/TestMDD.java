@@ -72,7 +72,6 @@ public class TestMDD extends TestCase {
 
 		SimpleNode n_true = ddi.leaf(1);
 		SimpleNode n_false = ddi.leaf(0);
-		long t = System.currentTimeMillis();
 		ddi = new SimpleHashDDI(100);
 		for (int i=maxlevel ; i>-1 ; i--) {
 			t_v[i] = new Vector();

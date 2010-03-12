@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 
 public class GsFunctionEditorDisplayPanel extends GsPanel implements ItemListener, ActionListener {
+	private static final long serialVersionUID = -945722071153537623L;
 	private JRadioButton userInputRadioButton, compactRadioButton, rawDNFRadioButton, quineRadioButton, quineDNF, quineCNF;
 	private JProgressBar displayProgressBar;
 	private GsButton cancelButton, okButton, cancelQuineButton;

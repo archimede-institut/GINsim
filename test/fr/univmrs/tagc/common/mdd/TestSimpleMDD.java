@@ -70,7 +70,6 @@ public abstract class TestSimpleMDD extends TestCase {
 
 		MDDNode n_true = ddi.getLeaf(1);
 		MDDNode n_false = ddi.getLeaf(0);
-		long t = System.currentTimeMillis();
 		ddi.reset();
 		for (int i=maxlevel ; i>-1 ; i--) {
 			t_v[i] = new Vector();
@@ -158,21 +157,21 @@ public abstract class TestSimpleMDD extends TestCase {
 		return ret;
 	}
 
-	private MDDNode buildXor(int[] t_xor) {
-		MDDNode ret = n_true;
-		for (int i=0 ; i<t_xor.length ; i++) {
-			MDDNode row = n_true;
-			for (int j=0 ; j<t_xor.length ; i++) {
-				if (i == j) {
-					row = row.merge(ddi, ddi.getNewNode(t_xor[j], nextTrue), DecisionDiagramAction.ACTION_AND);
-				} else {
-					row = row.merge(ddi, ddi.getNewNode(t_xor[j], nextFalse), DecisionDiagramAction.ACTION_AND);
-				}
-			}
-			ret = ret.merge(ddi, row, DecisionDiagramAction.ACTION_OR);
-		}
-		return ret;
-	}
+//	private MDDNode buildXor(int[] t_xor) {
+//		MDDNode ret = n_true;
+//		for (int i=0 ; i<t_xor.length ; i++) {
+//			MDDNode row = n_true;
+//			for (int j=0 ; j<t_xor.length ; i++) {
+//				if (i == j) {
+//					row = row.merge(ddi, ddi.getNewNode(t_xor[j], nextTrue), DecisionDiagramAction.ACTION_AND);
+//				} else {
+//					row = row.merge(ddi, ddi.getNewNode(t_xor[j], nextFalse), DecisionDiagramAction.ACTION_AND);
+//				}
+//			}
+//			ret = ret.merge(ddi, row, DecisionDiagramAction.ACTION_OR);
+//		}
+//		return ret;
+//	}
 	
 	private MDDNode buildOr(int[] t_xor) {
 		MDDNode ret = n_false;

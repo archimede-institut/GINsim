@@ -6,6 +6,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class GeneTreeCellRenderer extends DefaultTreeCellRenderer {
+  private static final long serialVersionUID = 8017694814129271413L;
   public GeneTreeCellRenderer() {
     super();
   }

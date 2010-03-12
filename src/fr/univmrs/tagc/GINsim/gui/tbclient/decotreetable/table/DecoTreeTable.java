@@ -12,7 +12,8 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 import java.awt.Color;
 
 public class DecoTreeTable extends JTable {
-  private DTreeTableCellRenderer cellRenderer;
+	private static final long serialVersionUID = -6092467728304640800L;
+    private DTreeTableCellRenderer cellRenderer;
 	private DTreeTableCellEditor cellEditor;
 	private DecoTreeTableModel model;
 	private DTreeModel treeModel;
@@ -30,6 +31,7 @@ public class DecoTreeTable extends JTable {
 		setRowHeight(t.getRowHeight());
 		cellRenderer = new DTreeTableCellRenderer(tree);
 		tree.setSelectionModel(new DefaultTreeSelectionModel() {
+			private static final long serialVersionUID = 7360828868695237574L;
 			{
 				setSelectionModel(listSelectionModel);
 			}

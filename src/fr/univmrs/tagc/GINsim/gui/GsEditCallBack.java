@@ -2,7 +2,6 @@ package fr.univmrs.tagc.GINsim.gui;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;

@@ -5,6 +5,7 @@ import javax.swing.tree.TreeModel;
 
 
 public class DecoTree extends JTree {
+	private static final long serialVersionUID = 1683057279195963727L;
 	public DecoTree(TreeModel model, int h) {
 		super(model);
 		DTreeCellRenderer r = new DTreeCellRenderer();

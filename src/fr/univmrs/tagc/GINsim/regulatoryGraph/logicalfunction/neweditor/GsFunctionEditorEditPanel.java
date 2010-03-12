@@ -19,7 +19,9 @@ import fr.univmrs.tagc.common.widgets.GsButton;
 import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, ActionListener {
+	private static final long serialVersionUID = 7097954459263383619L;
 	class EditorTableRenderer extends DefaultTableCellRenderer {
+		private static final long serialVersionUID = 353936508495109143L;
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 			super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			if (column != 0) {

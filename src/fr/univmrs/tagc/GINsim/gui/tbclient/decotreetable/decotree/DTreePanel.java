@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 public class DTreePanel extends JPanel {
+  private static final long serialVersionUID = 2380470785460603574L;
   public static Color shCol = UIManager.getColor("TextField.darkShadow");
   public static final int WEST = GridBagConstraints.WEST;
   public static final int NORTHWEST = GridBagConstraints.NORTHWEST;

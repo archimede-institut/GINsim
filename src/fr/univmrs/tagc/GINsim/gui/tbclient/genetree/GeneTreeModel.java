@@ -219,7 +219,6 @@ public class GeneTreeModel implements TreeModel {
   }
   public Vector getGeneSymbols() {
     Vector v = new Vector();
-    int n;
     AbstractTreeElement nodeElement, gsElement;
 
     for (int i = 0; i < root.getChildCount(); i++) {
