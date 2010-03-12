@@ -3,25 +3,19 @@ package fr.univmrs.tagc.GINsim.connectivity;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.interactionAnalysis.InteractionAnalysisSelector;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
@@ -36,13 +30,12 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 	private javax.swing.JPanel jContentPane = null;
 	private JFrame frame;
 	protected GsGraph graph;
-    private javax.swing.JButton buttonRun = null;
+    private javax.swing.JButton buttonOpenSCC = null;
     private javax.swing.JButton buttonCancel = null;
     private javax.swing.JButton buttonColorize = null;
 	private javax.swing.JLabel labelProgression = null;
-	private javax.swing.JComboBox actionComboBox = null;
-    private AlgoConnectivity algo = new AlgoConnectivity();
-	private String[] possibleActions;
+    private AlgoConnectivity algoOpenGraph = null;
+    private AlgoConnectivity algoColorize = null;
 	private CascadingStyle cs;
 	private Color[] colorPalette;
 	private List components;
@@ -60,9 +53,6 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 			Tools.error("no graph", frame);
 		}
 		this.graph = graph;
-		this.possibleActions = new String[2];
-		this.possibleActions[0] = Translator.getString("STR_connectivity_create_reducedGraph");
-		this.possibleActions[1] = Translator.getString("STR_connectivity_colorize_currentGraph");
 		initialize();
 	}
 	/**
@@ -84,14 +74,22 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
      * 
      */
     protected void close() {
-        if (algo != null && algo.isAlive()) {
-            algo.cancel();
+        if (algoColorize != null && algoColorize.isAlive()) {
+        	algoColorize.cancel();
         }
-        graph = null;
+        if (algoOpenGraph != null && algoOpenGraph.isAlive()) {
+        	algoOpenGraph.cancel();
+        } 
 		if (isColored) {
 			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
-			if (res == JOptionPane.OK_OPTION) undoColorize();
-			else if (res == JOptionPane.CANCEL_OPTION) return;
+			if (res == JOptionPane.NO_OPTION) {
+				dispose();
+			} else if (res == JOptionPane.CANCEL_OPTION) {
+				return;
+			} else if (res == JOptionPane.YES_OPTION) {
+				undoColorize();
+				dispose();
+			}
 		}
 		dispose();
     }
@@ -117,65 +115,34 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 
             c.gridx = 0;
             c.gridy++;
-            jContentPane.add(getActions(), c);
-            
-            c.gridx = 0;
-            c.gridy++;
             c.gridwidth = 1;
             c.anchor = GridBagConstraints.EAST;
-            jContentPane.add(getJButtonColorize(), c);
+            jContentPane.add(getJButtonCancel(), c);
             
             c.gridx++;
-            c.anchor = GridBagConstraints.EAST;
-            jContentPane.add(getJButtonCancel(), c);
+            jContentPane.add(getJButtonColorize(), c);
  
             c.gridx++;
-            c.anchor = GridBagConstraints.EAST;
-            jContentPane.add(getJButtonRun(), c);
+            jContentPane.add(getJButtonOpenSCC(), c);
 		}
 		return jContentPane;
-	}
-	/**
-	 * Verify if the specified String is an integer
-	 * @param s - string to be tested
-	 * @return true if s is an integer, false if it isn't
-	 */
-	public boolean isInteger(String s){
-		try{
-			Integer.parseInt(s);
-		 }
-		catch (NumberFormatException e) {				
-			return false;
-		}
-		return true;
-	 }
-	
-    /**
-     * This method initializes buttonRun
-     * 
-     * @return buttonRun
-     */
-    private javax.swing.JComboBox getActions() {
-        if(actionComboBox  == null) {
-        	actionComboBox = new javax.swing.JComboBox(this.possibleActions);
-        }
-        return actionComboBox;
-    }
+	}	
    
-   /** This method initializes buttonRun
+   /** This method initializes getJButtonOpenSCC
     * 
     * @return buttonRun
     */
-   private javax.swing.JButton getJButtonRun() {
-       if(buttonRun == null) {
-           buttonRun = new javax.swing.JButton(Translator.getString("STR_run"));
-           buttonRun.addActionListener(new java.awt.event.ActionListener() { 
+   private javax.swing.JButton getJButtonOpenSCC() {
+       if(buttonOpenSCC == null) {
+           buttonOpenSCC = new javax.swing.JButton(Translator.getString("STR_connectivity_create_reducedGraph"));
+           buttonOpenSCC.addActionListener(new java.awt.event.ActionListener() { 
                public void actionPerformed(java.awt.event.ActionEvent e) {
-                   clicked();
+                  buttonOpenSCC.setText(Translator.getString("STR_cancel"));
+                  clicked(AlgoConnectivity.MODE_FULL);
                }
            });
        }
-       return buttonRun;
+       return buttonOpenSCC;
    }
   
     /**
@@ -202,10 +169,10 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
      */
     private javax.swing.JButton getJButtonColorize() {
         if(buttonColorize == null) {
-        	buttonColorize = new javax.swing.JButton(Translator.getString("STR_undo_colorize"));
-        	buttonColorize.setEnabled(false);
+        	buttonColorize = new javax.swing.JButton(Translator.getString("STR_connectivity_colorize_currentGraph"));
         	buttonColorize.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
+                	clicked(AlgoConnectivity.MODE_COLORIZE);
                 	colorize();
                 }
             });
@@ -213,21 +180,29 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
         return buttonColorize;
     }
    
-    protected void clicked() {
-        if (algo.isAlive()) {
-            algo.cancel();
-        } else {
-            algo.configure(graph, this, getModeFromActionComboBox());
+    protected void clicked(int mode) {
+    	 if (algoOpenGraph != null && algoOpenGraph.isAlive()) {
+         	algoOpenGraph.cancel();
+         }
+    	 if (algoColorize != null && algoColorize.isAlive()) {
+    		 algoColorize.cancel();
+         }
+    	 else {
+    		AlgoConnectivity algo;
+    		if (mode == AlgoConnectivity.MODE_COLORIZE) {
+    			algoColorize = new AlgoConnectivity();
+    			algo = algoColorize;
+    		} else {
+    			algoOpenGraph = new AlgoConnectivity();
+    			algo = algoOpenGraph;
+    		}
+            algo.configure(graph, this, mode);
             algo.start();
-            buttonRun.setText(Translator.getString("STR_cancel"));
+            buttonColorize.setEnabled(false);
+            buttonOpenSCC.setEnabled(false);
         }
     }
-    
-    
-    private int getModeFromActionComboBox() {
-    	if (this.actionComboBox.getSelectedIndex() == 0) return AlgoConnectivity.MODE_FULL;
-    	else return AlgoConnectivity.MODE_COLORIZE;
-	}
+
     
 	public void setProgressText(String text) {
         getLabelProgression().setText(text);
@@ -237,11 +212,11 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
         if (result != null) {
         	if (result instanceof GsReducedGraph) {
         		GsEnv.whatToDoWithGraph(frame, (GsReducedGraph)result, true);
-                close();
             }
         }
-        buttonRun.setText(Translator.getString("STR_run"));
-        buttonRun.setEnabled(false);
+        buttonOpenSCC.setText(Translator.getString("STR_connectivity_create_reducedGraph"));
+        buttonColorize.setEnabled(true);
+        buttonOpenSCC.setEnabled(true);
     }
 
     /**
@@ -284,14 +259,13 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 				color_index++;
 			}
 		}		
-    	buttonColorize.setEnabled(true);
     	buttonColorize.setText(Translator.getString("STR_undo_colorize"));
     	isColored = true;
  	}
 	
 	public void undoColorize() {
-		cs.restoreAllNodes(graph.getGraphManager().getVertexAttributesReader());
-    	buttonColorize.setText(Translator.getString("STR_do_colorize"));
+		if (cs != null) cs.restoreAllNodes(graph.getGraphManager().getVertexAttributesReader());
+    	buttonColorize.setText(Translator.getString("STR_connectivity_colorize_currentGraph"));
     	isColored = false;
 	}
 	
@@ -305,4 +279,4 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 	public void setComponents(List components) {
 		this.components = components;
 	}
-}  //  @jve:visual-info  decl-index=0 visual-constraint="11,9"  
+}

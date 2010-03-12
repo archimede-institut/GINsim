@@ -201,8 +201,14 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	public void cancel() {
 		if (isColorized) {
 			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
-			if (res == JOptionPane.OK_OPTION) fii.undoColorize();
-			else if (res == JOptionPane.CANCEL_OPTION) return;
+			if (res == JOptionPane.NO_OPTION) {
+				super.cancel();
+			} else if (res == JOptionPane.CANCEL_OPTION) {
+				return;
+			} else if (res == JOptionPane.YES_OPTION) {
+				undoColorize();
+				super.cancel();
+			}
 		}
 		super.cancel();
 	}
