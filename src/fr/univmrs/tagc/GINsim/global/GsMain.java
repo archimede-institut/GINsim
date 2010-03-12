@@ -131,7 +131,19 @@ public class GsMain {
                             GsEnv.newMainFrame(), null, (String) open.get(i));
                 }
             } else {
-                GsEnv.newMainFrame();
+            	File autoexec = new File("autoexec.zginml");
+            	if (autoexec.exists()) {
+            		GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(),
+                            GsEnv.newMainFrame(), null, "autoexec.zginml");
+            		return;
+            	}
+            	autoexec = new File("autoexec.ginml");
+            	if (autoexec.exists()) {
+            		GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(),
+                            GsEnv.newMainFrame(), null, "autoexec.ginml");
+            		return;
+            	}                
+            	GsEnv.newMainFrame();
             }
         }
     }
