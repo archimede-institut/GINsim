@@ -18,6 +18,7 @@
 		<plugin name="graphComparator" 			mainClass="fr.univmrs.tagc.GINsim.graphComparator.GraphComparatorPlugin"/>
 		<plugin name="DHgraphSimplifier" 		mainClass="fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalSimplifierPlugin"/>
 		<plugin name="stateInRegGraph" 			mainClass="fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraphPlugin"/>
+		<plugin name="regFunctionsTreeView" 	mainClass="fr.univmrs.tagc.GINsim.treeViewer.GsRegulatoryFunctionTreeViewPlugin"/>
 
 		<!-- export plugins -->
 		<plugin name="export" 					mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin"/>
