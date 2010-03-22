@@ -14,7 +14,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.ColorPalette;
 
 public class GsTreeParserFromRegulatoryGraph extends GsTreeParser {
-	private final static int debug = 0;
+	private final static int debug = 1;
 	
 	public static final String PARAM_REGGRAPH = "pfrg_regGraph";
 	public static final String PARAM_INITIALVERTEXINDEX = "pfrg_initialVertex";
@@ -62,7 +62,7 @@ public class GsTreeParserFromRegulatoryGraph extends GsTreeParser {
 
 		GsRegulatoryVertex initialVertex = (GsRegulatoryVertex) nodeOrder.get(initial_gene_id);
 		
-		this.root = initialVertex.getTreeParameters(regGraph);
+		this.root = initialVertex.getTreeParameters(regGraph).reduce();
 		widthPerDepth = widthPerDepth_acc = realDetph = null;
 		total_levels = max_depth = 0;
 		max_terminal = initialVertex.getMaxValue()+1;
@@ -175,7 +175,7 @@ public class GsTreeParserFromRegulatoryGraph extends GsTreeParser {
 				treeNode = GsTree.leafs[o.value];
 				if (!tree.containsNode(treeNode)) {
 					tree.addVertex(treeNode);
-				}	
+				}
 			}
 			return treeNode;
 		}
@@ -204,16 +204,18 @@ public class GsTreeParserFromRegulatoryGraph extends GsTreeParser {
 			int mult = 1;
 			List parents = new ArrayList();
 			parents.add(parent);
+			int last_real = 0;
 			for (int j = lastLevel+1 ; j < max_depth ; j++) { //For all the missing genes
 				if (realDetph[j] != -2) {
 					parents = addChildren(j, mult, parents, childIndex, currentWidthPerDepth, ereader);
 					mult = widthPerDepth[j];
+					last_real = j;
 				}
 			}
 			for (Iterator it = parents.iterator(); it.hasNext();) {
 				GsTreeNode p = (GsTreeNode) it.next();
 				if (mult > 1) {
-					for (int i = 0; i < max_terminal; i++) {
+					for (int i = 0; i < widthPerDepth[last_real]; i++) {
 						log(tab(max_depth)+"S leaf : value:"+o.value+", level:"+max_depth+" "+(currentWidthPerDepth[max_depth]+1)+"/"+widthPerDepth_acc[max_depth]);
 						treeNode = new GsTreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], GsTreeNode.TYPE_LEAF, o.value);
 						tree.addVertex(treeNode);
