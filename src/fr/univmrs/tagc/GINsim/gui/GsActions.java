@@ -63,8 +63,8 @@ public class GsActions implements GraphChangeListener {
 	private JMenu				actionMenu					= null;
 	private JMenu				exportMenu					= null;
 	private JMenu				layoutMenu					= null;
-	private JMenu				openMenu					= null;
-	private JMenu				newMenu						= null;
+//	private JMenu				openMenu					= null;
+//	private JMenu				newMenu						= null;
 	private JMenu				addEdgeMenu					= null;
 	private JMenu				addVertexMenu				= null;
 	private JMenu				recentMenu					= null;
@@ -574,23 +574,23 @@ public class GsActions implements GraphChangeListener {
 
 		
 		// we could have auto-generated open/new menu, but we don't want it now!
-		if (false) {
-			// add menuentry / toolbar buttons for those actions
-			openMenu = new JMenu(Translator.getString("STR_open"));
-			newMenu = new JMenu(Translator.getString("STR_new"));
-			Vector v_graph = GsEnv.getGraphType();
-			for (int i = 0 ; i < v_graph.size() ; i++) {
-				GsGraphDescriptor gd = (GsGraphDescriptor)v_graph.get(i);
-				openMenu.add(new GsOpenAction(gd, GsOpenAction.MODE_OPEN,
-						mainFrame));
-				if (gd.canCreate()) {
-					newMenu.add(new GsOpenAction(gd, GsOpenAction.MODE_NEW,
-							mainFrame));
-				}
-			}
-			fileMenu.add(newMenu);
-			fileMenu.add(openMenu);
-		} else {
+//		if (false) {
+//			// add menuentry / toolbar buttons for those actions
+//			openMenu = new JMenu(Translator.getString("STR_open"));
+//			newMenu = new JMenu(Translator.getString("STR_new"));
+//			Vector v_graph = GsEnv.getGraphType();
+//			for (int i = 0 ; i < v_graph.size() ; i++) {
+//				GsGraphDescriptor gd = (GsGraphDescriptor)v_graph.get(i);
+//				openMenu.add(new GsOpenAction(gd, GsOpenAction.MODE_OPEN,
+//						mainFrame));
+//				if (gd.canCreate()) {
+//					newMenu.add(new GsOpenAction(gd, GsOpenAction.MODE_NEW,
+//							mainFrame));
+//				}
+//			}
+//			fileMenu.add(newMenu);
+//			fileMenu.add(openMenu);
+//		} else {
 			GsGraphDescriptor gd = GsGinsimGraphDescriptor.getInstance();
 			actionNew = new GsOpenAction(gd, GsOpenAction.MODE_NEW, mainFrame,
 					"STR_new", "STR_new_descr", KeyStroke.getKeyStroke(
@@ -604,7 +604,7 @@ public class GsActions implements GraphChangeListener {
 					mainFrame, "STR_open_and_do", "STR_open_and_do_descr", KeyStroke
 							.getKeyStroke(KeyEvent.VK_O, mask | KeyEvent.SHIFT_DOWN_MASK));
 			fileMenu.add(actionOpenAndDo);
-		}
+//		}
 
 		recentMenu = new JMenu(Translator.getString("STR_openRecent"));
 		fileMenu.add(recentMenu);
@@ -1028,8 +1028,9 @@ public class GsActions implements GraphChangeListener {
                 // use as delegates for various com.apple.eawt.ApplicationListener methods
                 OSXAdapter.setQuitHandler(this, this.getClass().getDeclaredMethod("quit", (Class[])null));
                 OSXAdapter.setAboutHandler(this, this.getClass().getDeclaredMethod("about", (Class[])null));
+                OSXAdapter.setFileHandler(this, this.getClass().getDeclaredMethod("loadGINML", new Class[] { String.class }));
             } catch (Exception e) {
-                System.err.println("Error while loading the OSXAdapter:"); //FIXME
+                System.err.println("Error while loading the OSXAdapter:");
                 e.printStackTrace();
             }
         }
@@ -1040,6 +1041,9 @@ public class GsActions implements GraphChangeListener {
 	public Object quit() {
 		this.filecallback.quit();
 		return Boolean.FALSE;
+	}
+	public void loadGINML(String filename) {
+		GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(), GsEnv.newMainFrame(), null, filename);
 	}
 }
 
