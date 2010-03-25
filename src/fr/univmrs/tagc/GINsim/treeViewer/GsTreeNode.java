@@ -1,6 +1,12 @@
 package fr.univmrs.tagc.GINsim.treeViewer;
 
+import java.util.Iterator;
+
+import org._3pq.jgrapht.edge.DirectedEdge;
+
 import fr.univmrs.tagc.GINsim.export.generic.Dotify;
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.common.Debugger;
 
 public class GsTreeNode implements Dotify {
 	public static long nextUid = 0;
@@ -10,6 +16,8 @@ public class GsTreeNode implements Dotify {
 
 	public static final int PADDING_VERTICAL = 60;
 	public static final int PADDING_HORIZONTAL = 60;
+	
+	public static final int LEAF_DEFAULT_DEPTH = -1;
 
 	/**
 	 * The value should be -42 if the node is skipped and added in the tree.
@@ -56,7 +64,7 @@ public class GsTreeNode implements Dotify {
 	 * @param type
 	 */
 	public GsTreeNode(String label, int depth, int width, byte type) {
-		this(label, depth, width, type, (byte) -1);
+		this(label, depth, width, type, (byte) LEAF_DEFAULT_DEPTH);
 	}
 	public GsTreeNode(String label, int depth, int width, byte type, byte value) {
 		this.uid = nextUid++;
@@ -67,6 +75,14 @@ public class GsTreeNode implements Dotify {
 		this.value = value;
 	}
 	
+	public GsTreeNode(GsTreeNode other) {
+		this.uid = nextUid++;
+		this.label = other.label;
+		this.type = other.type;
+		this.depth = other.depth;
+		this.width = other.width;
+		this.value = other.value;
+	}
 	/*
 	 * HELPERS
 	 */
@@ -117,5 +133,17 @@ public class GsTreeNode implements Dotify {
 	public boolean equals(Object other) {
 		if (!(other instanceof GsTreeNode)) return false;
 		return this.uid == ((GsTreeNode)other).uid;
+	}
+	public GsTreeNode deepCopy(GsGraphManager gm) {
+		GsTreeNode self = new GsTreeNode(this);
+		Debugger.log(self);
+		gm.addVertex(self);
+		for (Iterator it = gm.getOutgoingEdges(this).iterator(); it.hasNext();) {
+			DirectedEdge e = (DirectedEdge) it.next();
+			GsTreeNode target = ((GsTreeNode) e.getTarget()).deepCopy(gm);
+			gm.addVertex(target);
+			gm.addEdge(self, target, null);
+		}
+		return self;
 	}
 }

@@ -1,5 +1,8 @@
 package fr.univmrs.tagc.common;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * A simple helper class to log things in System.out or System.err
  * 
@@ -21,7 +24,35 @@ public class Debugger {
 	 * print the log in {@link System}.out and append msg to the end of the line
 	 * @param msg the message to append at the end of the line
 	 */
-	public static void log(String msg) {
+	public static void log(Object msg) {
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+	}
+	/**
+	 * print the log in {@link System}.out and append msg to the end of the line
+	 * @param msg the message to append at the end of the line
+	 */
+	public static void log(int msg) {
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+	}
+	/**
+	 * print the log in {@link System}.out and append msg to the end of the line
+	 * @param msg the message to append at the end of the line
+	 */
+	public static void log(boolean msg) {
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+	}
+	/**
+	 * print the log in {@link System}.out and append msg to the end of the line
+	 * @param msg the message to append at the end of the line
+	 */
+	public static void log(double msg) {
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+	}
+	/**
+	 * print the log in {@link System}.out and append msg to the end of the line
+	 * @param msg the message to append at the end of the line
+	 */
+	public static void log(long msg) {
 		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
 	}
 
@@ -35,7 +66,7 @@ public class Debugger {
 	 * print the log in {@link System}.err and append msg to the end of the line
 	 * @param msg the message to append at the end of the line
 	 */
-	public static void logr(String msg) {
+	public static void logr(Object msg) {
 		System.err.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
 	}
 
@@ -44,10 +75,50 @@ public class Debugger {
 	}
 
 	private static String getClassName() {
-	    return Thread.currentThread().getStackTrace()[3].getClassName();
+		String clname = Thread.currentThread().getStackTrace()[3].getClassName();
+	    return clname.substring(clname.lastIndexOf('.')+1);
 	}
 
 	private static String getMethodName() {
 	    return Thread.currentThread().getStackTrace()[3].getMethodName();
+	}
+	public static void log_collection(List parents) {
+		StringBuffer s = new StringBuffer("[");
+		for (Iterator iterator = parents.iterator(); iterator.hasNext();) {
+			s.append(iterator.next()+", ");
+		}
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s.substring(0, s.length()-2)+"]");
+	}
+	public static void log_collection(Object[] parents) {
+		StringBuffer s = new StringBuffer("[");
+		for (int i = 0; i < parents.length-1; i++) {
+			s.append(parents[i]+", ");
+		}
+		s.append(parents[parents.length-1]+"]");
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s);
+	}
+	public static void log_collection(int[] parents) {
+		StringBuffer s = new StringBuffer("[");
+		for (int i = 0; i < parents.length-1; i++) {
+			s.append(parents[i]+",");
+		}
+		s.append(parents[parents.length-1]+"]");
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s);
+	}
+	public static void log_collection(double[] parents) {
+		StringBuffer s = new StringBuffer("[");
+		for (int i = 0; i < parents.length-1; i++) {
+			s.append(parents[i]+",");
+		}
+		s.append(parents[parents.length-1]+"]");
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s);
+	}
+	public static void log_collection(boolean[] parents) {
+		StringBuffer s = new StringBuffer("[");
+		for (int i = 0; i < parents.length-1; i++) {
+			s.append(parents[i]+", ");
+		}
+		s.append(parents[parents.length-1]+"]");
+		System.out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s);
 	}
 }

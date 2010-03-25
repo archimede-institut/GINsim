@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import fr.univmrs.tagc.GINsim.circuit.GsFunctionalityContext;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
@@ -23,7 +24,7 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 public class GsTreeActionPanel extends JPanel {
 	private static final long serialVersionUID = 3342245591953494375L;
 
-	private JComboBox nodeList;
+	private JComboBox sourceList;
 
 	private JComboBox treeModeList;
 	private GsTree tree;
@@ -32,8 +33,8 @@ public class GsTreeActionPanel extends JPanel {
 	private static Vector TREEMODES;
 	static {
 		TREEMODES = new Vector(3);
-		TREEMODES.add(Translator.getString("STR_treeviewer_diagram"));
 		TREEMODES.add(Translator.getString("STR_treeviewer_diagram_with_all_leafs"));
+		TREEMODES.add(Translator.getString("STR_treeviewer_diagram"));
 		TREEMODES.add(Translator.getString("STR_treeviewer_tree"));
 	}
 	
@@ -85,14 +86,26 @@ public class GsTreeActionPanel extends JPanel {
 			c.gridy++;
 			add(new JLabel(Translator.getString("STR_treeviewer_tree_choose_gene")), c);
 			c.gridx++;
-			nodeList = new JComboBox(new Vector((List)parser.getParameter(GsTreeParser.PARAM_NODEORDER)));
-			nodeList.setSelectedIndex(((Integer)parser.getParameter(GsTreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX)).intValue());
-			nodeList.addActionListener(new ActionListener() {
+			sourceList = new JComboBox(new Vector((List)parser.getParameter(GsTreeParser.PARAM_NODEORDER)));
+			sourceList.setSelectedIndex(((Integer)parser.getParameter(GsTreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX)).intValue());
+			sourceList.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					selectionChange();
 				}
 			});
-			add(nodeList, c);
+			add(sourceList, c);
+		} else if (parser instanceof GsTreeParserFromCircuit) {
+			c.gridx = 0;
+			c.gridy++;
+			add(new JLabel(Translator.getString("STR_treeviewer_tree_choose_circuit")), c);
+			c.gridx++;
+			sourceList = new JComboBox((Vector)parser.getParameter(GsTreeParserFromCircuit.PARAM_ALLCONTEXTS));
+			sourceList.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					selectionChange();
+				}
+			});
+			add(sourceList, c);		
 		} //TODO: else { //Add other parser support here
 	}
 
@@ -101,10 +114,13 @@ public class GsTreeActionPanel extends JPanel {
 		if (treeMode < 0 && treeMode > 2) treeMode = 0;
 		
 		if (tree.getParser() instanceof GsTreeParserFromRegulatoryGraph) {
-			Integer geneIndex = new Integer(nodeList.getSelectedIndex());
+			Integer geneIndex = new Integer(sourceList.getSelectedIndex());
 			tree.getParser().setParameter(GsTreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, geneIndex);
+		} else if (tree.getParser() instanceof GsTreeParserFromCircuit) {
+			int contextIndex = sourceList.getSelectedIndex();
+			GsFunctionalityContext fcontext = (GsFunctionalityContext) ((List)tree.getParser().getParameter(GsTreeParserFromCircuit.PARAM_ALLCONTEXTS)).get(contextIndex);
+			tree.getParser().setParameter(GsTreeParserFromCircuit.PARAM_INITIALCIRCUITDESC, fcontext.getContext());
 		}
-		
 		tree.getParser().run(treeMode);
 	}
 }

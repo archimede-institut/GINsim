@@ -8,14 +8,12 @@ import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.Tools;
 
 public abstract class GsTreeParser {
 	public static final String PARAM_NODEORDER = "p_nodeOrder";
 	protected GsTree tree;
 	protected List nodeOrder;
-	protected OmddNode root;
 	protected GsGraphManager graphManager;
 	private Map parameters;
 
@@ -25,7 +23,6 @@ public abstract class GsTreeParser {
 	 * @param tree
 	 */
 	public GsTreeParser() {
-		this.root = null;
 	}
 	
 	/**

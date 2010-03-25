@@ -5,9 +5,19 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeModelEvent;
@@ -18,14 +28,18 @@ import javax.swing.tree.TreeSelectionModel;
 import fr.univmrs.tagc.GINsim.connectivity.AlgoConnectivity;
 import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.GINsim.treeViewer.GsTree;
+import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParser;
+import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParserFromCircuit;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
@@ -52,6 +66,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     private static final int STATUS_SEARCH_CIRCUIT = 2;
     private static final int STATUS_SHOW_CIRCUIT = 3;
     private static final int STATUS_SHOW_RESULT = 4;
+
     private int status = STATUS_NONE;
 
     private Vector v_circuit = new Vector();
@@ -72,6 +87,8 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     MutantSelectionPanel mutantPanel;
 
 	private JButton	but_pyexport;
+
+	private JButton viewContextButton;
 
     /**
      * This is the default constructor
@@ -138,48 +155,59 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         	resultPanel = new javax.swing.JPanel();
         	resultPanel.setLayout(new GridBagLayout());
         	GridBagConstraints c = new GridBagConstraints();
-        	c.gridx = 0;
-        	c.gridy = 0;
+        	c.gridwidth = 2;
         	c.weightx = 1;
         	c.fill = GridBagConstraints.BOTH;
+
+        	c.gridx = 0;
+        	c.gridy = 0;
         	mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
         	resultPanel.add(mutantPanel, c);
 
-        	c = new GridBagConstraints();
-        	c.gridx = 0;
-        	c.gridy = 1;
-        	c.weightx = 1;
-        	c.fill = GridBagConstraints.BOTH;
+        	c.gridy++;
         	resultPanel.add(getLabelProgression(), c);
         	
-        	c = new GridBagConstraints();
-        	c.gridx = 0;
-        	c.gridy = 3;
-        	c.weightx = 1;
+        	c.gridy++;
         	c.weighty = 1;
-        	c.fill = GridBagConstraints.BOTH;
         	resultPanel.add(getSplitPane(), c);
         	
-            // python button
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 4;
-            c.anchor = GridBagConstraints.WEST;
+            // actions button
+        	c.gridy++;
+        	c.weighty = 0;
+        	c.anchor = GridBagConstraints.WEST;
+        	c.fill = GridBagConstraints.NONE;
+        	c.gridwidth = 1;
+            resultPanel.add(getViewContextButton(), c);
+            
+        	c.gridx++;
             resultPanel.add(get_pythonPanel(), c);
 
             // cleanup checkbox
-            c = new GridBagConstraints();
             c.gridx = 0;
-            c.gridy = 2;
-            c.anchor = GridBagConstraints.WEST;
-            cb_cleanup = new JCheckBox(Translator.getString("STR_do_cleanup"));
+            c.gridy++;
+        	c.gridwidth = 2;
+        	c.fill = GridBagConstraints.BOTH;
+        	cb_cleanup = new JCheckBox(Translator.getString("STR_do_cleanup"));
             cb_cleanup.setSelected(true);           // FIXME: remember this as a setting
             resultPanel.add(cb_cleanup, c);
         }
         return resultPanel;
     }
     
-    private JButton get_pythonPanel() {
+    private JButton getViewContextButton() {
+    	if (viewContextButton == null) {
+    		viewContextButton = new JButton(Translator.getString("STR_circuit_viewContext"));
+    		viewContextButton.setEnabled(false);
+    		viewContextButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					viewContext();
+				}
+			});
+    	}
+		return viewContextButton;
+	}
+
+	private JButton get_pythonPanel() {
     	if (but_pyexport == null) {
     		but_pyexport = new JButton("to python");
     		but_pyexport.addActionListener(new ActionListener() {
@@ -230,13 +258,13 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     }
     
     protected void circuitToPython(List no, StringBuffer s, GsCircuitDescrInTree cit) {
-    	for (int i=0 ; i<cit.circuit.t_context.length ; i++) {
-    	    if (cit.circuit.t_context[i].next != null) {
+    	for (int i=0 ; i<cit.getCircuit().t_context.length ; i++) {
+    	    if (cit.getCircuit().t_context[i].next != null) {
     	        s.append("    ct.add_circuit((");
 
-    	        for (int j=0 ; j<cit.circuit.t_me.length ; j++) {
+    	        for (int j=0 ; j<cit.getCircuit().t_me.length ; j++) {
     	            int idx = 0; // FIXME: get the right edge!
-    	            GsRegulatoryMultiEdge me = cit.circuit.t_me[j];
+    	            GsRegulatoryMultiEdge me = cit.getCircuit().t_me[j];
     	            int src = no.indexOf(me.getSource());
     	            int dst = no.indexOf(me.getTarget());
     	            s.append("("+src+","+dst+","
@@ -245,7 +273,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
     	                     + "),");
     	        }
     	        s.append("), ");
-        	    s.append(mdd2py(cit.circuit.t_context[i]));
+        	    s.append(mdd2py(cit.getCircuit().t_context[i]));
                 s.append(")\n");
     	    }
     	}
@@ -568,33 +596,18 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
             tree.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
 				public void valueChanged(ListSelectionEvent e) {
-					showInfo(((TreeTableModelAdapter)tree.getModel()).nodeForRow(tree.getSelectedRow()));
+					showInfo();
 				}
 			});
         }
     }
 
-    protected void showInfo(Object selected) {
-        if (jta == null) {
-            return;
-        }
-        if (!(selected instanceof GsCircuitDescrInTree)) {
-        	if (selected == null || GsCircuitTreeModel.s_root.equals(selected)) {
-    			jta.setText("");
-    			return;
-			}
-			jta.setText("no data");
-            int count = treemodel.getChildCount(selected);
-            if (count > 0) {
-                jta.setText("contains "+count+" circuits");
-            }
-            return;
-        }
-        GsCircuitDescrInTree cdtree = (GsCircuitDescrInTree)selected;
+    protected void showInfo() {
+        GsCircuitDescrInTree cdtree = getSelectedContextFromTreeTable();
         int index = 0;
         if (cdtree.summary) {
-            if (!treemodel.isLeaf(selected)) {
-                int count = treemodel.getChildCount(selected);
+            if (!treemodel.isLeaf(cdtree)) {
+                int count = treemodel.getChildCount(cdtree);
                 jta.setText("contains "+count+" layered-circuits");
                 return;
             }
@@ -603,25 +616,25 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
                     index = 0;
                     break;
                 case GsCircuitDescr.FUNCTIONNAL:
-                    index = ((GsCircuitDescrInTree)cdtree.circuit.v_functionnal.get(0)).key;
+                    index = ((GsCircuitDescrInTree)cdtree.getCircuit().v_functionnal.get(0)).key;
                     break;
                 case GsCircuitDescr.POSITIVE:
-                    index = ((GsCircuitDescrInTree)cdtree.circuit.v_positive.get(0)).key;
+                    index = ((GsCircuitDescrInTree)cdtree.getCircuit().v_positive.get(0)).key;
                     break;
                 case GsCircuitDescr.NEGATIVE:
-                    index = ((GsCircuitDescrInTree)cdtree.circuit.v_negative.get(0)).key;
+                    index = ((GsCircuitDescrInTree)cdtree.getCircuit().v_negative.get(0)).key;
                     break;
                 case GsCircuitDescr.DUAL:
-                    index = ((GsCircuitDescrInTree)cdtree.circuit.v_dual.get(0)).key;
+                    index = ((GsCircuitDescrInTree)cdtree.getCircuit().v_dual.get(0)).key;
                     break;
             }
-        } else if (cdtree.key >= cdtree.circuit.t_context.length) {
+        } else if (cdtree.key >= cdtree.getCircuit().t_context.length) {
             index = 0;
         } else {
             index = cdtree.key;
         }
         
-        GsCircuitDescr circuit = cdtree.circuit;
+        GsCircuitDescr circuit = cdtree.getCircuit();
         if (circuit.t_context == null) {
             jta.setText("no data");
             return;
@@ -675,6 +688,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
 	        splitPane.setDividerLocation(h - 100);
         }
         treemodel.reload(this);
+        viewContextButton.setEnabled(true);
     }
 
     private JTextArea getJTextArea() {
@@ -696,212 +710,68 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         }
         return labelProgression;
     }
-}
-
-class GsCircuitDescr {
-    /** vertices in this circuit */
-    public GsRegulatoryVertex[] t_vertex;
-    /** GsRegulatoryMultiEdges in this circuit */
-    public GsRegulatoryMultiEdge[] t_me;
-
-    protected static final int FALSE = 0;
-    protected static final int ALL = 1;
-    protected static final int FUNCTIONNAL = 2;
-    protected static final int POSITIVE = 3;
-    protected static final int NEGATIVE = 4;
-    protected static final int DUAL = 5;
     
-    protected static final String[] SIGN_NAME = {
-    	Translator.getString("STR_not-functional"),
-    	Translator.getString("STR_all"),
-    	Translator.getString("STR_functional"),
-    	Translator.getString("STR_positive"), 
-    	Translator.getString("STR_negative"),
-    	Translator.getString("STR_dual")};
-    
-    // data on all subcircuits
-    protected OmsddNode[] t_context;
-    protected long[][] t_mark;
-    protected int[][] t_sub;
-    
-    // which sub circuits go in which category ?
-    Vector v_positive = null;
-    Vector v_negative = null;
-    Vector v_dual = null;
-    Vector v_all = new Vector();
-    Vector v_functionnal = null;
-    
-    // to iterate through "subcircuits"
-    private int[] t_pos;
-    private int[] t_posMax;
-
-    long score;
-    int sign;
-
     /**
-     * print the circuit in a nice order.
-     * 
-     * @param nodeOrder
-     * @return the tree of members of the circuit
+     * Launch the treeViewer to analyse the contexts of functionalities
+     * if a context is selected in the treeTable, it will use it, else it will use a "random" context (the first in v_circuit)
      */
-    public String printMe(Vector nodeOrder) {
-        int min = nodeOrder.indexOf(t_vertex[0]);
-        int minIndex = 0;
-        for (int i = 0; i < t_vertex.length; i++) {
-            int tmp = nodeOrder.indexOf(t_vertex[i]);
-            if (tmp < min) {
-                min = tmp;
-                minIndex = i;
-            }
-        }
-
-        String s = "";
-        for (int i = minIndex; i < t_vertex.length; i++) {
-            s += "" + (nodeOrder.indexOf(t_vertex[i]) + 1);
-        }
-        for (int i = 0; i < minIndex; i++) {
-            s += "" + (nodeOrder.indexOf(t_vertex[i]) + 1);
-        }
-        return s;
-    }
-
-    /**
-     * check if this circuit is functional.
-     * 
-     * @param algo
-     * @param nodeOrder 
-     * 
-     * @return true if the circuit is functional
-     */
-    public boolean check(GsCircuitAlgo algo, List nodeOrder) {
-        t_pos = new int[t_me.length];
-        t_posMax = new int[t_me.length];
-        int nbSub = 1;
-        for (int i = 0; i < t_pos.length; i++) {
-            t_posMax[i] = t_me[i].getEdgeCount() - 1;
-            nbSub *= t_posMax[i]+1;
-            t_pos[i] = 0;
-        }
-
-        int[] t_circuit = new int[nodeOrder.size()]; // filled with "0"
-        for (int i=0 ; i< t_me.length ; i++) {
-            t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(0);
-        }
-        GsRegulatoryEdge edge, next_edge;
-        boolean goon;
-        int sub = 0;
-        t_context = new OmsddNode[nbSub];
-        t_mark = new long[nbSub][];
-        t_sub = new int[nbSub][];
-        do {
-            OmsddNode context = OmsddNode.POSITIVE;
-            edge = t_me[t_me.length - 1].getEdge(t_pos[t_pos.length - 1]);
-            for (int i = 0; i < t_me.length; i++) {
-            	next_edge = t_me[i].getEdge(t_pos[i]);
-                OmsddNode node = algo.checkEdge(edge, t_circuit,
-                        next_edge.getMin(), next_edge.getMax());
-                edge = next_edge;
-                context = context.merge(node, OmsddNode.AND);
-            }
-
-            GsCircuitDescrInTree cdtree = new GsCircuitDescrInTree(this, false, sub);
-            v_all.add(cdtree);
-            if (algo.do_cleanup) {
-            	t_context[sub] = context.cleanup(t_circuit).reduce();
-            } else {
-            	t_context[sub] = context.reduce();
-            }
-            t_mark[sub] = algo.score(t_context[sub]);
-            t_sub[sub] = (int[])t_pos.clone();
-            switch ((int)t_mark[sub][1]) {
-                case POSITIVE:
-                    if (v_positive == null) {
-                        v_positive = new Vector();
-                    }
-                    v_positive.add(cdtree);
-                    if (v_functionnal == null) {
-                        v_functionnal = new Vector();
-                    }
-                    v_functionnal.add(cdtree);
-                    break;
-                case NEGATIVE:
-                    if (v_negative == null) {
-                        v_negative = new Vector();
-                    }
-                    v_negative.add(cdtree);
-                    if (v_functionnal == null) {
-                        v_functionnal = new Vector();
-                    }
-                    v_functionnal.add(cdtree);
-                    break;
-                case DUAL:
-                    if (v_dual == null) {
-                        v_dual = new Vector();
-                    }
-                    v_dual.add(cdtree);
-                    if (v_functionnal == null) {
-                        v_functionnal = new Vector();
-                    }
-                    v_functionnal.add(cdtree);
-                    break;
-            }
-            if (t_mark[sub][0] > score) {
-                score = t_mark[sub][0];
-            }
-
-            // find next subcircuit
-            goon = false;
-            for (int i = t_pos.length - 1; i >= 0; i--) {
-                if (t_pos[i] == t_posMax[i]) {
-                    t_pos[i] = 0;
-                    t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(0);
-                } else {
-                    t_pos[i]++;
-                    t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(t_pos[i]);
-                    goon = true;
-                    break;
-                }
-            }
-            sub++;
-        } while (goon);
-        
-        return v_positive != null || v_negative != null || v_dual != null;
-    }
-
-    protected int getChildCount(int key) {
-        switch (key) {
-            case ALL:
-                break;
-            case POSITIVE:
-                break;
-            case NEGATIVE:
-                break;
-        }
-        return 0;
-    }
-
-	public void clear() {
-		if (v_all != null) {
-			v_all.clear();
+	private void viewContext() {
+		GsTreeParser parser = new GsTreeParserFromCircuit();
+		GsTree tree = new GsTree(parser);
+			
+		parser.setParameter(GsTreeParser.PARAM_NODEORDER, graph.getNodeOrder());
+		parser.setParameter(GsTreeParserFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
+		parser.setParameter(GsTreeParserFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
+		GsEnv.newMainFrame(tree);
+	}
+	
+	/**
+	 * Return a vector of GsFunctionalityContext for each functional context of functionality.
+	 */
+	private Vector getCircuitDescriptors() {
+		Vector contexts = new Vector(v_circuit.size());
+		for (Iterator it = v_circuit.iterator(); it.hasNext();) {
+			GsCircuitDescrInTree cdit = (GsCircuitDescrInTree) it.next();
+			GsCircuitDescr cd = cdit.getCircuit();
+			OmsddNode[] context = cd.getContext();
+			Debugger.log_collection(context);
+			for (int i = 0; i < context.length; i++) {
+				OmsddNode o = context[i];
+				if (o != OmsddNode.FALSE) {
+					contexts.add(new GsFunctionalityContext(cd, i));
+				}
+			}
 		}
-    	if (v_functionnal != null) {
-    		v_functionnal.clear();
-    		v_functionnal = null;
-    	}
-    	if (v_positive != null) {
-    		v_positive.clear();
-    		v_positive = null;
-    	}
-    	if (v_negative != null) {
-    		v_negative.clear();
-    		v_negative = null;
-    	}
-    	if (v_dual != null) {
-    		v_dual.clear();
-    		v_dual = null;
-    	}
+		return contexts;
+	}
+	/**
+	 * Return the selected context from the treeTable
+	 * if none is selected, then return the first circuit in v_circuit
+	 */
+	private GsCircuitDescrInTree getSelectedContextFromTreeTable() {
+		GsCircuitDescrInTree circuitDescrInTree  = null;
+		for (Iterator it = v_circuit.iterator(); it.hasNext();) {
+			circuitDescrInTree = (GsCircuitDescrInTree) it.next();
+			if (circuitDescrInTree.getCircuit().sign != GsCircuitDescr.FALSE) break;
+		}
+		Object selected = ((TreeTableModelAdapter)tree.getModel()).nodeForRow(tree.getSelectedRow());
+		if (!(selected instanceof GsCircuitDescrInTree)) {
+        	if (selected == null || GsCircuitTreeModel.s_root.equals(selected)) {
+    			jta.setText("");
+    			return circuitDescrInTree;
+			}
+			jta.setText("no data");
+            int count = treemodel.getChildCount(selected);
+            if (count > 0) {
+                jta.setText("contains "+count+" circuits");
+            }
+            return circuitDescrInTree;
+        }
+		return (GsCircuitDescrInTree)selected;
 	}
 }
+
+
 
 class GsCircuitTreeModel extends AbstractTreeTableModel {
 
@@ -938,12 +808,12 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
         m_parent.put("All", v_circuit);
         m_parent.put(s_root, v_root);
         for (int i = 0; i < v_circuit.size(); i++) {
-        	GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).circuit;
+        	GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).getCircuit();
         	cdescr.clear();
         }
         
         for (int i = 0; i < v_circuit.size(); i++) {
-            GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).circuit;
+            GsCircuitDescr cdescr = ((GsCircuitDescrInTree) v_circuit.get(i)).getCircuit();
             cdescr.check(circuitAlgo, graph.getNodeOrder());
             GsCircuitDescrInTree cdtree;
             if (cdescr.v_all.size() > 1) {
@@ -1089,27 +959,27 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
 	                        index = 0;
 	                        break;
 	                    case GsCircuitDescr.FUNCTIONNAL:
-	                        index = ((GsCircuitDescrInTree)cdtree.circuit.v_functionnal.get(0)).key;
+	                        index = ((GsCircuitDescrInTree)cdtree.getCircuit().v_functionnal.get(0)).key;
 	                        break;
 	                    case GsCircuitDescr.POSITIVE:
-	                        index = ((GsCircuitDescrInTree)cdtree.circuit.v_positive.get(0)).key;
+	                        index = ((GsCircuitDescrInTree)cdtree.getCircuit().v_positive.get(0)).key;
 	                        break;
 	                    case GsCircuitDescr.NEGATIVE:
-	                        index = ((GsCircuitDescrInTree)cdtree.circuit.v_negative.get(0)).key;
+	                        index = ((GsCircuitDescrInTree)cdtree.getCircuit().v_negative.get(0)).key;
 	                        break;
 	                    case GsCircuitDescr.DUAL:
-	                        index = ((GsCircuitDescrInTree)cdtree.circuit.v_dual.get(0)).key;
+	                        index = ((GsCircuitDescrInTree)cdtree.getCircuit().v_dual.get(0)).key;
 	                        break;
 	                }
-	            } else if (cdtree.key >= cdtree.circuit.t_context.length) {
+	            } else if (cdtree.key >= cdtree.getCircuit().t_context.length) {
 	                index = 0;
 	            } else {
 	                index = cdtree.key;
 	            }
-	            if (cdtree.circuit.t_mark != null 
-	            	&& cdtree.circuit.t_mark.length > index 
-	            	&& cdtree.circuit.t_mark[index] != null) {
-	            	return GsCircuitDescr.SIGN_NAME[(int)cdtree.circuit.t_mark[index][1]];
+	            if (cdtree.getCircuit().t_mark != null 
+	            	&& cdtree.getCircuit().t_mark.length > index 
+	            	&& cdtree.getCircuit().t_mark[index] != null) {
+	            	return GsCircuitDescr.SIGN_NAME[(int)cdtree.getCircuit().t_mark[index][1]];
 	            }
 				return "??";
 		}
@@ -1121,88 +991,3 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     }	
 }
 
-class GsCircuitDescrInTree {
-    GsCircuitDescr circuit;
-    boolean summary;
-    int key;
-    
-    protected GsCircuitDescrInTree(GsCircuitDescr cdescr, boolean summary, int key) {
-        this.circuit = cdescr;
-        this.key = key;
-        this.summary = summary;
-    }
-
-    public String toString() {
-        if (circuit.t_vertex == null) {
-            return "no name";
-        }
-        int nbChild = 1;
-        int index;
-        if (summary) {
-        	Object o = null;
-            switch (key) {
-            case GsCircuitDescr.ALL:
-            	if (circuit.t_sub != null) {
-            		nbChild = circuit.t_sub.length;
-            	} else {
-            		nbChild = 1;
-            	}
-                break;
-            case GsCircuitDescr.FUNCTIONNAL:
-            	nbChild = circuit.v_functionnal.size();
-            	o = circuit.v_functionnal.get(0);
-                break;
-            case GsCircuitDescr.POSITIVE:
-            	nbChild = circuit.v_positive.size();
-            	o = circuit.v_positive.get(0);
-                break;
-            case GsCircuitDescr.NEGATIVE:
-            	nbChild = circuit.v_negative.size();
-            	o = circuit.v_negative.get(0);
-                break;
-            case GsCircuitDescr.DUAL:
-            	nbChild = circuit.v_dual.size();
-            	o = circuit.v_dual.get(0);
-                break;
-            }
-            if (nbChild == 1 && o != null) {
-            		index = ((GsCircuitDescrInTree)o).key;
-            } else {
-            	index = 0;
-            }
-        } else {
-        	index = key;
-        }
-        String s = "";
-        // if the circuit has several children, then hide details
-        if (summary && (nbChild > 1 || circuit.t_sub == null)) {
-            for (int i=0 ; i < circuit.t_vertex.length ; i++) {
-                s += " " + circuit.t_vertex[i];
-            }
-        } else { // if one child only, show details here and hide the child
-	        int[] t_pos;
-	        t_pos = circuit.t_sub[index];
-	        for (int i=0 ; i < circuit.t_vertex.length ; i++) {
-	            s += " " + circuit.t_vertex[i];
-	            if (t_pos[i] != 0) {
-	                s += "["+t_pos[i]+"]";
-	            }
-	        }
-        }
-        if (summary && circuit.t_sub != null && circuit.t_sub.length > 1) {
-        	if (circuit.t_sub.length == nbChild) {
-                s += "  ("+nbChild+")";
-        	} else {
-                s += "  ("+nbChild+"/"+circuit.t_sub.length+")";
-        	} 
-        }
-        return s;
-    }
-
-    protected long getScore() {
-        if (summary) {
-            return circuit.score;
-        }
-        return circuit.t_mark[key][0];
-    }
-}

@@ -18,8 +18,8 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class GsTree extends GsGraph {
-	public final static int MODE_DIAGRAM = 0;
-	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 1;
+	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
+	public final static int MODE_DIAGRAM = 1;
 	public final static int MODE_TREE = 2;
 
 	/**
