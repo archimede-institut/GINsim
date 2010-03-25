@@ -92,7 +92,7 @@ public class GsStateInRegGraphFrame extends StackDialog implements ActionListene
 
 			c.gridy++;
 			c.ipady = 0;
-			c.fill = GridBagConstraints.BASELINE;
+			c.fill = GridBagConstraints.CENTER;
 			colorizeButton = new JButton(Translator.getString("STR_undo_colorize"));
 			colorizeButton.setEnabled(false);
 			mainPanel.add(colorizeButton, c);
@@ -269,7 +269,7 @@ class StableState extends TabComponantProvidingAState {
 		c.gridy++;
 		c.weightx = 0;
 		c.weighty = 0;
-		c.fill = GridBagConstraints.BASELINE;
+		c.fill = GridBagConstraints.CENTER;
 		computeStableStateButton = new JButton(Translator.getString("STR_stateInRegGraph_computeStableState"));
 		add(computeStableStateButton, c);
 		computeStableStateButton.addActionListener(new ActionListener() {

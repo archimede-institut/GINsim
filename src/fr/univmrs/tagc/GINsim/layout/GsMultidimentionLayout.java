@@ -106,7 +106,7 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
 		table.getColumn(table.getColumnName(2)).setCellRenderer(new SimpleRenderer());
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setMinimumSize(new Dimension(320, 240));
-		table.setFillsViewportHeight(true);
+		//table.setFillsViewportHeight(true); //FIXME: find a replacement working in 1.4 (table.setFillsViewportHeight is 1.6)
 		
 		frame.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
