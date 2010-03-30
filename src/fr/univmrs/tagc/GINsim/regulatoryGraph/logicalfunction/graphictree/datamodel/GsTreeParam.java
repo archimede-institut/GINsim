@@ -48,7 +48,7 @@ public class GsTreeParam extends GsTreeElement {
     return warning;
   }
   public boolean isBasal() {
-    return edgeIndexes == null;
+    return (edgeIndexes == null) || (edgeIndexes.size() == 0);
   }
   public int compareTo(Object o) {
     GsTreeElement element = (GsTreeElement)o;

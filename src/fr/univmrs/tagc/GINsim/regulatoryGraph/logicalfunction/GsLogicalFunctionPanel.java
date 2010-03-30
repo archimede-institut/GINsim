@@ -50,13 +50,11 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
     edgeList = new GsIncomingEdgeListModel();
   }
   public void setEditEditorVisible(boolean b) {
-		b = false;  // FIXME: disable editors
 		eastPanel.setVisible(b);
 		if (b)
 			((CardLayout)eastPanel.getLayout()).show(eastPanel, "edit");
   }
 	public void setDisplayEditorVisible(boolean b) {
-		b = false;  // FIXME: disable editors
 		eastPanel.setVisible(b);
 		if (b)
 			((CardLayout)eastPanel.getLayout()).show(eastPanel, "display");
@@ -117,13 +115,13 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
 	public void mouseExited(MouseEvent e) {
 	}
 	public void keyTyped(KeyEvent e) {
-		if ('\t' == e.getKeyChar()) {
+		/*if ('\t' == e.getKeyChar()) {
 			GsTreeExpression exp = treePanel.getSelectedFunction();
 			if ((exp != null) && !((Boolean) exp.getProperty("invalid")).booleanValue()) {
 				setDisplayEditorVisible(true);
 				functionEditor.init(exp, currentVertex, graph, treePanel.getTree());
 			}
-		}
+		}*/
 	}
 	public void keyPressed(KeyEvent e) {
 	}

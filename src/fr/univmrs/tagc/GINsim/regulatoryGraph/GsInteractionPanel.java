@@ -51,7 +51,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	private JSplitPane jSplitPane = null;
 	private JPanel jPanel = null;
 
-	private JButton chaosButton;
+	private JButton makeOneFunctionButton, makeNFunctionsButton;
 
 	private GenericPropertyInfo	pinfo;
 
@@ -103,55 +103,75 @@ public class GsInteractionPanel extends GsParameterPanel
 	 */
 	private Component getJPanel() {
 		if (jPanel == null) {
-			GridBagConstraints gridBagConstraints10 = new GridBagConstraints();
-			GridBagConstraints gridBagConstraints8 = new GridBagConstraints();
-            GridBagConstraints gridBagConstraints7 = new GridBagConstraints();
-            GridBagConstraints c_up = new GridBagConstraints();
-            GridBagConstraints c_down = new GridBagConstraints();
+			jPanel = new JPanel(new GridBagLayout());
+			jPanel.add(getJScrollPane(), new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(5, 5, 5, 0), 0, 0));
+			
+			JPanel buttonsPanel = new JPanel(new GridBagLayout());
+			buttonsPanel.add(getButAddParameter(), new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(2, 0, 0, 2), 0, 0));
+			buttonsPanel.add(getButRemove(), new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(2, 0, 0, 2), 0, 0));
+			buttonsPanel.add(getUpButton(), new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(2, 0, 0, 2), 0, 0));
+			buttonsPanel.add(getDownButton(), new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(2, 0, 0, 2), 0, 0));
+			buttonsPanel.add(getMakeOneFuctionButton(), new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(10, 0, 0, 2), 0, 0));
+			buttonsPanel.add(getMakeNFuctionsButton(), new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(2, 0, 2, 2), 0, 0));
+			
+			jPanel.add(buttonsPanel, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 3, 5, 0), 0, 0));
+			
+			//GridBagConstraints gridBagConstraints10 = new GridBagConstraints();
+			//GridBagConstraints gridBagConstraints8 = new GridBagConstraints();
+      //      GridBagConstraints gridBagConstraints7 = new GridBagConstraints();
+      //      GridBagConstraints c_up = new GridBagConstraints();
+      //      GridBagConstraints c_down = new GridBagConstraints();
 
-            jPanel = new JPanel();
-			jPanel.setLayout(new GridBagLayout());
-			gridBagConstraints7.weightx = 1.0;
-			gridBagConstraints7.weighty = 4.0D;
-			gridBagConstraints7.fill = java.awt.GridBagConstraints.BOTH;
-			gridBagConstraints8.fill = java.awt.GridBagConstraints.NONE;
-			gridBagConstraints10.fill = java.awt.GridBagConstraints.NONE;
-			gridBagConstraints7.gridx = 0;
-			gridBagConstraints7.gridy = 0;
-            gridBagConstraints7.gridheight = 6;
-            gridBagConstraints7.gridwidth = 2;
-			gridBagConstraints7.weightx = 1;
-			gridBagConstraints7.weighty = 1;
-			gridBagConstraints8.gridx = 2;
-			gridBagConstraints8.gridy = 0;
-			gridBagConstraints8.weightx = 0;
-			gridBagConstraints8.weighty = 0;
-			gridBagConstraints10.gridx = 2;
-			gridBagConstraints10.gridy = 2;
-			gridBagConstraints10.weightx = 0;
-			gridBagConstraints10.weighty = 0;
+      //      jPanel = new JPanel();
+			//jPanel.setLayout(new GridBagLayout());
+			//gridBagConstraints7.weightx = 1.0;
+			//gridBagConstraints7.weighty = 4.0D;
+			//gridBagConstraints7.fill = java.awt.GridBagConstraints.BOTH;
+			//gridBagConstraints8.fill = java.awt.GridBagConstraints.NONE;
+			//gridBagConstraints10.fill = java.awt.GridBagConstraints.NONE;
+			//gridBagConstraints7.gridx = 0;
+			//gridBagConstraints7.gridy = 0;
+      //      gridBagConstraints7.gridheight = 6;
+      //      gridBagConstraints7.gridwidth = 2;
+			//gridBagConstraints7.weightx = 1;
+			//gridBagConstraints7.weighty = 1;
+			//gridBagConstraints8.gridx = 2;
+			//gridBagConstraints8.gridy = 0;
+			//gridBagConstraints8.weightx = 0;
+			//gridBagConstraints8.weighty = 0;
+			//gridBagConstraints10.gridx = 2;
+			//gridBagConstraints10.gridy = 2;
+			//gridBagConstraints10.weightx = 0;
+			//gridBagConstraints10.weighty = 0;
 
-            Insets insets = new Insets(0, 5, 3, 5);
-            gridBagConstraints7.insets = insets;
-            gridBagConstraints8.insets = insets;
-            gridBagConstraints10.insets = insets;
+      //      Insets insets = new Insets(0, 5, 3, 5);
+            //gridBagConstraints7.insets = insets;
+      //      gridBagConstraints8.insets = insets;
+      //      gridBagConstraints10.insets = insets;
 
-            c_up.gridx = 2;
-            c_up.gridy = 3;
-            c_down.gridx = 2;
-            c_down.gridy = 4;
+      //      c_up.gridx = 2;
+      //      c_up.gridy = 3;
+      //      c_down.gridx = 2;
+      //      c_down.gridy = 4;
 
-			jPanel.add(getJScrollPane(), gridBagConstraints7);
-            jPanel.add(getButAddParameter(), gridBagConstraints8);
-            jPanel.add(getButRemove(), gridBagConstraints10);
-            jPanel.add(getUpButton(), c_up);
-            jPanel.add(getDownButton(), c_down);
+			//jPanel.add(getJScrollPane(), gridBagConstraints7);
+      //      jPanel.add(getButAddParameter(), gridBagConstraints8);
+      //      jPanel.add(getButRemove(), gridBagConstraints10);
+      //      jPanel.add(getUpButton(), c_up);
+      //      jPanel.add(getDownButton(), c_down);
 
-//            GridBagConstraints c_chaos = new GridBagConstraints();
-//            c_chaos.gridx = 2;
-//            c_chaos.gridy = 5;
-//            c_chaos.insets = new Insets(10, 5, 3, 5);
-//            jPanel.add(getChaosButton(), c_chaos);
+
+      //      GridBagConstraints c_oneFunction = new GridBagConstraints();
+      //      c_oneFunction.gridx = 2;
+      //      c_oneFunction.gridy = 5;
+      //      c_oneFunction.insets = new Insets(0, 5, 3, 5);
+      //      jPanel.add(getMakeOneFuctionButton(), c_oneFunction);
+            
+      //      GridBagConstraints c_nFunctions = new GridBagConstraints();
+     //       c_nFunctions.gridx = 2;
+     //       c_nFunctions.gridy = 6;
+     //       c_nFunctions.insets = new Insets(0, 5, 3, 5);
+     //       jPanel.add(getMakeNFuctionsButton(), c_nFunctions);
 		}
 		return jPanel;
 	}
@@ -391,7 +411,8 @@ public class GsInteractionPanel extends GsParameterPanel
     	getButRemove().setEnabled(edit);
     	getUpButton().setEnabled(edit);
     	getDownButton().setEnabled(edit);
-    	getChaosButton().setEnabled(edit || t_selection.length == 0);
+    	getMakeOneFuctionButton().setEnabled(edit || t_selection.length == 0);
+    	getMakeNFuctionsButton().setEnabled(edit || t_selection.length == 0);
 			if (add) {
             getButAddParameter().setEnabled(true);
             jList.setEnabled(true);
@@ -459,21 +480,35 @@ public class GsInteractionPanel extends GsParameterPanel
         }
 	}
 
-	private javax.swing.JButton getChaosButton() {
-      if(chaosButton == null) {
-        chaosButton = new StockButton("edit-copy.png", true);
-        chaosButton.setName("chaosButton");
-        chaosButton.setToolTipText("Are you sure ?");
-        chaosButton.addActionListener(new java.awt.event.ActionListener() {
+	private javax.swing.JButton getMakeOneFuctionButton() {
+      if(makeOneFunctionButton == null) {
+      	makeOneFunctionButton = new StockButton("makeOneFunction.png", true);
+      	makeOneFunctionButton.setName("makeOneFunctionButton");
+      	makeOneFunctionButton.setToolTipText("Make one logical formula");
+      	makeOneFunctionButton.addActionListener(new java.awt.event.ActionListener() {
           public void actionPerformed(java.awt.event.ActionEvent e) {
-						doChaos(jTable.getSelectedRows().length == 0);
+						doChaos(jTable.getSelectedRows().length == 0, true);
           }
         });
       }
-      return chaosButton;
+      return makeOneFunctionButton;
     }
 
-    protected void doChaos(boolean comp) {
+	private javax.swing.JButton getMakeNFuctionsButton() {
+    if(makeNFunctionsButton == null) {
+    	makeNFunctionsButton = new StockButton("makeNFunctions.png", true);
+    	makeNFunctionsButton.setName("makeNFunctionsButton");
+    	makeNFunctionsButton.setToolTipText("Make several logical formulae");
+    	makeNFunctionsButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent e) {
+					doChaos(jTable.getSelectedRows().length == 0, false);
+        }
+      });
+    }
+    return makeNFunctionsButton;
+  }
+
+	protected void doChaos(boolean comp, boolean one) {
       GsFunctionsCreator c = null;
       Vector v = new Vector();
       List interactions = ((GsTableInteractionsModel)jTable.getModel()).getInteractions();
@@ -496,14 +531,27 @@ public class GsInteractionPanel extends GsParameterPanel
       while (enu.hasMoreElements()) {
         key = (Integer)enu.nextElement();
         v = (Vector)h.get(key);
-        for (Enumeration enu2 = v.elements(); enu2.hasMoreElements(); ) {
-          s = (String)enu2.nextElement();
-          try {
-          	interactionsModel.addExpression(null, key.byteValue(), currentVertex, s);
-          }
-          catch (Exception ex) {
-            ex.printStackTrace();
-          }
+        Enumeration enu2 = v.elements();
+        if (one) {
+        	s = "(" + (String)enu2.nextElement() + ")";
+        	while (enu2.hasMoreElements()) s = s + " | " + "(" + (String)enu2.nextElement() + ")";
+        	try {
+        		interactionsModel.addExpression(null, key.byteValue(), currentVertex, s);
+        	}
+        	catch (Exception ex) {
+        		ex.printStackTrace();
+        	}
+        }
+        else {
+        	while (enu2.hasMoreElements()) {
+        		s = (String)enu2.nextElement();
+        		try {
+        			interactionsModel.addExpression(null, key.byteValue(), currentVertex, s);
+        		}
+        		catch (Exception ex) {
+        			ex.printStackTrace();
+        		}
+        	}
         }
       }
       interactionsModel.setRootInfos();
