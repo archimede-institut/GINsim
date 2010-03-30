@@ -257,7 +257,7 @@ public class GsTreeInteractionsModel implements TreeModel {
   }
 
   public boolean updateExpression(byte val, GsTreeExpression exp, String newExp) {
-    try {
+  	try {
       TBooleanTreeNode root = exp.getRoot();
       if (newExp.equals("")) {
         exp.clearChilds();
@@ -278,6 +278,7 @@ public class GsTreeInteractionsModel implements TreeModel {
       GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
       Vector params = parser.getParams(functionList.getData());
       Iterator it = params.iterator();
+      GsTreeParam paramBasal = null;
       while (it.hasNext()) {
         Iterator it2 = ((Vector)it.next()).iterator();
         Vector v = new Vector();
@@ -287,8 +288,12 @@ public class GsTreeInteractionsModel implements TreeModel {
         }
         if (v.size() > 0) setActivesEdges(v, val);
         GsTreeParam param = new GsTreeParam(exp, v);
-        exp.addChild(param, -1);
+        if (param.isBasal()) 
+        	paramBasal = param;
+        else
+        	exp.addChild(param, -1);
       }
+      if (paramBasal != null)	exp.addChild(paramBasal, 0);
       parseFunctions();
       exp.setRoot(root);
       fireTreeStructureChanged(this.root);

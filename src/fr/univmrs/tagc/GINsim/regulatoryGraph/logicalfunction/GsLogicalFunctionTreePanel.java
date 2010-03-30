@@ -1,6 +1,10 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.util.*;
@@ -215,7 +219,44 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
 		return null;
 	}
   public void mousePressed(MouseEvent e) {
-    if (e.getButton() == MouseEvent.BUTTON3 || e.isPopupTrigger()) {
+  	boolean delete = false, copy = false, cut = false, paste = false;
+  	GsTreeElement node = null;
+  	if (e.getButton() == MouseEvent.BUTTON3 || e.isPopupTrigger()) {
+    	if (current_transferable != null) {
+    		node = (GsTreeElement)tree.getSelectionPath().getLastPathComponent();
+        delete = ((current_transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR) ||
+      						(current_transferable.getCurrentFlavor() == GsTransferable.FUNCTION_FLAVOR) ||
+      						((current_transferable.getCurrentFlavor() == GsTransferable.MIXED_FLAVOR) && 
+      						 !current_transferable.containsRoot() && !current_transferable.containsParameter()));
+      	cut = ((current_transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR) ||
+						 	 (current_transferable.getCurrentFlavor() == GsTransferable.FUNCTION_FLAVOR));
+      	copy = true;  
+    	}
+    	if ((transferable != null) && (node != null) && (tree.getSelectionCount() == 1)) {
+    		if ((transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR) && node instanceof GsTreeString)
+        	paste = true;
+        else if ((transferable.getCurrentFlavor() == GsTransferable.FUNCTION_FLAVOR) && node instanceof GsTreeValue)
+        	paste = true;
+    	}
+    	menu.setEnabled(GsTreeMenu.DELETE, delete);
+    	menu.setEnabled(GsTreeMenu.COPY, copy);
+    	menu.setEnabled(GsTreeMenu.CUT, cut);
+    	menu.setEnabled(GsTreeMenu.PASTE, paste);
+      
+      if (tree.getSelectionCount() == 0) {
+        menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, false);
+        menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, false);
+      }
+      else {
+      	if ((current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR) && current_transferable.isOneValue()) {
+        	menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, true);
+          menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, true);
+        }
+        else {
+          menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, false);
+          menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, false);
+        }
+      }
       menu.show(tree, e.getX(), e.getY());
       e.consume();
     }
@@ -230,26 +271,31 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
   public void mouseExited(MouseEvent e) {}
 
   public void actionPerformed(ActionEvent e) {
-    if (e.getActionCommand().equals(GsTreeMenu.COPY)) transferable = current_transferable;
+    if (e.getActionCommand().equals(GsTreeMenu.COPY)) {
+    	transferable = current_transferable;
+    	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+    	GsTreeElement[] gste = current_transferable.getNodes();
+    	String s = "";
+    	for (int i = 0; i < gste.length; i++) s += gste[i].toString() + "\n";
+    	StringSelection stringSelection = new StringSelection(s);
+    	clipboard.setContents(stringSelection, new ClipboardOwner() {
+        public void lostOwnership(Clipboard aClipboard, Transferable aContents) {}
+      });
+    }
     else if (e.getActionCommand().equals(GsTreeMenu.CUT)) {
       transferable = current_transferable;
       deleteSelection();
     }
     else if (e.getActionCommand().equals(GsTreeMenu.PASTE)) {
       GsTreeElement node = (GsTreeElement) tree.getSelectionPath().getLastPathComponent();
-      if (transferable != null)
-        if (transferable.getCurrentFlavor() == GsTransferable.FUNCTION_FLAVOR && node instanceof GsTreeValue)
-          pasteFunctionsInValue(transferable.getNodes(), ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
-                                (GsTreeValue) node);
-        else if (transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR && node instanceof GsTreeString)
-          pasteValuesInRoot(transferable.getNodes(), (GsTreeString) node);
-        /*else if (transferable.getCurrentFlavor() == GsTransferable.MANUAL_FLAVOR && node instanceof GsTreeValue)
-          pasteManualsInValue(transferable.getNodes(), ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
+      if (transferable.getCurrentFlavor().equals(GsTransferable.FUNCTION_FLAVOR) && node instanceof GsTreeValue)
+        pasteFunctionsInValue(transferable.getNodes(), ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
                               (GsTreeValue) node);
-        */
-        else if (transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR && node instanceof GsTreeValue)
-          pasteParamsInValue(transferable.getNodes(), ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
-                             (GsTreeValue) node);
+      else if (transferable.getCurrentFlavor().equals(GsTransferable.PARAM_FLAVOR) && node instanceof GsTreeValue)
+        pasteParamsInValue(transferable.getNodes(), ((e.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK),
+                           (GsTreeValue) node);
+      else if (transferable.getCurrentFlavor().equals(GsTransferable.VALUE_FLAVOR) && node instanceof GsTreeString)
+        pasteValuesInRoot(transferable.getNodes(), (GsTreeString)node);
     }
     else if (e.getActionCommand().equals(GsTreeMenu.DELETE)) {
       deleteSelection();
@@ -264,46 +310,16 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
   }
 
   public void valueChanged(TreeSelectionEvent e) {
-
+  	boolean enabled;
     TreePath[] selectedPaths = tree.getSelectionPaths();
     GsTreeElement[] nodes = new GsTreeElement[tree.getSelectionCount()];
-    for (int i = 0; i < tree.getSelectionCount(); i++) nodes[i] = (GsTreeElement) selectedPaths[i].getLastPathComponent();
-    if (tree.getSelectionCount() != 0)
+    if (tree.getSelectionCount() != 0) {
+      for (int i = 0; i < tree.getSelectionCount(); i++)
+      	nodes[i] = (GsTreeElement) selectedPaths[i].getLastPathComponent();
       current_transferable = new GsTransferable(nodes);
+    }
     else
       current_transferable = null;
-    menu.setEnabled(GsTreeMenu.COPY, (tree.getSelectionCount() > 0));
-    menu.setEnabled(GsTreeMenu.CUT, (tree.getSelectionCount() > 0) && (
-                    current_transferable.getCurrentFlavor() != GsTransferable.MIXED_FLAVOR));
-    menu.setEnabled(GsTreeMenu.DELETE, (tree.getSelectionCount() > 0));
-    if (tree.getSelectionCount() == 0) {
-      menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, false);
-      menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, false);
-      menu.setEnabled(GsTreeMenu.PASTE, false);
-    }
-    else {
-      if (current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR) {
-        menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, true);
-        menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, true);
-      }
-      else {
-        menu.setEnabled(GsTreeMenu.CREATE_1_FUNCTION, false);
-        menu.setEnabled(GsTreeMenu.CREATE_N_FUNCTIONS, false);
-      }
-      if (transferable != null && tree.getSelectionCount() == 1)
-        if (current_transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR) {
-          if ((transferable.getCurrentFlavor() == GsTransferable.FUNCTION_FLAVOR) ||
-              (transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR))
-            menu.setEnabled(GsTreeMenu.PASTE, true);
-          else
-            menu.setEnabled(GsTreeMenu.PASTE, false);
-        }
-        else if ((tree.getSelectionPath().getLastPathComponent() instanceof GsTreeString) &&
-                 (transferable.getCurrentFlavor() == GsTransferable.VALUE_FLAVOR))
-          menu.setEnabled(GsTreeMenu.PASTE, true);
-        else
-          menu.setEnabled(GsTreeMenu.PASTE, false);
-    }
   }
 
   public void pasteFunctionsInValue(GsTreeElement[] functions, boolean remove, GsTreeValue value) {
@@ -433,7 +449,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
     boolean res = false;
     tree.stopEditing();
     TreePath[] selectedPaths = tree.getSelectionPaths();
-    if (current_transferable.getCurrentFlavor() == GsTransferable.PARAM_FLAVOR) {
+    if (current_transferable.getCurrentFlavor().equals(GsTransferable.PARAM_FLAVOR)) {
       res = doChaos(current_transferable.getNodes(), oneFunction);
       if (res) {
         tree.setSelectionPaths(selectedPaths);
