@@ -166,9 +166,6 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 
 			graphScrollPane = new JScrollPane();
 
-			// FIXME: useless thing to avoid crashing when using icedtea, but crash on SUN and openJDK
-			//graphScrollPane.setViewportView(new JLabel());
-
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 0;
