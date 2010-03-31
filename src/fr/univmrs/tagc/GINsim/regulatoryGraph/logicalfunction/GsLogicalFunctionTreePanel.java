@@ -310,7 +310,6 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
   }
 
   public void valueChanged(TreeSelectionEvent e) {
-  	boolean enabled;
     TreePath[] selectedPaths = tree.getSelectionPaths();
     GsTreeElement[] nodes = new GsTreeElement[tree.getSelectionCount()];
     if (tree.getSelectionCount() != 0) {

@@ -12,7 +12,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.models.*;
 import fr.univmrs.tagc.common.datastore.*;
 import fr.univmrs.tagc.common.datastore.gui.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 
 public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {
   private static final long serialVersionUID = -87854595177707062L;

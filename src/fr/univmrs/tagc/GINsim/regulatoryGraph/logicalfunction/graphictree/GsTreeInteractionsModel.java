@@ -210,8 +210,8 @@ public class GsTreeInteractionsModel implements TreeModel {
     }
     return n;
   }
-  public void addExpression(JTree tree, byte val, GsRegulatoryVertex currentVertex, String expression) throws Exception {
-    GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(currentVertex));
+  public void addExpression(JTree tree, byte val, GsRegulatoryVertex currentVertex, String expression) throws Exception {	  
+    GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(currentVertex), graph.getGraphManager().getMainFrame().getActions().shouldAutoAddNewElements());
     if (!tbp.compile(expression, graph, currentVertex))
       graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
         GsGraphNotificationMessage.NOTIFICATION_WARNING));
@@ -265,7 +265,7 @@ public class GsTreeInteractionsModel implements TreeModel {
         graph.getVertexEditor().setEditedObject(node);
         return true;
       }
-			GsBooleanParser parser = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(node));
+			GsBooleanParser parser = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(node), graph.getGraphManager().getMainFrame().getActions().shouldAutoAddNewElements());
       if (!parser.compile(newExp.trim(), graph, node)) {
         graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula : " + newExp,
             GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));

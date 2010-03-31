@@ -41,7 +41,7 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 	private JPanel jPanel1 = null;
 	private GsGraphicAttributePanel gsGraphicAttributePanel = null;
 	private GsEventDispatcher eventDispatcher = new GsEventDispatcher(true);
-    GsActions gsActions = new GsActions(this);
+    private GsActions gsActions = new GsActions(this);
     private GsGraph graph = null;
     private CardLayout cards = new CardLayout();
     private JPanel emptyPanel = null;
@@ -813,5 +813,8 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
                 bcloseNotification.requestFocusInWindow();
 			}
 		}
+	}
+	public GsActions getActions() {
+		return gsActions;
 	}
    }

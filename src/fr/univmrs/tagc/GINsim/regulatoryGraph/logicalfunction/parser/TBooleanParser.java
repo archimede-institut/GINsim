@@ -89,7 +89,7 @@ public abstract class TBooleanParser {
         ret = operandStack.isEmpty();
       }
       catch (Exception ex) {
-        ret = false;
+       ret = false;
       }
     }
     else {

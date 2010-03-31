@@ -6,6 +6,7 @@ import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.common.OptionStore;
 
 
 /**
@@ -248,4 +249,7 @@ public class GsEditCallBack {
 		gm.addSelection(vertices);		
 	}
 	
+	public void simpleFunctionEdition(boolean b) {
+        OptionStore.setOption("edit.simpleFunctionEdition", b?Boolean.TRUE:Boolean.FALSE);
+	}
 }

@@ -8,10 +8,30 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComponent;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.*;
+import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
+import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
+import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
+import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.OSXAdapter;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
@@ -115,6 +135,7 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionExtendSelectionToOutgoingArcs;
 	private AbstractAction		actionExtendSelectionToIncomingVertices;
 	private AbstractAction		actionExtendSelectionToOutgoingVertices;
+	private AbstractAction      actionSimpleFunctionEdition;
 
 	// Check Box Menu Item
 	private JCheckBoxMenuItem	btt_divideWindow;
@@ -123,6 +144,9 @@ public class GsActions implements GraphChangeListener {
 	private JCheckBoxMenuItem	btt_displayGrid;
 	private JCheckBoxMenuItem	btt_gridActive;
 	private JCheckBoxMenuItem	btt_displayMiniMap;
+	private JCheckBoxMenuItem   btt_simpleFunctionEdition;
+	
+	private JSeparator          simpleFunctionEdition_separator = new JSeparator();			
 
 	protected static final int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
@@ -497,6 +521,19 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
+		actionSimpleFunctionEdition = new BaseAction("STR_simpleFunctionEdition", null,
+				"STR_simpleFunctionEdition_descr", null) {
+			
+			private static final long	serialVersionUID	= 7152250065865101484L;
+
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				if (e.getSource() instanceof JCheckBoxMenuItem) {
+					editcallback.simpleFunctionEdition(((JCheckBoxMenuItem)e
+							.getSource()).getState());
+				}
+			}
+		};
+
 		actionExtendSelectionToIncomingVertices = new BaseAction("STR_extendSelectionToIncomingVertices", null,
 				"STR_extendSelectionToIncomingVertices_descr", null) {
 
@@ -606,6 +643,8 @@ public class GsActions implements GraphChangeListener {
 			fileMenu.add(actionOpenAndDo);
 //		}
 
+		btt_simpleFunctionEdition = new JCheckBoxMenuItem(actionSimpleFunctionEdition);
+
 		recentMenu = new JMenu(Translator.getString("STR_openRecent"));
 		fileMenu.add(recentMenu);
 		updateRecentMenu();
@@ -639,6 +678,8 @@ public class GsActions implements GraphChangeListener {
 		editMenu.add(selectAllMenu);
 		editMenu.add(editExtendSelectionMenu);
 		editMenu.add(invertSelectionMenu);
+		editMenu.add(simpleFunctionEdition_separator);
+		editMenu.add(btt_simpleFunctionEdition);
 
 		invertSelectionMenu.add(actionInvertSelection);
 		invertSelectionMenu.add(actionInvertVertexSelection);
@@ -667,7 +708,6 @@ public class GsActions implements GraphChangeListener {
 		btt_gridActive = new JCheckBoxMenuItem(actionGridActive);
 		btt_displayMiniMap = new JCheckBoxMenuItem(actionDisplayMiniMap);
 		btt_vertextofront = new JCheckBoxMenuItem(actionVertexToFront);
-
 		btt_displayGrid.setSelected(true);
 		btt_displayMiniMap.setSelected(true);
 		viewMenu.add(actionZoomIn);
@@ -706,25 +746,20 @@ public class GsActions implements GraphChangeListener {
 	 * apply saved and default values
 	 */
 	public void setDefaults() {
-		btt_divideWindow.setState(((Boolean)OptionStore.getOption(
-				"display.dividewindow", Boolean.FALSE)).booleanValue());
-		actionDivideWindow.actionPerformed(new ActionEvent(btt_divideWindow, 0,
-				""));
+		btt_divideWindow.setState(((Boolean)OptionStore.getOption("display.dividewindow", Boolean.FALSE)).booleanValue());
+		actionDivideWindow.actionPerformed(new ActionEvent(btt_divideWindow, 0, ""));
 
-		btt_displayGrid.setState(((Boolean)OptionStore.getOption(
-				"display.grid", Boolean.TRUE)).booleanValue());
-		actionDisplayGrid.actionPerformed(new ActionEvent(btt_displayGrid, 0,
-				""));
+		btt_displayGrid.setState(((Boolean)OptionStore.getOption("display.grid", Boolean.TRUE)).booleanValue());
+		actionDisplayGrid.actionPerformed(new ActionEvent(btt_displayGrid, 0, ""));
 
-		btt_gridActive.setState(((Boolean)OptionStore.getOption(
-				"display.gridactive", Boolean.FALSE)).booleanValue());
-		actionGridActive
-				.actionPerformed(new ActionEvent(btt_gridActive, 0, ""));
+		btt_gridActive.setState(((Boolean)OptionStore.getOption("display.gridactive", Boolean.FALSE)).booleanValue());
+		actionGridActive.actionPerformed(new ActionEvent(btt_gridActive, 0, ""));
 
-		btt_displayMiniMap.setState(((Boolean)OptionStore.getOption(
-				"display.minimap", Boolean.TRUE)).booleanValue());
-		actionDisplayMiniMap.actionPerformed(new ActionEvent(
-				btt_displayMiniMap, 0, ""));
+		btt_displayMiniMap.setState(((Boolean)OptionStore.getOption("display.minimap", Boolean.TRUE)).booleanValue());
+		actionDisplayMiniMap.actionPerformed(new ActionEvent(btt_displayMiniMap, 0, ""));
+	
+		btt_simpleFunctionEdition.setState(((Boolean)OptionStore.getOption("edit.simpleFunctionEdition", Boolean.FALSE)).booleanValue());
+		actionSimpleFunctionEdition.actionPerformed(new ActionEvent(btt_simpleFunctionEdition, 0, ""));
 	}
 
 	private void initToolbar() {
@@ -891,6 +926,14 @@ public class GsActions implements GraphChangeListener {
 
 		btt_displayGrid.setSelected(graph.getGraphManager().isGridDisplayed());
 		btt_gridActive.setSelected(graph.getGraphManager().isGridActive());
+		if (graph instanceof GsRegulatoryGraph) {
+			btt_simpleFunctionEdition.setVisible(true);
+			simpleFunctionEdition_separator.setVisible(true);
+		} else {
+			btt_simpleFunctionEdition.setVisible(false);
+			simpleFunctionEdition_separator.setVisible(false);
+		}
+		
 	}
 
 	private void addToMenu(JMenu menu, List v_actions, int actionCode,
@@ -1044,6 +1087,10 @@ public class GsActions implements GraphChangeListener {
 	}
 	public void loadGINML(String filename) {
 		GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(), GsEnv.newMainFrame(), null, filename);
+	}
+
+	public boolean shouldAutoAddNewElements() {
+		return btt_simpleFunctionEdition.isSelected();
 	}
 }
 
