@@ -86,16 +86,16 @@ public class SnakesExport extends GsAbstractExport  {
 			GsDirectedEdge edge;
 			GsRegulatoryVertex source;
 			Iterator it = incomingEdges.iterator();
-			edge = (GsDirectedEdge) it.next();
 			while (true) {
+				edge = (GsDirectedEdge) it.next();
 				source = (GsRegulatoryVertex) edge.getSourceVertex();
 				s.append(source.getId());
-				s.append(", ");				
-				edge = (GsDirectedEdge) it.next();
-				if (!it.hasNext()) break;
+				if (it.hasNext()) {
+					s.append(", ");
+				} else {
+					break;
+				}
 			}				
-			source = (GsRegulatoryVertex) edge.getSourceVertex();
-			s.append(source.getId());
 
 			
 			out.write("    # specification of component \""+current_node_name+"\"\n");
