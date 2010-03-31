@@ -72,34 +72,35 @@ public class SnakesExport extends GsAbstractExport  {
 			if (incomingEdges.size() == 0) {
 				out.write("    # specification of component \""+current_node_name+"\"\n");
 				out.write("    range_"+current_node_name+"=(0, "+current_node.getMaxValue()+")\n");
-				out.write("    def update_"+current_node_name+"(self, "+current_node_name+"):\n        return "+nodes[node_i].value+"\n");	
+				if (current_node.isInput()) {
+					out.write("    def update_"+current_node_name+"(self, "+current_node_name+"):\n");
+					out.write("        return "+current_node_name+"\n");	
+				} else {
+					out.write("    def update_"+current_node_name+"(self, "+current_node_name+"):\n");
+					out.write("        return "+nodes[node_i].value+"\n");	
+				}
 				continue;
 			}
 			
 			StringBuffer s = new StringBuffer();
-			for (Iterator it = incomingEdges.iterator(); it.hasNext();) {
-				GsDirectedEdge edge = (GsDirectedEdge) it.next();
-				GsRegulatoryVertex source = (GsRegulatoryVertex) edge.getSourceVertex();
+			GsDirectedEdge edge;
+			GsRegulatoryVertex source;
+			Iterator it = incomingEdges.iterator();
+			edge = (GsDirectedEdge) it.next();
+			while (true) {
+				source = (GsRegulatoryVertex) edge.getSourceVertex();
 				s.append(source.getId());
-				s.append(", ");
-			}
+				s.append(", ");				
+				edge = (GsDirectedEdge) it.next();
+				if (!it.hasNext()) break;
+			}				
+			source = (GsRegulatoryVertex) edge.getSourceVertex();
+			s.append(source.getId());
 
-			//Add autoregulation everywhere. //FIXME is that right ?
-			if (s.indexOf(current_node_name) == -1) {
-				if (s.length() > 0) s.append(", ");
-				s.append(current_node_name);
-			}
 			
-			String arguments;
-			if (s.length() == 0) {
-				arguments = "";
-			} else {
-				arguments = s.substring(0, s.length()-2);
-			}
 			out.write("    # specification of component \""+current_node_name+"\"\n");
 			out.write("    range_"+current_node_name+"=(0, "+current_node.getMaxValue()+")\n");
-			out.write("    def update_"+current_node_name+"(self, "+arguments+"):\n");
-			//exploreNode(nodes[node_i], null, node_i, "    ", nodeOrder);
+			out.write("    def update_"+current_node_name+"(self, "+s+"):\n");
 			exploreNode(parcours, 0 ,nodes[node_i], nodeOrder);
 			if (nodes[node_i].next != null) {//if it's not a leaf
 				out.write("        return 0\n\n");
