@@ -30,8 +30,10 @@ public class GsBooleanParser extends TBooleanParser {
 	public GsBooleanParser(List edgesList, boolean shouldAutoAddNewElements) throws ClassNotFoundException {
 		super(returnClassName, operandClassName);
 		nodeFactory = new GsBooleanTreeNodeFactory(returnClassName, operandClassName, this);
-		makeOperandList(edgesList);
-		setAllData(edgesList);
+		if (edgesList != null && edgesList.size() > 0) {
+			makeOperandList(edgesList);
+			setAllData(edgesList);			
+		}
 		this.shouldAutoAddNewElements = shouldAutoAddNewElements;
 	}
 	public boolean verifOperandList(List list) {
@@ -175,16 +177,56 @@ public class GsBooleanParser extends TBooleanParser {
 	public boolean compile(String v, GsRegulatoryGraph graph, GsRegulatoryVertex vertex) {
 		this.graph = graph;
 		this.vertex = vertex;
+		boolean shouldReInit = false;
+		if (shouldAutoAddNewElements) {
+			List sourceVertices = getSourceVertices(v);
+			for (Iterator it = sourceVertices.iterator(); it.hasNext();) {
+				String nodeID = (String) it.next();
+				GsRegulatoryVertex source = null;
+				for (Iterator itno = graph.getNodeOrder().iterator(); itno.hasNext();) {
+					GsRegulatoryVertex node = (GsRegulatoryVertex) itno.next();
+					if (node.getId().equals(nodeID)) {
+						source = node;
+						shouldReInit = true;
+						break;
+					}
+				}
+				if (source == null)	source = graph.addNewVertex(nodeID, null, (byte) 1);
+
+				GsDirectedEdge edge = (GsDirectedEdge)graph.getGraphManager().getEdge(source, this.vertex);
+				if (edge == null) {
+					edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, GsRegulatoryMultiEdge.SIGN[0]).me;
+					shouldReInit = true;
+				}
+			}
+		}
+		if (shouldReInit) {
+			List edgesList = graph.getGraphManager().getIncomingEdges(vertex);
+			makeOperandList(edgesList);
+			setAllData(edgesList);		
+		}
+		
+		
 		try {
 			return super.compile(v);
 		} 
 		catch (Exception e) {
 			if (e instanceof GsException) {
-			System.out.println("working");
-		}
+				System.out.println("working");
+			}
 			e.printStackTrace();
 			return false;
 		}
+	}
+	private List getSourceVertices(String v) {
+		String[] split = v.split("(!|&|\\||\\(|\\)|\\s|:\\d+)");
+		List sourceVertices = new ArrayList(split.length);
+		for (int i = 0; i < split.length; i++) {
+			if (split[i].length() > 0) {
+				sourceVertices.add(split[i]);
+			}
+		}
+		return sourceVertices;
 	}
 	public Object getEdge(String value) throws GsException {
 		String nodeID;
@@ -228,13 +270,11 @@ public class GsBooleanParser extends TBooleanParser {
 			}
 		}
 		if (!found) {
-			if (shouldAutoAddNewElements) vertex = graph.addNewVertex(nodeID, null, (byte) 1);
-			else throw new GsException(GsException.GRAVITY_NORMAL, "The node is not defined in the graph");
+			throw new GsException(GsException.GRAVITY_NORMAL, "The node is not defined in the graph");
 		}
 		GsDirectedEdge de = (GsDirectedEdge)graph.getGraphManager().getEdge(vertex, this.vertex);
 		if (de == null) {
-			if (shouldAutoAddNewElements) de = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)0, GsRegulatoryMultiEdge.SIGN[0]).me;
-			else throw new GsException(GsException.GRAVITY_NORMAL, "The node is not linked by any edge in the graph");
+			throw new GsException(GsException.GRAVITY_NORMAL, "The node is not linked by any edge in the graph");
 		}
 		GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)de.getUserObject();
 		if (edgeTh != -1) {
