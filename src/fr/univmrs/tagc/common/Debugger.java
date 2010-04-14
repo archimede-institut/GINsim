@@ -1,8 +1,8 @@
 package fr.univmrs.tagc.common;
 
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * A simple helper class to log things in System.out or System.err
@@ -71,7 +71,11 @@ public class Debugger {
 	private static String getMethodName() {
 	    return Thread.currentThread().getStackTrace()[3].getMethodName();
 	}
-	public static void log_collection(List parents) {
+	public static void log_collection(Collection parents) {
+		if (parents.size() == 0) {
+			out.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() []");
+			return;
+		}
 		StringBuffer s = new StringBuffer("[");
 		for (Iterator iterator = parents.iterator(); iterator.hasNext();) {
 			s.append(iterator.next()+", ");
