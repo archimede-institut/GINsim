@@ -152,7 +152,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 			xr.setContentHandler(this);
 			xr.setEntityResolver(this);
 			xr.setErrorHandler(this);
-			xr.parse(new InputSource(new InputStreamReader(is)));
+			xr.parse(new InputSource(new InputStreamReader(is, "UTF-8")));
 		} catch (FileNotFoundException e) { 
 		    Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		} catch (IOException e) {
@@ -180,7 +180,9 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 		String path = (String)m_entities.get(systemId);
 		if (path != null) {
 			try {
-				return new InputSource(Tools.getStreamForPath(path));
+				InputSource is = new InputSource(Tools.getStreamForPath(path));
+				is.setEncoding("UTF-8");
+				return is;
 			} catch (Exception e) {}
 		}
 		return null;
