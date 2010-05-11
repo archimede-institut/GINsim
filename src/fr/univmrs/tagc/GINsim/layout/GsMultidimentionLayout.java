@@ -55,13 +55,13 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
 	private int height;
     
     private int pivot;
-    private GsVertexAttributesReader vreader;
    
     
     private GsPluggableActionDescriptor[] t_layout = {
 		new GsPluggableActionDescriptor("STR_multidimention_placement", "STR_multidimention_placement_descr", null, this, ACTION_LAYOUT, MULTIDIMENTION),
     };
 	private GsEdgeAttributesReader ereader;
+    private GsVertexAttributesReader vreader;
 	private byte[] newNodeOrder;
 	private MdLayoutTableModel tableModel;
 	private GsDynamicGraph graph;

@@ -173,7 +173,6 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
         	buttonColorize.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                 	clicked(AlgoConnectivity.MODE_COLORIZE);
-                	colorize();
                 }
             });
         }
