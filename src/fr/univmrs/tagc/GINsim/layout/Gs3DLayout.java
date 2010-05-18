@@ -30,6 +30,8 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 	private static final int X = 0;
 	private static final int Y = 1;
 	private static final int Z = 2;
+	private static final int A = 3;
+	private static final int B = 4;
 
 	
     private GsPluggableActionDescriptor[] t_layout = {
@@ -51,7 +53,7 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
         if (actionType != ACTION_LAYOUT) {
             return;
         }
-        initColorPalette(3);
+        initColorPalette(6);
  
         GsGraphManager gmanager = graph.getGraphManager();
 		Iterator it = gmanager.getVertexIterator();
@@ -63,8 +65,8 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 		vreader = gmanager.getVertexAttributesReader();
 		ereader = gmanager.getEdgeAttributesReader();
 		List nodeOrder = ((GsDynamicGraph)graph).getAssociatedGraph().getNodeOrder();
-		if (nodeOrder.size() != 3) {
-			Tools.error("The model must contain only three nodes for this layout", parent);
+		if (nodeOrder.size() > 5) {
+			Tools.error("The model must contain less than 6 nodes for this layout", parent);
 	    	return;
 	    }
 	    byte[] maxValues = getMaxValues(nodeOrder);
@@ -100,9 +102,11 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
     	int x = getState(state, X);
     	int y = getState(state, Y);
     	int z = getState(state, Z);
+    	int a = getState(state, A);
+    	int b = getState(state, B);
     	
-    	double left = 10+x*120+(getState(maxValues, Z)-z)*50;
-    	double top = 10+(getState(maxValues, Y)-y)*120+(getState(maxValues, Z)-z)*60;
+    	double left = 10+x*120+(getState(maxValues, Z)-z)*50+a*350+b*50;
+    	double top = 10+(getState(maxValues, Y)-y)*120+(getState(maxValues, Z)-z)*60+a*50+b*350;
     	vreader.setPos((int)left, (int)top);
         vreader.refresh();		
 	}
@@ -121,15 +125,16 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 
 		ereader.refresh();
 	}
-
-   /**
-    * return the value of the state i according to the newNodeOrder
-    * @param state
-    * @param i
-    * @return
-    */
-   private int getState(byte[] state, int i) {
-		return state[i];
+	
+	   /**
+	* return the value of the state i according to the newNodeOrder
+	* @param state
+	* @param i
+	* @return
+	*/
+	private int getState(byte[] state, int i) {
+		if (state.length > i) return state[i];
+		else return 0;
 	}
 
 	/**
