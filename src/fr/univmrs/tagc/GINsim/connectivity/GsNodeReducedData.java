@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.Translator;
@@ -123,6 +124,21 @@ public class GsNodeReducedData {
 		return SCC_TYPE_SIMPLE_CYCLE;
 	}
 	
+	public boolean isTransient(GsGraphManager gm) {
+		for (Iterator it_nodes = content.iterator(); it_nodes.hasNext();) {
+			Object currentNode = it_nodes.next();
+			for (Iterator it_edges = gm.getOutgoingEdges(currentNode).iterator(); it_edges.hasNext();) {
+				GsDirectedEdge edge = (GsDirectedEdge) it_edges.next();
+				if (!content.contains(edge.getTargetVertex())) return true; //There is a node that is not in the cycle
+			}
+		}
+		return false;
+	}
+
+	public boolean isTrivial() {
+		return content.size() == 1;
+	}
+
 	public String getTypeName(GsGraphManager gm) {
 		switch (getType(gm)) {
 			case SCC_TYPE_UNIQUE_NODE: 		return Translator.getString("STR_connectivity_unique_node"); 

@@ -19,10 +19,10 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 /**
  * the class with the algorithms for strongest connected component
  */
-public final class AlgoConnectivity extends Thread {
+public class AlgoConnectivity extends Thread {
 
-	private GsReducedGraph reducedGraph = null;
-	private GsGraphManager graphModel;
+	protected GsReducedGraph reducedGraph = null;
+	protected GsGraphManager graphModel;
     private GsGraph g = null;
 
     private static final String S_SEARCH_CC = Translator.getString("STR_connectivity_searching");
@@ -68,7 +68,11 @@ public final class AlgoConnectivity extends Thread {
 	}
 
    public void run() {
-       frame.setResult(compute());
+	   if (frame != null) {
+	       frame.setResult(compute());
+	   } else {
+		   compute();
+	   }
    }
 
    public Object compute() {
@@ -155,7 +159,7 @@ public final class AlgoConnectivity extends Thread {
         return reducedGraph;
    }
 
-	private void createSCCGraphByOutgoingEdges(int nbCompo, List component, GsGraphManager gm, GsVertexAttributesReader vreader) throws InterruptedException {
+	public void createSCCGraphByOutgoingEdges(int nbCompo, List component, GsGraphManager gm, GsVertexAttributesReader vreader) throws InterruptedException {
 		//Complexity = #nodes + #edges + #component => O(3n+1)
 		if (nbCompo == 1) {
             return;																				//The graph is already created, no edges to add.
