@@ -22,6 +22,8 @@
 		<plugin name="regFunctionsTreeView" 	mainClass="fr.univmrs.tagc.GINsim.treeViewer.GsRegulatoryFunctionTreeViewPlugin"/>
 		<plugin name="pathFinding" 				mainClass="fr.univmrs.tagc.GINsim.pathFinding.PathFingingPlugin"/>
 		<plugin name="stg2htg" 					mainClass="fr.univmrs.tagc.GINsim.stg2htg.STG2HTGPlugin"/>
+		<plugin name="omddViz" 					mainClass="fr.univmrs.tagc.GINsim.omddViz.OmddVizPlugin"/>
+		
 
 		<!-- export plugins -->
 		<plugin name="export" 					mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin"/>

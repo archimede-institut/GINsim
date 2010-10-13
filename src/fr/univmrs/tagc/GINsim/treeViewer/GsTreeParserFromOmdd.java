@@ -47,11 +47,6 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	 */
 	protected int max_depth;
 
-	/**
-	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial vertex, assuming regGraph is defined
-	 * @param initialVertex
-	 */
-	public abstract void initRealDepth(GsRegulatoryVertex initialVertex);	
 
 	/**
 	 * Return the name of the node at level
