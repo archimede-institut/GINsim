@@ -7,6 +7,7 @@ import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.common.GsException;
 
@@ -35,7 +36,7 @@ public class GsStateInRegGraphPlugin implements GsActionProvider, GsPlugin {
 			return;
 		}
 		if (ref == 0) {
-           new GsStateInRegGraphFrame(frame, graph);
+			if (graph instanceof GsRegulatoryGraph) new GsStateInRegGraphFrame(frame, graph);
 		}
 	}
 

@@ -7,7 +7,7 @@ import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
 
 public class GsComponentVertex extends GsNodeReducedData {
 
-	private Object sigma;
+	private HashSet sigma;
 
 	public GsComponentVertex(String id, Vector content, Object sigma) {
 		super(id, content);
@@ -17,6 +17,10 @@ public class GsComponentVertex extends GsNodeReducedData {
 	public GsComponentVertex(GsNodeReducedData scc, Object sigma) {
 		super(scc.getId(), scc.getContent());
 		this.sigma = (HashSet)sigma;
+	}
+	
+	public HashSet getSigma() {
+		return sigma;
 	}
 
 }

@@ -32,13 +32,11 @@ public class GsStateInRegGraph {
 	private boolean shouldStore;
 
 
-	/**
-	 * Prepare the colorization of regGraph and save the initial color of regGraph's edges and nodes to be restored later
-	 * @param regGraph a regualtory graph to colorize
-	 */
+
 	public GsStateInRegGraph(GsRegulatoryGraph regGraph) {
 		this(regGraph, true);
 	}
+
 	/**
 	 * Prepare the colorization of regGraph
 	 * @param regGraph a regualtory graph to colorize

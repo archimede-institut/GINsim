@@ -24,13 +24,12 @@ public class STG2HTGPlugin implements GsPlugin, GsActionProvider{
 		}
 		if (t_action == null) {
 			t_action = new GsPluggableActionDescriptor[1];
-			t_action[0] = new GsPluggableActionDescriptor("STG to HTG", "STR_STG2HTG_descr", null, this, ACTION_ACTION, 0);
+			t_action[0] = new GsPluggableActionDescriptor("STR_STG2HTG", "STR_STG2HTG_descr", null, this, ACTION_ACTION, 0);
 		}
 		return t_action;
 	}
 	
 	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
-		System.out.println("Runnnn action");
 		if (actionType != ACTION_ACTION) {
 			return;
 		}

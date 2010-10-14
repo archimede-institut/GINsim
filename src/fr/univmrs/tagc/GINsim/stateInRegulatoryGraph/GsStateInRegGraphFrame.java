@@ -17,6 +17,7 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -40,7 +41,7 @@ public class GsStateInRegGraphFrame extends StackDialog implements ActionListene
 	private static final long serialVersionUID = -5576209151262677441L;
 
 	//private JFrame frame;
-	private GsRegulatoryGraph graph;
+	private GsRegulatoryGraph regGraph;
 
 	private Container mainPanel;
 	private JTabbedPane tabbedPane;
@@ -54,10 +55,11 @@ public class GsStateInRegGraphFrame extends StackDialog implements ActionListene
 	public GsStateInRegGraphFrame(JFrame frame, GsGraph graph) {
 		super(frame, "stateInRegGraph", 420, 260);
 		//this.frame = frame;
-		this.graph = (GsRegulatoryGraph) graph;
-		sirg = new GsStateInRegGraph(this.graph);
+		this.regGraph = (GsRegulatoryGraph) graph;
+		sirg = new GsStateInRegGraph(this.regGraph);
 		setMainPanel(getMainPanel());
 	}
+
 
 
 	private Container getMainPanel() {
@@ -79,9 +81,9 @@ public class GsStateInRegGraphFrame extends StackDialog implements ActionListene
 			c.weightx = 1;
 			c.weighty = 1;
 			tabbedPane = new JTabbedPane();
-			tabbedPane.add(Translator.getString("STR_stateInRegGraph_state"), new State(graph));
-			tabbedPane.add(Translator.getString("STR_stateInRegGraph_stablestate"), new StableState(graph, this));
-			tabbedPane.add(Translator.getString("STR_stateInRegGraph_maxvalues"), new MaxValues(graph));
+			tabbedPane.add(Translator.getString("STR_stateInRegGraph_state"), new State(regGraph));
+			tabbedPane.add(Translator.getString("STR_stateInRegGraph_stablestate"), new StableState(regGraph, this));
+			tabbedPane.add(Translator.getString("STR_stateInRegGraph_maxvalues"), new MaxValues(regGraph));
 			mainPanel.add(tabbedPane, c);
 
 			c.gridy++;

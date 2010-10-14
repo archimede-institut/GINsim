@@ -13,9 +13,8 @@ public class STG2HTGFrame extends StackDialog implements ActionListener {
 	private GsGraph graph;
 	
 	public STG2HTGFrame(JFrame frame, GsGraph graph) {
-		super(frame, "stg2htg", 420, 260);
+		super(frame, "STR_STG2HTG", 420, 260);
 		this.graph = graph;
-		System.out.println("frame created");
    }
 
 	protected void run() {

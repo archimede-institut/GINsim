@@ -23,6 +23,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.treeViewer.GsTree;
 import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParser;
 import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParserFromManualOmdd;
+import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class OmddVizFrame extends StackDialog implements ActionListener {
@@ -46,7 +47,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 	}
 
 	public OmddVizFrame(JFrame frame, GsGraph graph) {
-		super(frame, "OMDD Vizualizer", 475, 260);
+		super(frame, "STR_omddViz", 475, 260);
 		this.frame = frame;
 		this.graph = graph;
         initialize();
@@ -79,7 +80,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			calcPanel = new javax.swing.JPanel();
 			calcPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
-			calcPanel.setBorder(BorderFactory.createTitledBorder("Operation"));
+			calcPanel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_omddViz_operation")));
 		
 			c.gridx = 0;
 			c.gridy = 0;
@@ -102,14 +103,14 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			resPanel = new javax.swing.JPanel();
 			resPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
-			resPanel.setBorder(BorderFactory.createTitledBorder("Results"));
+			resPanel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_omddViz_results")));
 		
 			c.gridx = 0;
 			c.gridy = 0;
 			resultTextField = new JTextField("", 25);
 			resPanel.add(resultTextField, c);
 			c.gridy++;
-			displayTreeButton = new JButton("display tree view");
+			displayTreeButton = new JButton(Translator.getString("STR_omddViz_getTree"));
 			displayTreeButton.addActionListener(this);
 			resPanel.add(displayTreeButton, c);
 		}
@@ -127,13 +128,11 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 		if (e.getSource() == leftOperandCB) {
 			GsRegulatoryVertex item = (GsRegulatoryVertex) leftOperandCB.getSelectedItem();
 			if (item != null) {
-				System.out.println("left = "+item);
 				leftOmdd = item.getTreeParameters((GsRegulatoryGraph) graph);
 			}
 		} else if (e.getSource() == rightOperandCB) {
 			GsRegulatoryVertex item = (GsRegulatoryVertex) rightOperandCB.getSelectedItem();
 			if (item != null) {
-				System.out.println("right = "+item);
 				rightOmdd = item.getTreeParameters((GsRegulatoryGraph) graph);
 			}
 		} else if (e.getSource() == displayTreeButton) {
