@@ -241,7 +241,6 @@ class StateSelectorTable extends JPanel {
 		int rowCount = table.getRowCount();
 		List states = new ArrayList();
 
-		System.out.println(selectedRowCount+"  "+table.getSelectedRow()+"  "+table.getRowCount()+"  "+table.getColumnCount());
 		if (rowCount <= 1 || (selectedRowCount == 1 && table.getSelectedRow() >= rowCount-1)) return null;
 
 		if (selectedRowCount > 0) {

@@ -74,13 +74,18 @@ public class LocalGraph {
 				GsDirectedEdge edge = (GsDirectedEdge) it_edges.next();
 				GsRegulatoryVertex source = (GsRegulatoryVertex) edge.getSourceVertex();
 				GsRegulatoryVertex target = (GsRegulatoryVertex) edge.getTargetVertex();
-				i = ((Integer) node_to_position.get(target)).intValue();
-				j = ((Integer) node_to_position.get(source)).intValue();
+				i = ((Integer) node_to_position.get(source)).intValue();
+				j = ((Integer) node_to_position.get(target)).intValue();
 				byte[] fx = f(state);
 				byte[] fxbi = f(bar_x(state, i));
+//				System.out.println(j+"->"+i);
+//				print(state);
+//				print(fx);
+//				print(fxbi);
+//				System.out.println(fx[j]+"=="+fxbi[j]);
 				if (fx[j] != fxbi[j]) {
 					String func = (String) functionalityMap.get(edge);
-					if (state[i] == fxbi[i]) {
+					if (state[i] != fxbi[i]) {
 						if (func == null || func == LocalGraphSelector.CAT_POSITIVE) functionalityMap.put(edge, LocalGraphSelector.CAT_POSITIVE);
 						else functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
 					} else {
@@ -95,6 +100,11 @@ public class LocalGraph {
 		}
 
 	}
+	
+//	public void print(byte[] x) {
+//		for (int i = 0 ; i < x.length ; i++) System.out.print(x[i]);
+//		System.out.println();
+//	}
 
 	/**
 	 * Compute the next state
