@@ -26,13 +26,10 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 	private GsEdgeAttributesReader ereader;
     private GsVertexAttributesReader vreader;
     private Color[] colorPalette;
-	  
-	private static final int X = 0;
-	private static final int Y = 1;
-	private static final int Z = 2;
-	private static final int A = 3;
-	private static final int B = 4;
+    private int[] decalx, decaly;
+    private int stateWidth = 0;
 
+    private static int MARGIN = 10;
 	
     private GsPluggableActionDescriptor[] t_layout = {
 		new GsPluggableActionDescriptor("STR_3D_placement", "STR_3D_placement_descr", null, this, ACTION_LAYOUT, LAYOUT3D),
@@ -53,7 +50,6 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
         if (actionType != ACTION_LAYOUT) {
             return;
         }
-        initColorPalette(6);
  
         GsGraphManager gmanager = graph.getGraphManager();
 		Iterator it = gmanager.getVertexIterator();
@@ -65,16 +61,14 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 		vreader = gmanager.getVertexAttributesReader();
 		ereader = gmanager.getEdgeAttributesReader();
 		List nodeOrder = ((GsDynamicGraph)graph).getAssociatedGraph().getNodeOrder();
-		if (nodeOrder.size() > 5) {
-			Tools.error("The model must contain less than 6 nodes for this layout", parent);
-	    	return;
-	    }
 	    byte[] maxValues = getMaxValues(nodeOrder);
-	    
+        initColorPalette(maxValues.length);
 	    //move the nodes
 	    GsDynamicNode vertex = (GsDynamicNode)v;
 	    vreader.setVertex(vertex);
-
+	    stateWidth = vreader.getWidth()+MARGIN;
+        initDecal(maxValues);
+	    
 	    do {
 	    	moveVertex(vertex, maxValues);
 		    vertex = (GsDynamicNode)it.next();
@@ -98,15 +92,15 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 	private void moveVertex(GsDynamicNode vertex, byte[] maxValues) {
 	    vreader.setVertex(vertex);
     	byte[] state = vertex.state;
- 
-    	int x = getState(state, X);
-    	int y = getState(state, Y);
-    	int z = getState(state, Z);
-    	int a = getState(state, A);
-    	int b = getState(state, B);
+  	
+    	double left = MARGIN;
+    	double top = MARGIN;
     	
-    	double left = 10+x*120+(getState(maxValues, Z)-z)*50+a*350+b*50;
-    	double top = 10+(getState(maxValues, Y)-y)*120+(getState(maxValues, Z)-z)*60+a*50+b*350;
+    	for (int i = 0; i < state.length; i++) {
+    		left += state[i]*decalx[i];
+    		top += state[i]*decaly[i];
+		}
+    	    	
     	vreader.setPos((int)left, (int)top);
         vreader.refresh();		
 	}
@@ -196,4 +190,34 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 			colorPalette[i] = Color.getHSBColor((float)i/(float)n , 0.85f, 1.0f);
 		}
     }
+    public void initDecal(byte[] maxValues) {
+    	int l = (maxValues.length < 3?3:maxValues.length);
+       	decalx = new int[l];
+       	decaly = new int[l];
+      	
+       	decalx[0] = stateWidth*2; 
+       	decaly[0] = 0;
+
+       	decalx[1] = 0; 
+       	decaly[1] = stateWidth*2;
+
+       	decalx[2] = 50; 
+       	decaly[2] = 50;
+
+      	if (maxValues.length > 3) {
+           	decalx[3] = stateWidth*(maxValues[0]+2)+stateWidth+MARGIN;
+           	decaly[3] = 30;
+          	if (maxValues.length > 4) {
+               	decalx[4] = 30;
+               	decaly[4] = stateWidth*(maxValues[1]+2)+stateWidth+MARGIN;
+           	}
+       	}
+       	
+    	for (int i = 5; i < maxValues.length; i++) {
+			decalx[i] = 2*decalx[i-2]+(i%2==0?stateWidth*(maxValues[i-2]):0);
+			decaly[i] = 2*decaly[i-2]+(i%2==1?stateWidth*(maxValues[i-2]):0);
+		}
+    	
+	}
+    
 }
