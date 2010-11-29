@@ -47,7 +47,7 @@ public class OmddNode {
     public static final int CONSTRAINT = 2;
     public static final int CONSTRAINTOR = 3;
 
-    public static final int MAX = 5;
+    public static final int MAX = 4;
 
     static {
     	MINUSONE = new OmddNode();

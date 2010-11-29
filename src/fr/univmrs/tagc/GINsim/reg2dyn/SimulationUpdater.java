@@ -39,7 +39,15 @@ abstract public class SimulationUpdater implements Iterator {
         }
 		this.length = t_tree.length;
 	}
-	
+
+	public SimulationUpdater(GsRegulatoryGraph regGraph, GsRegulatoryMutantDef mutant) {
+        t_tree = regGraph.getParametersForSimulation(true);
+        if (mutant != null) {
+            mutant.apply(t_tree, regGraph);
+        }
+		this.length = t_tree.length;
+	}
+
 	public boolean hasNext() {
 		return next != null;
 	}
@@ -65,7 +73,7 @@ abstract public class SimulationUpdater implements Iterator {
 	 * 
 	 * @param t_tree
 	 */
-	void setState(byte[] state, int depth, Object node) {
+	public void setState(byte[] state, int depth, Object node) {
 		this.cur_state = state;
 		this.depth = depth;
 		this.node = node;
@@ -106,40 +114,6 @@ abstract public class SimulationUpdater implements Iterator {
 			return new AsynchronousSimulationUpdater(regGraph, params);
 		}
 		return new PrioritySimulationUpdater(regGraph, params);
-	}
-}
-
-/* **************************** Synchronous ***********************************/
-
-class SynchronousSimulationUpdater extends SimulationUpdater {
-
-	public SynchronousSimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
-		super(regGraph, params);
-	}
-
-	protected void doBuildNext() {
-		next = null;
-	}
-
-	protected void doSetState() {
-		next = new byte[length];
-		boolean hasChange = false;
-		// for each node
-		for (int i=0 ; i<length ; i++){
-		    byte change = (byte) nodeChange(cur_state, i);
-		    if (change != 0) {
-		    	if (hasChange) {
-		    		multiple = true;
-		    	}
-		    	hasChange = true;
-		    	next[i] = (byte) (cur_state[i] + change);
-		    } else {
-		    	next[i] = cur_state[i];
-		    }
-		}
-		if (!hasChange) {
-			next = null;
-		}
 	}
 }
 

@@ -71,7 +71,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 		byte[] state = (byte[]) data.get(rowIndex);
 		int val = state[columnIndex];
 		if (val == GsStateInRegGraphSelector.STAR) {
-			return "*";
+			return "0";
 		}
 		if (val == statemax[columnIndex]) {
 			return "M"+String.valueOf(val);
@@ -91,7 +91,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 		if (row == data.size()) {
 			state = new byte[g.getNodeOrder().size()];
 			for (int i = 0; i < state.length; i++) {
-				state[i] = STAR;
+				state[i] = 0;
 			}
 			data.add(state);
 			fireTableRowsInserted(row-1, row);
@@ -125,6 +125,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 	}
 
 	public byte[] getState(int row) {
+		if (data.size() == 0) return new byte[statemax.length];
 		if (row >= data.size()) return null;
 		return (byte[]) data.get(row);
 	}

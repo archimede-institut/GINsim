@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.stateInRegulatoryGraph;
+package fr.univmrs.tagc.GINsim.stg2htg;
 
 import javax.swing.JFrame;
 
@@ -7,17 +7,15 @@ import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.common.GsException;
 
-public class GsStateInRegGraphPlugin implements GsActionProvider, GsPlugin {
+public class STG2HTGPlugin implements GsPlugin, GsActionProvider{
 
 	private GsPluggableActionDescriptor[] t_action = null;
 
 	public void registerPlugin() {
-		GsRegulatoryGraphDescriptor.registerActionProvider(this);
-		Selector.registerSelector(GsStateInRegGraphSelector.IDENTIFIER, GsStateInRegGraphSelector.class);
+		GsGraph.registerActionProvider(this);
+		Selector.registerSelector(STG2HTGSelector.IDENTIFIER, STG2HTGSelector.class);
 	}
 	
 	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
@@ -26,7 +24,7 @@ public class GsStateInRegGraphPlugin implements GsActionProvider, GsPlugin {
 		}
 		if (t_action == null) {
 			t_action = new GsPluggableActionDescriptor[1];
-			t_action[0] = new GsPluggableActionDescriptor("STR_stateInRegGraph", "STR_stateInRegGraph_descr", null, this, ACTION_ACTION, 0);
+			t_action[0] = new GsPluggableActionDescriptor("STR_STG2HTG", "STR_STG2HTG_descr", null, this, ACTION_ACTION, 0);
 		}
 		return t_action;
 	}
@@ -36,8 +34,10 @@ public class GsStateInRegGraphPlugin implements GsActionProvider, GsPlugin {
 			return;
 		}
 		if (ref == 0) {
-			if (graph instanceof GsRegulatoryGraph) new GsStateInRegGraphFrame(frame, graph);
+			Thread thread = new STG2HTG(graph);
+			thread.start();
 		}
 	}
 
 }
+
