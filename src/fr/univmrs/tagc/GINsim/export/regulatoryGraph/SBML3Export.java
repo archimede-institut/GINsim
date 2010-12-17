@@ -94,7 +94,7 @@ public class SBML3Export implements OMDDBrowserListener {
                 String s_id = node.getId();
                 String s_name = node.getName();
                 out.openTag("qualitativeSpecies");
-                out.addAttr("id", "s_"+s_id);
+                out.addAttr("id", s_id);
                 if (s_name != null) {
                 	out.addAttr("name",s_name);
                 }
@@ -128,8 +128,8 @@ public class SBML3Export implements OMDDBrowserListener {
                 while (it.hasNext()) {
                     GsDirectedEdge edge = (GsDirectedEdge)it.next();
                     out.openTag("input");
-                    out.addAttr("qualitativeSpecies", "s_"+edge.getSourceVertex().toString());
-                    out.addAttr("transitionEffect","None");
+                    out.addAttr("qualitativeSpecies", edge.getSourceVertex().toString());
+                    out.addAttr("transitionEffect","none");
                     // TODO: missing threshold
                     out.closeTag();
                 }
@@ -137,12 +137,15 @@ public class SBML3Export implements OMDDBrowserListener {
 
                 out.openTag("listOfOutputs");
                 out.openTag("output");
-                out.addAttr("qualitativeSpecies", "s_"+s_node);
+                out.addAttr("qualitativeSpecies", s_node);
                 out.addAttr("transitionEffect","assignmentLevel");
                 out.closeTag();
                 out.closeTag();
 
                 out.openTag("listOfFunctionTerms");
+                out.openTag("defaultTerm");
+                out.addAttr("resultLevel", ""+0);
+                out.closeTag();
                 for (curValue=1 ; curValue<2 ; curValue++) {
 	                out.openTag("functionTerm");
 	                out.addAttr("resultLevel", ""+curValue);
@@ -150,9 +153,8 @@ public class SBML3Export implements OMDDBrowserListener {
 	                out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
 	                
 	                out.openTag("apply");
-	                out.openTag("or");    // enforced for now, we should try to avoid it when not needed
+	                out.addTag("or");    // enforced for now, we should try to avoid it when not needed
                     browser.browse(node); // will call leafReached()
-                    out.closeTag();  // or
                     out.closeTag();  // apply
 
                     out.closeTag(); // math
@@ -180,7 +182,7 @@ public class SBML3Export implements OMDDBrowserListener {
 		
         try {
 			out.openTag("apply");
-	        out.openTag("and");    // enforced for now, we should try to avoid it when not needed
+	        out.addTag("and");    // enforced for now, we should try to avoid it when not needed
 	        
 	        // TODO: list of conditions
 	        for (int i=0 ; i<depth ; i++) {
@@ -193,7 +195,6 @@ public class SBML3Export implements OMDDBrowserListener {
 	        	}
 	        }
 	        
-            out.closeTag();  // and
             out.closeTag();  // apply
 	        
 		} catch (IOException e) {
@@ -209,7 +210,7 @@ public class SBML3Export implements OMDDBrowserListener {
 		out.openTag(cst);
 		
 		out.openTag("ci");
-		out.addContent("s_"+v_no.get(idx));
+		out.addContent(""+v_no.get(idx));
         out.closeTag();  // ci
 		
         out.openTag("ci");
