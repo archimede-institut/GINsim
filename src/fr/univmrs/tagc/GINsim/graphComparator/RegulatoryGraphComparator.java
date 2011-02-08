@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
+import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -131,17 +132,34 @@ public class RegulatoryGraphComparator extends GraphComparator {
 				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), g2m.getVertexAttributesReader(), color[0]);
 				setLogicalFunction(v, v1, g1);
 			}
-			Annotation gsa;
-			if (v1 != null) gsa = v1.getAnnotation();
-			else gsa = v2.getAnnotation();
-			if (gsa != null) gsa = (Annotation) gsa.clone();
-			else gsa = new Annotation();
+			Annotation gsa = v.getAnnotation();
+			if (v1 == null) {
+				gsa.copyFrom(v2.getAnnotation());
+			} else {
+				gsa.copyFrom(v1.getAnnotation());
+				if (v2 != null) {
+					addtoannotation(gsa, v2.getAnnotation());
+				}
+			}
 			gsa.appendToComment(comment);
-			v.setGsa(gsa);
 			log(comment);
 		}		
 	}
 
+	protected void addtoannotation(Annotation a, Annotation a1) {
+		if (!a.getComment().contains(a1.getComment())) {
+			a.appendToComment(a1.getComment());
+		}
+		
+		int nblinks = a1.getLinkList().size();
+		for (int i=0 ; i<nblinks ; i++) {
+			String link = a1.getLink(i);
+			if (!a.containsLink(link)) {
+				a.addLink(link, g);
+			}
+		}
+	}
+	
 	protected void addVerticesFromGraph(GsGraphManager gm) {
 		for (Iterator it=gm.getVertexIterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
@@ -152,32 +170,47 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	
 	protected void addEdgesFromGraph(GsGraphManager gm_main, GsGraphManager gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
 		GsRegulatoryVertex v = (GsRegulatoryVertex) gm_main.getVertexByName(id);
+		if (v == null) {
+			return;
+		}
 		GsRegulatoryEdge e = null;
-		GsDirectedEdge e1, e2;
 		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributesReader();
 		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributesReader();
 
-		if (v != null) { //If v is a vertex from the studied graph, we look at its edges
-			for (Iterator edge_it = gm_main.getOutgoingEdges(v).iterator(); edge_it.hasNext();) {
-				e1 = (GsDirectedEdge) edge_it.next();
-				GsRegulatoryMultiEdge me1 = (GsRegulatoryMultiEdge)e1.getUserObject();
-				String tid = ((GsRegulatoryVertex)e1.getTargetVertex()).getId();
-				GsRegulatoryVertex target = (GsRegulatoryVertex) gm.getVertexByName(tid);
-				GsRegulatoryVertex source = (GsRegulatoryVertex) gm.getVertexByName(id);
-				
-				if (gm.getEdge(source, target) != null) {
-					continue;
+		//If v is a vertex from the studied graph, we look at its edges
+		GsRegulatoryVertex source = (GsRegulatoryVertex) gm.getVertexByName(id);
+		for (Iterator edge_it = gm_main.getOutgoingEdges(v).iterator(); edge_it.hasNext();) {
+			GsDirectedEdge e1 = (GsDirectedEdge) edge_it.next();
+			GsRegulatoryMultiEdge me1 = (GsRegulatoryMultiEdge)e1.getUserObject();
+			String tid = ((GsRegulatoryVertex)e1.getTargetVertex()).getId();
+			GsRegulatoryVertex target = (GsRegulatoryVertex) gm.getVertexByName(tid);
+			
+			if (gm.getEdge(source, target) != null) {
+				continue;
+			}
+
+			GsRegulatoryMultiEdge me2 = null;
+			if (vcol != SPECIFIC_G1_COLOR && vcol != SPECIFIC_G2_COLOR && isCommonVertex(target)) {
+				GsDirectedEdge e2 = (GsDirectedEdge) gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
+				if (e2 != null) {
+					me2 = (GsRegulatoryMultiEdge)e2.getUserObject();
 				}
-				for (int i = 0; i < me1.getEdgeCount(); i++) {
-					e = g.addNewEdge(id, tid, me1.getMin(i) , me1.getSign(i));
+			}
+			
+			for (int i = 0; i < me1.getEdgeCount(); i++) {
+				e = g.addNewEdge(id, tid, me1.getMin(i) , me1.getSign(i));
+				Annotation gsa = e.me.getGsAnnotation(i);
+				e.me.getGsAnnotation(i).copyFrom(me1.getGsAnnotation(i));
+				if (me2 != null && me2.getEdgeCount() >= i) {
+					// merge annotations
+					addtoannotation(gsa, me2.getGsAnnotation(i));
 				}
-				if (vcol == SPECIFIC_G1_COLOR || vcol == SPECIFIC_G2_COLOR|| !isCommonVertex(target)) { //The edge's vertices are specific to a graph therefore the edge is specific, and we add it with the right color.
-					mergeEdgeAttributes(e.me, me1, null, pcol, ereader, e1reader, null);
-				} else { //source and target are common to both graph.
-					e2 = (GsDirectedEdge) gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
-					if (e2 != null)	mergeEdgeAttributes(e.me, me1, e2.getUserObject(), vcol, ereader, e1reader, e2reader);
-					else			mergeEdgeAttributes(e.me, me1, null, pcol, ereader, e1reader, null);
-				}
+			}
+			
+			if (me2 == null) { //The edge's vertices are specific to a graph therefore the edge is specific, and we add it with the right color.
+				mergeEdgeAttributes(e.me, me1, null, pcol, ereader, e1reader, null);
+			} else { //source and target are common to both graph.
+				mergeEdgeAttributes(e.me, me1, me2, vcol, ereader, e1reader, e2reader);
 			}
 		}
 	}
