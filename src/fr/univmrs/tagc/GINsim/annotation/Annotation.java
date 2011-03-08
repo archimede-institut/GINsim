@@ -52,6 +52,15 @@ public class Annotation implements XMLize
 	public boolean containsLink(AnnotationLink al) {
 		return getLinkList().contains(al);
 	}
+	public boolean containsLink(String s) {
+		int nblinks = getLinkList().size();
+		for (int i=0 ; i<nblinks ; i++) {
+			if (getLink(i).equals(s)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	/**
 	 * return the String containing the comments.
 	 * @return a String
@@ -78,7 +87,11 @@ public class Annotation implements XMLize
 	 * @param comment the new comment
 	 */
 	public void appendToComment(String comment) {
-		this.comment += comment;
+		if (this.comment.length() > 0 && !this.comment.endsWith("\n")) {
+			this.comment += "\n" + comment;
+		} else {
+			this.comment += comment;
+		}
 	}
 
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {

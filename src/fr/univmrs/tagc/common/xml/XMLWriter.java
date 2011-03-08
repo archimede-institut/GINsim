@@ -43,8 +43,8 @@ public class XMLWriter {
     public XMLWriter(OutputStreamWriter out, String dtdFile, boolean indent) throws IOException {
         this.indent = indent;
         this.out = out;
+        write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         if (dtdFile != null) {
-            write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             write("<!DOCTYPE gxl SYSTEM \""+dtdFile+"\">\n");
         }
     }
