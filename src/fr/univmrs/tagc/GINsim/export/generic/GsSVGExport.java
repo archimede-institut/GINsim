@@ -176,7 +176,7 @@ public class GsSVGExport {
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true, w);
         out.write("    <path " +
                 " stroke=\""+color+"\""+
-                " stroke-width=\""+w+"\""+
+                " stroke-width=\""+w*2+"\""+
                 " fill=\"none\""+
         		" marker-end=\"url(#"+marker+")\"");
         
@@ -326,33 +326,58 @@ public class GsSVGExport {
         String id = "Marker_"+markerType+"_"+color.substring(1)+"_"+fill+"_"+stroke;
         if (!m_marker.containsKey(id)) {
 	        out.write("  <defs>\n");
-	        out.write("    <marker\n"+
-                      "      markerWidth=\"2\""+
-                      "      markerHeight=\"2\""+
-                      "      markerUnits=\"userSpaceOnUse\"" +
-	                  "      id=\""+id+"\"" +
-	                  "      orient=\"auto\">\n" +
-	                  "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
 	        double v,w;
             float offset = stroke/2;
             switch (markerType) {
 	        	case GsEdgeAttributesReader.ARROW_NEGATIVE:
 	        	    v = stroke<3 ? 5 : 1.8*stroke;
-			        out.write("stroke-width=\""+stroke+"\" d=\"M 0 -"+v+" L 0 "+v+" z\"/>\n");
+	                out.write("    <marker\n"+
+	                        "      markerWidth=\"2\""+
+	                        "      markerHeight=\""+stroke*v+"\""+
+	                        "      markerUnits=\"strokeWidth\"" +
+	                        "      viewBox=\"-"+stroke+" -"+stroke+" "+stroke+" "+stroke+"\"" +
+	  	                    "      id=\""+id+"\"" +
+	  	                    "      orient=\"auto\">\n" +
+	  	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
+	        	    out.write("stroke-width=\""+stroke+"\" d=\"M 0 -"+stroke+" L 0 "+stroke+" z\"/>\n");
 			        break;
 	        	case GsEdgeAttributesReader.ARROW_UNKNOWN:
                     v = stroke<3 ? 4 : 1.5*stroke;
+                    out.write("    <marker\n"+
+                            "      markerWidth=\"2\""+
+                            "      markerHeight=\"4\""+
+                            "      markerUnits=\"strokeWidth\"" +
+	                        "      viewBox=\"-0 0 2 2\"" +
+      	                    "      id=\""+id+"\"" +
+      	                    "      orient=\"auto\">\n" +
+      	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
 			        out.write("d=\"M -4,0 a2,2 -30 1,0 0,-0.1\"/>\n");
 			        break;
                 case GsEdgeAttributesReader.ARROW_DOUBLE:
                     v = stroke<3 ? 4 : 1.5*stroke;
-                    out.write("d=\"M -7 -"+v+" L -7 "+v+"  -7 0 -5 0 -5 -3 L 0 0 L -5 3 -5 0 z\"/>\n");
-                    break;
+                    out.write("    <marker\n"+
+                            "      markerWidth=\"2\""+
+                            "      markerHeight=\"4\""+
+                            "      markerUnits=\"strokeWidth\"" +
+	                        "      viewBox=\"-0 0 2 2\"" +
+     	                    "      id=\""+id+"\"" +
+      	                    "      orient=\"auto\">\n" +
+      	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
+                 out.write("d=\"M -7 -"+v+" L -7 "+v+"  -7 0 -5 0 -5 -3 L 0 0 L -5 3 -5 0 z\"/>\n");
+                   break;
             	default:
                     v = (stroke<3 ? 6 : 2.2*stroke) - offset;
             	    w = stroke<3 ? 4.5 : 1.3*stroke;
+                    out.write("    <marker\n"+
+                            "      markerWidth=\"2\""+
+                            "      markerHeight=\"4\""+
+                            "      markerUnits=\"strokeWidth\"" +
+	                        "      viewBox=\"-0 0 2 2\"" +
+     	                    "      id=\""+id+"\"" +
+      	                    "      orient=\"auto\">\n" +
+      	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
 			        out.write("d=\"M -"+v+" -"+w+" L "+offset+" 0 L -"+v+" "+w+" L -"+0.2*v+" 0 z\"/>\n");
-            }
+           }
 	        out.write("    </marker>\n");
 	        out.write("  </defs>\n");
 	        m_marker.put(id, null);
