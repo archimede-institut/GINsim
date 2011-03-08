@@ -1,7 +1,11 @@
 package fr.univmrs.tagc.GINsim.dynamicGraph;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import java.util.Iterator;
+import java.util.List;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * a vertex in a state transition graph (ie a possible state of the regulatory graph).
@@ -12,6 +16,11 @@ public final class GsDynamicNode {
 	/** if this is a stable node, default to false */
 	private boolean stable = false;
 
+	/** pattern constants */
+	public final int PLUS = 1;
+	public final int MINUS = 2;
+	public final int EPSILON = 0; //No commutation
+	
 	/**
 	 * @param state
 	 */
@@ -61,6 +70,37 @@ public final class GsDynamicNode {
 	public String getId() {
 		return "s"+this.toString();
 	}
+
+	/**
+	 * @return the node's pattern of commutation.
+	 */
+	public int[] getPattern(GsGraphManager graphManager) {
+		int[] pattern = new int[state.length];
+		List oe = graphManager.getOutgoingEdges(this);
+		for (Iterator it = oe.iterator(); it.hasNext();) {
+			GsDirectedEdge e = (GsDirectedEdge) it.next();
+			GsDynamicNode s = (GsDynamicNode) e.getTargetVertex();
+			for (int i = 0; i < s.state.length; i++) {
+				if (s.state[i] < this.state[i]) pattern[i] = MINUS;
+				else if (s.state[i] > this.state[i]) pattern[i] = PLUS;
+			}
+		}
+		return pattern;
+	}
+	/**
+	 * @return the node's pattern of commutation.
+	 */
+	public String getPatternString(GsGraphManager graphManager) {
+		int[] pattern = getPattern(graphManager);
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < pattern.length; i++) {
+			if (pattern[i] == EPSILON) sb.append('e');
+			else if (pattern[i] == PLUS) sb.append('+');
+			else if (pattern[i] == MINUS) sb.append('-');
+		}
+		return sb.toString();
+	}
+
 	
 	public boolean equals (Object obj) {
 		if (!(obj instanceof GsDynamicNode)) {

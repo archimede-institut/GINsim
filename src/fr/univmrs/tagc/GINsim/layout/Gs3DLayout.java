@@ -19,7 +19,6 @@ import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.Tools;
 
 public class Gs3DLayout implements GsPlugin, GsActionProvider {
     private static final int LAYOUT3D = 1;

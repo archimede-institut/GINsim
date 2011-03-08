@@ -11,6 +11,7 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
 public class STG2HTGFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7430762236435581864L;
 	private GsGraph graph;
+	private JFrame frame;
 	
 	public STG2HTGFrame(JFrame frame, GsGraph graph) {
 		super(frame, "STR_STG2HTG", 420, 260);
@@ -18,7 +19,7 @@ public class STG2HTGFrame extends StackDialog implements ActionListener {
    }
 
 	protected void run() {
-		Thread thread = new STG2HTG(graph);
+		Thread thread = new STG2HTG(frame, graph);
 		thread.start();
 	}
 	

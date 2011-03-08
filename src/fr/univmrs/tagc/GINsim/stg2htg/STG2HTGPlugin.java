@@ -34,7 +34,7 @@ public class STG2HTGPlugin implements GsPlugin, GsActionProvider{
 			return;
 		}
 		if (ref == 0) {
-			Thread thread = new STG2HTG(graph);
+			Thread thread = new STG2HTG(frame, graph);
 			thread.start();
 		}
 	}

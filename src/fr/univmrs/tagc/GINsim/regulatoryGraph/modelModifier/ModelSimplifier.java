@@ -87,6 +87,26 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 	}
 
+	public ModelSimplifier(GsRegulatoryGraph graph, String removed, boolean strict, boolean start) {
+		this.graph = graph;
+		this.oldNodeOrder = graph.getNodeOrder();
+		this.dialog = null;
+		this.strict = strict;
+		manager = graph.getGraphManager();
+		for (Iterator it = oldNodeOrder.iterator(); it.hasNext();) {
+			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+			if (v.getId().equals(removed)) {
+				HashMap m = new HashMap();
+				m.put(v, Boolean.TRUE);
+				this.m_removed = new HashMap(m);
+				break;
+			}
+		}
+		if (start) {
+		    start();
+		}
+	}
+
     public void run() {
         GsRegulatoryGraph simplifiedGraph = do_reduction();
         if (dialog != null) {

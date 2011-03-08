@@ -8,10 +8,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JFrame;
+
 import fr.univmrs.tagc.GINsim.connectivity.AlgoConnectivity;
 import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraph;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -29,6 +32,7 @@ public class STG2HTG extends AlgoConnectivity {
 	private HashSet B;
 	private ArrayList components;
 	private Color[] colors;
+	private JFrame frame;
 
 	/**
 	 * Create a new thread that will search a path between start and end
@@ -40,12 +44,22 @@ public class STG2HTG extends AlgoConnectivity {
 	 * @param start a node
 	 * @param end a node
 	 */
-	public STG2HTG(GsGraph graph) {
+	public STG2HTG(JFrame frame, GsGraph graph) {
+		this.frame = frame;
 		this.graph = graph;
 		this.graphModel = graph.getGraphManager();
 	}
 
 	public void run() {
+		if (frame != null) {
+			compute();
+	    	GsEnv.whatToDoWithGraph(null, reducedGraph, true);
+		} else {
+		   compute();
+		}
+	}
+	
+	public Object compute() {
 		AlgoConnectivity algoSCC = new AlgoConnectivity();
 		algoSCC.configure(graph, null, AlgoConnectivity.MODE_COMPO);
 		List sccs = (List) algoSCC.compute();
@@ -79,7 +93,7 @@ public class STG2HTG extends AlgoConnectivity {
 			createSCCGraphByOutgoingEdges(components.size(), components, reducedGraph.getGraphManager(), reducedGraph.getGraphManager().getVertexAttributesReader());
 		} catch (InterruptedException e) {
 		}
-		GsEnv.whatToDoWithGraph(null, reducedGraph, true);
+		return reducedGraph;
 	}
 
 	private void sigma(GsNodeReducedData b) {
@@ -158,7 +172,13 @@ public class STG2HTG extends AlgoConnectivity {
 				GsNodeReducedData scc = (GsNodeReducedData) it_key.next();
 				content.addAll(scc.getContent());
 			}
-			GsComponentVertex comp = new GsComponentVertex("TT-"+(i), content, key);
+			GsDynamicNode s = (GsDynamicNode) ((GsNodeReducedData)content.get(0)).getContent().get(0);
+			GsComponentVertex comp = new GsComponentVertex("TT-"+s.getPatternString(this.graphModel), content, key);
+			System.out.println("TT-"+s.getPatternString(this.graphModel));
+			for (Iterator it = ((GsNodeReducedData)content.get(0)).getContent().iterator(); it.hasNext();) {
+				s = (GsDynamicNode) it.next();
+				System.out.println("\t"+s.getPatternString(this.graphModel)+"\n\t"+s.toString());
+			}
 			reducedGraph.addVertex(comp);
 			components.add(comp);
 			vreader.setVertex(comp);
@@ -168,12 +188,18 @@ public class STG2HTG extends AlgoConnectivity {
 		}
 		for (Iterator it_sigma = A.iterator(); it_sigma.hasNext();) {
 			GsNodeReducedData scc = (GsNodeReducedData) it_sigma.next();
+			GsDynamicNode s = (GsDynamicNode) scc.getContent().get(0);
 			GsComponentVertex comp;
 			if ( scc.isTrivial() ) comp = new GsComponentVertex(scc, null);
 			else {
 				HashSet hs = new HashSet();
 				hs.add(scc);
-				comp = new GsComponentVertex(scc, hs);
+				comp = new GsComponentVertex(scc, hs, "CC-"+s.getPatternString(this.graphModel));
+				System.out.println("CC-"+s.getPatternString(this.graphModel));
+				for (Iterator it = scc.getContent().iterator(); it.hasNext();) {
+					s = (GsDynamicNode) it.next();
+					System.out.println("\t"+s.getPatternString(this.graphModel)+"\n\t"+s.toString());
+				}
 			}
 			reducedGraph.addVertex(comp);
 			components.add(comp);

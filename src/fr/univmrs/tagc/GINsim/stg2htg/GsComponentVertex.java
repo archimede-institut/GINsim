@@ -19,6 +19,11 @@ public class GsComponentVertex extends GsNodeReducedData {
 		this.sigma = (HashSet)sigma;
 	}
 	
+	public GsComponentVertex(GsNodeReducedData scc, Object sigma, String id) {
+		super(id, scc.getContent());
+		this.sigma = (HashSet)sigma;
+	}
+	
 	public HashSet getSigma() {
 		return sigma;
 	}
