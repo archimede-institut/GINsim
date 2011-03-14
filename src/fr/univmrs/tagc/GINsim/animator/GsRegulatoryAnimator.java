@@ -83,6 +83,8 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         initAnim();
     }
 
+    
+    
     /**
      * @param frame
      * @param regGraph
@@ -107,7 +109,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         dynGraph.addBlockEdit(this);
         colorizer = new GsStateInRegGraph(regGraph);
         dynGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
-        ui = new GsAnimatorUI(frame, this);
+        ui = new GsAnimatorUI(frame, this);      
     }
     
 	/**

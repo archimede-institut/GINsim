@@ -21,19 +21,22 @@ import fr.univmrs.tagc.common.xml.XMLize;
  */
 public class GsSimulationParameters implements XMLize, NamedObject, GsInitialStateStore {
 
-	static final int MUTANT = 0;
-	static final int PCLASS = 1;
+	public static final int MUTANT = 0;
+	public static final int PCLASS = 1;
 		
+	public static final int STRATEGY_STG = 0;
+	public static final int STRATEGY_SCCG = 1;
+	public static final int STRATEGY_HTG = 2;
+
 	public String name = "new_parameter";
     public List nodeOrder;
 
     public int maxdepth;
     public int maxnodes;
-    public boolean buildSTG = true;
     public boolean breadthFirst = false;
-    public int hierarchicalStrategies = 0;
+    public int simulationStrategy = STRATEGY_STG;
 
-    ObjectStore store = new ObjectStore(2);
+    public ObjectStore store = new ObjectStore(2);
     Map m_initState = new HashMap();
     Map m_input = new HashMap();
 	GsSimulationParameterList param_list;
@@ -82,7 +85,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
         }
         String s = "construction parameters:\n";
         s += "    Regulatory graph: " + name + "\n";
-        s += "    Graph building strategy: " + buildSTG + "\n";
+        s += "    Simulation strategy: " + simulationStrategy + "\n";
         s += "    Updating policy: ";
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
         if (pcdef.getNbElements(null) > 1) {
@@ -157,7 +160,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 		out.addAttr("breadthFirst", ""+breadthFirst);
 		out.addAttr("maxdepth", ""+maxdepth);
 		out.addAttr("maxnodes", ""+maxnodes);
-		out.addAttr("buildSTG", ""+buildSTG);
+		out.addAttr("simulationStrategy", ""+simulationStrategy);
 
 		if (pcdef.getNbElements(null) > 1) {
 			out.openTag("priorityClass");
@@ -196,7 +199,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 
     public Object clone() {
     	GsSimulationParameters newp = new GsSimulationParameters(param_list);
-    	newp.buildSTG = buildSTG;
+    	newp.simulationStrategy = simulationStrategy;
     	newp.name = name;
     	newp.maxdepth = maxdepth;
     	newp.maxnodes = maxnodes;
@@ -238,7 +241,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 	}
 
     public void copy_to(GsSimulationParameters other, Map mapping) {
-        other.buildSTG = this.buildSTG;
+        other.simulationStrategy = this.simulationStrategy;
         other.breadthFirst = this.breadthFirst;
         other.maxdepth = this.maxdepth;
         other.maxnodes = this.maxnodes;

@@ -23,13 +23,13 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
  * </ul>
  */
 abstract public class SimulationUpdater implements Iterator {
-	private OmddNode[] t_tree;
-	int length;
-	byte[] cur_state;
-	byte[] next = null;
-	int depth;
-	Object node;
-	boolean multiple;
+	protected OmddNode[] t_tree;
+	protected int length;
+	protected byte[] cur_state;
+	protected byte[] next = null;
+	protected int depth;
+	protected Object node;
+	protected boolean multiple;
 	
 	public SimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
         t_tree = regGraph.getParametersForSimulation(true);

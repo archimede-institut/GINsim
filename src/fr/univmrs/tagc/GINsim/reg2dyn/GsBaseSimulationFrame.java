@@ -8,7 +8,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 
-public abstract class BaseReg2DynFrame extends StackDialog implements SimulationManager {
+public abstract class GsBaseSimulationFrame extends StackDialog implements SimulationManager {
     /**  */
     private static final long serialVersionUID = 8275117764047606650L;
 
@@ -18,7 +18,7 @@ public abstract class BaseReg2DynFrame extends StackDialog implements Simulation
     public abstract void endSimu(GsGraph graph);
 
 
-    public BaseReg2DynFrame(JFrame parent, String id, int w, int h) {
+    public GsBaseSimulationFrame(JFrame parent, String id, int w, int h) {
         super(parent, id, w, h);
     }
 

@@ -18,8 +18,10 @@ import java.util.Iterator;
 public class GsHierarchicalNodeSet extends HashSet {
 	private static final long serialVersionUID = -6542206623359579872L;
 
+	private int hashCode;
 	public GsHierarchicalNodeSet() {
 		super();
+		buildHashCode();
 	}
 	
 	/**
@@ -46,4 +48,17 @@ public class GsHierarchicalNodeSet extends HashSet {
 		if (!found) return null;
 		return HNode;
 	}
+	
+	public int hashCode() {
+		return hashCode;
+	}
+
+	public void buildHashCode() {
+		hashCode = 0;
+		for (Iterator it = iterator(); it.hasNext();) {
+			GsHierarchicalNode node = (GsHierarchicalNode) it.next();
+			hashCode += node.getUniqueId();
+		}
+	}
+
 }

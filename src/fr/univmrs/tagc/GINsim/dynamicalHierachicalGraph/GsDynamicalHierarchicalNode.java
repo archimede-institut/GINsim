@@ -258,10 +258,11 @@ public class GsDynamicalHierarchicalNode implements Dotify {
 	/**
 	 * Indicates if the GsDynamicalHierarchicalNode contains a state
 	 * @param state
-	 * @return if it contains the state
+	 * @return true if it contains the state
 	 */
 	public boolean contains(byte [] state) {
-		if (statePile != null) {
+		if (root == null) return false;
+		if (statePile != null) { //First search the state in the Pile
 			for (Iterator it = statePile.iterator(); it.hasNext();) {
 				byte[] stateInPile = (byte[]) it.next();
 				boolean found = true;
@@ -275,7 +276,6 @@ public class GsDynamicalHierarchicalNode implements Dotify {
 					return true;
 				}
 			}
-			return root != null && root.testStatus(state) != 0;
 		}
 		return root.testStatus(state) != 0;
 	}

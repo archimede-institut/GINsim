@@ -19,7 +19,7 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 /**
  * frame to set up the simulation
  */
-public class BatchReg2dynFrame extends BaseReg2DynFrame {
+public class GsBatchSimulationFrame extends GsBaseSimulationFrame {
     private static final long serialVersionUID = -4386183125281770860L;
     
     GsSimulationParameterList paramList;
@@ -37,7 +37,7 @@ public class BatchReg2dynFrame extends BaseReg2DynFrame {
      * @param frame
      * @param paramList
      */
-    public BatchReg2dynFrame(JFrame frame, GsSimulationParameterList paramList) {
+    public GsBatchSimulationFrame(JFrame frame, GsSimulationParameterList paramList) {
         super(frame, "display.batchsimulation", 800, 400);
         this.paramList = paramList;
         paramList.graph.addBlockEdit(this);

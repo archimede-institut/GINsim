@@ -7,6 +7,7 @@ import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalG
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.GINsim.reg2dyn.helpers.SimulationHelper;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
@@ -19,7 +20,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 	public DynamicalHierarchicalSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		this.regGraph = regGraph;
 		this.dynHieGraph = new GsDynamicalHierarchicalGraph(params.nodeOrder);
-		this.mergingStrategy = (byte) params.hierarchicalStrategies;
+//		this.mergingStrategy = (byte) params.hierarchicalStrategies;
 		if (regGraph instanceof GsRegulatoryGraph) {
 			dynHieGraph.setAssociatedGraph(regGraph);
 		}
@@ -29,15 +30,15 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
         arcs = new HashMap();
 	}
 
-	boolean addNode(SimulationQueuedState item) {
+	public boolean addNode(SimulationQueuedState item) {
 		return false;
 	}
 
-	GsGraph endSimulation() {
+	public GsGraph endSimulation() {
 		return dynHieGraph;
 	}
 
-	void setStable() {
+	public void setStable() {
 	}
 
 	public Object getNode() {
@@ -48,7 +49,10 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 		this.node = (GsDynamicalHierarchicalNode) node;
 	}
 	
-	public GsDynamicalHierarchicalGraph getGraph() {
+	public GsGraph getRegulatoryGraph() {
+		return this.regGraph;
+	}
+	public GsGraph getDynamicGraph() {
 		return this.dynHieGraph;
 	}
 

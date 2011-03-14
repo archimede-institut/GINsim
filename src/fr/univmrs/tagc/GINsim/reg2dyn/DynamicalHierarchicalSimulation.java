@@ -89,9 +89,9 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			debug_o.println("Error : "+e.getMessage());
 			e.printStackTrace();
 		}
-		addAllNodeTo(helper.getGraph());									// add all nodes to the graph
-		addAllEdgesTo(helper.getGraph());									// add all the edges to the graph
-		updateTerminalCycles(helper.getGraph());							// indicates if a cycle is terminal
+		addAllNodeTo((GsDynamicalHierarchicalGraph) helper.getDynamicGraph());									// add all nodes to the graph
+		addAllEdgesTo((GsDynamicalHierarchicalGraph) helper.getDynamicGraph());									// add all the edges to the graph
+		updateTerminalCycles((GsDynamicalHierarchicalGraph) helper.getDynamicGraph());							// indicates if a cycle is terminal
 		log(-100, "Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		return helper.endSimulation();
 	}

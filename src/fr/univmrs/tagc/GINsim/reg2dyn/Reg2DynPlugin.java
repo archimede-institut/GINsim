@@ -74,9 +74,9 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
 
             GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
             if (ref == 0) {
-                new GsReg2dynFrame(frame, paramList).setVisible(true);
+                new GsSingleSimulationFrame(frame, paramList).setVisible(true);
             } else {
-                new BatchReg2dynFrame(frame, paramList).setVisible(true);
+                new GsBatchSimulationFrame(frame, paramList).setVisible(true);
             }
 		}
 	}
