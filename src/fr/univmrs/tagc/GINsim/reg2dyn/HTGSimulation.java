@@ -3,7 +3,9 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Set;
 
+import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -131,7 +133,7 @@ public class HTGSimulation extends Simulation {
 			e.printStackTrace();
 		}
 		addAllNodeTo();									// add all nodes to the graph
-//		addAllEdgesTo(helper.getRegulatoryGraph());									// add all the edges to the graph
+		addAllEdgesTo();								// add all the edges to the graph
 //		updateTerminalCycles(helper.getRegulatoryGraph());							// indicates if a cycle is terminal
 		log(-100, "Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		return helper.endSimulation();
@@ -170,7 +172,7 @@ public class HTGSimulation extends Simulation {
 
 	}
 
-	private void explore(HTGSimulationQueuedState e) {
+	private GsHierarchicalNode explore(HTGSimulationQueuedState e) {
 		HTGSimulationQueuedState n = null;
 		tabdepth.append('\t');
 		log(DBG_MAINLOOPS,tabdepth+"Exploring :"+e);
@@ -183,7 +185,11 @@ public class HTGSimulation extends Simulation {
 			byte[] n_state= ((SimulationQueuedState)e.updater.next()).state;					// n_state is the state of the successor
 			SimulationUpdater n_updater = getUpdaterForState(n_state);
 			if (!n_updater.hasNext()) {															// n_state has no child No child => stable state
-				processStableState(n_state);
+				GsHierarchicalNode stableState = processStableState(n_state);
+				e.addOutgoingHNode(stableState);
+//				GsHierarchicalNodeSet stableStateSet = GsHierarchicalNodeSetFactory.get(stableState.getUniqueId());
+//				if (current_hnode == null) current_hnode = stableStateSet; 
+//				else  
 				continue;
 			}
 
@@ -197,12 +203,14 @@ public class HTGSimulation extends Simulation {
 				hnode = nodeSet.getHNodeForState(n_state);									//  If it already processed (in the nodeSet)	
 				if (hnode != null) {
 					log(DBG_APPARTENANCETESTS,tabdepth+"in N :"+hnode.getUniqueId());
+					e.addOutgoingHNode(hnode);
 					continue;																//     then continue to the next successor	
 				} else {																	//  Else
 					log(DBG_APPARTENANCETESTS,tabdepth+"not in N");
 					n = new HTGSimulationQueuedState(n_state, index, index, n_updater);		//     explore it
-					explore(n);																//     update the index
+					hnode = explore(n);																//     update the index
 					e.low_index = Math.min(e.low_index, n.low_index);
+					if (hnode != null) e.addOutgoingHNode(hnode);
 				}
 			}
 		}
@@ -220,21 +228,34 @@ public class HTGSimulation extends Simulation {
 				tmp = (HTGSimulationQueuedState) queue.removeLast();
 				log(DBG_QUEUE,tabdepth+"\tunqueuing:"+queue);
 				hnode.addStateToThePile(tmp.state);
+				for (Iterator it = tmp.getOutgoindHNodes().iterator(); it.hasNext();) {
+					GsHierarchicalNode node = (GsHierarchicalNode) it.next();
+					node.addIncomingEdge(hnode);
+				}
 			} while (!tmp.equals(e));
 			hnode.addAllTheStatesInPile();
+			if (hnode.getSize() == 1) {
+				hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+			} else {
+				hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE);
+			}
 			nodeSet.add(hnode);
+			
 			log(DBG_QUEUE,tabdepth+"\tunqueuing:"+queue+"\n"+tabdepth+"done");
 			log(DBG_MAINLOOPS,tabdepth+"NEW SCC = "+hnode.statesToString(true));
+		} else {
+			log(DBG_MAINLOOPS, "WTF why am i here ?");
 		}
 		tabdepth.deleteCharAt(tabdepth.length()-1);
+		return null;
 	}
 
 	
-	private void processStableState(byte[] state) {
-		hnode = nodeSet.getHNodeForState(state);									//  If it already processed (in the nodeSet)	
+	private GsHierarchicalNode processStableState(byte[] state) {
+		GsHierarchicalNode hnode = nodeSet.getHNodeForState(state);									//  If it already processed (in the nodeSet)	
 		if (hnode != null) {
 			log(DBG_MAINLOOPS,tabdepth+"found stable state :"+print_state(state));
-			return;
+			return hnode;
 		}
 		index++;
 		log(DBG_MAINLOOPS,tabdepth+"found NEW stable state :"+print_state(state));
@@ -242,6 +263,7 @@ public class HTGSimulation extends Simulation {
 		hnode.addState(state, GsHierarchicalNode.STATUS_PROCESSED);
 		hnode.setType(GsHierarchicalNode.TYPE_STABLE_STATE);
 		nodeSet.add(hnode);
+		return hnode;
 	}
 
 	private HTGSimulationQueuedState getTripletInQueueForState(byte[] state) {
@@ -276,12 +298,12 @@ public class HTGSimulation extends Simulation {
 				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
 				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_STABLE_STATE_COLOR);
 				break;
+			case GsDynamicalHierarchicalNode.TYPE_CYCLE:
+				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_CYCLE_COLOR);
+				if (hnode.getIncomingEdges().size() != 0) break;
 			case GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE:
 				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
 				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
-				break;
-			case GsDynamicalHierarchicalNode.TYPE_CYCLE:
-				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_CYCLE_COLOR);
 				break;
 			case GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT:
 				if (hnode.statesSet.getSizeOrOverApproximation() > 1) vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR);
@@ -296,6 +318,26 @@ public class HTGSimulation extends Simulation {
 		log(DBG_POSTTREATMENT," total of node added : "+n);
 		log(DBG_POSTTREATMENT," done");
 	}
+	
+	private void addAllEdgesTo() {
+		log(DBG_POSTTREATMENT,"Adding all arcs to the graph...");
+		int nbarc = 0;
+		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
+			GsHierarchicalNode to = (GsHierarchicalNode) it.next();
+			log(DBG_POSTTREATMENT,"  from "+to);
+			Set froms = to.getIncomingEdges();
+			for (Iterator it2 = froms.iterator(); it2.hasNext();) {
+				GsHierarchicalNode from = (GsHierarchicalNode) it2.next();
+				if (!from.equals(to)) {
+                    htg.addEdge(from, to);
+                    nbarc++;
+                }
+			}
+			to.releaseEdges();
+		}
+		log(DBG_POSTTREATMENT," ("+nbarc+") done");
+	}
+
 
 
 /* ****************** DEBUG AND LOG STUFF**********/

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.TableColumn;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
@@ -31,6 +32,8 @@ public class GsHierarchicalParameterPanel extends GsParameterPanel {
 			if (obj instanceof GsHierarchicalNode) {
 				node = (GsHierarchicalNode)obj;
 				((GsHierarchicalTableModel)getJTable().getModel()).setContent(node);
+	            jTable.getColumnModel().getColumn(0).setMinWidth(10);
+	            jTable.getColumnModel().getColumn(0).setPreferredWidth(10);
 			}
 		}
 

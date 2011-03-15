@@ -259,8 +259,7 @@ public class GsHierarchicalNode implements Dotify {
 	}
 
 	
-	public int getSize() throws GsException {
-		if (true) throw new GsException(1, "Get Size()");
+	public int getSize() {
 		return size;
 	}
 
@@ -325,6 +324,9 @@ public class GsHierarchicalNode implements Dotify {
 /* **************** TOSTRINGS ************/	
 
 		public String toString() {
+			if (size == 0) {
+				updateSize();
+			}
 			if (size == 1) {
 				StringBuffer s = new StringBuffer();
 				byte[] t = (byte[]) ((List)statesToList()).get(0);
@@ -332,7 +334,7 @@ public class GsHierarchicalNode implements Dotify {
 					s.append(String.valueOf(t[i]).charAt(0));
 				}
 				return s.toString();
-			}
+			} 
 			return "#"+size;
 		}
 		public String toLongString() {

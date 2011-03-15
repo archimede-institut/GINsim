@@ -1,11 +1,17 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
+
 public class HTGSimulationQueuedState {
 
 	public byte[] state;
 	public int index;
 	public int low_index;
 	public SimulationUpdater updater;
+	public Set outgoindHNodes = null;
 	
 	public HTGSimulationQueuedState(byte[] state, int index, int low_index, SimulationUpdater updater) {
 		this.state = state;
@@ -24,5 +30,15 @@ public class HTGSimulationQueuedState {
 			s.append(""+t[i]);
 		}
 		return s.toString();
+	}
+	
+	public Set getOutgoindHNodes() {
+		if (outgoindHNodes == null) outgoindHNodes = new HashSet();
+		return outgoindHNodes;
+	}
+	
+	public void addOutgoingHNode(GsHierarchicalNode hnode) {
+		if (outgoindHNodes == null) outgoindHNodes = new HashSet();
+		outgoindHNodes.add(hnode);
 	}
 }

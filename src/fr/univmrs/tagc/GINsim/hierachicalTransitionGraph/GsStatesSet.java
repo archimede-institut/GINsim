@@ -189,7 +189,7 @@ public class GsStatesSet {
 		}
 		
 		for (int i = 0 ; i < omdd.next.length ; i++) {
-			updateSize(omdd.next[i], omdd.level, coef, childsCount);
+			updateSize(omdd.next[i], omdd.level, coef, counts);
 		}
 	}
 
