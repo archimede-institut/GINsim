@@ -155,8 +155,8 @@ public class GsStatesSet {
 	 * Count the number of states in the Omdd and update the <b>size</b> accordingly
 	 * @return an array indiced by the status and counting the number of state per status
 	 */
-	public byte[] updateSize() {
-		byte[] counts = new byte[10];
+	public int[] updateSize() {
+		int[] counts = new int[10];
 		size = 0;
 		updateSize(root, 0, 1, counts);
 		size_consistancy = true;
@@ -171,7 +171,7 @@ public class GsStatesSet {
 	 * @param coef
 	 * @param counts
 	 */
-	private void updateSize(OmddNode omdd, int last_depth, int coef, byte[] counts) {
+	private void updateSize(OmddNode omdd, int last_depth, int coef, int[] counts) {
 		if (omdd.next == null) {
 			if (omdd.value == 0) return;
 	

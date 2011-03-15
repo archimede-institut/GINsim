@@ -20,7 +20,7 @@ import fr.univmrs.tagc.common.GsException;
 /* **************** CONTAINS ************/	
 /* **************** MERGE ************/	
 /* **************** SIZE ************/	
-/* **************** EDGES ************/	
+/* **************** EDGES, ID AND SIGMA ************/	
 /* **************** TOSTRINGS ************/	
 /* **************** TYPE GETTERS, SETTERS, TESTERS (isStable) AND CONVERSIONS ************/		
 /* **************** TO DOT (DOTIFY) ************/	
@@ -56,7 +56,7 @@ public class GsHierarchicalNode implements Dotify {
 	public static final Color TYPE_CYCLE_COLOR = new Color(114, 159, 207);
 	public static final Color TYPE_TERMINAL_CYCLE_COLOR = new Color(32, 74, 135);
 	public static final Color TYPE_STABLE_STATE_COLOR = new Color(164, 0, 0);
-//	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(109, 179, 43);
+	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(175, 255, 86);
 
 	/**
 	 * OmddNode status to indicate the state is present in the GsStateSet but unprocessed 
@@ -111,9 +111,19 @@ public class GsHierarchicalNode implements Dotify {
 	private Set in;
 
 	/**
+	 * The atteignability in terms of attractors
+	 */
+	private Set sigma;
+	
+	/**
 	 * An array indicating such that childsCount[i] indicates the maxValue of the i-th gene
 	 */
 	private byte[] childsCount;
+
+	/**
+	 * An array indicating such that childsCount[i] indicates the maxValue of the i-th gene
+	 */
+	private GsHierarchicalNode master;
 
 	
 /* **************** CONSTRUCTORS ************/	
@@ -129,6 +139,7 @@ public class GsHierarchicalNode implements Dotify {
 		nextId = nextId*2-1;
 		this.type = TYPE_TRANSIENT_COMPONENT;
 		this.childsCount = childsCount;
+		this.master = this;
 	}
 	
 /* **************** PILE ************/	
@@ -209,11 +220,12 @@ public class GsHierarchicalNode implements Dotify {
 	 * @param childsCount 
 	 * @param helper 
 	 */
-	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet, int nbNodes, byte[] childsCount) throws Exception {
+	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet) {// throws Exception {
 		if (slaveNode == this) return;
-		if (slaveNode.type != this.type) {
-			throw new Exception("Error merging two node of different types : "+slaveNode.toLongString()+" in "+this.toLongString()); //FIXME : remove me
-		}
+		slaveNode = slaveNode.master;
+//		if (slaveNode.type != this.type) {
+//			throw new Exception("Error merging two node of different types : "+slaveNode.toLongString()+" in "+this.toLongString()); //FIXME : remove me
+//		}
 		if (this.statesSet != null && slaveNode.statesSet != null) { 			//Merge the set of states
 			this.statesSet.merge(slaveNode.statesSet);
 		}
@@ -235,6 +247,7 @@ public class GsHierarchicalNode implements Dotify {
 			}
 		}
 		nodeSet.remove(slaveNode);												//Make slaveNode a slaveNode !
+		slaveNode.master = this;
 	}
 	
 
@@ -269,23 +282,23 @@ public class GsHierarchicalNode implements Dotify {
 		if (statePile != null) {
 			size = statePile.size();
 		}
-		byte[] counts = statesSet.updateSize();
+		int[] counts = statesSet.updateSize();
 		size += counts[STATUS_UNPROCESSED] + counts[STATUS_PROCESSED];
 		processed += counts[STATUS_PROCESSED];
 		
 	}
 	
 
-	/* **************** EDGES ************/	
+	/* **************** EDGES, ID AND SIGMA ************/	
 
 	/**
 	 * Return the set of incoming edges HashSet&lt;GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;&gt;
 	 */
 	public Set getIncomingEdges() {
-		if (in == null) {
-			in = new HashSet();
+		if (master.in == null) {
+			master.in = new HashSet();
 		}
-		return in;
+		return master.in;
 	}
 
 	/**
@@ -293,30 +306,69 @@ public class GsHierarchicalNode implements Dotify {
 	 * @param o
 	 */
 	public void addIncomingEdge(Object o) {
-		if (in == null) {
-			in = new HashSet();
+		if (master.in == null) {
+			master.in = new HashSet();
 		}
-		in.add(o);
+		master.in.add(o);
 	}
 
+	/**
+	 * Add an edge between the masters nodes
+	 * @param to
+	 * @param htg
+	 * @return true if an edge was added (no autoregulation
+	 */
+	public boolean addEdge(GsHierarchicalNode to, GsHierarchicalTransitionGraph htg) {
+		if (!master.equals(to.master)) {
+			htg.addEdge(master, to.master);
+			return true;
+		}
+		return false;
+	}
+
+	
 	/**
 	 * Release all the references to the set of incoming edges.
 	 */
 	public void releaseEdges() {
-		in = null;
+		master.in = null;
 	}
 
-
+	/**
+	 * return the set sigma
+	 */
+	public Set getSigma() {
+		if (master.sigma == null) {
+			master.sigma = new HashSet();
+		}
+		return master.sigma;
+	}
+	/**
+	 * return the set sigma
+	 */
+	public void setSigma(Set sigma) {
+		this.master.sigma = sigma;
+	}
+	
+	public void releaseSigma() {
+		master.sigma = null;
+	}
+	
+	
+	/**
+	 * Return the long identifying this node "uniquely" (if in the range of long)
+	 * @return
+	 */
 	public long getUniqueId() {
-		return uid;
+		return master.uid;
 	}
 	
 	public int hashcode() {
-		return (int)uid;
+		return (int)master.uid;
 	}
 
 	public void parse(String parse) throws SAXException {
-		statesSet.parse(parse);
+		statesSet.parse(parse); //TODO:
 	}
 
 
@@ -333,7 +385,7 @@ public class GsHierarchicalNode implements Dotify {
 				for (int i = 0; i < t.length; i++) {
 					s.append(String.valueOf(t[i]).charAt(0));
 				}
-				return s.toString();
+				return s.toString()+(master != this ? "¤{"+master+"}":"");
 			} 
 			return "#"+size;
 		}
@@ -502,6 +554,7 @@ public class GsHierarchicalNode implements Dotify {
 			return  this.getUniqueId()+" -> "+((GsHierarchicalNode) to).getUniqueId()+";";
 		}
 
+	
 	}
 
 

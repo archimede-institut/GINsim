@@ -39,46 +39,57 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class GsHierarchicalTransitionGraph extends GsGraph {
 
-		public final static String zip_mainEntry = "hierarchicalTransitionGraph.ginml";
-		private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
-		private JPanel optionPanel = null;
-		
-		/**
-		 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
-		 */
-		private byte[] childsCount = null;
-		private GsHierarchicalParameterPanel vertexPanel = null;
+	public static final int MODE_SCC = 1;
+	public static final int MODE_HTG = 2;
 
-		
+	public final static String zip_mainEntry = "hierarchicalTransitionGraph.ginml";
+	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
+	private JPanel optionPanel = null;
+	
+	/**
+	 * Mode is either SCC or HTG depending if we group the transients component by their atteignability of attractors.
+	 */
+	private int transientCompactionMode;
+	
+	/**
+	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
+	 */
+	private byte[] childsCount = null;
+	private GsHierarchicalParameterPanel vertexPanel = null;
+
+	
 /* **************** CONSTRUCTORS ************/	
-		
-		
-		/**
-		 * create a new empty GsDynamicalHierarchicalGraph.
-		 */
-		public GsHierarchicalTransitionGraph() {
-			this((String)null, false);
-		}
-					
-		/**
-		 * create a new GsDynamicalHierarchicalGraph with a nodeOrder.
-		 * @param nodeOrder the node order
-		 */
-		public GsHierarchicalTransitionGraph(List nodeOrder) {
-		    this();
-		    this.nodeOrder = new ArrayList(nodeOrder);
-		}
+	
+	
+	/**
+	 * create a new empty GsDynamicalHierarchicalGraph.
+	 */
+	public GsHierarchicalTransitionGraph() {
+		this((String)null, false);
+	}
+				
+	/**
+	 * create a new GsDynamicalHierarchicalGraph with a nodeOrder.
+	 * @param nodeOrder the node order
+	 * @param transientCompactionMode MODE_SCC or MODE_HTG
+	 */
+	public GsHierarchicalTransitionGraph(List nodeOrder, int transientCompactionMode) {
+	    this();
+	    this.nodeOrder = new ArrayList(nodeOrder);
+	    this.transientCompactionMode = transientCompactionMode;
+	}
 
-		public GsHierarchicalTransitionGraph(String filename, boolean parsing) {
-	        super(GsHierarchicalTransitionGraphDescriptor.getInstance(), filename, parsing);
-		}
+	public GsHierarchicalTransitionGraph(String filename, boolean parsing) {
+        super(GsHierarchicalTransitionGraphDescriptor.getInstance(), filename, parsing);
+        System.out.println("ERROR"); //TODO fix this
+	}
 
-		public GsHierarchicalTransitionGraph(Map map, File file) {
-		    this(file.getAbsolutePath(), true);
-	        GsHierarchicalTransitionGraphParser parser = new GsHierarchicalTransitionGraphParser();
-	        parser.parse(file, map, this);
-			graphManager.ready();
-		}
+	public GsHierarchicalTransitionGraph(Map map, File file) {
+	    this(file.getAbsolutePath(), true);
+        GsHierarchicalTransitionGraphParser parser = new GsHierarchicalTransitionGraphParser();
+        parser.parse(file, map, this);
+		graphManager.ready();
+	}
 
 		
 /* **************** EDITION OF VERTEX AND EDGE ************/	
@@ -321,6 +332,14 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 			return s.substring(0, s.length()-1);
 		}
 		return s;
+	}
+	
+	/**
+	 * Return <b>true</b> if the transients are compacted into component by their atteignability of attractors.
+	 * @return
+	 */
+	public boolean areTransientCompacted() {
+		return transientCompactionMode == MODE_HTG;
 	}
 
     

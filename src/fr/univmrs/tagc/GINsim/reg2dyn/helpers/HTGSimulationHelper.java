@@ -16,12 +16,18 @@ public class HTGSimulationHelper  extends SimulationHelper {
 	protected GsHierarchicalTransitionGraph htg;
 	public Map arcs;
 	protected GsRegulatoryGraph regGraph;
-	protected boolean shouldCompactTransients;
 	
 	public HTGSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		this.regGraph = regGraph;
-		this.htg = new GsHierarchicalTransitionGraph(params.nodeOrder);
-		this.shouldCompactTransients = (params.simulationStrategy == GsSimulationParameters.STRATEGY_HTG);
+		int mode;
+		if (params.simulationStrategy == GsSimulationParameters.STRATEGY_HTG) {
+			mode = GsHierarchicalTransitionGraph.MODE_HTG;
+		} else {
+			mode = GsHierarchicalTransitionGraph.MODE_SCC;
+		}
+		mode = GsHierarchicalTransitionGraph.MODE_HTG; //FIXME remove ME
+		this.htg = new GsHierarchicalTransitionGraph(params.nodeOrder, mode);
+		;
 		if (regGraph instanceof GsRegulatoryGraph) {
 			htg.setAssociatedGraph(regGraph);
 		}
