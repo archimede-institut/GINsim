@@ -28,14 +28,14 @@ public class PriorityClassManager extends SimpleGenericList {
 		// add default priority classes
 		int index = add();
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)getElement(null, index);
-		pcdef.setName("Asynchronous");
+		pcdef.setName("asynchronous");
 		GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, 0);
 		pc.setName("all");
 		pc.setMode(GsReg2dynPriorityClass.ASYNCHRONOUS);
 		pcdef.lock();
 		index = add();
 		pcdef = (PriorityClassDefinition)getElement(null, index);
-		pcdef.setName("Synchronous");
+		pcdef.setName("synchronous");
 		pc = (GsReg2dynPriorityClass)pcdef.getElement(null, 0);
 		pc.setName("all");
 		pc.setMode(GsReg2dynPriorityClass.SYNCHRONOUS);

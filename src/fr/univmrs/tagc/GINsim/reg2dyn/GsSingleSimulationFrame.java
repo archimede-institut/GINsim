@@ -8,8 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -28,6 +26,7 @@ import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
+import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
@@ -42,7 +41,7 @@ import fr.univmrs.tagc.common.widgets.SplitPane;
 public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements ListSelectionListener{
 	private static final long serialVersionUID = 8687415239702718705L;
 	
-	private static final String[] simulationMethodsNames = {Translator.getString("STR_HTG"), Translator.getString("STR_SCCG"), Translator.getString("STR_STG")}; //FIXME: change the order before release
+	private static final String[] simulationMethodsNames = {Translator.getString("STR_STG"), Translator.getString("STR_SCCG"), Translator.getString("STR_HTG")};
 
 
 /* *************** SIMULATION RELATED PARAMETERS **********************/
@@ -131,26 +130,24 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 			c.weightx = 0.4;
 			mainPanel.add(getSimulationStrategyPanel(), c);
 			
-			// size limits
-			c.gridx++;
-			c.gridy++;
-			mainPanel.add(getGraphSizeLimitsPanel(), c);
 		
 			// bottom-right part with mutants
-			c = new GridBagConstraints();
-			c.gridx = 1;
-			c.gridy = 0;
+			c.gridx++;
 			c.fill = GridBagConstraints.BOTH;
 			c.weightx = 0.6;
+			c.gridheight = 1;
 			ObjectStore store = currentParameter == null ? null : currentParameter.store;
 			mutantPanel = new MutantSelectionPanel(this, paramList.graph, store);
 			mainPanel.add(mutantPanel, c);
+
+			// size limits
+			c.gridy++;
+			mainPanel.add(getGraphSizeLimitsPanel(), c);
 			
 			// initial state
 			initStatePanel = new GsInitialStatePanel(this, paramList.graph, true);
-			c = new GridBagConstraints();
 			c.gridx = 0;
-			c.gridy = 2;
+			c.gridy++;
 			c.gridwidth = 2;
 			c.fill = GridBagConstraints.BOTH;
 			c.weightx = 1;
@@ -260,8 +257,13 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 	private JComboBox getSimulationMethodsComboBox() {
 		if (simulationMethodsComboBox == null) {
 			simulationMethodsComboBox = new JComboBox(simulationMethodsNames);
-			simulationMethodsComboBox.addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent e) {
+			Integer selectedIndex = (Integer)OptionStore.getOption("simulation.defaultMethod");
+			if (selectedIndex != null) {
+				int v = selectedIndex.intValue();
+				simulationMethodsComboBox.setSelectedIndex(v);
+			}
+			simulationMethodsComboBox.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
 					if (currentParameter.simulationStrategy != GsSimulationParameters.STRATEGY_STG) {
 						radioBreadthFirst.setEnabled(false);
@@ -360,6 +362,9 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 			sim.interrupt();	
 		}
 		paramList.graph.removeBlockEdit(this);
+		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
+		OptionStore.setOption(id+".width", new Integer(getWidth()));
+		OptionStore.setOption(id+".height", new Integer(getHeight()));
 		super.cancel();
 	}
 	protected void run() {
@@ -380,7 +385,9 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 		textMaxNodes.setEnabled(false);
 		
 		isrunning = true;
-		if (currentParameter.simulationStrategy != GsSimulationParameters.STRATEGY_STG) { //FIXME change this
+		currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
+		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
+		if (currentParameter.simulationStrategy == GsSimulationParameters.STRATEGY_STG) {
 			sim = new Simulation(paramList.graph, this, currentParameter);
 		} else {
 			sim = new HTGSimulation(paramList.graph, this, currentParameter);

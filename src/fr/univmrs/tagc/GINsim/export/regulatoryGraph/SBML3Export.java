@@ -112,13 +112,12 @@ public class SBML3Export implements OMDDBrowserListener {
             out.openTag("listOfTransitions");
             out.addAttr("xmlns", L3_QUALI_URL);
             for (int i=0 ; i<t_tree.length ; i++) {
-                GsRegulatoryVertex component = (GsRegulatoryVertex)v_no.get(i);
-                if (component.isInput()) {
+                GsRegulatoryVertex regulatoryVertex = (GsRegulatoryVertex)v_no.get(i);
+                if (regulatoryVertex.isInput()) {
                 	continue;
                 }
                 OmddNode node = t_tree[i];
-                String s_node = component.getId();
-                int max = component.getMaxValue();
+                String s_node = regulatoryVertex.getId();
                 out.openTag("transition");
                 out.addAttr("id", "tr_"+s_node);
                 
@@ -146,7 +145,7 @@ public class SBML3Export implements OMDDBrowserListener {
                 out.openTag("defaultTerm");
                 out.addAttr("resultLevel", ""+0);
                 out.closeTag();
-                for (curValue=1 ; curValue<2 ; curValue++) {
+                for (curValue=1 ; curValue<=regulatoryVertex.getMaxValue() ; curValue++) {
 	                out.openTag("functionTerm");
 	                out.addAttr("resultLevel", ""+curValue);
 	                out.openTag("math");

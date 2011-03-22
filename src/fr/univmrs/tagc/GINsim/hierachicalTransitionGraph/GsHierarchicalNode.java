@@ -57,6 +57,7 @@ public class GsHierarchicalNode implements Dotify {
 	public static final Color TYPE_TERMINAL_CYCLE_COLOR = new Color(32, 74, 135);
 	public static final Color TYPE_STABLE_STATE_COLOR = new Color(164, 0, 0);
 	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(175, 255, 86);
+	public static final Color TYPE_EDEN_TRANSIENT_COMPONENT_COLOR = new Color(120, 160, 40);
 
 	/**
 	 * OmddNode status to indicate the state is present in the GsStateSet but unprocessed 
@@ -282,6 +283,7 @@ public class GsHierarchicalNode implements Dotify {
 		if (statePile != null) {
 			size = statePile.size();
 		}
+		statesSet.reduce();
 		int[] counts = statesSet.updateSize();
 		size += counts[STATUS_UNPROCESSED] + counts[STATUS_PROCESSED];
 		processed += counts[STATUS_PROCESSED];
@@ -446,10 +448,8 @@ public class GsHierarchicalNode implements Dotify {
 	 * @return
 	 */
 	public List statesToList() {
-		List v = statePile;
-		if (v == null) {
-			v = new LinkedList();
-		}
+		addAllTheStatesInPile();
+		List v = new LinkedList();
 		statesSet.statesToList(v);
 		return v;
 	}

@@ -10,7 +10,7 @@ import fr.univmrs.tagc.common.OptionStore;
 public abstract class SimpleDialog extends JDialog {
 	private static final long	serialVersionUID	= -460464845250055098L;
 
-	String id;
+	protected String id;
 	
 	Action actionListener = new AbstractAction() {
 		private static final long serialVersionUID = 448859746054492959L;

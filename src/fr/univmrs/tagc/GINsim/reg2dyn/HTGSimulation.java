@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
+import java.awt.Color;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class HTGSimulation extends Simulation {
 
 	
 	/*  ****DEBUG RELATED STUFF*/
-	private static final int DBG_DEPLOYMENT = -1;
+	private static final int DBG_DEPLOYMENT = 0;
 	private static final int DBG_MAINLOOPS = 1;
 	private static final int DBG_POSTTREATMENT = 2;
 	private static final int DBG_APPARTENANCETESTS = 4;
@@ -45,6 +46,9 @@ public class HTGSimulation extends Simulation {
 	private PrintStream debug_o = System.err;
 	private StringBuffer log_tabdepth = new StringBuffer();
 	
+	/**
+	 * Indicates if the transient SCC should be compacted into a hierarchical transition graph.
+	 */
 	private boolean shouldCompactSCC;
 	
 	
@@ -70,24 +74,6 @@ public class HTGSimulation extends Simulation {
 
 	private GsSimulationParameters params;
 	
-	
-	
-//	
-//	protected DynamicalHierarchicalSimulationHelper helper;
-//	private int depth = 0;
-//	private DynamicalHierarchicalSimulationQueuedState e, next;
-//	private GsHierarchicalNode dhnode;
-//	private GsHierarchicalNodeSet nodeSet;
-//	
-//
-//	
-//	private int totalNode = 0;
-//	private GsDynamicalHierarchicalGraph dynGraph;
-//	private GsGraphManager rgm;
-//	
-//	private byte[] childsCount;
-//
-//	private int vertexCount;
 	
 	public HTGSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params) {
 		this(regGraph, frame, params, true, true);
@@ -142,26 +128,36 @@ public class HTGSimulation extends Simulation {
 
 	/**
 	 * The main entrance for the algorithm. Basically, initialize the main variables, and run the recursive explore function on every initial states
+	 *
+	 * <pre> index = 0
+	 * For each initial state __state__
+	 *     If __state__ is not in __nodeSet__, that is is not already processed
+	 *         If __state__ has no successors
+	 *             It is a stable state; continue
+	 *         Else
+	 *             Explore({__state__, index, index})
+	 * </pre>
 	 */
 	private void runSimulationOnInitialStates() throws Exception {
 		nodeSet = new GsHierarchicalNodeSet();
 		childsCount = htg.getChildsCount();
 		index = 0;
-		
-		while(initStatesIterator.hasNext()) { 										//For each initial states
-			byte[] state = (byte[])initStatesIterator.next();						//  fetch the current initial state.
-			log(DBG_MAINLOOPS,log_tabdepth+"New initial state :"+print_state(state));
-			
-			GsHierarchicalNode processed_hnode = nodeSet.getHNodeForState(state);					//  If it already processed (in the nodeSet)	
-			if (processed_hnode  == null) { 										//  If the new state has not been processed
-				HTGSimulationQueuedState e = new HTGSimulationQueuedState(state, index, index, getUpdaterForState(state));
-				if (!e.updater.hasNext()) {
-					processStableState(e.state);
-					continue;
-				}
-				updateProgess();														//  Update the GUI to indicates the progress (ie. one node processed)
-				depth = -1;
-				explore(e);
+		                                                                                            						
+		while(initStatesIterator.hasNext()) { 																				//For each initial states
+			byte[] state = (byte[])initStatesIterator.next();																//  __state__ is the current initial state.
+			log(DBG_MAINLOOPS,log_tabdepth+"New initial state :"+print_state(state));               						
+			                                                                                        						
+			GsHierarchicalNode processed_hnode = nodeSet.getHNodeForState(state);											//  Search __state__ in the nodeSet
+			if (processed_hnode  == null) { 																				//  If the new state was not in the nodeSet, that is has not been processed
+				SimulationUpdater updater = getUpdaterForState(state);														//    Get the updater of the state
+				if (!updater.hasNext()) {                                                                                   //    If it has no successor
+					processStableState(state);                                                                           	//      Process it as a stable state
+					continue;                                                                                                     
+				}                                                                                                                 
+				HTGSimulationQueuedState e = new HTGSimulationQueuedState(state, index, index, updater);					//    Create __e__ a queue item with the state, index and updater
+				updateProgess();																							//    Update the GUI to indicates the progress (ie. one node processed)
+				depth = -1;                                                                                                 //    Set the depth to -1, (as it will be incremented immediatly to 0)
+				explore(e);                                                                                                 //    Call the recursive dunction explore() on __e__.
 			} else {
 				log(DBG_MAINLOOPS,log_tabdepth+"\tAlready processed :"+processed_hnode.getUniqueId());
 			}
@@ -169,6 +165,46 @@ public class HTGSimulation extends Simulation {
 
 	}
 
+	/**
+	 * The reccursive function of the algorithm.
+	 *
+	 * <pre> For a given queue item __e__
+	 * increment __index__
+	 * increment __depth__
+	 * initialize __e_sigma__ as a new Set<GsHierarchicalNode>
+	 * queue __e__
+	 * for each successor __n_state__ of __e__
+	 *   If __n__ has no successor
+	 *      process it as a stable state ¬ __stable_state__
+	 *      append __stable_state__ to the set of __outgoingEdges__ of __e__
+	 *      append __stable_state__.__sigma__ to __e_sigma__
+	 *      continue;
+	 *   __n__ = Search __n_state__ in the queue
+	 *   If __n__ is found   
+	 *      __e__.low_index = min(__e__.low_index, __n__.index)
+	 *   Else
+	 *      __hnode__ = Search __n_state__ in nodeSet, that is, has it already been processed.
+	 *      If __hnode__ is found
+	 *          append __hnode__ to the set of __outgoingEdges__ of __e__
+	 *          append __hnode__.__sigma__ to __e_sigma__
+	 *          continue;
+	 *      Else
+	 *          __n__ = {__n_state__, index, index}
+	 *          __hnode__ = explore(__n__)
+	 *          __e__.low_index = min(__e__.low_index, __n__.low_index)
+	 *          If __hnode__ is not null
+	 *          append __hnode__ to the set of __outgoingEdges__ of __e__
+	 *          append __hnode__.__sigma__ to __e_sigma__
+	 *              
+	 *   
+	 *              
+	 *   
+	 *              
+	 *   
+	 *              
+	 *   
+	 * </pre>
+	 */
 	private GsHierarchicalNode explore(HTGSimulationQueuedState e) throws Exception {
 		checkStopConditions();
 		
@@ -177,44 +213,41 @@ public class HTGSimulation extends Simulation {
 		log(DBG_MAINLOOPS,log_tabdepth+"Exploring :"+e);
 		index++;
 		depth++;
-		Set new_sigma = new HashSet(); 
+		Set e_sigma = new HashSet(); 
 		
-		queue.add(e);																		//Queueing the current state
-		log(DBG_QUEUE,log_tabdepth+"queue :"+queue);
-		while (e.updater.hasNext()) {															//For each successors
-			byte[] n_state= ((SimulationQueuedState)e.updater.next()).state;					// n_state is the state of the successor
-			SimulationUpdater n_updater = getUpdaterForState(n_state);
-			if (!n_updater.hasNext()) {															// n_state has no child No child => stable state
+		queue.add(e);																										//Queueing the current state
+		log(DBG_QUEUE,log_tabdepth+"queue :"+queue);                                            							
+		while (e.updater.hasNext()) {																						//For each successors
+			byte[] n_state= ((SimulationQueuedState)e.updater.next()).state;												// n_state is the state of the successor
+			SimulationUpdater n_updater = getUpdaterForState(n_state);                          							
+			if (!n_updater.hasNext()) {																						// n_state has no child No child => stable state
 				GsHierarchicalNode stableState = processStableState(n_state);
 				e.addOutgoingHNode(stableState);
-//				GsHierarchicalNodeSet stableStateSet = GsHierarchicalNodeSetFactory.get(stableState.getUniqueId());
-//				if (current_hnode == null) current_hnode = stableStateSet; 
-//				else  
-				new_sigma.addAll(stableState.getSigma());
+				e_sigma.addAll(stableState.getSigma());
 				continue;
 			}
 
 			log(DBG_MAINLOOPS,log_tabdepth+"nextState :"+print_state(n_state));
-			n = getTripletInQueueForState(n_state);				//Search the state in the queue
-			if (n != null) {																//If found
-				log(DBG_APPARTENANCETESTS,log_tabdepth+"in P :"+n);
-				e.low_index = Math.min(e.low_index, n.index);								//  update the index
-			} else {																		//Else the state is not in the queue
-				log(DBG_APPARTENANCETESTS,log_tabdepth+"not in P");
-				GsHierarchicalNode n_hnode = nodeSet.getHNodeForState(n_state);									//  If it already processed (in the nodeSet)	
-				if (n_hnode != null) {
-					log(DBG_APPARTENANCETESTS,log_tabdepth+"in N :"+n_hnode.getUniqueId());
-					e.addOutgoingHNode(n_hnode);
-					new_sigma.addAll(n_hnode.getSigma());
-					continue;																//     then continue to the next successor	
-				} else {																	//  Else
-					log(DBG_APPARTENANCETESTS,log_tabdepth+"not in N");
-					n = new HTGSimulationQueuedState(n_state, index, index, n_updater);		//     explore it
-					n_hnode = explore(n);																//     update the index
+			n = getTripletInQueueForState(n_state);															   				//Search the state in the queue
+			if (n != null) {																				   				//If found
+				log(DBG_APPARTENANCETESTS,log_tabdepth+"in P :"+n);                         				   				
+				e.low_index = Math.min(e.low_index, n.index);												   				//  update the index
+			} else {																						   				//Else the state is not in the queue
+				log(DBG_APPARTENANCETESTS,log_tabdepth+"not in P");                         				   				 
+				GsHierarchicalNode n_hnode = nodeSet.getHNodeForState(n_state);								   				//  If it already processed (in the nodeSet)	
+				if (n_hnode != null) {                                                                         				
+					log(DBG_APPARTENANCETESTS,log_tabdepth+"in N :"+n_hnode.getUniqueId());                    				
+					e.addOutgoingHNode(n_hnode);                                                               				
+					e_sigma.addAll(n_hnode.getSigma());                                                      				
+					continue;																				   				//     then continue to the next successor	
+				} else {																					   				//  Else
+					log(DBG_APPARTENANCETESTS,log_tabdepth+"not in N");                     				   				 
+					n = new HTGSimulationQueuedState(n_state, index, index, n_updater);						   				//     explore it
+					n_hnode = explore(n);																					//     update the index
 					e.low_index = Math.min(e.low_index, n.low_index);
 					if (n_hnode != null) {
 						e.addOutgoingHNode(n_hnode);
-						new_sigma.addAll(n_hnode.getSigma());
+						e_sigma.addAll(n_hnode.getSigma());
 					}
 				}
 			}
@@ -233,7 +266,7 @@ public class HTGSimulation extends Simulation {
 					GsHierarchicalNode node = (GsHierarchicalNode) it.next();
 					node.addIncomingEdge(new_hnode);
 					e_dhnode_successors.add(node);
-					new_sigma.addAll(node.getSigma()); //merge the sigmas
+					e_sigma.addAll(node.getSigma()); //merge the sigmas
 				}
 			} while (!tmp.equals(e));
 			new_hnode.addAllTheStatesInPile();
@@ -241,16 +274,16 @@ public class HTGSimulation extends Simulation {
 				new_hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 			} else {
 				new_hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE);
-				new_sigma.add(new_hnode);
+				e_sigma.add(new_hnode);
 			}
 			log(DBG_SIGMA,log_tabdepth+"\tsigma:"+new_hnode.getSigma());
-			new_hnode.setSigma(new_sigma);
+			new_hnode.setSigma(e_sigma);
 			if (shouldCompactSCC && new_hnode.isTransient()) {
-				log(DBG_MERGE,log_tabdepth+"\t\tsigma_new"+new_sigma);
+				log(DBG_MERGE,log_tabdepth+"\t\tsigma_new"+e_sigma);
 				for (Iterator it = e_dhnode_successors.iterator(); it.hasNext();) {
 					GsHierarchicalNode node = (GsHierarchicalNode) it.next();
 					log(DBG_MERGE,log_tabdepth+"\t\tsigma_suc"+node.getSigma());
-					if (node.isTransient() && new_sigma.equals(node.getSigma())) {
+					if (node.isTransient() && e_sigma.equals(node.getSigma())) {
 						log(DBG_MERGE,log_tabdepth+"\t\t\tshould merge "+new_hnode+" with "+node);
 						new_hnode.merge(node, nodeSet);
 					}
@@ -310,7 +343,7 @@ public class HTGSimulation extends Simulation {
 			n++;
 			GsHierarchicalNode hnode = (GsHierarchicalNode) it.next();
 			hnode.addAllTheStatesInPile();
-			//hnode.releaseSigma();//FIXME remove me !
+			hnode.releaseSigma();
 			hnode.updateSize();
 			htg.addVertex(hnode);
 			vreader.setVertex(hnode);
@@ -321,15 +354,24 @@ public class HTGSimulation extends Simulation {
 				break;
 			case GsHierarchicalNode.TYPE_TRANSIENT_CYCLE:
 				vreader.setBackgroundColor(GsHierarchicalNode.TYPE_CYCLE_COLOR);
-				//if (hnode.getIncomingEdges().size() != 0) break; ///EDEN GARDEN TEST
 				break;
 //			case GsHierarchicalNode.TYPE_TERMINAL_CYCLE:
 //				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
 //				vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 //				break;
 			case GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT:
-				if (hnode.statesSet.getSizeOrOverApproximation() > 1) vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR);
-				else vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR);
+				Color color = null;
+				if (hnode.getIncomingEdges().size() == 0) color = GsHierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR; ///EDEN GARDEN TEST
+				else if (hnode.getIncomingEdges().size() == 1) {
+					if (((GsHierarchicalNode)hnode.getIncomingEdges().iterator().next()).equals(hnode)) {
+						color = GsHierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR; ///EDEN GARDEN TEST
+					}
+				}
+				if (color == null) {
+					if (hnode.statesSet.getSizeOrOverApproximation() > 1) color = GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR;
+					else color = GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR;					
+				}
+				vreader.setBackgroundColor(color);
 				break;
 			default:
 				break;

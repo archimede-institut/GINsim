@@ -81,7 +81,6 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 
 	public GsHierarchicalTransitionGraph(String filename, boolean parsing) {
         super(GsHierarchicalTransitionGraphDescriptor.getInstance(), filename, parsing);
-        System.out.println("ERROR"); //TODO fix this
 	}
 
 	public GsHierarchicalTransitionGraph(Map map, File file) {
@@ -172,7 +171,8 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 	            XMLWriter out = new XMLWriter(os, dtdFile);
 		  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 				out.write("\t<graph id=\"" + graphName + "\"");
-				out.write(" class=\"hierarchicalTransition\"");
+				out.write(" class=\"hierarchicalTransitionGraph\"");
+				out.write(" iscompact=\""+this.transientCompactionMode+"\"");
 				out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
 				saveNode(out, mode, selectedOnly);
 				saveEdge(out, mode, selectedOnly);
@@ -340,6 +340,10 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 	 */
 	public boolean areTransientCompacted() {
 		return transientCompactionMode == MODE_HTG;
+	}
+	
+	public void setMode(int mode) {
+		transientCompactionMode = mode;
 	}
 
     

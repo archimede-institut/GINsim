@@ -57,7 +57,7 @@ public final class GsGinmlParser extends XMLHelper {
                 realParser = new GsDynamicParser(map, attributes, s_dtd, s_filename);
             } else if ("reduced".equals(s_class)) {
                 realParser = new GsReducedGraphParser(map, attributes, s_dtd, s_filename);
-            } else if ("dynamicalHierarchical".equals(s_class)) {
+            } else if ("hierarchicalTransitionGraph".equals(s_class)) {
                 realParser = new GsDynamicalHierarchicalParser(map, attributes, s_dtd, s_filename);
             } else {
                 throw new SAXException("bad type of graph");

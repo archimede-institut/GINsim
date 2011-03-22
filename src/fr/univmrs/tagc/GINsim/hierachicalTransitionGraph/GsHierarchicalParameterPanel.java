@@ -1,19 +1,17 @@
 package fr.univmrs.tagc.GINsim.hierachicalTransitionGraph;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.Iterator;
-import java.util.Set;
 
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.table.TableColumn;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.common.manageressources.Translator;
 
 public class GsHierarchicalParameterPanel extends GsParameterPanel {
 		private static final long serialVersionUID = 3342245591953494375L;
@@ -22,7 +20,7 @@ public class GsHierarchicalParameterPanel extends GsParameterPanel {
 		private JScrollPane jScrollPane = null;
 		private JTable jTable = null;
 
-		private JTextField sigmaTextField;
+		private JLabel typeLabel;
 		
 		/**
 		 */
@@ -41,14 +39,7 @@ public class GsHierarchicalParameterPanel extends GsParameterPanel {
 				((GsHierarchicalTableModel)getJTable().getModel()).setContent(node);
 	            jTable.getColumnModel().getColumn(0).setMinWidth(10);
 	            jTable.getColumnModel().getColumn(0).setPreferredWidth(10);
-	            
-	            Set sigma = node.getSigma();
-	            StringBuffer s = new StringBuffer();
-	            for (Iterator iterator = sigma.iterator(); iterator.hasNext();) {
-					GsHierarchicalNode node = (GsHierarchicalNode) iterator.next();
-					s.append(node.getLongId()+", ");
-				}
-	            sigmaTextField.setText(s.toString());
+	            typeLabel.setText("Type : "+Translator.getString("STR_"+node.typeToString()));
 			}
 		}
 
@@ -58,11 +49,14 @@ public class GsHierarchicalParameterPanel extends GsParameterPanel {
 		private void initialize() {
 	        this.setLayout(new GridBagLayout());
 	        GridBagConstraints c = new GridBagConstraints();
-	        c.fill = GridBagConstraints.BOTH;
+	        c.gridx = 0;
+	        c.gridy = 0;
 	        c.weightx = 1;
+	        c.fill = GridBagConstraints.BOTH;
+	        this.add(getTypeLabel(), c);
+	        c.gridx = 0;
+	        c.gridy = 1;
 	        c.weighty = 1;
-	        this.add(getSigmaTextField(), c);
-	        c.gridy++;
 	        this.add(getJScrollPane(), c);
 	        this.setMinimumSize(new Dimension(20,20));
 		}
@@ -72,11 +66,11 @@ public class GsHierarchicalParameterPanel extends GsParameterPanel {
 		 * 
 		 * @return javax.swing.JTable
 		 */
-		private JTextField getSigmaTextField() {
-			if(sigmaTextField == null) {
-				sigmaTextField = new JTextField();
+		private JLabel getTypeLabel() {
+			if(typeLabel == null) {
+				typeLabel = new JLabel();
 			}
-			return sigmaTextField;
+			return typeLabel;
 		}
 		/**
 		 * This method initializes jTable

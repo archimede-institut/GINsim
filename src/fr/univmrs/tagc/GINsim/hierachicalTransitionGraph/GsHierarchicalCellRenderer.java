@@ -16,11 +16,7 @@ public class GsHierarchicalCellRenderer extends DefaultTableCellRenderer impleme
         Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
         cmp.setBackground(Color.WHITE);
         if(table != null) {
-        	if (column == 0) {
-        		cmp.setBackground(Color.gray);
-        		return cmp;
-        	}
-            String state = (String)table.getModel().getValueAt(row, column-1); 
+            String state = (String)table.getModel().getValueAt(row, column); 
             if (state.equals("*")) {
             	cmp.setBackground( Color.green );
             }

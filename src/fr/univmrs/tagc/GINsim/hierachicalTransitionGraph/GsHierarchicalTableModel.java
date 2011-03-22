@@ -17,7 +17,7 @@ public class GsHierarchicalTableModel extends AbstractTableModel {
 		public GsHierarchicalTableModel(GsGraph g) {
 			super();
 			this.htg = (GsHierarchicalTransitionGraph) g;
-			colCount = g.getNodeOrder().size()+1;
+			colCount = g.getNodeOrder().size();
 		}
 		
 		/**
@@ -45,8 +45,7 @@ public class GsHierarchicalTableModel extends AbstractTableModel {
 			if (rowIndex >= getRowCount() || columnIndex >= colCount) {
 				return null;
 			}
-			if (columnIndex == 0) return (rowIndex+1)+":";
-			int i = ((byte[])content.get(rowIndex))[columnIndex-1];
+			int i = ((byte[])content.get(rowIndex))[columnIndex];
 			if (i == -1 ) return "*";
 			return String.valueOf(i);
 		}
@@ -57,12 +56,11 @@ public class GsHierarchicalTableModel extends AbstractTableModel {
 		 * @return the name of this column
 		 */	
 		public String getColumnName(int column) {
-			if (column == 0) return "#";
-			return htg.getNodeOrder().get(column-1).toString();
+			return htg.getNodeOrder().get(column).toString();
 		}
 
-		public void setContent(GsHierarchicalNode dhnode) {
-			this.content = dhnode.statesToList();
+		public void setContent(GsHierarchicalNode hnode) {
+			this.content = hnode.statesToList();
 	        fireTableStructureChanged();
 		}
 

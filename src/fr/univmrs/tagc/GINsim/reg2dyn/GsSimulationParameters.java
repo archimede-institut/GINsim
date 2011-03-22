@@ -37,9 +37,9 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
     public int simulationStrategy = STRATEGY_STG;
 
     public ObjectStore store = new ObjectStore(2);
-    Map m_initState = new HashMap();
-    Map m_input = new HashMap();
-	GsSimulationParameterList param_list;
+    public Map m_initState = new HashMap();
+    public Map m_input = new HashMap();
+    public GsSimulationParameterList param_list;
 
     /**
      * empty constructor for everyday use.
@@ -88,23 +88,25 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
         s += "    Simulation strategy: " + simulationStrategy + "\n";
         s += "    Updating policy: ";
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
-        if (pcdef.getNbElements(null) > 1) {
-            s += "by priority class\n";
-            int[][] pclass = getPriorityClassDefinition().getPclass(nodeOrder);
-            for (int i=0 ; i<pclass.length ; i++) {
-                int[] cl = pclass[i];
-                s += "        "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
-                for (int j=2;j<cl.length ; j+=2) {
-                    if (j>2) {
-                        s += ", ";
-                    }
-                    s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":cl[j+1]==1?"+":"-");
-                }
-                s += "\n";
-            }
-        } else {
-        	s += pcdef.toString()+"\n";
-        }
+		if (pcdef != null) {
+	        if (pcdef.getNbElements(null) > 1) {
+	            s += "by priority class\n";
+	            int[][] pclass = getPriorityClassDefinition().getPclass(nodeOrder);
+	            for (int i=0 ; i<pclass.length ; i++) {
+	                int[] cl = pclass[i];
+	                s += "        "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
+	                for (int j=2;j<cl.length ; j+=2) {
+	                    if (j>2) {
+	                        s += ", ";
+	                    }
+	                    s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":cl[j+1]==1?"+":"-");
+	                }
+	                s += "\n";
+	            }
+	        } else {
+	        	s += pcdef.toString()+"\n";
+	        }
+		}
         s += "    Initial states: ";
         if (m_initState == null || m_initState.size()==0) {
             s += "ALL\n";

@@ -158,7 +158,7 @@ public class GsStatesSet {
 	public int[] updateSize() {
 		int[] counts = new int[10];
 		size = 0;
-		updateSize(root, 0, 1, counts);
+		updateSize(root, -1, 1, counts);
 		size_consistancy = true;
 		return counts;
 	}
@@ -392,7 +392,7 @@ public class GsStatesSet {
 	public List statesToList() {
 		List v = new LinkedList();
 		byte[] t = new byte[childsCount.length];
-		statesToList(root, v, t, 0);	
+		statesToList(root, v, t, -1);	
 		return v;
 	}
 	
@@ -404,7 +404,7 @@ public class GsStatesSet {
 	 */
 	public void statesToList(List v) {
 		byte[] t = new byte[childsCount.length];
-		statesToList(root, v, t, 0);	
+		statesToList(root, v, t, -1);	
 	}
 	
 	private void statesToList(OmddNode omdd, List v, byte[] t, int last_depth) {

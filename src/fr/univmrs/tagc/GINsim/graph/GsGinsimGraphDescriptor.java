@@ -18,6 +18,7 @@ import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
+import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.manageressources.Translator;
@@ -150,8 +151,11 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                     	if (ze == null) {
                     		ze = f.getEntry(GsGraph.zip_prefix+GsReducedGraph.zip_mainEntry);
                         	if (ze == null) {
-                        		// TODO: nicer error here
-                        		System.out.println("unable to find a known main zip entry");
+                        		ze = f.getEntry(GsGraph.zip_prefix+GsHierarchicalTransitionGraph.zip_mainEntry);
+	                        	if (ze == null) {
+	                        		// TODO: nicer error here
+	                        		System.out.println("unable to find a known main zip entry");
+	                        	}
                         	}
                     	}
                 	}

@@ -25,7 +25,6 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		} else {
 			mode = GsHierarchicalTransitionGraph.MODE_SCC;
 		}
-		mode = GsHierarchicalTransitionGraph.MODE_HTG; //FIXME remove ME
 		this.htg = new GsHierarchicalTransitionGraph(params.nodeOrder, mode);
 		;
 		if (regGraph instanceof GsRegulatoryGraph) {

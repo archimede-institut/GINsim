@@ -51,7 +51,7 @@ public class Simulation extends Thread implements Runnable {
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
 
-		if (params.simulationStrategy == GsSimulationParameters.STRATEGY_HTG) { //FIXME: reverse back to STG
+		if (params.simulationStrategy == GsSimulationParameters.STRATEGY_STG) {
 			helper = new GsSTGSimulationHelper(regGraph, params);
 		}
 		breadthFirst = params.breadthFirst;
