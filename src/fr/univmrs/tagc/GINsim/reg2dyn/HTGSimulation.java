@@ -22,10 +22,8 @@ import fr.univmrs.tagc.common.manageressources.Translator;
 
 /**
  * 
+ * Run a simulation to construct a HierarchicalTransitionGraph
  * 
- * Two variables for the algorithm : e and n, the currEnt state and the Next state.
- * 
- * @author duncan
  *
  */
 public class HTGSimulation extends Simulation {
@@ -47,14 +45,16 @@ public class HTGSimulation extends Simulation {
 	private StringBuffer log_tabdepth = new StringBuffer();
 	
 	/**
-	 * Indicates if the transient SCC should be compacted into a hierarchical transition graph.
+	 * Indicates if the transient SCC with the same sigma should be compacted into a single HierarchicalNode.
 	 */
 	private boolean shouldCompactSCC;
 	
-	
+	/**
+	 * The HierarchicalTransitionGraph in construction
+	 */
 	private GsHierarchicalTransitionGraph htg;
 	/**
-	 * The GsGraphManager of the regulatory graph
+	 * The regulatory graph
 	 */
 	private GsRegulatoryGraph regGraph;
 	
@@ -67,11 +67,17 @@ public class HTGSimulation extends Simulation {
 	 */
 	private GsHierarchicalNodeSet nodeSet;
 	/**
-	 * The count of genes in the RegulatoryGraph
+	 * The index of the next state found during the dfs.
 	 */
 	private int index;
+	/**
+	 * The current depth in the dfs. Used mainly for the simulation limit's.
+	 */
 	private int depth;
 
+	/**
+	 * The simulation parameters
+	 */
 	private GsSimulationParameters params;
 	
 	
@@ -302,7 +308,11 @@ public class HTGSimulation extends Simulation {
 		return null;
 	}
 
-	
+	/**
+	 * 
+	 * @param state
+	 * @return
+	 */
 	private GsHierarchicalNode processStableState(byte[] state) {
 		GsHierarchicalNode hnode = nodeSet.getHNodeForState(state);									//  If it already processed (in the nodeSet)	
 		if (hnode != null) {
@@ -312,13 +322,18 @@ public class HTGSimulation extends Simulation {
 		index++;
 		log(DBG_MAINLOOPS,log_tabdepth+"found NEW stable state :"+print_state(state));
 		hnode = new GsHierarchicalNode(childsCount);
-		hnode.addState(state, GsHierarchicalNode.STATUS_PROCESSED);
+		hnode.addState(state, 1);
 		hnode.setType(GsHierarchicalNode.TYPE_STABLE_STATE);
 		hnode.getSigma().add(hnode);
 		nodeSet.add(hnode);
 		return hnode;
 	}
 
+	/**
+	 * Search __state__ in the queue
+	 * @param state
+	 * @return
+	 */
 	private HTGSimulationQueuedState getTripletInQueueForState(byte[] state) {
 		for (Iterator it = queue.iterator(); it.hasNext();) {
 			HTGSimulationQueuedState triplet = (HTGSimulationQueuedState) it.next();
@@ -421,7 +436,7 @@ public class HTGSimulation extends Simulation {
 /* ****************** DEBUG AND LOG STUFF**********/
 	
 	
-	public static String print_state(byte[] t) {
+	private static String print_state(byte[] t) {
 		StringBuffer s = new StringBuffer();
 		for (int i = 0 ; i < t.length ; i++){
 			s.append(" "+t[i]);
@@ -429,7 +444,7 @@ public class HTGSimulation extends Simulation {
 		return s.toString();
 	}
 	
-	public void log(int mask, String msg) {
+	private void log(int mask, String msg) {
 		if ((debug & mask) != 0) {
             debug_o.println(msg);
         }

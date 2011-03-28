@@ -32,18 +32,13 @@ import fr.univmrs.tagc.common.GsException;
  * 
  * <p>A node has a unique id <b>uid</b>, a <b>type</b> defining the kind of Strongly Connected Component 
  * it contains and <b>statesSet</b>, the set of all the states it contains.</p>
- * <p>During its construction</p>
  * 
- * @author Duncan Berenguier
  *
  */
 public class GsHierarchicalNode implements Dotify {
 
-	/**
-	 * Defining the node type
-	 */
 	public static final byte TYPE_TRANSIENT_COMPONENT = 0;
-	public static final byte TYPE_TRANSIENT_CYCLE = 1; //FIXME: Rename me to TRANSIENT_CYCLE
+	public static final byte TYPE_TRANSIENT_CYCLE = 1;
 	public static final byte TYPE_TERMINAL_CYCLE = 2;
 	public static final byte TYPE_STABLE_STATE = 3;
 	
@@ -59,14 +54,14 @@ public class GsHierarchicalNode implements Dotify {
 	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(175, 255, 86);
 	public static final Color TYPE_EDEN_TRANSIENT_COMPONENT_COLOR = new Color(120, 160, 40);
 
-	/**
-	 * OmddNode status to indicate the state is present in the GsStateSet but unprocessed 
-	 */
-	public static final int STATUS_UNPROCESSED = 1;
-	/**
-	 * OmddNode status to indicate the state is present in the GsStateSet and processed 
-	 */
-	public static final int STATUS_PROCESSED = 2;
+//	/**
+//	 * OmddNode status to indicate the state is present in the GsStateSet but unprocessed 
+//	 */
+//	public static final int STATUS_UNPROCESSED = 1;
+//	/**
+//	 * OmddNode status to indicate the state is present in the GsStateSet and processed 
+//	 */
+//	public static final int STATUS_PROCESSED = 2;
 	
 	
 	/**
@@ -95,10 +90,10 @@ public class GsHierarchicalNode implements Dotify {
 	 */
 	private List statePile = null;
 	
-	/**
-	 * Count of processed states in this node (a node is processed when all its childs are processed.
-	 */
-	private int processed = 0;
+//	/**
+//	 * Count of processed states in this node (a node is processed when all its childs are processed.
+//	 */
+//	private int processed = 0;
 
 	/**
 	 * Count of states in this node.
@@ -117,12 +112,12 @@ public class GsHierarchicalNode implements Dotify {
 	private Set sigma;
 	
 	/**
-	 * An array indicating such that childsCount[i] indicates the maxValue of the i-th gene
+	 * An array such that childsCount[i] indicates the maxValue of the i-th gene
 	 */
 	private byte[] childsCount;
 
 	/**
-	 * An array indicating such that childsCount[i] indicates the maxValue of the i-th gene
+	 * The real GsHierarchicalNode in case the nodes have been merged
 	 */
 	private GsHierarchicalNode master;
 
@@ -256,21 +251,21 @@ public class GsHierarchicalNode implements Dotify {
 /* **************** SIZE ************/	
 
 	
-	public int getProcessedStates() {
-		return processed;
-	}
-	
-	public boolean isProcessed() throws GsException {
-		if (statePile == null && size < processed) {
-			throw new GsException(1, "Error size < processes Childs : "+this);
-		}
-		return statePile == null && size == processed;
-	}
-	
-	public void processState(byte[] state) {
-		statesSet.updateStatus(state, STATUS_PROCESSED);
-		processed++;
-	}
+//	private int getProcessedStates() {
+//		return processed;
+//	}
+//	
+//	private boolean isProcessed() throws GsException {
+//		if (statePile == null && size < processed) {
+//			throw new GsException(1, "Error size < processes Childs : "+this);
+//		}
+//		return statePile == null && size == processed;
+//	}
+//	
+//	private void processState(byte[] state) {
+//		statesSet.updateStatus(state, STATUS_PROCESSED);
+//		processed++;
+//	}
 
 	
 	public int getSize() {
@@ -279,14 +274,14 @@ public class GsHierarchicalNode implements Dotify {
 
 	public void updateSize() {
 		size = 0;
-		processed = 0;
+		//processed = 0;
 		if (statePile != null) {
 			size = statePile.size();
 		}
 		statesSet.reduce();
 		int[] counts = statesSet.updateSize();
-		size += counts[STATUS_UNPROCESSED] + counts[STATUS_PROCESSED];
-		processed += counts[STATUS_PROCESSED];
+		size += counts[1];// + counts[STATUS_PROCESSED];
+		//processed += counts[STATUS_PROCESSED];
 		
 	}
 	
@@ -401,14 +396,10 @@ public class GsHierarchicalNode implements Dotify {
 				}
 				name = ",name: "+s.toString();
 			}
-			return "{"+processed+"/"+size+name+", type:"+typeToString()+"}";
+			return "{"+size+name+", type:"+typeToString()+"}";
 		}
 		public String getShortId() {
-			if (size == 1) {
-				return ""+hashCode();
-			} else {
-				return ""+hashCode()+"{"+processed+"/"+size+"}";
-			}
+			return ""+hashCode();
 		}
 		public String getLongId() {
 			return uid+"::"+toString();
