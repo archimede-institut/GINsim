@@ -19,8 +19,6 @@ public abstract class GsTreeParser {
 
 	/**
 	 * Create a new parser, knowing a nodeOrder and the tree to fill.
-	 * @param nodeOrder
-	 * @param tree
 	 */
 	public GsTreeParser() {
 	}
@@ -28,9 +26,7 @@ public abstract class GsTreeParser {
 	/**
 	 * Run the parser on the OmddNode root, and fill the tree.
 	 * 
-	 * @param root the Omdd's root to parse
 	 * @param treeMode the kind of tree to parse (tree, diagram or diagramWithAllleafs)
-	 * @param parameters the parameters to use in the init() method.
 	 */
 	public void run(int treeMode) {
 		tree.setMode(treeMode);
@@ -50,8 +46,6 @@ public abstract class GsTreeParser {
 	
 	/**
 	 * This method is called before parsing the tree. Should initialize all the side variables.
-	 * 
-	 * @param parameters a map of optional parameters to use during the initialization.
 	 */
 	public abstract void init();
 
@@ -73,7 +67,6 @@ public abstract class GsTreeParser {
 	
 	/**
 	 * Remove all the vertices from the tree
-	 * @param tree
 	 */
 	public void clearTree() {
 		Vector tmp = new Vector(graphManager.getVertexCount());
@@ -104,8 +97,8 @@ public abstract class GsTreeParser {
 	
 	/**
 	 * Little helper function to write a tree in stdout
-	 * @param tabs
-	 * @return
+	 * @param tabs the count of tab to output
+	 * @return a string with <b>tab</b> tabs
 	 */
 	protected String tab(int tabs) {
     	if (tabs <= 0) return "";

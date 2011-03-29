@@ -42,13 +42,13 @@ public class GsStateInRegGraph {
 	 * @param regGraph a regualtory graph to colorize
 	 * @param shouldStore if true (default) save the initial color of regGraph's edges and nodes to be restored later
 	 */
-	public GsStateInRegGraph(GsRegulatoryGraph regGraph, boolean store) {
+	public GsStateInRegGraph(GsRegulatoryGraph regGraph, boolean shouldStore) {
 		this.regGraph = regGraph;
 		this.nodeOrder = regGraph.getNodeOrder();
-		this.shouldStore = store;
+		this.shouldStore = shouldStore;
 
 		cs = new CascadingStyle(false);  //Create a cs and save the current color manually
-		if (store) {
+		if (shouldStore) {
 			cs.storeAllEdges(regGraph.getGraphManager().getAllEdges(), regGraph.getGraphManager().getEdgeAttributesReader());
 			cs.storeAllNodes(nodeOrder, regGraph.getGraphManager().getVertexAttributesReader());        	
 		}

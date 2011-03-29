@@ -51,7 +51,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	/**
 	 * Return the name of the node at level
 	 * @param level the level of the node
-	 * @return
+	 * @returnthe name
 	 */
 	protected abstract String getNodeName(int level);
 	

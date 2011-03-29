@@ -39,10 +39,6 @@ public class STG2HTG extends AlgoConnectivity {
 	 * The graphManager is used to find the outgoingEdges from a node.
 	 * The resultHandler is informed of the progression during the run() and of the results when the run() is finish.
 	 * 
-	 * @param resultHandler
-	 * @param graphModel
-	 * @param start a node
-	 * @param end a node
 	 */
 	public STG2HTG(JFrame frame, GsGraph graph) {
 		this.frame = frame;

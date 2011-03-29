@@ -72,7 +72,7 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 	
 	/**
 	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial vertex, assuming regGraph is defined
-	 * @param initialVertex
+	 * @param root
 	 */
 	public void initRealDepth(OmsddNode root) {
 		realDetph = new int[nodeOrder.size()+1]; //+1 for the leafs
@@ -100,7 +100,7 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 	/**
 	 * Return the name of the node at level
 	 * @param level the level of the node
-	 * @return
+	 * @return the name
 	 */
 	protected String getNodeName(int level) {
 		return ((GsRegulatoryVertex)nodeOrder.get(level)).getId();

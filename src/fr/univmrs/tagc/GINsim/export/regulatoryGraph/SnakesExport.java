@@ -19,9 +19,8 @@ import fr.univmrs.tagc.common.GsException;
 
 /**
  * Export the logical functions from regulatory graphs to python for use with the Snakes python library.
- * @see http://lacl.univ-paris12.fr/pommereau/soft/snakes/
+ * http://lacl.univ-paris12.fr/pommereau/soft/snakes/
  * 
- * @author Berenguier Duncan
  *
  */
 public class SnakesExport extends GsAbstractExport  {

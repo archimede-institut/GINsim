@@ -54,7 +54,7 @@ public class GsTree extends GsGraph {
 	/**
      * Indicates if the tree contains a node
      * @param node
-     * @return
+     * @return true if the tree contains the node
      */
     public boolean containsNode(GsTreeNode node) {
     	for (Iterator it = graphManager.getVertexIterator(); it.hasNext();) {

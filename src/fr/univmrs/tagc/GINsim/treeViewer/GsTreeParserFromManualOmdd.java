@@ -21,7 +21,7 @@ public class GsTreeParserFromManualOmdd extends GsTreeParserFromOmdd {
 	
 	/**
 	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial vertex, assuming regGraph is defined
-	 * @param initialVertex
+	 * @param root
 	 */
 	public void initRealDepth(OmddNode root) {
 		realDetph = new int[nodeOrder.size()+1]; //+1 for the leafs

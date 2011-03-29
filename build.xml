@@ -118,6 +118,26 @@
 		    author="true"
 		    version="true"
 		    use="true"
+			access="private"
+			windowtitle="API documentation for the Gene Interaction Network simulator (GINsim)">
+
+			<packageset dir="${src}" defaultexcludes="yes">
+	    		<include name="fr/univmrs/tagc/**" />
+		    </packageset>
+
+		    <doctitle><![CDATA[<h1>API documentation for GINsim</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>Copyright &#169; 2005 IBDML. All Rights Granted.</i>]]></bottom>
+		</javadoc>
+	</target>
+	
+	 <target name="javadoc-private" depends="docinit" description="generate javadoc with private fields">
+		<javadoc
+		    destdir="${javadoc}"
+			classpath="${classpath}"
+		    author="true"
+		    version="true"
+		    use="true"
+			access="private"
 			windowtitle="API documentation for the Gene Interaction Network simulator (GINsim)">
 
 			<packageset dir="${src}" defaultexcludes="yes">

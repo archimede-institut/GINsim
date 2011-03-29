@@ -117,7 +117,6 @@ public class Debugger {
 	
 	/**
 	 * print the last "levels" stack trace lines
-	 * @param level
 	 */
 	public static void printStackTrace() {
 		printStackTrace(Thread.currentThread().getStackTrace().length);
