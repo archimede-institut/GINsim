@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
