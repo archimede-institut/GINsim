@@ -194,8 +194,8 @@ public class GsStatesSet {
 	}
 
 	/**
-	 * Indicates if the size is in a consistent state, that is if it realy reflect the number of state in the set, or only an overapproximation.
-	 * @return
+	 * Indicates if the size is in a consistent state, that is if it really reflect the number of state in the set, or only an overapproximation.
+	 * @return true if size is equal to the exact count of state in the set.
 	 */
 	public boolean isSizeConsistent() {
 		return size_consistancy;
@@ -387,7 +387,7 @@ public class GsStatesSet {
 	 * Initialize and fill a list with all the states in the omdd
 	 * Each item of the returned list is a string representation using wildcard * (-1).
 	 * Note the order in the list is relative to the omdd structure.
-	 * @return
+	 * @return a list made of all the states as schemata (using *)
 	 */
 	public List statesToList() {
 		List v = new LinkedList();
@@ -400,7 +400,7 @@ public class GsStatesSet {
 	 * Fill a list with all the states in the omdd
 	 * Each item of the returned list is a string representation using wildcard * (-1).
 	 * Note the order in the list is relative to the omdd structure.
-	 * @return
+	 * @return a list made of all the states as schemata (using *)
 	 */
 	public void statesToList(List v) {
 		byte[] t = new byte[childsCount.length];
@@ -496,7 +496,7 @@ public class GsStatesSet {
 	 * @param omdd
 	 * @param s
 	 * @param last_depth
-	 * @return
+	 * @return is used internally for the recursion
 	 */
 	private boolean firstStatesToString(OmddNode omdd, StringBuffer s, int last_depth) {
         if (omdd.next == null) {

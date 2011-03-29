@@ -15,6 +15,7 @@ import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNodeSet;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.reg2dyn.helpers.HTGSimulationHelper;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.Translator;
@@ -124,7 +125,6 @@ public class HTGSimulation extends Simulation {
 		}
 		addAllNodeTo();									// add all nodes to the graph
 		addAllEdgesTo();								// add all the edges to the graph
-		updateTerminalCycles();							// indicates if a cycle is terminal
 		log(-100, "Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		return helper.endSimulation();
 	}
@@ -229,34 +229,33 @@ public class HTGSimulation extends Simulation {
 			if (!n_updater.hasNext()) {																						// n_state has no child No child => stable state
 				GsHierarchicalNode stableState = processStableState(n_state);
 				e.addOutgoingHNode(stableState);
-				e_sigma.addAll(stableState.getSigma());
-				continue;
-			}
-
-			log(DBG_MAINLOOPS,log_tabdepth+"nextState :"+print_state(n_state));
-			n = getTripletInQueueForState(n_state);															   				//Search the state in the queue
-			if (n != null) {																				   				//If found
-				log(DBG_APPARTENANCETESTS,log_tabdepth+"in P :"+n);                         				   				
-				e.low_index = Math.min(e.low_index, n.index);												   				//  update the index
-			} else {																						   				//Else the state is not in the queue
-				log(DBG_APPARTENANCETESTS,log_tabdepth+"not in P");                         				   				 
-				GsHierarchicalNode n_hnode = nodeSet.getHNodeForState(n_state);								   				//  If it already processed (in the nodeSet)	
-				if (n_hnode != null) {                                                                         				
-					log(DBG_APPARTENANCETESTS,log_tabdepth+"in N :"+n_hnode.getUniqueId());                    				
-					e.addOutgoingHNode(n_hnode);                                                               				
-					e_sigma.addAll(n_hnode.getSigma());                                                      				
-					continue;																				   				//     then continue to the next successor	
-				} else {																					   				//  Else
-					log(DBG_APPARTENANCETESTS,log_tabdepth+"not in N");                     				   				 
-					n = new HTGSimulationQueuedState(n_state, index, index, n_updater);						   				//     explore it
-					n_hnode = explore(n);																					//     update the index
-					e.low_index = Math.min(e.low_index, n.low_index);
-					if (n_hnode != null) {
-						e.addOutgoingHNode(n_hnode);
-						e_sigma.addAll(n_hnode.getSigma());
+				e_sigma.add(stableState);
+			} else {
+				log(DBG_MAINLOOPS,log_tabdepth+"nextState :"+print_state(n_state));
+				n = getTripletInQueueForState(n_state);															   				//Search the state in the queue
+				if (n != null) {																				   				//If found
+					log(DBG_APPARTENANCETESTS,log_tabdepth+"in P :"+n);                         				   				
+					e.low_index = Math.min(e.low_index, n.index);												   				//  update the index
+				} else {																						   				//Else the state is not in the queue
+					log(DBG_APPARTENANCETESTS,log_tabdepth+"not in P");                         				   				 
+					GsHierarchicalNode n_hnode = nodeSet.getHNodeForState(n_state);								   				//  If it already processed (in the nodeSet)	
+					if (n_hnode != null) {                                                                         				
+						log(DBG_APPARTENANCETESTS,log_tabdepth+"in N :"+n_hnode.getUniqueId());                    				
+						e.addOutgoingHNode(n_hnode);                                                               				
+						e_sigma.addAll(n_hnode.getSigma());                                                      				
+					} else {																					   				//  Else
+						log(DBG_APPARTENANCETESTS,log_tabdepth+"not in N");                     				   				 
+						n = new HTGSimulationQueuedState(n_state, index, index, n_updater);						   				//     explore it
+						n_hnode = explore(n);																					//     update the index
+						e.low_index = Math.min(e.low_index, n.low_index);
+						if (n_hnode != null) {
+							e.addOutgoingHNode(n_hnode);
+							e_sigma.addAll(n_hnode.getSigma());
+						}
 					}
 				}
 			}
+
 		}
 		log(DBG_MAINLOOPS,log_tabdepth+"Comparing indexes "+e);
 		if (e.index == e.low_index) {
@@ -275,11 +274,12 @@ public class HTGSimulation extends Simulation {
 					e_sigma.addAll(node.getSigma()); //merge the sigmas
 				}
 			} while (!tmp.equals(e));
-			new_hnode.addAllTheStatesInPile();
+			new_hnode.addAllTheStatesInQueue();
 			if (new_hnode.getSize() == 1) {
 				new_hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 			} else {
-				new_hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE);
+				if (e_dhnode_successors.size() == 0) new_hnode.setType(GsHierarchicalNode.TYPE_TERMINAL_CYCLE);
+				else new_hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE);
 				e_sigma.add(new_hnode);
 			}
 			log(DBG_SIGMA,log_tabdepth+"\tsigma:"+new_hnode.getSigma());
@@ -357,7 +357,7 @@ public class HTGSimulation extends Simulation {
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			n++;
 			GsHierarchicalNode hnode = (GsHierarchicalNode) it.next();
-			hnode.addAllTheStatesInPile();
+			hnode.addAllTheStatesInQueue();
 			hnode.releaseSigma();
 			hnode.updateSize();
 			htg.addVertex(hnode);
@@ -368,12 +368,12 @@ public class HTGSimulation extends Simulation {
 				vreader.setBackgroundColor(GsHierarchicalNode.TYPE_STABLE_STATE_COLOR);
 				break;
 			case GsHierarchicalNode.TYPE_TRANSIENT_CYCLE:
-				vreader.setBackgroundColor(GsHierarchicalNode.TYPE_CYCLE_COLOR);
+				vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
 				break;
-//			case GsHierarchicalNode.TYPE_TERMINAL_CYCLE:
-//				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
-//				vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
-//				break;
+			case GsHierarchicalNode.TYPE_TERMINAL_CYCLE:
+				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
+				vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
+				break;
 			case GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT:
 				Color color = null;
 				if (hnode.getIncomingEdges().size() == 0) color = GsHierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR; ///EDEN GARDEN TEST
@@ -414,24 +414,6 @@ public class HTGSimulation extends Simulation {
 		log(DBG_POSTTREATMENT," ("+nbarc+") done");
 	}
 
-	private void updateTerminalCycles() {
-		log(DBG_POSTTREATMENT,"Updating terminal cycles...");
-		GsGraphManager gm = htg.getGraphManager();
-		GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
-		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
-			GsHierarchicalNode hnode = (GsHierarchicalNode) it.next();
-			if (hnode.isCycle() && gm.getOutgoingEdges(hnode).size() == 0) {
-				hnode.setType(GsHierarchicalNode.TYPE_TERMINAL_CYCLE);
-				vreader.setVertex(hnode);
-				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
-				vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
-				vreader.refresh();
-			}
-		}
-		log(DBG_POSTTREATMENT,"done");
-	}
-
-
 
 /* ****************** DEBUG AND LOG STUFF**********/
 	
@@ -446,7 +428,7 @@ public class HTGSimulation extends Simulation {
 	
 	private void log(int mask, String msg) {
 		if ((debug & mask) != 0) {
-            debug_o.println(msg);
+			Debugger.log(msg);
         }
 	}
 	

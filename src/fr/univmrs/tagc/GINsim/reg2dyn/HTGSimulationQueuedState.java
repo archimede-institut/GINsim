@@ -46,10 +46,10 @@ public class HTGSimulationQueuedState {
 	}
 
 	public String toString() {
-		return "["+print_state(state)+", i:"+index+", li:"+low_index+", out:"+outgoindHNodes+"]";
+		return "["+printStateToString(state)+", i:"+index+", li:"+low_index+", out:"+outgoindHNodes+"]";
 	}
 	
-	private static String print_state(byte[] t) {
+	private static String printStateToString(byte[] t) {
 		StringBuffer s = new StringBuffer();
 		for (int i = 0 ; i < t.length ; i++){
 			s.append(""+t[i]);

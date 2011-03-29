@@ -70,8 +70,7 @@ abstract public class SimulationUpdater implements Iterator {
 	 * set the state which should be used as basis.
 	 * @param node 
 	 * @param depth 
-	 * 
-	 * @param t_tree
+	 * @param state
 	 */
 	public void setState(byte[] state, int depth, Object node) {
 		this.cur_state = state;

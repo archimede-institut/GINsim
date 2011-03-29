@@ -11,7 +11,6 @@ import java.util.Set;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.export.generic.Dotify;
-import fr.univmrs.tagc.common.GsException;
 
 /*  SUMMARY
  * 
@@ -44,11 +43,11 @@ public class GsHierarchicalNode implements Dotify {
 	
 	public static final String TYPE_TRANSIENT_COMPONENT_STRING = "transientComponent";
 	public static final String TYPE_TERMINAL_CYCLE_STRING = "terminalCycle";
-	public static final String TYPE_CYCLE_STRING = "cycle";
+	public static final String TYPE_TRANSIENT_CYCLE_STRING = "cycle";
 	public static final String TYPE_STABLE_STATE_STRING = "stableState";
 	
 	public static final Color TYPE_TRANSIENT_COMPONENT_COLOR = new Color(78, 154, 6);
-	public static final Color TYPE_CYCLE_COLOR = new Color(114, 159, 207);
+	public static final Color TYPE_TRANSIENT_CYCLE_COLOR = new Color(114, 159, 207);
 	public static final Color TYPE_TERMINAL_CYCLE_COLOR = new Color(32, 74, 135);
 	public static final Color TYPE_STABLE_STATE_COLOR = new Color(164, 0, 0);
 	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(175, 255, 86);
@@ -142,9 +141,8 @@ public class GsHierarchicalNode implements Dotify {
 
 	/**
 	 * Perform a mergeMultiple on all the omdd in the pile and the root.
-	 * @param childsCount
 	 */
-	public void addAllTheStatesInPile() {
+	public void addAllTheStatesInQueue() {
 		if (statePile == null) return;
 		if (statesSet == null) statesSet = new GsStatesSet(childsCount);
 		statesSet.addStates(statePile);
@@ -156,7 +154,6 @@ public class GsHierarchicalNode implements Dotify {
 	 * Add a new state to the pile.
 	 * Note the new state is not added to the GsHierarchicalNode omdd aiming to add several omdd at the same time.
 	 * 
-	 * @see addPileToOmdd()
 	 * 
 	 * @param state the state to add
 	 */
@@ -166,14 +163,14 @@ public class GsHierarchicalNode implements Dotify {
 	}
 	
 	/**
-	 * Add a state directly to the stateSet.
+	 * Add the state directly to the stateSet. Set the leaf value to status
 	 * 
 	 * @param state
-	 * @param statusProcessed
+	 * @param status
 	 */
-	public void addState(byte[] state, int statusProcessed) {
+	public void addState(byte[] state, int status) {
 		if (statesSet == null) statesSet = new GsStatesSet(childsCount);
-		statesSet.addState(state, statusProcessed);
+		statesSet.addState(state, status);
 	}
 
 	
@@ -213,15 +210,11 @@ public class GsHierarchicalNode implements Dotify {
 	 * The states of the slave are merged with this (or its master)
 	 * 
 	 * @param slaveNode
-	 * @param childsCount 
-	 * @param helper 
+	 * @param nodeSet 
 	 */
-	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet) {// throws Exception {
+	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet) {
 		if (slaveNode == this) return;
 		slaveNode = slaveNode.master;
-//		if (slaveNode.type != this.type) {
-//			throw new Exception("Error merging two node of different types : "+slaveNode.toLongString()+" in "+this.toLongString()); //FIXME : remove me
-//		}
 		if (this.statesSet != null && slaveNode.statesSet != null) { 			//Merge the set of states
 			this.statesSet.merge(slaveNode.statesSet);
 		}
@@ -272,6 +265,9 @@ public class GsHierarchicalNode implements Dotify {
 		return size;
 	}
 
+	/**
+	 * Compute the size. This function reduce the stateSet but doesn't add the states in the queue to the stateSet. 
+	 */
 	public void updateSize() {
 		size = 0;
 		//processed = 0;
@@ -313,7 +309,7 @@ public class GsHierarchicalNode implements Dotify {
 	 * Add an edge between the masters nodes
 	 * @param to
 	 * @param htg
-	 * @return true if an edge was added (no autoregulation
+	 * @return true if an edge was added (no autoregulation)
 	 */
 	public boolean addEdge(GsHierarchicalNode to, GsHierarchicalTransitionGraph htg) {
 		if (!master.equals(to.master)) {
@@ -365,81 +361,81 @@ public class GsHierarchicalNode implements Dotify {
 	}
 
 	public void parse(String parse) throws SAXException {
-		statesSet.parse(parse); //TODO:
+		statesSet.parse(parse);
 	}
 
 
 	
 /* **************** TOSTRINGS ************/	
 
-		public String toString() {
-			if (size == 0) {
-				updateSize();
+	public String toString() {
+		if (size == 0) {
+			updateSize();
+		}
+		if (size == 1) {
+			StringBuffer s = new StringBuffer();
+			byte[] t = (byte[]) ((List)statesToList()).get(0);
+			for (int i = 0; i < t.length; i++) {
+				s.append(String.valueOf(t[i]).charAt(0));
 			}
-			if (size == 1) {
-				StringBuffer s = new StringBuffer();
-				byte[] t = (byte[]) ((List)statesToList()).get(0);
-				for (int i = 0; i < t.length; i++) {
-					s.append(String.valueOf(t[i]).charAt(0));
-				}
-				return s.toString()+(master != this ? "¤{"+master+"}":"");
-			} 
-			return "#"+size;
-		}
-		public String toLongString() {
-			String name = "";
-			if (size == 1) {
-				StringBuffer s = new StringBuffer();
-				byte[] t = (byte[]) ((List)statesToList()).get(0);
-				for (int i = 0; i < t.length; i++) {
-					s.append(String.valueOf(t[i]).charAt(0));
-				}
-				name = ",name: "+s.toString();
+			return s.toString()+(master != this ? "¤{"+master+"}":"");
+		} 
+		return "#"+size;
+	}
+	public String toLongString() {
+		String name = "";
+		if (size == 1) {
+			StringBuffer s = new StringBuffer();
+			byte[] t = (byte[]) ((List)statesToList()).get(0);
+			for (int i = 0; i < t.length; i++) {
+				s.append(String.valueOf(t[i]).charAt(0));
 			}
-			return "{"+size+name+", type:"+typeToString()+"}";
+			name = ",name: "+s.toString();
 		}
-		public String getShortId() {
-			return ""+hashCode();
-		}
-		public String getLongId() {
-			return uid+"::"+toString();
-		}
-		public StringBuffer write() {
-			return statesSet.write();
-		}
-			
-		public String statesToString() {
-			return statesToString(false);
-		}
+		return "{"+size+name+", type:"+typeToString()+"}";
+	}
+	public String getShortId() {
+		return ""+hashCode();
+	}
+	public String getLongId() {
+		return uid+"::"+toString();
+	}
+	public StringBuffer write() {
+		return statesSet.write();
+	}
 		
-		public String statesToString(boolean addValue) {
-			StringBuffer res = new StringBuffer();
-			if (statePile != null) {
-				for (Iterator it = statePile.iterator(); it.hasNext();) {
-					byte[] stateInPile = (byte[]) it.next();
-					for (int i = 0; i < stateInPile.length; i++) {
-						res.append(stateInPile[i]);
-					}
-		        	if (addValue) {
-		        		res.append("-1\n");
-		        	} else {
-		        		res.append("\n");
-		        	}
+	public String statesToString() {
+		return statesToString(false);
+	}
+	
+	public String statesToString(boolean addValue) {
+		StringBuffer res = new StringBuffer();
+		if (statePile != null) {
+			for (Iterator it = statePile.iterator(); it.hasNext();) {
+				byte[] stateInPile = (byte[]) it.next();
+				for (int i = 0; i < stateInPile.length; i++) {
+					res.append(stateInPile[i]);
 				}
+	        	if (addValue) {
+	        		res.append("-1\n");
+	        	} else {
+	        		res.append("\n");
+	        	}
 			}
-			res.append(statesSet.statesToString(addValue));
-			return res.toString();
 		}
+		res.append(statesSet.statesToString(addValue));
+		return res.toString();
+	}
 
 	 
 	/**
 	 * Initialize and fill a list with all the states in the omdd
 	 * Each item of the returned list is a string representation using wildcard * (-1).
 	 * Note the order in the list is relative to the omdd structure.
-	 * @return
+	 * @return a list made of all the states as schemata (using *)
 	 */
 	public List statesToList() {
-		addAllTheStatesInPile();
+		addAllTheStatesInQueue();
 		List v = new LinkedList();
 		statesSet.statesToList(v);
 		return v;
@@ -463,90 +459,90 @@ public class GsHierarchicalNode implements Dotify {
 	
 
 /* **************** TYPE GETTERS, SETTERS, TESTERS AND CONVERSIONS ************/		
-		
-		public boolean isStable() {
-			return type == TYPE_STABLE_STATE;
-		}
-		public boolean isTransient() {
-			return type == TYPE_TRANSIENT_COMPONENT;
-		}
-		public boolean isCycle() {
-			return type == TYPE_TERMINAL_CYCLE || type == TYPE_TRANSIENT_CYCLE;
-		}
-		public boolean isTerminal() {
-			return type == TYPE_TERMINAL_CYCLE || type == TYPE_STABLE_STATE;
-		}
+	
+	public boolean isStable() {
+		return type == TYPE_STABLE_STATE;
+	}
+	public boolean isTransient() {
+		return type == TYPE_TRANSIENT_COMPONENT;
+	}
+	public boolean isCycle() {
+		return type == TYPE_TERMINAL_CYCLE || type == TYPE_TRANSIENT_CYCLE;
+	}
+	public boolean isTerminal() {
+		return type == TYPE_TERMINAL_CYCLE || type == TYPE_STABLE_STATE;
+	}
 
-		public void setType(byte type) {
-			this.type = type;
-		}
+	public void setType(byte type) {
+		this.type = type;
+	}
 
-		public byte getType() {
-			return type;
+	public byte getType() {
+		return type;
+	}
+	
+	/**
+	 * Return a string representation for the type of this node.
+	 * @return the string reprensetation
+	 */
+	public String typeToString() {
+		return typeToString(type);
+	}
+	/**
+	 * Return a string representation for a given type.
+	 * @param type is either TYPE_STABLE_STATEG or TYPE_TERMINAL_CYCLE or TYPE_TRANSIENT_COMPONENT
+	 * @return the string reprensetation
+	 */
+	public static String typeToString(int type) {
+		switch (type) {
+		case TYPE_STABLE_STATE:
+			return TYPE_STABLE_STATE_STRING;
+		case TYPE_TERMINAL_CYCLE:
+			return TYPE_TERMINAL_CYCLE_STRING;
+		case TYPE_TRANSIENT_CYCLE:
+			return TYPE_TRANSIENT_CYCLE_STRING;
+		case TYPE_TRANSIENT_COMPONENT:
+			return TYPE_TRANSIENT_COMPONENT_STRING;
+		default:
+			return null;
 		}
-		
-		/**
-		 * Return a string representation for the type of this node.
-		 * @return
-		 */
-		public String typeToString() {
-			return typeToString(type);
-		}
-		/**
-		 * Return a string representation for a given type.
-		 * @param type is either TYPE_STABLE_STATEG or TYPE_TERMINAL_CYCLE or TYPE_TRANSIENT_COMPONENT
-		 * @return
-		 */
-		public static String typeToString(int type) {
-			switch (type) {
-			case TYPE_STABLE_STATE:
-				return TYPE_STABLE_STATE_STRING;
-			case TYPE_TERMINAL_CYCLE:
-				return TYPE_TERMINAL_CYCLE_STRING;
-			case TYPE_TRANSIENT_CYCLE:
-				return TYPE_CYCLE_STRING;
-			case TYPE_TRANSIENT_COMPONENT:
-				return TYPE_TRANSIENT_COMPONENT_STRING;
-			default:
-				return null;
-			}
-		}
-		/**
-		 * Set the type from a string
-		 * @param type a string from the constants TYPE_STABLE_STATE_STRING, TYPE_TERMINAL_CYCLE_STRING...
-		 */
-		public void setTypeFromString(String type) {
-			this.type = typeFromString(type);
-		}
-		/**
-		 * Return an int representation for a given string
-		 * @param type is either TYPE_STABLE_STATE_STRING or TYPE_TERMINAL_CYCLE_STRING or TYPE_TRANSIENT_COMPONENT_STRING
-		 * @return
-		 */
-		public static byte typeFromString(String type) {
-			if (type.equals(TYPE_STABLE_STATE_STRING)) return TYPE_STABLE_STATE;
-			if (type.equals(TYPE_TERMINAL_CYCLE_STRING)) return TYPE_TERMINAL_CYCLE;
-			if (type.equals(TYPE_CYCLE_STRING)) return TYPE_TRANSIENT_CYCLE;
-			return  TYPE_TRANSIENT_COMPONENT;
-		}
+	}
+	/**
+	 * Set the type from a string
+	 * @param type a string from the constants TYPE_STABLE_STATE_STRING, TYPE_TERMINAL_CYCLE_STRING...
+	 */
+	public void setTypeFromString(String type) {
+		this.type = typeFromString(type);
+	}
+	/**
+	 * Return an int representation for a given string
+	 * @param type is either TYPE_STABLE_STATE_STRING or TYPE_TERMINAL_CYCLE_STRING or TYPE_TRANSIENT_COMPONENT_STRING OR TYPE_CYCLE_STRING
+	 * @return the type constant
+	 */
+	public static byte typeFromString(String type) {
+		if (type.equals(TYPE_STABLE_STATE_STRING)) return TYPE_STABLE_STATE;
+		if (type.equals(TYPE_TERMINAL_CYCLE_STRING)) return TYPE_TERMINAL_CYCLE;
+		if (type.equals(TYPE_TRANSIENT_CYCLE_STRING)) return TYPE_TRANSIENT_CYCLE;
+		return  TYPE_TRANSIENT_COMPONENT;
+	}
 		
 /* **************** TO DOT (DOTIFY) ************/	
-		
-		public String toDot() {
-			String options;
-	    	if (this.getType() == TYPE_TRANSIENT_CYCLE) 				options = "shape=ellipse,style=filled,color=\"#C8E4A5\"";
-	    	else if (this.getType() == TYPE_STABLE_STATE) 	options = "shape=box,style=filled, width=\"1.1\", height=\"1.1\",color=\"#9CBAEB\"";
-	    	else if (this.getType() == TYPE_TERMINAL_CYCLE) options = "shape=circle,style=filled, width=\"1.1\", height=\"1.1\",color=\"#F5AC6F\"";
-	    	else 											options = "shape=point,style=filled,color=\"#00FF00\"";
-			return  this.getUniqueId()+" [label=\""+this.toString()+"\", "+options+"];";
-		}
-		
-		public String toDot(Object to) {
-			return  this.getUniqueId()+" -> "+((GsHierarchicalNode) to).getUniqueId()+";";
-		}
-
 	
+	public String toDot() {
+		String options;
+    	if (this.getType() == TYPE_TRANSIENT_CYCLE) 	options = "shape=ellipse,style=filled,color=\"#C8E4A5\"";
+    	else if (this.getType() == TYPE_STABLE_STATE) 	options = "shape=box,style=filled, width=\"1.1\", height=\"1.1\",color=\"#9CBAEB\"";
+    	else if (this.getType() == TYPE_TERMINAL_CYCLE) options = "shape=circle,style=filled, width=\"1.1\", height=\"1.1\",color=\"#F5AC6F\"";
+    	else 											options = "shape=point,style=filled,color=\"#00FF00\"";
+		return  this.getUniqueId()+" [label=\""+this.toString()+"\", "+options+"];";
 	}
+	
+	public String toDot(Object to) {
+		return  this.getUniqueId()+" -> "+((GsHierarchicalNode) to).getUniqueId()+";";
+	}
+
+
+}
 
 
 

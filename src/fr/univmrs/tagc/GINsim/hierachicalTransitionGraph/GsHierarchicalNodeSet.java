@@ -13,27 +13,27 @@ import java.util.Iterator;
  * <pre>		public GsDynamicalHierarchicalNode getHNodeForState(byte[] state)</pre>
  *
  *
- * <p><i>The java 1.5 definition should be GsHierarchicalNodeSet&lt;GsDynamicalHierarchicalNode&gt;</i></p>
+ * <p><i>The java 1.5 definition should be GsHierarchicalNodeSet&lt;GsHierarchicalNode&gt;</i></p>
  */
 public class GsHierarchicalNodeSet extends HashSet {
 	private static final long serialVersionUID = -6542206623359579872L;
-
-	private int hashCode;
+	
+	private int hashCode = 0;
 	public GsHierarchicalNodeSet() {
 		super();
-		buildHashCode();
+		buildHashCode(); //FIXME: Should no be here, because it is called before any elements are added
 	}
 	
 	/**
 	 * 
 	 * <p>Iterate over all the GsDynamicalHierarchicalNode in the HashSet and test if it 
-	 * contains <b>state</b> using the function GsDynamicalHierarchicalNode.contains(state)</p>
+	 * contains <b>state</b> using the function contains(state) of GsHierarchicalNode</p>
 	 * 
-	 * <p>The complexity is equal to the count of GsDynamicalHierarchicalNode times the function contains.</p>
+	 * <p>The complexity is equal to the count of GsHierarchicalNode times the function contains. That is O(|States|x|Genes|).</p>
 	 * 
 	 * 
-	 * @param state
-	 * @return the node containg the state or null if it is not found
+	 * @param state The state to test
+	 * @return The node containing the state or null if it is not found
 	 */
 	public GsHierarchicalNode getHNodeForState(byte[] state) {
 		GsHierarchicalNode HNode = null;
@@ -53,6 +53,9 @@ public class GsHierarchicalNodeSet extends HashSet {
 		return hashCode;
 	}
 
+	/**
+	 * Initialize the value of the hashCode from the content of the set. Basically its just the sum of the GsHierarchicalNode's uids.
+	 */
 	public void buildHashCode() {
 		hashCode = 0;
 		for (Iterator it = iterator(); it.hasNext();) {

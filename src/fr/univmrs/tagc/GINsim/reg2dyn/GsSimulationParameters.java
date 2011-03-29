@@ -43,7 +43,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 
     /**
      * empty constructor for everyday use.
-     * @param nodeOrder
+     * @param param_list
      */
     public GsSimulationParameters(GsSimulationParameterList param_list) {
     	this.param_list = param_list;
