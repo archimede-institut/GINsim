@@ -212,9 +212,9 @@ public class SBML3Export implements OMDDBrowserListener {
 		out.addContent(""+v_no.get(idx));
         out.closeTag();  // ci
 		
-        out.openTag("ci");
+        out.openTag("cn");
 		out.addContent(""+value);
-        out.closeTag();  // ci
+        out.closeTag();  // cn
 
         out.closeTag();  // cst
         out.closeTag();  // apply
