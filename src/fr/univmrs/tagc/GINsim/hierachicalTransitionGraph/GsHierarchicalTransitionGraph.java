@@ -56,6 +56,7 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 	 */
 	private byte[] childsCount = null;
 	private GsHierarchicalParameterPanel vertexPanel = null;
+	private long saveEdgeId;
 
 	
 /* **************** CONSTRUCTORS ************/	
@@ -107,6 +108,8 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 	 * @return the new edge
 	 */
 	public Object addEdge(Object source, Object target) {
+		Object e = graphManager.getEdge(source, target);
+		if (e != null) return e;
 		return graphManager.addEdge(source, target, null);
 	}
 
@@ -166,6 +169,11 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		
 /* **************** SAVE ************/	
 		
+	protected String getGraphZipName() {
+		return zip_mainEntry;
+    }
+
+	
 	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
 	       try {
 	            XMLWriter out = new XMLWriter(os, dtdFile);
@@ -193,48 +201,48 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 	        }
 	}
 	
- private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-     Iterator it;
-     if (selectedOnly) {
-     		it = graphManager.getSelectedEdgeIterator();
-     } else {
-     		it = graphManager.getEdgeIterator();
-     }
-     while (it.hasNext()) {
-     	Object o_edge = it.next();
-     	if (o_edge instanceof GsDirectedEdge) {
-     		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-	            String source = ""+((GsHierarchicalNode)edge.getSourceVertex()).getUniqueId();
-	            String target =""+((GsHierarchicalNode) edge.getTargetVertex()).getUniqueId();
-	            out.write("\t\t<edge id=\"e"+ source +"_"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
-     	}
-     }
- }
- 
- /**
-  * @param out
-  * @param mode
-  * @param selectedOnly
-  * @throws IOException
-  */
- private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
- 	Iterator it;
- 	if (selectedOnly) {
- 		it = graphManager.getSelectedVertexIterator();
- 	} else {
- 		it = graphManager.getVertexIterator();
- 	}
- 	GsVertexAttributesReader vReader = graphManager.getVertexAttributesReader();
-     while (it.hasNext()) {
-    	 GsHierarchicalNode vertex = (GsHierarchicalNode)it.next();
-         vReader.setVertex(vertex);
-         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
-         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
-         out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");
-         out.write(GsGinmlHelper.getFullNodeVS(vReader));
-         out.write("\t\t</node>\n");
-     }
- }		
+	private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
+		Iterator it;
+	     if (selectedOnly) {
+	     		it = graphManager.getSelectedEdgeIterator();
+	     } else {
+	     		it = graphManager.getEdgeIterator();
+	     }
+	     while (it.hasNext()) {
+	     	Object o_edge = it.next();
+	     	if (o_edge instanceof GsDirectedEdge) {
+	     		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
+		            String source = ""+((GsHierarchicalNode)edge.getSourceVertex()).getUniqueId();
+		            String target =""+((GsHierarchicalNode) edge.getTargetVertex()).getUniqueId();
+		            out.write("\t\t<edge id=\"e"+(++saveEdgeId)+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
+	     	}
+	     }
+	 }
+	 
+	 /**
+	  * @param out
+	  * @param mode
+	  * @param selectedOnly
+	  * @throws IOException
+	  */
+	 private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
+	 	Iterator it;
+	 	if (selectedOnly) {
+	 		it = graphManager.getSelectedVertexIterator();
+	 	} else {
+	 		it = graphManager.getVertexIterator();
+	 	}
+	 	GsVertexAttributesReader vReader = graphManager.getVertexAttributesReader();
+	     while (it.hasNext()) {
+	    	 GsHierarchicalNode vertex = (GsHierarchicalNode)it.next();
+	         vReader.setVertex(vertex);
+	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
+	         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
+	         out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");
+	         out.write(GsGinmlHelper.getFullNodeVS(vReader));
+	         out.write("\t\t</node>\n");
+	     }
+	 }		
 		
 /* **************** NODE SEARCH ************/
 		
@@ -273,20 +281,6 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
 			GsHierarchicalNode v = (GsHierarchicalNode) it.next();
 			if (v.contains(state)) return v;
-		}
-		return null;
-	}
-	
-	/**
-	 * 
-	 * @param sid a string representation of the id with a letter in first position eg. "s102"
-	 * @return the node with the corresponding id. eg. 102.
-	 */
-	public GsHierarchicalNode getNodeById(String sid) {
-		int id = Integer.parseInt(sid.substring(1));
-		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
-			GsHierarchicalNode v = (GsHierarchicalNode) it.next();
-			if (v.getUniqueId() == id) return v;
 		}
 		return null;
 	}

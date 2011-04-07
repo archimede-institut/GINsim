@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.hierachicalTransitionGraph;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -40,6 +41,8 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
     private GsEdgeAttributesReader ereader = null;
     private Annotation annotation = null;
     private Map map;
+    private Map oldIdToVertex = new HashMap();
+	private byte[] childCount;
     
     /**
      * @param map
@@ -61,7 +64,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
 		try {
 			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
 			Vector nodeOrder = new Vector(t_nodeOrder.length);
-			byte[] childCount = new byte[t_nodeOrder.length];
+			childCount = new byte[t_nodeOrder.length];
 			for (int i=0 ; i<t_nodeOrder.length ; i++) {
 				String[] args = t_nodeOrder[i].split(":");
 			    nodeOrder.add(args[0]);
@@ -143,7 +146,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
             case POS_VERTEX_STATES_S:
                 if (qName.equals("string")) {
                     pos = POS_VERTEX_STATES;
-                    //vertex.parse(curval, graph.getChildsCount());  FIXME
+                    vertex.parse(curval);
                 	curval = null;
                 }
                 break; // POS_VERTEX_STATES_S
@@ -181,7 +184,8 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
                     String id = attributes.getValue("id");
                     if (map == null || map.containsKey(id)) {
                         pos = POS_VERTEX;
-                    //    vertex = new GsHierarchicalNode(id);FIXME
+                        vertex = new GsHierarchicalNode(childCount);
+                        oldIdToVertex.put(id, vertex);
                         htg.addVertex(vertex);
                     } else {
                         pos = POS_FILTERED;
@@ -191,7 +195,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
                     String s_to = attributes.getValue("to");
                     if (map == null || map.containsKey(s_from) && map.containsKey(s_to)) {
                         pos = POS_EDGE;
-                        htg.addEdge(htg.getNodeById(s_from), htg.getNodeById(s_to));
+                        htg.addEdge(oldIdToVertex.get(s_from), oldIdToVertex.get(s_to));
                     } else {
                         pos = POS_FILTERED;
                     }

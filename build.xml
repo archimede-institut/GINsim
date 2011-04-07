@@ -237,7 +237,7 @@
 	<!-- ************************************************** -->
 	<target name="macbundle" depends="jardist" description="Build an application for mac">
 		<!--Fetch jarbundler at http://informagen.com/JarBundler/ and install it in /usr/share/ant/lib/ (default)  -->
-		<taskdef name="jarbundler" classpath="/usr/share/ant/lib/jarbundler-2.1.0.jar"  classname="net.sourceforge.jarbundler.JarBundler"/>
+		<taskdef name="jarbundler" classpath="/usr/share/ant/lib/jarbundler-2.2.0.jar"  classname="net.sourceforge.jarbundler.JarBundler"/>
 
 	    <jarbundler dir="" verbose="true" showPlist="false"
 	                name="GINsim"

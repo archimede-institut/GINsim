@@ -274,11 +274,13 @@ public class GsHierarchicalNode implements Dotify {
 		if (statePile != null) {
 			size = statePile.size();
 		}
-		statesSet.reduce();
-		int[] counts = statesSet.updateSize();
-		size += counts[1];// + counts[STATUS_PROCESSED];
-		//processed += counts[STATUS_PROCESSED];
-		
+		if (statesSet != null) {
+			statesSet.reduce();
+			int[] counts = statesSet.updateSize();
+			size += counts[1];// + counts[STATUS_PROCESSED];
+			//processed += counts[STATUS_PROCESSED];
+			
+		}		
 	}
 	
 
@@ -355,12 +357,14 @@ public class GsHierarchicalNode implements Dotify {
 	public long getUniqueId() {
 		return master.uid;
 	}
-	
+
+
 	public int hashcode() {
 		return (int)master.uid;
 	}
 
 	public void parse(String parse) throws SAXException {
+		if (statesSet == null) statesSet = new GsStatesSet(childsCount);
 		statesSet.parse(parse);
 	}
 
@@ -378,7 +382,7 @@ public class GsHierarchicalNode implements Dotify {
 			for (int i = 0; i < t.length; i++) {
 				s.append(String.valueOf(t[i]).charAt(0));
 			}
-			return s.toString()+(master != this ? "¤{"+master+"}":"");
+			return s.toString()+(master != this ? "{"+master+"}":"");
 		} 
 		return "#"+size;
 	}
