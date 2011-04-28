@@ -16,7 +16,9 @@ public interface GsActionProvider {
     public static final int ACTION_EXPORT = 1;
     /**  */
     public static final int ACTION_ACTION = 2;
-
+    /**  */
+    public static final int ACTION_IMPORT = 3;
+    
 	/**
      * get actions available within this provider.
      *

@@ -82,6 +82,7 @@ public class GsActions implements GraphChangeListener {
 	private JMenu				helpMenu					= null;
 	private JMenu				actionMenu					= null;
 	private JMenu				exportMenu					= null;
+	private JMenu 				importMenu 					= null;
 	private JMenu				layoutMenu					= null;
 //	private JMenu				openMenu					= null;
 //	private JMenu				newMenu						= null;
@@ -149,7 +150,10 @@ public class GsActions implements GraphChangeListener {
 	private JSeparator          simpleFunctionEdition_separator = new JSeparator();			
 
 	protected static final int mask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-	
+
+	/** list of available imports */
+	private static List v_import;
+
 	// other menuItems
 	JMenuItem					mi_edit;
 	JMenuItem					mi_delete;
@@ -658,6 +662,7 @@ public class GsActions implements GraphChangeListener {
 		fileMenu.add(actionSaveAs);
 		fileMenu.add(actionSaveSubGraph);
 		fileMenu.add(exportMenu);
+		fileMenu.add(importMenu);
 		fileMenu.add(new JSeparator());
 
 		fileMenu.add(actionQuit);
@@ -897,6 +902,10 @@ public class GsActions implements GraphChangeListener {
 		addToMenu(exportMenu, graphManager.getExport(),
 				GsActionProvider.ACTION_EXPORT, graph);
 
+		// fill import menu
+		importMenu.removeAll();
+		addToMenu(importMenu, getImport(), GsActionProvider.ACTION_IMPORT, graph);
+
 		// fill layout menu
 		layoutMenu.removeAll();
 		addToMenu(layoutMenu, graph.getLayout(),
@@ -977,6 +986,24 @@ public class GsActions implements GraphChangeListener {
 		if (v_editButtons != null && v_editButtons.size() > index) {
 			((JToggleButton)v_editButtons.get(index)).setSelected(true);
 		}
+	}
+
+	/**
+	 * 
+	 * @param import
+	 */
+	public static void registerImportProvider(GsActionProvider imports) {
+		if (v_import == null) {
+			v_import = new Vector();
+		}
+		v_import.add(imports);
+	}
+
+	/**
+	 * @return a list of avaible actions.
+	 */
+	public List getImport() {
+		return v_import;
 	}
 
 	/**
