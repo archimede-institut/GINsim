@@ -12,6 +12,11 @@ public interface SimulationManager {
      * @param n
      */
     public void setProgress(int n);
+    /**
+     * set the progress level, to give the user some feedback
+     * @param n
+     */
+    public void setProgress(String s);
 
     public void addStableState(SimulationQueuedState item);
 

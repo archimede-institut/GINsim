@@ -63,5 +63,14 @@ public class GsHierarchicalNodeSet extends HashSet {
 			hashCode += node.getUniqueId();
 		}
 	}
+	
+	public String toString() {
+		StringBuffer s = new StringBuffer();
+		for (Iterator iterator = this.iterator(); iterator.hasNext();) {
+			GsHierarchicalNode node = (GsHierarchicalNode) iterator.next();
+			s.append(node+"("+node.getIncomingEdges()+");");
+		}
+		return s.toString();
+	}
 
 }

@@ -27,6 +27,11 @@ public abstract class GsBaseSimulationFrame extends StackDialog implements Simul
             setMessage(""+n);
 //        }
     }
+    public void setProgress(String s) {
+//      if (isrunning) {
+          setMessage(s);
+//      }
+  }
 
     public void addStableState(SimulationQueuedState item) {
         System.out.print("stable (depth "+item.depth+"): ");

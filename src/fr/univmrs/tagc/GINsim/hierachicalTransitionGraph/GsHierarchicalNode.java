@@ -108,7 +108,7 @@ public class GsHierarchicalNode implements Dotify {
 	/**
 	 * The atteignability in terms of attractors
 	 */
-	private Set sigma;
+	private GsHierarchicalSigmaSet sigma;
 	
 	/**
 	 * An array such that childsCount[i] indicates the maxValue of the i-th gene
@@ -130,8 +130,7 @@ public class GsHierarchicalNode implements Dotify {
 	 */
 	public GsHierarchicalNode(byte[] childsCount) {
 		this.statesSet = null;
-		this.uid = nextId;
-		nextId = nextId*2-1;
+		this.uid = nextId++;
 		this.type = TYPE_TRANSIENT_COMPONENT;
 		this.childsCount = childsCount;
 		this.master = this;
@@ -215,6 +214,7 @@ public class GsHierarchicalNode implements Dotify {
 	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet) {
 		if (slaveNode == this) return;
 		slaveNode = slaveNode.master;
+		nodeSet.remove(slaveNode);												//Make slaveNode a slaveNode !
 		if (this.statesSet != null && slaveNode.statesSet != null) { 			//Merge the set of states
 			this.statesSet.merge(slaveNode.statesSet);
 		}
@@ -235,7 +235,6 @@ public class GsHierarchicalNode implements Dotify {
 				this.statePile.addAll(slaveNode.statePile); //merging the statePile
 			}
 		}
-		nodeSet.remove(slaveNode);												//Make slaveNode a slaveNode !
 		slaveNode.master = this;
 	}
 	
@@ -304,6 +303,8 @@ public class GsHierarchicalNode implements Dotify {
 		if (master.in == null) {
 			master.in = new HashSet();
 		}
+		compactMaster();
+		((GsHierarchicalNode)o).compactMaster();
 		master.in.add(o);
 	}
 
@@ -332,16 +333,16 @@ public class GsHierarchicalNode implements Dotify {
 	/**
 	 * return the set sigma
 	 */
-	public Set getSigma() {
+	public GsHierarchicalSigmaSet getSigma() {
 		if (master.sigma == null) {
-			master.sigma = new HashSet();
+			master.sigma = new GsHierarchicalSigmaSet();
 		}
 		return master.sigma;
 	}
 	/**
 	 * return the set sigma
 	 */
-	public void setSigma(Set sigma) {
+	public void setSigma(GsHierarchicalSigmaSet sigma) {
 		this.master.sigma = sigma;
 	}
 	
@@ -360,6 +361,7 @@ public class GsHierarchicalNode implements Dotify {
 
 
 	public int hashcode() {
+		compactMaster();
 		return (int)master.uid;
 	}
 
@@ -545,6 +547,20 @@ public class GsHierarchicalNode implements Dotify {
 		return  this.getUniqueId()+" -> "+((GsHierarchicalNode) to).getUniqueId()+";";
 	}
 
+	public static boolean addEdge(GsHierarchicalNode from, GsHierarchicalNode to, GsHierarchicalTransitionGraph htg) {
+		from.compactMaster();
+		to.compactMaster();
+		return from.master.addEdge(to.master, htg);
+	}
+
+	public void compactMaster() {
+		if (!this.equals(this.master)) {
+			if (!this.master.master.equals(this.master)) {
+				this.master.compactMaster();
+				this.master = this.master.master;
+			}
+		}
+	}
 
 }
 
