@@ -84,8 +84,6 @@ public class GsActions implements GraphChangeListener {
 	private JMenu				exportMenu					= null;
 	private JMenu 				importMenu 					= null;
 	private JMenu				layoutMenu					= null;
-//	private JMenu				openMenu					= null;
-//	private JMenu				newMenu						= null;
 	private JMenu				addEdgeMenu					= null;
 	private JMenu				addVertexMenu				= null;
 	private JMenu				recentMenu					= null;
@@ -196,6 +194,7 @@ public class GsActions implements GraphChangeListener {
 		// additionnals menus:
 		layoutMenu = new JMenu(Translator.getString("STR_layout"));
 		exportMenu = new JMenu(Translator.getString("STR_export"));
+		importMenu = new JMenu(Translator.getString("STR_import"));
 		addVertexMenu = new JMenu(Translator.getString("STR_addVertex"));
 		addEdgeMenu = new JMenu(Translator.getString("STR_addEdge"));
 		editSelectMenu = new JMenu(Translator.getString("STR_editSelectMenu"));
@@ -652,6 +651,7 @@ public class GsActions implements GraphChangeListener {
 		recentMenu = new JMenu(Translator.getString("STR_openRecent"));
 		fileMenu.add(recentMenu);
 		updateRecentMenu();
+		fileMenu.add(importMenu);
 
 		fileMenu.add(actionMergeGraph);
 		fileMenu.add(actionClose);
@@ -662,7 +662,6 @@ public class GsActions implements GraphChangeListener {
 		fileMenu.add(actionSaveAs);
 		fileMenu.add(actionSaveSubGraph);
 		fileMenu.add(exportMenu);
-		fileMenu.add(importMenu);
 		fileMenu.add(new JSeparator());
 
 		fileMenu.add(actionQuit);

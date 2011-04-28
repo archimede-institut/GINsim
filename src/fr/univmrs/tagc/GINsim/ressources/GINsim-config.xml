@@ -25,6 +25,8 @@
 		<plugin name="omddViz" 					mainClass="fr.univmrs.tagc.GINsim.omddViz.OmddVizPlugin"/>
 		<plugin name="localGraph" 				mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.localGraph.LocalGraphPlugin"/>
 		
+		<!-- import plugins -->
+		<plugin name="SBMLimport"                   mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.SBML.SBMLImportPlugin"/>
 
 		<!-- export plugins -->
 		<plugin name="export" 					mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin"/>

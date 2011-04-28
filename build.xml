@@ -33,8 +33,9 @@
 	<property name="jfjar" location="${extlib}/jfreechart-1.0.11.jar"/>
 	<property name="jcjar" location="${extlib}/jcommon-1.0.14.jar"/>
 	<property name="jythonjar" location="${extlib}/jython.jar"/>
+	<property name="jdomjars" location="lib/jsci-xtra.jar:lib/jdom-1.1.jar"/>
 	
-	<property name="classpath"  value=".:${tbjar}:${jfjar}:${jcjar}:${jythonjar}:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/javabib-bin.jar"/>
+	<property name="classpath"  value=".:${jdomjars}:${tbjar}:${jfjar}:${jcjar}:${jythonjar}:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/javabib-bin.jar"/>
 
 	<target name="init">
 		<!-- Create the time stamp -->
