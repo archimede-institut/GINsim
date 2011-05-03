@@ -78,14 +78,14 @@ public class LocalGraph {
 				j = ((Integer) node_to_position.get(target)).intValue();
 				byte[] fx = f(state);
 				byte[] fxbi = f(bar_x(state, i));
-//				System.out.println(j+"->"+i);
+//				System.out.println(i+"->"+j);
 //				print(state);
 //				print(fx);
 //				print(fxbi);
 //				System.out.println(fx[j]+"=="+fxbi[j]);
 				if (fx[j] != fxbi[j]) {
 					String func = (String) functionalityMap.get(edge);
-					if (state[i] != fxbi[i]) {
+					if (state[i] == fx[j]) {
 						if (func == null || func == LocalGraphSelector.CAT_POSITIVE) functionalityMap.put(edge, LocalGraphSelector.CAT_POSITIVE);
 						else functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
 					} else {

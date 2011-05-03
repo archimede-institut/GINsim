@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -164,7 +165,9 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			}
 		} else if (e.getSource() == saveReportButton){
 			try {
-				Object[] fileAndFormat = GenericDocumentFileChooser.saveDialog(OPT_REPORTDIRECTORY, this);
+				Vector format = new Vector(1);
+				format.add(GenericDocumentFormat.XHTMLDocumentFormat);
+				Object[] fileAndFormat = GenericDocumentFileChooser.saveDialog(OPT_REPORTDIRECTORY, this, format);
 				if (fileAndFormat != null) {
 					DocumentWriter doc = (DocumentWriter)((GenericDocumentFormat)fileAndFormat[1]).documentWriterClass.newInstance();
 					doc.setOutput((File)fileAndFormat[0]);

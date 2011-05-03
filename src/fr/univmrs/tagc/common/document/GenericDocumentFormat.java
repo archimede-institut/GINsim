@@ -11,10 +11,12 @@ import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
  */
 public class GenericDocumentFormat {
 	
+	public static final GenericDocumentFormat XHTMLDocumentFormat = new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", "xHTML files (.html, .xhtml)", "html", new String[] {"html", "xhtml"});
+	public static final GenericDocumentFormat OOoDocumentFormat = new GenericDocumentFormat(OOoDocumentWriter.class, "OpenDocument", "OpenDocument Text files (.odt)", "odt", new String[] {"odt"});
 	private static Vector formats = new Vector();
 	static {
-		formats.add(new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", "xHTML files (.html, .xhtml)", "html", new String[] {"html", "xhtml"}));
-		formats.add(new GenericDocumentFormat(OOoDocumentWriter.class, "OpenDocument", "OpenDocument Text files (.odt)", "odt", new String[] {"odt"}));
+		formats.add(XHTMLDocumentFormat);
+		formats.add(OOoDocumentFormat);
         //FIXME: WIKI and LaTeX formats are disabled
         //formats.add(new GenericDocumentFormat(WikiDocumentWriter.class, "Wiki", "Text files (.txt)", "txt", new String[] {"txt"}));
         // formats.add(new GenericDocumentFormat(LaTeXDocumentWriter.class, "LaTeX", "LaTeX files (.tex)", "tex", new String[] {"tex"})); 			
