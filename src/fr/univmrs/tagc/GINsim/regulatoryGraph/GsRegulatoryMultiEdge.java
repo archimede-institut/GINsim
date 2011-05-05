@@ -310,7 +310,8 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 		return source;
 	}
 
-	protected void rescanSign(GsGraph graph) {
+	//protected void rescanSign(GsGraph graph) {
+	public void rescanSign(GsGraph graph) {
 		this.sign = edges[0].sign;
 		for (int i=0 ; i<edgecount ; i++) {
 			if ( edges[i].sign != sign) {

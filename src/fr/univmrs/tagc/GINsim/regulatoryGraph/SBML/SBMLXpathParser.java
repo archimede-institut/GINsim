@@ -23,6 +23,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -38,6 +39,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;// just to get rescanSign() method
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
@@ -172,7 +174,6 @@ public final class SBMLXpathParser {
 					}
 				}
 			}
-
 			/** retrieve all transitions list */
 			List listOfTransition = xpa2.selectNodes(racine);
 			for (int i = 0; i < listOfTransition.size(); i++) {
@@ -198,20 +199,31 @@ public final class SBMLXpathParser {
 									.getAttributeValue("qualitativeSpecies");
 							String sign = ((Element) input).getAttributeValue("sign");
 							if (sign.equals("SBO:0000020"))
-								sign = "1";
+								sign = "negative";
 							else if (sign.equals("SBO:0000459"))
-								sign = "0";
+								sign = "positive";
 							else
-								sign = "2";
+								sign = "unknown"; 
 							String transitionEffect = ((Element) input)
 									.getAttributeValue("transitionEffect");
 							String boundaryCondition = ((Element) input)
 									.getAttributeValue("boundaryCondition");
-							String to = getNodeId(trans_Id);
-							edge = graph.addNewEdge(qualitativeSpecies, to, (byte) 1, sign);
+							String to = getNodeId(trans_Id);						
+							String minimumvalue = ((Element)input).getAttributeValue("minvalue");
+							byte minvalue = (byte)Integer.parseInt(getAttributeValueWithDefault(minimumvalue, "1"));
+							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");							
+							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
 							byte maxvalue = -2;
+							edge = graph.addNewEdge(qualitativeSpecies, to, minvalue, sign);							
+							if (smax.startsWith("m")) {
+                            	maxvalue = -1; 
+                            } else 
+                            {
+                            	maxvalue = (byte)Integer.parseInt(smax);
+                            }
 							storeMaxValueForCheck(edge, maxvalue);
 							m_edges.put(qualitativeSpecies, edge);
+							edge.me.rescanSign(graph);
 							ereader.setEdge(edge.me);
 						} // try
 						catch (NumberFormatException e) {
@@ -219,7 +231,6 @@ public final class SBMLXpathParser {
 						}
 					} // for
 					Element listOfOutput = (Element) transChildren.get(1);
-
 					List outputElemList = listOfOutput.getChildren();
 					Element output = (Element) outputElemList.get(0);
 					String qualSpecies = output.getAttributeValue("qualitativeSpecies");
@@ -228,15 +239,25 @@ public final class SBMLXpathParser {
 					List functTermChildren = listOfFunctionTerm.getChildren();
 					/** retrieve <defaultTerm> element */
 					Element defaultTerm = (Element) functTermChildren.get(0);
-					String fctResultLevel = null;
-					for (int j = 1; j < functTermChildren.size(); j++) {
+					String fctResultLevel = null;						
+					for (int j = 1; j < functTermChildren.size(); j++) 
+					{
+						v_function = new Vector();
 						Element functionTerm = (Element) functTermChildren.get(j);
 						fctResultLevel = functionTerm.getAttributeValue("resultLevel");
-						StringBuffer sb = deal(functionTerm); 																															
-						v_function = new Vector();
+						StringBuffer sb = deal(functionTerm); 																																					
 						v_function.addElement(sb.toString());
-						((Hashtable) values.get(vertex)).put(fctResultLevel, v_function);
-					} // for
+						String myVertex = null;
+						for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						{
+							vertex = (GsRegulatoryVertex) enumvertex.nextElement();
+							String vertexName = vertex.toString();
+							if(qualSpecies.equals(vertexName))
+							{								
+								((Hashtable) values.get(vertex)).put(fctResultLevel, v_function);							
+							}
+						}						
+					} // for					
 				} // for 
 			} // for 
 		} //  try 
@@ -332,11 +353,11 @@ public final class SBMLXpathParser {
 			Iterator it = m_checkMaxValue.entrySet().iterator();
 			while (it.hasNext()) {
 				Entry entry = (Entry) it.next();
-				byte m1 = ((GsRegulatoryEdge) entry.getKey()).getMax();
-				byte m2 = ((Integer) entry.getValue()).byteValue();
-				byte max = ((GsRegulatoryEdge) entry.getKey()).me.getSource().getMaxValue();
+				byte m1 = ((GsRegulatoryEdge) entry.getKey()).getMax();				
+				byte m2 = ((Integer) entry.getValue()).byteValue();				
+				byte max = ((GsRegulatoryEdge) entry.getKey()).me.getSource().getMaxValue();				
 				if (m1 != m2) {
-					if (m == null) {
+					if (m == null) { 
 						m = new HashMap();
 					}
 					if (m1 == -1 && m2 == max || m2 == -1 && m1 == max) {
@@ -345,12 +366,12 @@ public final class SBMLXpathParser {
 						m.put(entry, null);
 					}
 				}
-			}
+			} 
 			if (m != null) { 
 				graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
 						"inconsistency in some interactions", new InteractionInconsistencyAction(),
 						m, GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));
-			}
+			}			
 		}
 	} // void placeInteractions()
 
@@ -392,7 +413,7 @@ public final class SBMLXpathParser {
 							addExpression(Byte.parseByte(value), vertex, exp);
 						}
 					}
-					vertex.getInteractionsModel().parseFunctions();
+					vertex.getInteractionsModel().parseFunctions(); 
 					if (vertex.getMaxValue() + 1 == ((Hashtable) values.get(vertex)).size()) {
 						((GsTreeElement) vertex.getInteractionsModel().getRoot()).setProperty(
 								"add", new Boolean(false));
@@ -417,7 +438,7 @@ public final class SBMLXpathParser {
 				o.addElement(exp);
 				graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
 						"Invalid formula : " + exp, a, o,
-						GsGraphNotificationMessage.NOTIFICATION_WARNING));
+						GsGraphNotificationMessage.NOTIFICATION_WARNING));				
 			} else {
 				interactionList.addExpression(val, vertex, tbp);
 			}
@@ -430,6 +451,15 @@ public final class SBMLXpathParser {
 		return graph;
 	}
 
+    public String getAttributeValueWithDefault(String atValue, String defValue)
+    {  	
+	    if (atValue != null) 
+	    {	
+	    	return atValue;
+	    }
+	    return defValue;
+	}
+	
 	/** Les classes ***/
 	class InteractionInconsistencyAction implements GsGraphNotificationAction {
 		public String[] getActionName() {

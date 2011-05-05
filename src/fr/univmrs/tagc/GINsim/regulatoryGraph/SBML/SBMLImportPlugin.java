@@ -15,7 +15,7 @@ import fr.univmrs.tagc.common.GsException;
 
 public class SBMLImportPlugin implements GsPlugin, GsActionProvider {
 
-	private static final int XML = 7; // last modif
+	private static final int XML = 7; 
 
 	public void registerPlugin() {
 		GsActions.registerImportProvider(this);
