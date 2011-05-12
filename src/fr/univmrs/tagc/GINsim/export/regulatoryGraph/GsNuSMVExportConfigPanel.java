@@ -90,7 +90,6 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 		add(jpTmp, BorderLayout.NORTH);
 
 		priorityPanel.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				selectionChanged();
 			}

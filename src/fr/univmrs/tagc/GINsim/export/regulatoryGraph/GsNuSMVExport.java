@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -143,17 +144,17 @@ public class GsNuSMVExport extends GsAbstractExport {
 
 			PriorityClassDefinition priorities = (PriorityClassDefinition) config.store
 					.getObject(1);
-			TreeMap<Integer, String> tmPcNum2Name = new TreeMap<Integer, String>();
+			TreeMap tmPcNum2Name = new TreeMap();
 			// classNum -> className
-			TreeMap<Integer, Integer> tmVarNum2PcNum = new TreeMap<Integer, Integer>();
+			TreeMap tmVarNum2PcNum = new TreeMap();
 			// varNum -> classNum
-			TreeMap<Integer, String> tmVarNum2PcName = new TreeMap<Integer, String>();
+			TreeMap tmVarNum2PcName = new TreeMap();
 			// varNum -> className
-			TreeMap<Integer, String> tmVarNum2SubPcName = new TreeMap<Integer, String>();
+			TreeMap tmVarNum2SubPcName = new TreeMap();
 			// varNum-> subClassName
-			TreeMap<Integer, Integer> tmPcNum2Rank = new TreeMap<Integer, Integer>();
+			TreeMap tmPcNum2Rank = new TreeMap();
 			// classNum -> RankNum
-			TreeMap<Integer, String> tmPcRank2Name = new TreeMap<Integer, String>();
+			TreeMap tmPcRank2Name = new TreeMap();
 			// rankNum -> rankName
 
 			String sTmp;
@@ -164,14 +165,14 @@ public class GsNuSMVExport extends GsAbstractExport {
 			case GsNuSMVConfig.CFG_SYNC:
 				out.write("-- Synchronous\n  PCs : { PC_c1 };\n  PC_c1_vars : { ");
 				sTmp = "PC_c1";
-				tmPcNum2Name.put(1, sTmp);
+				tmPcNum2Name.put(new Integer(1), sTmp);
 				for (int i = 0; i < nodeOrder.size(); i++) {
 					sTmp += "_" + t_regulators[i];
-					tmVarNum2PcNum.put(i, 1); // every variable -> 1 class
+					tmVarNum2PcNum.put(new Integer(i), new Integer(1)); // every variable -> 1 class
 				}
 				for (int i = 0; i < nodeOrder.size(); i++) {
-					tmVarNum2SubPcName.put(i, sTmp);
-					tmVarNum2PcName.put(i, "PC_c1");
+					tmVarNum2SubPcName.put(new Integer(i), sTmp);
+					tmVarNum2PcName.put(new Integer(i), "PC_c1");
 				}
 				out.write(sTmp + " };\n");
 				break;
@@ -185,27 +186,27 @@ public class GsNuSMVExport extends GsAbstractExport {
 						out.write(", ");
 					sTmp = "PC_" + pc.getName();
 					out.write(sTmp);
-					tmPcNum2Name.put(i + 1, sTmp);
+					tmPcNum2Name.put(new Integer(i + 1), sTmp);
 				}
 				out.write(" };\n");
 
 				iaTmp = priorities.getPclass(nodeOrder);
 				for (int i = 0; i < iaTmp.length; i++) {
-					sTmp = tmPcNum2Name.get(i + 1);
+					sTmp = (String) tmPcNum2Name.get(new Integer(i + 1));
 					out.write("  " + sTmp + "_vars : { ");
-					tmPcNum2Rank.put(i + 1, iaTmp[i][0]);
+					tmPcNum2Rank.put(new Integer(i + 1), new Integer(iaTmp[i][0]));
 
 					switch (iaTmp[i][1]) {
 					case 0: // Synchronous
 						for (int j = 2; j < iaTmp[i].length; j += 2) {
 							sTmp += "_" + t_regulators[iaTmp[i][j]];
-							tmVarNum2PcNum.put(iaTmp[i][j], (i + 1));
-							tmVarNum2PcName.put(iaTmp[i][j],
-									tmPcNum2Name.get(i + 1));
+							tmVarNum2PcNum.put(new Integer(iaTmp[i][j]), new Integer(i + 1));
+							tmVarNum2PcName.put(new Integer(iaTmp[i][j]),
+									tmPcNum2Name.get(new Integer(i + 1)));
 						}
 						out.write(sTmp);
 						for (int j = 2; j < iaTmp[i].length; j += 2)
-							tmVarNum2SubPcName.put(iaTmp[i][j], sTmp);
+							tmVarNum2SubPcName.put(new Integer(iaTmp[i][j]), sTmp);
 						break;
 
 					default: // Asynchronous
@@ -214,9 +215,9 @@ public class GsNuSMVExport extends GsAbstractExport {
 								out.write(", ");
 							out.write(sTmp + "_");
 							out.write(t_regulators[iaTmp[i][j]]);
-							tmVarNum2PcNum.put(iaTmp[i][j], (i + 1));
-							tmVarNum2PcName.put(iaTmp[i][j], sTmp);
-							tmVarNum2SubPcName.put(iaTmp[i][j], sTmp + "_"
+							tmVarNum2PcNum.put(new Integer(iaTmp[i][j]), new Integer(i + 1));
+							tmVarNum2PcName.put(new Integer(iaTmp[i][j]), sTmp);
+							tmVarNum2SubPcName.put(new Integer(iaTmp[i][j]), sTmp + "_"
 									+ t_regulators[iaTmp[i][j]]);
 						}
 						break;
@@ -232,16 +233,16 @@ public class GsNuSMVExport extends GsAbstractExport {
 						out.write(", ");
 					sTmp = "PC_c" + (i + 1);
 					out.write(sTmp);
-					tmVarNum2PcNum.put(i, i + 1);
-					tmVarNum2PcName.put(i, sTmp);
-					tmPcNum2Name.put(i + 1, sTmp);
+					tmVarNum2PcNum.put(new Integer(i), new Integer(i + 1));
+					tmVarNum2PcName.put(new Integer(i), sTmp);
+					tmPcNum2Name.put(new Integer(i + 1), sTmp);
 				}
 				out.write(" };\n");
 				for (int i = 0; i < nodeOrder.size(); i++) {
 					sTmp = "PC_c" + (i + 1) + "_" + t_regulators[i];
 					out.write("  PC_c" + (i + 1) + "_vars : { " + sTmp
 							+ " };\n");
-					tmVarNum2SubPcName.put(i, sTmp);
+					tmVarNum2SubPcName.put(new Integer(i), sTmp);
 				}
 				break;
 			}
@@ -257,60 +258,61 @@ public class GsNuSMVExport extends GsAbstractExport {
 						iLast = iaTmp[c][0];
 						sTmp = "rank" + iLast;
 					}
-					sTmp += "_" + tmPcNum2Name.get(c + 1);
+					sTmp += "_" + tmPcNum2Name.get(new Integer(c + 1));
 					if (c + 1 == iaTmp.length || iaTmp[c + 1][0] > iLast) {
 						if (bWrote)
 							out.write(", ");
 						bWrote = true;
 						out.write(sTmp);
-						tmPcRank2Name.put(iLast, sTmp);
+						tmPcRank2Name.put(new Integer(iLast), sTmp);
 					}
 				}
 				out.write(" };\n");
 			}
 
 			// Topological sorting of the state variables
-			HashMap<String, ArrayList<String>> hmRegulators = new HashMap<String, ArrayList<String>>();
+			HashMap hmRegulators = new HashMap();
 			for (int i = 0; i < t_vertex.length; i++) {
 				for (int j = 0; j < t_cst.length; j++)
 					t_cst[j] = -1;
-				hmRegulators.put(t_regulators[i], new ArrayList<String>(
+				hmRegulators.put(t_regulators[i], new ArrayList(
 						nodeRegulators(t_tree[i], t_vertex, t_cst, i)));
 			}
 			// Starting Nodes
-			ArrayList<Integer> alStarting = new ArrayList<Integer>();
+			ArrayList alStarting = new ArrayList();
 			int min = hmRegulators.size(), pos = -1;
 			boolean[] visited = new boolean[t_vertex.length];
 			for (int i = 0; i < t_vertex.length; i++) {
 				visited[i] = false;
-				ArrayList<String> alTmp = hmRegulators.get(t_regulators[i]);
+				ArrayList alTmp = (ArrayList)hmRegulators.get(t_regulators[i]);
 				if (alTmp.isEmpty() || alTmp.get(0) == t_regulators[i])
-					alStarting.add(i);
+					alStarting.add(new Integer(i));
 				else if (alTmp.size() < min) {
 					min = alTmp.size();
 					pos = i;
 				}
 			}
 			if (alStarting.isEmpty())
-				alStarting.add(pos);
-			ArrayList<Integer> alSorted = new ArrayList<Integer>();
-			for (int index : alStarting)
-				topoSortVisit(hmRegulators, t_regulators, t_vertex, index,
+				alStarting.add(new Integer(pos));
+			ArrayList alSorted = new ArrayList();
+			ListIterator li = alStarting.listIterator();
+			while (li.hasNext())
+				topoSortVisit(hmRegulators, t_regulators, t_vertex, ((Integer)li.next()).intValue(),
 						visited, alSorted);
 			Collections.reverse(alSorted);
 
 			// Print State variables according to the Topological Sort!!!
 			out.write("\n-- State variables declaration\n");
 			for (int i = 0; i < t_vertex.length; i++) {
-				int currIndex = alSorted.get(i);
+				int currIndex = ((Integer)alSorted.get(i)).intValue();
 				String s_levels = "0";
 
 				for (int j = 1; j <= t_vertex[currIndex].getMaxValue(); j++)
 					s_levels += ", " + j;
 
 				out.write("  " + t_regulators[currIndex] + " : {" + s_levels + "};\n");
-				out.write("  " + t_regulators[currIndex] + "_nlevel : {" + s_levels
-						+ "};\n");
+//				out.write("  " + t_regulators[currIndex] + "_nlevel : {" + s_levels
+//						+ "};\n");
 			}
 
 			out.write("\nASSIGN\n");
@@ -323,16 +325,6 @@ public class GsNuSMVExport extends GsAbstractExport {
 					out.write("  init(" + t_regulators[i] + ") := " + s_init
 							+ ";\n");
 				}
-			}
-
-			out.write("\n-- Variable next level regulation\n");
-			for (int i = 0; i < nodeOrder.size(); i++) {
-				out.write("  " + t_vertex[i].getId() + "_nlevel :=\n");
-				out.write("    case\n");
-				for (int j = 0; j < t_cst.length; j++)
-					t_cst[j] = -1;
-				node2SMV(t_tree[i], out, t_vertex, t_cst, i);
-				out.write("    esac;\n");
 			}
 
 			if (config.getType() == GsNuSMVConfig.CFG_PCLASS && iaTmp != null
@@ -353,7 +345,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 							}
 						}
 						out.write(sTmp + ") : "
-								+ tmPcRank2Name.get(tmPcNum2Rank.get(c + 1))
+								+ tmPcRank2Name.get(tmPcNum2Rank.get(new Integer(c + 1)))
 								+ ";\n");
 					}
 					out.write("    esac;\n");
@@ -363,31 +355,40 @@ public class GsNuSMVExport extends GsAbstractExport {
 			out.write("\n-- Variable update if conditions are met\n");
 			for (int i = 0; i < nodeOrder.size(); i++) {
 				// The real next(Variable) if conditions are satisfied
-				out.write("  next(" + t_vertex[i].getId() + ") := \n");
-				out.write("    case\n");
+				out.write("next(" + t_vertex[i].getId() + ") := \n");
+				out.write("  case\n");
 
 				// TODO: put the conditions for the other class
 				// for the async + between classes
 
 				// Class entry conditions
-				out.write("      update_" + t_vertex[i].getId() + "_OK & (");
+				out.write("    update_" + t_vertex[i].getId() + "_OK & (");
 				out.write(t_vertex[i].getId() + "_inc) : ");
 				out.write(((t_vertex[i].getMaxValue() > 1) ? t_vertex[i]
 						.getId() + " + 1" : "1")
 						+ ";\n");
-				out.write("      update_" + t_vertex[i].getId() + "_OK & (");
+				out.write("    update_" + t_vertex[i].getId() + "_OK & (");
 				out.write(t_vertex[i].getId() + "_dec) : ");
 				out.write(((t_vertex[i].getMaxValue() > 1) ? t_vertex[i]
 						.getId() + " - 1" : "0")
 						+ ";\n");
-				out.write("      1 : " + t_vertex[i].getId() + ";\n");
-				out.write("    esac;\n");
+				out.write("    1 : " + t_vertex[i].getId() + ";\n");
+				out.write("  esac;\n");
 			}
 
+			out.write("\nDEFINE\n");
+			
+			out.write("-- Variable next level regulation\n");
+			for (int i = 0; i < nodeOrder.size(); i++) {
+				out.write(t_vertex[i].getId() + "_nlevel :=\n");
+				out.write("  case\n");
+				for (int j = 0; j < t_cst.length; j++)
+					t_cst[j] = -1;
+				node2SMV(t_tree[i], out, t_vertex, t_cst, i);
+				out.write("  esac;\n");
+			}
 			out.write("\n");
-
-			out.write("\n-- Useful macro definitions\n");
-			out.write("DEFINE\n");
+			
 			for (int v = 0; v < nodeOrder.size(); v++) {
 				out.write(t_regulators[v] + "_inc := case ");
 				out.write(t_regulators[v] + "_nlevel > ");
@@ -408,14 +409,14 @@ public class GsNuSMVExport extends GsAbstractExport {
 			out.write(";\n\n");
 
 			for (int v = 0; v < nodeOrder.size(); v++) {
-				int pc = tmVarNum2PcNum.get(v);
+				int pc = ((Integer)tmVarNum2PcNum.get(new Integer(v))).intValue();
 				out.write("update_" + t_regulators[v] + "_OK := (PCs = ");
-				out.write(tmPcNum2Name.get(pc) + ") & (");
-				out.write(tmPcNum2Name.get(pc) + "_vars = ");
-				out.write(tmVarNum2SubPcName.get(v));
+				out.write(tmPcNum2Name.get(new Integer(pc)) + ") & (");
+				out.write(tmPcNum2Name.get(new Integer(pc)) + "_vars = ");
+				out.write((String)tmVarNum2SubPcName.get(new Integer(v)));
 				if (config.getType() == GsNuSMVConfig.CFG_PCLASS) {
 					out.write(") & (PCrank = ");
-					out.write(tmPcRank2Name.get(tmPcNum2Rank.get(pc)));
+					out.write(((Integer)tmPcRank2Name.get(tmPcNum2Rank.get(new Integer(pc)))).intValue());
 				}
 				out.write(");\n");
 			}
@@ -435,9 +436,9 @@ public class GsNuSMVExport extends GsAbstractExport {
 	}
 
 	static private void topoSortVisit(
-			HashMap<String, ArrayList<String>> hmRegulators,
+			HashMap hmRegulators,
 			String[] t_regulators, GsRegulatoryVertex[] t_vertex,
-			int currindex, boolean[] visited, ArrayList<Integer> alSorted) {
+			int currindex, boolean[] visited, ArrayList alSorted) {
 		if (visited[currindex])
 			return;
 		visited[currindex] = true;
@@ -445,17 +446,17 @@ public class GsNuSMVExport extends GsAbstractExport {
 		for (int i = 0; i < t_vertex.length; i++) {
 			if (i == currindex)
 				continue;
-			ArrayList<String> alRegulators = hmRegulators.get(t_regulators[i]);
+			ArrayList alRegulators = (ArrayList)hmRegulators.get(t_regulators[i]);
 			if (alRegulators.contains(sReg))
 				topoSortVisit(hmRegulators, t_regulators, t_vertex, i, visited,
 						alSorted);
 		}
-		alSorted.add(currindex);
+		alSorted.add(new Integer(currindex));
 	}
 
-	static private HashSet<String> nodeRegulators(OmddNode node,
+	static private HashSet nodeRegulators(OmddNode node,
 			GsRegulatoryVertex[] t_names, int[] t_cst, int index) {
-		HashSet<String> hs = new HashSet<String>();
+		HashSet hs = new HashSet();
 		if (node.next == null) {
 			for (int i = 0; i < t_cst.length; i++)
 				if (t_cst[i] != -1)
@@ -488,7 +489,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 				s = s.substring(0, s.length() - 2);
 			}
 			// FIXME: replace node.value with smart incremental move
-			out.write("      " + s + ": " + node.value + ";\n");
+			out.write("    " + s + ": " + node.value + ";\n");
 			return;
 		}
 		for (int i = 0; i < node.next.length; i++) {
