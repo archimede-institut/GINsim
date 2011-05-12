@@ -33,6 +33,7 @@
 		<plugin	name="CytoscapeExport" 			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"/>
 		<plugin name="PNexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsPetriNetExport"/>
 		<plugin name="SMVexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSMVExport"/>
+		<plugin name="NuSMVexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsNuSMVExport"/>
 		<plugin name="GNAexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport"/>
 		<plugin name="GNAMLexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAMLExport"/>
 		<plugin name="SnakesExport"				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.SnakesExport"/>
