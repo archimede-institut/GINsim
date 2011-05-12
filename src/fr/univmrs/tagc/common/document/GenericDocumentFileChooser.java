@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Vector;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -47,6 +48,16 @@ public class GenericDocumentFileChooser extends JFileChooser {
 		initFilter();
 	}
 	
+	public GenericDocumentFileChooser(File curDir, Vector formats) {
+		super(curDir);
+		for (Iterator it = formats.iterator(); it.hasNext();) {
+			GenericDocumentFormat format = (GenericDocumentFormat) it.next();
+			GenericDocumentFileFilter filter = new GenericDocumentFileFilter();
+			filter.setExtensionList(format);
+			addChoosableFileFilter(filter);			
+		}
+	}
+
 	private void initFilter() {
 		for (Iterator it = GenericDocumentFormat.getAllFormats().iterator(); it.hasNext();) {
 			GenericDocumentFormat format = (GenericDocumentFormat) it.next();
@@ -108,7 +119,44 @@ public class GenericDocumentFileChooser extends JFileChooser {
         }
         return null;
 	}
-	
+
+	/**
+	 * Open a dialog asking to choose a save file location
+	 * 
+	 * @param optionStoreDirectory  the key to load/store the initial directory of the panel
+	 * @param parentWindow the window to attach the panel to
+	 * 
+	 * @return an array of two element : [0] is the file, [1] is the GenericDocumentFormat
+	 * 
+	 * @throws IOException
+	 * @throws GsException
+	 */
+	public static Object[] saveDialog(String optionStoreDirectory, Component parentWindow, Vector formats) throws IOException, GsException {
+		GenericDocumentFileChooser jfc = GenericDocumentFileChooser.createFileChooser(optionStoreDirectory, formats);
+		int returnVal = jfc.showSaveDialog(parentWindow);
+        if (null != jfc.getSelectedFile() && returnVal == JFileChooser.APPROVE_OPTION) {
+    		if (optionStoreDirectory != null) {
+    			OptionStore.setOption(optionStoreDirectory, jfc.getCurrentDirectory().getPath());
+    		}
+    		GenericDocumentFormat format = jfc.getSelectedFormat(parentWindow);
+    		if (format == null) {
+    			return null;
+    		}
+        	String filePath = jfc.getSelectedFile().getPath();
+        	String extension = "."+format.defaultExtension;
+        	if (extension != null && ! filePath.endsWith(extension)) {
+        		filePath += extension;
+        	}
+            if (Tools.isFileWritable(filePath, parentWindow)) {               
+                Object[] v = new Object[2];
+                v[0] = new File(filePath);
+                v[1] = format;
+                return v;
+            }
+        }
+        return null;
+	}
+
 	private static GenericDocumentFileChooser createFileChooser(String optionStoreDirectory) {
        File curDir = null;
        String path = (String)OptionStore.getOption(optionStoreDirectory);
@@ -120,6 +168,18 @@ public class GenericDocumentFileChooser extends JFileChooser {
        }
       return new GenericDocumentFileChooser(curDir);
    }
+	private static GenericDocumentFileChooser createFileChooser(String optionStoreDirectory, Vector formats) {
+	       File curDir = null;
+	       String path = (String)OptionStore.getOption(optionStoreDirectory);
+	       if (path != null) {
+	           curDir = new File(path);
+	       }
+	       if (curDir != null && !curDir.exists()) {
+	           curDir = null;
+	       }
+	      return new GenericDocumentFileChooser(curDir, formats);
+	   }
+
 }
 
 /**

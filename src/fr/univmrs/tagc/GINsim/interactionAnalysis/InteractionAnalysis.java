@@ -381,19 +381,23 @@ public class InteractionAnalysis {
 		dw.setStyles(style);
 		
 		StringBuffer css = dw.getDocumentExtra("css");
-		css.append("  h2,h3,h4 {display:none;}\n" +
-			"  th, td, tr {border: 1px solid black;}\n" +
-			"  table {width: auto; margin: 2px;}\n" +
-			"  .summary>tbody>tr>th {background-color: blue; color: white}\n" +
-			"  .summary td {background-color: lightblue}\n" +
-			"  .summary td table, .summary td table td {background-color: lightgreen}\n" +
-			"  .summary table th {background-color: green; color: white}\n" +
-			"  th span {font-size: 60%;}"
-		);
+		if (css != null) {
+			css.append("  h2,h3,h4 {display:none;}\n" +
+					"  th, td, tr {border: 1px solid black;}\n" +
+					"  table {width: auto; margin: 2px;}\n" +
+					"  .summary>tbody>tr>th {background-color: blue; color: white}\n" +
+					"  .summary td {background-color: lightblue}\n" +
+					"  .summary td table, .summary td table td {background-color: lightgreen}\n" +
+					"  .summary table th {background-color: green; color: white}\n" +
+					"  th span {font-size: 60%;}"
+				);
+		}
 		
 		
 		StringBuffer javascript = dw.getDocumentExtra("javascript");
-		javascript.append(Tools.readFromFile("src/fr/univmrs/tagc/GINsim/interactionAnalysis/interactionAnalysis.js"));
+		if (javascript != null) {
+			javascript.append(Tools.readFromFile("src/fr/univmrs/tagc/GINsim/interactionAnalysis/interactionAnalysis.js"));
+		}
 		
 		dw.startDocument();
 		dw.openHeader(1, Translator.getString("STR_interactionAnalysis"), null);

@@ -17,12 +17,11 @@
 		<plugin name="interactionAnalysis" 		mainClass="fr.univmrs.tagc.GINsim.interactionAnalysis.InteractionAnalysisPlugin"/>
 		<plugin name="modelChecker" 			mainClass="fr.univmrs.tagc.GINsim.modelChecker.GsModelCheckerPlugin"/>
 		<plugin name="graphComparator" 			mainClass="fr.univmrs.tagc.GINsim.graphComparator.GraphComparatorPlugin"/>
-		<plugin name="DHgraphSimplifier" 		mainClass="fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalSimplifierPlugin"/>
 		<plugin name="stateInRegGraph" 			mainClass="fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraphPlugin"/>
 		<plugin name="regFunctionsTreeView" 	mainClass="fr.univmrs.tagc.GINsim.treeViewer.GsRegulatoryFunctionTreeViewPlugin"/>
 		<plugin name="pathFinding" 				mainClass="fr.univmrs.tagc.GINsim.pathFinding.PathFingingPlugin"/>
-		<plugin name="stg2htg" 					mainClass="fr.univmrs.tagc.GINsim.stg2htg.STG2HTGPlugin"/>
-		<plugin name="omddViz" 					mainClass="fr.univmrs.tagc.GINsim.omddViz.OmddVizPlugin"/>
+		<plugin name="stg2htg" 		load="false"			mainClass="fr.univmrs.tagc.GINsim.stg2htg.STG2HTGPlugin"/>
+		<plugin name="omddViz" 		load="false"			mainClass="fr.univmrs.tagc.GINsim.omddViz.OmddVizPlugin"/>
 		<plugin name="localGraph" 				mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.localGraph.LocalGraphPlugin"/>
 		
 		<!-- import plugins -->
