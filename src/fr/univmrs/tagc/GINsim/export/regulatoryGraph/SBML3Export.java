@@ -206,7 +206,7 @@ public class SBML3Export implements OMDDBrowserListener {
 	
 	private void writeConstraint(String cst, int idx, int value) throws IOException {
 		out.openTag("apply");
-		out.openTag(cst);
+		out.addTag(cst);
 		
 		out.openTag("ci");
 		out.addContent(""+v_no.get(idx));
@@ -216,7 +216,6 @@ public class SBML3Export implements OMDDBrowserListener {
 		out.addContent(""+value);
         out.closeTag();  // cn
 
-        out.closeTag();  // cst
         out.closeTag();  // apply
 	}
 }
