@@ -1,0 +1,529 @@
+<?xml version="1.0"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+
+<section id="sec_ui">
+	<?dbhtml filename="ui.html"?>
+	<title>The User Interface</title>
+	<section id="sec_mainWindow">
+		<title>The GINsim window</title>
+		<para>When GINsim is launched, its main window opens (see <xref linkend="sc_mainWindow"
+				xrefstyle="select:label"/>). This window is divided into three parts:<itemizedlist>
+				<listitem>
+					<simpara>the menu and toolbar on the top;</simpara>
+				</listitem>
+				<listitem>
+					<simpara>the graph panel, as the main central part;</simpara>
+				</listitem>
+				<listitem>
+					<simpara>the secondary panel on the bottom.</simpara>
+				</listitem>
+			</itemizedlist></para>
+		<figure id="sc_mainWindow">
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/mainWindow.png"/>
+				</imageobject>
+			</mediaobject>
+			<title>The main window of GINsim</title>
+			<caption>The main window of GINsim, featuring an empty model.</caption>
+		</figure>
+		<para>In the following, the contents of the menus are described.</para>
+	</section>
+	<section id="sec_fileMenu">
+		<title>File menu</title>
+		<figure id="fig_fileMenu">
+			<title>File menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/fileMenu.png"/>
+				</imageobject>
+				<caption>The File menu offers all the classical options to open/save a file, to
+					open/close a window, and to quit the application.</caption>
+			</mediaobject>
+		</figure>
+		<para> The File menu provides the following options: <itemizedlist>
+				<listitem>
+					<simpara><emphasis>New</emphasis>: to create a new graph. This opens a new window unless the
+						current graph is empty.</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Open</emphasis>: to load a graph from a file. This opens a new window
+						unless the current graph is empty.</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Recent Files</emphasis>: to open a recently used graph. This submenu lists the
+						last opened graphs.</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Merge graph</emphasis>: to open a graph and merge it with the current one.
+						This option works only for regulatory graphs.</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Close</emphasis>: to close the current graph. If other windows are opened, it
+						will simply close the current one, otherwise it will last with an empty
+						window.</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Save</emphasis> and <emphasis>Save as</emphasis>: to save the current graph. If the file is new or
+						if the <emphasis>Save as</emphasis> option has been selected, a
+							file selection dialog appears (<xref
+							linkend="fig_saveDialog" xrefstyle="select:label"/>) which allows to choose the graphical
+						attributes to save: it is possible to save only the structure of
+						the graph, ignoring all graphical attributes, or to save only the
+						position of nodes. The default is to save all graphical attributes
+						(position, size, color, shape...). The graph is saved in the (XML-based) <ulink url="http://gin.univ-mrs.fr/GINsim/ginml.html"><emphasis
+								role="strong">GINML</emphasis></ulink> format.
+						<!--
+						<itemizedlist>
+						<listitem>extended save: if this option is selected, the resulting file will be a zip file containing the model itself along with additionnal data (simulation parameters, definition of mutants...) that is associated to it. If the option is not selected, the file will be a text file containing only the model.</listitem>
+					</itemizedlist>
+						-->
+					</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Save Subgraph</emphasis>: to save the current selection as a new
+					graph.</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Export</emphasis>: to save the current graph in another format. GINsim
+						can export regulatory and state transition graphs using several generic visualisation formats.
+						These exports only retain the graph structure and
+						visual appearance. The following export formats are available under the
+						File/export submenu: </simpara>
+					<itemizedlist>
+						<listitem>
+							<simpara role="newline"><emphasis>Graphviz:</emphasis> Graphs can be
+								exported to the "dot" format used by the graph visualisation
+								software Graphviz (<ulink url="http://www.graphviz.org"
+									>http://www.graphviz.org</ulink>). This export considers
+								only the graph structure (graphical attributes are lost). It
+								enables the display of large state transition graphs, that can
+								not be viewed within GINsim.</simpara>
+						</listitem>
+						<listitem>
+							<simpara role="newline"><emphasis>BioLayout:</emphasis> graphs can also be exported to
+								the BioLayout format (<ulink url="http://www.biolayout.org"
+									>http://www.biolayout.org</ulink>). As in the case of graphviz,
+								graphical attributes are lost.</simpara>
+						</listitem>
+						<listitem>
+							<simpara role="newline"><emphasis>SVG:</emphasis> the Scalable Vector Graphic (SVG)
+								format is an XML-based format for representing vector graphics
+									(<ulink url="http://www.w3.org/Graphics/SVG/"
+									>http://www.w3.org/Graphics/SVG/</ulink>). Tools like
+								Inkscape (<ulink url="http://inkscape.org/"
+								>http://inkscape.org</ulink>), can be used to display, modify
+								and export SVG files to virtually any image format.</simpara>
+						</listitem>
+					</itemizedlist>
+					<simpara>The regulatory graph can additionally be exported into different <xref
+							linkend="sec_pn"/> formats.</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Quit</emphasis>: close all graphs and exit the GINsim application.</simpara>
+				</listitem>
+			</itemizedlist> Some of these actions (<emphasis>New</emphasis>, <emphasis>Open</emphasis> and <emphasis>Save</emphasis>) are also available from
+			the toolbar. </para>
+		<figure id="fig_saveDialog">
+			<title>The save dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/saving.png"/>
+				</imageobject>
+				<caption>
+					<simpara>The Java <emphasis>Save</emphasis> dialog allows to browse and
+						create folders, as well as to choose their location. By default, only
+						folders and GINML files are shown; other files can be seen by removing
+						the <emphasis>GINML Files</emphasis> filter. The drop-down list 
+						on the right side allows to select the graphical attributes to save. The
+							<emphasis>ExtendedSave</emphasis> checkbox allows to enable or
+						disable extended save (which generates an archive containing the graph and related
+						data).</simpara>
+				</caption>
+			</mediaobject>
+		</figure>
+		<tip>
+			<simpara>If the <emphasis>Extended Save</emphasis> option is selected, the file is
+				saved in an archive (zip file with a .zginml extension) instead of a xml file
+				(with a .ginml extension). This allows to save related data, such as simulation
+				parameters or mutant definitions, along with the model. These files need GINsim
+				2.3 or later  to be opened.</simpara>
+		</tip>
+		<!--
+			<para>In addition to these generic export format, regulatory graphs can be exported into <ulink url="http://www.sbml.org/">SBML</ulink>. <warning>MORE EXPLANATIONS ARE NEEDED</warning></para>
+			-->
+	</section>
+	<section id="sec_editMenu">
+		<title>Edit menu</title>
+		<figure id="fig_editMenu">
+			<title>The Edit menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/editMenu.png"/>
+				</imageobject>
+				<caption>The Edit menu allows the selection of some editing options. It is
+					composed of three sections: copy/paste, graph editing tools and selection
+					management.</caption>
+			</mediaobject>
+		</figure>
+		<section id="sec_copyPaste">
+			<title>Copy/paste</title>
+			<para>The edit menu offers classical <emphasis>Copy</emphasis> / <emphasis>Paste</emphasis> entries.</para>
+			<note>
+				<simpara><emphasis>Copy</emphasis> and <emphasis>Paste</emphasis> actions are
+					specific to GINsim: copying the graph and pasting it into an external
+					application is not supported. These actions are only available for
+					regulatory graphs.</simpara>
+			</note>
+			<itemizedlist>
+				<listitem>
+					<simpara>Regulatory graph elements can be copied and pasted from one GINsim window to
+						another.</simpara>
+				</listitem>
+				<listitem>
+					<simpara>Pasted elements are automatically selected to ease their move.</simpara>
+				</listitem>
+				<listitem>
+					<simpara>The <emphasis>Copy</emphasis> action does not test selected
+						interactions, it will automatically select ALL interactions between
+						selected genes.</simpara>
+				</listitem>
+				<listitem>
+					<simpara>The identifiers of pasted genes are postfixed to avoid naming conflicts</simpara>
+				</listitem>
+				<listitem>
+					<simpara>Logical parameters are also copied and cleaned up: logical
+						parameters involving not-copied nodes are suppressed. The resulting graph
+						is consistent but the new parameters may need to be checked.</simpara>
+				</listitem>
+			</itemizedlist>
+		</section>
+		<section id="sec_graphEditing">
+			<title>Graph editing tools</title>
+			<para><itemizedlist>
+					<listitem>
+						<simpara><emphasis>Delete</emphasis>: to delete all selected
+						elements.</simpara>
+					</listitem>
+					<listitem>
+						<simpara><emphasis>Edit</emphasis>: to select and move genes and arcs
+							(default editing mode).</simpara>
+					</listitem>
+					<listitem>
+						<simpara><emphasis>Add Node</emphasis>: to add a node. This submenu
+							lists the node insertion modes. When this mode is selected,
+							clicking in the graph panel creates a new node.</simpara>
+					</listitem>
+					<listitem>
+						<simpara><emphasis>Add Arc</emphasis>: to add an arc. This submenu lists
+							the arc insertion modes. When one of these modes is selected,
+							dragging from a node to another adds an arc between them.</simpara>
+					</listitem>
+				</itemizedlist> Toolbar buttons show the selected editing mode and allow to
+				change it. <tip>
+					<simpara>The selection of non-default editing modes is transient by default:
+						once the action has been performed, GINsim switches back to the default
+						mode (E). GINsim can be locked in any mode by double-clicking on the
+						corresponding toolbar button.</simpara>
+				</tip> These options are <emphasis role="strong">not</emphasis> available when
+				visualizing a state transition graph.</para>
+		</section>
+		<section id="sec_selection">
+			<title>Multiple Selection</title>
+			<itemizedlist>
+				<listitem>
+					<simpara><emphasis>Select All</emphasis>: select all elements of the
+					graph.</simpara>
+				</listitem>
+				<listitem>
+					<simpara><emphasis>Invert Selection</emphasis>: unselect all selected
+						elements and select all others.</simpara>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</section>
+	<section id="sec_viewMenu">
+		<title>View menu</title>
+		<figure id="fig_viewMenu">
+			<title>The View menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/viewMenu.png"/>
+				</imageobject>
+				<caption>The View menu allows to control the zoom factor and to set some display
+					options.</caption>
+			</mediaobject>
+		</figure>
+		<para/>
+		<para>The View menu encompasses the following items:</para>
+		<itemizedlist>
+			<listitem>
+				<simpara><emphasis>Zoom In/Out</emphasis> and <emphasis>Normal Size</emphasis>:
+					to control the zoom factor.</simpara>
+			</listitem>
+			<listitem>
+				<simpara><emphasis>Split Tool Window</emphasis>: to put the secondary panel in a
+					separate window.</simpara>
+			</listitem>
+			<listitem>
+				<simpara><emphasis>Arc Names</emphasis>: to display or hide arc names (the
+					source and target nodes).</simpara>
+			</listitem>
+			<listitem>
+				<simpara><emphasis>Nodes to front</emphasis>: to move all nodes to front (above
+					arcs) or to back (makes selection easier).</simpara>
+			</listitem>
+			<listitem>
+				<simpara><emphasis>Grid</emphasis>: to display or hide the grid in the graph
+					panel.</simpara>
+			</listitem>
+			<listitem>
+				<simpara><emphasis>Grid Active</emphasis>: to make the grid magnetic.</simpara>
+			</listitem>
+			<listitem>
+				<simpara><emphasis>Bird View</emphasis>: to display or hide the bird view
+					(miniature) of the graph in the secondary window. The bird view gives an
+					overview for large graphs, and enables the selection of the visible
+				part.</simpara>
+			</listitem>
+		</itemizedlist>
+	</section>
+	<section id="sec_actionMenu">
+		<title>Actions menu</title>
+		<figure id="fig_actionMenu">
+			<title>The Actions menu</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/actionMenu.png"/>
+				</imageobject>
+				<caption>The Action menu for a regulatory graph.</caption>
+			</mediaobject>
+		</figure>
+		<para>Different actions can be performed from this menu, depending on the type of graph.
+			Individual actions are detailed in the relevant part of this manual. Currently
+			available actions are:</para>
+		<itemizedlist>
+			<listitem>
+				<simpara role="newline">for all graphs:</simpara>
+				<itemizedlist>
+					<listitem>
+						<simpara role="newline"><xref linkend="sec_layout"/>;</simpara>
+					</listitem>
+					<listitem>
+						<simpara role="newline">determination of the <link linkend="sec_scc">Strongly
+							Connected Components (SCC)</link> of a graph;</simpara>
+					</listitem>
+				</itemizedlist>
+			</listitem>
+			<listitem>
+				<simpara role="newline">for regulatory graphs:</simpara>
+				<itemizedlist>
+					<listitem>
+						<simpara role="newline"><xref linkend="sec_simulation"/> (<emphasis>i.e.</emphasis> computation of a state transition graph);</simpara>
+					</listitem>
+					<listitem><simpara role="newline">analyse of the <xref linkend="sec_circuits"/>;</simpara></listitem>
+					<listitem><simpara role="newline">determination of <xref linkend="sec_stableStates"/>;</simpara></listitem>
+					<!--
+					<listitem><simpara role="newline">running a <xref linkend="modelChecker"/>;</simpara></listitem>
+					-->
+				</itemizedlist>
+			</listitem>
+			<listitem>
+				<simpara role="newline">for state transition graphs:</simpara>						
+				<itemizedlist>
+					<listitem>
+						<simpara role="newline"><link linkend="pathFinder">path search</link>;</simpara>
+					</listitem>
+					<listitem>
+						<simpara role="newline"><link linkend="animator">graphical path construction
+						(animation)</link>.</simpara>
+					</listitem>
+			</itemizedlist>
+			</listitem>
+		</itemizedlist>
+		<section id="sec_layout" xreflabel="layout algorithms">
+			<title>Layout algorithms</title>
+			<para>Elements of the graph can be placed automatically (useful for graphs
+				constructed by GINsim, like state transition graphs).</para>
+			<itemizedlist>
+				<listitem>
+					<simpara>Level layout: nodes are placed on rows, nodes without any incoming
+						arc being placed at the top and nodes without any outgoing arc at the bottom.</simpara>
+					<figure id="fig_levelLayout">
+						<title>Level layout example</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="../figures/levelLayout.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</listitem>
+				<listitem>
+					<simpara>Ring layout: nodes are placed on three concentric rings, source
+						nodes at the center, terminal nodes at the periphery. </simpara>
+					<figure id="fig_ringLayout">
+						<title>Ring layout example</title>
+						<mediaobject>
+							<imageobject>
+								<imagedata fileref="../figures/ringLayout.png"/>
+							</imageobject>
+						</mediaobject>
+					</figure>
+				</listitem>
+			</itemizedlist>
+			<para>Both the level and ring layouts have an inversed counterpart.</para>
+		</section>
+	</section>
+	<section id="sec_secWindow">
+		<title>The secondary window</title>
+		<para>This window, which is originally attached to the main frame, offers a bird view of
+			the graph and 3 tabs: </para>
+		<orderedlist>
+			<listitem>
+				<simpara><emphasis>Modelling Attributes</emphasis> (this name changes according
+					to the context),</simpara>
+			</listitem>
+			<listitem>
+				<simpara><emphasis>Graphical Attributes</emphasis>,</simpara>
+			</listitem>
+			<listitem>
+				<simpara><emphasis>Graph Attributes</emphasis>.</simpara>
+			</listitem>
+		</orderedlist>
+		<para>The <emphasis>Modelling Attributes</emphasis> and <emphasis>Graph
+			Attributes</emphasis> tabs are specific to the type of graph and will be detailed
+			later on.</para>
+		<para>Different tabs are activated depending on the current selection:</para>
+		<itemizedlist>
+			<listitem>
+				<simpara>if nothing is selected, only the <emphasis>Graph Attributes</emphasis>
+					tab is active,</simpara>
+			</listitem>
+			<listitem>
+				<simpara>if one node or one edge is selected, the first two tabs are
+				active,</simpara>
+			</listitem>
+			<listitem>
+				<simpara>if several nodes or several edges are selected, only the
+						<emphasis>Graphical Attributes</emphasis> tab is active,</simpara>
+			</listitem>
+			<listitem>
+				<simpara>if the selection contains both nodes and edges, all tabs are
+				inactive.</simpara>
+			</listitem>
+		</itemizedlist>
+		<section id="sec_graphicAttributes">
+			<title>Graphical Attributes</title>
+			<para>The <emphasis>Graphical Attributes</emphasis> tab in the secondary window
+				allows to change the visual properties of the graph elements.</para>
+			<itemizedlist>
+				<listitem>
+					<simpara>Nodes:</simpara>
+					<itemizedlist>
+						<listitem>
+							<simpara>background and foreground color,</simpara>
+						</listitem>
+						<listitem>
+							<simpara>shape and size.</simpara>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+			<figure id="fig_graphicAttributes">
+				<title>Graphical attributes for nodes</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="../figures/vertex_vs.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<itemizedlist>
+				<listitem>
+					<simpara>Arcs: </simpara>
+					<itemizedlist>
+						<listitem>
+							<simpara>line color,</simpara>
+						</listitem>
+						<listitem>
+							<simpara>line width,</simpara>
+						</listitem>
+						<listitem>
+							<simpara>intermediate points: they can be either automatically or
+								manually placed,</simpara>
+						</listitem>
+						<listitem>
+							<simpara>drawing method: straight from one point to the next one, or
+								following a bezier curve.</simpara>
+						</listitem>
+					</itemizedlist>
+				</listitem>
+			</itemizedlist>
+			<para>When the option for intermediate points is set to <emphasis>Manual</emphasis>,
+				the points can be added by right-clicking on an arc. As the underlying drawing
+				tool does not support <emphasis>ctrl+click</emphasis> to emulate right-click on
+				Mac OSX, an additional toolbar button allows to insert them with a normal click
+					(<inlinegraphic fileref="../figures/buttons/custumizeedgerouting.gif"/>).</para>
+			<figure id="fig_arcGraphicAttr">
+				<title>Graphical attributes for arcs</title>
+				<mediaobject>
+					<imageobject>
+						<imagedata fileref="../figures/edge_vs.png"/>
+					</imageobject>
+				</mediaobject>
+			</figure>
+			<tip>
+				<simpara>Buttons on the right side of the tab allow to apply the selected
+					graphical attributes to additional elements: </simpara>
+				<itemizedlist>
+					<listitem>
+						<simpara role="newline"><emphasis>Apply to All:</emphasis> apply the
+							selected attributes (those for which the checkbox is selected) to
+							all nodes (or edges) of the graph. Note that, if several elements
+							are selected, the selected attributes are only applied to the
+							selection.</simpara>
+					</listitem>
+					<listitem>
+						<simpara role="newline"><emphasis>Set as Default:</emphasis> use the
+							selected attributes as default for elements that will be created in
+							the future.</simpara>
+					</listitem>
+				</itemizedlist>
+			</tip>
+		</section>
+		<section id="sec_birdView">
+			<title>Bird view</title>
+			<para>The bird view offers an overview of the graph, a red rectangle highlighting
+				the viewed part. It also offers some navigation facilities:</para>
+			<itemizedlist>
+				<listitem>
+					<simpara>click on it to change the viewed part,</simpara>
+				</listitem>
+				<listitem>
+					<simpara>resize the red square (using the bottom right corner) to change the
+						zoom factor.</simpara>
+				</listitem>
+			</itemizedlist>
+		</section>
+	</section>
+	<section id="sec_whattodo" xreflabel="processing a new graph">
+		<title>Processing a new graph</title>
+		<para>When a graph is generated (state transition graph or graph of the strongly
+			connected components), the user can choose to display it, to perform some actions on
+			it or to save it, through the <emphasis>What to do</emphasis> dialog box.</para>
+		<figure id="fig_whattodo">
+			<title>The <emphasis>Processing the New Grah</emphasis> dialog box</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/whattodo.png"/>
+				</imageobject>
+			</mediaobject>
+		</figure>
+		<para>For state transition graphs, the number of stable states appears at the top-right
+			corner.</para>
+		<para>Clicking on the "OK" button performs the selected action. This dialog box remains
+			available to perform different actions on the graph. This dialog is closed when
+			the graph is displayed, as all actions can then be performed through the
+				<emphasis>Actions</emphasis> menu of the GINsim window.</para>
+	</section>
+</section>
+

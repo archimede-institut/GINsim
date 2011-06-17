@@ -72,14 +72,14 @@
 	 		<arg line="--stringparam  targets.filename tutorial.db --stringparam collect.xref.targets only ginsimdoc.xsl tutorial.xml"/>
 	 	</exec>
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
-	 		<arg line="--stringparam  targets.filename userManual.db --stringparam collect.xref.targets only ginsimdoc.xsl userManual.xml"/>
+	 		<arg line="--xinclude --stringparam  targets.filename userManual.db --stringparam collect.xref.targets only ginsimdoc.xsl userManual.xml"/>
 	 	</exec>
 
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="-o ../html/ --stringparam  current.docid tutorial ginsimdoc.xsl tutorial.xml"/>
 	 	</exec>
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
-	 		<arg line="-o ../html/ --stringparam  current.docid userManual ginsimdoc.xsl userManual.xml"/>
+	 		<arg line="-o ../html/ --xinclude --stringparam  current.docid userManual ginsimdoc.xsl userManual.xml"/>
 	 	</exec>
 	</target>
 
@@ -89,13 +89,13 @@
 	 		<arg line="--stringparam  targets.filename tutorial.db --stringparam collect.xref.targets only ginsimdoc-single.xsl tutorial.xml"/>
 	 	</exec>
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
-	 		<arg line="--stringparam  targets.filename userManual.db --stringparam collect.xref.targets only ginsimdoc-single.xsl userManual.xml"/>
+	 		<arg line="--xinclude --stringparam  targets.filename userManual.db --stringparam collect.xref.targets only ginsimdoc-single.xsl userManual.xml"/>
 	 	</exec>
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
 	 		<arg line="-o ../html/tutorial.html --stringparam  current.docid tutorial ginsimdoc-single.xsl tutorial.xml"/>
 	 	</exec>
 	 	<exec dir="${docbookdoc}" executable="xsltproc">
-	 		<arg line="-o ../html/userManual.html --stringparam  current.docid userManual ginsimdoc-single.xsl userManual.xml"/>
+	 		<arg line="-o ../html/userManual.html --xinclude --stringparam  current.docid userManual ginsimdoc-single.xsl userManual.xml"/>
 	 	</exec>
 	</target>
 

@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!DOCTYPE section PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+
+<section id="sec_analyseRegGraph">
+	<?dbhtml filename="analyseRegulatoryGraph.html"?>
+	<title>Analysing the regulatory graph</title>
+	<section id="sec_stableStates" xreflabel="stable states">
+		<title>Stable State Search</title>
+		<para>The <emphasis>Stable States</emphasis> option of the <emphasis>Actions</emphasis>
+			menu allows the analytic (<emphasis>i.e.</emphasis> without running a simulation) determination of stable
+			states of the model. All stable states are determined, regardless of their
+			reachability, using an algorithm described in <xref linkend="Naldi2007"/>. The
+			stable states dialog box (see <xref linkend="fig_stableStates"
+				xrefstyle="select:label"/>) allows to run the analysis after the optional
+			selection of a mutant. The result is shown in a table in the same dialog box, allowing
+			to launch a novel analysis for another mutant. A "*" in the table denotes that
+			each of the values of this component gives rise to a stable state (or several if another
+			"*" appears in the same row).</para>
+		<figure id="fig_stableStates">
+			<title>The stable states dialog box, showing the result of the analysis</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/stableStates.png"/>
+				</imageobject>
+				<caption/>
+			</mediaobject>
+		</figure>
+	</section>
+	<section id="sec_circuits" xreflabel="functionality domains of regulatory circuits">
+		<title>Functionality of Regulatory Circuits</title>
+		<para> Regulatory circuits play crucial roles in the dynamical behaviour of a system.
+			Indeed, positive circuits are required for the existence of several attractors, whereas negative
+			circuits may generate cyclic attractors <xref linkend="Thieffry2007"/>. In <xref linkend="Naldi2007"/>, we 
+			describe a method to analyse the dynamical roles of regulatory circuits.
+			An implementation of this analysis is available in GINsim using the
+			<emphasis>Circuits Functionality</emphasis> option of the <emphasis>Action</emphasis>
+			menu (see <xref linkend="fig_circuits" xrefstyle="select:label"/>).
+		</para>
+		<figure id="fig_circuits">
+			<title>Finding and analysing regulatory circuits</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/circuitsConfig.png"/>
+				</imageobject>
+				<caption>A first dialog enables to select which circuits will be analysed, by specifying
+					constraints on the length of the circuits or on the involved actors. By default all
+					circuits are considered.
+				</caption>
+			</mediaobject>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/circuits.png"/>
+				</imageobject>
+				<caption>When this first step is completed, the second dialog shows the list of circuits and
+					enables to run the analysis. When the analysis is completed, new branches then displays 
+					the functional circuits, classified according to their signs.
+					When a circuit is selected, its functionality context is shown at the bottom of the dialog box.
+					The analysis can be performed for the wild type model or for any predefined mutant.
+				</caption>
+			</mediaobject>
+		</figure>
+	</section>
+	<section id="sec_pn" xreflabel="Petri net">
+		<title>Petri Net Export</title>
+		<para>
+			Regulatory graphs can be exported into discrete <!-- TODO: check nomenclature with claudine -->
+			Petri net using the rewriting method described in <xref linkend="Chaouiya2006"/>.
+		</para>
+		<figure>
+			<title>The Petri Net export dialog</title>
+			<mediaobject>
+				<imageobject>
+					<imagedata fileref="../figures/pnexport.png"/>
+				</imageobject>
+				<caption>The Petri Net export dialog box allows to select the export format, the initial markup and the 
+					mutant to apply before exporting. The initial markup can be generated from an existing initial state
+					of the model  (modifications made in this dialog are also applied to the simulation settings); only the 
+					first selected state is used.
+				</caption>
+			</mediaobject>
+		</figure>
+	</section>
+	<section id="sec_cytoscape" xreflabel="Cytoscape export">
+		<title>Cytoscape Export</title>
+		<para>
+			Regulatory graphs can be exported to the <ulink url="http://www.cytoscape.org/">cytoscape</ulink> format.
+			As cytoscape is not a modelling tool, this export only preserves the structure and appareance of the graph,
+			not the logical parameters.
+			An experimental cytoscape plugin is available on request to perform the complementary operation
+			(i.e. export a cytoscape model into GINML).
+		</para>
+	</section>
+</section>
+
