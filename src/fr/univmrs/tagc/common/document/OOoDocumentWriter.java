@@ -123,7 +123,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 					for (int i=0 ; i<10 ; i++) {
 						xmlw.openTag("text:list-level-style-bullet");
 						xmlw.addAttr("text:level", ""+i);
-						xmlw.addAttr("text:bullet-char", "●");
+						xmlw.addAttr("text:bullet-char", "\u2022");
 						xmlw.openTag("style:list-level-properties");
 						xmlw.addAttr("text:space-before", (i-1)*spacing+"cm");
 						xmlw.addAttr("text:min-label-width", spacing+"cm");
