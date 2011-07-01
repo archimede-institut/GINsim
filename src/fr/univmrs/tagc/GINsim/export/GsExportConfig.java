@@ -43,7 +43,7 @@ public class GsExportConfig extends GsExtensibleConfig {
 		}
 	}
 
-	public int gerRef() {
+	public int getRef() {
 		return ref;
 	}
 	public String getFilename() {

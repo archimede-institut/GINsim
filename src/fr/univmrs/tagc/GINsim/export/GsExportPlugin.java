@@ -7,7 +7,6 @@ import fr.univmrs.tagc.GINsim.export.generic.GsGraphvizEncoder;
 import fr.univmrs.tagc.GINsim.export.generic.GsSVGExport;
 import fr.univmrs.tagc.GINsim.export.generic.ImageExport;
 import fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSBMLExport;
-import fr.univmrs.tagc.GINsim.export.regulatoryGraph.SBML3Export;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -32,7 +31,6 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
     private static final int SVG = 2;
     private static final int IMAGE = 3;
     private static final int SBML = 6;
-    private static final int SBML3 = 7;
     
 	public void registerPlugin() {
 		GsGraphManager.registerExportProvider(this);
@@ -47,7 +45,6 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                       new GsPluggableActionDescriptor("STR_SVG", "STR_SVG_descr", null, this, ACTION_EXPORT, SVG),
                       new GsPluggableActionDescriptor("STR_Image", "STR_Image_descr", null, this, ACTION_EXPORT, IMAGE),
                       new GsPluggableActionDescriptor("STR_SBML", "STR_SBML_descr", null, this, ACTION_EXPORT, SBML),
-                      new GsPluggableActionDescriptor("STR_SBML_L3", "STR_SBML_L3_descr", null, this, ACTION_EXPORT, SBML3),
               };
             }
             return new GsPluggableActionDescriptor[] {
@@ -85,7 +82,6 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 extension = ".png";
                 break;
             case SBML:
-            case SBML3:
                 ffilter.setExtensionList(new String[] {"sbml"}, "SBML files");
                 extension = ".sbml";
                 break;
@@ -113,9 +109,6 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 break;
             case SBML:
                 GsSBMLExport.export(graph, filename);
-                break;
-            case SBML3:
-                new SBML3Export(graph, filename);
                 break;
 		}
 	}
