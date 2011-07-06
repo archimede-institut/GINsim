@@ -2,17 +2,15 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.common.mdd.DecisionDiagramInfo;
-import fr.univmrs.tagc.common.mdd.MDDNode;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
-import java.util.Iterator;
-import java.util.TreeSet;
 
 /**
  * the Class in which we store biological data for logical parameters
@@ -277,41 +275,6 @@ public class GsLogicalParameter implements XMLize {
             	}
             	curRoot = newNode;
             }
-        }
-        return curRoot;
-    }
-
-	public MDDNode buildMDD(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, MDDNode valueNode, DecisionDiagramInfo ddi) {
-        byte[][] t_ac = buildTac(regGraph, node);
-        byte[] t_tmp;
-
-        if (t_ac == null) {
-            return null;
-        }
-        // simple sort on rows:
-        for (int i=t_ac.length-1 ; i>0 ; i--) {
-            for (int j=1 ; j<i ; j++) {
-                if (t_ac[i][0] < t_ac[j][0]) {
-                    t_tmp = t_ac[i];
-                    t_ac[i] = t_ac[j];
-                    t_ac[j] = t_tmp;
-                }
-            }
-        }
-        MDDNode curRoot = valueNode!=null ? valueNode : ddi.getLeaf(value);
-        // FIXME: check on the existing value is not yet done
-        for (int i=t_ac.length-1 ; i>0 ; i--) {
-            t_tmp = t_ac[i];
-            int curLevel = t_tmp[0];
-            MDDNode[] next = new MDDNode[t_tmp.length-1 ];
-            for (int j=1 ; j<t_tmp.length ; j++) {
-                if (t_tmp[j] != -1) {
-                    next[j-1] = curRoot;
-                } else {
-                    next[j-1] = ddi.getLeaf(0);
-                }
-            }
-            curRoot = ddi.getNewNode(curLevel, next);
         }
         return curRoot;
     }

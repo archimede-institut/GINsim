@@ -30,8 +30,6 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.manageressources.ImageLoader;
 import fr.univmrs.tagc.common.manageressources.Translator;
-import fr.univmrs.tagc.common.mdd.DecisionDiagramInfo;
-import fr.univmrs.tagc.common.mdd.MDDNode;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
@@ -629,20 +627,6 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
             } else {
             	t_tree[i] = t_tree[i].reduce();
             }
-        }
-        return t_tree;
-    }
-
-    /**
-     * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
-     * @return a tree representation of logical parameters
-     */
-    public MDDNode[] getNewTrees(DecisionDiagramInfo ddi, boolean focal) {
-        MDDNode[] t_tree = new MDDNode[nodeOrder.size()];
-        for (int i=0 ; i<nodeOrder.size() ; i++) {
-        	GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
-            t_tree[i] = vertex.getMDD(this, ddi);
-            // TODO: port "non-focal" to the new MDD
         }
         return t_tree;
     }
