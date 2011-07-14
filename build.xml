@@ -21,7 +21,6 @@
 	<!-- ************************************************** -->
 	<!--		change path to docbook XSL in ginsimdoc.xsl		-->
 	<!-- ************************************************** -->
-	<property name="extlib" location="/cobelix/naldi/GINsim/libs"/>
 	<available file="${GSLib}" type="dir" property="extlib" value="${GSLib}" />
 	<property name="doc" location="${dist}/Documentation"/>
 	<property name="javadoc" location="${doc}/javadoc"/>
@@ -30,12 +29,12 @@
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
 	<property name="tbjar" location="${extlib}/tbrowser.jar"/>
-	<property name="jfjar" location="${extlib}/jfreechart-1.0.11.jar"/>
-	<property name="jcjar" location="${extlib}/jcommon-1.0.14.jar"/>
+	<property name="jfjar" location="${extlib}/jfreechart-1.0.11.jar:${extlib}/jcommon-1.0.14.jar"/>
 	<property name="jythonjar" location="${extlib}/jython.jar"/>
-	<property name="jdomjars" location="lib/jsci-xtra.jar:lib/jdom-1.1.jar"/>
+	<property name="jdomjars" location="${extlib}/jsci-xtra.jar:${extlib}/jdom-1.1.jar"/>
+	<property name="jgraphjars" location="${extlib}/jgraph.jar:${extlib}/jgrapht-0.6.0.jar:${extlib}/jgraphaddons.jar"/>
 	
-	<property name="classpath"  value=".:${jdomjars}:${tbjar}:${jfjar}:${jcjar}:${jythonjar}:lib/jgraph.jar:lib/jgrapht-0.6.0.jar:lib/jgraphaddons.jar:lib/javabib-bin.jar"/>
+	<property name="classpath"  value=".:${jdomjars}:${tbjar}:${jfjar}:${jythonjar}:${jgraphjars}:${extlib}/javabib-bin.jar"/>
 
 	<target name="init">
 		<!-- Create the time stamp -->
@@ -180,7 +179,6 @@
 	    <mkdir dir="${dist}/data"/>
 	    <mkdir dir="${dist}/plugins"/>
 	    <mkdir dir="${dist}/plugins/data"/>
-	    <copy todir="${dist}/lib"><fileset dir="lib"/></copy>
 	    <copy todir="${dist}" file="runginsim.bat"/>
 	    <copy todir="${dist}" file="makeclasspath.bat"/>
 	    <copy todir="${dist}" file="runginsim.sh"/>
@@ -224,10 +222,6 @@
 	<target name="jardist" depends="dist" description="create a runnable jar version">
 		<property name="tmpdir" value="tmp"/>
 		<mkdir dir="${tmpdir}"/>
-		<_merge_jar jarfile="${dist}/lib/jgraph.jar" dest="${tmpdir}"/>
-		<_merge_jar jarfile="${dist}/lib/jgrapht-0.6.0.jar" dest="${tmpdir}"/>
-		<_merge_jar jarfile="${dist}/lib/jgraphaddons.jar" dest="${tmpdir}"/>
-		<_merge_jar jarfile="${dist}/lib/javabib-bin.jar" dest="${tmpdir}"/>
 	   	<copy todir="${tmpdir}"><fileset dir="${build}"/></copy>
 		<jar jarfile="${ginsim}-${version}.jar" basedir="${tmpdir}" manifest="MANIFEST.MF"/> 
 	 	<delete dir="${tmpdir}"/>
