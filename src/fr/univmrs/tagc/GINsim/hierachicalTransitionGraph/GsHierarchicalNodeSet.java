@@ -68,7 +68,7 @@ public class GsHierarchicalNodeSet extends HashSet {
 		StringBuffer s = new StringBuffer();
 		for (Iterator iterator = this.iterator(); iterator.hasNext();) {
 			GsHierarchicalNode node = (GsHierarchicalNode) iterator.next();
-			s.append(node+"("+node.getIncomingEdges()+");");
+			s.append(node+"("+node.getOutgoingEdges()+"){"+node.getSigma().getSigmaImage()+"};");
 		}
 		return s.toString();
 	}

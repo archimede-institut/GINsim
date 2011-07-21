@@ -34,7 +34,7 @@ import fr.univmrs.tagc.GINsim.export.generic.Dotify;
  * 
  *
  */
-public class GsHierarchicalNode implements Dotify {
+public class GsHierarchicalNode implements Comparable, Dotify {
 
 	public static final byte TYPE_TRANSIENT_COMPONENT = 0;
 	public static final byte TYPE_TRANSIENT_CYCLE = 1;
@@ -103,7 +103,7 @@ public class GsHierarchicalNode implements Dotify {
 	/**
 	 * Set of nodes for 'in'coming edges, that is a HashSet&lt;GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;&gt;
 	 */
-	private Set in;
+	private Set out;
 
 	/**
 	 * The atteignability in terms of attractors
@@ -211,20 +211,20 @@ public class GsHierarchicalNode implements Dotify {
 	 * @param slaveNode
 	 * @param nodeSet 
 	 */
-	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet) {
+	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet, GsHierarchicalSigmaSetFactory sigmaSetFactory) {
 		if (slaveNode == this) return;
-		slaveNode = slaveNode.master;
 		nodeSet.remove(slaveNode);												//Make slaveNode a slaveNode !
+		slaveNode = slaveNode.master;
 		if (this.statesSet != null && slaveNode.statesSet != null) { 			//Merge the set of states
 			this.statesSet.merge(slaveNode.statesSet);
 		}
 		
-		if (this.in == null) {													//Merge the set of edges
-			this.in = slaveNode.in;
+		if (this.out == null) {													//Merge the set of edges
+			this.out = slaveNode.out;
 		} else {
-			if (slaveNode.in != null) {
-				this.in.addAll(slaveNode.in);
-				slaveNode.in = this.in;
+			if (slaveNode.out != null) {
+				this.out.addAll(slaveNode.out);
+				slaveNode.out = this.out;
 			}
 		}
 				
@@ -233,6 +233,13 @@ public class GsHierarchicalNode implements Dotify {
 				this.statePile = slaveNode.statePile;
 			} else {
 				this.statePile.addAll(slaveNode.statePile); //merging the statePile
+			}
+		}
+		if (slaveNode.sigma != null) {
+			if (this.sigma == null) {
+				this.sigma = slaveNode.sigma;
+			} else {
+				sigmaSetFactory.merge(this, slaveNode);
 			}
 		}
 		slaveNode.master = this;
@@ -286,26 +293,26 @@ public class GsHierarchicalNode implements Dotify {
 	/* **************** EDGES, ID AND SIGMA ************/	
 
 	/**
-	 * Return the set of incoming edges HashSet&lt;GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;&gt;
+	 * Return the set of outgoing edges HashSet&lt;GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;&gt;
 	 */
-	public Set getIncomingEdges() {
-		if (master.in == null) {
-			master.in = new HashSet();
+	public Set getOutgoingEdges() {
+		if (master.out == null) {
+			master.out = new HashSet();
 		}
-		return master.in;
+		return master.out;
 	}
 
 	/**
-	 * Add a new incoming edge GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;
+	 * Add a new outgoing edge GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;
 	 * @param o
 	 */
-	public void addIncomingEdge(Object o) {
-		if (master.in == null) {
-			master.in = new HashSet();
-		}
+	public void addOutgoingEdge(Object o) {
 		compactMaster();
 		((GsHierarchicalNode)o).compactMaster();
-		master.in.add(o);
+		if (master.out == null) {
+			master.out = new HashSet();
+		}
+		master.out.add(o);
 	}
 
 	/**
@@ -327,16 +334,13 @@ public class GsHierarchicalNode implements Dotify {
 	 * Release all the references to the set of incoming edges.
 	 */
 	public void releaseEdges() {
-		master.in = null;
+		master.out = null;
 	}
 
 	/**
 	 * return the set sigma
 	 */
 	public GsHierarchicalSigmaSet getSigma() {
-		if (master.sigma == null) {
-			master.sigma = new GsHierarchicalSigmaSet();
-		}
 		return master.sigma;
 	}
 	/**
@@ -561,6 +565,15 @@ public class GsHierarchicalNode implements Dotify {
 			}
 		}
 	}
+
+	public int compareTo(Object arg0) {
+		return (int) (this.master.uid - ((GsHierarchicalNode)arg0).master.uid);
+	}
+
+	public GsHierarchicalNode getMaster() {
+		return master;
+	}
+
 
 }
 

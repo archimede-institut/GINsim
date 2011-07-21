@@ -2,8 +2,6 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.awt.Color;
 import java.io.PrintStream;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -12,6 +10,7 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNodeSet;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalSigmaSet;
+import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalSigmaSetFactory;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.reg2dyn.helpers.HTGSimulationHelper;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -41,7 +40,7 @@ public class HTGSimulation extends Simulation {
 	private static final int DBG_MERGE = 32; 
 	private static final int DBG_ALL = DBG_MAINLOOPS | DBG_POSTTREATMENT | DBG_APPARTENANCETESTS | DBG_QUEUE | DBG_SIGMA | DBG_MERGE; 
 	
-	private static final byte debug = DBG_DEPLOYMENT; //Work as a mask, use val | val | val .... //FIXME : set to DBG_DEPLOYMENT before deploying
+	private static final byte debug = DBG_ALL; //Work as a mask, use val | val | val .... //FIXME : set to DBG_DEPLOYMENT before deploying
 	private PrintStream debug_o = System.err;
 	private StringBuffer log_tabdepth = new StringBuffer();
 	
@@ -87,6 +86,8 @@ public class HTGSimulation extends Simulation {
 	 */
 	private GsSimulationParameters params;
 	
+	private GsHierarchicalSigmaSetFactory sigmaFactory;
+	
 	
 	public HTGSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params) {
 		this(regGraph, frame, params, true, true);
@@ -116,6 +117,7 @@ public class HTGSimulation extends Simulation {
 		this.htg = (GsHierarchicalTransitionGraph) helper.getDynamicGraph();
 		this.shouldCompactSCC = htg.areTransientCompacted();
 		this.regGraph = (GsRegulatoryGraph) helper.getRegulatoryGraph();
+		this.sigmaFactory = new GsHierarchicalSigmaSetFactory();
 		Debugger.setDebug(debug);
 		ready = true;
 		try {
@@ -130,9 +132,10 @@ public class HTGSimulation extends Simulation {
 			debug_o.println("Error : "+e.getMessage());
 			e.printStackTrace();
 		}
+		Debugger.log(-100, "Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		addAllNodeTo();									// add all nodes to the graph
 		addAllEdgesTo();								// add all the edges to the graph
-		Debugger.log(-100, "Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
+		Debugger.log(-100, "Graph created in : "+(System.currentTimeMillis()-time)+"ms");
 		return helper.endSimulation();
 	}
 
@@ -167,10 +170,10 @@ public class HTGSimulation extends Simulation {
 					processStableState(state);                                                                           	//      Process it as a stable state
 					continue;                                                                                                     
 				}                                                                                                                 
-				HTGSimulationQueuedState e = new HTGSimulationQueuedState(state, index, index, updater);					//    Create __e__ a queue item with the state, index and updater
+				HTGSimulationQueuedState e = new HTGSimulationQueuedState(state, index, index);					//    Create __e__ a queue item with the state, index and updater
 				depth = -1;                                                                                                 //    Set the depth to -1, (as it will be incremented immediatly to 0)
 				max_depth_reached = -1;
-				explore(e);                                                                                                 //    Call the recursive dunction explore() on __e__.
+				explore(e, updater);                                                                                                 //    Call the recursive dunction explore() on __e__.
 			} else {
 				Debugger.log(DBG_MAINLOOPS,log_tabdepth+"\tAlready processed :"+processed_hnode.getUniqueId());
 			}
@@ -180,7 +183,7 @@ public class HTGSimulation extends Simulation {
 	}
 
 	/**
-	 * The reccursive function of the algorithm.
+	 * The recursive function of the algorithm.
 	 *
 	 * <pre> For a given queue item __e__
 	 * increment __index__
@@ -219,46 +222,47 @@ public class HTGSimulation extends Simulation {
 	 *   
 	 * </pre>
 	 */
-	private GsHierarchicalNode explore(HTGSimulationQueuedState e) throws Exception {
+	private GsHierarchicalNode explore(HTGSimulationQueuedState e, SimulationUpdater e_updater) throws Exception {
 		checkStopConditions();
 		
-		HTGSimulationQueuedState n = null;
+		HTGSimulationQueueItem n = null;
 		log_tabdepth.append('\t');
 		Debugger.log(DBG_MAINLOOPS,log_tabdepth+"Exploring :"+e);
 		index++;
 		depth++;
-		GsHierarchicalSigmaSet e_sigma = new GsHierarchicalSigmaSet(); 
 		
 		queue.add(e);																										//Queueing the current state
 		Debugger.log(DBG_QUEUE,log_tabdepth+"queue :"+queue);                                            							
-		while (e.updater.hasNext()) {																						//For each successors
-			byte[] n_state= ((SimulationQueuedState)e.updater.next()).state;												// n_state is the state of the successor
+		while (e_updater.hasNext()) {																						//For each successors
+			byte[] n_state= ((SimulationQueuedState)e_updater.next()).state;												// n_state is the state of the successor
 			SimulationUpdater n_updater = getUpdaterForState(n_state);                          							
 			if (!n_updater.hasNext()) {																						// n_state has no child No child => stable state
 				GsHierarchicalNode stableState = processStableState(n_state);
 				e.addOutgoingHNode(stableState);
-				e_sigma.add(stableState);
 			} else {
 				Debugger.log(DBG_MAINLOOPS,log_tabdepth+"nextState :"+print_state(n_state));
 				n = getTripletInQueueForState(n_state);															   				//Search the state in the queue
 				if (n != null) {																				   				//If found
-					Debugger.log(DBG_APPARTENANCETESTS,log_tabdepth+"in P :"+n);                         				   				
-					e.low_index = Math.min(e.low_index, n.index);												   				//  update the index
+					Debugger.log(DBG_APPARTENANCETESTS,log_tabdepth+"in P :"+n);
+					HTGSimulationQueueSCC newCycleItem = new HTGSimulationQueueSCC(null, index, n.getLow_index());
+					GsHierarchicalNode n_hnode = cycleFound(n, newCycleItem);
+					//newCycleItem.setSCC(n_hnode);
+					e.setLow_index(Math.min(e.getLow_index(), newCycleItem.getLow_index()));												   				//  update the index
+					queue.add(newCycleItem);
+					Debugger.log(DBG_QUEUE,log_tabdepth+"\tqueue:"+queue);
 				} else {																						   				//Else the state is not in the queue
 					Debugger.log(DBG_APPARTENANCETESTS,log_tabdepth+"not in P");                         				   				 
 					GsHierarchicalNode n_hnode = nodeSet.getHNodeForState(n_state);								   				//  If it already processed (in the nodeSet)	
 					if (n_hnode != null) {                                                                         				
 						Debugger.log(DBG_APPARTENANCETESTS,log_tabdepth+"in N :"+n_hnode.getUniqueId());                    				
 						e.addOutgoingHNode(n_hnode);                                                               				
-						e_sigma.addAll(n_hnode.getSigma());                                                      				
 					} else {																					   				//  Else
 						Debugger.log(DBG_APPARTENANCETESTS,log_tabdepth+"not in N");                     				   				 
-						n = new HTGSimulationQueuedState(n_state, index, index, n_updater);						   				//     explore it
-						n_hnode = explore(n);																					//     update the index
-						e.low_index = Math.min(e.low_index, n.low_index);
+						n = new HTGSimulationQueuedState(n_state, index, index);						   				//     explore it
+						n_hnode = explore((HTGSimulationQueuedState) n, n_updater);																					//     update the index
+						e.setLow_index(Math.min(e.getLow_index(), n.getLow_index()));
 						if (n_hnode != null) {
 							e.addOutgoingHNode(n_hnode);
-							e_sigma.addAll(n_hnode.getSigma());
 						}
 					}
 				}
@@ -266,57 +270,101 @@ public class HTGSimulation extends Simulation {
 
 		}
 		Debugger.log(DBG_MAINLOOPS,log_tabdepth+"Comparing indexes "+e);
-		if (e.index == e.low_index) {
-			Set e_dhnode_successors = new HashSet();
-			GsHierarchicalNode new_hnode = new GsHierarchicalNode(childsCount);
-			HTGSimulationQueuedState tmp;
-			Debugger.log(DBG_QUEUE,log_tabdepth+"\tunqueuing:"+queue);
-			do {
-				tmp = (HTGSimulationQueuedState) queue.removeLast();
-				Debugger.log(DBG_QUEUE,log_tabdepth+"\tunqueuing:"+queue);
-				new_hnode.addStateToThePile(tmp.state);
-				for (Iterator it = tmp.getOutgoindHNodes().iterator(); it.hasNext();) {
-					GsHierarchicalNode node = (GsHierarchicalNode) it.next();
-					Debugger.log(DBG_QUEUE,log_tabdepth+"\t\thas a outgoingnode:"+node);
-					node.addIncomingEdge(new_hnode);
-					e_dhnode_successors.add(node);
-					e_sigma.addAll(node.getSigma()); //merge the sigmas
-				}
-			} while (!tmp.equals(e));
-			new_hnode.addAllTheStatesInQueue();
-			if (new_hnode.getSize() == 1) {
-				new_hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
-			} else {
-				if (e_dhnode_successors.size() == 0) new_hnode.setType(GsHierarchicalNode.TYPE_TERMINAL_CYCLE);
-				else new_hnode.setType(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE);
-				e_sigma.add(new_hnode);
-			}
-			Debugger.log(DBG_SIGMA,log_tabdepth+"\tsigma:"+new_hnode.getSigma());
-			new_hnode.setSigma(e_sigma);
-			if (shouldCompactSCC && new_hnode.isTransient()) {
-				Debugger.log(DBG_MERGE,log_tabdepth+"\t\tsigma_new"+e_sigma);
-				for (Iterator it = e_dhnode_successors.iterator(); it.hasNext();) {
-					GsHierarchicalNode node = (GsHierarchicalNode) it.next();
-					Debugger.log(DBG_MERGE,log_tabdepth+"\t\tsigma_suc"+node.getSigma());
-					if (node.isTransient() && e_sigma.equals(node.getSigma())) {
-						Debugger.log(DBG_MERGE,log_tabdepth+"\t\t\tshould merge "+new_hnode+" with "+node);
-						new_hnode.merge(node, nodeSet);
-					} 
-				}
-				e_sigma.setRefNode(new_hnode, nodeSet);
-			}
-
-			
-			nodeSet.add(new_hnode);
-			
-			Debugger.log(DBG_QUEUE,log_tabdepth+"\tunqueuing:"+queue);
-			Debugger.log(DBG_MAINLOOPS,log_tabdepth+"NEW SCC = "+new_hnode.statesToString(true));
-			Debugger.log(DBG_MAINLOOPS,log_tabdepth+"ALL SCC = "+nodeSet);
+		if (e.isCycle() || e.getIndex() == e.getLow_index()) {
+			GsHierarchicalNode hnode = buildSCC(e);
 			log_tabdepth.deleteCharAt(log_tabdepth.length()-1);
-			return new_hnode;
+			return hnode;
+		} else if (!e.isCycle()) {
+			GsHierarchicalNode scc = ((HTGSimulationQueuedState)e).getInCycle().getSCC();
+			Set out = ((HTGSimulationQueuedState)e).getOutgoindHNodes();
+			for (Iterator it = out.iterator(); it.hasNext();) {
+				GsHierarchicalNode hnode = (GsHierarchicalNode) it.next();
+				scc.addOutgoingEdge(hnode);
+			}
 		}
 		log_tabdepth.deleteCharAt(log_tabdepth.length()-1);
 		return null;
+	}
+	
+	
+	private GsHierarchicalNode cycleFound(HTGSimulationQueueItem stopItemInQueue, HTGSimulationQueueSCC newCycleItem) {
+		Debugger.log(DBG_QUEUE,log_tabdepth+"Cycle Found up to  "+stopItemInQueue);
+		GsHierarchicalNode cycle = new GsHierarchicalNode(childsCount);
+		newCycleItem.setSCC(cycle);
+		HTGSimulationQueueItem n;
+		int low_index = stopItemInQueue.getLow_index();
+		do {
+			n = (HTGSimulationQueueItem) queue.removeLast();
+			if (n.getLow_index() < low_index) low_index = n.getLow_index();
+			Debugger.log(DBG_QUEUE,log_tabdepth+"\tunqueuing:"+queue);
+			if (n.isCycle()) {
+				Debugger.log(DBG_MERGE,log_tabdepth+"\t\tmerge cycle "+cycle+" and "+n);
+				cycle.merge(((HTGSimulationQueueSCC)n).getSCC(), nodeSet, sigmaFactory);		//Merge all the states of the SCC in the cycle
+			} else {
+				cycle.addState(((HTGSimulationQueuedState)n).getState(), 1);
+				((HTGSimulationQueuedState)n).setInCycle(newCycleItem);
+			}
+		} while (!n.equals(stopItemInQueue));
+		cycle.compactMaster();
+		newCycleItem.setLow_index(low_index);
+		return cycle;
+	}
+	
+	private GsHierarchicalNode buildSCC(HTGSimulationQueueItem e) {
+		GsHierarchicalNode scc;
+		HTGSimulationQueueSCC inCycle = ((HTGSimulationQueuedState) e).getInCycle();
+		if (inCycle != null) {
+			Debugger.log(DBG_QUEUE,log_tabdepth+"\tthe state is in a cycle:"+queue);
+			scc = inCycle.getSCC();
+			GsHierarchicalSigmaSet sigma = computeSigma(scc, true);
+			if (sigma.isSingleton()) {
+				scc.setType(GsHierarchicalNode.TYPE_TERMINAL_CYCLE);
+			} else {
+				scc.setType(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE);
+			}
+			nodeSet.add(scc);
+		} else {
+			scc = new GsHierarchicalNode(childsCount);
+			scc.addState(((HTGSimulationQueuedState) e).getState(), 1);
+			scc.setType(GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+			Set out = ((HTGSimulationQueuedState)e).getOutgoindHNodes();
+			for (Iterator it = out.iterator(); it.hasNext();) {
+				GsHierarchicalNode hnode = (GsHierarchicalNode) it.next();
+				hnode.compactMaster();
+				scc.addOutgoingEdge(hnode);
+			}
+			GsHierarchicalSigmaSet sigma = computeSigma(scc, false);
+			nodeSet.add(scc);
+			sigma.setUnrecoverable(scc, shouldCompactSCC, nodeSet, sigmaFactory);
+		}
+		queue.removeLast();
+		Debugger.log(DBG_MAINLOOPS,log_tabdepth+"NEW SCC sigma "+scc.getSigma());
+		Debugger.log(DBG_MAINLOOPS,log_tabdepth+"NEW SCC = "+scc.statesToString(true));
+		Debugger.log(DBG_MAINLOOPS,log_tabdepth+"ALL SCC = "+nodeSet);
+		return scc;
+	}
+
+	private GsHierarchicalSigmaSet computeSigma(GsHierarchicalNode scc, boolean isCycle) {
+		if (!shouldCompactSCC) return null;
+		sigmaFactory.beginNewSigma();
+		if (isCycle) sigmaFactory.addToNewSigma(scc);
+		Set out = scc.getOutgoingEdges();
+		for (Iterator it = out.iterator(); it.hasNext();) {
+			GsHierarchicalNode node = (GsHierarchicalNode) it.next();
+			node.compactMaster();
+			System.out.println("On scc ("+isCycle+")"+scc.toString()+"::"+scc.toLongString()+" for node "+node.toString()+" -- "+node.toLongString()+" -- "+node.getSigma());
+			System.out.println("---"+scc.getMaster()+"::"+scc.getMaster().getMaster()+" for node "+node.getMaster()+"::"+node.getMaster().getMaster());
+			System.out.println("---"+node.getMaster().toLongString()+""+node.getMaster().getSigma());
+			if (node.getOutgoingEdges() == null) {
+				sigmaFactory.addToNewSigma(node);
+			} else {
+				sigmaFactory.addAllToNewSigma(node.getSigma().getSigmaImage());
+			}
+		}
+		GsHierarchicalSigmaSet sigma = sigmaFactory.endNewSigma();
+		scc.setSigma(sigma);
+		System.out.println("Sigma computed for "+scc+" "+sigma.pathToString()+" --- "+scc.getSigma());
+		return sigma;
 	}
 
 	/**
@@ -335,6 +383,11 @@ public class HTGSimulation extends Simulation {
 		hnode = new GsHierarchicalNode(childsCount);
 		hnode.addState(state, 1);
 		hnode.setType(GsHierarchicalNode.TYPE_STABLE_STATE);
+		if (shouldCompactSCC) {
+			sigmaFactory.beginNewSigma();
+			sigmaFactory.addToNewSigma(hnode);
+			hnode.setSigma(sigmaFactory.endNewSigma());			
+		}
 		nodeSet.add(hnode);
 		return hnode;
 	}
@@ -344,10 +397,10 @@ public class HTGSimulation extends Simulation {
 	 * @param state
 	 * @return
 	 */
-	private HTGSimulationQueuedState getTripletInQueueForState(byte[] state) {
+	private HTGSimulationQueueItem getTripletInQueueForState(byte[] state) {
 		for (Iterator it = queue.iterator(); it.hasNext();) {
-			HTGSimulationQueuedState triplet = (HTGSimulationQueuedState) it.next();
-			if (Arrays.equals(triplet.state, state)) {
+			HTGSimulationQueueItem triplet = (HTGSimulationQueueItem) it.next();
+			if (triplet.containsState(state)) {
 				return triplet;
 			}
 		}
@@ -386,9 +439,9 @@ public class HTGSimulation extends Simulation {
 				break;
 			case GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT:
 				Color color = null;
-				if (hnode.getIncomingEdges().size() == 0) color = GsHierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR; ///EDEN GARDEN TEST
-				else if (hnode.getIncomingEdges().size() == 1) {
-					if (((GsHierarchicalNode)hnode.getIncomingEdges().iterator().next()).equals(hnode)) {
+				if (hnode.getOutgoingEdges().size() == 0) color = GsHierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR; ///EDEN GARDEN TEST
+				else if (hnode.getOutgoingEdges().size() == 1) {
+					if (((GsHierarchicalNode)hnode.getOutgoingEdges().iterator().next()).equals(hnode)) {
 						color = GsHierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR; ///EDEN GARDEN TEST
 					}
 				}
@@ -412,17 +465,17 @@ public class HTGSimulation extends Simulation {
 		Debugger.log(DBG_POSTTREATMENT,"Adding all arcs to the graph...");
 		int nbarc = 0;
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
-			GsHierarchicalNode to = (GsHierarchicalNode) it.next();
-			Debugger.log(DBG_POSTTREATMENT,"\tto "+to);
-			Set froms = to.getIncomingEdges();
-			for (Iterator it2 = froms.iterator(); it2.hasNext();) {
-				GsHierarchicalNode from = (GsHierarchicalNode) it2.next();
+			GsHierarchicalNode from = (GsHierarchicalNode) it.next();
+			Debugger.log(DBG_POSTTREATMENT,"\tto "+from);
+			Set tos = from.getOutgoingEdges();
+			for (Iterator it2 = tos.iterator(); it2.hasNext();) {
+				GsHierarchicalNode to = (GsHierarchicalNode) it2.next();
 				boolean b = GsHierarchicalNode.addEdge(from, to, htg);
 				if (b) nbarc++;
-				Debugger.log(DBG_POSTTREATMENT,"\ttfrom "+from+" --- "+b);
+				Debugger.log(DBG_POSTTREATMENT,"\tfrom "+to+" --- "+b);
 				
 			}
-			to.releaseEdges();
+			from.releaseEdges();
 		}
 		Debugger.log(DBG_POSTTREATMENT," ("+nbarc+") done");
 	}
@@ -461,17 +514,10 @@ public class HTGSimulation extends Simulation {
 		}
 		if (depth > max_depth_reached) max_depth_reached = depth;
 	    if (frame != null) {
-	    	if (System.currentTimeMillis() - lastDraw > 1000) {
+	    	if (System.currentTimeMillis() - lastDraw > 250) {
 	    		frame.setProgress(nbinitialstates+", "+depth+"/"+max_depth_reached);
 	    		lastDraw = System.currentTimeMillis();
 	    	}
-		}
-	}
-	
-	private void updateProgess() {
-		nbnode = nodeSet.size();
-	    if (frame != null) {
-            frame.setProgress(nbinitialstates+", "+depth+"/"+max_depth_reached); 
 		}
 	}
 	

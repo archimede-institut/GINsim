@@ -64,6 +64,6 @@ public class HTGSimulationHelper  extends SimulationHelper {
 	}
 
 	public void addEdge(GsHierarchicalNode from, GsHierarchicalNode to) {
-		to.getIncomingEdges().add(from);
+		to.getOutgoingEdges().add(from);
 	}
 }
