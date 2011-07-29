@@ -54,12 +54,13 @@ public class GsHierarchicalSigmaSet {
 	 * @param unrecoverable the unrecoverable component associated to this SigmaSet to set
 	 * @param shouldCompactSCC
 	 * @param nodeSet 
+	 * @param htg 
 	 */
-	public void setUnrecoverable(GsHierarchicalNode unrecoverable, boolean shouldCompactSCC, Collection nodeSet, GsHierarchicalSigmaSetFactory sigmaSetFactory) {
-		if (this.unrecoverable != null && shouldCompactSCC) {
-			System.out.println("MERGING SAME SIGMA : "+this.unrecoverable+" and "+unrecoverable+" \\sigm:"+this+" -- "+this.pathToString());
-			this.unrecoverable.merge(unrecoverable, nodeSet, sigmaSetFactory);
-			this.unrecoverable.compactMaster();
+	public void setUnrecoverable(GsHierarchicalNode unrecoverable, Collection nodeSet, GsHierarchicalSigmaSetFactory sigmaSetFactory, GsHierarchicalTransitionGraph htg) {
+		if (this.unrecoverable != null) {
+			this.unrecoverable.merge(unrecoverable, nodeSet, sigmaSetFactory, htg);
+			this.unrecoverable.statesSet.reduce();
+
 		} else {
 			this.unrecoverable = unrecoverable;			
 		}

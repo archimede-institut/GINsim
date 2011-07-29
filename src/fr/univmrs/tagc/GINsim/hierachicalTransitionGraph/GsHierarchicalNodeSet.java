@@ -36,17 +36,17 @@ public class GsHierarchicalNodeSet extends HashSet {
 	 * @return The node containing the state or null if it is not found
 	 */
 	public GsHierarchicalNode getHNodeForState(byte[] state) {
-		GsHierarchicalNode HNode = null;
+		GsHierarchicalNode hnode = null;
 		boolean found = false;
 		for (Iterator it = iterator(); it.hasNext();) {
-			HNode = (GsHierarchicalNode) it.next();
-			if (HNode != null && HNode.contains(state)) {
+			hnode = (GsHierarchicalNode) it.next();
+			if (hnode != null && hnode.contains(state)) {
 				found = true;
 				break;
 			}
 		}
 		if (!found) return null;
-		return HNode;
+		return hnode;
 	}
 	
 	public int hashCode() {
@@ -68,7 +68,7 @@ public class GsHierarchicalNodeSet extends HashSet {
 		StringBuffer s = new StringBuffer();
 		for (Iterator iterator = this.iterator(); iterator.hasNext();) {
 			GsHierarchicalNode node = (GsHierarchicalNode) iterator.next();
-			s.append(node+"("+node.getOutgoingEdges()+"){"+node.getSigma().getSigmaImage()+"};");
+			s.append(node+"{"+node.getSigma()+"};");
 		}
 		return s.toString();
 	}

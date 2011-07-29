@@ -381,18 +381,18 @@ public class GsStatesSet {
 	}
 
 
-/* **************** STATE TO LISTS ************/	
 	
+/* **************** STATE TO LISTS ************/	
 	/**
 	 * Initialize and fill a list with all the states in the omdd
 	 * Each item of the returned list is a string representation using wildcard * (-1).
 	 * Note the order in the list is relative to the omdd structure.
 	 * @return a list made of all the states as schemata (using *)
 	 */
-	public List statesToList() {
+	public List statesToSchemaList() {
 		List v = new LinkedList();
 		byte[] t = new byte[childsCount.length];
-		statesToList(root, v, t, -1);	
+		statesToSchemaList(root, v, t, -1);	
 		return v;
 	}
 	
@@ -402,12 +402,12 @@ public class GsStatesSet {
 	 * Note the order in the list is relative to the omdd structure.
 	 * @return a list made of all the states as schemata (using *)
 	 */
-	public void statesToList(List v) {
+	public void statesToSchemaList(List v) {
 		byte[] t = new byte[childsCount.length];
-		statesToList(root, v, t, -1);	
+		statesToSchemaList(root, v, t, -1);	
 	}
 	
-	private void statesToList(OmddNode omdd, List v, byte[] t, int last_depth) {
+	private void statesToSchemaList(OmddNode omdd, List v, byte[] t, int last_depth) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return;
         	for (int i = last_depth+1; i < childsCount.length; i++) {
@@ -422,12 +422,64 @@ public class GsStatesSet {
 		}
         for (int i = 0 ; i < omdd.next.length ; i++) {
 	    	t[omdd.level] = (byte) i;
-        	statesToList(omdd.next[i], v ,t, omdd.level);
+        	statesToSchemaList(omdd.next[i], v ,t, omdd.level);
         }
 
 	}
 	
+	public List statesToFullList() {
+		List v = new LinkedList();
+		byte[] t = new byte[childsCount.length];
+		statesToFullList(root, v, t, -1);	
+		return v;
+	}
+	/**
+	 * Fill a list with all the states in the omdd
+	 * Each item of the returned list is a string representation using wildcard * (-1).
+	 * Note the order in the list is relative to the omdd structure.
+	 * @return a list made of all the states as schemata (using *)
+	 */
+	public void statesToFullList(List v) {
+		byte[] t = new byte[childsCount.length];
+		statesToFullList(root, v, t, -1);	
+	}
 	
+	private void statesToFullList(OmddNode omdd, List v, byte[] t, int last_depth) {
+        if (omdd.next == null) {
+        	if (omdd.value == 0) return;
+            statesToList_leaf(omdd, v, t, last_depth+1);
+        	return;
+        }
+        
+        statesToFullList_inner(omdd, v, t, last_depth+1, omdd.level);
+ 
+	}
+	
+	private void statesToFullList_inner(OmddNode omdd, List v, byte[] t, int depth, int limit_depth) {
+		if (depth == limit_depth) {
+	        for (int i = 0 ; i < omdd.next.length ; i++) {
+		    	t[omdd.level] = (byte) i;
+		    	statesToFullList(omdd.next[i], v ,t, omdd.level);
+	        }
+	        return;
+		}
+		for (byte i = 0; i < childsCount[depth]; i++) {
+			t[depth] = i;
+			statesToFullList_inner(omdd, v, t, depth+1, limit_depth);
+		}
+	}
+
+	private void statesToList_leaf(OmddNode omdd, List v, byte[] t, int depth) {
+		if (depth == childsCount.length) {
+			v.add(t.clone());
+			return;
+		}
+		for (byte i = 0; i < childsCount[depth]; i++) {
+			t[depth] = i;
+			statesToList_leaf(omdd, v, t, depth+1);
+		}
+	}
+
 	
 	
 /* **************** TO STRINGS ************/	

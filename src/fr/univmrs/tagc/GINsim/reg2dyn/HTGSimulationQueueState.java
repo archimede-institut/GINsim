@@ -1,15 +1,17 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
+import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNodeSet;
 
 /**
  * Used to represent the elements in the queue of the HTGSimulation
  */
-public class HTGSimulationQueuedState implements HTGSimulationQueueItem  {
+public class HTGSimulationQueueState implements HTGSimulationQueueItem  {
 
 	/**
 	 * The state itself
@@ -24,10 +26,6 @@ public class HTGSimulationQueuedState implements HTGSimulationQueueItem  {
 	 */
 	private int low_index;
 	/**
-	 * The set of outgoingEdges HashSet&lt;GsHierarchicalNode&gt;, that is the GsHierarchicalNode of its successors.
-	 */
-	public Set outgoindHNodes = null;
-	/**
 	 * Indicates if it is in a cycle
 	 */
 	private HTGSimulationQueueSCC inCycle = null;
@@ -39,7 +37,7 @@ public class HTGSimulationQueuedState implements HTGSimulationQueueItem  {
 	 * @param low_index
 	 * @param updater
 	 */
-	public HTGSimulationQueuedState(byte[] state, int index, int low_index) {
+	public HTGSimulationQueueState(byte[] state, int index, int low_index) {
 		this.setState(state);
 		this.setIndex(index);
 		this.setLow_index(low_index);
@@ -49,7 +47,7 @@ public class HTGSimulationQueuedState implements HTGSimulationQueueItem  {
 	 * @see fr.univmrs.tagc.GINsim.reg2dyn.HTGSimulationQueueItem#toString()
 	 */
 	public String toString() {
-		return "["+printStateToString(getState())+", i:"+getIndex()+", li:"+getLow_index()+", out:"+outgoindHNodes+"]";
+		return "["+printStateToString(getState())+", i:"+getIndex()+", li:"+getLow_index()+"]";
 	}
 	
 	private static String printStateToString(byte[] t) {
@@ -60,21 +58,6 @@ public class HTGSimulationQueuedState implements HTGSimulationQueueItem  {
 		return s.toString();
 	}
 	
-	/* (non-Javadoc)
-	 * @see fr.univmrs.tagc.GINsim.reg2dyn.HTGSimulationQueueItem#getOutgoindHNodes()
-	 */
-	public Set getOutgoindHNodes() {
-		if (outgoindHNodes == null) outgoindHNodes = new HashSet();
-		return outgoindHNodes;
-	}
-	
-	/* (non-Javadoc)
-	 * @see fr.univmrs.tagc.GINsim.reg2dyn.HTGSimulationQueueItem#addOutgoingHNode(fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode)
-	 */
-	public void addOutgoingHNode(GsHierarchicalNode hnode) {
-		if (outgoindHNodes == null) outgoindHNodes = new HashSet();
-		outgoindHNodes.add(hnode);
-	}
 
 	/* (non-Javadoc)
 	 * @see fr.univmrs.tagc.GINsim.reg2dyn.HTGSimulationQueueItem#setIndex(int)
@@ -129,10 +112,32 @@ public class HTGSimulationQueuedState implements HTGSimulationQueueItem  {
 		return false;
 	}
 
+	/**
+	 * Set the SCC that contains the state. 
+	 * 
+	 * Note it could be a discarded SCC after a merge.
+	 * 
+	 * @param newCycleItem
+	 */
 	public void setInCycle(HTGSimulationQueueSCC newCycleItem) {
 		this.inCycle  = newCycleItem;
 	}
-	public HTGSimulationQueueSCC getInCycle() {
-		return inCycle;
+	/**
+	 * Retrieve the real SCC containing the state.
+	 * @param nodeSet
+	 * @param queue
+	 * @return
+	 */
+	public GsHierarchicalNode getInCycle(GsHierarchicalNodeSet nodeSet, List queue) {
+		if (inCycle == null) return null;
+		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
+			GsHierarchicalNode n = (GsHierarchicalNode) it.next();
+			if (n.contains(state)) return n;
+		}
+		for (ListIterator it = queue.listIterator(queue.size()); it.hasPrevious();) {
+			HTGSimulationQueueItem e = (HTGSimulationQueueItem) it.previous();
+			if (e.isCycle() && e.containsState(state)) return ((HTGSimulationQueueSCC) e).getSCC();
+		}
+		return inCycle.getSCC();
 	}
 }
