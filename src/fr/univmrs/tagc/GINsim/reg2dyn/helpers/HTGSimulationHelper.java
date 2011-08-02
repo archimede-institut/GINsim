@@ -62,8 +62,4 @@ public class HTGSimulationHelper  extends SimulationHelper {
 	public GsGraph getDynamicGraph() {
 		return this.htg;
 	}
-
-	public void addEdge(GsHierarchicalNode from, GsHierarchicalNode to) {
-		to.getIncomingEdges().add(from);
-	}
 }

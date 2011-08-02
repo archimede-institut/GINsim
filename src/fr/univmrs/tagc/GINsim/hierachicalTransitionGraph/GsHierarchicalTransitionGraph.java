@@ -340,21 +340,17 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		transientCompactionMode = mode;
 	}
 
-    
+	public void removeEdge(Object obj) {
+		GsDirectedEdge e = (GsDirectedEdge) obj;
+		this.graphManager.removeEdge(e.getSourceVertex(), e.getTargetVertex());
+	}
+	
+ 
   	
 		
 /* **************** UNIMPLEMENTED METHODS ************/
 	
 
-		
-		/**
-		 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#removeEdge(java.lang.Object)
-		 *
-		 * not used for this kind of graph: it's not interactivly editable
-		 */
-		public void removeEdge(Object obj) {
-		}
-		
 		/**
 		 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#changeVertexId(java.lang.Object, java.lang.String)
 		 *

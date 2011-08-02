@@ -207,16 +207,16 @@ public class Debugger {
 	}
 
 	private static int getLineNumber() {
-	    return Thread.currentThread().getStackTrace()[3].getLineNumber();
+	    return Thread.currentThread().getStackTrace()[4].getLineNumber();
 	}
 
 	private static String getClassName() {
-		String clname = Thread.currentThread().getStackTrace()[3].getClassName();
+		String clname = Thread.currentThread().getStackTrace()[4].getClassName();
 	    return clname.substring(clname.lastIndexOf('.')+1);
 	}
 
 	private static String getMethodName() {
-	    return Thread.currentThread().getStackTrace()[3].getMethodName();
+	    return Thread.currentThread().getStackTrace()[4].getMethodName();
 	}
 
 	/**

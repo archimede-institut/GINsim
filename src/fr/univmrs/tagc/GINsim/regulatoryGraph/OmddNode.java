@@ -562,7 +562,11 @@ public class OmddNode {
        			o = new OmddNode();
     			heap.add(o);
     			deep++;
-    			i = readLevel(s, o, i+1, length);
+				i = readLevel(s, o, i+1, length);
+				for (int j = deep; j < o.level; j++) {
+					childVisited[j] = -1; //the child is skipped
+				}
+				deep = o.level;
     			if (i >= length || s.charAt(i) != ',') {
     				throw new ParseException("Missing , after opening a new node", i-1);
     			}
@@ -570,8 +574,10 @@ public class OmddNode {
     			if (childVisited[deep] != childCount[deep]) {
     				throw new ParseException("Wrong number of child found", i);
     			}
-    			childVisited[deep] = 0;
-    			deep--;
+    			do {
+        			childVisited[deep] = 0;
+    				deep--;
+    			} while (deep >= 0 && childVisited[deep] == -1); //while the child has been skipped skipped
         		op = (OmddNode) heap.pop();
         		if (heap.size() > 0) {
             		o = (OmddNode) heap.peek();
@@ -591,11 +597,9 @@ public class OmddNode {
     	}
     	if (deep != -1) {
 			throw new ParseException("End of string reached too early", i);
-    	}
+    	}  	
     	return o;
     }
-
-
 
 	private static void readTerminal(String s, OmddNode o, int i, int deep, byte[] childVisited, byte[] childCount, int length) throws ParseException {
 		byte val;

@@ -23,7 +23,7 @@ import fr.univmrs.tagc.GINsim.export.generic.Dotify;
 /* **************** TOSTRINGS ************/	
 /* **************** TYPE GETTERS, SETTERS, TESTERS (isStable) AND CONVERSIONS ************/		
 /* **************** TO DOT (DOTIFY) ************/	
-
+/* **************** COMPARABLE ************/	
 
 
 /**
@@ -34,7 +34,7 @@ import fr.univmrs.tagc.GINsim.export.generic.Dotify;
  * 
  *
  */
-public class GsHierarchicalNode implements Dotify {
+public class GsHierarchicalNode implements Comparable, Dotify {
 
 	public static final byte TYPE_TRANSIENT_COMPONENT = 0;
 	public static final byte TYPE_TRANSIENT_CYCLE = 1;
@@ -66,7 +66,7 @@ public class GsHierarchicalNode implements Dotify {
 	/**
 	 * A static long used to give a unique id to each HN
 	 */
-	private static long nextId = 2;
+	private static long nextId = 0;
 
 	/**
 	 * The unique id of the node, used for efficient comparison of HN.
@@ -99,11 +99,6 @@ public class GsHierarchicalNode implements Dotify {
 	 */
 	private int size = 0;
 
-	
-	/**
-	 * Set of nodes for 'in'coming edges, that is a HashSet&lt;GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;&gt;
-	 */
-	private Set in;
 
 	/**
 	 * The atteignability in terms of attractors
@@ -114,11 +109,8 @@ public class GsHierarchicalNode implements Dotify {
 	 * An array such that childsCount[i] indicates the maxValue of the i-th gene
 	 */
 	private byte[] childsCount;
-
-	/**
-	 * The real GsHierarchicalNode in case the nodes have been merged
-	 */
-	private GsHierarchicalNode master;
+	private Set out;
+	private Set in;
 
 	
 /* **************** CONSTRUCTORS ************/	
@@ -133,7 +125,8 @@ public class GsHierarchicalNode implements Dotify {
 		this.uid = nextId++;
 		this.type = TYPE_TRANSIENT_COMPONENT;
 		this.childsCount = childsCount;
-		this.master = this;
+		this.in = new HashSet();
+		this.out = new HashSet();
 	}
 	
 /* **************** PILE ************/	
@@ -210,24 +203,18 @@ public class GsHierarchicalNode implements Dotify {
 	 * 
 	 * @param slaveNode
 	 * @param nodeSet 
+	 * @param htg 
 	 */
-	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet) {
+	public void merge(GsHierarchicalNode slaveNode, Collection nodeSet, GsHierarchicalSigmaSetFactory sigmaSetFactory, GsHierarchicalTransitionGraph htg) {
 		if (slaveNode == this) return;
-		slaveNode = slaveNode.master;
 		nodeSet.remove(slaveNode);												//Make slaveNode a slaveNode !
-		if (this.statesSet != null && slaveNode.statesSet != null) { 			//Merge the set of states
-			this.statesSet.merge(slaveNode.statesSet);
-		}
-		
-		if (this.in == null) {													//Merge the set of edges
-			this.in = slaveNode.in;
-		} else {
-			if (slaveNode.in != null) {
-				this.in.addAll(slaveNode.in);
-				slaveNode.in = this.in;
+		if (this.statesSet != null) {
+			if (slaveNode.statesSet != null) { 			//Merge the set of states
+				this.statesSet.merge(slaveNode.statesSet);
 			}
+		} else {
+			this.statesSet = slaveNode.statesSet;
 		}
-				
 		if (slaveNode.statePile != null) {										//Merge the piles of states
 			if (this.statePile == null) {
 				this.statePile = slaveNode.statePile;
@@ -235,30 +222,39 @@ public class GsHierarchicalNode implements Dotify {
 				this.statePile.addAll(slaveNode.statePile); //merging the statePile
 			}
 		}
-		slaveNode.master = this;
+		if (slaveNode.sigma != null) {
+			if (this.sigma == null) {
+				this.sigma = slaveNode.sigma;
+			} else {
+				sigmaSetFactory.merge(this, slaveNode);
+			}
+		}
+		
+		
+		if (slaveNode.getOut() != null) {
+			for (Iterator it = slaveNode.getOut().iterator(); it.hasNext();) {
+				GsHierarchicalNode to = (GsHierarchicalNode) it.next();
+				if (!to.equals(this)) {
+					this.addEdgeTo(to);
+					to.getIn().remove(slaveNode);
+				}
+			}			
+		}
+		if (slaveNode.getIn() != null) {
+			for (Iterator it = slaveNode.getIn().iterator(); it.hasNext();) {
+				GsHierarchicalNode from = (GsHierarchicalNode) it.next();
+				if (!from.equals(this)) {
+					from.addEdgeTo(this);
+					from.getOut().remove(slaveNode);
+				}
+			}			
+		}
+		if (this.uid > slaveNode.uid) this.uid = slaveNode.uid;
 	}
 	
 
 	
 /* **************** SIZE ************/	
-
-	
-//	private int getProcessedStates() {
-//		return processed;
-//	}
-//	
-//	private boolean isProcessed() throws GsException {
-//		if (statePile == null && size < processed) {
-//			throw new GsException(1, "Error size < processes Childs : "+this);
-//		}
-//		return statePile == null && size == processed;
-//	}
-//	
-//	private void processState(byte[] state) {
-//		statesSet.updateStatus(state, STATUS_PROCESSED);
-//		processed++;
-//	}
-
 	
 	public int getSize() {
 		return size;
@@ -285,69 +281,64 @@ public class GsHierarchicalNode implements Dotify {
 
 	/* **************** EDGES, ID AND SIGMA ************/	
 
-	/**
-	 * Return the set of incoming edges HashSet&lt;GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;&gt;
-	 */
-	public Set getIncomingEdges() {
-		if (master.in == null) {
-			master.in = new HashSet();
-		}
-		return master.in;
-	}
 
 	/**
-	 * Add a new incoming edge GsDirectedEdge&lt;GsHierarchicalNode, GsHierarchicalNode&gt;
-	 * @param o
-	 */
-	public void addIncomingEdge(Object o) {
-		if (master.in == null) {
-			master.in = new HashSet();
-		}
-		compactMaster();
-		((GsHierarchicalNode)o).compactMaster();
-		master.in.add(o);
-	}
-
-	/**
-	 * Add an edge between the masters nodes
+	 * Add an edge between to a node
 	 * @param to
-	 * @param htg
 	 * @return true if an edge was added (no autoregulation)
 	 */
-	public boolean addEdge(GsHierarchicalNode to, GsHierarchicalTransitionGraph htg) {
-		if (!master.equals(to.master)) {
-			htg.addEdge(master, to.master);
-			return true;
-		}
-		return false;
+	public boolean addEdgeTo(GsHierarchicalNode to) {
+		to.getIn().add(this);
+		getOut().add(to);
+		return true;
+	}
+
+	/**
+	 * @param out the out to set
+	 */
+	public void setOut(Set out) {
+		this.out = out;
+	}
+
+	/**
+	 * @return the out
+	 */
+	public Set getOut() {
+		return out;
+	}
+
+	/**
+	 * @param in the in to set
+	 */
+	public void setIn(Set in) {
+		this.in = in;
+	}
+
+	/**
+	 * @return the in
+	 */
+	public Set getIn() {
+		return in;
+	}
+
+
+	public void releaseEdges() {
+		this.setIn(null);
+		this.out = null;
 	}
 
 	
 	/**
-	 * Release all the references to the set of incoming edges.
-	 */
-	public void releaseEdges() {
-		master.in = null;
-	}
-
-	/**
 	 * return the set sigma
 	 */
 	public GsHierarchicalSigmaSet getSigma() {
-		if (master.sigma == null) {
-			master.sigma = new GsHierarchicalSigmaSet();
-		}
-		return master.sigma;
+		return sigma;
 	}
 	/**
 	 * return the set sigma
 	 */
 	public void setSigma(GsHierarchicalSigmaSet sigma) {
-		this.master.sigma = sigma;
-	}
-	
-	public void releaseSigma() {
-		master.sigma = null;
+		this.sigma = sigma;
 	}
 	
 	
@@ -356,13 +347,12 @@ public class GsHierarchicalNode implements Dotify {
 	 * @return
 	 */
 	public long getUniqueId() {
-		return master.uid;
+		return uid;
 	}
 
 
 	public int hashcode() {
-		compactMaster();
-		return (int)master.uid;
+		return (int)uid;
 	}
 
 	public void parse(String parse) throws SAXException {
@@ -384,7 +374,7 @@ public class GsHierarchicalNode implements Dotify {
 			for (int i = 0; i < t.length; i++) {
 				s.append(String.valueOf(t[i]).charAt(0));
 			}
-			return s.toString()+(master != this ? "{"+master+"}":"");
+			return s.toString();
 		} 
 		return "#"+size;
 	}
@@ -429,7 +419,7 @@ public class GsHierarchicalNode implements Dotify {
 	        	}
 			}
 		}
-		res.append(statesSet.statesToString(addValue));
+		if (statesSet != null) res.append(statesSet.statesToString(addValue));
 		return res.toString();
 	}
 
@@ -443,7 +433,7 @@ public class GsHierarchicalNode implements Dotify {
 	public List statesToList() {
 		addAllTheStatesInQueue();
 		List v = new LinkedList();
-		statesSet.statesToList(v);
+		statesSet.statesToSchemaList(v);
 		return v;
 	}
 		
@@ -536,10 +526,11 @@ public class GsHierarchicalNode implements Dotify {
 	
 	public String toDot() {
 		String options;
-    	if (this.getType() == TYPE_TRANSIENT_CYCLE) 	options = "shape=ellipse,style=filled,color=\"#C8E4A5\"";
-    	else if (this.getType() == TYPE_STABLE_STATE) 	options = "shape=box,style=filled, width=\"1.1\", height=\"1.1\",color=\"#9CBAEB\"";
-    	else if (this.getType() == TYPE_TERMINAL_CYCLE) options = "shape=circle,style=filled, width=\"1.1\", height=\"1.1\",color=\"#F5AC6F\"";
-    	else 											options = "shape=point,style=filled,color=\"#00FF00\"";
+    	if (this.getType() == TYPE_TRANSIENT_CYCLE) 			options = "shape=ellipse,style=filled,color=\"#5DA1D0\"";
+    	else if (this.getType() == TYPE_STABLE_STATE) 			options = "shape=box,style=filled, width=\"1.1\", height=\"1.1\",color=\"#F5AC6F\"";
+    	else if (this.getType() == TYPE_TERMINAL_CYCLE) 		options = "shape=circle,style=filled, width=\"1.1\", height=\"1.1\",color=\"#004B88\"";
+    	else if (this.getType() == TYPE_TRANSIENT_COMPONENT) 	options = "shape=box,style=filled, width=\"1.1\", height=\"1.1\",color=\"#229C00\"";
+    	else 													options = "shape=point,style=filled,color=\"#F5AC6F\"";
 		return  this.getUniqueId()+" [label=\""+this.toString()+"\", "+options+"];";
 	}
 	
@@ -547,51 +538,9 @@ public class GsHierarchicalNode implements Dotify {
 		return  this.getUniqueId()+" -> "+((GsHierarchicalNode) to).getUniqueId()+";";
 	}
 
-	public static boolean addEdge(GsHierarchicalNode from, GsHierarchicalNode to, GsHierarchicalTransitionGraph htg) {
-		from.compactMaster();
-		to.compactMaster();
-		return from.master.addEdge(to.master, htg);
+	
+/* **************** COMPARABLE ************/	
+	public int compareTo(Object arg0) {
+		return (int) (this.uid - ((GsHierarchicalNode)arg0).uid);
 	}
-
-	public void compactMaster() {
-		if (!this.equals(this.master)) {
-			if (!this.master.master.equals(this.master)) {
-				this.master.compactMaster();
-				this.master = this.master.master;
-			}
-		}
-	}
-
 }
-
-
-
-//
-//
-//
-//	/**
-//	 * A new node with a certain initial state.
-//	 * @param state an initial state to add in the graph
-//	 * @param childsCount
-//	 * @param childValue the value to add at the end of the omdd (default 1).
-//	 */
-//	public GsDynamicalHierarchicalNode(byte[] state, byte[] childsCount, int childValue) {
-//		this.size = 1;
-//		if (childValue == 2) {
-//			processed = 1;
-//			root = stateFromArray(state, childsCount, childValue);
-//		} else {
-//			root = null;
-//			addStateToThePile(state);
-//		}
-//		this.uid = nextId++;
-//	}
-//	
-//	/**
-//	 * A new node with a certain initial state.
-//	 * @param state an initial state to add in the graph
-//	 * @param childsCount
-//	 */
-//	public GsDynamicalHierarchicalNode(byte[] state, byte[]childsCount) {
-//		this(state, childsCount, 1);
-//	}
