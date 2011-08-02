@@ -28,6 +28,7 @@
 	<property name="pdfdoc" location="${doc}/pdf"/>
 	<property name="docbookdoc" location="${doc}/docbook"/>
 	<property name="htmlstyle" location="${docbookdoc}/ginsimdoc.xsl"/>
+
 	<property name="tbjar" location="${extlib}/tbrowser.jar"/>
 	<property name="jfjar" location="${extlib}/jfreechart-1.0.11.jar:${extlib}/jcommon-1.0.14.jar"/>
 	<property name="jythonjar" location="${extlib}/jython.jar"/>
@@ -161,7 +162,7 @@
   		<copy todir="${build}/${path}"><fileset dir="${src}/${path}"/></copy>
   		<property name="p2" value="fr/univmrs/tagc/common/ressources"/>
   		<copy todir="${build}/${p2}"><fileset dir="${src}/${p2}"/></copy>
-  		<property name="p3" value="fr/univmrs/tagc/GINsim/jython/console"/>
+  		<property name="p3" value="fr/univmrs/tagc/GINsim/jython"/>
   		<copy todir="${build}/${p3}"><fileset dir="${src}/${p3}"/></copy>
 
   		<!-- build the doap file -->

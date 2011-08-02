@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.global;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+import org.python.util.PythonInterpreter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -17,6 +19,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.manageressources.ImageLoader;
 import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.AboutDialog;
@@ -48,25 +51,17 @@ public class GsMain {
     	loadCore();
 
         String gsdir = ".";
-        boolean startui = true;
-        Vector commands = new Vector(0);
         Vector open = new Vector(0);
 
         /*
-         * parse args: - run without GUI - set ginsim dir - choose locale - give
-         * some help
+         * parse args:
+         *  - run in script mode
+         *  - set ginsim dir
+         *  - choose locale
+         *  - give some help
          */
         for (int i = 0; i < args.length; i++) {
-            // help
-            if (args[i].equals("--help")) {
-                System.out.println("avaible options");
-                System.out.println("\t--lang <lang>: choose the lang (avaible: C, FR)");
-                System.out.println("\t--noui: don't run UI [completly useless until \"run\" does something]");
-                System.out.println("\t--run <file>: run \"script\" from <file> [not really supported yet]");
-                System.out.println("\t--ginsimdir <dir>: define GINsim install dir");
-                System.out.println("\t--help: display this message");
-                return;
-            } else if (args[i].equals("--ginsimdir")) {
+            if (args[i].equals("--ginsimdir")) {
                 if (args.length > i) {
                     i++;
                     gsdir = args[i];
@@ -99,17 +94,52 @@ public class GsMain {
                     System.out.println(args[i]+": missing argument");
                     return;
                 }
-            } else if (args[i].equals("--noui")) {
-                startui = false;
             } else if (args[i].equals("--run")) {
-                if (args.length > i) {
-                    i++;
-                    commands.add(args[i]);
+                if (args.length == i+1) {
+                    System.out.println("Script mode requires a filename argument");
+                    return;
                 }
+                
+                i++;
+                
+                File f = new File(args[i]);
+                if (!f.exists()) {
+                    System.out.println("No such script: "+args[i]);
+                	return;
+                }
+
+                GsEnv.setGinsimDir(gsdir);
+                Tools.HASGUI = false;
+
+                PythonInterpreter pi = new PythonInterpreter();
+                
+                
+				try {
+	                InputStream is = Tools.getStreamForPath("/fr/univmrs/tagc/GINsim/jython/GINsim.py");
+	                pi.execfile(is, "GS.py");
+	                is.close();
+	                pi.exec("GINsim = GINsim()");
+				} catch (Exception e) {
+	                System.out.println("Script mode failed");
+	                return;
+				}
+
+				// TODO: pass remaining arguments
+				
+                pi.execfile(args[i]);
+                return;
             }
             else {
                 if (args[i].startsWith("-")) {
-                    System.out.println("unknown option, try --help for a list");
+                	if (!args[i].equals("--help")) {
+                        System.out.println("Unknown option: "+args[i]);
+                	}
+                    System.out.println("avaible options");
+                    System.out.println("\t--lang <lang>: choose the lang (avaible: C, FR)");
+                    System.out.println("\t--run <file>: run \"script\" from <file> [TODO: pass other args to the script]");
+                    System.out.println("\t--ginsimdir <dir>: define GINsim install dir");
+                    System.out.println("\t--help: display this message");
+                    return;
                 } else {
                     File f = new File(args[i]);
                     if (f.exists()) {
@@ -120,31 +150,25 @@ public class GsMain {
         }
         GsEnv.setGinsimDir(gsdir);
 
-        for (int i = 0; i < commands.size(); i++) {
-            System.out.println("run: " + commands.get(i) + "[not yet done]");
-        }
-
-        if (startui) {
-            if (open.size() > 0) {
-                for (int i = 0; i < open.size(); i++) {
-                    GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(),
-                            GsEnv.newMainFrame(), null, (String) open.get(i));
-                }
-            } else {
-            	File autoexec = new File("autoexec.zginml");
-            	if (autoexec.exists()) {
-            		GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(),
-                            GsEnv.newMainFrame(), null, "autoexec.zginml");
-            		return;
-            	}
-            	autoexec = new File("autoexec.ginml");
-            	if (autoexec.exists()) {
-            		GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(),
-                            GsEnv.newMainFrame(), null, "autoexec.ginml");
-            		return;
-            	}                
-            	GsEnv.newMainFrame();
+        if (open.size() > 0) {
+            for (int i = 0; i < open.size(); i++) {
+                GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(),
+                        GsEnv.newMainFrame(), null, (String) open.get(i));
             }
+        } else {
+        	File autoexec = new File("autoexec.zginml");
+        	if (autoexec.exists()) {
+        		GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(),
+                        GsEnv.newMainFrame(), null, "autoexec.zginml");
+        		return;
+        	}
+        	autoexec = new File("autoexec.ginml");
+        	if (autoexec.exists()) {
+        		GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(),
+                        GsEnv.newMainFrame(), null, "autoexec.ginml");
+        		return;
+        	}                
+        	GsEnv.newMainFrame();
         }
     }
 
