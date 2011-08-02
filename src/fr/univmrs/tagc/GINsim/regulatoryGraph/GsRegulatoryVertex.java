@@ -271,16 +271,18 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 		    
 		    if (isInput) {
 	            out.addAttr("input", ""+isInput);
-		    }
-			// TODO: at some point stop saving logical parameters
-		    Iterator it = v_logicalParameters.iterator();
-		    while (it.hasNext()) {
-				((GsLogicalParameter) it.next()).toXML(out, null, mode);
-			}
-			// save logical functions
-			saveInteractionsModel(out, mode);
-
-			gsa.toXML(out, null, mode);
+		    }	    
+		    // TODO: at some point stop saving logical parameters
+		 	LogicalParameterList lpl = this.getV_logicalParameters();
+		 	Iterator it = lpl.iterator();
+    	    while (it.hasNext()) {
+		 		GsLogicalParameter lp = (GsLogicalParameter) it.next();
+		 		if(lpl.inParam(lp))
+		 			 lp.toXML(out, null, mode);		 			    
+		 	} 
+		    // save logical function
+		 	saveInteractionsModel(out, mode);
+		 	gsa.toXML(out, null, mode);
 
 			if (param != null) {
 			    out.addContent("\n");
