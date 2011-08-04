@@ -103,7 +103,7 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 	public void selectionChanged() {
 		this.cfg.setType();
 	}
-	
+
 	/**
 	 * refresh the state blocking.
 	 * 
@@ -353,12 +353,16 @@ class GsNuSMVConfig implements GsInitialStateStore {
 
 	public void setType() {
 		PriorityClassDefinition priorities = (PriorityClassDefinition) store
-		.getObject(1);
-		if (priorities == null || priorities.getName() == "Asynchronous")
+				.getObject(1);
+		if (priorities == null)
 			type = CFG_ASYNC;
-		else if (priorities.getName() == "Synchronous")
-			type = CFG_SYNC;
-		else type = CFG_PCLASS;
+		else if (priorities.getNbElements() == 1) {
+			if (priorities.getPclass(graph.getNodeOrder())[0][1] == 0)
+				type = CFG_SYNC;
+			else
+				type = CFG_ASYNC;
+		} else
+			type = CFG_PCLASS;
 	}
 
 	public int getType() {
