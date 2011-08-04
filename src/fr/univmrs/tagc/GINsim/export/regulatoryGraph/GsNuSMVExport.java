@@ -400,7 +400,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 				out.write(t_regulators[v] + "_nlevel = ");
 				out.write(t_regulators[v] + " : 1; 1 : 0; esac;\n\n");
 			}
-			out.write("steadyState := ");
+			out.write("stableState := ");
 			for (int v = 0; v < nodeOrder.size(); v++) {
 				if (v > 0)
 					out.write(" & ");
@@ -423,7 +423,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 
 			out.write("\n");
 			out.write("-- Property specification\n");
-			out.write("-- SPEC !EF ( steadyState )\n");
+			out.write("-- SPEC !EF ( stableState )\n");
 
 			// Close main tags
 			out.close();
