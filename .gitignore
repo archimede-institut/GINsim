@@ -9,6 +9,7 @@
 classes/
 build/
 dist/
+bin/
 GINsim*.jar
 
 # Packages #
@@ -41,3 +42,5 @@ Thumbs.db
 *.backup
 *.tmp
 *.swp
+.classpath
+.project
