@@ -10,12 +10,14 @@ classes/
 build/
 dist/
 bin/
-GINsim*.jar
+GINsim-*.jar
+GINsim.app
+core/
+bak/
+testCase/tmp
 
-# Packages #
+# compressed files #
 ############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
 *.7z
 *.dmg
 *.gz
@@ -44,3 +46,7 @@ Thumbs.db
 *.swp
 .classpath
 .project
+.settings
+*.jpx
+*.jpx.local
+*.cld
