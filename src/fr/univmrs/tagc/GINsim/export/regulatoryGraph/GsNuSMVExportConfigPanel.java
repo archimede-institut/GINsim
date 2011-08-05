@@ -13,10 +13,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.tagc.GINsim.graph.GsExtensibleConfig;
@@ -27,6 +24,7 @@ import fr.univmrs.tagc.GINsim.reg2dyn.PrioritySelectionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -109,7 +107,7 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 	 * 
 	 * @param nodeOrder
 	 */
-	public void refresh(Vector nodeOrder) {
+	public void refresh(Vector<GsRegulatoryVertex> nodeOrder) {
 		model.refresh(nodeOrder);
 	}
 
@@ -130,8 +128,8 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 class GsNuSMVConfigModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 864660594916225977L;
-	private Vector nodeOrder;
-	Map m_initstates;
+	private Vector<GsRegulatoryVertex> nodeOrder;
+	Map<GsRegulatoryVertex, Integer> m_initstates;
 
 	/**
 	 * @param nodeOrder
@@ -139,7 +137,7 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param t_max
 	 * @param initstates
 	 */
-	public GsNuSMVConfigModel(Vector nodeOrder, Map m_initstates) {
+	public GsNuSMVConfigModel(Vector<GsRegulatoryVertex> nodeOrder, Map<GsRegulatoryVertex, Integer> m_initstates) {
 		this.nodeOrder = nodeOrder;
 		this.m_initstates = m_initstates;
 	}
@@ -274,7 +272,7 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param minBlock
 	 * @param maxBlock
 	 */
-	public void refresh(Vector nodeOrder) {
+	public void refresh(Vector<GsRegulatoryVertex> nodeOrder) {
 		this.nodeOrder = nodeOrder;
 		fireTableStructureChanged();
 	}
