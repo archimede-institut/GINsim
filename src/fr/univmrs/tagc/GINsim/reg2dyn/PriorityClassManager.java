@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 
@@ -12,8 +13,17 @@ public class PriorityClassManager extends SimpleGenericList {
 	List nodeOrder;
 	public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
 	
+	private List<GsRegulatoryVertex> filterInputVariables(List<GsRegulatoryVertex> nodeOrder) {
+		List<GsRegulatoryVertex> alFiltered = new ArrayList<GsRegulatoryVertex>();
+		for (int i = 0; i < nodeOrder.size(); i++) {
+			if (!nodeOrder.get(i).isInput())
+				alFiltered.add(nodeOrder.get(i));
+		}
+		return alFiltered;
+	}
+	
 	public PriorityClassManager(GsRegulatoryGraph graph) {
-		this.nodeOrder = graph.getNodeOrder();
+		this.nodeOrder = filterInputVariables(graph.getNodeOrder());
 		canAdd = true;
 		canOrder = true;
 		canRemove = true;
