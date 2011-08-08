@@ -99,15 +99,15 @@ public class GsNuSMVExport extends GsAbstractExport {
 		String date = dateformat.format(new Date());
 		try {
 			FileWriter out = new FileWriter(fileName);
-			Iterator it = config.getInitialState().keySet().iterator();
-			Map m_initstates;
+			Iterator<GsInitialState> it = config.getInitialState().keySet().iterator();
+			Map<GsRegulatoryVertex, ArrayList<Integer>> m_initstates;
 			if (it.hasNext()) {
-				m_initstates = ((GsInitialState) it.next()).getMap();
+				m_initstates = it.next().getMap();
 			} else {
-				m_initstates = new HashMap();
+				m_initstates = new HashMap<GsRegulatoryVertex, ArrayList<Integer>>();
 			}
 			if (m_initstates == null) {
-				m_initstates = new HashMap();
+				m_initstates = new HashMap<GsRegulatoryVertex, ArrayList<Integer>>();
 			}
 
 			GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef) config.store
