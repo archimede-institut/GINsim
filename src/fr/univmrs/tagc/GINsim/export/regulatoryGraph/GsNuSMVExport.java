@@ -32,7 +32,17 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
- * Encode a graph to NuSMV format.
+ * GINsim export plugin capable of encoding the working model into a NuSMV
+ * specification. It currently uses NuSMV version 2.5.3.
+ * <p>
+ * It considers the use of priority classes for every model, whichever the
+ * updating policy defined inside GINsim. If a given model considers priority
+ * classes, it maps the corresponding classes. However, if a given model
+ * considers an asynchronous (synchronous) updating policy, it creates an
+ * equivalent mapping using priority classes, one class for each (all the)
+ * variable(s).
+ * </p>
+ * 
  */
 public class GsNuSMVExport extends GsAbstractExport {
 
@@ -68,8 +78,18 @@ public class GsNuSMVExport extends GsAbstractExport {
 		return new GsNuSMVExportConfigPanel(config, dialog);
 	}
 
-	private static String getInitState(Object vertex, Map m) {
-		List v = (List) m.get(vertex);
+	/**
+	 * Gets the set of values of a given @see {@link GsRegulatoryVertex}
+	 * 
+	 * @param vertex
+	 *            The vertex containing the values to be written.
+	 * @param m
+	 *            The map containing the initial values of all the vertexes.
+	 * @return A string of values in the NuSMV format.
+	 */
+	private static String getInitState(GsRegulatoryVertex vertex,
+			Map<GsRegulatoryVertex, ArrayList<Integer>> m) {
+		List<Integer> v = m.get(vertex);
 		if (v != null && v.size() > 0) {
 			String s = "" + v.get(0);
 			if (v.size() > 1) {
@@ -85,11 +105,15 @@ public class GsNuSMVExport extends GsAbstractExport {
 	}
 
 	/**
+	 * Main method that knows how to export a given graph @see
+	 * {@link GsRegulatoryGraph} and write it to a specific file.
+	 * 
 	 * @param graph
-	 * @param selectedOnly
+	 *            The graph object to be exported.
 	 * @param fileName
+	 *            The file name to be written.
 	 * @param config
-	 *            store the configuration
+	 *            store with the configuration specified by the user in the GUI.
 	 */
 	public static void encode(GsRegulatoryGraph graph, String fileName,
 			GsNuSMVConfig config) {
@@ -99,7 +123,8 @@ public class GsNuSMVExport extends GsAbstractExport {
 		String date = dateformat.format(new Date());
 		try {
 			FileWriter out = new FileWriter(fileName);
-			Iterator<GsInitialState> it = config.getInitialState().keySet().iterator();
+			Iterator<GsInitialState> it = config.getInitialState().keySet()
+					.iterator();
 			Map<GsRegulatoryVertex, ArrayList<Integer>> m_initstates;
 			if (it.hasNext()) {
 				m_initstates = it.next().getMap();
@@ -302,7 +327,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 				for (int j = 0; j < t_cst.length; j++)
 					t_cst[j] = -1;
 				hmRegulators.put(t_regulators[i], new ArrayList<String>(
-						nodeRegulators(t_tree[i], t_vertex, t_cst, i)));
+						nodeRegulators(t_tree[i], t_vertex, t_cst)));
 			}
 			// Starting Nodes
 			ArrayList<Integer> alStarting = new ArrayList<Integer>();
@@ -452,7 +477,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 				out.write("  case\n");
 				for (int j = 0; j < t_cst.length; j++)
 					t_cst[j] = -1;
-				node2SMV(t_tree[i], out, t_vertex, t_cst, i);
+				node2SMV(t_tree[i], out, t_vertex, t_cst);
 				out.write("  esac;\n");
 			}
 			out.write("\n");
@@ -532,6 +557,24 @@ public class GsNuSMVExport extends GsAbstractExport {
 		}
 	}
 
+	/**
+	 * Implements a simple (recursive) topological sort for sorting, in
+	 * ascending order, the model variables by the number of regulators
+	 * affecting each one.
+	 * 
+	 * @param hmRegulators
+	 *            a String containing the set of regulators per variable.
+	 * @param t_regulators
+	 *            The name of each regulator.
+	 * @param t_vertex
+	 *            The set of vertexes.
+	 * @param currindex
+	 *            The current index in the recursion.
+	 * @param visited
+	 *            A mark of visited vertexes.
+	 * @param alSorted
+	 *            The list of vertexes already sorted.
+	 */
 	static private void topoSortVisit(
 			HashMap<String, ArrayList<String>> hmRegulators,
 			String[] t_regulators, GsRegulatoryVertex[] t_vertex,
@@ -551,8 +594,20 @@ public class GsNuSMVExport extends GsAbstractExport {
 		alSorted.add(new Integer(currindex));
 	}
 
+	/**
+	 * It creates an HashSet with the regulators of a given vertex given its
+	 * OMDD. It is used for the topological sort algorithm.
+	 * 
+	 * @param node
+	 *            The OMDD of a given vertex.
+	 * @param t_names
+	 *            The set of existing vertexes in the model.
+	 * @param t_cst
+	 *            Auxiliary variable to help navigate through the tree.
+	 * @return The set of regulator names of a given vertex.
+	 */
 	static private HashSet<String> nodeRegulators(OmddNode node,
-			GsRegulatoryVertex[] t_names, int[] t_cst, int index) {
+			GsRegulatoryVertex[] t_names, int[] t_cst) {
 		HashSet<String> hs = new HashSet<String>();
 		if (node.next == null) {
 			for (int i = 0; i < t_cst.length; i++)
@@ -562,15 +617,28 @@ public class GsNuSMVExport extends GsAbstractExport {
 		}
 		for (int i = 0; i < node.next.length; i++) {
 			t_cst[node.level] = i;
-			hs.addAll(nodeRegulators(node.next[i], t_names, t_cst, index));
+			hs.addAll(nodeRegulators(node.next[i], t_names, t_cst));
 		}
 		t_cst[node.level] = -1;
 		return hs;
 	}
 
+	/**
+	 * Knows how to write the given logical function of a given vertex,
+	 * specified by its OMDD, into a NuSMV case construct.
+	 * 
+	 * @param node
+	 *            The OMDD to be written.
+	 * @param out
+	 *            The Writer where the specification is to be written.
+	 * @param t_names
+	 *            The set of model vertexes.
+	 * @param t_cst
+	 *            Auxiliary variable to help navigate through the tree.
+	 * @throws IOException
+	 */
 	static private void node2SMV(OmddNode node, FileWriter out,
-			GsRegulatoryVertex[] t_names, int[] t_cst, int index)
-			throws IOException {
+			GsRegulatoryVertex[] t_names, int[] t_cst) throws IOException {
 		if (node.next == null) // this is a leaf, write the constraint
 		{
 			String s = "";
@@ -590,7 +658,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 		}
 		for (int i = 0; i < node.next.length; i++) {
 			t_cst[node.level] = i;
-			node2SMV(node.next[i], out, t_names, t_cst, index);
+			node2SMV(node.next[i], out, t_names, t_cst);
 		}
 		t_cst[node.level] = -1;
 	}
