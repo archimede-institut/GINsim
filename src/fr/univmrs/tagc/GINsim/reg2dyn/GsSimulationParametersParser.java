@@ -96,7 +96,7 @@ public class GsSimulationParametersParser extends XMLHelper {
                         s = attributes.getValue("updating");
                         Object o = paramLists.pcmanager.getElement(s);
                         if (o == null) {
-                        	o = paramLists.pcmanager.getElement("Asynchronous");
+                        	o = paramLists.pcmanager.getElement(PriorityClassManager.ASYNCHRONOUS);
                         }
                         param.store.setObject(GsSimulationParameters.PCLASS, o);
                         param.breadthFirst = "true".equals(attributes.getValue("breadthFirst"));

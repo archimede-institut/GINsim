@@ -9,6 +9,8 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 public class PriorityClassManager extends SimpleGenericList {
 
+	public static final String SYNCHRONOUS = "synchronous", ASYNCHRONOUS = "asynchronous"; 
+	
 	List nodeOrder;
 	public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
 	
@@ -28,14 +30,14 @@ public class PriorityClassManager extends SimpleGenericList {
 		// add default priority classes
 		int index = add();
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)getElement(null, index);
-		pcdef.setName("asynchronous");
+		pcdef.setName(ASYNCHRONOUS);
 		GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, 0);
 		pc.setName("all");
 		pc.setMode(GsReg2dynPriorityClass.ASYNCHRONOUS);
 		pcdef.lock();
 		index = add();
 		pcdef = (PriorityClassDefinition)getElement(null, index);
-		pcdef.setName("synchronous");
+		pcdef.setName(SYNCHRONOUS);
 		pc = (GsReg2dynPriorityClass)pcdef.getElement(null, 0);
 		pc.setName("all");
 		pc.setMode(GsReg2dynPriorityClass.SYNCHRONOUS);
