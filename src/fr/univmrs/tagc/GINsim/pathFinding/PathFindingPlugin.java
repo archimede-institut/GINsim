@@ -9,7 +9,7 @@ import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.common.GsException;
 
-public class PathFingingPlugin implements GsPlugin, GsActionProvider{
+public class PathFindingPlugin implements GsPlugin, GsActionProvider{
 
 	private GsPluggableActionDescriptor[] t_action = null;
 
@@ -34,7 +34,7 @@ public class PathFingingPlugin implements GsPlugin, GsActionProvider{
 			return;
 		}
 		if (ref == 0) {
-           new PathFingingFrame(frame, graph);
+           new PathFindingFrame(frame, graph);
 		}
 	}
 

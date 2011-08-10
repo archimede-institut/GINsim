@@ -7,7 +7,7 @@ import java.util.Vector;
 import tbrowser.ihm.widget.TBToggleButton;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class TreeElementVertexNote extends TreeElementDeco {
   private TBToggleButton b;

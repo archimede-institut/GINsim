@@ -5,8 +5,8 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class Label extends JLabel {
 	private static final long serialVersionUID = 6165159464465715839L;

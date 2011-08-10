@@ -9,7 +9,7 @@ import javax.swing.*;
 
 import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 abstract public class GenericListSelectionPanel extends JPanel implements ActionListener {

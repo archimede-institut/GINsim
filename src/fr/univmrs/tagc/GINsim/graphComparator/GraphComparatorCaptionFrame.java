@@ -33,7 +33,7 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -3613649496687281647L;

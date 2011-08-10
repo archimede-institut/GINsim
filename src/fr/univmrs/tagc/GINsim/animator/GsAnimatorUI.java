@@ -9,7 +9,7 @@ import java.awt.event.WindowListener;
 
 import javax.swing.*;
 
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * UI for the animator plugin.

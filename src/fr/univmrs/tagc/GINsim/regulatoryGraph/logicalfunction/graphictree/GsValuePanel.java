@@ -15,7 +15,7 @@ import javax.swing.tree.TreePath;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.common.widgets.GsButton;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class GsValuePanel extends GsBooleanFunctionTreePanel implements ActionListener, ChangeListener, MouseListener, MouseMotionListener {
   private static final long serialVersionUID = 207002545507075699L;

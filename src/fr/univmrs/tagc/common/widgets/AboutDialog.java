@@ -15,7 +15,7 @@ import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 

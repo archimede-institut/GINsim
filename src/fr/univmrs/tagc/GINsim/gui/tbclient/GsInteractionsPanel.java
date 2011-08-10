@@ -115,11 +115,11 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 	public GsInteractionsPanel(GsTBClientPanel p) {
 		super();
 		try {
-			URL url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/ressources/icons/in_on.png");
+			URL url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/resources/icons/in_on.png");
 			in_on = new ImageIcon(url);
-			url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/ressources/icons/out_on.png");
+			url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/resources/icons/out_on.png");
 			out_on = new ImageIcon(url);
-			url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/ressources/icons/show.png");
+			url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/resources/icons/show.png");
 			show = new ImageIcon(url);
 		}
 		catch (Exception ex) {

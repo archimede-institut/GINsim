@@ -18,7 +18,7 @@
 		<plugin name="graphComparator" 			mainClass="fr.univmrs.tagc.GINsim.graphComparator.GraphComparatorPlugin"/>
 		<plugin name="stateInRegGraph" 			mainClass="fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraphPlugin"/>
 		<plugin name="regFunctionsTreeView" 	mainClass="fr.univmrs.tagc.GINsim.treeViewer.GsRegulatoryFunctionTreeViewPlugin"/>
-		<plugin name="pathFinding" 				mainClass="fr.univmrs.tagc.GINsim.pathFinding.PathFingingPlugin"/>
+		<plugin name="pathFinding" 				mainClass="fr.univmrs.tagc.GINsim.pathFinding.PathFindingPlugin"/>
 		<plugin name="stg2htg" 		load="false"			mainClass="fr.univmrs.tagc.GINsim.stg2htg.STG2HTGPlugin"/>
 		<plugin name="omddViz" 		load="false"			mainClass="fr.univmrs.tagc.GINsim.omddViz.OmddVizPlugin"/>
 		<plugin name="localGraph" 				mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.localGraph.LocalGraphPlugin"/>
@@ -52,7 +52,7 @@
 		<graph name="dynamicalHierarchicalGraph" 	mainClass="fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraphDescriptor" load="true"/>
 	</listOfGraphType>
 
-	<imagePath 		path="/fr/univmrs/tagc/GINsim/ressources/icons"/>
-	<messagesPath 	path="fr.univmrs.tagc.GINsim.ressources.messages"/>
-	<doap 			path="/fr/univmrs/tagc/GINsim/ressources/GINsim-about.rdf"/>
+	<imagePath 		path="/fr/univmrs/tagc/GINsim/resources/icons"/>
+	<messagesPath 	path="fr.univmrs.tagc.GINsim.resources.messages"/>
+	<doap 			path="/fr/univmrs/tagc/GINsim/resources/GINsim-about.rdf"/>
 </GINsim-addon>

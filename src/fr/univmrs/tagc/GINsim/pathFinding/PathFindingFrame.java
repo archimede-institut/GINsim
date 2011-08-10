@@ -30,11 +30,11 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
-public class PathFingingFrame extends StackDialog implements ActionListener, ResultHandler {
+public class PathFindingFrame extends StackDialog implements ActionListener, ResultHandler {
 	private static final long serialVersionUID = -7430762236435581864L;
 	private GsGraph graph;
 	private Container mainPanel, resultsPanel, progressionPanel;
@@ -53,7 +53,7 @@ public class PathFingingFrame extends StackDialog implements ActionListener, Res
 	private JButton selectionForEndButton, selectionForStartButton;
 	
 	
-	public PathFingingFrame(JFrame frame, GsGraph graph) {
+	public PathFindingFrame(JFrame frame, GsGraph graph) {
 		super(frame, "pathFinding", 420, 260);
 		this.graph = graph;
         initialize();

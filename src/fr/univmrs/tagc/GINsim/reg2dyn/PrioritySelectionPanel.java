@@ -5,7 +5,7 @@ import java.util.Map;
 
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
 import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class PrioritySelectionPanel extends GenericListSelectionPanel {

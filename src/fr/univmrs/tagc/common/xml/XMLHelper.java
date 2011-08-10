@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 abstract public class XMLHelper extends DefaultHandler implements EntityResolver {
 

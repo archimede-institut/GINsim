@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Vector;
 
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * extract from graph graphic info on a vertex.

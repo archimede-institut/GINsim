@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphOptionPanel;
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * offer save option for regulatory graphs 

@@ -3,7 +3,7 @@ package fr.univmrs.tagc.GINsim.gui;
 import javax.swing.ImageIcon;
 
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * all info needed to add a custom action in the menus or toolbar without any headache.
