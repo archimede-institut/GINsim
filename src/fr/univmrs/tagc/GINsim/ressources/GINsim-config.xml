@@ -15,7 +15,6 @@
 		<plugin name="analyseStateTransition"	mainClass="fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicAnalyserPlugin"/>
 		<plugin name="modelSimplifier" 			mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier.ModelSimplifierPlugin"/>
 		<plugin name="interactionAnalysis" 		mainClass="fr.univmrs.tagc.GINsim.interactionAnalysis.InteractionAnalysisPlugin"/>
-		<plugin name="modelChecker" 			mainClass="fr.univmrs.tagc.GINsim.modelChecker.GsModelCheckerPlugin"/>
 		<plugin name="graphComparator" 			mainClass="fr.univmrs.tagc.GINsim.graphComparator.GraphComparatorPlugin"/>
 		<plugin name="stateInRegGraph" 			mainClass="fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraphPlugin"/>
 		<plugin name="regFunctionsTreeView" 	mainClass="fr.univmrs.tagc.GINsim.treeViewer.GsRegulatoryFunctionTreeViewPlugin"/>
@@ -32,7 +31,6 @@
 		<plugin name="GenericDocumentExport"	mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport"/>
 		<plugin	name="CytoscapeExport" 			mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.CytoscapeExport"/>
 		<plugin name="PNexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsPetriNetExport"/>
-		<plugin name="SMVexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSMVExport"/>
 		<plugin name="NuSMVexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsNuSMVExport"/>
 		<plugin name="GNAexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAExport"/>
 		<plugin name="GNAMLexport" 				mainClass="fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsGNAMLExport"/>

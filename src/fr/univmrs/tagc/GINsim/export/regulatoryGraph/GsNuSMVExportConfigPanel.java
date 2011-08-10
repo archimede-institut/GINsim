@@ -13,10 +13,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import fr.univmrs.tagc.GINsim.graph.GsExtensibleConfig;
@@ -103,13 +100,13 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 	public void selectionChanged() {
 		this.cfg.setType();
 	}
-	
+
 	/**
 	 * refresh the state blocking.
 	 * 
 	 * @param nodeOrder
 	 */
-	public void refresh(Vector nodeOrder) {
+	public void refresh(Vector<GsRegulatoryVertex> nodeOrder) {
 		model.refresh(nodeOrder);
 	}
 
@@ -130,8 +127,8 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 class GsNuSMVConfigModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 864660594916225977L;
-	private Vector nodeOrder;
-	Map m_initstates;
+	private Vector<GsRegulatoryVertex> nodeOrder;
+	Map<GsRegulatoryVertex, Integer> m_initstates;
 
 	/**
 	 * @param nodeOrder
@@ -139,7 +136,7 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param t_max
 	 * @param initstates
 	 */
-	public GsNuSMVConfigModel(Vector nodeOrder, Map m_initstates) {
+	public GsNuSMVConfigModel(Vector<GsRegulatoryVertex> nodeOrder, Map<GsRegulatoryVertex, Integer> m_initstates) {
 		this.nodeOrder = nodeOrder;
 		this.m_initstates = m_initstates;
 	}
@@ -274,7 +271,7 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param minBlock
 	 * @param maxBlock
 	 */
-	public void refresh(Vector nodeOrder) {
+	public void refresh(Vector<GsRegulatoryVertex> nodeOrder) {
 		this.nodeOrder = nodeOrder;
 		fireTableStructureChanged();
 	}
@@ -353,12 +350,16 @@ class GsNuSMVConfig implements GsInitialStateStore {
 
 	public void setType() {
 		PriorityClassDefinition priorities = (PriorityClassDefinition) store
-		.getObject(1);
-		if (priorities == null || priorities.getName() == "Asynchronous")
+				.getObject(1);
+		if (priorities == null)
 			type = CFG_ASYNC;
-		else if (priorities.getName() == "Synchronous")
-			type = CFG_SYNC;
-		else type = CFG_PCLASS;
+		else if (priorities.getNbElements() == 1) {
+			if (priorities.getPclass(graph.getNodeOrder())[0][1] == 0)
+				type = CFG_SYNC;
+			else
+				type = CFG_ASYNC;
+		} else
+			type = CFG_PCLASS;
 	}
 
 	public int getType() {
