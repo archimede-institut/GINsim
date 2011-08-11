@@ -44,7 +44,7 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                       new GsPluggableActionDescriptor("STR_biolayout", "STR_biolayout_descr", null, this, ACTION_EXPORT, BIOLAYOUT),
                       new GsPluggableActionDescriptor("STR_SVG", "STR_SVG_descr", null, this, ACTION_EXPORT, SVG),
                       new GsPluggableActionDescriptor("STR_Image", "STR_Image_descr", null, this, ACTION_EXPORT, IMAGE),
-                      new GsPluggableActionDescriptor("STR_SBML", "STR_SBML_descr", null, this, ACTION_EXPORT, SBML),
+                     // new GsPluggableActionDescriptor("STR_SBML", "STR_SBML_descr", null, this, ACTION_EXPORT, SBML),
               };
             }
             return new GsPluggableActionDescriptor[] {

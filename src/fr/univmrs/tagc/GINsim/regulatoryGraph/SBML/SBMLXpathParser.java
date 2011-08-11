@@ -158,9 +158,17 @@ public final class SBMLXpathParser {
 								.getAttributeValue("maxLevel"));
 						vertex = graph.addNewVertex(id, name, maxval);
 						vertex.getV_logicalParameters().setUpdateDup(false);
-						byte basevalue = 1;
-						vertex.addLogicalParameter(new GsLogicalParameter(basevalue), true);
 
+						String s_basal = elcurrent.getAttributeValue("basevalue");
+						if(s_basal != null)
+						{
+							byte basevalue = (byte)Integer.parseInt(s_basal);
+							if(basevalue !=0)
+							{
+								vertex.addLogicalParameter(new GsLogicalParameter(basevalue), true);
+							}
+						}
+						
 						String input = elcurrent.getAttributeValue("boundaryCondition");
 						if (input != null) {
 							vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"),

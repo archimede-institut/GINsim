@@ -353,7 +353,8 @@ public class GsOpenAction extends BaseAction {
      */
     public static String selectFile(JFrame frame) {
         getJfc();
-        int ret = jfc.showSaveDialog(frame);
+        //int ret = jfc.showSaveDialog(frame);
+        int ret = jfc.showOpenDialog(frame);
 
         if (null != jfc.getSelectedFile() && ret == JFileChooser.APPROVE_OPTION) {
             String filename = jfc.getSelectedFile().getPath();
