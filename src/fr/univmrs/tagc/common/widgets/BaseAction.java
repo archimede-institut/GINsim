@@ -7,7 +7,7 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * this class is used for all actions, it will lookup for an internatiolized string

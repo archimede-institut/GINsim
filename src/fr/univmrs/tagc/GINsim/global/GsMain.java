@@ -20,8 +20,8 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.AboutDialog;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
@@ -37,7 +37,7 @@ public class GsMain {
         updateClassPath(dirs);
 
         try {
-            GsEnv.readConfig("/fr/univmrs/tagc/GINsim/ressources/GINsim-config.xml");
+            GsEnv.readConfig("/fr/univmrs/tagc/GINsim/resources/GINsim-config.xml");
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);

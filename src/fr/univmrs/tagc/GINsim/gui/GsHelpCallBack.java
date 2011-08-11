@@ -5,7 +5,7 @@ import java.io.File;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.AboutDialog;
 
 /**

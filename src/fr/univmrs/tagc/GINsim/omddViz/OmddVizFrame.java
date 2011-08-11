@@ -23,7 +23,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.treeViewer.GsTree;
 import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParser;
 import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParserFromManualOmdd;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class OmddVizFrame extends StackDialog implements ActionListener {

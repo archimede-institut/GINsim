@@ -27,7 +27,7 @@ import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.datastore.gui.SimpleStateListTableModel;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 

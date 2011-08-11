@@ -21,7 +21,7 @@ import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**

@@ -12,7 +12,7 @@ import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 
 public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListener {

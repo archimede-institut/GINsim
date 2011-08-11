@@ -14,7 +14,7 @@ import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * This frame offers to the user a choice about it's new graph.

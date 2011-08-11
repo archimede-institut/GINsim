@@ -14,7 +14,7 @@ import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class RegulatoryEdgeEditor extends ObjectEditor {
 

@@ -7,7 +7,7 @@ import java.util.Vector;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * this object represents nodes in the reduced graph : the graph of strong connected components

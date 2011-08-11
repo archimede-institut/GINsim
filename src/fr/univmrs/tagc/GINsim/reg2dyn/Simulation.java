@@ -12,7 +12,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * This is the main part of the simulation. It supports pluggable backends

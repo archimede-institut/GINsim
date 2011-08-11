@@ -18,7 +18,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 
 /**

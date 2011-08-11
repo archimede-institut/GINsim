@@ -72,9 +72,9 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
   public GsFunctionEditorEditPanel() {
   	super();
   	try {
-			URL url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/ressources/icons/notred.png");
+			URL url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/resources/icons/notred.png");
 			ic_on = new ImageIcon(url);
-			url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/ressources/icons/notgrey.png");
+			url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/resources/icons/notgrey.png");
 			ic_off = new ImageIcon(url);
 		}
 		catch (Exception ex) {

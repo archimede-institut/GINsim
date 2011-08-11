@@ -9,7 +9,7 @@ import javax.swing.tree.*;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
-import fr.univmrs.tagc.common.manageressources.*;
+import fr.univmrs.tagc.common.managerresources.*;
 import fr.univmrs.tagc.common.widgets.*;
 
 public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionListener {

@@ -32,7 +32,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class GraphComparatorFrame  extends StackDialog implements ActionListener {

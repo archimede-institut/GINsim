@@ -1,6 +1,6 @@
 package fr.univmrs.tagc.common;
 
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * When something bad happen, a GsException must be raised.

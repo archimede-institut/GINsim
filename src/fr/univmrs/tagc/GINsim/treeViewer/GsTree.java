@@ -15,7 +15,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GsTree extends GsGraph {
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;

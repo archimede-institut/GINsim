@@ -10,7 +10,7 @@ import javax.swing.*;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 
 public class RegulatoryEdgeEditPanel extends JPanel 

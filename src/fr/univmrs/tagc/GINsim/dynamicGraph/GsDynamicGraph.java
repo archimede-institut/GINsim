@@ -26,8 +26,8 @@ import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 

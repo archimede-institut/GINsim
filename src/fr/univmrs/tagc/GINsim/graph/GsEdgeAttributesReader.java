@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * graphic info on an edge.

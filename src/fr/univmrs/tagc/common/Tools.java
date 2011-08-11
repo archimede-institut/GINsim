@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 
 import org.jgraph.util.BrowserLauncher;
 
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * some little utilities, might be replaced later by call to some external code,

@@ -17,12 +17,12 @@
 	<property name="build" location="./build"/>
 	<property name="dist" location="./dist"/>
 	<property name="lib.dir" value="../lib"/>
-	<property name="src.resources.ginsim" location="${src}/fr/univmrs/tagc/GINsim/ressources"/>
+	<property name="src.resources.ginsim" location="${src}/fr/univmrs/tagc/GINsim/resources"/>
 	<property name="src.resources.jython" location="${src}/fr/univmrs/tagc/GINsim/jython"/>
-	<property name="src.resources.common" location="${src}/fr/univmrs/tagc/common/ressources"/>
-	<property name="build.resources.ginsim" location="${build}/fr/univmrs/tagc/GINsim/ressources"/>
+	<property name="src.resources.common" location="${src}/fr/univmrs/tagc/common/resources"/>
+	<property name="build.resources.ginsim" location="${build}/fr/univmrs/tagc/GINsim/resources"/>
 	<property name="build.resources.jython" location="${build}/fr/univmrs/tagc/GINsim/jython"/>
-	<property name="build.resources.common" location="${build}/fr/univmrs/tagc/common/ressources"/>
+	<property name="build.resources.common" location="${build}/fr/univmrs/tagc/common/resources"/>
 
 	<property name="jar.name" value="${ant.project.name}-${version}.jar"/>
 	<property name="jar.file" value="${lib.dir}/../${jar.name}"/>
@@ -40,6 +40,10 @@
 	<path id="lib.classpath">
 		<fileset dir="${lib.dir}" includes="**/*.jar" />
 	</path>
+	
+	<!-- Setting the JarBundler file location -->
+	<property name="jarbundle.file" value="/usr/share/ant/lib/jarbundler-2.2.0.jar"/>
+	<available file="${BUNDLER}" type="file" property="jarbundle.file" value="${BUNDLER}"/>
 
 	<!-- ************************************************** -->
 	<!-- Display the list of all available targets          -->
@@ -249,39 +253,56 @@
 	<!-- ************************************************** -->
 	<!-- Build an application bundle for Mac OS X           -->
 	<!-- ************************************************** -->
-	<target name="macbundle" depends="jar" description="Build an application for mac">
+	<target name="macbundle.check" description="Build an application for mac">
 		<!--Fetch jarbundler at http://informagen.com/JarBundler/ and install it in /usr/share/ant/lib/ (default)  -->
-		<taskdef name="jarbundler" classpath="/usr/share/ant/lib/jarbundler-2.2.0.jar"  classname="net.sourceforge.jarbundler.JarBundler"/>
-
-	    <jarbundler dir="" verbose="true" showPlist="false"
-	                name="GINsim"
-	                shortname="GINsim"
-	                signature="????"
-	                stubfile="ginsim"
-	                mainclass="fr.univmrs.tagc.GINsim.global.GsMain"
-	                jar="${ginsim}-${version}.jar"
-	                jvmversion="1.4+"
-	                version="${baseversion}"
-       			    build="${CURDATE}" 
-	                infostring="GINsim (Gene Interaction Network simulation) is a computer tool for the modeling and simulation of genetic regulatory networks. See http://gin.univ-mrs.fr/"
-	                bundleid="fr.univmrs.tagc.GINsim" > 
-		      <!-- FIXME: add icon="icons/GINsim.icns" -->
-
-	    	<!-- Adjust the look, feel and behavior -->
-	      <javaproperty name="apple.laf.useScreenMenuBar" value="true"/>
-	      <javaproperty name="apple.awt.brushMetal" value="false"/>
-	      <javaproperty name="apple.awt.showGrowBox" value="false"/>
-
-	      <!-- Associate document types with this application -->
-	      <!-- FIXME: add iconFile="${icons}/ginml.icns" -->
-	      <documenttype name="GINML document"
-	                    extensions="ginml" 
-	                    role="Editor"/>
-	                    
-	      <documenttype name="zGINML document"
-	                    extensions="zginml" 
-	                    role="Editor"/>
-	    </jarbundler>
+		<condition property="macbundle.cond">
+			<resourceexists><file file="${jarbundle.file}"/></resourceexists>
+		</condition>
 	</target>
+	<target name="macbundle.then" depends="macbundle.check,jar" if="macbundle.cond">
+		<taskdef name="jarbundler" classpath="${jarbundle.file}"
+			classname="net.sourceforge.jarbundler.JarBundler"/>
+
+		<jarbundler dir="${dist}"
+			name="${ant.project.name}"
+			mainclass="fr.univmrs.tagc.GINsim.global.GsMain"
+			jar="${dist}/${jar.name}"
+			jvmversion="${compile.jversion}"
+			version="${baseversion}"
+			build="${CURDATE}"
+			infostring="GINsim (Gene Interaction Network simulation) is a computer tool for the modeling and simulation of genetic regulatory networks. See http://gin.univ-mrs.fr/" 
+			icon="${src.resources.ginsim}/icons/GINsim.icns"
+			>
+<!--
+			bundleid="fr.univmrs.tagc.GINsim"
+			stubfile="${ant.project.name}"
+			showPlist="false"
+			shortname="${ant.project.name}"
+			verbose="true"
+			signature="giml"
+			
+-->
+			<!-- Adjust the look, feel and behavior -->
+			<javaproperty name="apple.laf.useScreenMenuBar" value="true"/>
+			<javaproperty name="apple.awt.brushMetal" value="false"/>
+			<javaproperty name="apple.awt.showGrowBox" value="false"/>
+
+			<!-- Associate document types with this application -->
+			<!-- FIXME: add iconFile="${icons}/ginml.icns" -->
+			<documenttype name="GINML document" extensions="ginml" role="Editor"
+				iconFile="${src.resources.ginsim}/icons/GINsim.icns"/>
+			<documenttype name="zGINML document" extensions="zginml" role="Editor"
+				iconFile="${src.resources.ginsim}/icons/GINsim.icns"/>
+		</jarbundler>
+		<copy todir="${dist}/${ant.project.name}.app/Contents/Resources/Java/lib">
+			<fileset dir="${lib.dir}" includes="**/*.jar" />
+		</copy>
+	</target>
+	<target name="macbundle.else" depends="macbundle.check" unless="macbundle.cond">
+		<echo>JarBundler not found at ${jarbundle.file}
+Please install it or pass its location to ant using the BUNDLER parameter:
+  ant -DBUNDLER=/path/to/bundler.jar macbundle</echo>
+	</target>
+	<target name="macbundle" depends="macbundle.then, macbundle.else"/>
 	
 </project>

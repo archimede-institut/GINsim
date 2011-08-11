@@ -14,7 +14,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * main method for the reg2dyn plugin

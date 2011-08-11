@@ -4,7 +4,7 @@
  *
  * Please visit our website at http://librarian.sf.de
  */
-package fr.univmrs.tagc.common.manageressources;
+package fr.univmrs.tagc.common.managerresources;
 
 import java.util.Enumeration;
 

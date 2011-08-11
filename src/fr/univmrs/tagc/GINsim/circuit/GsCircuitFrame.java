@@ -43,7 +43,7 @@ import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Label;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 import fr.univmrs.tagc.common.widgets.treetable.AbstractTreeTableModel;

@@ -10,7 +10,7 @@ import javax.swing.JTable;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GsHierarchicalParameterPanel extends GsParameterPanel {
 		private static final long serialVersionUID = 3342245591953494375L;

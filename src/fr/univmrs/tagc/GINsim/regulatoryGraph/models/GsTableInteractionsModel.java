@@ -9,7 +9,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * This is the model behind the interaction editor

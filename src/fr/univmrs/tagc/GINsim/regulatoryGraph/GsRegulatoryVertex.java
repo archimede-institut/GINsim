@@ -18,7 +18,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 

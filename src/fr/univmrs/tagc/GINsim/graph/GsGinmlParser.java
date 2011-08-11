@@ -22,13 +22,13 @@ public final class GsGinmlParser extends XMLHelper {
     private GsXMLHelper realParser = null;
     
     static {
-        String DTD = "/fr/univmrs/tagc/GINsim/ressources/GINML_2_1.dtd";
+        String DTD = "/fr/univmrs/tagc/GINsim/resources/GINML_2_1.dtd";
         XMLHelper.addEntity("http://gin.univ-mrs.fr/GINsim/GINML_2_0.dtd", DTD);
         XMLHelper.addEntity("http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd", DTD);
-        XMLHelper.addEntity("file://fr/univmrs/ibdm/GINsim/ressources/GINML_2_1.dtd", DTD);
-        XMLHelper.addEntity("file://fr/univmrs/ibdm/GINsim/ressources/GINML_2_0.dtd", DTD);
-        XMLHelper.addEntity("file://fr/univmrs/tagc/GINsim/ressources/GINML_2_1.dtd", DTD);
-        XMLHelper.addEntity("file://fr/univmrs/tagc/GINsim/ressources/GINML_2_0.dtd", DTD);
+        XMLHelper.addEntity("file://fr/univmrs/ibdm/GINsim/resources/GINML_2_1.dtd", DTD);
+        XMLHelper.addEntity("file://fr/univmrs/ibdm/GINsim/resources/GINML_2_0.dtd", DTD);
+        XMLHelper.addEntity("file://fr/univmrs/tagc/GINsim/resources/GINML_2_1.dtd", DTD);
+        XMLHelper.addEntity("file://fr/univmrs/tagc/GINsim/resources/GINML_2_0.dtd", DTD);
     }
     
     /**

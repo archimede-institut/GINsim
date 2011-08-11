@@ -25,7 +25,7 @@ import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * Base class for specialized graphs, with some common functions.

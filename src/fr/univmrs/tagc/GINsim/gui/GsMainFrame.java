@@ -18,8 +18,8 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 import fr.univmrs.tagc.common.widgets.SplitPane;
 

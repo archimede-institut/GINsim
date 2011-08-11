@@ -4,7 +4,7 @@ import java.awt.Insets;
 
 import javax.swing.JButton;
 
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import javax.swing.ImageIcon;
 
 public class GsButton extends JButton {

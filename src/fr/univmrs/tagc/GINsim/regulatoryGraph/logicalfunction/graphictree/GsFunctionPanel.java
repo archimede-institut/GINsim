@@ -12,7 +12,7 @@ import javax.swing.tree.TreePath;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
-import fr.univmrs.tagc.common.manageressources.ImageLoader;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class GsFunctionPanel extends GsBooleanFunctionTreePanel implements ActionListener, KeyListener, PropertyChangeListener, MouseListener {

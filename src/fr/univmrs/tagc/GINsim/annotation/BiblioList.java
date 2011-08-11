@@ -20,7 +20,7 @@ import fr.univmrs.tagc.GINsim.graph.*;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
