@@ -62,12 +62,12 @@ abstract public class GsGraphManager {
     /**
      * add an edge beetwen two vertices and attach the given data to it.
      * 
-     * @param souce
+     * @param source
      * @param target
      * @param data
      * @return the newly created edge (or null if failed/inapropriate)
      */
-	abstract public Object addEdge (Object souce, Object target, Object data);
+	abstract public Object addEdge (Object source, Object target, Object data);
     
     /**
      * select all objects (vertices and edges).

@@ -23,6 +23,9 @@
 		<plugin name="stg2htg" 		load="false"			mainClass="fr.univmrs.tagc.GINsim.stg2htg.STG2HTGPlugin"/>
 		<plugin name="omddViz" 		load="false"			mainClass="fr.univmrs.tagc.GINsim.omddViz.OmddVizPlugin"/>
 		<plugin name="localGraph" 				mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.localGraph.LocalGraphPlugin"/>
+		<plugin name="DecisionAnalysis" 		mainClass="fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis.GsDecisionAnalysisPlugin"/>
+		
+		
 		
 		<!-- import plugins -->
 		<plugin name="SBMLimport"                   mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.SBML.SBMLImportPlugin"/>
