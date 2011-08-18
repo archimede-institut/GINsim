@@ -31,19 +31,16 @@ public class GsDecisionOnEdge {
 	public void computeChange(byte[] source, byte[] target) {
 		for (int i = 0; i < source.length; i++) {
 			int change = target[i] - source[i];
-			if (change == 0) {
-				return;
+			if (change != 0) {
+				int currentChange = genesUpdated[i];
+				if (currentChange != change) {
+					if (currentChange == CHANGE_NONE) {
+						genesUpdated[i] = change;
+					} else if (currentChange != CHANGE_BOTH) {
+						genesUpdated[i] = CHANGE_BOTH;
+					}
+				}
 			}
-			int currentChange = genesUpdated[i];
-			if (currentChange == change) {
-				return;
-			}
-			if (currentChange == CHANGE_NONE) {
-				genesUpdated[i] = change;
-			} else if (currentChange != CHANGE_BOTH) {
-				genesUpdated[i] = CHANGE_BOTH;
-			}
-
 		}
 	}
 	

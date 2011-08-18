@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -13,11 +14,10 @@ import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitio
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParametersManager;
-import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassManager;
 import fr.univmrs.tagc.GINsim.reg2dyn.PrioritySelectionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
+import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class GsDecisionAnalysisFrame extends StackDialog implements ActionListener {
@@ -37,7 +37,7 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 	}
 
 	public GsDecisionAnalysisFrame(JFrame frame, GsGraph graph) {
-		super(frame, "STR_omddViz", 475, 260);
+		super(frame, "STR_htg_decision_analysis", 475, 260);
 		this.frame = frame;
 		if (graph instanceof GsHierarchicalTransitionGraph) {
 			this.htg = (GsHierarchicalTransitionGraph) graph;
@@ -56,6 +56,10 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 		
 			c.gridx = 0;
 			c.gridy = 0;
+			JLabel label = new JLabel(Translator.getString("STR_htg_decision_analysis_instructions"));
+			mainPanel.add(label, c);
+			c.gridy++;
+			
 			mainPanel.add(getPriorityClassSelector(), c);
 			c.gridy++;
 			
@@ -79,7 +83,10 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 
 	protected void run() {
 		GsDecisionAnalysis gsDecisionAnalysis = new GsDecisionAnalysis(htg, currentParameter);
+		this.brun.setEnabled(false);
 		gsDecisionAnalysis.run();
+		this.brun.setEnabled(true);
+		cancel();
 	}
 	
 	public void actionPerformed(ActionEvent e) {

@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraphDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.common.GsException;
