@@ -1249,7 +1249,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         }
 
         if (associatedID == null) {
-            associatedID = GsOpenAction.selectFile(mainFrame);
+            associatedID = GsOpenAction.selectFileWithOpenDialog(mainFrame);
         }
 
         return associatedID;

@@ -54,7 +54,7 @@ public class SBMLImportPlugin implements GsPlugin, GsActionProvider {
 			return;
 		}
 		// we should add a better way to select a file for import
-		filename = GsOpenAction.selectFile(frame);
+		filename = GsOpenAction.selectFileWithOpenDialog(frame);
 		if (filename == null) {
 			System.out.println("fichier d'entree null");
 			return;
