@@ -125,7 +125,7 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 0;
-			c.gridheight = 2;
+			//c.gridheight = 2;
 			c.fill = GridBagConstraints.BOTH;
 			c.weightx = 0.4;
 			mainPanel.add(getSimulationStrategyPanel(), c);
@@ -143,6 +143,9 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 			// size limits
 			c.gridy++;
 			mainPanel.add(getGraphSizeLimitsPanel(), c);
+			
+			c.gridx--;
+			mainPanel.add(getPriorityClassSelector(), c);
 			
 			// initial state
 			initStatePanel = new GsInitialStatePanel(this, paramList.graph, true);
@@ -175,11 +178,6 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 			c.gridwidth = 2;
 			simulationStrategyPanel.add(getSimulationMethodsComboBox(), c);
 			
-			c.gridx = 0;
-			c.gridy++;
-			c.gridwidth = 2;
-			simulationStrategyPanel.add(getPriorityClassSelector(), c);
-
 			c.gridx = 0;
 			c.gridy++;
 			c.gridwidth = 1;
