@@ -29,6 +29,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.manageressources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
@@ -154,10 +155,19 @@ public class GsNuSMVExport extends GsAbstractExport {
 			if (mutant != null) {
 				mutant.apply(t_tree, graph);
 			}
+			boolean bType1 = true;
+			if (config.getExportType() == config.CFG_INPUT_IVAR)
+				bType1 = false;
 
-			out.write("-- GINsim implicit representation for NuSMV --\n");
 			out.write("-- " + date + "\n");
-			out.write("\nMODULE main\n");
+			out.write("-- GINsim implicit representation for NuSMV --\n");
+			out.write("-- NuSMV version 2.5.1 (or higher) required --\n");
+			out.write("-- ");
+			if (bType1)
+				out.write(Translator.getString("STR_NuSMV_Type1"));
+			else
+				out.write(Translator.getString("STR_NuSMV_Type2"));
+			out.write("\n\nMODULE main\n");
 
 			PriorityClassDefinition priorities = (PriorityClassDefinition) config.store
 					.getObject(1);
@@ -177,7 +187,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 			int[][] iaTmp = null;
 
 			out.write("\nIVAR\n-- Simulation mode declaration --\n");
-			switch (config.getType()) {
+			switch (config.getUpdatePolicy()) {
 			case GsNuSMVConfig.CFG_SYNC:
 				out.write("-- Synchronous\n  PCs : { PC_c1 };\n  PC_c1_vars : { ");
 				sTmp = "PC_c1";
@@ -293,12 +303,27 @@ public class GsNuSMVExport extends GsAbstractExport {
 				break;
 			}
 
+			if (hasInputVars) {
+				if (bType1)
+					out.write("\nFROZENVAR\n");
+				out.write("-- Input variables declaration\n");
+				for (int i = 0; i < t_vertex.length; i++) {
+					if (t_vertex[i].isInput()) {
+						String s_levels = "0";
+						for (int j = 1; j <= t_vertex[i].getMaxValue(); j++)
+							s_levels += ", " + j;
+						out.write("  " + t_regulators[i] + " : { " + s_levels
+								+ "};\n");
+					}
+				}
+			}
+
 			out.write("\nVAR");
 			// PCrank depends on the state variables
 			// Should therefore be declared after
 			// But after some tests
-			if (config.getType() == GsNuSMVConfig.CFG_PCLASS && iaTmp != null
-					&& iaTmp.length > 1) {
+			if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS
+					&& iaTmp != null && iaTmp.length > 1) {
 				out.write("\n-- Priority definition\n");
 				out.write("  PCrank : { ");
 				int iLast = 0;
@@ -370,19 +395,6 @@ public class GsNuSMVExport extends GsAbstractExport {
 				// + "};\n");
 			}
 
-			if (hasInputVars) {
-				out.write("\nFROZENVAR\n");
-				for (int i = 0; i < t_vertex.length; i++) {
-					if (t_vertex[i].isInput()) {
-						String s_levels = "0";
-						for (int j = 1; j <= t_vertex[i].getMaxValue(); j++)
-							s_levels += ", " + j;
-						out.write("  " + t_regulators[i] + " : { " + s_levels
-								+ "};\n");
-					}
-				}
-			}
-
 			// Forcing to have some state variable to change
 			// Otherwise: cycles within PClasses could arise
 			/*
@@ -393,20 +405,36 @@ public class GsNuSMVExport extends GsAbstractExport {
 			 * t_regulators[i] + ") != "); out.write(t_regulators[i] + " |\n");
 			 * } out.write("  stableState;\n");
 			 */
-			out.write("\nASSIGN\n");
-			out.write("-- Variable initialization\n");
+			out.write("\n-- State variables initialization\n");
 			for (int i = 0; i < t_vertex.length; i++) {
+				if (t_vertex[i].isInput())
+					continue;
 				String s_init = getInitState(nodeOrder.get(i), m_initstates);
 				if (s_init == null) {
-					out.write("--  init(" + t_regulators[i] + ") := 0;\n");
+					out.write("--  INIT " + t_regulators[i] + " = 0;\n");
 				} else {
-					out.write("  init(" + t_regulators[i] + ") := " + s_init
+					out.write("  INIT " + t_regulators[i] + " = " + s_init
 							+ ";\n");
 				}
 			}
+			if (bType1) {
+				out.write("-- Input variables initialization\n");
+				for (int i = 0; i < t_vertex.length; i++) {
+					if (!t_vertex[i].isInput())
+						continue;
+					String s_init = getInitState(nodeOrder.get(i), m_initstates);
+					if (s_init == null) {
+						out.write("--  INIT " + t_regulators[i] + " = 0;\n");
+					} else {
+						out.write("  INIT " + t_regulators[i] + " = " + s_init
+								+ ";\n");
+					}
+				}
+			}
 
-			if (config.getType() == GsNuSMVConfig.CFG_PCLASS && iaTmp != null
-					&& iaTmp.length > 1) {
+			out.write("\nASSIGN");
+			if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS
+					&& iaTmp != null && iaTmp.length > 1) {
 				if (tmPcRank2Name.size() > 1) {
 					out.write("\n-- Establishing priorities\n");
 					out.write("  PCrank :=\n    case\n");
@@ -521,7 +549,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 				out.write(tmPcNum2Name.get(pc) + ") & (");
 				out.write(tmPcNum2Name.get(pc) + "_vars = ");
 				out.write(sub);
-				if (config.getType() == GsNuSMVConfig.CFG_PCLASS) {
+				if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS) {
 					out.write(") & (PCrank = ");
 					out.write((String) tmPcRank2Name.get(tmPcNum2Rank.get(pc)));
 				}
@@ -534,7 +562,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 					out.write(tmPcNum2Name.get(pc) + ") & (");
 					out.write(tmPcNum2Name.get(pc) + "_vars = ");
 					out.write(saSubName[0]);
-					if (config.getType() == GsNuSMVConfig.CFG_PCLASS) {
+					if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS) {
 						out.write(") & (PCrank = ");
 						out.write((String) tmPcRank2Name.get(tmPcNum2Rank
 								.get(pc)));
@@ -543,9 +571,21 @@ public class GsNuSMVExport extends GsAbstractExport {
 				}
 			}
 
+			out.write("\nTRANS\n");
+			for (int i = 0; i < t_vertex.length; i++) {
+				if (t_vertex[i].isInput())
+					continue;
+				out.write("next(" + t_regulators[i] + ") != ");
+				out.write(t_regulators[i] + " |\n");
+			}
+			out.write("stableState;\n");
+
 			out.write("\n");
 			out.write("-- Property specification\n");
-			out.write("-- SPEC !EF ( stableState )\n");
+			if (bType1)
+				out.write("-- SPEC !EF ( stableState )\n");
+			else
+				out.write("-- LTLSPEC G F ( stableState )\n");
 
 			// Close main tags
 			out.close();

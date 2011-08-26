@@ -15,7 +15,7 @@ public class PrioritySelectionPanel extends GenericListSelectionPanel {
 	private PriorityClassManager pcmanager;
 
 	public PrioritySelectionPanel(StackDialog dialog, PriorityClassManager pcmanager) {
-		super(dialog, pcmanager, null, false, Translator.getString("STR_configure_priorities"));
+		super(dialog, pcmanager, Translator.getString("STR_priorityclass"), false, Translator.getString("STR_configure_priorities"));
 		this.pcmanager = pcmanager;
 	}
 	

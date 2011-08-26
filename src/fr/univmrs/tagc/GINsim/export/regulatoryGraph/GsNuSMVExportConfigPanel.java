@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -9,10 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
@@ -47,6 +52,8 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 	private GsNuSMVConfigModel model;
 	private GsNuSMVMutantModel mutantModel;
 
+	private JRadioButton jrbType2;
+
 	private StackDialog dialog;
 
 	public GsNuSMVExportConfigPanel(GsExtensibleConfig config,
@@ -63,8 +70,8 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 
 	private void initialize() {
 		setLayout(new BorderLayout());
-		JPanel jpTmp = new JPanel(new GridBagLayout());
 
+		JPanel jpTmp = new JPanel(new GridBagLayout());
 		mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg.store);
 		GridBagConstraints cst = new GridBagConstraints();
 		cst.gridx = 0;
@@ -88,17 +95,50 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 
 		priorityPanel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				selectionChanged();
+				changeUpdatePolicy();
 			}
 		});
 
 		initPanel = new GsInitialStatePanel(dialog, cfg.graph, false);
 		initPanel.setParam(cfg);
 		add(initPanel, BorderLayout.CENTER);
+		this.setMinimumSize(new Dimension(450, 320));
+
+		JPanel jpExportType = new JPanel();
+		jpExportType
+				.setLayout(new BoxLayout(jpExportType, BoxLayout.PAGE_AXIS));
+		jpExportType.setBorder(BorderFactory.createTitledBorder(Translator
+				.getString("STR_NuSMV_Type")));
+		JRadioButton jrb1 = new JRadioButton(
+				Translator.getString("STR_NuSMV_Type1"));
+		jrb1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeExportType();
+			}
+		});
+		jrbType2 = new JRadioButton(Translator.getString("STR_NuSMV_Type2"));
+		jrbType2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeExportType();
+			}
+		});
+		ButtonGroup group = new ButtonGroup();
+		group.add(jrb1);
+		group.add(jrbType2);
+		jrb1.setSelected(true);
+		jpExportType.add(jrb1);
+		jpExportType.add(jrbType2);
+		add(jpExportType, BorderLayout.SOUTH);
 	}
 
-	public void selectionChanged() {
-		this.cfg.setType();
+	public void changeUpdatePolicy() {
+		this.cfg.setUpdatePolicy();
+	}
+
+	public void changeExportType() {
+		int type = (jrbType2.isSelected()) ? GsNuSMVConfig.CFG_INPUT_IVAR
+				: GsNuSMVConfig.CFG_INPUT_FRONZEN;
+		this.cfg.setExportType(type);
 	}
 
 	/**
@@ -136,7 +176,8 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param t_max
 	 * @param initstates
 	 */
-	public GsNuSMVConfigModel(Vector<GsRegulatoryVertex> nodeOrder, Map<GsRegulatoryVertex, Integer> m_initstates) {
+	public GsNuSMVConfigModel(Vector<GsRegulatoryVertex> nodeOrder,
+			Map<GsRegulatoryVertex, Integer> m_initstates) {
 		this.nodeOrder = nodeOrder;
 		this.m_initstates = m_initstates;
 	}
@@ -330,14 +371,17 @@ class GsNuSMVConfig implements GsInitialStateStore {
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
 	public static final int CFG_PCLASS = 2;
+	public static final int CFG_INPUT_FRONZEN = 10;
+	public static final int CFG_INPUT_IVAR = 11;
 
 	GsRegulatoryGraph graph;
 	Map m_initStates;
 	Map m_input;
 	// Store has two objects: 0- Mutant & 1- PriorityClass
 	ObjectStore store = new ObjectStore(2);
-	public GsRegulatoryMutantDef mutant; // TODO remove?!
-	private int type;
+	public GsRegulatoryMutantDef mutant;
+	private int updatePolicy;
+	private int exportType;
 
 	/**
 	 * @param graph
@@ -345,25 +389,34 @@ class GsNuSMVConfig implements GsInitialStateStore {
 	public GsNuSMVConfig(GsRegulatoryGraph graph) {
 		m_initStates = new HashMap();
 		this.graph = graph;
-		type = CFG_ASYNC; // Default export mode
+		updatePolicy = CFG_ASYNC; // Default update policy
+		exportType = CFG_INPUT_FRONZEN; // Default export type
 	}
 
-	public void setType() {
+	public void setUpdatePolicy() {
 		PriorityClassDefinition priorities = (PriorityClassDefinition) store
 				.getObject(1);
 		if (priorities == null)
-			type = CFG_ASYNC;
+			updatePolicy = CFG_ASYNC;
 		else if (priorities.getNbElements() == 1) {
 			if (priorities.getPclass(graph.getNodeOrder())[0][1] == 0)
-				type = CFG_SYNC;
+				updatePolicy = CFG_SYNC;
 			else
-				type = CFG_ASYNC;
+				updatePolicy = CFG_ASYNC;
 		} else
-			type = CFG_PCLASS;
+			updatePolicy = CFG_PCLASS;
 	}
 
-	public int getType() {
-		return type;
+	public int getUpdatePolicy() {
+		return updatePolicy;
+	}
+
+	public void setExportType(int type) {
+		exportType = type;
+	}
+
+	public int getExportType() {
+		return exportType;
 	}
 
 	public Map getInitialState() {
