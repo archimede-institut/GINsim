@@ -17,7 +17,7 @@ import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParametersManager;
 import fr.univmrs.tagc.GINsim.reg2dyn.PrioritySelectionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.common.manageressources.Translator;
+import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class GsDecisionAnalysisFrame extends StackDialog implements ActionListener {
