@@ -26,10 +26,7 @@ public class HTGSimulationHelper  extends SimulationHelper {
 			mode = GsHierarchicalTransitionGraph.MODE_SCC;
 		}
 		this.htg = new GsHierarchicalTransitionGraph(params.nodeOrder, mode);
-		;
-		if (regGraph instanceof GsRegulatoryGraph) {
-			htg.setAssociatedGraph(regGraph);
-		}
+		htg.setAssociatedGraph(regGraph);
 		GsVertexAttributesReader vreader = htg.getGraphManager().getVertexAttributesReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         htg.getAnnotation().setComment(params.getDescr()+"\n");

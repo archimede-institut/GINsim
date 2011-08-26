@@ -19,6 +19,8 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
@@ -55,8 +57,10 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
 	private byte[] childsCount = null;
-	private GsHierarchicalParameterPanel vertexPanel = null;
+	private GsHierarchicalVertexParameterPanel vertexPanel = null;
 	private long saveEdgeId;
+	private GsSimulationParameters simulationParameters;
+	private GsHierarchicalEdgeParameterPanel edgePanel;
 
 	
 /* **************** CONSTRUCTORS ************/	
@@ -137,12 +141,15 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		
     
 	public GsParameterPanel getEdgeAttributePanel() {
-		return null;
+	    if (edgePanel == null) {
+	    	edgePanel  = new GsHierarchicalEdgeParameterPanel(this);
+	    }
+		return edgePanel;
 	}
 
 	public GsParameterPanel getVertexAttributePanel() {
 	    if (vertexPanel == null) {
-	        vertexPanel  = new GsHierarchicalParameterPanel(this);
+	        vertexPanel  = new GsHierarchicalVertexParameterPanel(this);
 	    }
 		return vertexPanel;
 	}
@@ -345,8 +352,14 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		this.graphManager.removeEdge(e.getSourceVertex(), e.getTargetVertex());
 	}
 	
- 
-  	
+
+
+    protected boolean isAssociationValid(GsGraph graph) {
+        if (graph instanceof GsRegulatoryGraph) {
+            return true;
+        }
+        return false;
+    }
 		
 /* **************** UNIMPLEMENTED METHODS ************/
 	
@@ -412,11 +425,6 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		protected List doMerge(GsGraph otherGraph) {
 	        return null;
 	    }
-
-
-
-
-
 
 
 }
