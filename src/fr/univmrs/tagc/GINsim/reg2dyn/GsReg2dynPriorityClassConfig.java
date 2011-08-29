@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -7,9 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,14 +38,14 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
     private JButton but_insert;
     private JButton but_remove;
     
-    private List nodeOrder;
+    private List<GsRegulatoryVertex> nodeOrder;
     GenericListPanel contentPanel;
     GenericListPanel availablePanel;
-    SimpleGenericList contentList = new SimpleGenericList();
-    SimpleGenericList availableList = new SimpleGenericList();
+    SimpleGenericList<PriorityMember> contentList = new SimpleGenericList<PriorityMember>();
+    SimpleGenericList<PriorityMember> availableList = new SimpleGenericList<PriorityMember>();
     
-    private List l_content = new ArrayList();
-    private List l_avaible = new ArrayList();
+    private List<PriorityMember> l_content = new ArrayList<PriorityMember>();
+    private List<PriorityMember> l_avaible = new ArrayList<PriorityMember>();
     
     private GsReg2dynPriorityClass currentClass;
 
@@ -60,8 +59,8 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
      * @param nodeOrder
      * @param param
      */
-    public GsReg2dynPriorityClassConfig(List nodeOrder) {
-    	super(new HashMap(), "pclassConfig");
+    public GsReg2dynPriorityClassConfig(List<GsRegulatoryVertex> nodeOrder) {
+    	super(new HashMap<Class<?>, Component>(), "pclassConfig");
         this.nodeOrder = nodeOrder;
         initialize();
         contentList.setData(l_content);
@@ -320,9 +319,7 @@ public class GsReg2dynPriorityClassConfig extends GenericListPanel implements Li
             but_remove.setEnabled(true);
         }
         
-        Iterator it = nodeOrder.iterator();
-        while (it.hasNext()) {
-        	GsRegulatoryVertex v = (GsRegulatoryVertex)it.next();
+        for (GsRegulatoryVertex v: nodeOrder) {
             PriorityMember k = new PriorityMember(v, NONE);
             Object target = pcdef.m_elt.get(v);
             if (target instanceof Object[]) {
@@ -397,15 +394,5 @@ class PriorityMember {
 
 	public String toString() {
 		return vertex+GsReg2dynPriorityClassConfig.t_typeName[type];
-	}
-}
-
-class ClassList extends SimpleGenericList {
-	protected ClassList (Vector v) {
-		setData(v);
-		canEdit = true;
-		canAdd = true;
-		canRemove = true;
-		canOrder = true;
 	}
 }

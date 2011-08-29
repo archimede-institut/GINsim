@@ -3,7 +3,6 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -93,7 +92,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
 
     public void doSave(OutputStreamWriter os, GsGraph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
-        List nodeOrder = graph.getNodeOrder();
+        List<GsRegulatoryVertex> nodeOrder = graph.getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
@@ -138,7 +137,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
         return null;
     }
     
-    List nodeOrder;
+    List<GsRegulatoryVertex> nodeOrder;
     ModelSimplifierConfigList paramList;
     
     /**
@@ -162,9 +161,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
         	}
         	String[] t_remove = attributes.getValue("removeList").split(" ");
         	for (int i=0 ; i<t_remove.length ; i++) {
-        		Iterator it = nodeOrder.iterator();
-        		while (it.hasNext()) {
-        			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+        		for (GsRegulatoryVertex vertex: nodeOrder) {
         			if (vertex.getId().equals(t_remove[i])) {
         				cfg.m_removed.put(vertex, null);
         			}

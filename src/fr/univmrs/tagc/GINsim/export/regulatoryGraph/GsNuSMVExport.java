@@ -89,7 +89,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 	 * @return A string of values in the NuSMV format.
 	 */
 	private static String getInitState(GsRegulatoryVertex vertex,
-			Map<GsRegulatoryVertex, ArrayList<Integer>> m) {
+			Map<GsRegulatoryVertex, List<Integer>> m) {
 		List<Integer> v = m.get(vertex);
 		if (v != null && v.size() > 0) {
 			String s = "" + v.get(0);
@@ -126,14 +126,14 @@ public class GsNuSMVExport extends GsAbstractExport {
 			FileWriter out = new FileWriter(fileName);
 			Iterator<GsInitialState> it = config.getInitialState().keySet()
 					.iterator();
-			Map<GsRegulatoryVertex, ArrayList<Integer>> m_initstates;
+			Map<GsRegulatoryVertex, List<Integer>> m_initstates;
 			if (it.hasNext()) {
 				m_initstates = it.next().getMap();
 			} else {
-				m_initstates = new HashMap<GsRegulatoryVertex, ArrayList<Integer>>();
+				m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
 			}
 			if (m_initstates == null) {
-				m_initstates = new HashMap<GsRegulatoryVertex, ArrayList<Integer>>();
+				m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
 			}
 
 			GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef) config.store

@@ -1,7 +1,6 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.xml.sax.Attributes;
@@ -33,7 +32,7 @@ public class GsSimulationParametersParser extends XMLHelper {
     InitialStateList initList = null;
     InitialStateList inputList = null;
     GsRegulatoryGraph graph;
-    List nodeOrder;
+    List<GsRegulatoryVertex> nodeOrder;
     String[] t_order;
     int pos = POS_OUT;
     int posback = POS_OUT;
@@ -275,9 +274,7 @@ public class GsSimulationParametersParser extends XMLHelper {
     private void closeClass() {
         // some consistency checking
         if (pclass_fine) {
-        	Iterator it = nodeOrder.iterator();
-        	while (it.hasNext()) {
-        		Object vertex = it.next();
+        	for (GsRegulatoryVertex vertex: nodeOrder) {
         		Object oc = pcdef.m_elt.get(vertex);
         		Object[] t;
         		if (oc instanceof GsReg2dynPriorityClass) {

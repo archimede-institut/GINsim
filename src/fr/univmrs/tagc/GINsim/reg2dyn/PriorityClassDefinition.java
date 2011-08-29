@@ -1,8 +1,14 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.NamedObject;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
@@ -10,13 +16,13 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
 
-public class PriorityClassDefinition extends SimpleGenericList implements NamedObject, XMLize {
+public class PriorityClassDefinition extends SimpleGenericList<GsReg2dynPriorityClass> implements NamedObject, XMLize {
 
-	public Map m_elt;
+	public Map<GsRegulatoryVertex,Object> m_elt;
 	String name;
 	boolean locked;
 
-	public PriorityClassDefinition(Iterator it, String name) {
+	public PriorityClassDefinition(List<GsRegulatoryVertex> elts, String name) {
 		canAdd = true;
 		canRemove = true;
 		canOrder = true;
@@ -30,20 +36,23 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 		add();
 		m_elt = new HashMap();
 		GsReg2dynPriorityClass newclass = (GsReg2dynPriorityClass)getElement(null, 0);
-		while (it.hasNext()) {
-			m_elt.put(it.next(), newclass);
+		for (GsRegulatoryVertex v: elts) {
+			m_elt.put(v, newclass);
 		}
 	}
-	
+
+	@Override
 	public void setName(String name) {
 		if (locked) {
 			return;
 		}
 		this.name = name;
 	}
+	@Override
 	public String getName() {
 		return name;
 	}
+	@Override
 	public String toString() {
 		return name;
 	}
@@ -54,7 +63,8 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 		}
 		moveElement(j, pos);
 	}
-	public Object doCreate(String name, int pos, int mode) {
+	@Override
+	public GsReg2dynPriorityClass doCreate(String name, int pos, int mode) {
 		if (locked) {
 			return null;
 		}
@@ -78,6 +88,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
         return null;
 	}
 	
+	@Override
 	public String getColName(int col) {
 		switch (col) {
 			case 0:
@@ -91,6 +102,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 		}
 	}
 
+	@Override
 	public boolean remove(String filter, int[] t_index) {
 		if (locked || t_index.length >= v_data.size()) {
 			return false;
@@ -109,13 +121,12 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
             		}
             	}
             }
-            Iterator it = m_elt.keySet().iterator();
-            Object lastClass = v_data.get(v_data.size()-1);
-            while (it.hasNext()) {
-                Object k = it.next();
-                Object cl = m_elt.get(k); 
+            Set<GsRegulatoryVertex> elts = m_elt.keySet();
+            GsReg2dynPriorityClass lastClass = v_data.get(v_data.size()-1);
+            for (GsRegulatoryVertex v: elts) {
+                Object cl = m_elt.get(v); 
                 if (cl == c) {
-                    m_elt.put(k,lastClass);
+                    m_elt.put(v,lastClass);
                 } else if (cl instanceof Object[]) {
                     Object[] t = (Object[])cl;
                     for (int j=0 ; j<t.length ; j++) {
@@ -127,9 +138,8 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
             }
 			
 			if (v_listeners != null) {
-				it = v_listeners.iterator();
-				while (it.hasNext()) {
-					((GenericListListener)it.next()).itemRemoved(c, t_index[i]);
+				for (GenericListListener l: v_listeners) {
+					l.itemRemoved(c, t_index[i]);
 				}
 			}
 		}
@@ -141,6 +151,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
      * move the whole selection up.
      * if some selected class are part of a group, the whole group will move with it.
      */
+	@Override
     protected void doMoveUp(int[] selection, int diff) {
 		if (locked) {
 			return;
@@ -180,6 +191,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
      * move the whole selection down
      * if some selected class are part of a group, the whole group will move with it.
      */
+	@Override
     protected void doMoveDown(int[] selection, int diff) {
 		if (locked) {
 			return;
@@ -194,18 +206,18 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
             int start = index[i][0];
             int stop = index[i][1];
             int target = stop+diff;
-            int pr = ((GsReg2dynPriorityClass)v_data.get(start)).rank;
-            int prTarget = ((GsReg2dynPriorityClass)v_data.get(target)).rank;
+            int pr = v_data.get(start).rank;
+            int prTarget = v_data.get(target).rank;
             target++;
-            while (target < v_data.size() && ((GsReg2dynPriorityClass)v_data.get(target)).rank == prTarget) {
+            while (target < v_data.size() && v_data.get(target).rank == prTarget) {
                 target++;
             }
             target--;
             for (int j=stop+1 ; j<=target ; j++) {
-                ((GsReg2dynPriorityClass)v_data.get(j)).rank = pr;
+                v_data.get(j).rank = pr;
             }
             for (int j=0 ; j<=stop-start ; j++) {
-                ((GsReg2dynPriorityClass)v_data.get(start)).rank = prTarget;
+                v_data.get(start).rank = prTarget;
                 moveElement(start, target);
                 if (reselect < selection.length && selection[reselect] == start+j) {
             		selection[reselect++] = target-stop+start+j;
@@ -276,6 +288,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
         return ret;
     }
 
+	@Override
 	public void toXML(XMLWriter out, Object param, int mode)
 			throws IOException {
 		out.openTag("priorityClassList");
@@ -288,19 +301,18 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
             out.addAttr("mode", ""+pc.getMode());
             out.addAttr("rank", ""+pc.rank);
 			s_tmp = new StringBuffer();
-            Iterator it = m_elt.keySet().iterator();
-            while (it.hasNext()) {
-                Object o = it.next();
-                Object oc = m_elt.get(o);
+            for (Entry<GsRegulatoryVertex, Object> e: m_elt.entrySet()) {
+            	GsRegulatoryVertex v = e.getKey();
+                Object oc = e.getValue();
                 if (oc instanceof GsReg2dynPriorityClass) {
-                    if (m_elt.get(o) == pc) {
-                        s_tmp.append(o+" ");
+                    if (oc == pc) {
+                        s_tmp.append(v+" ");
                     }
                 } else if (oc instanceof Object[]) {
                     Object[] t = (Object[])oc;
                     for (int j=0 ; j<t.length ; j++) {
                         if (t[j] == pc) {
-                            s_tmp.append(o+","+(j==0 ? "+" : "-")+" ");
+                            s_tmp.append(v+","+(j==0 ? "+" : "-")+" ");
                         }
                     }
                 }
@@ -323,7 +335,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
      *
      * bytely: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
      */
-    public int[][] getPclass(List nodeOrder) {
+    public int[][] getPclass(List<GsRegulatoryVertex> nodeOrder) {
 
         Integer zaroo = new Integer(0);
         Integer one = new Integer(1);
@@ -332,19 +344,19 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
         // it is done by browsing twice the list:
         //   - during the first pass asynchronous classes with the same priority are merged
         //   - then the real int[][] is created from the merged classes
-		List v_vpclass = new ArrayList();
+		List<List<Integer>> v_vpclass = new ArrayList<List<Integer>>();
         for (int i=0 ; i<v_data.size() ; i++) {
             GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)v_data.get(i);
-            List v_content;
+            List<Integer> v_content;
             if (pc.getMode() == GsReg2dynPriorityClass.ASYNCHRONOUS) {
-                v_content = new ArrayList();
-                v_content.add(new Integer(pc.rank));
-                v_content.add(new Integer(pc.getMode()));
+                v_content = new ArrayList<Integer>();
+                v_content.add(pc.rank);
+                v_content.add(pc.getMode());
                 v_vpclass.add(v_content);
             } else {
-                v_content = new ArrayList();
-                v_content.add(new Integer(pc.rank));
-                v_content.add(new Integer(pc.getMode()));
+                v_content = new ArrayList<Integer>();
+                v_content.add(pc.rank);
+                v_content.add(pc.getMode());
                 v_vpclass.add(v_content);
             }
             for (int n=0 ; n<nodeOrder.size() ; n++) {
@@ -356,19 +368,19 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
                     if (t[0] == pc) {
                         // to do it right: if both +1 and -1 are in the same class, add the node only once :)
                         if (t[1] == pc) {
-                            v_content.add(new Integer(n));
+                            v_content.add(n);
                             v_content.add(zaroo);
                         } else {
-                            v_content.add(new Integer(n));
+                            v_content.add(n);
                             v_content.add(one);
                         }
                     } else if (t[1] == pc) {
-                        v_content.add(new Integer(n));
+                        v_content.add(n);
                         v_content.add(minusOne);
                     }
                 } else { // +1 and -1 aren't separated, always accept every transitions
                     if (target == pc) {
-                        v_content.add(new Integer(n));
+                        v_content.add(n);
                         v_content.add(zaroo);
                     }
                 }
@@ -377,7 +389,7 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 
         int[][] pclass = new int[v_vpclass.size()][];
         for (int i=0 ; i<pclass.length ; i++) {
-            List v_content = (List)v_vpclass.get(i);
+            List<Integer> v_content = v_vpclass.get(i);
             int[] t = new int[v_content.size()];
             t[0] = ((Integer)v_content.get(0)).intValue();
             if (v_content.size() > 1) {
@@ -396,8 +408,8 @@ public class PriorityClassDefinition extends SimpleGenericList implements NamedO
 
 	public void lock() {
 		this.locked = true;
-		for (Iterator it=v_data.iterator() ; it.hasNext() ;) {
-			((GsReg2dynPriorityClass)it.next()).lock();
+		for (GsReg2dynPriorityClass pc : v_data) {
+			pc.lock();
 		}
 	}
 }

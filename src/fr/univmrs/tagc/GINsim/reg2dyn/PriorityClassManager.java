@@ -8,11 +8,11 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 
-public class PriorityClassManager extends SimpleGenericList {
+public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinition> {
 
 	public static final String SYNCHRONOUS = "synchronous", ASYNCHRONOUS = "asynchronous"; 
 	
-	List nodeOrder;
+	List<GsRegulatoryVertex> nodeOrder;
 	public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
 	
 	private List<GsRegulatoryVertex> filterInputVariables(List<GsRegulatoryVertex> nodeOrder) {
@@ -32,7 +32,7 @@ public class PriorityClassManager extends SimpleGenericList {
 		canEdit = true;
 		enforceUnique = true;
 		prefix = "priorities_";
-		addOptions = new ArrayList();
+		addOptions = new ArrayList<String>();
 		addOptions.add("One unique class");
 		addOptions.add("One class for each node");
 		addOptions.add("Splitting transitions – one unique class");
@@ -54,8 +54,8 @@ public class PriorityClassManager extends SimpleGenericList {
 		pcdef.lock();
 	}
 	
-	public Object doCreate(String name, int mode) {
-		PriorityClassDefinition pcdef = new PriorityClassDefinition(nodeOrder.iterator(), name);
+	public PriorityClassDefinition doCreate(String name, int mode) {
+		PriorityClassDefinition pcdef = new PriorityClassDefinition(nodeOrder, name);
         Object lastClass = pcdef.v_data.get(0);
         GsReg2dynPriorityClass currentClass;
         switch (mode) {
@@ -80,7 +80,7 @@ public class PriorityClassManager extends SimpleGenericList {
         return pcdef;
     }
 
-	public Object doCreate(String name, int pos, int mode) {
+	public PriorityClassDefinition doCreate(String name, int pos, int mode) {
 		return doCreate(name, mode);
 	}
 	public boolean remove(String filter, int[] t_index) {

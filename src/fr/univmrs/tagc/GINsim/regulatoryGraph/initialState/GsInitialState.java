@@ -9,12 +9,12 @@ import fr.univmrs.tagc.common.datastore.NamedObject;
 
 public class GsInitialState implements NamedObject {
 	String name;
-	Map m = new HashMap();
+	Map<GsRegulatoryVertex, List<Integer>> m = new HashMap<GsRegulatoryVertex, List<Integer>>();
 	
-    public void setState(int[] state, List nodeOrder) {
+    public void setState(int[] state, List<GsRegulatoryVertex> nodeOrder) {
         setState(state, nodeOrder, false);
     }
-    public void setState(int[] state, List nodeOrder, boolean input) {
+    public void setState(int[] state, List<GsRegulatoryVertex> nodeOrder, boolean input) {
         String[] t_s = new String[state.length];
         for (int i=0 ; i<t_s.length ; i++) {
             GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
@@ -27,7 +27,7 @@ public class GsInitialState implements NamedObject {
         setData(t_s, nodeOrder);
     }
     
-	public void setData(String[] t_s, List nodeOrder) {
+	public void setData(String[] t_s, List<GsRegulatoryVertex> nodeOrder) {
         for (int i=0 ; i<t_s.length ; i++) {
             GsRegulatoryVertex vertex = null;
             String[] t_val = t_s[i].split(";");
@@ -39,7 +39,7 @@ public class GsInitialState implements NamedObject {
                     }
                 }
                 if (vertex != null) {
-                	List v_val = new ArrayList();
+                	List<Integer> v_val = new ArrayList<Integer>();
                     for (int j=1 ; j<t_val.length ; j++) {
                         try {
                         	int v = Integer.parseInt(t_val[j]);
@@ -80,10 +80,10 @@ public class GsInitialState implements NamedObject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Map getMap() {
+	public Map<GsRegulatoryVertex,List<Integer>> getMap() {
 		return m;
 	}
-	public OmddNode getMDD(List nodeOrder) {
+	public OmddNode getMDD(List<GsRegulatoryVertex> nodeOrder) {
 		OmddNode falseNode = OmddNode.TERMINALS[0];
 		OmddNode ret = OmddNode.TERMINALS[1];
 		for (int i=nodeOrder.size()-1 ; i>-1 ; i--) {
@@ -97,9 +97,9 @@ public class GsInitialState implements NamedObject {
 				for (int v=0 ; v<newNode.next.length ; v++) {
 					newNode.next[v] = falseNode;
 				}
-				List l_val = (List)m.get(vertex);
-				for (Iterator it = l_val.iterator() ; it.hasNext() ;) {
-					newNode.next[((Integer)it.next()).intValue()] = ret;
+				List<Integer> l_val = m.get(vertex);
+				for (int n: l_val) {
+					newNode.next[n] = ret;
 				}
 				ret = newNode;
 			}
