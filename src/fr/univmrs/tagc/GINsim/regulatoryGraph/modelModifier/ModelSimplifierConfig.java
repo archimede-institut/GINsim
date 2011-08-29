@@ -61,7 +61,7 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 		return o;
 	}
 	@Override
-	public boolean setVal(GsRegulatoryVertex vertex, int index, GsRegulatoryVertex value) {
+	public boolean setVal(GsRegulatoryVertex vertex, int index, Object value) {
 		if (index == 1) {
 			if (value.equals(Boolean.TRUE)) {
 				m_removed.put(vertex, null);
