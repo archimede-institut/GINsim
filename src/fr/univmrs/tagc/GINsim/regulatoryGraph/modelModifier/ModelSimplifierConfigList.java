@@ -10,7 +10,7 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
  * store all simplification parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
-public class ModelSimplifierConfigList extends SimpleGenericList 
+public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifierConfig>
 	implements GsGraphListener {
 
     String s_current;
@@ -45,7 +45,7 @@ public class ModelSimplifierConfigList extends SimpleGenericList
     	return null;
     }
 
-	protected Object doCreate(String name, int pos) {
+	protected ModelSimplifierConfig doCreate(String name, int pos) {
 		ModelSimplifierConfig config = new ModelSimplifierConfig();
 		config.setName(name);
 		return config;

@@ -2,7 +2,6 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,13 +36,12 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 	@Override
 	public void toXML(XMLWriter out, Object param, int mode)
 			throws IOException {
-		Iterator it = m_removed.keySet().iterator();
-		if (!it.hasNext()) {
+		if (m_removed.size() < 1) {
 			return;
 		}
 		String s_removed = "";
-		while (it.hasNext()) {
-			s_removed += " "+it.next();
+		for (GsRegulatoryVertex v: m_removed.keySet()) {
+			s_removed += " "+v;
 		}
 		out.openTag("simplificationConfig");
 		out.addAttr("name", this.name);

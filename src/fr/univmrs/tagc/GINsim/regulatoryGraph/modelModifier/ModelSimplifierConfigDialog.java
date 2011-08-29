@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -15,6 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.GenericListListener;
@@ -26,7 +28,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 	private static final long	serialVersionUID	= 3618855894072951620L;
 
 	GsRegulatoryGraph graph;
-	GenericListPanel lp;
+	GenericListPanel<ModelSimplifierConfig> lp;
 	SimplifierConfigContentList ctlist;
 	boolean isRunning = false;
 	
@@ -34,7 +36,6 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		super(graph.getGraphManager().getMainFrame(), "modelSimplifier", 600, 500);
 		this.graph = graph;
 		setTitle("select nodes to remove");
-		
 		
         ModelSimplifierConfigList cfgList = (ModelSimplifierConfigList)graph.getObject(ModelSimplifierConfigManager.key, true);
 		if (cfgList.getNbElements(null) == 0) {
@@ -45,7 +46,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
         panel.setList(ctlist);
         Map<Class<?>, Component> m = new HashMap<Class<?>, Component>();
         m.put(ModelSimplifierConfig.class, panel);
-        lp = new GenericListPanel(m, "modelSimplifier");
+        lp = new GenericListPanel<ModelSimplifierConfig>(m, "modelSimplifier");
         lp.addSelectionListener(this);
         lp.setList(cfgList);
 		setMainPanel(lp);
@@ -75,11 +76,25 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		ctlist.mcolHelper = (ModelSimplifierConfig)lp.getSelectedItem();
 		ctlist.refresh();
 	}
+
+	public boolean showPartialReduction(List<RemovedInfo> l_todo) {
+
+        int choice = JOptionPane.showConfirmDialog(this, "show result of partial reduction?", "Reduction failed",
+				JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+
+		if (choice == JOptionPane.NO_OPTION) {
+	    	isRunning = false;
+			cancel();
+			return false;
+		}
+		return true;
+	}
 }
 
-class SimplifierConfigContentList extends SimpleGenericList {
 
-	SimplifierConfigContentList(List nodeOrder) {
+class SimplifierConfigContentList extends SimpleGenericList<GsRegulatoryVertex> {
+
+	SimplifierConfigContentList(List<GsRegulatoryVertex> nodeOrder) {
 		super(nodeOrder);
 		canAdd = false;
 		canOrder = false;
@@ -91,7 +106,7 @@ class SimplifierConfigContentList extends SimpleGenericList {
 	}
 }
 
-class SimplifierConfigConfigurePanel extends GenericListPanel 
+class SimplifierConfigConfigurePanel extends GenericListPanel<GsRegulatoryVertex> 
 	implements GenericListListener, ChangeListener {
 	private static final long serialVersionUID = -2219030309910143737L;
 	JCheckBox checkbox;
@@ -105,7 +120,8 @@ class SimplifierConfigConfigurePanel extends GenericListPanel
 		this.checkbox.addChangeListener(this);
 	}
 	
-    public void setList(GenericList list) {
+	@Override
+    public void setList(GenericList<GsRegulatoryVertex> list) {
     	super.setList(list);
     	list.addListListener(this);
     }

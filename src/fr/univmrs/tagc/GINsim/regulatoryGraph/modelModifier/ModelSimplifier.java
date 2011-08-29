@@ -77,331 +77,372 @@ public class ModelSimplifier extends Thread implements Runnable {
 	Map<GsRegulatoryVertex,boolean[]> m_edges = new HashMap<GsRegulatoryVertex, boolean[]>();
 	Map<Object, Object> copyMap = new HashMap<Object, Object>();
 	Map<GsRegulatoryVertex, List<GsRegulatoryVertex>> m_removed;
+	
+	Map<GsRegulatoryVertex, OmddNode> m_affected = new HashMap<GsRegulatoryVertex, OmddNode>();
+	String s_comment = "";
+	List<GsRegulatoryVertex> l_removed = new ArrayList<GsRegulatoryVertex>();
+
+	TargetEdgesIterator it_targets;
+	
 	boolean strict;
 	ParameterGenerator pgen;
-	
-	long cplx_counter;
 
 	public ModelSimplifier(GsRegulatoryGraph graph, ModelSimplifierConfig config, ModelSimplifierConfigDialog dialog, boolean start) {
 		this.graph = graph;
 		this.oldNodeOrder = graph.getNodeOrder();
 		this.dialog = dialog;
 		this.m_removed = new HashMap<GsRegulatoryVertex, List<GsRegulatoryVertex>>(config.m_removed);
+		this.it_targets = new TargetEdgesIterator(m_removed);
 		this.strict = config.strict;
 		manager = graph.getGraphManager();
+		
 		if (start) {
 		    start();
 		}
 	}
 	
+	/**
+	 * Run the reduction method.
+	 */
+	@Override
     public void run() {
-        GsRegulatoryGraph simplifiedGraph = do_reduction();
+    	// prepare the list of removal requests
+		List<RemovedInfo> l_todo = new ArrayList<RemovedInfo>();
+		for (GsRegulatoryVertex vertex: m_removed.keySet()) {
+			int index = graph.getNodeOrder().indexOf(vertex);
+			RemovedInfo ri = new RemovedInfo(vertex, index, manager.getOutgoingEdges(vertex));
+			l_todo.add(ri);
+		}
+		
+		
+		// perform the actual reduction
+		l_todo = remove_all(l_todo);
+
+		// the "main" part is done, did it finish or fail ?
+		if (l_todo.size() > 0) {
+			if (dialog != null) {
+				if (!dialog.showPartialReduction(l_todo)) {
+					return;
+				}
+				
+				for (RemovedInfo ri: l_todo) {
+					m_removed.remove(ri.vertex);
+				}
+				System.out.println("Partial reduction result...");
+			} else {
+				// it failed, trigger an error message
+				StringBuffer sb = new StringBuffer("Reduction failed.\n  Removed: ");
+				for (GsRegulatoryVertex v: l_removed) {
+					sb.append(" "+v);
+				}
+				sb.append("\n  Failed: ");
+				for (RemovedInfo ri: l_todo) {
+					sb.append(" "+ri.vertex);
+				}
+				throw new RuntimeException(sb.toString());
+			}
+		}
+
+		// go ahead and extract the result
+        GsRegulatoryGraph simplifiedGraph = extractReducedGraph();
+        
         if (dialog != null) {
             dialog.endSimu(simplifiedGraph, null);
         }
     }
-    public GsRegulatoryGraph do_reduction() {
-        cplx_counter = 0;
-		try {
-			// first do the "real" simplification work
-			Map<GsRegulatoryVertex, OmddNode> m_affected = new HashMap<GsRegulatoryVertex, OmddNode>();
-			String s_comment = "";
-			TargetEdgesIterator it_targets = new TargetEdgesIterator(m_removed);
-			List<GsRegulatoryVertex> l_removed = new ArrayList<GsRegulatoryVertex>();
-			List<RemovedInfo> l_todo = new ArrayList<RemovedInfo>();
-			for (GsRegulatoryVertex vertex: m_removed.keySet()) {
-				int index = graph.getNodeOrder().indexOf(vertex);
-				RemovedInfo ri = new RemovedInfo(vertex, index, manager.getOutgoingEdges(vertex));
-				l_todo.add(ri);
-			}
-			boolean tryagain = true;
-			while (tryagain && l_todo.size() > 0) {
-				tryagain = false;
-				List<RemovedInfo> l_cur_todo = l_todo;
-				l_todo = new ArrayList<RemovedInfo>();
-				for (RemovedInfo ri: l_cur_todo) {
-					GsRegulatoryVertex vertex = ri.vertex;
-					List<GsRegulatoryVertex> targets = new ArrayList<GsRegulatoryVertex>();
-					OmddNode deleted = m_affected.get(vertex);
-					if (deleted == null) {
-						deleted = vertex.getTreeParameters(graph);
-					}
-					try {
-						if (strict) {
-							// check that the node is not self-regulated
-							checkNoSelfReg(deleted, ri.pos);
-						}
-						s_comment += ", "+vertex.getId();
-					
-						// mark all its targets as affected
-						it_targets.setOutgoingList(ri.targets);
-						while (it_targets.hasNext()) {
-							GsRegulatoryVertex target = (GsRegulatoryVertex)it_targets.next();
-							if (!target.equals(vertex)) {
-								targets.add(target);
-								OmddNode targetNode = m_affected.get(target);
-								if (targetNode == null) {
-									targetNode = target.getTreeParameters(graph);
-								}
-								m_affected.put(target, remove(targetNode, deleted, ri.pos).reduce());
-							}
-						}
-						m_removed.put(ri.vertex, new ArrayList<GsRegulatoryVertex>(targets));
-						l_removed.add(vertex);
-						tryagain = true;
-					} catch (GsException e) {
-						// this removal failed, remember that we may get a second chance
-						l_todo.add(ri);
-					}
-				}
-			}
-			// the "main" part is done, did it finish or fail ?
-			if (l_todo.size() > 0) {
-				// it failed, trigger an error message
-				GsException e = new GsException(GsException.GRAVITY_ERROR, "Removal failed.");
-				StringBuffer sb = new StringBuffer();
-				for (GsRegulatoryVertex v: l_removed) {
-					sb.append(" "+v);
-				}
-				e.addMessage("already removed:"+sb);
-				sb = new StringBuffer();
-				for (RemovedInfo ri: l_todo) {
-					sb.append(" "+ri.vertex);
-				}
-				e.addMessage("remaining:"+sb);
-				throw e;
-			}
-			
-			// create the new regulatory graph
-			simplifiedGraph = new GsRegulatoryGraph();
-			Annotation note = simplifiedGraph.getAnnotation();
-			note.copyFrom(graph.getAnnotation());
-			if (s_comment.length() > 2) {
-				note.setComment("Model Generated by GINsim on "+
-						DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()) +
-						", by removing the following nodes: "+s_comment.substring(2)+
-						"\n\n"+note.getComment());
-			}
-			
-			GsGraphManager simplifiedManager = simplifiedGraph.getGraphManager();
-			List<GsRegulatoryVertex> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
-			
-			// Create all the nodes of the new model
-			GsVertexAttributesReader vreader = manager.getVertexAttributesReader();
-			GsVertexAttributesReader simplified_vreader = simplifiedManager.getVertexAttributesReader();
-			for (GsRegulatoryVertex vertex: (List<GsRegulatoryVertex>)graph.getNodeOrder()) {
-				if (!m_removed.containsKey(vertex)) {
-					GsRegulatoryVertex clone = (GsRegulatoryVertex)vertex.clone();
-					simplifiedManager.addVertex(clone);
-					vreader.setVertex(vertex);
-					simplified_vreader.setVertex(clone);
-					simplified_vreader.copyFrom(vreader);
-					copyMap.put(vertex, clone);
-					simplified_nodeOrder.add(clone);
-				}
-			}
-			
-			// copy all unaffected edges
-			GsEdgeAttributesReader ereader = manager.getEdgeAttributesReader();
-			GsEdgeAttributesReader simplified_ereader = simplifiedManager.getEdgeAttributesReader();
-			Iterator<GsDirectedEdge>it = manager.getEdgeIterator();
-			while (it.hasNext()) {
-				GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)it.next()).getUserObject();
-				GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(me.getSource());
-				GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(me.getTarget());
-				if (src != null && target != null) {
-					GsRegulatoryMultiEdge me_clone = new GsRegulatoryMultiEdge(src, target);
-					me_clone.copyFrom(me);
-					Object new_me = simplifiedManager.addEdge(src, target, me_clone);
-					copyMap.put(me, me_clone);
-					ereader.setEdge(me);
-					simplified_ereader.setEdge(new_me);
-					simplified_ereader.copyFrom(ereader);
-				}
-			}
-
-			// build a mapping between new nodes and old position
-			Map<GsRegulatoryVertex, Integer> m_orderPos = new HashMap<GsRegulatoryVertex, Integer>();
-			Iterator<GsRegulatoryVertex> it_oldOrder = oldNodeOrder.iterator();
-			int pos = -1;
-			for (GsRegulatoryVertex vertex: simplified_nodeOrder) {;
-				String id = vertex.getId();
-				while (it_oldOrder.hasNext()) {
-					pos++;
-					GsRegulatoryVertex oldVertex = it_oldOrder.next();
-					if (id.equals(oldVertex.getId())) {
-						m_orderPos.put(vertex, new Integer(pos));
-						break;
-					}
-				}
-			}
-			// create the parameter generator with it
-			pgen = new ParameterGenerator(oldNodeOrder, m_orderPos);
-
-			// copy parameters/logical functions on the unaffected nodes
-			for (GsRegulatoryVertex vertex: oldNodeOrder) {
-				GsRegulatoryVertex clone = (GsRegulatoryVertex)copyMap.get(vertex);
-				if (m_removed.containsKey(vertex)) {
-					continue;
-				}
-				if (!m_affected.containsKey(vertex)) {
-					vertex.cleanupInteractionForNewGraph(copyMap);
-					continue;
-				}
-				
-				// this node needs new parameters
-				OmddNode newNode = m_affected.get(vertex);
+    
+    private List<RemovedInfo> remove_all(List<RemovedInfo> l_todo) {
+		// first do the "real" simplification work
+		int todoSize = l_todo.size();
+		int oldSize = todoSize + 1;
+		while (todoSize > 0 && todoSize < oldSize) {
+			oldSize = todoSize;
+			l_todo = remove_batch(l_todo);
+			todoSize = l_todo.size();
+		}
+		return l_todo;
+    }
 	
-				// make sure that the needed edges target the affected node
-				m_edges.clear();
-				extractEdgesFromNode(newNode);
-				GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(vertex);
-				for (Entry<GsRegulatoryVertex,boolean[]> e: m_edges.entrySet()) {
-					GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(e.getKey());
-					GsDirectedEdge de = (GsDirectedEdge)simplifiedManager.getEdge(src, target);
-					GsRegulatoryMultiEdge new_me;
-					if (de == null) {
-						new_me = new GsRegulatoryMultiEdge(src, target);
-						simplifiedManager.addEdge(src, target, new_me);
-					} else {
-						new_me = (GsRegulatoryMultiEdge)de.getUserObject();
+    /**
+     * Go through a list of nodes to remove and try to remove all of them.
+     * <p>
+     * It may fail on some removals, in which case it will go on with the others and add them to the list of failed.
+     * 
+     * @param l_todo
+     * @return the list of failed removals.
+     */
+    private List<RemovedInfo> remove_batch(List<RemovedInfo> l_todo) {
+		System.out.println("batch of removal...");
+    	List<RemovedInfo> l_failed = new ArrayList<RemovedInfo>();
+    	
+		for (RemovedInfo ri: l_todo) {
+			GsRegulatoryVertex vertex = ri.vertex;
+			List<GsRegulatoryVertex> targets = new ArrayList<GsRegulatoryVertex>();
+			OmddNode deleted = m_affected.get(vertex);
+			if (deleted == null) {
+				deleted = vertex.getTreeParameters(graph);
+			}
+			try {
+				if (strict) {
+					// check that the node is not self-regulated
+					checkNoSelfReg(deleted, ri.pos);
+				}
+				s_comment += ", "+vertex.getId();
+			
+				// mark all its targets as affected
+				it_targets.setOutgoingList(ri.targets);
+				while (it_targets.hasNext()) {
+					GsRegulatoryVertex target = (GsRegulatoryVertex)it_targets.next();
+					if (!target.equals(vertex)) {
+						targets.add(target);
+						OmddNode targetNode = m_affected.get(target);
+						if (targetNode == null) {
+							targetNode = target.getTreeParameters(graph);
+						}
+						m_affected.put(target, remove(targetNode, deleted, ri.pos).reduce());
 					}
-					boolean[] t_required = e.getValue();
-					new_me.copyFrom(t_required);
 				}
-				// rebuild the parameters
-				m_edges.clear();
-				List<GsDirectedEdge> edges = simplifiedManager.getIncomingEdges(clone);
-				for (GsDirectedEdge e: edges) {
-					GsRegulatoryVertex src = (GsRegulatoryVertex)e.getSourceVertex();
-					
-					// FIXME: not sure what this should be! (used to be a integer[])
-					boolean[] t_val = {false, true};
-					m_edges.put(src, t_val);
+				m_removed.put(ri.vertex, new ArrayList<GsRegulatoryVertex>(targets));
+				l_removed.add(vertex);
+			} catch (GsException e) {
+				// this removal failed, remember that we may get a second chance
+				l_failed.add(ri);
+			}
+		}
+    	return l_failed;
+    }
+
+    /**
+     * After the reduction, build a new regulatory graph with the result.
+     * 
+     * @return the reduced graph obtained after reduction
+     */
+    private GsRegulatoryGraph extractReducedGraph() {
+		// create the new regulatory graph
+		simplifiedGraph = new GsRegulatoryGraph();
+		Annotation note = simplifiedGraph.getAnnotation();
+		note.copyFrom(graph.getAnnotation());
+		if (s_comment.length() > 2) {
+			note.setComment("Model Generated by GINsim on "+
+					DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date()) +
+					", by removing the following nodes: "+s_comment.substring(2)+
+					"\n\n"+note.getComment());
+		}
+		
+		GsGraphManager simplifiedManager = simplifiedGraph.getGraphManager();
+		List<GsRegulatoryVertex> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
+		
+		// Create all the nodes of the new model
+		GsVertexAttributesReader vreader = manager.getVertexAttributesReader();
+		GsVertexAttributesReader simplified_vreader = simplifiedManager.getVertexAttributesReader();
+		for (GsRegulatoryVertex vertex: (List<GsRegulatoryVertex>)graph.getNodeOrder()) {
+			if (!m_removed.containsKey(vertex)) {
+				GsRegulatoryVertex clone = (GsRegulatoryVertex)vertex.clone();
+				simplifiedManager.addVertex(clone);
+				vreader.setVertex(vertex);
+				simplified_vreader.setVertex(clone);
+				simplified_vreader.copyFrom(vreader);
+				copyMap.put(vertex, clone);
+				simplified_nodeOrder.add(clone);
+			}
+		}
+		
+		// copy all unaffected edges
+		GsEdgeAttributesReader ereader = manager.getEdgeAttributesReader();
+		GsEdgeAttributesReader simplified_ereader = simplifiedManager.getEdgeAttributesReader();
+		Iterator<GsDirectedEdge>it = manager.getEdgeIterator();
+		while (it.hasNext()) {
+			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)it.next()).getUserObject();
+			GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(me.getSource());
+			GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(me.getTarget());
+			if (src != null && target != null) {
+				GsRegulatoryMultiEdge me_clone = new GsRegulatoryMultiEdge(src, target);
+				me_clone.copyFrom(me);
+				Object new_me = simplifiedManager.addEdge(src, target, me_clone);
+				copyMap.put(me, me_clone);
+				ereader.setEdge(me);
+				simplified_ereader.setEdge(new_me);
+				simplified_ereader.copyFrom(ereader);
+			}
+		}
+
+		// build a mapping between new nodes and old position
+		Map<GsRegulatoryVertex, Integer> m_orderPos = new HashMap<GsRegulatoryVertex, Integer>();
+		Iterator<GsRegulatoryVertex> it_oldOrder = oldNodeOrder.iterator();
+		int pos = -1;
+		for (GsRegulatoryVertex vertex: simplified_nodeOrder) {;
+			String id = vertex.getId();
+			while (it_oldOrder.hasNext()) {
+				pos++;
+				GsRegulatoryVertex oldVertex = it_oldOrder.next();
+				if (id.equals(oldVertex.getId())) {
+					m_orderPos.put(vertex, new Integer(pos));
+					break;
 				}
-				pgen.browse(edges, clone, newNode);
+			}
+		}
+		// create the parameter generator with it
+		pgen = new ParameterGenerator(oldNodeOrder, m_orderPos);
+
+		// copy parameters/logical functions on the unaffected nodes
+		for (GsRegulatoryVertex vertex: oldNodeOrder) {
+			GsRegulatoryVertex clone = (GsRegulatoryVertex)copyMap.get(vertex);
+			if (m_removed.containsKey(vertex)) {
+				continue;
+			}
+			if (!m_affected.containsKey(vertex)) {
+				vertex.cleanupInteractionForNewGraph(copyMap);
+				continue;
 			}
 			
-			// get as much of the associated data as possible
-			Map m_alldata = new HashMap();
-			// mutants: only copy mutants that don't affect removed nodes
-			GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
-			if (mutants != null && mutants.getNbElements(null) > 0) {
-				GsRegulatoryMutants newMutants = (GsRegulatoryMutants)simplifiedGraph.getObject(GsMutantListManager.key, true);
-				GsRegulatoryMutantDef mutant, newMutant;
-				int mutantPos=0;
-				for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
-					mutant = (GsRegulatoryMutantDef)mutants.getElement(null, i);
-					mutantPos = newMutants.add();
-					newMutant = (GsRegulatoryMutantDef)newMutants.getElement(null, mutantPos);
-					newMutant.setName(mutant.getName());
-					boolean ok = true;
-					for (int j=0 ; j<mutant.getNbChanges() ; j++ ) {
-						String id = mutant.getName(j);
-						GsRegulatoryVertex vertex = null;
-						for (GsRegulatoryVertex v: simplified_nodeOrder) {
-							if (id.equals(v.getId())) {
-								vertex = v;
-								break;
-							}
-						}
-						if (vertex == null) {
-							ok = false;
+			// this node needs new parameters
+			OmddNode newNode = m_affected.get(vertex);
+
+			// make sure that the needed edges target the affected node
+			m_edges.clear();
+			extractEdgesFromNode(newNode);
+			GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(vertex);
+			for (Entry<GsRegulatoryVertex,boolean[]> e: m_edges.entrySet()) {
+				GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(e.getKey());
+				GsDirectedEdge de = (GsDirectedEdge)simplifiedManager.getEdge(src, target);
+				GsRegulatoryMultiEdge new_me;
+				if (de == null) {
+					new_me = new GsRegulatoryMultiEdge(src, target);
+					simplifiedManager.addEdge(src, target, new_me);
+				} else {
+					new_me = (GsRegulatoryMultiEdge)de.getUserObject();
+				}
+				boolean[] t_required = e.getValue();
+				new_me.copyFrom(t_required);
+			}
+			// rebuild the parameters
+			m_edges.clear();
+			List<GsDirectedEdge> edges = simplifiedManager.getIncomingEdges(clone);
+			for (GsDirectedEdge e: edges) {
+				GsRegulatoryVertex src = (GsRegulatoryVertex)e.getSourceVertex();
+				
+				// FIXME: not sure what this should be! (used to be a integer[])
+				boolean[] t_val = {false, true};
+				m_edges.put(src, t_val);
+			}
+			pgen.browse(edges, clone, newNode);
+		}
+		
+		// get as much of the associated data as possible
+		Map m_alldata = new HashMap();
+		// mutants: only copy mutants that don't affect removed nodes
+		GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
+		if (mutants != null && mutants.getNbElements(null) > 0) {
+			GsRegulatoryMutants newMutants = (GsRegulatoryMutants)simplifiedGraph.getObject(GsMutantListManager.key, true);
+			GsRegulatoryMutantDef mutant, newMutant;
+			int mutantPos=0;
+			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
+				mutant = (GsRegulatoryMutantDef)mutants.getElement(null, i);
+				mutantPos = newMutants.add();
+				newMutant = (GsRegulatoryMutantDef)newMutants.getElement(null, mutantPos);
+				newMutant.setName(mutant.getName());
+				boolean ok = true;
+				for (int j=0 ; j<mutant.getNbChanges() ; j++ ) {
+					String id = mutant.getName(j);
+					GsRegulatoryVertex vertex = null;
+					for (GsRegulatoryVertex v: simplified_nodeOrder) {
+						if (id.equals(v.getId())) {
+							vertex = v;
 							break;
 						}
-						newMutant.addChange(vertex, mutant.getMin(j), mutant.getMax(j));
-						// TODO: transfer condition only if it does not involve removed nodes
-						newMutant.setCondition(j, simplifiedGraph, mutant.getCondition(j));
 					}
-					if (!ok) {
-						newMutants.remove(null, new int[] {mutantPos});
-					} else {
-	                    m_alldata.put(mutant, newMutant);
+					if (vertex == null) {
+						ok = false;
+						break;
 					}
+					newMutant.addChange(vertex, mutant.getMin(j), mutant.getMax(j));
+					// TODO: transfer condition only if it does not involve removed nodes
+					newMutant.setCondition(j, simplifiedGraph, mutant.getCondition(j));
+				}
+				if (!ok) {
+					newMutants.remove(null, new int[] {mutantPos});
+				} else {
+                    m_alldata.put(mutant, newMutant);
 				}
 			}
-			
-			// initial states
-            GsInitialStateList linit = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
-			if (linit != null && !linit.isEmpty()) {
-    			GsInitialStateList newLinit = (GsInitialStateList)simplifiedGraph.getObject(GsInitialStateManager.key, true);
-                InitialStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
-                InitialStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};
-    
-    			for (int i=0 ; i<inits.length ; i++) {
-                    InitialStateList init = inits[i];
-                    InitialStateList newInit = newInits[i];
-        			if (init != null && init.getNbElements(null) > 0) {
-        				for (int j=0 ; j<init.getNbElements(null) ; j++) {
-        					GsInitialState istate = (GsInitialState)init.getElement(null, j);
-        					int epos = newInit.add();
-        					GsInitialState newIstate = (GsInitialState)newInit.getElement(null, epos);
-        					newIstate.setName(istate.getName());
-        					m_alldata.put(istate, newIstate);
-        					Map<GsRegulatoryVertex, List<Integer>> m_init = newIstate.getMap();
-        					for (Entry<GsRegulatoryVertex, List<Integer>> e: istate.getMap().entrySet()) {
-        						GsRegulatoryVertex o = (GsRegulatoryVertex)copyMap.get(e.getKey());
-        						if (o != null) {
-        							m_init.put( o, e.getValue());
-        						}
-        					}
-        				}
-        			}
+		}
+		
+		// initial states
+        GsInitialStateList linit = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
+		if (linit != null && !linit.isEmpty()) {
+			GsInitialStateList newLinit = (GsInitialStateList)simplifiedGraph.getObject(GsInitialStateManager.key, true);
+            InitialStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
+            InitialStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};
+
+			for (int i=0 ; i<inits.length ; i++) {
+                InitialStateList init = inits[i];
+                InitialStateList newInit = newInits[i];
+    			if (init != null && init.getNbElements(null) > 0) {
+    				for (int j=0 ; j<init.getNbElements(null) ; j++) {
+    					GsInitialState istate = (GsInitialState)init.getElement(null, j);
+    					int epos = newInit.add();
+    					GsInitialState newIstate = (GsInitialState)newInit.getElement(null, epos);
+    					newIstate.setName(istate.getName());
+    					m_alldata.put(istate, newIstate);
+    					Map<GsRegulatoryVertex, List<Integer>> m_init = newIstate.getMap();
+    					for (Entry<GsRegulatoryVertex, List<Integer>> e: istate.getMap().entrySet()) {
+    						GsRegulatoryVertex o = (GsRegulatoryVertex)copyMap.get(e.getKey());
+    						if (o != null) {
+    							m_init.put( o, e.getValue());
+    						}
+    					}
+    				}
     			}
 			}
-			
-			// priority classes definition and simulation parameters
-			GsSimulationParameterList params = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, false);
-			if (params != null) {
-				PriorityClassManager pcman = params.pcmanager;
-				GsSimulationParameterList new_params = (GsSimulationParameterList)simplifiedGraph.getObject(GsSimulationParametersManager.key, true);
-				PriorityClassManager new_pcman = new_params.pcmanager;
-				for (int i=2 ; i<pcman.getNbElements(null) ; i++) {
-					PriorityClassDefinition pcdef = (PriorityClassDefinition)pcman.getElement(null, i);
-					int index = new_pcman.add();
-					PriorityClassDefinition new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, index);
-					new_pcdef.setName(pcdef.getName());
-					m_alldata.put(pcdef, new_pcdef);
-					Map<GsReg2dynPriorityClass, GsReg2dynPriorityClass> m_pclass = new HashMap<GsReg2dynPriorityClass, GsReg2dynPriorityClass>();
-					// copy all priority classes
-					for (int j=0 ; j<pcdef.getNbElements(null) ; j++) {
-						GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, j);
-						if (j>0) {
-							new_pcdef.add();
-						}
-						GsReg2dynPriorityClass new_pc = (GsReg2dynPriorityClass)new_pcdef.getElement(null, j);
-						new_pc.setName(pc.getName());
-						new_pc.rank = pc.rank;
-						new_pc.setMode(pc.getMode());
-						m_pclass.put(pc, new_pc);
+		}
+		
+		// priority classes definition and simulation parameters
+		GsSimulationParameterList params = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, false);
+		if (params != null) {
+			PriorityClassManager pcman = params.pcmanager;
+			GsSimulationParameterList new_params = (GsSimulationParameterList)simplifiedGraph.getObject(GsSimulationParametersManager.key, true);
+			PriorityClassManager new_pcman = new_params.pcmanager;
+			for (int i=2 ; i<pcman.getNbElements(null) ; i++) {
+				PriorityClassDefinition pcdef = (PriorityClassDefinition)pcman.getElement(null, i);
+				int index = new_pcman.add();
+				PriorityClassDefinition new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, index);
+				new_pcdef.setName(pcdef.getName());
+				m_alldata.put(pcdef, new_pcdef);
+				Map<GsReg2dynPriorityClass, GsReg2dynPriorityClass> m_pclass = new HashMap<GsReg2dynPriorityClass, GsReg2dynPriorityClass>();
+				// copy all priority classes
+				for (int j=0 ; j<pcdef.getNbElements(null) ; j++) {
+					GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, j);
+					if (j>0) {
+						new_pcdef.add();
 					}
-					
-					// properly place nodes
-					for (Entry<?,?> e: pcdef.m_elt.entrySet()) {
-						GsRegulatoryVertex vertex = (GsRegulatoryVertex)copyMap.get(e.getKey());
-						if (vertex != null) {
-							new_pcdef.m_elt.put(vertex,	m_pclass.get(e.getValue()));
-						}
-					}
+					GsReg2dynPriorityClass new_pc = (GsReg2dynPriorityClass)new_pcdef.getElement(null, j);
+					new_pc.setName(pc.getName());
+					new_pc.rank = pc.rank;
+					new_pc.setMode(pc.getMode());
+					m_pclass.put(pc, new_pc);
 				}
-				int[] t_index = {0};
-				new_pcman.remove(null, t_index);
 				
-				// simulation parameters
-				for (int i=0 ; i<params.getNbElements() ; i++) {
-				    GsSimulationParameters param = (GsSimulationParameters)params.getElement(null, i);
-				    int index = new_params.add();
-				    GsSimulationParameters new_param = (GsSimulationParameters)new_params.getElement(null, index);
-				    m_alldata.put("", new_pcman);
-				    param.copy_to(new_param, m_alldata);
+				// properly place nodes
+				for (Entry<?,?> e: pcdef.m_elt.entrySet()) {
+					GsRegulatoryVertex vertex = (GsRegulatoryVertex)copyMap.get(e.getKey());
+					if (vertex != null) {
+						new_pcdef.m_elt.put(vertex,	m_pclass.get(e.getValue()));
+					}
 				}
 			}
-			System.out.println("cplx counter: "+cplx_counter);
-			return simplifiedGraph;
-		} catch (Exception e) {
-		    e.printStackTrace();
-		    return null;
+			int[] t_index = {0};
+			new_pcman.remove(null, t_index);
+			
+			// simulation parameters
+			for (int i=0 ; i<params.getNbElements() ; i++) {
+			    GsSimulationParameters param = (GsSimulationParameters)params.getElement(null, i);
+			    int index = new_params.add();
+			    GsSimulationParameters new_param = (GsSimulationParameters)new_params.getElement(null, index);
+			    m_alldata.put("", new_pcman);
+			    param.copy_to(new_param, m_alldata);
+			}
 		}
+		return simplifiedGraph;
 	}
 	
 	/**
@@ -469,7 +510,6 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * @return
 	 */
 	public OmddNode remove(OmddNode node, OmddNode regulator, int level) throws GsException {
-		cplx_counter++;
 		if (node.next == null || node.level > level) {
 			return node;
 		}
@@ -519,7 +559,6 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * @return
 	 */
 	public OmddNode remove(OmddNode[] t_ori, OmddNode regulator) {
-	    cplx_counter++;
 		if (regulator.next == null) {
 			return t_ori[regulator.value];
 		}

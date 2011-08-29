@@ -1,6 +1,11 @@
 package fr.univmrs.tagc.common.datastore.gui;
 
-import java.awt.*;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -10,27 +15,43 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
-import fr.univmrs.tagc.common.datastore.*;
-import fr.univmrs.tagc.common.widgets.*;
+import fr.univmrs.tagc.common.datastore.GenericList;
+import fr.univmrs.tagc.common.datastore.GenericListListener;
+import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.common.datastore.MultiColObject;
+import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.common.widgets.ButtonPopup;
+import fr.univmrs.tagc.common.widgets.EnhancedJTable;
+import fr.univmrs.tagc.common.widgets.SplitPane;
+import fr.univmrs.tagc.common.widgets.StatusTextField;
+import fr.univmrs.tagc.common.widgets.StockButton;
 
 /**
  * Generic UI to display the content of a list.
  * It offers optional UI to reorder and alter the content of the list,
  * using the GenericList interface as a backend.
  */
-public class GenericListPanel extends JPanel 
+public class GenericListPanel<T> extends JPanel 
 	implements KeyListener, ObjectPropertyEditorUI, ListSelectionListener, MultiActionListener {
     private static final long serialVersionUID = -4236977685092639157L;
     
     JScrollPane sp = new JScrollPane();
-    protected GenericList list;
-    protected listModel model = new listModel();
+    protected GenericList<T> list;
+    protected listModel<T> model = new listModel<T>();
     EnhancedJTable jl = new EnhancedJTable(model);
     boolean rendererInstalled = false;
     int autohide = -1;
@@ -190,7 +211,7 @@ public class GenericListPanel extends JPanel
      * set the list to show.
      * @param list
      */
-    public void setList(GenericList list) {
+    public void setList(GenericList<T> list) {
         this.list = list;
         if (list == null) {
             b_up.setVisible(false);
@@ -418,11 +439,11 @@ public class GenericListPanel extends JPanel
 	}
 }
 
-class listModel extends AbstractTableModel implements GenericListListener, TableActionListener {
+class listModel<T> extends AbstractTableModel implements GenericListListener, TableActionListener {
     private static final long serialVersionUID = 886643323547667463L;
     
-    private GenericList list;
-    private GenericListPanel panel;
+    private GenericList<T> list;
+    private GenericListPanel<T> panel;
     private int lastLineInc = 0;
     private Map m_button = new HashMap();
     private Class[] t_type;
@@ -433,8 +454,9 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return list.canEdit() && columnIndex >= list.nbAction;
     }
+    @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        list.edit(filter, startIndex, rowIndex, columnIndex, aValue);
+        list.edit(filter, startIndex, rowIndex, columnIndex, (T)aValue);
     }
 
     public Object getValueAt(int row, int col) {
@@ -465,7 +487,7 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
         }
         Object o = list.getElement(filter, startIndex, row);
         if (list.mcolHelper != null) {
-        	return list.mcolHelper.getVal(o, col-list.nbAction);
+        	return list.mcolHelper.getVal((T)o, col-list.nbAction);
         }
         if (o instanceof MultiColObject) {
     		return ((MultiColObject)o).getVal(col-list.nbAction);
@@ -515,7 +537,7 @@ class listModel extends AbstractTableModel implements GenericListListener, Table
     	}
     	fireTableDataChanged();
     }
-    void setList(GenericList list, GenericListPanel panel) {
+    void setList(GenericList<T> list, GenericListPanel<T> panel) {
         this.list = list;
         this.panel = panel;
         this.t_type = list.getObjectType();
