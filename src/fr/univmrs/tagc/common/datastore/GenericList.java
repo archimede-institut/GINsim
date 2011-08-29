@@ -1,16 +1,16 @@
 package fr.univmrs.tagc.common.datastore;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 
 /**
  * generic interface for list of objects, a common UI will allow to show it,
  * and eventually offer generic services: reordering, adding/removing objects...
  */
-abstract public class GenericList {
+abstract public class GenericList<T> {
 
 	public boolean canOrder = false;
 	public boolean canEdit = false;
@@ -20,15 +20,15 @@ abstract public class GenericList {
 	public boolean doInlineAddRemove = false;
 	public int nbAction = 0;
 	public int nbcol = 1;
-	public List addOptions = null;
+	public List<String> addOptions = null;
 	
 	protected String title = "";
 	
 	protected Class[] t_type = null;
 	protected Map m_editor = null;
 	
-	public MultiColHelper mcolHelper = null;
-	protected Vector v_listeners = new Vector();
+	public MultiColHelper<T> mcolHelper = null;
+	protected List<GenericListListener> v_listeners = new ArrayList<GenericListListener>();
 	
 	public List getAddOptions() {
 		return addOptions;
@@ -113,7 +113,7 @@ abstract public class GenericList {
      * @param i
      * @return the ith element of the list
      */
-    abstract public Object getElement(String filter, int startIndex, int i);
+    abstract public T getElement(String filter, int startIndex, int i);
     public Object getElement(String filter, int i) {
     	return getElement(filter, 0, i);
     }
@@ -126,8 +126,8 @@ abstract public class GenericList {
      * @param o the result of the edit
      * @return true if the list has changed
      */
-    abstract public boolean edit(String filter, int startIndex, int row, int col, Object o);
-    public boolean edit(String filter, int row, int col, Object o) {
+    abstract public boolean edit(String filter, int startIndex, int row, int col, T o);
+    public boolean edit(String filter, int row, int col, T o) {
     	return edit(filter, 0, row, col, o);
     }
     

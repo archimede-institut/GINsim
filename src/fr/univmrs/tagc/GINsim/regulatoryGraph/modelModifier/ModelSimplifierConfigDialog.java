@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		ctlist = new SimplifierConfigContentList(graph.getNodeOrder());
 		SimplifierConfigConfigurePanel panel = new SimplifierConfigConfigurePanel();
         panel.setList(ctlist);
-        Map m = new HashMap();
+        Map<Class<?>, Component> m = new HashMap<Class<?>, Component>();
         m.put(ModelSimplifierConfig.class, panel);
         lp = new GenericListPanel(m, "modelSimplifier");
         lp.addSelectionListener(this);

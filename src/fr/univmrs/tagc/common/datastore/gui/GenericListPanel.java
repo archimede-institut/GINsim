@@ -54,7 +54,7 @@ public class GenericListPanel extends JPanel
     public GenericListPanel() {
     	this(null, null);
     }
-    public GenericListPanel(Map m_right, String name) {
+    public GenericListPanel(Map<Class<?>, Component> m_right, String name) {
     	jl.addActionListener(model);
     	jl.getSelectionModel().addListSelectionListener(this);
     	targetpanel = this;
@@ -66,10 +66,10 @@ public class GenericListPanel extends JPanel
     		cards = new CardLayout();
     		p_right.setLayout(cards);
     		p_right.add(new JPanel(), "empty");
-    		Iterator it = m_right.entrySet().iterator();
+    		Iterator<Entry<Class<?>, Component>> it = m_right.entrySet().iterator();
     		while (it.hasNext()) {
-    			Entry e = (Entry)it.next();
-    			p_right.add((Component)e.getValue(), e.getKey().toString());
+    			Entry<Class<?>, Component> e = it.next();
+    			p_right.add(e.getValue(), e.getKey().toString());
     		}
     		cards.show(p_right, "empty");
     		split.setRightComponent(p_right);

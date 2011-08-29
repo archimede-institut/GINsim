@@ -8,6 +8,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
@@ -18,7 +19,7 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
  * store all simulation parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
-public class GsSimulationParameterList extends SimpleGenericList 
+public class GsSimulationParameterList extends SimpleGenericList<GsSimulationParameters> 
 	implements GsGraphListener, GsRegulatoryMutantListener, GenericListListener {
 
     String s_current;
@@ -71,7 +72,7 @@ public class GsSimulationParameterList extends SimpleGenericList
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
     		if (pcdef.m_elt != null) {
-    			pcdef.m_elt.put(data, pcdef.getElement(null, 0));
+    			pcdef.m_elt.put((GsRegulatoryVertex)data, pcdef.getElement(null, 0));
     		}
         }
         return null;
@@ -119,7 +120,7 @@ public class GsSimulationParameterList extends SimpleGenericList
         }
     }
 
-	protected Object doCreate(String name, int mode) {
+	protected GsSimulationParameters doCreate(String name, int mode) {
         GsSimulationParameters parameter = new GsSimulationParameters(this);
         parameter.name = name;
 		return parameter;
