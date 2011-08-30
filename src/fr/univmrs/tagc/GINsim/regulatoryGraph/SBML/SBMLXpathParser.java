@@ -93,24 +93,29 @@ public final class SBMLXpathParser {
 			SAXBuilder sxb = new SAXBuilder();
 			document = sxb.build(_FilePath);
 		} catch (IOException e) {
-			System.out.println("Ereur lors de la lecture du fichier" + e.getMessage());
 			e.printStackTrace();
 		} catch (JDOMException e) {
-			System.out.println("Ereur lors de la construction du fichier JDOM" + e.getMessage());
 			e.printStackTrace();
 		}
 
 		try {
-			/**
-			 * initialization of the root element.
-			 */
+			
+			/** initialization of the root element. **/			
 			Element racine = document.getRootElement();
-
+			/**
+			 * we need to declare every namespace of a file to avoid errors 
+			 * when we will try to retrieve elements belonging at this namespace 
+			 **/
 			Namespace namespace1 = Namespace.getNamespace("sbml",
 					"http://www.sbml.org/sbml/level3/version1");
-			/** Recovery of the ID model. */
+			
+			/** to get the model ID. */
 			XPath xpa1 = XPath.newInstance("//sbml:model/@id");
+			
+			/** add this namespace (namespace1) from xpath namespace list **/ 		 
 			xpa1.addNamespace(namespace1);
+			
+			/** Retrieve the model ID (graph name)  **/			
 			String modelName = xpa1.valueOf(racine);
 			try {
 				graph.setGraphName(modelName);
@@ -122,21 +127,19 @@ public final class SBMLXpathParser {
 
 			Namespace namespace = Namespace.getNamespace("qual",
 					"http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models");
-			/** Search the list of species. */
+			
+			/** Search the list of species.**/
 			XPath xpa = XPath.newInstance("//qual:listOfQualitativeSpecies");
 			xpa.addNamespace(namespace);
 
-			/** Search the transitions list*/
+			/** Search the transitions list **/
 			XPath xpa2 = XPath.newInstance("//qual:listOfTransitions");
 			xpa2.addNamespace(namespace);
-			/**
-			 * retrieves all the nodes corresponding to the path:/model/listOfQualitativeSpecies. 
-			 */
+			
+			/** retrieves all nodes corresponding to the path:/model/listOfQualitativeSpecies. **/
 			List results = xpa.selectNodes(racine);
 
-			/**retrieves the "id" species 
-			* and are supplied to a graph
-			*/
+			/** to retrieve species data **/			
 			for (int i = 0; i < results.size(); i++) {
 				Element obElement = (Element) results.get(i);
 				byte maxvalue = 0;
@@ -144,18 +147,21 @@ public final class SBMLXpathParser {
 				Iterator it = elList.iterator();
 				while (it.hasNext()) {
 					try {
-						Element elcurrent = (Element) it.next();
+						Element elcurrent = (Element) it.next();						
+						/** we need construct a string character with different nodes from the graph **/
 						s_nodeOrder += elcurrent.getAttributeValue("id") + " ";
 						if (s_nodeOrder == null) {
 							throw new JDOMException("missing nodeOrder");
 						}
+						/** get species ID and species name **/
 						String id = elcurrent.getAttributeValue("id");
 						String name = elcurrent.getAttributeValue("name");
 						if (name == null || name.equals("")) {
 							name = "noName";
 						}
 						byte maxval = (byte) Integer.parseInt(elcurrent
-								.getAttributeValue("maxLevel"));
+								.getAttributeValue("maxLevel"));						
+						/** set a vertex with a species data **/
 						vertex = graph.addNewVertex(id, name, maxval);
 						vertex.getV_logicalParameters().setUpdateDup(false);
 
@@ -174,6 +180,7 @@ public final class SBMLXpathParser {
 							vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"),
 									graph);
 						}
+						/** add this vertex in a vertex collection **/
 						values.put(vertex, new Hashtable());
 					} catch (NumberFormatException e) {
 						throw new JDOMException("mal formed node's parameter");// TODO:
@@ -182,7 +189,7 @@ public final class SBMLXpathParser {
 					}
 				}
 			}
-			/** retrieve all transitions list */
+			/** to deal transition list in order to retrieve his all data **/
 			List listOfTransition = xpa2.selectNodes(racine);
 			for (int i = 0; i < listOfTransition.size(); i++) {
 				Element transition = (Element) listOfTransition.get(i);
@@ -195,7 +202,7 @@ public final class SBMLXpathParser {
 					String trans_Id = transElem.getAttributeValue("id");
 					/** retrieve children of transition element */
 					List transChildren = transElem.getChildren(); 																																														
-					/** retrieve  <listOfInputs> element */
+					/** retrieve input data **/
 					Element listOfInput = (Element) transChildren.get(0);
 					List inputElemList = listOfInput.getChildren();
 					/** retrieve children of <listOfInputs> element */
@@ -205,6 +212,7 @@ public final class SBMLXpathParser {
 
 							String qualitativeSpecies = ((Element) input)
 									.getAttributeValue("qualitativeSpecies");
+							/** to get the SBOTerm value from the current edge **/
 							String sign = ((Element) input).getAttributeValue("sign");
 							if (sign.equals("SBO:0000020"))
 								sign = "negative";
@@ -222,6 +230,7 @@ public final class SBMLXpathParser {
 							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");							
 							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
 							byte maxvalue = -2;
+							/** add this edge in a graph **/
 							edge = graph.addNewEdge(qualitativeSpecies, to, minvalue, sign);							
 							if (smax.startsWith("m")) {
                             	maxvalue = -1; 
@@ -233,11 +242,12 @@ public final class SBMLXpathParser {
 							m_edges.put(qualitativeSpecies, edge);
 							edge.me.rescanSign(graph);
 							ereader.setEdge(edge.me);
-						} // try
+						}
 						catch (NumberFormatException e) {
 							throw new JDOMException("mal formed interaction's parameters");
 						}
-					} // for
+					} 
+					/** retrieve output data **/
 					Element listOfOutput = (Element) transChildren.get(1);
 					List outputElemList = listOfOutput.getChildren();
 					Element output = (Element) outputElemList.get(0);
@@ -251,6 +261,8 @@ public final class SBMLXpathParser {
 					for (int j = 1; j < functTermChildren.size(); j++) 
 					{
 						v_function = new Vector();
+						
+						/** to get all data in every <functionTerm> element **/
 						Element functionTerm = (Element) functTermChildren.get(j);
 						fctResultLevel = functionTerm.getAttributeValue("resultLevel");
 						StringBuffer sb = deal(functionTerm); 																																					
@@ -265,10 +277,10 @@ public final class SBMLXpathParser {
 								((Hashtable) values.get(vertex)).put(fctResultLevel, v_function);							
 							}
 						}						
-					} // for					
-				} // for 
-			} // for 
-		} //  try 
+					} 					
+				} 
+			} 
+		} 
 		catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -285,6 +297,9 @@ public final class SBMLXpathParser {
 		}
 	} // void parse(File _FilePath)
 
+	/** this function allows to obtain a string which
+	 *  contain a logical function of every <functionTerm> element 
+	 *  **/
 	public StringBuffer deal(Element root) throws SAXException, IOException {
 		List rootConv = root.getChildren();
 		Element element = (Element) rootConv.get(0);
@@ -292,6 +307,10 @@ public final class SBMLXpathParser {
 		String xml = outputer.outputString(element);
 
 		InputSource file = new InputSource(new ByteArrayInputStream(xml.getBytes()));
+		
+		/** we use MathMLExpression (JSci API) to easily parse 
+		 ** and obtain data located in a <math> element.
+		 ** each <math> element has been transformed into a file **/
 		MathMLParser parser = new MathMLParser();
 		parser.parse(file);
 
@@ -306,6 +325,9 @@ public final class SBMLXpathParser {
 		return sb;
 	}
 
+	/** This function writes the logical function of
+	 ** every <functionTerm> as a string 
+	 **/
 	public void exploreExpression(Object expression, int level, StringBuffer sb) {
 		if (expression instanceof MathMLExpression) {
 			MathMLExpression mexpr = (MathMLExpression) expression;
@@ -341,6 +363,7 @@ public final class SBMLXpathParser {
 		}
 	}
 
+	/** To get vertex ID corresponding to the current <transition> element **/
 	public String getNodeId(String transId) {
 		char pathSeparator = '_';
 		int sep = transId.lastIndexOf(pathSeparator);
@@ -354,6 +377,7 @@ public final class SBMLXpathParser {
 		m_checkMaxValue.put(key, new Integer(maxvalue));
 	}
 
+	/** To place different interactions between nodes **/
 	private void placeInteractions() {
 		// check the maxvalues of all interactions first
 		if (m_checkMaxValue != null) {
@@ -383,6 +407,7 @@ public final class SBMLXpathParser {
 		}
 	} // void placeInteractions()
 
+	/** To place every node in the graph **/
 	private void placeNodeOrder() {
 		Vector v_order = new Vector();
 		String[] t_order = s_nodeOrder.split(" ");
@@ -401,8 +426,9 @@ public final class SBMLXpathParser {
 		} else {
 			graph.setNodeOrder(v_order);
 		}
-	} // void placeNodeOrder()
+	}
 
+	/** To parse each logical function **/
 	private void parseBooleanFunctions() {
 		List allowedEdges;
 		GsRegulatoryVertex vertex;
@@ -468,7 +494,7 @@ public final class SBMLXpathParser {
 	    return defValue;
 	}
 	
-	/** Les classes ***/
+	/**  **/
 	class InteractionInconsistencyAction implements GsGraphNotificationAction {
 		public String[] getActionName() {
 			String t[] = { "view" };

@@ -221,7 +221,6 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 Iterator it = graph.getGraphManager().getIncomingEdges(v_no.get(i)).iterator();
                 while (it.hasNext()) {
                     GsDirectedEdge edge = (GsDirectedEdge)it.next();
-                  // test
                     GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)edge.getUserObject();
                     int sign = me.getSign(); 
                     switch (sign) {
@@ -234,7 +233,6 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 					default:
 						break;
 					}                   
-                  // fin test
                     out.openTag("input");
                     out.addAttr("qualitativeSpecies", edge.getSourceVertex().toString());
                     out.addAttr("transitionEffect","none");

@@ -38,4 +38,11 @@ public class TestExport extends TestCase {
 		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.xgmml");
 		export.doExport(config);
 	}
+	
+/*	public void testSbml() {
+		SBML3Export export = new SBML3Export();
+		GsExportConfig config = new GsExportConfig(graph, export, 0);
+		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.sbml");
+		export.doExport(config);		
+	}*/
 }
