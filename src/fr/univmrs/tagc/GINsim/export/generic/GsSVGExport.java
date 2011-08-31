@@ -35,7 +35,7 @@ public class GsSVGExport {
             GsEdgeAttributesReader ereader = graph.getGraphManager().getEdgeAttributesReader();
             if (selectedOnly) {
                 itNodes = graph.getGraphManager().getSelectedVertexIterator();
-                itEdges = graph.getGraphManager().getSelectedEdgeIterator();
+                itEdges = graph.getGraphManager().getFullySelectedEdgeIterator();
             } else {
                 itNodes = graph.getGraphManager().getVertexIterator();
                 itEdges = graph.getGraphManager().getEdgeIterator();
@@ -50,7 +50,7 @@ public class GsSVGExport {
 	        Map m_marker = new HashMap();
             if (selectedOnly) {
                 itNodes = graph.getGraphManager().getSelectedVertexIterator();
-                itEdges = graph.getGraphManager().getSelectedEdgeIterator();
+                itEdges = graph.getGraphManager().getFullySelectedEdgeIterator();
             } else {
                 itNodes = graph.getGraphManager().getVertexIterator();
                 itEdges = graph.getGraphManager().getEdgeIterator();

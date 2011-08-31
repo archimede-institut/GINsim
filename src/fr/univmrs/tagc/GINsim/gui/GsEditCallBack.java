@@ -74,7 +74,7 @@ public class GsEditCallBack {
 	}
 	
 	/**
-	 * select all previously unselected nodes and vice-versa
+	 * select all previously unselected edges and vice-versa
 	 */
 	public void invertEdgeSelection() {
 		Set sel, edges = new HashSet();

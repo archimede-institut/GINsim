@@ -204,9 +204,14 @@ abstract public class GsGraphManager {
     abstract public Iterator getEdgeIterator();
 
     /**
-     * @return an iterator to selected edges.
+     * @return an iterator on the selected edges if their source and target vertices are also selected.
+     */
+	abstract public Iterator getFullySelectedEdgeIterator();
+    /**
+     * @return an iterator on the selected edges, even if their source and target vertices are not selected.
      */
 	abstract public Iterator getSelectedEdgeIterator();
+	
     /**
      * @return an iterator to selected vertices.
      */

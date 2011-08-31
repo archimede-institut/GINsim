@@ -32,7 +32,7 @@ public class GsBioLayoutEncoder {
 	        
 	        // Process Edges
 	        if (selectedOnly) {
-	        	it = graph.getGraphManager().getSelectedEdgeIterator();
+	        	it = graph.getGraphManager().getFullySelectedEdgeIterator();
 	        } else {
 	        	it = graph.getGraphManager().getEdgeIterator();
 	        }

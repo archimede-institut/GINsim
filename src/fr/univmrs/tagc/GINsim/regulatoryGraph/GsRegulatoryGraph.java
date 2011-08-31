@@ -165,7 +165,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
         Iterator it;
         if (selectedOnly) {
-        		it = graphManager.getSelectedEdgeIterator();
+        		it = graphManager.getFullySelectedEdgeIterator();
         } else {
         		it = graphManager.getEdgeIterator();
         }

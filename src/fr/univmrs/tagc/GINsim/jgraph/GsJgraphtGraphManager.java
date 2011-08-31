@@ -334,21 +334,22 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         return g.edgeSet().iterator();
     }
 
-    /**
-     * Return an iterator on the selected edges if their source and target vertices are also selected.
-     * 
-     * @see GsMainFrame#getSelectedEdges()
-     */
-	public Iterator getSelectedEdgeIterator() {
+	public Iterator<?> getFullySelectedEdgeIterator() {
 		if (visible) {
 			return new GsSelectedEdgeWithVertexIterator(mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges());
+		}
+        return g.edgeSet().iterator();
+	}
+	public Iterator getSelectedEdgeIterator() {
+		if (visible) {
+			return mainFrame.getSelectedEdges().iterator();
 		}
         return g.edgeSet().iterator();
 	}
 
 	public Iterator getSelectedVertexIterator() {
 		if (visible) {
-			return new GsSelectedVertexIterator(mainFrame.getSelectedVertices());
+			return mainFrame.getSelectedVertices().iterator();
 		}
         return g.vertexSet().iterator();
 	}
