@@ -129,7 +129,7 @@ public class GsNodeReducedData {
 			Object currentNode = it_nodes.next();
 			for (Iterator it_edges = gm.getOutgoingEdges(currentNode).iterator(); it_edges.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it_edges.next();
-				if (!content.contains(edge.getTargetVertex())) return true; //There is a node that is not in the cycle
+				if (!content.contains(edge.getTarget())) return true; //There is a node that is not in the cycle
 			}
 		}
 		return false;

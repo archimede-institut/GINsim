@@ -1,24 +1,60 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import fr.univmrs.tagc.GINsim.css.*;
-import fr.univmrs.tagc.GINsim.graph.*;
-import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.*;
-import fr.univmrs.tagc.GINsim.jgraph.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
-import fr.univmrs.tagc.common.widgets.*;
-import tbrowser.data.module.*;
-import tbrowser.ihm.widget.*;
-import tbrowser.io.remote.client.*;
+import tbrowser.data.module.TBModule;
+import tbrowser.data.module.TBModuleData;
+import tbrowser.data.module.TBModules;
+import tbrowser.ihm.widget.TBButton;
+import tbrowser.ihm.widget.TBPanel;
+import tbrowser.io.remote.client.TBClient;
+import fr.univmrs.tagc.GINsim.css.EdgeStyle;
+import fr.univmrs.tagc.GINsim.css.Selector;
+import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
+import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
+import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.AbstractTreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellEditor;
+import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellRenderer;
+import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeModel;
+import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.TreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.TreeElementNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class GsTBClientPanel extends GsPanel implements GraphChangeListener, WindowListener {
   private static final long serialVersionUID = 787313901857354026L;
@@ -66,16 +102,15 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 	    EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
 		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
 			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-			List l = gm.getIncomingEdges(v);
-			for (Iterator it2 = l.iterator(); it2.hasNext(); ) {
-				GsJgraphDirectedEdge me = (GsJgraphDirectedEdge)it2.next();
+			Collection<GsRegulatoryMultiEdge> edges = gm.getIncomingEdges(v);
+			for (GsRegulatoryMultiEdge me:  edges) {
 				ereader.setEdge(me);
 				cs.applyOnEdge(style, me, ereader);
 			}
 		}
 	}
 
-	public void applyEdgeStyle(GsJgraphDirectedEdge me, float w) {
+	public void applyEdgeStyle(GsRegulatoryMultiEdge me, float w) {
 		EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
 		style.border = w;
 		ereader.setEdge(me);
@@ -324,22 +359,22 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
   }
 
   public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
-    Vector v_edge = event.getV_edge();
-    Vector v_vertex = event.getV_vertex();
+    List v_edge = event.getV_edge();
+    List v_vertex = event.getV_vertex();
 
     Vector v = new Vector();
     for (int i = 0; i < v_vertex.size(); i++) {
-        if (!v.contains(v_vertex.elementAt(i))) {
-            v.addElement(v_vertex.elementAt(i));
+        if (!v.contains(v_vertex.get(i))) {
+            v.addElement(v_vertex.get(i));
         }
     }
     for (int i = 0; i < v_edge.size(); i++) {
-      GsJgraphDirectedEdge e = (GsJgraphDirectedEdge) v_edge.elementAt(i);
-      if (!v.contains(e.getSourceVertex())) {
-        v.addElement(e.getSourceVertex());
+      GsRegulatoryMultiEdge e = (GsRegulatoryMultiEdge) v_edge.get(i);
+      if (!v.contains(e.getSource())) {
+        v.addElement(e.getSource());
     }
-      if (!v.contains(e.getTargetVertex())) {
-        v.addElement(e.getTargetVertex());
+      if (!v.contains(e.getTarget())) {
+        v.addElement(e.getTarget());
     }
     }
     setGenes(v);

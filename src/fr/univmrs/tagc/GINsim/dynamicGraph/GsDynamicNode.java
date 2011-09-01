@@ -1,7 +1,6 @@
 package fr.univmrs.tagc.GINsim.dynamicGraph;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.Collection;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -74,12 +73,11 @@ public final class GsDynamicNode {
 	/**
 	 * @return the node's pattern of commutation.
 	 */
-	public int[] getPattern(GsGraphManager graphManager) {
+	public int[] getPattern(GsGraphManager<GsDynamicNode, GsDirectedEdge<GsDynamicNode>> graphManager) {
 		int[] pattern = new int[state.length];
-		List oe = graphManager.getOutgoingEdges(this);
-		for (Iterator it = oe.iterator(); it.hasNext();) {
-			GsDirectedEdge e = (GsDirectedEdge) it.next();
-			GsDynamicNode s = (GsDynamicNode) e.getTargetVertex();
+		Collection<GsDirectedEdge<GsDynamicNode>> oe = graphManager.getOutgoingEdges(this);
+		for (GsDirectedEdge<GsDynamicNode> e: oe) {
+			GsDynamicNode s = e.getTarget();
 			for (int i = 0; i < s.state.length; i++) {
 				if (s.state[i] < this.state[i]) pattern[i] = MINUS;
 				else if (s.state[i] > this.state[i]) pattern[i] = PLUS;

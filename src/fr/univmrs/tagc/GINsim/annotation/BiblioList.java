@@ -16,6 +16,7 @@ import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.*;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OpenHelper;
@@ -235,19 +236,19 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 		files.remove(fileName);
 	}
 
-	public GsGraphEventCascade edgeAdded(Object data) {
+	public GsGraphEventCascade edgeAdded(GsDirectedEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeRemoved(Object data) {
+	public GsGraphEventCascade edgeRemoved(GsDirectedEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeUpdated(Object data) {
+	public GsGraphEventCascade edgeUpdated(GsDirectedEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade graphMerged(Object data) {
+	public GsGraphEventCascade graphMerged(Collection data) {
 		return null;
 	}
 

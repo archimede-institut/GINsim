@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.graphComparator;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -77,21 +78,20 @@ public class DynamicGraphComparator extends GraphComparator {
 
 	protected void addEdgesFromGraph(GsGraphManager gm_main, GsGraphManager gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
 		GsDynamicNode v = (GsDynamicNode) gm_main.getVertexByName(id);
-		GsDirectedEdge e = null;
-		GsDirectedEdge e1, e2;
+		GsDirectedEdge<GsDynamicNode> e = null;
 		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributesReader();
 		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributesReader();
 		
 		if (v != null) { //If v is a vertex from the studied graph, we look at its edges
-			for (Iterator edge_it = gm_main.getOutgoingEdges(v).iterator(); edge_it.hasNext();) {
-				e1 = (GsDirectedEdge) edge_it.next();
-				String tid = ((GsDynamicNode)e1.getTargetVertex()).toString();
+			Collection<GsDirectedEdge<GsDynamicNode>> edges = gm_main.getOutgoingEdges(v);
+			for (GsDirectedEdge<GsDynamicNode> e1: edges) {
+				String tid = ((GsDynamicNode)e1.getTarget()).toString();
 				GsDynamicNode source = (GsDynamicNode) gm.getVertexByName(id);
 				GsDynamicNode target = (GsDynamicNode) gm.getVertexByName(tid);
-				e2 = (GsDirectedEdge) gm.getEdge(source, target);
+				GsDirectedEdge<GsDynamicNode> e2 = gm.getEdge(source, target);
 				
 				if (e2 == null) //The edge doesn't not already exists.
-					e = (GsDirectedEdge)g.addEdge(v, e1.getTargetVertex(), false);
+					e = g.addEdge(v, e1.getTarget(), false);
 				else
 					continue;
 				
@@ -100,7 +100,7 @@ public class DynamicGraphComparator extends GraphComparator {
 					comment+= "is specific to "+(pcol == SPECIFIC_G1_COLOR ? "g1":"g2");
 					mergeEdgeAttributes(e, e1, null, pcol, ereader, e1reader, null);
 				} else {
-					e2 = (GsDirectedEdge) gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
+					e2 = gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
 					if (e2 != null) {
 						comment+= "is common to both graphs";
 						mergeEdgeAttributes(e, e1, e2, vcol, ereader, e1reader, e2reader);

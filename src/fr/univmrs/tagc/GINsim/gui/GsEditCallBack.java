@@ -164,12 +164,12 @@ public class GsEditCallBack {
 			Object v = (Object) it.next();
 			for (Iterator it2 = gm.getOutgoingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
-				vertices.add(edge.getTargetVertex());
+				vertices.add(edge.getTarget());
 			}
 		}
 		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();
-			vertices.add(e.getTargetVertex());
+			vertices.add(e.getTarget());
 		}
 		gm.select(vertices);		
 	}
@@ -181,12 +181,12 @@ public class GsEditCallBack {
 			Object v = (Object) it.next();
 			for (Iterator it2 = gm.getIncomingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
-				vertices.add(edge.getSourceVertex());
+				vertices.add(edge.getSource());
 			}
 		}
 		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();
-			vertices.add(e.getSourceVertex());
+			vertices.add(e.getSource());
 		}
 		gm.select(vertices);		
 	}
@@ -222,12 +222,12 @@ public class GsEditCallBack {
 			Object v = (Object) it.next();
 			for (Iterator it2 = gm.getOutgoingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
-				vertices.add(edge.getTargetVertex());
+				vertices.add(edge.getTarget());
 			}
 		}
 		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();
-			vertices.add(e.getTargetVertex());
+			vertices.add(e.getTarget());
 		}
 		gm.addSelection(vertices);		
 	}
@@ -239,12 +239,12 @@ public class GsEditCallBack {
 			Object v = (Object) it.next();
 			for (Iterator it2 = gm.getIncomingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
-				vertices.add(edge.getSourceVertex());
+				vertices.add(edge.getSource());
 			}
 		}
 		for (Iterator it = main.getSelectedEdges().iterator(); it.hasNext();) {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();
-			vertices.add(e.getSourceVertex());
+			vertices.add(e.getSource());
 		}
 		gm.addSelection(vertices);		
 	}

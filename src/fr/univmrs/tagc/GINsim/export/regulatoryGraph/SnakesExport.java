@@ -2,16 +2,17 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
@@ -66,7 +67,7 @@ public class SnakesExport extends GsAbstractExport  {
 		for (int node_i = 0; node_i < nodes.length; node_i++) {
 			//generate the argument list from incoming edges : a, b, _a, _b
 			GsRegulatoryVertex current_node = (GsRegulatoryVertex) nodeOrder.get(node_i);
-			List incomingEdges = graph.getGraphManager().getIncomingEdges(current_node);
+			Collection<GsRegulatoryMultiEdge> incomingEdges = graph.getGraphManager().getIncomingEdges(current_node);
 			String current_node_name = getVertexNameForLevel(node_i, nodeOrder);
 			if (incomingEdges.size() == 0) {
 				out.write("    # specification of component \""+current_node_name+"\"\n");
@@ -82,12 +83,12 @@ public class SnakesExport extends GsAbstractExport  {
 			}
 			
 			StringBuffer s = new StringBuffer();
-			GsDirectedEdge edge;
+			GsRegulatoryMultiEdge edge;
 			GsRegulatoryVertex source;
-			Iterator it = incomingEdges.iterator();
+			Iterator<GsRegulatoryMultiEdge> it = incomingEdges.iterator();
 			while (true) {
-				edge = (GsDirectedEdge) it.next();
-				source = (GsRegulatoryVertex) edge.getSourceVertex();
+				edge = it.next();
+				source = edge.getSource();
 				s.append(source.getId());
 				if (it.hasNext()) {
 					s.append(", ");

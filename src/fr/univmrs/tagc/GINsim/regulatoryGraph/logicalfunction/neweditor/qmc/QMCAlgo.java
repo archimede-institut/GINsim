@@ -1,8 +1,11 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.qmc;
 
+import java.util.Collection;
 import java.util.Vector;
 import java.util.List;
 import javax.swing.JProgressBar;
+
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.common.widgets.GsButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -21,7 +24,7 @@ public class QMCAlgo implements ActionListener {
 		progressBar = jpb;
 		cancelButton = b;
 	}
-	public void init(List interactions, List parameters) {
+	public void init(Collection<GsRegulatoryMultiEdge> interactions, List parameters) {
 		groups = new ParameterGroupS(interactions, parameters, cnf, this);
 		function = "";
 	}

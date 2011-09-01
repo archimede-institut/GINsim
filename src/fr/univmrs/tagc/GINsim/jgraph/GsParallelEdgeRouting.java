@@ -4,7 +4,11 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import org.jgraph.graph.*;
+import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.EdgeView;
+import org.jgraph.graph.GraphLayoutCache;
+import org.jgraph.graph.PortView;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
@@ -22,7 +26,7 @@ public class GsParallelEdgeRouting extends DefaultEdge.DefaultRouting {
         GsDirectedEdge de = (GsDirectedEdge)((DefaultGraphCell)edge.getCell()).getUserObject();
         boolean isdouble = false;
         if (edge instanceof GsEdgeView && ((GsEdgeView)edge).getRenderer() instanceof GsEdgeRenderer) {
-            isdouble = ((GsEdgeRenderer)((GsEdgeView)edge).getRenderer()).getGraph().containsEdge(de.getTargetVertex(), de.getSourceVertex());
+            isdouble = ((GsEdgeRenderer)((GsEdgeView)edge).getRenderer()).getGraph().containsEdge(de.getTarget(), de.getSource());
         }
         
         if (isdouble) {

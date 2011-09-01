@@ -1,10 +1,11 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.qmc;
 
-import java.util.Vector;
-import java.util.Hashtable;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
+import java.util.Vector;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 
@@ -15,14 +16,10 @@ public class ParameterGroupS {
 	private int nbParameters;
 	private QMCAlgo algo;
 
-	public ParameterGroupS(List inters, List parameters, boolean cnf, QMCAlgo a) {
-		GsJgraphDirectedEdge e;
-		GsRegulatoryMultiEdge me;
+	public ParameterGroupS(Collection<GsRegulatoryMultiEdge> inters, List parameters, boolean cnf, QMCAlgo a) {
 		Vector vi = new Vector(), vp = new Vector();
 		algo = a;
-		for (int i = 0; i < inters.size(); i++) {
-			e = (GsJgraphDirectedEdge)inters.get(i);
-			me = (GsRegulatoryMultiEdge)e.getUserObject();
+		for (GsRegulatoryMultiEdge me: inters) {
 			for (int k = 0; k < me.getEdgeCount(); k++)
 				vi.addElement(me.getEdge(k).getShortInfo());
 		}

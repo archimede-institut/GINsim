@@ -14,31 +14,39 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org._3pq.jgrapht.DirectedGraph;
-import org._3pq.jgrapht.Edge;
-import org._3pq.jgrapht.ListenableGraph;
-import org._3pq.jgrapht.alg.DijkstraShortestPath;
-import org._3pq.jgrapht.alg.StrongConnectivityInspector;
-import org._3pq.jgrapht.ext.JGraphModelAdapter;
-import org._3pq.jgrapht.graph.ListenableDirectedGraph;
-import org.jgraph.graph.*;
+import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.Edge;
+import org.jgraph.graph.GraphConstants;
+import org.jgraph.graph.GraphUndoManager;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.ListenableGraph;
+import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.alg.StrongConnectivityInspector;
+import org.jgrapht.ext.JGraphModelAdapter;
+import org.jgrapht.graph.ListenableDirectedGraph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.*;
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.GINsim.graph.GsSelectedEdgeWithVertexIterator;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 
 /**
  * Implementation of a graphManager using jgraph/jgrapht.
  * 
  */
-public class GsJgraphtGraphManager extends GsGraphManager {
+public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGraphManager<V,E> {
 
-    private ListenableGraph     	g 				= null;
-    private JGraphModelAdapter 		m_jgAdapter    	= null;
-    private GsJgraph 				jgraph 			= null;
-    private GsGraph 				gsGraph		    = null;
-    private GsParallelEdgeRouting 	pedgerouting	= null;
-    private GraphUndoManager	    undoManager		= null;
+    private ListenableGraph<V,E>    	g 				= null;
+    private JGraphModelAdapter<V,E>		m_jgAdapter    	= null;
+    private GsJgraph 					jgraph 			= null;
+    private GsGraph<V,E> 				gsGraph		    = null;
+    private GsParallelEdgeRouting	 	pedgerouting	= null;
+    private GraphUndoManager	    	undoManager		= null;
     
     private boolean visible = false;
     
@@ -81,7 +89,7 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         return GPOverviewPanel.createOverviewPanel(this, sp);
     }
 
-    public boolean addVertex(Object vertex) {
+    public boolean addVertex(V vertex) {
         if (g.addVertex(vertex)) {
             if (visible) {
                 positionVertexAuto(vertex);
@@ -104,39 +112,42 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         }
     }
 
-    public Object addEdge(Object source, Object target, Object data) {
-    		Edge newedge = g.addEdge(source, target);
-    		if (newedge == null) {
-    		    return null;
+    public E addEdge(V source, V target, E newedge) {
+    	if (newedge == null) {
+    		newedge = g.addEdge(source, target);
+    	} else {
+        	g.addEdge(source, target, newedge);
+    	}
+    	if (newedge == null) {
+    		return null;
+    	}
+		
+		if (visible) {
+			if (source == target) {
+				DefaultEdge[] t_cell = {m_jgAdapter.getEdgeCell(newedge)};
+				GraphConstants.setRouting( t_cell[0].getAttributes(), pedgerouting);
+    			GraphConstants.setLineStyle(t_cell[0].getAttributes(), GraphConstants.STYLE_BEZIER);
+    			GraphConstants.setRemoveAttributes(
+    					t_cell[0].getAttributes(),
+    					new Object[] { GraphConstants.POINTS });
+    			
+        		m_jgAdapter.cellsChanged(t_cell);
+			} else {
+				E edge = g.getEdge(target, source);
+        		if ( edge != null) {
+    				DefaultEdge[] t_cell = {m_jgAdapter.getEdgeCell(edge), m_jgAdapter.getEdgeCell(newedge)};
+    				if (t_cell[0] != null) {
+    				    GraphConstants.setRouting( t_cell[0].getAttributes(), pedgerouting);
+            			GraphConstants.setLineStyle(t_cell[0].getAttributes(), GraphConstants.STYLE_BEZIER);
+    				}
+    				if (t_cell[1] != null) {
+    				    GraphConstants.setRouting( t_cell[1].getAttributes(), pedgerouting);
+            			GraphConstants.setLineStyle(t_cell[1].getAttributes(), GraphConstants.STYLE_BEZIER);
+    				}
+    				m_jgAdapter.cellsChanged(t_cell);
+        		}					
     		}
-    		((GsDirectedEdge)newedge).setUserObject(data);
-    		
-    		if (visible) {
-    			if (source == target) {
-    				DefaultEdge[] t_cell = {m_jgAdapter.getEdgeCell(newedge)};
-					GraphConstants.setRouting( t_cell[0].getAttributes(), pedgerouting);
-        			GraphConstants.setLineStyle(t_cell[0].getAttributes(), GraphConstants.STYLE_BEZIER);
-        			GraphConstants.setRemoveAttributes(
-        					t_cell[0].getAttributes(),
-        					new Object[] { GraphConstants.POINTS });
-        			
-            		m_jgAdapter.cellsChanged(t_cell);
-    			} else {
-	    			Edge edge = g.getEdge(target, source);
-	        		if ( edge != null) {
-	    				DefaultEdge[] t_cell = {m_jgAdapter.getEdgeCell(edge), m_jgAdapter.getEdgeCell(newedge)};
-	    				if (t_cell[0] != null) {
-	    				    GraphConstants.setRouting( t_cell[0].getAttributes(), pedgerouting);
-	            			GraphConstants.setLineStyle(t_cell[0].getAttributes(), GraphConstants.STYLE_BEZIER);
-	    				}
-	    				if (t_cell[1] != null) {
-	    				    GraphConstants.setRouting( t_cell[1].getAttributes(), pedgerouting);
-	            			GraphConstants.setLineStyle(t_cell[1].getAttributes(), GraphConstants.STYLE_BEZIER);
-	    				}
-	    				m_jgAdapter.cellsChanged(t_cell);
-	        		}					
-        		}
-    		}
+		}
         return newedge;
     }
 
@@ -187,9 +198,9 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         for (Iterator it = l.iterator(); it.hasNext();) {
 			Object o = (Object) it.next();
             if (o instanceof GsDirectedEdge) {
-                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)o));
+                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
             } else {
-                jgraph.addSelectionCell(m_jgAdapter.getVertexCell(o));
+                jgraph.addSelectionCell(m_jgAdapter.getVertexCell((V)o));
             }
         }
     }
@@ -201,7 +212,7 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         for (Iterator it = s.iterator(); it.hasNext();) {
 			Object o = (Object) it.next();
             if (o instanceof GsDirectedEdge) {
-                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)o));
+                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
             } else {
                 jgraph.addSelectionCell(m_jgAdapter.getVertexCell(o));
             }
@@ -303,22 +314,22 @@ public class GsJgraphtGraphManager extends GsGraphManager {
 				Object obj=((DefaultGraphCell)cells[i]).getUserObject();
 				//if it's an edge
 				if (obj instanceof Edge) {
-				    gsGraph.removeEdge(obj);
+				    gsGraph.removeEdge((E)obj);
 				//else it's a node
 				} else {
-				    gsGraph.removeVertex(obj);
+				    gsGraph.removeVertex((V)obj);
 				}
 			}
 		}
     }
 
-    public void removeVertex(Object obj) {
+    public void removeVertex(V obj) {
         g.removeVertex(obj);
         vertexCount--;
         vertexRemoved(obj);
     }
 
-    public Object getEdge(Object source, Object target) {
+    public E getEdge(V source, V target) {
         return g.getEdge(source, target);
     }
 
@@ -334,34 +345,34 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         return g.edgeSet().iterator();
     }
 
-	public Iterator<?> getFullySelectedEdgeIterator() {
+	public Iterator<E> getFullySelectedEdgeIterator() {
 		if (visible) {
 			return new GsSelectedEdgeWithVertexIterator(mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges());
 		}
         return g.edgeSet().iterator();
 	}
-	public Iterator getSelectedEdgeIterator() {
+	public Iterator<E> getSelectedEdgeIterator() {
 		if (visible) {
 			return mainFrame.getSelectedEdges().iterator();
 		}
         return g.edgeSet().iterator();
 	}
 
-	public Iterator getSelectedVertexIterator() {
+	public Iterator<V> getSelectedVertexIterator() {
 		if (visible) {
 			return mainFrame.getSelectedVertices().iterator();
 		}
         return g.vertexSet().iterator();
 	}
 
-    public List getIncomingEdges(Object vertex) {
+    public Set<E> getIncomingEdges(V vertex) {
     	if (g instanceof ListenableDirectedGraph) {
     		return ((ListenableDirectedGraph)g).incomingEdgesOf(vertex);
     	}
         return g.edgesOf(vertex);
     }
 
-    public List getOutgoingEdges(Object vertex) {
+    public Set<E> getOutgoingEdges(V vertex) {
         if (g instanceof ListenableDirectedGraph) {
             return ((ListenableDirectedGraph)g).outgoingEdgesOf(vertex);
         }
@@ -375,8 +386,8 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         return mainFrame;
     }
 
-    public void removeEdge(Object source, Object target) {
-		Edge edge = g.getEdge(target, source);
+    public void removeEdge(V source, V target) {
+    	E edge = g.getEdge(target, source);
 		if (visible) {
 			DefaultEdge de = m_jgAdapter.getEdgeCell(edge);
 	    		if ( edge != null && GraphConstants.getRouting(de.getAttributes()) == pedgerouting) {
@@ -449,10 +460,6 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         }
 	}
 
-	public Object getVertexByName(String id) {
-		return super.getVertexByName(id);
-	}
-
 	/**
 	 * @return Returns the defaultEdgeAttr.
 	 */
@@ -484,13 +491,12 @@ public class GsJgraphtGraphManager extends GsGraphManager {
 	/**
 	 * @return the jgrapht graph
 	 */
-    public ListenableGraph getG() {
+    public ListenableGraph<V, E> getG() {
         return g;
     }
 
     /**
      * @return the list of strong connected components
-     * 
      */
     public List getStrongComponent() {
         return new StrongConnectivityInspector((DirectedGraph)g).stronglyConnectedSets();
@@ -526,15 +532,15 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         }
     }
     
-    public List getShortestPath(Object source, Object target) {
+    public List getShortestPath(V source, V target) {
         return DijkstraShortestPath.findPathBetween(g, source, target);
     }
 
-    public boolean containsVertex(Object vertex) {
+    public boolean containsVertex(V vertex) {
         return g.containsVertex(vertex);
     }
     
-    public boolean containsEdge(Object from, Object to) {
+    public boolean containsEdge(V from, V to) {
         return g.containsEdge(from, to);
     }
 
@@ -559,10 +565,10 @@ public class GsJgraphtGraphManager extends GsGraphManager {
         }
         if (obj instanceof GsDirectedEdge) {
         	if (obj instanceof Edge) {
-                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)obj));
+                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)obj));
 			} else {
-				GsDirectedEdge de = (GsDirectedEdge)obj;
-				jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((Edge)getEdge(de.getSourceVertex(), de.getTargetVertex())));
+				E de = (E)obj;
+				jgraph.addSelectionCell(m_jgAdapter.getEdgeCell(getEdge(de.getSource(), de.getTarget())));
 			}
         } else {
             jgraph.addSelectionCell(m_jgAdapter.getVertexCell(obj));

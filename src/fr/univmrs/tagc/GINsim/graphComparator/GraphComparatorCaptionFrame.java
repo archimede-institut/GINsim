@@ -31,8 +31,6 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {
@@ -307,7 +305,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 				style = is.v2;
 				if (style == null) style = is.v1;
 			}
-			if (o.getClass() == GsRegulatoryMultiEdge.class || o.getClass() == GsJgraphDirectedEdge.class || o.getClass() == GsDirectedEdge.class ) { 	//edge
+			if (o instanceof GsDirectedEdge) { 	//edge
 				ereader.setEdge(o);
 				if (style != null) {
 					ereader.setDash(ereader.getPattern(0)); //FIXME : thats dirty, but copy/paste from DynamicGraph.

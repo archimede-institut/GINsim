@@ -38,7 +38,7 @@ public class GsTreeParserFromRegulatoryGraph extends GsTreeParserFromOmdd {
 		int i = 0;
 		for (Iterator it = regGraph.getGraphManager().getIncomingEdges(initialVertex).iterator(); it.hasNext();) {
 			GsDirectedEdge e = ((GsDirectedEdge) it.next());
-			GsRegulatoryVertex source = (GsRegulatoryVertex) e.getSourceVertex();
+			GsRegulatoryVertex source = (GsRegulatoryVertex) e.getSource();
 			i = 0;
 			for (Iterator it2 = nodeOrder.iterator(); it2.hasNext(); i++) {
 				GsRegulatoryVertex v = (GsRegulatoryVertex) it2.next();

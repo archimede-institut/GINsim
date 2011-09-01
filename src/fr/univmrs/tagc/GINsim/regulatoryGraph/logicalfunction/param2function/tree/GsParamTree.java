@@ -68,11 +68,10 @@ public class GsParamTree {
       }
     }
   }
-  public void init(List interactions, boolean comp) {
-	  Iterator it = interactions.iterator();
-		if (comp) defaultValue = 1234;
-		while (it.hasNext()) {
-	    init((GsLogicalParameter)it.next(), comp);
+  public void init(Collection<GsLogicalParameter> interactions, boolean comp) {
+	  if (comp) defaultValue = 1234;
+	  for (GsLogicalParameter p: interactions) {
+		  init(p, comp);
 	  }
   }
   private void init(GsLogicalParameter lp, boolean comp) {

@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser;
 
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;
@@ -9,7 +10,7 @@ public abstract class TBooleanParser {
   private Stack operatorStack, operandStack;
   protected TBooleanTreeNode root;
   protected TBooleanTreeNodeFactory nodeFactory = null;
-  protected Vector allData;
+  protected List<Integer> allData;
 
   public TBooleanParser(String returnClassName, String operandClassName) throws ClassNotFoundException {
     super();
@@ -17,7 +18,7 @@ public abstract class TBooleanParser {
     operatorStack = operandStack = null;
   }
   public abstract boolean verifOperandList(List list);
-  protected abstract void setAllData(List list);
+//  protected abstract void setAllData(List data);
   public boolean compile(String s) throws Exception {
     boolean ret = true;
     int i, j, k;
@@ -120,7 +121,7 @@ public abstract class TBooleanParser {
     }
     return ret;
   }
-  public Vector getAllData() {
+  public List<Integer> getAllData() {
     return allData;
   }
   public TBooleanData eval() throws Exception {

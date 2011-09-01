@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -181,7 +182,7 @@ class GraphExamples {
 	public static  GsDynamicGraph dg1() {
 		GsDynamicGraph g = new  GsDynamicGraph(); 
 		try { g.setGraphName("dynamic_graph_A");} catch (GsException e) {}
-		GsGraphManager gm = g.getGraphManager();
+		GsGraphManager<GsDynamicNode, GsDirectedEdge<GsDynamicNode>> gm = g.getGraphManager();
 		
 		g.addVertex(new GsDynamicNode("a00"));
 		g.addVertex(new GsDynamicNode("a01"));
@@ -208,7 +209,7 @@ class GraphExamples {
 	public static  GsDynamicGraph dg2() {
 		GsDynamicGraph g = new  GsDynamicGraph(); 
 		try { g.setGraphName("dynamic_graph_B");} catch (GsException e) {}
-		GsGraphManager gm = g.getGraphManager();
+		GsGraphManager<GsDynamicNode, GsDirectedEdge<GsDynamicNode>> gm = g.getGraphManager();
 		
 		g.addVertex(new GsDynamicNode("a00"));
 		g.addVertex(new GsDynamicNode("a01"));

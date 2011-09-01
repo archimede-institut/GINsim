@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.treeViewer;
 
 import java.io.OutputStreamWriter;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -8,6 +9,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
@@ -17,7 +19,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class GsTree extends GsGraph {
+public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
 	public final static int MODE_DIAGRAM = 1;
 	public final static int MODE_TREE = 2;
@@ -140,7 +142,7 @@ public class GsTree extends GsGraph {
 	 * @param target
 	 * @return the new edge
 	 */
-	public Object addEdge(Object source, Object target) {
+	public Object addEdge(GsTreeNode source, GsTreeNode target) {
 		Object e = graphManager.getEdge(source, target);
 		if (e != null) return e;
 		return graphManager.addEdge(source, target, null);
@@ -162,15 +164,15 @@ public class GsTree extends GsGraph {
 			return regGraph.getNodeOrder();
 		return null;
 	}
-		
+
 	/* Not used methods */
-	public 	  void 		removeEdge(Object obj) {}
+	public 	  void 		removeEdge(GsDirectedEdge<GsTreeNode> obj) {}
 	public    void 		changeVertexId(Object vertex, String newId) throws GsException {}
 	protected void 		setCopiedGraph(GsGraph graph) {}
 	protected GsGraph 	getCopiedGraph() {return null;}
-	protected GsGraph 	doCopySelection(Vector vertex, Vector edges) {return null;}
-	protected Object 	doInteractiveAddEdge(Object source, Object target, int param) {return null;}
-	protected Object 	doInteractiveAddVertex(int param) {return null;}
+	protected GsGraph 	doCopySelection(Collection vertex, Collection edges) {return null;}
+	protected GsDirectedEdge<GsTreeNode> 	doInteractiveAddEdge(GsTreeNode source, GsTreeNode target, int param) {return null;}
+	protected GsTreeNode 	doInteractiveAddVertex(int param) {return null;}
 	protected List		doMerge(GsGraph otherGraph) {return null;}
 	public	  Vector 	searchNodes(String regexp) {return null;}
 }

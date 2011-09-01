@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsRegulatoryMutantListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.datastore.ValueList;
@@ -35,7 +37,7 @@ import fr.univmrs.tagc.common.widgets.StockButton;
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.
  */
-public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphListener {
+public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
     /**
      * edit mutants associated with a graph
@@ -71,16 +73,16 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
         canEdit = true;
     }
     
-    public GsGraphEventCascade edgeAdded(Object data) {
+    public GsGraphEventCascade edgeAdded(GsRegulatoryMultiEdge data) {
         return null;
     }
-    public GsGraphEventCascade edgeRemoved(Object data) {
+    public GsGraphEventCascade edgeRemoved(GsRegulatoryMultiEdge data) {
         return null;
     }
-    public GsGraphEventCascade vertexAdded(Object data) {
+    public GsGraphEventCascade vertexAdded(GsRegulatoryVertex data) {
         return null;
     }
-    public GsGraphEventCascade vertexRemoved(Object data) {
+    public GsGraphEventCascade vertexRemoved(GsRegulatoryVertex data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
             GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_data.get(i);
@@ -97,10 +99,10 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
         }
         return null;
     }
-	public GsGraphEventCascade graphMerged(Object data) {
+	public GsGraphEventCascade graphMerged(Collection<GsRegulatoryVertex> data) {
 		return null;
 	}
-    public GsGraphEventCascade vertexUpdated(Object data) {
+    public GsGraphEventCascade vertexUpdated(GsRegulatoryVertex data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
             GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_data.get(i);
@@ -124,7 +126,7 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
         }
         return null;
     }
-    public GsGraphEventCascade edgeUpdated(Object data) {
+    public GsGraphEventCascade edgeUpdated(GsRegulatoryMultiEdge data) {
         return null;
     }
     

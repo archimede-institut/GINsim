@@ -2,7 +2,7 @@ package fr.univmrs.tagc.GINsim.graph;
 
 
 /**
- * Object willing to be informed of changes in the graph sould implement this interface
+ * Object willing to be informed of changes in the graph should implement this interface
  */
 public interface GraphChangeListener {
 
@@ -18,7 +18,7 @@ public interface GraphChangeListener {
 	 */
 	public void graphSelectionChanged(GsGraphSelectionChangeEvent event);
 	/**
-	 * alert the listenners that the graph is being closed
+	 * alert the listeners that the graph is being closed
 	 * @param graph
 	 */
 	public void graphClosed(GsGraph graph);

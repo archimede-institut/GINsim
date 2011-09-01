@@ -72,8 +72,8 @@ public class LocalGraph {
 			int j;
 			for (Iterator it_edges = gm.getAllEdges().iterator(); it_edges.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it_edges.next();
-				GsRegulatoryVertex source = (GsRegulatoryVertex) edge.getSourceVertex();
-				GsRegulatoryVertex target = (GsRegulatoryVertex) edge.getTargetVertex();
+				GsRegulatoryVertex source = (GsRegulatoryVertex) edge.getSource();
+				GsRegulatoryVertex target = (GsRegulatoryVertex) edge.getTarget();
 				i = ((Integer) node_to_position.get(source)).intValue();
 				j = ((Integer) node_to_position.get(target)).intValue();
 				byte[] fx = f(state);

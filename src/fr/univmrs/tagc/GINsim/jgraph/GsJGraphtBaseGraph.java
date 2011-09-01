@@ -1,77 +1,89 @@
 package fr.univmrs.tagc.GINsim.jgraph;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import org._3pq.jgrapht.DirectedGraph;
-import org._3pq.jgrapht.Edge;
-import org._3pq.jgrapht.EdgeFactory;
-import org._3pq.jgrapht.graph.AbstractGraph;
+import org.jgrapht.DirectedGraph;
+import org.jgrapht.EdgeFactory;
+import org.jgrapht.graph.AbstractGraph;
+
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 /**
  * a "simple" jgrapht implementation using hashmap.
  * it aims at "low" memory consumption without getting too slow.
- * 
  */
-public class GsJGraphtBaseGraph extends AbstractGraph implements DirectedGraph {
+public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractGraph<V, E> implements DirectedGraph<V,E> {
     
-    protected Map m_vertices = new HashMap(256);
-    private EdgeFactory ef;
-    private Set edgeSet = null;
-    private Set vertexSet = null;
+    protected Map<V, VInfo<V,E>> m_vertices = new HashMap<V, VInfo<V,E>>(256);
+    private EdgeFactory<V,E> ef;
+    private Set<E> edgeSet = null;
+    private Set<V> vertexSet = null;
     private int edgeCount = 0;
     
-    private static final List emptyList = new Vector();
+    private static final Set emptySet = new HashSet();
     
     /**
      * 
      * @param ef the edge factory
      */
-    public GsJGraphtBaseGraph( EdgeFactory ef ) {
+    public GsJGraphtBaseGraph( EdgeFactory<V,E> ef ) {
         this.ef = ef;
     }
 
-    public List getAllEdges(Object sourceVertex, Object targetVertex) {
+    @Override
+    public Set<E> getAllEdges(V sourceVertex, V targetVertex) {
         // no multiple edges here
         return null;
     }
 
-    public Edge getEdge(Object sourceVertex, Object targetVertex) {
-        VInfo vinfo = (VInfo)m_vertices.get(sourceVertex);
+    @Override
+    public E getEdge(V sourceVertex, V targetVertex) {
+        VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
         if (vinfo == null) {
             return null;
         }
         return vinfo.getOutgoing(targetVertex);
     }
 
-    public EdgeFactory getEdgeFactory() {
+    @Override
+    public EdgeFactory<V,E> getEdgeFactory() {
         return ef;
     }
 
-    public Edge addEdge(Object sourceVertex, Object targetVertex) {
+    @Override
+    public E addEdge(V sourceVertex, V targetVertex) {
         
         // at the same time, check if vertices exists in graph AND replace them if necessary
-        VInfo vinfo = (VInfo)m_vertices.get(sourceVertex);
+        VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
         if (vinfo == null) {
             return null;
         }
         
-        Object src = vinfo.self;
-        vinfo = (VInfo)m_vertices.get(targetVertex);
+        V src = vinfo.self;
+        vinfo = m_vertices.get(targetVertex);
         if (vinfo == null) {
             return null;
         }
         // really create/add the edge
-        Edge e = ef.createEdge( src, vinfo.self );
-        if (addEdge(e)) {
+        E e = ef.createEdge( src, vinfo.self );
+        if (addEdge(sourceVertex, targetVertex, e)) {
             return e;
         }
         return null;
     }
 
-    public boolean addEdge(Edge e) {
-        VInfo vinfo = (VInfo)m_vertices.get(e.getSource());
+	@Override
+	public boolean addEdge(V sourceVertex, V targetVertex, E e) {
+		if (sourceVertex != e.getSource() || targetVertex != e.getTarget()) {
+			return false;
+		}
+        VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
         if (vinfo.addOutgoing(e)) {
-            vinfo = (VInfo)m_vertices.get(e.getTarget());
+            vinfo = m_vertices.get(targetVertex);
             vinfo.addIncoming(e);
             edgeCount++;
             return true;
@@ -79,63 +91,70 @@ public class GsJGraphtBaseGraph extends AbstractGraph implements DirectedGraph {
         return false;
     }
 
-    public boolean addVertex(Object v) {
+    @Override
+    public boolean addVertex(V v) {
         if (m_vertices.containsKey(v)) {
             return false;
         }
-        m_vertices.put(v, new VInfo( v ));
+        m_vertices.put(v, new VInfo<V,E>( v ));
         return true;
     }
 
-    public boolean containsEdge(Edge e) {
-        VInfo vinfo = (VInfo)m_vertices.get(e.getSource());
+    @Override
+    public boolean containsEdge(E e) {
+        VInfo<V,E> vinfo = m_vertices.get(e.getSource());
         if (vinfo == null) {
             return false;
         }
         return vinfo.containsOutgoing(e);
     }
 
-    public boolean containsVertex(Object v) {
+    @Override
+    public boolean containsVertex(V v) {
         return m_vertices.containsKey(v);
     }
 
-    public Set edgeSet() {
+    @Override
+    public Set<E> edgeSet() {
         if (edgeSet == null) {
-            edgeSet = new EdgeSet();
+            edgeSet = new HashSet<E>();
         }
         return edgeSet;
     }
 
-    public List edgesOf(Object vertex) {
-        List l1 = incomingEdgesOf(vertex);
-        List l2 = outgoingEdgesOf(vertex);
+    @Override
+    public Set<E> edgesOf(V vertex) {
+        Set<E> l1 = incomingEdgesOf(vertex);
+        Set<E> l2 = outgoingEdgesOf(vertex);
         if (l1 == null) {
             return l2;
         } else if (l2 == null) {
             return l1;
         } else {
-            Vector l = new Vector(l1);
+            Set<E> l = new HashSet<E>(l1);
             l.addAll(l2);
             return l;
         }
     }
 
-    public Edge removeEdge(Object sourceVertex, Object targetVertex) {
-        VInfo vinfo = (VInfo)m_vertices.get(sourceVertex);
+    @Override
+    public E removeEdge(V sourceVertex, V targetVertex) {
+        VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
         if (vinfo == null) {
             return null;
         }
-        Edge e = vinfo.getOutgoing(targetVertex);
+        E e = vinfo.getOutgoing(targetVertex);
         if (e != null) {
             vinfo.removeOutgoing(e);
-            ((VInfo)m_vertices.get(targetVertex)).removeIncoming(e);
+            m_vertices.get(targetVertex).removeIncoming(e);
             edgeCount--;
         }
         return e;
     }
 
-    public boolean removeEdge(Edge e) {
-        VInfo vinfo = (VInfo)m_vertices.get(e.getSource());
+    @Override
+    public boolean removeEdge(E e) {
+        VInfo<V,E> vinfo = m_vertices.get(e.getSource());
         if (vinfo == null) {
             return false;
         }
@@ -143,13 +162,14 @@ public class GsJGraphtBaseGraph extends AbstractGraph implements DirectedGraph {
             return false;
         }
         vinfo.removeOutgoing(e);
-        ((VInfo)m_vertices.get(e.getTarget())).removeIncoming(e);
+        m_vertices.get(e.getTarget()).removeIncoming(e);
         edgeCount--;
         return true;
     }
 
-    public boolean removeVertex(Object v) {
-        VInfo vinfo = (VInfo)m_vertices.get(v);
+    @Override
+    public boolean removeVertex(V v) {
+        VInfo<V,E> vinfo = m_vertices.get(v);
         if (vinfo == null) {
             return false;
         }
@@ -158,230 +178,139 @@ public class GsJGraphtBaseGraph extends AbstractGraph implements DirectedGraph {
         return true;
     }
 
-    public Set vertexSet() {
+    @Override
+    public Set<V> vertexSet() {
         if (vertexSet == null) {
             vertexSet = Collections.unmodifiableSet(m_vertices.keySet());
         }
         return vertexSet;
     }
 
-    private class VInfo {
-        Object self;
-        List l_incoming;
-        List l_outgoing;
-        
-        protected VInfo( Object o ) {
-            self = o;
-        }
-        
-        protected boolean addIncoming( Edge e ) {
-            if (l_incoming == null) {
-                l_incoming = new Vector();
-                l_incoming.add(e);
-                return true;
-            }
-            if (l_incoming.contains(e)) {
-                return false;
-            }
-            l_incoming.add(e);
-            return true;
-        }
-        protected boolean addOutgoing( Edge e ) {
-            if (l_outgoing == null) {
-                l_outgoing = new Vector();
-                l_outgoing.add(e);
-                return true;
-            }
-            if (l_outgoing.contains(e)) {
-                return false;
-            }
-            l_outgoing.add(e);
-            return true;
-        }
-        
-        protected boolean containsOutgoing(Edge e) {
-            if (l_outgoing == null) {
-                return false;
-            }
-            return l_outgoing.contains(e);
-        }
-        
-        protected void removeIncoming(Edge e) {
-            if (l_incoming != null) {
-                l_incoming.remove(e);
-            }
-        }
-        protected void removeOutgoing(Edge e) {
-            if (l_outgoing != null) {
-                l_outgoing.remove(e);
-            }
-        }
-        protected Edge getOutgoing(Object target) {
-            if (l_outgoing == null) {
-                return null;
-            }
-            for (int i=0 ; i<l_outgoing.size() ; i++) {
-                Edge e = (Edge)l_outgoing.get(i);
-                if (e.getTarget().equals(target)) {
-                    return e;
-                }
-            }
-            return null;
-        }
-        
-        protected void cleanup( Map m_vertices ) {
-            Iterator it;
-            VInfo vinfo;
-            if (l_incoming != null) {
-                it = l_incoming.iterator();
-                while (it.hasNext()) {
-                    Edge e = (Edge)it.next();
-                    vinfo = (VInfo)m_vertices.get(e.getSource());
-                    vinfo.removeOutgoing(e);
-                }
-            }
-            if (l_outgoing != null) {
-                it = l_outgoing.iterator();
-                while (it.hasNext()) {
-                    Edge e = (Edge)it.next();
-                    vinfo = (VInfo)m_vertices.get(e.getTarget());
-                    vinfo.removeIncoming(e);
-                }
-            }
-        }
-    }
-    
-    class EdgeSet implements Set {
-        private GsJGraphtBaseGraph g;
-        
-
-        public int size() {
-            return g.getEdgesCount();
-        }
-
-        public boolean isEmpty() {
-            return (g.getEdgesCount() == 0);
-        }
-
-        public boolean contains(Object o) {
-            return g.containsEdge((Edge)o);
-        }
-
-        public Iterator iterator() {
-            return new EdgeIterator();
-        }
-
-        public Object[] toArray() {
-            // shouldn't be needed
-            return null;
-        }
-
-        public Object[] toArray(Object[] a) {
-            // shouldn't be needed
-            return a;
-        }
-
-        public boolean add(Object o) {
-            return false;
-        }
-
-        public boolean remove(Object o) {
-            return false;
-        }
-
-        public boolean containsAll(Collection c) {
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                if (!contains(it.next())) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public boolean addAll(Collection c) {
-            return false;
-        }
-
-        public boolean retainAll(Collection c) {
-            return false;
-        }
-
-        public boolean removeAll(Collection c) {
-            return false;
-        }
-
-        public void clear() {
-        }
-    }
-    
-    private class EdgeIterator implements Iterator {
-
-        Object next;
-        Iterator i_vertices;
-        Iterator i_edges;
-        
-        public boolean hasNext() {
-            return (next != null);
-        }
-
-        public Object next() {
-            Object ret = next;
-            selectNext();
-            return ret;
-        }
-
-        public void remove() {
-            // unsupported
-        }
-        
-        private void selectNext() {
-            next = null;
-            if (i_edges != null && i_edges.hasNext()) {
-                next = i_edges.next();
-            } else while (i_vertices.hasNext()) {
-                VInfo vinfo = (VInfo)i_vertices.next();
-                if (vinfo.l_outgoing != null) {
-                    i_edges = vinfo.l_outgoing.iterator();
-                    if (i_edges.hasNext()) {
-                        next = i_edges.next();
-                        break;
-                    }
-                }
-            }
-        }
-
-        protected EdgeIterator() {
-            this.i_vertices = m_vertices.values().iterator();
-            selectNext();
-        }
-    }
-
-    public int inDegreeOf(Object vertex) {
+    @Override
+    public int inDegreeOf(V vertex) {
         return incomingEdgesOf(vertex).size();
     }
 
-    public List incomingEdgesOf(Object vertex) {
-        List l = ((VInfo)m_vertices.get(vertex)).l_incoming;
+    @Override
+    public Set<E> incomingEdgesOf(V vertex) {
+        Set<E> l = m_vertices.get(vertex).l_incoming;
         if (l == null) {
-            return emptyList;
+            return emptySet;
         }
         return l;
     }
 
-    public int outDegreeOf(Object vertex) {
+    @Override
+    public int outDegreeOf(V vertex) {
         return outgoingEdgesOf(vertex).size();
     }
 
-    public List outgoingEdgesOf(Object vertex) {
-        List l = ((VInfo)m_vertices.get(vertex)).l_outgoing;
+    @Override
+    public Set<E> outgoingEdgesOf(V vertex) {
+        Set<E> l = m_vertices.get(vertex).l_outgoing;
         if (l == null) {
-            return emptyList;
+            return emptySet;
         }
         return l;
     }
     
-    protected int getEdgesCount() {
-        return edgeCount;
+	@Override
+	public V getEdgeSource(E e) {
+		return e.getSource();
+	}
+
+	@Override
+	public V getEdgeTarget(E e) {
+		return e.getTarget();
+	}
+
+	@Override
+	public double getEdgeWeight(E e) {
+		return 0;
+	}
+}
+
+/**
+ * Store information about a node and its incoming and outgoing edges.
+ * 
+ * @author Aurelien Naldi
+ *
+ * @param <V>
+ * @param <E>
+ */
+class VInfo<V,E extends GsDirectedEdge<V>> {
+    V self;
+    Set<E> l_incoming;
+    Set<E> l_outgoing;
+    
+    protected VInfo( V o ) {
+        self = o;
+    }
+    
+    protected boolean addIncoming(E e ) {
+        if (l_incoming == null) {
+            l_incoming = new HashSet<E>();
+            l_incoming.add(e);
+            return true;
+        }
+        if (l_incoming.contains(e)) {
+            return false;
+        }
+        l_incoming.add(e);
+        return true;
+    }
+    protected boolean addOutgoing(E e ) {
+        if (l_outgoing == null) {
+            l_outgoing = new HashSet<E>();
+            l_outgoing.add(e);
+            return true;
+        }
+        if (l_outgoing.contains(e)) {
+            return false;
+        }
+        l_outgoing.add(e);
+        return true;
+    }
+    
+    protected boolean containsOutgoing(E e) {
+        if (l_outgoing == null) {
+            return false;
+        }
+        return l_outgoing.contains(e);
+    }
+    
+    protected void removeIncoming(E e) {
+        if (l_incoming != null) {
+            l_incoming.remove(e);
+        }
+    }
+    protected void removeOutgoing(E e) {
+        if (l_outgoing != null) {
+            l_outgoing.remove(e);
+        }
+    }
+    protected E getOutgoing(V target) {
+        if (l_outgoing == null) {
+            return null;
+        }
+        for (E e: l_outgoing) {
+            if (e.getTarget().equals(target)) {
+                return e;
+            }
+        }
+        return null;
+    }
+    
+    protected void cleanup( Map<V,VInfo<V, E>> m_vertices ) {
+        if (l_incoming != null) {
+            for (E e: l_incoming) {
+                m_vertices.get(e.getSource()).removeOutgoing(e);
+            }
+        }
+        if (l_outgoing != null) {
+            for (E e: l_outgoing) {
+                m_vertices.get(e.getTarget()).removeIncoming(e);
+            }
+        }
     }
 }

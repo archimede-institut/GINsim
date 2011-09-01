@@ -128,7 +128,7 @@ public class GsStateInRegGraphSelector extends Selector {
 		}
 		GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge) obj;
 		int threshold = me.getMin(0);
-		int order = ((Integer)nodeToOrder.get(me.getSourceVertex())).intValue();
+		int order = ((Integer)nodeToOrder.get(me.getSource())).intValue();
 		if (state[order] >= threshold) return CAT_EDGE_ON;
 		return CAT_EDGE_OFF;
 	}

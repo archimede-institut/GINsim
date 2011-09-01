@@ -2,11 +2,11 @@ package fr.univmrs.tagc.GINsim.jgraph.layout;
 
 import javax.swing.JFrame;
 
-import org._3pq.jgrapht.ext.JGraphModelAdapter;
 import org.jgraph.JGraph;
 import org.jgraph.layout.CircleGraphLayout;
 import org.jgraph.layout.JGraphLayoutAlgorithm;
 import org.jgraph.layout.TreeLayoutAlgorithm;
+import org.jgrapht.ext.JGraphModelAdapter;
 
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;

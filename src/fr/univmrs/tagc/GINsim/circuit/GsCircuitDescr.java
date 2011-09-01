@@ -94,7 +94,7 @@ public class GsCircuitDescr {
 
         int[] t_circuit = new int[nodeOrder.size()]; // filled with "0"
         for (int i=0 ; i< t_me.length ; i++) {
-            t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(0);
+            t_circuit[ nodeOrder.indexOf(t_me[i].getSource()) ] = t_me[i].getMin(0);
         }
         GsRegulatoryEdge edge, next_edge;
         boolean goon;
@@ -163,10 +163,10 @@ public class GsCircuitDescr {
             for (int i = t_pos.length - 1; i >= 0; i--) {
                 if (t_pos[i] == t_posMax[i]) {
                     t_pos[i] = 0;
-                    t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(0);
+                    t_circuit[ nodeOrder.indexOf(t_me[i].getSource()) ] = t_me[i].getMin(0);
                 } else {
                     t_pos[i]++;
-                    t_circuit[ nodeOrder.indexOf(t_me[i].getSourceVertex()) ] = t_me[i].getMin(t_pos[i]);
+                    t_circuit[ nodeOrder.indexOf(t_me[i].getSource()) ] = t_me[i].getMin(t_pos[i]);
                     goon = true;
                     break;
                 }

@@ -1,12 +1,19 @@
 package fr.univmrs.tagc.GINsim.graph;
 
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 
@@ -14,15 +21,15 @@ import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
  * interface that each graphManager should implement, the only implementor should be
  * the jgraphtGraphManager for a while
  */
-abstract public class GsGraphManager {
+abstract public class GsGraphManager<V,E extends GsDirectedEdge<V>> {
 
-	private static Vector v_layout = null;
-	private static Vector v_export = null;
-	private static Vector v_action = null;
+	private static List<GsActionProvider> v_layout = null;
+	private static List<GsActionProvider> v_export = null;
+	private static List<GsActionProvider> v_action = null;
 
 	protected boolean canUndo;
-    private HashMap evsmap = null;
-    private HashMap vvsmap = null;
+    private Map evsmap = null;
+    private Map vvsmap = null;
     private GsEdgeAttributesReader fbEReader = null;
     private GsVertexAttributesReader fbVReader = null;
     private GsEventDispatcher eventDispatcher = new GsEventDispatcher(false);
@@ -30,7 +37,7 @@ abstract public class GsGraphManager {
     protected GsMainFrame mainFrame;
 	
     /**
-     * @return a Jcomponent showing the graph.
+     * @return a JComponent showing the graph.
      */
 	abstract public JComponent getGraphPanel();
     /**
@@ -48,9 +55,9 @@ abstract public class GsGraphManager {
     /**
      * add the given vertex to the graph.
      * @param vertex
-     * @return the newly created vertex (or null if failed/inapropriate)
+     * @return the newly created vertex (or null if failed/inappropriate)
      */
-	abstract public boolean addVertex (Object vertex);
+	abstract public boolean addVertex (V vertex);
     /**
      * add the given vertex and place it.
      * 
@@ -58,16 +65,16 @@ abstract public class GsGraphManager {
      * @param x
      * @param y
      */
-	abstract public void placeVertex (Object vertex, int x, int y);
+	abstract public void placeVertex (V vertex, int x, int y);
     /**
-     * add an edge beetwen two vertices and attach the given data to it.
+     * add an edge between two vertices and attach the given data to it.
      * 
      * @param source
      * @param target
      * @param data
      * @return the newly created edge (or null if failed/inapropriate)
      */
-	abstract public Object addEdge (Object source, Object target, Object data);
+	abstract public E addEdge (V source, V target, E data);
     
     /**
      * select all objects (vertices and edges).
@@ -127,7 +134,7 @@ abstract public class GsGraphManager {
     /**
      * @return the real graph.
      */
-    abstract public GsGraph getGsGraph();
+    abstract public GsGraph<V,E> getGsGraph();
     
     /**
      * zoom out the display.
@@ -174,14 +181,14 @@ abstract public class GsGraphManager {
      * 
      * @param obj
      */
-    abstract public void removeVertex(Object obj);
+    abstract public void removeVertex(V obj);
     
-    protected void vertexRemoved(Object vertex) {
+    protected void vertexRemoved(V vertex) {
     	if (vvsmap != null) {
     		vvsmap.remove(vertex);
     	}
     }
-    protected void edgeRemoved(Object edge) {
+    protected void edgeRemoved(E edge) {
     	if (evsmap != null) {
     		evsmap.remove(edge);
     	}
@@ -192,47 +199,47 @@ abstract public class GsGraphManager {
      * @param target
      * @return the edge between source and target or null if not found.
      */
-    abstract public Object getEdge(Object source, Object target);
+    abstract public E getEdge(V source, V target);
 
     /**
      * @return an iterator to all vertices.
      */
-    abstract public Iterator getVertexIterator();
+    abstract public Iterator<V> getVertexIterator();
     /**
      * @return an iterator to all edges.
      */
-    abstract public Iterator getEdgeIterator();
+    abstract public Iterator<E> getEdgeIterator();
 
     /**
      * @return an iterator on the selected edges if their source and target vertices are also selected.
      */
-	abstract public Iterator getFullySelectedEdgeIterator();
+	abstract public Iterator<E> getFullySelectedEdgeIterator();
     /**
      * @return an iterator on the selected edges, even if their source and target vertices are not selected.
      */
-	abstract public Iterator getSelectedEdgeIterator();
+	abstract public Iterator<E> getSelectedEdgeIterator();
 	
     /**
      * @return an iterator to selected vertices.
      */
-	abstract public Iterator getSelectedVertexIterator();
+	abstract public Iterator<V> getSelectedVertexIterator();
 
     
     /**
      * @param vertex
      * @return incoming edges of the given vertex.
      */
-    abstract public List getIncomingEdges(Object vertex);
+    abstract public Set<E> getIncomingEdges(V vertex);
     /**
      * @param vertex
      * @return outgoing edges of the given vertex.
      */
-    abstract public List getOutgoingEdges(Object vertex);
+    abstract public Set<E> getOutgoingEdges(V vertex);
     /**
      * @param source
      * @param target
      */
-    abstract public void removeEdge(Object source, Object target);
+    abstract public void removeEdge(V source, V target);
     /**
      * 
      */
@@ -254,14 +261,14 @@ abstract public class GsGraphManager {
 	 */
 	public static void registerLayoutProvider(GsActionProvider layout) {
 		if (v_layout == null) {
-			v_layout = new Vector();
+			v_layout = new ArrayList<GsActionProvider>();
 		}
 		v_layout.add(layout);
 	}
 	/**
-	 * @return a list of avaible layouts.
+	 * @return a list of available layouts.
 	 */
-	public Vector getLayout() {
+	public List<GsActionProvider> getLayout() {
 		return v_layout;
 	}
 
@@ -270,14 +277,14 @@ abstract public class GsGraphManager {
 	 */
 	public static void registerExportProvider(GsActionProvider export) {
 		if (v_export == null) {
-			v_export = new Vector();
+			v_export = new ArrayList<GsActionProvider>();
 		}
 		v_export.add(export);
 	}
 	/**
-	 * @return a list of avaible export filters.
+	 * @return a list of available export filters.
 	 */
-	public Vector getExport() {
+	public List<GsActionProvider> getExport() {
 		return v_export;
 	}
 
@@ -287,14 +294,14 @@ abstract public class GsGraphManager {
 	 */
 	public static void registerActionProvider(GsActionProvider action) {
 		if (v_action == null) {
-			v_action = new Vector();
+			v_action = new ArrayList<GsActionProvider>();
 		}
 		v_action.add(action);
 	}
 	/**
-	 * @return a list of avaible actions.
+	 * @return a list of available actions.
 	 */
-	public Vector getAction() {
+	public List<GsActionProvider> getAction() {
 		return v_action;
 	}
 
@@ -313,10 +320,10 @@ abstract public class GsGraphManager {
 	 * @param id name of a vertex
 	 * @return the vertex corresponding to this uniq id or null if not found.
 	 */
-	public Object getVertexByName(String id) {
-		Iterator it = getVertexIterator();
+	public V getVertexByName(String id) {
+		Iterator<V> it = getVertexIterator();
 		while (it.hasNext()) {
-			Object vertex = it.next();
+			V vertex = it.next();
 			if (id.equals(vertex.toString())) {
 				return vertex;
 			}
@@ -382,13 +389,13 @@ abstract public class GsGraphManager {
     }
     
     /**
-     * find the byteestPath between two nodes
+     * find the shortestPath between two nodes
      * 
      * @param source starting point
      * @param target ending point
      * @return a List describing the path or null if none found
      */
-    public abstract List getShortestPath(Object source, Object target);
+    public abstract List getShortestPath(V source, V target);
     
     /**
      * test if the graph contains a given vertex.
@@ -396,7 +403,7 @@ abstract public class GsGraphManager {
      * @param vertex
      * @return true if this graph contains the vertex.
      */
-    public abstract boolean containsVertex(Object vertex);
+    public abstract boolean containsVertex(V vertex);
 
     /**
      * test if the graph contains a given edge.
@@ -405,7 +412,7 @@ abstract public class GsGraphManager {
      * @param to
      * @return true if an edge from <code>from</code> to <code>to</code> exists.
      */
-    public abstract boolean containsEdge(Object from, Object to);
+    public abstract boolean containsEdge(V from, V to);
     
     /**
      * @return the mainFrame showing this graph.
@@ -425,6 +432,6 @@ abstract public class GsGraphManager {
 		return null;
 	}
 	
-	abstract public Collection getAllEdges();
-	abstract public Collection getAllVertex();
+	abstract public Collection<E> getAllEdges();
+	abstract public Collection<V> getAllVertex();
 }

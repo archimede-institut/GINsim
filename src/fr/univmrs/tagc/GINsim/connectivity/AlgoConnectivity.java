@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.connectivity;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -164,7 +165,7 @@ public class AlgoConnectivity extends Thread {
 		if (nbCompo == 1) {
             return;																				//The graph is already created, no edges to add.
         }
-		HashMap nodeParentSCC = new HashMap(); //Map the a node to its parent SCC
+		HashMap<Object, GsNodeReducedData> nodeParentSCC = new HashMap(); //Map the a node to its parent SCC
 		
 		for (int scc_i=0 ; scc_i<nbCompo; scc_i++) {															//for each SCC
             if (canceled) {
@@ -192,17 +193,16 @@ public class AlgoConnectivity extends Thread {
                     throw new InterruptedException();
                 }
 				Object currentNode = it.next();
-				List outgoingEdges = graphModel.getOutgoingEdges(currentNode);
-				for (Iterator it_out = outgoingEdges.iterator(); it_out.hasNext();) {							//    for each edge outgoing from this node
+				Collection<GsDirectedEdge> outgoingEdges = graphModel.getOutgoingEdges(currentNode);
+				for (GsDirectedEdge edge: outgoingEdges) {							//    for each edge outgoing from this node
                 	if (canceled) {
                         throw new InterruptedException();
                     }						
-                	GsDirectedEdge edge = (GsDirectedEdge) it_out.next();
-					Object targetNode = edge.getTargetVertex();
-					Object targetParent = nodeParentSCC.get(targetNode);
-					if (nodeParentSCC.get(targetNode) != currentSCCNode) {										//      if the target of the edge is not in the SCC
+					Object targetNode = edge.getTarget();
+					GsNodeReducedData targetParent = nodeParentSCC.get(targetNode);
+					if (nodeParentSCC.get(targetNode) != currentSCCNode) {			//      if the target of the edge is not in the SCC
 						reducedGraph.addEdge(currentSCCNode, targetParent);
-					//	targets.put(targetNode.toString(), currentSCCNode);						//      add it to the targets map <=> say the current SCC is targeting the SCC containing targetNode
+					//	targets.put(targetNode.toString(), currentSCCNode);			//      add it to the targets map <=> say the current SCC is targeting the SCC containing targetNode
 					}
 				}
 				

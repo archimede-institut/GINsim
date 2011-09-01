@@ -153,7 +153,7 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
 			node = nb.getNode();
 			node.setUserObject(new GsListInteraction(o, -1, false));
 			al.setNode(node);
-			nb.addLabel(o.getSourceVertex().toString(), darkGreen);
+			nb.addLabel(o.getSource().toString(), darkGreen);
 			node = nb.getNode();
 			tb.addNode(node);
       for (int j = 0; j < o.getEdgeCount(); j++) {

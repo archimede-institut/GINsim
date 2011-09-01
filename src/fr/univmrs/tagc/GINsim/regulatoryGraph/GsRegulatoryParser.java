@@ -1,8 +1,14 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.io.File;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -12,8 +18,11 @@ import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.*;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
+import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
@@ -446,7 +455,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     }
 
     private void parseBooleanFunctions() {
-      List allowedEdges;
+      Set<GsRegulatoryMultiEdge> allowedEdges;
       GsRegulatoryVertex vertex;
       String value, exp;
       try {
@@ -496,7 +505,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     }
     public void addParam(byte val, GsRegulatoryVertex vertex, String par) throws Exception {
       GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
-      List l = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
+//      Set<GsDirectedEdge> l = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
       GsTreeParam param = interactionList.addEmptyParameter(val, vertex);
       String[] t_interaction = par.split(" ");
       Vector v = new Vector();
@@ -511,12 +520,13 @@ public final class GsRegulatoryParser extends GsXMLHelper {
           srcString = t_interaction[i];
           indexString = "1";
         }
-        for (int j = 0; j < l.size(); j++) {
-          o = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)l.get(j)).getUserObject();
-          if (o.getSource().getId().equals(srcString)) {
+        Set<GsRegulatoryMultiEdge> edges;
+        edges = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
+        for (GsRegulatoryMultiEdge e: edges) {
+          if (e.getSource().getId().equals(srcString)) {
         	  // FIXME: edge definition changed, consistency should be checked
                   // FIXED ... I hope
-            v.addElement(o.getEdge(Integer.parseInt(indexString) - 1));
+            v.add(e.getEdge(Integer.parseInt(indexString) - 1));
             break;
           }
         }

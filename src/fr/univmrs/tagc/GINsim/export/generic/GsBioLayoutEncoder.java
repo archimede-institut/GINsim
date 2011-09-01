@@ -41,8 +41,8 @@ public class GsBioLayoutEncoder {
 	        	Object from = null;
 	        	Object to = null;
 	        	if (edge instanceof GsDirectedEdge) {
-	        		from = ((GsDirectedEdge)edge).getSourceVertex();
-	        		to = ((GsDirectedEdge)edge).getTargetVertex();
+	        		from = ((GsDirectedEdge)edge).getSource();
+	        		to = ((GsDirectedEdge)edge).getTarget();
 		        	out.write(from + "\t" + to + "\n");
 	        	}
 	        }

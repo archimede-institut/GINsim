@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.graph;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -35,10 +36,9 @@ public class GsGraphicalAttributesStore {
             vreader.setVertex(vertex);
             oldColors.put(vertex, new StoreColor(vreader));
 
-            List l_edge = graphManager.getOutgoingEdges(vertex);
-            for (int j=0 ; j<l_edge.size() ; j++) {
-                Object edge = ((GsDirectedEdge)l_edge.get(j)).getUserObject();
-                ereader.setEdge(l_edge.get(j));
+            Collection<GsDirectedEdge> edges = graphManager.getOutgoingEdges(vertex);
+            for (GsDirectedEdge edge: edges) {
+                ereader.setEdge(edge);
                 oldColors.put(edge, new StoreColor(ereader));
             }
         }

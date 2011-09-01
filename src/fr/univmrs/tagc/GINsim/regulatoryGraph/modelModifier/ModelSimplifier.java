@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +14,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.export.regulatoryGraph.LogicalFunctionBrowser;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -42,8 +42,8 @@ import fr.univmrs.tagc.common.GsException;
 class RemovedInfo {
 	GsRegulatoryVertex vertex;
 	int pos;
-	List<GsDirectedEdge> targets;
-	public RemovedInfo(GsRegulatoryVertex vertex, int pos, List<GsDirectedEdge> targets) {
+	Collection<GsRegulatoryMultiEdge> targets;
+	public RemovedInfo(GsRegulatoryVertex vertex, int pos, Collection<GsRegulatoryMultiEdge> targets) {
 		super();
 		this.vertex = vertex;
 		this.pos = pos;
@@ -229,7 +229,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 					"\n\n"+note.getComment());
 		}
 		
-		GsGraphManager simplifiedManager = simplifiedGraph.getGraphManager();
+		GsGraphManager<GsRegulatoryVertex, GsRegulatoryMultiEdge> simplifiedManager = simplifiedGraph.getGraphManager();
 		List<GsRegulatoryVertex> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
 		
 		// Create all the nodes of the new model
@@ -250,9 +250,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		// copy all unaffected edges
 		GsEdgeAttributesReader ereader = manager.getEdgeAttributesReader();
 		GsEdgeAttributesReader simplified_ereader = simplifiedManager.getEdgeAttributesReader();
-		Iterator<GsDirectedEdge>it = manager.getEdgeIterator();
+		Iterator<GsRegulatoryMultiEdge>it = manager.getEdgeIterator();
 		while (it.hasNext()) {
-			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)it.next()).getUserObject();
+			GsRegulatoryMultiEdge me = it.next();
 			GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(me.getSource());
 			GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(me.getTarget());
 			if (src != null && target != null) {
@@ -304,22 +304,19 @@ public class ModelSimplifier extends Thread implements Runnable {
 			GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(vertex);
 			for (Entry<GsRegulatoryVertex,boolean[]> e: m_edges.entrySet()) {
 				GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(e.getKey());
-				GsDirectedEdge de = (GsDirectedEdge)simplifiedManager.getEdge(src, target);
-				GsRegulatoryMultiEdge new_me;
+				GsRegulatoryMultiEdge de = simplifiedManager.getEdge(src, target);
 				if (de == null) {
-					new_me = new GsRegulatoryMultiEdge(src, target);
-					simplifiedManager.addEdge(src, target, new_me);
-				} else {
-					new_me = (GsRegulatoryMultiEdge)de.getUserObject();
+					de = new GsRegulatoryMultiEdge(src, target);
+					simplifiedManager.addEdge(src, target, de);
 				}
 				boolean[] t_required = e.getValue();
-				new_me.copyFrom(t_required);
+				de.copyFrom(t_required);
 			}
 			// rebuild the parameters
 			m_edges.clear();
-			List<GsDirectedEdge> edges = simplifiedManager.getIncomingEdges(clone);
-			for (GsDirectedEdge e: edges) {
-				GsRegulatoryVertex src = (GsRegulatoryVertex)e.getSourceVertex();
+			Collection<GsRegulatoryMultiEdge> edges = simplifiedManager.getIncomingEdges(clone);
+			for (GsRegulatoryMultiEdge e: edges) {
+				GsRegulatoryVertex src = e.getSource();
 				
 				// FIXME: not sure what this should be! (used to be a integer[])
 				boolean[] t_val = {false, true};
@@ -654,11 +651,11 @@ class TargetEdgesIterator implements Iterator<GsRegulatoryVertex> {
 		throw new UnsupportedOperationException();
 	}
 	
-	public void setOutgoingList(List<GsDirectedEdge> outgoing) {
+	public void setOutgoingList(Collection<GsRegulatoryMultiEdge> outgoing) {
 		m_visited.clear();
 		queue.clear();
-		for (GsDirectedEdge e: outgoing) {
-			queue.addLast((GsRegulatoryVertex)e.getTargetVertex());
+		for (GsRegulatoryMultiEdge e: outgoing) {
+			queue.addLast(e.getTarget());
 		}
 		next();
 	}
@@ -675,14 +672,14 @@ class ParameterGenerator extends LogicalFunctionBrowser {
 		this.m_orderPos = m_orderPos;
 	}
 
-	public void browse(List<GsDirectedEdge> edges, GsRegulatoryVertex targetVertex, OmddNode node) {
+	public void browse(Collection<GsRegulatoryMultiEdge> edges, GsRegulatoryVertex targetVertex, OmddNode node) {
 		this.paramList = new ArrayList<GsLogicalParameter>();
 		t_values = new int[edges.size()][4];
 		t_me = new GsRegulatoryMultiEdge[t_values.length];
 		
-		for (int i=0 ; i<t_values.length ; i++) {
-			GsDirectedEdge de = edges.get(i);
-			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)de.getUserObject();
+		int i = -1;
+		for (GsRegulatoryMultiEdge me: edges) {
+			i++;
 			t_me[i] = me;
 			t_values[i][0] = m_orderPos.get(me.getSource());
 		}

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
@@ -31,9 +32,9 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  * Base class for specialized graphs, with some common functions.
  * each kind of graph (ie regulatory, dynamic...) must extend it
  */
-public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
+public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphListener<V,E>, GraphChangeListener {
     /** graphManager used */
-    protected GsGraphManager graphManager;
+    protected GsGraphManager<V,E> graphManager;
     /** name of the file in which we save */
     protected String saveFileName = null;
     /** the save mode, maybe unused... */
@@ -48,7 +49,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     protected boolean isParsing = false;
     protected List nodeOrder = new ArrayList();
     protected GsGraphDescriptor descriptor = null;
-    protected List listeners = new ArrayList();
+    protected List<GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
 
     protected String graphName = "default_name";
 
@@ -128,9 +129,8 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 
     public void endParsing() {
     	isParsing = false;
-    	Iterator it = listeners.iterator();
-    	while (it.hasNext()) {
-    		((GsGraphListener)it.next()).endParsing();
+    	for (GsGraphListener<V,E> l: listeners) {
+    		l.endParsing();
     	}
     }
 
@@ -164,7 +164,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @param param kind of vertex to create
      * @return the newly created vertex (or null if failed/inapropriate)
      */
-    abstract protected Object doInteractiveAddVertex (int param);
+    abstract protected V doInteractiveAddVertex (int param);
     /**
      *
      * @param source
@@ -172,7 +172,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @param param the kind of edge to create
      * @return the newly created edge (or null if failed/inapropriate)
      */
-    abstract protected Object doInteractiveAddEdge (Object source, Object target, int param);
+    abstract protected Object doInteractiveAddEdge (V source, V target, int param);
     /**
      * actually save the graph.
      *
@@ -197,7 +197,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * save the current graph.
      * if the graph has never been saved, calls saveAs.
      *
-     * this will call the specialized method doSave() to do te work
+     * this will call the specialised method doSave() to do the work
      * @throws GsException
      */
     public void save() throws GsException {
@@ -386,7 +386,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      *
      * @return the graphManager
      */
-    public GsGraphManager getGraphManager() {
+    public GsGraphManager<V,E> getGraphManager() {
         return graphManager;
     }
 
@@ -402,7 +402,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         if (v_blockEdit != null) {
             return null;
         }
-        Object obj = doInteractiveAddVertex(param);
+        V obj = doInteractiveAddVertex(param);
         if (obj != null) {
             graphManager.placeVertex(obj, x, y);
             fireGraphChange(CHANGE_VERTEXADDED, obj);
@@ -416,7 +416,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      * @param target
      * @param param
      */
-    public void interactiveAddEdge(Object source, Object target, int param) {
+    public void interactiveAddEdge(V source, V target, int param) {
         if (v_blockEdit != null) {
             return;
         }
@@ -431,7 +431,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
      *
      * @param obj
      */
-    public void removeVertex(Object obj) {
+    public void removeVertex(V obj) {
         graphManager.removeVertex(obj);
         fireGraphChange(CHANGE_VERTEXREMOVED, obj);
     }
@@ -517,7 +517,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
     /**
      * @param obj
      */
-    abstract public void removeEdge(Object obj);
+    abstract public void removeEdge(E obj);
 
 	/**
 	 * @param layout
@@ -671,59 +671,58 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 
         // TODO: extend this to support undo/redo and more events!
         List l_cascade = new ArrayList();
-        Iterator it_listeners = listeners.iterator();
 		switch (change) {
 		case CHANGE_EDGEADDED:
-			while (it_listeners.hasNext()) {
-				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).edgeAdded(data);
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.edgeAdded((E)data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
 			}
 			break;
 		case CHANGE_EDGEREMOVED:
-			while (it_listeners.hasNext()) {
-				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).edgeRemoved(data);
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.edgeRemoved((E)data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
 			}
 			break;
 		case CHANGE_VERTEXADDED:
-			while (it_listeners.hasNext()) {
-				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).vertexAdded(data);
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.vertexAdded((V)data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
 			}
 			break;
         case CHANGE_VERTEXREMOVED:
-        	while (it_listeners.hasNext()) {
-				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).vertexRemoved(data);
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.vertexRemoved((V)data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
             }
             break;
         case CHANGE_MERGED:
-        	while (it_listeners.hasNext()) {
-				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).graphMerged(data);
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.graphMerged((List<V>)data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
             }
             break;
         case CHANGE_VERTEXUPDATED:
-        	while (it_listeners.hasNext()) {
-				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).vertexUpdated(data);
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.vertexUpdated((V)data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
             }
             break;
         case CHANGE_EDGEUPDATED:
-        	while (it_listeners.hasNext()) {
-				GsGraphEventCascade gec = ((GsGraphListener)it_listeners.next()).edgeUpdated(data);
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.edgeUpdated((E)data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -838,7 +837,7 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 	 *
 	 * @return the copied graph
 	 */
-	protected abstract GsGraph doCopySelection (Vector vertex, Vector edges) ;
+	protected abstract GsGraph doCopySelection (Collection<V> vertex, Collection<E> edges) ;
 
 	/**
 	 * copy the selected part of the current graph.
@@ -850,8 +849,8 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
 		if (mainFrame == null) {
 			return;
 		}
-		Vector v_edges = new Vector();
-		Vector v_vertex = mainFrame.getSelectedVertices();
+		List v_edges = new Vector();
+		List v_vertex = mainFrame.getSelectedVertices();
         if (v_vertex == null) {
             // stop here if nothing to copy: avoid loosing copied graph for nothing...
             return;
@@ -1170,30 +1169,29 @@ public abstract class GsGraph implements GsGraphListener, GraphChangeListener {
         regGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
     }
 
-    public GsGraphEventCascade edgeAdded(Object data) {
+    public GsGraphEventCascade edgeAdded(E data) {
+        setAssociatedGraph(null);
+        return null;
+    }
+    public GsGraphEventCascade edgeRemoved(E data) {
+        setAssociatedGraph(null);
+        return null;
+    }
+    public GsGraphEventCascade edgeUpdated(E data) {
+        return null;
+    }
+
+
+    public GsGraphEventCascade vertexAdded(V data) {
         setAssociatedGraph(null);
         return null;
     }
 
-    public GsGraphEventCascade edgeRemoved(Object data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-
-    public GsGraphEventCascade vertexAdded(Object data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-
-	public GsGraphEventCascade graphMerged(Object data) {
+	public GsGraphEventCascade graphMerged(Collection<V> data) {
         setAssociatedGraph(null);
 		return null;
 	}
-    public GsGraphEventCascade vertexUpdated(Object data) {
-        return null;
-    }
-
-    public GsGraphEventCascade edgeUpdated(Object data) {
+    public GsGraphEventCascade vertexUpdated(V data) {
         return null;
     }
 

@@ -21,7 +21,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * reduced Graph.
  */
-public class GsReducedGraph extends GsGraph {
+public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<GsNodeReducedData>> {
 
 	private ReducedParameterPanel parameterPanel = null;
     private JPanel optionPanel = null;
@@ -67,14 +67,14 @@ public class GsReducedGraph extends GsGraph {
     /*
 	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddVertex(int)
 	 */
-	protected Object doInteractiveAddVertex(int param) {
+	protected GsNodeReducedData doInteractiveAddVertex(int param) {
 		return null;
 	}
 
 	/*
 	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddEdge(java.lang.Object, java.lang.Object, int)
 	 */
-	protected Object doInteractiveAddEdge(Object source, Object target, int param) {
+	protected GsDirectedEdge<GsNodeReducedData> doInteractiveAddEdge(GsNodeReducedData source, GsNodeReducedData target, int param) {
 		return null;
 	}
 
@@ -113,7 +113,7 @@ public class GsReducedGraph extends GsGraph {
      * @throws IOException
      */
     private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-        Iterator it;
+        Iterator<GsDirectedEdge<GsNodeReducedData>> it;
         if (selectedOnly) {
         		it = graphManager.getFullySelectedEdgeIterator();
         } else {
@@ -122,13 +122,10 @@ public class GsReducedGraph extends GsGraph {
         switch (mode) {
         	default:
 		        while (it.hasNext()) {
-		        	Object o_edge = it.next();
-		        	if (o_edge instanceof GsDirectedEdge) {
-		        		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-			            String source = edge.getSourceVertex().toString();
-			            String target = edge.getTargetVertex().toString();
-			            out.write("\t\t<edge id=\""+ source +"_"+target+"\" from=\""+source+"\" to=\""+target+"\"/>\n");
-		        	}
+		        	GsDirectedEdge edge = it.next();
+		            String source = edge.getSource().toString();
+		            String target = edge.getTarget().toString();
+		            out.write("\t\t<edge id=\""+ source +"_"+target+"\" from=\""+source+"\" to=\""+target+"\"/>\n");
 		        }
 		        break;
         }
@@ -201,7 +198,7 @@ public class GsReducedGraph extends GsGraph {
 	public void changeVertexId(Object vertex, String newId) throws GsException {
 	}
 
-	public void removeEdge(Object obj) {
+	public void removeEdge(GsDirectedEdge<GsNodeReducedData> edge) {
 	}
 	/**
 	 * add a vertex to this graph.
@@ -215,7 +212,7 @@ public class GsReducedGraph extends GsGraph {
 	 * @param source source vertex of this edge.
 	 * @param target target vertex of this edge.
 	 */
-	public void addEdge(Object source, Object target) {
+	public void addEdge(GsNodeReducedData source, GsNodeReducedData target) {
 		graphManager.addEdge(source, target, null);
 	}
 	public List getSpecificLayout() {
@@ -236,7 +233,7 @@ public class GsReducedGraph extends GsGraph {
     protected List doMerge(GsGraph otherGraph) {
         return null;
     }
-    protected GsGraph doCopySelection(Vector vertex, Vector edges) {
+    protected GsGraph doCopySelection(Collection vertex, Collection edges) {
         // no copy for reduced graphs
         return null;
     }

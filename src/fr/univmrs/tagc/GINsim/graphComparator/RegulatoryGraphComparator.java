@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -75,14 +74,13 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		
 		meMap = new HashMap();
 		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
-		for (Iterator it = gm.getEdgeIterator(); it.hasNext();) {
-			GsDirectedEdge e = (GsDirectedEdge) it.next();
-			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)e.getUserObject();
-			String sid = ((GsRegulatoryVertex) e.getSourceVertex()).getId();
-			String tid = ((GsRegulatoryVertex) e.getTargetVertex()).getId();
+		for (Iterator<GsRegulatoryMultiEdge> it = gm.getEdgeIterator(); it.hasNext();) {
+			GsRegulatoryMultiEdge me = it.next();
+			String sid = me.getSource().getId();
+			String tid = me.getTarget().getId();
 			
-			GsDirectedEdge e1 = (GsDirectedEdge) g1m.getEdge(g1m.getVertexByName(sid), g1m.getVertexByName(tid));
-			GsDirectedEdge e2 = (GsDirectedEdge) g2m.getEdge(g2m.getVertexByName(sid), g2m.getVertexByName(tid));
+			GsDirectedEdge e1 = g1m.getEdge(g1m.getVertexByName(sid), g1m.getVertexByName(tid));
+			GsDirectedEdge e2 = g2m.getEdge(g2m.getVertexByName(sid), g2m.getVertexByName(tid));
 			
 			String comment = "The edge "+me.toToolTip()+" ";
 			ereader.setEdge(me);
@@ -91,14 +89,14 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			if (col == SPECIFIC_G1_COLOR) comment+= "is specific to g1";
 			else if (col == SPECIFIC_G2_COLOR) comment+= "is specific to g2";
 			else comment+= "is common to both graphs";
-			int edgeCount = ((GsRegulatoryMultiEdge) me.getUserObject()).getEdgeCount();
+			int edgeCount = ((GsRegulatoryMultiEdge) me).getEdgeCount();
 			for (int j = 0; j < edgeCount; j++) {
-				((GsRegulatoryMultiEdge) me.getUserObject()).getGsAnnotation(j).appendToComment(comment);
+				((GsRegulatoryMultiEdge) me).getGsAnnotation(j).appendToComment(comment);
 			}
 			log(comment+"\n");
-			if (e1 != null && e2 != null) compareEdges((GsRegulatoryMultiEdge)e1.getUserObject(), (GsRegulatoryMultiEdge)e2.getUserObject());
-			if (e1 != null) meMap.put(e1.getUserObject(),me);
-			else if (e2 != null) meMap.put(e2.getUserObject(),me);
+			if (e1 != null && e2 != null) compareEdges((GsRegulatoryMultiEdge)e1, (GsRegulatoryMultiEdge)e2);
+			if (e1 != null) meMap.put(e1,me);
+			else if (e2 != null) meMap.put(e2,me);
 		}
 		setAllLogicalFunctions();
 		meMap = null;
@@ -181,8 +179,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		GsRegulatoryVertex source = (GsRegulatoryVertex) gm.getVertexByName(id);
 		for (Iterator edge_it = gm_main.getOutgoingEdges(v).iterator(); edge_it.hasNext();) {
 			GsDirectedEdge e1 = (GsDirectedEdge) edge_it.next();
-			GsRegulatoryMultiEdge me1 = (GsRegulatoryMultiEdge)e1.getUserObject();
-			String tid = ((GsRegulatoryVertex)e1.getTargetVertex()).getId();
+			GsRegulatoryMultiEdge me1 = (GsRegulatoryMultiEdge)e1;
+			String tid = ((GsRegulatoryVertex)e1.getTarget()).getId();
 			GsRegulatoryVertex target = (GsRegulatoryVertex) gm.getVertexByName(tid);
 			
 			if (gm.getEdge(source, target) != null) {
@@ -193,7 +191,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			if (vcol != SPECIFIC_G1_COLOR && vcol != SPECIFIC_G2_COLOR && isCommonVertex(target)) {
 				GsDirectedEdge e2 = (GsDirectedEdge) gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
 				if (e2 != null) {
-					me2 = (GsRegulatoryMultiEdge)e2.getUserObject();
+					me2 = (GsRegulatoryMultiEdge)e2;
 				}
 			}
 			

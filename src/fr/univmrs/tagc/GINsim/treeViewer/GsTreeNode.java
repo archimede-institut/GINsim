@@ -1,9 +1,8 @@
 package fr.univmrs.tagc.GINsim.treeViewer;
 
-import java.util.Iterator;
+import java.util.List;
 
-import org._3pq.jgrapht.edge.DirectedEdge;
-
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.export.generic.Dotify;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.common.Debugger;
@@ -138,9 +137,8 @@ public class GsTreeNode implements Dotify {
 		GsTreeNode self = new GsTreeNode(this);
 		Debugger.log(self);
 		gm.addVertex(self);
-		for (Iterator it = gm.getOutgoingEdges(this).iterator(); it.hasNext();) {
-			DirectedEdge e = (DirectedEdge) it.next();
-			GsTreeNode target = ((GsTreeNode) e.getTarget()).deepCopy(gm);
+		for (GsDirectedEdge<GsTreeNode> e: (List<GsDirectedEdge>)gm.getOutgoingEdges(this)) {
+			GsTreeNode target = e.getTarget().deepCopy(gm);
 			gm.addVertex(target);
 			gm.addEdge(self, target, null);
 		}

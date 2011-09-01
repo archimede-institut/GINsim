@@ -110,7 +110,7 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 		ereader.setPoints(null);
 		ereader.setStyle(GsEdgeAttributesReader.STYLE_STRAIGHT);
 		
-		byte[] diffstate = getDiffStates((GsDynamicNode)edge.getSourceVertex(), (GsDynamicNode)edge.getTargetVertex());
+		byte[] diffstate = getDiffStates((GsDynamicNode)edge.getSource(), (GsDynamicNode)edge.getTarget());
 		int change = get_change(diffstate);
 	
 		ereader.setLineColor(colorPalette[change]);

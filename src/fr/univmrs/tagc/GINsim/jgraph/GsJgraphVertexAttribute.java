@@ -10,11 +10,11 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import org._3pq.jgrapht.ext.JGraphModelAdapter;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.VertexRenderer;
+import org.jgrapht.ext.JGraphModelAdapter;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Tools;

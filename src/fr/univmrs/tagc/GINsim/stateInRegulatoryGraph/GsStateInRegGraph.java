@@ -1,10 +1,10 @@
 package fr.univmrs.tagc.GINsim.stateInRegulatoryGraph;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -30,8 +30,6 @@ public class GsStateInRegGraph {
 	private CascadingStyle cs;
 	private List nodeOrder;
 	private boolean shouldStore;
-
-
 
 	public GsStateInRegGraph(GsRegulatoryGraph regGraph) {
 		this(regGraph, true);
@@ -100,13 +98,13 @@ public class GsStateInRegGraph {
 		for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex) it.next();
 
-			// apply the vertex's color
+			// apply the vertex's colour
 			vreader.setVertex(vertex);
 			cs.applyOnNode(selector, vertex, vreader);
 
 			// colorize edges
-			for (Iterator it2 = regGraph.getGraphManager().getOutgoingEdges(vertex).iterator(); it2.hasNext();) {
-				GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)it2.next()).getUserObject();
+			Collection<GsRegulatoryMultiEdge> edges = regGraph.getGraphManager().getOutgoingEdges(vertex);
+			for (GsRegulatoryMultiEdge edge: edges) {
 				ereader.setEdge(edge);
 				cs.applyOnEdge(selector, edge, ereader);
 			}

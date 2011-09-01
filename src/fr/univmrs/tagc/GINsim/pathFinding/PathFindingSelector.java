@@ -46,9 +46,9 @@ public class PathFindingSelector extends Selector {
 	public String getCategoryForEdge(Object obj) {
 		GsDirectedEdge e = (GsDirectedEdge) obj;
 		List path = getPath();
-		int i = path.indexOf(e.getSourceVertex());
+		int i = path.indexOf(e.getSource());
 		if (i == -1) return CAT_OUTOFPATH_EDGE;
-		if (i+1 < path.size() && path.get(i+1) == e.getTargetVertex()) {
+		if (i+1 < path.size() && path.get(i+1) == e.getTarget()) {
 			return CAT_PATH_EDGE;
 		}
 		return CAT_OUTOFPATH_EDGE;

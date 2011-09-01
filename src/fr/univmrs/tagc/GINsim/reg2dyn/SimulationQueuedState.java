@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
-
 public class SimulationQueuedState {
 	public byte[] state;
 	public Object previous = null;

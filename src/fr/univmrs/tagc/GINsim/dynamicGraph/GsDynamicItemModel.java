@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.dynamicGraph;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -98,9 +99,9 @@ public class GsDynamicItemModel extends AbstractTableModel {
             nbRelated = nbNext + ( prevState != null ? prevState.length : 0 );
         } else if (obj instanceof GsDirectedEdge){
             GsDirectedEdge edge = (GsDirectedEdge)obj;
-            state = ((GsDynamicNode)edge.getSourceVertex()).state;
+            state = ((GsDynamicNode)edge.getSource()).state;
             nextState = new GsDynamicNode[1];
-            nextState[0] = (GsDynamicNode)edge.getTargetVertex();
+            nextState[0] = (GsDynamicNode)edge.getTarget();
             prevState = null;
             nbNext = nextState != null ? nextState.length : 0;
             nbRelated = nbNext;
@@ -123,16 +124,18 @@ public class GsDynamicItemModel extends AbstractTableModel {
         fireTableDataChanged();
     }
     
-    private GsDynamicNode[] getRelatedNodes(List l_related, boolean target) {
+    private GsDynamicNode[] getRelatedNodes(Collection<GsDirectedEdge<GsDynamicNode>> l_related, boolean target) {
         if (l_related == null || l_related.size() == 0) {
             return null;
         }
         GsDynamicNode[] ret = new GsDynamicNode[l_related.size()];
-        for (int i=0 ; i<ret.length ; i++) {
+        int i=-1;
+        for (GsDirectedEdge<GsDynamicNode> edge: l_related) {
+        	i++;
         	if (target) {
-        		ret[i] = (GsDynamicNode)((GsDirectedEdge)l_related.get(i)).getTargetVertex();
+        		ret[i] = edge.getTarget();
         	} else {
-        		ret[i] = (GsDynamicNode)((GsDirectedEdge)l_related.get(i)).getSourceVertex();
+        		ret[i] = edge.getSource();
         	}
         }
         return ret;

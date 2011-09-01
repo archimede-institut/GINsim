@@ -1,9 +1,11 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -24,10 +26,10 @@ public class GsBooleanParser extends TBooleanParser {
 	private GsRegulatoryVertex vertex;
 	private boolean shouldAutoAddNewElements;
 
-	public GsBooleanParser(List edgesList) throws ClassNotFoundException {
+	public GsBooleanParser(Set<GsRegulatoryMultiEdge> edgesList) throws ClassNotFoundException {
 		this(edgesList, false);
 	}
-	public GsBooleanParser(List edgesList, boolean shouldAutoAddNewElements) throws ClassNotFoundException {
+	public GsBooleanParser(Set<GsRegulatoryMultiEdge> edgesList, boolean shouldAutoAddNewElements) throws ClassNotFoundException {
 		super(returnClassName, operandClassName);
 		nodeFactory = new GsBooleanTreeNodeFactory(returnClassName, operandClassName, this);
 		if (edgesList != null && edgesList.size() > 0) {
@@ -68,28 +70,23 @@ public class GsBooleanParser extends TBooleanParser {
 //		}
 //		return v.containsAll(list);
 	}
-	protected void setAllData(List edgesList) {
-		Iterator it = edgesList.iterator();
-		GsDirectedEdge e;
-
-		ArrayList[] F = new ArrayList[operandList.size()];
+	protected void setAllData(Collection<GsRegulatoryMultiEdge> edgesList) {
+		List[] F = new List[operandList.size()];
 		int[] N = new int[operandList.size()];
 		int[] K = new int[operandList.size()];
 		int n, i, p, j;
 
-		Vector L, v;
-
-		v = new Vector();
+		List L, v;
+		v = new ArrayList();
 
 		i = 0;
 		p = 1;
-		while (it.hasNext()) {
-			e = (GsDirectedEdge)it.next();
-			n = ((GsRegulatoryMultiEdge)e.getUserObject()).getEdgeCount();
+		for (GsRegulatoryMultiEdge me: edgesList) {
+			n = me.getEdgeCount();
 			F[i] = new ArrayList(n + 1);
 			F[i].add(new GsLogicalFunctionListElement(null, -1));
 			for (int k = 0; k < n; k++) {
-				F[i].add(new GsLogicalFunctionListElement((GsRegulatoryMultiEdge)e.getUserObject(), k));
+				F[i].add(new GsLogicalFunctionListElement(me, k));
 			}
 			N[i] = n;
 			K[i] = 0;
@@ -110,10 +107,10 @@ public class GsBooleanParser extends TBooleanParser {
 				L = new Vector();
 				for (j = 0; j < edgesList.size(); j++) {
 					if (!((GsLogicalFunctionListElement) F[j].get(K[j])).toString().equals("")) {
-						L.addElement(F[j].get(K[j]));
+						L.add(F[j].get(K[j]));
 					}
 				}
-				v.addElement(L);
+				v.add(L);
 			} else {
 				break;
 			}
@@ -121,7 +118,7 @@ public class GsBooleanParser extends TBooleanParser {
 		allParams = v.toArray();
 		allData = new Vector(allParams.length);
 		for (i = 0; i < allParams.length; i++) {
-			allData.addElement(new Integer(i));
+			allData.add(new Integer(i));
 		}
 	}
 
@@ -135,25 +132,20 @@ public class GsBooleanParser extends TBooleanParser {
 	public Object[] getAllParams() {
 		return allParams;
 	}
-	private void makeOperandList(List edgesList) {
-		Iterator it = edgesList.iterator();
-		GsDirectedEdge e;
+	private void makeOperandList(Collection<GsRegulatoryMultiEdge> edgesList) {
 		GsRegulatoryVertex source;
 		GsRegulatoryEdge re;
-		GsRegulatoryMultiEdge me;
 
 		operandList = new Hashtable();
-		while (it.hasNext()) {
-			e = (GsDirectedEdge)it.next();
-			me = (GsRegulatoryMultiEdge)e.getUserObject();
-			source = (GsRegulatoryVertex)e.getSourceVertex();
+		for (GsRegulatoryMultiEdge me: edgesList) {
+			source = me.getSource();
 			operandList.put(source, source.getId());
 			for (int i = 0; i < me.getEdgeCount(); i++) {
 				re = me.getEdge(i);
 				if (me.getEdgeCount() > 1) {
 					operandList.put(re/*.getShortInfo("#")*/, re.getShortDetail("#"));
 				} else {
-					operandList.put(e/*.getId() + "#" + (i + 1)*/, re.getShortDetail("#"));
+					operandList.put(me/*.getId() + "#" + (i + 1)*/, re.getShortDetail("#"));
 				}
 			}
 		}
@@ -201,7 +193,7 @@ public class GsBooleanParser extends TBooleanParser {
 			}
 		}
 		if (shouldReInit) {
-			List edgesList = graph.getGraphManager().getIncomingEdges(vertex);
+			Set edgesList = graph.getGraphManager().getIncomingEdges(vertex);
 			makeOperandList(edgesList);
 			setAllData(edgesList);		
 		}
@@ -272,11 +264,10 @@ public class GsBooleanParser extends TBooleanParser {
 		if (!found) {
 			throw new GsException(GsException.GRAVITY_NORMAL, "The node is not defined in the graph");
 		}
-		GsDirectedEdge de = (GsDirectedEdge)graph.getGraphManager().getEdge(vertex, this.vertex);
-		if (de == null) {
+		GsRegulatoryMultiEdge me = graph.getGraphManager().getEdge(vertex, this.vertex);
+		if (me == null) {
 			throw new GsException(GsException.GRAVITY_NORMAL, "The node is not linked by any edge in the graph");
 		}
-		GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)de.getUserObject();
 		if (edgeTh != -1) {
 			GsRegulatoryEdge edge = me.getEdgeForThreshold(edgeTh);
 			if (edge == null) {

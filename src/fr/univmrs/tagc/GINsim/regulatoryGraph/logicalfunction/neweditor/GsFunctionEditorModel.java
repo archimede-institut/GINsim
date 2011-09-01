@@ -1,16 +1,14 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 
-import java.util.List;
-import java.util.Vector;
-
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.GsListInteraction;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import java.awt.Point;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Set;
+import java.util.Vector;
+
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 
 public class GsFunctionEditorModel {
 	private GsFunctionPanel functionPanel;
@@ -28,14 +26,12 @@ public class GsFunctionEditorModel {
 		oldExp = "";
   }
   public void init(GsTreeInteractionsModel m, GsFunctionPanel p) {
-  	Object o;
   	functionPanel = p;
   	oldExp = p.getCurrentText();
-  	List ed = m.getGraph().getGraphManager().getIncomingEdges(m.getVertex());
+  	Set<GsRegulatoryMultiEdge> ed = m.getGraph().getGraphManager().getIncomingEdges(m.getVertex());
     interactions.clear();
-    for (int i = 0; i < ed.size(); i++) {
-      o = ((GsJgraphDirectedEdge)ed.get(i)).getUserObject();
-      interactions.addElement(o);
+    for (GsRegulatoryMultiEdge me: ed) {
+      interactions.addElement(me);
     }
     Vector v = new Vector();
     v.addElement(oldExp);
@@ -97,7 +93,7 @@ public class GsFunctionEditorModel {
 					ed = (GsRegulatoryMultiEdge)enu.nextElement();
 					found = false;
 					k = -1;
-					if (t[i].equals(ed.getSourceVertex().toString()))
+					if (t[i].equals(ed.getSource().toString()))
 						found = true;
 					else
 						for (k = 0; k < ed.getEdgeCount(); k++) {

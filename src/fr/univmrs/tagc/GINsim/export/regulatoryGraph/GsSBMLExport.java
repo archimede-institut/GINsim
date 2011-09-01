@@ -112,7 +112,7 @@ public class GsSBMLExport {
                 while (it.hasNext()) {
                     GsDirectedEdge edge = (GsDirectedEdge)it.next();
                     out.openTag("modifierSpeciesReference");
-                    out.addAttr("species","s_"+edge.getSourceVertex().toString());
+                    out.addAttr("species","s_"+edge.getSource().toString());
                     out.closeTag();
                 }
                 out.closeTag(); // list of modifiers

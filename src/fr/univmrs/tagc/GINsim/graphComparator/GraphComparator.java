@@ -151,7 +151,7 @@ public abstract class GraphComparator {
 		for (Iterator it = gm.getEdgeIterator(); it.hasNext();) {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();
 			
-			GsDirectedEdge e1 = (GsDirectedEdge) gm1.getEdge(gm1.getVertexByName(e.getSourceVertex().toString()), gm1.getVertexByName(e.getTargetVertex().toString()));
+			GsDirectedEdge e1 = (GsDirectedEdge) gm1.getEdge(gm1.getVertexByName(e.getSource().toString()), gm1.getVertexByName(e.getTarget().toString()));
 			if (e1 == null) {//The edge is (only or not) in the first graph. So its intermediary point are right.
 				GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
 				ereader.setEdge(e);

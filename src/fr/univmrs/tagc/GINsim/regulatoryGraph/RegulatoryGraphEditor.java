@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
+import java.util.Collection;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -15,7 +16,7 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 
-public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListener {
+public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NODEORDER = 1;
@@ -102,33 +103,33 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 		return null;
 	}
 
-	public GsGraphEventCascade edgeAdded(Object data) {
+	public GsGraphEventCascade edgeAdded(GsRegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeRemoved(Object data) {
+	public GsGraphEventCascade edgeRemoved(GsRegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeUpdated(Object data) {
+	public GsGraphEventCascade edgeUpdated(GsRegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade graphMerged(Object data) {
+	public GsGraphEventCascade graphMerged(Collection<GsRegulatoryVertex> data) {
 		return null;
 	}
 
-	public GsGraphEventCascade vertexAdded(Object data) {
+	public GsGraphEventCascade vertexAdded(GsRegulatoryVertex data) {
 		refresh(true);
 		return null;
 	}
 
-	public GsGraphEventCascade vertexRemoved(Object data) {
+	public GsGraphEventCascade vertexRemoved(GsRegulatoryVertex data) {
 		refresh(true);
 		return null;
 	}
 
-	public GsGraphEventCascade vertexUpdated(Object data) {
+	public GsGraphEventCascade vertexUpdated(GsRegulatoryVertex data) {
 		refresh(true);
 		return null;
 	}

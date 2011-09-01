@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import javax.swing.Action;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
@@ -18,7 +17,6 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class RegulatoryEdgeEditor extends ObjectEditor {
 
-	
 	GsGraph graph;
 	GsRegulatoryMultiEdge medge;
 	GsRegulatoryEdge edge;
@@ -69,7 +67,7 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	}
 	
 	public void setEditedObject(Object o) {
-		this.medge = (GsRegulatoryMultiEdge)((GsDirectedEdge)o).getUserObject();
+		this.medge = (GsRegulatoryMultiEdge)o;
 		if (medge == null) {
 			return;
 		}
@@ -122,10 +120,10 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	public void performAction(int prop) {
 		switch (prop) {
 			case SOURCE:
-				graph.getGraphManager().select(medge.getSourceVertex());
+				graph.getGraphManager().select(medge.getSource());
 				break;
 			case TARGET:
-				graph.getGraphManager().select(medge.getTargetVertex());
+				graph.getGraphManager().select(medge.getTarget());
 				break;
 		}
 	}

@@ -34,7 +34,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * the dynamic (state transition) graph.
  */
-public final class GsDynamicGraph extends GsGraph implements GsGraphListener, GraphChangeListener {
+public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<GsDynamicNode>> implements
+	GsGraphListener<GsDynamicNode, GsDirectedEdge<GsDynamicNode>>, GraphChangeListener {
 
     public final static String zip_mainEntry = "stateTransitionGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
@@ -89,7 +90,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	public Object doInteractiveAddVertex(int param) {
+	public GsDynamicNode doInteractiveAddVertex(int param) {
 		return null;
 	}
 
@@ -98,7 +99,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	public Object doInteractiveAddEdge(Object source, Object target, int param) {
+	public GsDirectedEdge<GsDynamicNode> doInteractiveAddEdge(GsDynamicNode source, GsDynamicNode target, int param) {
 		return null;
 	}
 
@@ -165,8 +166,8 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 		        	if (o_edge instanceof GsDirectedEdge) {
 		        	    eReader.setEdge(o_edge);
 		        		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-			            String source = edge.getSourceVertex().toString();
-			            String target = edge.getTargetVertex().toString();
+			            String source = edge.getSource().toString();
+			            String target = edge.getTarget().toString();
 			            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\">\n");
 			            out.write(GsGinmlHelper.getEdgeVS(eReader));
 			            out.write("</edge>");
@@ -178,8 +179,8 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 		        	Object o_edge = it.next();
 		        	if (o_edge instanceof GsDirectedEdge) {
 		        		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-			            String source = edge.getSourceVertex().toString();
-			            String target = edge.getTargetVertex().toString();
+			            String source = edge.getSource().toString();
+			            String target = edge.getTarget().toString();
 			            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
 		        	}
 		        }
@@ -258,7 +259,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	public void removeEdge(Object obj) {
+	public void removeEdge(GsDirectedEdge<GsDynamicNode> obj) {
 	}
 
 	/**
@@ -284,8 +285,8 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 	 * @param multiple
 	 * @return the new edge
 	 */
-	public Object addEdge(Object source, Object target, boolean multiple) {
-		Object edge = graphManager.addEdge(source, target, null);
+	public GsDirectedEdge<GsDynamicNode> addEdge(GsDynamicNode source, GsDynamicNode target, boolean multiple) {
+		GsDirectedEdge<GsDynamicNode> edge = graphManager.addEdge(source, target, null);
 		if (multiple) {
 			eReader.setEdge(edge);
 			eReader.setDash(dashpattern);
@@ -363,8 +364,8 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
         it = otherGraph.getGraphManager().getEdgeIterator();
         while (it.hasNext()) {
             GsDirectedEdge edge = (GsDirectedEdge)it.next();
-            GsDynamicNode from = (GsDynamicNode)edge.getSourceVertex();
-            GsDynamicNode to = (GsDynamicNode)edge.getTargetVertex();
+            GsDynamicNode from = (GsDynamicNode)edge.getSource();
+            GsDynamicNode to = (GsDynamicNode)edge.getTarget();
             int c = 0;
             for ( int i=0 ; i<from.state.length ; i++) {
             	if (from.state[i] != to.state[i]) {
@@ -376,7 +377,7 @@ public final class GsDynamicGraph extends GsGraph implements GsGraphListener, Gr
 
         return ret;
     }
-    protected GsGraph doCopySelection(Vector vertex, Vector edges) {
+    protected GsGraph doCopySelection(Collection vertex, Collection edges) {
         // no copy for state transition graphs
         return null;
     }

@@ -33,7 +33,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     private GsRegulatoryGraph regGraph;
     private GsDynamicGraph dynGraph;
 
-    private Vector path = new Vector();
+    private Vector<GsDynamicNode> path = new Vector();
     
     private GsGraphicalAttributesStore dynGas;
     
@@ -133,8 +133,8 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         }
     }
         
-    protected void add2path (Object vertex) {
-        if (vertex == null || !(vertex instanceof GsDynamicNode)) {
+    protected void add2path (GsDynamicNode vertex) {
+        if (vertex == null) {
             return;
         }
         // if path wasn't empty, check that this vertex can be added
@@ -156,12 +156,12 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
             return;
         }
         // mark all vertices and followed edges
-        Object vertex = path.get(0);
+        GsDynamicNode vertex = path.get(0);
         dynGas.ensureStoreVertex(vertex);
         dynGas.vreader.setBackgroundColor(Color.BLUE);
         dynGas.vreader.refresh();
         for (int i=1 ; i<path.size() ; i++) {
-            Object vertex2 = path.get(i);
+            GsDynamicNode vertex2 = path.get(i);
             dynGas.ensureStoreVertex(vertex2);
             dynGas.vreader.setBackgroundColor(Color.BLUE);
             dynGas.vreader.refresh();
@@ -181,7 +181,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         }
         for (int i=0 ; i<v_highlight.size() ; i++) {
             GsDirectedEdge edge = (GsDirectedEdge)v_highlight.get(i);
-            Object target = edge.getTargetVertex();
+            Object target = edge.getTarget();
             dynGas.ensureStoreEdge(edge);
             dynGas.ensureStoreVertex(target);
             dynGas.vreader.setBorder(GsVertexAttributesReader.BORDER_STRONG);
@@ -224,7 +224,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
     public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
         if (event.getNbEdge() == 0 && event.getNbVertex() == 1) {
             colorizer.colorizeGraph( ((GsDynamicNode)event.getV_vertex().get(0)).state );
-            add2path(event.getV_vertex().get(0));
+            add2path((GsDynamicNode)event.getV_vertex().get(0));
         }
     }
     

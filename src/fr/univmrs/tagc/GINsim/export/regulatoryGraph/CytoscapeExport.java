@@ -161,11 +161,11 @@ public class CytoscapeExport extends GsAbstractExport {
 		
 		//edges
 		GsEdgeAttributesReader edgeAttributeReader = graph.getGraphManager().getEdgeAttributesReader();
-		for (Iterator it=graph.getGraphManager().getEdgeIterator() ; it.hasNext() ;) {
-			GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)it.next()).getUserObject();
+		for (Iterator<GsRegulatoryMultiEdge> it=graph.getGraphManager().getEdgeIterator() ; it.hasNext() ;) {
+			GsRegulatoryMultiEdge edge = it.next();
 
-			String source_id = ((GsRegulatoryVertex)edge.getTargetVertex()).getId(); //C1
-			String target_id = ((GsRegulatoryVertex)edge.getSourceVertex()).getId(); //C2
+			String source_id = ((GsRegulatoryVertex)edge.getTarget()).getId(); //C1
+			String target_id = ((GsRegulatoryVertex)edge.getSource()).getId(); //C2
 			String edge_type; //inhibit | activate | undefined
 			String edge_cyt_id; //15 | 3 | 12
 			switch (edge.getSign()) {

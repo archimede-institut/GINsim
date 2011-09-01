@@ -1,12 +1,18 @@
 package fr.univmrs.tagc.GINsim.gui;
 
-import java.awt.*;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.*;
 
@@ -64,8 +70,8 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 
 	private boolean alwaysForceClose = false;
 
-	private Vector v_edge;
-	private Vector v_vertex;
+	private List v_edge;
+	private List v_vertex;
     private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
 
     public static final int TAB_CHECK = -1;
@@ -715,14 +721,14 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
     /**
      * @return the list of currently selected edges
      */
-    public Vector getSelectedEdges() {
+    public List getSelectedEdges() {
     	return v_edge;
     }
 
     /**
      * @return the list of currently selected vertices
      */
-    public Vector getSelectedVertices() {
+    public List getSelectedVertices() {
     	return v_vertex;
     }
     /**

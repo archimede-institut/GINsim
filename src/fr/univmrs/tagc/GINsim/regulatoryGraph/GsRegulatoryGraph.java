@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -35,7 +35,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * The regulatory graph
  */
-public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulatoryGraph {
+public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegulatoryMultiEdge> implements GsGenericRegulatoryGraph {
 
 	private JPanel optionPanel = null;
 	private ObjectEditor graphEditor;
@@ -91,12 +91,12 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         canDelete = true;
     }
 
-    protected Object doInteractiveAddVertex(int param) {
+    protected GsRegulatoryVertex doInteractiveAddVertex(int param) {
 
         while ( graphManager.getVertexByName("G" + nextid) != null) {
         		nextid++;
         }
-        Object obj = new GsRegulatoryVertex(nextid++, (GsRegulatoryGraph)graphManager.getGsGraph());
+        GsRegulatoryVertex obj = new GsRegulatoryVertex(nextid++, (GsRegulatoryGraph)graphManager.getGsGraph());
         if (graphManager.addVertex(obj)) {
         		nodeOrder.add(obj);
         		return obj;
@@ -104,10 +104,9 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         return null;
     }
 
-    protected Object doInteractiveAddEdge(Object source, Object target, int param) {
-    	Object obj = graphManager.getEdge(source, target);
+    protected GsRegulatoryMultiEdge doInteractiveAddEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param) {
+    	GsRegulatoryMultiEdge obj = graphManager.getEdge(source, target);
     	if (obj != null) {
-    		obj = ((GsDirectedEdge)obj).getUserObject();
     		GsGraphNotificationAction action = new GsGraphNotificationAction() {
     			final String[] t_action = {"go"};
 				public boolean timeout(GsGraph graph, Object data) {
@@ -129,10 +128,10 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 	    			GsGraphNotificationMessage.NOTIFICATION_WARNING));
     		return obj;
     	}
-    	obj = new GsRegulatoryMultiEdge((GsRegulatoryVertex)source, (GsRegulatoryVertex)target, param);
-    	Object ret = graphManager.addEdge(source, target, obj);
-    	((GsRegulatoryMultiEdge)obj).rescanSign(this);
-    	((GsRegulatoryVertex)target).incomingEdgeAdded((GsRegulatoryMultiEdge)obj);
+    	obj = new GsRegulatoryMultiEdge(source, target, param);
+    	GsRegulatoryMultiEdge ret = graphManager.addEdge(source, target, obj);
+    	obj.rescanSign(this);
+    	target.incomingEdgeAdded(obj);
     	return ret;
     }
 
@@ -163,7 +162,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @throws IOException
      */
     private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-        Iterator it;
+        Iterator<GsRegulatoryMultiEdge> it;
         if (selectedOnly) {
         		it = graphManager.getFullySelectedEdgeIterator();
         } else {
@@ -173,15 +172,15 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 	    	case 2:
 	    	    GsEdgeAttributesReader ereader = graphManager.getEdgeAttributesReader();
 		        while (it.hasNext()) {
-		            GsDirectedEdge edge = (GsDirectedEdge) it.next();
-		            ereader.setEdge(edge.getUserObject());
-		            ((GsRegulatoryMultiEdge)edge.getUserObject()).toXML(out, GsGinmlHelper.getEdgeVS(ereader), mode);
+		        	GsRegulatoryMultiEdge edge = it.next();
+		            ereader.setEdge(edge);
+		            edge.toXML(out, GsGinmlHelper.getEdgeVS(ereader), mode);
 		        }
 		        break;
         	default:
 		        while (it.hasNext()) {
-		            GsDirectedEdge edge = (GsDirectedEdge) it.next();
-		            ((GsRegulatoryMultiEdge)edge.getUserObject()).toXML(out, null, mode);
+		        	GsRegulatoryMultiEdge edge = it.next();
+		            edge.toXML(out, null, mode);
 		        }
         }
     }
@@ -232,16 +231,16 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
     /**
      * @param edge
      */
-    public void addToExistingEdge(Object edge) {
-        ((GsRegulatoryMultiEdge)((GsDirectedEdge)edge).getUserObject()).addEdge(this);
+    public void addToExistingEdge(GsRegulatoryMultiEdge edge) {
+        edge.addEdge(this);
     }
 
     /**
      * @param edge
      * @param param
      */
-    public void addToExistingEdge(Object edge, int param) {
-        ((GsRegulatoryMultiEdge)((GsDirectedEdge)edge).getUserObject()).addEdge(this);
+    public void addToExistingEdge(GsRegulatoryMultiEdge edge, int param) {
+        edge.addEdge(this);
     }
 
     public ObjectEditor getEdgeEditor() {
@@ -307,18 +306,16 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      *
      * @param obj
      */
-    public void removeEdge(Object obj) {
-       GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)((GsDirectedEdge)obj).getUserObject();
+    public void removeEdge(GsRegulatoryMultiEdge edge) {
        edge.markRemoved();
        graphManager.removeEdge(edge.getSource(), edge.getTarget());
        edge.getTarget().removeEdgeFromInteraction(edge);
-       fireGraphChange(CHANGE_EDGEREMOVED, obj);
+       fireGraphChange(CHANGE_EDGEREMOVED, edge);
     }
 
-    public void removeVertex(Object obj) {
-        List edge = graphManager.getOutgoingEdges(obj);
-        for (int i=edge.size()-1 ; i>=0 ; i--) {
-            removeEdge(edge.get(i));
+    public void removeVertex(GsRegulatoryVertex obj) {
+        for (GsRegulatoryMultiEdge me: graphManager.getOutgoingEdges(obj)) {
+            removeEdge(me);
         }
         graphManager.removeVertex(obj);
         nodeOrder.remove(obj);
@@ -388,15 +385,12 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
             GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "STR_noSuchVertex"), null);
             return null;
         }
-        Object oedge = graphManager.getEdge(source, target);
-        GsRegulatoryMultiEdge me = null;
+        GsRegulatoryMultiEdge me = graphManager.getEdge(source, target);
         int index = 0;
-        if (oedge == null) {
+        if (me == null) {
             me = new GsRegulatoryMultiEdge(source, target, sign, minvalue);
             graphManager.addEdge(source, target, me);
-            oedge = graphManager.getEdge(source, target);
         } else {
-            me = (GsRegulatoryMultiEdge) ((GsDirectedEdge)oedge).getUserObject();
             index = me.addEdge(sign, minvalue, this);
         }
         return me.getEdge(index);
@@ -407,11 +401,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
      * @return a warning string if necessary
 	 */
 	public void canApplyNewMaxValue(GsRegulatoryVertex vertex, byte newMax, List l_fixable, List l_conflict) {
-		Iterator it = graphManager.getOutgoingEdges(vertex).iterator();
-		while (it.hasNext()) {
-			Object next = it.next();
-			GsRegulatoryMultiEdge me;
-			me = (GsRegulatoryMultiEdge)((GsDirectedEdge)next).getUserObject();
+		for (GsRegulatoryMultiEdge me: graphManager.getOutgoingEdges(vertex)) {
 			me.canApplyNewMaxValue(newMax, l_fixable, l_conflict);
 		}
 	}
@@ -479,7 +469,7 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         }
         List ret = new ArrayList();
         HashMap copyMap = new HashMap();
-        Iterator it = otherGraph.getGraphManager().getVertexIterator();
+        Iterator<GsRegulatoryVertex> it = otherGraph.getGraphManager().getVertexIterator();
         GsVertexAttributesReader cvreader = otherGraph.getGraphManager().getVertexAttributesReader();
         while (it.hasNext()) {
             GsRegulatoryVertex vertexOri = (GsRegulatoryVertex)it.next();
@@ -493,24 +483,23 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
             ret.add(vertex);
         }
 
-        it = otherGraph.getGraphManager().getEdgeIterator();
+        Iterator<GsRegulatoryMultiEdge> it2 = otherGraph.getGraphManager().getEdgeIterator();
         GsEdgeAttributesReader cereader = otherGraph.getGraphManager().getEdgeAttributesReader();
-        while (it.hasNext()) {
-            GsDirectedEdge deOri = (GsDirectedEdge)it.next();
-            GsDirectedEdge de = (GsDirectedEdge) doInteractiveAddEdge(copyMap.get(deOri.getSourceVertex()), copyMap.get(deOri.getTargetVertex()), 0);
-            GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)de.getUserObject();
-            edge.copyFrom((GsRegulatoryMultiEdge)deOri.getUserObject());
-            cereader.setEdge(deOri.getUserObject());
-            eReader.setEdge(de);
+        while (it2.hasNext()) {
+        	GsRegulatoryMultiEdge deOri = it2.next();
+        	GsRegulatoryMultiEdge edge = doInteractiveAddEdge((GsRegulatoryVertex)copyMap.get(deOri.getSource()), (GsRegulatoryVertex)copyMap.get(deOri.getTarget()), 0);
+            edge.copyFrom(deOri);
+            cereader.setEdge(deOri);
+            eReader.setEdge(edge);
             eReader.copyFrom(cereader);
             eReader.refresh();
-            copyMap.put(deOri.getUserObject(), edge);
-            ret.add(de);
+            copyMap.put(deOri, edge);
+            ret.add(edge);
         }
 
         it = otherGraph.getGraphManager().getVertexIterator();
         while (it.hasNext()) {
-            ((GsRegulatoryVertex)it.next()).cleanupInteractionForNewGraph(copyMap);
+            it.next().cleanupInteractionForNewGraph(copyMap);
         }
         return ret;
     }
@@ -533,13 +522,12 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
         nodeOrder.add(vertex);
     }
 
-    protected GsGraph doCopySelection(Vector v_vertex, Vector v_edges) {
+    protected GsGraph doCopySelection(Collection<GsRegulatoryVertex> v_vertex, Collection<GsRegulatoryMultiEdge> v_edges) {
         GsRegulatoryGraph copiedGraph = new GsRegulatoryGraph();
         GsVertexAttributesReader cvreader = copiedGraph.getGraphManager().getVertexAttributesReader();
         HashMap copyMap = new HashMap();
         if (v_vertex != null) {
-            for (int i=0 ; i<v_vertex.size() ; i++) {
-                GsRegulatoryVertex vertexOri = (GsRegulatoryVertex)v_vertex.get(i);
+            for (GsRegulatoryVertex vertexOri: v_vertex) {
                 GsRegulatoryVertex vertex = (GsRegulatoryVertex)vertexOri.clone();
                 copiedGraph.addVertexWithNewId(vertex);
                 vReader.setVertex(vertexOri);
@@ -551,22 +539,19 @@ public final class GsRegulatoryGraph extends GsGraph implements GsGenericRegulat
 
         if (v_edges != null) {
             GsEdgeAttributesReader cereader = copiedGraph.getGraphManager().getEdgeAttributesReader();
-	        for (int i=0 ; i<v_edges.size() ; i++) {
-                GsDirectedEdge deOri = (GsDirectedEdge)v_edges.get(i);
-                GsRegulatoryMultiEdge edgeOri = (GsRegulatoryMultiEdge)deOri.getUserObject();
-                GsDirectedEdge de = (GsDirectedEdge)copiedGraph.doInteractiveAddEdge(copyMap.get(edgeOri.getSourceVertex()), copyMap.get(edgeOri.getTargetVertex()), 0);
-	            GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)de.getUserObject();
+	        for (GsRegulatoryMultiEdge edgeOri: v_edges) {
+	        	GsRegulatoryMultiEdge edge = copiedGraph.doInteractiveAddEdge((GsRegulatoryVertex)copyMap.get(edgeOri.getSource()), (GsRegulatoryVertex)copyMap.get(edgeOri.getTarget()), 0);
 	            edge.copyFrom(edgeOri);
 	            copyMap.put(edgeOri, edge);
-                eReader.setEdge(deOri);
+                eReader.setEdge(edgeOri);
                 cereader.setEdge(edge);
                 cereader.copyFrom(eReader);
 	        }
         }
 
         if (v_vertex != null) {
-            for (int i=0 ; i<v_vertex.size() ; i++) {
-                ((GsRegulatoryVertex)v_vertex.get(i)).cleanupInteractionForNewGraph(copyMap);
+            for (GsRegulatoryVertex v: v_vertex) {
+                v.cleanupInteractionForNewGraph(copyMap);
             }
         }
 

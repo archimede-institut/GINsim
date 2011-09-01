@@ -13,7 +13,6 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -43,7 +42,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 	
 	public static final String L3_QUALI_URL = "http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models";
 	
-    List v_no;
+    List<GsRegulatoryVertex> v_no;
     int len;
     OmddNode[] t_tree;
     OMDDNodeBrowser browser;
@@ -218,11 +217,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 out.openTag("listOfInputs");
                 
                 String edgeSign = null;
-                Iterator it = graph.getGraphManager().getIncomingEdges(v_no.get(i)).iterator();
-                while (it.hasNext()) {
-                    GsDirectedEdge edge = (GsDirectedEdge)it.next();
-                  // test
-                    GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)edge.getUserObject();
+                for (GsRegulatoryMultiEdge me: graph.getGraphManager().getIncomingEdges(v_no.get(i))) {
                     int sign = me.getSign(); 
                     switch (sign) {
 					case 0:
@@ -236,7 +231,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 					}                   
                   // fin test
                     out.openTag("input");
-                    out.addAttr("qualitativeSpecies", edge.getSourceVertex().toString());
+                    out.addAttr("qualitativeSpecies", me.getSource().toString());
                     out.addAttr("transitionEffect","none");
                     out.addAttr("sign", ""+edgeSign);
                     out.closeTag();

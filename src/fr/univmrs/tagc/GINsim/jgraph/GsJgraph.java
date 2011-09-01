@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphLayoutCache;
+import org.jgrapht.ext.JGraphModelAdapter;
 
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.common.OptionStore;
@@ -22,6 +23,8 @@ public class GsJgraph extends JGraph {
      */
     public GsJgraph(GsJgraphtGraphManager graph) {
         super(graph.getM_jgAdapter());
+        
+        JGraphModelAdapter ma;
         
         setGraphLayoutCache(new GraphLayoutCache(graph.getM_jgAdapter(), new GsCellViewFactory(graph)));
 		setGridVisible(((Boolean)OptionStore.getOption("display.grid", Boolean.FALSE)).booleanValue());

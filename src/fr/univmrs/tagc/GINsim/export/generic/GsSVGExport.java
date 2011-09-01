@@ -67,8 +67,8 @@ public class GsSVGExport {
 	            Rectangle2D box1=null,  box2=null;
 	            if (obj instanceof GsDirectedEdge) {
 	                GsDirectedEdge e = (GsDirectedEdge)obj;
-                    box1 = (Rectangle2D)boxes.get(e.getSourceVertex());
-                    box2 = (Rectangle2D)boxes.get(e.getTargetVertex());
+                    box1 = (Rectangle2D)boxes.get(e.getSource());
+                    box2 = (Rectangle2D)boxes.get(e.getTarget());
 	            }
 	            ereader.setEdge(obj);
 	            writeEdge(out, box1, box2, ereader, m_marker);

@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.SBML;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -23,7 +24,6 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
-import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -38,8 +38,8 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;// just to get rescanSign() method
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
@@ -396,7 +396,7 @@ public final class SBMLXpathParser {
 	} // void placeNodeOrder()
 
 	private void parseBooleanFunctions() {
-		List allowedEdges;
+		Collection<GsRegulatoryMultiEdge> allowedEdges;
 		GsRegulatoryVertex vertex;
 		String value, exp;
 		try {

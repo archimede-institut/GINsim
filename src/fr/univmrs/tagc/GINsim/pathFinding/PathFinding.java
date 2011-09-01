@@ -100,13 +100,13 @@ public class PathFinding extends Thread {
 	 * @return
 	 */
 	public Collection getChildren(Object node) {
-		List outgoingEdges = graphManager.getOutgoingEdges(node);
+		Collection outgoingEdges = graphManager.getOutgoingEdges(node);
 		List children = new ArrayList(outgoingEdges.size());
 		for (Iterator it = outgoingEdges.iterator(); it.hasNext();) {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();
-			Object child = e.getTargetVertex();
+			Object child = e.getTarget();
 			if (!visitedNodes.contains(child))
-				children.add(e.getTargetVertex());
+				children.add(e.getTarget());
 		}
 		return children;
 	}

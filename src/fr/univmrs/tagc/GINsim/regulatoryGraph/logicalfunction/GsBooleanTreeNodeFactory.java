@@ -40,7 +40,7 @@ public class GsBooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
   
   private void fillLogicalFunctionList(List p, GsBooleanGene bg) {
   	Object[] allParams = parser.getAllParams();
-    Vector allData = parser.getAllData();
+    List allData = parser.getAllData();
     int nb_params = allParams.length;
     Vector data;
     Iterator it_data;

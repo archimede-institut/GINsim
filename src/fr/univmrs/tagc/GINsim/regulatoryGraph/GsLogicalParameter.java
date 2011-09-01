@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -141,7 +142,7 @@ public class GsLogicalParameter implements XMLize {
      * @return the t_ac
      */
 	private byte[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
-	    List incEdges = regGraph.getGraphManager().getIncomingEdges(node);
+	    Set<GsRegulatoryMultiEdge> incEdges = regGraph.getGraphManager().getIncomingEdges(node);
 	    List nodeOrder = regGraph.getNodeOrder();
         byte[][] t_ac = new byte[incEdges.size()+1][];
         t_ac[0] = new byte[1];
@@ -151,8 +152,9 @@ public class GsLogicalParameter implements XMLize {
         	return t_ac;
         }
         boolean ok = false;
-        for (int i=incEdges.size() ; i>0 ; i--) {
-            GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)((GsDirectedEdge)incEdges.get(i-1)).getUserObject();
+        int i = -1;
+        for (GsRegulatoryMultiEdge me: incEdges) {
+        	i++;
             GsRegulatoryVertex vertex = me.getSource();
             byte[] t_val = new byte[vertex.getMaxValue()+2];
             t_val[0] = (byte)nodeOrder.indexOf(vertex);

@@ -1,52 +1,59 @@
 package fr.univmrs.tagc.GINsim.graph;
 
+import java.util.Collection;
+
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+
 /**
  * listen graph events
  */
-public interface GsGraphListener {
+public interface GsGraphListener<V,E extends GsDirectedEdge<V>> {
 
     /**
-     * an adge was added to the graph.
+     * an edge was added to the graph.
      * @param data
      * @return an object to describe/undo cascade event
      */
-	public GsGraphEventCascade edgeAdded(Object data);
+	public GsGraphEventCascade edgeAdded(E data);
     /**
-     * an adge was removed from the graph.
+     * an edge was removed from the graph.
      * @param data
      * @return an object to describe/undo cascade event
      */
-	public GsGraphEventCascade edgeRemoved(Object data);
-    /**
-     * a vertex was added to the graph.
-     * @param data
-     * @return an object to describe/undo cascade event
-     */
-    public GsGraphEventCascade vertexAdded(Object data);
-    /**
-     * a vertex was removed from the graph.
-     * @param data
-     * @return an object to describe/undo cascade event
-     */
-    public GsGraphEventCascade vertexRemoved(Object data);
-    /**
-     * a vertex was updated.
-     * @param data
-     * @return an object to describe/undo cascade event
-     */
-    public GsGraphEventCascade vertexUpdated(Object data);
-    /**
-     * the graph was merged with another one
-     * @param data vector of all merged in vertices
-     * @return an object to describe/undo cascade event
-     */
-    public GsGraphEventCascade graphMerged(Object data);
+	public GsGraphEventCascade edgeRemoved(E data);
     /**
      * an edge was updated.
      * @param data
      * @return an object to describe/undo cascade event
      */
-    public GsGraphEventCascade edgeUpdated(Object data);
+    public GsGraphEventCascade edgeUpdated(E data);
+
+    /**
+     * a vertex was added to the graph.
+     * @param data
+     * @return an object to describe/undo cascade event
+     */
+    public GsGraphEventCascade vertexAdded(V data);
+    /**
+     * a vertex was removed from the graph.
+     * @param data
+     * @return an object to describe/undo cascade event
+     */
+    public GsGraphEventCascade vertexRemoved(V data);
+    /**
+     * a vertex was updated.
+     * @param data
+     * @return an object to describe/undo cascade event
+     */
+    public GsGraphEventCascade vertexUpdated(V data);
+    
+    /**
+     * the graph was merged with another one
+     * @param nodes list of all merged in vertices
+     * @return an object to describe/undo cascade event
+     */
+    public GsGraphEventCascade graphMerged(Collection<V> nodes);
+    
 	/** graph parsing is finished */
     public void endParsing();
 }

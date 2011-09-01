@@ -1,22 +1,44 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToggleButton;
+import javax.swing.table.DefaultTableCellRenderer;
 
-import fr.univmrs.tagc.GINsim.graph.*;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.*;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.*;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.*;
-import fr.univmrs.tagc.GINsim.jgraph.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
-import fr.univmrs.tagc.common.widgets.*;
-import tbrowser.data.*;
-import tbrowser.data.module.*;
+import tbrowser.data.TBProbe;
+import tbrowser.data.module.TBModuleData;
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeTableBuilder;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementButton;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTable;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.common.widgets.GsButton;
+import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class GsInteractionsPanel extends GsPanel implements ItemListener, ActionListener {
 	private static final long serialVersionUID = 6871206109510696996L;
@@ -236,7 +258,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 									w = 3;
 								else if (ns >= 1)
 									w = 2;
-								clientPanel.applyEdgeStyle((GsJgraphDirectedEdge) graph.getGraphManager().getEdge(v1, v2), w);
+								clientPanel.applyEdgeStyle((GsRegulatoryMultiEdge)graph.getGraphManager().getEdge(v1, v2), w);
 							}
 							node.getChild(j).getValues().setValueAt(3, (v == null ? "?" : v.size() == 0 ? "?" : String.valueOf(ns)), false);
 						}
@@ -337,7 +359,6 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 
 		Iterator it = graph.getGraphManager().getVertexIterator();
 		GsRegulatoryVertex vertex;
-		GsRegulatoryMultiEdge edge;
 
 		while (it.hasNext()) {
 			vertex = (GsRegulatoryVertex)it.next();
@@ -346,13 +367,12 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 			nb.getNode().setUserObject(vertex);
 			tb.addNode(nb.getNode());
 			if (!((DTreeElementToggleButton)node).isSelected()) {
-				Iterator it2 = graph.getGraphManager().getOutgoingEdges(vertex).iterator();
-				while (it2.hasNext()) {
-					edge = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)it2.next()).getUserObject();
+				Collection<GsRegulatoryMultiEdge> edges = graph.getGraphManager().getOutgoingEdges(vertex);
+				for (GsRegulatoryMultiEdge edge: edges) {
 					for (int k = 0; k < edge.getEdgeCount(); k++) {
-						tb.newNode(edge.getTargetVertex().toString() + "   ", Color.black);
-						if (vertex != edge.getTargetVertex())	{
-							al = new ButtonListener(vertex, (GsRegulatoryVertex)edge.getTargetVertex());
+						tb.newNode(edge.getTarget().toString() + "   ", Color.black);
+						if (vertex != edge.getTarget())	{
+							al = new ButtonListener(vertex, (GsRegulatoryVertex)edge.getTarget());
 							nb.addButton(show, null, al, null);
 							nb.setSelectable(false, this);
 						}
@@ -361,19 +381,18 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 						nb.addValue(edge.getEdge(k).getMaxAsString(), false);
 						nb.addValue("?", false);
 						nb.addValue("?", false);
-						nb.getNode().setUserObject(edge.getTargetVertex());
+						nb.getNode().setUserObject(edge.getTarget());
 						tb.addNode(nb.getNode());
 					}
 				}
 			}
 			else {
-				Iterator it2 = graph.getGraphManager().getIncomingEdges(vertex).iterator();
-				while (it2.hasNext()) {
-					edge = (GsRegulatoryMultiEdge)((GsJgraphDirectedEdge)it2.next()).getUserObject();
+				Collection<GsRegulatoryMultiEdge> edges = graph.getGraphManager().getIncomingEdges(vertex);
+				for (GsRegulatoryMultiEdge edge: edges) {
 					for (int k = 0; k < edge.getEdgeCount(); k++) {
-						tb.newNode(edge.getSourceVertex().toString() + "   ", Color.black);
-						al = new ButtonListener((GsRegulatoryVertex)edge.getSourceVertex(), vertex);
-						if (vertex != edge.getSourceVertex()) {
+						tb.newNode(edge.getSource().toString() + "   ", Color.black);
+						al = new ButtonListener((GsRegulatoryVertex)edge.getSource(), vertex);
+						if (vertex != edge.getSource()) {
 							nb.addButton(show, null, al, null);
 							nb.setSelectable(false, this);
 						}
@@ -382,7 +401,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 						nb.addValue(edge.getEdge(k).getMaxAsString(), false);
 						nb.addValue("?", false);
 						nb.addValue("?", false);
-						nb.getNode().setUserObject(edge.getSourceVertex());
+						nb.getNode().setUserObject(edge.getSource());
 						tb.addNode(nb.getNode());
 					}
 				}

@@ -58,7 +58,7 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
     public void setEdge(Object obj) {
         evsd = (EdgeVSdata)dataMap.get(obj);
         if (evsd == null && obj instanceof GsDirectedEdge) {
-            evsd = (EdgeVSdata)dataMap.get(((GsDirectedEdge)obj).getUserObject());
+            evsd = (EdgeVSdata)dataMap.get(obj);
         }
         if (evsd == null) {
             evsd = new EdgeVSdata();

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class GsDynamicalHierarchicalGraph extends GsGraph {
+public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchicalNode, GsDirectedEdge<GsDynamicalHierarchicalNode>> {
 
 	public final static String zip_mainEntry = "dynamicalHierarchicalGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
@@ -141,8 +142,8 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
         	Object o_edge = it.next();
         	if (o_edge instanceof GsDirectedEdge) {
         		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-	            String source = ""+((GsDynamicalHierarchicalNode)edge.getSourceVertex()).getUniqueId();
-	            String target =""+((GsDynamicalHierarchicalNode) edge.getTargetVertex()).getUniqueId();
+	            String source = ""+((GsDynamicalHierarchicalNode)edge.getSource()).getUniqueId();
+	            String target =""+((GsDynamicalHierarchicalNode) edge.getTarget()).getUniqueId();
 	            out.write("\t\t<edge id=\"e"+ source +"_"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
         	}
         }
@@ -216,13 +217,13 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	 * @param target
 	 * @return the new edge
 	 */
-	public Object addEdge(Object source, Object target) {
+	public Object addEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target) {
 		return graphManager.addEdge(source, target, null);
 	}
 
 
 	
-	/* somethign else */
+	/* something else */
 	
 	/**
 	 * return an array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
@@ -250,7 +251,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	public void removeEdge(Object obj) {
+	public void removeEdge(GsDirectedEdge<GsDynamicalHierarchicalNode> obj) {
 	}
 	
 	/**
@@ -284,7 +285,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	 * 
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	protected GsGraph doCopySelection(Vector vertex, Vector edges) {
+	protected GsGraph doCopySelection(Collection vertex, Collection edges) {
 		return null;
 	}
 	
@@ -293,7 +294,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	protected Object doInteractiveAddEdge(Object source, Object target, int param) {
+	protected GsDirectedEdge<GsDynamicalHierarchicalNode> doInteractiveAddEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target, int param) {
 		return null;
 	}
 
@@ -302,7 +303,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	protected Object doInteractiveAddVertex(int param) {
+	protected GsDynamicalHierarchicalNode doInteractiveAddVertex(int param) {
 		return null;
 	}
 
@@ -368,9 +369,4 @@ public class GsDynamicalHierarchicalGraph extends GsGraph {
 		}
 		return null;
 	}
-
-
-
-
-
 }

@@ -64,8 +64,8 @@ public class GsGraphvizEncoder {
 	        	Object from = null;
 	        	Object to = null;
 	        	if (edge instanceof GsDirectedEdge) {
-        			from = ((GsDirectedEdge)edge).getSourceVertex();
-                	to = ((GsDirectedEdge)edge).getTargetVertex();	        			
+        			from = ((GsDirectedEdge)edge).getSource();
+                	to = ((GsDirectedEdge)edge).getTarget();	        			
 	        		if (from instanceof Dotify) {
 	                    out.write("\n\t"+((Dotify) from).toDot(to));
 	        		} else {

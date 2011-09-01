@@ -1,8 +1,11 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.qmc;
 
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+
+import java.util.Collection;
 import java.util.List;
 import javax.swing.tree.TreePath;
 import javax.swing.JTree;
@@ -30,7 +33,7 @@ public class QMCThread extends Thread {
 	}
 	public void run() {
 		algo = new QMCAlgo(cnf, progressBar, cancelButton);
-		List l = graph.getGraphManager().getIncomingEdges(vertex);
+		Collection<GsRegulatoryMultiEdge> l = graph.getGraphManager().getIncomingEdges(vertex);
 		algo.init(l, expression.getChilds());
 		algo.exec();
 		TreePath sel_path = tree.getLeadSelectionPath();

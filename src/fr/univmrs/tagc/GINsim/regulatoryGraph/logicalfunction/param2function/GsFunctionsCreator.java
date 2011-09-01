@@ -1,26 +1,29 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Vector;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTreeLeafPattern;
 
 public class GsFunctionsCreator {
   private GsRegulatoryGraph graph;
-  private List interactions;
+  private Collection<GsLogicalParameter> interactions;
   private GsRegulatoryVertex currentVertex;
 
-  public GsFunctionsCreator(GsRegulatoryGraph graph, List interactions, GsRegulatoryVertex currentVertex) {
-    this.graph = graph;
-    this.interactions = interactions;
-    this.currentVertex = currentVertex;
-  }
-  public GsFunctionsCreator(GsRegulatoryGraph graph, Vector interactions, GsRegulatoryVertex currentVertex) {
+  public GsFunctionsCreator(GsRegulatoryGraph graph, Collection<GsLogicalParameter> interactions, GsRegulatoryVertex currentVertex) {
     this.graph = graph;
     this.interactions = interactions;
     this.currentVertex = currentVertex;
@@ -32,26 +35,22 @@ public class GsFunctionsCreator {
     return currentVertex;
   }
   public GsParamTree makeTree(int def) {
-    List l = graph.getGraphManager().getIncomingEdges(currentVertex);
-    Iterator it = l.iterator();
-    GsDirectedEdge de;
-    HashMap h = new HashMap();
+	Set<GsRegulatoryMultiEdge> l = graph.getGraphManager().getIncomingEdges(currentVertex);
+    HashMap<GsRegulatoryVertex,Object> h = new HashMap();
 
-    while (it.hasNext()) {
-      de = (GsDirectedEdge)it.next();
-      h.put(de.getSourceVertex(), new Integer(0));
+    for (GsRegulatoryMultiEdge me: l) {
+      h.put(me.getSource(), new Integer(0));
     }
     if (interactions != null) {
       int I;
-      for (int i = 0; i < interactions.size(); i++) {
-        GsLogicalParameter p = (GsLogicalParameter) interactions.get(i);
+      for (GsLogicalParameter p: interactions) {
         for (int j = 0; j < p.EdgeCount(); j++) {
           I = ((Integer) h.get(p.getEdge(j).me.getSource())).intValue() + 1;
           h.put(p.getEdge(j).me.getSource(), new Integer(I));
         }
       }
     }
-    ArrayList as = new ArrayList(h.entrySet());
+    ArrayList<Entry<GsRegulatoryVertex, Object>> as = new ArrayList(h.entrySet());
     Collections.sort(as, new Comparator() {
       public int compare(Object o1, Object o2) {
         Entry e1 = (Entry) o1;
@@ -64,13 +63,10 @@ public class GsFunctionsCreator {
         return ((GsRegulatoryVertex)e1.getKey()).getName().compareTo(((GsRegulatoryVertex) e2.getKey()).getName());
       }
     });
-    it = as.iterator();
-    Entry e;
     GsRegulatoryVertex v;
-    while (it.hasNext()) {
-      e = (Entry)it.next();
-      v = (GsRegulatoryVertex)e.getKey();
-      e.setValue(((GsDirectedEdge)graph.getGraphManager().getEdge(v, currentVertex)).getUserObject());
+    for (Entry<GsRegulatoryVertex, Object> e: as) {
+      v = e.getKey();
+      e.setValue(graph.getGraphManager().getEdge(v, currentVertex));
     }
     return new GsParamTree(as, def);
   }

@@ -34,7 +34,7 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 		node = new GsDynamicNode(item.state);
 		boolean isnew = stateTransitionGraph.addVertex(node);
 		if (item.previous != null) {
-			stateTransitionGraph.addEdge(item.previous, node, item.multiple);
+			stateTransitionGraph.addEdge((GsDynamicNode)item.previous, node, item.multiple);
 		}
 		return isnew;
 	}

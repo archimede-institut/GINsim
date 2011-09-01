@@ -219,8 +219,8 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 	     	Object o_edge = it.next();
 	     	if (o_edge instanceof GsDirectedEdge) {
 	     		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-		            String source = ""+((GsHierarchicalNode)edge.getSourceVertex()).getUniqueId();
-		            String target =""+((GsHierarchicalNode) edge.getTargetVertex()).getUniqueId();
+		            String source = ""+((GsHierarchicalNode)edge.getSource()).getUniqueId();
+		            String target =""+((GsHierarchicalNode) edge.getTarget()).getUniqueId();
 		            out.write("\t\t<edge id=\"e"+(++saveEdgeId)+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
 	     	}
 	     }
@@ -349,7 +349,7 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 
 	public void removeEdge(Object obj) {
 		GsDirectedEdge e = (GsDirectedEdge) obj;
-		this.graphManager.removeEdge(e.getSourceVertex(), e.getTargetVertex());
+		this.graphManager.removeEdge(e.getSource(), e.getTarget());
 	}
 	
 

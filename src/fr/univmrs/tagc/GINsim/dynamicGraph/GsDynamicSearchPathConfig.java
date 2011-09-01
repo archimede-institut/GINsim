@@ -185,11 +185,11 @@ public class GsDynamicSearchPathConfig extends JDialog {
                 break;
             }
             if (i == 1 && i<v_pathConstraints.size()) {
-                path.add(((GsDirectedEdge)l.get(0)).getSourceVertex());
+                path.add(((GsDirectedEdge)l.get(0)).getSource());
             }
             for (int j=0 ; j<l.size() ; j++) {
                 GsDirectedEdge edge = (GsDirectedEdge)l.get(j);
-                path.add(edge.getTargetVertex());
+                path.add(edge.getTarget());
             }
         }
         if (isPath) {

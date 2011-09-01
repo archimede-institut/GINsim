@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.stg2htg;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -108,11 +109,10 @@ public class STG2HTG extends AlgoConnectivity {
 	}
 
 	private void dfs(Object source, HashSet image, HashSet visited) {
-		List outgoingEdges = graphModel.getOutgoingEdges(source);
+		Collection<GsDirectedEdge> outgoingEdges = graphModel.getOutgoingEdges(source);
 		if (outgoingEdges == null) return;
-		for (Iterator it_edges = outgoingEdges.iterator(); it_edges.hasNext();) {
-			GsDirectedEdge edge = (GsDirectedEdge) it_edges.next();
-			Object target = edge.getTargetVertex();
+		for (GsDirectedEdge edge: outgoingEdges) {
+			Object target = edge.getTarget();
 			if (!visited.contains(target)) {
 				visited.add(target);
 				GsNodeReducedData scc = (GsNodeReducedData) tilde_S.get(target);

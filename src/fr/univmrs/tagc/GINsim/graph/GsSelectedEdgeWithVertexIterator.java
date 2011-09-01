@@ -1,7 +1,7 @@
 package fr.univmrs.tagc.GINsim.graph;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
@@ -10,8 +10,8 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
  */
 public class GsSelectedEdgeWithVertexIterator implements Iterator {
 
-	Vector v_edge;
-	Vector v_vertex;
+	List v_edge;
+	List v_vertex;
 	int i;
 	
 
@@ -19,7 +19,7 @@ public class GsSelectedEdgeWithVertexIterator implements Iterator {
 	 * @param v_vertex
 	 * @param v_edge
 	 */
-	public GsSelectedEdgeWithVertexIterator(Vector v_vertex, Vector v_edge) {
+	public GsSelectedEdgeWithVertexIterator(List v_vertex, List v_edge) {
 		this.v_vertex = v_vertex;
 		this.v_edge = v_edge;
 		if ( v_vertex == null || v_edge == null) {
@@ -34,7 +34,7 @@ public class GsSelectedEdgeWithVertexIterator implements Iterator {
 		if (i != -1) {
 			for ( ; i<v_edge.size() ; i++) {
 				GsDirectedEdge edge = (GsDirectedEdge)v_edge.get(i);
-				if (v_vertex.contains(edge.getSourceVertex()) && v_vertex.contains(edge.getTargetVertex())) {
+				if (v_vertex.contains(edge.getSource()) && v_vertex.contains(edge.getTarget())) {
 					return;
 				}
 			}

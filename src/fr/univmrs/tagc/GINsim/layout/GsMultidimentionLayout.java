@@ -251,7 +251,7 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
 	 * @param maxValues
 	 */
 	private void moveEdge(GsDirectedEdge edge, byte[] maxValues) {
-		byte[] diffstate = getDiffStates((GsDynamicNode)edge.getSourceVertex(), (GsDynamicNode)edge.getTargetVertex());
+		byte[] diffstate = getDiffStates((GsDynamicNode)edge.getSource(), (GsDynamicNode)edge.getTarget());
 		int change = get_change(diffstate);
 		
 		ereader.setEdge(edge);

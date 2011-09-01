@@ -2,13 +2,22 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphDirectedEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.document.DocumentStyle;
@@ -117,7 +126,7 @@ public class InteractionAnalysis {
 			
 			total_level = 1;																//  Compute the total number of level in the omdd tree
 			for (Iterator it2 = l.iterator(); it2.hasNext();) {
-				GsRegulatoryVertex source = (GsRegulatoryVertex) ((GsJgraphDirectedEdge) it2.next()).getSourceVertex();
+				GsRegulatoryVertex source = (GsRegulatoryVertex) ((GsJgraphDirectedEdge) it2.next()).getSource();
 				total_level *= source.getMaxValue()+1;
 			}
 			leafs = new byte[total_level];
@@ -145,7 +154,7 @@ public class InteractionAnalysis {
 
 			for (Iterator it2 = l.iterator(); it2.hasNext();) {									//	For each incoming edge
 				GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge) ((GsJgraphDirectedEdge)it2.next()).getUserObject();
-				GsRegulatoryVertex source = (GsRegulatoryVertex) me.getSourceVertex();
+				GsRegulatoryVertex source = (GsRegulatoryVertex) me.getSource();
 //				for (int k = 0; k < me.getEdgeCount(); k++) {									// 		For each sub-edge of the multiedge
 //					GsRegulatoryEdge e = me.getEdge(k);
 					SourceItem sourceItem = report.reportFor(target, source);

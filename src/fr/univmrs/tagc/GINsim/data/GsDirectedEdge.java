@@ -1,27 +1,34 @@
 package fr.univmrs.tagc.GINsim.data;
 
+
 /**
  * As we need a userObject and fast access to source and target of edges, 
- * real edges must implement this interface to provide this functionnality.
+ * real edges must implement this interface to provide this functionality.
  */
-public interface GsDirectedEdge {
-    /**
-     * @return the object attached to the edge.
-     */
-    public Object getUserObject();
+public class GsDirectedEdge<V> implements ToolTipsable {
+    protected final V source, target;
 
-    /**
-     * @param obj the new userObject
-     */
-    public void setUserObject(Object obj);
+	/**
+	 * create a directedEdge.
+	 *
+	 * @param source the source vertex.
+	 * @param target the target vertex.
+	 * @param obj data to attach to th edge.
+	 */
+    public GsDirectedEdge(V source, V target) {
+    	this.source = source;
+    	this.target = target;
+    }
 
-    /**
-     * @return the source vertex.
-     */
-    public Object getSourceVertex();
-    
-    /**
-     * @return the target vertex.
-     */
-    public Object getTargetVertex();
+    public V getSource() {
+        return source;
+    }
+
+    public V getTarget() {
+        return target;
+    }
+
+	public String toToolTip() {
+		return "";
+	}
 }

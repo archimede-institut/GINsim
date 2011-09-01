@@ -93,7 +93,7 @@ public class GsSearchStableStates extends Thread {
 			int cpt = 0;
 			boolean[] t_regline = t_reg[i];
 			while (it_reg.hasNext()) {
-				int j = nodeOrder.indexOf(((GsDirectedEdge)it_reg.next()).getSourceVertex());
+				int j = nodeOrder.indexOf(((GsDirectedEdge)it_reg.next()).getSource());
 				t_regline[j] = true;
 				cpt++;
 			}

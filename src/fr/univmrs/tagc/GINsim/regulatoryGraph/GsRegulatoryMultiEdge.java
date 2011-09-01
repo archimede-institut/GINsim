@@ -14,7 +14,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
 /**
  * This edge object allows to have several edges from a vertex to another
  */
-public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEdge {
+public class GsRegulatoryMultiEdge extends GsDirectedEdge<GsRegulatoryVertex> implements XMLize, ToolTipsable {
 
 	/** array of sign's names */
 	static public final String[] SIGN = {"positive","negative","unknown"};
@@ -29,7 +29,6 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 
 	private GsRegulatoryEdge[] edges = new GsRegulatoryEdge[GsRegulatoryVertex.MAXVALUE+1];
 	private int edgecount = 0;
-    private GsRegulatoryVertex source, target;
     private int sign = 0;
 
     /**
@@ -41,8 +40,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
     	this(source, target, param, (byte)1);
     }
     public GsRegulatoryMultiEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param, byte threshold) {
-        this.source = source;
-        this.target = target;
+    	super(source, target);
         GsRegulatoryEdge edge = new GsRegulatoryEdge(this);
         edge.sign = (byte)param;
         if (threshold <= source.getMaxValue()) {
@@ -73,7 +71,7 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
     	int index = doAddEdge(sign, threshold);
     	if (index != -1) {
     		rescanSign(graph);
-    		target.incomingEdgeAdded(this);
+    		getTarget().incomingEdgeAdded(this);
     	}
     	return index;
     }
@@ -162,19 +160,6 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
             }
             out.write("\t\t</edge>\n");
         }
-    }
-
-    /**
-     * @return the source vertex of this edge
-     */
-    public GsRegulatoryVertex getSource() {
-        return source;
-    }
-    /**
-     * @return the target vertex of this edge
-     */
-    public GsRegulatoryVertex getTarget() {
-        return target;
     }
 
 	/**
@@ -302,14 +287,6 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 		edges[index].threshold = min;
 	}
 
-	public Object getUserObject() {
-		return this;
-	}
-
-	public Object getSourceVertex() {
-		return source;
-	}
-
 	//protected void rescanSign(GsGraph graph) {
 	public void rescanSign(GsGraph graph) {
 		this.sign = edges[0].sign;
@@ -326,10 +303,6 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
 		ereader.setEdge(this);
 		ereader.setLineEnd(sign);
 		ereader.refresh();
-	}
-
-	public Object getTargetVertex() {
-		return target;
 	}
 
 	/**

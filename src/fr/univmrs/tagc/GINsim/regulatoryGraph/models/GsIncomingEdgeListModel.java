@@ -1,10 +1,9 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.models;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.AbstractListModel;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 
@@ -17,7 +16,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	
 	private static final long serialVersionUID = 6359093601750388688L;
 	//list of incoming edge
-	private List edge;
+	private Collection<GsRegulatoryMultiEdge> edge;
 	//size of the list
 	private int size;
 	
@@ -48,14 +47,9 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 			return;
 		} 
 		int count=0; 
-		for (int i=0;i<edge.size();i++) {
-			//for each incoming edge
-			Object obj=edge.get(i);
-			if (obj instanceof GsDirectedEdge) {
-				GsDirectedEdge de = (GsDirectedEdge)obj;
-				//increase the size of the number of interaction 
-				count += ((GsRegulatoryMultiEdge)de.getUserObject()).getEdgeCount();
-			}
+		for (GsRegulatoryMultiEdge me: edge) {
+			//increase the size of the number of interaction 
+			count += me.getEdgeCount();
 		}
 		size=count;
 	}
@@ -68,18 +62,13 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 			return null; //no data
 		}
 		int j=0;
-		for (int i=0;i<edge.size();i++) {
-			//for each incoming edge
-			Object obj=edge.get(i);
-			if (obj instanceof GsDirectedEdge) {
-				GsDirectedEdge de=(GsDirectedEdge)obj;
-				if (((GsRegulatoryMultiEdge)de.getUserObject()).getEdgeCount() + j <= index) {
-					//if index is not in the current edge
-					j += ((GsRegulatoryMultiEdge)de.getUserObject()).getEdgeCount();
-				} else {
-					//return the good data
-					return ((GsRegulatoryMultiEdge)de.getUserObject()).getEdge(index-j);
-				}
+		for (GsRegulatoryMultiEdge me: edge) {
+			if (me.getEdgeCount() + j <= index) {
+				//if index is not in the current edge
+				j += me.getEdgeCount();
+			} else {
+				//return the good data
+				return me.getEdge(index-j);
 			}
 		}
 		return null;
@@ -89,7 +78,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	 * get the list of incoming edge
 	 * @return the list of incoming edge
 	 */
-	public List getEdge() {
+	public Collection<GsRegulatoryMultiEdge> getEdge() {
 		return edge;
 	}
 
@@ -97,7 +86,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	 * set the list of incoming edge
 	 * @param list the list of incoming edge
 	 */
-	public void setEdge(List list) {
+	public void setEdge(Collection<GsRegulatoryMultiEdge> list) {
 		edge = list;
 		updateSize();
 		fireContentsChanged(this,0,size);
@@ -113,18 +102,12 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
             return 0;
         }
 		int j = 0;
-		for (int i=0 ; i<edge.size() ; i++) {
-			Object obj = edge.get(i);
-			if (obj instanceof GsDirectedEdge) {
-				GsDirectedEdge de = (GsDirectedEdge)obj;
-				if (e.me == de.getUserObject()) {
-					return j+e.index;
-				}
-				j += ((GsRegulatoryMultiEdge)de.getUserObject()).getEdgeCount();				
+		for (GsRegulatoryMultiEdge me: edge) {
+			if (e.me == me) {
+				return j+e.index;
 			}
+			j += me.getEdgeCount();				
 		}
 		return 0;
 	}
-
-
 }
