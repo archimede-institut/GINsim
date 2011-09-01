@@ -142,10 +142,15 @@ public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
 	 * @param target
 	 * @return the new edge
 	 */
-	public Object addEdge(GsTreeNode source, GsTreeNode target) {
-		Object e = graphManager.getEdge(source, target);
-		if (e != null) return e;
-		return graphManager.addEdge(source, target, null);
+	public GsDirectedEdge<GsTreeNode> addEdge(GsTreeNode source, GsTreeNode target) {
+		GsDirectedEdge<GsTreeNode> edge = graphManager.getEdge(source, target);
+		if (edge == null) {
+			edge = new GsDirectedEdge<GsTreeNode>(source, target);
+			if (!graphManager.addEdge(edge)) {
+				return null;
+			}
+		}
+		return edge;
 	}
 	
 		

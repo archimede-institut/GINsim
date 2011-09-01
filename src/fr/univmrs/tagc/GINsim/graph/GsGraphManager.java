@@ -67,14 +67,13 @@ abstract public class GsGraphManager<V,E extends GsDirectedEdge<V>> {
      */
 	abstract public void placeVertex (V vertex, int x, int y);
     /**
-     * add an edge between two vertices and attach the given data to it.
+     * add an edge. The edge knows about its source and target vertices and
+     * must have been created in advance (your GsGraph should provide the required help).
      * 
-     * @param source
-     * @param target
-     * @param data
-     * @return the newly created edge (or null if failed/inapropriate)
+     * @param edge
+     * @return true if added successfully
      */
-	abstract public E addEdge (V source, V target, E data);
+	abstract public boolean addEdge (E edge);
     
     /**
      * select all objects (vertices and edges).

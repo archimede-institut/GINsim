@@ -258,7 +258,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			if (src != null && target != null) {
 				GsRegulatoryMultiEdge me_clone = new GsRegulatoryMultiEdge(src, target);
 				me_clone.copyFrom(me);
-				Object new_me = simplifiedManager.addEdge(src, target, me_clone);
+				Object new_me = simplifiedManager.addEdge(me_clone);
 				copyMap.put(me, me_clone);
 				ereader.setEdge(me);
 				simplified_ereader.setEdge(new_me);
@@ -307,7 +307,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				GsRegulatoryMultiEdge de = simplifiedManager.getEdge(src, target);
 				if (de == null) {
 					de = new GsRegulatoryMultiEdge(src, target);
-					simplifiedManager.addEdge(src, target, de);
+					simplifiedManager.addEdge(de);
 				}
 				boolean[] t_required = e.getValue();
 				de.copyFrom(t_required);

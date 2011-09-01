@@ -286,7 +286,10 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
 	 * @return the new edge
 	 */
 	public GsDirectedEdge<GsDynamicNode> addEdge(GsDynamicNode source, GsDynamicNode target, boolean multiple) {
-		GsDirectedEdge<GsDynamicNode> edge = graphManager.addEdge(source, target, null);
+		GsDirectedEdge<GsDynamicNode> edge = new GsDirectedEdge<GsDynamicNode>(source, target);
+		if (!graphManager.addEdge(edge)) {
+			return null;
+		}
 		if (multiple) {
 			eReader.setEdge(edge);
 			eReader.setDash(dashpattern);

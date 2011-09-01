@@ -112,14 +112,14 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         }
     }
 
-    public E addEdge(V source, V target, E newedge) {
+    public boolean addEdge(E newedge) {
     	if (newedge == null) {
-    		newedge = g.addEdge(source, target);
-    	} else {
-        	g.addEdge(source, target, newedge);
+    		return false;
     	}
-    	if (newedge == null) {
-    		return null;
+    	V source = newedge.getSource();
+    	V target = newedge.getTarget();
+    	if (!g.addEdge(source, target, newedge)) {
+    		return false;
     	}
 		
 		if (visible) {
@@ -148,7 +148,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         		}					
     		}
 		}
-        return newedge;
+        return true;
     }
 
     public void placeVertex( Object vertex, int x, int y ) {

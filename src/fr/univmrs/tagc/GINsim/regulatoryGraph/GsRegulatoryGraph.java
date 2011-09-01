@@ -129,10 +129,10 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     		return obj;
     	}
     	obj = new GsRegulatoryMultiEdge(source, target, param);
-    	GsRegulatoryMultiEdge ret = graphManager.addEdge(source, target, obj);
+    	graphManager.addEdge(obj);
     	obj.rescanSign(this);
     	target.incomingEdgeAdded(obj);
-    	return ret;
+    	return obj;
     }
 
     protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
@@ -389,7 +389,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         int index = 0;
         if (me == null) {
             me = new GsRegulatoryMultiEdge(source, target, sign, minvalue);
-            graphManager.addEdge(source, target, me);
+            graphManager.addEdge(me);
         } else {
             index = me.addEdge(sign, minvalue, this);
         }

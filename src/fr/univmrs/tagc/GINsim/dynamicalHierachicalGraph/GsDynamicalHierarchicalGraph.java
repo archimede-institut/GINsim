@@ -217,8 +217,12 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 	 * @param target
 	 * @return the new edge
 	 */
-	public Object addEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target) {
-		return graphManager.addEdge(source, target, null);
+	public GsDirectedEdge<GsDynamicalHierarchicalNode> addEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target) {
+		GsDirectedEdge<GsDynamicalHierarchicalNode> edge = new GsDirectedEdge<GsDynamicalHierarchicalNode>(source, target);
+		if (graphManager.addEdge(edge)) {
+			return edge;
+		}
+		return null;
 	}
 
 

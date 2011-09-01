@@ -18,7 +18,7 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
  */
 public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractGraph<V, E> implements DirectedGraph<V,E> {
     
-    protected Map<V, VInfo<V,E>> m_vertices = new HashMap<V, VInfo<V,E>>(256);
+    protected Map<V, VInfo<V,E>> m_vertices = new HashMap<V, VInfo<V,E>>(10);
     private EdgeFactory<V,E> ef;
     private Set<E> edgeSet = null;
     private Set<V> vertexSet = null;
@@ -56,7 +56,6 @@ public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractG
 
     @Override
     public E addEdge(V sourceVertex, V targetVertex) {
-        
         // at the same time, check if vertices exists in graph AND replace them if necessary
         VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
         if (vinfo == null) {
@@ -78,9 +77,6 @@ public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractG
 
 	@Override
 	public boolean addEdge(V sourceVertex, V targetVertex, E e) {
-		if (sourceVertex != e.getSource() || targetVertex != e.getTarget()) {
-			return false;
-		}
         VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
         if (vinfo.addOutgoing(e)) {
             vinfo = m_vertices.get(targetVertex);
@@ -97,6 +93,7 @@ public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractG
             return false;
         }
         m_vertices.put(v, new VInfo<V,E>( v ));
+        System.out.println("added vertex: "+v + m_vertices.get(v));
         return true;
     }
 

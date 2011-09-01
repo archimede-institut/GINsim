@@ -213,7 +213,8 @@ public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<Gs
 	 * @param target target vertex of this edge.
 	 */
 	public void addEdge(GsNodeReducedData source, GsNodeReducedData target) {
-		graphManager.addEdge(source, target, null);
+		GsDirectedEdge<GsNodeReducedData> edge = new GsDirectedEdge<GsNodeReducedData>(source, target);
+		graphManager.addEdge(edge);
 	}
 	public List getSpecificLayout() {
 		return GsReducedGraphDescriptor.getLayout();

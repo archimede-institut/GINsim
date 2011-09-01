@@ -140,7 +140,8 @@ public class GsTreeNode implements Dotify {
 		for (GsDirectedEdge<GsTreeNode> e: (List<GsDirectedEdge>)gm.getOutgoingEdges(this)) {
 			GsTreeNode target = e.getTarget().deepCopy(gm);
 			gm.addVertex(target);
-			gm.addEdge(self, target, null);
+			GsDirectedEdge<GsTreeNode> edge = new GsDirectedEdge<GsTreeNode>(self, target);
+			gm.addEdge(edge);
 		}
 		return self;
 	}
