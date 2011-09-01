@@ -1,8 +1,10 @@
 package fr.univmrs.tagc.GINsim.jgraph;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -114,7 +116,7 @@ public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractG
     @Override
     public Set<E> edgeSet() {
         if (edgeSet == null) {
-            edgeSet = new HashSet<E>();
+            edgeSet = new EdgeSet(this);
         }
         return edgeSet;
     }
@@ -225,6 +227,13 @@ public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractG
 	public double getEdgeWeight(E e) {
 		return 0;
 	}
+
+	protected int getEdgesCount() {
+		return edgeCount;
+	}
+	protected Collection<VInfo<V, E>> getVInfoSet() {
+		return m_vertices.values();
+	}
 }
 
 /**
@@ -309,5 +318,122 @@ class VInfo<V,E extends GsDirectedEdge<V>> {
                 m_vertices.get(e.getTarget()).removeIncoming(e);
             }
         }
+    }
+}
+
+class EdgeSet<V,E extends GsDirectedEdge<V>> implements Set<E> {
+	
+    private final GsJGraphtBaseGraph<V,E> g;
+    
+    public EdgeSet(GsJGraphtBaseGraph<V, E> graphManager) {
+		this.g = graphManager;
+	}
+
+	public int size() {
+        return g.getEdgesCount();
+    }
+
+    public boolean isEmpty() {
+        return (size() == 0);
+    }
+
+    public boolean contains(E edge) {
+        return g.containsEdge(edge);
+    }
+
+    public Iterator<E> iterator() {
+        return new EdgeIterator<V,E>(g.getVInfoSet());
+    }
+
+    public Object[] toArray() {
+        return null;
+    }
+
+    public boolean add(E edge) {
+        return false;
+    }
+    public void clear() {
+    }
+
+	@Override
+	public boolean addAll(Collection<? extends E> c) {
+		return false;
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+        for (Object o: c) {
+            if (!contains(o)) {
+                return false;
+            }
+        }
+        return true;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		return false;
+	}
+
+	@Override
+	public <T> T[] toArray(T[] a) {
+		return null;
+	}
+}
+
+class EdgeIterator<V,E extends GsDirectedEdge<V>> implements Iterator<E> {
+
+    E next;
+    Iterator<VInfo<V, E>> i_vertices;
+    Iterator<E> i_edges;
+    
+    public boolean hasNext() {
+        return (next != null);
+    }
+
+    public E next() {
+        E ret = next;
+        selectNext();
+        return ret;
+    }
+
+    public void remove() {
+        // unsupported
+    }
+    
+    private void selectNext() {
+        next = null;
+        if (i_edges != null && i_edges.hasNext()) {
+            next = i_edges.next();
+        } else while (i_vertices.hasNext()) {
+            VInfo vinfo = (VInfo)i_vertices.next();
+            if (vinfo.l_outgoing != null) {
+                i_edges = vinfo.l_outgoing.iterator();
+                if (i_edges.hasNext()) {
+                    next = i_edges.next();
+                    break;
+                }
+            }
+        }
+    }
+
+    protected EdgeIterator(Collection<VInfo<V, E>> infoSet) {
+        this.i_vertices = infoSet.iterator();
+        selectNext();
     }
 }
