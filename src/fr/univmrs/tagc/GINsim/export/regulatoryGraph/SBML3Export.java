@@ -130,7 +130,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 	 */
 	protected void doExport(GsExportConfig exportConfig) {
 		GsRegulatoryGraph graph = (GsRegulatoryGraph) exportConfig.getGraph();
-		String filename = exportConfig.getFilename();System.out.println(filename);
+		String filename = exportConfig.getFilename();
 		SBML3Config config = (SBML3Config)exportConfig.getSpecificConfig();
 
         v_no = graph.getNodeOrder();
@@ -173,11 +173,6 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
             
             out.openTag("model");
             out.addAttr("id", "m_"+graph.getGraphName());
-/*            out.openTag("listOfCompartments");
-            out.openTag("compartment");
-            out.addAttr("id", s_compartment);
-            out.closeTag();
-            out.closeTag();*/
             
             // List all components
             out.openTag("listOfQualitativeSpecies");
@@ -191,8 +186,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 out.addAttr("id", s_id);
                 if ((s_name != null) && (!s_name.equals("noName"))) {
                 	out.addAttr("name",s_name);
-                }
-               // out.addAttr("compartment",s_compartment);
+                } 
                 out.addAttr("maxLevel",""+node.getMaxValue());
                 out.addAttr("initialLevel",""+t_markup[i][0]);
                 if (node.isInput()) {
