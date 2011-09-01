@@ -157,7 +157,7 @@ public final class SBMLXpathParser {
 						String id = elcurrent.getAttributeValue("id");
 						String name = elcurrent.getAttributeValue("name");
 						if (name == null || name.equals("")) {
-							name = "noName";
+							name = null;
 						}
 						byte maxval = (byte) Integer.parseInt(elcurrent
 								.getAttributeValue("maxLevel"));						
