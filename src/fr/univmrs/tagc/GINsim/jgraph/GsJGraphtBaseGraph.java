@@ -95,7 +95,6 @@ public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractG
             return false;
         }
         m_vertices.put(v, new VInfo<V,E>( v ));
-        System.out.println("added vertex: "+v + m_vertices.get(v));
         return true;
     }
 
