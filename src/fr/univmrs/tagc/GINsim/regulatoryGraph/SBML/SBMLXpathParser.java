@@ -24,7 +24,6 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
-import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -41,7 +40,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;// just to get rescanSign() method
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
@@ -150,7 +148,6 @@ public final class SBMLXpathParser {
 			/** to retrieve species data **/			
 			for (int i = 0; i < results.size(); i++) {
 				Element obElement = (Element) results.get(i);
-				byte maxvalue = 0;
 				List elList = obElement.getChildren();
 				Iterator it = elList.iterator();
 				while (it.hasNext()) {
@@ -216,11 +213,8 @@ public final class SBMLXpathParser {
 					List outputElemList = listOfOutput.getChildren();
 					Element output = (Element) outputElemList.get(0);
 					String qualSpecies = output.getAttributeValue("qualitativeSpecies");
-					String transEffect = output.getAttributeValue("transitionEffect");
 					Element listOfFunctionTerm = (Element) transChildren.get(2);
 					List functTermChildren = listOfFunctionTerm.getChildren();
-					/** retrieve <defaultTerm> element */
-					Element defaultTerm = (Element) functTermChildren.get(0);
 					String fctResultLevel = null;						
 					for (int j = 1; j < functTermChildren.size(); j++) 
 					{
@@ -231,7 +225,6 @@ public final class SBMLXpathParser {
 						fctResultLevel = functionTerm.getAttributeValue("resultLevel");
 						StringBuffer sb = deal(functionTerm); 																																					
 						v_function.addElement(sb.toString());
-						String myVertex = null;
 						for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
 							vertex = (GsRegulatoryVertex) enumvertex.nextElement();
@@ -261,8 +254,6 @@ public final class SBMLXpathParser {
 								sign = "positive";
 							else
 								sign = "unknown"; 
-							String transitionEffect = ((Element) input)
-									.getAttributeValue("transitionEffect");
 							String boundaryCondition = ((Element) input)
 									.getAttributeValue("boundaryCondition");
 							String to = getNodeId(trans_Id);								
