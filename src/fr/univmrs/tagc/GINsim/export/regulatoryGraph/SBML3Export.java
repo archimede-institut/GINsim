@@ -172,7 +172,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
             out.addAttr("qual:required", "true");
             
             out.openTag("model");
-            out.addAttr("id", "m_"+graph.getGraphName());
+            out.addAttr("id", ""+getPrevFilename(graph.getSaveFileName()));
             
             // List all components
             out.openTag("listOfQualitativeSpecies");
@@ -209,8 +209,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 out.openTag("transition");
                 out.addAttr("id", "tr_"+s_node);
                 
-                out.openTag("listOfInputs");
-                
+                out.openTag("listOfInputs");               
                 String edgeSign = null;
                 Iterator it = graph.getGraphManager().getIncomingEdges(v_no.get(i)).iterator();
                 while (it.hasNext()) {
@@ -274,6 +273,20 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		}
     }
+	
+	/**
+	 * gets filename without extension
+	 **/
+	// gets filename without extension
+		public String getPrevFilename(String fullPath) {  
+			char pathSeparator = '/';
+			char extensionSeparator = '.';
+		    int dot = fullPath.lastIndexOf(extensionSeparator);
+			int sep = fullPath.lastIndexOf(pathSeparator);
+			String realName= fullPath.substring(sep + 1, dot);
+			return realName;	
+		    }
+	
 }
 
 

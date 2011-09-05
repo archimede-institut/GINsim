@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
+import java.util.regex.*;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -29,6 +30,7 @@ import org.xml.sax.SAXException;
 
 import JSci.io.MathMLExpression;
 import JSci.io.MathMLParser;
+import JSci.maths.MathDouble;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -63,6 +65,8 @@ public final class SBMLXpathParser {
 	private Map m_edges = new HashMap();
 	private Map map;
 	Map m_checkMaxValue;
+	Map m_thresholds;
+	static Pattern pattern;
 
 	private Hashtable values;
 	private Vector v_function;
@@ -71,8 +75,12 @@ public final class SBMLXpathParser {
 	}
 
 	public SBMLXpathParser(String filename) {
+		try {
+			this._FilePath = new File(filename);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		this.graph = new GsRegulatoryGraph();
-		this._FilePath = new File(filename);
 		values = new Hashtable();
 		map = new HashMap();
 		initialize();
@@ -107,7 +115,7 @@ public final class SBMLXpathParser {
 			 * when we will try to retrieve elements belonging at this namespace 
 			 **/
 			Namespace namespace1 = Namespace.getNamespace("sbml",
-					"http://www.sbml.org/sbml/level3/version1");
+					"http://www.sbml.org/sbml/level3/version1/core");
 			
 			/** to get the model ID. */
 			XPath xpa1 = XPath.newInstance("//sbml:model/@id");
@@ -201,52 +209,8 @@ public final class SBMLXpathParser {
 					transElem = (Element) allTransitionElement.get(k);
 					String trans_Id = transElem.getAttributeValue("id");
 					/** retrieve children of transition element */
-					List transChildren = transElem.getChildren(); 																																														
-					/** retrieve input data **/
-					Element listOfInput = (Element) transChildren.get(0);
-					List inputElemList = listOfInput.getChildren();
-					/** retrieve children of <listOfInputs> element */
-					for (int p = 0; p < inputElemList.size(); p++) {
-						try {
-							Element input = (Element) inputElemList.get(p);
-
-							String qualitativeSpecies = ((Element) input)
-									.getAttributeValue("qualitativeSpecies");
-							/** to get the SBOTerm value from the current edge **/
-							String sign = ((Element) input).getAttributeValue("sign");
-							if (sign.equals("SBO:0000020"))
-								sign = "negative";
-							else if (sign.equals("SBO:0000459"))
-								sign = "positive";
-							else
-								sign = "unknown"; 
-							String transitionEffect = ((Element) input)
-									.getAttributeValue("transitionEffect");
-							String boundaryCondition = ((Element) input)
-									.getAttributeValue("boundaryCondition");
-							String to = getNodeId(trans_Id);						
-							String minimumvalue = ((Element)input).getAttributeValue("minvalue");
-							byte minvalue = (byte)Integer.parseInt(getAttributeValueWithDefault(minimumvalue, "1"));
-							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");							
-							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
-							byte maxvalue = -2;
-							/** add this edge in a graph **/
-							edge = graph.addNewEdge(qualitativeSpecies, to, minvalue, sign);							
-							if (smax.startsWith("m")) {
-                            	maxvalue = -1; 
-                            } else 
-                            {
-                            	maxvalue = (byte)Integer.parseInt(smax);
-                            }
-							storeMaxValueForCheck(edge, maxvalue);
-							m_edges.put(qualitativeSpecies, edge);
-							edge.me.rescanSign(graph);
-							ereader.setEdge(edge.me);
-						}
-						catch (NumberFormatException e) {
-							throw new JDOMException("mal formed interaction's parameters");
-						}
-					} 
+					List transChildren = transElem.getChildren(); 	
+					
 					/** retrieve output data **/
 					Element listOfOutput = (Element) transChildren.get(1);
 					List outputElemList = listOfOutput.getChildren();
@@ -277,7 +241,56 @@ public final class SBMLXpathParser {
 								((Hashtable) values.get(vertex)).put(fctResultLevel, v_function);							
 							}
 						}						
-					} 					
+					} 
+					
+					/** retrieve input data **/
+					Element listOfInput = (Element) transChildren.get(0);
+					List inputElemList = listOfInput.getChildren();
+					/** retrieve children of <listOfInputs> element */
+					for (int p = 0; p < inputElemList.size(); p++) {
+						try {
+							Element input = (Element) inputElemList.get(p);
+
+							String qualitativeSpecies = ((Element) input)
+									.getAttributeValue("qualitativeSpecies");
+							/** to get the SBOTerm value from the current edge **/
+							String sign = ((Element) input).getAttributeValue("sign");
+							if (sign.equals("SBO:0000020"))
+								sign = "negative";
+							else if (sign.equals("SBO:0000459"))
+								sign = "positive";
+							else
+								sign = "unknown"; 
+							String transitionEffect = ((Element) input)
+									.getAttributeValue("transitionEffect");
+							String boundaryCondition = ((Element) input)
+									.getAttributeValue("boundaryCondition");
+							String to = getNodeId(trans_Id);								
+					        byte minv = 1;
+					        
+					        if(m_thresholds.containsKey(qualitativeSpecies)){					        	
+					        		minv = (byte) ((MathDouble) m_thresholds.get(qualitativeSpecies)).intValue();
+					        }
+							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");							
+							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
+							byte maxvalue = -2;
+							/** add this edge in a graph **/
+							edge = graph.addNewEdge(qualitativeSpecies, to, minv, sign);							
+							if (smax.startsWith("m")) {
+                            	maxvalue = -1; 
+                            } else 
+                            {
+                            	maxvalue = (byte)Integer.parseInt(smax);
+                            }
+							storeMaxValueForCheck(edge, maxvalue);
+							m_edges.put(qualitativeSpecies, edge);
+							edge.me.rescanSign(graph);
+							ereader.setEdge(edge.me);
+						}
+						catch (NumberFormatException e) {
+							throw new JDOMException("mal formed interaction's parameters");
+						}
+					} 
 				} 
 			} 
 		} 
@@ -302,9 +315,9 @@ public final class SBMLXpathParser {
 	 *  **/
 	public StringBuffer deal(Element root) throws SAXException, IOException {
 		List rootConv = root.getChildren();
-		Element element = (Element) rootConv.get(0);
+		Element math = (Element) rootConv.get(0);
 		XMLOutputter outputer = new XMLOutputter(Format.getPrettyFormat());
-		String xml = outputer.outputString(element);
+		String xml = outputer.outputString(math);
 
 		InputSource file = new InputSource(new ByteArrayInputStream(xml.getBytes()));
 		
@@ -317,10 +330,11 @@ public final class SBMLXpathParser {
 		int nLevel = 0;
 		Object[] parseList = parser.translateToJSciObjects();
 		StringBuffer sb = new StringBuffer();
+		m_thresholds = new HashMap();
 		for (int i = 0; i < parseList.length; i++) {
 			Object o = parseList[i];
 			MathMLExpression expr = (MathMLExpression) o;
-			exploreExpression(expr, nLevel, sb);
+			exploreExpression(expr, nLevel, sb, m_thresholds);
 		}
 		return sb;
 	}
@@ -328,7 +342,7 @@ public final class SBMLXpathParser {
 	/** This function writes the logical function of
 	 ** every <functionTerm> as a string 
 	 **/
-	public void exploreExpression(Object expression, int level, StringBuffer sb) {
+	public void exploreExpression(Object expression, int level, StringBuffer sb, Map m_t) {
 		if (expression instanceof MathMLExpression) {
 			MathMLExpression mexpr = (MathMLExpression) expression;
 			String op = mexpr.getOperation();
@@ -340,13 +354,14 @@ public final class SBMLXpathParser {
 				} else if (op.equals("gt") || op.equals("geq")) {
 					op = "";
 					chaine = op + mexpr.getArgument(0);
+					m_t.put(mexpr.getArgument(0), mexpr.getArgument(1));
 				}
 				sb.append(chaine);
 			} else {
 				if (mexpr.length() > 1)
 					sb.append("(");
 				for (int i = 0; i < mexpr.length(); i++) {
-					exploreExpression(mexpr.getArgument(i), level + 1, sb);
+					exploreExpression(mexpr.getArgument(i), level + 1, sb, m_t);
 					if (i < mexpr.length() - 1) {
 						if (op.equals("and")) {
 							sb.append("&");
@@ -359,15 +374,19 @@ public final class SBMLXpathParser {
 					sb.append(")");
 			}
 		} else {
-			sb.append("Erreur");
+			sb.append("We have a serious problem !");
 		}
 	}
 
 	/** To get vertex ID corresponding to the current <transition> element **/
 	public String getNodeId(String transId) {
-		char pathSeparator = '_';
-		int sep = transId.lastIndexOf(pathSeparator);
-		return transId.substring(sep + 1);
+		String nodeName = null;
+		pattern = Pattern.compile("tr_(.*)");
+		Matcher matcher = pattern.matcher(transId);
+		if(matcher.matches()){
+			nodeName = matcher.group(1);
+		}
+		return nodeName;
 	}
 
 	private void storeMaxValueForCheck(GsRegulatoryEdge key, byte maxvalue) {
