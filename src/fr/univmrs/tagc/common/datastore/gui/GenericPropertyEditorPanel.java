@@ -12,6 +12,7 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 
 import fr.univmrs.tagc.common.datastore.GenericList;
+import fr.univmrs.tagc.common.datastore.GenericNamedList;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.models.MinMaxSpinModel;
@@ -35,6 +36,7 @@ public class GenericPropertyEditorPanel extends JPanel implements GenericPropert
 		m_class.put(MinMaxSpinModel.class, MinMaxEditor.class);
 		m_class.put(SpinModel.class, SpinEditor.class);
 		m_class.put(GenericList.class, GenericListPanel.class);
+		m_class.put(GenericNamedList.class, GenericNamedListPanel.class);
 		m_class.put(Action.class, PropertyActionButton.class);
 	}
 	public static void addSupportedClass(Class data, Class widget) {
