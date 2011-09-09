@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.SBML;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -10,11 +11,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 import java.util.regex.*;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.xml.xpath.XPathException;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -24,12 +27,14 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import JSci.io.MathMLExpression;
 import JSci.io.MathMLParser;
 import JSci.maths.MathDouble;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -73,19 +78,15 @@ public final class SBMLXpathParser {
 	}
 
 	public SBMLXpathParser(String filename) {
-		try {
-			this._FilePath = new File(filename);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+		this._FilePath = new File(filename);
 		this.graph = new GsRegulatoryGraph();
 		values = new Hashtable();
 		map = new HashMap();
 		initialize();
-
 	}
 
-	public void initialize() {
+	public void initialize()  {
 		parse();
 	}
 
@@ -214,7 +215,23 @@ public final class SBMLXpathParser {
 					Element output = (Element) outputElemList.get(0);
 					String qualSpecies = output.getAttributeValue("qualitativeSpecies");
 					Element listOfFunctionTerm = (Element) transChildren.get(2);
-					List functTermChildren = listOfFunctionTerm.getChildren();
+					List functTermChildren = listOfFunctionTerm.getChildren();				
+					/** retrieve <defaultTerm> element */
+					Element defaultTerm = (Element) functTermChildren.get(0);
+					String dft_resulLevel = defaultTerm.getAttributeValue("resultLevel");
+					byte dft_value = (byte)Integer.parseInt(dft_resulLevel);
+					if(dft_resulLevel.equals("1")){						
+						for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						{
+							vertex = (GsRegulatoryVertex) enumvertex.nextElement();
+							String vertexName = vertex.toString();
+							if(qualSpecies.equals(vertexName))
+							{								
+								vertex.addLogicalParameter(new GsLogicalParameter(dft_value), true); 
+							}
+						}
+					}
+					
 					String fctResultLevel = null;						
 					for (int j = 1; j < functTermChildren.size(); j++) 
 					{
@@ -256,12 +273,13 @@ public final class SBMLXpathParser {
 								sign = "unknown"; 
 							String boundaryCondition = ((Element) input)
 									.getAttributeValue("boundaryCondition");
-							String to = getNodeId(trans_Id);								
+							String to = getNodeId(trans_Id);	
+							
 					        byte minv = 1;
-					        
-					        if(m_thresholds.containsKey(qualitativeSpecies)){					        	
-					        		minv = (byte) ((MathDouble) m_thresholds.get(qualitativeSpecies)).intValue();
+					        if(m_thresholds.containsKey(qualitativeSpecies)){
+					        	minv = (byte) ((MathDouble) m_thresholds.get(qualitativeSpecies)).intValue();				        		
 					        }
+
 							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");							
 							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
 							byte maxvalue = -2;
@@ -287,6 +305,7 @@ public final class SBMLXpathParser {
 		} 
 		catch (Exception e) {
 			// TODO: handle exception
+			e.printStackTrace();
 		}
 		placeInteractions();
 		placeNodeOrder();
@@ -317,7 +336,6 @@ public final class SBMLXpathParser {
 		 ** each <math> element has been transformed into a file **/
 		MathMLParser parser = new MathMLParser();
 		parser.parse(file);
-
 		int nLevel = 0;
 		Object[] parseList = parser.translateToJSciObjects();
 		StringBuffer sb = new StringBuffer();
@@ -342,6 +360,7 @@ public final class SBMLXpathParser {
 				if (op.equals("leq") || op.equals("lt")) {
 					op = "!";
 					chaine = op + mexpr.getArgument(0);
+					m_t.put(mexpr.getArgument(0), mexpr.getArgument(1));
 				} else if (op.equals("gt") || op.equals("geq")) {
 					op = "";
 					chaine = op + mexpr.getArgument(0);
@@ -367,6 +386,14 @@ public final class SBMLXpathParser {
 		} else {
 			sb.append("We have a serious problem !");
 		}
+		
+		Set set = m_thresholds.entrySet();
+	    Iterator it = set.iterator();
+	    while(it.hasNext())
+	    {
+	      Map.Entry me = (Map.Entry)it.next();
+	    }
+		
 	}
 
 	/** To get vertex ID corresponding to the current <transition> element **/

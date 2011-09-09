@@ -174,6 +174,12 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
             out.openTag("model");
             out.addAttr("id", ""+getPrevFilename(graph.getSaveFileName()));
             
+            out.openTag("listOfCompartments");
+            out.openTag("compartment");
+            out.addAttr("id", s_compartment);
+            out.closeTag();
+            out.closeTag();
+            
             // List all components
             out.openTag("listOfQualitativeSpecies");
             out.addAttr("xmlns", L3_QUALI_URL);
@@ -187,6 +193,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 if ((s_name != null) && (!s_name.equals("noName"))) {
                 	out.addAttr("name",s_name);
                 } 
+                out.addAttr("compartment",s_compartment);
                 out.addAttr("maxLevel",""+node.getMaxValue());
                 out.addAttr("initialLevel",""+t_markup[i][0]);
                 if (node.isInput()) {
@@ -243,6 +250,12 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 
                 out.openTag("listOfFunctionTerms");
                 out.openTag("defaultTerm");
+                
+                if(graph.getGraphManager().getIncomingEdges(v_no.get(i)).size() == 0) {               	
+                   	out.addAttr("resultLevel", ""+1);
+                	out.closeTag(); 
+                }
+                else{
                 out.addAttr("resultLevel", ""+0);
                 out.closeTag();
                 for (curValue=1 ; curValue<=regulatoryVertex.getMaxValue() ; curValue++) {
@@ -259,9 +272,11 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                     out.closeTag(); // math
                     out.closeTag(); // functionTerm
                 }
+                }
                 out.closeTag(); // listOfFunctionTerms
                 out.closeTag(); // transition
             }
+                
             out.closeTag(); // list of transitions
             
 			// Close the file
