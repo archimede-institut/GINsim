@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxl SYSTEM "http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd">
+<gxl xmlns:xlink="http://www.w3.org/1999/xlink">
+	<graph id="default_name" class="regulatory" nodeorder="VarU VarA VarB VarC">
+<node id="VarC" maxvalue="1">
+  <value val="1">
+    <exp str="VarB | VarU"/>
+  </value>
+
+			<nodevisualsetting>
+				<rect x="318" y="27" width="55" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="VarA" maxvalue="1">
+  <value val="1">
+    <exp str="!VarB &amp; VarU"/>
+  </value>
+
+			<nodevisualsetting>
+				<rect x="174" y="151" width="55" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="VarU" maxvalue="1" input="true">
+			<nodevisualsetting>
+				<rect x="174" y="27" width="55" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="VarB" maxvalue="1">
+  <value val="1">
+    <exp str="!VarA &amp; VarC"/>
+  </value>
+
+			<nodevisualsetting>
+				<rect x="312" y="152" width="55" height="19" backgroundColor="#ff9900" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+		<edge id="VarC:VarB" from="VarC" to="VarB" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="345,39 327,99 339,161" line_style="curve" line_color="#3399ff" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="VarA:VarB" from="VarA" to="VarB" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="201,163 270,177 339,161" line_style="curve" line_color="#3399ff" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="VarU:VarA" from="VarU" to="VarA" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="201,39 201,163" line_style="curve" line_color="#3399ff" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="VarU:VarC" from="VarU" to="VarC" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="201,39 345,39" line_style="curve" line_color="#3399ff" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="VarB:VarA" from="VarB" to="VarA" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="339,161 270,147 201,163" line_style="curve" line_color="#3399ff" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="VarB:VarC" from="VarB" to="VarC" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="339,161 357,101 345,39" line_style="curve" line_color="#3399ff" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+	</graph>
+</gxl>
