@@ -219,8 +219,8 @@ public final class SBMLXpathParser {
 					/** retrieve <defaultTerm> element */
 					Element defaultTerm = (Element) functTermChildren.get(0);
 					String dft_resulLevel = defaultTerm.getAttributeValue("resultLevel");
-					byte dft_value = (byte)Integer.parseInt(dft_resulLevel);
-					if(dft_resulLevel.equals("1")){						
+					byte dft_value = (byte)Integer.parseInt(dft_resulLevel);		
+					if(!(dft_resulLevel.equals("0"))){
 						for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
 							vertex = (GsRegulatoryVertex) enumvertex.nextElement();

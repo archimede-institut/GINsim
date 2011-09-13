@@ -258,8 +258,9 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                     LogicalParameterList lpl = regulatoryVertex.getV_logicalParameters();
                     if (lpl.size() == 1) {
                     	GsLogicalParameter lp = (GsLogicalParameter) lpl.get(0);
+                    	int value = lp.getValue();
                     	if (lpl.isManual(lp)) {
-           			    	out.addAttr("resultLevel", ""+1);
+           			    	out.addAttr("resultLevel", ""+value);
                     	    out.closeTag(); 
                     	    hasNoBasalValue = false;
                     	}
