@@ -19,9 +19,11 @@ import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OMDDBrowserListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OMDDNodeBrowser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -251,11 +253,19 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 out.openTag("listOfFunctionTerms");
                 out.openTag("defaultTerm");
                 
-                if(graph.getGraphManager().getIncomingEdges(v_no.get(i)).size() == 0) {               	
-                   	out.addAttr("resultLevel", ""+1);
-                	out.closeTag(); 
-                }
-                else{
+                boolean hasNoBasalValue = true;
+                if (graph.getGraphManager().getIncomingEdges(v_no.get(i)).size() == 0) {
+                    LogicalParameterList lpl = regulatoryVertex.getV_logicalParameters();
+                    if (lpl.size() == 1) {
+                    	GsLogicalParameter lp = (GsLogicalParameter) lpl.get(0);
+                    	if (lpl.isManual(lp)) {
+           			    	out.addAttr("resultLevel", ""+1);
+                    	    out.closeTag(); 
+                    	    hasNoBasalValue = false;
+                    	}
+                    }
+                } 
+                if (hasNoBasalValue) {
                 out.addAttr("resultLevel", ""+0);
                 out.closeTag();
                 for (curValue=1 ; curValue<=regulatoryVertex.getMaxValue() ; curValue++) {
