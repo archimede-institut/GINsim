@@ -392,7 +392,7 @@ class GsNuSMVConfig implements GsInitialStateStore {
 		updatePolicy = CFG_ASYNC; // Default update policy
 		exportType = CFG_INPUT_FRONZEN; // Default export type
 	}
-
+	
 	public void setUpdatePolicy() {
 		PriorityClassDefinition priorities = (PriorityClassDefinition) store
 				.getObject(1);
