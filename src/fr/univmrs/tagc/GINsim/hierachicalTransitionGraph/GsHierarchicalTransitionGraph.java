@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis.GsDecisionOnEdge;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
@@ -39,7 +41,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /* **************** GETTER AND SETTERS ************/
 /* **************** UNIMPLEMENTED METHODS ************/
 
-public class GsHierarchicalTransitionGraph extends GsGraph {
+public class GsHierarchicalTransitionGraph extends GsGraph<GsHierarchicalNode,GsDecisionOnEdge> {
 
 	public static final int MODE_SCC = 1;
 	public static final int MODE_HTG = 2;
@@ -111,10 +113,12 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 	 * @param target a GsHierarchicalNode
 	 * @return the new edge
 	 */
-	public Object addEdge(Object source, Object target) {
+	public Object addEdge(GsHierarchicalNode source, GsHierarchicalNode target) {
 		Object e = graphManager.getEdge(source, target);
 		if (e != null) return e;
-		return graphManager.addEdge(source, target, null);
+		// FIXME: creating an empty GsDecisionOnEdge object: is it even possible?
+		GsDecisionOnEdge edge = new GsDecisionOnEdge(source, target);
+		return graphManager.addEdge(edge);
 	}
 
 		
@@ -347,9 +351,8 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		transientCompactionMode = mode;
 	}
 
-	public void removeEdge(Object obj) {
-		GsDirectedEdge e = (GsDirectedEdge) obj;
-		this.graphManager.removeEdge(e.getSource(), e.getTarget());
+	public void removeEdge(GsDecisionOnEdge edge) {
+		this.graphManager.removeEdge(edge.getSource(), edge.getTarget());
 	}
 	
 
@@ -393,18 +396,18 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		/**
 		 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doCopySelection(java.utils.Vector, java.utils.Vector)
 		 * 
-		 * not used for this kind of graph: it's not interactivly editable
+		 * not used for this kind of graph: it's not interactively editable
 		 */
-		protected GsGraph doCopySelection(Vector vertex, Vector edges) {
+		protected GsGraph doCopySelection(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
 			return null;
 		}
 		
 		/**
 		 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddEdge(java.lang.Object, java.lang.Object, int)
 		 *
-		 * not used for this kind of graph: it's not interactivly editable
+		 * not used for this kind of graph: it's not interactively editable
 		 */
-		protected Object doInteractiveAddEdge(Object source, Object target, int param) {
+		protected GsDecisionOnEdge doInteractiveAddEdge(GsHierarchicalNode source, GsHierarchicalNode target, int param) {
 			return null;
 		}
 
@@ -413,7 +416,7 @@ public class GsHierarchicalTransitionGraph extends GsGraph {
 		 *
 		 * not used for this kind of graph: it's not interactivly editable
 		 */
-		protected Object doInteractiveAddVertex(int param) {
+		protected GsHierarchicalNode doInteractiveAddVertex(int param) {
 			return null;
 		}
 

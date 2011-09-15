@@ -2,27 +2,37 @@ package fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis;
 
 import java.util.List;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
+
 /**
  * 
  * Store a label that represent the genes that are updated between two states source, and target.
  * In a HTG, to compute the label of an edge, call this function for each couple of states corresponding to the edge.
  */
-public class GsDecisionOnEdge {
+public class GsDecisionOnEdge extends GsDirectedEdge<GsHierarchicalNode> {
 	
     private static final int CHANGE_NONE = 0;
 	private static final int CHANGE_INCREASE = 1;
 	private static final int CHANGE_DECREASE = -1;
 	private static final int CHANGE_BOTH = 3;
-	private int[] genesUpdated;
+	private int[] genesUpdated = null;
+
+	public GsDecisionOnEdge(GsHierarchicalNode source, GsHierarchicalNode target) {
+		super(source, target);
+		// FIXME: new constructor for en empty decision, see init method below
+	}
 
 	/**
 	 * Initialize a new label
 	 * @param geneCount the count of genes in the LRG
 	 */
-	public GsDecisionOnEdge(int geneCount) {
-        this.genesUpdated = new int[geneCount];
+	public void init(int geneCount) {
+		if (this.genesUpdated == null) {
+			this.genesUpdated = new int[geneCount];
+		}
     }
-	
+
 	/**
 	 * Compute the changes of a given edge (source, target)
 	 * @param source
@@ -79,6 +89,9 @@ public class GsDecisionOnEdge {
 	 * Use labelToString(List nodeOrder) to display their names.
 	 */
 	public String toString() {
+		if (genesUpdated == null) {
+			return "empty decision";
+		}
 		StringBuffer s = new StringBuffer();
 		for (int i = 0; i < genesUpdated.length; i++) {
 			switch (genesUpdated[i]) {

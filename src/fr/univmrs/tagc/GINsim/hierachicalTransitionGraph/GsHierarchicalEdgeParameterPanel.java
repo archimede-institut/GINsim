@@ -5,7 +5,6 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JLabel;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis.GsDecisionOnEdge;
@@ -28,14 +27,11 @@ public class GsHierarchicalEdgeParameterPanel  extends GsParameterPanel {
 	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
 	 */
 	public void setEditedObject(Object obj) {
-		if (obj instanceof GsDirectedEdge) {
-			GsDirectedEdge edge = (GsDirectedEdge)obj;
-			GsDecisionOnEdge decisions = (GsDecisionOnEdge) edge.getUserObject();
-			if (decisions != null) {
-				typeLabel.setText(decisions.labelToString(graph.getNodeOrder()));
-			} else {
-				typeLabel.setText("");
-			}
+		if (obj != null && obj instanceof GsDecisionOnEdge) {
+			GsDecisionOnEdge decisions = (GsDecisionOnEdge)obj;
+			typeLabel.setText(decisions.labelToString(graph.getNodeOrder()));
+		} else {
+			typeLabel.setText("");
 		}
 	}
 

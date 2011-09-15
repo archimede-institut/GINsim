@@ -41,7 +41,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
     private GsEdgeAttributesReader ereader = null;
     private Annotation annotation = null;
     private Map map;
-    private Map oldIdToVertex = new HashMap();
+    private Map<String, GsHierarchicalNode> oldIdToVertex = new HashMap<String, GsHierarchicalNode>();
 	private byte[] childCount;
     
     /**

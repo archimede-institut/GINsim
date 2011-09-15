@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
@@ -35,38 +34,43 @@ public class GsDecisionAnalysis extends Thread {
 	}
 
 	public void run() {
-		GsGraphManager gm = htg.getGraphManager();
+		GsGraphManager<GsHierarchicalNode, GsDecisionOnEdge> gm = htg.getGraphManager();
 		
 		//Iterate on the selected vertex or all of them f node are selected
-		Iterator it = gm.getSelectedVertexIterator();
+		Iterator<GsHierarchicalNode> it = gm.getSelectedVertexIterator();
 		if (! it.hasNext()) {
 			it = gm.getVertexIterator();
 		}
 		for (; it.hasNext();) {
-			GsHierarchicalNode source = (GsHierarchicalNode) it.next();
-			List state_list = new LinkedList();
+			GsHierarchicalNode source = it.next();
+			List<byte[]> state_list = new LinkedList<byte[]>();
 			source.statesSet.statesToFullList(state_list);
-			for (Iterator it_states = state_list.iterator(); it_states.hasNext();) {
-				byte[] source_state = (byte[]) it_states.next();
+			for (byte[] source_state: state_list) {
 				for (SimulationUpdater updt = getUpdaterForState(source_state); updt.hasNext();) {
 					byte[] target_state = ((SimulationQueuedState)(updt.next())).state;
 					GsHierarchicalNode target = htg.getNodeForState(target_state);
 					if (!target.equals(source)) {
-						 GsDirectedEdge edge = (GsDirectedEdge) gm.getEdge(source, target);
+						GsDecisionOnEdge edge = gm.getEdge(source, target);
 						 if (edge != null) {
-							 edge.setUserObject(computeChange(source_state, target_state, (GsDecisionOnEdge) edge.getUserObject()));							 
+							 // FIXME: used to call computeChange below, which may create the DecisionOnEdge object
+							 // I hope it was properly moved to edge.init() ....
+							 edge.init(geneCount);
+							 edge.computeChange(source_state, target_state);							 
 						 }
 					}
 				}
-				
 			}
 		}
 	}
 
 
+	/*
+	 * FIXME: this is still here just to remind to check for missing initialisation
+	 * should not be used anymore...
+	 */
 	private GsDecisionOnEdge computeChange(byte[] source_state, byte[] target_state, GsDecisionOnEdge decisions) {
 		if (decisions == null) {
-			decisions = new GsDecisionOnEdge(geneCount);
+			// decisions = new GsDecisionOnEdge(geneCount);
 		}
 		decisions.computeChange(source_state, target_state);
 		return decisions;

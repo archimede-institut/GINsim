@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,7 +35,7 @@ public class InteractionAnalysis {
 	private GsRegulatoryMutantDef mutant;
 
 	private GsRegulatoryGraph g;
-	private GsGraphManager gm;
+	private GsGraphManager<GsRegulatoryVertex, GsRegulatoryMultiEdge> gm;
 	private HashMap node_to_position;
 	private Map functionalityMap = null;
 	private CascadingStyle cs = null;
@@ -121,12 +122,12 @@ public class InteractionAnalysis {
 			if (target.isInput() || (selectedNodes != null && !selectedNodes.contains(target))) { 	//skip the inputs or unselected nodes
 			    continue;
 			}
-			List l = gm.getIncomingEdges(target);												//  get the list l of incoming edges
+			Collection<GsRegulatoryMultiEdge> l = gm.getIncomingEdges(target);											//  get the list l of incoming edges
 			OmddNode omdd = t_tree[i];
 			
 			total_level = 1;																//  Compute the total number of level in the omdd tree
-			for (Iterator it2 = l.iterator(); it2.hasNext();) {
-				GsRegulatoryVertex source = (GsRegulatoryVertex) ((GsJgraphDirectedEdge) it2.next()).getSource();
+			for (GsRegulatoryMultiEdge edge: l) {
+				GsRegulatoryVertex source = edge.getSource();
 				total_level *= source.getMaxValue()+1;
 			}
 			leafs = new byte[total_level];
@@ -137,8 +138,8 @@ public class InteractionAnalysis {
 			small_node_order_vertex = new GsRegulatoryVertex[l.size()];
 			small_node_order_level = new int[l.size()];
 			int m = 0;
-			for (Iterator it2 = g.getNodeOrder().iterator(); it2.hasNext();) {
-				GsRegulatoryVertex source = (GsRegulatoryVertex) it2.next();				
+			for (Object obj: g.getNodeOrder()) {
+				GsRegulatoryVertex source = (GsRegulatoryVertex) obj;				
 				if (gm.getEdge(source, target) != null) {
 					node_in_subtree.put(source, new Integer(m));
 					subtree_size[m+1] = 1;
@@ -152,9 +153,8 @@ public class InteractionAnalysis {
 			}
 		    scannOmdd(omdd, 0, leafs, subtree_size, small_node_order_vertex, small_node_order_level);												//  scan the logical function of v
 
-			for (Iterator it2 = l.iterator(); it2.hasNext();) {									//	For each incoming edge
-				GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge) ((GsJgraphDirectedEdge)it2.next()).getUserObject();
-				GsRegulatoryVertex source = (GsRegulatoryVertex) me.getSource();
+			for (GsRegulatoryMultiEdge me: l) {									//	For each incoming edge
+				GsRegulatoryVertex source = me.getSource();
 //				for (int k = 0; k < me.getEdgeCount(); k++) {									// 		For each sub-edge of the multiedge
 //					GsRegulatoryEdge e = me.getEdge(k);
 					SourceItem sourceItem = report.reportFor(target, source);
@@ -180,8 +180,8 @@ public class InteractionAnalysis {
 
 					}
 					if (opt_annotate) {
-						for (int j = 0; j < ((GsRegulatoryMultiEdge) me.getUserObject()).getEdgeCount(); j++) {
-							((GsRegulatoryMultiEdge) me.getUserObject()).getGsAnnotation(j).appendToComment("This edge is "+res+"\n");
+						for (int j = 0; j < me.getEdgeCount(); j++) {
+							me.getGsAnnotation(j).appendToComment("This edge is "+res+"\n");
 						}
 					}
 	//			}
@@ -501,7 +501,7 @@ public class InteractionAnalysis {
 			for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
 				SourceItem sourceItem = (SourceItem) it_sources.next();
 								
-				GsRegulatoryMultiEdge e = (GsRegulatoryMultiEdge) ((GsJgraphDirectedEdge)gm.getEdge(sourceItem.source, target)).getUserObject();
+				GsRegulatoryMultiEdge e = gm.getEdge(sourceItem.source, target);
 				dw.openTableRow();
 				dw.openTableCell(sourceItem.source.getId());
 				dw.openTableCell(target.getId());
