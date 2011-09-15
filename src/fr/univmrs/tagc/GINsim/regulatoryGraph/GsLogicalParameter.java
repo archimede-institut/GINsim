@@ -143,7 +143,7 @@ public class GsLogicalParameter implements XMLize {
      */
 	private byte[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
 	    Set<GsRegulatoryMultiEdge> incEdges = regGraph.getGraphManager().getIncomingEdges(node);
-	    List nodeOrder = regGraph.getNodeOrder();
+	    List<GsRegulatoryVertex> nodeOrder = regGraph.getNodeOrder();
         byte[][] t_ac = new byte[incEdges.size()+1][];
         t_ac[0] = new byte[1];
         t_ac[0][0] = (byte)value;
@@ -152,19 +152,19 @@ public class GsLogicalParameter implements XMLize {
         	return t_ac;
         }
         boolean ok = false;
-        int i = -1;
+        int i = 0;
         for (GsRegulatoryMultiEdge me: incEdges) {
         	i++;
             GsRegulatoryVertex vertex = me.getSource();
-            byte[] t_val = new byte[vertex.getMaxValue()+2];
+            int max = vertex.getMaxValue();
+            byte[] t_val = new byte[max+2];
             t_val[0] = (byte)nodeOrder.indexOf(vertex);
             t_ac[i] = t_val;
             int nbedges = me.getEdgeCount();
-            int m = vertex.getMaxValue();
             for (int j=0 ; j<nbedges ; j++) {
                 int im = me.getMax(j);
                 if (im == -1) {
-                    im = m;
+                    im = max;
                 }
                 if (!edge_index.contains(me.getEdge(j))) {
                     // must be inactive
@@ -176,7 +176,7 @@ public class GsLogicalParameter implements XMLize {
                     for (int l=0 ; l<me.getMin(j) ; l++) {
                         t_val[l+1] = -1;
                     }
-                    for (int l=im+1 ; l<=m ; l++) {
+                    for (int l=im+1 ; l<=max ; l++) {
                         t_val[l+1] = -1;
                     }
                 }
