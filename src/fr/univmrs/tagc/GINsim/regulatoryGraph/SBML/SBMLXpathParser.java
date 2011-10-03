@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -19,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.xml.xpath.XPathException;
 
+import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -27,6 +31,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+import org.omg.CORBA.portable.ValueOutputStream;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -35,6 +40,7 @@ import JSci.io.MathMLExpression;
 import JSci.io.MathMLParser;
 import JSci.maths.MathDouble;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -44,6 +50,7 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -58,6 +65,7 @@ public final class SBMLXpathParser {
 	private GsRegulatoryGraph graph;
 	protected File _FilePath;
 	private String s_nodeOrder = "";
+	private String childCount = "";
 	private GsRegulatoryVertex vertex = null;
 	public GsRegulatoryEdge edge = null;
 	private GsVertexAttributesReader vareader = null;
@@ -69,7 +77,13 @@ public final class SBMLXpathParser {
 	private Map map;
 	Map m_checkMaxValue;
 	Map m_thresholds;
+	List maliste;
+	StringBuffer strBuf = null; 
 	static Pattern pattern;
+	/**
+	 * The root of the diagram (OmddNode) 
+	 */
+	private OmddNode omdd_root = null;
 
 	private Hashtable values;
 	private Vector v_function;
@@ -125,9 +139,9 @@ public final class SBMLXpathParser {
 			/** Retrieve the model ID (graph name)  **/			
 			String modelName = xpa1.valueOf(racine);
 			try {
-				graph.setGraphName(modelName);
-			} catch (GsException e) {
-				GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+				graph.setSaveFileName(modelName);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			vareader = graph.getGraphManager().getVertexAttributesReader();
 			ereader = graph.getGraphManager().getEdgeAttributesReader();
@@ -146,7 +160,8 @@ public final class SBMLXpathParser {
 			/** retrieves all nodes corresponding to the path:/model/listOfQualitativeSpecies. **/
 			List results = xpa.selectNodes(racine);
 
-			/** to retrieve species data **/			
+			/** to retrieve species data **/	
+			Map m_maxvalues = null;
 			for (int i = 0; i < results.size(); i++) {
 				Element obElement = (Element) results.get(i);
 				List elList = obElement.getChildren();
@@ -166,7 +181,9 @@ public final class SBMLXpathParser {
 							name = null;
 						}
 						byte maxval = (byte) Integer.parseInt(elcurrent
-								.getAttributeValue("maxLevel"));						
+								.getAttributeValue("maxLevel"));	
+						// AJOUT POUR childCount
+						childCount += elcurrent.getAttributeValue("maxLevel")+" ";
 						/** set a vertex with a species data **/
 						vertex = graph.addNewVertex(id, name, maxval);
 						vertex.getV_logicalParameters().setUpdateDup(false);
@@ -194,7 +211,8 @@ public final class SBMLXpathParser {
 																				// exception
 					}
 				}
-			}
+			} 
+			
 			/** to deal transition list in order to retrieve his all data **/
 			List listOfTransition = xpa2.selectNodes(racine);
 			for (int i = 0; i < listOfTransition.size(); i++) {
@@ -230,17 +248,18 @@ public final class SBMLXpathParser {
 								vertex.addLogicalParameter(new GsLogicalParameter(dft_value), true); 
 							}
 						}
-					}
+					}					
+					String fctResultLevel = null;
+					// Le tableau "states[]" contient
+					List statesList = null;
 					
-					String fctResultLevel = null;						
 					for (int j = 1; j < functTermChildren.size(); j++) 
 					{
-						v_function = new Vector();
-						
+						v_function = new Vector();						
 						/** to get all data in every <functionTerm> element **/
 						Element functionTerm = (Element) functTermChildren.get(j);
 						fctResultLevel = functionTerm.getAttributeValue("resultLevel");
-						StringBuffer sb = deal(functionTerm); 																																					
+						StringBuffer sb = deal(functionTerm);
 						v_function.addElement(sb.toString());
 						for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
@@ -273,29 +292,46 @@ public final class SBMLXpathParser {
 								sign = "unknown"; 
 							String boundaryCondition = ((Element) input)
 									.getAttributeValue("boundaryCondition");
-							String to = getNodeId(trans_Id);	
-							
-					        byte minv = 1;
-					        if(m_thresholds.containsKey(qualitativeSpecies)){
-					        	minv = (byte) ((MathDouble) m_thresholds.get(qualitativeSpecies)).intValue();				        		
-					        }
-
-							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");							
+							String to = getNodeId(trans_Id);
+							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");	
 							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
 							byte maxvalue = -2;
-							/** add this edge in a graph **/
-							edge = graph.addNewEdge(qualitativeSpecies, to, minv, sign);							
+							
 							if (smax.startsWith("m")) {
                             	maxvalue = -1; 
                             } else 
                             {
                             	maxvalue = (byte)Integer.parseInt(smax);
-                            }
-							storeMaxValueForCheck(edge, maxvalue);
-							m_edges.put(qualitativeSpecies, edge);
-							edge.me.rescanSign(graph);
-							ereader.setEdge(edge.me);
-						}
+                            }	
+					        byte minv = 1;							        						
+					        
+					        /** On itère sur les <input>*/
+					        System.out.println("avant la m_threshold");
+					        Iterator it = ((Vector)m_thresholds.get(qualitativeSpecies)).iterator(); 
+					        Vector t_minvalue = new Vector();												
+							while(it.hasNext()) {
+							    minv =(byte) Double.parseDouble((String)it.next());
+							    if(t_minvalue.size() == 0){
+							    	t_minvalue.add(minv);
+							    	edge = graph.addNewEdge(qualitativeSpecies, to, minv, sign);
+							    }
+							    if(!t_minvalue.contains(minv)) {
+							    	if(sign.equals("negative")) {
+							    	edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
+							    	}
+							    	else if(sign.equals("positive")){
+							    		edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_POSITIVE);
+							    	}
+							    	else {
+							    		edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_UNKNOWN);
+							    	}
+							    }
+								storeMaxValueForCheck(edge, maxvalue); 
+								m_edges.put(qualitativeSpecies, edge);
+								edge.me.rescanSign(graph);
+								ereader.setEdge(edge.me);
+							} 						
+						} // try
 						catch (NumberFormatException e) {
 							throw new JDOMException("mal formed interaction's parameters");
 						}
@@ -319,6 +355,8 @@ public final class SBMLXpathParser {
 			vertex.getV_logicalParameters().cleanupDup();
 		}
 	} // void parse(File _FilePath)
+	String[] childs = childCount.split(" ");
+	byte[] childsCount = new byte[childs.length];
 
 	/** this function allows to obtain a string which
 	 *  contain a logical function of every <functionTerm> element 
@@ -328,7 +366,6 @@ public final class SBMLXpathParser {
 		Element math = (Element) rootConv.get(0);
 		XMLOutputter outputer = new XMLOutputter(Format.getPrettyFormat());
 		String xml = outputer.outputString(math);
-
 		InputSource file = new InputSource(new ByteArrayInputStream(xml.getBytes()));
 		
 		/** we use MathMLExpression (JSci API) to easily parse 
@@ -339,18 +376,19 @@ public final class SBMLXpathParser {
 		int nLevel = 0;
 		Object[] parseList = parser.translateToJSciObjects();
 		StringBuffer sb = new StringBuffer();
-		m_thresholds = new HashMap();
+		m_thresholds = new HashMap();		
+		strBuf = new StringBuffer();
 		for (int i = 0; i < parseList.length; i++) {
 			Object o = parseList[i];
 			MathMLExpression expr = (MathMLExpression) o;
 			exploreExpression(expr, nLevel, sb, m_thresholds);
-		}
+		}	System.out.println("sb.toString() "+sb.toString());
 		return sb;
 	}
 
 	/** This function writes the logical function of
 	 ** every <functionTerm> as a string 
-	 **/
+	 **/	
 	public void exploreExpression(Object expression, int level, StringBuffer sb, Map m_t) {
 		if (expression instanceof MathMLExpression) {
 			MathMLExpression mexpr = (MathMLExpression) expression;
@@ -358,18 +396,50 @@ public final class SBMLXpathParser {
 			if (op.equals("lt") || op.equals("geq") || op.equals("leq") || op.equals("gt")) {
 				String chaine = null;
 				if (op.equals("leq") || op.equals("lt")) {
-					op = "!";
-					chaine = op + mexpr.getArgument(0);
-					m_t.put(mexpr.getArgument(0), mexpr.getArgument(1));
+					op = "!";			
+					String node = (String) mexpr.getArgument(0).toString();
+					String th = (String) mexpr.getArgument(1).toString();
+	
+					double d = Double.parseDouble(th);
+					int nbrChilds = (int) (d);
+					chaine = op + mexpr.getArgument(0)+":"+nbrChilds;
+					if(!(m_t.containsKey(node)))
+					{
+						try {
+							m_t.put(node, new Vector());	
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}										
+					}
+					((Vector)m_t.get(node)).add(th);
+
+
 				} else if (op.equals("gt") || op.equals("geq")) {
-					op = "";
-					chaine = op + mexpr.getArgument(0);
-					m_t.put(mexpr.getArgument(0), mexpr.getArgument(1));
+					op = ""; 
+					String node = (String) mexpr.getArgument(0).toString();
+					String th = (String) mexpr.getArgument(1).toString();		
+					
+					double d = Double.parseDouble(th);
+					int nbrChilds = (int) (d);
+					chaine = op + mexpr.getArgument(0)+":"+nbrChilds;
+					if(!(m_t.containsKey(node)))
+					{
+						try {
+							m_t.put(node, new Vector());	
+						}
+						catch (Exception e) {
+							e.printStackTrace();
+						}										
+					}
+					((Vector)m_t.get(node)).add(th);
+
 				}
-				sb.append(chaine);
+				sb.append(chaine);			
 			} else {
-				if (mexpr.length() > 1)
+				if (mexpr.length() > 1){
 					sb.append("(");
+					}
 				for (int i = 0; i < mexpr.length(); i++) {
 					exploreExpression(mexpr.getArgument(i), level + 1, sb, m_t);
 					if (i < mexpr.length() - 1) {
@@ -380,22 +450,15 @@ public final class SBMLXpathParser {
 						}
 					}
 				}
-				if (mexpr.length() > 1)
+				if (mexpr.length() > 1){
 					sb.append(")");
+					}
 			}
 		} else {
-			sb.append("We have a serious problem !");
-		}
-		
-		Set set = m_thresholds.entrySet();
-	    Iterator it = set.iterator();
-	    while(it.hasNext())
-	    {
-	      Map.Entry me = (Map.Entry)it.next();
-	    }
-		
+			sb.append("We have a serious problem !"); 
+		}	
 	}
-
+	
 	/** To get vertex ID corresponding to the current <transition> element **/
 	public String getNodeId(String transId) {
 		String nodeName = null;
@@ -424,7 +487,7 @@ public final class SBMLXpathParser {
 				Entry entry = (Entry) it.next();
 				byte m1 = ((GsRegulatoryEdge) entry.getKey()).getMax();				
 				byte m2 = ((Integer) entry.getValue()).byteValue();				
-				byte max = ((GsRegulatoryEdge) entry.getKey()).me.getSource().getMaxValue();				
+				byte max = ((GsRegulatoryEdge) entry.getKey()).me.getSource().getMaxValue();
 				if (m1 != m2) {
 					if (m == null) { 
 						m = new HashMap();

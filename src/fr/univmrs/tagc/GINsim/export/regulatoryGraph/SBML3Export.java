@@ -200,6 +200,11 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 out.addAttr("initialLevel",""+t_markup[i][0]);
                 if (node.isInput()) {
                     out.addAttr("boundaryCondition", "true");
+                    out.addAttr("constant", "true");
+                }
+                else {
+                	out.addAttr("boundaryCondition", "false");
+                    out.addAttr("constant", "false");
                 }
                 out.closeTag();
             }
