@@ -199,6 +199,12 @@ public final class SBMLXpathParser {
 						}
 						
 						String input = elcurrent.getAttributeValue("boundaryCondition");
+						//if (input.equals("true")) {
+/*						if (input == null) {
+							vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"),
+									graph);
+						}*/
+						
 						if (input != null) {
 							vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"),
 									graph);
@@ -250,7 +256,6 @@ public final class SBMLXpathParser {
 						}
 					}					
 					String fctResultLevel = null;
-					// Le tableau "states[]" contient
 					List statesList = null;
 					
 					for (int j = 1; j < functTermChildren.size(); j++) 
@@ -290,8 +295,8 @@ public final class SBMLXpathParser {
 								sign = "positive";
 							else
 								sign = "unknown"; 
-							String boundaryCondition = ((Element) input)
-									.getAttributeValue("boundaryCondition");
+/*							String boundaryCondition = ((Element) input)
+									.getAttributeValue("boundaryCondition");*/
 							String to = getNodeId(trans_Id);
 							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");	
 							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
@@ -305,8 +310,10 @@ public final class SBMLXpathParser {
                             }	
 					        byte minv = 1;							        						
 					        
-					        /** On itère sur les <input>*/
-					        System.out.println("avant la m_threshold");
+					        /** On itère sur les <input>*/					    
+					       // System.out.println("m_thresholds.toString() : "+m_thresholds.toString());
+					        if(m_thresholds.get(qualitativeSpecies) != null) {
+					        	System.out.println(m_thresholds.get(qualitativeSpecies).toString());
 					        Iterator it = ((Vector)m_thresholds.get(qualitativeSpecies)).iterator(); 
 					        Vector t_minvalue = new Vector();												
 							while(it.hasNext()) {
@@ -317,7 +324,7 @@ public final class SBMLXpathParser {
 							    }
 							    if(!t_minvalue.contains(minv)) {
 							    	if(sign.equals("negative")) {
-							    	edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
+							    		edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
 							    	}
 							    	else if(sign.equals("positive")){
 							    		edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_POSITIVE);
@@ -330,14 +337,15 @@ public final class SBMLXpathParser {
 								m_edges.put(qualitativeSpecies, edge);
 								edge.me.rescanSign(graph);
 								ereader.setEdge(edge.me);
-							} 						
+							} 		
+					        } //  if(m_thresholds.get(qualitativeSpecies) != null) 
 						} // try
 						catch (NumberFormatException e) {
 							throw new JDOMException("mal formed interaction's parameters");
 						}
-					} 
-				} 
-			} 
+					} // <input> 
+				} // transition 
+			}  
 		} 
 		catch (Exception e) {
 			// TODO: handle exception
@@ -383,6 +391,7 @@ public final class SBMLXpathParser {
 			MathMLExpression expr = (MathMLExpression) o;
 			exploreExpression(expr, nLevel, sb, m_thresholds);
 		}	System.out.println("sb.toString() "+sb.toString());
+			//System.out.println("m_thresholds.toString() "+m_thresholds.toString());
 		return sb;
 	}
 
@@ -395,6 +404,7 @@ public final class SBMLXpathParser {
 			String op = mexpr.getOperation();
 			if (op.equals("lt") || op.equals("geq") || op.equals("leq") || op.equals("gt")) {
 				String chaine = null;
+				String chaine1 = null;
 				if (op.equals("leq") || op.equals("lt")) {
 					op = "!";			
 					String node = (String) mexpr.getArgument(0).toString();
@@ -402,7 +412,7 @@ public final class SBMLXpathParser {
 	
 					double d = Double.parseDouble(th);
 					int nbrChilds = (int) (d);
-					chaine = op + mexpr.getArgument(0)+":"+nbrChilds;
+					//chaine1 = op + mexpr.getArgument(0)+":"+nbrChilds;
 					if(!(m_t.containsKey(node)))
 					{
 						try {
@@ -413,7 +423,7 @@ public final class SBMLXpathParser {
 						}										
 					}
 					((Vector)m_t.get(node)).add(th);
-
+					chaine = op + mexpr.getArgument(0);		
 
 				} else if (op.equals("gt") || op.equals("geq")) {
 					op = ""; 
@@ -422,7 +432,8 @@ public final class SBMLXpathParser {
 					
 					double d = Double.parseDouble(th);
 					int nbrChilds = (int) (d);
-					chaine = op + mexpr.getArgument(0)+":"+nbrChilds;
+					//chaine1 = op + mexpr.getArgument(0)+":"+nbrChilds;
+					chaine = op + mexpr.getArgument(0);		
 					if(!(m_t.containsKey(node)))
 					{
 						try {
@@ -435,7 +446,7 @@ public final class SBMLXpathParser {
 					((Vector)m_t.get(node)).add(th);
 
 				}
-				sb.append(chaine);			
+				sb.append(chaine);	
 			} else {
 				if (mexpr.length() > 1){
 					sb.append("(");
