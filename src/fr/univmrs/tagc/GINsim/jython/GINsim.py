@@ -1,6 +1,6 @@
 ######################################################################
 # python helper to access some parts of GINsim API through jython
-# import this file for use in your own scripts
+# it is automatically included by "--run" option.
 ######################################################################
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph as rg
 
@@ -137,6 +137,7 @@ class GINsim:
 		"get a graph coloriser: colorise acording to states. Don't forget to call endColorization() when you are done"
 		return GsRegulatoryAnimator(graph).colorizer
 
+gs = GINsim()
 
 class SimulationReporter(SimulationManager):
     "helper to perform simulations"
@@ -157,7 +158,7 @@ class SimulationReporter(SimulationManager):
 
     def run(self, simulation, init=None, inputs=None):
         if simulation.__class__ == "".__class__:
-            simulation = get_simulations(self.graph, simulation)
+            simulation = gs.get_simulations(self.graph, simulation)
         sim = Simulation(self.graph, self, simulation, False, True)
 
         if init or inputs:
