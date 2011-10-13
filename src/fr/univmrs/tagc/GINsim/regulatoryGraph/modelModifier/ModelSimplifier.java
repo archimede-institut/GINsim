@@ -106,6 +106,13 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 */
 	@Override
     public void run() {
+		GsRegulatoryGraph simplifiedGraph = do_reduction();
+        if (simplifiedGraph != null && dialog != null) {
+            dialog.endSimu(simplifiedGraph, null);
+        }
+	}
+	
+    public GsRegulatoryGraph do_reduction() {
     	// prepare the list of removal requests
 		List<RemovedInfo> l_todo = new ArrayList<RemovedInfo>();
 		for (GsRegulatoryVertex vertex: m_removed.keySet()) {
@@ -122,7 +129,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 		if (l_todo.size() > 0) {
 			if (dialog != null) {
 				if (!dialog.showPartialReduction(l_todo)) {
-					return;
+					return null;
 				}
 				
 				for (RemovedInfo ri: l_todo) {
@@ -144,11 +151,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 
 		// go ahead and extract the result
-        GsRegulatoryGraph simplifiedGraph = extractReducedGraph();
-        
-        if (dialog != null) {
-            dialog.endSimu(simplifiedGraph, null);
-        }
+        return extractReducedGraph();
     }
     
     private List<RemovedInfo> remove_all(List<RemovedInfo> l_todo) {
@@ -300,7 +303,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 
 			// make sure that the needed edges target the affected node
 			m_edges.clear();
-			extractEdgesFromNode(newNode);
+			extractEdgesFromNode(m_edges, newNode);
 			GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(vertex);
 			for (Entry<GsRegulatoryVertex,boolean[]> e: m_edges.entrySet()) {
 				GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(e.getKey());
@@ -446,7 +449,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * extract the list of required edges for a given logical function.
 	 * @param node
 	 */
-	private void extractEdgesFromNode(OmddNode node) {
+	private void extractEdgesFromNode(Map<GsRegulatoryVertex,boolean[]> m_edges, OmddNode node) {
 		if (node.next == null) {
 			return;
 		}
@@ -467,7 +470,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 					t_threshold[i] = true;
 				}
 				child = node.next[i];
-				extractEdgesFromNode(node.next[i]);
+				extractEdgesFromNode(m_edges, node.next[i]);
 			}
 		}
 	}
