@@ -54,7 +54,7 @@ public class LogicalParameterList extends ArrayList {
 		return false;
 	}
 	
-	public boolean inParam(GsLogicalParameter lp){
+	public boolean isManual(GsLogicalParameter lp){
 		return manualp.contains(lp);
 	}
 	

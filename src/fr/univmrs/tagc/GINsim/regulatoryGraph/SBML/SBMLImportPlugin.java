@@ -56,14 +56,8 @@ public class SBMLImportPlugin implements GsPlugin, GsActionProvider {
 		// we should add a better way to select a file for import
 		filename = GsOpenAction.selectFileWithOpenDialog(frame);
 		if (filename == null) {
-			System.out.println("fichier d'entree null");
 			return;
 		}
-
-		/*
-		 * switch (ref) { case SBML3: new SbmlXpathParser(filename); break; }
-		 */
-		System.out.println("On lance le parseur");
 		SBMLXpathParser parser = new SBMLXpathParser(filename);
 		GsGraph newGraph = parser.getGraph();
 		new GsWhatToDoFrame(frame, newGraph, true);

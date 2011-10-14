@@ -18,9 +18,11 @@ import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OMDDBrowserListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OMDDNodeBrowser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -164,14 +166,15 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
             out = new XMLWriter(os, null);
             String s_compartment = "c_"+graph.getGraphName();
             out.openTag("sbml");
-            out.addAttr("xmlns", "http://www.sbml.org/sbml/level3/version1");
+            out.addAttr("xmlns", "http://www.sbml.org/sbml/level3/version1/core");
             out.addAttr("level", "3");
             out.addAttr("version", "1");
             out.addAttr("xmlns:qual", L3_QUALI_URL);
             out.addAttr("qual:required", "true");
             
             out.openTag("model");
-            out.addAttr("id", "m_"+graph.getGraphName());
+            out.addAttr("id", ""+getPrevFilename(graph.getSaveFileName()));
+            
             out.openTag("listOfCompartments");
             out.openTag("compartment");
             out.addAttr("id", s_compartment);
@@ -188,14 +191,19 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 String s_name = node.getName();
                 out.openTag("qualitativeSpecies");
                 out.addAttr("id", s_id);
-                if (s_name != null) {
+                if ((s_name != null) && (!s_name.equals("noName"))) {
                 	out.addAttr("name",s_name);
-                }
+                } 
                 out.addAttr("compartment",s_compartment);
                 out.addAttr("maxLevel",""+node.getMaxValue());
                 out.addAttr("initialLevel",""+t_markup[i][0]);
                 if (node.isInput()) {
                     out.addAttr("boundaryCondition", "true");
+                    out.addAttr("constant", "true");
+                }
+                else {
+                	out.addAttr("boundaryCondition", "false");
+                    out.addAttr("constant", "false");
                 }
                 out.closeTag();
             }
@@ -214,8 +222,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 out.openTag("transition");
                 out.addAttr("id", "tr_"+s_node);
                 
-                out.openTag("listOfInputs");
-                
+                out.openTag("listOfInputs");               
                 String edgeSign = null;
                 for (GsRegulatoryMultiEdge me: graph.getGraphManager().getIncomingEdges(v_no.get(i))) {
                     int sign = me.getSign(); 
@@ -229,7 +236,6 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 					default:
 						break;
 					}                   
-                  // fin test
                     out.openTag("input");
                     out.addAttr("qualitativeSpecies", me.getSource().toString());
                     out.addAttr("transitionEffect","none");
@@ -247,6 +253,21 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 
                 out.openTag("listOfFunctionTerms");
                 out.openTag("defaultTerm");
+                
+                boolean hasNoBasalValue = true;
+                if (graph.getGraphManager().getIncomingEdges(v_no.get(i)).size() == 0) {
+                    LogicalParameterList lpl = regulatoryVertex.getV_logicalParameters();
+                    if (lpl.size() == 1) {
+                    	GsLogicalParameter lp = (GsLogicalParameter) lpl.get(0);
+                    	int value = lp.getValue();
+                    	if (lpl.isManual(lp)) {
+           			    	out.addAttr("resultLevel", ""+value);
+                    	    out.closeTag(); 
+                    	    hasNoBasalValue = false;
+                    	}
+                    }
+                } 
+                if (hasNoBasalValue) {
                 out.addAttr("resultLevel", ""+0);
                 out.closeTag();
                 for (curValue=1 ; curValue<=regulatoryVertex.getMaxValue() ; curValue++) {
@@ -263,9 +284,11 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                     out.closeTag(); // math
                     out.closeTag(); // functionTerm
                 }
+                }
                 out.closeTag(); // listOfFunctionTerms
                 out.closeTag(); // transition
             }
+                
             out.closeTag(); // list of transitions
             
 			// Close the file
@@ -277,6 +300,20 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		}
     }
+	
+	/**
+	 * gets filename without extension
+	 **/
+	// gets filename without extension
+		public String getPrevFilename(String fullPath) {  
+			char pathSeparator = '/';
+			char extensionSeparator = '.';
+		    int dot = fullPath.lastIndexOf(extensionSeparator);
+			int sep = fullPath.lastIndexOf(pathSeparator);
+			String realName= fullPath.substring(sep + 1, dot);
+			return realName;	
+		    }
+	
 }
 
 

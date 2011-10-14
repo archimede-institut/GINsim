@@ -10,7 +10,7 @@ public class TestTools {
 	
 	public static File getTestDir() {
 		if (testDir == null) {
-			testDir = new File("testCase");
+			testDir = new File("testCase");//testCase
 			if (!testDir.exists()) {
 				testDir.mkdir();
 			}

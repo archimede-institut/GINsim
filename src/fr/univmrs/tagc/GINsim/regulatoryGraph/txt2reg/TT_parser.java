@@ -7,16 +7,16 @@ import java.io.FileReader;
 import java.io.FileNotFoundException;
 
 public class TT_parser { // define a regulatory graph from a table describing a dynamics stored in a file 
-	// static type???? tableName; // the file identifier from the import function l’dentificateur du fichier contenant la table
+	// static type???? tableName; // the file identifier from the import function l'identificateur du fichier contenant la table
 	
 	static String tableName;  // pour l instant on lit le nom du fichier en ligne de cmd
 	
 
 	
-	/** on lit le nom du fichier aui contient la table
+	/** on lit le nom du fichier qui contient la table
 	 * on lit la premiere ligne de ce fichier pour initialiser le nb de lignes L et le nb de composants n
 	 * ex: 1ere ligne du fichier  6 2 --> on a 6 lignes et 2 composants donc forcement un composant qui prend les val 0..2 et un composant Bool
-	 * ensuite on va lire toutes lignes suivantes du fichier en les stockant dans une table d«entiers de taille L x 2n */
+	 * ensuite on va lire toutes lignes suivantes du fichier en les stockant dans une table d'entiers de taille L x 2n */
 	
 	
 	public TT_parser (String tableName) {
@@ -97,7 +97,7 @@ public class TT_parser { // define a regulatory graph from a table describing a 
 		   // o[i] is the number of times all the values of i have to be considered
 		   int o[]=new int[n]; //the nb of occurrences of the blocs for eqch component
 		   for (i=0;i<n;i++){
-		   o[i]=1;// calcul du nombre d'occurrences de la série des blocs
+		   o[i]=1;// calcul du nombre d'occurrences de la serie des blocs
 			for ( j=i-1;j>=0;j--){
 				o[i]=o[i]*(m[j]+1);
 			}
@@ -108,7 +108,7 @@ public class TT_parser { // define a regulatory graph from a table describing a 
 	 // List of the comparisons
 		   
 		 	 for ( i=0;i<n;i++){ // for each component, we want to determine its influence
-				for ( j=0;j<o[i];j++){// pour chaque occurrence de série de blocs
+				for ( j=0;j<o[i];j++){// pour chaque occurrence de serie de blocs
 					for(k=0;k<m[i];k++){//sur toutes les valeurs de i
 						System.out.println("G" +i+ " at level "  +(k+1)+" has the following influences");
 
