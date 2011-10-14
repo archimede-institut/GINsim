@@ -38,9 +38,8 @@ public class LRGCreator {
 		lrg.interactiveAddEdge(g1, g2, 1);
 		
 		// get an edge (interactiveAddEdge does not return it)
-		GsGraphManager manager = lrg.getGraphManager();
-		GsDirectedEdge edge = (GsDirectedEdge)manager.getEdge(g0, g2);
-		GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)edge.getUserObject();
+		GsGraphManager<GsRegulatoryVertex, GsRegulatoryMultiEdge> manager = lrg.getGraphManager();
+		GsRegulatoryMultiEdge me = manager.getEdge(g0, g2);
 		// change its threshold
 		me.setMin(0, (byte)2);
 		
