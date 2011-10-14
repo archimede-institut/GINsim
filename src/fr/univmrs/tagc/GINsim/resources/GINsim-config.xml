@@ -28,6 +28,7 @@
 		
 		<!-- import plugins -->
 		<plugin name="SBMLimport"                   mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.SBML.SBMLImportPlugin"/>
+		<plugin name="TxtImport"                   mainClass="fr.univmrs.tagc.GINsim.regulatoryGraph.txt2reg.TxtImportPlugin"/>
 
 		<!-- export plugins -->
 		<plugin name="export" 					mainClass="fr.univmrs.tagc.GINsim.export.GsExportPlugin"/>
