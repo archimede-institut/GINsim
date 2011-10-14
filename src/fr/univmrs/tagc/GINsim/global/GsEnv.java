@@ -18,7 +18,6 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.plugin.GsClassLoader;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
-import fr.univmrs.tagc.common.Env;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
@@ -29,7 +28,7 @@ import fr.univmrs.tagc.common.widgets.Frame;
  * it loads plugins on startup
  * each frame is registred here, so that we can try to close them all when quitting
  */
-public class GsEnv extends Env {
+public class GsEnv {
 
 	private static String ginsimDir = null;
 	private static String dtdDir = null;
