@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.jgraph;
 import java.awt.event.MouseEvent;
 
 import org.jgraph.JGraph;
+import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgrapht.ext.JGraphModelAdapter;
@@ -22,11 +23,13 @@ public class GsJgraph extends JGraph {
      * @param graph
      */
     public GsJgraph(GsJgraphtGraphManager graph) {
-        super(graph.getM_jgAdapter());
+        this(graph.getM_jgAdapter(), new GsCellViewFactory(graph));
+    }
+
+    public GsJgraph(JGraphModelAdapter ma, CellViewFactory cvf) {
+        super(ma);
         
-        JGraphModelAdapter ma;
-        
-        setGraphLayoutCache(new GraphLayoutCache(graph.getM_jgAdapter(), new GsCellViewFactory(graph)));
+        setGraphLayoutCache(new GraphLayoutCache(ma, cvf));
 		setGridVisible(((Boolean)OptionStore.getOption("display.grid", Boolean.FALSE)).booleanValue());
 		setGridEnabled(((Boolean)OptionStore.getOption("display.gridactive", Boolean.FALSE)).booleanValue());
 		setDisconnectable(false);
