@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.GraphBackend;
 import org.ginsim.graph.JgraphtBackendImpl;
 import org.ginsim.graph.regulatoryGraph.RegulatoryEdge;
 import org.ginsim.graph.regulatoryGraph.RegulatoryGraph;
@@ -71,11 +72,12 @@ public class TestRefactor {
 		GraphGUI<V,E> graphGUI = null;
 
 		if (graph instanceof AbstractGraphFrontend) {
-			graph = ((AbstractGraphFrontend<V, E>)graph).getBackend();
+			GraphBackend<V,E> graph_backend = ((AbstractGraphFrontend<V, E>)graph).getBackend();
+			if (graph_backend instanceof JgraphtBackendImpl) {
+				graphGUI = new JgraphGUIImpl<V,E>((JgraphtBackendImpl<V,E>) graph_backend);
+			}
 		}
-		if (graph instanceof JgraphtBackendImpl) {
-			graphGUI = new JgraphGUIImpl<V,E>((JgraphtBackendImpl<V,E>)graph);
-		}
+
 
 		return graphGUI;
 	}

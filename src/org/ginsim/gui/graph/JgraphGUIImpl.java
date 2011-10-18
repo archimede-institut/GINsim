@@ -31,4 +31,5 @@ public class JgraphGUIImpl<V, E extends Edge<V>> implements GraphGUI<V, E> {
 	public Component getGraphComponent() {
 		return jgraph;
 	}
+	
 }

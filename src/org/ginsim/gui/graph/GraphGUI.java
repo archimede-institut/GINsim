@@ -15,52 +15,66 @@ import org.ginsim.graph.Edge;
 public interface GraphGUI<V, E extends Edge<V>> {
 
 	/**
-	 * @return a widget showing the graph
+	 * 
+	 * @return the widget showing the graph
 	 */
 	public Component getGraphComponent();
 	
-	
-	// the rest is commented out for quick testing...
-	
-//    /**
-//     * select all objects (vertices and edges).
-//     */
+// TODO Commented out for quick testing: remove comments	
+
+//	/**
+//	 * Select all the graph objects (vertices and edges)
+//	 * 
+//	 */
 //    public void selectAll();
+//	
+//	
 //    /**
-//     * select some objects (vertices and edges).
+//     * Select the graph objects in the List.
+//     * 
 //     * @param l the list of objects to select
 //     */
 //    public void select(List l);
+//    
+//    
 //    /**
-//     * select some objects (vertices and edges).
+//     * Select the graph objects in the Set.
+//     * 
 //     * @param s the Set of objects to select
 //     */
 //    public void select(Set s);
+//    
+//    
 //    /**
-//     * select some objects (vertices and edges) and keep the previous selection.
+//     * Add the graph objects of the List to the selected objects
+//     * 
 //     * @param l the list of objects to select
 //     */
 //    public void addSelection(List l);
+//    
+//    
 //    /**
-//     * select some objects (vertices and edges) and keep the previous selection.
+//     * Add the graph objects of the Set to the selected objects
+//     * 
 //     * @param s the Set of objects to select
 //     */
 //    public void addSelection(Set s);
+//    
+//    
 //    /** 
-//     * select a single item.
+//     * Select the provided graph object
 //     * 
 //     * @param obj the item to select 
 //     */
 //    public void select(Object obj);
 //
+//    
 //    /**
-//     * invert the selection.
-//     * ie unselect currently selected objects and select all others.
+//     * Invert the selection ie unselect currently selected objects and select all others.
 //     *
 //     */
 //    public void invertSelection();
-//    
-//    
+//
 //    
 //    /**
 //     * @return an iterator on the selected edges if their source and target vertices are also selected.
@@ -76,25 +90,31 @@ public interface GraphGUI<V, E extends Edge<V>> {
 //     */
 //	abstract public Iterator<V> getSelectedVertexIterator();
 //
-//    
-//    
-//    
+// 
 //    /**
-//     * show/hide the grid.
+//     * Show the grid if boolean is true. 
+//     * Hide the grid if boolean is false.
+//     * 
 //     * @param b
 //     */
 //    public void showGrid(boolean b);
+//    
 //
 //    /**
-//     * make the grid (in)active.
+//     * Activate the grid if boolean is true.
+//     * Deactivate the grid if boolean is false.
+//     * 
 //     * @param b
 //     */
 //    public void setGridActive(boolean b);
+//    
 //
 //    /**
 //     * @return true if the grid is visible
 //     */
-//    public abstract boolean isGridDisplayed();
+//    public boolean isGridDisplayed();
+//    
+//    
 //    /**
 //     * @return true if the grid is visible
 //     */
@@ -102,35 +122,46 @@ public interface GraphGUI<V, E extends Edge<V>> {
 //
 //    
 //    /**
-//     * move all vertex to front
+//     * Move all vertex to front if boolean is true.
+//     * Remove vertices from front if boolean is false. 
+//     * 
 //     * @param b
 //     */
 //    public void vertexToFront(boolean b);
+//    
 //
 //    /**
 //     * zoom out the display.
 //     */
 //    public void zoomOut();
 //
+//    
 //    /**
 //     * zoom in the display.
 //     */
 //    public void zoomIn();
 //
+//    
 //    /**
 //     * restore the display to the default zoom level.
 //     */
 //    public void zoomNormal();
 //
+//    
 //    /**
-//     * show/hide edge name on the display.
+//     * Show the edge name on the display if boolean is true.
+//     * Hide the edge name on the display if boolean is false.
+//     * 
 //     * @param b
 //     */
 //    public void displayEdgeName(boolean b);
 //
 //    /**
-//     * show/hide vertex name on the display.
+//     * Show the vertex name on the display if boolean is true.
+//     * Hide the vertex name on the display if boolean is false.
+//     * 
 //     * @param b
 //     */
 //    public void displayVertexName(boolean b);
+
 }

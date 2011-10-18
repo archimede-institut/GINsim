@@ -89,6 +89,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return GPOverviewPanel.createOverviewPanel(this, sp);
     }
 
+    //TODO remove: moved to Graph
     public boolean addVertex(V vertex) {
         if (g.addVertex(vertex)) {
             if (visible) {
@@ -112,6 +113,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         }
     }
 
+    //TODO partially moved to Graph. Move the GUI code to jgraphGUIImpl
     public boolean addEdge(E newedge) {
     	if (newedge == null) {
     		return false;
@@ -177,20 +179,24 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return jgraph;
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void selectAll() {
         jgraph.setSelectionCells(jgraph.getRoots());
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void select(List l) {
         jgraph.setSelectionCells( new Object[0]);
         addSelection(l);
     }
     
+ // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void select(Set s) {
         jgraph.setSelectionCells( new Object[0]);
         addSelection(s);
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void addSelection(List l) {
         if (l == null) {
             return;
@@ -205,6 +211,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         }
     }
     
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void addSelection(Set s) {
         if (s == null) {
             return;
@@ -219,6 +226,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         }
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void vertexToFront(boolean b) {
         if (!visible) {
             return;
@@ -235,6 +243,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         }
     }
     
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void invertSelection() {
 		Object[] selects = jgraph.getSelectionCells();
 		Object roots[] = jgraph.getRoots();
@@ -258,26 +267,32 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void showGrid(boolean b) {
         jgraph.setGridVisible(b);
     }
     
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void setGridActive(boolean b) {
         jgraph.setGridEnabled(b);
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void zoomOut() {
         jgraph.setScale(jgraph.getScale()-0.1);
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void zoomIn() {
         jgraph.setScale(jgraph.getScale()+0.1);
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void zoomNormal() {
         jgraph.setScale(1);
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void displayEdgeName(boolean b) {
        jgraph.setEdgeLabelDisplayed(b);
     }
@@ -286,9 +301,11 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
      * show/hide vertex name: not applicable as they are always visible.
      * @see fr.univmrs.tagc.GINsim.graph.GsGraphManager#displayVertexName(boolean)
      */
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void displayVertexName(boolean b) {
     		// NOTHING
     }
+    
     
     public void undo() {
 		if (undoManager.canUndo()) {
@@ -329,6 +346,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         vertexRemoved(obj);
     }
 
+	// TODO remove. moved to Graph
     public E getEdge(V source, V target) {
         return g.getEdge(source, target);
     }
@@ -365,6 +383,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return g.vertexSet().iterator();
 	}
 
+	// TODO remove. moved to Graph
     public Set<E> getIncomingEdges(V vertex) {
     	if (g instanceof ListenableDirectedGraph) {
     		return ((ListenableDirectedGraph)g).incomingEdgesOf(vertex);
@@ -372,6 +391,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return g.edgesOf(vertex);
     }
 
+	// TODO remove. moved to Graph
     public Set<E> getOutgoingEdges(V vertex) {
         if (g instanceof ListenableDirectedGraph) {
             return ((ListenableDirectedGraph)g).outgoingEdgesOf(vertex);
@@ -544,6 +564,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return g.containsEdge(from, to);
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public boolean isGridDisplayed() {
         if (!visible) {
             return false;
@@ -551,6 +572,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return jgraph.isGridVisible();
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public boolean isGridActive() {
         if (!visible) {
             return false;
@@ -558,6 +580,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return jgraph.isGridEnabled();
     }
 
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void select(Object obj) {
         jgraph.setSelectionCells( new Object[0]);
         if (obj == null) {
@@ -582,6 +605,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
     	return null;
     }
 
+	// TODO remove. moved to Graph
 	public Collection getAllEdges() {
 		return g.edgeSet();
 	}

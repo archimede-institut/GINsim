@@ -19,11 +19,24 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 		super(new GsJGraphtBaseGraph<V, E>(new GsJgraphtEdgeFactory()));
 	}
 
+	
+	/**
+	 * Add an edge in the JGraphT Graph
+	 * 
+	 * @param edge
+	 * @return true if the edge was correctly added, false if not.
+	 */
 	@Override
 	public boolean addEdgeInBackend(E edge) {
 		return super.addEdge(edge.getSource(), edge.getTarget(), edge);
 	}
 	
+    /**
+     * Add a vertex in the JGraphT graph
+     * 
+     * @param vertex
+     * @return true if the vertex was correctly added, false if not.
+     */
 	@Override
 	public boolean addVertexInBackend(V vertex) {
 		return super.addVertex(vertex);
@@ -53,26 +66,47 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	public Collection<E> getOutgoingEdges(V vertex) {
 		return outgoingEdgesOf(vertex);
 	}
-
+	
+    /**
+     * @param vertex
+     * @return true if the vertex is in the graph, false if not.
+     */
 	@Override
-	public E addEdge(V source, V target, int mode) {
-		if (frontend == null) {
-			throw new RuntimeException("No frontend is available to create the new edge");
-		}
-		E edge = frontend.createEdge(source, target, mode);
-		addEdgeInBackend(edge);
-		return edge;
-	}
-
+    public boolean containsVertex(V vertex) {
+        return super.containsVertex(vertex);
+    }
+    
+    /**
+     * @param from
+     * @param to
+     * @return true if an edge between the two provided vertices exists in the graph, false if not.
+     */
 	@Override
-	public V addVertex(int mode) {
-		if (frontend == null) {
-			throw new RuntimeException("No frontend is available to create the new edge");
-		}
-		V vertex = frontend.createVertex(mode);
-		addVertexInBackend(vertex);
-		return vertex;
-	}
+    public boolean containsEdge(V from, V to) {
+        return super.containsEdge(from, to);
+    }
+
+	// TODO is this method useful in back-end? Creation of new object have to pass directly from front-end
+//	@Override
+//	public E addEdge(V source, V target, int mode) {
+//		if (frontend == null) {
+//			throw new RuntimeException("No frontend is available to create the new edge");
+//		}
+//		E edge = frontend.createEdge(source, target, mode);
+//		addEdgeInBackend(edge);
+//		return edge;
+//	}
+
+	// TODO is this method useful in back-end? Creation of new object have to pass directly from front-end
+//	@Override
+//	public V addVertex(int mode) {
+//		if (frontend == null) {
+//			throw new RuntimeException("No frontend is available to create the new edge");
+//		}
+//		V vertex = frontend.createVertex(mode);
+//		addVertexInBackend(vertex);
+//		return vertex;
+//	}
 
 	@Override
 	public GraphView getGraphView() {

@@ -40,6 +40,7 @@ public interface Graph<V,E extends Edge<V>> {
 	 */
 	public GraphView getGraphView();
 	
+	
 	/**
 	 * Add an edge between two vertices.
 	 * 
@@ -49,6 +50,7 @@ public interface Graph<V,E extends Edge<V>> {
 	 * @return the new vertex
 	 */
 	public E addEdge (V source, V target, int mode);
+	
 	
 	/**
 	 * Add a new vertex.
@@ -64,17 +66,21 @@ public interface Graph<V,E extends Edge<V>> {
      * @param vertex
      */
     public boolean removeVertex(V vertex);
+    
+    
     /**
      * remove an edge from the graph.
      * @param edge
      */
     public boolean removeEdge(E edge);
 
+    
 	/**
 	 * @return the number of vertex in this graph.
 	 */
 	public int getVertexCount();
 
+	
     /**
      * @param source
      * @param target
@@ -82,16 +88,41 @@ public interface Graph<V,E extends Edge<V>> {
      */
     public E getEdge(V source, V target);
 
-
+    
+    /**
+     * @return a Collection of the graph vertices.
+     */
+    public Collection<V> getVertices();
+    
+    
+    /**
+     * @return a Collection of the graph edges.
+     */
 	public Collection<E> getEdges();
-	public Collection<V> getVertices();
 
+	
+    /**
+     * @param vertex
+     * @return true if the vertex is in the graph, false if not.
+     */
+    public boolean containsVertex(V vertex);
+    
+    
+    /**
+     * @param from
+     * @param to
+     * @return true if an edge between the two provided vertices exists in the graph, false if not.
+     */
+    public boolean containsEdge(V from, V to);
+    
     
     /**
      * @param vertex
      * @return incoming edges of the given vertex.
      */
     public Collection<E> getIncomingEdges(V vertex);
+    
+    
     /**
      * @param vertex
      * @return outgoing edges of the given vertex.
