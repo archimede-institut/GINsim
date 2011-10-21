@@ -2,16 +2,18 @@ package org.ginsim.graph;
 
 import java.util.Collection;
 
-abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E> {
+abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, GraphView {
 
-	private final GraphBackend<V,E> backend;
+	private final GraphBackend<V,E> graphBackend;
+	private final GraphViewBackend viewBackend;
 
 	
 	/**
 	 * Create a new graph with the default back-end.
 	 */
 	public AbstractGraphFrontend() {
-		this(new JgraphtBackendImpl<V, E>());
+		this( new JgraphtBackendImpl<V, E>());
+		
 	}
 
 	
@@ -20,7 +22,8 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * @param backend
 	 */
 	public AbstractGraphFrontend(GraphBackend<V, E> backend) {
-		this.backend = backend;
+		this.graphBackend = backend;
+		viewBackend = graphBackend.getGraphViewBackend();
 	}
 
 	
@@ -48,7 +51,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * @return
 	 */
 	public GraphBackend<V, E> getBackend() {
-		return backend;
+		return graphBackend;
 	}
 
 	
@@ -61,7 +64,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	@Override
 	public V addVertex(int mode) {
 		V vertex = createVertex(mode);
-		backend.addVertexInBackend(vertex);
+		graphBackend.addVertexInBackend(vertex);
 		return vertex;
 	}
 
@@ -77,7 +80,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	@Override
 	public E addEdge(V source, V target, int mode) {
 		E edge = createEdge(source, target, mode);
-		backend.addEdgeInBackend(edge);
+		graphBackend.addEdgeInBackend(edge);
 		return edge;
 	}
 
@@ -88,7 +91,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
 	public boolean removeVertex(V vertex) {
-		return backend.removeVertex(vertex);
+		return graphBackend.removeVertex(vertex);
 	}
 
 	
@@ -98,19 +101,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
 	public boolean removeEdge(E edge) {
-		return backend.removeEdge(edge);
-	}
-
-	
-	/**
-	 * Grab the GraphView associated to this graph.
-	 * It provide access to all visual information: positions, sizes, colors...
-	 * 
-	 * @return the view of this graph.
-	 */	
-	@Override
-	public GraphView getGraphView() {
-		return backend.getGraphView();
+		return graphBackend.removeEdge(edge);
 	}
 	
 	
@@ -119,7 +110,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 */
 	@Override
 	public int getVertexCount() {
-		return backend.getVertexCount();
+		return graphBackend.getVertexCount();
 	}
 
 	
@@ -130,7 +121,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
 	public E getEdge(V source, V target) {
-		return backend.getEdge(source, target);
+		return graphBackend.getEdge(source, target);
 	}
 
 	
@@ -139,7 +130,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
 	public Collection<E> getEdges() {
-		return backend.getEdges();
+		return graphBackend.getEdges();
 	}
 
 	
@@ -148,7 +139,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
 	public Collection<V> getVertices() {
-		return backend.getVertices();
+		return graphBackend.getVertices();
 	}
 	
 	
@@ -158,7 +149,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
     public boolean containsVertex(V vertex) {
-        return backend.containsVertex(vertex);
+        return graphBackend.containsVertex(vertex);
     }
     
 	
@@ -169,7 +160,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
     public boolean containsEdge(V from, V to) {
-        return backend.containsEdge(from, to);
+        return graphBackend.containsEdge(from, to);
     }	
 	
 
@@ -179,7 +170,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
 	public Collection<E> getIncomingEdges(V vertex) {
-		return backend.getIncomingEdges(vertex);
+		return graphBackend.getIncomingEdges(vertex);
 	}
 	
     
@@ -189,6 +180,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
 	public Collection<E> getOutgoingEdges(V vertex) {
-		return backend.getOutgoingEdges(vertex);
+		return graphBackend.getOutgoingEdges(vertex);
 	}
 }

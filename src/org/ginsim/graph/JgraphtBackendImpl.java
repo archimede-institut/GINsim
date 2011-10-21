@@ -12,7 +12,7 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	
 	
 	private AbstractGraphFrontend<V,E> frontend = null;
-	private GraphView graphView;
+	private GraphViewBackend graphViewBackend;
 	
 	public JgraphtBackendImpl() {
 		// FIXME: remove the edgeFactory (with better integration with the underlying graph)
@@ -109,10 +109,10 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 //	}
 
 	@Override
-	public GraphView getGraphView() {
-		if (graphView == null) {
-			graphView = new GraphViewImpl();
+	public GraphViewBackend getGraphViewBackend() {
+		if (graphViewBackend == null) {
+			graphViewBackend = new JgraphtViewBackendImpl();
 		}
-		return graphView;
+		return graphViewBackend;
 	}
 }

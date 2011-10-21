@@ -97,10 +97,10 @@ public interface GraphBackend<V, E extends Edge<V>> {
     
     
 	/**
-	 * Grab the GraphView associated to this graph.
+	 * Grab the GraphViewBackend associated to this graph.
 	 * It provide access to all visual information: positions, sizes, colors...
 	 * 
 	 * @return the view of this graph.
 	 */
-	public GraphView getGraphView();
+	public GraphViewBackend getGraphViewBackend();
 }

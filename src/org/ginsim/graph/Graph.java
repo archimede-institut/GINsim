@@ -31,14 +31,6 @@ public interface Graph<V,E extends Edge<V>> {
 	 *   * service providers: layout, actions, exports. Should be done outside of the graph
 	 *   * copy/paste a subgraph
 	 */
-
-	/**
-	 * Grab the GraphView associated to this graph.
-	 * It provide access to all visual information: positions, sizes, colors...
-	 * 
-	 * @return the view of this graph.
-	 */
-	public GraphView getGraphView();
 	
 	
 	/**
