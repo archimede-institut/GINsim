@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -32,6 +33,7 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 import org.omg.CORBA.portable.ValueOutputStream;
+import org.python.parser.ast.Str;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -66,17 +68,13 @@ public final class SBMLXpathParser {
 	private GsRegulatoryGraph graph;
 	protected File _FilePath;
 	private String s_nodeOrder = "";
-	private String childCount = "";
 	private GsRegulatoryVertex vertex = null;
 	public GsRegulatoryEdge edge = null;
 	private GsVertexAttributesReader vareader = null;
 	private GsEdgeAttributesReader ereader = null;
 	private int vslevel = 0;
 	private Map m_edges = new HashMap();
-	private Map map;
-	Map m_checkMaxValue;
-	Map m_thresholds;
-	StringBuffer strBuf = null; 
+
 	static Pattern pattern;
 
 	private Hashtable values;
@@ -90,7 +88,6 @@ public final class SBMLXpathParser {
 		this._FilePath = new File(filename);
 		this.graph = new GsRegulatoryGraph();
 		values = new Hashtable();
-		map = new HashMap();
 		initialize();
 	}
 
@@ -195,11 +192,6 @@ public final class SBMLXpathParser {
 						}
 						
 						String input = elcurrent.getAttributeValue("boundaryCondition");
-						//if (input.equals("true")) {
-/*						if (input == null) {
-							vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"),
-									graph);
-						}*/
 						
 						if (input != null) {
 							vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"),
@@ -228,14 +220,30 @@ public final class SBMLXpathParser {
 					/** retrieve a transition element */
 					transElem = (Element) allTransitionElement.get(k);
 					String trans_Id = transElem.getAttributeValue("id"); //transition id
+					
 					/** retrieve children of transition element */
 					List transChildren = transElem.getChildren(); 	
+					
+					/** Retrieve the list of inputs **/
+					Element listOfInput = (Element) transChildren.get(0);
+					List inputElemList = listOfInput.getChildren();
+					HashMap<String, String> intput_to_sign = new HashMap<String, String>();
+					for (int p = 0; p < inputElemList.size(); p++) { 
+						Element input = (Element) inputElemList.get(p);
+						String node_from = ((Element) input)
+								.getAttributeValue("qualitativeSpecies");
+						/** to get the SBOTerm value from the current edge **/
+						String sign = ((Element) input).getAttributeValue("sign");
+						intput_to_sign.put( node_from, sign);
+					}
 					
 					/** retrieve output data **/
 					Element listOfOutput = (Element) transChildren.get(1);
 					List outputElemList = listOfOutput.getChildren();
 					Element output = (Element) outputElemList.get(0); // output element
 					String qualSpecies = output.getAttributeValue("qualitativeSpecies");
+					
+					/** retrieve the lits of function terms **/
 					Element listOfFunctionTerm = (Element) transChildren.get(2);
 					List functTermChildren = listOfFunctionTerm.getChildren();				
 					/** retrieve <defaultTerm> element */
@@ -260,10 +268,14 @@ public final class SBMLXpathParser {
 						v_function = new Vector();	
 						
 						/** to get all data in every <functionTerm> element **/
-						Element functionTerm = (Element) functTermChildren.get(j);
-						fctResultLevel = functionTerm.getAttributeValue("resultLevel");
-						StringBuffer sb = deal(functionTerm);
-						v_function.addElement(sb.toString());
+						Element function_term_element = (Element) functTermChildren.get(j);
+						fctResultLevel = function_term_element.getAttributeValue("resultLevel");
+						FunctionTerm function_term = deal( function_term_element);
+						if( function_term != null) {
+							createMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
+							v_function.addElement( function_term.getLogicalFunction());
+						}
+			
 						for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
 							vertex = (GsRegulatoryVertex) enumvertex.nextElement();
@@ -274,71 +286,6 @@ public final class SBMLXpathParser {
 							}
 						}						
 					} // </functionTerm>
-					
-					/** retrieve input data **/
-					Element listOfInput = (Element) transChildren.get(0);
-					List inputElemList = listOfInput.getChildren();
-					/** retrieve children of <listOfInputs> element */
-					for (int p = 0; p < inputElemList.size(); p++) { 
-						try {
-							Element input = (Element) inputElemList.get(p);
-
-							String qualitativeSpecies = ((Element) input)
-									.getAttributeValue("qualitativeSpecies");
-							/** to get the SBOTerm value from the current edge **/
-							String sign = ((Element) input).getAttributeValue("sign");
-							if (sign.equals("SBO:0000020"))
-								sign = "negative";
-							else if (sign.equals("SBO:0000459"))
-								sign = "positive";
-							else
-								sign = "unknown"; 
-							String to = getNodeId(trans_Id);
-							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");	
-							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
-							byte maxvalue = -2;
-							
-							if (smax.startsWith("m")) {
-                            	maxvalue = -1; 
-                            } else 
-                            {
-                            	maxvalue = (byte)Integer.parseInt(smax);
-                            }
-							
-					        byte minv = 1;							        						
-					        
-					        /** On itre sur les <input>*/					    
-					        if(m_thresholds.get(qualitativeSpecies) != null) {
-						        Iterator it = ((Vector)m_thresholds.get(qualitativeSpecies)).iterator(); 
-						        Vector t_minvalue = new Vector();												
-								while(it.hasNext()) {
-								    minv =(byte) Double.parseDouble((String)it.next());
-								    if(!t_minvalue.contains(minv)) {
-								    	t_minvalue.add(minv);
-
-								    	byte maxval = minv;
-								    	
-								    	if(sign.equals("negative")) {
-								    		edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
-										}
-										else if(sign.equals("positive")){
-											edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-									    }
-									   	else {
-									   		edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_UNKNOWN);
-									    }
-										storeMaxValueForCheck(edge, maxvalue); 
-										m_edges.put(qualitativeSpecies, edge);
-										edge.me.rescanSign(graph);
-										ereader.setEdge(edge.me);
-								    }
-								} 		
-					        } 
-						} // try
-						catch (NumberFormatException e) {
-							throw new JDOMException("mal formed interaction's parameters");
-						}
-					} // </input> 
 				} // </transition> 
 			}  
 		} 
@@ -346,7 +293,7 @@ public final class SBMLXpathParser {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		placeInteractions();
+
 		placeNodeOrder();
 		graph.setSaveMode(vslevel);
 		if (!values.isEmpty()) {
@@ -358,108 +305,295 @@ public final class SBMLXpathParser {
 			vertex.getV_logicalParameters().cleanupDup();
 		}
 	} // void parse(File _FilePath)
-	String[] childs = childCount.split(" ");
-	byte[] childsCount = new byte[childs.length];
-
-	/** this function allows to obtain a string which
+	
+	/** This function allows to obtain a string which
 	 *  contain a logical function of every <functionTerm> element 
-	 *  **/
-	public StringBuffer deal(Element root) throws SAXException, IOException {
+	 *  We use MathMLExpression (JSci API) to easily parse 
+	 *  and obtain a String that represent all contain (data) located in a <math> element.
+	 *  For instance, if we have this :   <math>
+	 *										<apply>
+	 *										  <or/>
+	 *											<apply>
+	 *											  <and/>
+	 *												<apply>
+	 *											      <lt/>
+	 *											      <ci>GO</ci>
+	 *											      <ci>1</ci>
+	 *											    </apply>
+	 *											    <apply>
+	 *											      <geq/>
+	 *											      <ci>G2</ci>
+	 *											      <ci>2</ci>
+	 *											    </apply>
+	 *											</apply>
+	 *										    <apply>
+	 *											.......
+	 *										    </apply>
+	 *										 </apply>
+	 *									   </math>		 
+	 * The JSci API allows to obtain all contain representing this <math> element like this :
+	 *				" G0.lt(new MathDouble(1)).and(G2.geq(new MathDouble(2))).or(.....) "
+	 * Thus, we make some tranformations on this String to get a representation which correspond 
+	 * a logical function of GINsim, like this : " (!G0:1&G2:2) | (...) " 
+	 **/
+	
+	public FunctionTerm deal(Element root) throws SAXException, IOException {
 		List rootConv = root.getChildren();
 		Element math = (Element) rootConv.get(0);
 		XMLOutputter outputer = new XMLOutputter(Format.getPrettyFormat());
 		String xml = outputer.outputString(math);
 		InputSource file = new InputSource(new ByteArrayInputStream(xml.getBytes()));
 		
-		/** we use MathMLExpression (JSci API) to easily parse 
-		 ** and obtain data located in a <math> element.
-		 ** each <math> element has been transformed into a file **/
 		MathMLParser parser = new MathMLParser();
 		parser.parse(file);
-		int nLevel = 0;
-		Object[] parseList = parser.translateToJSciObjects();
-		StringBuffer sb = new StringBuffer();
-		m_thresholds = new HashMap();		
-		strBuf = new StringBuffer();
-		for (int i = 0; i < parseList.length; i++) {
-			Object o = parseList[i];
-			MathMLExpression expr = (MathMLExpression) o;
-			exploreExpression(expr, nLevel, sb, m_thresholds);
-		}	
-		return sb;
-	}
-
-	/** This function writes the logical function of
-	 ** every <functionTerm> as a string 
-	 **/	
-	public void exploreExpression(Object expression, int level, StringBuffer sb, Map m_t) {
-		if (expression instanceof MathMLExpression) {
-			MathMLExpression mexpr = (MathMLExpression) expression;
-			String op = mexpr.getOperation();
-			int nbrChilds = 0;
-			if (op.equals("lt") || op.equals("geq") || op.equals("leq") || op.equals("gt")) {
-				String chaine = null;
-				if (op.equals("leq") || op.equals("lt")) {
-					op = "!";			
-					String node = (String) mexpr.getArgument(0).toString();
-					String th = (String) mexpr.getArgument(1).toString();
-	
-					double d = Double.parseDouble(th);
-					nbrChilds = (int) (d);
-					chaine = op + mexpr.getArgument(0)+":"+nbrChilds;
-					if(!(m_t.containsKey(node)))
-					{
-						try {
-							m_t.put(node, new Vector());	
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-						}										
-					}
-					((Vector)m_t.get(node)).add(th);		
-
-				} else if (op.equals("gt") || op.equals("geq")) {
-					op = ""; 
-					String node = (String) mexpr.getArgument(0).toString();
-					String th = (String) mexpr.getArgument(1).toString();		
-					
-					double d = Double.parseDouble(th);
-					nbrChilds = (int) (d);
-					chaine = op + mexpr.getArgument(0)+":"+nbrChilds;		
-					if(!(m_t.containsKey(node)))
-					{
-						try {
-							m_t.put(node, new Vector());	
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-						}										
-					}
-					((Vector)m_t.get(node)).add(th);
-				}
-				sb.append(chaine);	
-			} else {
-				if (mexpr.length() > 1){
-					sb.append("(");
-					}
-				for (int i = 0; i < mexpr.length(); i++) {
-					exploreExpression(mexpr.getArgument(i), level + 1, sb, m_t);
-					if (i < mexpr.length() - 1) {
-						if (op.equals("and")) {
-							sb.append("&");
-						} else if (op.equals("or")) {
-							sb.append("|");
-						}
-					}
-				}
-				if (mexpr.length() > 1){
-					sb.append(")");
-					}
+		FunctionTerm function = new FunctionTerm("or");
+		Object[] parseList = parser.translateToJSciCode();
+		
+		 for (Object o : parseList)
+		 {
+			String exp_Object = (String)o;
+			HashMap< String, ArrayList<String>> cond_to_exp = MathMLCodeParser.getSBMLLogicalFunction(exp_Object);
+			if(cond_to_exp == null) {
+				return null;
 			}
-		} else {
-			sb.append("We have a serious problem !"); 
-		}	
+			Iterator<String> it_cond = cond_to_exp.keySet().iterator();
+			while (it_cond.hasNext()) {
+				String cond =  it_cond.next();
+				Condition condition = new Condition("and");
+				function.addCondition( condition);
+				ArrayList<String> expressions = cond_to_exp.get(cond);
+				
+				for(int i = 0; i< expressions.size(); i++){
+					Expression expression = new Expression(expressions.get(i), graph);
+					if( !expression.getNode().isEmpty()){
+						condition.addExpression( expression);						
+					}	
+				}
+			}			
+		 }
+		 
+		return function;
 	}
+	
+	
+	private void createMutliEdges( FunctionTerm function_term, String node_to_id, HashMap<String, String> input_to_sign, GsRegulatoryGraph graph){		
+				
+		List<Condition> l_condition = function_term.getConditionList();
+		Iterator<Condition> it_cond = l_condition.iterator();
+		while( it_cond.hasNext()){
+			Condition condition = it_cond.next(); 
+			List<Expression> l_exp = condition.getExpressionList();
+			Iterator<Expression> it_exp = l_exp.iterator();
+			while( it_exp.hasNext()){
+				Expression expression = it_exp.next();
+				String node_from_id = expression.getNode();
+				String sign_code = input_to_sign.get( node_from_id);
+				byte sign;
+				if ( "SBO:0000020".equals(sign_code)){
+					sign = GsRegulatoryMultiEdge.SIGN_NEGATIVE;
+				}
+				else if ( "SBO:0000459".equals(sign_code)){
+					sign = GsRegulatoryMultiEdge.SIGN_POSITIVE;
+				}
+				else{
+					sign = GsRegulatoryMultiEdge.SIGN_UNKNOWN;
+				}	
+				Vector<String> list_cases = expression.getAllCases();
+				
+				for( int i = 0; i < list_cases.size(); i++) {
+					String exp = list_cases.get(i);
+					int index = exp.indexOf(":");
+					if( index >= 0 && index < exp.length()-1) {
+						byte threshold = (byte) Integer.parseInt( exp.substring( index+1));
+						edge = graph.addNewEdge( node_from_id, node_to_id, threshold, sign);
+						m_edges.put(sign_code, edge);
+						edge.me.rescanSign(graph);
+						ereader.setEdge(edge.me);
+					}
+				}
+			}
+		}
+	}
+		
+	
+	static class MathMLCodeParser {
+		
+		public static HashMap< String, ArrayList<String>> getSBMLLogicalFunction(String code) {
+			
+			code = MathMLCodeParser.generateLogicalFunction( code);
+			if(code.isEmpty()) {
+				return null;
+			}
+
+			ArrayList<String> conditions = MathMLCodeParser.getConditions( code);
+			
+			HashMap< String, ArrayList<String>> final_result = new HashMap<String, ArrayList<String>>();
+			
+			for( int i = 0; i < conditions.size(); i++){
+				String condition = conditions.get( i);
+				ArrayList<String> expressions = MathMLCodeParser.getExpressions( condition);
+				final_result.put(condition, expressions);
+			}
+			return final_result;
+		}
+		
+		
+		private static ArrayList<String> getExpressions( String code){
+			
+			ArrayList<String> expressions = new ArrayList<String>();
+			
+			int old_index = 0;	
+			int new_index;
+			do{
+				new_index = code.indexOf( "&", old_index);
+				if( new_index >=0){
+					expressions.add( code.substring( old_index, new_index));
+					old_index = new_index +1;
+				}
+				else{
+					expressions.add( code.substring( old_index));
+				}
+			}while( new_index >= 0);
+			
+			return expressions;
+		}
+		
+		private static ArrayList<String> getConditions( String code){
+			
+			ArrayList<String> conditions = new ArrayList<String>();
+			
+			int old_index = 0;	
+			int new_index;
+			do{
+				new_index = code.indexOf( "|", old_index);
+				if( new_index >=0){
+					conditions.add( code.substring( old_index, new_index));
+					old_index = new_index +1;
+				}
+				else{
+					conditions.add( code.substring( old_index));
+				}
+			}while( new_index >= 0);
+			
+			return conditions;
+		}
+		
+		
+		private static String generateLogicalFunction( String code){
+			
+			code = MathMLCodeParser.replaceMathDouble( code);
+			
+			code = MathMLCodeParser.replaceGEQ( code);
+			
+			code = MathMLCodeParser.replaceLT( code);
+
+			code = MathMLCodeParser.replaceAnd( code);
+			
+			code = MathMLCodeParser.replaceOr( code);
+			
+			return code ;
+		}
+		
+		
+		private static String replaceMathDouble( String code){
+			
+			Pattern p = Pattern.compile( "new MathDouble\\((\\d)\\)");
+			Matcher m = p.matcher( code);
+			
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+				m.appendReplacement(sb, m.group(1));
+			}
+			m.appendTail(sb);
+			
+			return sb.toString();
+		}
+		
+		private static String replaceGEQ( String code){
+			
+			Pattern p = Pattern.compile( "([^\\(\\)\\.]*)\\.geq\\((\\d)\\)");
+			Matcher m = p.matcher( code);
+			
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+				m.appendReplacement(sb,  m.group(1) + ">=" + m.group(2));
+			}
+			m.appendTail(sb);
+			
+			return sb.toString();
+		}
+		
+		private static String replaceLT( String code){
+			
+			Pattern p = Pattern.compile( "([^\\(\\)\\.]*)\\.lt\\((\\d)\\)");
+			Matcher m = p.matcher( code);
+			
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+				String digit = m.group(2);
+				if( "1".equals( digit)){
+					m.appendReplacement(sb, m.group(1) + "<" + digit);
+				}
+				else{
+					m.appendReplacement(sb,  m.group(1) + "<" + m.group(2));
+				}
+			}
+			m.appendTail(sb);
+			
+			return sb.toString();
+		}
+		
+		private static String replaceAnd( String code){
+			
+			Pattern p = Pattern.compile( "\\.and\\(([^\\(\\)\\.]*)\\)");
+			Matcher m = p.matcher( code);
+			
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+				m.appendReplacement(sb, "&" + m.group(1));
+			}
+			m.appendTail(sb);
+			
+			return sb.toString();
+		}
+		
+		private static String replaceOr( String code){
+			
+			Pattern p = Pattern.compile( "\\.or\\(([^\\(\\)\\.]*)\\)");
+			Matcher m = p.matcher( code);
+			
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+				m.appendReplacement(sb, "|" + m.group(1));
+			}
+			m.appendTail(sb);
+			
+			String result = sb.toString();
+			if( "|".equals(result.substring( result.length() - 1))) {
+				result = result.substring(0, result.length() - 1);
+			}
+			
+			return result;
+		}
+		
+	} // class MathMLCodeParser
+	
+	
+	 public boolean characterInString(String chaine, char c)
+	     {
+	           boolean verite = false;
+	           for(int i = 0; i < chaine.length(); i++)
+	           {
+	               if(chaine.charAt(i) == c)
+	               {
+	                     verite = true;
+	                     break;
+	               }
+	           }
+	         return verite;
+	     }
+	
+	
 	
 	/** To get vertex ID corresponding to the current <transition> element **/
 	public String getNodeId(String transId) {
@@ -472,42 +606,6 @@ public final class SBMLXpathParser {
 		return nodeName;
 	}
 
-	private void storeMaxValueForCheck(GsRegulatoryEdge key, byte maxvalue) {
-		if (m_checkMaxValue == null) {
-			m_checkMaxValue = new HashMap();
-		}
-		m_checkMaxValue.put(key, new Integer(maxvalue));
-	}
-
-	/** To place different interactions between nodes **/
-	private void placeInteractions() {
-		// check the maxvalues of all interactions first
-		if (m_checkMaxValue != null) {
-			Map m = null;
-			Iterator it = m_checkMaxValue.entrySet().iterator();
-			while (it.hasNext()) {
-				Entry entry = (Entry) it.next();
-				byte m1 = ((GsRegulatoryEdge) entry.getKey()).getMax();	//			
-				byte m2 = ((Integer) entry.getValue()).byteValue();				
-				byte max = ((GsRegulatoryEdge) entry.getKey()).me.getSource().getMaxValue();
-				if (m1 != m2) {
-					if (m == null) { 
-						m = new HashMap();
-					}
-					if (m1 == -1 && m2 == max || m2 == -1 && m1 == max) {
-						m.put(entry, "");
-					} else {
-						m.put(entry, null);
-					}
-				}
-			} 
-			if (m != null) { 
-				graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
-						"inconsistency in some interactions", new InteractionInconsistencyAction(),
-						m, GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));
-			}			
-		}
-	} // void placeInteractions()
 
 	/** To place every node in the graph **/
 	private void placeNodeOrder() {
@@ -614,6 +712,7 @@ public final class SBMLXpathParser {
 		public boolean timeout(GsGraph graph, Object data) {
 			return true;
 		}
+		
 	} // class InteractionInconsistencyAction
 
 	class InteractionInconsistencyDialog extends StackDialog {
@@ -706,5 +805,312 @@ public final class SBMLXpathParser {
 			String[] t = { "Keep function", "Discard function" };
 			return t;
 		}
+		
 	} // class InvalidFunctionNotificationAction
+
+	
+	/** <p> An object Expression represent a "single" contain of an apply element.
+	 * i.e : <apply>
+	 *         <geq/>
+	 *           <ci>node id</ci> 
+	 *           <cn>threshold value</cn> 
+	 *       </apply>
+	 *  </p>     
+	 ** @author Guy-Ross ASSOUMOU
+	 **/	
+ class Expression {
+	 	/** The node id*/	 
+		private String node;
+		
+		/** The operator in this apply element, i.e : <geq/>. */
+		private String operator;
+		
+		/** The threshold value in this apply element. */
+		private int minvalue;
+		/** The maxvalue of this input element (the regulatory vertex which is identify by the "node id"). */
+		private int maxvalue;
+
+		
+		/* **************** CONSTRUCTORS ************/	
+		
+		public Expression() {
+			this.node ="";
+			this.operator = "";
+			this.minvalue = 0;
+			this.maxvalue = 0;
+		}		
+
+		/** To create an Expression Object with the maxvalue of any regulatory vertex of the graph. */
+		public Expression(String str, GsRegulatoryGraph graph) {
+			
+			int index = str.indexOf("<");
+			if( index >= 0) {
+				node = str.substring( 0, index);
+				operator = "lt";
+				minvalue = Integer.parseInt( str.substring( index+1));
+			}
+			else{
+				index = str.indexOf(">=");
+				if( index >= 0) {
+					node = str.substring( 0, index);
+					operator = "geq";
+					minvalue = Integer.parseInt( str.substring( index+2));
+				}
+				else {
+					System.out.println("SBMLXpathParser.Expression.Expression() : unknown operator in expression: " + str);
+					this.node ="";
+					this.operator = "";
+					this.minvalue = 0;
+					this.maxvalue = 0;
+				}
+			}
+			
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getGraphManager().getVertexByName(node);
+			if( vertex != null) {
+				maxvalue = vertex.getMaxValue();
+			}			
+		}
+		
+		public Expression(String node, String operator, int minvalue,
+				int maxvalue) {
+
+			this.node = node;
+			this.operator = operator;
+			this.minvalue = minvalue;
+			this.maxvalue = maxvalue;
+		}
+		
+		
+		/* **************** GETTERS AND SETTERS ************/
+		
+		public String getNode() {
+			return node;
+		}
+		public void setNode(String node) {
+			this.node = node;
+		}
+		public String getOperator() {
+			return operator;
+		}
+		public void setOperator(String operator) {
+			this.operator = operator;
+		}
+		public int getMinvalue() {
+			return minvalue;
+		}
+		public void setMinvalue(int minvalue) {
+			this.minvalue = minvalue;
+		}
+		public int getMaxvalue() {
+			return maxvalue;
+		}
+		public void setMaxvalue(int maxvalue) {
+			this.maxvalue = maxvalue;
+		}	
+
+		
+		/**
+		 * To manage each case of representation of any <apply> element.
+		 * @return a vector that contains a String which represents a combination 
+		 * of node and his threshold value. For instance : "GO:1" where "GO" is a 
+		 * node name and "1" is a threshold value for this node.
+		 */
+		 
+		public Vector<String> getAllCases() {
+			String op = getOperator();
+			Vector<String> cases = new Vector<String>();
+			
+			if(op.equals("geq")){
+				for( int i = minvalue; i <= maxvalue; i++){
+					String cas = node + ":" + i;
+					cases.add( cas);
+				}
+			}
+			else if(op.equals("gt") && maxvalue > minvalue){
+				for( int i = minvalue + 1; i <= maxvalue; i++){
+					String cas = node + ":" + i;
+					cases.add( cas);
+				}
+			}
+			else if(op.equals("leq")){
+				for( int i = minvalue; i >= 1; i--){
+					String cas = "!" + node + ":" + i;
+					cases.add( cas);
+				}
+			}
+			else if(op.equals("lt") && minvalue > 0){
+				for( int i = 1; i <= minvalue; i++){
+					String cas = "!"+ node + ":" + i;
+					cases.add( cas);
+				}
+			}
+			return cases;
+		} 
+		
+		@Override
+		public String toString() {
+			return node + " " + operator +" " + minvalue + "/" + maxvalue + "\n";
+		}
+	}// class Expression
+	
+ class Condition {
+	 
+		private List<Expression> expressionList;
+		private String op;
+		private String op_symbol;
+		
+		public Condition( String op) {
+			expressionList = new ArrayList<SBMLXpathParser.Expression>();
+			this.op = op;
+			if( op.equals("and")){
+				op_symbol = "&";
+			}
+			else if ( op.equals("or")){
+				op_symbol = "|";
+			}
+			else{
+				op_symbol="UNKNOWN";
+			}
+			
+			
+		}
+		
+		public List<Expression> getExpressionList() {
+			return expressionList;
+		}
+
+
+		public Vector<String> getAllCases() {
+
+			/** Generate an arraylist of vectors. Each vector contains all 
+			 * the situations described by an expression
+			 * For instance G0>=1 with G0={0,1,2} means G0:1 and G0:2 */
+			ArrayList<Vector<String>> expressions = new ArrayList<Vector<String>>();
+			Iterator<Expression> it = expressionList.iterator();
+			while(it.hasNext()){
+				expressions.add(it.next().getAllCases());
+			}
+			
+			Vector<String> all_cases = new Vector<String>();
+			all_cases.add("");
+			/** Parse the liste of expressions vectors */
+			Iterator<Vector<String>> exp_it = expressions.iterator();
+			while( exp_it.hasNext()){
+				Vector<String> exp = exp_it.next();
+				Iterator<String> case_it = exp.iterator();
+				Vector<String> temp_all_cases = new Vector<String>();
+				/** Parse the list of situations of a single expression */
+				while( case_it.hasNext()){
+					String current_exp_cas = case_it.next();
+					Iterator<String> all_case_ite = all_cases.iterator();
+					/** Duplicate the string perviously construct with the precedent expressions in order
+					 * to generate all the entries related to the current situation lists */
+					while( all_case_ite.hasNext()){
+						String current_all_case = all_case_ite.next();
+						String new_entry = current_all_case + op_symbol + current_exp_cas;
+						if(new_entry.charAt(0) == '&') {
+							new_entry = new_entry.substring(1);
+						}
+						
+						temp_all_cases.add( new_entry);
+					}
+				}
+				all_cases.clear();
+				all_cases.addAll( temp_all_cases);
+			}			
+		
+			return all_cases;
+		}
+		
+		public void addExpression(Expression exp) {
+			expressionList.add(exp);			
+		}
+		
+		@Override
+		public String toString() {
+			String result = op + "\n";
+			for (int i = 0; i < expressionList.size(); i++) {
+				result += "|--|-- " + expressionList.get( i);
+			}			
+			return result;
+		}
+		
+ 	}// class Condition
+	
+class FunctionTerm {		
+		private List<Condition> conditionList;
+		private String op;
+		private String op_symbol;
+		
+		public FunctionTerm(String op) {
+			conditionList = new ArrayList<SBMLXpathParser.Condition>();
+			this.op = op;
+			if( op.equals("and")){
+				op_symbol = "&";
+			}
+			else if ( op.equals("or")){
+				op_symbol = "|";
+			}
+			else{
+				op_symbol="UNKNOWN";
+			}
+		}
+		
+		
+		public String getOp() {
+			return op;
+		}
+
+
+		public void setOp(String op) {
+			this.op = op;
+		}
+
+
+		public List<Condition> getConditionList() {
+			return conditionList;
+		}	
+		
+		public void addCondition(Condition cond) {
+			conditionList.add(cond);
+			
+		}
+		
+		public String getLogicalFunction(){
+			
+			String logical_function = "";
+			Iterator<Condition> cond_ite = conditionList.iterator();
+			while( cond_ite.hasNext()){
+				Condition cond = cond_ite.next();
+				Vector<String> cond_cases = cond.getAllCases();
+				String new_entry = "";
+				Iterator<String> case_ite = cond_cases.iterator();
+				
+				while( case_ite.hasNext()){				
+					String cas = case_ite.next();								
+					new_entry += "(" + cas + ")|";
+
+				} // while
+				new_entry = new_entry.substring(0, new_entry.length() - 1); 
+				logical_function += new_entry + op_symbol;	
+
+			} // while
+			logical_function = logical_function.substring(0, logical_function.length() - 1);
+			logical_function = "(" + logical_function + ")";
+			return logical_function;
+		}
+		
+		@Override
+		public String toString() {
+
+			String result = op + "\n";
+			for (int i = 0; i < conditionList.size(); i++) {
+				result += "|-- " + conditionList.get( i) + "\n";
+			}			
+			result += this.getLogicalFunction();			
+			return result;			
+		}
+		
+	} // class FunctionTerm
+
 }

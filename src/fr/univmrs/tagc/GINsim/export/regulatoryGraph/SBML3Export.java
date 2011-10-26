@@ -89,14 +89,16 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
         try {
 			out.openTag("apply");
 	        out.addTag("and");    // enforced for now, we should try to avoid it when not needed
-	        
+
 	        // TODO: list of conditions
 	        for (int i=0 ; i<depth ; i++) {
 	        	int level = path[i][2];
 	        	if (path[i][0] > 0) {
+	        		System.out.println( "case GEQ");
 	        		writeConstraint("geq", level, path[i][0]);
 	        	}
 	        	if (path[i][1] < path[i][3]) {
+	        		System.out.println( "case LT");
 	        		writeConstraint("lt", level, path[i][1]);
 	        	}
 	        }

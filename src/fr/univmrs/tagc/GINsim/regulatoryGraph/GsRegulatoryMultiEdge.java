@@ -95,6 +95,11 @@ public class GsRegulatoryMultiEdge implements XMLize, ToolTipsable, GsDirectedEd
     			edge.index = (byte)i;
     			return i;
     		}
+    		else if (threshold == edges[i].threshold){
+    			edges[i] = edge;
+    			edge.index = (byte)i;
+    			return i;
+    		}
     	}
     	edge.index = (byte)edgecount;
     	edges[edgecount] = edge;
