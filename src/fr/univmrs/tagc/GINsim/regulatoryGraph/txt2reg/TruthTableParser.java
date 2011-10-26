@@ -102,21 +102,20 @@ public final class TruthTableParser {
 
 		            
 	try {
-	    BufferedReader entree = new BufferedReader (new FileReader(fileName)); 
+	    BufferedReader fileTable= new BufferedReader (new FileReader(fileName)); 
 			
-	    //  the first line contains 2 integers 
-	    StringTokenizer st = new StringTokenizer(entree.readLine());
+	    //  the first line contains 2 integers (total number of lines and number of components) 
+	    StringTokenizer st = new StringTokenizer(fileTable.readLine());
 	    L=(new Integer(st.nextToken())).intValue();// number of lines
 	    n=(new Integer(st.nextToken())).intValue();// number of components
 	    System.out.println("L="+L+" n="+n);		   
 	    table_gene=new byte[L][2*n];
-	    i=0;
-			        
-			        
+	    i=0;		        
+        
 	    // read the remaining lines to fill the table
-	    while (((line = entree.readLine()) != null)&& (line.length()>1))
+	    while (((line = fileTable.readLine()) != null)&& (line.length()>1))
 	    {
-		states=line.split(" ");                    // state and its image state
+		states=line.split("\\s");                    // state and its image state
 		   for ( j = 0; j < n; j++) 
 		   { 
 		    table_gene[i][j]=(byte)Character.getNumericValue(states[0].charAt(j)); 
@@ -125,7 +124,7 @@ public final class TruthTableParser {
 		i++;		
  
 	    }
-	    entree.close();			
+	    fileTable.close();			
 			        
 	    // to control... print the table
 	    for ( i = 0; i < L; i++) 
@@ -226,36 +225,47 @@ public final class TruthTableParser {
 		table_interactors[i]=new ArrayList();
 	  }
 	  for ( i=0;i<n;i++)              // for each component i, we want to determine its influence to determine all the interactions
-	  {
 		 for ( j=0;j<o[i];j++)    // for each occurrence of the series of blocks
 		 {             
 		     for(k=0;k<m[i];k++)  // On all the values of i
 		     {               
-		        L1=(k+j*(m[i]+1))*b[i];            // the first line to run of each block 
-		           for ( l=L1;l<L1+b[i];l++)         // running the lines of each block 	
-		           {
-		    	       for( int u=n; u<2*n; u++) // running columns of images (second part of the table)
+		        L1=(k+j*(m[i]+1))*b[i];            // the first line of the block  
+		        for ( l=L1;l<L1+b[i];l++)         // for all the lines of the block 	
+		        {
+		    	       for( int u=n; u<2*n; u++) //  scan the target values of each component (second column of image states)
 		    	       {
-		    		sign=-1; // sign is used to define the type of the interaction (positive/negative)
-		    		
+		    	    	  sign=-1; // sign defines the type of the interaction (0 positive/1 negative/2 unknown)		
 		    		      if(table_gene[l][u]> table_gene[l+b[i]][u]) sign=1;  // negative interaction
 		    		      else if (table_gene[l][u]< table_gene[l+b[i]][u]) sign=0; // positive interaction
 		    		      if (sign!=-1) 
 		    		      {
-		    			     if ((GsDirectedEdge)manager.getEdge(G[i], G[u-n])==null)
+		    		  		GsDirectedEdge edge = (GsDirectedEdge)manager.getEdge(G[i], G[u-n]);
+		    			     if (edge==null)
 		    			     {
 		    					model.interactiveAddEdge(G[i], G[u-n], sign); 
-		    					GsRegulatoryMultiEdge me =(GsRegulatoryMultiEdge)((GsDirectedEdge)manager.getEdge(G[i], G[u-n])).getUserObject();
-		    					incoming_edges[u-n].add(me.getEdge(0)); 
+		    					edge = (GsDirectedEdge)manager.getEdge(G[i], G[u-n]);
+		    			    	GsRegulatoryMultiEdge me=(GsRegulatoryMultiEdge)(edge.getUserObject());
+		    					incoming_edges[u-n].add(me.getEdge(0));
+		    					me.setMin(0, (byte)table_gene[l+b[i]][i]);
 		    					table_interactors[u-n].add(i);
 		    			     }
+		    			     /*else // an edge already exists TO BE FIXED.... in the case of a multi-arc encompassing several arcs..
+		    			     {   
+			    			    GsRegulatoryMultiEdge me=(GsRegulatoryMultiEdge)(edge.getUserObject());
+			    			    System.out.println("nb edges"+me.getEdgeCount()+"states of "+u+" "+table_gene[l][u]+" "+table_gene[l+b[i]][u]);
+			    				//either the arc already exists with this threshold or it has to be added
+			    			    if (me.getMax(me.getEdgeCount())<table_gene[l+b[i]][i]){
+			    			    		int multi=me.addEdge(sign,table_gene[l+b[i]][i], model);
+			    			    		incoming_edges[u-n].add(me.getEdge(me.getEdgeCount()));
+			    			    		me.setMin(0, (byte)table_gene[l+b[i]][i]);
+			    			    }
+		    			     }*/
 		    		      }
-		    		
 		    	       }	
 		           }
-		     }
-		 }
-	  }
+		     	}
+		 	}
+	  
 		
 	  // defining the logical parameters
 	  for (i=0; i<n; i++) 
@@ -266,14 +276,14 @@ public final class TruthTableParser {
 			 if (table_gene[j][i+n]!= 0)  
 			 {
 				List activeInteractions=new ArrayList();
-				// search for the active interactions ie for the components, sources of incoming edge, which value is one in state of line j
+				// search for the active interactions ie for the components, sources of incoming edge, which value is not zero in state of line j
 				 for(k=0;k<deg;k++)
 				 {
 					int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
 					if (table_gene[j][reg]!=0 )  
 					 {	 
 					 GsRegulatoryMultiEdge me =(GsRegulatoryMultiEdge)((GsDirectedEdge)manager.getEdge(G[reg], G[i])).getUserObject();
-					   activeInteractions.add(me.getEdge(0));
+					 activeInteractions.add(me.getEdge(0));
 					 }
 					 
 					 }
@@ -292,7 +302,7 @@ public final class TruthTableParser {
 	  
 	  //-------test--------
 	  
-	  for (i=0; i<n; i++) 
+/**	  for (i=0; i<n; i++) 
 	  {
 		int deg=incoming_edges[i].size();
 		 for (j=0; j<L; j++) 
@@ -321,7 +331,7 @@ public final class TruthTableParser {
 			 }
 		 }	
 	
-	  }  
+	  }  **/
 	  
 					                  
     } // close  the "private void defineModel()"	                	
