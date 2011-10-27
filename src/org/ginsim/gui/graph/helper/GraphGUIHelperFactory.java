@@ -39,7 +39,7 @@ public class GraphGUIHelperFactory<V, E extends Edge<V>> {
 	private GraphGUIHelperFactory(){}
 	
 	/**
-	 * Method providing access to the fatory instance
+	 * Method providing access to the factory instance
 	 * 
 	 * @return the GraphGUIHelperFactory singleton 
 	 */
@@ -69,9 +69,7 @@ public class GraphGUIHelperFactory<V, E extends Edge<V>> {
 		else{
 			String graph_helper_class = graph_class + GRAPH_GUI_HELPER_EXTENSION;
 			helper = (GraphGUIHelper<V,E>) Class.forName( graph_helper_class).newInstance();
-			if( helper != null){
-				guiGraphHelpers.put( graph_class, helper);
-			}
+			guiGraphHelpers.put( graph_class, helper);
 		}
 		
 		return helper;
