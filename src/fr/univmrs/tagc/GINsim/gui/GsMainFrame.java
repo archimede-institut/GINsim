@@ -14,11 +14,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.WindowConstants;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
-import fr.univmrs.tagc.GINsim.graph.*;
+import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
+import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
+import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
+import fr.univmrs.tagc.GINsim.gui.BaseMainFrame.TabSelection;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OptionStore;
@@ -26,27 +41,17 @@ import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.Frame;
 import fr.univmrs.tagc.common.widgets.SplitPane;
 
 /**
  * GINsim's main frame
  */
-public class GsMainFrame extends Frame implements GraphChangeListener {
+public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 
     private static final long serialVersionUID = -3626877344852342412L;
 
-    private JDialog secondaryFrame = null;
-	private JPanel jPanel = null;
-	private JSplitPane jSplitPane = null;
-	private JScrollPane graphScrollPane = null;
-	private JPanel graphPanel = null;
-	private JSplitPane jSplitPane1 = null;
-	private JTabbedPane jTabbedPane = null;
-	private JPanel gsGraphMapPanel = null;
 	private JPanel jPanel1 = null;
 	private GsGraphicAttributePanel gsGraphicAttributePanel = null;
-	private GsEventDispatcher eventDispatcher = new GsEventDispatcher(true);
     private GsActions gsActions = new GsActions(this);
     private GsGraph graph = null;
     private CardLayout cards = new CardLayout();
@@ -54,14 +59,6 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 
     private JPanel graphParameterPanel = null;
     private ObjectEditor graphEditor = null;
-
-    private JPanel notificationPanel = null;
-    private JLabel notificationMessage = null;
-    private JButton bcloseNotification = null;
-    private JComboBox cNotificationAction = null;
-    private JButton bNotificationAction = null;
-    private JButton bNotificationAction2 = null;
-    private GsGraphNotificationMessage notification = null;
 
     private ObjectEditor vertexEditor = null;
     private ObjectEditor edgeEditor = null;
@@ -72,334 +69,56 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 
 	private List v_edge;
 	private List v_vertex;
-    private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
 
-    public static final int TAB_CHECK = -1;
-    public static final int TAB_SINGLE = 0;
-    public static final int TAB_MULTIPLE = 1;
-    public static final int TAB_NONE = 2;
-    
-    public static final int[] FLAGS =  {1,2,4};
-    public static final int FLAG_NONE = FLAGS[TAB_NONE];
-    public static final int FLAG_SINGLE = FLAGS[TAB_SINGLE];
-    public static final int FLAG_MULTIPLE = FLAGS[TAB_MULTIPLE];
-
-    public static final int FLAG_SELECTION = FLAG_SINGLE | FLAG_MULTIPLE;
-    public static final int FLAG_ANY = FLAG_SELECTION | FLAG_NONE;
-
-    private Map m_tabs = new HashMap();
-    
 	/**
 	 * This method initializes a new MainFrame
 	 *
 	 */
 	public GsMainFrame() {
 		super("display.mainFrame", 800, 600);
-		initialize();
-		eventDispatcher.addGraphChangedListener(this);
-
-    setGlassPane(new GsGlassPane());
-	}
-	/**
-	 * This method initializes this
-	 */
-	private void initialize() {
         this.setJMenuBar(gsActions.getMenuBar());
-        this.setContentPane(getJPanel());
 
         // doesn't work on mac OSX ?
 		this.setIconImage(ImageLoader.getImage("gs1.gif"));
 		updateTitle();
+		addTab(Translator.getString("STR_tab_selection"), getJPanel1(), true, FLAG_SINGLE);
+		addTab(Translator.getString("STR_tab_graphicAttributes"), getGsGraphicAttributePanel(), true, FLAG_SELECTION);
+
+		getEventDispatcher().addGraphChangedListener(this);
+		setGlassPane(new GsGlassPane());
 		this.setVisible(true);
 	}
-	/**
-	 * This method initializes jPanel
-	 *
-	 * @return javax.swing.JPanel
-	 */
-	private JPanel getJPanel() {
-		if (jPanel == null) {
-			jPanel = new JPanel();
-			jPanel.setLayout(new GridBagLayout());
 
-            GridBagConstraints c_toolbar = new GridBagConstraints();
-            GridBagConstraints c_split = new GridBagConstraints();
-
-            c_toolbar.gridx = 0;
-            c_toolbar.gridy = 0;
-            c_toolbar.weightx = 1;
-            c_toolbar.weighty = 0;
-            c_toolbar.fill = GridBagConstraints.HORIZONTAL;
-            c_toolbar.anchor = GridBagConstraints.WEST;
-            c_split.gridx = 0;
-            c_split.gridy = 1;
-            c_split.weightx = 1;
-            c_split.weighty = 1;
-            c_split.fill = GridBagConstraints.BOTH;
-
-			jPanel.add(getJSplitPane(), c_split);
-			jPanel.add(gsActions.getToolBar(), c_toolbar);
-		}
-		return jPanel;
-	}
-	/**
-	 * This method initializes jSplitPane
-	 *
-	 * @return javax.swing.JSplitPane
-	 */
-	private JSplitPane getJSplitPane() {
-		if (jSplitPane == null) {
-			jSplitPane = new SplitPane();
-			jSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-			jSplitPane.setTopComponent(getGraphPanel());
-			jSplitPane.setBottomComponent(getJSplitPane1());
-			jSplitPane.setResizeWeight(1.0);
-			jSplitPane.setName("mainFrameSeparator");
-			jSplitPane.setOneTouchExpandable(true);
-		}
-		return jSplitPane;
-	}
-	/**
-	 * This method initializes gsGraphPanel
-	 *
-	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphPanel
-	 */
-	private JComponent getGraphPanel() {
-		if (graphPanel == null) {
-			graphPanel = new JPanel();
-
-			graphPanel.setLayout(new GridBagLayout());
-
-			graphScrollPane = new JScrollPane();
-
-			GridBagConstraints c = new GridBagConstraints();
-			c.gridx = 0;
-			c.gridy = 0;
-			c.weightx = 1;
-			c.weighty = 1;
-			c.fill = GridBagConstraints.BOTH;
-			graphPanel.add(graphScrollPane, c);
-
-			c = new GridBagConstraints();
-			c.gridx = 0;
-			c.gridy = 1;
-			c.weightx = 1;
-			c.weighty = 0;
-            c.fill = GridBagConstraints.HORIZONTAL;
-			graphPanel.add(getNotificationPanel(), c);
-		}
-		return graphPanel;
-	}
-
-	private JPanel getNotificationPanel() {
-		if (notificationPanel == null) {
-			notificationPanel = new JPanel();
-			if (graph != null) {
-				notification = graph.getTopMessage();
-			}
-			notificationPanel.setVisible(notification != null);
-			notificationPanel.setLayout(new GridBagLayout());
-
-			GridBagConstraints c = new GridBagConstraints();
-			c.gridx = 0;
-			c.gridy = 0;
-			c.weightx = 1;
-			c.weighty = 1;
-            c.insets = new Insets(0,10,0,10);
-			c.anchor = GridBagConstraints.WEST;
-			c.fill = GridBagConstraints.BOTH;
-			notificationMessage = new JLabel("no notification");
-			notificationPanel.add(notificationMessage, c);
-
-			c = new GridBagConstraints();
-			c.gridx = 2;
-			c.gridy = 0;
-			c.anchor = GridBagConstraints.EAST;
-            bNotificationAction = new JButton();
-            notificationPanel.add(bNotificationAction, c);
-            bNotificationAction.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    notificationAction(0);
-                }
-            });
-
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 0;
-            c.anchor = GridBagConstraints.EAST;
-            bNotificationAction2 = new JButton();
-            notificationPanel.add(bNotificationAction2, c);
-            bNotificationAction2.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    notificationAction(1);
-                }
-            });
-            cNotificationAction = new JComboBox();
-            notificationPanel.add(cNotificationAction, c);
-
-			c = new GridBagConstraints();
-			c.gridx = 3;
-			c.gridy = 0;
-            c.insets = new Insets(0,10,0,0);
-			c.anchor = GridBagConstraints.EAST;
-			bcloseNotification = new JButton("close");
-			notificationPanel.add(bcloseNotification, c);
-			bcloseNotification.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					closeNotification();
-				}
-			});
-		}
-		return notificationPanel;
-	}
-
+	@Override
 	protected void closeNotification() {
 		graph.deleteAllNotificationMessage();
 	}
 
-	protected void notificationAction(int index) {
-		if (notification != null) {
-            if (index == 0) {
-                if (cNotificationAction.isVisible()) {
-                    notification.performAction(cNotificationAction.getSelectedIndex());
-                    return;
-                }
+	@Override
+	protected TabSelection getCurrentSelectionType() {
+        int nb_edges = v_edge == null ? 0 : v_edge.size();
+        int nb_vertices = v_vertex == null ? 0 : v_vertex.size();
+        if (nb_edges == 0) {
+            switch (nb_vertices) {
+                case 0:
+                    return TabSelection.TAB_NONE;
+                case 1:
+                    return TabSelection.TAB_SINGLE;
+                default:
+                	return TabSelection.TAB_MULTIPLE;
             }
-            notification.performAction(index);
-		}
+        }
+        
+        if (nb_vertices == 0) {
+            if (nb_edges == 1) {
+            	return TabSelection.TAB_SINGLE;
+            }
+            return TabSelection.TAB_MULTIPLE;
+        }
+        
+        return TabSelection.TAB_MULTIPLE;
 	}
-
-	/**
-	 * This method initializes jSplitPane1
-	 *
-	 * @return javax.swing.JSplitPane
-	 */
-	private JSplitPane getJSplitPane1() {
-		if (jSplitPane1 == null) {
-			jSplitPane1 = new SplitPane();
-			jSplitPane1.setLeftComponent(getJTabbedPane());
-			jSplitPane1.setRightComponent(getGsGraphMapPanel());
-			jSplitPane1.setDividerSize(2);
-			jSplitPane1.setResizeWeight(0.7);
-			jSplitPane1.setName("mapSeparator");
-		}
-		return jSplitPane1;
-	}
-	/**
-	 * This method initializes jTabbedPane
-	 *
-	 * @return javax.swing.JTabbedPane
-	 */
-	private JTabbedPane getJTabbedPane() {
-	    if (jTabbedPane == null) {
-			jTabbedPane = new JTabbedPane();
-			jTabbedPane.setMinimumSize(new Dimension(0, 0));
-			addTab(Translator.getString("STR_tab_selection"), getJPanel1(), true, FLAG_SINGLE);
-			addTab(Translator.getString("STR_tab_graphicAttributes"), getGsGraphicAttributePanel(), true, FLAG_SELECTION);
-		}
-	    return jTabbedPane;
-	}
-
-    public void addTab(String name, JPanel panel, boolean enabled, int constraint) {
-        if (m_tabs.containsKey(name)) {
-            // TODO: error
-            return;
-        }
-        jTabbedPane.addTab(name, null, panel, null);
-        m_tabs.put(name, new Integer(constraint));
-        if (panel instanceof GraphChangeListener) {
-            eventDispatcher.addGraphChangedListener((GraphChangeListener) panel);
-        }
-        updateTabs(TAB_CHECK);
-    }
-    public boolean hasTab(String name) {
-        return m_tabs.containsKey(name);
-    }
-    /**
-     * enable/disable tabs depending on the constraint
-     * if the selected tab becomes inactive, select another one
-     */
-    public void updateTabs(int constraint) {
-        int cst = constraint;
-        if (constraint == TAB_CHECK) {
-            int nb_edges = v_edge == null ? 0 : v_edge.size();
-            int nb_vertices = v_vertex == null ? 0 : v_vertex.size();
-            if (nb_edges == 0) {
-                switch (nb_vertices) {
-                    case 0:
-                        cst = TAB_NONE;
-                        break;
-                    case 1:
-                        cst = TAB_SINGLE;
-                        break;
-                    default:
-                        cst = TAB_MULTIPLE;
-                }
-            } else if (nb_vertices == 0) {
-                if (nb_edges == 1) {
-                    cst = TAB_SINGLE;
-                } else {
-                    cst = TAB_MULTIPLE;
-                }
-            } else {
-                cst = TAB_MULTIPLE;
-            }
-        }
-
-        int selected = jTabbedPane.getSelectedIndex();
-        boolean need_change = true;
-        if (selected != -1) {
-            Integer i_sel = (Integer)m_tabs.get(jTabbedPane.getTitleAt(selected));
-            int sel = 0;
-            if (i_sel != null) {
-                sel = i_sel.intValue();
-            }
-            need_change = (sel & FLAGS[cst]) == 0;
-        }
-        int nbtabs = jTabbedPane.getTabCount();
-        for (int i=0 ; i<nbtabs ; i++) {
-            Integer curCst = (Integer)m_tabs.get(jTabbedPane.getTitleAt(i));
-            int cur_cst = 0;
-            if (curCst != null) {
-                cur_cst = curCst.intValue();
-            }
-
-            if ((cur_cst & FLAGS[cst]) > 0) {
-                jTabbedPane.setEnabledAt(i, true);
-                if (need_change) {
-                    jTabbedPane.setSelectedIndex(i);
-                    need_change = false;
-                }
-            } else {
-                jTabbedPane.setEnabledAt(i, false);
-            }
-        }
-    }
-    public boolean removeTab(String name) {
-        int i = jTabbedPane.indexOfTab(name);
-        if (i != -1) {
-            Component c = jTabbedPane.getComponentAt(i);
-            jTabbedPane.removeTabAt(i);
-            if (c instanceof GraphChangeListener) {
-                eventDispatcher.removeGraphChangeListener((GraphChangeListener)c);
-            }
-            m_tabs.remove(name);
-            updateTabs(TAB_CHECK);
-            return true;
-        }
-        return false;
-    }
-	/**
-	 * This method initializes gsGraphMapPanel
-	 *
-	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphMapPanel
-	 */
-	private JPanel getGsGraphMapPanel() {
-		if (gsGraphMapPanel == null) {
-			gsGraphMapPanel = new JPanel();
-		}
-		return gsGraphMapPanel;
-	}
+	
 	/**
 	 * This method initializes jPanel1
 	 *
@@ -512,22 +231,16 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
 
         updateTitle();
         updateGraphNotificationMessage(graph);
-        updateTabs(TAB_CHECK);
+        updateTabs(TabSelection.TAB_CHECK);
     }
     /**
-     * @return an empty jPanel (to be displayed when nothing is selected or when no parameter panel is avaible)
+     * @return an empty jPanel (to be displayed when nothing is selected or when no parameter panel is available)
      */
     private JPanel getEmptyPanel() {
         if (emptyPanel == null) {
             emptyPanel = new JPanel();
         }
         return emptyPanel;
-    }
-    /**
-     * @return this mainFrame's event dispatcher
-     */
-    public GsEventDispatcher getEventDispatcher() {
-        return eventDispatcher;
     }
     /**
      * @return the graph currently associated with this frame
@@ -615,56 +328,6 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
     	}
     }
 
-    /**
-     * change the attribute panel position.
-     *
-     * @param b : if true the panel will be in a separate window
-     */
-    public void divideWindow(boolean b) {
-		//if it's not divided
-		if (secondaryFrame==null && b) {
-			//create second frame
-			secondaryFrame=new JDialog(this);
-			secondaryFrame.setTitle(Translator.getString("STR_Tools"));
-			//detach component from SplitPane_H
-			jSplitPane.setBottomComponent(null);
-			//set tools in ContentPane
-			secondaryFrame.setContentPane(jSplitPane1);
-			secondaryFrame.setSize(800,300);
-			secondaryFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-					public void windowClosing(java.awt.event.WindowEvent evt) {
-						gsActions.viewcallback.divideWindow(false);
-					}
-				});
-			//show
-			secondaryFrame.setVisible(true);
-			secondaryFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		} else if (secondaryFrame!=null) {
-			// re-attach tools
-			jSplitPane.setBottomComponent(jSplitPane1);
-			//destroy secondary frame
-			secondaryFrame.setVisible(false);
-			secondaryFrame.dispose();
-			secondaryFrame=null;
-			this.setSize(this.getSize().width+1,this.getSize().height);
-		}
-    }
-    /**
-     * show/hide the minimap
-     *
-     * @param b : if true the miniMap will be shown
-     */
-    public void showMiniMap(boolean b) {
-        if (gsGraphMapPanel != null) {
-            if (b) {
-                gsGraphMapPanel.setVisible(b);
-                jSplitPane1.setDividerLocation(jSplitPane1.getWidth() - mmapDivLocation);
-            } else {
-                mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
-                gsGraphMapPanel.setVisible(b);
-            }
-        }
-    }
     /**
      * @see fr.univmrs.tagc.GINsim.graph.GraphChangeListener#graphSelectionChanged(fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent)
      *
@@ -765,62 +428,15 @@ public class GsMainFrame extends Frame implements GraphChangeListener {
             setTitle("GINsim");
         }
     }
-	public synchronized void updateGraphNotificationMessage(GsGraph graph) {
-		notification = graph.getTopMessage();
-		if (notification == null) {
-			notificationPanel.setVisible(false);
-		} else {
-            switch (notification.getType()) {
-            case GsGraphNotificationMessage.NOTIFICATION_INFO:
-            case GsGraphNotificationMessage.NOTIFICATION_INFO_LONG:
-                notificationPanel.setBackground(Color.CYAN);
-                break;
-            case GsGraphNotificationMessage.NOTIFICATION_WARNING:
-            case GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG:
-                notificationPanel.setBackground(Color.ORANGE);
-                break;
-            case GsGraphNotificationMessage.NOTIFICATION_ERROR:
-            case GsGraphNotificationMessage.NOTIFICATION_ERROR_LONG:
-                notificationPanel.setBackground(Color.RED);
-                break;
-
-            default:
-                notificationPanel.setBackground(null);
-                break;
-            }
-
-			notificationPanel.setVisible(true);
-			notificationMessage.setText(notification.toString());
-            String[] t_text = notification.getActionText();
-			if (t_text != null && t_text.length > 0) {
-                bNotificationAction.setVisible(true);
-                if ( t_text.length == 1) {
-                    cNotificationAction.setVisible(false);
-                    bNotificationAction2.setVisible(false);
-                    bNotificationAction.setText(t_text[0]);
-                    bNotificationAction.requestFocusInWindow();
-                } else if ( t_text.length == 2) {
-                    bNotificationAction.setText(t_text[0]);
-                    bNotificationAction2.setText(t_text[1]);
-                    bNotificationAction2.setVisible(true);
-                    cNotificationAction.setVisible(false);
-                    bNotificationAction2.requestFocusInWindow();
-                } else {
-                    cNotificationAction.setVisible(true);
-                    bNotificationAction2.setVisible(false);
-                    bNotificationAction.setText("OK");
-                    cNotificationAction.setModel(new DefaultComboBoxModel(t_text));
-                    cNotificationAction.requestFocusInWindow();
-                }
-			} else {
-                bNotificationAction.setVisible(false);
-                bNotificationAction2.setVisible(false);
-                cNotificationAction.setVisible(false);
-                bcloseNotification.requestFocusInWindow();
-			}
-		}
-	}
 	public GsActions getActions() {
 		return gsActions;
+	}
+	
+	@Override
+	public GsGraphNotificationMessage getTopNotification() {
+		if (graph != null) {
+			return graph.getTopMessage();
+		}
+		return null;
 	}
    }
