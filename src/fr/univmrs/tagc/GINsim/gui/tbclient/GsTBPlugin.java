@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.gui.BaseMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
@@ -39,9 +40,9 @@ public class GsTBPlugin implements GsPlugin, GsActionProvider {
   }
 
   public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
-    if (!((GsMainFrame)frame).removeTab("TBrowser")) {
+    if (!((BaseMainFrame)frame).removeTab("TBrowser")) {
       clientPanel = new GsTBClientPanel(graph);
-      ((GsMainFrame) frame).addTab("TBrowser", clientPanel, true, GsMainFrame.FLAG_ANY);
+      ((BaseMainFrame) frame).addTab("TBrowser", clientPanel, true, BaseMainFrame.FLAG_ANY);
       WindowListener[] wl = frame.getWindowListeners();
       for (int i = 0; i < wl.length; i++) {
         frame.removeWindowListener(wl[i]);

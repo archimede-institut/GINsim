@@ -23,6 +23,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
+import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -76,6 +77,11 @@ abstract public class BaseMainFrame extends Frame {
     private Map<String, Integer> m_tabs = new HashMap<String, Integer>();
     private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
 
+	private static final boolean alwaysForceClose = false;
+
+	// FIXME: to remove, only used by TB plugin
+	public static final int FLAG_ANY = TabSelection.TAB_MULTIPLE.flag | TabSelection.TAB_SINGLE.flag | TabSelection.TAB_NONE.flag;
+    
 	public BaseMainFrame(String id, int w, int h) {
 		super(id, w, h);
 		
@@ -168,6 +174,20 @@ abstract public class BaseMainFrame extends Frame {
 		}
 		return graphPanel;
 	}
+	
+	protected JScrollPane getGraphScrollPane() {
+		return graphScrollPane;
+	}
+
+    protected void setMapPanel(JPanel graphMapPanel) {
+        jSplitPane1.remove(gsGraphMapPanel);
+        gsGraphMapPanel = graphMapPanel;
+        if (gsGraphMapPanel == null) {
+            showMiniMap(false);
+        } else {
+        	jSplitPane1.setRightComponent(gsGraphMapPanel);
+        }
+	}
 
 	public abstract GsGraphNotificationMessage getTopNotification();
 	protected abstract void closeNotification();
@@ -244,8 +264,8 @@ abstract public class BaseMainFrame extends Frame {
 		}
 	}
 
-	public synchronized void updateGraphNotificationMessage() {
-		notification = graph.getTopMessage();
+	public synchronized void updateNotificationMessage() {
+		notification = getTopNotification();
 		if (notification == null) {
 			notificationPanel.setVisible(false);
 		} else {
@@ -465,7 +485,58 @@ abstract public class BaseMainFrame extends Frame {
         }
     }
 
-	
+    abstract protected boolean confirmCloseGraph();
+    
+    /**
+     * close the current window
+     * this will exit if it is the last window
+     */
+    public void doClose() {
+        doClose(true);
+    }
+    /**
+     * close the window without exiting:
+     *    ie close if it's not the last window
+     */
+    public void close() {
+        doClose(alwaysForceClose);
+    }
+    
+    /**
+     * close the window without exiting:
+     *    ie close if it's not the last window
+     * @param force
+     */
+    private void doClose(boolean force) {
+        
+        // FIXME: graph not always really closed
+        // --> GsEnv.m_graphs pas vide
+        
+    	if (confirmCloseGraph()) {
+            if (gsGraphMapPanel.isVisible()) {
+                mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
+            }
+            OptionStore.setOption("display.minimapsize", new Integer(mmapDivLocation));
+            if (secondaryFrame == null) {
+                OptionStore.setOption("display.dividersize", new Integer(jSplitPane.getHeight()-jSplitPane.getDividerLocation()));
+            }
+		    if (force || GsEnv.getNbFrame() > 1) {
+		        GsEnv.delFrame(this);
+		        dispose();
+		    } else {
+		        GsEnv.newGraph(this);
+		    }
+    	}
+    }
+
+    protected void setGraphView(JComponent view) {
+    	graphScrollPane.setViewportView(view);
+    }
+
+	public void updateRecentMenu() {
+		gsActions.updateRecentMenu();
+	}
+
 	enum TabSelection {
 		TAB_CHECK(0), TAB_NONE(1), TAB_SINGLE(2), TAB_MULTIPLE(4);
 

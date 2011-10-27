@@ -65,8 +65,6 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
     private GsParameterPanel vertexPanel = null;
     private GsParameterPanel edgePanel = null;
 
-	private boolean alwaysForceClose = false;
-
 	private List v_edge;
 	private List v_vertex;
 
@@ -81,8 +79,8 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         // doesn't work on mac OSX ?
 		this.setIconImage(ImageLoader.getImage("gs1.gif"));
 		updateTitle();
-		addTab(Translator.getString("STR_tab_selection"), getJPanel1(), true, FLAG_SINGLE);
-		addTab(Translator.getString("STR_tab_graphicAttributes"), getGsGraphicAttributePanel(), true, FLAG_SELECTION);
+		addTab(Translator.getString("STR_tab_selection"), getJPanel1(), true, TabSelection.TAB_SINGLE.flag);
+		addTab(Translator.getString("STR_tab_graphicAttributes"), getGsGraphicAttributePanel(), true, TabSelection.TAB_SINGLE.flag | TabSelection.TAB_MULTIPLE.flag);
 
 		getEventDispatcher().addGraphChangedListener(this);
 		setGlassPane(new GsGlassPane());
@@ -144,6 +142,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 		}
 		return gsGraphicAttributePanel;
 	}
+	
     public void graphChanged(GsNewGraphEvent event) {
         if (event.getNewGraph() == null) {
             close();
@@ -163,8 +162,9 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         Object cst = m_tabs.get(jTabbedPane.getTitleAt(0));
         jTabbedPane.setTitleAt(0, Translator.getString(graph.getTabLabel()));
         m_tabs.put(jTabbedPane.getTitleAt(0), cst);
+        
         graph.setMainFrame(this);
-        graphScrollPane.setViewportView(graph.getGraphManager().getGraphPanel());
+        setGraphView(graph.getGraphManager().getGraphPanel());
         jPanel1.removeAll();
         jPanel1.add(getEmptyPanel(), "empty");
         edgeEditor = graph.getEdgeEditor();
@@ -175,9 +175,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         if (vertexEditor == null) {
         	vertexPanel = graph.getVertexAttributePanel();
         }
-        jSplitPane1.remove(gsGraphMapPanel);
-        gsGraphMapPanel = graph.getGraphManager().getGraphMapPanel(graphScrollPane);
-        jSplitPane1.setRightComponent(gsGraphMapPanel);
+        setMapPanel(graph.getGraphManager().getGraphMapPanel(getGraphScrollPane()));
 
         if (graphParameterPanel != null) {
         	removeTab(Translator.getString("STR_tab_graphParameter"));
@@ -190,13 +188,10 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         	graphParameterPanel = graph.getGraphParameterPanel();
         }
         if (graphParameterPanel != null) {
-        	addTab(Translator.getString("STR_tab_graphParameter"), graphParameterPanel, true, FLAG_NONE);
+        	addTab(Translator.getString("STR_tab_graphParameter"), graphParameterPanel, true, TabSelection.TAB_NONE.flag);
         }
         gsActions.setDefaults();
 
-        if (gsGraphMapPanel == null) {
-            showMiniMap(false);
-        }
         if (edgeEditor != null) {
         	jPanel1.add(new GenericPropertyEditorPanel(edgeEditor), "edge");
         } else if (edgePanel != null) {
@@ -233,7 +228,8 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         updateGraphNotificationMessage(graph);
         updateTabs(TabSelection.TAB_CHECK);
     }
-    /**
+
+	/**
      * @return an empty jPanel (to be displayed when nothing is selected or when no parameter panel is available)
      */
     private JPanel getEmptyPanel() {
@@ -247,20 +243,6 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
      */
     public GsGraph getGraph() {
         return graph;
-    }
-    /**
-     * close the current window
-     * this will exit if it is the last window
-     */
-    public void doClose() {
-        doClose(true);
-    }
-    /**
-     * close the window without exiting:
-     *    ie close if it's not the last window
-     */
-    public void close() {
-        doClose(alwaysForceClose);
     }
 
     /**
@@ -301,32 +283,6 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         }
         return true;
     }
-    /**
-     * close the window without exiting:
-     *    ie close if it's not the last window
-     * @param force
-     */
-    private void doClose(boolean force) {
-        
-        // FIXME: graph not always really closed
-        // --> GsEnv.m_graphs pas vide
-        
-    	if (confirmCloseGraph()) {
-            if (gsGraphMapPanel.isVisible()) {
-                mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
-            }
-            OptionStore.setOption("display.minimapsize", new Integer(mmapDivLocation));
-            if (secondaryFrame == null) {
-                OptionStore.setOption("display.dividersize", new Integer(jSplitPane.getHeight()-jSplitPane.getDividerLocation()));
-            }
-		    if (force || GsEnv.getNbFrame() > 1) {
-		        GsEnv.delFrame(this);
-		        dispose();
-		    } else {
-		        GsEnv.newGraph(this);
-		    }
-    	}
-    }
 
     /**
      * @see fr.univmrs.tagc.GINsim.graph.GraphChangeListener#graphSelectionChanged(fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent)
@@ -353,11 +309,11 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
                     edgePanel.setEditedObject(v_edge.get(0));
                 }
                 gsGraphicAttributePanel.setEditedObject(v_edge.get(0));
-                updateTabs(TAB_SINGLE);
+                updateTabs(TabSelection.TAB_SINGLE);
             } else {
                 cards.show(jPanel1, "empty");
                 gsGraphicAttributePanel.setEditedObject(v_edge);
-                updateTabs(TAB_MULTIPLE);
+                updateTabs(TabSelection.TAB_MULTIPLE);
             }
         } else if (event.getNbEdge() == 0 && event.getNbVertex() > 0) {
             if (event.getNbVertex() == 1) {
@@ -368,16 +324,16 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
                     vertexPanel.setEditedObject(v_vertex.get(0));
                 }
                 gsGraphicAttributePanel.setEditedObject(v_vertex.get(0));
-                updateTabs(TAB_SINGLE);
+                updateTabs(TabSelection.TAB_SINGLE);
             } else {
                 cards.show(jPanel1, "empty");
                 gsGraphicAttributePanel.setEditedObject(v_vertex);
-                updateTabs(TAB_MULTIPLE);
+                updateTabs(TabSelection.TAB_MULTIPLE);
             }
         } else {
             cards.show(jPanel1, "empty");
             gsGraphicAttributePanel.setEditedObject(null);
-            updateTabs(TAB_NONE);
+            updateTabs(TabSelection.TAB_NONE);
         }
     }
 
@@ -438,5 +394,12 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 			return graph.getTopMessage();
 		}
 		return null;
+	}
+
+	@Override
+	public void updateGraphNotificationMessage(GsGraph graph) {
+		if (graph == this.graph) {
+			super.updateNotificationMessage();
+		}
 	}
    }

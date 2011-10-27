@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import java.util.jar.JarFile;
@@ -15,6 +17,7 @@ import javax.swing.JFrame;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
+import fr.univmrs.tagc.GINsim.gui.BaseMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.plugin.GsClassLoader;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
@@ -33,7 +36,7 @@ public class GsEnv {
 	private static String ginsimDir = null;
 	private static String dtdDir = null;
 	private static String pluginDir = null;
-	private static Vector allFrames = new Vector(1);
+	private static List<BaseMainFrame> allFrames = new ArrayList<BaseMainFrame>(1);
 
     private static final Map m_graphs = new HashMap();
 
@@ -62,7 +65,7 @@ public class GsEnv {
 	 *
 	 * @param frame the frame to add
 	 */
-	public static void addFrame(GsMainFrame frame) {
+	public static void addFrame(BaseMainFrame frame) {
 		allFrames.add(frame);
 	}
 
@@ -73,10 +76,10 @@ public class GsEnv {
 	 *
 	 * @param frame the frame to remove
 	 */
-	public static void delFrame (GsMainFrame frame) {
+	public static void delFrame (BaseMainFrame frame) {
 		allFrames.remove(frame);
 
-                if (allFrames.size() == 0) {
+		if (allFrames.size() == 0) {
             OptionStore.saveOptions();
 			System.exit(0);
 		}
@@ -88,8 +91,8 @@ public class GsEnv {
 	 */
 	public static void exit() {
 		// try to close all windows
-		for ( int i=allFrames.size()-1 ; i>=0 ; i--) {
-			((GsMainFrame)allFrames.get(i)).closeEvent();
+		for ( BaseMainFrame frame: allFrames) {
+			frame.closeEvent();
 		}
 	}
 
@@ -211,7 +214,7 @@ public class GsEnv {
      * create a new default graph in frame m.
      * @param m
      */
-    public static void newGraph(GsMainFrame m) {
+    public static void newGraph(BaseMainFrame m) {
         newGraph(m, 0);
     }
 
@@ -220,14 +223,14 @@ public class GsEnv {
      * @param m
      * @param graphType
      */
-    public static void newGraph(GsMainFrame m, int graphType) {
+    public static void newGraph(BaseMainFrame m, int graphType) {
 
         if (graphType > v_graph.size()) {
             error(new GsException(GsException.GRAVITY_ERROR, "STR_noSuchGraphType"), m);
             return;
         }
 
-        GsGraph myGraph = ((GsGraphDescriptor)v_graph.get(graphType)).getNew(m);
+        GsGraph myGraph = ((GsGraphDescriptor)v_graph.get(graphType)).getNew((GsMainFrame)m);
         myGraph.getGraphManager().ready();
 		m.getEventDispatcher().fireGraphChange(null, null, myGraph, false);
     }
@@ -354,9 +357,8 @@ public class GsEnv {
      * ask all GINsim frames to update their recent menus
      */
     public static void updateRecentMenu() {
-        for (int i=0 ; i<allFrames.size() ; i++) {
-            GsMainFrame frame = (GsMainFrame)allFrames.get(i);
-            frame.getGsAction().updateRecentMenu();
+        for (BaseMainFrame frame: allFrames) {
+            frame.updateRecentMenu();
         }
     }
 
