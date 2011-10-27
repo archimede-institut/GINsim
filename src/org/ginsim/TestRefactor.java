@@ -18,6 +18,8 @@ import org.ginsim.graph.regulatoryGraph.RegulatoryVertex;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.JgraphGUIImpl;
 
+import fr.univmrs.tagc.common.widgets.Frame;
+
 /**
  * Simple, stupid launcher to test the ongoing refactoring
  * 
@@ -48,9 +50,12 @@ public class TestRefactor {
 		GraphGUI<RegulatoryVertex, RegulatoryEdge> graphGUI = getGraphGUI(lrg);
 
 		if (graphGUI != null) {
-			JFrame frame = new JFrame();
-			frame.setSize(800, 600);
-			
+			JFrame frame = new Frame("test", 800, 600) {
+				@Override
+				public void doClose() {
+					System.exit(0);
+				}
+			};
 			Container panel = frame.getContentPane();
 			panel.setLayout(new GridBagLayout());
 			

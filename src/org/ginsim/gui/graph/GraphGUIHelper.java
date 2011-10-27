@@ -15,6 +15,8 @@ public interface GraphGUIHelper<V, E extends Edge<V>> {
 
 	public GUIEditor<Graph<V,E>> getMainEditionPanel();
 	
+	public String getEditingTabLabel();
+	
 	public GUIEditor<V> getNodeEditionPanel();
 	
 	public GUIEditor<E> getEdgeEditionPanel();
