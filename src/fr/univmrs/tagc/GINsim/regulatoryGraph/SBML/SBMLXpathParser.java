@@ -414,7 +414,10 @@ public final class SBMLXpathParser {
 			}
 		}
 	}
-		
+	
+	
+	/** This class parse a JSci String that correspond to all data located in <math> element from every
+	 *  <functionTerm> element of a <transition> tag. **/
 	
 	static class MathMLCodeParser {
 		
@@ -437,7 +440,7 @@ public final class SBMLXpathParser {
 			return final_result;
 		}
 		
-		
+		/** **/
 		private static ArrayList<String> getExpressions( String code){
 			
 			ArrayList<String> expressions = new ArrayList<String>();
@@ -494,7 +497,12 @@ public final class SBMLXpathParser {
 			return code ;
 		}
 		
-		
+		/**
+		 * Replace some caracters identify by "new MathDouble(int)" in a JSci String by an Integer.
+		 * i.e : if we have a JSci String like this :" G0.lt(new MathDouble(1)) ", thus we can
+		 * replace "new MathDouble(1)" by "1". This String become: " G0.lt(:1) ".
+		 * @return String.
+		 */		
 		private static String replaceMathDouble( String code){
 			
 			Pattern p = Pattern.compile( "new MathDouble\\((\\d)\\)");
@@ -509,6 +517,12 @@ public final class SBMLXpathParser {
 			return sb.toString();
 		}
 		
+		
+		/**
+		 * Replace a "geq" String by ">=".
+		 * @return String without geq. 
+		 * For instance : " G0.geq(:1) " become : " G0 >= 1) "
+		 */	
 		private static String replaceGEQ( String code){
 			
 			Pattern p = Pattern.compile( "([^\\(\\)\\.]*)\\.geq\\((\\d)\\)");
@@ -523,6 +537,12 @@ public final class SBMLXpathParser {
 			return sb.toString();
 		}
 		
+		
+		/**
+		 * Replace a "lt" String by "<".
+		 * @return String without geq. 
+		 * For instance : " G0.lt(:1) " become : " G0 < 1) "
+		 */	
 		private static String replaceLT( String code){
 			
 			Pattern p = Pattern.compile( "([^\\(\\)\\.]*)\\.lt\\((\\d)\\)");
@@ -543,6 +563,12 @@ public final class SBMLXpathParser {
 			return sb.toString();
 		}
 		
+		/**
+		 * Replace an "and" operator by "&".
+		 * @return String without "and" operator. 
+		 * For instance, this String: " G0.lt(new MathDouble(1)).and(G2.geq(new MathDouble(2))) " 
+		 * become : " G0.lt(new MathDouble(1)) & (G2.geq(new MathDouble(2))) "
+		 */	
 		private static String replaceAnd( String code){
 			
 			Pattern p = Pattern.compile( "\\.and\\(([^\\(\\)\\.]*)\\)");
@@ -557,6 +583,13 @@ public final class SBMLXpathParser {
 			return sb.toString();
 		}
 		
+		
+		/**
+		 * Replace an "or" operator by "|".
+		 * @return String without "or" operator. 
+		 * For instance, this String: " G0.lt(new MathDouble(1)).or(G2.geq(new MathDouble(2))) " 
+		 * become : " G0.lt(new MathDouble(1)) | (G2.geq(new MathDouble(2))) "
+		 */	
 		private static String replaceOr( String code){
 			
 			Pattern p = Pattern.compile( "\\.or\\(([^\\(\\)\\.]*)\\)");
@@ -809,7 +842,7 @@ public final class SBMLXpathParser {
 	} // class InvalidFunctionNotificationAction
 
 	
-	/** <p> An object Expression represent a "single" contain of an apply element.
+	/** <p> An object Expression represent the contain of a "single" an apply element.
 	 * i.e : <apply>
 	 *         <geq/>
 	 *           <ci>node id</ci> 
@@ -840,7 +873,7 @@ public final class SBMLXpathParser {
 			this.maxvalue = 0;
 		}		
 
-		/** To create an Expression Object with the maxvalue of any regulatory vertex of the graph. */
+		/** To create an Expression Object with the maxvalue of every regulatory vertex of the graph. */
 		public Expression(String str, GsRegulatoryGraph graph) {
 			
 			int index = str.indexOf("<");
@@ -921,10 +954,8 @@ public final class SBMLXpathParser {
 			Vector<String> cases = new Vector<String>();
 			
 			if(op.equals("geq")){
-				for( int i = minvalue; i <= maxvalue; i++){
-					String cas = node + ":" + i;
-					cases.add( cas);
-				}
+				String cas = node + ":" + minvalue;
+				cases.add( cas);
 			}
 			else if(op.equals("gt") && maxvalue > minvalue){
 				for( int i = minvalue + 1; i <= maxvalue; i++){
@@ -939,13 +970,14 @@ public final class SBMLXpathParser {
 				}
 			}
 			else if(op.equals("lt") && minvalue > 0){
-				for( int i = 1; i <= minvalue; i++){
-					String cas = "!"+ node + ":" + i;
-					cases.add( cas);
-				}
+				String cas = "!"+ node + ":" + minvalue;
+				cases.add( cas);
 			}
 			return cases;
 		} 
+
+		
+		
 		
 		@Override
 		public String toString() {
@@ -953,11 +985,17 @@ public final class SBMLXpathParser {
 		}
 	}// class Expression
 	
+ 
+ /** An object Condition represent every first <apply> tag under the <or/> tag in SBML file.
+  *  A condition contains mainly an operator ("and" operator always) and a list of Expression.
+  * */
  class Condition {
 	 
 		private List<Expression> expressionList;
 		private String op;
 		private String op_symbol;
+		
+		/* **************** CONSTRUCTORS ************/	
 		
 		public Condition( String op) {
 			expressionList = new ArrayList<SBMLXpathParser.Expression>();
@@ -975,6 +1013,9 @@ public final class SBMLXpathParser {
 			
 		}
 		
+		/* ****************  GETTERS  ************/	
+		
+		/** To get a list of Expressions that belong to this Condition */
 		public List<Expression> getExpressionList() {
 			return expressionList;
 		}
@@ -993,16 +1034,19 @@ public final class SBMLXpathParser {
 			
 			Vector<String> all_cases = new Vector<String>();
 			all_cases.add("");
+			
 			/** Parse the liste of expressions vectors */
-			Iterator<Vector<String>> exp_it = expressions.iterator();
+			Iterator<Vector<String>> exp_it = expressions.iterator();			
 			while( exp_it.hasNext()){
 				Vector<String> exp = exp_it.next();
 				Iterator<String> case_it = exp.iterator();
 				Vector<String> temp_all_cases = new Vector<String>();
+				
 				/** Parse the list of situations of a single expression */
 				while( case_it.hasNext()){
 					String current_exp_cas = case_it.next();
 					Iterator<String> all_case_ite = all_cases.iterator();
+					
 					/** Duplicate the string perviously construct with the precedent expressions in order
 					 * to generate all the entries related to the current situation lists */
 					while( all_case_ite.hasNext()){
@@ -1022,6 +1066,7 @@ public final class SBMLXpathParser {
 			return all_cases;
 		}
 		
+		/** Add an Expression into a list */
 		public void addExpression(Expression exp) {
 			expressionList.add(exp);			
 		}
@@ -1037,10 +1082,16 @@ public final class SBMLXpathParser {
 		
  	}// class Condition
 	
+ 
+ /** A FunctionTerm object represent a collection of Condition object.
+  *  It contains also an operator (mainly "or" operator) **/
+ 
 class FunctionTerm {		
 		private List<Condition> conditionList;
 		private String op;
 		private String op_symbol;
+		
+		/* **************** CONSTRUCTORS ************/
 		
 		public FunctionTerm(String op) {
 			conditionList = new ArrayList<SBMLXpathParser.Condition>();
@@ -1056,6 +1107,7 @@ class FunctionTerm {
 			}
 		}
 		
+		/* **************** GETTERS AND SETTERS ************/
 		
 		public String getOp() {
 			return op;
@@ -1075,7 +1127,9 @@ class FunctionTerm {
 			conditionList.add(cond);
 			
 		}
-		
+	
+		/** @return a logical fiunction that correspond to  
+		 * **/
 		public String getLogicalFunction(){
 			
 			String logical_function = "";
@@ -1092,6 +1146,8 @@ class FunctionTerm {
 
 				} // while
 				new_entry = new_entry.substring(0, new_entry.length() - 1); 
+				System.out
+				.println("SBMLXpathParser.FunctionTerm.getLogicalFunction(): final new_entry = " + new_entry);
 				logical_function += new_entry + op_symbol;	
 
 			} // while
