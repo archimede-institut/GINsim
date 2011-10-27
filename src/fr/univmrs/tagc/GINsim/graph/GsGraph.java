@@ -35,8 +35,12 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphListener<V,E>, GraphChangeListener {
     /** graphManager used */
     protected GsGraphManager<V,E> graphManager;
+    
+    // TODO Move to GUI side
     /** name of the file in which we save */
     protected String saveFileName = null;
+    
+    // TODO Move to GUI side if used
     /** the save mode, maybe unused... */
     protected int saveMode = 2;
     /** the frame containing the graph */
@@ -127,6 +131,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         eReader = graphManager.getEdgeAttributesReader();
     }
 
+    // TODO Usage? Where to move?
     public void endParsing() {
     	isParsing = false;
     	for (GsGraphListener<V,E> l: listeners) {
@@ -134,6 +139,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     	}
     }
 
+    // TODO Usage? Where to move?
     public boolean isParsing() {
     	return isParsing;
     }
@@ -142,6 +148,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      *
      * @param saveFileName
      */
+    // TODO Move to GUI side
     public void setSaveFileName(String saveFileName) {
         this.saveFileName = saveFileName;
         // TODO: cleaner way to remember if extended or not
@@ -152,19 +159,26 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         }
         endParsing();
     }
+    
+    
     /**
      * set the save mode.
      *
      * @param saveMode
      */
+    // TODO Move to GUI side
     public void setSaveMode(int saveMode) {
         this.saveMode = saveMode;
     }
+    
+    
     /**
      * @param param kind of vertex to create
      * @return the newly created vertex (or null if failed/inapropriate)
      */
     abstract protected V doInteractiveAddVertex (int param);
+    
+    
     /**
      *
      * @param source
@@ -173,6 +187,9 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @return the newly created edge (or null if failed/inapropriate)
      */
     abstract protected Object doInteractiveAddEdge (V source, V target, int param);
+    
+    
+    
     /**
      * actually save the graph.
      *
@@ -181,16 +198,20 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param selectedOnly
      * @throws GsException
      */
+    // TODO Move to GUI side
     abstract protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException;
 
     /**
      *
      * @return a FileFilter for the save dialog (or null)
      */
+    // TODO Move to GUI side
     abstract protected FileFilter doGetFileFilter();
+    
     /**
      * @return an accessory panel for the save dialog (or null)
      */
+    // TODO Move to GUI side
     abstract protected JPanel doGetFileChooserPanel();
 
     /**
@@ -200,6 +221,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * this will call the specialised method doSave() to do the work
      * @throws GsException
      */
+    // TODO Move to GUI side
     public void save() throws GsException {
         if (saveFileName == null) {
             saveAs(false);
@@ -212,6 +234,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * similar to save() but will save only the selected subgraph
 	 * @throws GsException
 	 */
+    // TODO Move to GUI side
 	public void saveSubGraph() throws GsException {
 	    GsGraph subGraph = doCopySelection( mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges() );
 	    if (subGraph != null) {
@@ -225,14 +248,18 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * when done, calls save()
      * @throws GsException
      */
+    // TODO Move to GUI side
     public void saveAs() throws GsException {
     		saveAs(false);
     }
+    
+    
     /**
      *
      * @param selectedOnly
      * @throws GsException
      */
+    // TODO Move to GUI side
     private void saveAs(boolean selectedOnly) throws GsException {
     	JComponent poption = doGetFileChooserPanel();
     	String filename = GsOpenAction.selectSaveFile(mainFrame,
@@ -276,6 +303,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param compressed
      * @throws GsException
      */
+    // TODO Move to GUI
     private void save(boolean selectedOnly, String savePath, int saveMode, boolean extended, boolean compressed) {
         try {
         	File f = new File(savePath != null ? savePath : this.saveFileName);
@@ -416,6 +444,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param target
      * @param param
      */
+    // TODO Usage? Where to move?
     public void interactiveAddEdge(V source, V target, int param) {
         if (v_blockEdit != null) {
             return;
@@ -431,6 +460,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      *
      * @param obj
      */
+    // TODO Move 'fireGraphChange' call to AbstractGraphFrontend ?
     public void removeVertex(V obj) {
         graphManager.removeVertex(obj);
         fireGraphChange(CHANGE_VERTEXREMOVED, obj);
@@ -439,20 +469,26 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     /**
      * @return a GsParameterPanel able to edit edges of this graph or null if not applicable.
      */
+    // TODO Move to GUI
     public GsParameterPanel getEdgeAttributePanel() {
     	return null;
     }
+    
     /**
      * @return a GsParameterPanel able to edit vertices of this graph or null if not applicable.
      */
+    // TODO Move to GUI
     public GsParameterPanel getVertexAttributePanel() {
     	return null;
     }
 
+    // TODO Move to GUI
     // TODO: deprecate get----AttributePanel to promote get---Editor
     public ObjectEditor getEdgeEditor() {
     	return null;
     }
+    
+    // TODO Move to GUI
     public ObjectEditor getVertexEditor() {
     	return null;
     }
@@ -460,12 +496,14 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     /**
      * @return true if the graph is already saved (ie hasn't been altered since the last save);
      */
+    // TODO Move to GUI
     public boolean isSaved() {
         return saved;
     }
     /**
      * @return the name under which this graph is saved
      */
+    // TODO Move to GUI
     public String getSaveFileName() {
         return saveFileName;
     }
@@ -473,6 +511,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     /**
      * @return the name associated with this graph.
      */
+    // TODO Move to AbstractGraphFrontend
     public String getGraphName() {
         return graphName;
     }
@@ -483,6 +522,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param graphName the new name.
      * @throws GsException if the name is invalid.
      */
+    // TODO Move to AbstractGraphFrontend
     public void setGraphName(String graphName) throws GsException {
 
 		if (!graphName.matches("[a-zA-Z_]+[a-zA-Z0-9_-]*")) {
@@ -501,6 +541,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @return a vector describing edit modes.
      * each element of the vector must be an GsEditModeDescriptor object
      */
+    // TODO Move to AbstractGraphFrontend
     public Vector getEditingModes() {
         return null;
     }
@@ -522,15 +563,18 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @param layout
 	 */
+ // TODO Move to AbstractGraphFrontend (GraphView)
 	public static void registerLayoutProvider(GsActionProvider layout) {
 		if (v_layout == null) {
 			v_layout = new Vector();
 		}
 		v_layout.add(layout);
 	}
+	
 	/**
 	 * @return a list of avaible layouts.
 	 */
+	// TODO Move to AbstractGraphFrontend (GraphView)
 	public List getLayout() {
 		return v_layout;
 	}
@@ -538,6 +582,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @param export
 	 */
+	// TODO Move to AbstractGraphFrontend
 	public static void registerExportProvider(GsActionProvider export) {
 		if (v_export == null) {
 			v_export = new Vector();
@@ -548,6 +593,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @return a list of avaible export filters.
 	 */
+	// TODO Move to AbstractGraphFrontend
 	public List getExport() {
 		return v_export;
 	}
@@ -556,6 +602,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 *
 	 * @param action
 	 */
+	// TODO Move to AbstractGraphFrontend
 	public static void registerActionProvider(GsActionProvider action) {
 		if (v_action == null) {
 			v_action = new Vector();
@@ -565,6 +612,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @return a list of avaible actions.
 	 */
+	// TODO Move to AbstractGraphFrontend
 	public List getAction() {
 		return v_action;
 	}
@@ -574,6 +622,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      *
      * @param manager
      */
+	// TODO Move to AbstractGraphFrontend
     public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
         if (v_OManager == null) {
             v_OManager = new Vector();
@@ -583,10 +632,12 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     /**
      * @return object managers
      */
+    // TODO Move to AbstractGraphFrontend
     public List getObjectManager() {
         return v_OManager;
     }
 
+    // TODO Move to AbstractGraphFrontend
     public GsGraphAssociatedObjectManager getObjectManager(Object key) {
     	if (v_OManager == null) {
     		return null;
@@ -603,23 +654,31 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @return a vector of layout actions for this kind of graph
 	 */
+    // TODO Move to AbstractGraphFrontend (GraphView)
 	abstract public List getSpecificLayout();
+	
 	/**
 	 * @return a vector of export actions for this kind of graph.
 	 */
+	// TODO Move to AbstractGraphFrontend
 	abstract public List getSpecificExport();
+	
     /**
      * @return a vector of action related to this kind of graph.
      */
+	// TODO Move to AbstractGraphFrontend
     abstract public List getSpecificAction();
+    
     /**
      * @return a vector of action related to this kind of graph.
      */
+    // TODO Move to AbstractGraphFrontend
     abstract public List getSpecificObjectManager();
     /**
      * @param key
      * @return the object manager associated with THIS kind of graph and to a given key
      */
+    // TODO Move to AbstractGraphFrontend
     public GsGraphAssociatedObjectManager getSpecificObjectManager(Object key) {
     	Vector v_OManager = GsRegulatoryGraphDescriptor.getObjectManager();
     	if (v_OManager == null) {
@@ -638,29 +697,38 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @return the node order
 	 */
+    // TODO Move to AbstractGraphFrontend
 	public List getNodeOrder() {
 		return nodeOrder;
 	}
+	
+	
 	/**
 	 * add a graph listener
 	 * @param gl
 	 */
+	// TODO Move to AbstractGraphFrontend
 	public void addGraphListener(GsGraphListener gl) {
 		listeners.add(gl);
 	}
+	
+	
 	/**
 	 * remove a graph listener.
 	 * @param gl
 	 */
+	// TODO Move to AbstractGraphFrontend
 	public void removeGraphListener(GsGraphListener gl) {
 		listeners.remove(gl);
 	}
+	
 	/**
 	 * the graph has changed, all listeners will be notified.
 	 * it will also be marked as unsaved.
 	 * @param change
      * @param data
 	 */
+	// TODO Move to AbstractGraphFrontend
 	public void fireGraphChange(int change, Object data) {
 		if (saved && !opening) {
 		    saved = false;
@@ -740,15 +808,20 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 *
 	 * @return the graphParameterPanel (null by default, please override)
 	 */
+	// TODO Move to GUI (GUIGraphHelper)
 	public JPanel getGraphParameterPanel() {
 		return null;
 	}
+	
+	// TODO Move to GUI (GUIGraphHelper)
 	public ObjectEditor getGraphEditor() {
 		return null;
 	}
+	
 	/**
 	 * @param nodeOrder The nodeOrder to set.
 	 */
+	// TODO Move to AbstractGraphFrontend
 	public void setNodeOrder(Vector nodeOrder) {
 		this.nodeOrder = nodeOrder;
 	}
@@ -758,6 +831,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * if true, it will get a "DEL" toolbar button.
 	 * @return true if this graph allow interactivly deleting items
 	 */
+	// TODO Move to GUI (GraphGUIHelper)
 	public boolean canDelete() {
 		return canDelete;
 	}
@@ -767,6 +841,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * override me to return something else than <code>null</code> (ie no automatic extension)
 	 * @return the extension to always add to filenames.
 	 */
+	// TODO Move to GUI (GraphGUIHelper)
     public String getAutoFileExtension() {
         return null;
     }
@@ -776,6 +851,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 *
 	 * @param mainFrame
 	 */
+    // TODO Move to GUI
 	public void setMainFrame(GsMainFrame mainFrame) {
 		this.mainFrame = mainFrame;
         graphManager.setMainFrame(mainFrame);
