@@ -86,9 +86,11 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 
 	
     /**
-     * remove a vertex from the graph.
+     * Remove a vertex from the graph.
+     * 
      * @param vertex
-     */
+     * @return true if the vertex was effectively removed
+     */ 
 	@Override
 	public boolean removeVertex(V vertex) {
 		return graphBackend.removeVertex(vertex);
@@ -96,8 +98,10 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 
 	
     /**
-     * remove an edge from the graph.
+     * Remove an edge from the graph.
+     * 
      * @param edge
+     * @return true if the edge was effectively removed
      */
 	@Override
 	public boolean removeEdge(E edge) {
