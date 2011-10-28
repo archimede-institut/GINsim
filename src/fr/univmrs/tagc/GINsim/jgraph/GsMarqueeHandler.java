@@ -49,7 +49,7 @@ public class GsMarqueeHandler extends BasicMarqueeHandler implements GraphSelect
 		jgraph.setMarqueeHandler(this);
 		jgraph.addGraphSelectionListener(this);
 		graphManager = g;
-		gsactions = g.getMainFrame().getGsAction();
+		gsactions = g.getMainFrame().getActions();
 	}
 	/**
 	 * 

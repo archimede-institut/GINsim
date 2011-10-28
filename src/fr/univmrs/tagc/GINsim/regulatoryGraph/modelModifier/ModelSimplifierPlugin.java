@@ -69,7 +69,7 @@ public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
 		if (ref == 0) {
 			GsMainFrame mframe = graph.getGraphManager().getMainFrame();
 			if (mframe != null) {
-				mframe.getGsAction().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
+				mframe.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
 				new ModelSimplifierConfigDialog((GsRegulatoryGraph)graph);
 			}
 		}

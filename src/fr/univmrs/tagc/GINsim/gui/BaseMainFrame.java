@@ -26,7 +26,6 @@ import javax.swing.WindowConstants;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -45,15 +44,6 @@ import fr.univmrs.tagc.common.widgets.SplitPane;
  */
 abstract public class BaseMainFrame extends Frame {
 	private static final long serialVersionUID = 3002680535567580439L;
-	
-	
-//    public static final int[] FLAGS =  {1,2,4};
-//    public static final int FLAG_NONE = FLAGS[TAB_NONE];
-//    public static final int FLAG_SINGLE = FLAGS[TAB_SINGLE];
-//    public static final int FLAG_MULTIPLE = FLAGS[TAB_MULTIPLE];
-//    public static final int FLAG_SELECTION = FLAG_SINGLE | FLAG_MULTIPLE;
-//    public static final int FLAG_ANY = FLAG_SELECTION | FLAG_NONE;
-
 	
 	private GsEventDispatcher eventDispatcher = new GsEventDispatcher(true);
     private JDialog secondaryFrame = null;
@@ -84,8 +74,11 @@ abstract public class BaseMainFrame extends Frame {
     
 	public BaseMainFrame(String id, int w, int h) {
 		super(id, w, h);
-		
-        this.setContentPane(getJPanel());
+	}
+	
+	protected void init() {
+        setJMenuBar(getActions().getMenuBar());
+        setContentPane(getJPanel());
 	}
 
     /**
@@ -95,7 +88,6 @@ abstract public class BaseMainFrame extends Frame {
         return eventDispatcher;
     }
 
-    
 	/**
 	 * This method initializes jPanel
 	 *
@@ -117,12 +109,12 @@ abstract public class BaseMainFrame extends Frame {
             c_toolbar.anchor = GridBagConstraints.WEST;
             c_split.gridx = 0;
             c_split.gridy = 1;
-            c_split.weightx = 1;
+            c_split.weightx = 1; 
             c_split.weighty = 1;
             c_split.fill = GridBagConstraints.BOTH;
 
 			jPanel.add(getJSplitPane(), c_split);
-			jPanel.add(gsActions.getToolBar(), c_toolbar);
+			jPanel.add(getActions().getToolBar(), c_toolbar);
 		}
 		return jPanel;
 	}
@@ -143,6 +135,24 @@ abstract public class BaseMainFrame extends Frame {
 		}
 		return jSplitPane;
 	}
+	
+	protected void loadGraphPanel() {
+        jSplitPane.setTopComponent(getGraphPanel());
+
+        // FIXME: restore memory for divider location
+//        // replace jSplitPane, only if this is the first graph in this frame
+//        if (event.getOldGraph() != null) {
+//            int md = jSplitPane.getHeight()-jTabbedPane.getMinimumSize().height;
+//            if (d == -1 || md < d) {
+//                // without the (-5) it's sometimes strange...
+//                d = md-5;
+//            }
+//            jSplitPane.setDividerLocation(d);
+//        }
+        getJSplitPane().setDividerLocation(
+                jSplitPane.getHeight()-((Integer)OptionStore.getOption("display.dividersize", new Integer(80))).intValue());
+	}
+
 	/**
 	 * This method initializes gsGraphPanel
 	 *
@@ -187,6 +197,17 @@ abstract public class BaseMainFrame extends Frame {
         } else {
         	jSplitPane1.setRightComponent(gsGraphMapPanel);
         }
+	}
+
+    /**
+     * change the label of the main tab.
+     * 
+     * @param label the new label
+     */
+	protected void setTabLabel(String label) {
+        int cst = m_tabs.get(jTabbedPane.getTitleAt(0));
+        jTabbedPane.setTitleAt(0, label);
+        m_tabs.put(jTabbedPane.getTitleAt(0), cst);
 	}
 
 	public abstract GsGraphNotificationMessage getTopNotification();
@@ -452,7 +473,7 @@ abstract public class BaseMainFrame extends Frame {
 			secondaryFrame.setSize(800,300);
 			secondaryFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 					public void windowClosing(java.awt.event.WindowEvent evt) {
-						gsActions.viewcallback.divideWindow(false);
+						getActions().viewcallback.divideWindow(false);
 					}
 				});
 			//show
@@ -534,8 +555,9 @@ abstract public class BaseMainFrame extends Frame {
     }
 
 	public void updateRecentMenu() {
-		gsActions.updateRecentMenu();
+		getActions().updateRecentMenu();
 	}
+	abstract public GsActions getActions();
 
 	enum TabSelection {
 		TAB_CHECK(0), TAB_NONE(1), TAB_SINGLE(2), TAB_MULTIPLE(4);
@@ -546,5 +568,6 @@ abstract public class BaseMainFrame extends Frame {
 			this.flag = flag;
 		}
 	}
+
 }
 

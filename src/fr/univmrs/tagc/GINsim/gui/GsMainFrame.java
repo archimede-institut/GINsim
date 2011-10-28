@@ -1,31 +1,11 @@
 package fr.univmrs.tagc.GINsim.gui;
 
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.WindowConstants;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
@@ -33,15 +13,12 @@ import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
-import fr.univmrs.tagc.GINsim.gui.BaseMainFrame.TabSelection;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.SplitPane;
 
 /**
  * GINsim's main frame
@@ -53,7 +30,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 	private JPanel jPanel1 = null;
 	private GsGraphicAttributePanel gsGraphicAttributePanel = null;
     private GsActions gsActions = new GsActions(this);
-    private GsGraph graph = null;
+    private GsGraph<?,?> graph = null;
     private CardLayout cards = new CardLayout();
     private JPanel emptyPanel = null;
 
@@ -70,12 +47,12 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 
 	/**
 	 * This method initializes a new MainFrame
-	 *
 	 */
 	public GsMainFrame() {
 		super("display.mainFrame", 800, 600);
-        this.setJMenuBar(gsActions.getMenuBar());
 
+		init();
+		
         // doesn't work on mac OSX ?
 		this.setIconImage(ImageLoader.getImage("gs1.gif"));
 		updateTitle();
@@ -151,17 +128,16 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
             updateGraphNotificationMessage(graph);
             return;
         }
-        // stupid default
-        int d = -1;
+        // FIXME: restore memory for divider location
+//        // stupid default
+//        int d = -1;
         if (graph != null) {
-            d = jSplitPane.getDividerLocation();
+//            d = jSplitPane.getDividerLocation();
             graph.close();
         }
         graph = event.getNewGraph();
         // hack to update selection constraint for the tab after name change
-        Object cst = m_tabs.get(jTabbedPane.getTitleAt(0));
-        jTabbedPane.setTitleAt(0, Translator.getString(graph.getTabLabel()));
-        m_tabs.put(jTabbedPane.getTitleAt(0), cst);
+        setTabLabel(Translator.getString(graph.getTabLabel()));
         
         graph.setMainFrame(this);
         setGraphView(graph.getGraphManager().getGraphPanel());
@@ -210,19 +186,8 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         }
 
         gsGraphicAttributePanel.setMainFrame(this);
-        jSplitPane.setTopComponent(getGraphPanel());
-
-        // replace jSplitPane, only if this is the first graph in this frame
-        if (event.getOldGraph() != null) {
-            int md = jSplitPane.getHeight()-jTabbedPane.getMinimumSize().height;
-            if (d == -1 || md < d) {
-                // without the (-5) it's sometimes strange...
-                d = md-5;
-            }
-            jSplitPane.setDividerLocation(d);
-        }
-        getJSplitPane().setDividerLocation(
-                jSplitPane.getHeight()-((Integer)OptionStore.getOption("display.dividersize", new Integer(80))).intValue());
+        
+        loadGraphPanel();
 
         updateTitle();
         updateGraphNotificationMessage(graph);
@@ -350,10 +315,9 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
     public List getSelectedVertices() {
     	return v_vertex;
     }
-    /**
-     * @return this frame's action manager.
-     */
-    public GsActions getGsAction() {
+    
+    @Override
+    public GsActions getActions() {
     	return gsActions;
     }
 
@@ -384,9 +348,6 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
             setTitle("GINsim");
         }
     }
-	public GsActions getActions() {
-		return gsActions;
-	}
 	
 	@Override
 	public GsGraphNotificationMessage getTopNotification() {
