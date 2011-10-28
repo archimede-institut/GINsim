@@ -1,32 +1,26 @@
 package fr.univmrs.tagc.GINsim.gui;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
+import org.ginsim.gui.notifications.NotificationPanel;
+import org.ginsim.gui.notifications.NotificationSource;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
@@ -42,7 +36,7 @@ import fr.univmrs.tagc.common.widgets.SplitPane;
  * 
  * FIXME: refactor in progress...
  */
-abstract public class BaseMainFrame extends Frame {
+abstract public class BaseMainFrame extends Frame implements NotificationSource {
 	private static final long serialVersionUID = 3002680535567580439L;
 	
 	private GsEventDispatcher eventDispatcher = new GsEventDispatcher(true);
@@ -56,16 +50,10 @@ abstract public class BaseMainFrame extends Frame {
 	private JPanel gsGraphMapPanel = null;
 
 
-    private JPanel notificationPanel = null;
-    private JLabel notificationMessage = null;
-    private JButton bcloseNotification = null;
-    private JComboBox cNotificationAction = null;
-    private JButton bNotificationAction = null;
-    private JButton bNotificationAction2 = null;
-    private GsGraphNotificationMessage notification = null;
-	
     private Map<String, Integer> m_tabs = new HashMap<String, Integer>();
     private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
+
+	private NotificationPanel notificationPanel;
 
 	private static final boolean alwaysForceClose = false;
 
@@ -210,135 +198,15 @@ abstract public class BaseMainFrame extends Frame {
         m_tabs.put(jTabbedPane.getTitleAt(0), cst);
 	}
 
-	public abstract GsGraphNotificationMessage getTopNotification();
-	protected abstract void closeNotification();
-	
-	private JPanel getNotificationPanel() {
+	private NotificationPanel getNotificationPanel() {
 		if (notificationPanel == null) {
-			notificationPanel = new JPanel();
-			notification = getTopNotification();
-			notificationPanel.setVisible(notification != null);
-			notificationPanel.setLayout(new GridBagLayout());
-
-			GridBagConstraints c = new GridBagConstraints();
-			c.gridx = 0;
-			c.gridy = 0;
-			c.weightx = 1;
-			c.weighty = 1;
-            c.insets = new Insets(0,10,0,10);
-			c.anchor = GridBagConstraints.WEST;
-			c.fill = GridBagConstraints.BOTH;
-			notificationMessage = new JLabel("no notification");
-			notificationPanel.add(notificationMessage, c);
-
-			c = new GridBagConstraints();
-			c.gridx = 2;
-			c.gridy = 0;
-			c.anchor = GridBagConstraints.EAST;
-            bNotificationAction = new JButton();
-            notificationPanel.add(bNotificationAction, c);
-            bNotificationAction.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    notificationAction(0);
-                }
-            });
-
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 0;
-            c.anchor = GridBagConstraints.EAST;
-            bNotificationAction2 = new JButton();
-            notificationPanel.add(bNotificationAction2, c);
-            bNotificationAction2.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    notificationAction(1);
-                }
-            });
-            cNotificationAction = new JComboBox();
-            notificationPanel.add(cNotificationAction, c);
-
-			c = new GridBagConstraints();
-			c.gridx = 3;
-			c.gridy = 0;
-            c.insets = new Insets(0,10,0,0);
-			c.anchor = GridBagConstraints.EAST;
-			bcloseNotification = new JButton("close");
-			notificationPanel.add(bcloseNotification, c);
-			bcloseNotification.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					closeNotification();
-				}
-			});
+			notificationPanel = new NotificationPanel(this);
 		}
 		return notificationPanel;
 	}
 
-	protected void notificationAction(int index) {
-		if (notification != null) {
-            if (index == 0) {
-                if (cNotificationAction.isVisible()) {
-                    notification.performAction(cNotificationAction.getSelectedIndex());
-                    return;
-                }
-            }
-            notification.performAction(index);
-		}
-	}
-
 	public synchronized void updateNotificationMessage() {
-		notification = getTopNotification();
-		if (notification == null) {
-			notificationPanel.setVisible(false);
-		} else {
-            switch (notification.getType()) {
-            case GsGraphNotificationMessage.NOTIFICATION_INFO:
-            case GsGraphNotificationMessage.NOTIFICATION_INFO_LONG:
-                notificationPanel.setBackground(Color.CYAN);
-                break;
-            case GsGraphNotificationMessage.NOTIFICATION_WARNING:
-            case GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG:
-                notificationPanel.setBackground(Color.ORANGE);
-                break;
-            case GsGraphNotificationMessage.NOTIFICATION_ERROR:
-            case GsGraphNotificationMessage.NOTIFICATION_ERROR_LONG:
-                notificationPanel.setBackground(Color.RED);
-                break;
-
-            default:
-                notificationPanel.setBackground(null);
-                break;
-            }
-
-			notificationPanel.setVisible(true);
-			notificationMessage.setText(notification.toString());
-            String[] t_text = notification.getActionText();
-			if (t_text != null && t_text.length > 0) {
-                bNotificationAction.setVisible(true);
-                if ( t_text.length == 1) {
-                    cNotificationAction.setVisible(false);
-                    bNotificationAction2.setVisible(false);
-                    bNotificationAction.setText(t_text[0]);
-                    bNotificationAction.requestFocusInWindow();
-                } else if ( t_text.length == 2) {
-                    bNotificationAction.setText(t_text[0]);
-                    bNotificationAction2.setText(t_text[1]);
-                    bNotificationAction2.setVisible(true);
-                    cNotificationAction.setVisible(false);
-                    bNotificationAction2.requestFocusInWindow();
-                } else {
-                    cNotificationAction.setVisible(true);
-                    bNotificationAction2.setVisible(false);
-                    bNotificationAction.setText("OK");
-                    cNotificationAction.setModel(new DefaultComboBoxModel(t_text));
-                    cNotificationAction.requestFocusInWindow();
-                }
-			} else {
-                bNotificationAction.setVisible(false);
-                bNotificationAction2.setVisible(false);
-                cNotificationAction.setVisible(false);
-                bcloseNotification.requestFocusInWindow();
-			}
-		}
+		notificationPanel.updateNotificationMessage();
 	}
 
 	/**

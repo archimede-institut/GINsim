@@ -65,7 +65,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 	}
 
 	@Override
-	protected void closeNotification() {
+	public void closeNotification() {
 		graph.deleteAllNotificationMessage();
 	}
 
