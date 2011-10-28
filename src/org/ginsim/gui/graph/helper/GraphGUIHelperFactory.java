@@ -14,6 +14,7 @@ import org.ginsim.graph.Graph;
  * 	getGraphGUIHelper method to obtain the helper instance
  * 
  * Note that all the GraphGUIHelper implementors must be called with the same pattern: '<GraphClassName>GUIHelper.java'
+ * and created in org.ginsim.gui.graph.helper 
  * 
  * @author Lionel Spinelli
  *
@@ -23,6 +24,7 @@ import org.ginsim.graph.Graph;
 
 public class GraphGUIHelperFactory {
 	
+	private static final String GRAPH_GUI_HELPER_PACKAGE = "org.ginsim.gui.graph.helper";
 	private static final String GRAPH_GUI_HELPER_EXTENSION = "GUIHelper";
 	
 	// The factory singleton
@@ -31,11 +33,13 @@ public class GraphGUIHelperFactory {
 	// The map establishing the correspondence between graph class and GraphGUIHelper instance
 	private HashMap<String, GraphGUIHelper<?,?,?>> guiGraphHelpers = new HashMap<String, GraphGUIHelper<?,?,?>>();  
 	
+	
 	/**
 	 * Factory trivial creator
 	 * 
 	 */
 	private GraphGUIHelperFactory(){}
+	
 	
 	/**
 	 * Method providing access to the factory instance
@@ -51,6 +55,7 @@ public class GraphGUIHelperFactory {
 		return factory;
 	}
 	
+	
 	/**
 	 * Give access to the GraphGUIHelper corresponding to the given graph class
 	 * 
@@ -58,21 +63,35 @@ public class GraphGUIHelperFactory {
 	 * @return the instance of GraphGUIHelper corresponding to the graph class
 	 */
 	@SuppressWarnings("unchecked")
-	public GraphGUIHelper<?,?,?> getGraphGUIHelper( String graph_class) throws ClassNotFoundException, IllegalAccessException, InstantiationException{
+	public GraphGUIHelper<?,?,?> getGraphGUIHelper( String graph_class_name) throws ClassNotFoundException, IllegalAccessException, InstantiationException{
 		
 		GraphGUIHelper<?,?,?> helper = null;
 		
-		if( guiGraphHelpers.containsKey( graph_class)){
-			helper = guiGraphHelpers.get( graph_class);
+		if( guiGraphHelpers.containsKey( graph_class_name)){
+			helper = guiGraphHelpers.get( graph_class_name);
 		}
 		else{
-			String graph_helper_class = graph_class + GRAPH_GUI_HELPER_EXTENSION;
+			// Verify if the class name contains packages
+			// If so, only the final name of the class is used
+			int index_dot = graph_class_name.indexOf( ".");
+			if( index_dot >=0){
+				if( index_dot < graph_class_name.length() - 1){
+					graph_class_name = graph_class_name.substring( index_dot + 1);
+				}
+				else{
+					throw new ClassNotFoundException("GraphGUIHelperFactory.getGraphGUIHelper: the provided class name is not correctly formatted : " + graph_class_name);
+				}
+			}
+			// Build the class name of the corresponding GraphGUIHelper
+			String graph_helper_class = GRAPH_GUI_HELPER_PACKAGE + "." + graph_class_name + GRAPH_GUI_HELPER_EXTENSION;
+			// Implement the GraphGUIHelper and store it into the global map
 			helper = (GraphGUIHelper<?,?,?>) Class.forName( graph_helper_class).newInstance();
-			guiGraphHelpers.put( graph_class, helper);
+			guiGraphHelpers.put( graph_class_name, helper);
 		}
 		
 		return helper;
 	}
+	
 	
 	/**
 	 * Give access to the GraphGUIHelper corresponding to the given graph
