@@ -73,7 +73,7 @@ public class GraphGUIHelperFactory {
 		else{
 			// Verify if the class name contains packages
 			// If so, only the final name of the class is used
-			int index_dot = graph_class_name.indexOf( ".");
+			int index_dot = graph_class_name.lastIndexOf( ".");
 			if( index_dot >=0){
 				if( index_dot < graph_class_name.length() - 1){
 					graph_class_name = graph_class_name.substring( index_dot + 1);

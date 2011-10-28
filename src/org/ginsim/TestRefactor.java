@@ -17,6 +17,7 @@ import org.ginsim.graph.regulatoryGraph.RegulatoryGraphImpl;
 import org.ginsim.graph.regulatoryGraph.RegulatoryVertex;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.JgraphGUIImpl;
+import org.ginsim.gui.graph.helper.GraphGUIHelper;
 import org.ginsim.gui.graph.helper.GraphGUIHelperFactory;
 
 import fr.univmrs.tagc.common.widgets.Frame;
@@ -52,7 +53,8 @@ public class TestRefactor {
 
 		// get a graph GUI helper
 		try {
-			GraphGUIHelperFactory.getFactory().getGraphGUIHelper(lrg);
+			GraphGUIHelper helper = GraphGUIHelperFactory.getFactory().getGraphGUIHelper(lrg);
+			System.out.println(helper);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
