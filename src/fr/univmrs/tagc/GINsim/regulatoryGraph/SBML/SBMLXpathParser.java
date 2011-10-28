@@ -49,6 +49,7 @@ import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public final class SBMLXpathParser {
+	
 	/** Creates a new instance of SbmlXpathParser */
 	private GsRegulatoryGraph graph;
 	protected File _FilePath;
@@ -58,12 +59,12 @@ public final class SBMLXpathParser {
 	private GsVertexAttributesReader vareader = null;
 	private GsEdgeAttributesReader ereader = null;
 	private int vslevel = 0;
-	private Map m_edges = new HashMap();
 
+	private HashMap<String, GsRegulatoryEdge> m_edges = new HashMap<String, GsRegulatoryEdge>();
 	static Pattern pattern;
 
-	private Hashtable values;
-	private Vector v_function;
+	private Hashtable<GsRegulatoryVertex, Hashtable<String, Vector<String>>> values;
+	private Vector<String> v_function;
 
 	public SBMLXpathParser() {
 	}
@@ -72,7 +73,7 @@ public final class SBMLXpathParser {
 
 		this._FilePath = new File(filename);
 		this.graph = new GsRegulatoryGraph();
-		values = new Hashtable();
+		values = new Hashtable<GsRegulatoryVertex, Hashtable<String, Vector<String>>>();
 		initialize();
 	}
 
@@ -134,19 +135,20 @@ public final class SBMLXpathParser {
 			xpa2.addNamespace(namespace);
 			
 			/** retrieves all nodes corresponding to the path:/model/listOfQualitativeSpecies. **/
-			List results = xpa.selectNodes(racine);
+			@SuppressWarnings("unchecked")
+			List<Element> results = xpa.selectNodes(racine);
 
 			/** to retrieve species data **/	
-			Map m_maxvalues = null;
-			Vector v_nodeOrder = null;
+			Vector<String> v_nodeOrder = null;
 			for (int i = 0; i < results.size(); i++) {
-				Element obElement = (Element) results.get(i);
-				List elList = obElement.getChildren();
-				Iterator it = elList.iterator();
+				Element obElement = results.get(i);
+				@SuppressWarnings("unchecked")
+				List<Element> elList = obElement.getChildren();
+				Iterator<Element> it = elList.iterator();
 				v_nodeOrder = new Vector<String>();
 				while (it.hasNext()) {
 					try {
-						Element elcurrent = (Element) it.next();						
+						Element elcurrent = it.next();						
 						/** we need construct a string character with different nodes from the graph **/
 						s_nodeOrder += elcurrent.getAttributeValue("id") + " ";
 						v_nodeOrder.add(elcurrent.getAttributeValue("id"));
@@ -184,7 +186,8 @@ public final class SBMLXpathParser {
 						}
 						
 						/** add this vertex in a vertex collection **/
-						values.put(vertex, new Hashtable());
+						//values.put(vertex, new Hashtable());
+						values.put(vertex, new Hashtable<String, Vector<String>>());
 					} catch (NumberFormatException e) {
 						throw new JDOMException("mal formed node's parameter");// TODO:
 																				// handle
@@ -195,26 +198,30 @@ public final class SBMLXpathParser {
 			graph.setNodeOrder(v_nodeOrder);
 			
 			/** to deal transition list in order to retrieve his all data **/
-			List listOfTransition = xpa2.selectNodes(racine);
+			@SuppressWarnings("unchecked")
+			List<Element> listOfTransition = xpa2.selectNodes(racine);
 			for (int i = 0; i < listOfTransition.size(); i++) {
-				Element transition = (Element) listOfTransition.get(i);
-				List allTransitionElement = transition.getChildren();
+				Element transition = listOfTransition.get(i);
+				@SuppressWarnings("unchecked")
+				List<Element> allTransitionElement = transition.getChildren();
 				Element transElem = null;
 
 				for (int k = 0; k < allTransitionElement.size(); k++) {
 					/** retrieve a transition element */
-					transElem = (Element) allTransitionElement.get(k);
+					transElem = allTransitionElement.get(k);
 					String trans_Id = transElem.getAttributeValue("id"); //transition id
 					
 					/** retrieve children of transition element */
-					List transChildren = transElem.getChildren(); 	
+					@SuppressWarnings("unchecked")
+					List<Element> transChildren = transElem.getChildren(); 	
 					
 					/** Retrieve the list of inputs **/
-					Element listOfInput = (Element) transChildren.get(0);
-					List inputElemList = listOfInput.getChildren();
+					Element listOfInput = transChildren.get(0);
+					@SuppressWarnings("unchecked")
+					List<Element> inputElemList = listOfInput.getChildren();
 					HashMap<String, String> intput_to_sign = new HashMap<String, String>();
 					for (int p = 0; p < inputElemList.size(); p++) { 
-						Element input = (Element) inputElemList.get(p);
+						Element input = inputElemList.get(p);
 						String node_from = ((Element) input)
 								.getAttributeValue("qualitativeSpecies");
 						/** to get the SBOTerm value from the current edge **/
@@ -223,22 +230,25 @@ public final class SBMLXpathParser {
 					}
 					
 					/** retrieve output data **/
-					Element listOfOutput = (Element) transChildren.get(1);
-					List outputElemList = listOfOutput.getChildren();
-					Element output = (Element) outputElemList.get(0); // output element
+					Element listOfOutput = transChildren.get(1);
+					@SuppressWarnings("unchecked")
+					List<Element> outputElemList = listOfOutput.getChildren();
+					Element output = outputElemList.get(0); // output element
 					String qualSpecies = output.getAttributeValue("qualitativeSpecies");
 					
 					/** retrieve the lits of function terms **/
-					Element listOfFunctionTerm = (Element) transChildren.get(2);
-					List functTermChildren = listOfFunctionTerm.getChildren();				
+					Element listOfFunctionTerm = transChildren.get(2);
+					@SuppressWarnings("unchecked")
+					List<Element> functTermChildren = listOfFunctionTerm.getChildren();				
 					/** retrieve <defaultTerm> element */
-					Element defaultTerm = (Element) functTermChildren.get(0);
+					Element defaultTerm = functTermChildren.get(0);
 					String dft_resulLevel = defaultTerm.getAttributeValue("resultLevel");
 					byte dft_value = (byte)Integer.parseInt(dft_resulLevel);		
 					if(!(dft_resulLevel.equals("0"))){
-						for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						//for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						for (Enumeration<GsRegulatoryVertex> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
-							vertex = (GsRegulatoryVertex) enumvertex.nextElement();
+							vertex = enumvertex.nextElement();
 							String vertexName = vertex.toString();
 							if(qualSpecies.equals(vertexName))
 							{								
@@ -250,10 +260,10 @@ public final class SBMLXpathParser {
 					String fctResultLevel = null;					
 					for (int j = 1; j < functTermChildren.size(); j++) 
 					{
-						v_function = new Vector();	
+						v_function = new Vector<String>();	
 						
 						/** to get all data in every <functionTerm> element **/
-						Element function_term_element = (Element) functTermChildren.get(j);
+						Element function_term_element = functTermChildren.get(j);
 						fctResultLevel = function_term_element.getAttributeValue("resultLevel");
 						FunctionTerm function_term = deal( function_term_element);
 						if( function_term != null) {
@@ -261,13 +271,17 @@ public final class SBMLXpathParser {
 							v_function.addElement( function_term.getLogicalFunction());
 						}
 			
-						for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						//for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						for (Enumeration<GsRegulatoryVertex> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
-							vertex = (GsRegulatoryVertex) enumvertex.nextElement();
+							vertex = enumvertex.nextElement();
 							String vertexName = vertex.getId();
 							if(qualSpecies.equals(vertexName))
-							{								
-								((Hashtable) values.get(vertex)).put(fctResultLevel, v_function);							
+							{		
+								// Ce Hashtable est le 2ième mè pas "values".
+								// normalement : ((Hashtable<String, Vector<String>>) values.get(vertex)).put(fctResultLevel, v_function);			
+								//((Hashtable) values.get(vertex)).put(fctResultLevel, v_function);
+								values.get(vertex).put(fctResultLevel, v_function);	
 							}
 						}						
 					} // </functionTerm>
@@ -284,9 +298,10 @@ public final class SBMLXpathParser {
 		if (!values.isEmpty()) {
 			parseBooleanFunctions();
 		}
-		Iterator it = graph.getNodeOrder().iterator();
+		@SuppressWarnings("unchecked")
+		Iterator<GsRegulatoryVertex> it = graph.getNodeOrder().iterator();
 		while (it.hasNext()) {
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex) it.next();
+			GsRegulatoryVertex vertex = it.next();
 			vertex.getV_logicalParameters().cleanupDup();
 		}
 	} // void parse(File _FilePath)
@@ -323,8 +338,9 @@ public final class SBMLXpathParser {
 	 **/
 	
 	public FunctionTerm deal(Element root) throws SAXException, IOException {
-		List rootConv = root.getChildren();
-		Element math = (Element) rootConv.get(0);
+		@SuppressWarnings("unchecked")
+		List<Element> rootConv = root.getChildren();
+		Element math = rootConv.get(0);
 		XMLOutputter outputer = new XMLOutputter(Format.getPrettyFormat());
 		String xml = outputer.outputString(math);
 		InputSource file = new InputSource(new ByteArrayInputStream(xml.getBytes()));
@@ -360,6 +376,13 @@ public final class SBMLXpathParser {
 		return function;
 	}
 	
+	
+	/** Creating all edges and multiEdges of graph 
+	 * @param l_condition : a list of conditions for every transition 
+	 * @param function_term : an object that contains a list of conditions for every 
+     *        <functionTerm> element of a <transition> tag (see the sbml file).
+	 * @param node_to_id : to identify a regulatory vertex target 
+	 * @param input_to_sign: a map that contains every regulatory vertex source and his sign. */
 	
 	private void createMutliEdges( FunctionTerm function_term, String node_to_id, HashMap<String, String> input_to_sign, GsRegulatoryGraph graph){		
 				
@@ -627,7 +650,7 @@ public final class SBMLXpathParser {
 
 	/** To place every node in the graph **/
 	private void placeNodeOrder() {
-		Vector v_order = new Vector();
+		Vector<GsRegulatoryVertex> v_order = new Vector<GsRegulatoryVertex>();
 		String[] t_order = s_nodeOrder.split(" ");
 		for (int i = 0; i < t_order.length; i++) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getGraphManager()
@@ -647,26 +670,27 @@ public final class SBMLXpathParser {
 	}
 
 	/** To parse each logical function **/
+	@SuppressWarnings("unchecked")
 	private void parseBooleanFunctions() {
-		List allowedEdges;
+		List<GsRegulatoryEdge> allowedEdges;
 		GsRegulatoryVertex vertex;
 		String value, exp;
 		try {
-			for (Enumeration enu_vertex = values.keys(); enu_vertex.hasMoreElements();) {
-				vertex = (GsRegulatoryVertex) enu_vertex.nextElement();
+			for (Enumeration<GsRegulatoryVertex> enu_vertex = values.keys(); enu_vertex.hasMoreElements();) {
+				vertex = enu_vertex.nextElement();
 				allowedEdges = graph.getGraphManager().getIncomingEdges(vertex);
 				if (allowedEdges.size() > 0) {
-					for (Enumeration enu_values = ((Hashtable) values.get(vertex)).keys(); enu_values
+					for (Enumeration<String> enu_values = values.get(vertex).keys(); enu_values
 							.hasMoreElements();) {
 						value = (String) enu_values.nextElement();
-						for (Enumeration enu_exp = ((Vector) ((Hashtable) values.get(vertex))
-								.get(value)).elements(); enu_exp.hasMoreElements();) {
+						for (Enumeration<String> enu_exp = values.get(vertex)
+								.get(value).elements(); enu_exp.hasMoreElements();) {
 							exp = (String) enu_exp.nextElement();
 							addExpression(Byte.parseByte(value), vertex, exp);
 						}
 					}
 					vertex.getInteractionsModel().parseFunctions(); 
-					if (vertex.getMaxValue() + 1 == ((Hashtable) values.get(vertex)).size()) {
+					if (vertex.getMaxValue() + 1 == values.get(vertex).size()) {
 						((GsTreeElement) vertex.getInteractionsModel().getRoot()).setProperty(
 								"add", new Boolean(false));
 					}
@@ -685,7 +709,7 @@ public final class SBMLXpathParser {
 			GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
 			if (!tbp.compile(exp, graph, vertex)) {
 				InvalidFunctionNotificationAction a = new InvalidFunctionNotificationAction();
-				Vector o = new Vector();
+				Vector<Object> o = new Vector<Object>();
 				o.addElement(new Short(val));
 				o.addElement(vertex);
 				o.addElement(exp);
@@ -827,7 +851,7 @@ public final class SBMLXpathParser {
 	} // class InvalidFunctionNotificationAction
 
 	
-	/** <p> An object Expression represent the contain of a "single" an apply element.
+	/** <p> An object Expression represent the contain of last "single" <apply> element.
 	 * i.e : <apply>
 	 *         <geq/>
 	 *           <ci>node id</ci> 
@@ -845,7 +869,8 @@ public final class SBMLXpathParser {
 		
 		/** The threshold value in this apply element. */
 		private int minvalue;
-		/** The maxvalue of this input element (the regulatory vertex which is identify by the "node id"). */
+		
+		/** The maxvalue of this <input> element (the regulatory vertex identified by the "node id"). */
 		private int maxvalue;
 
 		
@@ -858,7 +883,10 @@ public final class SBMLXpathParser {
 			this.maxvalue = 0;
 		}		
 
-		/** To create an Expression Object with the maxvalue of every regulatory vertex of the graph. */
+		/** To create an Expression Object with the maxvalue of every regulatory vertex of the graph. 
+		 * @param str : a String that contains a needed data for an expression
+		 * For instance : str = "G0<1", where G0 is a node id and. "<" is an operator and "1" is a threshold value*/
+		
 		public Expression(String str, GsRegulatoryGraph graph) {
 			
 			int index = str.indexOf("<");
@@ -874,8 +902,7 @@ public final class SBMLXpathParser {
 					operator = "geq";
 					minvalue = Integer.parseInt( str.substring( index+2));
 				}
-				else {
-					System.out.println("SBMLXpathParser.Expression.Expression() : unknown operator in expression: " + str);
+				else {					
 					this.node ="";
 					this.operator = "";
 					this.minvalue = 0;
@@ -883,6 +910,7 @@ public final class SBMLXpathParser {
 				}
 			}
 			
+			/** To set a maxvalue for a regulatory vertex */
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getGraphManager().getVertexByName(node);
 			if( vertex != null) {
 				maxvalue = vertex.getMaxValue();
@@ -1032,7 +1060,7 @@ public final class SBMLXpathParser {
 					String current_exp_cas = case_it.next();
 					Iterator<String> all_case_ite = all_cases.iterator();
 					
-					/** Duplicate the string perviously construct with the precedent expressions in order
+					/** Duplicate the string previously construct with the precedent expressions in order
 					 * to generate all the entries related to the current situation lists */
 					while( all_case_ite.hasNext()){
 						String current_all_case = all_case_ite.next();
@@ -1131,8 +1159,6 @@ class FunctionTerm {
 
 				} // while
 				new_entry = new_entry.substring(0, new_entry.length() - 1); 
-				System.out
-				.println("SBMLXpathParser.FunctionTerm.getLogicalFunction(): final new_entry = " + new_entry);
 				logical_function += new_entry + op_symbol;	
 
 			} // while
