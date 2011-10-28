@@ -132,6 +132,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     }
 
     // TODO Usage? Where to move?
+    // should stay on server side: emit a signal when parsing is finished
+    // Needed as the graph data structure can be inconsistent during parsing
     public void endParsing() {
     	isParsing = false;
     	for (GsGraphListener<V,E> l: listeners) {
@@ -140,6 +142,9 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     }
 
     // TODO Usage? Where to move?
+    // stays on server side
+    // it is only used by the BiblioList to avoid errors during parsing that will be solved once all the data is here
+    // better solution is welcome
     public boolean isParsing() {
     	return isParsing;
     }
@@ -199,6 +204,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @throws GsException
      */
     // TODO Move to GUI side
+    // I think it should stay on the server side as it is the actual save implementation
+    // it could be moved to a dedicated IO class, but should be server side
     abstract protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException;
 
     /**
@@ -206,12 +213,14 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @return a FileFilter for the save dialog (or null)
      */
     // TODO Move to GUI side
+    // --> GraphGUIHelper
     abstract protected FileFilter doGetFileFilter();
     
     /**
      * @return an accessory panel for the save dialog (or null)
      */
     // TODO Move to GUI side
+    // --> GraphGUIHelper
     abstract protected JPanel doGetFileChooserPanel();
 
     /**
@@ -222,6 +231,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @throws GsException
      */
     // TODO Move to GUI side
+    // merge it with the save action if the options are moved there as well
     public void save() throws GsException {
         if (saveFileName == null) {
             saveAs(false);
@@ -304,6 +314,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @throws GsException
      */
     // TODO Move to GUI
+    // this is the implementation, it stays on the server side
+    // all interactive-notifications should be replaced by exceptions...
     private void save(boolean selectedOnly, String savePath, int saveMode, boolean extended, boolean compressed) {
         try {
         	File f = new File(savePath != null ? savePath : this.saveFileName);
@@ -445,6 +457,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param param
      */
     // TODO Usage? Where to move?
+    // triggered by the GUI, it changes a bit with the new architecture, should be killed and
+    // replaced by a cleaner solution. The signal firing should go to the server side
     public void interactiveAddEdge(V source, V target, int param) {
         if (v_blockEdit != null) {
             return;
@@ -461,6 +475,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param obj
      */
     // TODO Move 'fireGraphChange' call to AbstractGraphFrontend ?
+    // yes, something like that
     public void removeVertex(V obj) {
         graphManager.removeVertex(obj);
         fireGraphChange(CHANGE_VERTEXREMOVED, obj);
@@ -1335,6 +1350,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         fireGraphChange(CHANGE_METADATA, null);
     }
 
+    // TODO: ideally move to the GUI
+    // may be troublesome, also affects all other notification methods below
 	public void updateGraphNotificationMessage(GsGraph graph) {
         if (graphManager == null) {
             // can happen when the graph has been closed before the end of the timeout ?
