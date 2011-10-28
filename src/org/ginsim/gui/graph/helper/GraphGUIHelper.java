@@ -5,23 +5,51 @@ import org.ginsim.graph.Graph;
 import org.ginsim.gui.graph.GUIEditor;
 
 /**
- * GUI-side helper for a graph type. Implementors will have to be declared in a configuration file
+ * GUI-side helper for a graph type.
+ * 
+ * A helper is a singleton dedicated to a specific graph type.
+ * It provides GUI components required to visualize and edit a graph.
  * 
  * Implementors must be called with the same pattern: '<GraphClassName>GUIHelper.java' in order to have
  * the GraphGUIHelperFactory able to create their instances through introspective access
  * 
  * @author Aurelien Naldi
  *
+ * @param <G>
  * @param <V>
  * @param <E>
  */
-public interface GraphGUIHelper<V, E extends Edge<V>> {
+public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 
-	public GUIEditor<Graph<V,E>> getMainEditionPanel();
+	/**
+	 * Create an edition panel for the graph itself.
+	 * 
+	 * @param graph
+	 * @return
+	 */
+	public GUIEditor<G> getMainEditionPanel(G graph);
 	
-	public String getEditingTabLabel();
+	/**
+	 * Retrieve the Title used for the selection edition tab
+	 * 
+	 * @param graph
+	 * @return
+	 */
+	public String getEditingTabLabel(G graph);
 	
-	public GUIEditor<V> getNodeEditionPanel();
+	/**
+	 * Create an edition panel for nodes.
+	 * 
+	 * @param graph
+	 * @return
+	 */
+	public GUIEditor<V> getNodeEditionPanel(G graph);
 	
-	public GUIEditor<E> getEdgeEditionPanel();
+	/**
+	 * Create an edition panel for edges.
+	 * 
+	 * @param graph
+	 * @return
+	 */
+	public GUIEditor<E> getEdgeEditionPanel(G graph);
 }
