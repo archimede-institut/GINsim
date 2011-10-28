@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
+import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
@@ -27,6 +28,8 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 
     private static final long serialVersionUID = -3626877344852342412L;
 
+	private GsEventDispatcher eventDispatcher = new GsEventDispatcher(true);
+    
 	private JPanel jPanel1 = null;
 	private GsGraphicAttributePanel gsGraphicAttributePanel = null;
     private GsActions gsActions = new GsActions(this);
@@ -94,6 +97,13 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         return TabSelection.TAB_MULTIPLE;
 	}
 	
+    /**
+     * @return this mainFrame's event dispatcher
+     */
+    public GsEventDispatcher getEventDispatcher() {
+        return eventDispatcher;
+    }
+
 	/**
 	 * This method initializes jPanel1
 	 *
@@ -107,7 +117,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 		return jPanel1;
 	}
 
-        /**
+	/**
 	 * This method initializes gsGraphicAttributePanel
 	 *
 	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphicAttributePanel

@@ -215,22 +215,7 @@ public class GsEnv {
      * @param m
      */
     public static void newGraph(BaseMainFrame m) {
-        newGraph(m, 0);
-    }
-
-    /**
-     * create a new graph of type graphType in the frame m.
-     * @param m
-     * @param graphType
-     */
-    public static void newGraph(BaseMainFrame m, int graphType) {
-
-        if (graphType > v_graph.size()) {
-            error(new GsException(GsException.GRAVITY_ERROR, "STR_noSuchGraphType"), m);
-            return;
-        }
-
-        GsGraph myGraph = ((GsGraphDescriptor)v_graph.get(graphType)).getNew((GsMainFrame)m);
+        GsGraph myGraph = ((GsGraphDescriptor)v_graph.get(0)).getNew((GsMainFrame)m);
         myGraph.getGraphManager().ready();
 		m.getEventDispatcher().fireGraphChange(null, null, myGraph, false);
     }

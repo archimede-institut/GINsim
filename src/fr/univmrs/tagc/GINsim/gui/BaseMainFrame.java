@@ -39,7 +39,6 @@ import fr.univmrs.tagc.common.widgets.SplitPane;
 abstract public class BaseMainFrame extends Frame implements NotificationSource {
 	private static final long serialVersionUID = 3002680535567580439L;
 	
-	private GsEventDispatcher eventDispatcher = new GsEventDispatcher(true);
     private JDialog secondaryFrame = null;
 	private JPanel jPanel = null;
 	private JSplitPane jSplitPane = null;
@@ -68,13 +67,6 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
         setJMenuBar(getActions().getMenuBar());
         setContentPane(getJPanel());
 	}
-
-    /**
-     * @return this mainFrame's event dispatcher
-     */
-    public GsEventDispatcher getEventDispatcher() {
-        return eventDispatcher;
-    }
 
 	/**
 	 * This method initializes jPanel
@@ -251,7 +243,7 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
         }
         updateTabs(TabSelection.TAB_CHECK);
     }
-    public boolean hasTab(String name) {
+	public boolean hasTab(String name) {
         return m_tabs.containsKey(name);
     }
     
@@ -426,6 +418,8 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 		getActions().updateRecentMenu();
 	}
 	abstract public GsActions getActions();
+    abstract public GsEventDispatcher getEventDispatcher();
+
 
 	enum TabSelection {
 		TAB_CHECK(0), TAB_NONE(1), TAB_SINGLE(2), TAB_MULTIPLE(4);
