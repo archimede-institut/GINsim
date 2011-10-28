@@ -17,6 +17,7 @@ import org.ginsim.graph.regulatoryGraph.RegulatoryGraphImpl;
 import org.ginsim.graph.regulatoryGraph.RegulatoryVertex;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.JgraphGUIImpl;
+import org.ginsim.gui.graph.helper.GraphGUIHelperFactory;
 
 import fr.univmrs.tagc.common.widgets.Frame;
 
@@ -49,6 +50,13 @@ public class TestRefactor {
 
 		GraphGUI<RegulatoryVertex, RegulatoryEdge> graphGUI = getGraphGUI(lrg);
 
+		// get a graph GUI helper
+		try {
+			GraphGUIHelperFactory.getFactory().getGraphGUIHelper(lrg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		if (graphGUI != null) {
 			JFrame frame = new Frame("test", 800, 600) {
 				@Override
