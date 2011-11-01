@@ -171,7 +171,7 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 	 */
 	public void hyperlinkUpdate(HyperlinkEvent event) {
 		if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-			Tools.webBrowse(event.getURL().toString());
+			Tools.openURI(event.getDescription());
 		}
 	}
 

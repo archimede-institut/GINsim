@@ -26,7 +26,7 @@ public class GsHelpCallBack {
 	 */
 	public void help() {
         if (new File("/" + GsEnv.getGinsimDir() + "Documentation/html/index.html").exists()) {
-            Tools.webBrowse("file://" + GsEnv.getGinsimDir() + "Documentation/html/index.html");
+            Tools.openURI("file://" + GsEnv.getGinsimDir() + "Documentation/html/index.html");
         } else {
             GsEnv.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_docPathError")), null);
         }

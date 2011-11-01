@@ -19,8 +19,6 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
-import org.jgraph.util.BrowserLauncher;
-
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -201,26 +199,6 @@ public class Tools {
 			return helper.open(protocol.toString(), value.toString());
 		}
 		return openURI(protocol + ":" + value);
-	}
-
-	/**
-	 * run a web browser to visit "url"
-	 * 
-	 * @param url
-	 *            the url to visit
-	 */
-	public static void webBrowse(String url) {
-		try {
-			try {
-				Runtime.getRuntime().exec("xdg-open " + url);
-				System.getProperty("os.name");
-			} catch (Exception e1) {
-				BrowserLauncher.openURL(url);
-			}
-		} catch (IOException e) {
-			error(new GsException(GsException.GRAVITY_NORMAL,
-					Translator.getString("STR_browserError")), null);
-		}
 	}
 
 	/**
