@@ -40,14 +40,13 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 	private static final long serialVersionUID = 3002680535567580439L;
 	
     private JDialog secondaryFrame = null;
-	private JPanel jPanel = null;
-	private JSplitPane jSplitPane = null;
+	private JPanel contentPanel = null;
+	private JSplitPane mainSplitPane = null;
 	private JScrollPane graphScrollPane = null;
 	private JPanel graphPanel = null;
-	private JSplitPane jSplitPane1 = null;
-	private JTabbedPane jTabbedPane = null;
-	private JPanel gsGraphMapPanel = null;
-
+	private JSplitPane secondarySplitPanel = null;
+	private JTabbedPane editTabbedPane = null;
+	private JPanel miniMapPanel = null;
 
     private Map<String, Integer> m_tabs = new HashMap<String, Integer>();
     private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
@@ -65,7 +64,7 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 	
 	protected void init() {
         setJMenuBar(getActions().getMenuBar());
-        setContentPane(getJPanel());
+        setContentPane(getContentPanel());
 	}
 
 	/**
@@ -73,10 +72,10 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 	 *
 	 * @return javax.swing.JPanel
 	 */
-	private JPanel getJPanel() {
-		if (jPanel == null) {
-			jPanel = new JPanel();
-			jPanel.setLayout(new GridBagLayout());
+	private JPanel getContentPanel() {
+		if (contentPanel == null) {
+			contentPanel = new JPanel();
+			contentPanel.setLayout(new GridBagLayout());
 
             GridBagConstraints c_toolbar = new GridBagConstraints();
             GridBagConstraints c_split = new GridBagConstraints();
@@ -93,31 +92,31 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
             c_split.weighty = 1;
             c_split.fill = GridBagConstraints.BOTH;
 
-			jPanel.add(getJSplitPane(), c_split);
-			jPanel.add(getActions().getToolBar(), c_toolbar);
+			contentPanel.add(getMainSplitPane(), c_split);
+			contentPanel.add(getActions().getToolBar(), c_toolbar);
 		}
-		return jPanel;
+		return contentPanel;
 	}
 	/**
 	 * This method initializes jSplitPane
 	 *
 	 * @return javax.swing.JSplitPane
 	 */
-	private JSplitPane getJSplitPane() {
-		if (jSplitPane == null) {
-			jSplitPane = new SplitPane();
-			jSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-			jSplitPane.setTopComponent(getGraphPanel());
-			jSplitPane.setBottomComponent(getJSplitPane1());
-			jSplitPane.setResizeWeight(1.0);
-			jSplitPane.setName("mainFrameSeparator");
-			jSplitPane.setOneTouchExpandable(true);
+	private JSplitPane getMainSplitPane() {
+		if (mainSplitPane == null) {
+			mainSplitPane = new SplitPane();
+			mainSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+			mainSplitPane.setTopComponent(getGraphPanel());
+			mainSplitPane.setBottomComponent(getSecondarySplitPanel());
+			mainSplitPane.setResizeWeight(1.0);
+			mainSplitPane.setName("mainFrameSeparator");
+			mainSplitPane.setOneTouchExpandable(true);
 		}
-		return jSplitPane;
+		return mainSplitPane;
 	}
 	
 	protected void loadGraphPanel() {
-        jSplitPane.setTopComponent(getGraphPanel());
+        mainSplitPane.setTopComponent(getGraphPanel());
 
         // FIXME: restore memory for divider location
 //        // replace jSplitPane, only if this is the first graph in this frame
@@ -129,8 +128,8 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 //            }
 //            jSplitPane.setDividerLocation(d);
 //        }
-        getJSplitPane().setDividerLocation(
-                jSplitPane.getHeight()-((Integer)OptionStore.getOption("display.dividersize", new Integer(80))).intValue());
+        getMainSplitPane().setDividerLocation(
+                mainSplitPane.getHeight()-((Integer)OptionStore.getOption("display.dividersize", new Integer(80))).intValue());
 	}
 
 	/**
@@ -170,12 +169,12 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 	}
 
     protected void setMapPanel(JPanel graphMapPanel) {
-        jSplitPane1.remove(gsGraphMapPanel);
-        gsGraphMapPanel = graphMapPanel;
-        if (gsGraphMapPanel == null) {
+        secondarySplitPanel.remove(miniMapPanel);
+        miniMapPanel = graphMapPanel;
+        if (miniMapPanel == null) {
             showMiniMap(false);
         } else {
-        	jSplitPane1.setRightComponent(gsGraphMapPanel);
+        	secondarySplitPanel.setRightComponent(miniMapPanel);
         }
 	}
 
@@ -185,9 +184,9 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
      * @param label the new label
      */
 	protected void setTabLabel(String label) {
-        int cst = m_tabs.get(jTabbedPane.getTitleAt(0));
-        jTabbedPane.setTitleAt(0, label);
-        m_tabs.put(jTabbedPane.getTitleAt(0), cst);
+        int cst = m_tabs.get(editTabbedPane.getTitleAt(0));
+        editTabbedPane.setTitleAt(0, label);
+        m_tabs.put(editTabbedPane.getTitleAt(0), cst);
 	}
 
 	private NotificationPanel getNotificationPanel() {
@@ -206,29 +205,29 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 	 *
 	 * @return javax.swing.JSplitPane
 	 */
-	private JSplitPane getJSplitPane1() {
-		if (jSplitPane1 == null) {
-			jSplitPane1 = new SplitPane();
-			jSplitPane1.setLeftComponent(getJTabbedPane());
-			jSplitPane1.setRightComponent(getGsGraphMapPanel());
-			jSplitPane1.setDividerSize(2);
-			jSplitPane1.setResizeWeight(0.7);
-			jSplitPane1.setName("mapSeparator");
+	private JSplitPane getSecondarySplitPanel() {
+		if (secondarySplitPanel == null) {
+			secondarySplitPanel = new SplitPane();
+			secondarySplitPanel.setLeftComponent(getEditTabbedPane());
+			secondarySplitPanel.setRightComponent(getMiniMapPanel());
+			secondarySplitPanel.setDividerSize(2);
+			secondarySplitPanel.setResizeWeight(0.7);
+			secondarySplitPanel.setName("mapSeparator");
 		}
-		return jSplitPane1;
+		return secondarySplitPanel;
 	}
 
 	/**
-	 * This method initializes jTabbedPane
+	 * This method initializes editTabbedPane
 	 *
 	 * @return javax.swing.JTabbedPane
 	 */
-	private JTabbedPane getJTabbedPane() {
-	    if (jTabbedPane == null) {
-			jTabbedPane = new JTabbedPane();
-			jTabbedPane.setMinimumSize(new Dimension(0, 0));
+	private JTabbedPane getEditTabbedPane() {
+	    if (editTabbedPane == null) {
+			editTabbedPane = new JTabbedPane();
+			editTabbedPane.setMinimumSize(new Dimension(0, 0));
 		}
-	    return jTabbedPane;
+	    return editTabbedPane;
 	}
 
     public void addTab(String name, JPanel panel, boolean enabled, int constraint) {
@@ -236,7 +235,7 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
             // TODO: error
             return;
         }
-        jTabbedPane.addTab(name, null, panel, null);
+        editTabbedPane.addTab(name, null, panel, null);
         m_tabs.put(name, new Integer(constraint));
         if (panel instanceof GraphChangeListener) {
             getEventDispatcher().addGraphChangedListener((GraphChangeListener) panel);
@@ -260,40 +259,40 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
             cst = getCurrentSelectionType();
         }
 
-        int selected = jTabbedPane.getSelectedIndex();
+        int selected = editTabbedPane.getSelectedIndex();
         boolean need_change = true;
         if (selected != -1) {
-            Integer i_sel = (Integer)m_tabs.get(jTabbedPane.getTitleAt(selected));
+            Integer i_sel = (Integer)m_tabs.get(editTabbedPane.getTitleAt(selected));
             int sel = 0;
             if (i_sel != null) {
                 sel = i_sel.intValue();
             }
             need_change = (sel & cst.flag) == 0;
         }
-        int nbtabs = jTabbedPane.getTabCount();
+        int nbtabs = editTabbedPane.getTabCount();
         for (int i=0 ; i<nbtabs ; i++) {
-            Integer curCst = (Integer)m_tabs.get(jTabbedPane.getTitleAt(i));
+            Integer curCst = (Integer)m_tabs.get(editTabbedPane.getTitleAt(i));
             int cur_cst = 0;
             if (curCst != null) {
                 cur_cst = curCst.intValue();
             }
 
             if ((cur_cst & cst.flag) > 0) {
-                jTabbedPane.setEnabledAt(i, true);
+                editTabbedPane.setEnabledAt(i, true);
                 if (need_change) {
-                    jTabbedPane.setSelectedIndex(i);
+                    editTabbedPane.setSelectedIndex(i);
                     need_change = false;
                 }
             } else {
-                jTabbedPane.setEnabledAt(i, false);
+                editTabbedPane.setEnabledAt(i, false);
             }
         }
     }
     public boolean removeTab(String name) {
-        int i = jTabbedPane.indexOfTab(name);
+        int i = editTabbedPane.indexOfTab(name);
         if (i != -1) {
-            Component c = jTabbedPane.getComponentAt(i);
-            jTabbedPane.removeTabAt(i);
+            Component c = editTabbedPane.getComponentAt(i);
+            editTabbedPane.removeTabAt(i);
             if (c instanceof GraphChangeListener) {
                 getEventDispatcher().removeGraphChangeListener((GraphChangeListener)c);
             }
@@ -304,15 +303,15 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
         return false;
     }
 	/**
-	 * This method initializes gsGraphMapPanel
+	 * This method initializes miniMapPanel
 	 *
 	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphMapPanel
 	 */
-	private JPanel getGsGraphMapPanel() {
-		if (gsGraphMapPanel == null) {
-			gsGraphMapPanel = new JPanel();
+	private JPanel getMiniMapPanel() {
+		if (miniMapPanel == null) {
+			miniMapPanel = new JPanel();
 		}
-		return gsGraphMapPanel;
+		return miniMapPanel;
 	}
 
     /**
@@ -327,9 +326,9 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 			secondaryFrame=new JDialog(this);
 			secondaryFrame.setTitle(Translator.getString("STR_Tools"));
 			//detach component from SplitPane_H
-			jSplitPane.setBottomComponent(null);
+			mainSplitPane.setBottomComponent(null);
 			//set tools in ContentPane
-			secondaryFrame.setContentPane(jSplitPane1);
+			secondaryFrame.setContentPane(secondarySplitPanel);
 			secondaryFrame.setSize(800,300);
 			secondaryFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 					public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -341,7 +340,7 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
 			secondaryFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		} else if (secondaryFrame!=null) {
 			// re-attach tools
-			jSplitPane.setBottomComponent(jSplitPane1);
+			mainSplitPane.setBottomComponent(secondarySplitPanel);
 			//destroy secondary frame
 			secondaryFrame.setVisible(false);
 			secondaryFrame.dispose();
@@ -355,13 +354,13 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
      * @param b : if true the miniMap will be shown
      */
     public void showMiniMap(boolean b) {
-        if (gsGraphMapPanel != null) {
+        if (miniMapPanel != null) {
             if (b) {
-                gsGraphMapPanel.setVisible(b);
-                jSplitPane1.setDividerLocation(jSplitPane1.getWidth() - mmapDivLocation);
+                miniMapPanel.setVisible(b);
+                secondarySplitPanel.setDividerLocation(secondarySplitPanel.getWidth() - mmapDivLocation);
             } else {
-                mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
-                gsGraphMapPanel.setVisible(b);
+                mmapDivLocation = secondarySplitPanel.getWidth() - secondarySplitPanel.getDividerLocation();
+                miniMapPanel.setVisible(b);
             }
         }
     }
@@ -394,12 +393,12 @@ abstract public class BaseMainFrame extends Frame implements NotificationSource 
         // --> GsEnv.m_graphs pas vide
         
     	if (confirmCloseGraph()) {
-            if (gsGraphMapPanel.isVisible()) {
-                mmapDivLocation = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation();
+            if (miniMapPanel.isVisible()) {
+                mmapDivLocation = secondarySplitPanel.getWidth() - secondarySplitPanel.getDividerLocation();
             }
             OptionStore.setOption("display.minimapsize", new Integer(mmapDivLocation));
             if (secondaryFrame == null) {
-                OptionStore.setOption("display.dividersize", new Integer(jSplitPane.getHeight()-jSplitPane.getDividerLocation()));
+                OptionStore.setOption("display.dividersize", new Integer(mainSplitPane.getHeight()-mainSplitPane.getDividerLocation()));
             }
 		    if (force || GsEnv.getNbFrame() > 1) {
 		        GsEnv.delFrame(this);

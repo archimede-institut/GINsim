@@ -30,8 +30,10 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 
 	private GsEventDispatcher eventDispatcher = new GsEventDispatcher(true);
     
-	private JPanel jPanel1 = null;
-	private GsGraphicAttributePanel gsGraphicAttributePanel = null;
+	private JPanel selectionEditPanel = null;
+	private GsGraphicAttributePanel graphicAttributePanel = null;
+	
+	
     private GsActions gsActions = new GsActions(this);
     private GsGraph<?,?> graph = null;
     private CardLayout cards = new CardLayout();
@@ -110,11 +112,11 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 	 * @return javax.swing.JPanel
 	 */
 	private JPanel getJPanel1() {
-		if (jPanel1 == null) {
-			jPanel1 = new JPanel();
-			jPanel1.setLayout(cards);
+		if (selectionEditPanel == null) {
+			selectionEditPanel = new JPanel();
+			selectionEditPanel.setLayout(cards);
 		}
-		return jPanel1;
+		return selectionEditPanel;
 	}
 
 	/**
@@ -123,11 +125,11 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphicAttributePanel
 	 */
 	private GsGraphicAttributePanel getGsGraphicAttributePanel() {
-		if (gsGraphicAttributePanel == null) {
-			gsGraphicAttributePanel = new GsGraphicAttributePanel();
-			gsGraphicAttributePanel.setMainFrame(this);
+		if (graphicAttributePanel == null) {
+			graphicAttributePanel = new GsGraphicAttributePanel();
+			graphicAttributePanel.setMainFrame(this);
 		}
-		return gsGraphicAttributePanel;
+		return graphicAttributePanel;
 	}
 	
     public void graphChanged(GsNewGraphEvent event) {
@@ -151,8 +153,8 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         
         graph.setMainFrame(this);
         setGraphView(graph.getGraphManager().getGraphPanel());
-        jPanel1.removeAll();
-        jPanel1.add(getEmptyPanel(), "empty");
+        selectionEditPanel.removeAll();
+        selectionEditPanel.add(getEmptyPanel(), "empty");
         edgeEditor = graph.getEdgeEditor();
         if (edgeEditor == null) {
         	edgePanel = graph.getEdgeAttributePanel();
@@ -179,23 +181,23 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         gsActions.setDefaults();
 
         if (edgeEditor != null) {
-        	jPanel1.add(new GenericPropertyEditorPanel(edgeEditor), "edge");
+        	selectionEditPanel.add(new GenericPropertyEditorPanel(edgeEditor), "edge");
         } else if (edgePanel != null) {
         	edgePanel.setMainFrame(this);
-            jPanel1.add(edgePanel, "edge");
+            selectionEditPanel.add(edgePanel, "edge");
         } else {
-            jPanel1.add(emptyPanel, "edge");
+            selectionEditPanel.add(emptyPanel, "edge");
         }
         if (vertexEditor != null) {
-        	jPanel1.add(new GenericPropertyEditorPanel(vertexEditor), "vertex");
+        	selectionEditPanel.add(new GenericPropertyEditorPanel(vertexEditor), "vertex");
         } else if (vertexPanel != null) {
             vertexPanel.setMainFrame(this);
-            jPanel1.add(vertexPanel, "vertex");
+            selectionEditPanel.add(vertexPanel, "vertex");
         } else {
-            jPanel1.add(emptyPanel, "vertex");
+            selectionEditPanel.add(emptyPanel, "vertex");
         }
 
-        gsGraphicAttributePanel.setMainFrame(this);
+        graphicAttributePanel.setMainFrame(this);
         
         loadGraphPanel();
 
@@ -277,37 +279,37 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         if (event.getNbEdge() > 0 && event.getNbVertex() == 0) {
             // if multi-selection: force it on the graphic attribute panel otherwise let it free
             if (event.getNbEdge() == 1) {
-                cards.show(jPanel1, "edge");
+                cards.show(selectionEditPanel, "edge");
                 if (edgeEditor != null) {
                 	edgeEditor.setEditedObject(v_edge.get(0));
                 } else if (edgePanel != null) {
                     edgePanel.setEditedObject(v_edge.get(0));
                 }
-                gsGraphicAttributePanel.setEditedObject(v_edge.get(0));
+                graphicAttributePanel.setEditedObject(v_edge.get(0));
                 updateTabs(TabSelection.TAB_SINGLE);
             } else {
-                cards.show(jPanel1, "empty");
-                gsGraphicAttributePanel.setEditedObject(v_edge);
+                cards.show(selectionEditPanel, "empty");
+                graphicAttributePanel.setEditedObject(v_edge);
                 updateTabs(TabSelection.TAB_MULTIPLE);
             }
         } else if (event.getNbEdge() == 0 && event.getNbVertex() > 0) {
             if (event.getNbVertex() == 1) {
-                cards.show(jPanel1, "vertex");
+                cards.show(selectionEditPanel, "vertex");
                 if (vertexEditor != null) {
                 	vertexEditor.setEditedObject(v_vertex.get(0));
                 } else if (vertexPanel != null) {
                     vertexPanel.setEditedObject(v_vertex.get(0));
                 }
-                gsGraphicAttributePanel.setEditedObject(v_vertex.get(0));
+                graphicAttributePanel.setEditedObject(v_vertex.get(0));
                 updateTabs(TabSelection.TAB_SINGLE);
             } else {
-                cards.show(jPanel1, "empty");
-                gsGraphicAttributePanel.setEditedObject(v_vertex);
+                cards.show(selectionEditPanel, "empty");
+                graphicAttributePanel.setEditedObject(v_vertex);
                 updateTabs(TabSelection.TAB_MULTIPLE);
             }
         } else {
-            cards.show(jPanel1, "empty");
-            gsGraphicAttributePanel.setEditedObject(null);
+            cards.show(selectionEditPanel, "empty");
+            graphicAttributePanel.setEditedObject(null);
             updateTabs(TabSelection.TAB_NONE);
         }
     }
