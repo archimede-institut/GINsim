@@ -35,8 +35,3 @@ public class EditMode {
 		return value;
 	}
 }
-
-
-enum EditGroup {
-	NODE, EDGE
-}

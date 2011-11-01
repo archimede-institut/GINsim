@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.ginsim.gui.shell.FrameActions;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;

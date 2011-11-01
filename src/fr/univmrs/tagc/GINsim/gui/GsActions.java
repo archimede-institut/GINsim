@@ -22,6 +22,10 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
+import org.ginsim.graph.EditGroup;
+import org.ginsim.graph.EditMode;
+import org.ginsim.gui.shell.FrameActions;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
@@ -45,7 +49,7 @@ import fr.univmrs.tagc.common.widgets.BaseAction;
  * this class creates the menubar, the toolbar and the main actions for GINsim
  * GUI.
  */
-public class GsActions implements GraphChangeListener {
+public class GsActions implements GraphChangeListener, FrameActions {
 
 	/** default edit mode: move/resize objects */
 	public static final int		MODE_DEFAULT		= 0;
@@ -1117,6 +1121,23 @@ public class GsActions implements GraphChangeListener {
 
 	public boolean shouldAutoAddNewElements() {
 		return btt_simpleFunctionEdition.isSelected();
+	}
+
+	@Override
+	public void setCurrentMode(EditMode mode, boolean lock) {
+		// FIXME: temporary empty, waiting for a replacement
+	}
+
+	@Override
+	public EditMode getCurrentEditMode() {
+		// FIXME: temporary empty, waiting for a replacement
+		return null;
+	}
+
+	@Override
+	public EditGroup getCurrentGroup() {
+		// FIXME: temporary empty, waiting for a replacement
+		return null;
 	}
 }
 
