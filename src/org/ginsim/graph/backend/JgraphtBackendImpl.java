@@ -1,7 +1,9 @@
-package org.ginsim.graph;
+package org.ginsim.graph.backend;
 
 import java.util.Collection;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Edge;
 import org.jgrapht.graph.ListenableDirectedGraph;
 
 import fr.univmrs.tagc.GINsim.jgraph.GsJGraphtBaseGraph;

@@ -1,6 +1,8 @@
-package org.ginsim.graph;
+package org.ginsim.graph.backend;
 
 import java.util.Collection;
+
+import org.ginsim.graph.Edge;
 
 public interface GraphBackend<V, E extends Edge<V>> {
 

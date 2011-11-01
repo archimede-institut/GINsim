@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.JgraphtBackendImpl;
+import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge.Routing;

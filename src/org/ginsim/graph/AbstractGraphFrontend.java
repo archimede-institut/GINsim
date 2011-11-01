@@ -2,6 +2,10 @@ package org.ginsim.graph;
 
 import java.util.Collection;
 
+import org.ginsim.graph.backend.GraphBackend;
+import org.ginsim.graph.backend.GraphViewBackend;
+import org.ginsim.graph.backend.JgraphtBackendImpl;
+
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 

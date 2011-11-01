@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.graph;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
@@ -17,19 +18,13 @@ public class GsGraphSelectionChangeEvent {
     /**
      * @param v_edge
      * @param v_vertex
-     * @param nbEdge
-     * @param nbVertex
      */
-    public GsGraphSelectionChangeEvent(List v_edge, List v_vertex,
-            int nbEdge, int nbVertex) {
+    public GsGraphSelectionChangeEvent(List v_edge, List v_vertex) {
         super();
         this.v_edge = v_edge;
         this.v_vertex = v_vertex;
-        this.nbEdge = nbEdge;
-        this.nbVertex = nbVertex;
-    }
-    public GsGraphSelectionChangeEvent(Vector v_edge, Vector v_vertex) {
-    	this(v_edge, v_vertex, v_edge.size(), v_vertex.size());
+        this.nbEdge = v_edge.size();
+        this.nbVertex = v_vertex.size();
     }
     /**
      * @return the number of edges in the new selected.

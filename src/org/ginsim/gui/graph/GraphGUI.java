@@ -1,8 +1,10 @@
 package org.ginsim.gui.graph;
 
 import java.awt.Component;
+import java.util.Collection;
 
 import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
 
 /**
  * Deal with the GUI view of a graph: get a component, provide access to selected items and view options.
@@ -12,13 +14,63 @@ import org.ginsim.graph.Edge;
  * @param <V>
  * @param <E>
  */
-public interface GraphGUI<V, E extends Edge<V>> {
+public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 
 	/**
-	 * 
+	 * @return the underlying graph
+	 */
+	public Graph<V, E> getGraph();
+	
+	/**
 	 * @return the widget showing the graph
 	 */
 	public Component getGraphComponent();
+
+	/**
+	 * Change a property of this GUI (grid visible/active/AA,...)
+	 * 
+	 * @param property
+	 * @param b
+	 */
+	public void setProperty(int property, boolean b);
+
+	/**
+	 * Test if a property is enabled in this GUI.
+	 * 
+	 * @param property
+	 * @return true if this property is enabled
+	 */
+	public boolean hasProperty(int property);
+
+	/**
+	 * @return the list of properties supported by this GUI.
+	 */
+	public int[] getProperties();
+
+	/**
+	 * @return the list of selected vertices
+	 */
+	public Collection<V> getSelectedVertices();
+	/**
+	 * @return the list of selected edges
+	 */
+	public Collection<E> getSelectedEdges();
+
+	/**
+	 * @param property
+	 * @return the text to display in a menu for this property
+	 */
+	public String getPropertyName(int property);
+	
+
+	public GUIEditor<G> getMainEditionPanel();
+
+	public String getEditingTabLabel();
+
+	public GUIEditor<V> getNodeEditionPanel();
+
+	public GUIEditor<E> getEdgeEditionPanel();
+	
 	
 // TODO Commented out for quick testing: remove comments	
 
@@ -89,37 +141,6 @@ public interface GraphGUI<V, E extends Edge<V>> {
 //     * @return an iterator to selected vertices.
 //     */
 //	abstract public Iterator<V> getSelectedVertexIterator();
-//
-// 
-//    /**
-//     * Show the grid if boolean is true. 
-//     * Hide the grid if boolean is false.
-//     * 
-//     * @param b
-//     */
-//    public void showGrid(boolean b);
-//    
-//
-//    /**
-//     * Activate the grid if boolean is true.
-//     * Deactivate the grid if boolean is false.
-//     * 
-//     * @param b
-//     */
-//    public void setGridActive(boolean b);
-//    
-//
-//    /**
-//     * @return true if the grid is visible
-//     */
-//    public boolean isGridDisplayed();
-//    
-//    
-//    /**
-//     * @return true if the grid is visible
-//     */
-//    public abstract boolean isGridActive();
-//
 //    
 //    /**
 //     * Move all vertex to front if boolean is true.

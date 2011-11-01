@@ -1,7 +1,8 @@
-package org.ginsim.graph;
+package org.ginsim.graph.backend;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsFallBackEdgeAttributeReader;

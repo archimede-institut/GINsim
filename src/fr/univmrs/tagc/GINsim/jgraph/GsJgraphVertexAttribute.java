@@ -10,7 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import org.ginsim.graph.JgraphtBackendImpl;
+import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
