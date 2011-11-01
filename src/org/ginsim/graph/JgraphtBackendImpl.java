@@ -10,7 +10,6 @@ import fr.univmrs.tagc.GINsim.jgraph.GsJgraphtEdgeFactory;
 public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirectedGraph<V, E> implements GraphBackend<V, E> {
 	private static final long serialVersionUID = -7766943723639796018L;
 	
-	
 	private AbstractGraphFrontend<V,E> frontend = null;
 	private GraphViewBackend graphViewBackend;
 	
@@ -18,7 +17,6 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 		// FIXME: remove the edgeFactory (with better integration with the underlying graph)
 		super(new GsJGraphtBaseGraph<V, E>(new GsJgraphtEdgeFactory()));
 	}
-
 	
 	/**
 	 * Add an edge in the JGraphT Graph
@@ -111,8 +109,20 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	@Override
 	public GraphViewBackend getGraphViewBackend() {
 		if (graphViewBackend == null) {
-			graphViewBackend = new JgraphtViewBackendImpl();
+			graphViewBackend = new JgraphtViewBackendImpl(this);
 		}
 		return graphViewBackend;
+	}
+
+	/**
+	 * Change the back-end used for graph view.
+	 * Used to switch from the generic back-end to a jgraph one.
+	 * @param backend
+	 */
+	public void setGraphViewBackend(GraphViewBackend backend) {
+		if (graphViewBackend != null) {
+			// FIXME: transfer view info from one to the other
+		}
+		this.graphViewBackend = backend;
 	}
 }

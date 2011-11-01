@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import org.ginsim.graph.JgraphtBackendImpl;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
@@ -57,11 +58,15 @@ public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
      * @param graphmanager
      */
     public GsJgraphVertexAttribute(GsJgraphtGraphManager graphmanager) {
-        this.m_adaptor = graphmanager.getM_jgAdapter();
-        this.defaultVertexAttr = graphmanager.getDefaultVertexAttr();
+    	this(graphmanager.getM_jgAdapter(), graphmanager.getDefaultVertexAttr());
     }
 
-    public static void applyDefault(AttributeMap defaultVertexAttr) {
+    public GsJgraphVertexAttribute(JGraphModelAdapter<?,?> adaptor, AttributeMap defaults) {
+        this.m_adaptor = adaptor;
+        this.defaultVertexAttr = defaults;
+	}
+
+	public static void applyDefault(AttributeMap defaultVertexAttr) {
         GraphConstants.setBackground(defaultVertexAttr, GsVertexAttributesReader.bg);
         GraphConstants.setForeground(defaultVertexAttr, GsVertexAttributesReader.fg);
         GraphConstants.setBorder(defaultVertexAttr, (Border)v_borderRenderer[GsVertexAttributesReader.border]);

@@ -1,5 +1,8 @@
 package org.ginsim.graph;
 
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+
 /**
  * View was done through "attribute readers" for nodes and edges.
  * When no GUI was here a fallback datastructure was used, otherwise it delegates to JGraph.
@@ -12,4 +15,6 @@ package org.ginsim.graph;
  */
 public interface GraphView {
 
+	public GsEdgeAttributesReader getEdgeReader();
+	public GsVertexAttributesReader getVertexReader();
 }

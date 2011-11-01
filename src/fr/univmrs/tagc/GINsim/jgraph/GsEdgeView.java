@@ -18,7 +18,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 public class GsEdgeView extends EdgeView {
 	
 	private static final long serialVersionUID = 875785889768955L;
-	private GsEdgeRenderer renderer;
+	private EdgeRenderer renderer;
 	/**
 	 * create a new EdgeView.
 	 * 
@@ -39,21 +39,27 @@ class GsEdgeRenderer extends EdgeRenderer {
 
 	private static final long serialVersionUID = 6746746786967887L;
 	private GsJgraphtGraphManager graph;
+	private GsJgraph jgraph;
 	
 	protected GsEdgeRenderer(GsJgraphtGraphManager graph) {
 		this.graph = graph;
+		this.jgraph = graph.getJgraph();
+	}
+	
+	protected GsEdgeRenderer(GsJgraph jgraph) {
+		this.jgraph = jgraph;
 	}
 	
     /**
-     * 
      * @return the graph for which this renderer works
      */
+	@Deprecated
     public GsGraphManager getGraph() {
         return graph;
     }
     
 	public void paintLabel(java.awt.Graphics g, String label, Point2D point, boolean b) {
-		if (graph.getJgraph().isEdgeLabelDisplayed()) super.paintLabel(g,label, point, b);
+		if (jgraph.isEdgeLabelDisplayed()) super.paintLabel(g,label, point, b);
 	}
     
     protected Shape createLineEnd(int size, int style, Point2D src, Point2D dst) {

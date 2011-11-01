@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.JgraphtBackendImpl;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge.Routing;
@@ -46,14 +47,19 @@ public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
      * @param graphmanager
      */
     public GsJgraphEdgeAttribute(GsJgraphtGraphManager graphmanager) {
-        this.m_adaptor = graphmanager.getM_jgAdapter();
-        this.g = graphmanager.getG();
-        this.defaultEdgeAttr = graphmanager.getDefaultEdgeAttr();
+    	this(graphmanager.getG(), graphmanager.getM_jgAdapter(), graphmanager.getDefaultEdgeAttr());
+        this.glc = graphmanager.getJgraph().getGraphLayoutCache();
+    }
+    
+    public GsJgraphEdgeAttribute(ListenableGraph g, JGraphModelAdapter adaptor, AttributeMap defaultEdgeAttr) {
+        this.m_adaptor = adaptor;
+        this.g = g;
+        this.defaultEdgeAttr = defaultEdgeAttr;
     	applyDefault(defaultEdgeAttr);
-        glc = graphmanager.getJgraph().getGraphLayoutCache();
+        //this.glc = graphmanager.getJgraph().getGraphLayoutCache();
         // routing aren't static: they need knowledge of the graphManager.
     	v_routingRenderer = new Object[NBROUTING];
-    	v_routingRenderer[ROUTING_AUTO] = graphmanager.getPedgerouting();
+    	//v_routingRenderer[ROUTING_AUTO] = graphmanager.getPedgerouting();
     	v_routingRenderer[ROUTING_NONE] = null;
     }
 

@@ -31,68 +31,52 @@ public class TestRefactor {
 
 	/**
 	 * @param args
+	 * @throws InstantiationException 
+	 * @throws IllegalAccessException 
+	 * @throws ClassNotFoundException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 		RegulatoryGraph lrg = new RegulatoryGraphImpl();
 
 		RegulatoryVertex v1 = lrg.addVertex(0);
 		RegulatoryVertex v2 = lrg.addVertex(0);
 		RegulatoryVertex v3 = lrg.addVertex(0);
 
-		// add edge broken for now: the backend relies on GsDirectedEdge
 		lrg.addEdge(v1, v2, 0);
 		lrg.addEdge(v1, v3, 0);
 		
-		// debug output
-		for (RegulatoryVertex v: lrg.getVertices()) {
-			System.out.println(v);
-		}
-
-
 		GraphGUI<RegulatoryVertex, RegulatoryEdge> graphGUI = getGraphGUI(lrg);
-
-		// get a graph GUI helper
-		try {
-			GraphGUIHelper helper = GraphGUIHelperFactory.getFactory().getGraphGUIHelper(lrg);
-			System.out.println(helper);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		JFrame frame = new Frame("test", 800, 600) {
+			@Override
+			public void doClose() {
+				System.exit(0);
+			}
+		};
+		Container panel = frame.getContentPane();
+		panel.setLayout(new GridBagLayout());
 		
-		if (graphGUI != null) {
-			JFrame frame = new Frame("test", 800, 600) {
-				@Override
-				public void doClose() {
-					System.exit(0);
-				}
-			};
-			Container panel = frame.getContentPane();
-			panel.setLayout(new GridBagLayout());
-			
-			GridBagConstraints cst = new GridBagConstraints();
-			cst.gridx = 0;
-			cst.gridy = 0;
-			cst.weightx = 1;
-			cst.weighty = 1;
-			cst.fill = GridBagConstraints.BOTH;
-			panel.add(graphGUI.getGraphComponent(), cst);
-			frame.setVisible(true);
-		} else {
-			System.out.println("can't find GUI for this graph: "+lrg);
-		}
+		GridBagConstraints cst = new GridBagConstraints();
+		cst.gridx = 0;
+		cst.gridy = 0;
+		cst.weightx = 1;
+		cst.weighty = 1;
+		cst.fill = GridBagConstraints.BOTH;
+		panel.add(graphGUI.getGraphComponent(), cst);
+		frame.setVisible(true);
 	}
 	
-	public static <V,E extends Edge<V>> GraphGUI<V,E> getGraphGUI(Graph<V,E> graph) {
+	public static <V,E extends Edge<V>> GraphGUI<V,E> getGraphGUI(Graph<V,E> graph) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+		// get a graph GUI helper
+		GraphGUIHelper helper = GraphGUIHelperFactory.getFactory().getGraphGUIHelper(graph);
+		
 		// find the GUI component and show the graph...
 		GraphGUI<V,E> graphGUI = null;
-
 		if (graph instanceof AbstractGraphFrontend) {
 			GraphBackend<V,E> graph_backend = ((AbstractGraphFrontend<V, E>)graph).getBackend();
 			if (graph_backend instanceof JgraphtBackendImpl) {
-				graphGUI = new JgraphGUIImpl<V,E>((JgraphtBackendImpl<V,E>) graph_backend);
+				graphGUI = new JgraphGUIImpl<V,E>((JgraphtBackendImpl<V,E>) graph_backend, helper);
 			}
 		}
-
 
 		return graphGUI;
 	}

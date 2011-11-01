@@ -23,11 +23,16 @@ public class GsJgraph extends JGraph {
      * @param graph
      */
     public GsJgraph(GsJgraphtGraphManager graph) {
-        this(graph.getM_jgAdapter(), new GsCellViewFactory(graph));
+        super(graph.getM_jgAdapter());
+        setCellViewFactory(graph.getM_jgAdapter(), new GsCellViewFactory(graph));
+    }
+    
+    public GsJgraph(JGraphModelAdapter ma) {
+        super(ma);
+        setCellViewFactory(ma, new GsCellViewFactory(this));
     }
 
-    public GsJgraph(JGraphModelAdapter ma, CellViewFactory cvf) {
-        super(ma);
+    private void setCellViewFactory(JGraphModelAdapter ma, CellViewFactory cvf) {
         
         setGraphLayoutCache(new GraphLayoutCache(ma, cvf));
 		setGridVisible(((Boolean)OptionStore.getOption("display.grid", Boolean.FALSE)).booleanValue());

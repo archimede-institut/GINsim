@@ -23,6 +23,14 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 	}
 
 	/**
+	 * @param jgraph
+	 * FIXME: parallel edge routing requires a graphmanager, this constructor may not fully work yet
+	 */
+	public GsCellViewFactory(GsJgraph jgraph) {
+		this.renderer = new GsEdgeRenderer(jgraph);
+	}
+
+	/**
 	 * Constructs an EdgeView view for the specified object.
 	 * @param cell
 	 * @return the new EdgeView.

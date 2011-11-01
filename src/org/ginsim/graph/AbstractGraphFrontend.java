@@ -2,6 +2,9 @@ package org.ginsim.graph;
 
 import java.util.Collection;
 
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+
 abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, GraphView {
 
 	private final GraphBackend<V,E> graphBackend;
@@ -185,5 +188,14 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	@Override
 	public Collection<E> getOutgoingEdges(V vertex) {
 		return graphBackend.getOutgoingEdges(vertex);
+	}
+	
+	@Override
+	public GsEdgeAttributesReader getEdgeReader() {
+		return viewBackend.getEdgeReader();
+	}
+	@Override
+	public GsVertexAttributesReader getVertexReader() {
+		return viewBackend.getVertexReader();
 	}
 }

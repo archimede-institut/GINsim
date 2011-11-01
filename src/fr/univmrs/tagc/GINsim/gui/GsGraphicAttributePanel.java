@@ -1,6 +1,11 @@
 package fr.univmrs.tagc.GINsim.gui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -8,9 +13,20 @@ import java.awt.event.FocusEvent;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.ginsim.graph.GraphView;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -888,7 +904,19 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 		vReader = graph.getGraphManager().getVertexAttributesReader();
 		eReader = graph.getGraphManager().getEdgeAttributesReader();
-
+		reload();
+	}
+	
+	public void setGraph(GraphView view) {
+		if (graph == null) {
+			return;
+		}
+		vReader = view.getVertexReader();
+		eReader = view.getEdgeReader();
+		reload();
+	}
+	
+	private void reload() {
 		// apply shape list
 		jComboBox_shape.removeAllItems();
 		Vector v_tmp = vReader.getShapeList();
