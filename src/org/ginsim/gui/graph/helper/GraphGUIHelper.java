@@ -52,4 +52,11 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @return
 	 */
 	public GUIEditor<E> getEdgeEditionPanel(G graph);
+	
+	/**
+	 * Return the name of the graph class the helper help to manage
+	 * 
+	 * @return the name of the graph class the helper help to manage
+	 */
+	public String getGraphClassName();
 }

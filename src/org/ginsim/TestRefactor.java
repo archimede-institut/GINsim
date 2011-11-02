@@ -9,6 +9,7 @@ import org.ginsim.graph.testGraph.TestEdge;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.graph.testGraph.TestVertex;
+import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
 import org.ginsim.gui.graph.helper.GraphGUIHelper;
@@ -40,6 +41,11 @@ public class TestRefactor {
 		
 		GraphGUI<TestGraph, TestVertex, TestEdge> graphGUI = getGraphGUI(lrg);
 		newFrame(graphGUI);
+		
+		GraphGUIHelper<TestGraph,TestVertex,TestEdge> helper = (GraphGUIHelper<TestGraph,TestVertex,TestEdge>) GraphGUIHelperFactory.getFactory().getGraphGUIHelper( lrg);
+		GUIEditor<TestVertex> node_editor = helper.getNodeEditionPanel( lrg);
+		System.out.println("TestRefactor.main() : Node editor = " + node_editor);
+		
 	}
 	
 	public static MainFrame newFrame(GraphGUI<?,?,?> gui) {
