@@ -1,26 +1,23 @@
-package org.ginsim.gui.graph.helper;
+package org.ginsim.gui.testgraph;
 
 import javax.swing.JPanel;
 
+import org.ginsim.graph.Graph;
 import org.ginsim.graph.testGraph.TestEdge;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.graph.testGraph.TestVertex;
 import org.ginsim.gui.graph.GUIEditor;
-import org.ginsim.gui.testgraph.TestEdgeEditionPanel;
-import org.ginsim.gui.testgraph.TestGraphEditionPanel;
-import org.ginsim.gui.testgraph.TestVertexEditionPanel;
+import org.ginsim.gui.graph.helper.GraphGUIHelper;
 import org.mangosdk.spi.ProviderFor;
 
 /**
- * Simple GUI helper for the regulatory graph.
- * 
- * FIXME: the name is based on the name of the implementation, we want to do better!
+ * Simple GUI helper for the test graph.
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor( GraphGUIHelper.class)  // requires SPI, could be a more solid solution for service discovery
-public class TestGraphImplGUIHelper implements GraphGUIHelper<TestGraph, TestVertex, TestEdge> {
+@ProviderFor( GraphGUIHelper.class)
+public class TestGraphGUIHelper implements GraphGUIHelper<TestGraph, TestVertex, TestEdge> {
 
 	@Override
 	public GUIEditor<TestGraph> getMainEditionPanel(TestGraph graph) {
@@ -29,7 +26,7 @@ public class TestGraphImplGUIHelper implements GraphGUIHelper<TestGraph, TestVer
 
 	@Override
 	public String getEditingTabLabel(TestGraph graph) {
-		return "LRG";
+		return "Test graph";
 	}
 
 	@Override
@@ -43,15 +40,12 @@ public class TestGraphImplGUIHelper implements GraphGUIHelper<TestGraph, TestVer
 	}
 	
 	@Override
-	public String getGraphClassName() {
-		
-		return TestGraphImpl.class.getName();
+	public Class getGraphClass() {
+		return TestGraph.class;
 	}
 
 	@Override
 	public JPanel getInfoPanel(TestGraph graph) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

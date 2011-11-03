@@ -15,6 +15,8 @@ import org.ginsim.gui.graph.GUIEditor;
  * Implementors must be called with the same pattern: '<GraphClassName>GUIHelper.java' in order to have
  * the GraphGUIHelperFactory able to create their instances through introspective access
  * 
+ * Implementations must be annotated "@ProviderFor( GraphGUIHelper.class)" to be discovered at runtime
+ *
  * @author Aurelien Naldi
  *
  * @param <G>
@@ -64,9 +66,9 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	public JPanel getInfoPanel( G graph);
 	
 	/**
-	 * Return the name of the graph class the helper help to manage
+	 * Get the graph class the helper helps to manage
 	 * 
-	 * @return the name of the graph class the helper help to manage
+	 * @return the graph class the helper helps to manage
 	 */
-	public String getGraphClassName();
+	public Class<G> getGraphClass();
 }

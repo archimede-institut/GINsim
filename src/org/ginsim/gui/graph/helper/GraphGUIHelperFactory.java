@@ -31,7 +31,7 @@ public class GraphGUIHelperFactory {
 	private static GraphGUIHelperFactory factory = null;
 	
 	// The map establishing the correspondence between graph class and GraphGUIHelper instance
-	private HashMap<String, GraphGUIHelper<?,?,?>> guiGraphHelpers = new HashMap<String, GraphGUIHelper<?,?,?>>();  
+	private HashMap<Class<?>, GraphGUIHelper<?,?,?>> guiGraphHelpers = new HashMap<Class<?>, GraphGUIHelper<?,?,?>>();
 	
 	
 	/**
@@ -44,9 +44,9 @@ public class GraphGUIHelperFactory {
         while (helpers.hasNext()) {
             try {
             	GraphGUIHelper<?,?,?> helper = helpers.next();
-            	String graph_class_name = helper.getGraphClassName();
-                    if( graph_class_name != null && !graph_class_name.isEmpty()) {
-                    	guiGraphHelpers.put( graph_class_name, helper);
+            	Class graph_class = helper.getGraphClass();
+                    if( graph_class != null) {
+                    	guiGraphHelpers.put( graph_class, helper);
                     }
             }
             catch (ServiceConfigurationError e){
@@ -77,18 +77,22 @@ public class GraphGUIHelperFactory {
 	 * @param graph_class the name of the graph class name for which the GUI helper is required
 	 * @return the instance of GraphGUIHelper corresponding to the graph class
 	 */
-	public GraphGUIHelper<?,?,?> getGraphGUIHelper( String graph_class_name) throws ClassNotFoundException, IllegalAccessException, InstantiationException{
+	public GraphGUIHelper<?,?,?> getGraphGUIHelper( Class<?> graph_class) throws ClassNotFoundException, IllegalAccessException, InstantiationException{
 		
-		GraphGUIHelper<?,?,?> helper = null;
-		
-		if( guiGraphHelpers.containsKey( graph_class_name)){
-			helper = guiGraphHelpers.get( graph_class_name);
+		GraphGUIHelper<?,?,?> helper = guiGraphHelpers.get( graph_class);
+		if (helper != null) {
+			return helper;
 		}
-		else{
-			throw new ClassNotFoundException( "GraphGUIhelperFactory.getGraphGUIHelper : No GraphGUIHelper found for graph name : " + graph_class_name);
+
+		// no helper for the concrete class, lookup on interfaces
+		Class<?>[] interfaces = graph_class.getInterfaces();
+		for (Class<?> i: interfaces) {
+			helper = guiGraphHelpers.get(i);
+			if (helper != null) {
+				return helper;
+			}
 		}
-		
-		return helper;
+		throw new ClassNotFoundException( "GraphGUIhelperFactory.getGraphGUIHelper : No GraphGUIHelper found for graph name : " + graph_class);
 	}
 	
 	
@@ -101,7 +105,7 @@ public class GraphGUIHelperFactory {
 	public GraphGUIHelper<?,?,?> getGraphGUIHelper( Graph<?,?> graph) throws ClassNotFoundException, IllegalAccessException, InstantiationException{
 		
 		if( graph != null){
-			return getGraphGUIHelper( graph.getClass().getName());
+			return getGraphGUIHelper( graph.getClass());
 		}
 		else{
 			throw new ClassNotFoundException( "GraphGUIhelperFactory.getGraphGUIHelper : the provided graph is null");
