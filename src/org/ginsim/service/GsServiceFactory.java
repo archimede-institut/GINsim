@@ -1,4 +1,4 @@
-package org.ginsim.gui.service;
+package org.ginsim.service;
 
 import java.util.Iterator;
 import java.util.List;
@@ -10,7 +10,6 @@ import java.lang.Class;
 
 import org.ginsim.graph.Graph;
 
-import org.ginsim.service.GsService;
 
 /**
  * This factory provides access to the GsServices corresponding to a specific graph class
