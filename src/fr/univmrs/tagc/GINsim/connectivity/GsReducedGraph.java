@@ -234,7 +234,7 @@ public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<Gs
     protected List doMerge(GsGraph otherGraph) {
         return null;
     }
-    protected GsGraph doCopySelection(Collection vertex, Collection edges) {
+    protected GsGraph getSubGraph(Collection vertex, Collection edges) {
         // no copy for reduced graphs
         return null;
     }

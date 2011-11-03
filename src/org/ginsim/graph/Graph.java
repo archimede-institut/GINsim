@@ -1,6 +1,7 @@
 package org.ginsim.graph;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Interface for the main objects: graphs.
@@ -15,6 +16,23 @@ import java.util.Collection;
  */
 public interface Graph<V,E extends Edge<V>> {
 
+    /**  an edged has been added */
+    public static final int CHANGE_EDGEADDED = 0;
+    /**  an edged has been removed */
+    public static final int CHANGE_EDGEREMOVED = 1;
+    /** a vertex has been added  */
+    public static final int CHANGE_VERTEXADDED = 2;
+    /**  a vertex has been removed */
+    public static final int CHANGE_VERTEXREMOVED = 3;
+    /**  an edge has been modified */
+    public static final int CHANGE_EDGEUPDATED = 4;
+    /**  a vertex has been modified */
+    public static final int CHANGE_VERTEXUPDATED = 5;
+    /**  a vertex has been modified */
+    public static final int CHANGE_MERGED = 6;
+    /**  other kind of change */
+    public static final int CHANGE_METADATA = 7;
+	
 	/*
 	 * so, what do we want to be able to do here?
 	 * 
@@ -120,4 +138,20 @@ public interface Graph<V,E extends Edge<V>> {
      * @return outgoing edges of the given vertex.
      */
     public Collection<E> getOutgoingEdges(V vertex);
+    
+    /**
+     * Build a graph from the provided vertices and edges based on the current graph
+     * 
+     * @param vertex the collection of vertices used to create the subgraph
+     * @param edges the collection of edges used to create the subgraph
+     * @return a Graph composed of the provided vertices and edges and based on the current graph
+     */
+    public Graph<V,E> getSubgraph( Collection<V> vertex, Collection<E> edges);
+    
+    /**
+     * Merge the provided graph with the current one
+     * 
+     * @param graph The graph to merge with the current graph
+     */
+    public List merge( Graph<V,E> graph);
 }

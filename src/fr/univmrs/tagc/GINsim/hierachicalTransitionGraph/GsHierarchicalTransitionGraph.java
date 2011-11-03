@@ -394,11 +394,11 @@ public class GsHierarchicalTransitionGraph extends GsGraph<GsHierarchicalNode,Gs
 
 
 		/**
-		 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doCopySelection(java.utils.Vector, java.utils.Vector)
+		 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#getSubGraph(java.utils.Vector, java.utils.Vector)
 		 * 
 		 * not used for this kind of graph: it's not interactively editable
 		 */
-		protected GsGraph doCopySelection(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
+		protected GsGraph getSubGraph(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
 			return null;
 		}
 		

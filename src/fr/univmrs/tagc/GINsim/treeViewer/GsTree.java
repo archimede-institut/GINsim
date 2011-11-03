@@ -175,7 +175,7 @@ public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
 	public    void 		changeVertexId(Object vertex, String newId) throws GsException {}
 	protected void 		setCopiedGraph(GsGraph graph) {}
 	protected GsGraph 	getCopiedGraph() {return null;}
-	protected GsGraph 	doCopySelection(Collection vertex, Collection edges) {return null;}
+	protected GsGraph 	getSubGraph(Collection vertex, Collection edges) {return null;}
 	protected GsDirectedEdge<GsTreeNode> 	doInteractiveAddEdge(GsTreeNode source, GsTreeNode target, int param) {return null;}
 	protected GsTreeNode 	doInteractiveAddVertex(int param) {return null;}
 	protected List		doMerge(GsGraph otherGraph) {return null;}

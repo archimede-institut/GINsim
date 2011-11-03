@@ -285,11 +285,11 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 
 
 	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doCopySelection(java.utils.Vector, java.utils.Vector)
+	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#getSubGraph(java.utils.Vector, java.utils.Vector)
 	 * 
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	protected GsGraph doCopySelection(Collection vertex, Collection edges) {
+	protected GsGraph getSubGraph(Collection vertex, Collection edges) {
 		return null;
 	}
 	

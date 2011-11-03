@@ -35,7 +35,10 @@ public interface GsGraphDescriptor {
      * @param m
      * @return a new graph.
      */
+    // TODO Remove this method and implement a more specialized one that will create only RegulatoryGraph at startup
+    // or when "New" button is pressed
     public GsGraph getNew(GsMainFrame m);
+    
 	/**
 	 * @param file
 	 * @return a new graph readed from the file

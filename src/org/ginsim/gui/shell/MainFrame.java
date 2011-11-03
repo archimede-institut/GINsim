@@ -39,6 +39,9 @@ import fr.univmrs.tagc.common.widgets.SplitPane;
  * 
  * FIXME: refactor in progress...
  */
+
+
+
 public class MainFrame extends Frame implements NotificationSource {
 	private static final long serialVersionUID = 3002680535567580439L;
 	

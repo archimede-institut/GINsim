@@ -1,6 +1,7 @@
 package org.ginsim.graph;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
@@ -198,8 +199,29 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	public GsEdgeAttributesReader getEdgeReader() {
 		return viewBackend.getEdgeReader();
 	}
+	
 	@Override
 	public GsVertexAttributesReader getVertexReader() {
 		return viewBackend.getVertexReader();
 	}
+	
+	@Override
+	public List merge( Graph<V, E> graph) {
+		
+		this.doMerge( graph);
+		List v = this.doMerge(graph);
+        if (v != null) {
+        	//FIXME Change firegraphChange call
+        	//fireGraphChange( CHANGE_MERGED, v);
+        	//TODO Move the select on the GUI side
+        	//graphManager.select(v);
+        }
+    	return v;
+	}
+	
+	abstract protected List doMerge( Graph<V, E> graph);
+
+	@Override
+	public abstract Graph<V, E> getSubgraph(Collection<V> vertex, Collection<E> edges);
+
 }

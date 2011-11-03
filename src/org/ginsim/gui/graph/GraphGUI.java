@@ -3,6 +3,8 @@ package org.ginsim.gui.graph;
 import java.awt.Component;
 import java.util.Collection;
 
+import javax.swing.JPanel;
+
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
@@ -70,6 +72,8 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	public GUIEditor<V> getNodeEditionPanel();
 
 	public GUIEditor<E> getEdgeEditionPanel();
+	
+	public JPanel getInfoPanel();
 	
 	
 // TODO Commented out for quick testing: remove comments	

@@ -380,7 +380,7 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
 
         return ret;
     }
-    protected GsGraph doCopySelection(Collection vertex, Collection edges) {
+    protected GsGraph getSubGraph(Collection vertex, Collection edges) {
         // no copy for state transition graphs
         return null;
     }

@@ -522,7 +522,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         nodeOrder.add(vertex);
     }
 
-    protected GsGraph doCopySelection(Collection<GsRegulatoryVertex> v_vertex, Collection<GsRegulatoryMultiEdge> v_edges) {
+    protected GsGraph getSubGraph(Collection<GsRegulatoryVertex> v_vertex, Collection<GsRegulatoryMultiEdge> v_edges) {
         GsRegulatoryGraph copiedGraph = new GsRegulatoryGraph();
         GsVertexAttributesReader cvreader = copiedGraph.getGraphManager().getVertexAttributesReader();
         HashMap copyMap = new HashMap();

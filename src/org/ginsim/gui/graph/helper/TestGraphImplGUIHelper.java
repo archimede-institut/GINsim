@@ -1,5 +1,7 @@
 package org.ginsim.gui.graph.helper;
 
+import javax.swing.JPanel;
+
 import org.ginsim.graph.testGraph.TestEdge;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestGraphImpl;
@@ -44,6 +46,12 @@ public class TestGraphImplGUIHelper implements GraphGUIHelper<TestGraph, TestVer
 	public String getGraphClassName() {
 		
 		return TestGraphImpl.class.getName();
+	}
+
+	@Override
+	public JPanel getInfoPanel(TestGraph graph) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

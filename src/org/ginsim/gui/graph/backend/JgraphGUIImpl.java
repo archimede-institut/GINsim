@@ -3,6 +3,8 @@ package org.ginsim.gui.graph.backend;
 import java.awt.Component;
 import java.util.Collection;
 
+import javax.swing.JPanel;
+
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.backend.GraphViewBackend;
@@ -143,7 +145,12 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
 	@Override
 	public GUIEditor<E> getEdgeEditionPanel() {
-		return helper.getEdgeEditionPanel(graph);
+		return helper.getEdgeEditionPanel( graph);
+	}
+
+	@Override
+	public JPanel getInfoPanel() {
+		return helper.getInfoPanel( graph);
 	}
 }
 

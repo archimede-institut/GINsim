@@ -98,6 +98,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     private static int graphID = 0;
     private int id;
 
+    // TODO specialize his variable on the specialized graph that require it
     protected GsGraph associatedGraph = null;
     protected String associatedID = null;
 
@@ -181,6 +182,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param param kind of vertex to create
      * @return the newly created vertex (or null if failed/inapropriate)
      */
+    // TODO Change to generic call of Vertex creation  from Graph and change position on the new node
     abstract protected V doInteractiveAddVertex (int param);
     
     
@@ -191,6 +193,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param param the kind of edge to create
      * @return the newly created edge (or null if failed/inapropriate)
      */
+ // TODO Change to generic call of Edge creation from Graph
     abstract protected Object doInteractiveAddEdge (V source, V target, int param);
     
     
@@ -246,7 +249,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 */
     // TODO Move to GUI side
 	public void saveSubGraph() throws GsException {
-	    GsGraph subGraph = doCopySelection( mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges() );
+	    GsGraph subGraph = getSubGraph( mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges() );
 	    if (subGraph != null) {
 	        subGraph.saveAs();
 	        subGraph.saveMode = saveMode;
@@ -891,6 +894,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 *
 	 * @return the previously copied graph.
 	 */
+	// TODO deprecated
 	protected abstract GsGraph getCopiedGraph();
 
 	/**
@@ -901,8 +905,9 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * graph which aren't interactively editable should do nothing here.
 	 *
 	 * @param graph the new copied graph
-	 * @see #doCopySelection(Vector, Vector)
+	 * @see #getSubGraph(Vector, Vector)
 	 */
+	// TODO deprecated
 	protected abstract void setCopiedGraph(GsGraph graph);
 
 	/**
@@ -914,6 +919,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @param otherGraph
      * @return the vector of newly added items
 	 */
+	// TODO Already moved
 	protected abstract List doMerge (GsGraph otherGraph);
 
 	/**
@@ -928,14 +934,15 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 *
 	 * @return the copied graph
 	 */
-	protected abstract GsGraph doCopySelection (Collection<V> vertex, Collection<E> edges) ;
+	protected abstract GsGraph getSubGraph (Collection<V> vertex, Collection<E> edges) ;
 
 	/**
 	 * copy the selected part of the current graph.
 	 * this is just an abstract layer, the real copy has to be done by the graph implementor.
-	 * @see #doCopySelection(Vector, Vector)
+	 * @see #getSubGraph(Vector, Vector)
 	 * @see #getCopiedGraph()
 	 */
+	// TODO Move to GUI side
 	public void copy() {
 		if (mainFrame == null) {
 			return;
@@ -954,14 +961,19 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 			    }
 			}
         }
-		doCopySelection(v_vertex, v_edges);
+		getSubGraph(v_vertex, v_edges);
 	}
 
 	/**
 	 * paste a previously copied graph.
 	 * @see #doMerge(GsGraph)
 	 */
-	public void paste() {
+	// TODO Remove this method:
+	// On GUI side:
+	//     - Copy method that get the selected vertex and edges and call the specialized vertex DoCopySelection() method
+	//        to obtain a graph
+	//     - call the server side on the merge( graph) method
+	public void paste( ) {
 	    GsGraph graph = getCopiedGraph();
 	    if (graph != null) {
 	        List v = doMerge(graph);
@@ -975,6 +987,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * open a graph from a file and merge it with the current one.
 	 */
+	// TODO REMOVE
 	public void merge() {
 	    GsGraph graph = GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(), null);
 	    if (graph != null) {
@@ -992,6 +1005,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @param key
 	 * @see #removeBlockEdit(Object)
 	 */
+	// TODO Move on GUI Side (FrameActions)
 	public void addBlockEdit(Object key) {
 	    if (key == null) {
 	        return;
@@ -1006,6 +1020,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @return true if edit isn't blocked
 	 * @see #addBlockEdit(Object)
 	 */
+	// TODO Move on GUI Side (FrameActions)
 	public boolean isEditAllowed() {
 	    return v_blockEdit == null;
 	}
@@ -1014,6 +1029,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @param key
 	 * @see #addBlockEdit(Object)
 	 */
+	// TODO Move on GUI Side (FrameActions)
 	public void removeBlockEdit (Object key) {
 	    if (v_blockEdit == null) {
 	        return;
@@ -1031,6 +1047,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 *
 	 * @param key
 	 */
+	// TODO Move on GUI Side (FrameActions)
 	public void addBlockClose(Object key) {
 	    if (key == null) {
 	        return;
@@ -1045,6 +1062,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @param key
 	 * @see #addBlockClose(Object)
 	 */
+	// TODO Move on GUI Side (FrameActions)
 	public void removeBlockClose (Object key) {
 	    if (v_blockClose == null) {
 	        return;
@@ -1063,6 +1081,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @see #addBlockClose(Object)
      * @see #isSaved()
      */
+	// TODO Move on GUI Side (FrameActions)
     public boolean canClose() {
         return v_blockClose == null;
     }
@@ -1070,6 +1089,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     /**
      * @return an info panel for "whattodo" frame
      */
+    // TODO Already moved 
     public JPanel getInfoPanel() {
         return null;
     }

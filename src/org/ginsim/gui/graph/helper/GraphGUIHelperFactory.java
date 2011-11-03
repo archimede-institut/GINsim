@@ -35,7 +35,7 @@ public class GraphGUIHelperFactory {
 	
 	
 	/**
-	 * Factory trivial creator
+	 * Factory creator. Instantiate the factory and ask the ServiceLoader to load the GraphGUIHelper list.
 	 * 
 	 */
 	private GraphGUIHelperFactory(){
