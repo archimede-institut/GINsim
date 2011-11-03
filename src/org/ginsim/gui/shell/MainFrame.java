@@ -62,6 +62,8 @@ public class MainFrame extends Frame implements NotificationSource {
 
 	private NotificationPanel notificationPanel = new NotificationPanel(this);
 
+	private final FrameActions actions = new MainFrameActionManager(menubar, toolbar);
+	
 	private static final boolean alwaysForceClose = false;
 
 	public MainFrame(String id, int w, int h) {
@@ -427,6 +429,8 @@ public class MainFrame extends Frame implements NotificationSource {
     	gui.getMainEditionPanel();
     	gui.getEdgeEditionPanel();
     	gui.getNodeEditionPanel();
+    	
+    	actions.setGraph(gui.getGraph());
     }
     
 	enum TabSelection {

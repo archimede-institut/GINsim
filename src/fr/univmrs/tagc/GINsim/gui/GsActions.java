@@ -49,7 +49,7 @@ import fr.univmrs.tagc.common.widgets.BaseAction;
  * this class creates the menubar, the toolbar and the main actions for GINsim
  * GUI.
  */
-public class GsActions implements GraphChangeListener, FrameActions {
+public class GsActions implements GraphChangeListener {
 
 	/** default edit mode: move/resize objects */
 	public static final int		MODE_DEFAULT		= 0;
@@ -1123,22 +1123,6 @@ public class GsActions implements GraphChangeListener, FrameActions {
 		return btt_simpleFunctionEdition.isSelected();
 	}
 
-	@Override
-	public void setCurrentMode(EditMode mode, boolean lock) {
-		// FIXME: temporary empty, waiting for a replacement
-	}
-
-	@Override
-	public EditMode getCurrentEditMode() {
-		// FIXME: temporary empty, waiting for a replacement
-		return null;
-	}
-
-	@Override
-	public EditGroup getCurrentGroup() {
-		// FIXME: temporary empty, waiting for a replacement
-		return null;
-	}
 }
 
 

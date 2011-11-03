@@ -11,7 +11,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Vector;
 
-import org.ginsim.gui.shell.FrameActions;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
@@ -35,7 +34,7 @@ public class GsMarqueeHandler extends BasicMarqueeHandler implements GraphSelect
 	
 	private JGraph jgraph;
 	private GsGraphManager graphManager;
-	private FrameActions gsactions;
+	private GsActions gsactions;
 	// Holds the Start and the Current Point
 	private Point2D start, current;
 	private boolean leaveCell;
