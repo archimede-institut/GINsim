@@ -32,7 +32,7 @@ public class GsHierarchicalEdgeParameterPanel  extends GsParameterPanel {
 			GsDirectedEdge edge = (GsDirectedEdge)obj;
 			GsDecisionOnEdge decisions = (GsDecisionOnEdge) edge.getUserObject();
 			if (decisions != null) {
-				typeLabel.setText(decisions.labelToString(graph.getNodeOrder()));
+				typeLabel.setText(decisions.toString());
 			} else {
 				typeLabel.setText("");
 			}
