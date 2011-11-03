@@ -14,8 +14,6 @@ import org.ginsim.graph.Graph;
 public interface FrameActions {
 
 	
-	public void updateRecentMenu();
-	
 	public void setCurrentMode(EditMode mode, boolean lock);
 	public EditMode getCurrentEditMode();
 	public EditGroup getCurrentGroup();

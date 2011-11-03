@@ -18,7 +18,13 @@ import org.ginsim.gui.service.GsLayoutAction;
 public class MainFrameActionManager implements FrameActions {
 
 	private final JToolBar toolbar;
-	private final JMenu recentMenu = new JMenu("Recent");
+
+	private final static JMenu recentMenu = new JMenu("Recent");
+	
+	private final JMenu importMenu = new JMenu("Import");
+	private final JMenu exportMenu = new JMenu("Export");
+	private final JMenu layoutMenu = new JMenu("Layout");
+	private final JMenu actionMenu = new JMenu("Actions");
 	
 
 	public MainFrameActionManager(JMenuBar menubar, JToolBar toolbar) {
@@ -26,16 +32,20 @@ public class MainFrameActionManager implements FrameActions {
 		
 		// fill the menu
 		JMenu menu = new JMenu("File");
+		menu.add(recentMenu);
+		menu.add(importMenu);
+		menu.add(exportMenu);
 		menubar.add(menu);
 		menu = new JMenu("Edit");
 		menubar.add(menu);
+		menu = new JMenu("View");
+		menu.add(layoutMenu);
+		menubar.add(menu);
+		menubar.add(actionMenu);
+		menu = new JMenu("Help");
+		menubar.add(menu);
 	}
 	
-	@Override
-	public void updateRecentMenu() {
-		// TODO Auto-generated method stub
-	}
-
 	@Override
 	public void setCurrentMode(EditMode mode, boolean lock) {
 		// TODO Auto-generated method stub
@@ -69,7 +79,11 @@ public class MainFrameActionManager implements FrameActions {
 	@Override
 	public void setGraph(Graph<?, ?> graph) {
 		
-		// TODO: clean dynamic menus
+		// TODO: deal with the view and edit menus
+		importMenu.removeAll();
+		exportMenu.removeAll();
+		layoutMenu.removeAll();
+		actionMenu.removeAll();
 		
 		// TODO: reset edit actions
 		
@@ -77,16 +91,16 @@ public class MainFrameActionManager implements FrameActions {
 		for (Action action: actions) {
 			System.out.println("should add action: "+ action);
 			if (action instanceof GsImportAction) {
-				// TODO: add to import menu
+				importMenu.add(action);
 			}
 			else if (action instanceof GsExportAction) {
-				// TODO: add to export menu
+				exportMenu.add(action);
 			}
 			else if (action instanceof GsLayoutAction) {
-				// TODO: add to layout menu
+				layoutMenu.add(action);
 			}
 			else {
-				// TODO: add to action menu
+				actionMenu.add(action);
 			}
 		}
 	}

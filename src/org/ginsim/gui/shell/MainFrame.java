@@ -369,13 +369,11 @@ public class MainFrame extends Frame implements NotificationSource {
         }
     }
 
-    /**
-     * close the current window
-     * this will exit if it is the last window
-     */
+    @Override
     public void doClose() {
         doClose(true);
     }
+    
     /**
      * close the window without exiting:
      *    ie close if it's not the last window
@@ -418,13 +416,16 @@ public class MainFrame extends Frame implements NotificationSource {
     	return true;
     }
 
-    
-    private void setGraphView(Component view) {
-    	graphScrollPane.setViewportView(view);
-    }
-
+    /**
+     * Put a graph into this frame.
+     * 
+     * @param gui
+     */
     public void setGraphGUI(GraphGUI<?,?,?> gui) {
-    	setGraphView(gui.getGraphComponent());
+    	
+    	// TODO: close the previous graph
+    	
+    	graphScrollPane.setViewportView(gui.getGraphComponent());
     	// TODO: add the edition panels at the right position
     	gui.getMainEditionPanel();
     	gui.getEdgeEditionPanel();

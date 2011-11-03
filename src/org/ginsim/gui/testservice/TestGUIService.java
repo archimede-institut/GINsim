@@ -9,6 +9,7 @@ import org.ginsim.graph.Graph;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.gui.service.GsExportAction;
 import org.ginsim.gui.service.GsGUIService;
+import org.ginsim.gui.service.GsImportAction;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(GsGUIService.class)
@@ -17,21 +18,39 @@ public class TestGUIService implements GsGUIService {
 	@Override
 	public void registerActions(List<Action> actions, Graph<?, ?> graph) {
 		if (graph instanceof TestGraph) {
-			actions.add(new TestAction((TestGraph) graph));
+			TestGraph g = (TestGraph)graph;
+			actions.add(new TestExport(g));
+			actions.add(new TestImport(g));
 		}
 	}
 }
 
-class TestAction extends GsExportAction {
+class TestExport extends GsExportAction {
 
 	private final TestGraph graph;
 	
-	protected TestAction(TestGraph graph) {
+	protected TestExport(TestGraph graph) {
+		super("test export");
 		this.graph = graph;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		System.out.println("test action performed on graph: "+ graph);
+		System.out.println("test export performed on graph: "+ graph);
+	}
+}
+
+class TestImport extends GsImportAction {
+
+	private final TestGraph graph;
+	
+	protected TestImport(TestGraph graph) {
+		super("test import");
+		this.graph = graph;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		System.out.println("test import performed on graph: "+ graph);
 	}
 }
