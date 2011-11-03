@@ -4,7 +4,7 @@ import org.ginsim.graph.Graph;
 
 /**
  * This interface is the central interface for GINsim services.
- * GINsim services are separated in four kind of services, all of them represented by an abstract class
+ * GINsim services are separated in four kind of services, all of them represented by distinct abstract classes
  * implementing this interface:
  *  - Import : those services correspond to data import from file of various format. They are represented by the
  *  		   GsImportService class
@@ -15,9 +15,9 @@ import org.ginsim.graph.Graph;
  *  - Action : those services correspond to various data management algorithm. They are represented by the
  *  		   GsActionService class
  *  
- *  Each new Service must extend one of these four abstract class and delcare the annotation "@ProviderFor(GsService)"
+ *  Each new Service must extend one of these four abstract class and declare the annotation "@ProviderFor(GsService.class)"
  * 
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 
