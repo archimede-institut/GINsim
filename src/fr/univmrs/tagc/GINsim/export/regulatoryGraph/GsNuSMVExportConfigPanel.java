@@ -388,11 +388,12 @@ class GsNuSMVConfig implements GsInitialStateStore {
 	 */
 	public GsNuSMVConfig(GsRegulatoryGraph graph) {
 		m_initStates = new HashMap();
+		m_input = new HashMap();
 		this.graph = graph;
 		updatePolicy = CFG_ASYNC; // Default update policy
 		exportType = CFG_INPUT_FRONZEN; // Default export type
 	}
-
+	
 	public void setUpdatePolicy() {
 		PriorityClassDefinition priorities = (PriorityClassDefinition) store
 				.getObject(1);

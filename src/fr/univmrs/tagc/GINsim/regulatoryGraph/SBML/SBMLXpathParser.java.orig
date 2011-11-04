@@ -3,8 +3,11 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.SBML;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+<<<<<<< HEAD
 import java.util.Collection;
+=======
 import java.util.ArrayList;
+>>>>>>> dev-import-sbml
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -13,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -26,12 +30,18 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+<<<<<<< HEAD
+=======
 
+>>>>>>> dev-import-sbml
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import JSci.io.MathMLParser;
+<<<<<<< HEAD
+=======
 
+>>>>>>> dev-import-sbml
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
@@ -286,6 +296,74 @@ public final class SBMLXpathParser {
 							}
 						}						
 					} // </functionTerm>
+<<<<<<< HEAD
+					
+					/** retrieve input data **/
+					Element listOfInput = (Element) transChildren.get(0);
+					List inputElemList = listOfInput.getChildren();
+					/** retrieve children of <listOfInputs> element */
+					for (int p = 0; p < inputElemList.size(); p++) { 
+						try {
+							Element input = (Element) inputElemList.get(p);
+
+							String qualitativeSpecies = ((Element) input)
+									.getAttributeValue("qualitativeSpecies");
+							/** to get the SBOTerm value from the current edge **/
+							String sign = ((Element) input).getAttributeValue("sign");
+							if (sign.equals("SBO:0000020"))
+								sign = "negative";
+							else if (sign.equals("SBO:0000459"))
+								sign = "positive";
+							else
+								sign = "unknown"; 
+							String to = getNodeId(trans_Id);
+							String maximumvalue = ((Element)input).getAttributeValue("maxvalue");	
+							String smax = getAttributeValueWithDefault(maximumvalue, "-1");
+							byte maxvalue = -2;
+							
+							if (smax.startsWith("m")) {
+                            	maxvalue = -1; 
+                            } else 
+                            {
+                            	maxvalue = (byte)Integer.parseInt(smax);
+                            }
+							
+					        byte minv = 1;							        						
+					        
+					        /** On itere sur les <input>*/					    
+					        if(m_thresholds.get(qualitativeSpecies) != null) {
+						        Iterator it = ((Vector)m_thresholds.get(qualitativeSpecies)).iterator(); 
+						        Vector t_minvalue = new Vector();												
+								while(it.hasNext()) {
+								    minv =(byte) Double.parseDouble((String)it.next());
+								    if(!t_minvalue.contains(minv)) {
+								    	t_minvalue.add(minv);
+
+								    	byte maxval = minv;
+								    	
+								    	if(sign.equals("negative")) {
+								    		edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
+										}
+										else if(sign.equals("positive")){
+											edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_POSITIVE);
+									    }
+									   	else {
+									   		edge = graph.addNewEdge(qualitativeSpecies, to, minv, GsRegulatoryMultiEdge.SIGN_UNKNOWN);
+									    }
+										storeMaxValueForCheck(edge, maxvalue); 
+										m_edges.put(qualitativeSpecies, edge);
+										edge.me.rescanSign(graph);
+										ereader.setEdge(edge.me);
+								    }
+								} 		
+					        } 
+						} // try
+						catch (NumberFormatException e) {
+							throw new JDOMException("mal formed interaction's parameters");
+						}
+					} // </input> 
+=======
+>>>>>>> dev-import-sbml
 				} // </transition> 
 			}  
 		} 
@@ -673,7 +751,11 @@ public final class SBMLXpathParser {
 	/** To parse each logical function **/
 	@SuppressWarnings("unchecked")
 	private void parseBooleanFunctions() {
+<<<<<<< HEAD
 		Collection<GsRegulatoryMultiEdge> allowedEdges;
+=======
+		List<GsRegulatoryEdge> allowedEdges;
+>>>>>>> dev-import-sbml
 		GsRegulatoryVertex vertex;
 		String value, exp;
 		try {
@@ -850,6 +932,9 @@ public final class SBMLXpathParser {
 		}
 		
 	} // class InvalidFunctionNotificationAction
+<<<<<<< HEAD
+}
+=======
 
 	
 	/** <p> An object Expression represent the contain of last "single" <apply> element.
@@ -1182,3 +1267,4 @@ class FunctionTerm {
 	} // class FunctionTerm
 
 }
+>>>>>>> dev-import-sbml

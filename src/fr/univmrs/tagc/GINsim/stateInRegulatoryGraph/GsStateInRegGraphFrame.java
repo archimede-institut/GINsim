@@ -282,7 +282,7 @@ class StableState extends TabComponantProvidingAState {
 	}
 
 	protected void run() {
-		sss = new GsSearchStableStates(g, (GsRegulatoryMutantDef) mutantStore.getObject(0), null);
+		sss = new GsSearchStableStates(g, g.getNodeOrder(), (GsRegulatoryMutantDef) mutantStore.getObject(0));
 		OmddNode stable = sss.getStable();
 		tableModel.setResult(stable, g);
 	}

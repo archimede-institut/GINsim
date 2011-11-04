@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxl SYSTEM "http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd">
+<gxl xmlns:xlink="http://www.w3.org/1999/xlink">
+	<graph id="default" class="regulatory" nodeorder="Wg_p Wg_a Fz_p Fz_a Dsh_p Dsh_a Slp_p Slp_a Nkd_p Nkd_a Zw3_p Zw3_a Arm_p Arm_a En_p En_a Hh_p Hh_a Ci_p Ci_a Ciact_p Ciact_a Cirep_p Cirep_a Ptc_p Ptc_a Smo_p Smo_a Pka_p Pka_a Fu_p Fu_a SuFu_p SuFu_a Cos2_p Cos2_a">
+<node id="Ptc_p" name="Ptc" maxvalue="2">
+  <parameter val="1"/>
+  <parameter idActiveInteractions=" Ciact_p:Ptc_p" val="2"/>
+
+			<nodevisualsetting>
+				<rect x="1006" y="468" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Arm_a" name="Arm" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="433" y="136" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Slp_p" name="Slp" maxvalue="1">
+  <parameter idActiveInteractions=" Dsh_p:Slp_p" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="793" y="80" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Ci_p" name="Ci" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="828" y="257" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Smo_a" name="Smo" maxvalue="2">
+  <parameter val="2"/>
+  <parameter idActiveInteractions=" Hh_a:Smo_a:1" val="2"/>
+  <parameter idActiveInteractions=" Hh_a:Smo_a:2" val="2"/>
+  <parameter idActiveInteractions=" Ptc_a:Smo_a:1 Hh_a:Smo_a:1" val="2"/>
+  <parameter idActiveInteractions=" Ptc_a:Smo_a:1 Hh_a:Smo_a:2" val="2"/>
+  <parameter idActiveInteractions=" Ptc_a:Smo_a:2 Hh_a:Smo_a:2" val="2"/>
+  <parameter idActiveInteractions=" Ptc_a:Smo_a:2 Hh_a:Smo_a:1" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="277" y="454" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Cos2_a" name="Cos2" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="369" y="391" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Wg_a" name="Wg" maxvalue="2">
+  <parameter idActiveInteractions=" Ciact_a:Wg_a:1 Slp_a:Wg_a" val="1"/>
+  <parameter idActiveInteractions=" Slp_a:Wg_a Ciact_a:Wg_a:2" val="2"/>
+  <parameter idActiveInteractions=" Ciact_a:Wg_a:2 Slp_a:Wg_a Nkd_a:Wg_a" val="2"/>
+
+			<nodevisualsetting>
+				<rect x="75" y="218" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Ciact_a" name="Ciact" maxvalue="2">
+  <parameter idActiveInteractions=" Ci_a:Ciact_a" val="1"/>
+  <parameter idActiveInteractions=" Ci_a:Ciact_a Dsh_a:Ciact_a" val="2"/>
+  <parameter idActiveInteractions=" Ci_a:Ciact_a Pka_a:Ciact_a Dsh_a:Ciact_a" val="1"/>
+  <parameter idActiveInteractions=" SuFu_a:Ciact_a Dsh_a:Ciact_a Ci_a:Ciact_a" val="1"/>
+  <parameter idActiveInteractions=" SuFu_a:Ciact_a Dsh_a:Ciact_a Pka_a:Ciact_a Ci_a:Ciact_a" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="121" y="290" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Cos2_p" name="Cos2" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="925" y="390" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Cirep_a" name="Cirep" maxvalue="1">
+  <parameter idActiveInteractions=" Ci_a:Cirep_a Pka_a:Cirep_a Zw3_a:Cirep_a Cos2_a:Cirep_a" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="366" y="291" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Ptc_a" name="Ptc" maxvalue="2">
+  <parameter val="1"/>
+  <parameter idActiveInteractions=" Ciact_a:Ptc_a" val="2"/>
+
+			<nodevisualsetting>
+				<rect x="468" y="472" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Nkd_p" name="Nkd" maxvalue="2">
+  <parameter val="1"/>
+  <parameter idActiveInteractions=" Dsh_p:Nkd_p" val="2"/>
+
+			<nodevisualsetting>
+				<rect x="824" y="197" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Pka_p" name="Pka" maxvalue="2">
+  <parameter val="2"/>
+
+			<nodevisualsetting>
+				<rect x="829" y="337" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Ci_a" name="Ci" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="272" y="258" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="En_a" name="En" maxvalue="1">
+  <parameter idActiveInteractions=" Arm_a:En_a" val="1"/>
+  <parameter idActiveInteractions=" Nkd_a:En_a Arm_a:En_a" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="464" y="217" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Dsh_a" name="Dsh" maxvalue="1">
+  <parameter idActiveInteractions=" Fz_a:Dsh_a" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="189" y="161" width="50" height="28" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Smo_p" name="Smo" maxvalue="2">
+  <parameter val="2"/>
+  <parameter idActiveInteractions=" Hh_p:Smo_p:1" val="2"/>
+  <parameter idActiveInteractions=" Hh_p:Smo_p:2" val="2"/>
+  <parameter idActiveInteractions=" Ptc_p:Smo_p:1 Hh_p:Smo_p:2" val="2"/>
+  <parameter idActiveInteractions=" Ptc_p:Smo_p:2 Hh_p:Smo_p:2" val="2"/>
+  <parameter idActiveInteractions=" Ptc_p:Smo_p:1 Hh_p:Smo_p:1" val="2"/>
+  <parameter idActiveInteractions=" Ptc_p:Smo_p:2 Hh_p:Smo_p:1" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="831" y="440" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Pka_a" name="Pka" maxvalue="2">
+  <parameter val="2"/>
+
+			<nodevisualsetting>
+				<rect x="273" y="338" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Fz_a" name="Fz" maxvalue="1">
+  <parameter idActiveInteractions=" Wg_a:Fz_a" val="1"/>
+  <parameter idActiveInteractions=" Wg_p:Fz_a" val="1"/>
+  <parameter idActiveInteractions=" Wg_a:Fz_a Wg_p:Fz_a" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="22" y="108" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Cirep_p" name="Cirep" maxvalue="1">
+  <parameter idActiveInteractions=" Ci_p:Cirep_p Pka_p:Cirep_p Zw3_p:Cirep_p Cos2_p:Cirep_p" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="922" y="290" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Dsh_p" name="Dsh" maxvalue="1">
+  <parameter idActiveInteractions=" Fz_p:Dsh_p" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="745" y="160" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="En_p" name="En" maxvalue="1">
+  <parameter idActiveInteractions=" Arm_p:En_p" val="1"/>
+  <parameter idActiveInteractions=" Nkd_p:En_p Arm_p:En_p" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="1018" y="211" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="SuFu_a" name="Su(Fu)" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="119" y="347" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Nkd_a" name="Nkd" maxvalue="2">
+  <parameter val="1"/>
+  <parameter idActiveInteractions=" Dsh_a:Nkd_a" val="2"/>
+
+			<nodevisualsetting>
+				<rect x="268" y="202" width="50" height="31" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Zw3_a" name="Zw3" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="351" y="135" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Hh_a" name="Hh" maxvalue="2">
+  <parameter idActiveInteractions=" En_a:Hh_a" val="2"/>
+  <parameter idActiveInteractions=" Hh_p:Hh_a:2" val="2"/>
+  <parameter idActiveInteractions=" En_a:Hh_a Hh_p:Hh_a:1" val="2"/>
+  <parameter idActiveInteractions=" En_a:Hh_a Hh_p:Hh_a:2" val="2"/>
+  <parameter idActiveInteractions=" En_a:Hh_a Ptc_p:Hh_a" val="2"/>
+  <parameter idActiveInteractions=" En_a:Hh_a Hh_p:Hh_a:1 Ptc_p:Hh_a" val="2"/>
+  <parameter idActiveInteractions=" En_a:Hh_a Hh_p:Hh_a:2 Ptc_p:Hh_a" val="2"/>
+  <parameter idActiveInteractions=" Hh_p:Hh_a:1" val="1"/>
+  <parameter idActiveInteractions=" Hh_p:Hh_a:1 Ptc_p:Hh_a" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="496" y="393" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Ciact_p" name="Ciact" maxvalue="2">
+  <parameter idActiveInteractions=" Ci_p:Ciact_p" val="1"/>
+  <parameter idActiveInteractions=" Ci_p:Ciact_p Dsh_p:Ciact_p" val="2"/>
+  <parameter idActiveInteractions=" Ci_p:Ciact_p Pka_p:Ciact_p Dsh_p:Ciact_p" val="1"/>
+  <parameter idActiveInteractions=" SuFu_p:Ciact_p Dsh_p:Ciact_p Ci_p:Ciact_p" val="1"/>
+  <parameter idActiveInteractions=" SuFu_p:Ciact_p Dsh_p:Ciact_p Pka_p:Ciact_p Ci_p:Ciact_p" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="677" y="289" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Hh_p" name="Hh" maxvalue="2">
+  <parameter idActiveInteractions=" En_p:Hh_p" val="2"/>
+  <parameter idActiveInteractions=" Hh_a:Hh_p:2" val="2"/>
+  <parameter idActiveInteractions=" En_p:Hh_p Hh_a:Hh_p:2" val="2"/>
+  <parameter idActiveInteractions=" En_p:Hh_p Hh_a:Hh_p:1" val="2"/>
+  <parameter idActiveInteractions=" En_p:Hh_p Ptc_a:Hh_p" val="2"/>
+  <parameter idActiveInteractions=" En_p:Hh_p Ptc_a:Hh_p Hh_a:Hh_p:2" val="2"/>
+  <parameter idActiveInteractions=" En_p:Hh_p Ptc_a:Hh_p Hh_a:Hh_p:1" val="2"/>
+  <parameter idActiveInteractions=" Ptc_a:Hh_p Hh_a:Hh_p:2" val="1"/>
+  <parameter idActiveInteractions=" Hh_a:Hh_p:1" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="1052" y="392" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="SuFu_p" name="Su(Fu)" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="675" y="346" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Fz_p" name="Fz" maxvalue="1">
+  <parameter idActiveInteractions=" Wg_p:Fz_p" val="1"/>
+  <parameter idActiveInteractions=" Wg_a:Fz_p" val="1"/>
+  <parameter idActiveInteractions=" Wg_p:Fz_p Wg_a:Fz_p" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="579" y="120" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Fu_a" name="Fu" maxvalue="1">
+  <parameter idActiveInteractions=" Smo_a:Fu_a" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="209" y="391" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Fu_p" name="Fu" maxvalue="1">
+  <parameter idActiveInteractions=" Smo_p:Fu_p" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="765" y="390" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Zw3_p" name="Zw3" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="913" y="135" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Slp_a" name="Slp" maxvalue="1">
+  <parameter idActiveInteractions=" Dsh_a:Slp_a" val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="237" y="81" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Arm_p" name="Arm" maxvalue="1">
+  <parameter val="1"/>
+
+			<nodevisualsetting>
+				<ellipse x="1010" y="134" width="50" height="30" backgroundColor="#cccccc" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="Wg_p" name="Wg" maxvalue="2">
+  <parameter idActiveInteractions=" Ciact_p:Wg_p:1 Slp_p:Wg_p" val="1"/>
+  <parameter idActiveInteractions=" Slp_p:Wg_p Ciact_p:Wg_p:2" val="2"/>
+  <parameter idActiveInteractions=" Ciact_p:Wg_p:2 Slp_p:Wg_p Nkd_p:Wg_p" val="2"/>
+
+			<nodevisualsetting>
+				<rect x="625" y="224" width="50" height="30" backgroundColor="#ffffff" foregroundColor="#000000"/>
+			</nodevisualsetting>
+</node>
+		<edge id="Ptc_p:Smo_p:1" from="Ptc_p" to="Smo_p" minvalue="1" maxvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="1031,483 977,469 856,455" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ptc_p:Smo_p:2" from="Ptc_p" to="Smo_p" minvalue="2" sign="negative">
+			<edgevisualsetting>
+				<polyline points="1031,483 977,469 856,455" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ptc_p:Hh_a" from="Ptc_p" to="Hh_a" minvalue="2" sign="negative">
+			<edgevisualsetting>
+				<polyline points="1031,483 541,495 521,408" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Arm_a:En_a" from="Arm_a" to="En_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="458,151 475,202 489,232" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Slp_p:Wg_p" from="Slp_p" to="Wg_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="818,95 658,91 650,239" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Slp_p:En_p" from="Slp_p" to="En_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="818,95 1063,102 1043,226" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ci_p:Ciact_p" from="Ci_p" to="Ciact_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="853,272 836,299 702,304" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ci_p:Cirep_p" from="Ci_p" to="Cirep_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="853,272 866,299 947,305" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Smo_a:Fu_a" from="Smo_a" to="Fu_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="302,469 232,468 234,406" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Smo_a:Pka_a" from="Smo_a" to="Pka_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="302,469 298,404 298,353" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Cos2_a:Cirep_a" from="Cos2_a" to="Cirep_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="394,406 393,358 391,306" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Wg_a:Fz_a" from="Wg_a" to="Fz_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="100,233 44,228 47,123" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Wg_a:Fz_p" from="Wg_a" to="Fz_p" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="100,233 92,73 593,73 604,135" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ciact_a:Ptc_a" from="Ciact_a" to="Ptc_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="146,305 97,314 99,494 493,487" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ciact_a:Wg_a:1" from="Ciact_a" to="Wg_a" minvalue="1" maxvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="146,305 100,299 100,233" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ciact_a:Wg_a:2" from="Ciact_a" to="Wg_a" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="146,305 100,299 100,233" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Cos2_p:Cirep_p" from="Cos2_p" to="Cirep_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="950,405 949,357 947,305" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Cirep_a:Hh_a" from="Cirep_a" to="Hh_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="391,306 526,312 521,408" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ptc_a:Smo_a:1" from="Ptc_a" to="Smo_a" minvalue="1" maxvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="493,487 375,474 302,469" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ptc_a:Smo_a:2" from="Ptc_a" to="Smo_a" minvalue="2" sign="negative">
+			<edgevisualsetting>
+				<polyline points="493,487 375,474 302,469" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ptc_a:Hh_p" from="Ptc_a" to="Hh_p" minvalue="2" sign="negative">
+			<edgevisualsetting>
+				<polyline points="493,487 499,515 1066,515 1077,407" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Nkd_p:Wg_p" from="Nkd_p" to="Wg_p" minvalue="2" sign="negative">
+			<edgevisualsetting>
+				<polyline points="849,212 757,225 650,239" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Nkd_p:En_p" from="Nkd_p" to="En_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="849,212 1016,223 1043,226" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Pka_p:Ciact_p" from="Pka_p" to="Ciact_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="854,352 838,316 702,304" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Pka_p:Cirep_p" from="Pka_p" to="Cirep_p" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="854,352 865,311 947,305" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ci_a:Cirep_a" from="Ci_a" to="Cirep_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="297,273 310,300 391,306" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ci_a:Ciact_a" from="Ci_a" to="Ciact_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="297,273 280,300 146,305" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_a:Ptc_a" from="En_a" to="Ptc_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="489,232 487,354 493,487" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_a:Wg_a" from="En_a" to="Wg_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="489,232 293,244 100,233" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_a:Hh_a" from="En_a" to="Hh_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="489,232 506,267 521,408" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_a:Nkd_a" from="En_a" to="Nkd_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="489,232 401,218 293,217" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_a:Slp_a" from="En_a" to="Slp_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="489,232 529,241 528,85 262,96" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_a:Ci_a" from="En_a" to="Ci_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="489,232 479,273 297,273" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Dsh_a:Nkd_a" from="Dsh_a" to="Nkd_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="214,175 207,213 293,217" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Dsh_a:Slp_a" from="Dsh_a" to="Slp_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="214,175 260,168 262,96" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Dsh_a:Zw3_a" from="Dsh_a" to="Zw3_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="214,175 371,187 376,150" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Dsh_a:Ciact_a" from="Dsh_a" to="Ciact_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="214,175 149,176 146,305" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Smo_p:Pka_p" from="Smo_p" to="Pka_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="856,455 856,406 854,352" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Smo_p:Fu_p" from="Smo_p" to="Fu_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="856,455 780,456 790,405" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Pka_a:Cirep_a" from="Pka_a" to="Cirep_a" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="298,353 311,313 391,306" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Pka_a:Ciact_a" from="Pka_a" to="Ciact_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="298,353 282,317 146,305" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Fz_a:Dsh_a" from="Fz_a" to="Dsh_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="47,123 209,124 214,175" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Cirep_p:Hh_p" from="Cirep_p" to="Hh_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="947,305 1082,311 1077,407" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Dsh_p:Ciact_p" from="Dsh_p" to="Ciact_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="770,175 705,175 702,304" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Dsh_p:Slp_p" from="Dsh_p" to="Slp_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="770,175 816,167 818,95" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Dsh_p:Nkd_p" from="Dsh_p" to="Nkd_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="770,175 760,206 849,212" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Dsh_p:Zw3_p" from="Dsh_p" to="Zw3_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="770,175 927,186 938,150" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_p:Ptc_p" from="En_p" to="Ptc_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="1043,226 1043,353 1031,483" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_p:Hh_p" from="En_p" to="Hh_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1043,226 1062,266 1077,407" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_p:Wg_p" from="En_p" to="Wg_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="1043,226 848,242 650,239" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_p:Slp_p" from="En_p" to="Slp_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="1043,226 1084,228 1084,90 818,95" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_p:Ci_p" from="En_p" to="Ci_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="1043,226 1035,272 853,272" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="En_p:Nkd_p" from="En_p" to="Nkd_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="1043,226 970,213 849,212" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="SuFu_a:Ciact_a" from="SuFu_a" to="Ciact_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="144,362 149,340 146,305" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Nkd_a:Wg_a" from="Nkd_a" to="Wg_a" minvalue="2" sign="negative">
+			<edgevisualsetting>
+				<polyline points="293,217 167,225 100,233" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Nkd_a:En_a" from="Nkd_a" to="En_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="293,217 405,230 489,232" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Zw3_a:Arm_a" from="Zw3_a" to="Arm_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="376,150 413,152 458,151" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Zw3_a:Cirep_a" from="Zw3_a" to="Cirep_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="376,150 391,233 391,306" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Hh_a:Smo_a:1" from="Hh_a" to="Smo_a" minvalue="1" maxvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="521,408 505,456 302,469" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Hh_a:Smo_a:2" from="Hh_a" to="Smo_a" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="521,408 505,456 302,469" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Hh_a:Hh_p:1" from="Hh_a" to="Hh_p" minvalue="1" maxvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="521,408 533,535 1078,535 1077,407" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Hh_a:Hh_p:2" from="Hh_a" to="Hh_p" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="521,408 533,535 1078,535 1077,407" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ciact_p:Ptc_p" from="Ciact_p" to="Ptc_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="702,304 653,313 654,485 1031,483" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ciact_p:Wg_p:1" from="Ciact_p" to="Wg_p" minvalue="1" maxvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="702,304 647,298 650,239" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Ciact_p:Wg_p:2" from="Ciact_p" to="Wg_p" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="702,304 647,298 650,239" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Hh_p:Hh_a:1" from="Hh_p" to="Hh_a" minvalue="1" maxvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1077,407 1092,545 523,544 521,408" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Hh_p:Hh_a:2" from="Hh_p" to="Hh_a" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1077,407 1092,545 523,544 521,408" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Hh_p:Smo_p:1" from="Hh_p" to="Smo_p" minvalue="1" maxvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1077,407 1054,447 856,455" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Hh_p:Smo_p:2" from="Hh_p" to="Smo_p" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1077,407 1054,447 856,455" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="SuFu_p:Ciact_p" from="SuFu_p" to="Ciact_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="700,361 705,339 702,304" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Fz_p:Dsh_p" from="Fz_p" to="Dsh_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="604,135 769,136 770,175" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Fu_a:Cos2_a" from="Fu_a" to="Cos2_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="234,406 394,406" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Fu_a:SuFu_a" from="Fu_a" to="SuFu_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="234,406 152,405 144,362" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Fu_p:SuFu_p" from="Fu_p" to="SuFu_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="790,405 708,404 700,361" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Fu_p:Cos2_p" from="Fu_p" to="Cos2_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="790,405 950,405" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Zw3_p:Arm_p" from="Zw3_p" to="Arm_p" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="938,150 1035,149" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Zw3_p:Cirep_p" from="Zw3_p" to="Cirep_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="938,150 947,232 947,305" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Slp_a:Wg_a" from="Slp_a" to="Wg_a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="262,96 104,94 100,233" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Slp_a:En_a" from="Slp_a" to="En_a" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="262,96 512,107 489,232" line_style="straight" line_color="#ff0000" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Arm_p:En_p" from="Arm_p" to="En_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1035,149 1031,201 1043,226" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Wg_p:Fz_p" from="Wg_p" to="Fz_p" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="650,239 598,235 604,135" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="Wg_p:Fz_a" from="Wg_p" to="Fz_a" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="650,239 642,52 50,52 47,123" line_style="straight" line_color="#009900" line_width="2" routage="manual"/>
+			</edgevisualsetting>
+		</edge>
+	</graph>
+</gxl>

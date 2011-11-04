@@ -23,10 +23,9 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
  * but immediately assembled.
  * The order in which they are considerd is also chosen to keep them small as long as possible.
  */
-public class GsSearchStableStates extends Thread {
+public class GsSearchStableStates {
 
 	private GsRegulatoryGraph regGraph;
-	private GenericStableStateUI ui;
 	List nodeOrder;
 	OmddNode[] t_param;
 	OmddNode dd_stable;
@@ -40,11 +39,19 @@ public class GsSearchStableStates extends Thread {
 	int bestIndex, bestValue;
 	int nbgene, nbremain;
 
-	public GsSearchStableStates(GsGraph regGraph, Perturbation mutant, GenericStableStateUI ui) {
+	public GsSearchStableStates(GsGraph regGraph, List nodeOrder, Perturbation mutant) {
 		this.regGraph = (GsRegulatoryGraph)regGraph;
-		this.nodeOrder = regGraph.getNodeOrder();
+		this.nodeOrder = nodeOrder;
 		this.mutant = mutant;
-		this.ui = ui;
+		this.t_param = this.regGraph.getAllTrees(true);
+	}
+
+	public GsSearchStableStates(GsGraph regGraph, List nodeOrder, Perturbation mutant,
+			OmddNode[] trees) {
+		this.regGraph = (GsRegulatoryGraph)regGraph;
+		this.nodeOrder = nodeOrder;
+		this.mutant = mutant;
+		this.t_param = trees;
 	}
 
 	public OmddNode getStable() {
@@ -52,7 +59,6 @@ public class GsSearchStableStates extends Thread {
 			buildAdjTable();
 		}
 		
-		t_param = regGraph.getAllTrees(true);
 		if (mutant != null) {
 			mutant.apply(t_param, regGraph);
 		}
@@ -77,11 +83,7 @@ public class GsSearchStableStates extends Thread {
 		}
 		return dd_stable;
 	}
-	
-	public void run() {
-		showStableState(getStable());
-	}
-	
+
 	private void buildAdjTable() {
 		nbgene = nbremain = nodeOrder.size();
 		GsGraphManager manager = regGraph.getGraphManager();
@@ -293,10 +295,6 @@ public class GsSearchStableStates extends Thread {
 	
 	// show stable state
 	private void showStableState (OmddNode stable) {
-		if (ui != null) {
-			ui.setResult(stable);
-			return;
-		}
 		int[] state = new int[nodeOrder.size()];
 		for (int i=0 ; i<state.length ; i++) {
 			state[i] = -1;

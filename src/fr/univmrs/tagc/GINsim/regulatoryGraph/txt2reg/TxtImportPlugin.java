@@ -37,31 +37,21 @@ public class TxtImportPlugin implements GsPlugin, GsActionProvider {
 		if (actionType != ACTION_IMPORT) {
 			return;
 		}
-		
 
 		GsFileFilter ffilter = new GsFileFilter();
 		String extension = null;
 		String filename;
 
-		
 		ffilter.setExtensionList(new String[] { "txt" }, "TXT files");
 		extension = ".txt";
-	
 
-			// we should add a better way to select a file for import
+		// we should add a better way to select a file for import
 		filename = GsOpenAction.selectFileWithOpenDialog(frame);
-		
-		
-		
-	
-		
-// TODO ...
-		
-		
+
+
+		// TODO ...
 		TruthTableParser parser = new TruthTableParser(filename);
 		System.out.println(filename);
 		//GsGraph newGraph = parser.getGraph();
-		
-		
 	}
 }

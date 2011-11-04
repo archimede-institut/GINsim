@@ -35,10 +35,12 @@ public class OMDDNodeBrowser  {
      * @throws IOException
      */
 	protected void exploreNode(int depth, OmddNode node) {
+
 		if (node.next == null) {
 			listener.leafReached(node.value, depth, parcours);
 			return ;
 		}
+
 		OmddNode currentChild;
 		for (int i = 0 ; i < node.next.length ; i++) {
 			currentChild = node.next[i];
