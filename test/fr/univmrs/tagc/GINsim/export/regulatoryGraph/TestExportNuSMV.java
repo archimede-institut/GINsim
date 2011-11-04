@@ -8,8 +8,8 @@ import junit.framework.TestCase;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.common.TestTools;
 
+// FIXME: test file should be fixed
 public class TestExportNuSMV extends TestCase {
 	
 	String[] sFiles;
@@ -17,7 +17,7 @@ public class TestExportNuSMV extends TestCase {
 	GsNuSMVExport nusmvExport;
 
 	public TestExportNuSMV() throws FileNotFoundException {
-		sFiles = TestTools.getAllModels();
+		// sFiles = TestTools.getAllModels();
 		assertEquals(sFiles != null, true);
 		
 		regGraph = new GsRegulatoryGraph[sFiles.length];
