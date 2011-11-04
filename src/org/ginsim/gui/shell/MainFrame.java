@@ -15,6 +15,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
+import org.ginsim.graph.Graph;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
@@ -324,5 +325,10 @@ public class MainFrame extends Frame implements NotificationSource {
 	@Override
 	public void closeNotification() {
 		// TODO Auto-generated method stub
+	}
+	
+	public void setGraph( Graph<?,?> graph){
+		
+		actions.setGraph( graph);
 	}
 }

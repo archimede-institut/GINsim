@@ -11,9 +11,9 @@ import org.ginsim.graph.EditGroup;
 import org.ginsim.graph.EditMode;
 import org.ginsim.graph.Graph;
 import org.ginsim.gui.service.GsExportAction;
-import org.ginsim.gui.service.GsGUIServiceFactory;
 import org.ginsim.gui.service.GsImportAction;
 import org.ginsim.gui.service.GsLayoutAction;
+import org.ginsim.gui.service.GsServiceGUIManager;
 
 public class MainFrameActionManager implements FrameActions {
 
@@ -87,7 +87,7 @@ public class MainFrameActionManager implements FrameActions {
 		
 		// TODO: reset edit actions
 		
-		List<Action> actions = GsGUIServiceFactory.getFactory().getAvailableActions(graph);
+		List<Action> actions = GsServiceGUIManager.getManager().getAvailableActions(graph);
 		for (Action action: actions) {
 			System.out.println("should add action: "+ action);
 			if (action instanceof GsImportAction) {
