@@ -14,9 +14,12 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsExportAction;
 import org.ginsim.gui.service.GsImportAction;
 import org.ginsim.gui.service.GsLayoutAction;
+<<<<<<< HEAD
 import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
+=======
 import org.ginsim.gui.service.GsServiceGUIManager;
+>>>>>>> dd4564511f05a99242c28713b8a1dd2a9a984d59
 
 public class MainFrameActionManager implements FrameActions {
 
@@ -63,14 +66,17 @@ public class MainFrameActionManager implements FrameActions {
 		
 		// TODO: deal with the tool bar, view and edit menus
 		
+<<<<<<< HEAD
 		// get Service-related actions
-		List<Action> actions = GsServiceGUIManager.getManager().getAvailableActions(graph);
-
-		// add them to the right menus
 		JMenu importMenu = new JMenu("Import");
 		JMenu exportMenu = new JMenu("Export");
 		JMenu layoutMenu = new JMenu("Layout");
 		JMenu actionMenu = new JMenu("Actions");
+
+		List<Action> actions = GsGUIServiceFactory.getFactory().getAvailableActions(graph);
+=======
+		List<Action> actions = GsServiceGUIManager.getManager().getAvailableActions(graph);
+>>>>>>> dd4564511f05a99242c28713b8a1dd2a9a984d59
 		for (Action action: actions) {
 			System.out.println("should add action: "+ action);
 			if (action instanceof GsImportAction) {

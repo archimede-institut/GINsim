@@ -40,7 +40,7 @@ public class TestRefactor {
 		lrg.addEdge(v1, v3, 0);
 		
 		GraphGUI<TestGraph, TestVertex, TestEdge> graphGUI = getGraphGUI(lrg);
-		newFrame(graphGUI);
+		MainFrame frame = newFrame(graphGUI);
 		
 		GraphGUIHelper<TestGraph,TestVertex,TestEdge> helper = (GraphGUIHelper<TestGraph,TestVertex,TestEdge>) GraphGUIHelperFactory.getFactory().getGraphGUIHelper( lrg);
 		GUIEditor<TestVertex> node_editor = helper.getNodeEditionPanel( lrg);

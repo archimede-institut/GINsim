@@ -28,6 +28,6 @@ public interface GsService {
 	 * 
 	 * @return the served graph class
 	 */
-	public Class<Graph<?,?>> getServedGraphClass();
+	public Class getServedGraphClass();
 	
 }

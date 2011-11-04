@@ -12,13 +12,13 @@ import org.ginsim.graph.Graph;
 
 
 /**
- * This factory provides access to the GsServices corresponding to a specific graph class
- * The factory itself is managed as a singleton.
+ * This manager provides access to the GsServices corresponding to a specific graph class
+ * The manager itself is managed as a singleton.
  * The instances of GsServices are managed through a List. Their instances are generated using 
  *  the Service Provider interface implying each GsServices extension have to declare 
  *  the annotation "@ProviderFor(GsService.class)"
  * 
- * A user may access statically to the factory singleton through the getFactory method and then call the
+ * A user may access statically to the manager singleton through the getFactory method and then call the
  * 	getAvailableServices method to obtain the List of suitable GsServices
  * 
  * 
@@ -26,22 +26,23 @@ import org.ginsim.graph.Graph;
  */
 
 
-public class GsServiceFactory{
+public class GsServiceManager{
 
-	// The factory singleton
-	private static GsServiceFactory factory = null;
+	// The manager singleton
+	private static GsServiceManager manager = null;
 	
 	// The map establishing the correspondence between graph class and GraphGUIHelper instance
 	private List<GsService> services = new Vector<GsService>();
 	
 
 	/**
-	 * Factory creator. Instantiate the factory and ask the ServiceLoader to load the GsService list.
+	 * Factory creator. Instantiate the manager and ask the ServiceLoader to load the GsService list.
 	 * 
 	 */
-	private GsServiceFactory(){
+	private GsServiceManager(){
 		
-        Iterator<GsService> service_list = ServiceLoader.load( GsService.class).iterator();
+		
+        Iterator<GsService> service_list = ServiceLoader.load( GsService.class).iterator(); 
         while (service_list.hasNext()) {
             try {
             	GsService service = service_list.next();
@@ -57,17 +58,17 @@ public class GsServiceFactory{
 	
 	
 	/**
-	 * Method providing access to the factory instance
+	 * Method providing access to the manager instance
 	 * 
-	 * @return the GsServiceFactory singleton 
+	 * @return the GsServiceManager singleton 
 	 */
-	public static GsServiceFactory getFactory(){
+	public static GsServiceManager getManager(){
 		
-		if( factory == null){
-			factory = new GsServiceFactory();
+		if( manager == null){
+			manager = new GsServiceManager();
 		}
 		
-		return factory;
+		return manager;
 	}
 	
 	/**
@@ -80,12 +81,15 @@ public class GsServiceFactory{
 		
 		List<GsService> result = new Vector<GsService>();
 		
+		Class<?>[] graph_interfaces = graph.getClass().getInterfaces();
 		Iterator<GsService> service_ite = services.iterator();
 		while( service_ite.hasNext()) {
 			GsService service = (GsService) service_ite.next();
-			Class<Graph<?,?>> served_graph = service.getServedGraphClass();
-			if( graph.getClass().isInstance( served_graph)){
-				result.add( service);
+			Class<?> served_graph = service.getServedGraphClass();
+			for(int i = 0; i < graph_interfaces.length; i++){
+				if( graph_interfaces[i].getName().equals( served_graph.getName())){
+					result.add( service);			
+				}
 			}
 		}
 		
