@@ -605,7 +605,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         OmddNode[] t_tree = new OmddNode[nodeOrder.size()];
         for (int i=0 ; i<nodeOrder.size() ; i++) {
         	GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
-            t_tree[i] = vertex.getTreeParameters(this);
+            t_tree[i] = vertex.getTreeParameters(nodeOrder);
             if (!focal) {
             	// FIXME: does non-focal tree works correctly ??????
             	t_tree[i] = t_tree[i].buildNonFocalTree(i, vertex.getMaxValue()+1).reduce();

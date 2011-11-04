@@ -66,7 +66,12 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	
 	protected void run() {
 		setRunning(true);
-		new GsSearchStableStates(graph, (GsRegulatoryMutantDef)mutantstore.getObject(0), this).start();
+		// Pedro: I changed both this file and GsSearchStableStates.java to separate
+		// GUI/Service and use Service on NuSMVExport. Also removed Thread from GsSearchSS.
+		GsSearchStableStates sss = new GsSearchStableStates(graph,
+				graph.getNodeOrder(),
+				(GsRegulatoryMutantDef)mutantstore.getObject(0));
+		setResult(sss.getStable());
 	}
 	
 	public void setResult(OmddNode stable) {

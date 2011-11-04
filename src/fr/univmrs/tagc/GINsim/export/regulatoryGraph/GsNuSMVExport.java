@@ -28,6 +28,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
@@ -88,21 +89,30 @@ public class GsNuSMVExport extends GsAbstractExport {
 	 *            The map containing the initial values of all the vertexes.
 	 * @return A string of values in the NuSMV format.
 	 */
-	private static String getInitState(GsRegulatoryVertex vertex,
-			Map<GsRegulatoryVertex, List<Integer>> m) {
-		List<Integer> v = m.get(vertex);
-		if (v != null && v.size() > 0) {
-			String s = "" + v.get(0);
-			if (v.size() > 1) {
-				s = "{" + s;
-				for (int j = 1; j < v.size(); j++) {
-					s += "," + v.get(j);
+	private static String writeInitialState(GsRegulatoryVertex[] t_vertex,
+			boolean input,
+			Map<GsRegulatoryVertex, List<Integer>> mInitStates) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < t_vertex.length; i++) {
+			if (t_vertex[i].isInput() != input)
+				continue;
+			String s_init = "";
+			List<Integer> v = mInitStates.get(t_vertex[i]);
+			if (v != null && v.size() > 0) {
+				for (int j = 0; j < v.size(); j++) {
+					if (j > 0)
+						s_init += " | ";
+					s_init += t_vertex[i].getId() + "=" + v.get(j);
 				}
-				s += "}";
 			}
-			return s;
+			if (s_init.isEmpty()) {
+				sb.append("--  INIT ").append(t_vertex[i].getId())
+						.append(" = 0;\n");
+			} else {
+				sb.append("  INIT ").append(s_init).append(";\n");
+			}
 		}
-		return null;
+		return sb.toString();
 	}
 
 	/**
@@ -135,6 +145,16 @@ public class GsNuSMVExport extends GsAbstractExport {
 			if (m_initstates == null) {
 				m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
 			}
+			it = config.getInputState().keySet().iterator();
+			Map<GsRegulatoryVertex, List<Integer>> m_initinputs;
+			if (it.hasNext()) {
+				m_initinputs = it.next().getMap();
+			} else {
+				m_initinputs = new HashMap<GsRegulatoryVertex, List<Integer>>();
+			}
+			if (m_initinputs == null) {
+				m_initinputs = new HashMap<GsRegulatoryVertex, List<Integer>>();
+			}
 
 			GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef) config.store
 					.getObject(0);
@@ -155,9 +175,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 			if (mutant != null) {
 				mutant.apply(t_tree, graph);
 			}
-			boolean bType1 = true;
-			if (config.getExportType() == config.CFG_INPUT_IVAR)
-				bType1 = false;
+			boolean bType1 = (config.getExportType() == GsNuSMVConfig.CFG_INPUT_FRONZEN);
 
 			out.write("-- " + date + "\n");
 			out.write("-- GINsim implicit representation for NuSMV --\n");
@@ -390,46 +408,6 @@ public class GsNuSMVExport extends GsAbstractExport {
 
 				out.write("  " + t_regulators[currIndex] + " : {" + s_levels
 						+ "};\n");
-				// out.write("  " + t_regulators[currIndex] + "_focal : {" +
-				// s_levels
-				// + "};\n");
-			}
-
-			// Forcing to have some state variable to change
-			// Otherwise: cycles within PClasses could arise
-			/*
-			 * This is not needed any more since PCs are inside IVAR we might
-			 * use TRANS for the real input vars though ;)
-			 * out.write("\nTRANS\n"); for (int i = 0; i < t_vertex.length; i++)
-			 * { if (t_vertex[i].isInput()) continue; out.write("  next(" +
-			 * t_regulators[i] + ") != "); out.write(t_regulators[i] + " |\n");
-			 * } out.write("  stableState;\n");
-			 */
-			out.write("\n-- State variables initialization\n");
-			for (int i = 0; i < t_vertex.length; i++) {
-				if (t_vertex[i].isInput())
-					continue;
-				String s_init = getInitState(nodeOrder.get(i), m_initstates);
-				if (s_init == null) {
-					out.write("--  INIT " + t_regulators[i] + " = 0;\n");
-				} else {
-					out.write("  INIT " + t_regulators[i] + " = " + s_init
-							+ ";\n");
-				}
-			}
-			if (bType1) {
-				out.write("-- Input variables initialization\n");
-				for (int i = 0; i < t_vertex.length; i++) {
-					if (!t_vertex[i].isInput())
-						continue;
-					String s_init = getInitState(nodeOrder.get(i), m_initstates);
-					if (s_init == null) {
-						out.write("--  INIT " + t_regulators[i] + " = 0;\n");
-					} else {
-						out.write("  INIT " + t_regulators[i] + " = " + s_init
-								+ ";\n");
-					}
-				}
 			}
 
 			out.write("\nASSIGN");
@@ -523,18 +501,6 @@ public class GsNuSMVExport extends GsAbstractExport {
 				out.write(t_regulators[v] + "_focal = ");
 				out.write(t_regulators[v] + ";\n\n");
 			}
-			out.write("stableState := ");
-			boolean bIsFirst = true;
-			for (int v = 0; v < t_vertex.length; v++) {
-				if (t_vertex[v].isInput())
-					continue;
-				if (!bIsFirst) {
-					out.write(" & ");
-				}
-				out.write(t_regulators[v] + "_std");
-				bIsFirst = false;
-			}
-			out.write(";\n\n");
 
 			for (int v = 0; v < t_vertex.length; v++) {
 				if (t_vertex[v].isInput())
@@ -571,6 +537,53 @@ public class GsNuSMVExport extends GsAbstractExport {
 				}
 			}
 
+			out.write("\nstrongSS := ");
+			boolean bIsFirst = true;
+			for (int v = 0; v < t_vertex.length; v++) {
+				if (t_vertex[v].isInput())
+					continue;
+				if (!bIsFirst) {
+					out.write(" & ");
+				}
+				out.write(t_regulators[v] + "_std");
+				bIsFirst = false;
+			}
+			out.write(";\n");
+
+			if (!bType1) {
+				out.write("\nweakSS := FALSE\n");
+				// -- Computing Weak Stable States for compacted STG (type 2) --
+				List<GsRegulatoryVertex> sortedVars = new ArrayList<GsRegulatoryVertex>();
+				List<GsRegulatoryVertex> orderStateVars = new ArrayList<GsRegulatoryVertex>();
+				List<GsRegulatoryVertex> orderInputVars = new ArrayList<GsRegulatoryVertex>();
+				for (int i = 0; i < nodeOrder.size(); i++) {
+					if (nodeOrder.get(i).isInput())
+						orderInputVars.add(nodeOrder.get(i));
+					else {
+						orderStateVars.add(nodeOrder.get(i));
+						sortedVars.add(nodeOrder.get(i));
+					}
+				}
+				sortedVars.addAll(orderInputVars);
+				// OMDDs reordered [ stateVars inputVars]
+				OmddNode[] tReordered = new OmddNode[nodeOrder.size()];
+				for (int i = 0; i < nodeOrder.size(); i++) {
+					tReordered[i] = sortedVars.get(i)
+							.getTreeParameters(sortedVars).reduce();
+				}
+
+				GsSearchStableStates sss = new GsSearchStableStates(graph,
+						sortedVars, (GsRegulatoryMutantDef) mutant, tReordered);
+				OmddNode omdds = sss.getStable();
+				int[] stateValues = new int[sortedVars.size()];
+				for (int i = 0; i < stateValues.length; i++)
+					stateValues[i] = -1;
+
+				out.write(writeStableStates(stateValues, omdds, orderStateVars,
+						0));
+				out.write(";\n");
+			}
+
 			out.write("\nTRANS\n");
 			for (int i = 0; i < t_vertex.length; i++) {
 				if (t_vertex[i].isInput())
@@ -578,14 +591,26 @@ public class GsNuSMVExport extends GsAbstractExport {
 				out.write("next(" + t_regulators[i] + ") != ");
 				out.write(t_regulators[i] + " |\n");
 			}
-			out.write("stableState;\n");
+			if (bType1)
+				out.write("strongSS;\n");
+			else
+				out.write("weakSS;\n");
+
+			// TODO: make use of the name given by the user
+			// referencing the atomic proposition
+			out.write("\n-- State variables initialization\n");
+			out.write(writeInitialState(t_vertex, false, m_initstates));
+			if (bType1 && hasInputVars) {
+				out.write("-- Input variables initialization\n");
+				out.write(writeInitialState(t_vertex, true, m_initinputs));
+			}
 
 			out.write("\n");
 			out.write("-- Property specification\n");
 			if (bType1)
-				out.write("-- SPEC !EF ( stableState )\n");
+				out.write("-- SPEC !EF ( strongSS )\n");
 			else
-				out.write("-- LTLSPEC G F ( stableState )\n");
+				out.write("-- SPEC AF ( weakSS )\n-- LTLSPEC G F ( weakSS )\n");
 
 			// Close main tags
 			out.close();
@@ -595,6 +620,32 @@ public class GsNuSMVExport extends GsAbstractExport {
 					new GsException(GsException.GRAVITY_ERROR, e
 							.getLocalizedMessage()), null);
 		}
+	}
+
+	private static String writeStableStates(int[] stateValues, OmddNode nodes,
+			List<GsRegulatoryVertex> stateVars, int level) {
+		String sRet = "";
+		if (nodes.next == null) {
+			if (nodes.value == 1 && level > stateVars.size()) {
+				// we have a stable state:
+				sRet += "  | ";
+				for (int i = 0; i < stateVars.size(); i++) {
+					if (stateValues[i] == -1) continue;
+					if (i > 0)
+						sRet += " & ";
+					sRet += stateVars.get(i) + "=" + stateValues[i];
+				}
+				sRet += "\n";
+			}
+			return sRet;
+		}
+		for (int i = 0; i < nodes.next.length; i++) {
+			stateValues[nodes.level] = i;
+			sRet += writeStableStates(stateValues, nodes.next[i], stateVars,
+					level + 1);
+		}
+		stateValues[nodes.level] = -1;
+		return sRet;
 	}
 
 	/**

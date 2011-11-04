@@ -141,9 +141,8 @@ public class GsLogicalParameter implements XMLize {
      * @param node
      * @return the t_ac
      */
-	private byte[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
+	private byte[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, List<GsRegulatoryVertex> nodeOrder) {
 	    Set<GsRegulatoryMultiEdge> incEdges = regGraph.getGraphManager().getIncomingEdges(node);
-	    List<GsRegulatoryVertex> nodeOrder = regGraph.getNodeOrder();
         byte[][] t_ac = new byte[incEdges.size()+1][];
         t_ac[0] = new byte[1];
         t_ac[0][0] = (byte)value;
@@ -206,9 +205,13 @@ public class GsLogicalParameter implements XMLize {
      * @return true if this logical parameter is activable
      */
     public boolean activable(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
-        return buildTac(regGraph, node) != null;
+        return buildTac(regGraph, node, regGraph.getNodeOrder()) != null;
     }
 
+	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node,
+			OmddNode valueNode) {
+		return buildTree(regGraph, node, valueNode, regGraph.getNodeOrder());
+	}
     /**
      * build a tree of condition of activation for this logical parameter
      *
@@ -216,11 +219,12 @@ public class GsLogicalParameter implements XMLize {
      * @param node
      * @return the OmddNode representation of this logical parameter
      */
-    public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
-    	return buildTree(regGraph, node, OmddNode.TERMINALS[this.value]);
+    public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, List nodeOrder) {
+    	return buildTree(regGraph, node, OmddNode.TERMINALS[this.value], nodeOrder);
     }
-	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, OmddNode valueNode) {
-        byte[][] t_ac = buildTac(regGraph, node);
+	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node,
+			OmddNode valueNode, List nodeOrder) {
+        byte[][] t_ac = buildTac(regGraph, node, nodeOrder);
         byte[] t_tmp;
 
         if (t_ac == null) {

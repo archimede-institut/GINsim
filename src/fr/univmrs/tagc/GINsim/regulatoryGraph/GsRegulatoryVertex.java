@@ -223,6 +223,9 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 	public LogicalParameterList getV_logicalParameters() {
 		return v_logicalParameters;
 	}
+	public OmddNode getTreeParameters(GsRegulatoryGraph graph) {
+		return getTreeParameters(graph.getNodeOrder());
+	}
 
     /**
      * get the DAG representation of logical parameters.
@@ -230,11 +233,11 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
      * @param graph
      * @return an OmddNode representing logical parameters associated to this vertex.
      */
-    public OmddNode getTreeParameters(GsRegulatoryGraph graph) {
+    public OmddNode getTreeParameters(List<GsRegulatoryVertex> nodeOrder) {
         OmddNode root;
         if (isInput) {
             root = new OmddNode();
-            root.level = graph.getNodeOrder().indexOf(this);
+            root.level = nodeOrder.indexOf(this);
             root.next = new OmddNode[maxValue+1];
             for (int i=0 ; i<root.next.length ; i++) {
                 root.next[i] = OmddNode.TERMINALS[i];
@@ -245,7 +248,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
             Iterator it = v_logicalParameters.iterator();
             while (it.hasNext()) {
                 GsLogicalParameter gsi = (GsLogicalParameter)it.next();
-                curNode = gsi.buildTree(graph, this);
+                curNode = gsi.buildTree(graph, this, nodeOrder);
                 if (curNode != null) {
                     root = root.merge(curNode, OmddNode.OR);
                 }
