@@ -8,7 +8,6 @@ import javax.swing.Action;
 
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.GraphView;
-import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.GsLayoutAction;
 import org.ginsim.gui.service.GsServiceGUI;
@@ -24,25 +23,44 @@ public class LayoutServiceGUI implements GsServiceGUI {
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
-		actions.add( new LayoutAction((TestGraph) graph));
+		for (LayoutType type: LayoutType.values()) {
+			actions.add( new LayoutAction(graph, type));
+		}
 		
 		return actions;
 	}
 }
 
+enum LayoutType {
+	LEVEL("Level layout", GsLayoutService.LEVEL),
+	LEVEL_INV("Inversed level layout", GsLayoutService.LEVEL_INV),
+	RING("Ring layout", GsLayoutService.RING),
+	RING_INV("Inverser ring layout", GsLayoutService.RING_INV);
+	
+	public final String name;
+	public final int key;
+	
+	private LayoutType(String name, int key) {
+		this.name = name;
+		this.key = key;
+	}
+}
+
 class LayoutAction extends GsLayoutAction {
 
-	private final TestGraph graph;
+	private final Graph<?,?> graph;
+	private final LayoutType type;
 	
-	protected LayoutAction( TestGraph graph) {
-		super("layout");
+	protected LayoutAction( Graph<?,?> graph, LayoutType type) {
+		super(type.name);
 		this.graph = graph;
+		this.type = type;
 	}
 	
 	@Override
 	public void actionPerformed( ActionEvent arg0) {
 		try {
-			GsLayoutService.runLayout(GsLayoutService.LEVEL, graph, (GraphView)graph);
+			GsLayoutService.runLayout(type.key, graph, (GraphView)graph);
 		} catch (GsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
