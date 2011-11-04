@@ -41,7 +41,7 @@ public class GsServiceGUIManager{
 	 * 
 	 */
 	private GsServiceGUIManager(){
-		
+
         for (GsServiceGUI service: ServiceLoader.load( GsServiceGUI.class)) {
         	if( service != null){
         		services.add( service);
@@ -78,7 +78,7 @@ public class GsServiceGUIManager{
 			for( GsServiceGUI service: services) {
 				GUIFor gui_for = service.getClass().getAnnotation( GUIFor.class);
 				Class<?> gui_for_class = gui_for.value();
-				if( server_service.getClass().equals( gui_for_class)){
+				if (server_service.getClass().equals( gui_for_class)) {
 					List<Action> service_actions = service.getAvailableActions( graph);
 					result.addAll( service_actions);
 				}

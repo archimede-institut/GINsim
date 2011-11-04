@@ -2,6 +2,9 @@ package org.ginsim.layout;
 
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.GraphView;
+import org.ginsim.graph.testGraph.TestGraph;
+import org.ginsim.service.GsService;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.GsException;
@@ -13,14 +16,15 @@ import fr.univmrs.tagc.common.GsException;
  * @author Cecile Menahem
  * @author Aurelien Naldi
  */
-public class GsLayoutPlugin {
+@ProviderFor(GsService.class)
+public class GsLayoutService implements GsService {
 
-    private static final int LEVEL = 0;
-    private static final int LEVEL_INV = 1;
-    private static final int RING = 2;
-    private static final int RING_INV = 3;
+    public static final int LEVEL = 0;
+    public static final int LEVEL_INV = 1;
+    public static final int RING = 2;
+    public static final int RING_INV = 3;
     
-    public void runLayout(int ref, Graph graph, GraphView view) throws GsException {
+    public static void runLayout(int ref, Graph graph, GraphView view) throws GsException {
 		// first count nodes in each category
 		GsVertexAttributesReader vreader = view.getVertexReader();
 		int nbRoot = 0;
@@ -86,4 +90,9 @@ public class GsLayoutPlugin {
     		}
         }
     }
+
+	@Override
+	public Class getServedGraphClass() {
+		return TestGraph.class;
+	}
 }
