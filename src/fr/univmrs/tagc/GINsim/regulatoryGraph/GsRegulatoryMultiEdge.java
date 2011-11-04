@@ -93,6 +93,11 @@ public class GsRegulatoryMultiEdge extends GsDirectedEdge<GsRegulatoryVertex> im
     			edge.index = (byte)i;
     			return i;
     		}
+    		else if (threshold == edges[i].threshold){
+    			edges[i] = edge;
+    			edge.index = (byte)i;
+    			return i;
+    		}
     	}
     	edge.index = (byte)edgecount;
     	edges[edgecount] = edge;

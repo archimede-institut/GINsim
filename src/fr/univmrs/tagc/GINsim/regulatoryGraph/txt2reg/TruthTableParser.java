@@ -1,67 +1,18 @@
-  package fr.univmrs.tagc.GINsim.regulatoryGraph.txt2reg;
+package fr.univmrs.tagc.GINsim.regulatoryGraph.txt2reg;
  
-
-                    import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.Map.Entry;
-import java.util.Vector;
-
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import JSci.io.MathMLExpression;
-import JSci.io.MathMLParser;
-import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;// just to get rescanSign() method
-import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.widgets.StackDialog;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.global.GsMain;
 import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 
 
@@ -239,14 +190,13 @@ public final class TruthTableParser {
 		    		      else if (table_gene[l][u]< table_gene[l+b[i]][u]) sign=0; // positive interaction
 		    		      if (sign!=-1) 
 		    		      {
-		    		  		GsDirectedEdge edge = (GsDirectedEdge)manager.getEdge(G[i], G[u-n]);
+		    		    	  GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)manager.getEdge(G[i], G[u-n]);
 		    			     if (edge==null)
 		    			     {
 		    					model.interactiveAddEdge(G[i], G[u-n], sign); 
-		    					edge = (GsDirectedEdge)manager.getEdge(G[i], G[u-n]);
-		    			    	GsRegulatoryMultiEdge me=(GsRegulatoryMultiEdge)(edge.getUserObject());
-		    					incoming_edges[u-n].add(me.getEdge(0));
-		    					me.setMin(0, (byte)table_gene[l+b[i]][i]);
+		    					edge = (GsRegulatoryMultiEdge)manager.getEdge(G[i], G[u-n]);
+		    					incoming_edges[u-n].add(edge.getEdge(0));
+		    					edge.setMin(0, (byte)table_gene[l+b[i]][i]);
 		    					table_interactors[u-n].add(i);
 		    			     }
 		    			     /*else // an edge already exists TO BE FIXED.... in the case of a multi-arc encompassing several arcs..
@@ -282,7 +232,7 @@ public final class TruthTableParser {
 					int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
 					if (table_gene[j][reg]!=0 )  
 					 {	 
-					 GsRegulatoryMultiEdge me =(GsRegulatoryMultiEdge)((GsDirectedEdge)manager.getEdge(G[reg], G[i])).getUserObject();
+					 GsRegulatoryMultiEdge me =(GsRegulatoryMultiEdge)manager.getEdge(G[reg], G[i]);
 					 activeInteractions.add(me.getEdge(0));
 					 }
 					 
