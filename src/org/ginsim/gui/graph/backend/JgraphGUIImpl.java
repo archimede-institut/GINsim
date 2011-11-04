@@ -122,8 +122,10 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     }
 
 	@Override
-	public JMenu getViewMenu() {
+	public JMenu getViewMenu(JMenu layout) {
 		JMenu menu = new JMenu("View");
+		
+		menu.add(layout);
 
 		menu.add(new ZoomAction(this, -1));
 		menu.add(new ZoomAction(this, +1));

@@ -95,7 +95,7 @@ public class MainFrameActionManager implements FrameActions {
 		menubar.add(menu);
 		
 		
-		menubar.add(gui.getViewMenu());
+		menubar.add(gui.getViewMenu(layoutMenu));
 		
 		menubar.add(actionMenu);
 		

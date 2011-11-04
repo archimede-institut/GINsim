@@ -32,7 +32,7 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	/**
 	 * Fill the view menu with actions available on this graph GUI
 	 */
-	public JMenu getViewMenu();
+	public JMenu getViewMenu(JMenu layoutMenu);
 
 	/**
 	 * @return the list of selected vertices
