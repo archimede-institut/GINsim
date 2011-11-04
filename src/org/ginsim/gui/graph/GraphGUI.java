@@ -3,6 +3,7 @@ package org.ginsim.gui.graph;
 import java.awt.Component;
 import java.util.Collection;
 
+import javax.swing.JMenu;
 import javax.swing.JPanel;
 
 import org.ginsim.graph.Edge;
@@ -29,25 +30,9 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	public Component getGraphComponent();
 
 	/**
-	 * Change a property of this GUI (grid visible/active/AA,...)
-	 * 
-	 * @param property
-	 * @param b
+	 * Fill the view menu with actions available on this graph GUI
 	 */
-	public void setProperty(int property, boolean b);
-
-	/**
-	 * Test if a property is enabled in this GUI.
-	 * 
-	 * @param property
-	 * @return true if this property is enabled
-	 */
-	public boolean hasProperty(int property);
-
-	/**
-	 * @return the list of properties supported by this GUI.
-	 */
-	public int[] getProperties();
+	public JMenu getViewMenu();
 
 	/**
 	 * @return the list of selected vertices
@@ -57,13 +42,6 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @return the list of selected edges
 	 */
 	public Collection<E> getSelectedEdges();
-
-	/**
-	 * @param property
-	 * @return the text to display in a menu for this property
-	 */
-	public String getPropertyName(int property);
-	
 
 	public GUIEditor<G> getMainEditionPanel();
 

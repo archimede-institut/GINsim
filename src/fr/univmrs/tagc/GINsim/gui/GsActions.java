@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
@@ -22,9 +23,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
-import org.ginsim.graph.EditGroup;
-import org.ginsim.graph.EditMode;
-import org.ginsim.gui.shell.FrameActions;
+import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
@@ -107,8 +106,6 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionSaveSubGraph;
 	private AbstractAction		actionMergeGraph;
 	private AbstractAction		actionQuit;
-	private AbstractAction		actionHelp;
-	private AbstractAction		actionAbout;
 	private AbstractAction		actionCopy;
 	private AbstractAction		actionPaste;
 	private AbstractAction		actionSelectAll;
@@ -271,27 +268,6 @@ public class GsActions implements GraphChangeListener {
 				quit();
 			}
 			
-		};
-		actionHelp = new BaseAction("STR_help", "help-contents.png", "STR_help_descr", null,
-				new Integer(KeyEvent.VK_H)) {
-
-			private static final long	serialVersionUID	= 6430521053940787968L;
-
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				String path = GsEnv.getGinsimDir()+"Documentation/html/index.html";
-				// TODO: better URL on the web site ?
-				if (!Tools.openFile(path)) {
-					Tools.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
-				}
-			}
-		};
-
-		actionAbout = new BaseAction("STR_about", "help-about.png", "STR_about_descr", null, new Integer(KeyEvent.VK_C)) {
-			private static final long	serialVersionUID	= -4657616921932268806L;
-			
-			public void actionPerformed(java.awt.event.ActionEvent e) {
-				about();
-			}			
 		};
 		actionCopy = new BaseAction("STR_copy", "edit-copy.png", "STR_copy_descr",
 				KeyStroke.getKeyStroke(KeyEvent.VK_C, mask), null) {
@@ -670,8 +646,7 @@ public class GsActions implements GraphChangeListener {
 
 		fileMenu.add(actionQuit);
 
-		helpMenu.add(actionHelp);
-		helpMenu.add(actionAbout);
+		fillMenu(helpMenu, GsHelpCallBack.getActions());
 
 		editMenu.add(actionCopy);
 		editMenu.add(actionPaste);
@@ -732,6 +707,12 @@ public class GsActions implements GraphChangeListener {
 		registerForMacOSXEvents();
 	}
 
+	private void fillMenu(JMenu menu, List<Action> actions) {
+		for (Action action: actions) {
+			menu.add(action);
+		}
+	}
+	
 	/**
 	 * update the content of the "recent files" submenu
 	 */

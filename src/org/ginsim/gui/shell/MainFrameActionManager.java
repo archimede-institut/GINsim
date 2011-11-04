@@ -10,40 +10,20 @@ import javax.swing.JToolBar;
 import org.ginsim.graph.EditGroup;
 import org.ginsim.graph.EditMode;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsExportAction;
 import org.ginsim.gui.service.GsGUIServiceFactory;
 import org.ginsim.gui.service.GsImportAction;
 import org.ginsim.gui.service.GsLayoutAction;
+import org.ginsim.gui.shell.callbacks.GsFileCallBack;
+import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
 
 public class MainFrameActionManager implements FrameActions {
 
-	private final JToolBar toolbar;
-
-	private final static JMenu recentMenu = new JMenu("Recent");
-	
-	private final JMenu importMenu = new JMenu("Import");
-	private final JMenu exportMenu = new JMenu("Export");
-	private final JMenu layoutMenu = new JMenu("Layout");
-	private final JMenu actionMenu = new JMenu("Actions");
-	
-
-	public MainFrameActionManager(JMenuBar menubar, JToolBar toolbar) {
-		this.toolbar = toolbar;
-		
-		// fill the menu
-		JMenu menu = new JMenu("File");
-		menu.add(recentMenu);
-		menu.add(importMenu);
-		menu.add(exportMenu);
-		menubar.add(menu);
-		menu = new JMenu("Edit");
-		menubar.add(menu);
-		menu = new JMenu("View");
-		menu.add(layoutMenu);
-		menubar.add(menu);
-		menubar.add(actionMenu);
-		menu = new JMenu("Help");
-		menubar.add(menu);
+	private void fillMenu(JMenu menu, List<Action> actions) {
+		for (Action action: actions) {
+			menu.add(action);
+		}
 	}
 	
 	@Override
@@ -77,16 +57,18 @@ public class MainFrameActionManager implements FrameActions {
 	}
 
 	@Override
-	public void setGraph(Graph<?, ?> graph) {
+	public void setGraphGUI(GraphGUI<?,?,?> gui, JMenuBar menubar, JToolBar toolbar) {
+
+		Graph<?, ?> graph = gui.getGraph();
 		
-		// TODO: deal with the view and edit menus
-		importMenu.removeAll();
-		exportMenu.removeAll();
-		layoutMenu.removeAll();
-		actionMenu.removeAll();
+		// TODO: deal with the tool bar, view and edit menus
 		
-		// TODO: reset edit actions
-		
+		// get Service-related actions
+		JMenu importMenu = new JMenu("Import");
+		JMenu exportMenu = new JMenu("Export");
+		JMenu layoutMenu = new JMenu("Layout");
+		JMenu actionMenu = new JMenu("Actions");
+
 		List<Action> actions = GsGUIServiceFactory.getFactory().getAvailableActions(graph);
 		for (Action action: actions) {
 			System.out.println("should add action: "+ action);
@@ -103,6 +85,22 @@ public class MainFrameActionManager implements FrameActions {
 				actionMenu.add(action);
 			}
 		}
+
+		// fill the menu bar
+		menubar.removeAll();
+		menubar.add(GsFileCallBack.getFileMenu(graph, importMenu, exportMenu));
+		
+		JMenu menu = new JMenu("Edit");
+		menubar.add(menu);
+		
+		
+		menubar.add(gui.getViewMenu());
+		
+		menubar.add(actionMenu);
+		
+		menu = new JMenu("Help");
+		fillMenu(menu, GsHelpCallBack.getActions());
+		menubar.add(menu);
 	}
 
 }

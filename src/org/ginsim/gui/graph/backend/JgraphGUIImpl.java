@@ -1,9 +1,15 @@
 package org.ginsim.gui.graph.backend;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 
+import javax.swing.AbstractAction;
+import javax.swing.JMenu;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
@@ -12,6 +18,7 @@ import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.helper.GraphGUIHelper;
+import org.ginsim.gui.shell.FrameActions;
 import org.jgraph.JGraph;
 import org.jgrapht.ext.JGraphModelAdapter;
 
@@ -30,9 +37,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     private GsJgraph jgraph;
     private final GraphGUIHelper<G,V,E> helper;
 
-    private static final int GRID=0, ACTIVE_GRID=1;
-    private static final int[] PROPERTIES = {GRID, ACTIVE_GRID};
-    
     Collection<E> sel_edges;
     Collection<V> sel_vertices;
     
@@ -68,43 +72,70 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		return new GsJgraphVertexAttribute(m_jgAdapter, null);
 	}
 
-	@Override
-	public void setProperty(int property, boolean b) {
+	/**
+	 * Change a Boolean property
+	 * 
+	 * @param property
+	 * @param b
+	 */
+	protected void setProperty(GUIProperties property, boolean b) {
 		switch (property) {
 		case GRID:
+			// FIXME: Grid visibility flag does not work
 			jgraph.setGridVisible(b);
 			break;
-		case ACTIVE_GRID:
+		case GRIDACTIVE:
 			jgraph.setGridEnabled(b);
 			break;
 		}
 	}
 
-	@Override
-	public boolean hasProperty(int property) {
+	/**
+	 * Get the state of a Boolean property.
+	 * 
+	 * @param property
+	 * @return true if this property is enabled
+	 */
+	protected boolean hasProperty(GUIProperties property) {
 		switch (property) {
 		case GRID:
 			return jgraph.isGridVisible();
-		case ACTIVE_GRID:
+		case GRIDACTIVE:
 			return jgraph.isGridEnabled();
 		}
 		return false;
 	}
 
-	@Override
-	public String getPropertyName(int property) {
-		switch (property) {
-		case GRID:
-			return "Grid visible";
-		case ACTIVE_GRID:
-			return "Grid active";
-		}
-		return "";
-	}
+	/**
+	 * Change the zoom level.
+	 * 
+	 * @param direction: zoom in if positive, out if negative and reset if 0
+	 */
+    protected void setZoomLevel(int direction) {
+    	if (direction > 0) {
+            jgraph.setScale(jgraph.getScale()+0.1);
+    	} else if (direction < 0) {
+    		jgraph.setScale(jgraph.getScale()-0.1);
+    	} else {
+    		jgraph.setScale(1);
+    	}
+    }
 
 	@Override
-	public int[] getProperties() {
-		return PROPERTIES;
+	public JMenu getViewMenu() {
+		JMenu menu = new JMenu("View");
+
+		menu.add(new ZoomAction(this, -1));
+		menu.add(new ZoomAction(this, +1));
+		menu.add(new ZoomAction(this, 0));
+		
+		menu.add(new JSeparator());
+		
+		for (GUIProperties property: GUIProperties.values()) {
+			menu.add(new PropertySwitchAction(this, property));
+		}			
+		
+		return menu;
 	}
 
 	@Override
@@ -155,5 +186,58 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 }
 
 enum GUIProperties {
-	GRID, GRIDACTIVE;
+	
+	GRID("Grid Visible"),
+	GRIDACTIVE("Grid Active");
+	
+	public final String name;
+	
+	private GUIProperties(String name) {
+		this.name = name;
+	}
+}
+
+
+class PropertySwitchAction extends AbstractAction {
+
+	private final JgraphGUIImpl<?, ?, ?> gui;
+	private final GUIProperties property;
+	
+	public PropertySwitchAction(JgraphGUIImpl<?, ?, ?> gui, GUIProperties property) {
+		super(property.name);
+		this.gui = gui;
+		this.property = property;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		gui.setProperty(property, !gui.hasProperty(property));
+	}
+}
+
+class ZoomAction extends AbstractAction {
+
+	private final JgraphGUIImpl<?, ?, ?> gui;
+	private final int direction;
+	
+	public ZoomAction(JgraphGUIImpl<?, ?, ?> gui, int direction) {
+		this.gui = gui;
+		this.direction = direction;
+		
+		if (direction < 0) {
+			putValue(NAME, "Zoom out");
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, FrameActions.MASK));
+		} else if (direction > 0) {
+			putValue(NAME, "Zoom in");
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, FrameActions.MASK));
+		} else {
+			putValue(NAME, "Reset zoom level");
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, FrameActions.MASK));
+		}
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		gui.setZoomLevel(direction);
+	}
 }

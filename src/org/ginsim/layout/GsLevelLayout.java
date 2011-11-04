@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.layout;
+package org.ginsim.layout;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 

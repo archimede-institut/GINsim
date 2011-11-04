@@ -4,6 +4,10 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 
+import org.ginsim.layout.GsLayoutAlgo;
+import org.ginsim.layout.GsLevelLayout;
+import org.ginsim.layout.GsRingLayout;
+
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;

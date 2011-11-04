@@ -1,8 +1,13 @@
 package org.ginsim.gui.shell;
 
+import java.awt.Toolkit;
+
+import javax.swing.JMenuBar;
+import javax.swing.JToolBar;
+
 import org.ginsim.graph.EditGroup;
 import org.ginsim.graph.EditMode;
-import org.ginsim.graph.Graph;
+import org.ginsim.gui.graph.GraphGUI;
 
 /**
  * Tentative replacement API for GsAction.
@@ -13,6 +18,7 @@ import org.ginsim.graph.Graph;
  */
 public interface FrameActions {
 
+	public static final int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
 	public void setCurrentMode(EditMode mode, boolean lock);
 	public EditMode getCurrentEditMode();
@@ -21,5 +27,5 @@ public interface FrameActions {
 	public void changeModeIfUnlocked();
 	public boolean shouldAutoAddNewElements();
 
-	public void setGraph(Graph<?, ?> graph);
+	public void setGraphGUI(GraphGUI<?, ?, ?> graph, JMenuBar menubar, JToolBar toolbar);
 }
