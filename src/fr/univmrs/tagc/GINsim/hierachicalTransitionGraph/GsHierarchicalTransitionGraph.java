@@ -117,7 +117,7 @@ public class GsHierarchicalTransitionGraph extends GsGraph<GsHierarchicalNode,Gs
 		Object e = graphManager.getEdge(source, target);
 		if (e != null) return e;
 		// FIXME: creating an empty GsDecisionOnEdge object: is it even possible?
-		GsDecisionOnEdge edge = new GsDecisionOnEdge(source, target);
+		GsDecisionOnEdge edge = new GsDecisionOnEdge(source, target, nodeOrder);
 		return graphManager.addEdge(edge);
 	}
 
