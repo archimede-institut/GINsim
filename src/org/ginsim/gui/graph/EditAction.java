@@ -1,26 +1,24 @@
-package org.ginsim.graph;
+package org.ginsim.gui.graph;
 
 /**
  * Minimalistic description of the available edit types for a Graph.
  * 
  * @author Aurelien Naldi
  */
-public class EditMode {
+public class EditAction {
 
-	private final EditGroup mode;
+	private final EditMode mode;
 	private final String name;
-	private final int value;
 	
-	public EditMode(EditGroup mode, String name, int value) {
+	public EditAction(EditMode mode, String name) {
 		this.mode = mode;
 		this.name = name;
-		this.value = value;
 	}
 	
 	/**
 	 * @return the type of edit performed (to group nodes and edges related actions)
 	 */
-	public EditGroup getMode() {
+	public EditMode getMode() {
 		return mode;
 	}
 	
@@ -29,9 +27,5 @@ public class EditMode {
 	 */
 	public String getName() {
 		return name;
-	}
-	
-	public int getValue() {
-		return value;
 	}
 }

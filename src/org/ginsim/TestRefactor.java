@@ -32,12 +32,12 @@ public class TestRefactor {
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 		TestGraph lrg = new TestGraphImpl();
 
-		TestVertex v1 = lrg.addVertex(0);
-		TestVertex v2 = lrg.addVertex(0);
-		TestVertex v3 = lrg.addVertex(0);
+		TestVertex v1 = lrg.addVertex();
+		TestVertex v2 = lrg.addVertex();
+		TestVertex v3 = lrg.addVertex();
 
-		lrg.addEdge(v1, v2, 0);
-		lrg.addEdge(v1, v3, 0);
+		lrg.addEdge(v1, v2);
+		lrg.addEdge(v1, v3);
 		
 		GraphGUI<TestGraph, TestVertex, TestEdge> graphGUI = getGraphGUI(lrg);
 		MainFrame frame = newFrame(graphGUI);

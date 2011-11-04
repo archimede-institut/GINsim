@@ -6,16 +6,21 @@ import java.util.List;
 /**
  * Interface for the main objects: graphs.
  * 
- * This should provide only the main methods to edit and browse a graph.
+ * This should provide only the main methods to browse a graph.
+ * As not all graphs can be edited, edit methods should be provided by the
+ * specialised graph type only.
+ * 
  * As the existing stuff did a lot of things, I'll start by putting notes about what we may want to have as well...
  * 
  * @author Aurelien Naldi
+ * @author Lionel Spinelli
  *
  * @param <V> type for vertices
  * @param <E> type for edges
  */
 public interface Graph<V,E extends Edge<V>> {
 
+	// TODO: this should be done in an enum
     /**  an edged has been added */
     public static final int CHANGE_EDGEADDED = 0;
     /**  an edged has been removed */
@@ -41,7 +46,7 @@ public interface Graph<V,E extends Edge<V>> {
 	 *  * get the list of existing vertices and edges
 	 *  * access the GraphView object
 	 * 
-	 * We used to have some extra stuff:
+	 * We used to have some extra stuff, most of it should go to specialised types:
 	 *   * store some extra information: name, annotation
 	 *   * provide save methods. remember save path
 	 *   * metadata: can this graph be edited interactively, how ?
@@ -50,40 +55,6 @@ public interface Graph<V,E extends Edge<V>> {
 	 *   * copy/paste a subgraph
 	 */
 	
-	
-	/**
-	 * Add an edge between two vertices.
-	 * 
-	 * @param source source vertex for this edge
-	 * @param target target vertex for this edge
-	 * 
-	 * @return the new vertex
-	 */
-	public E addEdge (V source, V target, int mode);
-	
-	
-	/**
-	 * Add a new vertex.
-	 * 
-	 * @param mode
-	 * @return the new vertex
-	 */
-	public V addVertex (int mode);
-	
-	
-    /**
-     * remove a vertex from the graph.
-     * @param vertex
-     */
-    public boolean removeVertex(V vertex);
-    
-    
-    /**
-     * remove an edge from the graph.
-     * @param edge
-     */
-    public boolean removeEdge(E edge);
-
     
 	/**
 	 * @return the number of vertex in this graph.
@@ -153,5 +124,5 @@ public interface Graph<V,E extends Edge<V>> {
      * 
      * @param graph The graph to merge with the current graph
      */
-    public List merge( Graph<V,E> graph);
+    public List<?> merge( Graph<V,E> graph);
 }

@@ -1,9 +1,13 @@
 package org.ginsim.gui.graph.helper;
 
+import java.util.List;
+
 import javax.swing.JPanel;
 
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.testGraph.TestGraph;
+import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 
 /**
@@ -71,4 +75,10 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @return the graph class the helper helps to manage
 	 */
 	public Class<G> getGraphClass();
+	
+	/**
+	 * @param graph the edited graph
+	 * @return the list of actions or null if none are available
+	 */
+	public List<EditAction> getEditActions(TestGraph graph);
 }

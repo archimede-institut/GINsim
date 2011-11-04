@@ -5,8 +5,8 @@ import java.awt.Toolkit;
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
 
-import org.ginsim.graph.EditGroup;
-import org.ginsim.graph.EditMode;
+import org.ginsim.gui.graph.EditMode;
+import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GraphGUI;
 
 /**
@@ -20,9 +20,9 @@ public interface FrameActions {
 
 	public static final int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
-	public void setCurrentMode(EditMode mode, boolean lock);
-	public EditMode getCurrentEditMode();
-	public EditGroup getCurrentGroup();
+	public void setCurrentMode(EditAction mode, boolean lock);
+	public EditAction getCurrentEditMode();
+	public EditMode getCurrentGroup();
 
 	public void changeModeIfUnlocked();
 	public boolean shouldAutoAddNewElements();

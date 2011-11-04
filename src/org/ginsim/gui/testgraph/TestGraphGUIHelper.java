@@ -1,15 +1,21 @@
 package org.ginsim.gui.testgraph;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JPanel;
 
-import org.ginsim.graph.Graph;
 import org.ginsim.graph.testGraph.TestEdge;
 import org.ginsim.graph.testGraph.TestGraph;
-import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.graph.testGraph.TestVertex;
+import org.ginsim.gui.graph.AddEdgeAction;
+import org.ginsim.gui.graph.AddVertexAction;
+import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.helper.GraphGUIHelper;
 import org.mangosdk.spi.ProviderFor;
+
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * Simple GUI helper for the test graph.
@@ -47,5 +53,42 @@ public class TestGraphGUIHelper implements GraphGUIHelper<TestGraph, TestVertex,
 	@Override
 	public JPanel getInfoPanel(TestGraph graph) {
 		return null;
+	}
+
+	@Override
+	public List<EditAction> getEditActions(TestGraph graph) {
+		List<EditAction> actions = new ArrayList<EditAction>();
+		GsVertexAttributesReader reader = graph.getVertexReader();
+		actions.add(new AddTestVertexAction(graph, "Add TV", reader));
+		actions.add(new AddTestEdgeAction(graph, "Add TV"));
+		return actions;
+	}
+}
+
+class AddTestVertexAction extends AddVertexAction<TestVertex> {
+
+	private final TestGraph graph;
+	public AddTestVertexAction(TestGraph graph, String name, GsVertexAttributesReader reader) {
+		super(name, reader);
+		this.graph = graph;
+	}
+
+	@Override
+	protected TestVertex getNewVertex() {
+		return graph.addVertex();
+	}
+}
+
+class AddTestEdgeAction extends AddEdgeAction<TestVertex, TestEdge> {
+
+	private final TestGraph graph;
+	public AddTestEdgeAction(TestGraph graph, String name) {
+		super(name);
+		this.graph = graph;
+	}
+
+	@Override
+	protected TestEdge getNewEdge(TestVertex source, TestVertex target) {
+		return graph.addEdge(source, target);
 	}
 }

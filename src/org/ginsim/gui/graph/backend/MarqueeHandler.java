@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Vector;
 
-import org.ginsim.graph.EditGroup;
+import org.ginsim.gui.graph.EditMode;
 import org.ginsim.gui.shell.FrameActions;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
@@ -70,7 +70,7 @@ public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectio
 	public boolean isForceMarqueeEvent(MouseEvent e) {
 		currentObject = getObjectAtPoint(e.getPoint());
 		
-		if (actions.getCurrentGroup() != EditGroup.EDIT) {
+		if (actions.getCurrentGroup() != EditMode.EDIT) {
 			return true;
 		}
 		return super.isForceMarqueeEvent(e);
@@ -80,7 +80,7 @@ public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectio
 	@Override
 	public void mouseDragged(MouseEvent event) {
 		// If remembered Start Point is Valid
-		if (start != null && !event.isConsumed() && !(actions.getCurrentGroup() == EditGroup.EDGEPOINT)) {
+		if (start != null && !event.isConsumed() && !(actions.getCurrentGroup() == EditMode.EDGEPOINT)) {
 			// Fetch Graphics from Graph
 			Graphics g = jgraph.getGraphics();
 			// Xor-Paint the old Connector (Hide old Connector)
@@ -117,7 +117,7 @@ public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectio
 		Object obj = getObjectAtPoint(event.getPoint());
 		// Check Mode and Find Port
 		if (obj != null && !event.isConsumed() 
-			&& ( (obj instanceof Edge ) &&  actions.getCurrentGroup() == EditGroup.EDGEPOINT) ) {
+			&& ( (obj instanceof Edge ) &&  actions.getCurrentGroup() == EditMode.EDGEPOINT) ) {
 			// Set Cusor on Graph (Automatically Reset)
 			jgraph.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			// Consume Event
@@ -133,7 +133,7 @@ public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectio
 	public void mousePressed(MouseEvent event) {
 		if ( currentObject != null 
 			&& !(currentObject instanceof Edge) 
-			&& actions.getCurrentGroup() == EditGroup.EDGE ) {
+			&& actions.getCurrentGroup() == EditMode.EDGE ) {
 			// Remember Start Location
 			int cx = (int)jgraph.getCellBounds(currentObject).getCenterX();
 			int cy = (int)jgraph.getCellBounds(currentObject).getCenterY();
@@ -167,24 +167,26 @@ public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectio
 	    // If Valid Event, Current and First Port
 		if (event != null && !event.isConsumed() && leaveCell 
 			&& currentObject != null && firstObject != null 
-			&& actions.getCurrentGroup() == EditGroup.EDGE) {
+			&& actions.getCurrentGroup() == EditMode.EDGE) {
 		    
 			// Then Establish Connection
 			Object source = ((DefaultGraphCell)firstObject).getUserObject();
 			Object target = ((DefaultGraphCell)currentObject).getUserObject();
-		    graphUI.getGraph().addEdge(source, target, actions.getCurrentEditMode().getValue());
+			// FIXME: use an EditAction
+//		    graphUI.getGraph().addEdge(source, target, actions.getCurrentEditMode().getValue());
 			// Consume Event
 			event.consume();
 			jgraph.clearSelection();
 			actions.changeModeIfUnlocked();
-		} else if (event != null && actions.getCurrentGroup() == EditGroup.NODE) { 
+		} else if (event != null && actions.getCurrentGroup() == EditMode.NODE) { 
 
 		    // add the new vertex!
-			Object vertex = graphUI.getGraph().addVertex(actions.getCurrentEditMode().getValue());
+			// FIXME: use an EditAction
+//			Object vertex = graphUI.getGraph().addVertex(actions.getCurrentEditMode().getValue());
 			// FIXME: set position
 			// setPosition(vertex, (int)event.getPoint().getX(), (int)event.getPoint().getY(); 
 		    actions.changeModeIfUnlocked();
-		} else if (event != null && actions.getCurrentGroup() == EditGroup.EDGEPOINT) {
+		} else if (event != null && actions.getCurrentGroup() == EditMode.EDGEPOINT) {
 
             CellHandle hd=jgraph.getUI().getHandle();
             if (hd!=null) {

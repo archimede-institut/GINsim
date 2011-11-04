@@ -14,22 +14,6 @@ import org.ginsim.graph.Graph;
 public class TestGraphImpl extends AbstractGraphFrontend<TestVertex, TestEdge> implements TestGraph {
 
 	@Override
-	protected TestVertex createVertex(int mode) {
-		return new TestVertex();
-	}
-
-	@Override
-	protected TestEdge createEdge(TestVertex source, TestVertex target, int mode) {
-		return new TestEdge(source, target);
-	}
-
-	
-	@Override
-	public void specificMethod() {
-		// TODO: stuff... 
-	}
-
-	@Override
 	protected List doMerge(Graph<TestVertex, TestEdge> graph) {
 		// TODO Auto-generated method stub
 		return null;
@@ -41,4 +25,28 @@ public class TestGraphImpl extends AbstractGraphFrontend<TestVertex, TestEdge> i
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public TestVertex addVertex() {
+		TestVertex vertex = new TestVertex();
+		addVertexInBackend(vertex);
+		return vertex;
+	}
+
+	
+	/**
+	 * Add an edge between two vertices.
+	 * 
+	 * @param source source vertex for this edge
+	 * @param target target vertex for this edge
+	 * 
+	 * @return the new vertex
+	 */
+	@Override
+	public TestEdge addEdge(TestVertex source, TestVertex target) {
+		TestEdge edge = new TestEdge(source, target);
+		addEdgeInBackend(edge);
+		return edge;
+	}
+
 }

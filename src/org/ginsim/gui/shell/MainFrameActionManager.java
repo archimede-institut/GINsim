@@ -7,9 +7,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
 
-import org.ginsim.graph.EditGroup;
-import org.ginsim.graph.EditMode;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.graph.EditMode;
+import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsExportAction;
 import org.ginsim.gui.service.GsImportAction;
@@ -27,19 +27,19 @@ public class MainFrameActionManager implements FrameActions {
 	}
 	
 	@Override
-	public void setCurrentMode(EditMode mode, boolean lock) {
+	public void setCurrentMode(EditAction mode, boolean lock) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public EditMode getCurrentEditMode() {
+	public EditAction getCurrentEditMode() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public EditGroup getCurrentGroup() {
+	public EditMode getCurrentGroup() {
 		// TODO Auto-generated method stub
 		return null;
 	}

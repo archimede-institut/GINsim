@@ -34,64 +34,25 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		viewBackend = graphBackend.getGraphViewBackend();
 	}
 
-	
 	/**
-	 * Create a vertex object (but do not add it to the graph).
+	 * Add a vertex to this graph structure
 	 * 
-	 * @param mode
+	 * @param vertex
 	 * @return
 	 */
-	abstract protected V createVertex(int mode);
+	public boolean addVertexInBackend(V vertex) {
+		return graphBackend.addVertexInBackend(vertex);
+	}
 	
 	/**
-	 * Create an edge object (but do not add it to the graph).
+	 * Add an edge to this graph structure.
 	 * 
-	 * @param source
-	 * @param target
-	 * @param mode
+	 * @param edge
 	 * @return
 	 */
-	abstract protected E createEdge(V source, V target, int mode);
-
-	
-	/**
-	 * Hack required to forward the back-end to the GUI...
-	 * @return
-	 */
-	public GraphBackend<V, E> getBackend() {
-		return graphBackend;
+	public boolean addEdgeInBackend(E edge) {
+		return graphBackend.addEdgeInBackend(edge);
 	}
-
-	
-	/**
-	 * Add a new vertex.
-	 * 
-	 * @param mode
-	 * @return the new vertex
-	 */
-	@Override
-	public V addVertex(int mode) {
-		V vertex = createVertex(mode);
-		graphBackend.addVertexInBackend(vertex);
-		return vertex;
-	}
-
-	
-	/**
-	 * Add an edge between two vertices.
-	 * 
-	 * @param source source vertex for this edge
-	 * @param target target vertex for this edge
-	 * 
-	 * @return the new vertex
-	 */
-	@Override
-	public E addEdge(V source, V target, int mode) {
-		E edge = createEdge(source, target, mode);
-		graphBackend.addEdgeInBackend(edge);
-		return edge;
-	}
-
 	
     /**
      * Remove a vertex from the graph.
@@ -99,7 +60,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      * @param vertex
      * @return true if the vertex was effectively removed
      */ 
-	@Override
 	public boolean removeVertex(V vertex) {
 		return graphBackend.removeVertex(vertex);
 	}
@@ -111,11 +71,19 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      * @param edge
      * @return true if the edge was effectively removed
      */
-	@Override
 	public boolean removeEdge(E edge) {
 		return graphBackend.removeEdge(edge);
 	}
+
 	
+	/**
+	 * Hack required to forward the back-end to the GUI...
+	 * @return
+	 */
+	public GraphBackend<V, E> getBackend() {
+		return graphBackend;
+	}
+
 	
 	/**
 	 * @return the number of vertex in this graph.
@@ -219,7 +187,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     	return v;
 	}
 	
-	abstract protected List doMerge( Graph<V, E> graph);
+	abstract protected List<?> doMerge( Graph<V, E> graph);
 
 	@Override
 	public abstract Graph<V, E> getSubgraph(Collection<V> vertex, Collection<E> edges);
