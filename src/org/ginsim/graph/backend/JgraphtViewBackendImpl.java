@@ -18,17 +18,35 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
     private GsEdgeAttributesReader fbEReader = null;
     private GsVertexAttributesReader fbVReader = null;
 
+    GraphViewBackend backend = null;
+    
 	public JgraphtViewBackendImpl(JgraphtBackendImpl<?,?> jgraphtBackendImpl) {
 		this.graph = jgraphtBackendImpl;
 	}
 
 	public GsEdgeAttributesReader getEdgeReader() {
+		if (backend != null) {
+			return backend.getEdgeReader();
+		}
         return getFallBackEReader();
 	}
 	public GsVertexAttributesReader getVertexReader() {
+		if (backend != null) {
+			return backend.getVertexReader();
+		}
         return getFallBackVReader();
 	}
 
+	/**
+	 * Change the back-end used for graph view.
+	 * Used to switch from the generic back-end to a jgraph one.
+	 * @param backend
+	 */
+	public void setGraphViewBackend(GraphViewBackend backend) {
+		// FIXME: transfer view info from one to the other
+		this.backend = backend;
+	}
+	
 	/**
 	 * @return the place where local VS data is stored (create it if needed)
 	 * @see #hasFallBackVSData()

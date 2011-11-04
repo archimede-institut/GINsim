@@ -123,6 +123,9 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	 */
 	public void setGraphViewBackend(GraphViewBackend backend) {
 		if (graphViewBackend != null) {
+			if (graphViewBackend instanceof JgraphtViewBackendImpl) {
+				((JgraphtViewBackendImpl)graphViewBackend).setGraphViewBackend(backend);
+			}
 			// FIXME: transfer view info from one to the other
 		}
 		this.graphViewBackend = backend;
