@@ -15,6 +15,7 @@ import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.helper.GraphGUIHelper;
@@ -36,6 +37,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     private JGraphModelAdapter<V,E> m_jgAdapter;
     private GsJgraph jgraph;
     private final GraphGUIHelper<G,V,E> helper;
+    private final EditActionManager actionManager;
 
     Collection<E> sel_edges;
     Collection<V> sel_vertices;
@@ -49,8 +51,9 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		this.helper = helper;
 		backend.setGraphViewBackend(this);
 		
-		// FIXME: enable marquee handler when the actions are ready
-		// new MarqueeHandler<V, E>(this);
+		// create the action manager and marquee handler
+		actionManager = new EditActionManager(helper.getEditActions(graph));
+		new MarqueeHandler(this);
 	}
 	
 	public JGraph getJGraph() {
@@ -184,6 +187,11 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	@Override
 	public JPanel getInfoPanel() {
 		return helper.getInfoPanel( graph);
+	}
+
+	@Override
+	public EditActionManager getEditActionManager() {
+		return actionManager;
 	}
 }
 

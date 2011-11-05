@@ -76,6 +76,7 @@ public class MainFrame extends Frame implements NotificationSource {
         cst.weighty = 0;
         cst.fill = GridBagConstraints.HORIZONTAL;
         cst.anchor = GridBagConstraints.WEST;
+        toolbar.setFloatable(false);
 		contentPanel.add(toolbar, cst);
 
 		cst = new GridBagConstraints();

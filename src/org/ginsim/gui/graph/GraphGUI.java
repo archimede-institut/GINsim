@@ -2,6 +2,7 @@ package org.ginsim.gui.graph;
 
 import java.awt.Component;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JPanel;
@@ -52,7 +53,8 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	public GUIEditor<E> getEdgeEditionPanel();
 	
 	public JPanel getInfoPanel();
-	
+
+	public EditActionManager getEditActionManager();
 	
 // TODO Commented out for quick testing: remove comments	
 

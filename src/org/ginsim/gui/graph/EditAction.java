@@ -28,4 +28,12 @@ public class EditAction {
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Warn the edit action manager that this action was performed.
+	 * The manager will revert to the edit action is unlocked.
+	 */
+	public void performed(EditActionManager manager) {
+		manager.actionPerformed(this);
+	}
 }

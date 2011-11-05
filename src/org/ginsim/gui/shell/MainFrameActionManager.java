@@ -8,15 +8,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
 
 import org.ginsim.graph.Graph;
-import org.ginsim.gui.graph.EditMode;
-import org.ginsim.gui.graph.EditAction;
+import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsExportAction;
 import org.ginsim.gui.service.GsImportAction;
 import org.ginsim.gui.service.GsLayoutAction;
+import org.ginsim.gui.service.GsServiceGUIManager;
 import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
-import org.ginsim.gui.service.GsServiceGUIManager;
 
 public class MainFrameActionManager implements FrameActions {
 
@@ -27,41 +26,9 @@ public class MainFrameActionManager implements FrameActions {
 	}
 	
 	@Override
-	public void setCurrentMode(EditAction mode, boolean lock) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public EditAction getCurrentEditMode() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public EditMode getCurrentGroup() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void changeModeIfUnlocked() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public boolean shouldAutoAddNewElements() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public void setGraphGUI(GraphGUI<?,?,?> gui, JMenuBar menubar, JToolBar toolbar) {
 
 		Graph<?, ?> graph = gui.getGraph();
-		
-		// TODO: deal with the tool bar, view and edit menus
 		
 		// get Service-related actions
 		List<Action> actions = GsServiceGUIManager.getManager().getAvailableActions(graph);
@@ -89,9 +56,15 @@ public class MainFrameActionManager implements FrameActions {
 
 		// fill the menu bar
 		menubar.removeAll();
+		toolbar.removeAll();
 		menubar.add(GsFileCallBack.getFileMenu(graph, importMenu, exportMenu));
+		// TODO: the file menu should add some stuff to the toolbar as well
+		
+		EditActionManager editManager = gui.getEditActionManager();
+		editManager.addEditButtons(toolbar);
 		
 		JMenu menu = new JMenu("Edit");
+		// TODO: edit menu
 		menubar.add(menu);
 		
 		
