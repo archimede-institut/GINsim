@@ -1,13 +1,18 @@
 package org.ginsim.gui.graph;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 
 
 /**
@@ -66,6 +71,11 @@ public class EditActionManager {
 		} else {
 			selectedAction = action;
 			locked = false;
+		}
+		
+		// default action is always locked
+		if (action == EDIT_MODE) {
+			locked = true;
 		}
 		
 		// refresh buttons
@@ -139,21 +149,54 @@ class ChangeEditModeAction extends AbstractAction {
 }
 
 class EditActionSelectButton extends JToggleButton {
+	
+	// borders
+	private static final Border defaultBorder;
+	private static final Border selectedBorder;
+	private static final Border lockedBorder;
+	
+	static {
+		
+		// vertical and horizontal spacing
+		int v = 3, h = 4;
+		Border spacing = BorderFactory.createEmptyBorder(v,h,v,h);
+
+		v = 3;
+		h = 3;
+		// create the borders
+		Border inner = BorderFactory.createEtchedBorder( EtchedBorder.LOWERED);
+		Border empty = BorderFactory.createEmptyBorder( v,h,v,h);
+		Border outer = BorderFactory.createCompoundBorder( inner, empty);
+		defaultBorder = BorderFactory.createCompoundBorder( outer, spacing);
+		
+		inner = BorderFactory.createEtchedBorder( EtchedBorder.RAISED);
+		outer = BorderFactory.createCompoundBorder( inner, empty);
+		selectedBorder = BorderFactory.createCompoundBorder( outer, spacing);
+		
+		outer = BorderFactory.createMatteBorder( v,h,v,h, Color.GREEN);
+		outer = BorderFactory.createCompoundBorder( inner, outer);
+		lockedBorder = BorderFactory.createCompoundBorder( outer, spacing);
+	}
+	
 	private final EditAction action;
 	
 	protected EditActionSelectButton(ChangeEditModeAction action) {
 		super(action);
 		this.action = action.action;
+		System.out.println(getBorder());
 	}
 	
 	protected void setSelectedAction(EditAction action, boolean locked) {
 		if (this.action == action) {
 			setSelected(true);
 			if (locked) {
-				// TODO: change color for locked buttons
+				setBorder(lockedBorder);
+			} else {
+				setBorder(selectedBorder);
 			}
 		} else {
 			setSelected(false);
+			setBorder(defaultBorder);
 		}
 	}
 }
