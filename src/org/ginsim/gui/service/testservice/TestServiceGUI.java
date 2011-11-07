@@ -1,4 +1,4 @@
-package org.ginsim.gui.testservice;
+package org.ginsim.gui.service.testservice;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;

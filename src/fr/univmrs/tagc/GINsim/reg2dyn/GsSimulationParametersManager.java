@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
@@ -67,7 +70,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
         		paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 2);
     }
 
-	public Object doCreate(GsGraph graph) {
-		return new GsSimulationParameterList(graph);
+	public Object doCreate( Graph<?,?> graph) {
+		return new GsSimulationParameterList( graph);
 	}
 }

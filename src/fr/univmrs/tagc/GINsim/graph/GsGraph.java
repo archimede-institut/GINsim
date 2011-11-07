@@ -50,16 +50,16 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     protected boolean canDelete = false;
     protected boolean opening = false;
     protected boolean saved = true;
-    protected boolean isParsing = false;
+//    protected boolean isParsing = false;
     protected List nodeOrder = new ArrayList();
     protected GsGraphDescriptor descriptor = null;
-    protected List<GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
+//    protected List<GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
 
-    protected String graphName = "default_name";
+//    protected String graphName = "default_name";
 
     protected String tabLabel = "STR_tab_selection";
 
-    protected Annotation gsAnnotation = null;
+//    protected Annotation gsAnnotation = null;
     protected String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 
     private static List v_layout = null;
@@ -99,10 +99,10 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     private int id;
 
     // TODO specialize his variable on the specialized graph that require it
-    protected GsGraph associatedGraph = null;
-    protected String associatedID = null;
+//    protected GsGraph associatedGraph = null;
+//    protected String associatedID = null;
 
-    protected boolean annoted = false;
+//    protected boolean annoted = false;
     protected boolean extended = false;
     protected boolean compressed = true;
 
@@ -132,23 +132,24 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         eReader = graphManager.getEdgeAttributesReader();
     }
 
-    // TODO Usage? Where to move?
-    // should stay on server side: emit a signal when parsing is finished
-    // Needed as the graph data structure can be inconsistent during parsing
-    public void endParsing() {
-    	isParsing = false;
-    	for (GsGraphListener<V,E> l: listeners) {
-    		l.endParsing();
-    	}
-    }
+//    // TODO Usage? Where to move?
+      // TODO Remove : Moved to AbstractGraphFrontend 
+//    // should stay on server side: emit a signal when parsing is finished
+//    // Needed as the graph data structure can be inconsistent during parsing
+//    public void endParsing() {
+//    	isParsing = false;
+//    	for (GsGraphListener<V,E> l: listeners) {
+//    		l.endParsing();
+//    	}
+//    }
 
-    // TODO Usage? Where to move?
-    // stays on server side
-    // it is only used by the BiblioList to avoid errors during parsing that will be solved once all the data is here
-    // better solution is welcome
-    public boolean isParsing() {
-    	return isParsing;
-    }
+//    // TODO Usage? Where to move?
+//    // stays on server side
+//    // it is only used by the BiblioList to avoid errors during parsing that will be solved once all the data is here
+//    // better solution is welcome
+//    public boolean isParsing() {
+//    	return isParsing;
+//    }
     /**
      * set the save fileName.
      *
@@ -526,30 +527,30 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         return saveFileName;
     }
 
-    /**
-     * @return the name associated with this graph.
-     */
-    // TODO Move to AbstractGraphFrontend
-    public String getGraphName() {
-        return graphName;
-    }
-    /**
-     * changes (if success) the name associated with this graph.
-     * By default only valid xmlid are accepted.
-     *
-     * @param graphName the new name.
-     * @throws GsException if the name is invalid.
-     */
-    // TODO Move to AbstractGraphFrontend
-    public void setGraphName(String graphName) throws GsException {
-
-		if (!graphName.matches("[a-zA-Z_]+[a-zA-Z0-9_-]*")) {
-		    throw new GsException(GsException.GRAVITY_ERROR, "Invalid name");
-		}
-        this.graphName = graphName;
-        annoted = true;
-        fireMetaChange();
-    }
+//    /**
+//     * @return the name associated with this graph.
+//     */
+//    // TODO Move to AbstractGraphFrontend
+//    public String getGraphName() {
+//        return graphName;
+//    }
+//    /**
+//     * changes (if success) the name associated with this graph.
+//     * By default only valid xmlid are accepted.
+//     *
+//     * @param graphName the new name.
+//     * @throws GsException if the name is invalid.
+//     */
+//    // TODO Move to AbstractGraphFrontend
+//    public void setGraphName(String graphName) throws GsException {
+//
+//		if (!graphName.matches("[a-zA-Z_]+[a-zA-Z0-9_-]*")) {
+//		    throw new GsException(GsException.GRAVITY_ERROR, "Invalid name");
+//		}
+//        this.graphName = graphName;
+//        annoted = true;
+//        fireMetaChange();
+//    }
 
     /**
      * This function returns null by default, if not replaced, the frame will create generics buttons to
@@ -635,39 +636,39 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 		return v_action;
 	}
 
-    /**
-     * register a manager to open/save associated objects
-     *
-     * @param manager
-     */
-	// TODO Move to AbstractGraphFrontend
-    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
-        if (v_OManager == null) {
-            v_OManager = new Vector();
-        }
-            v_OManager.add(manager);
-    }
-    /**
-     * @return object managers
-     */
-    // TODO Move to AbstractGraphFrontend
-    public List getObjectManager() {
-        return v_OManager;
-    }
-
-    // TODO Move to AbstractGraphFrontend
-    public GsGraphAssociatedObjectManager getObjectManager(Object key) {
-    	if (v_OManager == null) {
-    		return null;
-    	}
-        for (int i=0 ; i<v_OManager.size() ; i++) {
-        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
-        	if (manager.getObjectName().equals(key)) {
-        		return manager;
-        	}
-        }
-        return null;
-    }
+//    /**
+//     * register a manager to open/save associated objects
+//     *
+//     * @param manager
+//     */
+//	// TODO Move to AbstractGraphFrontend
+//    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
+//        if (v_OManager == null) {
+//            v_OManager = new Vector();
+//        }
+//            v_OManager.add(manager);
+//    }
+//    /**
+//     * @return object managers
+//     */
+//    // TODO Move to AbstractGraphFrontend
+//    public List getObjectManager() {
+//        return v_OManager;
+//    }
+//
+//    // TODO Move to AbstractGraphFrontend
+//    public GsGraphAssociatedObjectManager getObjectManager(Object key) {
+//    	if (v_OManager == null) {
+//    		return null;
+//    	}
+//        for (int i=0 ; i<v_OManager.size() ; i++) {
+//        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+//        	if (manager.getObjectName().equals(key)) {
+//        		return manager;
+//        	}
+//        }
+//        return null;
+//    }
 
 	/**
 	 * @return a vector of layout actions for this kind of graph
@@ -721,104 +722,104 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	}
 	
 	
-	/**
-	 * add a graph listener
-	 * @param gl
-	 */
-	// TODO Move to AbstractGraphFrontend
-	public void addGraphListener(GsGraphListener gl) {
-		listeners.add(gl);
-	}
+//	/**
+//	 * add a graph listener
+//	 * @param gl
+//	 */
+//	// TODO Move to AbstractGraphFrontend
+//	public void addGraphListener(GsGraphListener gl) {
+//		listeners.add(gl);
+//	}
+//	
+//	
+//	/**
+//	 * remove a graph listener.
+//	 * @param gl
+//	 */
+//	// TODO Move to AbstractGraphFrontend
+//	public void removeGraphListener(GsGraphListener gl) {
+//		listeners.remove(gl);
+//	}
 	
-	
-	/**
-	 * remove a graph listener.
-	 * @param gl
-	 */
-	// TODO Move to AbstractGraphFrontend
-	public void removeGraphListener(GsGraphListener gl) {
-		listeners.remove(gl);
-	}
-	
-	/**
-	 * the graph has changed, all listeners will be notified.
-	 * it will also be marked as unsaved.
-	 * @param change
-     * @param data
-	 */
-	// TODO Move to AbstractGraphFrontend
-	public void fireGraphChange(int change, Object data) {
-		if (saved && !opening) {
-		    saved = false;
-		    if (mainFrame != null) {
-		        mainFrame.updateTitle();
-		    }
-		}
-
-        // TODO: extend this to support undo/redo and more events!
-        List l_cascade = new ArrayList();
-		switch (change) {
-		case CHANGE_EDGEADDED:
-			for (GsGraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.edgeAdded((E)data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-			}
-			break;
-		case CHANGE_EDGEREMOVED:
-			for (GsGraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.edgeRemoved((E)data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-			}
-			break;
-		case CHANGE_VERTEXADDED:
-			for (GsGraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.vertexAdded((V)data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-			}
-			break;
-        case CHANGE_VERTEXREMOVED:
-			for (GsGraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.vertexRemoved((V)data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-            }
-            break;
-        case CHANGE_MERGED:
-			for (GsGraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.graphMerged((List<V>)data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-            }
-            break;
-        case CHANGE_VERTEXUPDATED:
-			for (GsGraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.vertexUpdated((V)data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-            }
-            break;
-        case CHANGE_EDGEUPDATED:
-			for (GsGraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.edgeUpdated((E)data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-            }
-            break;
-		}
-        if (l_cascade.size() > 0) {
-            addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
-        }
-	}
+//	/**
+//	 * the graph has changed, all listeners will be notified.
+//	 * it will also be marked as unsaved.
+//	 * @param change
+//     * @param data
+//	 */
+//	// TODO Move to AbstractGraphFrontend
+//	public void fireGraphChange(int change, Object data) {
+//		if (saved && !opening) {
+//		    saved = false;
+//		    if (mainFrame != null) {
+//		        mainFrame.updateTitle();
+//		    }
+//		}
+//
+//        // TODO: extend this to support undo/redo and more events!
+//        List l_cascade = new ArrayList();
+//		switch (change) {
+//		case CHANGE_EDGEADDED:
+//			for (GsGraphListener<V, E> l: listeners) {
+//				GsGraphEventCascade gec = l.edgeAdded((E)data);
+//                if (gec != null) {
+//                    l_cascade.add(gec);
+//                }
+//			}
+//			break;
+//		case CHANGE_EDGEREMOVED:
+//			for (GsGraphListener<V, E> l: listeners) {
+//				GsGraphEventCascade gec = l.edgeRemoved((E)data);
+//                if (gec != null) {
+//                    l_cascade.add(gec);
+//                }
+//			}
+//			break;
+//		case CHANGE_VERTEXADDED:
+//			for (GsGraphListener<V, E> l: listeners) {
+//				GsGraphEventCascade gec = l.vertexAdded((V)data);
+//                if (gec != null) {
+//                    l_cascade.add(gec);
+//                }
+//			}
+//			break;
+//        case CHANGE_VERTEXREMOVED:
+//			for (GsGraphListener<V, E> l: listeners) {
+//				GsGraphEventCascade gec = l.vertexRemoved((V)data);
+//                if (gec != null) {
+//                    l_cascade.add(gec);
+//                }
+//            }
+//            break;
+//        case CHANGE_MERGED:
+//			for (GsGraphListener<V, E> l: listeners) {
+//				GsGraphEventCascade gec = l.graphMerged((List<V>)data);
+//                if (gec != null) {
+//                    l_cascade.add(gec);
+//                }
+//            }
+//            break;
+//        case CHANGE_VERTEXUPDATED:
+//			for (GsGraphListener<V, E> l: listeners) {
+//				GsGraphEventCascade gec = l.vertexUpdated((V)data);
+//                if (gec != null) {
+//                    l_cascade.add(gec);
+//                }
+//            }
+//            break;
+//        case CHANGE_EDGEUPDATED:
+//			for (GsGraphListener<V, E> l: listeners) {
+//				GsGraphEventCascade gec = l.edgeUpdated((E)data);
+//                if (gec != null) {
+//                    l_cascade.add(gec);
+//                }
+//            }
+//            break;
+//		}
+//        if (l_cascade.size() > 0) {
+//            addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
+//        }
+//	}
 
 	/**
 	 * panel to edit graph parameters, null by default => hidden.
@@ -970,7 +971,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 */
 	// TODO Remove this method:
 	// On GUI side:
-	//     - Copy method that get the selected vertex and edges and call the specialized vertex DoCopySelection() method
+	//     - Copy method that get the selected vertex and edges and call the specialized graph DoCopySelection() method
 	//        to obtain a graph
 	//     - call the server side on the merge( graph) method
 	public void paste( ) {
@@ -984,20 +985,20 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	    }
 	}
 
-	/**
-	 * open a graph from a file and merge it with the current one.
-	 */
-	// TODO REMOVE
-	public void merge() {
-	    GsGraph graph = GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(), null);
-	    if (graph != null) {
-	    	List v = doMerge(graph);
-	        if (v != null) {
-	        	fireGraphChange(CHANGE_MERGED, v);
-	        	graphManager.select(v);
-	        }
-	    }
-	}
+//	/**
+//	 * open a graph from a file and merge it with the current one.
+//	 */
+//	// TODO REMOVE
+//	public void merge() {
+//	    GsGraph graph = GsOpenAction.open(GsGinsimGraphDescriptor.getInstance(), null);
+//	    if (graph != null) {
+//	    	List v = doMerge(graph);
+//	        if (v != null) {
+//	        	fireGraphChange(CHANGE_MERGED, v);
+//	        	graphManager.select(v);
+//	        }
+//	    }
+//	}
 
 	/**
 	 * block editing mode for this graph.
@@ -1162,31 +1163,32 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         m_objects.remove(key);
     }
 
-	/**
-     * get the annotation associated with this graph.
-	 * @return the association associated with this graph
-	 */
-	public Annotation getAnnotation() {
-		if (gsAnnotation == null) {
-			gsAnnotation = new Annotation();
-		}
-		return gsAnnotation;
-	}
+//	/**
+//     * get the annotation associated with this graph.
+//	 * @return the association associated with this graph
+//	 */
+//	public Annotation getAnnotation() {
+//		if (gsAnnotation == null) {
+//			gsAnnotation = new Annotation();
+//		}
+//		return gsAnnotation;
+//	}
+//
+//    /**
+//     * @return true is the graph is empty
+//     */
+//    public boolean isEmpty() {
+//        return !annoted && getAnnotation().isEmpty() && graphManager.getVertexCount() == 0;
+//    }
 
-    /**
-     * @return true is the graph is empty
-     */
-    public boolean isEmpty() {
-        return !annoted && getAnnotation().isEmpty() && graphManager.getVertexCount() == 0;
-    }
-
-	/**
-     * get the DTD used by this graph (if relevant).
-	 * @return the (ginml) DTD for this graph
-	 */
-	public String getDTD() {
-		return dtdFile;
-	}
+//	/**
+//     * get the DTD used by this graph (if relevant).
+//	 * @return the (ginml) DTD for this graph
+//	 */
+//  REMOVE : Unused   
+//	public String getDTD() {
+//		return dtdFile;
+//	}
 
     /**
      * get the label to display in the "selected item" tab
@@ -1216,69 +1218,69 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         graphManager = null;
     }
 
-    /**
-     * @return the graph associated with this one.
-     */
-    public GsGraph getAssociatedGraph() {
-
-        if (associatedGraph == null && getAssociatedGraphID() != null) {
-            GsGraph ag = GsEnv.getRegistredGraph(associatedID);
-            if (ag != null) {
-                setAssociatedGraph(ag);
-            } else {
-                File f = new File(associatedID);
-                if (f.exists()) {
-                    ag = GsGinsimGraphDescriptor.getInstance().open(f);
-                    GsEnv.newMainFrame(ag);
-                    setAssociatedGraph(ag);
-                } else {
-                    GsEnv.error(new GsException(GsException.GRAVITY_INFO, "STR_openAssociatedGraphFailed"+"\n"+associatedID), mainFrame);
-                }
-            }
-        }
-
-        // check association
-        if (associatedGraph != null && !isAssociationValid(associatedGraph)) {
-            associatedGraph = null;
-            associatedID = null;
-        }
-
-        return associatedGraph;
-    }
-
-    /**
-     * test if a graph can be associated with this one.
-     * this is a default implementation and will always return false, override to do something usefull.
-     *
-     * @param graph
-     * @return true if this is a valid associated graph.
-     */
-    protected boolean isAssociationValid(GsGraph graph) {
-        if (graph == null) {
-            return false;
-        }
-        return false;
-    }
-
-    /**
-     * @param regGraph
-     */
-    public void setAssociatedGraph(GsGraph regGraph) {
-
-        if (regGraph == null || !isAssociationValid(regGraph)) {
-            return;
-        }
-
-        if (associatedGraph != null) {
-            associatedGraph.removeGraphListener(this);
-            associatedGraph.getGraphManager().getEventDispatcher().removeGraphChangeListener(this);
-            associatedGraph = null;
-            return;
-        }
-        associatedGraph = regGraph;
-        associatedGraph.addGraphListener(this);
-        regGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
-    }
+//    /**
+//     * @return the graph associated with this one.
+//     */
+//    public GsGraph getAssociatedGraph() {
+//
+//        if (associatedGraph == null && getAssociatedGraphID() != null) {
+//            GsGraph ag = GsEnv.getRegistredGraph(associatedID);
+//            if (ag != null) {
+//                setAssociatedGraph(ag);
+//            } else {
+//                File f = new File(associatedID);
+//                if (f.exists()) {
+//                    ag = GsGinsimGraphDescriptor.getInstance().open(f);
+//                    GsEnv.newMainFrame(ag);
+//                    setAssociatedGraph(ag);
+//                } else {
+//                    GsEnv.error(new GsException(GsException.GRAVITY_INFO, "STR_openAssociatedGraphFailed"+"\n"+associatedID), mainFrame);
+//                }
+//            }
+//        }
+//
+//        // check association
+//        if (associatedGraph != null && !isAssociationValid(associatedGraph)) {
+//            associatedGraph = null;
+//            associatedID = null;
+//        }
+//
+//        return associatedGraph;
+//    }
+//
+//    /**
+//     * test if a graph can be associated with this one.
+//     * this is a default implementation and will always return false, override to do something usefull.
+//     *
+//     * @param graph
+//     * @return true if this is a valid associated graph.
+//     */
+//    protected boolean isAssociationValid(GsGraph graph) {
+//        if (graph == null) {
+//            return false;
+//        }
+//        return false;
+//    }
+//
+//    /**
+//     * @param regGraph
+//     */
+//    public void setAssociatedGraph(GsGraph regGraph) {
+//
+//        if (regGraph == null || !isAssociationValid(regGraph)) {
+//            return;
+//        }
+//
+//        if (associatedGraph != null) {
+//            associatedGraph.removeGraphListener(this);
+//            associatedGraph.getGraphManager().getEventDispatcher().removeGraphChangeListener(this);
+//            associatedGraph = null;
+//            return;
+//        }
+//        associatedGraph = regGraph;
+//        associatedGraph.addGraphListener(this);
+//        regGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
+//    }
 
     public GsGraphEventCascade edgeAdded(E data) {
         setAssociatedGraph(null);
@@ -1328,41 +1330,42 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         }
     }
 
-    /**
-     * set the path to the associated graph.
-     * @param value
-     */
-    public void setAssociatedGraphID(String value) {
-        associatedID = value;
-    }
-    /**
-     * @return the ID (path) of the associated graph.
-     */
-    public String getAssociatedGraphID() {
-        if (associatedGraph != null) {
-            associatedID = associatedGraph.getSaveFileName();
-            if (associatedID == null) {
-                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_save")), mainFrame);
-                return null;
-            }
-        }
-
-        if (associatedID != null) {
-            File f = new File(associatedID);
-            if (!f.exists() || !f.canRead()) {
-                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_notfound")+associatedID), mainFrame);
-                associatedID = null;
-            }
-        } else {
-            GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_manual")), mainFrame);
-        }
-
-        if (associatedID == null) {
-            associatedID = GsOpenAction.selectFileWithOpenDialog(mainFrame);
-        }
-
-        return associatedID;
-    }
+//    /**
+//     * set the path to the associated graph.
+//     * @param value
+//     */
+//    public void setAssociatedGraphID(String value) {
+//        associatedID = value;
+//    }
+//    /**
+//     * @return the ID (path) of the associated graph.
+//     */
+//    public String getAssociatedGraphID() {
+//        if (associatedGraph != null) {
+//            associatedID = associatedGraph.getSaveFileName();
+//            if (associatedID == null) {
+//                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_save")), mainFrame);
+//                return null;
+//            }
+//        }
+//
+//        if (associatedID != null) {
+//            File f = new File(associatedID);
+//            if (!f.exists() || !f.canRead()) {
+//                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_notfound")+associatedID), mainFrame);
+//                associatedID = null;
+//            }
+//        } else {
+//            GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_manual")), mainFrame);
+//        }
+//
+//        if (associatedID == null) {
+//            associatedID = GsOpenAction.selectFileWithOpenDialog(mainFrame);
+//        }
+//
+//        return associatedID;
+//    }
+    
     /**
      * fire a change in the configuration of the graph (structural changes are handled by graphManager)
      */

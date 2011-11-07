@@ -3,6 +3,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.awt.GridBagConstraints;
 import java.util.Collection;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
@@ -23,7 +25,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 	public static final int PROP_ANNOTATION = 2;
 	public static final int PROP_RAW = 10;
 	
-	GsGraph graph;
+	Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph;
 	private GsGraphOrderList nodeList;
 
 	public RegulatoryGraphEditor() {
@@ -41,10 +43,10 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 	public void setEditedObject(Object o) {
 		if (o != this.graph) {
 			if (this.graph != null) {
-				this.graph.removeGraphListener(this);
+				this.graph.removeGraphListener( this);
 			}
-			this.graph = (GsGraph)o;
-			this.nodeList = new GsGraphOrderList(graph);
+			this.graph = (Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge>) o;
+			this.nodeList = new GsGraphOrderList( graph);
 			if (this.graph != null) {
 				this.graph.addGraphListener(this);
 			}
@@ -141,13 +143,13 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 class GsGraphOrderList extends SimpleGenericList {
 	GsRegulatoryGraph graph = null;
 	
-	GsGraphOrderList(GsGraph graph) {
+	GsGraphOrderList( Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph) {
 		super(graph.getNodeOrder());
 		if (graph instanceof GsRegulatoryGraph) {
 			canOrder = true;
 			canEdit = true;
 			nbAction = 1;
-			this.graph = (GsRegulatoryGraph)graph;
+			this.graph = (GsRegulatoryGraph) graph;
 		}
 	}
 	

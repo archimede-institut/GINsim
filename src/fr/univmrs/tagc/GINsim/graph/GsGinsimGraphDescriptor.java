@@ -164,7 +164,7 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                 if (map == null) {
                 	// try to restore associated data ONLY if no subgraph is selected
                 	// TODO: need to load associated entry with subgraphs
-                	List v_omanager = graph.getObjectManager();
+                	List v_omanager = graph.getObjectManagerList();
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
 	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);

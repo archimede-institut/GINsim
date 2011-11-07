@@ -44,7 +44,7 @@ public class GsSimulationParametersParser extends XMLHelper {
     /**
      * @param graph expected node order
      */
-    public GsSimulationParametersParser(GsRegulatoryGraph graph) {
+    public GsSimulationParametersParser( GsRegulatoryGraph graph) {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         paramLists = new GsSimulationParameterList(graph);

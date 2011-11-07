@@ -145,8 +145,8 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
 			out.write(">\n");
 			saveNode(out, mode, selectedOnly);
 			saveEdge(out, mode, selectedOnly);
-            if (gsAnnotation != null) {
-                gsAnnotation.toXML(out, null, 0);
+            if (graphAnnotation != null) {
+            	graphAnnotation.toXML(out, null, 0);
             }
 	  		out.write("\t</graph>\n");
 	  		out.write("</gxl>\n");

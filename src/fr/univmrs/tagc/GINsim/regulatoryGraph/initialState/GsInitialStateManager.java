@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -52,7 +53,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
         return list != null && !list.isEmpty();
     }
 
-	public Object doCreate(GsGraph graph) {
+	public Object doCreate( Graph graph) {
 		return new GsInitialStateList(graph);
 	}
 }
@@ -67,7 +68,7 @@ class initStateParser extends XMLHelper {
      * @param graph expected node order
      */
     public initStateParser(GsRegulatoryGraph graph) {
-        imanager = new GsInitialStateList(graph);
+        imanager = new GsInitialStateList( graph);
         list = imanager.getInitialStates();
         inputs = imanager.getInputConfigs();
     }

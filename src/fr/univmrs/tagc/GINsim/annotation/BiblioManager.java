@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.ginsim.graph.AbstractGraphFrontend;
 import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.GINsim.graph.BasicGraphAssociatedManager;
@@ -18,8 +19,8 @@ public class BiblioManager extends BasicGraphAssociatedManager {
 		AnnotationLink.addHelperClass("ref", key);
 	}
 	
-	public Object doCreate(GsGraph graph) {
-		return new BiblioList(graph);
+	public Object doCreate( AbstractGraphFrontend<?,?> graph) {
+		return new BiblioList( graph);
 	}
 
 	public Object doOpen(InputStream is, GsGraph graph) {

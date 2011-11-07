@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import javax.swing.JFileChooser;
 
+import org.ginsim.graph.AbstractGraphFrontend;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;
@@ -33,9 +34,9 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 	Map m_references = new HashMap();
 	Map m_used = new HashMap();
 	Ref curRef = null;
-	GsGraph graph;
+	AbstractGraphFrontend<?,?> graph;
 	
-	public BiblioList(GsGraph graph) {
+	public BiblioList( AbstractGraphFrontend<?,?> graph) {
 		this.graph = graph;
 		graph.addGraphListener(this);
 	}

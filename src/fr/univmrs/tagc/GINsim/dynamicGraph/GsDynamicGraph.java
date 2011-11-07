@@ -116,8 +116,8 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
 			out.write(">\n");
 			saveNode(out, mode, selectedOnly);
 			saveEdge(out, mode, selectedOnly);
-            if (gsAnnotation != null) {
-                gsAnnotation.toXML(out, null, 0);
+            if (graphAnnotation != null) {
+                graphAnnotation.toXML(out, null, 0);
             }
             // save the ref of the associated regulatory graph!
             if (associatedGraph != null) {

@@ -2,6 +2,9 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
 import java.util.Collection;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
@@ -20,8 +23,9 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
     String s_current;
     GsRegulatoryGraph graph;
 
-    public ModelSimplifierConfigList(GsGraph graph) {
-        this.graph = (GsRegulatoryGraph)graph;
+    public ModelSimplifierConfigList( Graph<GsRegulatoryVertex, GsRegulatoryMultiEdge> graph) {
+    	
+        this.graph = (GsRegulatoryGraph) graph;
     	prefix = "parameter_";
     	canAdd = true;
     	canEdit = true;

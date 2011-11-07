@@ -57,6 +57,6 @@ public class GsMutantListManager implements
     }
 
 	public Object doCreate(GsGraph graph) {
-		return new GsRegulatoryMutants((GsRegulatoryGraph)graph);
+		return new GsRegulatoryMutants( (GsRegulatoryGraph)graph);
 	}
 }

@@ -2,6 +2,9 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import java.util.Collection;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
@@ -30,13 +33,15 @@ public class GsSimulationParameterList extends SimpleGenericList<GsSimulationPar
     /**
      * @param graph
      */
-    public GsSimulationParameterList(GsGraph graph) {
+    public GsSimulationParameterList( Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph) {
+    	
     	this(graph, null);
     }
 
-    public GsSimulationParameterList(GsGraph graph, GsSimulationParameters param) {
-        this.graph = (GsRegulatoryGraph)graph;
-        imanager = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
+    public GsSimulationParameterList( Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph, GsSimulationParameters param) {
+    	
+        this.graph = (GsRegulatoryGraph) graph;
+        imanager = (GsInitialStateList) graph.getObject( GsInitialStateManager.key, true);
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
         pcmanager = new PriorityClassManager(this.graph);
@@ -46,7 +51,7 @@ public class GsSimulationParameterList extends SimpleGenericList<GsSimulationPar
     	canRemove = true;
     	canOrder = true;
         graph.addGraphListener(this);
-        GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
+        GsRegulatoryMutants mutants = (GsRegulatoryMutants) graph.getObject(GsMutantListManager.key, true);
         mutants.addListener(this);
         if (param == null) {
         	add();

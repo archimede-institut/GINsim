@@ -1,20 +1,50 @@
 package org.ginsim.graph;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Vector;
 
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 
+import fr.univmrs.tagc.GINsim.annotation.Annotation;
+import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
+import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
+import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
+import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascadeNotificationAction;
+import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
+import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
+import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, GraphView {
 
+    private static List<GsGraphAssociatedObjectManager> OBJECT_MANAGERS = null;
+	
+    protected String graphName = "default_name";
 	private final GraphBackend<V,E> graphBackend;
 	private final GraphViewBackend viewBackend;
+	
+	// List of the registered graph listeners
+    private List< GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
+    
+    // The annotation associated with the graph
+    protected Annotation graph_annotation = null;
 
+    
+    // TODO === List of variables that could be removed if a better solution is found =============
+    private boolean isParsing = false;
+    private Graph<?,?> associatedGraph = null;
+    private String associatedID = null;
+    protected boolean annoted = false;
 	
 	/**
 	 * Create a new graph with the default back-end.
@@ -173,23 +203,399 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		return viewBackend.getVertexReader();
 	}
 	
+	
+    /**
+     * @return true is the graph is empty
+     */
+    public boolean isEmpty() {
+        return !annoted && getAnnotation().isEmpty() && getVertexCount() == 0;
+    }
+	
+	
+    /**
+     * Launch the merge method on the specialized graph level, merging the current graph with the given one
+     * and fire a graph change event
+     * 
+     * @param graph the graph to merge with the current one
+     * @return 
+     */
 	@Override
-	public List merge( Graph<V, E> graph) {
+	public List<?> merge( Graph<V, E> graph) {
 		
-		this.doMerge( graph);
-		List v = this.doMerge(graph);
+		List<?> v = this.doMerge(graph);
         if (v != null) {
-        	//FIXME Change firegraphChange call
-        	//fireGraphChange( CHANGE_MERGED, v);
+        	fireGraphChange( CHANGE_MERGED, v);
         	//TODO Move the select on the GUI side
         	//graphManager.select(v);
         }
+        
     	return v;
 	}
 	
+	
+	/**
+	 * Specialized method that execute the merging of the given graph with the current one
+	 * Must be override at specialized graph level
+	 * 
+	 * @param graph
+	 * @return
+	 */
 	abstract protected List<?> doMerge( Graph<V, E> graph);
+	
 
+	/**
+	 * Specialized method that build the sub-graph corresponding to the given lists of vertices and edges
+	 * The returned graph contains clones of the given graph objects structured as they are in the current graph
+	 * 
+	 * @param vertex the list of vertex to include in the desired sub-graph
+	 * @param edges the list of edges to include in the sub-graph
+	 * @return a Graph containing clones of initial vertices and edges structured as they are in the current graph
+	 */
 	@Override
 	public abstract Graph<V, E> getSubgraph(Collection<V> vertex, Collection<E> edges);
+
+	
+    /**
+     * Give access to the name of the graph
+     * 
+     * @return the name associated with this graph.
+     */
+    public String getGraphName() {
+    	
+        return graphName;
+    }
+    
+    
+    /**
+     * changes (if success) the name associated with this graph.
+     * By default only valid xmlid are accepted.
+     *
+     * @param graphName the new name.
+     * @throws GsException if the name is invalid.
+     */
+    public void setGraphName( String graph_name) throws GsException {
+
+		if (!graph_name.matches("[a-zA-Z_]+[a-zA-Z0-9_-]*")) {
+		    throw new GsException(GsException.GRAVITY_ERROR, "Invalid name");
+		}
+        this.graphName = graph_name;
+        annoted = true;
+        fireMetaChange();
+    }
+    
+    
+	
+    //----------------------   EVENT MANAGEMENT METHODS --------------------------------------------
+	
+	/**
+	 * Register a listener on this graph
+	 * 
+	 * @param g_listener the graph listener
+	 */
+	public void addGraphListener(GsGraphListener<V,E> g_listener) {
+		
+		listeners.add( g_listener);
+	}
+	
+	
+	/**
+	 * Remove a graph listener from this graph
+	 * 
+	 * @param g_listener the graph listener to remove
+	 */
+	public void removeGraphListener( GsGraphListener<V,E> g_listener) {
+		
+		listeners.remove( g_listener);
+	}
+	
+    /**
+     * Associate the given graph to the current one
+     * 
+     * @param associated_graph
+     */
+    public void setAssociatedGraph( Graph<?,?> associated_graph) {
+
+        if (associated_graph == null || !isAssociationValid( associated_graph)) {
+            return;
+        }
+
+        if (associatedGraph != null) {
+            associatedGraph.removeGraphListener( this);
+            associatedGraph.getGraphManager().getEventDispatcher().removeGraphChangeListener(this);
+            associatedGraph = null;
+            return;
+        }
+        associatedGraph = associated_graph;
+        associatedGraph.addGraphListener(this);
+        associated_graph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
+    }
+	
+    
+    
+    //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
+
+	
+    /**
+     * @return the graph associated with this one.
+     */
+    public Graph<?,?> getAssociatedGraph() {
+
+        if ( associatedGraph == null && getAssociatedGraphID() != null) {
+            Graph<?,?> ag = GsEnv.getRegistredGraph( associatedID);
+            if (ag != null) {
+                setAssociatedGraph( ag);
+            } else {
+                File f = new File(associatedID);
+                if (f.exists()) {
+                    ag = GsGinsimGraphDescriptor.getInstance().open(f);
+                    GsEnv.newMainFrame(ag);
+                    setAssociatedGraph(ag);
+                } else {
+                    GsEnv.error(new GsException(GsException.GRAVITY_INFO, "STR_openAssociatedGraphFailed"+"\n"+associatedID), mainFrame);
+                }
+            }
+        }
+
+        // check association
+        if (associatedGraph != null && !isAssociationValid(associatedGraph)) {
+            associatedGraph = null;
+            associatedID = null;
+        }
+
+        return associatedGraph;
+    }
+    
+
+    
+    //----------------------   ANNOTATION METHODS --------------------------------------------
+
+    
+    
+	/**
+     * Give access to the annotation associated with this graph.
+     * 
+	 * @return the association associated with this graph
+	 */
+	public Annotation getAnnotation() {
+		if (graph_annotation == null) {
+			graph_annotation = new Annotation();
+		}
+		return graph_annotation;
+	}
+
+	
+	// ====================================================================================
+	// ====================================================================================
+	// METHODS THAT DO NOT APPEAR ON GRAPH INTERFACE 
+	// ====================================================================================
+	// ====================================================================================
+    
+	
+	// -------------------------  ASSOCIATED OBJECTS METHODS ---------------------------------
+	
+    /**
+     * Register a manager to open/save associated objects
+     *
+     * @param manager
+     */
+    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
+    	
+        if (OBJECT_MANAGERS == null) {
+        	OBJECT_MANAGERS = new Vector<GsGraphAssociatedObjectManager>();
+        }
+        OBJECT_MANAGERS.add( manager);
+    }
+    
+    
+    /**
+     * Give access to the list of registered object managers
+     * 
+     * @return the list of registered object managers
+     */
+    public List<GsGraphAssociatedObjectManager> getObjectManagerList() {
+    	
+        return OBJECT_MANAGERS;
+    }
+
+    /**
+     * Give access to the Object manager in charge of the given object
+     * 
+     * @return the Object manager in charge of the given object, null if no Manager is defined for this object
+     */
+    public GsGraphAssociatedObjectManager getObjectManager(Object key) {
+    	
+    	if (OBJECT_MANAGERS == null) {
+    		return null;
+    	}
+        for (int i=0 ; i < OBJECT_MANAGERS.size() ; i++) {
+        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager) OBJECT_MANAGERS.get(i);
+        	if (manager.getObjectName().equals( key)) {
+        		return manager;
+        	}
+        }
+        return null;
+    }
+
+    
+	// -------------------------  ASSOCIATED GRAPH METHODS ---------------------------------
+
+    
+    
+    /**
+     * test if a graph can be associated with this one.
+     * this is a default implementation and will always return false, override to do something usefull.
+     *
+     * @param graph
+     * @return true if this is a valid associated graph.
+     */
+    private boolean isAssociationValid( Graph<?,?> graph) {
+    	
+        return false;
+    }
+    
+    
+    /**
+     * set the path to the associated graph.
+     * @param value
+     */
+    public void setAssociatedGraphID(String value) {
+        associatedID = value;
+    }
+    
+    
+    /**
+     * @return the ID (path) of the associated graph.
+     */
+    public String getAssociatedGraphID() {
+        if (associatedGraph != null) {
+            associatedID = associatedGraph.getSaveFileName();
+            if (associatedID == null) {
+                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_save")), mainFrame);
+                return null;
+            }
+        }
+
+        if (associatedID != null) {
+            File f = new File(associatedID);
+            if (!f.exists() || !f.canRead()) {
+                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_notfound")+associatedID), mainFrame);
+                associatedID = null;
+            }
+        } else {
+            GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_manual")), mainFrame);
+        }
+
+        if (associatedID == null) {
+            associatedID = GsOpenAction.selectFileWithOpenDialog( mainFrame);
+        }
+
+        return associatedID;
+    }
+	
+    
+	// -------------------------  EVENT MANAGEMENT METHODS ---------------------------------
+
+	
+	/**
+	 * the graph has changed, all listeners will be notified.
+	 * it will also be marked as unsaved.
+	 * @param change
+     * @param data
+	 */
+	// TODO Move to AbstractGraphFrontend
+	public void fireGraphChange(int change, Object data) {
+		
+		if (saved && !opening) {
+		    saved = false;
+		    if (mainFrame != null) {
+		        mainFrame.updateTitle();
+		    }
+		}
+
+        // TODO: extend this to support undo/redo and more events!
+        List<GsGraphEventCascade> l_cascade = new ArrayList<GsGraphEventCascade>();
+		switch (change) {
+		case CHANGE_EDGEADDED:
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.edgeAdded((E) data);
+                if (gec != null) {
+                    l_cascade.add(gec);
+                }
+			}
+			break;
+		case CHANGE_EDGEREMOVED:
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.edgeRemoved((E) data);
+                if (gec != null) {
+                    l_cascade.add(gec);
+                }
+			}
+			break;
+		case CHANGE_VERTEXADDED:
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.vertexAdded((V) data);
+                if (gec != null) {
+                    l_cascade.add(gec);
+                }
+			}
+			break;
+        case CHANGE_VERTEXREMOVED:
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.vertexRemoved((V) data);
+                if (gec != null) {
+                    l_cascade.add(gec);
+                }
+            }
+            break;
+        case CHANGE_MERGED:
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.graphMerged((List<V>) data);
+                if (gec != null) {
+                    l_cascade.add(gec);
+                }
+            }
+            break;
+        case CHANGE_VERTEXUPDATED:
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.vertexUpdated((V) data);
+                if (gec != null) {
+                    l_cascade.add(gec);
+                }
+            }
+            break;
+        case CHANGE_EDGEUPDATED:
+			for (GsGraphListener<V, E> l: listeners) {
+				GsGraphEventCascade gec = l.edgeUpdated((E) data);
+                if (gec != null) {
+                    l_cascade.add(gec);
+                }
+            }
+            break;
+		}
+        if (l_cascade.size() > 0) {
+            addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
+        }
+	}
+	
+
+    /**
+     * 
+     * @return True if parsing is active, Flase if not
+     */
+    public boolean isParsing() {
+    	return isParsing;
+    }
+	
+    /**
+     * Inform the listeners of the graph that the parsing is finished
+     * 
+     */
+	public void endParsing() {
+    	isParsing = false;
+    	for (GsGraphListener<V,E> l: listeners) {
+    		l.endParsing();
+    	}
+    }
+
 
 }

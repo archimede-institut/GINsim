@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -77,7 +79,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
     public boolean isInput() {
         return isInput;
     }
-    public void setInput(boolean input, GsGraph graph) {
+    public void setInput(boolean input, AbstractGraphFrontend<?,?> graph) {
         if (input != this.isInput) {
             this.isInput = input;
             graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);

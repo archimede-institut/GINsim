@@ -3,6 +3,8 @@ package org.ginsim.graph;
 import java.util.Collection;
 import java.util.List;
 
+import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
+
 /**
  * Interface for the main objects: graphs.
  * 
@@ -125,4 +127,36 @@ public interface Graph<V,E extends Edge<V>> {
      * @param graph The graph to merge with the current graph
      */
     public List<?> merge( Graph<V,E> graph);
+    
+    
+	/**
+	 * Register a listener on this graph
+	 * 
+	 * @param g_listener the graph listener
+	 */
+    public void addGraphListener(GsGraphListener<V,E> g_listener);
+    
+    
+	/**
+	 * Remove a graph listener from this graph
+	 * 
+	 * @param g_listener the graph listener to remove
+	 */
+    public void removeGraphListener(GsGraphListener<V,E> g_listener);
+    
+    
+    /**
+     * Associate the given graph to the current one
+     * 
+     * @param associated_graph
+     */
+    public void setAssociatedGraph( Graph<?,?> associated_graph);
+    
+    
+    /**
+     * Given access to the graph that has been associated to the current graph
+     * 
+     * @return the graph associated with this one.
+     */
+    public Graph<?,?> getAssociatedGraph();
 }

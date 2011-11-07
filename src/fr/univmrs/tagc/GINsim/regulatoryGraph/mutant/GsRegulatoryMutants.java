@@ -18,6 +18,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
@@ -56,13 +59,13 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
     }
 
     Vector v_listeners = new Vector();
-    GsRegulatoryGraph graph;
+    Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph;
     
     /**
      * edit mutants associated with the graph
      * @param graph
      */
-    public GsRegulatoryMutants(GsRegulatoryGraph graph) {
+    public GsRegulatoryMutants( Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph) {
         this.graph = graph;
         graph.addGraphListener(this);
         

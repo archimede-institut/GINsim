@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -118,8 +119,9 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
         return paramList != null && paramList.getNbElements(null) > 0;
     }
 
-	public Object doCreate(GsGraph graph) {
-		return new ModelSimplifierConfigList(graph);
+	public Object doCreate( Graph<?,?> graph) {
+		
+		return new ModelSimplifierConfigList( graph);
 	}
 }
 
