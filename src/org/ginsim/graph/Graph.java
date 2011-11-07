@@ -4,9 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * Interface for the main objects: graphs.
@@ -174,25 +172,6 @@ public interface Graph<V,E extends Edge<V>> {
     
 	
     
-    //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
-	
-    
-    /**
-     * Associate the given graph to the current one
-     * 
-     * @param associated_graph
-     */
-    public void setAssociatedGraph( Graph<?,?> associated_graph);
-    
-    
-    /**
-     * Given access to the graph that has been associated to the current graph
-     * 
-     * @return the graph associated with this one.
-     */
-    public Graph<?,?> getAssociatedGraph();
-	
-    
     //----------------------   ANNOTATION METHODS --------------------------------------------
 
     
@@ -203,21 +182,4 @@ public interface Graph<V,E extends Edge<V>> {
 	 */
 	public Annotation getAnnotation();
 	
-	// -----------------------  ATTRIBUTE READERS METHODS ------------------------------------
-	
-    
-	/**
-	 * Give access to the attribute reader of edges
-	 * 
-	 * @return the attribute reader of edges
-	 */
-	public GsEdgeAttributesReader getEdgeAttributeReader();
-	
-	
-	/**
-	 * Give access to the attribute reader of vertices
-	 * 
-	 * @return the attribute reader of vertices
-	 */
-	public GsVertexAttributesReader getVertexAttributeReader();
 }

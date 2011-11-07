@@ -58,7 +58,7 @@ public class TestGraphGUIHelper implements GraphGUIHelper<TestGraph, TestVertex,
 	@Override
 	public List<EditAction> getEditActions(TestGraph graph) {
 		List<EditAction> actions = new ArrayList<EditAction>();
-		GsVertexAttributesReader reader = graph.getVertexReader();
+		GsVertexAttributesReader reader = graph.getVertexAttributeReader();
 		actions.add(new AddTestVertexAction(graph, "+ TV", reader));
 		actions.add(new AddTestEdgeAction(graph, "+ TE"));
 		return actions;

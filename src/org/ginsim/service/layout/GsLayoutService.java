@@ -26,7 +26,7 @@ public class GsLayoutService implements GsService {
     
     public static void runLayout(int ref, Graph graph, GraphView view) throws GsException {
 		// first count nodes in each category
-		GsVertexAttributesReader vreader = view.getVertexReader();
+		GsVertexAttributesReader vreader = view.getVertexAttributeReader();
 		int nbRoot = 0;
 		int nbStables = 0;
 		int nbClassic = 0;

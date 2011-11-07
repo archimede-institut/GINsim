@@ -1,6 +1,5 @@
 package org.ginsim.graph;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,19 +10,12 @@ import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascadeNotificationAction;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.common.GsException;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, GraphView {
 
@@ -46,8 +38,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
-    protected Graph<?,?> associatedGraph = null;
-    protected String associatedID = null;
     protected boolean annoted = false;
 	
 	/**
@@ -213,12 +203,12 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	}
 	
 	@Override
-	public GsEdgeAttributesReader getEdgeReader() {
+	public GsEdgeAttributesReader getEdgeAttributeReader() {
 		return viewBackend.getEdgeAttributeReader();
 	}
 	
 	@Override
-	public GsVertexAttributesReader getVertexReader() {
+	public GsVertexAttributesReader getVertexAttributeReader() {
 		return viewBackend.getVertexAttributeReader();
 	}
 	
@@ -326,66 +316,9 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		
 		listeners.remove( g_listener);
 	}
-	
-    /**
-     * Associate the given graph to the current one
-     * 
-     * @param associated_graph
-     */
-    public void setAssociatedGraph( Graph<?,?> associated_graph) {
 
-        if (associated_graph == null || !isAssociationValid( associated_graph)) {
-            return;
-        }
 
-        if (associatedGraph != null) {
-            associatedGraph.removeGraphListener( this);
-            associatedGraph.getGraphManager().getEventDispatcher().removeGraphChangeListener(this);
-            associatedGraph = null;
-            return;
-        }
-        associatedGraph = associated_graph;
-        associatedGraph.addGraphListener(this);
-        associated_graph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
-    }
-	
-    
-    
-    //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
 
-	
-    /**
-     * @return the graph associated with this one.
-     */
-    public Graph<?,?> getAssociatedGraph() {
-
-        if ( associatedGraph == null && getAssociatedGraphID() != null) {
-            Graph<?,?> ag = GsEnv.getRegistredGraph( associatedID);
-            if (ag != null) {
-                setAssociatedGraph( ag);
-            } else {
-                File f = new File(associatedID);
-                if (f.exists()) {
-                    ag = GsGinsimGraphDescriptor.getInstance().open(f);
-                    GsEnv.newMainFrame(ag);
-                    setAssociatedGraph(ag);
-                } else {
-                    GsEnv.error(new GsException(GsException.GRAVITY_INFO, "STR_openAssociatedGraphFailed"+"\n"+associatedID), mainFrame);
-                }
-            }
-        }
-
-        // check association
-        if (associatedGraph != null && !isAssociationValid(associatedGraph)) {
-            associatedGraph = null;
-            associatedID = null;
-        }
-
-        return associatedGraph;
-    }
-    
-
-    
     //----------------------   ANNOTATION METHODS --------------------------------------------
 
     
@@ -402,30 +335,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		return graphAnnotation;
 	}
 	
-	
-	// -----------------------  ATTRIBUTE READERS METHODS ------------------------------------
-	
-	/**
-	 * Give access to the attribute reader of edges
-	 * 
-	 * @return the attribute reader of edges
-	 */
-	public GsEdgeAttributesReader getEdgeAttributeReader() {
-		
-		return viewBackend.getEdgeAttributeReader();
-	}
-	
-	
-	/**
-	 * Give access to the attribute reader of vertices
-	 * 
-	 * @return the attribute reader of vertices
-	 */
-	public GsVertexAttributesReader getVertexAttributeReader() {
-		
-		return viewBackend.getVertexAttributeReader();
-	}
-
 	
 	// ====================================================================================
 	// ====================================================================================
@@ -480,64 +389,11 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     }
 
     
-	// -------------------------  ASSOCIATED GRAPH METHODS ---------------------------------
-
-    
-    
-    /**
-     * test if a graph can be associated with this one.
-     * this is a default implementation and will always return false, override to do something usefull.
-     *
-     * @param graph
-     * @return true if this is a valid associated graph.
-     */
-    private boolean isAssociationValid( Graph<?,?> graph) {
-    	
-        return false;
-    }
-    
-    
-    /**
-     * set the path to the associated graph.
-     * @param value
-     */
-    public void setAssociatedGraphID(String value) {
-        associatedID = value;
-    }
-    
-    
-    /**
-     * @return the ID (path) of the associated graph.
-     */
-    public String getAssociatedGraphID() {
-        if (associatedGraph != null) {
-            associatedID = associatedGraph.getSaveFileName();
-            if (associatedID == null) {
-                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_save")), mainFrame);
-                return null;
-            }
-        }
-
-        if (associatedID != null) {
-            File f = new File(associatedID);
-            if (!f.exists() || !f.canRead()) {
-                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_notfound")+associatedID), mainFrame);
-                associatedID = null;
-            }
-        } else {
-            GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_manual")), mainFrame);
-        }
-
-        if (associatedID == null) {
-            associatedID = GsOpenAction.selectFileWithOpenDialog( mainFrame);
-        }
-
-        return associatedID;
-    }
-	
-    
 	// -------------------------  EVENT MANAGEMENT METHODS ---------------------------------
 
+    public void fireMetaChange() {
+        fireGraphChange(CHANGE_METADATA, null);
+    }
 	
 	/**
 	 * the graph has changed, all listeners will be notified.
@@ -545,17 +401,10 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * @param change
      * @param data
 	 */
-	// TODO Move to AbstractGraphFrontend
 	public void fireGraphChange(int change, Object data) {
 		
-		if (saved && !opening) {
-		    saved = false;
-		    if (mainFrame != null) {
-		        mainFrame.updateTitle();
-		    }
-		}
-
-        // TODO: extend this to support undo/redo and more events!
+		// FIXME: saved status should be updated by the GUI
+		
         List<GsGraphEventCascade> l_cascade = new ArrayList<GsGraphEventCascade>();
 		switch (change) {
 		case CHANGE_EDGEADDED:
@@ -616,7 +465,8 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
             break;
 		}
         if (l_cascade.size() > 0) {
-            addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
+        	// FIXME: add back message upon modification cascade
+            //addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
         }
 	}
 	

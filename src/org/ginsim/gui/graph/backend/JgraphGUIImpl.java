@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -21,6 +22,9 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.helper.GraphGUIHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.jgraph.JGraph;
+import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -29,6 +33,7 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraph;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphEdgeAttribute;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphVertexAttribute;
+import fr.univmrs.tagc.GINsim.jgraph.GsParallelEdgeRouting;
 
 public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphViewBackend {
 
@@ -38,6 +43,9 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     private GsJgraph jgraph;
     private final GraphGUIHelper<G,V,E> helper;
     private final EditActionManager editActionManager;
+    
+    // TODO: should it be static, created later or what ?
+    private GsParallelEdgeRouting pedgerouting = new GsParallelEdgeRouting();
 
     Collection<E> sel_edges;
     Collection<V> sel_vertices;
@@ -193,6 +201,33 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	public EditActionManager getEditActionManager() {
 		return editActionManager;
 	}
+	
+	/**
+	 * Update edge routing upon removal (in case of cycle between 2 nodes.
+	 * 
+	 * Note: this was in the removeEdge() method of the jgraphtgraphmanager
+	 * TODO: call this upon edge removal
+	 * 
+	 * @param source
+	 * @param target
+	 */
+    public void edgeRemoved(E edge) {
+		DefaultEdge de = m_jgAdapter.getEdgeCell(edge);
+		if ( edge != null && GraphConstants.getRouting(de.getAttributes()) == pedgerouting) {
+			AttributeMap attr = de.getAttributes();
+		    de.getAttributes().remove(GraphConstants.ROUTING);
+	        List l = GraphConstants.getPoints(attr);
+            if (l != null) {
+                while ( l.size() > 2) {
+                    l.remove(1);
+                }
+                GraphConstants.setPoints(attr, l);
+            }
+
+			m_jgAdapter.cellsChanged(new Object[] {de});
+		}
+    }
+
 }
 
 enum GUIProperties {

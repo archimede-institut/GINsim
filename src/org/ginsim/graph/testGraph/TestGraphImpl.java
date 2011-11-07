@@ -29,7 +29,7 @@ public class TestGraphImpl extends AbstractGraphFrontend<TestVertex, TestEdge> i
 	@Override
 	public TestVertex addVertex() {
 		TestVertex vertex = new TestVertex();
-		addVertexInBackend(vertex);
+		super.addVertex(vertex);
 		return vertex;
 	}
 
@@ -45,7 +45,7 @@ public class TestGraphImpl extends AbstractGraphFrontend<TestVertex, TestEdge> i
 	@Override
 	public TestEdge addEdge(TestVertex source, TestVertex target) {
 		TestEdge edge = new TestEdge(source, target);
-		addEdgeInBackend(edge);
+		super.addEdge(edge);
 		return edge;
 	}
 

@@ -820,7 +820,14 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 //            addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
 //        }
 //	}
+//    /**
+//     * fire a change in the configuration of the graph (structural changes are handled by graphManager)
+//     */
+//    public void fireMetaChange() {
+//        fireGraphChange(CHANGE_METADATA, null);
+//    }
 
+	
 	/**
 	 * panel to edit graph parameters, null by default => hidden.
 	 * if you want one, just override this method and return your JPanel.
@@ -1282,54 +1289,54 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 //        regGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
 //    }
 
-    public GsGraphEventCascade edgeAdded(E data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-    public GsGraphEventCascade edgeRemoved(E data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-    public GsGraphEventCascade edgeUpdated(E data) {
-        return null;
-    }
-
-
-    public GsGraphEventCascade vertexAdded(V data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-
-	public GsGraphEventCascade graphMerged(Collection<V> data) {
-        setAssociatedGraph(null);
-		return null;
-	}
-    public GsGraphEventCascade vertexUpdated(V data) {
-        return null;
-    }
-
-    public GsGraphEventCascade vertexRemoved(Object data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-
-    public void graphChanged(GsNewGraphEvent event) {
-        if (event.getOldGraph() == associatedGraph) {
-            setAssociatedGraph(null);
-        }
-    }
-
-    public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
-    }
-
-    public void graphClosed(GsGraph graph) {
-        // it must be the associated regulatory graph
-        if (graph == associatedGraph) {
-            associatedID = associatedGraph.getSaveFileName();
-            setAssociatedGraph(null);
-        }
-    }
-
+//    public GsGraphEventCascade edgeAdded(E data) {
+//        setAssociatedGraph(null);
+//        return null;
+//    }
+//    public GsGraphEventCascade edgeRemoved(E data) {
+//        setAssociatedGraph(null);
+//        return null;
+//    }
+//    public GsGraphEventCascade edgeUpdated(E data) {
+//        return null;
+//    }
+//
+//
+//    public GsGraphEventCascade vertexAdded(V data) {
+//        setAssociatedGraph(null);
+//        return null;
+//    }
+//
+//	public GsGraphEventCascade graphMerged(Collection<V> data) {
+//        setAssociatedGraph(null);
+//		return null;
+//	}
+//    public GsGraphEventCascade vertexUpdated(V data) {
+//        return null;
+//    }
+//
+//    public GsGraphEventCascade vertexRemoved(Object data) {
+//        setAssociatedGraph(null);
+//        return null;
+//    }
+//
+//    public void graphChanged(GsNewGraphEvent event) {
+//        if (event.getOldGraph() == associatedGraph) {
+//            setAssociatedGraph(null);
+//        }
+//    }
+//
+//    public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
+//    }
+//
+//    public void graphClosed(GsGraph graph) {
+//        // it must be the associated regulatory graph
+//        if (graph == associatedGraph) {
+//            associatedID = associatedGraph.getSaveFileName();
+//            setAssociatedGraph(null);
+//        }
+//    }
+//
 //    /**
 //     * set the path to the associated graph.
 //     * @param value
@@ -1366,13 +1373,6 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 //        return associatedID;
 //    }
     
-    /**
-     * fire a change in the configuration of the graph (structural changes are handled by graphManager)
-     */
-    public void fireMetaChange() {
-        fireGraphChange(CHANGE_METADATA, null);
-    }
-
     // TODO: ideally move to the GUI
     // may be troublesome, also affects all other notification methods below
 	public void updateGraphNotificationMessage(GsGraph graph) {
