@@ -1005,7 +1005,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @param key
 	 * @see #removeBlockEdit(Object)
 	 */
-	// TODO Move on GUI Side (FrameActions)
+	// TODO Move on GUI Side (FrameActionManager)
 	public void addBlockEdit(Object key) {
 	    if (key == null) {
 	        return;
@@ -1020,7 +1020,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @return true if edit isn't blocked
 	 * @see #addBlockEdit(Object)
 	 */
-	// TODO Move on GUI Side (FrameActions)
+	// TODO Move on GUI Side (FrameActionManager)
 	public boolean isEditAllowed() {
 	    return v_blockEdit == null;
 	}
@@ -1029,7 +1029,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @param key
 	 * @see #addBlockEdit(Object)
 	 */
-	// TODO Move on GUI Side (FrameActions)
+	// TODO Move on GUI Side (FrameActionManager)
 	public void removeBlockEdit (Object key) {
 	    if (v_blockEdit == null) {
 	        return;
@@ -1047,7 +1047,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 *
 	 * @param key
 	 */
-	// TODO Move on GUI Side (FrameActions)
+	// TODO Move on GUI Side (FrameActionManager)
 	public void addBlockClose(Object key) {
 	    if (key == null) {
 	        return;
@@ -1062,7 +1062,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 * @param key
 	 * @see #addBlockClose(Object)
 	 */
-	// TODO Move on GUI Side (FrameActions)
+	// TODO Move on GUI Side (FrameActionManager)
 	public void removeBlockClose (Object key) {
 	    if (v_blockClose == null) {
 	        return;
@@ -1081,7 +1081,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @see #addBlockClose(Object)
      * @see #isSaved()
      */
-	// TODO Move on GUI Side (FrameActions)
+	// TODO Move on GUI Side (FrameActionManager)
     public boolean canClose() {
         return v_blockClose == null;
     }

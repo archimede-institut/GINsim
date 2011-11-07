@@ -10,13 +10,13 @@ import org.ginsim.gui.graph.GraphGUI;
 /**
  * Tentative replacement API for GsAction.
  * 
- * FIXME: plan/implement/polish FrameActions
+ * FIXME: plan/implement/polish FrameActionManager
  * 
  * @author Aurelien Naldi
  */
-public interface FrameActions {
+public interface FrameActionManager {
 
 	public static final int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 	
-	public void setGraphGUI(GraphGUI<?, ?, ?> graph, JMenuBar menubar, JToolBar toolbar);
+	public void buildActions(GraphGUI<?, ?, ?> graph, JMenuBar menubar, JToolBar toolbar);
 }

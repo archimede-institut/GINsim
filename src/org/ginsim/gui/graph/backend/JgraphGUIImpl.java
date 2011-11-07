@@ -19,7 +19,7 @@ import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.helper.GraphGUIHelper;
-import org.ginsim.gui.shell.FrameActions;
+import org.ginsim.gui.shell.FrameActionManager;
 import org.jgraph.JGraph;
 import org.jgrapht.ext.JGraphModelAdapter;
 
@@ -37,7 +37,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     private JGraphModelAdapter<V,E> m_jgAdapter;
     private GsJgraph jgraph;
     private final GraphGUIHelper<G,V,E> helper;
-    private final EditActionManager actionManager;
+    private final EditActionManager editActionManager;
 
     Collection<E> sel_edges;
     Collection<V> sel_vertices;
@@ -52,7 +52,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		backend.setGraphViewBackend(this);
 		
 		// create the action manager and marquee handler
-		actionManager = new EditActionManager(helper.getEditActions(graph));
+		editActionManager = new EditActionManager(helper.getEditActions(graph));
 		new MarqueeHandler(this);
 	}
 	
@@ -191,7 +191,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
 	@Override
 	public EditActionManager getEditActionManager() {
-		return actionManager;
+		return editActionManager;
 	}
 }
 
@@ -236,13 +236,13 @@ class ZoomAction extends AbstractAction {
 		
 		if (direction < 0) {
 			putValue(NAME, "Zoom out");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, FrameActions.MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, FrameActionManager.MASK));
 		} else if (direction > 0) {
 			putValue(NAME, "Zoom in");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, FrameActions.MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, FrameActionManager.MASK));
 		} else {
 			putValue(NAME, "Reset zoom level");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, FrameActions.MASK));
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, FrameActionManager.MASK));
 		}
 	}
 	

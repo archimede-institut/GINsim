@@ -11,7 +11,7 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import org.ginsim.graph.Graph;
-import org.ginsim.gui.shell.FrameActions;
+import org.ginsim.gui.shell.FrameActionManager;
 
 /**
  * Callbacks for the "File" menu
@@ -72,7 +72,7 @@ public class GsFileCallBack {
 class NewAction extends AbstractAction {
 	public NewAction() {
 		super("New");
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, FrameActions.MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, FrameActionManager.MASK));
 	}
 	
 	@Override
@@ -86,7 +86,7 @@ class OpenAction extends AbstractAction {
 	
 	public OpenAction() {
 		super("Open");
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, FrameActions.MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, FrameActionManager.MASK));
 	}
 	
 	@Override
@@ -103,7 +103,7 @@ class SaveAction extends AbstractAction {
 	
 	public SaveAction(Graph<?,?> g) {
 		super("Save");
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, FrameActions.MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, FrameActionManager.MASK));
 		this.g = g;
 	}
 	
@@ -121,7 +121,7 @@ class CloseAction extends AbstractAction {
 	
 	public CloseAction(Graph<?,?> g) {
 		super("Close");
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, FrameActions.MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, FrameActionManager.MASK));
 		this.g = g;
 	}
 	
@@ -136,7 +136,7 @@ class QuitAction extends AbstractAction {
 	
 	public QuitAction() {
 		super("Quit");
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, FrameActions.MASK));
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, FrameActionManager.MASK));
 	}
 	
 	@Override

@@ -73,7 +73,7 @@ public class GsServiceGUIManager{
 
 		List<Action> result = new ArrayList<Action>();
 		
-		List<GsService> server_services = GsServiceManager.getManager().getAvailableServices( graph);
+		List<GsService> server_services = GsServiceManager.getManager().getAvailableServices();
 		for( GsService server_service: server_services){
 			for( GsServiceGUI service: services) {
 				GUIFor gui_for = service.getClass().getAnnotation( GUIFor.class);

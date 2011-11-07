@@ -1,7 +1,5 @@
 package org.ginsim.service;
 
-import org.ginsim.graph.Graph;
-
 /**
  * This interface is the central interface for GINsim services.
  * GINsim services are separated in four kind of services, all of them represented by distinct abstract classes
@@ -23,11 +21,5 @@ import org.ginsim.graph.Graph;
 
 public interface GsService {
 
-	/**
-	 * Declare the graph class the service is providing services to
-	 * 
-	 * @return the served graph class
-	 */
-	public Class getServedGraphClass();
 	
 }

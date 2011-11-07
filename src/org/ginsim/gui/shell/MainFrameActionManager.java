@@ -17,7 +17,7 @@ import org.ginsim.gui.service.GsServiceGUIManager;
 import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
 
-public class MainFrameActionManager implements FrameActions {
+public class MainFrameActionManager implements FrameActionManager {
 
 	private void fillMenu(JMenu menu, List<Action> actions) {
 		for (Action action: actions) {
@@ -26,51 +26,50 @@ public class MainFrameActionManager implements FrameActions {
 	}
 	
 	@Override
-	public void setGraphGUI(GraphGUI<?,?,?> gui, JMenuBar menubar, JToolBar toolbar) {
+	public void buildActions(GraphGUI<?,?,?> gui, JMenuBar menubar, JToolBar toolbar) {
 
-		Graph<?, ?> graph = gui.getGraph();
+		Graph<?,?> graph = gui.getGraph();
 		
 		// get Service-related actions
 		List<Action> actions = GsServiceGUIManager.getManager().getAvailableActions(graph);
 
 		// add them to the right menus
-		JMenu importMenu = new JMenu("Import");
-		JMenu exportMenu = new JMenu("Export");
-		JMenu layoutMenu = new JMenu("Layout");
-		JMenu actionMenu = new JMenu("Actions");
+		JMenu importMenu = new JMenu( "Import");
+		JMenu exportMenu = new JMenu( "Export");
+		JMenu layoutMenu = new JMenu( "Layout");
+		JMenu actionMenu = new JMenu( "Actions");
 		for (Action action: actions) {
-			System.out.println("should add action: "+ action);
+			System.out.println( "should add action: "+ action);
 			if (action instanceof GsImportAction) {
-				importMenu.add(action);
+				importMenu.add( action);
 			}
 			else if (action instanceof GsExportAction) {
-				exportMenu.add(action);
+				exportMenu.add( action);
 			}
 			else if (action instanceof GsLayoutAction) {
-				layoutMenu.add(action);
+				layoutMenu.add( action);
 			}
 			else {
-				actionMenu.add(action);
+				actionMenu.add( action);
 			}
 		}
 
 		// fill the menu bar
 		menubar.removeAll();
 		toolbar.removeAll();
-		menubar.add(GsFileCallBack.getFileMenu(graph, importMenu, exportMenu));
+		menubar.add( GsFileCallBack.getFileMenu(graph, importMenu, exportMenu));
 		// TODO: the file menu should add some stuff to the toolbar as well
 		
 		EditActionManager editManager = gui.getEditActionManager();
-		editManager.addEditButtons(toolbar);
+		editManager.addEditButtons( toolbar);
 		
-		JMenu menu = new JMenu("Edit");
+		JMenu menu = new JMenu( "Edit");
 		// TODO: edit menu
-		menubar.add(menu);
+		menubar.add( menu);
 		
+		menubar.add( gui.getViewMenu( layoutMenu));
 		
-		menubar.add(gui.getViewMenu(layoutMenu));
-		
-		menubar.add(actionMenu);
+		menubar.add( actionMenu);
 		
 		menu = new JMenu("Help");
 		fillMenu(menu, GsHelpCallBack.getActions());

@@ -58,7 +58,7 @@ public class MainFrame extends Frame implements NotificationSource {
 
 	private NotificationPanel notificationPanel = new NotificationPanel(this);
 
-	private final FrameActions actions = new MainFrameActionManager();
+	private final FrameActionManager actionManager = new MainFrameActionManager();
 	
 	private static final boolean alwaysForceClose = false;
 
@@ -308,14 +308,16 @@ public class MainFrame extends Frame implements NotificationSource {
     }
 
     
-    private void setGraphView(Component view) {
-    	graphScrollPane.setViewportView(view);
+    private void fillGraphPane( Component view) {
+    	
+    	graphScrollPane.setViewportView( view);
     }
 
-    public void setGraphGUI(GraphGUI<?,?,?> gui) {
-    	actions.setGraphGUI(gui, menubar, toolbar);
-    	setGraphView(gui.getGraphComponent());
-    	editTabbedPane.setGraphGUI(gui);
+    public void buildFrameContent( GraphGUI<?,?,?> gui) {
+    	
+    	actionManager.buildActions( gui, menubar, toolbar);
+    	fillGraphPane( gui.getGraphComponent());
+    	editTabbedPane.buildEditionPanels( gui);
     }
     
 	@Override

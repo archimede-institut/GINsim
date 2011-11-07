@@ -129,7 +129,7 @@ public class EditPanel extends JTabbedPane {
         return false;
     }
 
-	public void setGraphGUI(GraphGUI<?, ?, ?> gui) {
+	public void buildEditionPanels(GraphGUI<?, ?, ?> gui) {
     	// TODO: add the edition panels at the right position
     	gui.getMainEditionPanel();
     	gui.getEdgeEditionPanel();

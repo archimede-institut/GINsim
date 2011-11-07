@@ -50,7 +50,7 @@ public class TestRefactor {
 	
 	public static MainFrame newFrame(GraphGUI<?,?,?> gui) {
 		MainFrame frame = new MainFrame("test", 800, 600);
-		frame.setGraphGUI(gui);
+		frame.buildFrameContent(gui);
 		frame.setVisible(true);
 		return frame;
 	}

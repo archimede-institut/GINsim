@@ -11,28 +11,28 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 public class JgraphtViewBackendImpl implements GraphViewBackend {
 
-	JgraphtBackendImpl<?, ?> graph;
+	JgraphtBackendImpl<?, ?> graphBackend;
 	
     private Map evsmap = null;
     private Map vvsmap = null;
     private GsEdgeAttributesReader fbEReader = null;
     private GsVertexAttributesReader fbVReader = null;
 
-    GraphViewBackend backend = null;
+    GraphViewBackend viewBackend = null;
     
 	public JgraphtViewBackendImpl(JgraphtBackendImpl<?,?> jgraphtBackendImpl) {
-		this.graph = jgraphtBackendImpl;
+		this.graphBackend = jgraphtBackendImpl;
 	}
 
 	public GsEdgeAttributesReader getEdgeReader() {
-		if (backend != null) {
-			return backend.getEdgeReader();
+		if (viewBackend != null) {
+			return viewBackend.getEdgeReader();
 		}
         return getFallBackEReader();
 	}
 	public GsVertexAttributesReader getVertexReader() {
-		if (backend != null) {
-			return backend.getVertexReader();
+		if (viewBackend != null) {
+			return viewBackend.getVertexReader();
 		}
         return getFallBackVReader();
 	}
@@ -44,7 +44,7 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
 	 */
 	public void setGraphViewBackend(GraphViewBackend backend) {
 		// FIXME: transfer view info from one to the other
-		this.backend = backend;
+		this.viewBackend = backend;
 	}
 	
 	/**

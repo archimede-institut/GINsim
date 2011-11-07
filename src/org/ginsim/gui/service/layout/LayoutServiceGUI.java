@@ -1,4 +1,4 @@
-package org.ginsim.gui.layout;
+package org.ginsim.gui.service.layout;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import org.ginsim.graph.GraphView;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.GsLayoutAction;
 import org.ginsim.gui.service.GsServiceGUI;
-import org.ginsim.layout.GsLayoutService;
+import org.ginsim.service.layout.GsLayoutService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.GsException;

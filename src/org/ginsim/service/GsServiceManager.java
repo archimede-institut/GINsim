@@ -34,6 +34,20 @@ public class GsServiceManager{
 	// The map establishing the correspondence between graph class and GraphGUIHelper instance
 	private List<GsService> services = new Vector<GsService>();
 	
+	
+	/**
+	 * Method providing access to the manager instance
+	 * 
+	 * @return the GsServiceManager singleton 
+	 */
+	public static GsServiceManager getManager(){
+		
+		if( manager == null){
+			manager = new GsServiceManager();
+		}
+		
+		return manager;
+	}
 
 	/**
 	 * Factory creator. Instantiate the manager and ask the ServiceLoader to load the GsService list.
@@ -56,44 +70,14 @@ public class GsServiceManager{
         }
 	}
 	
-	
 	/**
-	 * Method providing access to the manager instance
+	 * Give access to the list of available GsServices
 	 * 
-	 * @return the GsServiceManager singleton 
+	 * @return a List of available GsServices
 	 */
-	public static GsServiceManager getManager(){
+	public List<GsService> getAvailableServices(){
 		
-		if( manager == null){
-			manager = new GsServiceManager();
-		}
-		
-		return manager;
-	}
-	
-	/**
-	 * Give access to the list of GsService providing services to the given graph
-	 * 
-	 * @param graph The graph for which the requested service are providing services
-	 * @return a List of GsService providing service to the given graph.
-	 */
-	public List<GsService> getAvailableServices( Graph<?,?> graph){
-		
-		List<GsService> result = new Vector<GsService>();
-		
-		Class<?>[] graph_interfaces = graph.getClass().getInterfaces();
-		Iterator<GsService> service_ite = services.iterator();
-		while( service_ite.hasNext()) {
-			GsService service = (GsService) service_ite.next();
-			Class<?> served_graph = service.getServedGraphClass();
-			for(int i = 0; i < graph_interfaces.length; i++){
-				if( graph_interfaces[i].getName().equals( served_graph.getName())){
-					result.add( service);			
-				}
-			}
-		}
-		
-		return result;
+		return services;
 	}
 	
 }

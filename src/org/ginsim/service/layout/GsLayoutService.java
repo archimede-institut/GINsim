@@ -1,4 +1,4 @@
-package org.ginsim.layout;
+package org.ginsim.service.layout;
 
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.GraphView;
@@ -91,8 +91,4 @@ public class GsLayoutService implements GsService {
         }
     }
 
-	@Override
-	public Class getServedGraphClass() {
-		return TestGraph.class;
-	}
 }
