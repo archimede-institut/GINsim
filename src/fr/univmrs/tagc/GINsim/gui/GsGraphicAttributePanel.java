@@ -911,8 +911,8 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		if (graph == null) {
 			return;
 		}
-		vReader = view.getVertexReader();
-		eReader = view.getEdgeReader();
+		vReader = view.getVertexAttributeReader();
+		eReader = view.getEdgeAttributeReader();
 		reload();
 	}
 	

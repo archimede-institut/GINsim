@@ -43,7 +43,7 @@ public class GsDynamicItemAttributePanel extends GsParameterPanel {
 	 */
 	private javax.swing.JTable getJTable() {
 		if(jTable == null) {
-			GsDynamicItemModel model = new GsDynamicItemModel((GsDynamicGraph)graph);
+			GsDynamicItemModel model = new GsDynamicItemModel((GsDynamicGraph) graph);
             jTable = new EnhancedJTable(model);
 			jTable.setDefaultRenderer(Object.class, new GsDynamicItemCellRenderer());
 			jTable.setModel(model);

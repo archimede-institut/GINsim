@@ -21,7 +21,8 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 
 	public static final String key = "initialState";
 	
-    public Object doOpen(InputStream is, GsGraph graph) {
+    public Object doOpen(InputStream is,  Graph<?,?> graph) {
+    	
         initStateParser parser = new initStateParser((GsRegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();

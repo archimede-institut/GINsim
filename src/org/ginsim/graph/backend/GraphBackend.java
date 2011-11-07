@@ -65,6 +65,14 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	
     
 	/**
+	 * Give access to the vertex named with the given name
+	 * 
+	 * @param id name of a vertex
+	 * @return the vertex corresponding to this unique id or null if not found.
+	 */
+	public V getVertexByName( String id);
+    
+	/**
 	 * @return the number of vertex in this graph.
 	 */
 	public int getVertexCount();

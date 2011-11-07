@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -68,11 +70,11 @@ public class GsPetriNetExportINA extends GsAbstractExport {
 	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
 
 	protected void doExport(GsExportConfig config) {
-		GsGraph graph = config.getGraph();
+        Graph<?,?> graph = config.getGraph();
 
 		List v_no = graph.getNodeOrder();
         int len = v_no.size();
-        OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
+        OmddNode[] t_tree = ((GsRegulatoryGraph) graph).getAllTrees(true);
         List[] t_transition = new List[len];
         byte[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 

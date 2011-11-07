@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -41,7 +43,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /* **************** GETTER AND SETTERS ************/
 /* **************** UNIMPLEMENTED METHODS ************/
 
-public class GsHierarchicalTransitionGraph extends GsGraph<GsHierarchicalNode,GsDecisionOnEdge> {
+public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHierarchicalNode, GsDecisionOnEdge> {
 
 	public static final int MODE_SCC = 1;
 	public static final int MODE_HTG = 2;

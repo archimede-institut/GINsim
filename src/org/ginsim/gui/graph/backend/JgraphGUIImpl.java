@@ -66,12 +66,12 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	}
 	
 	@Override
-	public GsEdgeAttributesReader getEdgeReader() {
+	public GsEdgeAttributesReader getEdgeAttributeReader() {
 		return new GsJgraphEdgeAttribute(backend, m_jgAdapter, null);
 	}
 
 	@Override
-	public GsVertexAttributesReader getVertexReader() {
+	public GsVertexAttributesReader getVertexAttributeReader() {
 		return new GsJgraphVertexAttribute(m_jgAdapter, null);
 	}
 

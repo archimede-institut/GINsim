@@ -7,6 +7,8 @@ import java.util.*;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -296,14 +298,14 @@ class PNExportConfigPanel extends JPanel {
 	protected PNExportConfigPanel (GsExportConfig config, StackDialog dialog) {
     	config.setSpecificConfig(specConfig);
     	
-    	GsGraph graph = config.getGraph();
+    	Graph<?,?> graph = config.getGraph();
     	MutantSelectionPanel mutantPanel = null;
     	
     	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
     	initPanel.setParam(specConfig);
     	
     	setLayout(new GridBagLayout());
-    	mutantPanel = new MutantSelectionPanel(dialog, (GsRegulatoryGraph)graph, specConfig.store);
+    	mutantPanel = new MutantSelectionPanel(dialog, (GsRegulatoryGraph) graph, specConfig.store);
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
 		c.gridy = 1;

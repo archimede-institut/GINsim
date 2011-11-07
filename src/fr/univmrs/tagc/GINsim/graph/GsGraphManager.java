@@ -319,6 +319,7 @@ abstract public class GsGraphManager<V,E extends GsDirectedEdge<V>> {
 	 * @param id name of a vertex
 	 * @return the vertex corresponding to this uniq id or null if not found.
 	 */
+	// TODO : Remove: Moved to JgraphtBackendImpl
 	public V getVertexByName(String id) {
 		Iterator<V> it = getVertexIterator();
 		while (it.hasNext()) {

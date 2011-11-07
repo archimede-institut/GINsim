@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -34,7 +36,7 @@ public class GsRegulatoryFunctionTreeViewPlugin implements GsActionProvider, GsP
 		return t_action;
 	}
 	
-	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction(int actionType, int ref, Graph<?,?> graph, JFrame frame) throws GsException {
 		if (actionType != ACTION_ACTION) {
 			return;
 		}

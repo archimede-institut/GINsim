@@ -51,7 +51,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     protected boolean opening = false;
     protected boolean saved = true;
 //    protected boolean isParsing = false;
-    protected List nodeOrder = new ArrayList();
+//    protected List nodeOrder = new ArrayList();
     protected GsGraphDescriptor descriptor = null;
 //    protected List<GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
 
@@ -90,8 +90,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 
     protected static final String zip_prefix = "GINsim-data/";
 
-	protected GsVertexAttributesReader vReader;
-	protected GsEdgeAttributesReader eReader;
+//	protected GsVertexAttributesReader vReader;
+//	protected GsEdgeAttributesReader eReader;
 
     private Map m_objects = null;
 

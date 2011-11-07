@@ -3,6 +3,9 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.io.IOException;
 import java.util.List;
 
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
@@ -14,7 +17,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
 /**
  * This edge object allows to have several edges from a vertex to another
  */
-public class GsRegulatoryMultiEdge extends GsDirectedEdge<GsRegulatoryVertex> implements XMLize, ToolTipsable {
+public class GsRegulatoryMultiEdge extends Edge<GsRegulatoryVertex> implements XMLize, ToolTipsable {
 
 	/** array of sign's names */
 	static public final String[] SIGN = {"positive","negative","unknown"};
@@ -293,7 +296,7 @@ public class GsRegulatoryMultiEdge extends GsDirectedEdge<GsRegulatoryVertex> im
 	}
 
 	//protected void rescanSign(GsGraph graph) {
-	public void rescanSign(GsGraph graph) {
+	public void rescanSign( Graph graph) {
 		this.sign = edges[0].sign;
 		for (int i=0 ; i<edgecount ; i++) {
 			if ( edges[i].sign != sign) {
@@ -304,7 +307,7 @@ public class GsRegulatoryMultiEdge extends GsDirectedEdge<GsRegulatoryVertex> im
                 this.sign = GsEdgeAttributesReader.ARROW_DOUBLE;
 			}
 		}
-		GsEdgeAttributesReader ereader = graph.getGraphManager().getEdgeAttributesReader();
+		GsEdgeAttributesReader ereader = graph.getEdgeAttributeReader();
 		ereader.setEdge(this);
 		ereader.setLineEnd(sign);
 		ereader.refresh();

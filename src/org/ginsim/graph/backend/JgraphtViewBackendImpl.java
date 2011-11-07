@@ -24,15 +24,16 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
 		this.graphBackend = jgraphtBackendImpl;
 	}
 
-	public GsEdgeAttributesReader getEdgeReader() {
+	public GsEdgeAttributesReader getEdgeAttributeReader() {
+		
 		if (viewBackend != null) {
-			return viewBackend.getEdgeReader();
+			return viewBackend.getEdgeAttributeReader();
 		}
         return getFallBackEReader();
 	}
-	public GsVertexAttributesReader getVertexReader() {
+	public GsVertexAttributesReader getVertexAttributeReader() {
 		if (viewBackend != null) {
-			return viewBackend.getVertexReader();
+			return viewBackend.getVertexAttributeReader();
 		}
         return getFallBackVReader();
 	}

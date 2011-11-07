@@ -32,10 +32,13 @@ import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
+
 /**
  * The regulatory graph
  */
-public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegulatoryMultiEdge> implements GsGenericRegulatoryGraph {
+public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryVertex, GsRegulatoryMultiEdge> implements GsGenericRegulatoryGraph {
 
 	private JPanel optionPanel = null;
 	private ObjectEditor graphEditor;
@@ -45,7 +48,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     ObjectEditor vertexEditor = null;
 	private ObjectEditor edgeEditor;
 
-    private static GsGraph copiedGraph = null;
+    private static Graph copiedGraph = null;
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
 
     static {
@@ -66,7 +69,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
      * @param savefilename
      */
     public GsRegulatoryGraph(String savefilename, boolean parsing) {
-        super(GsRegulatoryGraphDescriptor.getInstance(), savefilename, parsing);
+        super( GsRegulatoryGraphDescriptor.getInstance(), savefilename, parsing);
         setDefaults();
     }
     /**
@@ -83,21 +86,18 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     private void setDefaults() {
         tabLabel = "STR_modelAttribute";
 
-        	vReader = graphManager.getVertexAttributesReader();
-        	eReader = graphManager.getEdgeAttributesReader();
-
-        vReader.setDefaultVertexSize(55, 25);
-        eReader.setDefaultEdgeSize(2);
+    	getVertexAttributeReader().setDefaultVertexSize(55, 25);
+    	getEdgeAttributeReader().setDefaultEdgeSize(2);
         canDelete = true;
     }
 
     protected GsRegulatoryVertex doInteractiveAddVertex(int param) {
 
-        while ( graphManager.getVertexByName("G" + nextid) != null) {
+        while ( getVertexByName("G" + nextid) != null) {
         		nextid++;
         }
         GsRegulatoryVertex obj = new GsRegulatoryVertex(nextid++, (GsRegulatoryGraph)graphManager.getGsGraph());
-        if (graphManager.addVertex(obj)) {
+        if (addVertex( obj)) {
         		nodeOrder.add(obj);
         		return obj;
         }
@@ -105,14 +105,14 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     }
 
     protected GsRegulatoryMultiEdge doInteractiveAddEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param) {
-    	GsRegulatoryMultiEdge obj = graphManager.getEdge(source, target);
+    	GsRegulatoryMultiEdge obj = getEdge(source, target);
     	if (obj != null) {
     		GsGraphNotificationAction action = new GsGraphNotificationAction() {
     			final String[] t_action = {"go"};
-				public boolean timeout(GsGraph graph, Object data) {
+				public boolean timeout( Graph graph, Object data) {
 					return true;
 				}
-				public boolean perform(GsGraph graph, Object data, int index) {
+				public boolean perform( Graph graph, Object data, int index) {
 					graph.getGraphManager().select(data);
 					return true;
 				}
@@ -129,8 +129,8 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     		return obj;
     	}
     	obj = new GsRegulatoryMultiEdge(source, target, param);
-    	graphManager.addEdge(obj);
-    	obj.rescanSign(this);
+    	addEdge(obj);
+    	obj.rescanSign( this);
     	target.incomingEdgeAdded(obj);
     	return obj;
     }
@@ -139,7 +139,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     	try {
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-			out.write("\t<graph id=\"" + graphName + "\"");
+			out.write("\t<graph id=\"" + getGraphName() + "\"");
 			out.write(" class=\"regulatory\"");
 			out.write(" nodeorder=\"" + stringNodeOrder() +"\"");
 			out.write(">\n");
@@ -166,11 +166,11 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         if (selectedOnly) {
         		it = graphManager.getFullySelectedEdgeIterator();
         } else {
-        		it = graphManager.getEdgeIterator();
+        		it = getEdges().iterator();
         }
         switch (mode) {
 	    	case 2:
-	    	    GsEdgeAttributesReader ereader = graphManager.getEdgeAttributesReader();
+	    	    GsEdgeAttributesReader ereader = getEdgeAttributeReader();
 		        while (it.hasNext()) {
 		        	GsRegulatoryMultiEdge edge = it.next();
 		            ereader.setEdge(edge);
@@ -196,18 +196,20 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     	if (selectedOnly) {
     		it = graphManager.getSelectedVertexIterator();
     	} else {
-    		it = graphManager.getVertexIterator();
+    		it = getVertices().iterator();
     	}
     	if ( mode >=0) {
     	}
 
+		GsVertexAttributesReader vReader = getVertexAttributeReader(); 
+    	
     	switch (mode) {
     		case 1:
     	        while (it.hasNext()) {
     	            Object vertex = it.next();
     	            String svs = "";
 	                vReader.setVertex(vertex);
-	                svs = GsGinmlHelper.getShortNodeVS(vReader);
+	                svs = GsGinmlHelper.getShortNodeVS( vReader);
     	            ((GsRegulatoryVertex)vertex).toXML(out, svs, mode);
     	        }
     			break;
@@ -228,20 +230,20 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         }
     }
 
-    /**
-     * @param edge
-     */
-    public void addToExistingEdge(GsRegulatoryMultiEdge edge) {
-        edge.addEdge(this);
-    }
-
-    /**
-     * @param edge
-     * @param param
-     */
-    public void addToExistingEdge(GsRegulatoryMultiEdge edge, int param) {
-        edge.addEdge(this);
-    }
+//    /**
+//     * @param edge
+//     */
+//    public void addToExistingEdge( GsRegulatoryMultiEdge edge) {
+//        edge.addEdge(this);
+//    }
+//
+//    /**
+//     * @param edge
+//     * @param param
+//     */
+//    public void addToExistingEdge(GsRegulatoryMultiEdge edge, int param) {
+//        edge.addEdge(this);
+//    }
 
     public ObjectEditor getEdgeEditor() {
     	if (edgeEditor == null) {
@@ -255,6 +257,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     	}
     	return vertexEditor;
     }
+    
     public Vector getEditingModes() {
         Vector v_mode = new Vector();
         v_mode.add(new GsEditModeDescriptor("STR_addGene", "STR_addGene_descr", ImageLoader.getImageIcon("insertsquare.gif"), GsActions.MODE_ADD_VERTEX, 0, KeyEvent.VK_G));
@@ -265,7 +268,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         return v_mode;
     }
     public boolean idExists(String newId) {
-        Iterator it = graphManager.getVertexIterator();
+        Iterator it = getVertices().iterator();
         while (it.hasNext()) {
             if (newId.equals(((GsRegulatoryVertex)it.next()).getId())) {
                 return true;
@@ -336,7 +339,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
             vertex.setName(name);
         }
         vertex.setMaxValue(max, this);
-        if (graphManager.addVertex(vertex)) {
+        if (addVertex(vertex)) {
         		nodeOrder.add(vertex);
         }
         return vertex;
@@ -374,22 +377,22 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         GsRegulatoryVertex source = null;
         GsRegulatoryVertex target = null;
 
-        source = (GsRegulatoryVertex) graphManager.getVertexByName(from);
+        source = (GsRegulatoryVertex) getVertexByName(from);
         if (from.equals(to)) {
             target = source;
         } else {
-            target = (GsRegulatoryVertex) graphManager.getVertexByName(to);
+            target = (GsRegulatoryVertex) getVertexByName(to);
         }
 
         if (source == null || target == null) {
             GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "STR_noSuchVertex"), null);
             return null;
         }
-        GsRegulatoryMultiEdge me = graphManager.getEdge(source, target);
+        GsRegulatoryMultiEdge me = getEdge(source, target);
         int index = 0;
         if (me == null) {
             me = new GsRegulatoryMultiEdge(source, target, sign, minvalue);
-            graphManager.addEdge(me);
+            addEdge(me);
         } else {
             index = me.addEdge(sign, minvalue, this);
         }
@@ -401,7 +404,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
      * @return a warning string if necessary
 	 */
 	public void canApplyNewMaxValue(GsRegulatoryVertex vertex, byte newMax, List l_fixable, List l_conflict) {
-		for (GsRegulatoryMultiEdge me: graphManager.getOutgoingEdges(vertex)) {
+		for (GsRegulatoryMultiEdge me: getOutgoingEdges(vertex)) {
 			me.canApplyNewMaxValue(newMax, l_fixable, l_conflict);
 		}
 	}
@@ -463,14 +466,15 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         return copiedGraph;
     }
 
-    protected List doMerge(GsGraph otherGraph) {
+    protected List doMerge( Graph<GsRegulatoryVertex, GsRegulatoryMultiEdge> otherGraph) {
         if (!(otherGraph instanceof GsRegulatoryGraph)) {
             return null;
         }
         List ret = new ArrayList();
         HashMap copyMap = new HashMap();
-        Iterator<GsRegulatoryVertex> it = otherGraph.getGraphManager().getVertexIterator();
-        GsVertexAttributesReader cvreader = otherGraph.getGraphManager().getVertexAttributesReader();
+        Iterator<GsRegulatoryVertex> it = otherGraph.getVertices().iterator();
+        GsVertexAttributesReader vReader = getVertexAttributeReader();
+        GsVertexAttributesReader cvreader = otherGraph.getVertexAttributeReader();
         while (it.hasNext()) {
             GsRegulatoryVertex vertexOri = (GsRegulatoryVertex)it.next();
             GsRegulatoryVertex vertex = (GsRegulatoryVertex)vertexOri.clone();
@@ -483,8 +487,9 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
             ret.add(vertex);
         }
 
-        Iterator<GsRegulatoryMultiEdge> it2 = otherGraph.getGraphManager().getEdgeIterator();
-        GsEdgeAttributesReader cereader = otherGraph.getGraphManager().getEdgeAttributesReader();
+        Iterator<GsRegulatoryMultiEdge> it2 = otherGraph.getEdges().iterator();
+        GsEdgeAttributesReader eReader = getEdgeAttributeReader();
+        GsEdgeAttributesReader cereader = otherGraph.getEdgeAttributeReader();
         while (it2.hasNext()) {
         	GsRegulatoryMultiEdge deOri = it2.next();
         	GsRegulatoryMultiEdge edge = doInteractiveAddEdge((GsRegulatoryVertex)copyMap.get(deOri.getSource()), (GsRegulatoryVertex)copyMap.get(deOri.getTarget()), 0);
@@ -497,7 +502,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
             ret.add(edge);
         }
 
-        it = otherGraph.getGraphManager().getVertexIterator();
+        it = otherGraph.getVertices().iterator();
         while (it.hasNext()) {
             it.next().cleanupInteractionForNewGraph(copyMap);
         }
@@ -508,23 +513,25 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
      */
     private void addVertexWithNewId(GsRegulatoryVertex vertex) {
         String id = vertex.getId();
-        if (graphManager.getVertexByName(id) == null) {
-            graphManager.addVertex(vertex);
+        if (getVertexByName(id) == null) {
+            addVertex(vertex);
             nodeOrder.add(vertex);
             return;
         }
         int addon = 1;
-        while ( graphManager.getVertexByName(id+"_"+addon) != null) {
+        while ( getVertexByName(id+"_"+addon) != null) {
             addon++;
         }
         vertex.setId(id+"_"+addon);
-        graphManager.addVertex(vertex);
+        addVertex(vertex);
         nodeOrder.add(vertex);
     }
 
-    protected GsGraph getSubGraph(Collection<GsRegulatoryVertex> v_vertex, Collection<GsRegulatoryMultiEdge> v_edges) {
+    protected Graph getSubGraph(Collection<GsRegulatoryVertex> v_vertex, Collection<GsRegulatoryMultiEdge> v_edges) {
+    	
         GsRegulatoryGraph copiedGraph = new GsRegulatoryGraph();
-        GsVertexAttributesReader cvreader = copiedGraph.getGraphManager().getVertexAttributesReader();
+        GsVertexAttributesReader vReader = getVertexAttributeReader();
+        GsVertexAttributesReader cvreader = copiedGraph.getVertexAttributeReader();
         HashMap copyMap = new HashMap();
         if (v_vertex != null) {
             for (GsRegulatoryVertex vertexOri: v_vertex) {
@@ -533,12 +540,13 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
                 vReader.setVertex(vertexOri);
                 cvreader.setVertex(vertex);
                 cvreader.copyFrom(vReader);
-                copyMap.put(vertexOri, vertex);
+                copyMap.put( vertexOri, vertex);
             }
         }
 
         if (v_edges != null) {
-            GsEdgeAttributesReader cereader = copiedGraph.getGraphManager().getEdgeAttributesReader();
+        	GsEdgeAttributesReader eReader = getEdgeAttributeReader();
+            GsEdgeAttributesReader cereader = copiedGraph.getEdgeAttributeReader();
 	        for (GsRegulatoryMultiEdge edgeOri: v_edges) {
 	        	GsRegulatoryMultiEdge edge = copiedGraph.doInteractiveAddEdge((GsRegulatoryVertex)copyMap.get(edgeOri.getSource()), (GsRegulatoryVertex)copyMap.get(edgeOri.getTarget()), 0);
 	            edge.copyFrom(edgeOri);
@@ -559,7 +567,7 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
         return copiedGraph;
     }
 
-    protected void setCopiedGraph(GsGraph graph) {
+    protected void setCopiedGraph( Graph graph) {
         if (graph != null && graph instanceof GsRegulatoryGraph) {
             copiedGraph = graph;
         } else {
@@ -617,9 +625,11 @@ public final class GsRegulatoryGraph extends GsGraph<GsRegulatoryVertex, GsRegul
     }
 
 	public List getNodeOrderForSimulation() {
+		
 		return getNodeOrder();
 	}
 	public OmddNode[] getParametersForSimulation(boolean focal) {
+		
 		return getAllTrees(focal);
 	}
 }

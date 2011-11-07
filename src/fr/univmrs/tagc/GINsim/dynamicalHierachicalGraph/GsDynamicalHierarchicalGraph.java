@@ -15,6 +15,10 @@ import java.util.regex.Pattern;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -27,7 +31,7 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchicalNode, GsDirectedEdge<GsDynamicalHierarchicalNode>> {
+public class GsDynamicalHierarchicalGraph extends AbstractGraphFrontend<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>> {
 
 	public final static String zip_mainEntry = "dynamicalHierarchicalGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
@@ -136,7 +140,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
         if (selectedOnly) {
         		it = graphManager.getFullySelectedEdgeIterator();
         } else {
-        		it = graphManager.getEdgeIterator();
+        		it = getEdges().iterator();
         }
         while (it.hasNext()) {
         	Object o_edge = it.next();
@@ -160,9 +164,9 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
     	if (selectedOnly) {
     		it = graphManager.getSelectedVertexIterator();
     	} else {
-    		it = graphManager.getVertexIterator();
+    		it = getVertices().iterator();
     	}
-    	GsVertexAttributesReader vReader = graphManager.getVertexAttributesReader();
+    	GsVertexAttributesReader vReader = getVertexAttributeReader();
         while (it.hasNext()) {
         	GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode)it.next();
             vReader.setVertex(vertex);
@@ -204,13 +208,14 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 	
 	/* adding edge and vertex */
   
-	/**
-	 * add a vertex to this graph.
-	 * @param vertex
-	 */
-	public boolean addVertex(GsDynamicalHierarchicalNode vertex) {
-		return graphManager.addVertex(vertex);
-	}
+//	/**
+//	 * add a vertex to this graph.
+//	 * @param vertex
+//	 */
+	// TODO to remove since it override an existing method on AbstractGraphFrontend doing the same thing
+//	public boolean addVertex(GsDynamicalHierarchicalNode vertex) {
+//		return graphManager.addVertex(vertex);
+//	}
 	/**
 	 * add an edge between source and target
 	 * @param source
@@ -219,7 +224,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 	 */
 	public GsDirectedEdge<GsDynamicalHierarchicalNode> addEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target) {
 		GsDirectedEdge<GsDynamicalHierarchicalNode> edge = new GsDirectedEdge<GsDynamicalHierarchicalNode>(source, target);
-		if (graphManager.addEdge(edge)) {
+		if (addEdge(edge)) {
 			return edge;
 		}
 		return null;
@@ -289,7 +294,8 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 	 * 
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	protected GsGraph getSubGraph(Collection vertex, Collection edges) {
+	@Override
+	public Graph getSubgraph(Collection vertex, Collection edges) {
 		return null;
 	}
 	
@@ -316,7 +322,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 	 * 
 	 * not used for this kind of graph: it has no meaning
      */
-	protected List doMerge(GsGraph otherGraph) {
+	protected List doMerge( Graph otherGraph) {
         return null;
     }
 
@@ -342,7 +348,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 		Pattern pattern = Pattern.compile(s.toString(), Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher("");
 		
-		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
+		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode) it.next();
 			matcher.reset(vertex.statesToString(this.getNodeOrder().size()));
 			if (matcher.find()) {
@@ -353,7 +359,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 	}
 	
 	public GsDynamicalHierarchicalNode getNodeForState(byte[] state) {
-		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
+		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
 			if (v.contains(state)) return v;
 		}
@@ -367,7 +373,7 @@ public class GsDynamicalHierarchicalGraph extends GsGraph<GsDynamicalHierarchica
 	 */
 	public GsDynamicalHierarchicalNode getNodeById(String sid) {
 		int id = Integer.parseInt(sid.substring(1));
-		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
+		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
 			if (v.getUniqueId() == id) return v;
 		}

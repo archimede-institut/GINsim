@@ -1,6 +1,7 @@
 package org.ginsim.graph.backend;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Edge;
@@ -55,6 +56,23 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	@Override
 	public Collection<V> getVertices() {
 		return vertexSet();
+	}
+	
+	/**
+	 * Give access to the vertex named with the given name
+	 * 
+	 * @param id name of a vertex
+	 * @return the vertex corresponding to this unique id or null if not found.
+	 */
+	public V getVertexByName( String id) {
+		Iterator<V> it = getVertices().iterator();
+		while (it.hasNext()) {
+			V vertex = it.next();
+			if (id.equals(vertex.toString())) {
+				return vertex;
+			}
+		}
+		return null;
 	}
 
 	@Override

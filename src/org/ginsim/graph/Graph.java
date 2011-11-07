@@ -3,7 +3,10 @@ package org.ginsim.graph;
 import java.util.Collection;
 import java.util.List;
 
+import fr.univmrs.tagc.GINsim.annotation.Annotation;
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * Interface for the main objects: graphs.
@@ -58,19 +61,15 @@ public interface Graph<V,E extends Edge<V>> {
 	 */
 	
     
+    
+	
+    //----------------------   GRAPH VERTICES AND EDGES MANAGEMENT METHODS -------------------------------
+
 	/**
 	 * @return the number of vertex in this graph.
 	 */
 	public int getVertexCount();
-
 	
-    /**
-     * @param source
-     * @param target
-     * @return the edge between source and target or null if not found.
-     */
-    public E getEdge(V source, V target);
-
     
     /**
      * @return a Collection of the graph vertices.
@@ -78,6 +77,23 @@ public interface Graph<V,E extends Edge<V>> {
     public Collection<V> getVertices();
     
     
+	/**
+	 * Give access to the vertex named with the given name
+	 * 
+	 * @param id name of a vertex
+	 * @return the vertex corresponding to this unique id or null if not found.
+	 */
+	public V getVertexByName( String id);
+	
+    
+    /**
+     * @param source
+     * @param target
+     * @return the edge between source and target or null if not found.
+     */
+    public E getEdge(V source, V target);
+    
+	
     /**
      * @return a Collection of the graph edges.
      */
@@ -112,6 +128,15 @@ public interface Graph<V,E extends Edge<V>> {
      */
     public Collection<E> getOutgoingEdges(V vertex);
     
+    
+    /**
+     * Give access to the name of the graph
+     * 
+     * @return the name associated with this graph.
+     */
+    public String getGraphName();
+    
+    
     /**
      * Build a graph from the provided vertices and edges based on the current graph
      * 
@@ -129,6 +154,9 @@ public interface Graph<V,E extends Edge<V>> {
     public List<?> merge( Graph<V,E> graph);
     
     
+	
+    //----------------------   EVENT MANAGEMENT METHODS --------------------------------------------
+	
 	/**
 	 * Register a listener on this graph
 	 * 
@@ -144,6 +172,10 @@ public interface Graph<V,E extends Edge<V>> {
 	 */
     public void removeGraphListener(GsGraphListener<V,E> g_listener);
     
+	
+    
+    //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
+	
     
     /**
      * Associate the given graph to the current one
@@ -159,4 +191,33 @@ public interface Graph<V,E extends Edge<V>> {
      * @return the graph associated with this one.
      */
     public Graph<?,?> getAssociatedGraph();
+	
+    
+    //----------------------   ANNOTATION METHODS --------------------------------------------
+
+    
+	/**
+     * Give access to the annotation associated with this graph.
+     * 
+	 * @return the association associated with this graph
+	 */
+	public Annotation getAnnotation();
+	
+	// -----------------------  ATTRIBUTE READERS METHODS ------------------------------------
+	
+    
+	/**
+	 * Give access to the attribute reader of edges
+	 * 
+	 * @return the attribute reader of edges
+	 */
+	public GsEdgeAttributesReader getEdgeAttributeReader();
+	
+	
+	/**
+	 * Give access to the attribute reader of vertices
+	 * 
+	 * @return the attribute reader of vertices
+	 */
+	public GsVertexAttributesReader getVertexAttributeReader();
 }

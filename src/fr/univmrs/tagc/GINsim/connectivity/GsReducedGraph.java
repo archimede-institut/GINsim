@@ -8,6 +8,10 @@ import java.util.*;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -21,7 +25,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * reduced Graph.
  */
-public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<GsNodeReducedData>> {
+public class GsReducedGraph extends AbstractGraphFrontend<GsNodeReducedData, Edge<GsNodeReducedData>> {
 
 	private ReducedParameterPanel parameterPanel = null;
     private JPanel optionPanel = null;
@@ -31,9 +35,9 @@ public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<Gs
 	/**
 	 * @param parent
 	 */
-	public GsReducedGraph(GsGraph parent) {
+	public GsReducedGraph( Graph parent) {
 	    this((String)null, false);
-        setAssociatedGraph(parent);
+        setAssociatedGraph( parent);
 	}
 	
     protected String getGraphZipName() {
@@ -113,11 +117,11 @@ public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<Gs
      * @throws IOException
      */
     private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-        Iterator<GsDirectedEdge<GsNodeReducedData>> it;
+        Iterator<Edge<GsNodeReducedData>> it;
         if (selectedOnly) {
         		it = graphManager.getFullySelectedEdgeIterator();
         } else {
-        		it = graphManager.getEdgeIterator();
+        		it = getEdges().iterator();
         }
         switch (mode) {
         	default:
@@ -142,12 +146,12 @@ public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<Gs
     	if (selectedOnly) {
     		it = graphManager.getSelectedVertexIterator();
     	} else {
-    		it = graphManager.getVertexIterator();
+    		it = getVertices().iterator();
     	}
-        	GsVertexAttributesReader vReader = null;
+        	GsVertexAttributesReader vReader = getVertexAttributeReader();
         	switch (mode) {
 	    		case 1:
-	    			vReader = graphManager.getVertexAttributesReader();
+
 	                while (it.hasNext()) {
 	                    Object vertex = it.next();
 	                    String content = ((GsNodeReducedData)vertex).getContentString();
@@ -158,7 +162,6 @@ public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<Gs
 	                }
 	    			break;
 				case 2:
-					vReader = graphManager.getVertexAttributesReader();
 	                while (it.hasNext()) {
 	                    Object vertex = it.next();
 	                    vReader.setVertex(vertex);
@@ -200,13 +203,14 @@ public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<Gs
 
 	public void removeEdge(GsDirectedEdge<GsNodeReducedData> edge) {
 	}
-	/**
-	 * add a vertex to this graph.
-	 * @param vertex the vertex to add.
-	 */
-	public void addVertex(GsNodeReducedData vertex) {
-		graphManager.addVertex(vertex);
-	}
+//	/**
+//	 * add a vertex to this graph.
+//	 * @param vertex the vertex to add.
+//	 */
+	// TODO remove since it duplicate a method existing on AbstractGraphFrontEnd
+//	public void addVertex(GsNodeReducedData vertex) {
+//		graphManager.addVertex(vertex);
+//	}
 	/**
 	 * add an edge to this graph.
 	 * @param source source vertex of this edge.
@@ -214,7 +218,7 @@ public class GsReducedGraph extends GsGraph<GsNodeReducedData, GsDirectedEdge<Gs
 	 */
 	public void addEdge(GsNodeReducedData source, GsNodeReducedData target) {
 		GsDirectedEdge<GsNodeReducedData> edge = new GsDirectedEdge<GsNodeReducedData>(source, target);
-		graphManager.addEdge(edge);
+		addEdge(edge);
 	}
 	public List getSpecificLayout() {
 		return GsReducedGraphDescriptor.getLayout();

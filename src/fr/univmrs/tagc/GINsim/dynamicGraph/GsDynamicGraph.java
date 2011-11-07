@@ -10,8 +10,13 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
+import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -34,7 +39,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * the dynamic (state transition) graph.
  */
-public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<GsDynamicNode>> implements
+public final class GsDynamicGraph extends AbstractGraphFrontend<GsDynamicNode, Edge<GsDynamicNode>> implements
 	GsGraphListener<GsDynamicNode, GsDirectedEdge<GsDynamicNode>>, GraphChangeListener {
 
     public final static String zip_mainEntry = "stateTransitionGraph.ginml";
@@ -156,9 +161,11 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
         if (selectedOnly) {
         		it = graphManager.getFullySelectedEdgeIterator();
         } else {
-        		it = graphManager.getEdgeIterator();
+        		it = getEdges().iterator();
         }
 
+        GsEdgeAttributesReader eReader = getEdgeAttributeReader();
+        
         switch (mode) {
         	case 2:
 		        while (it.hasNext()) {
@@ -199,11 +206,13 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
     	if (selectedOnly) {
     		it = graphManager.getSelectedVertexIterator();
     	} else {
-    		it = graphManager.getVertexIterator();
+    		it = getVertices().iterator();
     	}
+    	
+    	GsVertexAttributesReader vReader = getVertexAttributeReader();
+    	
         	switch (mode) {
 	    		case 1:
-	    			vReader = graphManager.getVertexAttributesReader();
 	                while (it.hasNext()) {
 	                    Object vertex = it.next();
 	                    vReader.setVertex(vertex);
@@ -214,7 +223,6 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
 	                }
 	    			break;
 				case 2:
-					vReader = graphManager.getVertexAttributesReader();
 	                while (it.hasNext()) {
 	                    Object vertex = it.next();
 	                    vReader.setVertex(vertex);
@@ -267,17 +275,22 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
 	 * @param state the state we want to add
 	 * @return the new GsDynamicNode.
 	 */
-	public boolean addVertex(byte[] state) {
-		return graphManager.addVertex(new GsDynamicNode(state));
+	public boolean addVertex( byte[] state) {
+		return addVertex( new GsDynamicNode(state));
 	}
-	/**
-	 * add a vertex to this graph.
-	 * @param vertex
-	 * @return the new GsDynamicNode.
-	 */
-	public boolean addVertex(GsDynamicNode vertex) {
-		return graphManager.addVertex(vertex);
-	}
+	
+	
+//	/**
+//	 * add a vertex to this graph.
+//	 * @param vertex
+//	 * @return the new GsDynamicNode.
+//	 */
+	// TODO REMOVE since it duplicate an existing method of AbstractGraphFrontend
+//	public boolean addVertex(GsDynamicNode vertex) {
+//		return addVertex( vertex);
+//	}
+	
+	
 	/**
 	 * add an edge between source and target
 	 * @param source
@@ -287,10 +300,11 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
 	 */
 	public GsDirectedEdge<GsDynamicNode> addEdge(GsDynamicNode source, GsDynamicNode target, boolean multiple) {
 		GsDirectedEdge<GsDynamicNode> edge = new GsDirectedEdge<GsDynamicNode>(source, target);
-		if (!graphManager.addEdge(edge)) {
+		if (!addEdge(edge)) {
 			return null;
 		}
 		if (multiple) {
+			GsEdgeAttributesReader eReader = getEdgeAttributeReader();
 			eReader.setEdge(edge);
 			eReader.setDash(dashpattern);
 		}
@@ -335,7 +349,7 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
     protected GsGraph getCopiedGraph() {
         return null;
     }
-    protected List doMerge(GsGraph otherGraph) {
+    protected List doMerge( Graph otherGraph) {
 
         // first check if this merge is allowed!
         if (!(otherGraph instanceof GsDynamicGraph)) {
@@ -352,8 +366,9 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
         }
 
         List ret = new ArrayList();
-        Iterator it = otherGraph.getGraphManager().getVertexIterator();
-        GsVertexAttributesReader cvreader = otherGraph.getGraphManager().getVertexAttributesReader();
+        Iterator it = otherGraph.getVertices().iterator();
+        GsVertexAttributesReader vReader = getVertexAttributeReader();
+        GsVertexAttributesReader cvreader = otherGraph.getVertexAttributeReader();
         while (it.hasNext()) {
             GsDynamicNode vertex = (GsDynamicNode)it.next();
             addVertex(vertex);
@@ -364,7 +379,7 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
             ret.add(vertex);
         }
 
-        it = otherGraph.getGraphManager().getEdgeIterator();
+        it = otherGraph.getEdges().iterator();
         while (it.hasNext()) {
             GsDirectedEdge edge = (GsDirectedEdge)it.next();
             GsDynamicNode from = (GsDynamicNode)edge.getSource();
@@ -394,7 +409,7 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
     public List getStableStates() {
         if (v_stables == null) {
             v_stables = new ArrayList();
-            Iterator it = graphManager.getVertexIterator();
+            Iterator it = getVertices().iterator();
             while (it.hasNext()) {
                 GsDynamicNode node = (GsDynamicNode)it.next();
                 if (node.isStable()) {
@@ -459,13 +474,13 @@ public final class GsDynamicGraph extends GsGraph<GsDynamicNode, GsDirectedEdge<
     public List byteestPath(byte[] source, byte[] target) {
         GsDynamicNode n = new GsDynamicNode(source);
         GsDynamicNode n2 = new GsDynamicNode(target);
-        if (graphManager.containsVertex(n) && graphManager.containsVertex(n2)) {
+        if (containsVertex(n) && containsVertex(n2)) {
             return graphManager.getShortestPath(n, n2);
         }
         return null;
     }
 
-    protected boolean isAssociationValid(GsGraph graph) {
+    protected boolean isAssociationValid( Graph<?,?> graph) {
         if (graph == null) {
             return true;
         }

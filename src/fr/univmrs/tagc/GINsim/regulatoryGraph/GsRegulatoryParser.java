@@ -13,6 +13,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -112,7 +113,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
      * @param map
      * @param graph the graph to fill with this data.
      */
-    public void parse(File file, Map map, GsGraph graph) {
+    public void parse(File file, Map map, Graph<?,?> graph) {
     	this.graph = (GsRegulatoryGraph) graph;
     	this.map = map;
 		  vareader = graph.getGraphManager().getVertexAttributesReader();

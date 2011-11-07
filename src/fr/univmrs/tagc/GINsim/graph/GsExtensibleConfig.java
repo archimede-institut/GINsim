@@ -1,11 +1,13 @@
 package fr.univmrs.tagc.GINsim.graph;
 
+import org.ginsim.graph.Graph;
+
 public class GsExtensibleConfig {
 
-	GsGraph graph;
+	Graph<?,?> graph;
 	Object specificConfig = null;
 
-	public GsExtensibleConfig(GsGraph graph) {
+	public GsExtensibleConfig( Graph<?,?> graph) {
 		this.graph = graph;
 	}
 	public Object getSpecificConfig() {
@@ -16,7 +18,8 @@ public class GsExtensibleConfig {
 		this.specificConfig = specificConfig;
 	}
 	
-	public GsGraph getGraph() {
+	public Graph<?,?> getGraph() {
+		
 		return graph;
 	}
 }

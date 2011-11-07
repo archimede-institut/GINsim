@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.gui;
 
 import javax.swing.JPanel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 
 /**
@@ -11,7 +13,7 @@ public abstract class GsParameterPanel extends JPanel {
 	private static final long	serialVersionUID	= 8326061792159035277L;
 	
 	protected GsMainFrame mainFrame;
-    protected GsGraph graph;
+    protected Graph<?,?> graph;
     
     /**
      * inform the panel that the select object changed.
@@ -22,15 +24,16 @@ public abstract class GsParameterPanel extends JPanel {
     /**
      * @param mainFrame
      */
-    public void setMainFrame(GsMainFrame mainFrame) {
+    public void setMainFrame( GsMainFrame mainFrame) {
         this.mainFrame = mainFrame;
-        setGraph(mainFrame.getGraph());
+        
+        setGraph( mainFrame.getGraph());
     }
     
     /**
      * @param graph
      */
-    public void setGraph(GsGraph graph) {
+    public void setGraph( Graph<?,?> graph) {
     	    this.graph = graph;
     }
 }

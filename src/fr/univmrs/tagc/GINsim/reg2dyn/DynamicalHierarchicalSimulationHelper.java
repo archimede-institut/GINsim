@@ -24,7 +24,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 		if (regGraph instanceof GsRegulatoryGraph) {
 			dynHieGraph.setAssociatedGraph(regGraph);
 		}
-		GsVertexAttributesReader vreader = dynHieGraph.getGraphManager().getVertexAttributesReader();
+		GsVertexAttributesReader vreader = dynHieGraph.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         dynHieGraph.getAnnotation().setComment(params.getDescr()+"\n");
         arcs = new HashMap();

@@ -3,7 +3,7 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
-import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
 
 /**
  * Implement this interface to save/open objects associated to graph automatically.
@@ -37,5 +37,5 @@ public interface GsGraphAssociatedObjectManager {
      * create the associated object for a graph
      * @param graph
      */
-	public Object doCreate( AbstractGraphFrontend<?,?> graph);
+	public Object doCreate( Graph<?,?> graph);
 }

@@ -69,6 +69,7 @@ public class CytoscapeExport extends GsAbstractExport {
 	 * @throws IOException
 	 */
 	protected synchronized void run() throws IOException {
+		
 		GsRegulatoryGraph graph = (GsRegulatoryGraph) config.getGraph();
 		fout = new FileWriter(config.getFilename());
 		out = new XMLWriter(fout, null);

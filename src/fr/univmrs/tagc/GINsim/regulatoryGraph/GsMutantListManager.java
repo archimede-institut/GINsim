@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
@@ -22,8 +24,8 @@ public class GsMutantListManager implements
 
 	public static final String key = "mutant";
 	
-    public Object doOpen(InputStream is, GsGraph graph) {
-        GsRegulatoryMutantParser parser = new GsRegulatoryMutantParser((GsRegulatoryGraph)graph);
+    public Object doOpen(InputStream is, Graph<?,?> graph) {
+        GsRegulatoryMutantParser parser = new GsRegulatoryMutantParser((GsRegulatoryGraph) graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
@@ -51,12 +53,14 @@ public class GsMutantListManager implements
         return "mutant";
     }
 
-    public boolean needSaving(GsGraph graph) {
-        GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject("mutant", false);
+    public boolean needSaving( Graph<?,?> graph) {
+    	
+        GsRegulatoryMutants lMutant = (GsRegulatoryMutants) graph.getObject("mutant", false);
         return lMutant != null && lMutant.getNbElements(null) > 0;
     }
 
-	public Object doCreate(GsGraph graph) {
+	public Object doCreate( Graph<?,?> graph) {
+		
 		return new GsRegulatoryMutants( (GsRegulatoryGraph)graph);
 	}
 }

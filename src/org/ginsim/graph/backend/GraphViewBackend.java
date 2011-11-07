@@ -5,7 +5,7 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 public interface GraphViewBackend{
 
-	public GsEdgeAttributesReader getEdgeReader();
-	public GsVertexAttributesReader getVertexReader();
+	public GsEdgeAttributesReader getEdgeAttributeReader();
+	public GsVertexAttributesReader getVertexAttributeReader();
 
 }

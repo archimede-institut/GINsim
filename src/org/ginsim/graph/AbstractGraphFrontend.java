@@ -29,21 +29,25 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 
     private static List<GsGraphAssociatedObjectManager> OBJECT_MANAGERS = null;
 	
-    protected String graphName = "default_name";
 	private final GraphBackend<V,E> graphBackend;
 	private final GraphViewBackend viewBackend;
+    
+	// The name of the graph
+	protected String graphName = "default_name";
+	// The list of vertices ordered as defined by the model
+	protected List<V> nodeOrder = new ArrayList<V>();
 	
 	// List of the registered graph listeners
-    private List< GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
+	protected List< GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
     
     // The annotation associated with the graph
-    protected Annotation graph_annotation = null;
+    protected Annotation graphAnnotation = null;
 
     
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
-    private Graph<?,?> associatedGraph = null;
-    private String associatedID = null;
+    protected Graph<?,?> associatedGraph = null;
+    protected String associatedID = null;
     protected boolean annoted = false;
 	
 	/**
@@ -68,9 +72,10 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * Add a vertex to this graph structure
 	 * 
 	 * @param vertex
-	 * @return
+	 * @return the created vertex
 	 */
-	public boolean addVertexInBackend(V vertex) {
+	public boolean addVertex( V vertex) {
+		
 		return graphBackend.addVertexInBackend(vertex);
 	}
 	
@@ -78,9 +83,10 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * Add an edge to this graph structure.
 	 * 
 	 * @param edge
-	 * @return
+	 * @return the created edge
 	 */
-	public boolean addEdgeInBackend(E edge) {
+	public boolean addEdge(E edge) {
+		
 		return graphBackend.addEdgeInBackend(edge);
 	}
 	
@@ -131,6 +137,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	@Override
 	public E getEdge(V source, V target) {
+		
 		return graphBackend.getEdge(source, target);
 	}
 
@@ -150,6 +157,18 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	@Override
 	public Collection<V> getVertices() {
 		return graphBackend.getVertices();
+	}
+	
+	/**
+	 * Give access to the vertex named with the given name
+	 * 
+	 * @param id name of a vertex
+	 * @return the vertex corresponding to this unique id or null if not found.
+	 */
+	@Override
+	public V getVertexByName( String id) {
+		
+		return graphBackend.getVertexByName( id);
 	}
 	
 	
@@ -195,12 +214,12 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	
 	@Override
 	public GsEdgeAttributesReader getEdgeReader() {
-		return viewBackend.getEdgeReader();
+		return viewBackend.getEdgeAttributeReader();
 	}
 	
 	@Override
 	public GsVertexAttributesReader getVertexReader() {
-		return viewBackend.getVertexReader();
+		return viewBackend.getVertexAttributeReader();
 	}
 	
 	
@@ -377,10 +396,34 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * @return the association associated with this graph
 	 */
 	public Annotation getAnnotation() {
-		if (graph_annotation == null) {
-			graph_annotation = new Annotation();
+		if (graphAnnotation == null) {
+			graphAnnotation = new Annotation();
 		}
-		return graph_annotation;
+		return graphAnnotation;
+	}
+	
+	
+	// -----------------------  ATTRIBUTE READERS METHODS ------------------------------------
+	
+	/**
+	 * Give access to the attribute reader of edges
+	 * 
+	 * @return the attribute reader of edges
+	 */
+	public GsEdgeAttributesReader getEdgeAttributeReader() {
+		
+		return viewBackend.getEdgeAttributeReader();
+	}
+	
+	
+	/**
+	 * Give access to the attribute reader of vertices
+	 * 
+	 * @return the attribute reader of vertices
+	 */
+	public GsVertexAttributesReader getVertexAttributeReader() {
+		
+		return viewBackend.getVertexAttributeReader();
 	}
 
 	

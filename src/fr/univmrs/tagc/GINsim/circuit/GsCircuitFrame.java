@@ -96,7 +96,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
      * @param frame
      * @param graph
      */
-    public GsCircuitFrame(JFrame frame, GsGraph graph) {
+    public GsCircuitFrame(JFrame frame, Graph<?,?> graph) {
         super(frame, "display.circuit", 500, 300);
         if (graph == null || !(graph instanceof GsRegulatoryGraph)) {
 			Tools.error("no graph", frame);

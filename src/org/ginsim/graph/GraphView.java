@@ -15,6 +15,18 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
  */
 public interface GraphView {
 
-	public GsEdgeAttributesReader getEdgeReader();
-	public GsVertexAttributesReader getVertexReader();
+	/**
+	 * Give access to the attribute reader of edges
+	 * 
+	 * @return the attribute reader of edges
+	 */
+	public GsEdgeAttributesReader getEdgeAttributeReader();
+	
+	
+	/**
+	 * Give access to the attribute reader of vertices
+	 * 
+	 * @return the attribute reader of vertices
+	 */
+	public GsVertexAttributesReader getVertexAttributeReader();
 }
