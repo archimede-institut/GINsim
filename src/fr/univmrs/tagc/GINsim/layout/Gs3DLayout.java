@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -22,8 +23,10 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.GsException;
 
-public class Gs3DLayout implements GsPlugin, GsActionProvider {
-    private static final int LAYOUT3D = 1;
+/**
+ * FIXME: port it to the new service API
+ */
+public class Gs3DLayout {
 	private GsEdgeAttributesReader ereader;
     private GsVertexAttributesReader vreader;
     private Color[] colorPalette;
@@ -32,37 +35,16 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
 
     private static int MARGIN = 10;
 	
-    private GsPluggableActionDescriptor[] t_layout = {
-		new GsPluggableActionDescriptor("STR_3D_placement", "STR_3D_placement_descr", null, this, ACTION_LAYOUT, LAYOUT3D),
-    };
-
-   public void registerPlugin() {
-        GsGraph.registerLayoutProvider(this);
-    }
-
-    public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-    	
-        if (actionType != ACTION_LAYOUT || !(graph instanceof GsDynamicGraph)) {
-            return null;
-        }
-        return t_layout;
-    }
-
-    public void runAction(int actionType, int ref, Graph graph, JFrame parent) throws GsException {
-        if (actionType != ACTION_LAYOUT) {
-            return;
-        }
- 
-        GsGraphManager gmanager = graph.getGraphManager();
-		Iterator it = gmanager.getVertexIterator();
+    public void layout(GsDynamicGraph graph) throws GsException {
+		Iterator it = graph.getVertices().iterator();
 		Object v = it.next();
 	    if (v == null || !(v instanceof GsDynamicNode)) {
 			System.out.println("wrong type of graph for this layout");
 	    	return;
 	    }
-		vreader = gmanager.getVertexAttributesReader();
-		ereader = gmanager.getEdgeAttributesReader();
-		List nodeOrder = ((GsDynamicGraph)graph).getAssociatedGraph().getNodeOrder();
+		vreader = graph.getVertexAttributeReader();
+		ereader = graph.getEdgeAttributeReader();
+		List nodeOrder = graph.getAssociatedGraph().getNodeOrder();
 	    byte[] maxValues = getMaxValues(nodeOrder);
         initColorPalette(maxValues.length);
 	    //move the nodes
@@ -78,9 +60,7 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
     	moveVertex(vertex, maxValues);
     	
     	//move the edges
-    	it = gmanager.getEdgeIterator();
-    	while (it.hasNext()) {
-    		GsDirectedEdge edge = (GsDirectedEdge) it.next();
+    	for (Edge edge: graph.getEdges()) {
     		moveEdge(edge, maxValues);
     	}
     }

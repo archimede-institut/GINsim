@@ -45,9 +45,10 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StockButton;
 
-public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
-    private static final int MULTIDIMENTION = 1;
-    
+/**
+ * FIXME: port it to the new service API
+ */
+public class GsMultidimentionLayout {
     private Color[] colorPalette;
 
     private static final int padx = 25;
@@ -58,10 +59,6 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
     
     private int pivot;
    
-    
-    private GsPluggableActionDescriptor[] t_layout = {
-		new GsPluggableActionDescriptor("STR_multidimention_placement", "STR_multidimention_placement_descr", null, this, ACTION_LAYOUT, MULTIDIMENTION),
-    };
 	private GsEdgeAttributesReader ereader;
     private GsVertexAttributesReader vreader;
 	private byte[] newNodeOrder;
@@ -74,25 +71,9 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
 
 	private boolean useStraightEdges;
 	
-    public void registerPlugin() {
-        GsGraph.registerLayoutProvider(this);
-    }
-
-    public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-    	
-        if (actionType != ACTION_LAYOUT || !(graph instanceof GsDynamicGraph)) {
-            return null;
-        }
-        return t_layout;
-    }
-
-    public void runAction(int actionType, int ref, Graph graph, JFrame parent) throws GsException {
-        if (actionType != ACTION_LAYOUT) {
-            return;
-        }
-        this.graph = (GsDynamicGraph)graph;
+    public void layout( GsDynamicGraph graph, JFrame parent) throws GsException {
+        this.graph = graph;
         initGUI(parent);
-        
     }
     
     private void initGUI(JFrame parent) {
@@ -201,7 +182,7 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
 	    }
 		vreader = graph.getVertexAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
-	    byte[] maxValues = getMaxValues(((GsDynamicGraph)graph).getAssociatedGraph().getNodeOrder());
+	    byte[] maxValues = getMaxValues(graph.getAssociatedGraph().getNodeOrder());
 	    
 	    //move the nodes
 	    GsDynamicNode vertex = (GsDynamicNode)v;
