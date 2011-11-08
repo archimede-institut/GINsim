@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.export.generic;
+package org.ginsim.service.export;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -6,14 +6,18 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 import org.jgraph.util.Bezier;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Tools;
 
@@ -27,21 +31,19 @@ public class GsSVGExport {
      * @param selectedOnly
      * @param fileName
      */
-    public static void exportSVG( Graph graph, boolean selectedOnly, String fileName) {
+	public static void exportSVG( Graph graph, Collection vertices,  Collection<Edge> edges, String fileName) {
 		try {
 	        FileWriter out = new FileWriter(fileName);
 
-	        Iterator itNodes, itEdges;
             GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
             GsEdgeAttributesReader ereader = graph.getEdgeAttributeReader();
-            if (selectedOnly) {
-                itNodes = graph.getGraphManager().getSelectedVertexIterator();
-                itEdges = graph.getGraphManager().getFullySelectedEdgeIterator();
-            } else {
-                itNodes = graph.getVertices().iterator();
-                itEdges = graph.getEdges().iterator();
+            if (edges == null) {
+                edges = graph.getEdges();
             }
-            int[] tmax = getmax(itNodes, itEdges, vreader, ereader);
+            if (vertices == null) {
+                vertices = graph.getVertices();
+            }
+            int[] tmax = getmax(vertices, edges, vreader, ereader);
 
 	        out.write("<?xml version='1.0' encoding='iso-8859-1' ?>\n");
 	        out.write("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20001102//EN\" \"http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd\">\n");
@@ -49,29 +51,17 @@ public class GsSVGExport {
 	        
 	        Map boxes = new HashMap();
 	        Map m_marker = new HashMap();
-            if (selectedOnly) {
-                itNodes = graph.getGraphManager().getSelectedVertexIterator();
-                itEdges = graph.getGraphManager().getFullySelectedEdgeIterator();
-            } else {
-                itNodes = graph.getVertices().iterator();
-                itEdges = graph.getEdges().iterator();
-            }
-	        while (itNodes.hasNext()) {
-	            Object obj = itNodes.next();
+	        for (Object obj: vertices) {
 	            vreader.setVertex(obj);
 	            writeVertex(out, obj, vreader);
 	            boxes.put(obj, new Rectangle(vreader.getX(), vreader.getY(), vreader.getWidth(), vreader.getHeight()));
 	        }
 	        
-	        while (itEdges.hasNext()) {
-	            Object obj = itEdges.next();
+	        for (Edge edge: edges) {
 	            Rectangle2D box1=null,  box2=null;
-	            if (obj instanceof GsDirectedEdge) {
-	                GsDirectedEdge e = (GsDirectedEdge)obj;
-                    box1 = (Rectangle2D)boxes.get(e.getSource());
-                    box2 = (Rectangle2D)boxes.get(e.getTarget());
-	            }
-	            ereader.setEdge(obj);
+                box1 = (Rectangle2D)boxes.get(edge.getSource());
+                box2 = (Rectangle2D)boxes.get(edge.getTarget());
+	            ereader.setEdge(edge);
 	            writeEdge(out, box1, box2, ereader, m_marker);
 	        }
 	        
@@ -89,11 +79,11 @@ public class GsSVGExport {
      * @param ereader edge attribute reader
      * @return a integer array containing x,y max coordinates
      */
-    public static int[] getmax(Iterator itNodes, Iterator itEdges, GsVertexAttributesReader vreader, GsEdgeAttributesReader ereader) {
+    public static int[] getmax(Collection vertices, Collection<Edge> edges, GsVertexAttributesReader vreader, GsEdgeAttributesReader ereader) {
         int[] tmax = new int[2];
         int value;
-        while (itNodes.hasNext()) {
-            vreader.setVertex(itNodes.next());
+        for (Object v: vertices) {
+            vreader.setVertex(v);
             value = vreader.getX() + vreader.getWidth();
             if (value > tmax[0]) {
                 tmax[0] = value;
@@ -104,8 +94,8 @@ public class GsSVGExport {
             }
         }
     
-        while (itEdges.hasNext()) {
-            ereader.setEdge(itEdges.next());
+        for (Edge e: edges) {
+            ereader.setEdge(e);
             List points = ereader.getPoints();
             if (points == null) {
                 continue;

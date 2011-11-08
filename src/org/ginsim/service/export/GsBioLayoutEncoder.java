@@ -1,15 +1,15 @@
-package fr.univmrs.tagc.GINsim.export.generic;
+package org.ginsim.service.export;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.GsException;
 
 /**
@@ -23,7 +23,7 @@ public class GsBioLayoutEncoder {
 	 * @param selectedOnly
 	 * @param fileName
 	 */
-	public static void encode( Graph graph, boolean selectedOnly, String fileName) {
+	public static void encode( Graph graph, Collection<Edge<?>> edges, String fileName) {
 		hash = new Hashtable();
 		try {
 	        FileWriter out = new FileWriter(fileName);
@@ -33,20 +33,13 @@ public class GsBioLayoutEncoder {
 	        Iterator it;
 	        
 	        // Process Edges
-	        if (selectedOnly) {
-	        	it = graph.getGraphManager().getFullySelectedEdgeIterator();
-	        } else {
-	        	it = graph.getEdges().iterator();
+	        if (edges == null) {
+	        	edges = graph.getEdges();
 	        }
-	        while (it.hasNext()) {
-	        	Object edge = it.next();
-	        	Object from = null;
-	        	Object to = null;
-	        	if (edge instanceof GsDirectedEdge) {
-	        		from = ((GsDirectedEdge)edge).getSource();
-	        		to = ((GsDirectedEdge)edge).getTarget();
-		        	out.write(from + "\t" + to + "\n");
-	        	}
+	        for (Edge edge: edges) {
+        		Object from = edge.getSource();
+        		Object to = edge.getTarget();
+	        	out.write(from + "\t" + to + "\n");
 	        }
 	
 			// Close main tags

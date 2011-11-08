@@ -9,9 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.ginsim.service.export.Dotify;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.export.generic.Dotify;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
 

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.export.generic;
+package org.ginsim.service.export;
 
 /**
  * Indicates a class can be dumped into dot (graphviz language)

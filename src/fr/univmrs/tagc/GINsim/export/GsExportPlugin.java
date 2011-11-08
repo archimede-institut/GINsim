@@ -3,11 +3,11 @@ package fr.univmrs.tagc.GINsim.export;
 import javax.swing.JFrame;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.service.export.GsBioLayoutEncoder;
+import org.ginsim.service.export.GsGraphvizEncoder;
+import org.ginsim.service.export.GsSVGExport;
+import org.ginsim.service.export.ImageExport;
 
-import fr.univmrs.tagc.GINsim.export.generic.GsBioLayoutEncoder;
-import fr.univmrs.tagc.GINsim.export.generic.GsGraphvizEncoder;
-import fr.univmrs.tagc.GINsim.export.generic.GsSVGExport;
-import fr.univmrs.tagc.GINsim.export.generic.ImageExport;
 import fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSBMLExport;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;

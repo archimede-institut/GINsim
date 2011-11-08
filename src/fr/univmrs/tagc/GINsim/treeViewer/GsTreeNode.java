@@ -2,8 +2,9 @@ package fr.univmrs.tagc.GINsim.treeViewer;
 
 import java.util.List;
 
+import org.ginsim.service.export.Dotify;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.export.generic.Dotify;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.common.Debugger;
 

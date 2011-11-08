@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.export.generic;
+package org.ginsim.service.export;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,7 +11,8 @@ import org.ginsim.graph.Graph;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 
 /**
- * export the graph to SVG
+ * export the graph to PNG
+ * 
  */
 public class ImageExport {
 
@@ -22,15 +23,15 @@ public class ImageExport {
      */
     public static void exportImage( Graph graph, boolean selectedOnly, String fileName) {
 
-    	BufferedImage img = graph.getGraphManager().getImage();
-    	
-    	if (img != null) {
-    			try {
-					ImageIO.write(img, "png", new File(fileName));
-				} catch (IOException e) {
-				}
-	    		return;
-    	}
+//    	BufferedImage img = graph.getImage();
+//    	
+//    	if (img != null) {
+//    			try {
+//					ImageIO.write(img, "png", new File(fileName));
+//				} catch (IOException e) {
+//				}
+//	    		return;
+//    	}
     }
     
 }
