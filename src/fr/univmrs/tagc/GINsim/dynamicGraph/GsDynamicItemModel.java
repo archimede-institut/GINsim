@@ -8,18 +8,21 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.graph.Edge;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 
 /**
  * table model to display a dynamic node or edge.
+ * 
+ * TODO: this should move to the GUI
  */
 public class GsDynamicItemModel extends AbstractTableModel {
 
     private static final long serialVersionUID = 8860415338236400531L;
     private List nodeOrder;
     GsDynamicGraph graph;
-    GsGraphManager graphManager;
     private byte[] state;
     private GsDynamicNode[] nextState;
     private GsDynamicNode[] prevState;
@@ -30,7 +33,6 @@ public class GsDynamicItemModel extends AbstractTableModel {
     
     protected GsDynamicItemModel (GsDynamicGraph graph) {
         this.graph = graph;
-        this.graphManager = graph.getGraphManager();
         this.nodeOrder = graph.getNodeOrder();
         len = nodeOrder.size()+1;
     }
@@ -92,14 +94,15 @@ public class GsDynamicItemModel extends AbstractTableModel {
     public void setContent(Object obj) {
     	nbRelated = 0;
         if (obj instanceof GsDynamicNode) {
-            state = ((GsDynamicNode)obj).state;
-            nextState = getRelatedNodes(graphManager.getOutgoingEdges(obj), true);
-            prevState = getRelatedNodes(graphManager.getIncomingEdges(obj), false);
+        	GsDynamicNode node = (GsDynamicNode)obj;
+            state = node.state;
+            nextState = getRelatedNodes(graph.getOutgoingEdges(node), true);
+            prevState = getRelatedNodes(graph.getIncomingEdges(node), false);
             nbNext = nextState != null ? nextState.length : 0;
             nbRelated = nbNext + ( prevState != null ? prevState.length : 0 );
-        } else if (obj instanceof GsDirectedEdge){
-            GsDirectedEdge edge = (GsDirectedEdge)obj;
-            state = ((GsDynamicNode)edge.getSource()).state;
+        } else if (obj instanceof Edge){
+            Edge<GsDynamicNode> edge = (Edge)obj;
+            state = edge.getSource().state;
             nextState = new GsDynamicNode[1];
             nextState[0] = (GsDynamicNode)edge.getTarget();
             prevState = null;
@@ -124,7 +127,7 @@ public class GsDynamicItemModel extends AbstractTableModel {
         fireTableDataChanged();
     }
     
-    private GsDynamicNode[] getRelatedNodes(Collection<GsDirectedEdge<GsDynamicNode>> l_related, boolean target) {
+    private GsDynamicNode[] getRelatedNodes(Collection<Edge<GsDynamicNode>> l_related, boolean target) {
         if (l_related == null || l_related.size() == 0) {
             return null;
         }

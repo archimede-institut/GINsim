@@ -2,8 +2,10 @@ package fr.univmrs.tagc.GINsim.dynamicGraph;
 
 import java.util.Collection;
 
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
@@ -73,9 +75,9 @@ public final class GsDynamicNode {
 	/**
 	 * @return the node's pattern of commutation.
 	 */
-	public int[] getPattern(GsGraphManager<GsDynamicNode, GsDirectedEdge<GsDynamicNode>> graphManager) {
+	public int[] getPattern(Graph<GsDynamicNode, Edge<GsDynamicNode>> graph) {
 		int[] pattern = new int[state.length];
-		Collection<GsDirectedEdge<GsDynamicNode>> oe = graphManager.getOutgoingEdges(this);
+		Collection<Edge<GsDynamicNode>> oe = graph.getOutgoingEdges(this);
 		for (GsDirectedEdge<GsDynamicNode> e: oe) {
 			GsDynamicNode s = e.getTarget();
 			for (int i = 0; i < s.state.length; i++) {
@@ -88,8 +90,8 @@ public final class GsDynamicNode {
 	/**
 	 * @return the node's pattern of commutation.
 	 */
-	public String getPatternString(GsGraphManager graphManager) {
-		int[] pattern = getPattern(graphManager);
+	public String getPatternString(Graph<GsDynamicNode, Edge<GsDynamicNode>> graph) {
+		int[] pattern = getPattern(graph);
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < pattern.length; i++) {
 			if (pattern[i] == EPSILON) sb.append('e');

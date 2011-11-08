@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 
 /**
@@ -19,7 +22,7 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
     private List nodeOrder;
     private List v;
     private List v_in;
-    private GsGraphManager gmanager;
+    private Graph<GsDynamicNode, Edge<GsDynamicNode>> graph;
     private GsDynamicSearchPathConfig searchConfig;
     
     /**
@@ -32,7 +35,7 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
         nodeOrder = graph.getNodeOrder();
         len = nodeOrder.size();
         this.searchConfig = config;
-        this.gmanager = graph.getGraphManager();
+        this.graph = graph;
         this.v = v_path;
         v_in = v_inPath;
         if (v == null) {
@@ -41,7 +44,7 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
         if (v.size() == 0 ) {
             v.add(new byte[len]);
             v.add(new byte[len]);
-            if (gmanager.containsVertex(new GsDynamicNode((byte[])v.get(0)))) {
+            if (graph.containsVertex(new GsDynamicNode((byte[])v.get(0)))) {
                 v_in.add(Boolean.TRUE);
                 v_in.add(Boolean.TRUE);
                 nbBad = 0;
@@ -73,7 +76,7 @@ public class GsDynamicAnalyserPathModel extends DefaultTableModel {
         	byte[] t = (byte[])v.get(row);
             try {
                 t[column] = Byte.parseByte((String)aValue);
-                if (gmanager.containsVertex(new GsDynamicNode(t))) {
+                if (graph.containsVertex(new GsDynamicNode(t))) {
                     if (v_in.get(row).equals(Boolean.FALSE)) {
                         nbBad--;
                     }

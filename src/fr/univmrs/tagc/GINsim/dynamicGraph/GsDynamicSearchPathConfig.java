@@ -178,7 +178,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
             path.clear();
         }
         for (int i=1 ; i<v_pathConstraints.size() ; i++) {
-            List l = graph.byteestPath((byte[])v_pathConstraints.get(i-1), (byte[])v_pathConstraints.get(i));
+            List l = graph.shortestPath((byte[])v_pathConstraints.get(i-1), (byte[])v_pathConstraints.get(i));
             isPath = true;
             if (l == null) {
                 isPath = false;

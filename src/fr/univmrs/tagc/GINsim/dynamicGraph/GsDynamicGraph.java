@@ -51,9 +51,6 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 
 	protected List v_stables = null;
     private ObjectEditor graphEditor = null;
-    private GsParameterPanel vertexPanel = null;
-    private GsParameterPanel edgePanel;
-    
     private float[] dashpattern = null;
 
 	/**
@@ -116,9 +113,6 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 		return null;
 	}
 
-	/*
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
-	 */
 	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, dtdFile);
@@ -164,40 +158,30 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-        Iterator it;
-        if (selectedOnly) {
-        		it = graphManager.getFullySelectedEdgeIterator();
-        } else {
-        		it = getEdges().iterator();
+    private void saveEdge(XMLWriter out, int mode, Collection<Edge<GsDynamicNode>> edges) throws IOException {
+        if (edges == null) {
+        	edges = getEdges();
         }
 
         GsEdgeAttributesReader eReader = getEdgeAttributeReader();
         
         switch (mode) {
         	case 2:
-		        while (it.hasNext()) {
-		        	Object o_edge = it.next();
-		        	if (o_edge instanceof GsDirectedEdge) {
-		        	    eReader.setEdge(o_edge);
-		        		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-			            String source = edge.getSource().toString();
-			            String target = edge.getTarget().toString();
-			            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\">\n");
-			            out.write(GsGinmlHelper.getEdgeVS(eReader));
-			            out.write("</edge>");
-		        	}
+		        for (Edge<GsDynamicNode> edge: edges) {
+	        	    eReader.setEdge(edge);
+		            String source = edge.getSource().toString();
+		            String target = edge.getTarget().toString();
+		            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\">\n");
+		            out.write(GsGinmlHelper.getEdgeVS(eReader));
+		            out.write("</edge>");
 		        }
         	    break;
 	    	default:
-		        while (it.hasNext()) {
-		        	Object o_edge = it.next();
-		        	if (o_edge instanceof GsDirectedEdge) {
-		        		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-			            String source = edge.getSource().toString();
-			            String target = edge.getTarget().toString();
-			            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
-		        	}
+		        for (Edge<GsDynamicNode> edge: edges) {
+	        	    eReader.setEdge(edge);
+		            String source = edge.getSource().toString();
+		            String target = edge.getTarget().toString();
+		            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
 		        }
 		        break;
         }
@@ -209,58 +193,38 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-    	Iterator it;
-    	if (selectedOnly) {
-    		it = graphManager.getSelectedVertexIterator();
-    	} else {
-    		it = getVertices().iterator();
+    private void saveNode(XMLWriter out, int mode, Collection<GsDynamicNode> nodes) throws IOException {
+    	if (nodes == null) {
+    		nodes = getVertices();
     	}
     	
     	GsVertexAttributesReader vReader = getVertexAttributeReader();
     	
         	switch (mode) {
 	    		case 1:
-	                while (it.hasNext()) {
-	                    Object vertex = it.next();
-	                    vReader.setVertex(vertex);
+	                for (GsDynamicNode node: nodes) {
+	                    vReader.setVertex(node);
 	                    String svs = GsGinmlHelper.getShortNodeVS(vReader);
-	                    out.write("\t\t<node id=\""+((GsDynamicNode)vertex).getId()+"\">\n");
+	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
 	                    out.write(svs);
 	                    out.write("\t\t</node>\n");
 	                }
 	    			break;
 				case 2:
-	                while (it.hasNext()) {
-	                    Object vertex = it.next();
-	                    vReader.setVertex(vertex);
+	                for (GsDynamicNode node: nodes) {
+	                    vReader.setVertex(node);
 	                    String svs = GsGinmlHelper.getFullNodeVS(vReader);
-	                    out.write("\t\t<node id=\""+((GsDynamicNode)vertex).getId()+"\">\n");
+	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
 	                    out.write(svs);
 	                    out.write("\t\t</node>\n");
 	                }
 	    			break;
         		default:
-        	        while (it.hasNext()) {
-        	            Object vertex = it.next();
-        	            out.write("\t\t<node id=\""+((GsDynamicNode)vertex).getId()+"\"/>\n");
+	                for (GsDynamicNode node: nodes) {
+        	            out.write("\t\t<node id=\""+node.getId()+"\"/>\n");
         	        }
         }
     }
-
-	public GsParameterPanel getEdgeAttributePanel() {
-	    if (edgePanel == null) {
-	        edgePanel = new GsDynamicItemAttributePanel(this);
-	    }
-		return edgePanel;
-	}
-
-	public GsParameterPanel getVertexAttributePanel() {
-	    if (vertexPanel == null) {
-	        vertexPanel = new GsDynamicItemAttributePanel(this);
-	    }
-		return vertexPanel;
-	}
 
 	/**
 	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#changeVertexId(java.lang.Object, java.lang.String)
@@ -320,41 +284,6 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 		return edge;
 	}
 
-	protected FileFilter doGetFileFilter() {
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
-		return ffilter;
-	}
-
-	public String getAutoFileExtension() {
-		return ".ginml";
-	}
-
-	protected JPanel doGetFileChooserPanel() {
-		return getOptionPanel();
-	}
-
-	private JPanel getOptionPanel() {
-		if (optionPanel == null) {
-            Object[] t_mode = { Translator.getString("STR_saveNone"),
-                    Translator.getString("STR_savePosition"),
-                    Translator.getString("STR_saveComplet") };
-            optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
-		}
-		return optionPanel;
-	}
-	public List getSpecificLayout() {
-		return GsDynamicGraphDescriptor.getLayout();
-	}
-	public List getSpecificExport() {
-		return GsDynamicGraphDescriptor.getExport();
-	}
-    public List getSpecificAction() {
-        return GsDynamicGraphDescriptor.getAction();
-    }
-    public List getSpecificObjectManager() {
-        return GsDynamicGraphDescriptor.getObjectManager();
-    }
     protected Graph getCopiedGraph() {
         return null;
     }
@@ -475,12 +404,12 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
     }
 
     /**
-     * look for the byteest path between two states.
+     * look for the shortest path between two states.
      * @param source
      * @param target
      * @return the List describing the path or null if none is found
      */
-    public List byteestPath(byte[] source, byte[] target) {
+    public List shortestPath(byte[] source, byte[] target) {
         GsDynamicNode n = new GsDynamicNode(source);
         GsDynamicNode n2 = new GsDynamicNode(target);
         if (containsVertex(n) && containsVertex(n2)) {
@@ -499,9 +428,52 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
         return GsRegulatoryGraph.associationValid((GsRegulatoryGraph)graph, this);
     }
 
-    public Vector getEditingModes() {
-        Vector v_mode = new Vector();
-        v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", ImageLoader.getImageIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
-        return v_mode;
-    }
+    // FIXME: move all this to a new GraphGUIHelper
+
+//    private GsParameterPanel vertexPanel = null;
+//    private GsParameterPanel edgePanel;
+//    
+//    public Vector getEditingModes() {
+//        Vector v_mode = new Vector();
+//        v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", ImageLoader.getImageIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
+//        return v_mode;
+//    }
+//	public GsParameterPanel getEdgeAttributePanel() {
+//	    if (edgePanel == null) {
+//	        edgePanel = new GsDynamicItemAttributePanel(this);
+//	    }
+//		return edgePanel;
+//	}
+//
+//	public GsParameterPanel getVertexAttributePanel() {
+//	    if (vertexPanel == null) {
+//	        vertexPanel = new GsDynamicItemAttributePanel(this);
+//	    }
+//		return vertexPanel;
+//	}
+//
+//	protected FileFilter doGetFileFilter() {
+//		GsFileFilter ffilter = new GsFileFilter();
+//		ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
+//		return ffilter;
+//	}
+//
+//	public String getAutoFileExtension() {
+//		return ".ginml";
+//	}
+//
+//	protected JPanel doGetFileChooserPanel() {
+//		return getOptionPanel();
+//	}
+//
+//	private JPanel getOptionPanel() {
+//		if (optionPanel == null) {
+//            Object[] t_mode = { Translator.getString("STR_saveNone"),
+//                    Translator.getString("STR_savePosition"),
+//                    Translator.getString("STR_saveComplet") };
+//            optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
+//		}
+//		return optionPanel;
+//	}
+
 }
