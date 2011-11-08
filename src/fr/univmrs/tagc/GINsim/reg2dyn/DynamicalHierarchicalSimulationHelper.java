@@ -3,6 +3,8 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -11,6 +13,7 @@ import fr.univmrs.tagc.GINsim.reg2dyn.helpers.SimulationHelper;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
+	
 	protected GsDynamicalHierarchicalNode node;
 	protected GsDynamicalHierarchicalGraph dynHieGraph;
 	public Map arcs;
@@ -34,7 +37,8 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 		return false;
 	}
 
-	public GsGraph endSimulation() {
+	public Graph endSimulation() {
+		
 		return dynHieGraph;
 	}
 
@@ -49,10 +53,12 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 		this.node = (GsDynamicalHierarchicalNode) node;
 	}
 	
-	public GsGraph getRegulatoryGraph() {
+	public Graph getRegulatoryGraph() {
+		
 		return this.regGraph;
 	}
-	public GsGraph getDynamicGraph() {
+	public Graph getDynamicGraph() {
+		
 		return this.dynHieGraph;
 	}
 

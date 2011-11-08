@@ -24,9 +24,9 @@ public class GsLayoutService implements GsService {
     public static final int RING = 2;
     public static final int RING_INV = 3;
     
-    public static void runLayout(int ref, Graph graph, GraphView view) throws GsException {
+    public static void runLayout(int ref, Graph graph) throws GsException {
 		// first count nodes in each category
-		GsVertexAttributesReader vreader = view.getVertexAttributeReader();
+		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
 		int nbRoot = 0;
 		int nbStables = 0;
 		int nbClassic = 0;

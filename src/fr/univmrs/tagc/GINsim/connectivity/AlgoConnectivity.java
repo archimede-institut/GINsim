@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -24,7 +26,7 @@ public class AlgoConnectivity extends Thread {
 
 	protected GsReducedGraph reducedGraph = null;
 	protected GsGraphManager graphModel;
-    private GsGraph g = null;
+    private Graph g = null;
 
     private static final String S_SEARCH_CC = Translator.getString("STR_connectivity_searching");
     
@@ -61,7 +63,7 @@ public class AlgoConnectivity extends Thread {
 	 * @param frame
      * @param searchMode MODE_COMPO=only find components; MODE_FULL=also search for path and create the reduced graph
 	 */
-	public void configure(GsGraph graphm, ProgressListener frame, int searchMode) {
+	public void configure( Graph graphm, ProgressListener frame, int searchMode) {
 		this.graphModel = graphm.getGraphManager();
 		this.frame = frame;
         this.g = graphm;
@@ -160,7 +162,7 @@ public class AlgoConnectivity extends Thread {
         return reducedGraph;
    }
 
-	public void createSCCGraphByOutgoingEdges(int nbCompo, List component, GsGraphManager gm, GsVertexAttributesReader vreader) throws InterruptedException {
+	public void createSCCGraphByOutgoingEdges(int nbCompo, List component, Graph graph, GsVertexAttributesReader vreader) throws InterruptedException {
 		//Complexity = #nodes + #edges + #component => O(3n+1)
 		if (nbCompo == 1) {
             return;																				//The graph is already created, no edges to add.
@@ -214,7 +216,7 @@ public class AlgoConnectivity extends Thread {
                 break;
             }
             GsNodeReducedData currentSCCNode = (GsNodeReducedData)component.get(scc_i);
-            if (gm.getOutgoingEdges(currentSCCNode).size() == 0) {												//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
+            if (graph.getOutgoingEdges(currentSCCNode).size() == 0) {												//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
             	vreader.setVertex(currentSCCNode);
                 vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
             }

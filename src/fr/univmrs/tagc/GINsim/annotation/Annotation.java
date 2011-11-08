@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
@@ -35,13 +37,13 @@ public class Annotation implements XMLize
 	public void openLink(int index) {
 		((AnnotationLink)getLinkList().get(index)).open();
 	}
-	public void addLink(String s, GsGraph graph) {
+	public void addLink(String s, Graph graph) {
 		setLink(s, getLinkList().size(), graph);
 	}
-	public void delLink(String s, GsGraph graph) {
+	public void delLink(String s, Graph graph) {
 		while (getLinkList().removeElement(new AnnotationLink(s, graph))) ;
 	}
-	public void setLink(String s, int index, GsGraph graph) {
+	public void setLink(String s, int index, Graph graph) {
 		if (index == getLinkList().size()) {
 			AnnotationLink al = new AnnotationLink(s, graph);
 			if (!containsLink(al)) getLinkList().add(al);

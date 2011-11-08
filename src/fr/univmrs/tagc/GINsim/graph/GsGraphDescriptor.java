@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 
 /**
@@ -37,19 +39,19 @@ public interface GsGraphDescriptor {
      */
     // TODO Remove this method and implement a more specialized one that will create only RegulatoryGraph at startup
     // or when "New" button is pressed
-    public GsGraph getNew(GsMainFrame m);
+    public Graph getNew(GsMainFrame m);
     
 	/**
 	 * @param file
 	 * @return a new graph readed from the file
 	 */
-	public GsGraph open(File file);
+	public Graph open(File file);
 	/**
 	 * @param map
 	 * @param file
 	 * @return a new graph readed from the file
 	 */
-	public GsGraph open(Map map, File file);
+	public Graph open(Map map, File file);
 	/**
 	 * @return the fileFilter for the open dialog
 	 */

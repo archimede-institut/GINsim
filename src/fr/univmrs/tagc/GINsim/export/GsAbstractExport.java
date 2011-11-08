@@ -5,6 +5,8 @@ import java.util.Vector;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -54,7 +56,7 @@ abstract public class GsAbstractExport implements GsPlugin, GsActionProvider  {
 		return id;
 	}
 
-	public void runAction (int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction (int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 	    if (actionType != ACTION_EXPORT) {
 	        return;
         }

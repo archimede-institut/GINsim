@@ -1,5 +1,7 @@
 package fr.univmrs.tagc.GINsim.graph;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Timeout;
 import fr.univmrs.tagc.common.TimeoutObject;
@@ -11,7 +13,7 @@ import fr.univmrs.tagc.common.TimeoutObject;
 public class GsGraphNotificationMessage implements TimeoutObject {
 
 	private String message;
-	private GsGraph graph;
+	private Graph graph;
     protected GsGraphNotificationAction action;
     private Object data;
     private byte type;
@@ -36,8 +38,9 @@ public class GsGraphNotificationMessage implements TimeoutObject {
      * @param message
      * @param type
      */
-    public GsGraphNotificationMessage (GsGraph graph, String message, byte type) {
-        this(graph, message, null, null, type);
+    public GsGraphNotificationMessage ( Graph graph, String message, byte type) {
+    	
+        this( graph, message, null, null, type);
     }
 
         
@@ -48,7 +51,7 @@ public class GsGraphNotificationMessage implements TimeoutObject {
      * @param data
 	 * @param type seconds after which the message will vanish (never = 0)
 	 */
-	public GsGraphNotificationMessage (GsGraph graph, String message, GsGraphNotificationAction action, Object data, byte type) {
+	public GsGraphNotificationMessage ( Graph graph, String message, GsGraphNotificationAction action, Object data, byte type) {
 		this.graph = graph;
 		this.message = message;
         this.action = action;
@@ -87,7 +90,7 @@ public class GsGraphNotificationMessage implements TimeoutObject {
      * @param graph
      * @param e
      */
-    public GsGraphNotificationMessage(GsGraph graph, GsException e) {
+    public GsGraphNotificationMessage( Graph graph, GsException e) {
         // TODO: show detail for exception
         this(graph, e.getMessage(), (e.getGravity() == GsException.GRAVITY_ERROR) ? NOTIFICATION_ERROR_LONG : NOTIFICATION_WARNING_LONG);
     }

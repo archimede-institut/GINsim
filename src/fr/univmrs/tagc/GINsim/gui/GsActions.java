@@ -23,6 +23,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
+import org.ginsim.graph.Graph;
 import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -817,7 +818,7 @@ public class GsActions implements GraphChangeListener {
 		editMenu.remove(addEdgeMenu);
 		editMenu.remove(addVertexMenu);
 
-		GsGraph graph = event.getNewGraph();
+		Graph graph = event.getNewGraph();
 		if (graph == null) {
 			toolBar.repaint();
 			return;
@@ -929,8 +930,7 @@ public class GsActions implements GraphChangeListener {
 		
 	}
 
-	private void addToMenu(JMenu menu, List v_actions, int actionCode,
-			GsGraph graph) {
+	private void addToMenu(JMenu menu, List v_actions, int actionCode, Graph graph) {
 		if (v_actions != null) {
 			for (int i = 0 ; i < v_actions.size() ; i++) {
 				Object obj = v_actions.get(i);
@@ -1066,10 +1066,10 @@ public class GsActions implements GraphChangeListener {
 		}
 	}
 
-	public void graphClosed(GsGraph graph) {
+	public void graphClosed( Graph graph) {
 	}
 
-	public void updateGraphNotificationMessage(GsGraph graph) {
+	public void updateGraphNotificationMessage( Graph graph) {
 	}
 	
     // Generic registration with the Mac OS X application menu

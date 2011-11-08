@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.global;
 
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
@@ -56,7 +58,7 @@ public class GsEventDispatcher implements GraphChangeListener {
 	 * @param newGraph
 	 * @param association
 	 */
-	public void fireGraphChange(Object source, GsGraph oldGraph, GsGraph newGraph, boolean association) {
+	public void fireGraphChange(Object source, Graph oldGraph, Graph newGraph, boolean association) {
         if (useDelagate) {
             if (dispatcher != null) {
                 dispatcher.removeGraphChangeListener(this);
@@ -87,7 +89,7 @@ public class GsEventDispatcher implements GraphChangeListener {
     /**
      * @param graph the closed graph.
      */
-    public void fireGraphClose(GsGraph graph) {
+    public void fireGraphClose( Graph graph) {
         if (useDelagate) {
             if (dispatcher != null) {
                 dispatcher.fireGraphClose(graph);
@@ -102,7 +104,7 @@ public class GsEventDispatcher implements GraphChangeListener {
      * @param graph
      * @param main
      */
-    public static void associateGraphWithFrame(GsGraph graph, GsMainFrame main) {
+    public static void associateGraphWithFrame( Graph graph, GsMainFrame main) {
         if (main != null) {
             main.getEventDispatcher().fireGraphChange(null, main.getGraph(), graph, false);
         }
@@ -118,13 +120,13 @@ public class GsEventDispatcher implements GraphChangeListener {
             ((GraphChangeListener)graphChangeListeners.get(i)).graphSelectionChanged(event);
         }
     }
-    public void graphClosed(GsGraph graph) {
+    public void graphClosed( Graph graph) {
         for (int i=graphChangeListeners.size()-1 ; i>=0 ; i--) {
             ((GraphChangeListener)graphChangeListeners.get(i)).graphClosed(graph);
         }
     }
 
-	public void updateGraphNotificationMessage(GsGraph graph) {
+	public void updateGraphNotificationMessage( Graph graph) {
         for (int i=graphChangeListeners.size()-1 ; i>=0 ; i--) {
             ((GraphChangeListener)graphChangeListeners.get(i)).updateGraphNotificationMessage(graph);
         }

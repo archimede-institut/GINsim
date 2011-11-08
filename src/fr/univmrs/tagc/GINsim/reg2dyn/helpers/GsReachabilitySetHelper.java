@@ -1,5 +1,7 @@
 package fr.univmrs.tagc.GINsim.reg2dyn.helpers;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
@@ -31,7 +33,7 @@ public class GsReachabilitySetHelper extends SimulationHelper {
 		return false;
 	}
 
-	public GsGraph endSimulation() {
+	public Graph endSimulation() {
 //		System.out.println("results ("+nbnode+" nodes):");
 //		dd_stable = dd_stable.reduce();
 //		dd_reachable = dd_reachable.reduce();
@@ -97,11 +99,11 @@ public class GsReachabilitySetHelper extends SimulationHelper {
 		return node;
 	}
 	
-	public GsGraph getRegulatoryGraph() {
+	public Graph getRegulatoryGraph() {
 		return null;
 	}
 	
-	public GsGraph getDynamicGraph() {
+	public Graph getDynamicGraph() {
 		return null;
 	}
 	

@@ -8,15 +8,20 @@ import java.util.*;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -25,7 +30,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * reduced Graph.
  */
-public class GsReducedGraph extends AbstractGraphFrontend<GsNodeReducedData, Edge<GsNodeReducedData>> {
+public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReducedData, Edge<GsNodeReducedData>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
 	private ReducedParameterPanel parameterPanel = null;
     private JPanel optionPanel = null;
@@ -36,8 +41,9 @@ public class GsReducedGraph extends AbstractGraphFrontend<GsNodeReducedData, Edg
 	 * @param parent
 	 */
 	public GsReducedGraph( Graph parent) {
-	    this((String)null, false);
-        setAssociatedGraph( parent);
+		
+	    this( false);
+        setAssociatedGraph( (GsRegulatoryGraph) parent);
 	}
 	
     protected String getGraphZipName() {
@@ -49,7 +55,8 @@ public class GsReducedGraph extends AbstractGraphFrontend<GsNodeReducedData, Edg
 	 * @param file
 	 */
 	public GsReducedGraph(Map map, File file) {
-	    this(file.getAbsolutePath(), true);
+		
+	    this( true);
         GsReducedGraphParser parser = new GsReducedGraphParser();
         parser.parse(file, map, this);
         graphManager.ready();
@@ -58,14 +65,16 @@ public class GsReducedGraph extends AbstractGraphFrontend<GsNodeReducedData, Edg
 	/**
 	 * @param filename
 	 */
-	public GsReducedGraph(String filename, boolean parsing) {
-        super(GsReducedGraphDescriptor.getInstance(), filename, parsing);
+	public GsReducedGraph( boolean parsing) {
+		
+        super( GsReducedGraphDescriptor.getInstance(), parsing);
 	}
 	/**
      * 
      */
     public GsReducedGraph() {
-        this((String)null, false);
+    	
+        this( false);
     }
 
     /*
@@ -217,9 +226,10 @@ public class GsReducedGraph extends AbstractGraphFrontend<GsNodeReducedData, Edg
 	 * @param target target vertex of this edge.
 	 */
 	public void addEdge(GsNodeReducedData source, GsNodeReducedData target) {
-		GsDirectedEdge<GsNodeReducedData> edge = new GsDirectedEdge<GsNodeReducedData>(source, target);
-		addEdge(edge);
+		Edge<GsNodeReducedData> edge = new Edge<GsNodeReducedData>(source, target);
+		addEdge( edge);
 	}
+	
 	public List getSpecificLayout() {
 		return GsReducedGraphDescriptor.getLayout();
 	}
@@ -232,18 +242,18 @@ public class GsReducedGraph extends AbstractGraphFrontend<GsNodeReducedData, Edg
     public List getSpecificObjectManager() {
         return GsReducedGraphDescriptor.getObjectManager();
     }
-    protected GsGraph getCopiedGraph() {
+    protected Graph getCopiedGraph() {
         return null;
     }
-    protected List doMerge(GsGraph otherGraph) {
+    protected List doMerge(Graph otherGraph) {
         return null;
     }
-    protected GsGraph getSubGraph(Collection vertex, Collection edges) {
+    protected Graph getSubGraph(Collection vertex, Collection edges) {
         // no copy for reduced graphs
         return null;
     }
 
-    protected void setCopiedGraph(GsGraph graph) {
+    protected void setCopiedGraph( Graph graph) {
     }
 
     /**
@@ -276,7 +286,7 @@ public class GsReducedGraph extends AbstractGraphFrontend<GsNodeReducedData, Edg
 		return optionPanel;
 	}
     
-    protected boolean isAssociationValid(GsGraph graph) {
+    protected boolean isAssociationValid( Graph graph) {
         // blindly accept all associations
         return true;
     }

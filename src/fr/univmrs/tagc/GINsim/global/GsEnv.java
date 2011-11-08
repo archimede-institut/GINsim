@@ -14,6 +14,8 @@ import java.util.jar.Manifest;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
@@ -203,7 +205,7 @@ public class GsEnv {
      * @param graph
      * @return the new frame
      */
-    public static GsMainFrame newMainFrame(GsGraph graph) {
+    public static GsMainFrame newMainFrame( Graph graph) {
 		GsMainFrame m = new GsMainFrame();
 		GsEventDispatcher.associateGraphWithFrame(graph, m);
 		addFrame(m);
@@ -215,7 +217,8 @@ public class GsEnv {
      * @param m
      */
     public static void newGraph(BaseMainFrame m) {
-        GsGraph myGraph = ((GsGraphDescriptor)v_graph.get(0)).getNew((GsMainFrame)m);
+    	
+        Graph myGraph = ((GsGraphDescriptor)v_graph.get(0)).getNew((GsMainFrame)m);
         myGraph.getGraphManager().ready();
 		m.getEventDispatcher().fireGraphChange(null, null, myGraph, false);
     }
@@ -256,7 +259,7 @@ public class GsEnv {
      */
     public static void error(GsException e, Frame main) {
         if (main instanceof GsMainFrame) {
-            GsGraph graph = ((GsMainFrame)main).getGraph();
+            Graph graph = ((GsMainFrame)main).getGraph();
             graph.addNotificationMessage(new GsGraphNotificationMessage(graph, e));
             return;
         }
@@ -267,7 +270,8 @@ public class GsEnv {
 	 * @param frame
 	 * @param graph
 	 */
-	public static void whatToDoWithGraph(JFrame frame, GsGraph graph) {
+	public static void whatToDoWithGraph(JFrame frame, Graph graph) {
+		
 		whatToDoWithGraph(frame, graph, true);
 	}
 
@@ -276,8 +280,9 @@ public class GsEnv {
 	 * @param graph
 	 * @param needLayout TODO
 	 */
-	public static void whatToDoWithGraph(JFrame frame, GsGraph graph, boolean needLayout) {
-		new GsWhatToDoFrame(frame, graph, needLayout);
+	public static void whatToDoWithGraph(JFrame frame, Graph graph, boolean needLayout) {
+		
+		new GsWhatToDoFrame( frame, graph, needLayout);
 	}
 
     /**
@@ -287,7 +292,7 @@ public class GsEnv {
      * @param id
      * @return ths id under which the graph is registred
      */
-    public static String registerGraph(GsGraph graph, String id) {
+    public static String registerGraph( Graph graph, String id) {
         if (graph == null) {
             return null;
         }
@@ -312,7 +317,8 @@ public class GsEnv {
      * @param newId
      */
     public static void renameGraph(String oldId, String newId) {
-        GsGraph graph = (GsGraph)m_graphs.get(oldId);
+    	
+        Graph graph = (Graph) m_graphs.get(oldId);
         if (graph != null) {
             m_graphs.remove(oldId);
             m_graphs.put(newId, graph);
@@ -325,8 +331,8 @@ public class GsEnv {
      * @param id
      * @return the corresponding graph (null if no such id)
      */
-    public static GsGraph getRegistredGraph(String id) {
-        return (GsGraph)m_graphs.get(id);
+    public static Graph getRegistredGraph(String id) {
+        return (Graph) m_graphs.get(id);
     }
     
     /**

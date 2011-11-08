@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import javax.swing.JFileChooser;
 
 import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;
@@ -149,11 +150,11 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 		}
 		GsGraphNotificationAction action = new GsGraphNotificationAction() {
 			String[] t = {Translator.getString("STR_addBib"), Translator.getString("STR_ignore")};
-			public boolean timeout(GsGraph graph, Object data) {
+			public boolean timeout(Graph graph, Object data) {
 				return true;
 			}
 		
-			public boolean perform(GsGraph graph, Object data, int index) {
+			public boolean perform( Graph graph, Object data, int index) {
 				switch (index) {
 					case 0:
 						((BiblioList)data).addFile();
@@ -211,11 +212,11 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 		} else {
 			GsGraphNotificationAction action = new GsGraphNotificationAction() {
 				String[] t = {Translator.getString("STR_purge")};
-				public boolean timeout(GsGraph graph, Object data) {
+				public boolean timeout(Graph graph, Object data) {
 					return true;
 				}
 			
-				public boolean perform(GsGraph graph, Object data, int index) {
+				public boolean perform(Graph graph, Object data, int index) {
 					((BiblioList)((Object[])data)[0]).removeFile(((Object[])data)[1].toString());
 					return true;
 				}

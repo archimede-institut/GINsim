@@ -1,9 +1,10 @@
 package fr.univmrs.tagc.GINsim.xml;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 
 public abstract class GsXMLHelper extends XMLHelper {
-	public abstract GsGraph getGraph();
+	public abstract Graph getGraph();
 }

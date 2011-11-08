@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.graph.AssociatedGraph;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -89,7 +92,7 @@ public class StableTableModel extends AbstractTableModel {
 		return ""+val;
 	}
 
-	public void setResult(OmddNode stable, GsGraph graph) {
+	public void setResult(OmddNode stable, Graph graph) {
 		v_stable.clear();
 		
 		byte[] state = new byte[nodeOrder.size()];
@@ -101,14 +104,16 @@ public class StableTableModel extends AbstractTableModel {
 		checkIndex = -1;
 		checklist = new ArrayList();
 		checklist.clear();
-		updateMatches(graph);
+		updateMatches( graph);
 	}
-	public void setResult(List v_stable, GsGraph graph) {
+	
+	public void setResult(List v_stable, Graph graph) {
 		this.v_stable = v_stable;
 		fireTableDataChanged();
-		updateMatches(graph.getAssociatedGraph());
+		updateMatches( ((AssociatedGraph) graph).getAssociatedGraph());
 	}
-	private void updateMatches(GsGraph graph) {
+	
+	private void updateMatches( Graph graph) {
 		InitialStateList initstates = null;
 		if (graph != null && graph instanceof GsRegulatoryGraph) {
 		    GsInitialStateList ilist = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);

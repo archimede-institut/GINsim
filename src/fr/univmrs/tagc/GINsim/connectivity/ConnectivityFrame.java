@@ -10,6 +10,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -29,7 +31,7 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 	private static final long serialVersionUID = 2671795894716799300L;
 	private javax.swing.JPanel jContentPane = null;
 	private JFrame frame;
-	protected GsGraph graph;
+	protected Graph graph;
     private javax.swing.JButton buttonOpenSCC = null;
     private javax.swing.JButton buttonCancel = null;
     private javax.swing.JButton buttonColorize = null;
@@ -46,7 +48,8 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 	 * @param frame
 	 * @param graph
 	 */
-	public ConnectivityFrame(JFrame frame, GsGraph graph) {
+	public ConnectivityFrame(JFrame frame, Graph graph) {
+		
 		super(frame);
 		this.frame = frame;
 		if (graph == null) {

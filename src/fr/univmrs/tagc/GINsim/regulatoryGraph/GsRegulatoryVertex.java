@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
@@ -431,7 +432,7 @@ class UpdateMaxBlockedAction implements GsGraphNotificationAction {
 		return t_action;
 	}
 
-	public boolean perform(GsGraph graph, Object data, int index) {
+	public boolean perform( Graph graph, Object data, int index) {
 		if (index == 1) {
 			if (l_conflict.size() > 0) {
 				return false;
@@ -452,7 +453,7 @@ class UpdateMaxBlockedAction implements GsGraphNotificationAction {
 		return true;
 	}
 
-	public boolean timeout(GsGraph graph, Object data) {
+	public boolean timeout( Graph graph, Object data) {
 		return true;
 	}
 }

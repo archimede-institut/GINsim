@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -34,7 +36,8 @@ public class GsGNAMLExport extends GsAbstractExport {
 		filterDescr = "GNAML files";
     }
     
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
         if (graph instanceof GsRegulatoryGraph) {
         	return new GsPluggableActionDescriptor[] {
         			new GsPluggableActionDescriptor("STR_GNAML", "STR_GNAML_descr", null, this, ACTION_EXPORT, 0)

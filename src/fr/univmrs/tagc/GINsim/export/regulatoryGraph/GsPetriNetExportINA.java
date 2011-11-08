@@ -61,8 +61,7 @@ public class GsPetriNetExportINA extends GsAbstractExport {
 		filterDescr = "INA files (.pnt)";
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType,
-			GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		return null;
 	}
 

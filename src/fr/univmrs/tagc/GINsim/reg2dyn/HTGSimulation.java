@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
@@ -117,10 +119,11 @@ public class HTGSimulation extends Simulation {
 	/**
 	 * Run the simulation, handle exception and build the graph.
 	 */
-	public GsGraph do_simulation() {
+	public Graph do_simulation() {
+		
 		long time = System.currentTimeMillis();
 		this.htg = (GsHierarchicalTransitionGraph) helper.getDynamicGraph();
-		this.vreader = htg.getGraphManager().getVertexAttributesReader();
+		this.vreader = htg.getVertexAttributeReader();
 		this.shouldCompactSCC = htg.areTransientCompacted();
 		this.regGraph = (GsRegulatoryGraph) helper.getRegulatoryGraph();
 		this.sigmaFactory = new GsHierarchicalSigmaSetFactory();

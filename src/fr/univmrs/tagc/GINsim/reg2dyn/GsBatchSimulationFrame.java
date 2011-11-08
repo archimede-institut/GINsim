@@ -9,6 +9,8 @@ import java.util.Map;
 
 import javax.swing.*;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
@@ -99,7 +101,7 @@ public class GsBatchSimulationFrame extends GsBaseSimulationFrame {
      * simulation is done (or interrupted), now choose what to do with the new graph.
      * @param graph the dynamic graph
      */
-    public void endSimu(GsGraph graph) {
+    public void endSimu( Graph graph) {
         if (graph != null) {
             // TODO: add other anlyses (SCC,... ?)
         }
@@ -144,7 +146,8 @@ public class GsBatchSimulationFrame extends GsBaseSimulationFrame {
         result.append("\n");
     }
 
-    public static String nameState(byte[] state, GsGraph graph) {
+    public static String nameState(byte[] state, Graph graph) {
+    	
         InitialStateList init = ((GsInitialStateList)graph.getObject(GsInitialStateManager.key, false)).getInitialStates();
         // FIXME: adapt it to deal with input configs !!
         if (init != null && init.getNbElements(null) > 0) {

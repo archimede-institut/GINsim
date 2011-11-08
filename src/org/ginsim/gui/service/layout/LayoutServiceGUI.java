@@ -60,7 +60,7 @@ class LayoutAction extends GsLayoutAction {
 	@Override
 	public void actionPerformed( ActionEvent arg0) {
 		try {
-			GsLayoutService.runLayout(type.key, graph, (GraphView)graph);
+			GsLayoutService.runLayout(type.key, graph);
 		} catch (GsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

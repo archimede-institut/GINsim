@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
@@ -24,7 +26,8 @@ import fr.univmrs.tagc.common.GsException;
  *
  */
 public abstract class GraphComparator {
-	protected GsGraphManager gm, g1m, g2m;
+	
+	protected Graph gm, g1m, g2m;
 	protected HashMap stylesMap;
 	protected Set verticesIdsSet;
 	protected GsGraphicalAttributesStore g1gas, g2gas;
@@ -74,7 +77,7 @@ public abstract class GraphComparator {
 		setVerticesColor();
 		log("\n");
 		
-		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
+		GsEdgeAttributesReader ereader = gm.getEdgeAttributeReader();
 		for (Iterator it = verticesIdsSet.iterator(); it.hasNext();) { 		//For all edges
 			String id = (String) it.next();
 			Color col = ((VertexStyle)((ItemStore)stylesMap.get(gm.getVertexByName(id))).v).background;
@@ -167,7 +170,7 @@ public abstract class GraphComparator {
 	 * The value should be null for the moment.
 	 * @param gm the graph manager for the graph containing the vertices.
 	 */
-	abstract protected void addVerticesFromGraph(GsGraphManager gm);
+	abstract protected void addVerticesFromGraph( Graph gm);
 
 	 /**
 	 * Set the value for the vertex to the right color in the verticeMap.
@@ -185,23 +188,23 @@ public abstract class GraphComparator {
 	 * @param ereader an edge attribute reader for the diff graph.
 	 * 
 	 */
-	abstract protected void addEdgesFromGraph(GsGraphManager gm, GsGraphManager gm_aux, String id, Color col, Color pcol, GsEdgeAttributesReader ereader);
+	abstract protected void addEdgesFromGraph( Graph gm, Graph gm_aux, String id, Color col, Color pcol, GsEdgeAttributesReader ereader);
 	
 	/**
 	 * Return a merge graph colored to indicates vertices and edges parent graph.
 	 * @return the diff graph
 	 */
-	abstract public GsGraph getDiffGraph();
+	abstract public Graph getDiffGraph();
 	/**
 	 * Return the first graph to compare
 	 * @return the graph
 	 */
-	abstract public GsGraph getG1();
+	abstract public Graph getG1();
 	/**
 	 * Return the second graph to compare
 	 * @return the graph
 	 */
-	abstract public GsGraph getG2();
+	abstract public Graph getG2();
 	
 	/**
 	 * append the string 's' to the log

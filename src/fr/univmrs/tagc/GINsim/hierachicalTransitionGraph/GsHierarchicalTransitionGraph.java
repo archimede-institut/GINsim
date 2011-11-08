@@ -15,9 +15,13 @@ import java.util.regex.Pattern;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -26,6 +30,7 @@ import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis.GsDeci
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.GsException;
@@ -43,7 +48,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /* **************** GETTER AND SETTERS ************/
 /* **************** UNIMPLEMENTED METHODS ************/
 
-public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHierarchicalNode, GsDecisionOnEdge> {
+public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFrontend<GsHierarchicalNode, GsDecisionOnEdge, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
 	public static final int MODE_SCC = 1;
 	public static final int MODE_HTG = 2;
@@ -74,7 +79,7 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 	 * create a new empty GsDynamicalHierarchicalGraph.
 	 */
 	public GsHierarchicalTransitionGraph() {
-		this((String)null, false);
+		this( false);
 	}
 				
 	/**
@@ -83,16 +88,19 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 	 * @param transientCompactionMode MODE_SCC or MODE_HTG
 	 */
 	public GsHierarchicalTransitionGraph(List nodeOrder, int transientCompactionMode) {
+		
 	    this();
 	    this.nodeOrder = new ArrayList(nodeOrder);
 	    this.transientCompactionMode = transientCompactionMode;
 	}
 
-	public GsHierarchicalTransitionGraph(String filename, boolean parsing) {
-        super(GsHierarchicalTransitionGraphDescriptor.getInstance(), filename, parsing);
+	public GsHierarchicalTransitionGraph( boolean parsing) {
+		
+        super(GsHierarchicalTransitionGraphDescriptor.getInstance(), parsing);
 	}
 
 	public GsHierarchicalTransitionGraph(Map map, File file) {
+		
 	    this(file.getAbsolutePath(), true);
         GsHierarchicalTransitionGraphParser parser = new GsHierarchicalTransitionGraphParser();
         parser.parse(file, map, this);
@@ -102,13 +110,14 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 		
 /* **************** EDITION OF VERTEX AND EDGE ************/	
 
-	/**
-	 * add a vertex to this graph.
-	 * @param vertex
-	 */
-	public boolean addVertex(GsHierarchicalNode vertex) {
-		return graphManager.addVertex(vertex);
-	}
+//	/**
+//	 * add a vertex to this graph.
+//	 * @param vertex
+//	 */
+	// TODO To remove since it duplicates a method existing on AbstractGraphFrontend
+//	public boolean addVertex(GsHierarchicalNode vertex) {
+//		return graphManager.addVertex(vertex);
+//	}
 	/**
 	 * add an edge between source and target
 	 * @param source a GsHierarchicalNode
@@ -116,11 +125,12 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 	 * @return the new edge
 	 */
 	public Object addEdge(GsHierarchicalNode source, GsHierarchicalNode target) {
-		Object e = graphManager.getEdge(source, target);
+		
+		Object e = getEdge(source, target);
 		if (e != null) return e;
 		// FIXME: creating an empty GsDecisionOnEdge object: is it even possible?
-		GsDecisionOnEdge edge = new GsDecisionOnEdge(source, target, nodeOrder);
-		return graphManager.addEdge(edge);
+		GsDecisionOnEdge edge = new GsDecisionOnEdge( source, target, nodeOrder);
+		return addEdge(edge);
 	}
 
 		
@@ -219,7 +229,7 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 	     if (selectedOnly) {
 	     		it = graphManager.getFullySelectedEdgeIterator();
 	     } else {
-	     		it = graphManager.getEdgeIterator();
+	     		it = getEdges().iterator();
 	     }
 	     while (it.hasNext()) {
 	     	Object o_edge = it.next();
@@ -243,9 +253,9 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 	 	if (selectedOnly) {
 	 		it = graphManager.getSelectedVertexIterator();
 	 	} else {
-	 		it = graphManager.getVertexIterator();
+	 		it = getVertices().iterator();
 	 	}
-	 	GsVertexAttributesReader vReader = graphManager.getVertexAttributesReader();
+	 	GsVertexAttributesReader vReader = getVertexAttributeReader();
 	     while (it.hasNext()) {
 	    	 GsHierarchicalNode vertex = (GsHierarchicalNode)it.next();
 	         vReader.setVertex(vertex);
@@ -280,7 +290,7 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 		Pattern pattern = Pattern.compile(s.toString(), Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher("");
 		
-		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
+		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
 			GsHierarchicalNode vertex = (GsHierarchicalNode) it.next();
 			matcher.reset(vertex.statesToString());
 			if (matcher.find()) {
@@ -291,7 +301,7 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 	}
 	
 	public GsHierarchicalNode getNodeForState(byte[] state) {
-		for (Iterator it = this.getGraphManager().getVertexIterator(); it.hasNext();) {
+		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
 			GsHierarchicalNode v = (GsHierarchicalNode) it.next();
 			if (v.contains(state)) return v;
 		}
@@ -357,9 +367,8 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 		this.graphManager.removeEdge(edge.getSource(), edge.getTarget());
 	}
 	
-
-
-    protected boolean isAssociationValid(GsGraph graph) {
+    protected boolean isAssociationValid( Graph graph) {
+    	
         if (graph instanceof GsRegulatoryGraph) {
             return true;
         }
@@ -382,7 +391,7 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 		 *
 		 * not used for this kind of graph: it's not interactivly editable
 		 */
-		protected void setCopiedGraph(GsGraph graph) {
+		protected void setCopiedGraph( Graph graph) {
 		}
 		
 		/**
@@ -390,7 +399,7 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 		 *
 		 * not used for this kind of graph: it's not interactivly editable
 		 */
-		protected GsGraph getCopiedGraph() {
+		protected Graph getCopiedGraph() {
 			return null;
 		}
 
@@ -400,7 +409,7 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 		 * 
 		 * not used for this kind of graph: it's not interactively editable
 		 */
-		protected GsGraph getSubGraph(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
+		protected Graph getSubGraph(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
 			return null;
 		}
 		
@@ -427,7 +436,7 @@ public class GsHierarchicalTransitionGraph extends AbstractGraphFrontend<GsHiera
 		 * 
 		 * not used for this kind of graph: it has no meaning
 	     */
-		protected List doMerge(GsGraph otherGraph) {
+		protected List doMerge( Graph otherGraph) {
 	        return null;
 	    }
 

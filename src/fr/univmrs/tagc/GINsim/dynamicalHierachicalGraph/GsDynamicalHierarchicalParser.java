@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -48,10 +49,11 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
      * @param s_filename
      */
     public GsDynamicalHierarchicalParser(Map map, Attributes attributes, String s_dtd, String s_filename) {
-    	this.graph = new GsDynamicalHierarchicalGraph(s_filename, true);
+    	
+    	this.graph = new GsDynamicalHierarchicalGraph( true);
     	this.map = map;
-		vareader = graph.getGraphManager().getVertexAttributesReader();
-		ereader = graph.getGraphManager().getEdgeAttributesReader();
+		vareader = graph.getVertexAttributeReader();
+		ereader = graph.getEdgeAttributeReader();
 		
 		try {
 			graph.setGraphName(attributes.getValue("id"));
@@ -87,11 +89,11 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
      * @param map
      * @param graph the graph to fill with this data.
      */
-    public void parse(File file, Map map, GsGraph graph) {
+    public void parse(File file, Map map, Graph graph) {
     	this.graph = (GsDynamicalHierarchicalGraph) graph;
     	this.map = map;
-		vareader = graph.getGraphManager().getVertexAttributesReader();
-		ereader = graph.getGraphManager().getEdgeAttributesReader();
+		vareader = graph.getVertexAttributeReader();
+		ereader = graph.getEdgeAttributeReader();
 
 		startParsing(file);
     }
@@ -275,7 +277,8 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
         }
     }
 
-    public GsGraph getGraph() {
-        return graph;
+    public Graph getGraph() {
+        
+    	return graph;
     }
 }

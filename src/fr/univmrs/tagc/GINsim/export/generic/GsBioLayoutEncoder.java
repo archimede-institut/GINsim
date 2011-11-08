@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -21,7 +23,7 @@ public class GsBioLayoutEncoder {
 	 * @param selectedOnly
 	 * @param fileName
 	 */
-	public static void encode(GsGraph graph, boolean selectedOnly, String fileName) {
+	public static void encode( Graph graph, boolean selectedOnly, String fileName) {
 		hash = new Hashtable();
 		try {
 	        FileWriter out = new FileWriter(fileName);
@@ -34,7 +36,7 @@ public class GsBioLayoutEncoder {
 	        if (selectedOnly) {
 	        	it = graph.getGraphManager().getFullySelectedEdgeIterator();
 	        } else {
-	        	it = graph.getGraphManager().getEdgeIterator();
+	        	it = graph.getEdges().iterator();
 	        }
 	        while (it.hasNext()) {
 	        	Object edge = it.next();

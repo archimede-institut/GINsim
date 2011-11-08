@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
@@ -35,7 +37,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 	
 	
     private GsActions gsActions = new GsActions(this);
-    private GsGraph<?,?> graph = null;
+    private Graph<?,?> graph = null;
     private CardLayout cards = new CardLayout();
     private JPanel emptyPanel = null;
 
@@ -218,7 +220,8 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
     /**
      * @return the graph currently associated with this frame
      */
-    public GsGraph getGraph() {
+    public Graph getGraph() {
+    	
         return graph;
     }
 
@@ -337,7 +340,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         graph.addNotificationMessage(new GsGraphNotificationMessage(graph, e));
     }
 
-    public void graphClosed(GsGraph graph) {
+    public void graphClosed(Graph graph) {
     }
 
     /**
@@ -370,7 +373,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
 	}
 
 	@Override
-	public void updateGraphNotificationMessage(GsGraph graph) {
+	public void updateGraphNotificationMessage( Graph graph) {
 		if (graph == this.graph) {
 			super.updateNotificationMessage();
 		}

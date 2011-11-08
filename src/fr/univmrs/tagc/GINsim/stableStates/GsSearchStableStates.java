@@ -3,6 +3,8 @@ package fr.univmrs.tagc.GINsim.stableStates;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -39,16 +41,18 @@ public class GsSearchStableStates {
 	int bestIndex, bestValue;
 	int nbgene, nbremain;
 
-	public GsSearchStableStates(GsGraph regGraph, List nodeOrder, Perturbation mutant) {
-		this.regGraph = (GsRegulatoryGraph)regGraph;
+	public GsSearchStableStates( Graph regGraph, List nodeOrder, Perturbation mutant) {
+		
+		this.regGraph = (GsRegulatoryGraph) regGraph;
 		this.nodeOrder = nodeOrder;
 		this.mutant = mutant;
 		this.t_param = this.regGraph.getAllTrees(true);
 	}
 
-	public GsSearchStableStates(GsGraph regGraph, List nodeOrder, Perturbation mutant,
+	public GsSearchStableStates( Graph regGraph, List nodeOrder, Perturbation mutant,
 			OmddNode[] trees) {
-		this.regGraph = (GsRegulatoryGraph)regGraph;
+		
+		this.regGraph = (GsRegulatoryGraph) regGraph;
 		this.nodeOrder = nodeOrder;
 		this.mutant = mutant;
 		this.t_param = trees;
@@ -86,12 +90,11 @@ public class GsSearchStableStates {
 
 	private void buildAdjTable() {
 		nbgene = nbremain = nodeOrder.size();
-		GsGraphManager manager = regGraph.getGraphManager();
 		t_newreg = new int[nbgene][2];
 		t_reg = new boolean[nbgene][nbgene];
 		bestValue = nbgene+1;
 		for (int i=0 ; i<nbgene ; i++) {
-			Iterator it_reg = manager.getIncomingEdges(nodeOrder.get(i)).iterator();
+			Iterator it_reg = regGraph.getIncomingEdges( (GsRegulatoryVertex) nodeOrder.get(i)).iterator();
 			int cpt = 0;
 			boolean[] t_regline = t_reg[i];
 			while (it_reg.hasNext()) {

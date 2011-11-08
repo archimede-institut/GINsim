@@ -5,15 +5,18 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class STG2HTGFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7430762236435581864L;
-	private GsGraph graph;
+	private Graph graph;
 	private JFrame frame;
 	
-	public STG2HTGFrame(JFrame frame, GsGraph graph) {
+	public STG2HTGFrame(JFrame frame, Graph graph) {
+		
 		super(frame, "STR_STG2HTG", 420, 260);
 		this.graph = graph;
    }
@@ -26,7 +29,8 @@ public class STG2HTGFrame extends StackDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 	}
 
-	public GsGraph getGraph() {
+	public Graph getGraph() {
+		
 		return graph;
 	}
 	

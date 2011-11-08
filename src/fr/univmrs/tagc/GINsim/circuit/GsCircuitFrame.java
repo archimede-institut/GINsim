@@ -25,6 +25,8 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.connectivity.AlgoConnectivity;
 import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;

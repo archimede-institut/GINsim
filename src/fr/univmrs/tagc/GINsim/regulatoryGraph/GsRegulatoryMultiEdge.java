@@ -64,13 +64,13 @@ public class GsRegulatoryMultiEdge extends Edge<GsRegulatoryVertex> implements X
     	this(source, target, 0, (byte)1);
     }
 
-    public void addEdge(GsGraph graph) {
+    public void addEdge( Graph graph) {
     	addEdge(SIGN_POSITIVE, 1, graph);
     }
-    public void addEdge(int sign, GsGraph graph) {
+    public void addEdge(int sign, Graph graph) {
     	addEdge(sign, 1, graph);
     }
-    public int addEdge(int sign, int threshold, GsGraph graph) {
+    public int addEdge(int sign, int threshold, Graph graph) {
     	int index = doAddEdge(sign, threshold);
     	if (index != -1) {
     		rescanSign(graph);
@@ -199,7 +199,7 @@ public class GsRegulatoryMultiEdge extends Edge<GsRegulatoryVertex> implements X
 	 * @param sign the new sign
 	 * @param graph
 	 */
-	public void setSign(int index, byte sign, GsGraph graph) {
+	public void setSign(int index, byte sign, Graph graph) {
 		if (index >= edgecount) {
 			return;
 		}
@@ -295,7 +295,7 @@ public class GsRegulatoryMultiEdge extends Edge<GsRegulatoryVertex> implements X
 		edges[index].threshold = min;
 	}
 
-	//protected void rescanSign(GsGraph graph) {
+	//protected void rescanSign(Graph graph) {
 	public void rescanSign( Graph graph) {
 		this.sign = edges[0].sign;
 		for (int i=0 ; i<edgecount ; i++) {

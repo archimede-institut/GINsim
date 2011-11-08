@@ -7,6 +7,8 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.annotation.BiblioManager;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -53,12 +55,14 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
         return true;
     }
 
-    public GsGraph getNew(GsMainFrame m) {
-        GsGraph graph = new GsRegulatoryGraph();
+    public Graph getNew(GsMainFrame m) {
+    	
+        Graph graph = new GsRegulatoryGraph();
         return graph;
     }
 
-	public GsGraph open(File file) {
+	public Graph open(File file) {
+		
 	    return open(null, file);
 	}
 
@@ -171,7 +175,8 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
         }
         return instance;
     }
-    public GsGraph open(Map map, File file) {
+    public Graph open(Map map, File file) {
+    	
         return new GsRegulatoryGraph(map, file);
     }
 }

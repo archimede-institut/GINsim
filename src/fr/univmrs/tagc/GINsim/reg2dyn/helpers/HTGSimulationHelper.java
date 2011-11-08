@@ -3,6 +3,8 @@ package fr.univmrs.tagc.GINsim.reg2dyn.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
@@ -27,7 +29,7 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		}
 		this.htg = new GsHierarchicalTransitionGraph(params.nodeOrder, mode);
 		htg.setAssociatedGraph(regGraph);
-		GsVertexAttributesReader vreader = htg.getGraphManager().getVertexAttributesReader();
+		GsVertexAttributesReader vreader = htg.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         htg.getAnnotation().setComment(params.getDescr()+"\n");
         arcs = new HashMap();
@@ -37,7 +39,8 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		return false;
 	}
 
-	public GsGraph endSimulation() {
+	public Graph endSimulation() {
+		
 		return htg;
 	}
 
@@ -52,11 +55,13 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		this.node = (GsHierarchicalNode) node;
 	}
 	
-	public GsGraph getRegulatoryGraph() {
+	public Graph getRegulatoryGraph() {
+		
 		return this.regGraph;
 	}
 	
-	public GsGraph getDynamicGraph() {
+	public Graph getDynamicGraph() {
+		
 		return this.htg;
 	}
 }

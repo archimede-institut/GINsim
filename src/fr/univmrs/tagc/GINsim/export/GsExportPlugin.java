@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.export;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.export.generic.GsBioLayoutEncoder;
 import fr.univmrs.tagc.GINsim.export.generic.GsGraphvizEncoder;
 import fr.univmrs.tagc.GINsim.export.generic.GsSVGExport;
@@ -36,7 +38,8 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
 		GsGraphManager.registerExportProvider(this);
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
         if (actionType == ACTION_EXPORT) {
             if (graph instanceof GsRegulatoryGraph) {
               return new GsPluggableActionDescriptor[] {
@@ -57,7 +60,7 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
 		return null;
 	}
 
-	public void runAction (int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction (int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 	    if (actionType != ACTION_EXPORT) {
 	        return;
         }

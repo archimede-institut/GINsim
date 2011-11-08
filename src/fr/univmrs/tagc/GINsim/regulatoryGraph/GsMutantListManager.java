@@ -24,13 +24,15 @@ public class GsMutantListManager implements
 
 	public static final String key = "mutant";
 	
-    public Object doOpen(InputStream is, Graph<?,?> graph) {
+    public Object doOpen(InputStream is, Graph graph) {
+    	
         GsRegulatoryMutantParser parser = new GsRegulatoryMutantParser((GsRegulatoryGraph) graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
 
-    public void doSave(OutputStreamWriter os, GsGraph graph) {
+    public void doSave(OutputStreamWriter os, Graph graph) {
+    	
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject(key, false);
         List nodeOrder = graph.getNodeOrder();
         if (lMutant == null || lMutant.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
@@ -53,13 +55,13 @@ public class GsMutantListManager implements
         return "mutant";
     }
 
-    public boolean needSaving( Graph<?,?> graph) {
+    public boolean needSaving( Graph graph) {
     	
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants) graph.getObject("mutant", false);
         return lMutant != null && lMutant.getNbElements(null) > 0;
     }
 
-	public Object doCreate( Graph<?,?> graph) {
+	public Object doCreate( Graph graph) {
 		
 		return new GsRegulatoryMutants( (GsRegulatoryGraph)graph);
 	}

@@ -18,24 +18,24 @@ public interface GsGraphAssociatedObjectManager {
      * @param graph
      * @return true if this graph has a relevant associated object
      */
-    public boolean needSaving(GsGraph graph);
+    public boolean needSaving( Graph graph);
     /**
      * save the object associated with this graph.
      * 
      * @param out
      * @param graph
      */
-    public void doSave(OutputStreamWriter out, GsGraph graph);
+    public void doSave(OutputStreamWriter out, Graph graph);
     /**
      * open associated object.
      * 
      * @param is
      * @param graph
      */
-    public Object doOpen(InputStream is, GsGraph graph);
+    public Object doOpen(InputStream is, Graph graph);
     /**
      * create the associated object for a graph
      * @param graph
      */
-	public Object doCreate( Graph<?,?> graph);
+	public Object doCreate( Graph graph);
 }

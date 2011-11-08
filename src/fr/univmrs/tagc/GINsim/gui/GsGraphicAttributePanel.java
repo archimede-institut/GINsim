@@ -26,11 +26,10 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.graph.GraphView;
+import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -898,21 +897,12 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		}
 	}
 
-	public void setGraph(GsGraph graph) {
+	public void setGraph( Graph graph) {
 		if (graph == null) {
 			return;
 		}
-		vReader = graph.getGraphManager().getVertexAttributesReader();
-		eReader = graph.getGraphManager().getEdgeAttributesReader();
-		reload();
-	}
-	
-	public void setGraph(GraphView view) {
-		if (graph == null) {
-			return;
-		}
-		vReader = view.getVertexAttributeReader();
-		eReader = view.getEdgeAttributeReader();
+		vReader = graph.getVertexAttributeReader();
+		eReader = graph.getEdgeAttributeReader();
 		reload();
 	}
 	

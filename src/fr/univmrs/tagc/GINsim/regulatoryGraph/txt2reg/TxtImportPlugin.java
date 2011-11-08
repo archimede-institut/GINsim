@@ -22,7 +22,7 @@ public class TxtImportPlugin implements GsPlugin, GsActionProvider {
 
 	private GsPluggableActionDescriptor[] t_import = null;
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		if (actionType == ACTION_IMPORT) {
 			if (graph instanceof GsRegulatoryGraph) {
 				return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
@@ -33,7 +33,7 @@ public class TxtImportPlugin implements GsPlugin, GsActionProvider {
 		return null;
 	}
 
-	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 		if (actionType != ACTION_IMPORT) {
 			return;
 		}
@@ -52,6 +52,6 @@ public class TxtImportPlugin implements GsPlugin, GsActionProvider {
 		// TODO ...
 		TruthTableParser parser = new TruthTableParser(filename);
 		System.out.println(filename);
-		//GsGraph newGraph = parser.getGraph();
+		//Graph newGraph = parser.getGraph();
 	}
 }

@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
@@ -32,7 +34,7 @@ public class GsWhatToDoFrame extends JDialog {
 	private javax.swing.JRadioButton radioAction = null;
     private javax.swing.JButton buttonOK = null;
     private javax.swing.JButton buttonClose = null;
-	private GsGraph graph;
+	private Graph graph;
 	private javax.swing.JLabel labelInfo = null;
 	
 	private JCheckBox checkLayout = null;
@@ -53,7 +55,7 @@ public class GsWhatToDoFrame extends JDialog {
 	 * @param graph
 	 * @param needLayout 
 	 */
-	public GsWhatToDoFrame(JFrame frame, GsGraph graph, boolean needLayout) {
+	public GsWhatToDoFrame(JFrame frame, Graph graph, boolean needLayout) {
 		super(frame);
 		this.graph = graph;
 		this.frame = frame;
@@ -80,7 +82,7 @@ public class GsWhatToDoFrame extends JDialog {
 	 * Initialization
 	 */
 	private void initialize() {
-		size = graph.getGraphManager().getVertexCount();
+		size = graph.getVertexCount();
 		this.setSize(500, 280);
 		this.setContentPane(getTheContentPane());
 		this.setVisible(true);
@@ -412,7 +414,7 @@ public class GsWhatToDoFrame extends JDialog {
 		return radioExport;
 	}
 	
-	private void fillComboWithList(JComboBox combo, List l, int actionCode, GsGraph graph) {
+	private void fillComboWithList(JComboBox combo, List l, int actionCode, Graph graph) {
 		if (l == null) {
 			return;
 		}

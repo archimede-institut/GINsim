@@ -1,13 +1,15 @@
 package fr.univmrs.tagc.GINsim.graph;
 
+import org.ginsim.graph.Graph;
+
 
 /**
  * Provide information about the new graph in the GsMainFrame
  */
 public class GsNewGraphEvent {
 
-	private GsGraph oldGraph;
-	private GsGraph newGraph;
+	private Graph oldGraph;
+	private Graph newGraph;
 	private boolean anAssociation;
 	private Object source;	
 	
@@ -19,7 +21,7 @@ public class GsNewGraphEvent {
 	 * @param newG Graph
 	 * @param association true if the associated graph was changed
 	 */
-	public GsNewGraphEvent(Object source,GsGraph oldG,GsGraph newG, boolean association) {
+	public GsNewGraphEvent(Object source, Graph oldG, Graph newG, boolean association) {
 		this.source=source;
 		oldGraph=oldG;
 		newGraph=newG;
@@ -30,7 +32,7 @@ public class GsNewGraphEvent {
 	 * get the new graph
 	 * @return the new graph
 	 */
-	public GsGraph getNewGraph() {
+	public Graph getNewGraph() {
 		return newGraph;
 	}
 
@@ -38,7 +40,7 @@ public class GsNewGraphEvent {
 	 * get the old graph
 	 * @return the old graph
 	 */
-	public GsGraph getOldGraph() {
+	public Graph getOldGraph() {
 		return oldGraph;
 	}
 	

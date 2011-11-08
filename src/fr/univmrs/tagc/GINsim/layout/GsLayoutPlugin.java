@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
 import org.ginsim.service.layout.GsLayoutAlgo;
 import org.ginsim.service.layout.GsLevelLayout;
 import org.ginsim.service.layout.GsRingLayout;
@@ -40,14 +41,14 @@ public class GsLayoutPlugin implements GsPlugin, GsActionProvider {
         GsGraph.registerLayoutProvider(this);
     }
 
-    public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+    public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
         if (actionType != ACTION_LAYOUT) {
             return null;
         }
         return t_layout;
     }
 
-    public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
         if (actionType != ACTION_LAYOUT) {
             return;
         }
@@ -93,7 +94,7 @@ public class GsLayoutPlugin implements GsPlugin, GsActionProvider {
 		algo.configure(vreader, nbRoot, nbStables, nbClassic, maxHeight, maxWidth);
 		
 		// then rebrowse all nodes to do the actual placement
-		it = graph.getGraphManager().getVertexIterator();
+		it = graph.getVertices().iterator();
         if (inversed) {
             while (it.hasNext()) {
                 Object vertex = it.next();

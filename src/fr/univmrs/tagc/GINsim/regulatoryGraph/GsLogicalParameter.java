@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -62,7 +64,7 @@ public class GsLogicalParameter implements XMLize {
 	 * set value of the interaction
 	 * @param i
 	 */
-	public void setValue(int i, GsGraph graph) {
+	public void setValue(int i, Graph graph) {
 		if (i != value) {
 			value = i;
 			graph.fireMetaChange();

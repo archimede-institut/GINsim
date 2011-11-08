@@ -16,6 +16,8 @@ import java.util.TreeMap;
 
 import javax.swing.JComponent;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -60,8 +62,8 @@ public class GsNuSMVExport extends GsAbstractExport {
 				(GsNuSMVConfig) config.getSpecificConfig());
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType,
-			GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
 		if (graph instanceof GsRegulatoryGraph) {
 			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
 					"STR_NuSMVmodelChecker",

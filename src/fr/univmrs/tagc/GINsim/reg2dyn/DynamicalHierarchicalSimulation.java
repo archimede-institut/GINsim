@@ -67,7 +67,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	/**
 	 * Run the simulation, handle exception and build the graph.
 	 */
-	public GsGraph do_simulation() {
+	public Graph do_simulation() {
 		long time = System.currentTimeMillis();
 		this.dynGraph = helper.dynHieGraph;
 		this.rgm = helper.regGraph.getGraphManager();

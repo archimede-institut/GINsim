@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import javax.swing.Action;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
@@ -17,7 +19,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class RegulatoryEdgeEditor extends ObjectEditor {
 
-	GsGraph graph;
+	Graph graph;
 	GsRegulatoryMultiEdge medge;
 	GsRegulatoryEdge edge;
 	EdgeList edgeList;
@@ -221,11 +223,11 @@ class AddEdgeNotificationAction implements GsGraphNotificationAction {
 	AddEdgeNotificationAction(EdgeList edgeList) {
 		this.edgeList = edgeList;
 	}
-	public boolean timeout(GsGraph graph, Object data) {
+	public boolean timeout( Graph graph, Object data) {
 		return true;
 	}
 
-	public boolean perform(GsGraph graph, Object data, int index) {
+	public boolean perform( Graph graph, Object data, int index) {
 		if (edgeList.medge == data) {
 			GsRegulatoryVertex vertex = ((GsRegulatoryMultiEdge)data).getSource();
 			vertex.setMaxValue((byte)(vertex.getMaxValue()+1), (GsRegulatoryGraph)graph);

@@ -36,8 +36,7 @@ public class GsPetriNetExportPNML extends GsAbstractExport {
 		filterDescr = "PNML files (.xml)";
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType,
-			GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		return null;
 	}
 	

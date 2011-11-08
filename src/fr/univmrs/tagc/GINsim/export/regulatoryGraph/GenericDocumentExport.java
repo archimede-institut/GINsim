@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
@@ -69,7 +71,8 @@ public class GenericDocumentExport extends GsAbstractExport {
 		return v_format;
 	}
    
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
         if (graph instanceof GsRegulatoryGraph) {
         	return new GsPluggableActionDescriptor[] {
         			new GsPluggableActionDescriptor("STR_Generic", "STR_Generic_descr", null, this, ACTION_EXPORT, 0)
@@ -646,7 +649,8 @@ class GenericDocumentExportFormat extends GenericDocumentExport {
 		return new GenericDocumentExportFormat(format.documentWriterClass, format.id, format.extensionArray, format.filterDescr, format.defaultExtension);
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
 		return null;
 	}
 	

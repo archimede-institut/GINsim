@@ -4,6 +4,8 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.BaseMainFrame;
@@ -28,7 +30,8 @@ public class GsTBPlugin implements GsPlugin, GsActionProvider {
     GsRegulatoryGraphDescriptor.registerActionProvider(this);
   }
 
-  public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+  public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+	  
     if (!graph.isVisible() || actionType != ACTION_ACTION) {
       return null;
     }
@@ -39,7 +42,7 @@ public class GsTBPlugin implements GsPlugin, GsActionProvider {
     return t_action;
   }
 
-  public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+  public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
     if (!((BaseMainFrame)frame).removeTab("TBrowser")) {
       clientPanel = new GsTBClientPanel(graph);
       ((BaseMainFrame) frame).addTab("TBrowser", clientPanel, true, BaseMainFrame.FLAG_ANY);

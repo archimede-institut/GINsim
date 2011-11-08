@@ -52,7 +52,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     protected boolean saved = true;
 //    protected boolean isParsing = false;
 //    protected List nodeOrder = new ArrayList();
-    protected GsGraphDescriptor descriptor = null;
+//    protected GsGraphDescriptor descriptor = null;
 //    protected List<GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
 
 //    protected String graphName = "default_name";
@@ -93,10 +93,10 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 //	protected GsVertexAttributesReader vReader;
 //	protected GsEdgeAttributesReader eReader;
 
-    private Map m_objects = null;
+//    private Map m_objects = null;
 
-    private static int graphID = 0;
-    private int id;
+//    private static int graphID = 0;
+//    private int id;
 
     // TODO specialize his variable on the specialized graph that require it
 //    protected GsGraph associatedGraph = null;
@@ -106,31 +106,31 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     protected boolean extended = false;
     protected boolean compressed = true;
 
-    /**
-     * @param descriptor
-     */
-    public GsGraph(GsGraphDescriptor descriptor) {
-        this(descriptor, null, false);
-    }
-    /**
-     *
-     * @param descriptor
-     * @param saveFileName
-     */
-    public GsGraph(GsGraphDescriptor descriptor, String saveFileName, boolean parsing) {
-        this.descriptor = descriptor;
-        this.saveFileName = saveFileName;
-        this.isParsing = parsing;
-        if (saveFileName == null) {
-            id = graphID++;
-           GsEnv.registerGraph(this, "[UNSAVED-"+id+"]");
-        } else {
-            GsEnv.registerGraph(this, saveFileName);
-        }
-        graphManager = new GsJgraphtGraphManager(this, mainFrame);
-        vReader = graphManager.getVertexAttributesReader();
-        eReader = graphManager.getEdgeAttributesReader();
-    }
+//    /**
+//     * @param descriptor
+//     */
+//    public GsGraph(GsGraphDescriptor descriptor) {
+//        this(descriptor, null, false);
+//    }
+//    /**
+//     *
+//     * @param descriptor
+//     * @param saveFileName
+//     */
+//    public GsGraph(GsGraphDescriptor descriptor, String saveFileName, boolean parsing) {
+//        this.descriptor = descriptor;
+//        this.saveFileName = saveFileName;
+//        this.isParsing = parsing;
+//        if (saveFileName == null) {
+//            id = graphID++;
+//           GsEnv.registerGraph(this, "[UNSAVED-"+id+"]");
+//        } else {
+//            GsEnv.registerGraph(this, saveFileName);
+//        }
+//        graphManager = new GsJgraphtGraphManager(this, mainFrame);
+//        vReader = graphManager.getVertexAttributesReader();
+//        eReader = graphManager.getEdgeAttributesReader();
+//    }
 
 //    // TODO Usage? Where to move?
       // TODO Remove : Moved to AbstractGraphFrontend 
@@ -688,29 +688,29 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	// TODO Move to AbstractGraphFrontend
     abstract public List getSpecificAction();
     
-    /**
-     * @return a vector of action related to this kind of graph.
-     */
-    // TODO Move to AbstractGraphFrontend
-    abstract public List getSpecificObjectManager();
-    /**
-     * @param key
-     * @return the object manager associated with THIS kind of graph and to a given key
-     */
-    // TODO Move to AbstractGraphFrontend
-    public GsGraphAssociatedObjectManager getSpecificObjectManager(Object key) {
-    	Vector v_OManager = GsRegulatoryGraphDescriptor.getObjectManager();
-    	if (v_OManager == null) {
-    		return null;
-    	}
-        for (int i=0 ; i<v_OManager.size() ; i++) {
-        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
-        	if (manager.getObjectName().equals(key)) {
-        		return manager;
-        	}
-        }
-        return null;
-    }
+//    /**
+//     * @return a vector of action related to this kind of graph.
+//     */
+//    // TODO Move to AbstractGraphFrontend
+//    abstract public List getSpecificObjectManager();
+//    /**
+//     * @param key
+//     * @return the object manager associated with THIS kind of graph and to a given key
+//     */
+//    // TODO Move to AbstractGraphFrontend
+//    public GsGraphAssociatedObjectManager getSpecificObjectManager(Object key) {
+//    	Vector v_OManager = GsRegulatoryGraphDescriptor.getObjectManager();
+//    	if (v_OManager == null) {
+//    		return null;
+//    	}
+//        for (int i=0 ; i < v_OManager.size() ; i++) {
+//        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+//        	if (manager.getObjectName().equals(key)) {
+//        		return manager;
+//        	}
+//        }
+//        return null;
+//    }
 
 
 	/**
@@ -1109,66 +1109,66 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         return descriptor;
     }
 
-    /**
-     * plugins/algo/anything may want to associate objects with a graph to retrieve them later.
-     * this (and <code>addObject(key, obj)</code>) makes it easy.
-     *
-     * @see #addObject(Object, Object)
-     * @param key
-     * @param create if true, a non-defined object will be created
-     * @return the associated object
-     */
-    public Object getObject (Object key, boolean create) {
-        if (m_objects == null) {
-        	if (create) {
-        		m_objects = new HashMap();
-        	} else {
-        		return null;
-        	}
-        }
-        Object ret = m_objects.get(key);
-        if (create && ret == null) {
-        	GsGraphAssociatedObjectManager manager = getObjectManager(key);
-        	if (manager == null) {
-        		manager = getSpecificObjectManager(key);
-        	}
-        	if (manager != null) {
-        		ret = manager.doCreate(this);
-        		addObject(key, ret);
-        	}
-        }
-        return ret;
-    }
-
-    /**
-     * plugins/algo/anything may want to associate objects with a graph to retrieve them later.
-     * this (and <code>getObject(key)</code>) makes it easy.
-     *
-     * @see #getObject(Object)
-     * @see #removeObject(Object)
-     * @param key
-     * @param obj
-     */
-    public void addObject(Object key, Object obj) {
-        if (m_objects == null) {
-            m_objects = new HashMap();
-        }
-        m_objects.put(key, obj);
-    }
-
-    /**
-     * remove an object previously associated to a graph with <code>addObject(Object, Object)</code>.
-     *
-     * @see #getObject(Object)
-     * @see #addObject(Object, Object)
-     * @param key
-     */
-    public void removeObject(Object key) {
-        if (m_objects == null) {
-            return;
-        }
-        m_objects.remove(key);
-    }
+//    /**
+//     * plugins/algo/anything may want to associate objects with a graph to retrieve them later.
+//     * this (and <code>addObject(key, obj)</code>) makes it easy.
+//     *
+//     * @see #addObject(Object, Object)
+//     * @param key
+//     * @param create if true, a non-defined object will be created
+//     * @return the associated object
+//     */
+//    public Object getObject (Object key, boolean create) {
+//        if (m_objects == null) {
+//        	if (create) {
+//        		m_objects = new HashMap();
+//        	} else {
+//        		return null;
+//        	}
+//        }
+//        Object ret = m_objects.get(key);
+//        if (create && ret == null) {
+//        	GsGraphAssociatedObjectManager manager = getObjectManager(key);
+//        	if (manager == null) {
+//        		manager = getSpecificObjectManager(key);
+//        	}
+//        	if (manager != null) {
+//        		ret = manager.doCreate(this);
+//        		addObject(key, ret);
+//        	}
+//        }
+//        return ret;
+//    }
+//
+//    /**
+//     * plugins/algo/anything may want to associate objects with a graph to retrieve them later.
+//     * this (and <code>getObject(key)</code>) makes it easy.
+//     *
+//     * @see #getObject(Object)
+//     * @see #removeObject(Object)
+//     * @param key
+//     * @param obj
+//     */
+//    public void addObject(Object key, Object obj) {
+//        if (m_objects == null) {
+//            m_objects = new HashMap();
+//        }
+//        m_objects.put(key, obj);
+//    }
+//
+//    /**
+//     * remove an object previously associated to a graph with <code>addObject(Object, Object)</code>.
+//     *
+//     * @see #getObject(Object)
+//     * @see #addObject(Object, Object)
+//     * @param key
+//     */
+//    public void removeObject(Object key) {
+//        if (m_objects == null) {
+//            return;
+//        }
+//        m_objects.remove(key);
+//    }
 
 //	/**
 //     * get the annotation associated with this graph.

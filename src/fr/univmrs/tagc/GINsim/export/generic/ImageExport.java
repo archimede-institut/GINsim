@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 
 /**
@@ -18,7 +20,7 @@ public class ImageExport {
      * @param selectedOnly
      * @param fileName
      */
-    public static void exportImage(GsGraph graph, boolean selectedOnly, String fileName) {
+    public static void exportImage( Graph graph, boolean selectedOnly, String fileName) {
 
     	BufferedImage img = graph.getGraphManager().getImage();
     	

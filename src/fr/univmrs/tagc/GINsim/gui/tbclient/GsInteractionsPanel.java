@@ -26,6 +26,8 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ginsim.graph.Graph;
+
 import tbrowser.data.TBProbe;
 import tbrowser.data.module.TBModuleData;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -127,7 +129,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 	}
 	private DecoTreeTable table;
 	private ImageIcon in_on, show, out_on;
-	private GsGraph graph;
+	private Graph graph;
 	private GsTBClientPanel clientPanel;
 	private JComboBox orgComboBox;
 	private JCheckBox selectAllCheckBox;
@@ -258,7 +260,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 									w = 3;
 								else if (ns >= 1)
 									w = 2;
-								clientPanel.applyEdgeStyle((GsRegulatoryMultiEdge)graph.getGraphManager().getEdge(v1, v2), w);
+								clientPanel.applyEdgeStyle((GsRegulatoryMultiEdge)graph.getEdge(v1, v2), w);
 							}
 							node.getChild(j).getValues().setValueAt(3, (v == null ? "?" : v.size() == 0 ? "?" : String.valueOf(ns)), false);
 						}
@@ -348,7 +350,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 			}
 		});
 	}
-	public void init(GsGraph graph, boolean resizeColumns) {
+	public void init( Graph graph, boolean resizeColumns) {
 		this.graph = graph;
 		DTreeNodeBuilder nb = new DTreeNodeBuilder(true);
 		DTreeTableBuilder tb = new DTreeTableBuilder(nb);
@@ -357,7 +359,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 		tb.clearTree(table);
 		node = nb.getNode();
 
-		Iterator it = graph.getGraphManager().getVertexIterator();
+		Iterator it = graph.getVertices().iterator();
 		GsRegulatoryVertex vertex;
 
 		while (it.hasNext()) {
@@ -367,7 +369,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 			nb.getNode().setUserObject(vertex);
 			tb.addNode(nb.getNode());
 			if (!((DTreeElementToggleButton)node).isSelected()) {
-				Collection<GsRegulatoryMultiEdge> edges = graph.getGraphManager().getOutgoingEdges(vertex);
+				Collection<GsRegulatoryMultiEdge> edges = graph.getOutgoingEdges(vertex);
 				for (GsRegulatoryMultiEdge edge: edges) {
 					for (int k = 0; k < edge.getEdgeCount(); k++) {
 						tb.newNode(edge.getTarget().toString() + "   ", Color.black);
@@ -387,7 +389,7 @@ public class GsInteractionsPanel extends GsPanel implements ItemListener, Action
 				}
 			}
 			else {
-				Collection<GsRegulatoryMultiEdge> edges = graph.getGraphManager().getIncomingEdges(vertex);
+				Collection<GsRegulatoryMultiEdge> edges = graph.getIncomingEdges(vertex);
 				for (GsRegulatoryMultiEdge edge: edges) {
 					for (int k = 0; k < edge.getEdgeCount(); k++) {
 						tb.newNode(edge.getSource().toString() + "   ", Color.black);

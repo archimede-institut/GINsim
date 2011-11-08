@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 
 public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
@@ -14,7 +16,7 @@ public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 	
 	private GsDynamicalHierarchicalGraph g;
 
-	public GsDynamicalHierarchicalTableModel(GsGraph g) {
+	public GsDynamicalHierarchicalTableModel( Graph g) {
 		super();
 		this.g = (GsDynamicalHierarchicalGraph) g;
 		colCount = g.getNodeOrder().size();

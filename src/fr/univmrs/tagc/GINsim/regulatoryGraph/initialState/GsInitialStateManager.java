@@ -21,14 +21,14 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 
 	public static final String key = "initialState";
 	
-    public Object doOpen(InputStream is,  Graph<?,?> graph) {
+    public Object doOpen(InputStream is, Graph graph) {
     	
         initStateParser parser = new initStateParser((GsRegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
 
-    public void doSave(OutputStreamWriter os, GsGraph graph) {
+    public void doSave(OutputStreamWriter os, Graph graph) {
         GsInitialStateList imanager = (GsInitialStateList)graph.getObject(key, true);
         List nodeOrder = graph.getNodeOrder();
         if (imanager == null || imanager.isEmpty() || nodeOrder == null || nodeOrder.size() == 0) {
@@ -49,7 +49,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 		return key;
 	}
 
-    public boolean needSaving(GsGraph graph) {
+    public boolean needSaving( Graph graph) {
         GsInitialStateList list = (GsInitialStateList)graph.getObject(key, false);
         return list != null && !list.isEmpty();
     }

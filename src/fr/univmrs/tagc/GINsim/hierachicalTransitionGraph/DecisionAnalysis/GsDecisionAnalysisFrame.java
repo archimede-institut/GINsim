@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
@@ -36,7 +38,7 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 		this.frame = parent;
 	}
 
-	public GsDecisionAnalysisFrame(JFrame frame, GsGraph graph) {
+	public GsDecisionAnalysisFrame(JFrame frame, Graph graph) {
 		super(frame, "STR_htg_decision_analysis", 475, 260);
 		this.frame = frame;
 		if (graph instanceof GsHierarchicalTransitionGraph) {
@@ -70,7 +72,7 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 
 	
 	private GenericListSelectionPanel getPriorityClassSelector() {
-        GsSimulationParameterList paramList = (GsSimulationParameterList)regGraph.getObject(GsSimulationParametersManager.key, true);
+        GsSimulationParameterList paramList = (GsSimulationParameterList) regGraph.getObject(GsSimulationParametersManager.key, true);
 		if (selectPriorityClass == null) {
 			selectPriorityClass = new PrioritySelectionPanel(this, paramList.pcmanager);
 			this.currentParameter = (GsSimulationParameters)paramList.getElement(null, 0);

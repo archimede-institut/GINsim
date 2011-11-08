@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -37,7 +38,7 @@ public final class GsGinmlParser extends XMLHelper {
      * @param map
      * @return the new graph
      */
-    public GsGraph  parse(InputStream is, Map map) {
+    public Graph  parse(InputStream is, Map map) {
     	this.map = map;
 		startParsing(is);
 		if (realParser == null) {
@@ -55,7 +56,7 @@ public final class GsGinmlParser extends XMLHelper {
             if ("regulatory".equals(s_class)) {
                 realParser = new GsRegulatoryParser(map, attributes, s_dtd, s_filename);
             } else if ("dynamical".equals(s_class)) {
-                realParser = new GsDynamicParser(map, attributes, s_dtd, s_filename);
+                realParser = new GsDynamicParser(map, attributes, s_dtd);
             } else if ("reduced".equals(s_class)) {
                 realParser = new GsReducedGraphParser(map, attributes, s_dtd, s_filename);
             } else if ("hierarchicalTransitionGraph".equals(s_class)) {
@@ -67,7 +68,8 @@ public final class GsGinmlParser extends XMLHelper {
         }
     }
     
-    public GsGraph getGraph() {
+    public Graph getGraph() {
+    	
 		if (realParser == null) {
 		    return null;
 		}

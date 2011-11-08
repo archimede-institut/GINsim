@@ -68,7 +68,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
      * @param gsGraph
      * @param mainFrame
      */
-    public GsJgraphtGraphManager(GsGraph gsGraph, GsMainFrame mainFrame) {
+    public GsJgraphtGraphManager( Graph gsGraph, GsMainFrame mainFrame) {
         this.mainFrame = mainFrame;
         this.gsGraph = gsGraph;
         

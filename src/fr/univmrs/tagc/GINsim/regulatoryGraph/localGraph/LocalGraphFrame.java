@@ -21,6 +21,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -57,7 +59,8 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 		super(parent, id, w, h);
 	}
 
-	public LocalGraphFrame(JFrame frame, GsGraph regGraph) {
+	public LocalGraphFrame(JFrame frame, Graph regGraph) {
+		
 		super(frame, "localGraph", 420, 260);
 		this.regGraph = (GsRegulatoryGraph) regGraph;
 		this.dynGraph = null;
@@ -65,7 +68,8 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
         initialize();
     }
 
-	public LocalGraphFrame(JFrame frame, GsGraph regulatoryGraph, GsGraph dynamicGraph) {
+	public LocalGraphFrame(JFrame frame, Graph regulatoryGraph, Graph dynamicGraph) {
+		
 		super(frame, "STR_localGraph", 420, 260);
 		this.regGraph = (GsRegulatoryGraph) regulatoryGraph;
 		this.dynGraph = (GsDynamicGraph) dynamicGraph;

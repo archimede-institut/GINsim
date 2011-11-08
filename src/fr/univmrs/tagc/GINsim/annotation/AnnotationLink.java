@@ -3,6 +3,8 @@ package fr.univmrs.tagc.GINsim.annotation;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.HttpHelper;
 import fr.univmrs.tagc.common.OpenHelper;
@@ -14,7 +16,8 @@ public class AnnotationLink {
 	static {
 		HttpHelper.setup();
 	}
-	static void addHelperClass(String key, String objectKey) {
+	static void addHelperClass( String key, String objectKey) {
+		
 		m_helper.put(key, objectKey);
 	}
 	
@@ -22,10 +25,10 @@ public class AnnotationLink {
 	String proto;
 	String value;
 
-	public AnnotationLink(String s, GsGraph graph) {
+	public AnnotationLink(String s, Graph graph) {
 		setText(s, graph);
 	}
-	public void setText(String s, GsGraph graph) {
+	public void setText(String s, Graph graph) {
 		String[] ts = s.split(":", 2);
 		if (ts.length == 1) {
 			this.helper = null;

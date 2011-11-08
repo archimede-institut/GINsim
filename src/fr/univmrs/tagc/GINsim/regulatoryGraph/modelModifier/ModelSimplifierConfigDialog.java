@@ -61,7 +61,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		}
 	}
 	
-    public void endSimu(GsGraph graph, Exception e) {
+    public void endSimu( Graph graph, Exception e) {
     	isRunning = false;
         if (null == graph) {
             Tools.error(e.getMessage(), this.graph.getGraphManager().getMainFrame());

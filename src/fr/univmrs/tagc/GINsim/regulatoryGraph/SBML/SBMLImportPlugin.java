@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.SBML;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -23,7 +25,7 @@ public class SBMLImportPlugin implements GsPlugin, GsActionProvider {
 
 	private GsPluggableActionDescriptor[] t_import = null;
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		if (actionType == ACTION_IMPORT) {
 			if (graph instanceof GsRegulatoryGraph) {
 				return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
@@ -34,7 +36,7 @@ public class SBMLImportPlugin implements GsPlugin, GsActionProvider {
 		return null;
 	}
 
-	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 		if (actionType != ACTION_IMPORT) {
 			return;
 		}
@@ -59,7 +61,7 @@ public class SBMLImportPlugin implements GsPlugin, GsActionProvider {
 			return;
 		}
 		SBMLXpathParser parser = new SBMLXpathParser(filename);
-		GsGraph newGraph = parser.getGraph();
+		Graph newGraph = parser.getGraph();
 		new GsWhatToDoFrame(frame, newGraph, true);
 	}
 }

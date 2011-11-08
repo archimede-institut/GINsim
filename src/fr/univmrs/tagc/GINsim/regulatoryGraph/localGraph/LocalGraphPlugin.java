@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.localGraph;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
@@ -24,7 +26,7 @@ public class LocalGraphPlugin implements GsActionProvider, GsPlugin {
 	}
 	
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		if (actionType != ACTION_ACTION) {
 			return null;
 		}
@@ -35,13 +37,13 @@ public class LocalGraphPlugin implements GsActionProvider, GsPlugin {
 		return t_action;
 	}
 	
-	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 		if (actionType != ACTION_ACTION) {
 			return;
 		}
 		if (ref == 0) {
 			if (graph instanceof GsRegulatoryGraph) new LocalGraphFrame(frame, graph);
-			if (graph instanceof GsDynamicGraph) new LocalGraphFrame(frame, graph.getAssociatedGraph(), graph);
+			if (graph instanceof GsDynamicGraph) new LocalGraphFrame(frame, ((GsDynamicGraph) graph).getAssociatedGraph(), graph);
 		}
 	}
 }

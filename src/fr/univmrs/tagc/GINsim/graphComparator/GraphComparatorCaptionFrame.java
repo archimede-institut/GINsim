@@ -21,6 +21,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Style;
@@ -37,7 +39,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private static final long serialVersionUID = -3613649496687281647L;
 //	private GsMainFrame mainFrame;
 //	private JFrame frame;
-	private GsGraph g;
+	private Graph g;
 	private JPanel mainPanel;
 	private JTextArea resultsPane;
 	private JRadioButton diffColor, specG1Color, specG2Color, intersectColor, exclusionColor, fusionColor1, fusionColor2;
@@ -48,7 +50,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, 1);
 	private static final VertexStyle clearVertexStyle = new VertexStyle(Color.white, Color.gray, 1, VertexStyle.NULL_SHAPE);
 	
-	public GraphComparatorCaptionFrame(JFrame frame, GsGraph g, GsMainFrame mainFrame, GraphComparator gc) {
+	public GraphComparatorCaptionFrame(JFrame frame, Graph g, GsMainFrame mainFrame, GraphComparator gc) {
         this.g = g;
         this.gc = gc;
 //        this.mainFrame = mainFrame;
@@ -69,7 +71,8 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
         });	
     }
 
-	public GraphComparatorCaptionFrame(JFrame frame, GsGraph g, GraphComparator gc) {
+	public GraphComparatorCaptionFrame(JFrame frame, Graph g, GraphComparator gc) {
+		
         this(frame, g, null, gc);
     }
 

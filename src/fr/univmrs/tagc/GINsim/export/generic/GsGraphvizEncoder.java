@@ -6,6 +6,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -24,7 +26,7 @@ public class GsGraphvizEncoder {
 	 * @param selectedOnly
 	 * @param fileName
 	 */
-	public static void encode(GsGraph graph, boolean selectedOnly, String fileName) {
+	public static void encode( Graph graph, boolean selectedOnly, String fileName) {
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
 		String date = dateformat.format(new Date());
 		try {
@@ -39,7 +41,7 @@ public class GsGraphvizEncoder {
 	        if (selectedOnly) {
 	        	it = graph.getGraphManager().getSelectedVertexIterator();
 	        } else {
-	        	it = graph.getGraphManager().getVertexIterator();
+	        	it = graph.getVertices().iterator();
 	        }
 
             // Process Nodes

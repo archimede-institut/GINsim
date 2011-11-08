@@ -5,6 +5,7 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
+import org.ginsim.graph.Graph;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
@@ -27,8 +28,7 @@ public class JythonPlugin implements GsPlugin, GsActionProvider {
         GsRegulatoryGraphDescriptor.registerActionProvider(this);
     }
 
-    public GsPluggableActionDescriptor[] getT_action(int actionType,
-            GsGraph graph) {
+    public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
         if (actionType != ACTION_ACTION) {
             return null;
         }
@@ -40,11 +40,11 @@ public class JythonPlugin implements GsPlugin, GsActionProvider {
         return t_action;
     }
 
-    public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
         if (actionType != ACTION_ACTION) {
             return;
         }
-        new JythonConsole(graph);
+        new JythonConsole( graph);
 	}
 }
 
@@ -53,10 +53,10 @@ class JythonConsole extends Thread {
         PySystemState.initialize();
 	}
 	
-	GsGraph graph;
+	Graph graph;
 	JythonFrame frame;
 	
-    public JythonConsole(GsGraph graph) {
+    public JythonConsole( Graph graph) {
     	this.graph = graph;
     	this.frame = new JythonFrame();
     	this.start();

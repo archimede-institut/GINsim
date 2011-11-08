@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.stg2htg;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -18,7 +20,8 @@ public class STG2HTGPlugin implements GsPlugin, GsActionProvider{
 		Selector.registerSelector(STG2HTGSelector.IDENTIFIER, STG2HTGSelector.class);
 	}
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
 		if (actionType != ACTION_ACTION) {
 			return null;
 		}
@@ -29,7 +32,8 @@ public class STG2HTGPlugin implements GsPlugin, GsActionProvider{
 		return t_action;
 	}
 	
-	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
+		
 		if (actionType != ACTION_ACTION) {
 			return;
 		}

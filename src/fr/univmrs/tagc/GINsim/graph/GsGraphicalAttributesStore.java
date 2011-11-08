@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 
@@ -16,27 +18,23 @@ public class GsGraphicalAttributesStore {
 	public GsVertexAttributesReader vreader;
 
 	Map oldColors = new HashMap();
+	Graph graph;
 	
-	GsGraphManager graphManager;
-	
-	public GsGraphicalAttributesStore(GsGraphManager graphManager) {
-	    this.graphManager = graphManager;
-		this.ereader = graphManager.getEdgeAttributesReader();
-		this.vreader = graphManager.getVertexAttributesReader();
-	}
-
-	public GsGraphicalAttributesStore(GsGraph graph) {
-		this(graph.getGraphManager());
+	public GsGraphicalAttributesStore( Graph graph) {
+		
+		this.graph = graph;
+		this.ereader = graph.getEdgeAttributeReader();
+		this.vreader = graph.getVertexAttributeReader();
 	}
 	
 	public void storeAll() {
-        Iterator it = graphManager.getVertexIterator();
+        Iterator it = graph.getVertices().iterator();
         while (it.hasNext()) {
             Object vertex = it.next();
             vreader.setVertex(vertex);
             oldColors.put(vertex, new StoreColor(vreader));
 
-            Collection<GsDirectedEdge> edges = graphManager.getOutgoingEdges(vertex);
+            Collection<GsDirectedEdge> edges = graph.getOutgoingEdges(vertex);
             for (GsDirectedEdge edge: edges) {
                 ereader.setEdge(edge);
                 oldColors.put(edge, new StoreColor(ereader));

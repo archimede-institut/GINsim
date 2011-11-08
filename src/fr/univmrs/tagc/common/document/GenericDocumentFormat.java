@@ -3,6 +3,8 @@ package fr.univmrs.tagc.common.document;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 
@@ -99,7 +101,8 @@ public class GenericDocumentFormat {
 		return v;
 	}
 		
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
 		return null;
 	}	
 }

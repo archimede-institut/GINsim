@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.connectivity;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
@@ -24,7 +26,7 @@ public class ConnectivityPlugin implements GsPlugin, GsActionProvider {
 		GsGraph.registerActionProvider(this);
 	}
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
         if (actionType != ACTION_ACTION) {
             return null;
         }
@@ -45,7 +47,7 @@ public class ConnectivityPlugin implements GsPlugin, GsActionProvider {
 		return t_action;
 	}
 	
-	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
         if (actionType != ACTION_ACTION) {
             return;
         }
@@ -53,7 +55,7 @@ public class ConnectivityPlugin implements GsPlugin, GsActionProvider {
 	        GsGraphDescriptor gd = GsGinsimGraphDescriptor.getInstance();
             String s_ag = graph.getAssociatedGraphID();
             if (s_ag != null) {
-    	        GsGraph subgraph = GsOpenAction.open(gd, null, ((GsReducedGraph)graph).getSelectedMap(), s_ag);
+    	        Graph subgraph = GsOpenAction.open(gd, null, ((GsReducedGraph)graph).getSelectedMap(), s_ag);
     	        if (subgraph != null) {
     	            GsEnv.whatToDoWithGraph(null, subgraph, true);
     	        }

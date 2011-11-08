@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -30,6 +32,7 @@ public class GsInitialStatePanel extends JPanel {
     private StateListPanel inputPanel;
     
 	public GsInitialStatePanel(StackDialog dialog, GsInitialStateList imanager, boolean several) {
+		
 	    initPanel = new StateListPanel(dialog, imanager.getInitialStates(), several, Translator.getString("STR_Initial_state"));
 	    inputPanel = new StateListPanel(dialog, imanager.getInputConfigs(), several, Translator.getString("STR_Fixed_inputs"));
 	    setLayout(new GridBagLayout());
@@ -44,8 +47,8 @@ public class GsInitialStatePanel extends JPanel {
             add(inputPanel, c);
         }
 	}
-    public GsInitialStatePanel(StackDialog dialog, GsGraph graph, boolean several) {
-        this(dialog, (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true), several);
+    public GsInitialStatePanel(StackDialog dialog, Graph graph, boolean several) {
+        this(dialog, (GsInitialStateList)graph.getObject( GsInitialStateManager.key, true), several);
     }
     public void setParam(GsInitialStateStore currentParameter) {
         initPanel.setParam(currentParameter.getInitialState());

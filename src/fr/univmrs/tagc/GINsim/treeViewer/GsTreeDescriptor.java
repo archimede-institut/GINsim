@@ -6,6 +6,9 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
+
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
@@ -59,15 +62,18 @@ public class GsTreeDescriptor implements GsGraphDescriptor {
      * 
      * can't interactively create a dynamic hierarchical graph => disabled
      */
-	public GsGraph getNew(GsMainFrame m) {
+	public Graph getNew(GsMainFrame m) {
+		
 		return null;
 	}
 
-	public GsGraph open(File file) {
+	public Graph open(File file) {
+		
 		return null;
 	}
 
-	public GsGraph open(Map map, File file) {
+	public Graph open(Map map, File file) {
+		
 		return null;
 	}
 	

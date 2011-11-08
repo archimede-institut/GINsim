@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
@@ -38,14 +40,15 @@ public class Gs3DLayout implements GsPlugin, GsActionProvider {
         GsGraph.registerLayoutProvider(this);
     }
 
-    public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+    public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+    	
         if (actionType != ACTION_LAYOUT || !(graph instanceof GsDynamicGraph)) {
             return null;
         }
         return t_layout;
     }
 
-    public void runAction(int actionType, int ref, GsGraph graph, JFrame parent) throws GsException {
+    public void runAction(int actionType, int ref, Graph graph, JFrame parent) throws GsException {
         if (actionType != ACTION_LAYOUT) {
             return;
         }

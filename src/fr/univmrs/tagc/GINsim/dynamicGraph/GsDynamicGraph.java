@@ -10,6 +10,7 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
@@ -26,6 +27,8 @@ import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryGraphEditor;
 import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
@@ -39,8 +42,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * the dynamic (state transition) graph.
  */
-public final class GsDynamicGraph extends AbstractGraphFrontend<GsDynamicNode, Edge<GsDynamicNode>> implements
-	GsGraphListener<GsDynamicNode, GsDirectedEdge<GsDynamicNode>>, GraphChangeListener {
+public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDynamicNode, Edge<GsDynamicNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge> 
+	implements GsGraphListener<GsDynamicNode, Edge<GsDynamicNode>>, GraphChangeListener {
 
     public final static String zip_mainEntry = "stateTransitionGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
@@ -58,9 +61,11 @@ public final class GsDynamicGraph extends AbstractGraphFrontend<GsDynamicNode, E
 	 * @param regGraph
 	 */
 	public GsDynamicGraph(List nodeOrder) {
-	    this((String)null, false);
+		
+	    this( false);
 	    this.nodeOrder = new ArrayList(nodeOrder);
 	}
+	
     protected String getGraphZipName() {
     	return zip_mainEntry;
     }
@@ -68,15 +73,17 @@ public final class GsDynamicGraph extends AbstractGraphFrontend<GsDynamicNode, E
 	/**
 	 */
 	public GsDynamicGraph() {
-	    this((String)null, false);
+		
+	    this( false);
 
 	}
 	/**
 	 * @param filename
 	 */
-	public GsDynamicGraph(String filename, boolean parsing) {
-        super(GsDynamicGraphDescriptor.getInstance(), filename, parsing);
-        dashpattern = eReader.getPattern(1);
+	public GsDynamicGraph( boolean parsing) {
+		
+        super(GsDynamicGraphDescriptor.getInstance(), parsing);
+        dashpattern = getEdgeAttributeReader().getPattern(1);
 	}
 
 	/**
@@ -84,7 +91,8 @@ public final class GsDynamicGraph extends AbstractGraphFrontend<GsDynamicNode, E
 	 * @param file
 	 */
 	public GsDynamicGraph(Map map, File file) {
-	    this(file.getAbsolutePath(), true);
+		
+	    this( true);
         GsDynamicParser parser = new GsDynamicParser();
         parser.parse(file, map, this);
 		graphManager.ready();
@@ -298,8 +306,9 @@ public final class GsDynamicGraph extends AbstractGraphFrontend<GsDynamicNode, E
 	 * @param multiple
 	 * @return the new edge
 	 */
-	public GsDirectedEdge<GsDynamicNode> addEdge(GsDynamicNode source, GsDynamicNode target, boolean multiple) {
-		GsDirectedEdge<GsDynamicNode> edge = new GsDirectedEdge<GsDynamicNode>(source, target);
+	public Edge<GsDynamicNode> addEdge(GsDynamicNode source, GsDynamicNode target, boolean multiple) {
+		
+		Edge<GsDynamicNode> edge = new Edge<GsDynamicNode>(source, target);
 		if (!addEdge(edge)) {
 			return null;
 		}
@@ -346,7 +355,7 @@ public final class GsDynamicGraph extends AbstractGraphFrontend<GsDynamicNode, E
     public List getSpecificObjectManager() {
         return GsDynamicGraphDescriptor.getObjectManager();
     }
-    protected GsGraph getCopiedGraph() {
+    protected Graph getCopiedGraph() {
         return null;
     }
     protected List doMerge( Graph otherGraph) {
@@ -395,11 +404,11 @@ public final class GsDynamicGraph extends AbstractGraphFrontend<GsDynamicNode, E
 
         return ret;
     }
-    protected GsGraph getSubGraph(Collection vertex, Collection edges) {
+    protected Graph getSubGraph(Collection vertex, Collection edges) {
         // no copy for state transition graphs
         return null;
     }
-    protected void setCopiedGraph(GsGraph graph) {
+    protected void setCopiedGraph( Graph graph) {
     }
 
     /**

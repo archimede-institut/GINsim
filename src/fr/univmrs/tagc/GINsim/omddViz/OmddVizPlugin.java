@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.omddViz;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
@@ -18,7 +20,7 @@ public class OmddVizPlugin implements GsActionProvider, GsPlugin {
 	}
 	
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		if (actionType != ACTION_ACTION) {
 			return null;
 		}
@@ -29,7 +31,7 @@ public class OmddVizPlugin implements GsActionProvider, GsPlugin {
 		return t_action;
 	}
 	
-	public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 		if (actionType != ACTION_ACTION) {
 			return;
 		}

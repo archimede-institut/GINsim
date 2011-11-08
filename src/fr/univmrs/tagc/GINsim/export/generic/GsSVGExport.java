@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+import org.ginsim.graph.Graph;
 import org.jgraph.util.Bezier;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -26,19 +27,19 @@ public class GsSVGExport {
      * @param selectedOnly
      * @param fileName
      */
-    public static void exportSVG(GsGraph graph, boolean selectedOnly, String fileName) {
+    public static void exportSVG( Graph graph, boolean selectedOnly, String fileName) {
 		try {
 	        FileWriter out = new FileWriter(fileName);
 
 	        Iterator itNodes, itEdges;
-            GsVertexAttributesReader vreader = graph.getGraphManager().getVertexAttributesReader();
-            GsEdgeAttributesReader ereader = graph.getGraphManager().getEdgeAttributesReader();
+            GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
+            GsEdgeAttributesReader ereader = graph.getEdgeAttributeReader();
             if (selectedOnly) {
                 itNodes = graph.getGraphManager().getSelectedVertexIterator();
                 itEdges = graph.getGraphManager().getFullySelectedEdgeIterator();
             } else {
-                itNodes = graph.getGraphManager().getVertexIterator();
-                itEdges = graph.getGraphManager().getEdgeIterator();
+                itNodes = graph.getVertices().iterator();
+                itEdges = graph.getEdges().iterator();
             }
             int[] tmax = getmax(itNodes, itEdges, vreader, ereader);
 
@@ -52,8 +53,8 @@ public class GsSVGExport {
                 itNodes = graph.getGraphManager().getSelectedVertexIterator();
                 itEdges = graph.getGraphManager().getFullySelectedEdgeIterator();
             } else {
-                itNodes = graph.getGraphManager().getVertexIterator();
-                itEdges = graph.getGraphManager().getEdgeIterator();
+                itNodes = graph.getVertices().iterator();
+                itEdges = graph.getEdges().iterator();
             }
 	        while (itNodes.hasNext()) {
 	            Object obj = itNodes.next();

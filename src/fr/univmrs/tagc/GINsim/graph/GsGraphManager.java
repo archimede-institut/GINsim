@@ -13,6 +13,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
@@ -21,7 +24,7 @@ import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
  * interface that each graphManager should implement, the only implementor should be
  * the jgraphtGraphManager for a while
  */
-abstract public class GsGraphManager<V,E extends GsDirectedEdge<V>> {
+abstract public class GsGraphManager<V,E extends Edge<V>> {
 
 	private static List<GsActionProvider> v_layout = null;
 	private static List<GsActionProvider> v_export = null;
@@ -68,7 +71,7 @@ abstract public class GsGraphManager<V,E extends GsDirectedEdge<V>> {
 	abstract public void placeVertex (V vertex, int x, int y);
     /**
      * add an edge. The edge knows about its source and target vertices and
-     * must have been created in advance (your GsGraph should provide the required help).
+     * must have been created in advance (your Graph should provide the required help).
      * 
      * @param edge
      * @return true if added successfully
@@ -133,7 +136,7 @@ abstract public class GsGraphManager<V,E extends GsDirectedEdge<V>> {
     /**
      * @return the real graph.
      */
-    abstract public GsGraph<V,E> getGsGraph();
+    abstract public Graph<V,E> getGsGraph();
     
     /**
      * zoom out the display.

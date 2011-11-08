@@ -27,6 +27,8 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
@@ -76,14 +78,15 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
         GsGraph.registerLayoutProvider(this);
     }
 
-    public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+    public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+    	
         if (actionType != ACTION_LAYOUT || !(graph instanceof GsDynamicGraph)) {
             return null;
         }
         return t_layout;
     }
 
-    public void runAction(int actionType, int ref, GsGraph graph, JFrame parent) throws GsException {
+    public void runAction(int actionType, int ref, Graph graph, JFrame parent) throws GsException {
         if (actionType != ACTION_LAYOUT) {
             return;
         }
@@ -190,15 +193,14 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
 
 	public void runLayout() {
         //Check if it is a DynamicGraph
-        GsGraphManager gmanager = graph.getGraphManager();
-		Iterator it = gmanager.getVertexIterator();
+		Iterator it = graph.getVertices().iterator();
 		Object v = it.next();
 	    if (v == null || !(v instanceof GsDynamicNode)) {
 			System.out.println("wrong type of graph for this layout");
 	    	return;
 	    }
-		vreader = gmanager.getVertexAttributesReader();
-		ereader = gmanager.getEdgeAttributesReader();
+		vreader = graph.getVertexAttributeReader();
+		ereader = graph.getEdgeAttributeReader();
 	    byte[] maxValues = getMaxValues(((GsDynamicGraph)graph).getAssociatedGraph().getNodeOrder());
 	    
 	    //move the nodes
@@ -214,7 +216,7 @@ public class GsMultidimentionLayout implements GsPlugin, GsActionProvider {
     	moveVertex(vertex, maxValues);
     	
     	//move the edges
-    	it = gmanager.getEdgeIterator();
+    	it = graph.getEdges().iterator();
     	while (it.hasNext()) {
     		GsDirectedEdge edge = (GsDirectedEdge) it.next();
     		moveEdge(edge, maxValues);

@@ -6,7 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 
 public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
@@ -18,7 +19,7 @@ public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 	
 	/**
 	 */
-	public GsDynamicalHierarchicalParameterPanel(GsGraph g) {
+	public GsDynamicalHierarchicalParameterPanel( Graph g) {
 		super();
 		this.graph = g;
 		initialize();

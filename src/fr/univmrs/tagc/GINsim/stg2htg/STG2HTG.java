@@ -11,6 +11,8 @@ import java.util.Vector;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.connectivity.AlgoConnectivity;
 import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraph;
@@ -26,7 +28,7 @@ import fr.univmrs.tagc.common.ColorPalette;
  * A class to find a path in any graph
  */
 public class STG2HTG extends AlgoConnectivity {
-	private GsGraph graph;
+	private Graph graph;
 	private HashMap sigma;
 	private HashMap tilde_S;
 	private HashSet A;
@@ -41,7 +43,7 @@ public class STG2HTG extends AlgoConnectivity {
 	 * The resultHandler is informed of the progression during the run() and of the results when the run() is finish.
 	 * 
 	 */
-	public STG2HTG(JFrame frame, GsGraph graph) {
+	public STG2HTG(JFrame frame, Graph graph) {
 		this.frame = frame;
 		this.graph = graph;
 		this.graphModel = graph.getGraphManager();
@@ -87,7 +89,7 @@ public class STG2HTG extends AlgoConnectivity {
 		components = new ArrayList(sigma.size()+A.size());
 		createReducedGraph();
 		try {
-			createSCCGraphByOutgoingEdges(components.size(), components, reducedGraph.getGraphManager(), reducedGraph.getGraphManager().getVertexAttributesReader());
+			createSCCGraphByOutgoingEdges(components.size(), components, reducedGraph, reducedGraph.getVertexAttributeReader());
 		} catch (InterruptedException e) {
 		}
 		return reducedGraph;
@@ -157,9 +159,8 @@ public class STG2HTG extends AlgoConnectivity {
 	}
 	
 	private void createReducedGraph() {
-        reducedGraph = new GsReducedGraph(graph);
-        GsGraphManager gm = reducedGraph.getGraphManager();
-        GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
+        reducedGraph = new GsReducedGraph( graph);
+        GsVertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
         int i = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
 			HashSet key = (HashSet) it_sigma.next();

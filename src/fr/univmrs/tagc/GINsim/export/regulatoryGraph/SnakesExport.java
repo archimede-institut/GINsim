@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -36,7 +38,7 @@ public class SnakesExport extends GsAbstractExport  {
 		filterDescr = "Python files";
 	}
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		if (graph instanceof GsRegulatoryGraph) {
 			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
 					"STR_snakes", "STR_snakes_descr", null, this, ACTION_EXPORT, 0) };
@@ -67,7 +69,7 @@ public class SnakesExport extends GsAbstractExport  {
 		for (int node_i = 0; node_i < nodes.length; node_i++) {
 			//generate the argument list from incoming edges : a, b, _a, _b
 			GsRegulatoryVertex current_node = (GsRegulatoryVertex) nodeOrder.get(node_i);
-			Collection<GsRegulatoryMultiEdge> incomingEdges = graph.getGraphManager().getIncomingEdges(current_node);
+			Collection<GsRegulatoryMultiEdge> incomingEdges = graph.getIncomingEdges(current_node);
 			String current_node_name = getVertexNameForLevel(node_i, nodeOrder);
 			if (incomingEdges.size() == 0) {
 				out.write("    # specification of component \""+current_node_name+"\"\n");

@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -37,7 +39,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	private List logicalFunctionPending;
 	private Map meMap;
 
-	public RegulatoryGraphComparator(GsGraph g1, GsGraph g2, GsGraph g) {
+	public RegulatoryGraphComparator( Graph g1,  Graph g2, Graph g) {
+		
         if (g  == null || !(g  instanceof GsRegulatoryGraph))  return;
         if (g1 == null || !(g1 instanceof GsRegulatoryGraph))  return;
         if (g2 == null || !(g2 instanceof GsRegulatoryGraph))  return;
@@ -45,7 +48,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
        	this.g1 = (GsRegulatoryGraph)g1; 
        	this.g2 = (GsRegulatoryGraph)g2;
        	
-		g1m = g1.getGraphManager(); g2m = g2.getGraphManager(); gm = g.getGraphManager();
+		g1m = g1; g2m = g2; gm = g;
 		stylesMap = new HashMap();
 		logicalFunctionPending = new ArrayList();
 		
@@ -73,8 +76,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		super.buildDiffGraph();
 		
 		meMap = new HashMap();
-		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
-		for (Iterator<GsRegulatoryMultiEdge> it = gm.getEdgeIterator(); it.hasNext();) {
+		GsEdgeAttributesReader ereader = gm.getEdgeAttributeReader();
+		for (Iterator<GsRegulatoryMultiEdge> it = gm.getEdges().iterator(); it.hasNext();) {
 			GsRegulatoryMultiEdge me = it.next();
 			String sid = me.getSource().getId();
 			String tid = me.getTarget().getId();
@@ -115,19 +118,19 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			if (v1 == null) {
 				comment = "The vertex "+id+" is specific to "+g2.getGraphName()+"\n";
 				v = g.addNewVertex(id, v2.getName(), v2.getMaxValue());
-				mergeVertexAttributes(v, v2, null, gm.getVertexAttributesReader(), g2m.getVertexAttributesReader(), null, SPECIFIC_G2_COLOR);
+				mergeVertexAttributes(v, v2, null, gm.getVertexAttributeReader(), g2m.getVertexAttributeReader(), null, SPECIFIC_G2_COLOR);
 				setLogicalFunction(v, v2, g2);
 			} else if (v2 == null) {
 				comment = "The vertex "+id+" is specific to "+g1.getGraphName()+"\n";
 				v = g.addNewVertex(id, v1.getName(), v1.getMaxValue());
-				mergeVertexAttributes(v, v1, null, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), null, SPECIFIC_G1_COLOR);
+				mergeVertexAttributes(v, v1, null, gm.getVertexAttributeReader(), g1m.getVertexAttributeReader(), null, SPECIFIC_G1_COLOR);
 				setLogicalFunction(v, v1, g1);
 			} else {
 				comment = "The vertex "+id+" is common to both graphs\n";
 				v = g.addNewVertex(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
 				Color[] color = {COMMON_COLOR};
 				comment += compareVertices(v ,v1, v2, color);
-				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), g2m.getVertexAttributesReader(), color[0]);
+				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributeReader(), g1m.getVertexAttributeReader(), g2m.getVertexAttributeReader(), color[0]);
 				setLogicalFunction(v, v1, g1);
 			}
 			Annotation gsa = v.getAnnotation();
@@ -274,7 +277,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 * @param v_source
 	 * @param g_source
 	 */
-	private void setLogicalFunction(GsRegulatoryVertex v, GsRegulatoryVertex v_source, GsGraph g_source) { //TODO : do we really want to do that ?
+	private void setLogicalFunction(GsRegulatoryVertex v, GsRegulatoryVertex v_source, Graph g_source) { //TODO : do we really want to do that ?
 		GsRegulatoryVertex[] t = new GsRegulatoryVertex[2];
 		t[0] = v;
 		t[1] = v_source;
@@ -355,13 +358,16 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		return comment;
 	}
 	
-	public GsGraph getDiffGraph() {
+	public Graph getDiffGraph() {
+		
 		return g;
 	}
-	public GsGraph getG1() {
+	public Graph getG1() {
+		
 		return g1;
 	}
-	public GsGraph getG2() {
+	public Graph getG2() {
+		
 		return g2;
 	}
 }

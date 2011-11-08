@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.jgraph.layout;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
 import org.jgraph.JGraph;
 import org.jgraph.layout.CircleGraphLayout;
 import org.jgraph.layout.JGraphLayoutAlgorithm;
@@ -35,7 +36,7 @@ public class GsJgraphLayout implements GsPlugin, GsActionProvider {
 		// GsGraph.registerLayoutProvider(this);
 	}
 
-	public void runAction (int actionType, int ref, GsGraph graph, JFrame frame) {
+	public void runAction (int actionType, int ref, Graph graph, JFrame frame) {
         if (actionType != ACTION_LAYOUT) {
             return;
         }
@@ -61,7 +62,8 @@ public class GsJgraphLayout implements GsPlugin, GsActionProvider {
 		((JGraphModelAdapter)jgraph.getModel()).cellsChanged(roots);
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
         if (actionType != ACTION_LAYOUT) {
             return null;
         }

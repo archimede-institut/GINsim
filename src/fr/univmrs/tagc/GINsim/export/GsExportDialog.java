@@ -8,6 +8,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
@@ -21,7 +23,7 @@ public class GsExportDialog extends StackDialog {
 	GsAbstractExport export;
 	GsExportConfig config;
 	GsInitialStatePanel initPanel = null;
-	GsGraph graph;
+	Graph graph;
 	
 	public GsExportDialog(GsAbstractExport export, GsExportConfig config) {
 		super(config.getGraph().getGraphManager().getMainFrame(), "exportDialog_"+export.getID(), 400, 300);

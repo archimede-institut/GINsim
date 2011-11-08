@@ -9,6 +9,10 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -19,7 +23,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
+public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> {
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
 	public final static int MODE_DIAGRAM = 1;
 	public final static int MODE_TREE = 2;
@@ -48,7 +52,7 @@ public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
 	private GsTreeParser parser;
 	
 	public GsTree(GsTreeParser parser) {
-		super(new GsTreeDescriptor());
+		super( new GsTreeDescriptor());
 		this.parser = parser;
 		parser.setTree(this);
 	}
@@ -59,7 +63,8 @@ public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
      * @return true if the tree contains the node
      */
     public boolean containsNode(GsTreeNode node) {
-    	for (Iterator it = graphManager.getVertexIterator(); it.hasNext();) {
+    	
+    	for (Iterator it = getVertices().iterator(); it.hasNext();) {
     		GsTreeNode treeNode = (GsTreeNode) it.next();
     		if (treeNode == node) return true;
 		}
@@ -129,13 +134,15 @@ public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
 	}
 	
 	/* adding edge and vertex */
-	/**
-	 * add a vertex to this graph.
-	 * @param vertex
-	 */
-	public boolean addVertex(GsTreeNode vertex) {
-		return graphManager.addVertex(vertex);
-	}
+//	/**
+//	 * add a vertex to this graph.
+//	 * @param vertex
+//	 */
+	// TODO REMOVE since it duplicates a method existing in AbstractGraphFrontend
+//	public boolean addVertex(GsTreeNode vertex) {
+//		
+//		return graphManager.addVertex(vertex);
+//	}
 	/**
 	 * add an edge between source and target
 	 * @param source
@@ -143,10 +150,11 @@ public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
 	 * @return the new edge
 	 */
 	public GsDirectedEdge<GsTreeNode> addEdge(GsTreeNode source, GsTreeNode target) {
-		GsDirectedEdge<GsTreeNode> edge = graphManager.getEdge(source, target);
+		
+		Edge<GsTreeNode> edge = getEdge(source, target);
 		if (edge == null) {
-			edge = new GsDirectedEdge<GsTreeNode>(source, target);
-			if (!graphManager.addEdge(edge)) {
+			edge = new Edge<GsTreeNode>(source, target);
+			if (!addEdge(edge)) {
 				return null;
 			}
 		}
@@ -165,6 +173,7 @@ public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
 	}
 	
 	public List getNodeOrder() {
+		
 		if (regGraph != null)
 			return regGraph.getNodeOrder();
 		return null;
@@ -173,11 +182,11 @@ public class GsTree extends GsGraph<GsTreeNode, GsDirectedEdge<GsTreeNode>> {
 	/* Not used methods */
 	public 	  void 		removeEdge(GsDirectedEdge<GsTreeNode> obj) {}
 	public    void 		changeVertexId(Object vertex, String newId) throws GsException {}
-	protected void 		setCopiedGraph(GsGraph graph) {}
-	protected GsGraph 	getCopiedGraph() {return null;}
-	protected GsGraph 	getSubGraph(Collection vertex, Collection edges) {return null;}
+	protected void 		setCopiedGraph( Graph graph) {}
+	protected Graph 	getCopiedGraph() {return null;}
+	protected Graph 	getSubGraph(Collection vertex, Collection edges) {return null;}
 	protected GsDirectedEdge<GsTreeNode> 	doInteractiveAddEdge(GsTreeNode source, GsTreeNode target, int param) {return null;}
 	protected GsTreeNode 	doInteractiveAddVertex(int param) {return null;}
-	protected List		doMerge(GsGraph otherGraph) {return null;}
+	protected List		doMerge(Graph otherGraph) {return null;}
 	public	  Vector 	searchNodes(String regexp) {return null;}
 }

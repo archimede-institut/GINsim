@@ -12,6 +12,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
@@ -26,7 +28,7 @@ public class AnnotationPanel extends JPanel
 
 	private static final long serialVersionUID = -8542547209276966234L;
 
-	private GsGraph graph;
+	private Graph graph;
 	private Annotation currentNote = null;
     private boolean listenChanges = true;
 	LinkList linkList;
@@ -142,18 +144,21 @@ public class AnnotationPanel extends JPanel
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
-		this.setGraph((GsGraph)pinfo.editor.getMasterObject());
+		this.setGraph((Graph)pinfo.editor.getMasterObject());
 		panel.addField(this, pinfo, 0);
 	}
-	public void setGraph(GsGraph graph) {
+	
+	public void setGraph( Graph graph) {
+		
 		this.graph = graph;
 		linkList.graph = graph;
 	}
 }
 
 class LinkList extends SimpleGenericList {
-	GsGraph graph;
-	LinkList(GsGraph graph) {
+	
+	Graph graph;
+	LinkList( Graph graph) {
 		this.graph = graph;
 		canAdd = true;
 		nbAction = 1;
@@ -162,7 +167,8 @@ class LinkList extends SimpleGenericList {
 		doInlineAddRemove = true;
 	}
 	public Object doCreate(String name, int pos) {
-		return new AnnotationLink(name, graph);
+		
+		return new AnnotationLink( name, graph);
 	}
 	public boolean doEdit(Object data, Object value) {
 		((AnnotationLink)data).setText((String)value, graph);

@@ -44,8 +44,7 @@ public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
         GsRegulatoryGraphDescriptor.registerActionProvider(this);
     }
 
-    public GsPluggableActionDescriptor[] getT_action(int actionType,
-            GsGraph graph) {
+    public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
         if (actionType != ACTION_ACTION) {
             return null;
         }
@@ -57,7 +56,7 @@ public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
         return t_action;
     }
 
-    public void runAction(int actionType, int ref, GsGraph graph, JFrame frame) throws GsException {
+    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
         if (actionType != ACTION_ACTION) {
             return;
         }
@@ -85,13 +84,14 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
 
 	public static final String key = "modelSimplifier";
 	
-    public Object doOpen(InputStream is, GsGraph graph) {
+    public Object doOpen(InputStream is, Graph graph) {
+    	
         ModelSimplifierConfigParser parser = new ModelSimplifierConfigParser((GsRegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
 
-    public void doSave(OutputStreamWriter os, GsGraph graph) {
+    public void doSave(OutputStreamWriter os, Graph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
         List<GsRegulatoryVertex> nodeOrder = graph.getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
@@ -114,12 +114,12 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
         return key;
     }
 
-    public boolean needSaving(GsGraph graph) {
+    public boolean needSaving( Graph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
         return paramList != null && paramList.getNbElements(null) > 0;
     }
 
-	public Object doCreate( Graph<?,?> graph) {
+	public Object doCreate( Graph graph) {
 		
 		return new ModelSimplifierConfigList( graph);
 	}
@@ -130,7 +130,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
  */
 class ModelSimplifierConfigParser extends XMLHelper {
 
-    public GsGraph getGraph() {
+    public Graph getGraph() {
         // doesn't create a graph!
         return null;
     }

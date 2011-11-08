@@ -1,6 +1,6 @@
 package org.ginsim.graph;
 
-public interface AssociatedGraph<V, E extends Edge<V>> {
+public interface AssociatedGraph<AG extends Graph<AV, AE>, AV, AE extends Edge<AV>> {
 
     //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
 	
@@ -10,7 +10,7 @@ public interface AssociatedGraph<V, E extends Edge<V>> {
      * 
      * @param associated_graph
      */
-    public void setAssociatedGraph( Graph<V,E> associated_graph);
+    public void setAssociatedGraph( AG associated_graph);
     
     
     /**
@@ -18,7 +18,7 @@ public interface AssociatedGraph<V, E extends Edge<V>> {
      * 
      * @return the graph associated with this one.
      */
-    public Graph<V,E> getAssociatedGraph();
+    public AG getAssociatedGraph();
 
     
     public String getAssociatedGraphID();

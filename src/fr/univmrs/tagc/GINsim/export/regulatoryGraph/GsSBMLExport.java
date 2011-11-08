@@ -11,6 +11,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -33,14 +35,15 @@ public class GsSBMLExport {
 	 * @param graph
 	 * @param fileName
 	 */
-	public static void export(GsGraph graph, String fileName) {
+	public static void export( Graph graph, String fileName) {
+		
         List v_no = graph.getNodeOrder();
         int len = v_no.size();
         OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
         byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
             GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_no.get(i);
-            if (graph.getGraphManager().getIncomingEdges(vertex).size() == 0) {
+            if ( graph.getIncomingEdges(vertex).size() == 0) {
                 // input node: no transition, use basal value as initial markup
             	
             	// TODO: put back max value ?
@@ -53,7 +56,7 @@ public class GsSBMLExport {
                 t_markup[i][1] = vertex.getMaxValue();
             }
         }
-        SBMLExportConfigPanel cpanel = new SBMLExportConfigPanel(graph.getNodeOrder(), t_markup);
+        SBMLExportConfigPanel cpanel = new SBMLExportConfigPanel( graph.getNodeOrder(), t_markup);
         int ret = JOptionPane.showConfirmDialog(null, cpanel, "initial state", JOptionPane.OK_CANCEL_OPTION);
         if (ret != JOptionPane.OK_OPTION) {
             return;
@@ -108,7 +111,7 @@ public class GsSBMLExport {
                 out.closeTag();
                 out.closeTag();
                 out.openTag("listOfModifiers");
-                Iterator it = graph.getGraphManager().getIncomingEdges(v_no.get(i)).iterator();
+                Iterator it = graph.getIncomingEdges(v_no.get(i)).iterator();
                 while (it.hasNext()) {
                     GsDirectedEdge edge = (GsDirectedEdge)it.next();
                     out.openTag("modifierSpeciesReference");

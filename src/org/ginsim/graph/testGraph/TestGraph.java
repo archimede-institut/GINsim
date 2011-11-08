@@ -1,9 +1,8 @@
 package org.ginsim.graph.testGraph;
 
 import org.ginsim.graph.Graph;
-import org.ginsim.graph.GraphView;
 
-public interface TestGraph extends Graph<TestVertex, TestEdge>, GraphView {
+public interface TestGraph extends Graph<TestVertex, TestEdge> {
 
 	/**
 	 * Add an edge between two vertices.

@@ -1,5 +1,7 @@
 package fr.univmrs.tagc.GINsim.reg2dyn.helpers;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -7,6 +9,7 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.reg2dyn.SimulationQueuedState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 
 /**
@@ -22,9 +25,9 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 	public GsSTGSimulationHelper(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
 		stateTransitionGraph = new GsDynamicGraph(params.nodeOrder);
 		if (regGraph instanceof GsGraph) {
-			stateTransitionGraph.setAssociatedGraph((GsGraph)regGraph);
+			stateTransitionGraph.setAssociatedGraph((GsRegulatoryGraph)regGraph);
 		}
-        vreader = stateTransitionGraph.getGraphManager().getVertexAttributesReader();
+        vreader = stateTransitionGraph.getVertexAttributeReader();
 	    vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         // add some default comments to the state transition graph
         stateTransitionGraph.getAnnotation().setComment(params.getDescr()+"\n");
@@ -39,7 +42,8 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 		return isnew;
 	}
 
-	public GsGraph endSimulation() {
+	public Graph endSimulation() {
+		
 		return stateTransitionGraph;
 	}
 
@@ -47,11 +51,13 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 		node.setStable(true, vreader);
 	}
 
-	public GsGraph getRegulatoryGraph() {
+	public Graph getRegulatoryGraph() {
+		
 		return this.stateTransitionGraph.getAssociatedGraph();
 	}
 	
-	public GsGraph getDynamicGraph() {
+	public Graph getDynamicGraph() {
+		
 		return this.stateTransitionGraph;
 	}
 

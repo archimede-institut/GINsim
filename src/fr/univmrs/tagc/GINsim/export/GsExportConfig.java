@@ -2,8 +2,9 @@ package fr.univmrs.tagc.GINsim.export;
 
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsExtensibleConfig;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.OptionStore;
 
 public class GsExportConfig extends GsExtensibleConfig {
@@ -12,7 +13,8 @@ public class GsExportConfig extends GsExtensibleConfig {
 	int format = -1;
 	String filename;
 	
-	public GsExportConfig(GsGraph graph, GsAbstractExport export, int ref) {
+	public GsExportConfig( Graph graph, GsAbstractExport export, int ref) {
+		
 		super(graph);
 		this.ref = ref;
 

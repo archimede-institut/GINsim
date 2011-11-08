@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -87,8 +88,9 @@ public final class GsRegulatoryParser extends GsXMLHelper {
      * @param s_filename
      * @throws SAXException
      */
-    public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws SAXException {
-        graph = new GsRegulatoryGraph(s_filename, true);
+    public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd,String file_name) throws SAXException {
+    	
+        graph = new GsRegulatoryGraph( true);
         this.map = map;
 		s_nodeOrder = attributes.getValue("nodeorder");
         if (s_nodeOrder == null) {
@@ -100,8 +102,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 		}
 
-		vareader = graph.getGraphManager().getVertexAttributesReader();
-		ereader = graph.getGraphManager().getEdgeAttributesReader();
+		vareader = graph.getVertexAttributeReader();
+		ereader = graph.getEdgeAttributeReader();
         pos = POS_OUT;
         values = new Hashtable();
     }
@@ -116,8 +118,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     public void parse(File file, Map map, Graph<?,?> graph) {
     	this.graph = (GsRegulatoryGraph) graph;
     	this.map = map;
-		  vareader = graph.getGraphManager().getVertexAttributesReader();
-		  ereader = graph.getGraphManager().getEdgeAttributesReader();
+		  vareader = graph.getVertexAttributeReader();
+		  ereader = graph.getEdgeAttributeReader();
 		  startParsing(file);
    	}
 
@@ -428,7 +430,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     		boolean ok = true;
     		if (map == null) {
 	    		for (int i=0 ; i<t_order.length ; i++) {
-	    			GsRegulatoryVertex vertex = (GsRegulatoryVertex)graph.getGraphManager().getVertexByName(t_order[i]);
+	    			GsRegulatoryVertex vertex = (GsRegulatoryVertex)graph.getVertexByName(t_order[i]);
 	    			if (vertex == null) {
 	    				ok = false;
 	    				break;
@@ -438,7 +440,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     		} else {
 	    		for (int i=0 ; i<t_order.length ; i++) {
 	    		    if (map.containsKey(t_order[i])) {
-	    		        GsRegulatoryVertex vertex = (GsRegulatoryVertex)graph.getGraphManager().getVertexByName(t_order[i]);
+	    		        GsRegulatoryVertex vertex = (GsRegulatoryVertex)graph.getVertexByName(t_order[i]);
 	    		        if (vertex == null) {
 	    		            ok = false;
 	    		            break;
@@ -447,7 +449,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 	    		    }
 	    		}
     		}
-    		if (!ok || v_order.size() != graph.getGraphManager().getVertexCount()) {
+    		if (!ok || v_order.size() != graph.getVertexCount()) {
     			// error
     			Tools.error("incoherent nodeOrder, not restoring it", null);
     		} else {
@@ -456,13 +458,13 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     }
 
     private void parseBooleanFunctions() {
-      Set<GsRegulatoryMultiEdge> allowedEdges;
+      Collection<GsRegulatoryMultiEdge> allowedEdges;
       GsRegulatoryVertex vertex;
       String value, exp;
       try {
         for (Enumeration enu_vertex = values.keys(); enu_vertex.hasMoreElements(); ) {
           vertex = (GsRegulatoryVertex)enu_vertex.nextElement();
-          allowedEdges = graph.getGraphManager().getIncomingEdges(vertex);
+          allowedEdges = graph.getIncomingEdges(vertex);
           if (allowedEdges.size() > 0) {
             for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
               value = (String)enu_values.nextElement();
@@ -485,7 +487,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 
     public void addExpression(byte val, GsRegulatoryVertex vertex, String exp) {
     	try {
-        GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
+        GsBooleanParser tbp = new GsBooleanParser( graph.getIncomingEdges(vertex));
         GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
         if (!tbp.compile(exp, graph, vertex)) {
         	InvalidFunctionNotificationAction a = new InvalidFunctionNotificationAction();
@@ -493,7 +495,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         	o.addElement(new Short(val));
         	o.addElement(vertex);
         	o.addElement(exp);
-          graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "Invalid formula : " + exp,
+          graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Invalid formula : " + exp,
             a, o, GsGraphNotificationMessage.NOTIFICATION_WARNING));
         }
         else {
@@ -534,7 +536,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
       }
       param.setEdgeIndexes(v);
     }
-    public GsGraph getGraph() {
+    public Graph getGraph() {
+    	
         return graph;
     }
 }
@@ -546,7 +549,7 @@ class InteractionInconsistencyAction implements GsGraphNotificationAction {
 		return t;
 	}
 
-	public boolean perform(GsGraph graph, Object data, int index) {
+	public boolean perform( Graph graph, Object data, int index) {
 		StackDialog d = new InteractionInconsistencyDialog((Map)data,
 				graph,
 				"interactionInconststancy",
@@ -555,20 +558,24 @@ class InteractionInconsistencyAction implements GsGraphNotificationAction {
 		return true;
 	}
 
-	public boolean timeout(GsGraph graph, Object data) {
+	public boolean timeout( Graph graph, Object data) {
 		return true;
 	}
 }
 
 class InvalidFunctionNotificationAction implements GsGraphNotificationAction {
+	
 	public InvalidFunctionNotificationAction() {
 		super();
 	}
-	public boolean timeout(GsGraph graph, Object data) {
+	
+	public boolean timeout( Graph graph, Object data) {
+		
 		return false;
 	}
 
-	public boolean perform(GsGraph graph, Object data, int index) {
+	public boolean perform( Graph graph, Object data, int index) {
+		
 		Vector v = (Vector)data;
 		byte value = ((Short)v.elementAt(0)).byteValue();
 		GsRegulatoryVertex vertex = (GsRegulatoryVertex)v.elementAt(1);
@@ -605,9 +612,10 @@ class InteractionInconsistencyDialog extends StackDialog {
 	Map m;
 	JPanel panel = null;
 
-	public InteractionInconsistencyDialog(Map m, GsGraph graph,
+	public InteractionInconsistencyDialog(Map m, Graph graph,
 			String msg, int w, int h) {
-		super(graph.getGraphManager().getMainFrame(), msg, w, h);
+		
+		super( graph.getGraphManager().getMainFrame(), msg, w, h);
 		this.graph = (GsRegulatoryGraph)graph;
 		this.m = m;
 

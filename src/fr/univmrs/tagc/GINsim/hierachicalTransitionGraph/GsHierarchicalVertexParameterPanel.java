@@ -8,7 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -23,7 +24,7 @@ public class GsHierarchicalVertexParameterPanel extends GsParameterPanel {
 		
 		/**
 		 */
-		public GsHierarchicalVertexParameterPanel(GsGraph g) {
+		public GsHierarchicalVertexParameterPanel( Graph g) {
 			super();
 			this.graph = g;
 			initialize();

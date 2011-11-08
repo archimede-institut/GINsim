@@ -1,5 +1,7 @@
 package fr.univmrs.tagc.GINsim.graph;
 
+import org.ginsim.graph.Graph;
+
 
 /**
  * Object willing to be informed of changes in the graph should implement this interface
@@ -21,10 +23,10 @@ public interface GraphChangeListener {
 	 * alert the listeners that the graph is being closed
 	 * @param graph
 	 */
-	public void graphClosed(GsGraph graph);
+	public void graphClosed( Graph graph);
 	
 	/**
 	 * @param graph
 	 */
-	public void updateGraphNotificationMessage(GsGraph graph);
+	public void updateGraphNotificationMessage( Graph graph);
 }

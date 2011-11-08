@@ -2,7 +2,8 @@ package fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis;
 
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import org.ginsim.graph.Edge;
+
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -12,7 +13,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
  * Store a label that represent the genes that are updated between two states source, and target.
  * In a HTG, to compute the label of an edge, call this function for each couple of states corresponding to the edge.
  */
-public class GsDecisionOnEdge extends GsDirectedEdge<GsHierarchicalNode> implements ToolTipsable {
+public class GsDecisionOnEdge extends Edge<GsHierarchicalNode> implements ToolTipsable {
 	
     private static final int CHANGE_NONE = 0;
 	private static final int CHANGE_INCREASE = 1;

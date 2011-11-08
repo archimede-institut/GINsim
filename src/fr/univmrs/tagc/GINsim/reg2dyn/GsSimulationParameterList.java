@@ -33,7 +33,7 @@ public class GsSimulationParameterList extends SimpleGenericList<GsSimulationPar
     /**
      * @param graph
      */
-    public GsSimulationParameterList( Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph) {
+    public GsSimulationParameterList( Graph graph) {
     	
     	this(graph, null);
     }

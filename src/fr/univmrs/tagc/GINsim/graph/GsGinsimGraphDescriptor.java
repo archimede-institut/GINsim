@@ -12,6 +12,8 @@ import java.util.zip.ZipFile;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -51,12 +53,12 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
         return true;
     }
 
-    public GsGraph getNew(GsMainFrame m) {
-        GsGraph graph = new GsRegulatoryGraph();
+    public Graph getNew(GsMainFrame m) {
+        Graph graph = new GsRegulatoryGraph();
         return graph;
     }
 
-	public GsGraph open(File file) {
+	public Graph open(File file) {
 	    return open(null, file);
 	}
 
@@ -136,7 +138,7 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
         }
         return instance;
     }
-    public GsGraph open(Map map, File file) {
+    public Graph open(Map map, File file) {
         try {
             ZipFile f = new ZipFile(file);
             try {
@@ -160,7 +162,8 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                     	}
                 	}
                 }
-                GsGraph graph = parser.parse(f.getInputStream(ze), map);
+                
+                Graph graph = parser.parse(f.getInputStream(ze), map);
                 if (map == null) {
                 	// try to restore associated data ONLY if no subgraph is selected
                 	// TODO: need to load associated entry with subgraphs
@@ -200,7 +203,7 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
         // not a zip file
         GsGinmlParser parser = new GsGinmlParser();
         try {
-            GsGraph graph = parser.parse(new FileInputStream(file), map);
+            Graph graph = parser.parse(new FileInputStream(file), map);
             graph.setSaveFileName(file.getAbsolutePath());
             return graph;
         } catch (FileNotFoundException e) {

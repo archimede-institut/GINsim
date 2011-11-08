@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 
 public class GsHierarchicalTableModel extends AbstractTableModel {
@@ -14,7 +16,8 @@ public class GsHierarchicalTableModel extends AbstractTableModel {
 		
 		private GsHierarchicalTransitionGraph htg;
 
-		public GsHierarchicalTableModel(GsGraph g) {
+		public GsHierarchicalTableModel( Graph g) {
+			
 			super();
 			this.htg = (GsHierarchicalTransitionGraph) g;
 			colCount = g.getNodeOrder().size();
@@ -56,6 +59,7 @@ public class GsHierarchicalTableModel extends AbstractTableModel {
 		 * @return the name of this column
 		 */	
 		public String getColumnName(int column) {
+			
 			return htg.getNodeOrder().get(column).toString();
 		}
 

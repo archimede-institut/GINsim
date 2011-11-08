@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -51,10 +52,11 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
      * @param s_filename
      */
     public GsHierarchicalTransitionGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) {
-    	this.htg = new GsHierarchicalTransitionGraph(s_filename, true);
+    	
+    	this.htg = new GsHierarchicalTransitionGraph( true);
     	this.map = map;
-		vareader = htg.getGraphManager().getVertexAttributesReader();
-		ereader = htg.getGraphManager().getEdgeAttributesReader();
+		vareader = htg.getVertexAttributeReader();
+		ereader = htg.getEdgeAttributeReader();
 		
 		try {
 			htg.setGraphName(attributes.getValue("id"));
@@ -90,11 +92,12 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
      * @param map
      * @param graph the graph to fill with this data.
      */
-    public void parse(File file, Map map, GsGraph graph) {
+    public void parse(File file, Map map, Graph graph) {
+    	
     	this.htg = (GsHierarchicalTransitionGraph) graph;
     	this.map = map;
-		vareader = graph.getGraphManager().getVertexAttributesReader();
-		ereader = graph.getGraphManager().getEdgeAttributesReader();
+		vareader = graph.getVertexAttributeReader();
+		ereader = graph.getEdgeAttributeReader();
 
 		startParsing(file);
     }
@@ -282,7 +285,8 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
         }
     }
 
-    public GsGraph getGraph() {
+    public Graph getGraph() {
+    	
         return htg;
     }
 }

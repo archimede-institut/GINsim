@@ -15,23 +15,27 @@ import java.util.regex.Pattern;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class GsDynamicalHierarchicalGraph extends AbstractGraphFrontend<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>> {
+public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFrontend<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
 	public final static String zip_mainEntry = "dynamicalHierarchicalGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
@@ -46,7 +50,8 @@ public class GsDynamicalHierarchicalGraph extends AbstractGraphFrontend<GsDynami
 	 * @param nodeOrder the node order
 	 */
 	public GsDynamicalHierarchicalGraph(List nodeOrder) {
-	    this((String)null, false);
+		
+	    this( false);
 	    this.nodeOrder = new ArrayList(nodeOrder);
 	}
 	
@@ -54,16 +59,19 @@ public class GsDynamicalHierarchicalGraph extends AbstractGraphFrontend<GsDynami
 	 * create a new empty GsDynamicalHierarchicalGraph.
 	 */
 	public GsDynamicalHierarchicalGraph() {
-		this((String)null, false);
+		
+		this( false);
 	}
 	
-	public GsDynamicalHierarchicalGraph(String filename, boolean parsing) {
-        super(GsDynamicalHierarchicalGraphDescriptor.getInstance(), filename, parsing);
+	public GsDynamicalHierarchicalGraph( boolean parsing) {
+		
+        super( GsDynamicalHierarchicalGraphDescriptor.getInstance(), parsing);
 	}
 
 
 	public GsDynamicalHierarchicalGraph(Map map, File file) {
-	    this(file.getAbsolutePath(), true);
+		
+	    this( true);
         GsDynamicalHierarchicalParser parser = new GsDynamicalHierarchicalParser();
         parser.parse(file, map, this);
 		graphManager.ready();
@@ -222,8 +230,9 @@ public class GsDynamicalHierarchicalGraph extends AbstractGraphFrontend<GsDynami
 	 * @param target
 	 * @return the new edge
 	 */
-	public GsDirectedEdge<GsDynamicalHierarchicalNode> addEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target) {
-		GsDirectedEdge<GsDynamicalHierarchicalNode> edge = new GsDirectedEdge<GsDynamicalHierarchicalNode>(source, target);
+	public Edge<GsDynamicalHierarchicalNode> addEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target) {
+		
+		Edge<GsDynamicalHierarchicalNode> edge = new Edge<GsDynamicalHierarchicalNode>(source, target);
 		if (addEdge(edge)) {
 			return edge;
 		}
@@ -276,7 +285,7 @@ public class GsDynamicalHierarchicalGraph extends AbstractGraphFrontend<GsDynami
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	protected void setCopiedGraph(GsGraph graph) {
+	protected void setCopiedGraph( Graph graph) {
 	}
 	
 	/**
@@ -284,7 +293,7 @@ public class GsDynamicalHierarchicalGraph extends AbstractGraphFrontend<GsDynami
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	protected GsGraph getCopiedGraph() {
+	protected  Graph getCopiedGraph() {
 		return null;
 	}
 

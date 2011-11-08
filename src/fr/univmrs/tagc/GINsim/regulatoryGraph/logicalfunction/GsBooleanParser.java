@@ -26,10 +26,10 @@ public class GsBooleanParser extends TBooleanParser {
 	private GsRegulatoryVertex vertex;
 	private boolean shouldAutoAddNewElements;
 
-	public GsBooleanParser(Set<GsRegulatoryMultiEdge> edgesList) throws ClassNotFoundException {
+	public GsBooleanParser( Collection<GsRegulatoryMultiEdge> edgesList) throws ClassNotFoundException {
 		this(edgesList, false);
 	}
-	public GsBooleanParser(Set<GsRegulatoryMultiEdge> edgesList, boolean shouldAutoAddNewElements) throws ClassNotFoundException {
+	public GsBooleanParser( Collection<GsRegulatoryMultiEdge> edgesList, boolean shouldAutoAddNewElements) throws ClassNotFoundException {
 		super(returnClassName, operandClassName);
 		nodeFactory = new GsBooleanTreeNodeFactory(returnClassName, operandClassName, this);
 		if (edgesList != null && edgesList.size() > 0) {
@@ -185,7 +185,7 @@ public class GsBooleanParser extends TBooleanParser {
 				}
 				if (source == null)	source = graph.addNewVertex(nodeID, null, (byte) 1);
 
-				GsDirectedEdge edge = (GsDirectedEdge)graph.getGraphManager().getEdge(source, this.vertex);
+				GsDirectedEdge edge = (GsDirectedEdge)graph.getEdge(source, this.vertex);
 				if (edge == null) {
 					edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, GsRegulatoryMultiEdge.SIGN[0]).me;
 					shouldReInit = true;
@@ -193,7 +193,7 @@ public class GsBooleanParser extends TBooleanParser {
 			}
 		}
 		if (shouldReInit) {
-			Set edgesList = graph.getGraphManager().getIncomingEdges(vertex);
+			Collection edgesList = graph.getIncomingEdges(vertex);
 			makeOperandList(edgesList);
 			setAllData(edgesList);		
 		}
@@ -264,7 +264,7 @@ public class GsBooleanParser extends TBooleanParser {
 		if (!found) {
 			throw new GsException(GsException.GRAVITY_NORMAL, "The node is not defined in the graph");
 		}
-		GsRegulatoryMultiEdge me = graph.getGraphManager().getEdge(vertex, this.vertex);
+		GsRegulatoryMultiEdge me = graph.getEdge(vertex, this.vertex);
 		if (me == null) {
 			throw new GsException(GsException.GRAVITY_NORMAL, "The node is not linked by any edge in the graph");
 		}

@@ -2,6 +2,8 @@ package fr.univmrs.tagc.GINsim.graph;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.common.GsException;
 
@@ -26,7 +28,7 @@ public interface GsActionProvider {
 	 * @param graph the graph for which we are adding it
 	 * @return the actions that this actionDescriptor can handle or null if none
 	 */
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph);
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph);
 
 	/**
 	 * run a given action on the graph.
@@ -37,5 +39,5 @@ public interface GsActionProvider {
      *
 	 * @throws GsException if error (like invalid parameters)
 	 */
-	public void runAction (int actionType, int ref, GsGraph graph, JFrame frame) throws GsException;
+	public void runAction (int actionType, int ref, Graph graph, JFrame frame) throws GsException;
 }

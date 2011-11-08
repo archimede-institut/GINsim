@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
@@ -46,7 +48,8 @@ public class CytoscapeExport extends GsAbstractExport {
 		filterDescr = "Cytoscape files";
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
 		if (graph instanceof GsRegulatoryGraph) {
 			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
 					"STR_cytoscape", "STR_cytoscape_descr", null, this, ACTION_EXPORT, 0) };
@@ -112,11 +115,11 @@ public class CytoscapeExport extends GsAbstractExport {
 		
 		//vertex
 		//We need a Hashtable to translate GINSim IDs into cytoscapes IDs.
-		Hashtable gs2cyt_Ids = new Hashtable(graph.getGraphManager().getVertexCount());
+		Hashtable gs2cyt_Ids = new Hashtable(graph.getVertexCount());
 		
-		int current_index_of_node_id = -graph.getGraphManager().getVertexCount(); // The IDs goes from -vertexCount to -1
-		GsVertexAttributesReader vertexAttributeReader = graph.getGraphManager().getVertexAttributesReader();
-		for (Iterator it=graph.getGraphManager().getVertexIterator() ; it.hasNext() ;) {
+		int current_index_of_node_id = -graph.getVertexCount(); // The IDs goes from -vertexCount to -1
+		GsVertexAttributesReader vertexAttributeReader = graph.getVertexAttributeReader();
+		for (Iterator it=graph.getVertices().iterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
 			
 			String name = vertex.getName();//The complete name (label) of the edge
@@ -161,8 +164,8 @@ public class CytoscapeExport extends GsAbstractExport {
 		}
 		
 		//edges
-		GsEdgeAttributesReader edgeAttributeReader = graph.getGraphManager().getEdgeAttributesReader();
-		for (Iterator<GsRegulatoryMultiEdge> it=graph.getGraphManager().getEdgeIterator() ; it.hasNext() ;) {
+		GsEdgeAttributesReader edgeAttributeReader = graph.getEdgeAttributeReader();
+		for (Iterator<GsRegulatoryMultiEdge> it=graph.getEdges().iterator() ; it.hasNext() ;) {
 			GsRegulatoryMultiEdge edge = it.next();
 
 			String source_id = ((GsRegulatoryVertex)edge.getTarget()).getId(); //C1

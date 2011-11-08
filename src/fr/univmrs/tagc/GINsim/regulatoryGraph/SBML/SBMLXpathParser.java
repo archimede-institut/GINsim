@@ -18,6 +18,7 @@ import java.util.regex.*;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import org.ginsim.graph.Graph;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -279,7 +280,7 @@ public final class SBMLXpathParser {
 							String vertexName = vertex.getId();
 							if(qualSpecies.equals(vertexName))
 							{		
-								// Ce Hashtable est le 2ième mè pas "values".
+								// Ce Hashtable est le 2iÔøΩme mÔøΩ pas "values".
 								// normalement : ((Hashtable<String, Vector<String>>) values.get(vertex)).put(fctResultLevel, v_function);			
 								//((Hashtable) values.get(vertex)).put(fctResultLevel, v_function);
 								values.get(vertex).put(fctResultLevel, v_function);	
@@ -725,7 +726,7 @@ public final class SBMLXpathParser {
 		}
 	}
 
-	public GsGraph getGraph() {
+	public Graph getGraph() {
 		return graph;
 	}
 
@@ -745,14 +746,16 @@ public final class SBMLXpathParser {
 			return t;
 		}
 
-		public boolean perform(GsGraph graph, Object data, int index) {
+		public boolean perform( Graph graph, Object data, int index) {
+			
 			StackDialog d = new InteractionInconsistencyDialog((Map) data, graph,
 					"interactionInconststancy", 200, 150);
 			d.setVisible(true);
 			return true;
 		}
 
-		public boolean timeout(GsGraph graph, Object data) {
+		public boolean timeout( Graph graph, Object data) {
+			
 			return true;
 		}
 		
@@ -765,7 +768,8 @@ public final class SBMLXpathParser {
 		Map m;
 		JPanel panel = null;
 
-		public InteractionInconsistencyDialog(Map m, GsGraph graph, String msg, int w, int h) {
+		public InteractionInconsistencyDialog(Map m, Graph graph, String msg, int w, int h) {
+			
 			super(graph.getGraphManager().getMainFrame(), msg, w, h);
 			this.graph = (GsRegulatoryGraph) graph;
 			this.m = m;
@@ -816,11 +820,12 @@ public final class SBMLXpathParser {
 			super();
 		}
 
-		public boolean timeout(GsGraph graph, Object data) {
+		public boolean timeout( Graph graph, Object data) {
+			
 			return false;
 		}
 
-		public boolean perform(GsGraph graph, Object data, int index) {
+		public boolean perform( Graph graph, Object data, int index) {
 			Vector v = (Vector) data;
 			byte value = ((Short) v.elementAt(0)).byteValue();
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex) v.elementAt(1);

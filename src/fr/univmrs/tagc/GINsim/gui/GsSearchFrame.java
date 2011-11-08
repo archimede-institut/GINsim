@@ -18,6 +18,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -36,7 +38,7 @@ import fr.univmrs.tagc.common.widgets.SimpleDialog;
 public class GsSearchFrame extends SimpleDialog {
 	private static final long serialVersionUID = 381064983897248950L;
 
-	private GsGraph g;
+	private Graph g;
 	
 	private JPanel mainPanel;
 	private JTextField searchTextField;

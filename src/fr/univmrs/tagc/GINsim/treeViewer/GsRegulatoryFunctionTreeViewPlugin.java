@@ -25,7 +25,7 @@ public class GsRegulatoryFunctionTreeViewPlugin implements GsActionProvider, GsP
 		GsRegulatoryGraphDescriptor.registerActionProvider(this);
 	}
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		if (actionType != ACTION_ACTION) {
 			return null;
 		}
@@ -36,7 +36,7 @@ public class GsRegulatoryFunctionTreeViewPlugin implements GsActionProvider, GsP
 		return t_action;
 	}
 	
-	public void runAction(int actionType, int ref, Graph<?,?> graph, JFrame frame) throws GsException {
+	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 		if (actionType != ACTION_ACTION) {
 			return;
 		}

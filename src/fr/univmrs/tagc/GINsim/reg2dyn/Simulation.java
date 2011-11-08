@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.reg2dyn.helpers.GsSTGSimulationHelper;
 import fr.univmrs.tagc.GINsim.reg2dyn.helpers.SimulationHelper;
@@ -79,9 +81,10 @@ public class Simulation extends Thread implements Runnable {
      * run the simulation in a new thread.
      */
     public void run() {
-        frame.endSimu(do_simulation());
+    	
+        frame.endSimu( do_simulation());
     }
-	public GsGraph do_simulation() {
+	public Graph do_simulation() {
         ready = true;
 		boolean maxDepthReached = false;
 		try {

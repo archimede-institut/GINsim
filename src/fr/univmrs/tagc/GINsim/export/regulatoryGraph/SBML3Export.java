@@ -13,6 +13,8 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -62,8 +64,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
 		filterDescr = "SBML files";
 	}
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType,
-			GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
 		if (graph instanceof GsRegulatoryGraph) {
 			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
 					"STR_SBML_L3",
@@ -226,7 +227,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 
                 out.openTag("listOfInputs");               
                 String edgeSign = null;
-                for (GsRegulatoryMultiEdge me: graph.getGraphManager().getIncomingEdges(v_no.get(i))) {
+                for (GsRegulatoryMultiEdge me: graph.getIncomingEdges(v_no.get(i))) {
                     int sign = me.getSign(); 
                     switch (sign) {
 					case 0:
@@ -257,7 +258,7 @@ public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener
                 out.openTag("defaultTerm");
                 
                 boolean hasNoBasalValue = true;
-                if (graph.getGraphManager().getIncomingEdges(v_no.get(i)).size() == 0) {
+                if (graph.getIncomingEdges(v_no.get(i)).size() == 0) {
                     LogicalParameterList lpl = regulatoryVertex.getV_logicalParameters();
                     if (lpl.size() == 1) {
                     	GsLogicalParameter lp = (GsLogicalParameter) lpl.get(0);
@@ -332,7 +333,7 @@ class SBML3ExportConfigPanel extends JPanel {
 			config.setSpecificConfig(specConfig);
 		}
 		
-		GsGraph graph = config.getGraph();
+		Graph graph = config.getGraph();
 		GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
 		initPanel.setParam(specConfig);
 		

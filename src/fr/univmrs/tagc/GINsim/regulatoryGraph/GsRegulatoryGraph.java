@@ -58,7 +58,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     /**
      */
     public GsRegulatoryGraph() {
-        this(null, false);
+    	
+        this( false);
     }
 
     protected String getGraphZipName() {
@@ -68,8 +69,9 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     /**
      * @param savefilename
      */
-    public GsRegulatoryGraph(String savefilename, boolean parsing) {
-        super( GsRegulatoryGraphDescriptor.getInstance(), savefilename, parsing);
+    public GsRegulatoryGraph( boolean parsing) {
+    	
+        super( GsRegulatoryGraphDescriptor.getInstance(), parsing);
         setDefaults();
     }
     /**
@@ -77,6 +79,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @param file
      */
     public GsRegulatoryGraph(Map map, File file) {
+    	
         this(file.getAbsolutePath(), true);
         GsRegulatoryParser parser = new GsRegulatoryParser();
         parser.parse(file, map, this);
@@ -317,10 +320,10 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     }
 
     public void removeVertex(GsRegulatoryVertex obj) {
-        for (GsRegulatoryMultiEdge me: graphManager.getOutgoingEdges(obj)) {
+        for (GsRegulatoryMultiEdge me: getOutgoingEdges(obj)) {
             removeEdge(me);
         }
-        graphManager.removeVertex(obj);
+        removeVertex( obj);
         nodeOrder.remove(obj);
         fireGraphChange(CHANGE_VERTEXREMOVED, obj);
     }
@@ -462,7 +465,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         return GsRegulatoryGraphDescriptor.getObjectManager();
     }
 
-    protected GsGraph getCopiedGraph() {
+    protected Graph getCopiedGraph() {
+    	
         return copiedGraph;
     }
 

@@ -22,6 +22,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
@@ -342,12 +344,12 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 	 * simulation is done (or interrupted), now choose what to do with the new graph.
 	 * @param graph the dynamic graph
 	 */
-	public void endSimu(GsGraph graph) {
+	public void endSimu( Graph graph) {
 		isrunning = false;
 		if (null == graph) {
 			Tools.error("no graph generated", regGraphFrame);
 		} else {
-			GsEnv.whatToDoWithGraph(regGraphFrame, graph, true);
+			GsEnv.whatToDoWithGraph( regGraphFrame, graph, true);
 		}
 		cancel();
 	}

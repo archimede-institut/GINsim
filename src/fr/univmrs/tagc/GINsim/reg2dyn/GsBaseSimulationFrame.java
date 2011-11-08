@@ -4,6 +4,8 @@ import java.awt.Insets;
 
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -15,7 +17,7 @@ public abstract class GsBaseSimulationFrame extends StackDialog implements Simul
     Insets indentInset = new Insets(0, 30, 0, 0);
 //    protected boolean isrunning = false;
 
-    public abstract void endSimu(GsGraph graph);
+    public abstract void endSimu( Graph graph);
 
 
     public GsBaseSimulationFrame(JFrame parent, String id, int w, int h) {

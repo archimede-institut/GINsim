@@ -8,6 +8,8 @@ import java.util.Vector;
 import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
@@ -51,7 +53,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
      * @param frame
      * @param graph
      */
-    public static void animate(JFrame frame, GsGraph graph) {
+    public static void animate(JFrame frame, Graph graph) {
         GsRegulatoryGraph regGraph = null;
         GsDynamicGraph dynGraph = null;
 
@@ -228,7 +230,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         }
     }
     
-    public void graphClosed(GsGraph graph) {
+    public void graphClosed( Graph graph) {
         endAnim();
     }
 
@@ -318,7 +320,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         return path;
     }
 
-	public void updateGraphNotificationMessage(GsGraph graph) {
+	public void updateGraphNotificationMessage( Graph graph) {
 	}
 }
 

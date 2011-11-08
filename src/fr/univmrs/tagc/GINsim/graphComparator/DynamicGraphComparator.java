@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
@@ -23,7 +25,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 public class DynamicGraphComparator extends GraphComparator {
 	private GsDynamicGraph g, g1, g2; //g is the graph merging g1 and g2, the graphs to compare.
 
-	public DynamicGraphComparator(GsGraph g1, GsGraph g2, GsGraph g) {
+	public DynamicGraphComparator( Graph g1, Graph g2, Graph g) {
 	    if (g  == null || !(g  instanceof GsDynamicGraph))  return;
 	    if (g1 == null || !(g1 instanceof GsDynamicGraph))  return;
 	    if (g2 == null || !(g2 instanceof GsDynamicGraph))  return;
@@ -31,12 +33,13 @@ public class DynamicGraphComparator extends GraphComparator {
 		this.g1 = (GsDynamicGraph)g1; 
 		this.g2 = (GsDynamicGraph)g2;
 		
-		g1m = g1.getGraphManager(); g2m = g2.getGraphManager(); gm = g.getGraphManager();
+		g1m = g1; g2m = g2; gm = g;
 		stylesMap = new HashMap();
 		buildDiffGraph();
 	}
 	
-	public DynamicGraphComparator(GsGraph g1, GsGraph g2) {
+	public DynamicGraphComparator( Graph g1, Graph g2) {
+		
 		this(g1, g2, new GsDynamicGraph());
 	}
 
@@ -52,17 +55,17 @@ public class DynamicGraphComparator extends GraphComparator {
 				log("The vertex "+id+" is specific to g2\n");
 				v = new GsDynamicNode(v2.state);
 				gm.addVertex(v);
-				mergeVertexAttributes(v, v2, null, gm.getVertexAttributesReader(), g2m.getVertexAttributesReader(), null, SPECIFIC_G2_COLOR);
+				mergeVertexAttributes(v, v2, null, gm.getVertexAttributeReader(), g2m.getVertexAttributeReader(), null, SPECIFIC_G2_COLOR);
 			} else if (v2 == null) {
 				log("The vertex "+id+" is specific to g1\n");
 				v = new GsDynamicNode(v1.state);
 				gm.addVertex(v);
-				mergeVertexAttributes(v, v1, null, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), null, SPECIFIC_G1_COLOR);
+				mergeVertexAttributes(v, v1, null, gm.getVertexAttributeReader(), g1m.getVertexAttributeReader(), null, SPECIFIC_G1_COLOR);
 			} else {
 				log("The vertex "+id+" is common to both g1 and g2\n");
 				v = new GsDynamicNode(v1.state);
 				gm.addVertex(v);
-				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributesReader(), g1m.getVertexAttributesReader(), g2m.getVertexAttributesReader(), COMMON_COLOR);
+				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributeReader(), g1m.getVertexAttributeReader(), g2m.getVertexAttributeReader(), COMMON_COLOR);
 				//compareVertices(v ,v1, v2);
 			}
 		}
@@ -116,13 +119,18 @@ public class DynamicGraphComparator extends GraphComparator {
 	
 
 	
-	public GsGraph getDiffGraph() {
+	public Graph getDiffGraph() {
+		
 		return g;
 	}
-	public GsGraph getG1() {
+	
+	public Graph getG1() {
+		
 		return g1;
 	}
-	public GsGraph getG2() {
+	
+	public Graph getG2() {
+		
 		return g2;
 	}
 
@@ -134,7 +142,7 @@ public class DynamicGraphComparator extends GraphComparator {
 	 * @param g2 another graph (in any order)
 	 * @return a node order or null if incompatible.
 	 */
-	public static List getNodeOrder(GsGraph g1, GsGraph g2) {
+	public static List getNodeOrder( Graph g1, Graph g2) {
 		List no1 = g1.getNodeOrder();
 		List no2 = g2.getNodeOrder();
 		List gNodeOrder = new ArrayList();

@@ -164,7 +164,8 @@ public class GsPetriNetExport extends GsAbstractExport {
 		// nothing needed here: subformat do all the job
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, GsGraph graph) {
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
+		
         if (graph instanceof GsRegulatoryGraph) {
         	return new GsPluggableActionDescriptor[] {
         			new GsPluggableActionDescriptor("STR_PetriNet", "STR_PetriNet_descr", null, this, ACTION_EXPORT, 0)

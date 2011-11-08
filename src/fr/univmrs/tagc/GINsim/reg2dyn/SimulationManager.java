@@ -1,11 +1,13 @@
 package fr.univmrs.tagc.GINsim.reg2dyn;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 
 
 public interface SimulationManager {
 
-    public void endSimu(GsGraph graph);
+    public void endSimu( Graph graph);
 
     /**
      * set the progress level, to give the user some feedback

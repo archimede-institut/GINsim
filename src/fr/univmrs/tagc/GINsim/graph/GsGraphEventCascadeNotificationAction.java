@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -16,7 +18,7 @@ public class GsGraphEventCascadeNotificationAction implements GsGraphNotificatio
         return t_action;
     }
 
-    public boolean perform(GsGraph graph, Object data, int index) {
+    public boolean perform( Graph graph, Object data, int index) {
         List v = (List)data;
         StringBuffer s = new StringBuffer();
         for (int i=0 ; i<v.size() ; i++) {
@@ -26,7 +28,7 @@ public class GsGraphEventCascadeNotificationAction implements GsGraphNotificatio
         return true;
     }
 
-    public boolean timeout(GsGraph graph, Object data) {
+    public boolean timeout( Graph graph, Object data) {
         return false;
     }
 

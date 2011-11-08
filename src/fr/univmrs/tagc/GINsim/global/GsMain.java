@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
 import org.python.util.PythonInterpreter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -218,7 +219,7 @@ class ReadConfig extends XMLHelper {
 		return null;
 	}
 
-	public GsGraph getGraph() {
+	public Graph getGraph() {
 		return null;
 	}
 

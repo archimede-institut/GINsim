@@ -31,6 +31,8 @@ import javax.swing.JTree;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.ginsim.graph.Graph;
+
 import tbrowser.data.module.TBModule;
 import tbrowser.data.module.TBModuleData;
 import tbrowser.data.module.TBModules;
@@ -80,12 +82,12 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
   private GsEdgeAttributesReader ereader;
   private GsGraphManager gm;
 
-  public GsTBClientPanel(GsGraph g) {
+  public GsTBClientPanel( Graph g) {
     super();
     initGraphic();
     initListeners();
     instance = this;
-    graph = (GsRegulatoryGraph)g;
+    graph = (GsRegulatoryGraph) g;
 		interactionsPanel.init(graph, true);
 		interactionsPanel.resizeColumns();
 		sel = (TBSelector)Selector.getNewSelector(TBSelector.IDENTIFIER);
@@ -402,10 +404,10 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 		geneTreeModel.fireTreeStructureChanged((AbstractTreeElement)geneTreeModel.getRoot());
 		sendButton.setEnabled(true);
 	}
-  public void graphClosed(GsGraph graph) {
+  public void graphClosed( Graph graph) {
   }
 
-  public void updateGraphNotificationMessage(GsGraph graph) {
+  public void updateGraphNotificationMessage( Graph graph) {
   }
   public void windowOpened(WindowEvent windowEvent) {
   }

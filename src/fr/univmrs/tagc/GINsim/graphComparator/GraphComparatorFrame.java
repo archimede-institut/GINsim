@@ -22,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
@@ -39,7 +41,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 
 	private static final long serialVersionUID = -5166645414957087984L;
 	private JFrame frame;
-	private GsGraph graph;
+	private Graph graph;
 	private GraphComparator gc;
 	
 	private JPanel mainPanel = null;
@@ -62,7 +64,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		super(parent, id, w, h);
 	}
 
-	public GraphComparatorFrame(JFrame frame, GsGraph graph) {
+	public GraphComparatorFrame(JFrame frame, Graph graph) {
 		super(frame, "graphComparator", 800, 600);
 		this.graph = graph;
         this.frame = frame;
@@ -161,7 +163,8 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		int i = 2;
 		
 		for (Iterator it = GsEnv.getAllGraphs().values().iterator(); it.hasNext();) {
-			GsGraph graph = (GsGraph) it.next();
+			
+			Graph graph = (Graph) it.next();
 			String name = graph.getGraphName();
 			if (graph == this.graph) indexToSelect = i; 
 			comboBoxEntries[i++] = name;
@@ -190,11 +193,12 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 	}
 
 	protected void run() {
-		GsGraph g1 = getGraph(g1_modelComboBox, g1_filepath);
-		GsGraph g2 = getGraph(g2_modelComboBox, g2_filepath);		
+		
+		Graph g1 = getGraph(g1_modelComboBox, g1_filepath);
+		Graph g2 = getGraph(g2_modelComboBox, g2_filepath);		
 		opt_display_graph = displayGraphCheckBox.getSelectedObjects() != null;//display the graph if displayGraphCheckBox is checked
 		GsMainFrame mainFrame = null;
-		GsGraph g = null;
+		Graph g = null;
 		
 		int g_type= getGraphsType(g1, g2);
 		switch (g_type) {
@@ -224,14 +228,14 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		}
 		doClose();
 		if (opt_display_graph) {
-			new GraphComparatorCaptionFrame(frame, gc.getDiffGraph(), mainFrame, gc);
+			new GraphComparatorCaptionFrame( frame, gc.getDiffGraph(), mainFrame, gc);
 		} else {
 			GsEnv.whatToDoWithGraph(frame, gc.getDiffGraph(), false);
 		}
 	}
 	
 	
-	private int getGraphsType(GsGraph g1, GsGraph g2) {
+	private int getGraphsType( Graph g1, Graph g2) {
 		if (g1 == null || g2 == null) return GRAPH_TYPE_NULL;
 		if (g1  instanceof GsRegulatoryGraph) {
 			if (g2 instanceof GsRegulatoryGraph) 
@@ -244,15 +248,16 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		return gc;
 	}
 
-	private GsGraph getGraph(JComboBox comboBox, JTextField filepath) {
-		GsGraph g = null;
+	private Graph getGraph(JComboBox comboBox, JTextField filepath) {
+		
+		Graph g = null;
 		int index = comboBox.getSelectedIndex() ;
 		if (index == 0) { // get from filepath
 			g = GsGinsimGraphDescriptor.getInstance().open(new File(filepath.getText()));
 		} else if (index == 1) { //has choose blank element
             Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_blankComboBox")), this.frame);
 		} else {
-			g = (GsGraph) graphList.get(index-2);
+			g = (Graph) graphList.get(index-2);
 		}
 		return g;
 	}

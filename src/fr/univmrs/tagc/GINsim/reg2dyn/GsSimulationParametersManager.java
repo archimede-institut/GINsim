@@ -23,13 +23,13 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
 
 	public static final String key = "reg2dyn_parameters";
 	
-    public Object doOpen(InputStream is, GsGraph graph) {
+    public Object doOpen(InputStream is, Graph graph) {
         GsSimulationParametersParser parser = new GsSimulationParametersParser((GsRegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
 
-    public void doSave(OutputStreamWriter os, GsGraph graph) {
+    public void doSave(OutputStreamWriter os, Graph graph) {
         GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
         List nodeOrder = graph.getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
@@ -64,13 +64,13 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
         return key;
     }
 
-    public boolean needSaving(GsGraph graph) {
+    public boolean needSaving( Graph graph) {
         GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
         return paramList != null && (paramList.getNbElements(null) > 0 || 
         		paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 2);
     }
 
-	public Object doCreate( Graph<?,?> graph) {
+	public Object doCreate( Graph graph) {
 		return new GsSimulationParameterList( graph);
 	}
 }

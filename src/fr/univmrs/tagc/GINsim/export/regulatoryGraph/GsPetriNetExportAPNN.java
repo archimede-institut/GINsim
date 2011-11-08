@@ -37,8 +37,7 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
 		filterDescr = "APNN files (.apnn)";
 	}
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType,
-			GsGraph graph) 
+	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) 
 	{
 		return null;
 	}

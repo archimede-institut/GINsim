@@ -5,8 +5,8 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JLabel;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis.GsDecisionOnEdge;
 
@@ -18,7 +18,7 @@ public class GsHierarchicalEdgeParameterPanel  extends GsParameterPanel {
 	
 	/**
 	 */
-	public GsHierarchicalEdgeParameterPanel(GsGraph g) {
+	public GsHierarchicalEdgeParameterPanel( Graph g) {
 		super();
 		this.graph = g;
 		initialize();

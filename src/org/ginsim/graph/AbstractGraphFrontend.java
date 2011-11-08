@@ -2,7 +2,9 @@ package org.ginsim.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.ginsim.graph.backend.GraphBackend;
@@ -10,14 +12,18 @@ import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
+import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
+import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.GINsim.jgraph.GsJgraphtGraphManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.common.GsException;
 
-abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, GraphView {
+abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E> {
 
     private static List<GsGraphAssociatedObjectManager> OBJECT_MANAGERS = null;
 	
@@ -34,11 +40,17 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
+    
+    // The map linking objects associated to the Graph with their representative key
+    private Map<Object,Object> m_objects = null;
 
     
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
     protected boolean annoted = false;
+    protected GsGraphDescriptor descriptor = null;
+    private static int GRAPH_ID = 0;
+    private int id;
 	
 	/**
 	 * Create a new graph with the default back-end.
@@ -47,6 +59,29 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		this( new JgraphtBackendImpl<V, E>());
 		
 	}
+	
+    /**
+     * @param descriptor
+     */
+    public AbstractGraphFrontend( GsGraphDescriptor descriptor) {
+    	
+        this( descriptor, false);
+    }
+    
+    /**
+     *
+     * @param descriptor
+     * @param saveFileName
+     */
+    public AbstractGraphFrontend( GsGraphDescriptor descriptor, boolean parsing) {
+    	
+        this( new JgraphtBackendImpl<V, E>());
+        this.descriptor = descriptor;
+        this.isParsing = parsing;
+        this.id = GRAPH_ID++;
+        GsEnv.registerGraph( this, "[UNSAVED-"+id+"]");
+
+    }
 
 	
 	/**
@@ -382,6 +417,93 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
         for (int i=0 ; i < OBJECT_MANAGERS.size() ; i++) {
         	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager) OBJECT_MANAGERS.get(i);
         	if (manager.getObjectName().equals( key)) {
+        		return manager;
+        	}
+        }
+        return null;
+    }
+    
+    
+    /**
+     * Allow to associate objects with a graph to retrieve them later.
+     * this (and <code>addObject(key, obj)</code>) makes it easy.
+     *
+     * @see #addObject(Object, Object)
+     * @param key
+     * @param create if true, a non-defined object will be created
+     * @return the associated object
+     */
+    public Object getObject( Object key, boolean create) {
+        if (m_objects == null) {
+        	if (create) {
+        		m_objects = new HashMap();
+        	} else {
+        		return null;
+        	}
+        }
+        Object ret = m_objects.get(key);
+        if (create && ret == null) {
+        	GsGraphAssociatedObjectManager manager = getObjectManager(key);
+        	if (manager == null) {
+        		manager = getSpecificObjectManager(key);
+        	}
+        	if (manager != null) {
+        		ret = manager.doCreate(this);
+        		addObject(key, ret);
+        	}
+        }
+        return ret;
+    }
+
+    /**
+     * Allow to associate objects with a graph to retrieve them later.
+     *
+     * @see #getObject(Object)
+     * @see #removeObject(Object)
+     * @param key
+     * @param obj
+     */
+    public void addObject(Object key, Object obj) {
+        if (m_objects == null) {
+            m_objects = new HashMap();
+        }
+        m_objects.put(key, obj);
+    }
+
+    /**
+     * remove an object previously associated to a graph with <code>addObject(Object, Object)</code>.
+     *
+     * @see #getObject(Object)
+     * @see #addObject(Object, Object)
+     * @param key
+     */
+    public void removeObject(Object key) {
+        if (m_objects == null) {
+            return;
+        }
+        m_objects.remove(key);
+    }
+    
+    
+    /**
+     * @return a vector of action related to this kind of graph.
+     */
+    abstract public List getSpecificObjectManager();
+    
+    
+    /**
+     * @param key
+     * @return the object manager associated with THIS kind of graph and to a given key
+     */
+    public GsGraphAssociatedObjectManager getSpecificObjectManager(Object key) {
+    	
+    	Vector v_OManager = GsRegulatoryGraphDescriptor.getObjectManager();
+    	if (v_OManager == null) {
+    		return null;
+    	}
+        for (int i=0 ; i < v_OManager.size() ; i++) {
+        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+        	if (manager.getObjectName().equals(key)) {
         		return manager;
         	}
         }

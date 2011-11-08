@@ -19,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -34,7 +36,7 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class InteractionAnalysisFrame extends StackDialog implements ActionListener {
 	private JFrame frame;
-	private GsGraph graph;
+	private Graph graph;
 	private Container mainPanel;
 	private JCheckBox[] runOptions;
 	private JButton colorizeButton, saveReportButton;
@@ -52,7 +54,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		super(parent, id, w, h);
 	}
 
-	public InteractionAnalysisFrame(JFrame frame, GsGraph graph) {
+	public InteractionAnalysisFrame( JFrame frame, Graph graph) {
 		super(frame, "functionalityAnalysis", 420, 260);
 		this.frame = frame;
 		this.graph = graph;
@@ -140,7 +142,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		if (selectedNodes.size() == 0) {
 			selectedNodes = null;
 		}
-		fii = new InteractionAnalysis((GsRegulatoryGraph)graph, getOption(0), (GsRegulatoryMutantDef) mutantStore.getObject(0), selectedNodes);
+		fii = new InteractionAnalysis((GsRegulatoryGraph) graph, getOption(0), (GsRegulatoryMutantDef) mutantStore.getObject(0), selectedNodes);
 	    saveReportButton.setEnabled(true);
 		colorizeButton.setEnabled(true);
 		if (getOption(2)) {

@@ -25,6 +25,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
@@ -36,7 +38,7 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class PathFindingFrame extends StackDialog implements ActionListener, ResultHandler {
 	private static final long serialVersionUID = -7430762236435581864L;
-	private GsGraph graph;
+	private Graph graph;
 	private Container mainPanel, resultsPanel, progressionPanel;
 	private JProgressBar progressBar;
 	private JLabel progressionLabel;
@@ -53,7 +55,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private JButton selectionForEndButton, selectionForStartButton;
 	
 	
-	public PathFindingFrame(JFrame frame, GsGraph graph) {
+	public PathFindingFrame(JFrame frame, Graph graph) {
 		super(frame, "pathFinding", 420, 260);
 		this.graph = graph;
         initialize();
@@ -366,7 +368,8 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		}
 	}
 
-	public GsGraph getGraph() {
+	public Graph getGraph() {
+		
 		return graph;
 	}
 	

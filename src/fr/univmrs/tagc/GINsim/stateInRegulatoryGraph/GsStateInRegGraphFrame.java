@@ -17,6 +17,8 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -52,7 +54,7 @@ public class GsStateInRegGraphFrame extends StackDialog implements ActionListene
 	private GsStateInRegGraph sirg;
 
 
-	public GsStateInRegGraphFrame(JFrame frame, GsGraph graph) {
+	public GsStateInRegGraphFrame(JFrame frame, Graph graph) {
 		super(frame, "stateInRegGraph", 420, 260);
 		//this.frame = frame;
 		this.regGraph = (GsRegulatoryGraph) graph;

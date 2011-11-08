@@ -3,6 +3,8 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -14,7 +16,8 @@ public abstract class BasicGraphAssociatedManager implements
 
 	protected String key;
 	
-	public void doSave(OutputStreamWriter os, GsGraph graph) {
+	public void doSave(OutputStreamWriter os, Graph graph) {
+		
         Object o = graph.getObject(key, false);
         if (o != null && o instanceof XMLize) {
 	        try {
@@ -30,7 +33,8 @@ public abstract class BasicGraphAssociatedManager implements
 		return key;
 	}
 
-	public boolean needSaving(GsGraph graph) {
+	public boolean needSaving( Graph graph) {
+		
 		return graph.getObject(key, false) != null;
 	}
 

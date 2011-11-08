@@ -9,6 +9,7 @@ import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
+import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
@@ -18,25 +19,33 @@ import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 
-public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AV, AE extends Edge<AV>>
+abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG extends Graph<AV, AE>, AV, AE extends Edge<AV>>
 			 extends AbstractGraphFrontend<V,E>
-			 implements AssociatedGraph<AV, AE>, GsGraphListener<AV,AE>, GraphChangeListener {
+			 implements AssociatedGraph<AG, AV, AE>, GsGraphListener<AV,AE>, GraphChangeListener {
 
-    protected Graph<AV,AE> associatedGraph = null;
+    protected AG associatedGraph = null;
     protected String associatedID = null;
 
+    
+    public AbstractAssociatedGraphFrontend( GsGraphDescriptor descriptor, boolean parsing) {
+    	
+    	super( descriptor, parsing);
+    }
+    
+    
     //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
     //   TODO: should the associated graph move to specialised graph types?
 	//        with an intermediate class providing the common code it would make sense
     //----------------------------------------------------------------------------------------------
 	
+    
     /**
      * Associate the given graph to the current one
      * 
      * @param associated_graph
      */
 	@Override
-	public void setAssociatedGraph( Graph<AV,AE> associated_graph) {
+	public void setAssociatedGraph( AG associated_graph) {
 
         if (associated_graph == null || !isAssociationValid( associated_graph)) {
             return;
@@ -57,16 +66,16 @@ public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AV, AE extend
      * @return the graph associated with this one.
      */
 	@Override
-    public Graph<AV,AE> getAssociatedGraph() {
+    public AG getAssociatedGraph() {
 
         if ( associatedGraph == null && getAssociatedGraphID() != null) {
-            Graph<AV,AE> ag = GsEnv.getRegistredGraph( associatedID);
+            AG ag = (AG) GsEnv.getRegistredGraph( associatedID);
             if (ag != null) {
                 setAssociatedGraph( ag);
             } else {
                 File f = new File(associatedID);
                 if (f.exists()) {
-                    ag = GsGinsimGraphDescriptor.getInstance().open(f);
+                    ag = (AG) GsGinsimGraphDescriptor.getInstance().open(f);
                     GsEnv.newMainFrame(ag);
                     setAssociatedGraph(ag);
                 } else {
@@ -172,7 +181,7 @@ public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AV, AE extend
         }
     }
 
-    public void graphClosed(GsGraph graph) {
+    public void graphClosed( Graph graph) {
         // it must be the associated regulatory graph
         if (graph == associatedGraph) {
             associatedID = associatedGraph.getSaveFileName();
@@ -185,7 +194,7 @@ public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AV, AE extend
 	}
 
 	@Override
-	public void updateGraphNotificationMessage(GsGraph graph) {
+	public void updateGraphNotificationMessage( Graph graph) {
 	}
 
 }

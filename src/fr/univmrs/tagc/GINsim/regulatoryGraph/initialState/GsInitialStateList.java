@@ -29,7 +29,7 @@ public class GsInitialStateList implements GsGraphListener<GsRegulatoryVertex, G
     	
         this.graph = (GsRegulatoryGraph) graph;
     	nodeOrder = graph.getNodeOrder();
-        graph.addGraphListener(this);
+        graph.addGraphListener( (GsGraphListener) this);
         updateLists();
         
         initialStates = new InitialStateList(normalNodes, false);
