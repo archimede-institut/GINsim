@@ -101,7 +101,7 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 
 	public GsHierarchicalTransitionGraph(Map map, File file) {
 		
-	    this(file.getAbsolutePath(), true);
+	    this( true);
         GsHierarchicalTransitionGraphParser parser = new GsHierarchicalTransitionGraphParser();
         parser.parse(file, map, this);
 		graphManager.ready();

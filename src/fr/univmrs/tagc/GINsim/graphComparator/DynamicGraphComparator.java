@@ -71,19 +71,19 @@ public class DynamicGraphComparator extends GraphComparator {
 		}
 	}
 
-	protected void addVerticesFromGraph(GsGraphManager gm) {
-		for (Iterator it=gm.getVertexIterator() ; it.hasNext() ;) {
+	protected void addVerticesFromGraph( Graph gm) {
+		for (Iterator it=gm.getVertices().iterator() ; it.hasNext() ;) {
 			GsDynamicNode vertex = (GsDynamicNode)it.next();
 			String id = vertex.toString(); //Beware, the real node id is not getId, but toString
 			verticesIdsSet.add(id); 
 		}
 	}
 
-	protected void addEdgesFromGraph(GsGraphManager gm_main, GsGraphManager gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
+	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
 		GsDynamicNode v = (GsDynamicNode) gm_main.getVertexByName(id);
 		GsDirectedEdge<GsDynamicNode> e = null;
-		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributesReader();
-		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributesReader();
+		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
+		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 		
 		if (v != null) { //If v is a vertex from the studied graph, we look at its edges
 			Collection<GsDirectedEdge<GsDynamicNode>> edges = gm_main.getOutgoingEdges(v);

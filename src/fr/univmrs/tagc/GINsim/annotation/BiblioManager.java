@@ -20,7 +20,8 @@ public class BiblioManager extends BasicGraphAssociatedManager {
 		AnnotationLink.addHelperClass("ref", key);
 	}
 	
-	public Object doCreate( AbstractGraphFrontend<?,?> graph) {
+	public Object doCreate( Graph graph) {
+		
 		return new BiblioList( graph);
 	}
 

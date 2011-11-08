@@ -161,22 +161,22 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		}
 	}
 	
-	protected void addVerticesFromGraph(GsGraphManager gm) {
-		for (Iterator it=gm.getVertexIterator() ; it.hasNext() ;) {
+	protected void addVerticesFromGraph( Graph gm) {
+		for (Iterator it=gm.getVertices().iterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
 			verticesIdsSet.add(vertex.getId());
 		}
 	}
 
 	
-	protected void addEdgesFromGraph(GsGraphManager gm_main, GsGraphManager gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
+	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
 		GsRegulatoryVertex v = (GsRegulatoryVertex) gm_main.getVertexByName(id);
 		if (v == null) {
 			return;
 		}
 		GsRegulatoryEdge e = null;
-		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributesReader();
-		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributesReader();
+		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
+		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 
 		//If v is a vertex from the studied graph, we look at its edges
 		GsRegulatoryVertex source = (GsRegulatoryVertex) gm.getVertexByName(id);

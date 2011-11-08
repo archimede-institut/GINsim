@@ -80,7 +80,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      */
     public GsRegulatoryGraph(Map map, File file) {
     	
-        this(file.getAbsolutePath(), true);
+        this( true);
         GsRegulatoryParser parser = new GsRegulatoryParser();
         parser.parse(file, map, this);
 		graphManager.ready();
@@ -124,7 +124,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 				}
 			
 			};
-	    	this.addNotificationMessage(new GsGraphNotificationMessage(this,
+	    	this.addNotificationMessage( new GsGraphNotificationMessage(this,
 	    			Translator.getString("STR_usePanelToAddMoreEdges"),
 	    			action,
 	    			obj,

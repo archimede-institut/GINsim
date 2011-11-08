@@ -35,9 +35,9 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 	Map m_references = new HashMap();
 	Map m_used = new HashMap();
 	Ref curRef = null;
-	AbstractGraphFrontend<?,?> graph;
+	Graph graph;
 	
-	public BiblioList( AbstractGraphFrontend<?,?> graph) {
+	public BiblioList( Graph graph) {
 		this.graph = graph;
 		graph.addGraphListener(this);
 	}
