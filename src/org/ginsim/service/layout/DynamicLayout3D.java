@@ -1,32 +1,21 @@
-package fr.univmrs.tagc.GINsim.layout;
+package org.ginsim.service.layout;
 
 import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.JFrame;
-
 import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.GsException;
 
-/**
- * FIXME: port it to the new service API
- */
-public class Gs3DLayout {
+public class DynamicLayout3D {
 	private GsEdgeAttributesReader ereader;
     private GsVertexAttributesReader vreader;
     private Color[] colorPalette;
@@ -35,6 +24,11 @@ public class Gs3DLayout {
 
     private static int MARGIN = 10;
 	
+    public static void runLayout(GsDynamicGraph graph) throws GsException {
+    	DynamicLayout3D algo = new DynamicLayout3D();
+    	algo.layout(graph);
+    }
+    
     public void layout(GsDynamicGraph graph) throws GsException {
 		Iterator it = graph.getVertices().iterator();
 		Object v = it.next();
