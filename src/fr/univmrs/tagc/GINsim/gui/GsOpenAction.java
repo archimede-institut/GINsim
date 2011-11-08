@@ -97,14 +97,14 @@ public class GsOpenAction extends BaseAction {
 	public void actionPerformed(ActionEvent e) {
 		switch (mode) {
         case MODE_OPEN:
-            if (main.getGraph().isEmpty()) {
+            if (main.getGraph().getVertexCount() <= 0) {
                 open(gd, main);
             } else {
                 openInNew(gd);
             }
             break;
         case MODE_NEW:
-            if (main.getGraph().isEmpty()) {
+            if (main.getGraph().getVertexCount() <= 0) {
                 //newGraph(gd, main);
             } else {
                 newFrame(gd);
@@ -114,7 +114,7 @@ public class GsOpenAction extends BaseAction {
             if (path != null && new File(path).exists()) {
                 Graph graph = gd.open(new File(path));
                 OptionStore.addRecent(path);
-                if (main.getGraph().isEmpty()) {
+                if (main.getGraph().getVertexCount() <= 0) {
                     GsEventDispatcher.associateGraphWithFrame(graph, main);
                 } else {
                     GsEnv.newMainFrame(graph);

@@ -4,6 +4,7 @@ import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * Here are the callback for entry in the "view" menu
+ * TODO: delete it. A brand new view menu manager is in the new architecture
  */
 public class GsViewCallBack {
 	
@@ -21,21 +22,21 @@ public class GsViewCallBack {
 	 * for now: simple zoom out
 	 */
 	public void zoomOut() {
-	    main.getGraph().getGraphManager().zoomOut();
+	    //main.getGraph().getGraphManager().zoomOut();
 	}
 
 	/**
 	 * for now: simple zoom in
 	 */
 	public void zoomIn() {
-	    main.getGraph().getGraphManager().zoomIn();
+	    //main.getGraph().getGraphManager().zoomIn();
 	}
 	
 	/**
 	 * come back to the default zoom level
 	 */
 	public void normalSize() {
-	    main.getGraph().getGraphManager().zoomNormal();
+	    //main.getGraph().getGraphManager().zoomNormal();
 	}
 
 	/**
@@ -43,7 +44,7 @@ public class GsViewCallBack {
 	 * @param b
 	 */
 	public void displayEdgeName(boolean b) {
-	    main.getGraph().getGraphManager().displayEdgeName(b);
+	    //main.getGraph().getGraphManager().displayEdgeName(b);
         OptionStore.setOption("display.edgename", b?Boolean.TRUE:Boolean.FALSE);
 	}
 
@@ -60,7 +61,7 @@ public class GsViewCallBack {
 	 * @param b
 	 */
 	protected void displayGrid(boolean b) {
-	    main.getGraph().getGraphManager().showGrid(b);
+	    //main.getGraph().getGraphManager().showGrid(b);
         OptionStore.setOption("display.grid", b?Boolean.TRUE:Boolean.FALSE);
 	}
 
@@ -69,7 +70,7 @@ public class GsViewCallBack {
      * @param b
      */
     public void gridActive(boolean b) {
-        main.getGraph().getGraphManager().setGridActive(b);
+        //main.getGraph().getGraphManager().setGridActive(b);
         OptionStore.setOption("display.gridactive", b?Boolean.TRUE:Boolean.FALSE);
     }
     
@@ -87,7 +88,7 @@ public class GsViewCallBack {
      * @param b
      */
     public void vertexToFront(boolean b) {
-        main.getGraph().getGraphManager().vertexToFront(b);
+        //main.getGraph().getGraphManager().vertexToFront(b);
     }
 
 }

@@ -77,31 +77,17 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
         this( false);
     }
 
-    /*
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddVertex(int)
-	 */
-	protected GsNodeReducedData doInteractiveAddVertex(int param) {
-		return null;
-	}
-
-	/*
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddEdge(java.lang.Object, java.lang.Object, int)
-	 */
-	protected GsDirectedEdge<GsNodeReducedData> doInteractiveAddEdge(GsNodeReducedData source, GsNodeReducedData target, int param) {
-		return null;
-	}
-
 	/*
 	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
 	 */
-	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
+	protected void doSave(OutputStreamWriter os, int mode, Collection<GsNodeReducedData> vertices, Collection<Edge<GsNodeReducedData>> edges) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"reduced\">\n");
-			saveNode(out, mode, selectedOnly);
-			saveEdge(out, mode, selectedOnly);
+			saveVertices(out, mode, vertices);
+			saveEdge(out, mode, edges);
             if (graphAnnotation != null) {
             	graphAnnotation.toXML(out, null, 0);
             }
@@ -125,19 +111,16 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
+    private void saveEdge(XMLWriter out, int mode, Collection<Edge<GsNodeReducedData>> edges) throws IOException {
         Iterator<Edge<GsNodeReducedData>> it;
-        if (selectedOnly) {
-        		it = graphManager.getFullySelectedEdgeIterator();
-        } else {
-        		it = getEdges().iterator();
-        }
+    	if (edges == null) {
+    		edges = getEdges();
+    	}
         switch (mode) {
         	default:
-		        while (it.hasNext()) {
-		        	GsDirectedEdge edge = it.next();
-		            String source = edge.getSource().toString();
-		            String target = edge.getTarget().toString();
+		        for (Edge<GsNodeReducedData> edge: edges) {
+		            GsNodeReducedData source = edge.getSource();
+		            GsNodeReducedData target = edge.getTarget();
 		            out.write("\t\t<edge id=\""+ source +"_"+target+"\" from=\""+source+"\" to=\""+target+"\"/>\n");
 		        }
 		        break;
@@ -150,68 +133,43 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
+    private void saveVertices(XMLWriter out, int mode, Collection<GsNodeReducedData> vertices) throws IOException {
     	Iterator it;
-    	if (selectedOnly) {
-    		it = graphManager.getSelectedVertexIterator();
-    	} else {
-    		it = getVertices().iterator();
+    	if (vertices == null) {
+    		vertices = getVertices();
     	}
-        	GsVertexAttributesReader vReader = getVertexAttributeReader();
-        	switch (mode) {
-	    		case 1:
+    	GsVertexAttributesReader vReader = getVertexAttributeReader();
+    	switch (mode) {
+    		case 1:
 
-	                while (it.hasNext()) {
-	                    Object vertex = it.next();
-	                    String content = ((GsNodeReducedData)vertex).getContentString();
-	                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                        out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-	                    out.write(GsGinmlHelper.getShortNodeVS(vReader));
-	                    out.write("\t\t</node>\n");
-	                }
-	    			break;
-				case 2:
-	                while (it.hasNext()) {
-	                    Object vertex = it.next();
-	                    vReader.setVertex(vertex);
-	                    String content = ((GsNodeReducedData)vertex).getContentString();
-	                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                        out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-	                    out.write(GsGinmlHelper.getFullNodeVS(vReader));
-	                    out.write("\t\t</node>\n");
-	                }
-	    			break;
-        		default:
-        	        while (it.hasNext()) {
-        	            Object vertex = it.next();
-	                    String content = ((GsNodeReducedData)vertex).getContentString();
-	                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                        out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-                        out.write("</node>");
-        	        }
+                for (GsNodeReducedData vertex: vertices) {
+                    String content = vertex.getContentString();
+                    out.write("\t\t<node id=\""+vertex+"\">\n");
+                    out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
+                    out.write(GsGinmlHelper.getShortNodeVS(vReader));
+                    out.write("\t\t</node>\n");
+                }
+    			break;
+			case 2:
+                for (GsNodeReducedData vertex: vertices) {
+                    vReader.setVertex(vertex);
+                    String content = ((GsNodeReducedData)vertex).getContentString();
+                    out.write("\t\t<node id=\""+vertex+"\">\n");
+                    out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
+                    out.write(GsGinmlHelper.getFullNodeVS(vReader));
+                    out.write("\t\t</node>\n");
+                }
+    			break;
+    		default:
+                for (GsNodeReducedData vertex: vertices) {
+                    String content = vertex.getContentString();
+                    out.write("\t\t<node id=\""+vertex+"\">\n");
+                    out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
+                    out.write("</node>");
+    	        }
         }
     }
 	
-	protected FileFilter doGetFileFilter() {
-		return null;
-	}
-
-	public GsParameterPanel getEdgeAttributePanel() {
-		return null;
-	}
-
-	public GsParameterPanel getVertexAttributePanel() {
-		if (parameterPanel == null) {
-			parameterPanel = new ReducedParameterPanel();
-		}
-		return parameterPanel;
-	}
-
-	public void changeVertexId(Object vertex, String newId) throws GsException {
-	}
-
-	public void removeEdge(GsDirectedEdge<GsNodeReducedData> edge) {
-	}
 //	/**
 //	 * add a vertex to this graph.
 //	 * @param vertex the vertex to add.
@@ -230,18 +188,6 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 		addEdge( edge);
 	}
 	
-	public List getSpecificLayout() {
-		return GsReducedGraphDescriptor.getLayout();
-	}
-	public List getSpecificExport() {
-		return GsReducedGraphDescriptor.getExport();
-	}
-	public List getSpecificAction() {
-		return GsReducedGraphDescriptor.getAction();
-	}
-    public List getSpecificObjectManager() {
-        return GsReducedGraphDescriptor.getObjectManager();
-    }
     protected Graph getCopiedGraph() {
         return null;
     }
@@ -272,6 +218,24 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
         return map;
     }
 
+    
+    // FIXME: move all this to the GUI Helper
+
+	protected FileFilter doGetFileFilter() {
+		return null;
+	}
+
+	public GsParameterPanel getEdgeAttributePanel() {
+		return null;
+	}
+
+	public GsParameterPanel getVertexAttributePanel() {
+		if (parameterPanel == null) {
+			parameterPanel = new ReducedParameterPanel();
+		}
+		return parameterPanel;
+	}
+
 	protected JPanel doGetFileChooserPanel() {
 		return getOptionPanel();
 	}
@@ -285,9 +249,4 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 		}
 		return optionPanel;
 	}
-    
-    protected boolean isAssociationValid( Graph graph) {
-        // blindly accept all associations
-        return true;
-    }
 }

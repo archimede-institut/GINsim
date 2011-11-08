@@ -968,7 +968,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
                 if (v_selection != null) {
                     it = v_selection.iterator();
                 } else {
-                    it = mainFrame.getGraph().getGraphManager().getEdgeIterator();
+                    it = mainFrame.getGraph().getEdges().iterator();
                 }
 				while (it.hasNext()) {
 					eReader.setEdge(it.next());
@@ -996,7 +996,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
                 if (v_selection != null) {
                     it = v_selection.iterator();
                 } else {
-                    it = mainFrame.getGraph().getGraphManager().getVertexIterator();
+                    it = mainFrame.getGraph().getVertices().iterator();
                 }
 				while (it.hasNext()) {
 					vReader.setVertex(it.next());
