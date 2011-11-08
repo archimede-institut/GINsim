@@ -1,7 +1,6 @@
 package org.ginsim.service.layout;
 
 import org.ginsim.graph.Graph;
-import org.ginsim.graph.GraphView;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;

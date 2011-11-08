@@ -14,6 +14,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.ginsim.graph.Graph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
@@ -44,7 +45,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
     private ListenableGraph<V,E>    	g 				= null;
     private JGraphModelAdapter<V,E>		m_jgAdapter    	= null;
     private GsJgraph 					jgraph 			= null;
-    private GsGraph<V,E> 				gsGraph		    = null;
+    private Graph<V,E> 					gsGraph		    = null;
     private GsParallelEdgeRouting	 	pedgerouting	= null;
     private GraphUndoManager	    	undoManager		= null;
     

@@ -13,6 +13,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;

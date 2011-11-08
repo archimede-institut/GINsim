@@ -4,6 +4,8 @@ import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNodeSet;

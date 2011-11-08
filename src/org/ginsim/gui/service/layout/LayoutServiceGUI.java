@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.Graph;
-import org.ginsim.graph.GraphView;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.GsLayoutAction;
 import org.ginsim.gui.service.GsServiceGUI;
