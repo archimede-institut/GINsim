@@ -12,6 +12,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
@@ -126,14 +127,14 @@ public class AnnotationPanel extends JPanel
         if (!currentNote.getComment().equals(new_text)) {
         		currentNote.setComment(new_text);
             if (listenChanges && graph != null) {
-                graph.fireMetaChange();
+                ((AbstractGraphFrontend) graph).fireMetaChange();
             }
         }
     }
     
     public void tableChanged(TableModelEvent e) {
         if (listenChanges && graph != null) {
-            graph.fireMetaChange();
+        	((AbstractGraphFrontend) graph).fireMetaChange();
         }
     }
 	public void apply() {

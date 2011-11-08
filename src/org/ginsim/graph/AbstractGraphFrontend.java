@@ -514,6 +514,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	// -------------------------  EVENT MANAGEMENT METHODS ---------------------------------
 
     public void fireMetaChange() {
+    	
         fireGraphChange(CHANGE_METADATA, null);
     }
 	

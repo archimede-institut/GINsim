@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -67,7 +68,7 @@ public class GsLogicalParameter implements XMLize {
 	public void setValue(int i, Graph graph) {
 		if (i != value) {
 			value = i;
-			graph.fireMetaChange();
+			((AbstractGraphFrontend) graph).fireMetaChange();
 		}
 	}
 
