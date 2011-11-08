@@ -32,8 +32,8 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     
 	// The name of the graph
 	protected String graphName = "default_name";
-	// The list of vertices ordered as defined by the model
-	protected List<V> nodeOrder = new ArrayList<V>();
+//	// The list of vertices ordered as defined by the model
+//	protected List<V> nodeOrder = new ArrayList<V>();
 	
 	// List of the registered graph listeners
 	protected List< GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();

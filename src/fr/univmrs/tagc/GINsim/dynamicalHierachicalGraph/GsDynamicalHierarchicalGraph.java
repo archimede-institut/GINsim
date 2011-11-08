@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -44,15 +45,19 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 	
 	private byte[] childsCount = null;
 	private GsDynamicalHierarchicalParameterPanel vertexPanel = null;
+	
+	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 
 	/**
 	 * create a new GsDynamicalHierarchicalGraph with a nodeOrder.
 	 * @param nodeOrder the node order
 	 */
-	public GsDynamicalHierarchicalGraph(List nodeOrder) {
+	public GsDynamicalHierarchicalGraph(List<GsRegulatoryVertex> nodeOrder) {
 		
 	    this( false);
-	    this.nodeOrder = new ArrayList(nodeOrder);
+	    for (GsRegulatoryVertex vertex: nodeOrder) {
+	    	this.nodeOrder.add(new NodeInfo(vertex.getId(), vertex.getMaxValue()));
+	    }
 	}
 	
 	/**
@@ -188,9 +193,8 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
     
 	private String stringNodeOrder() {
 		String s = "";
-		for (int i=0 ; i<nodeOrder.size() ; i++) {
-			GsRegulatoryVertex v = (GsRegulatoryVertex) nodeOrder.get(i);
-			s += v+":"+v.getMaxValue()+" ";
+		for (NodeInfo v: nodeOrder) {
+			s += v.name+":"+v.max+" ";
 		}
 		if (s.length() > 0) {
 			return s.substring(0, s.length()-1);
@@ -367,6 +371,10 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 		return v;
 	}
 	
+	private List<NodeInfo> getNodeOrder() {
+		return nodeOrder;
+	}
+
 	public GsDynamicalHierarchicalNode getNodeForState(byte[] state) {
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();

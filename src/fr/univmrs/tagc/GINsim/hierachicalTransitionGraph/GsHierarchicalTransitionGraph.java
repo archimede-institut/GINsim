@@ -22,6 +22,7 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
+import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.NodeInfo;
 import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -57,6 +58,8 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	private JPanel optionPanel = null;
 	
+	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
+	
 	/**
 	 * Mode is either SCC or HTG depending if we group the transients component by their atteignability of attractors.
 	 */
@@ -87,10 +90,12 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	 * @param nodeOrder the node order
 	 * @param transientCompactionMode MODE_SCC or MODE_HTG
 	 */
-	public GsHierarchicalTransitionGraph(List nodeOrder, int transientCompactionMode) {
+	public GsHierarchicalTransitionGraph(List<GsRegulatoryVertex> nodeOrder, int transientCompactionMode) {
 		
 	    this();
-	    this.nodeOrder = new ArrayList(nodeOrder);
+	    for (GsRegulatoryVertex vertex: nodeOrder) {
+	    	this.nodeOrder.add(new NodeInfo(vertex));
+	    }
 	    this.transientCompactionMode = transientCompactionMode;
 	}
 
@@ -107,7 +112,11 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 		graphManager.ready();
 	}
 
-		
+	public List<NodeInfo> getNodeOrder() {
+		return nodeOrder;
+	}
+
+
 /* **************** EDITION OF VERTEX AND EDGE ************/	
 
 //	/**
@@ -134,24 +143,6 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	}
 
 		
-		
-/* **************** SPECIFIC MAPPING OF DESCRIPTOR FOR ACTIONS & CO ************/	
-		
-	/* GsHierarchicalTransitionGraphDescriptor mapping */
-
-	public List getSpecificLayout() {
-		return GsHierarchicalTransitionGraphDescriptor.getLayout();
-	}
-	public List getSpecificExport() {
-		return GsHierarchicalTransitionGraphDescriptor.getExport();
-	}
-    public List getSpecificAction() {
-        return GsHierarchicalTransitionGraphDescriptor.getAction();
-    }
-    public List getSpecificObjectManager() {
-        return GsHierarchicalTransitionGraphDescriptor.getObjectManager();
-    }
-	
 		
 /* **************** PANELS ************/	
 		
@@ -341,9 +332,8 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	 */
 	private String stringNodeOrder() {
 		String s = "";
-		for (int i=0 ; i<nodeOrder.size() ; i++) {
-			GsRegulatoryVertex v = (GsRegulatoryVertex) nodeOrder.get(i);
-			s += v+":"+v.getMaxValue()+" ";
+		for (NodeInfo v: nodeOrder) {
+			s += v.name+":"+v.max+" ";
 		}
 		if (s.length() > 0) {
 			return s.substring(0, s.length()-1);
@@ -363,10 +353,6 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 		transientCompactionMode = mode;
 	}
 
-	public void removeEdge(GsDecisionOnEdge edge) {
-		this.graphManager.removeEdge(edge.getSource(), edge.getTarget());
-	}
-	
     protected boolean isAssociationValid( Graph graph) {
     	
         if (graph instanceof GsRegulatoryGraph) {

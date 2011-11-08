@@ -53,14 +53,23 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
     private ObjectEditor graphEditor = null;
     private float[] dashpattern = null;
 
+    private List<String> nodeOrder;
+    
 	/**
 	 * create a new GsDynamicGraph.
 	 * @param regGraph
 	 */
-	public GsDynamicGraph(List nodeOrder) {
+	public GsDynamicGraph(List<?> nodeOrder) {
 		
 	    this( false);
-	    this.nodeOrder = new ArrayList(nodeOrder);
+	    this.nodeOrder = new ArrayList<String>();
+	    for (Object node: nodeOrder) {
+	    	this.nodeOrder.add(node.toString());
+	    }
+	}
+	
+	public List<String> getNodeOrder() {
+		return nodeOrder;
 	}
 	
     protected String getGraphZipName() {
@@ -113,7 +122,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 		return null;
 	}
 
-	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
+	protected void doSave(OutputStreamWriter os, int mode, Collection<GsDynamicNode> nodes, Collection<Edge<GsDynamicNode>> edges) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -121,8 +130,8 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 			out.write(" class=\"dynamical\"");
 			out.write(" nodeorder=\"" + stringNodeOrder() +"\"");
 			out.write(">\n");
-			saveNode(out, mode, selectedOnly);
-			saveEdge(out, mode, selectedOnly);
+			saveNode(out, mode, nodes);
+			saveEdge(out, mode, edges);
             if (graphAnnotation != null) {
                 graphAnnotation.toXML(out, null, 0);
             }

@@ -47,6 +47,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 
     ObjectEditor vertexEditor = null;
 	private ObjectEditor edgeEditor;
+	
+	private List<GsRegulatoryVertex> nodeOrder = new ArrayList<GsRegulatoryVertex>();
 
     private static Graph copiedGraph = null;
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
@@ -66,6 +68,10 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	return zip_mainEntry;
     }
 
+    public List<GsRegulatoryVertex> getNodeOrder() {
+    	return nodeOrder;
+    }
+    
     /**
      * @param savefilename
      */
@@ -312,20 +318,22 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      *
      * @param obj
      */
-    public void removeEdge(GsRegulatoryMultiEdge edge) {
+    public boolean removeEdge(GsRegulatoryMultiEdge edge) {
        edge.markRemoved();
-       graphManager.removeEdge(edge.getSource(), edge.getTarget());
+       super.removeEdge(edge);
        edge.getTarget().removeEdgeFromInteraction(edge);
        fireGraphChange(CHANGE_EDGEREMOVED, edge);
+       return true;
     }
 
-    public void removeVertex(GsRegulatoryVertex obj) {
+    public boolean removeVertex(GsRegulatoryVertex obj) {
         for (GsRegulatoryMultiEdge me: getOutgoingEdges(obj)) {
             removeEdge(me);
         }
-        removeVertex( obj);
+        super.removeVertex( obj);
         nodeOrder.remove(obj);
         fireGraphChange(CHANGE_VERTEXREMOVED, obj);
+        return true;
     }
 
     /**
@@ -337,7 +345,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @return the new vertex.
      */
     public GsRegulatoryVertex addNewVertex(String id, String name, byte max) {
-        GsRegulatoryVertex vertex = new GsRegulatoryVertex(id, (GsRegulatoryGraph)graphManager.getGsGraph());
+        GsRegulatoryVertex vertex = new GsRegulatoryVertex(id, this);
         if (name != null) {
             vertex.setName(name);
         }
