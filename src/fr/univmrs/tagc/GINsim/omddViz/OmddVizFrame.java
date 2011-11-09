@@ -15,10 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.ginsim.graph.Graph;
-
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -31,7 +28,7 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
 public class OmddVizFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7619253564236142617L;
 	private JFrame frame;
-	private Graph graph;
+	private GsRegulatoryGraph graph;
 	private Container mainPanel;
 	
 	private JPanel calcPanel, resPanel;
@@ -48,7 +45,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 		this.frame = parent;
 	}
 
-	public OmddVizFrame( JFrame frame, Graph graph) {
+	public OmddVizFrame( JFrame frame, GsRegulatoryGraph graph) {
 		super(frame, "STR_omddViz", 475, 260);
 		this.frame = frame;
 		this.graph = graph;
