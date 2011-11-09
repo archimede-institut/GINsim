@@ -195,6 +195,10 @@ public final class SBMLXpathParser {
 					}
 				}
 			}
+			// TODO : REFACTORING ACTION
+			// The NodeOrder of a regulatory graph is now a List of RegulatoryVertex
+			// Moreover the graph.addNewVertex already update the NodeOrder of the graph
+			// So this command seems strange (and should be removed after complete analysis)
 			graph.setNodeOrder(v_nodeOrder);
 			
 			/** to deal transition list in order to retrieve his all data **/

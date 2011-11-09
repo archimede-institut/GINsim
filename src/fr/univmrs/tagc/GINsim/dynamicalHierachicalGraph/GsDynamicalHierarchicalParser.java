@@ -61,15 +61,13 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
 		}
 		try {
 			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-			Vector nodeOrder = new Vector(t_nodeOrder.length);
+			Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
 			byte[] childCount = new byte[t_nodeOrder.length];
 			for (int i=0 ; i<t_nodeOrder.length ; i++) {
 				String[] args = t_nodeOrder[i].split(":");
-			    nodeOrder.add(args[0]);
+			    nodeOrder.add( new NodeInfo(args[0]));
 			    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
 			}
-			// TODO: REFACTORING ACTION
-			// The nodeOrder is now a list of NodeInfo for this graph.
 			graph.setNodeOrder(nodeOrder);
 			graph.setChildsCount(childCount);
 		} catch (NumberFormatException e) {
@@ -209,11 +207,11 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
 						}
 						try {
 							String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-							Vector nodeOrder = new Vector(t_nodeOrder.length);
+							Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
 							byte[] childCount = new byte[t_nodeOrder.length];
 							for (int i=0 ; i<t_nodeOrder.length ; i++) {
 								String[] args = t_nodeOrder[i].split(":");
-							    nodeOrder.add(args[0]);
+							    nodeOrder.add( new NodeInfo(args[0]));
 							    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
 							}
 							graph.setNodeOrder(nodeOrder);

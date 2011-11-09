@@ -11,6 +11,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
+import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.NodeInfo;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -64,15 +65,13 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
 		}
 		try {
 			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-			Vector nodeOrder = new Vector(t_nodeOrder.length);
+			Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
 			childCount = new byte[t_nodeOrder.length];
 			for (int i=0 ; i<t_nodeOrder.length ; i++) {
 				String[] args = t_nodeOrder[i].split(":");
-			    nodeOrder.add(args[0]);
+			    nodeOrder.add( new NodeInfo( args[0]));
 			    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
 			}
-			// TODO: REFACTORING ACTION
-			// The nodeOrder is now a list of NodeInfo for this graph.
 			htg.setNodeOrder(nodeOrder);
 			htg.setChildsCount(childCount);
 		} catch (NumberFormatException e) {
@@ -214,11 +213,11 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
 						}
 						try {
 							String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-							Vector nodeOrder = new Vector(t_nodeOrder.length);
+							Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
 							byte[] childCount = new byte[t_nodeOrder.length];
 							for (int i=0 ; i<t_nodeOrder.length ; i++) {
 								String[] args = t_nodeOrder[i].split(":");
-							    nodeOrder.add(args[0]);
+							    nodeOrder.add( new NodeInfo( args[0]));
 							    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
 							}
 							htg.setNodeOrder(nodeOrder);

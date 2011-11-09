@@ -23,6 +23,7 @@ import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.NodeInfo;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
@@ -53,7 +54,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
     private ObjectEditor graphEditor = null;
     private float[] dashpattern = null;
 
-    private List<String> nodeOrder;
+    private List<NodeInfo> nodeOrder;
     
 	/**
 	 * create a new GsDynamicGraph.
@@ -62,9 +63,10 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	public GsDynamicGraph(List<?> nodeOrder) {
 		
 	    this( false);
-	    this.nodeOrder = new ArrayList<String>();
+	    this.nodeOrder = new ArrayList<NodeInfo>();
 	    for (Object node: nodeOrder) {
-	    	this.nodeOrder.add(node.toString());
+	    	NodeInfo node_info = new NodeInfo( node.toString());
+	    	this.nodeOrder.add( node_info);
 	    }
 	}
 	
@@ -73,7 +75,8 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	 * 
 	 * @return the node order as a list of String
 	 */
-	public List<String> getNodeOrder() {
+	public List<NodeInfo> getNodeOrder() {
+		
 		return nodeOrder;
 	}
 	
@@ -99,7 +102,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	 * 
 	 * @param list the list of String representing the order of vertex as defined by the model
 	 */
-	public void setNodeOrder( List<String> node_order){
+	public void setNodeOrder( List<NodeInfo> node_order){
 		
 		nodeOrder = node_order;
 	}

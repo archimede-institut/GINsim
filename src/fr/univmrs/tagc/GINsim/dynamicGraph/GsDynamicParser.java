@@ -10,6 +10,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
+import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.NodeInfo;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -64,9 +65,9 @@ public final class GsDynamicParser extends GsXMLHelper {
 			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 		}
 		String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-		Vector nodeOrder = new Vector(t_nodeOrder.length);
+		Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
 		for (int i=0 ; i<t_nodeOrder.length ; i++) {
-		    nodeOrder.add(t_nodeOrder[i]);
+		    nodeOrder.add( new NodeInfo( t_nodeOrder[i]));
 		}
 		graph.setNodeOrder(nodeOrder);
 
@@ -182,9 +183,9 @@ public final class GsDynamicParser extends GsXMLHelper {
 							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 						}
             			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-            			Vector nodeOrder = new Vector(t_nodeOrder.length);
+            			Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
             			for (int i=0 ; i<t_nodeOrder.length ; i++) {
-            			    nodeOrder.add(t_nodeOrder[i]);
+            			    nodeOrder.add( new NodeInfo( t_nodeOrder[i]));
             			}
             			graph.setNodeOrder(nodeOrder);
                 } else if (qName.equals("annotation")) {
