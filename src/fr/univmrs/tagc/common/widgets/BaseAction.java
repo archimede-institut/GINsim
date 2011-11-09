@@ -47,6 +47,7 @@ public abstract class BaseAction extends AbstractAction {
 			   Integer mnemonic) {
 		this(name, getIcon(icon), tooltip, accelerator, mnemonic);
 	}
+	
 	public BaseAction(String name,
 			   ImageIcon icon,
 			   String tooltip,
