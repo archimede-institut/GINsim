@@ -32,45 +32,6 @@ public class ConnectivityServiceGUI implements GsServiceGUI {
 		
 		return actions;
 	}
-	
-//	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-//        if (actionType != ACTION_ACTION) {
-//            return null;
-//        }
-//	    if (graph instanceof GsReducedGraph) {
-//	        if (!graph.isVisible()) {
-//	            return null;
-//	        }
-//			if (t_reducedAction == null) {
-//			    t_reducedAction = new GsPluggableActionDescriptor[1];
-//			    t_reducedAction[0] = new GsPluggableActionDescriptor("STR_connectivityExtract", "STR_connectivityExtract_descr", null, this, ACTION_ACTION, 0);
-//			}
-//	        return t_reducedAction;
-//	    }
-//		if (t_action == null) {
-//			t_action = new GsPluggableActionDescriptor[1];
-//			t_action[0] = new GsPluggableActionDescriptor("STR_connectivity", "STR_connectivity_descr", null, this, ACTION_ACTION, 0);
-//		}
-//		return t_action;
-//	}
-	
-//	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-//        if (actionType != ACTION_ACTION) {
-//            return;
-//        }
-//	    if (graph instanceof GsReducedGraph) {
-//	        GsGraphDescriptor gd = GsGinsimGraphDescriptor.getInstance();
-//            String s_ag = graph.getAssociatedGraphID();
-//            if (s_ag != null) {
-//    	        Graph subgraph = GsOpenAction.open(gd, null, ((GsReducedGraph)graph).getSelectedMap(), s_ag);
-//    	        if (subgraph != null) {
-//    	            GsEnv.whatToDoWithGraph(null, subgraph, true);
-//    	        }
-//            }
-//	    } else {
-//            new ConnectivityFrame(frame, graph);
-//	    }
-//	}
 
 	class ConnectivityAction extends GsActionAction{
 		
@@ -97,7 +58,8 @@ public class ConnectivityServiceGUI implements GsServiceGUI {
 	            }
 		    } 
 		    else {
-	            new ConnectivityFrame( frame, graph);
+		    	// TODO: get the parent frame
+	            new ConnectivityFrame( null, graph);
 		    }
 		}
 	}
