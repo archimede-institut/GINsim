@@ -1,11 +1,10 @@
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.gui.graph.backend;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge.Routing;
@@ -41,16 +40,6 @@ public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
         	v_styleRenderer[STYLE_CURVE] = GraphConstants.STYLE_BEZIER;
     }
 
-    /**
-     * create a jgraph edge attribute reader
-     * 
-     * @param graphmanager
-     */
-    public GsJgraphEdgeAttribute(GsJgraphtGraphManager graphmanager) {
-    	this(graphmanager.getG(), graphmanager.getM_jgAdapter(), graphmanager.getDefaultEdgeAttr());
-        this.glc = graphmanager.getJgraph().getGraphLayoutCache();
-    }
-    
     public GsJgraphEdgeAttribute(ListenableGraph g, JGraphModelAdapter adaptor, AttributeMap defaultEdgeAttr) {
         this.m_adaptor = adaptor;
         this.g = g;

@@ -25,7 +25,6 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-
 import fr.univmrs.tagc.GINsim.reg2dyn.SynchronousSimulationUpdater;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;

@@ -5,16 +5,13 @@ import java.net.URL;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 
 /**

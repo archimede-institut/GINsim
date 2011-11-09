@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -12,11 +13,9 @@ import org.xml.sax.SAXException;
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
-import fr.univmrs.tagc.common.GsException;
 
 public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
     

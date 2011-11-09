@@ -1,8 +1,8 @@
 package fr.univmrs.tagc.common.datastore;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;;
 
 /**
  * An ObjectEditor acts as proxy between an object and the UI to edit its properties.

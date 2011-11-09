@@ -7,7 +7,6 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
-
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.reg2dyn.helpers.SimulationHelper;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;

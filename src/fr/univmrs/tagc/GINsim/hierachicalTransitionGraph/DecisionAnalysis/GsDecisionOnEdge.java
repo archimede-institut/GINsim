@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.ginsim.graph.Edge;
 
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
+import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**

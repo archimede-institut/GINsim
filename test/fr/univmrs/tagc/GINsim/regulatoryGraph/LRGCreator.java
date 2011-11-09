@@ -3,10 +3,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsMain;
 import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**

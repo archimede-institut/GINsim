@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.gui.graph.backend;
 
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.DefaultGraphCell;

@@ -4,18 +4,13 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-
-import fr.univmrs.tagc.GINsim.gui.BaseMainFrame;
-import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
-import fr.univmrs.tagc.common.GsException;
-
 import tbrowser.TBrowser;
+import fr.univmrs.tagc.GINsim.gui.BaseMainFrame;
+import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 
 public class GsTBPlugin implements GsPlugin, GsActionProvider {
   private GsPluggableActionDescriptor[] t_action = null;

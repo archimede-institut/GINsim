@@ -1,11 +1,10 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
-
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 
 public class DTreeElementComboBox extends DTreeElementDeco implements ItemListener {
 	private Vector choices;

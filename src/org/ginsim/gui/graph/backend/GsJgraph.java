@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.gui.graph.backend;
 
 import java.awt.event.MouseEvent;
 
@@ -19,13 +19,6 @@ public class GsJgraph extends JGraph {
     private static final long serialVersionUID = 645635435678L;
 	private boolean edgeLabelDisplayed;
     private boolean nodeLabelDisplayed;
-    /**
-     * @param graph
-     */
-    public GsJgraph(GsJgraphtGraphManager graph) {
-        super(graph.getM_jgAdapter());
-        setCellViewFactory(graph.getM_jgAdapter(), new GsCellViewFactory(graph));
-    }
     
     public GsJgraph(JGraphModelAdapter ma) {
         super(ma);

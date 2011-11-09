@@ -1,16 +1,21 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Enumeration;
 
-import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.JLabel;
+import javax.swing.JTree;
+import javax.swing.tree.TreePath;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
-import fr.univmrs.tagc.common.managerresources.*;
-import fr.univmrs.tagc.common.widgets.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
+import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionListener {
   private static final long serialVersionUID = -1866485315946504210L;

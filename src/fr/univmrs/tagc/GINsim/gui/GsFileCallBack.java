@@ -1,7 +1,8 @@
 package fr.univmrs.tagc.GINsim.gui;
 
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.common.GsException;
 
 /**
  * Here are the callback for entry in the "file" menu

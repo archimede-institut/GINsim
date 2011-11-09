@@ -2,20 +2,18 @@ package org.ginsim.graph;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.List;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
-
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 

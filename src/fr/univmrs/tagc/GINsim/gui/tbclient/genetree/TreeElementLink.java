@@ -1,12 +1,12 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.genetree;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.Vector;
 
 import tbrowser.control.netbrowser.TBNetBrowser;
 import tbrowser.ihm.widget.TBButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class TreeElementLink extends TreeElementDeco {

@@ -2,10 +2,20 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Vector;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
@@ -13,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
@@ -20,19 +31,28 @@ import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.document.*;
+import fr.univmrs.tagc.common.document.DocumentStyle;
+import fr.univmrs.tagc.common.document.DocumentWriter;
+import fr.univmrs.tagc.common.document.GenericDocumentFormat;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
@@ -131,7 +151,10 @@ public class GenericDocumentExport extends GsAbstractExport {
 		doc.openHeader(2, "Annotation", null);
 		writeAnnotation(graph.getAnnotation());
 		doc.openParagraph(null);
-		doc.addImage(graph.getGraphManager().getImage(), "model.png");
+		
+		// FIXME: add back image to the documentation
+		// doc.addImage(graph.getGraphManager().getImage(), "model.png");
+		
 		doc.closeParagraph();
 		
 		// all nodes with comment and logical functions

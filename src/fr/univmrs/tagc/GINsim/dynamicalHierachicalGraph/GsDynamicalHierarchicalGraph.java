@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -16,14 +15,12 @@ import java.util.regex.Pattern;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
-import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
@@ -32,7 +29,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 

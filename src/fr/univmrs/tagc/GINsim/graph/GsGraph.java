@@ -13,6 +13,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -23,7 +26,6 @@ import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphtGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -365,7 +367,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
                                 manager.doSave(osw, this);
                             } catch (Exception e) {
                                 if (mainFrame != null) {
-                                    addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
+                                    addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
                                 } else {
                                     e.printStackTrace();
                                 }
@@ -391,14 +393,14 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
             }
             if (selectedOnly) {
                 if (mainFrame != null) {
-                    addNotificationMessage(new GsGraphNotificationMessage(this, "selection saved", GsGraphNotificationMessage.NOTIFICATION_INFO));
+                    addNotificationMessage(new NotificationMessage(this, "selection saved", NotificationMessage.NOTIFICATION_INFO));
                 }
             } else {
                 saved = true;
                 this.extended = extended;
                 this.compressed = compressed;
                 if (mainFrame != null) {
-                    addNotificationMessage(new GsGraphNotificationMessage(this, "graph saved", GsGraphNotificationMessage.NOTIFICATION_INFO));
+                    addNotificationMessage(new NotificationMessage(this, "graph saved", NotificationMessage.NOTIFICATION_INFO));
                     mainFrame.updateTitle();
                 }
             }
@@ -412,14 +414,14 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
             			r = ftmp.renameTo(f);
             		}
                 	if (!r) {
-                        addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath())));
+                        addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath())));
                 	}
             	}
             }
             OptionStore.addRecent(fileName);
         } catch (Exception e) {
             if (mainFrame != null) {
-                addNotificationMessage(new GsGraphNotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
+                addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
             } else {
                 e.printStackTrace();
             }
@@ -1386,17 +1388,17 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @return the topmost message to display
 	 */
-	public GsGraphNotificationMessage getTopMessage() {
+	public NotificationMessage getTopMessage() {
 		if (v_notification == null | v_notification.size() == 0) {
 			return null;
 		}
-		return (GsGraphNotificationMessage)v_notification.get(v_notification.size()-1);
+		return (NotificationMessage)v_notification.get(v_notification.size()-1);
 	}
 
 	/**
 	 * @param message
 	 */
-	public void deleteNotificationMessage(GsGraphNotificationMessage message) {
+	public void deleteNotificationMessage(NotificationMessage message) {
 		if (v_notification == null | v_notification.size() == 0) {
 			return;
 		}
@@ -1406,7 +1408,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @param message
 	 */
-	public void deleteAllNotificationMessage(GsGraphNotificationMessage message) {
+	public void deleteAllNotificationMessage(NotificationMessage message) {
 		if (v_notification == null | v_notification.size() == 0) {
 			return;
 		}
@@ -1431,7 +1433,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	/**
 	 * @param message
 	 */
-	public void addNotificationMessage(GsGraphNotificationMessage message) {
+	public void addNotificationMessage(NotificationMessage message) {
 		v_notification.add(message);
 		if (mainFrame != null) {
 			updateGraphNotificationMessage(this);

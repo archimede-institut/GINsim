@@ -1,16 +1,15 @@
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.gui.graph.backend;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.List;
 
+import org.ginsim.graph.Edge;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.EdgeView;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.PortView;
-
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 /**
  * The class to route edges 
@@ -23,10 +22,11 @@ public class GsParallelEdgeRouting extends DefaultEdge.DefaultRouting {
         if (edge.isLoop()) {
             return null;
         }
-        GsDirectedEdge de = (GsDirectedEdge)((DefaultGraphCell)edge.getCell()).getUserObject();
+        Edge<?> de = (Edge)((DefaultGraphCell)edge.getCell()).getUserObject();
         boolean isdouble = false;
         if (edge instanceof GsEdgeView && ((GsEdgeView)edge).getRenderer() instanceof GsEdgeRenderer) {
-            isdouble = ((GsEdgeRenderer)((GsEdgeView)edge).getRenderer()).getGraph().containsEdge(de.getTarget(), de.getSource());
+        	// FIXME: redo parallel routing
+            // isdouble = ((GsEdgeRenderer)((GsEdgeView)edge).getRenderer()).getGraph().containsEdge(de.getTarget(), de.getSource());
         }
         
         if (isdouble) {

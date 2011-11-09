@@ -1,16 +1,17 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
-import org.jfree.chart.axis.SymbolAxis;
-import org.jfree.ui.RectangleEdge;
-import org.jfree.chart.axis.AxisState;
 import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+
+import org.jfree.chart.axis.AxisState;
+import org.jfree.chart.axis.SymbolAxis;
+import org.jfree.chart.axis.TickType;
 import org.jfree.chart.axis.ValueTick;
 import org.jfree.text.TextUtilities;
-import org.jfree.chart.axis.TickType;
-import java.awt.geom.Line2D;
+import org.jfree.ui.RectangleEdge;
 
 public class GsSampleAxis extends SymbolAxis {
   private static final long serialVersionUID = -379568994220035468L;

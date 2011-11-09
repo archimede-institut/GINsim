@@ -5,12 +5,18 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionListElement;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.GsFunctionEditorModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBinaryOperator;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperator;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TUnaryOperator;
 
 public class GsTreeExpression extends GsTreeElement {
   private String userExpression;

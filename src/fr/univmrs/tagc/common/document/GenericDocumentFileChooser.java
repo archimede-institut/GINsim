@@ -9,7 +9,8 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import fr.univmrs.tagc.common.GsException;
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 

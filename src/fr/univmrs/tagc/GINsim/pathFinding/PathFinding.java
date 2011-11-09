@@ -12,7 +12,6 @@ import java.util.Vector;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 
 /**
  * A class to find a path in any graph

@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
-
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
@@ -18,7 +18,6 @@ import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitio
 import fr.univmrs.tagc.GINsim.reg2dyn.helpers.HTGSimulationHelper;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 

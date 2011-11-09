@@ -30,10 +30,6 @@ import org.jgrapht.ext.JGraphModelAdapter;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraph;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphEdgeAttribute;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphVertexAttribute;
-import fr.univmrs.tagc.GINsim.jgraph.GsParallelEdgeRouting;
 
 public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphViewBackend {
 

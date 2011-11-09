@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.gui.graph.backend;
 
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
@@ -10,7 +10,6 @@ import org.jgraph.graph.EdgeView;
 import org.jgraph.graph.GraphConstants;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 
 /**
  * a jgraph edge viewer
@@ -38,26 +37,12 @@ public class GsEdgeView extends EdgeView {
 class GsEdgeRenderer extends EdgeRenderer {
 
 	private static final long serialVersionUID = 6746746786967887L;
-	private GsJgraphtGraphManager graph;
 	private GsJgraph jgraph;
-	
-	protected GsEdgeRenderer(GsJgraphtGraphManager graph) {
-		this.graph = graph;
-		this.jgraph = graph.getJgraph();
-	}
 	
 	protected GsEdgeRenderer(GsJgraph jgraph) {
 		this.jgraph = jgraph;
 	}
 	
-    /**
-     * @return the graph for which this renderer works
-     */
-	@Deprecated
-    public GsGraphManager getGraph() {
-        return graph;
-    }
-    
 	public void paintLabel(java.awt.Graphics g, String label, Point2D point, boolean b) {
 		if (jgraph.isEdgeLabelDisplayed()) super.paintLabel(g,label, point, b);
 	}

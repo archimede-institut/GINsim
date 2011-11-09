@@ -2,15 +2,12 @@ package fr.univmrs.tagc.GINsim.interactionAnalysis;
 
 import javax.swing.JFrame;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
-import fr.univmrs.tagc.common.GsException;
 
 public class InteractionAnalysisPlugin implements GsActionProvider, GsPlugin {
 

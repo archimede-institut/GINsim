@@ -1,8 +1,11 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
 import java.awt.Color;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
@@ -10,10 +13,22 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
+import org.ginsim.exception.NotificationMessage;
+
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionListElement;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionTreePanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
 
@@ -213,8 +228,8 @@ public class GsTreeInteractionsModel implements TreeModel {
   public void addExpression(JTree tree, byte val, GsRegulatoryVertex currentVertex, String expression) throws Exception {	  
     GsBooleanParser tbp = new GsBooleanParser(graph.getIncomingEdges(currentVertex), graph.getGraphManager().getMainFrame().getActions().shouldAutoAddNewElements());
     if (!tbp.compile(expression, graph, currentVertex))
-      graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula",
-        GsGraphNotificationMessage.NOTIFICATION_WARNING));
+      graph.addNotificationMessage(new NotificationMessage(graph, "invalid formula",
+        NotificationMessage.NOTIFICATION_WARNING));
     else {
       addExpression(val, currentVertex, tbp);
       fireTreeStructureChanged(root);
@@ -267,8 +282,8 @@ public class GsTreeInteractionsModel implements TreeModel {
       }
 			GsBooleanParser parser = new GsBooleanParser(graph.getIncomingEdges(node), graph.getGraphManager().getMainFrame().getActions().shouldAutoAddNewElements());
       if (!parser.compile(newExp.trim(), graph, node)) {
-        graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "invalid formula : " + newExp,
-            GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));
+        graph.addNotificationMessage(new NotificationMessage(graph, "invalid formula : " + newExp,
+            NotificationMessage.NOTIFICATION_WARNING_LONG));
         exp.clearChilds();
         exp.setProperty("invalid", new Boolean(true));
         return false;

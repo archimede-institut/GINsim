@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
@@ -13,11 +14,8 @@ import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.common.GsException;
 
 /**
  * Compare 2 GsGraph

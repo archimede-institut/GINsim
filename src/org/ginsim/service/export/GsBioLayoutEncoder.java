@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.common.GsException;
 
 /**
  * Encode a graph to biolayout format.

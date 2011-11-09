@@ -8,8 +8,6 @@ import javax.swing.table.DefaultTableModel;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
-
 /**
  * table model for the path constraint table.
  */

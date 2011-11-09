@@ -6,11 +6,11 @@ import java.text.DateFormat;
 import java.util.Collection;
 import java.util.Date;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.common.GsException;
 
 /**
  * Encode a graph to graphviz format.

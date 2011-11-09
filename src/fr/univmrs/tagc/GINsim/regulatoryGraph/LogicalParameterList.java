@@ -1,6 +1,11 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class LogicalParameterList extends ArrayList {
 	private static final long serialVersionUID = 5768653095418077753L;

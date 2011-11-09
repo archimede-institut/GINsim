@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.export;
 
 import javax.swing.JFrame;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 import org.ginsim.service.export.GsBioLayoutEncoder;
 import org.ginsim.service.export.GsGraphvizEncoder;
@@ -9,14 +10,10 @@ import org.ginsim.service.export.GsSVGExport;
 import org.ginsim.service.export.ImageExport;
 
 import fr.univmrs.tagc.GINsim.export.regulatoryGraph.GsSBMLExport;
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.common.GsException;
 
 /**
  * register export plugins.
@@ -112,7 +109,7 @@ public class GsExportPlugin implements GsPlugin, GsActionProvider {
                 ImageExport.exportImage(graph, false, filename);
                 break;
             case SBML:
-                GsSBMLExport.export(graph, filename);
+                GsSBMLExport.export((GsRegulatoryGraph)graph, filename);
                 break;
 		}
 	}

@@ -2,7 +2,11 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -11,9 +15,12 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
-
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.reg2dyn.*;
+import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
+import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParametersManager;
+import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassDefinition;
+import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassManager;
+import fr.univmrs.tagc.GINsim.reg2dyn.PrioritySelectionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;

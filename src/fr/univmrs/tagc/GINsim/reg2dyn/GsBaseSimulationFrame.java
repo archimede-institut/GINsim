@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 
 import org.ginsim.graph.Graph;
 
-
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 

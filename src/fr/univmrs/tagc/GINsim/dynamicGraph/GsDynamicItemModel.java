@@ -11,7 +11,6 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.graph.Edge;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 
 /**
  * table model to display a dynamic node or edge.

@@ -1,8 +1,9 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
-import tbrowser.ihm.results.TBInfoPanel;
-import tbrowser.data.module.TBModule;
 import java.util.Vector;
+
+import tbrowser.data.module.TBModule;
+import tbrowser.ihm.results.TBInfoPanel;
 
 public class GsTBInfoPanel extends TBInfoPanel {
   private static final long serialVersionUID = -5932617499905893848L;

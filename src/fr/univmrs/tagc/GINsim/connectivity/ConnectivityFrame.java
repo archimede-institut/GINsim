@@ -15,8 +15,6 @@ import org.ginsim.graph.Graph;
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.ProgressListener;

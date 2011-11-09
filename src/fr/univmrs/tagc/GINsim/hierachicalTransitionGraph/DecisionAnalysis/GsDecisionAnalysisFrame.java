@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 
 import org.ginsim.graph.Graph;
 
-
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;

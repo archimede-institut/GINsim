@@ -7,17 +7,16 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsGlassPane;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
@@ -337,7 +336,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
     }
 
     protected void error (GsException e) {
-        graph.addNotificationMessage(new GsGraphNotificationMessage(graph, e));
+        graph.addNotificationMessage(new NotificationMessage(graph, e));
     }
 
     public void graphClosed(Graph graph) {
@@ -365,7 +364,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
     }
 	
 	@Override
-	public GsGraphNotificationMessage getTopNotification() {
+	public NotificationMessage getTopNotification() {
 		if (graph != null) {
 			return graph.getTopMessage();
 		}

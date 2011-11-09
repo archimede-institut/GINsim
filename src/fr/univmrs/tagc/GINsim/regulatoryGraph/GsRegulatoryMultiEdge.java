@@ -7,10 +7,8 @@ import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 

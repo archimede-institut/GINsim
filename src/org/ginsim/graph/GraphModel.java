@@ -4,10 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
-import fr.univmrs.tagc.common.GsException;
 
 /**
  * Interface for the main objects: graphs.

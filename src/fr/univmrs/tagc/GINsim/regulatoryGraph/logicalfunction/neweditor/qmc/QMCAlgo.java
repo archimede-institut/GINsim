@@ -1,14 +1,15 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.qmc;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.Vector;
 import java.util.List;
+import java.util.Vector;
+
 import javax.swing.JProgressBar;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.common.widgets.GsButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class QMCAlgo implements ActionListener {
 	private ParameterGroupS groups;

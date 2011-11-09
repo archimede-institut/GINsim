@@ -8,12 +8,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -26,7 +25,8 @@ public class GsExportDialog extends StackDialog {
 	Graph graph;
 	
 	public GsExportDialog(GsAbstractExport export, GsExportConfig config) {
-		super(config.getGraph().getGraphManager().getMainFrame(), "exportDialog_"+export.getID(), 400, 300);
+		// TODO: move to the new service GUI and set the right parent frame
+		super(null, "exportDialog_"+export.getID(), 400, 300);
 		this.export = export;
 		this.config = config;
 		if (export.getSubFormat() != null) {

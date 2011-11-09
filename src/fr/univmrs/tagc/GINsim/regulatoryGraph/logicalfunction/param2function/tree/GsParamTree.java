@@ -1,7 +1,14 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;

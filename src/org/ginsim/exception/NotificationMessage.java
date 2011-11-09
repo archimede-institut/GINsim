@@ -1,8 +1,5 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.exception;
 
-import org.ginsim.graph.Graph;
-
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Timeout;
 import fr.univmrs.tagc.common.TimeoutObject;
 
@@ -10,14 +7,16 @@ import fr.univmrs.tagc.common.TimeoutObject;
  * A notification message
  *
  */
-public class GsGraphNotificationMessage implements TimeoutObject {
+public class NotificationMessage extends GsException implements TimeoutObject {
 
 	private String message;
-	private Graph graph;
-    protected GsGraphNotificationAction action;
+	private NotificationMessageHolder holder;
+    protected NotificationMessageAction action;
     private Object data;
     private byte type;
 
+    // TODO: replace them with GsException gravities
+    
     /** info, disappear quickly (7s) */
     public static final byte NOTIFICATION_INFO = 0;
     /** info, stay longer (12s) */
@@ -38,12 +37,21 @@ public class GsGraphNotificationMessage implements TimeoutObject {
      * @param message
      * @param type
      */
-    public GsGraphNotificationMessage ( Graph graph, String message, byte type) {
+    public NotificationMessage ( NotificationMessageHolder holder, String message, byte type) {
     	
-        this( graph, message, null, null, type);
+        this( holder, message, null, null, type);
     }
 
-        
+    /**
+     * 
+     * @param graph
+     * @param e
+     */
+    public NotificationMessage( NotificationMessageHolder holder, GsException e) {
+        // TODO: show detail for exception
+        this(holder, e.getMessage(), (e.getGravity() == GsException.GRAVITY_ERROR) ? NOTIFICATION_ERROR_LONG : NOTIFICATION_WARNING_LONG);
+    }
+
 	/**
 	 * @param graph
 	 * @param message
@@ -51,8 +59,9 @@ public class GsGraphNotificationMessage implements TimeoutObject {
      * @param data
 	 * @param type seconds after which the message will vanish (never = 0)
 	 */
-	public GsGraphNotificationMessage ( Graph graph, String message, GsGraphNotificationAction action, Object data, byte type) {
-		this.graph = graph;
+	public NotificationMessage ( NotificationMessageHolder holder, String message, NotificationMessageAction action, Object data, byte type) {
+		super(type/2, message);
+		this.holder = holder;
 		this.message = message;
         this.action = action;
         this.data = data;
@@ -83,26 +92,16 @@ public class GsGraphNotificationMessage implements TimeoutObject {
         if (timeout > 0) {
             Timeout.addTimeout(this, timeout*1000);
         }
+        holder.addNotificationMessage(this);
 	}
-
-    /**
-     * 
-     * @param graph
-     * @param e
-     */
-    public GsGraphNotificationMessage( Graph graph, GsException e) {
-        // TODO: show detail for exception
-        this(graph, e.getMessage(), (e.getGravity() == GsException.GRAVITY_ERROR) ? NOTIFICATION_ERROR_LONG : NOTIFICATION_WARNING_LONG);
-    }
-
 
     public void timeout() {
         if (action != null) {
-            if (!action.timeout(graph, data)) {
+            if (!action.timeout(holder, data)) {
                 return;
             }
         }
-        graph.deleteNotificationMessage(this);
+        holder.deleteNotificationMessage(this);
     }
 	
 	public String toString() {
@@ -121,11 +120,11 @@ public class GsGraphNotificationMessage implements TimeoutObject {
 	 */
 	public void performAction(int index) {
 		if (action == null) {
-            graph.deleteNotificationMessage(this);
+            holder.deleteNotificationMessage(this);
 			return;
 		}
-        if (action.perform(graph, data, index)) {
-            graph.deleteNotificationMessage(this);
+        if (action.perform(holder, data, index)) {
+            holder.deleteNotificationMessage(this);
         }
 	}
     
@@ -136,15 +135,6 @@ public class GsGraphNotificationMessage implements TimeoutObject {
         return type;
     }
     
-//	/**
-//	 * @param message
-//	 * @return true if <code>message</code> is of the same class of notification message
-//	 */
-//	public boolean sameClass(GsGraphNotificationMessage message) {
-//		return message != null && message.familly == familly;
-//	}
-
-
 	/**
 	 * @return the text to show on the action button.
 	 */

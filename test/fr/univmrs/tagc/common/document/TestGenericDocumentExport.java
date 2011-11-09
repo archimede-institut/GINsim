@@ -5,13 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import junit.framework.TestCase;
+
 import org.ginsim.graph.Graph;
 
-import junit.framework.TestCase;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
-
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestGenericDocumentExport extends TestCase {

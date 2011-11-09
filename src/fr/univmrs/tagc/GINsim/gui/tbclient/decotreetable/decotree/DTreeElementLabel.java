@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
 import java.awt.Color;
 import java.util.Vector;
+
 import javax.swing.JLabel;
 
 public class DTreeElementLabel extends DTreeElementDeco {

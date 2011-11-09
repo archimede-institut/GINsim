@@ -4,17 +4,14 @@ import java.util.Iterator;
 
 import javax.swing.JFrame;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-import fr.univmrs.tagc.common.GsException;
 
 public class GsRegulatoryFunctionTreeViewPlugin implements GsActionProvider, GsPlugin {
 	private static final Integer ZERO = new Integer(0);

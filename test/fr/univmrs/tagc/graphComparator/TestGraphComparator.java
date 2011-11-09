@@ -3,21 +3,18 @@ package fr.univmrs.tagc.graphComparator;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.ginsim.graph.Edge;
+import junit.framework.TestCase;
+
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
-import junit.framework.TestCase;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graphComparator.DynamicGraphComparator;
 import fr.univmrs.tagc.GINsim.graphComparator.GraphComparator;
 import fr.univmrs.tagc.GINsim.graphComparator.RegulatoryGraphComparator;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.common.GsException;
 
 /**
  * Compare two models.

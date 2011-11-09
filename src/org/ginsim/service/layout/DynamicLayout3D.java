@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Edge;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -13,7 +14,6 @@ import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.ColorPalette;
-import fr.univmrs.tagc.common.GsException;
 
 public class DynamicLayout3D {
 	private GsEdgeAttributesReader ereader;

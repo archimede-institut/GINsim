@@ -20,7 +20,10 @@
  */
 package fr.univmrs.tagc.common.managerresources;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 
 /**

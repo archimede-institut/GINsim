@@ -15,12 +15,11 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.exception.NotificationMessage;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
@@ -321,7 +320,7 @@ public class MainFrame extends Frame implements NotificationSource {
     }
     
 	@Override
-	public GsGraphNotificationMessage getTopNotification() {
+	public NotificationMessage getTopNotification() {
 		// TODO Auto-generated method stub
 		return null;
 	}

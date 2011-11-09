@@ -19,8 +19,6 @@ import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
-
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;

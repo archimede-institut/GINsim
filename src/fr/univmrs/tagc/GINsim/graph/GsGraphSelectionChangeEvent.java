@@ -1,8 +1,6 @@
 package fr.univmrs.tagc.GINsim.graph;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * Event to inform of selection change events.

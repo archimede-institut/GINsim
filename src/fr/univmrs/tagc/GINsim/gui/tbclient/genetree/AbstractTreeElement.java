@@ -1,8 +1,8 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.genetree;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.util.Vector;
-import java.awt.Color;
 
 public abstract class AbstractTreeElement {
   protected Color fgColor, bgColor, brdColor, selColor;

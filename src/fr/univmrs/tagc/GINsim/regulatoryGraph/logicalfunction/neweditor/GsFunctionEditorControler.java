@@ -1,17 +1,23 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 
 import java.awt.Point;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
+import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.qmc.QMCThread;
-import javax.swing.JProgressBar;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class GsFunctionEditorControler {

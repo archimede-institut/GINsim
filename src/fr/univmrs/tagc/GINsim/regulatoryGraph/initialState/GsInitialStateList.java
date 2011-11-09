@@ -5,9 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
-
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;

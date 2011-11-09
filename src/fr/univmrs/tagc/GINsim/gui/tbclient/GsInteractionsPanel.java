@@ -30,7 +30,6 @@ import org.ginsim.graph.Graph;
 
 import tbrowser.data.TBProbe;
 import tbrowser.data.module.TBModuleData;
-
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeTableBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;

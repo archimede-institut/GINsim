@@ -1,6 +1,10 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Insets;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 

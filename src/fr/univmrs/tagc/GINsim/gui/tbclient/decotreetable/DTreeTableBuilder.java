@@ -3,8 +3,12 @@ package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable;
 import java.awt.Color;
 import java.util.Vector;
 
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.*;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.*;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTable;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTableModel;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.TableDecoTree;
 
 public class DTreeTableBuilder {
 	private DTreeModel model;

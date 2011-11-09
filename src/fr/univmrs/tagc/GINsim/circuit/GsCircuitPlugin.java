@@ -2,15 +2,13 @@ package fr.univmrs.tagc.GINsim.circuit;
 
 import javax.swing.JFrame;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -43,7 +41,7 @@ public class GsCircuitPlugin implements GsPlugin, GsActionProvider {
             return;
         }
         if (graph.getNodeOrderSize() < 1) {
-            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, Translator.getString("STR_emptyGraph"), GsGraphNotificationMessage.NOTIFICATION_WARNING));
+            new NotificationMessage((NotificationMessageHolder)graph, Translator.getString("STR_emptyGraph"), NotificationMessage.NOTIFICATION_WARNING);
             return;
         }
 		if (ref == 0) {

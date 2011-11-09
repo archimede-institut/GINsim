@@ -3,7 +3,11 @@ package fr.univmrs.tagc.common.widgets;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
@@ -11,9 +15,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import org.ginsim.exception.GsException;
 import org.xml.sax.Attributes;
 
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.xml.XMLHelper;

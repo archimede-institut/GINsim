@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import org.ginsim.graph.Graph;
 
-
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 

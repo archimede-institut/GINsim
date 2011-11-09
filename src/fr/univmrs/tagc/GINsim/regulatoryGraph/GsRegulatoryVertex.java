@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
@@ -105,15 +105,15 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 	    		List l_conflict = new ArrayList();
 	    		List l_parameters = new ArrayList();
 			    if (!getInteractionsModel().isMaxCompatible(max)) {
-			    	graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", GsGraphNotificationMessage.NOTIFICATION_ERROR) );
+			    	graph.addNotificationMessage( new NotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", NotificationMessage.NOTIFICATION_ERROR) );
 			    	return;
 			    }
 	    		graph.canApplyNewMaxValue(this, max, l_fixable, l_conflict);
 	    		v_logicalParameters.applyNewMaxValue(max, graph, l_parameters);
 	    		if (l_fixable.size() > 0 || l_conflict.size() > 0 || l_parameters.size() > 0) {
-	    			GsGraphNotificationAction action = new UpdateMaxBlockedAction(this, max, l_fixable, l_conflict, l_parameters);
-		    		graph.addNotificationMessage(new GsGraphNotificationMessage(
-		    				graph, "max value decrease is blocked", action, null, GsGraphNotificationMessage.NOTIFICATION_WARNING) );
+	    			NotificationMessageAction action = new UpdateMaxBlockedAction(this, max, l_fixable, l_conflict, l_parameters);
+		    		graph.addNotificationMessage(new NotificationMessage(
+		    				graph, "max value decrease is blocked", action, null, NotificationMessage.NOTIFICATION_WARNING) );
 	    			return;
 	    		}
 	    	}
@@ -403,7 +403,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
     }
 }
 
-class UpdateMaxBlockedAction implements GsGraphNotificationAction {
+class UpdateMaxBlockedAction implements NotificationMessageAction {
 
 	String[] t_action;
 

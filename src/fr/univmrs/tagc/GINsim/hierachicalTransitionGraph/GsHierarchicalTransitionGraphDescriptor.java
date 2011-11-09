@@ -9,8 +9,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;

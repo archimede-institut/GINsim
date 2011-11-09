@@ -1,20 +1,18 @@
-package fr.univmrs.tagc.GINsim.graph;
-
-import org.ginsim.graph.Graph;
+package org.ginsim.exception;
 
 /**
  * attach an action to a notification
  */
-public interface GsGraphNotificationAction {
+public interface NotificationMessageAction {
 
     /**
      * run the action
-     * @param graph 
+     * @param holder 
      * @param data
      * @param index 
      * @return true if the notification should be removed
      */
-    public boolean perform( Graph graph, Object data, int index);
+    public boolean perform( NotificationMessageHolder holder, Object data, int index);
 
     /**
      * get the name of the action, to display on the action button
@@ -24,10 +22,10 @@ public interface GsGraphNotificationAction {
 
     /**
      * for timeoutable notification, what should be done when the time is elapsed.
-     * @param graph 
+     * @param holder 
      * @param data 
      * 
      * @return true if the notification should be removed
      */
-    public boolean timeout( Graph graph, Object data);
+    public boolean timeout( NotificationMessageHolder holder, Object data);
 }

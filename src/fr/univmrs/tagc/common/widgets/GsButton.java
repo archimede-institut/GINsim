@@ -2,10 +2,10 @@ package fr.univmrs.tagc.common.widgets;
 
 import java.awt.Insets;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
-import javax.swing.ImageIcon;
 
 public class GsButton extends JButton {
   private static final long serialVersionUID = -6823613455585788403L;

@@ -13,7 +13,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
+import org.ginsim.exception.NotificationMessage;
+
 
 /**
  * A panel to show interactive notification messages.
@@ -29,7 +30,7 @@ public class NotificationPanel extends JPanel {
     private JComboBox cNotificationAction = null;
     private JButton bNotificationAction = null;
     private JButton bNotificationAction2 = null;
-    private GsGraphNotificationMessage notification = null;
+    private NotificationMessage notification = null;
 	
 
 	public NotificationPanel(NotificationSource source) {
@@ -106,16 +107,16 @@ public class NotificationPanel extends JPanel {
 			setVisible(false);
 		} else {
             switch (notification.getType()) {
-            case GsGraphNotificationMessage.NOTIFICATION_INFO:
-            case GsGraphNotificationMessage.NOTIFICATION_INFO_LONG:
+            case NotificationMessage.NOTIFICATION_INFO:
+            case NotificationMessage.NOTIFICATION_INFO_LONG:
                 setBackground(Color.CYAN);
                 break;
-            case GsGraphNotificationMessage.NOTIFICATION_WARNING:
-            case GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG:
+            case NotificationMessage.NOTIFICATION_WARNING:
+            case NotificationMessage.NOTIFICATION_WARNING_LONG:
                 setBackground(Color.ORANGE);
                 break;
-            case GsGraphNotificationMessage.NOTIFICATION_ERROR:
-            case GsGraphNotificationMessage.NOTIFICATION_ERROR_LONG:
+            case NotificationMessage.NOTIFICATION_ERROR:
+            case NotificationMessage.NOTIFICATION_ERROR_LONG:
                 setBackground(Color.RED);
                 break;
 

@@ -5,12 +5,11 @@ import java.util.ArrayList;
 
 import javax.swing.Action;
 
+import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
@@ -180,12 +179,12 @@ class EdgeList extends GenericList {
     
 	public int add(int position, int mode) {
 		if (mode == -1 || mode >= addOptions.size()) {
-			GsGraphNotificationAction notifAction = new AddEdgeNotificationAction(this);
-	    	graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
+			NotificationMessageAction notifAction = new AddEdgeNotificationAction(this);
+	    	graph.addNotificationMessage(new NotificationMessage(graph,
 	    			Translator.getString("STR_noMoreValueForInteraction"),
 	    			notifAction,
 	    			medge,
-	    			GsGraphNotificationMessage.NOTIFICATION_WARNING));
+	    			NotificationMessage.NOTIFICATION_WARNING));
 	    	return -1;
 		}
 		this.addEdge(((Integer)addOptions.get(mode)).intValue());
@@ -218,7 +217,7 @@ class EdgeList extends GenericList {
 	}
 }
 
-class AddEdgeNotificationAction implements GsGraphNotificationAction {
+class AddEdgeNotificationAction implements NotificationMessageAction {
 	EdgeList edgeList;
 	AddEdgeNotificationAction(EdgeList edgeList) {
 		this.edgeList = edgeList;

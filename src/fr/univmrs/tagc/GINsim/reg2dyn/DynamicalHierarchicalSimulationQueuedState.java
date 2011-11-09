@@ -3,8 +3,9 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
-import fr.univmrs.tagc.common.GsException;
 
 public class DynamicalHierarchicalSimulationQueuedState {
 	public byte[] state;

@@ -1,9 +1,10 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
-import java.io.IOException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.URL;
+
 import javax.swing.ImageIcon;
 
 public class DTreeElementLink extends DTreeElementButton implements ActionListener {

@@ -1,12 +1,12 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.genetree;
 
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.util.Vector;
 
-import javax.swing.JPanel;
-import java.awt.FlowLayout;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.JPanel;
 
 public abstract class TreeElementDeco extends AbstractTreeElement {
   protected AbstractTreeElement treeElement;

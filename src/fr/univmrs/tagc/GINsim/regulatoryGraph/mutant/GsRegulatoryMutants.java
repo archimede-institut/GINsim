@@ -12,13 +12,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.AnnotationPanel;

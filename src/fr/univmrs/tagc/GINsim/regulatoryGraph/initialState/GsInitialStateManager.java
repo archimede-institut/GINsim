@@ -5,15 +5,14 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 

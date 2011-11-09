@@ -28,11 +28,8 @@ import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
-
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;

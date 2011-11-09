@@ -1,10 +1,11 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd;
 
-import java.awt.event.MouseEvent;
 import java.awt.Component;
-import javax.swing.SwingUtilities;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.SwingUtilities;
 
 public class GsComponentAdapter extends MouseAdapter {
   protected GsGlassPane glassPane;

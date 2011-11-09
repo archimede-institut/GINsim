@@ -3,10 +3,10 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 

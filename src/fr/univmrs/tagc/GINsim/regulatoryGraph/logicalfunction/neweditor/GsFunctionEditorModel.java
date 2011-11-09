@@ -3,7 +3,6 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 import java.awt.Point;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Set;
 import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;

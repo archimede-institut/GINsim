@@ -19,7 +19,7 @@
  *
  */
 
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.gui.graph.backend;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -53,6 +53,7 @@ import org.jgraph.event.GraphModelEvent;
 import org.jgraph.event.GraphModelListener;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.GraphLayoutCache;
+import org.jgrapht.ext.JGraphModelAdapter;
 /**
  * GPOverviewPanel provides a 'birds-eye' view of a jgraph based graph.
  * this code comes from JgraphPad, nearlly unchanged.
@@ -74,11 +75,11 @@ public class GPOverviewPanel
 	 * @param g
 	 * @param sp
 	 */
-	protected GPOverviewPanel(GsJgraphtGraphManager g, JScrollPane sp) {
-		originalGraph = g.getJgraph();
+	protected GPOverviewPanel(JGraph g, JGraphModelAdapter<?,?> ma, JScrollPane sp) {
+		originalGraph = g;
 		v = new PannerViewfinder(this, sp);
 		GraphLayoutCache view = new ViewRedirector(originalGraph.getGraphLayoutCache());
-		graph = new GsJgraph(g);
+		graph = new GsJgraph(ma);
 		graph.setGraphLayoutCache(view);
 		graph.setGridVisible(false);
 		graph.setAntiAliased(false);
@@ -100,11 +101,11 @@ public class GPOverviewPanel
 	 * @param sp
 	 * @return the overview panel
 	 */
-	public static JPanel createOverviewPanel(GsJgraphtGraphManager g, JScrollPane sp){
+	public static JPanel createOverviewPanel(JGraph g, JGraphModelAdapter<?,?> ma, JScrollPane sp){
 		JPanel panelWithInternalOffset = new JPanel();
 		panelWithInternalOffset.setLayout(new BorderLayout());
 		panelWithInternalOffset.setBorder(new MatteBorder(PANEL_BUFFER,PANEL_BUFFER,PANEL_BUFFER,PANEL_BUFFER,Color.WHITE));
-		panelWithInternalOffset.add(new GPOverviewPanel(g,sp), BorderLayout.CENTER);
+		panelWithInternalOffset.add(new GPOverviewPanel(g, ma, sp), BorderLayout.CENTER);
 		return panelWithInternalOffset;
 	}
 

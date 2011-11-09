@@ -2,20 +2,17 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import javax.swing.JFrame;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.gui.GsActions;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -56,9 +53,9 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
             return;
         }
         if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrderSize() < 1) {
-            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, 
+            graph.addNotificationMessage(new NotificationMessage(graph, 
             		Translator.getString(graph instanceof GsRegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
-            		GsGraphNotificationMessage.NOTIFICATION_WARNING));
+            		NotificationMessage.NOTIFICATION_WARNING));
             return;
         }
 		if (ref == 0 || ref == 1) {

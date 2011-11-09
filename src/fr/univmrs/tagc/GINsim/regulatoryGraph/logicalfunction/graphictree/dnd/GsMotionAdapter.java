@@ -1,12 +1,13 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd;
 
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.Point;
-import javax.swing.SwingUtilities;
-import javax.swing.JTree;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
 public class GsMotionAdapter extends MouseMotionAdapter {

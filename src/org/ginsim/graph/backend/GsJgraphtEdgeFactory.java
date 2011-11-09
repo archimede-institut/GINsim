@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.graph.backend;
 
 import org.jgrapht.EdgeFactory;
 

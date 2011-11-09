@@ -6,9 +6,19 @@ import java.awt.event.ItemListener;
 import java.net.URL;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JTree;
 
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.*;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementButton;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementComboBox;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementLabel;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementLink;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementNode;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementTextField;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DataValues;
 
 public class DTreeNodeBuilder {

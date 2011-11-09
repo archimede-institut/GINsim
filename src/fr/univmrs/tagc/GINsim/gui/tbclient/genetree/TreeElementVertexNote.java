@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import tbrowser.ihm.widget.TBToggleButton;
-
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 

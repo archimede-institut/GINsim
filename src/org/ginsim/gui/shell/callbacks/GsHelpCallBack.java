@@ -9,9 +9,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.AboutDialog;
 
 /**

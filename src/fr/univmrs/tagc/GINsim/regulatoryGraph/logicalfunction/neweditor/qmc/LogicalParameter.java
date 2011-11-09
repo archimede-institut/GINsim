@@ -1,8 +1,8 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.qmc;
 
 import java.util.BitSet;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
 
 public class LogicalParameter {
 	private int xBitSet, boolBitSet;

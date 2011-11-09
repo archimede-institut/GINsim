@@ -1,19 +1,25 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -25,10 +31,12 @@ import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.RectangleInsets;
+
 import tbrowser.data.TBProbe;
 import tbrowser.data.TBSample;
 import tbrowser.data.module.TBModule;
 import tbrowser.ihm.widget.TBPanel;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListener, ActionListener, ListSelectionListener {
   private static final long serialVersionUID = 7691970870575102225L;

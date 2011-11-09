@@ -1,12 +1,11 @@
 package org.ginsim.service.layout;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
-import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.common.GsException;
 
 /**
  * This class contains different placement algorithms, 

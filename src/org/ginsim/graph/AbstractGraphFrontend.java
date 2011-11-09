@@ -10,6 +10,9 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
@@ -22,11 +25,9 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphtGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
-import fr.univmrs.tagc.common.GsException;
 
-abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E> {
+abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, NotificationMessageHolder {
 
     private static List<GsGraphAssociatedObjectManager> OBJECT_MANAGERS = null;
 	
@@ -665,5 +666,21 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     	}
     }
 
+
+	// ------------------- Notification messages ------------------------
+	// just dispatch them to a listener (most likely the mainframe)
+	
+	NotificationMessageHolder listener;
+	
+	public void addNotificationMessage(NotificationMessage message) {
+		if (listener != null) {
+			listener.addNotificationMessage(message);
+		}
+	}
+	public void deleteNotificationMessage(NotificationMessage message) {
+		if (listener != null) {
+			listener.deleteNotificationMessage(message);
+		}
+	}
 
 }

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common;
+package org.ginsim.exception;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 

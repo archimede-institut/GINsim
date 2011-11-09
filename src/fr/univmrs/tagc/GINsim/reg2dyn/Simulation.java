@@ -5,14 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
-
 
 import fr.univmrs.tagc.GINsim.reg2dyn.helpers.GsSTGSimulationHelper;
 import fr.univmrs.tagc.GINsim.reg2dyn.helpers.SimulationHelper;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 

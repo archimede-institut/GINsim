@@ -6,13 +6,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
-
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;

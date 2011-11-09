@@ -3,8 +3,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.SBML;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -13,11 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.graph.Graph;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -27,16 +30,11 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
-
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import JSci.io.MathMLParser;
-
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
@@ -714,9 +712,9 @@ public final class SBMLXpathParser {
 				o.addElement(new Short(val));
 				o.addElement(vertex);
 				o.addElement(exp);
-				graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
+				graph.addNotificationMessage(new NotificationMessage(graph,
 						"Invalid formula : " + exp, a, o,
-						GsGraphNotificationMessage.NOTIFICATION_WARNING));				
+						NotificationMessage.NOTIFICATION_WARNING));				
 			} else {
 				interactionList.addExpression(val, vertex, tbp);
 			}
@@ -739,7 +737,7 @@ public final class SBMLXpathParser {
 	}
 	
 	/**  **/
-	class InteractionInconsistencyAction implements GsGraphNotificationAction {
+	class InteractionInconsistencyAction implements NotificationMessageAction {
 		public String[] getActionName() {
 			String t[] = { "view" };
 			return t;
@@ -813,7 +811,7 @@ public final class SBMLXpathParser {
 		}
 	} // class InteractionInconsistencyDialog
 	
-	class InvalidFunctionNotificationAction implements GsGraphNotificationAction {
+	class InvalidFunctionNotificationAction implements NotificationMessageAction {
 
 		public InvalidFunctionNotificationAction() {
 			super();

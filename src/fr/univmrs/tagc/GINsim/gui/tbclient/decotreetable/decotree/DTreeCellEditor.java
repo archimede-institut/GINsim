@@ -1,6 +1,8 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 

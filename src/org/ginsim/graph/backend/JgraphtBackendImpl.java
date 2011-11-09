@@ -9,9 +9,6 @@ import org.ginsim.graph.Edge;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.ListenableDirectedGraph;
 
-import fr.univmrs.tagc.GINsim.jgraph.GsJGraphtBaseGraph;
-import fr.univmrs.tagc.GINsim.jgraph.GsJgraphtEdgeFactory;
-
 public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirectedGraph<V, E> implements GraphBackend<V, E> {
 	private static final long serialVersionUID = -7766943723639796018L;
 	

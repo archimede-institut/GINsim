@@ -1,7 +1,11 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.genetree;
 
+import java.awt.Color;
 import java.net.URL;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -10,8 +14,6 @@ import javax.swing.tree.TreePath;
 
 import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
-
-import java.awt.Color;
 import fr.univmrs.tagc.common.Tools;
 
 public class GeneTreeModel implements TreeModel {

@@ -1,11 +1,11 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.genetree;
 
-import java.util.Vector;
-
-import javax.swing.JCheckBox;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
+
+import javax.swing.JCheckBox;
 
 public class TreeElementSelectable extends TreeElementDeco implements ActionListener {
   private GeneTreeModel model;

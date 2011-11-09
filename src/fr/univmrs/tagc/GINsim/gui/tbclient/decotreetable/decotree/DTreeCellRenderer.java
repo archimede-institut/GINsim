@@ -1,9 +1,9 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
+import java.awt.Component;
+
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
-
-import java.awt.Component;
 
 public class DTreeCellRenderer extends DefaultTreeCellRenderer {
 	private static final long serialVersionUID = -3839683140995761773L;

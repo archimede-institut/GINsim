@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.gui.graph.backend;
 
 import java.awt.Color;
 import java.awt.Rectangle;
@@ -10,7 +10,6 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
@@ -52,13 +51,6 @@ public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
         	v_borderRenderer[BORDER_RAISED] = BorderFactory.createRaisedBevelBorder();
         	b = BorderFactory.createLineBorder(Color.BLACK, STRONG_BORDER_WIDTH);
         	v_borderRenderer[BORDER_STRONG] = b;
-    }
-    /**
-     * create a jgraph vertex attribute reader.
-     * @param graphmanager
-     */
-    public GsJgraphVertexAttribute(GsJgraphtGraphManager graphmanager) {
-    	this(graphmanager.getM_jgAdapter(), graphmanager.getDefaultVertexAttr());
     }
 
     public GsJgraphVertexAttribute(JGraphModelAdapter<?,?> adaptor, AttributeMap defaults) {

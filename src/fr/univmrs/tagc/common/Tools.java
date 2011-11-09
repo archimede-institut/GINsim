@@ -19,6 +19,8 @@ import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**

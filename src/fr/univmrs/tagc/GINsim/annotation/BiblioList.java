@@ -5,12 +5,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
-import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageAction;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 
@@ -19,8 +27,8 @@ import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.*;
-import fr.univmrs.tagc.common.GsException;
+import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -148,13 +156,13 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 				}
 			}
 		}
-		GsGraphNotificationAction action = new GsGraphNotificationAction() {
+		NotificationMessageAction action = new NotificationMessageAction() {
 			String[] t = {Translator.getString("STR_addBib"), Translator.getString("STR_ignore")};
-			public boolean timeout(Graph graph, Object data) {
+			public boolean timeout(NotificationMessageHolder graph, Object data) {
 				return true;
 			}
 		
-			public boolean perform( Graph graph, Object data, int index) {
+			public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 				switch (index) {
 					case 0:
 						((BiblioList)data).addFile();
@@ -172,10 +180,7 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 		
 		};
 		
-		graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
-				Translator.getString("STR_noref"), 
-			action, this,
-			GsGraphNotificationMessage.NOTIFICATION_WARNING));
+		new NotificationMessage((NotificationMessageHolder)graph, Translator.getString("STR_noref"), action, this, NotificationMessage.NOTIFICATION_WARNING);
 	}
 	
 	public String getLink(String proto, String value) {
@@ -210,13 +215,13 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 			}
 			endParsing();
 		} else {
-			GsGraphNotificationAction action = new GsGraphNotificationAction() {
+			NotificationMessageAction action = new NotificationMessageAction() {
 				String[] t = {Translator.getString("STR_purge")};
-				public boolean timeout(Graph graph, Object data) {
+				public boolean timeout(NotificationMessageHolder graph, Object data) {
 					return true;
 				}
 			
-				public boolean perform(Graph graph, Object data, int index) {
+				public boolean perform(NotificationMessageHolder graph, Object data, int index) {
 					((BiblioList)((Object[])data)[0]).removeFile(((Object[])data)[1].toString());
 					return true;
 				}
@@ -227,10 +232,8 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 			
 			};
 			
-			graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
-					Translator.getString("STR_noBibFile"), 
-				action, new Object[] {this, fileName},
-				GsGraphNotificationMessage.NOTIFICATION_WARNING));
+			new NotificationMessage((NotificationMessageHolder)graph, Translator.getString("STR_noBibFile"),
+					action, new Object[] {this, fileName}, NotificationMessage.NOTIFICATION_WARNING);
 		}
 	}
 	

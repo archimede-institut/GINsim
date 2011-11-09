@@ -28,8 +28,6 @@ import javax.swing.SwingConstants;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;

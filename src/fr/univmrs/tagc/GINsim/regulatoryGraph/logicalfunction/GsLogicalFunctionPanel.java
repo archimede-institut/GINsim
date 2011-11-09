@@ -1,17 +1,24 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
-import fr.univmrs.tagc.GINsim.gui.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.*;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.models.*;
-import fr.univmrs.tagc.common.datastore.*;
-import fr.univmrs.tagc.common.datastore.gui.*;
+import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.GsFunctionEditor;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.models.GsIncomingEdgeListModel;
+import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
+import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
+import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 
 public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {
   private static final long serialVersionUID = -87854595177707062L;

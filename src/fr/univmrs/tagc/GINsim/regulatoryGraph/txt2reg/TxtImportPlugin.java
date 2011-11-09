@@ -1,43 +1,39 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.txt2reg;
 
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFrame;
 
-import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
+import org.ginsim.exception.GsException;
+import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.GsServiceGUI;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsActions;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.common.GsException;
 
-public class TxtImportPlugin implements GsPlugin, GsActionProvider {
+@ProviderFor(GsServiceGUI.class)
+public class TxtImportPlugin implements GsServiceGUI {
 
-	private static final int TXT = 7; 
-
-	public void registerPlugin() {
-		GsActions.registerImportProvider(this);
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(new TxtImportAction());
+		return actions;
 	}
+}
 
-	private GsPluggableActionDescriptor[] t_import = null;
+class TxtImportAction extends AbstractAction {
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		if (actionType == ACTION_IMPORT) {
-			if (graph instanceof GsRegulatoryGraph) {
-				return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
-						"STR_TXT", "STR_TXT_descr", null, this, ACTION_IMPORT, TXT),};
-			}
-			return new GsPluggableActionDescriptor[] {};
-		}
-		return null;
-	}
-
-	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-		if (actionType != ACTION_IMPORT) {
-			return;
-		}
-
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
 		GsFileFilter ffilter = new GsFileFilter();
 		String extension = null;
 		String filename;
@@ -46,6 +42,7 @@ public class TxtImportPlugin implements GsPlugin, GsActionProvider {
 		extension = ".txt";
 
 		// we should add a better way to select a file for import
+		// FIXME: get the main frame for this graph
 		filename = GsOpenAction.selectFileWithOpenDialog(frame);
 
 
@@ -54,4 +51,5 @@ public class TxtImportPlugin implements GsPlugin, GsActionProvider {
 		System.out.println(filename);
 		//Graph newGraph = parser.getGraph();
 	}
+
 }

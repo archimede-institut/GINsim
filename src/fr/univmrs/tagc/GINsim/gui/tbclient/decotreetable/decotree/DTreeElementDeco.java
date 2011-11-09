@@ -1,7 +1,6 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
 import java.awt.Component;
-
 import java.util.Vector;
 
 import javax.swing.BorderFactory;

@@ -1,6 +1,8 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.qmc;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Vector;
 
 public class MCArray {
 	private Vector parameters, baseParameters;

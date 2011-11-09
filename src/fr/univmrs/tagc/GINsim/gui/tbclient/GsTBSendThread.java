@@ -1,12 +1,12 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient;
 
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.JProgressBar;
 
 import tbrowser.data.module.TBModules;
-import java.util.Enumeration;
-import java.util.Hashtable;
 
 public class GsTBSendThread extends Thread {
   private JProgressBar progressBar = null;

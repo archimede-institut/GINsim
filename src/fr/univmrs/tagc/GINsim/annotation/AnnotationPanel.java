@@ -15,7 +15,6 @@ import javax.swing.event.TableModelListener;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
-
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;

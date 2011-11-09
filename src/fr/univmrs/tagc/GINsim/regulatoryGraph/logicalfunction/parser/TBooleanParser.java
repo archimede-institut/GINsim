@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser;
 
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Stack;

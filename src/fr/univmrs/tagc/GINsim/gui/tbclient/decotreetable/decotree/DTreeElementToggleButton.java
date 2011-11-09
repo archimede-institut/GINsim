@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
@@ -8,7 +9,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
-import java.awt.event.ActionEvent;
 
 public class DTreeElementToggleButton extends DTreeElementDeco implements ActionListener {
 

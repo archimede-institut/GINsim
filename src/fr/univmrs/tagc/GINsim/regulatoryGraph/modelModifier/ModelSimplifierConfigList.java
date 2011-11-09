@@ -2,9 +2,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
 import java.util.Collection;
 
-import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
-
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;

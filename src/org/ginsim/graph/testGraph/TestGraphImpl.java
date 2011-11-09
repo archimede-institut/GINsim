@@ -6,8 +6,6 @@ import java.util.List;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphDescriptor;
-
 /**
  * Simple LRG, mostly placeholder for now.
  * 

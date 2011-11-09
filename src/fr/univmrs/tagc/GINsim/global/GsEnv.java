@@ -14,16 +14,14 @@ import java.util.jar.Manifest;
 
 import javax.swing.JFrame;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.Graph;
 
-
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.gui.BaseMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.plugin.GsClassLoader;
-import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.widgets.Frame;
@@ -260,7 +258,7 @@ public class GsEnv {
     public static void error(GsException e, Frame main) {
         if (main instanceof GsMainFrame) {
             Graph graph = ((GsMainFrame)main).getGraph();
-            graph.addNotificationMessage(new GsGraphNotificationMessage(graph, e));
+            graph.addNotificationMessage(new NotificationMessage(graph, e));
             return;
         }
         Tools.error(e, main);

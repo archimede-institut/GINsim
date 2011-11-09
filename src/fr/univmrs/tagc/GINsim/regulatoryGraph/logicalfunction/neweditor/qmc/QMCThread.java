@@ -1,15 +1,15 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.qmc;
 
+import java.util.Collection;
+
+import javax.swing.JProgressBar;
+import javax.swing.JTree;
+import javax.swing.tree.TreePath;
+
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-
-import java.util.Collection;
-import java.util.List;
-import javax.swing.tree.TreePath;
-import javax.swing.JTree;
-import javax.swing.JProgressBar;
 import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class QMCThread extends Thread {

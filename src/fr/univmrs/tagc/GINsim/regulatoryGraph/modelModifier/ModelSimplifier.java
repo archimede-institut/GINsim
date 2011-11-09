@@ -13,10 +13,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.export.regulatoryGraph.LogicalFunctionBrowser;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsReg2dynPriorityClass;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
@@ -37,7 +38,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.common.GsException;
 
 class RemovedInfo {
 	GsRegulatoryVertex vertex;

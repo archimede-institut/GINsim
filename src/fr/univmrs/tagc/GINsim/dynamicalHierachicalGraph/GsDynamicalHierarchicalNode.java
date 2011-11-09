@@ -9,11 +9,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.service.export.Dotify;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.common.GsException;
 
 public class GsDynamicalHierarchicalNode implements Dotify {
 	public static final byte TYPE_TRANSIENT_COMPONENT = 0;

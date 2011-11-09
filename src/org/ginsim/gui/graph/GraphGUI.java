@@ -2,7 +2,6 @@ package org.ginsim.gui.graph;
 
 import java.awt.Component;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JPanel;

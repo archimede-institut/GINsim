@@ -8,7 +8,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;

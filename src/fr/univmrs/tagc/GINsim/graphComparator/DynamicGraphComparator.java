@@ -14,8 +14,6 @@ import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
-
 /**
  * Compare 2 GsDynamicGraph
  * @author Berenguier Duncan

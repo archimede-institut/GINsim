@@ -8,12 +8,14 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -21,9 +23,6 @@ import org.xml.sax.SAXException;
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -32,7 +31,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -393,11 +391,11 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     			}
     		}
     		if (m != null) {
-    			graph.addNotificationMessage(new GsGraphNotificationMessage(graph,
+    			graph.addNotificationMessage(new NotificationMessage(graph,
     					"inconsistency in some interactions",
     					new InteractionInconsistencyAction(),
     					m,
-    					GsGraphNotificationMessage.NOTIFICATION_WARNING_LONG));
+    					NotificationMessage.NOTIFICATION_WARNING_LONG));
     		}
     	}
 
@@ -495,8 +493,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
         	o.addElement(new Short(val));
         	o.addElement(vertex);
         	o.addElement(exp);
-          graph.addNotificationMessage( new GsGraphNotificationMessage(graph, "Invalid formula : " + exp,
-            a, o, GsGraphNotificationMessage.NOTIFICATION_WARNING));
+          graph.addNotificationMessage( new NotificationMessage(graph, "Invalid formula : " + exp,
+            a, o, NotificationMessage.NOTIFICATION_WARNING));
         }
         else {
           interactionList.addExpression(val, vertex, tbp);
@@ -542,7 +540,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     }
 }
 
-class InteractionInconsistencyAction implements GsGraphNotificationAction {
+class InteractionInconsistencyAction implements NotificationMessageAction {
 
 	public String[] getActionName() {
 		String t[] = { "view" };
@@ -563,7 +561,7 @@ class InteractionInconsistencyAction implements GsGraphNotificationAction {
 	}
 }
 
-class InvalidFunctionNotificationAction implements GsGraphNotificationAction {
+class InvalidFunctionNotificationAction implements NotificationMessageAction {
 	
 	public InvalidFunctionNotificationAction() {
 		super();

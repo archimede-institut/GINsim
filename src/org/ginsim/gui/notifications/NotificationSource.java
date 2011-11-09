@@ -1,6 +1,6 @@
 package org.ginsim.gui.notifications;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
+import org.ginsim.exception.NotificationMessage;
 
 /**
  * 
@@ -8,7 +8,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
  *
  */
 public interface NotificationSource {
-	public GsGraphNotificationMessage getTopNotification();
+	public NotificationMessage getTopNotification();
 	public void closeNotification();
 
 }

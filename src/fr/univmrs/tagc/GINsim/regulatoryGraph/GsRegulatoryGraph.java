@@ -15,25 +15,24 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageAction;
+import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsActions;
 import fr.univmrs.tagc.GINsim.gui.GsEditModeDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.tagc.common.GsException;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
-
-import org.ginsim.graph.AbstractGraphFrontend;
-import org.ginsim.graph.Graph;
 
 /**
  * The regulatory graph
@@ -159,7 +158,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     public GsRegulatoryMultiEdge addEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int sign) {
     	GsRegulatoryMultiEdge obj = getEdge(source, target);
     	if (obj != null) {
-    		GsGraphNotificationAction action = new GsGraphNotificationAction() {
+    		NotificationMessageAction action = new NotificationMessageAction() {
     			final String[] t_action = {"go"};
 				public boolean timeout( Graph graph, Object data) {
 					return true;
@@ -173,11 +172,11 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 				}
 			
 			};
-	    	this.addNotificationMessage( new GsGraphNotificationMessage(this,
+	    	this.addNotificationMessage( new NotificationMessage(this,
 	    			Translator.getString("STR_usePanelToAddMoreEdges"),
 	    			action,
 	    			obj,
-	    			GsGraphNotificationMessage.NOTIFICATION_WARNING));
+	    			NotificationMessage.NOTIFICATION_WARNING));
     		return obj;
     	}
     	if (sign < 0) {

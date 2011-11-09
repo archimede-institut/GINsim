@@ -1,18 +1,38 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeTableBuilder;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.*;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable.*;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElement;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable.JCB;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
+import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DecoTree;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTable;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.common.widgets.GsButton;

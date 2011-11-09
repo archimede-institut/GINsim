@@ -1,8 +1,9 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree;
 
-import java.util.Vector;
-import java.awt.Component;
 import java.awt.Color;
+import java.awt.Component;
+import java.util.Vector;
+
 import javax.swing.JTree;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DataValues;

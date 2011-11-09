@@ -1,16 +1,18 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table;
 
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.tree.TreePath;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreePanel;
-
-import java.awt.Rectangle;
 
 public class DTreeTableCellEditor extends DefaultCellEditor {
 	private static final long serialVersionUID = 4908136333623167309L;

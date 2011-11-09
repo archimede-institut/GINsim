@@ -1,8 +1,8 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree;
 
-import java.util.Vector;
-import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
 public class GsParamTreeLeafPattern extends GsParamTreeLeaf {
   private String name = "";

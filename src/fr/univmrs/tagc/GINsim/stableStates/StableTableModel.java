@@ -8,7 +8,6 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.graph.AssociatedGraph;
 import org.ginsim.graph.Graph;
 
-
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;

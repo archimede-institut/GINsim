@@ -6,8 +6,6 @@ import javax.swing.Action;
 
 import org.ginsim.graph.Graph;
 
-import java.lang.annotation.*; 
-
 /**
  * This interface is the central interface for GUIs for GINsim services.
  * GUI services provide Actions depending on the type of graph.

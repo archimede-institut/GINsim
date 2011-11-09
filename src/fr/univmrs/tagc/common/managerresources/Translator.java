@@ -21,7 +21,11 @@
 package fr.univmrs.tagc.common.managerresources;
 
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Stack;
+import java.util.Vector;
 
 /** 
  * Contains ResourceBundle objects.

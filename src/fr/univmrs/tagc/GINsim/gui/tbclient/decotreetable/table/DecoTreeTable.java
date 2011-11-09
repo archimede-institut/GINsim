@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table;
 
+import java.awt.Color;
 import java.util.Vector;
 
 import javax.swing.JTable;
@@ -8,8 +9,6 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
-
-import java.awt.Color;
 
 public class DecoTreeTable extends JTable {
 	private static final long serialVersionUID = -6092467728304640800L;

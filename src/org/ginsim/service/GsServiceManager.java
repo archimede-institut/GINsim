@@ -6,10 +6,6 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Vector;
 
-import java.lang.Class;
-
-import org.ginsim.graph.Graph;
-
 
 /**
  * This manager provides access to the GsServices corresponding to a specific graph class

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.jgraph;
+package org.ginsim.gui.graph.backend;
 
 import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.EdgeView;
@@ -15,13 +15,6 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 	private GsEdgeRenderer renderer;
 
 	
-	/**
-	 * @param graph
-	 */
-	public GsCellViewFactory(GsJgraphtGraphManager graph) {
-		this.renderer = new GsEdgeRenderer(graph);
-	}
-
 	/**
 	 * @param jgraph
 	 * FIXME: parallel edge routing requires a graphmanager, this constructor may not fully work yet

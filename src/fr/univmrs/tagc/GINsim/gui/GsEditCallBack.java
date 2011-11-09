@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.common.OptionStore;
 
 

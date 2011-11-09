@@ -1,16 +1,20 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
+
+import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.tagc.common.widgets.GsButton;
 import fr.univmrs.tagc.common.widgets.GsPanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.util.Vector;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
 
 public class GsFunctionEditorDisplayPanel extends GsPanel implements ItemListener, ActionListener {
 	private static final long serialVersionUID = -945722071153537623L;

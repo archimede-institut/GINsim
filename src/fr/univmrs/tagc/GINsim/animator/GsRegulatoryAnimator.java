@@ -8,14 +8,13 @@ import java.util.Vector;
 import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
+import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
 import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
@@ -53,18 +52,13 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
      * @param frame
      * @param graph
      */
-    public static void animate(JFrame frame, Graph graph) {
-        GsRegulatoryGraph regGraph = null;
-        GsDynamicGraph dynGraph = null;
-
-        if (graph instanceof GsDynamicGraph) {
-            // we need an associated dynamic graph
-            regGraph = (GsRegulatoryGraph) graph.getAssociatedGraph();
-            dynGraph = (GsDynamicGraph)graph;
-        }
-        
+    public static void animate(JFrame frame, GsDynamicGraph dynGraph) {
+    	GsRegulatoryGraph regGraph = null;
+    	if (dynGraph != null) {
+    		regGraph = dynGraph.getAssociatedGraph();
+    	}
         if (regGraph == null || dynGraph == null) {
-        	graph.addNotificationMessage(new GsGraphNotificationMessage(graph, "Could not start the animator", GsGraphNotificationMessage.NOTIFICATION_WARNING));
+        	new NotificationMessage(dynGraph, "Could not start the animator", NotificationMessage.NOTIFICATION_WARNING);
             return;
         }
         // let's start the animator

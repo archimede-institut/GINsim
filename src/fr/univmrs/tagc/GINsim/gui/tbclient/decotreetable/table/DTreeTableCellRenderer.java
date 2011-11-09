@@ -1,6 +1,6 @@
 package fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table;
 
-import java.awt.*;
+import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;

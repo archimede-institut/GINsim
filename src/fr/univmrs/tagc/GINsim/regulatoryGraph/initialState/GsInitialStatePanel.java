@@ -16,7 +16,6 @@ import javax.swing.table.TableColumn;
 
 import org.ginsim.graph.Graph;
 
-
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;

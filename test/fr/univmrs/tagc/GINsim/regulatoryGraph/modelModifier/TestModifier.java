@@ -1,9 +1,11 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
 import junit.framework.TestCase;
+
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.common.GsException;
 
 public class TestModifier extends TestCase {
 

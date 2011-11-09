@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
-import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;

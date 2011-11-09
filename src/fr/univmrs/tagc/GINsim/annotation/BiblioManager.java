@@ -4,12 +4,10 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.GINsim.graph.BasicGraphAssociatedManager;
-
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 
