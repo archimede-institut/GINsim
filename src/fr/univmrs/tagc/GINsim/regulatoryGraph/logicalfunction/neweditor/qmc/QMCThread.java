@@ -33,7 +33,7 @@ public class QMCThread extends Thread {
 	}
 	public void run() {
 		algo = new QMCAlgo(cnf, progressBar, cancelButton);
-		Collection<GsRegulatoryMultiEdge> l = graph.getGraphManager().getIncomingEdges(vertex);
+		Collection<GsRegulatoryMultiEdge> l = graph.getIncomingEdges(vertex);
 		algo.init(l, expression.getChilds());
 		algo.exec();
 		TreePath sel_path = tree.getLeadSelectionPath();

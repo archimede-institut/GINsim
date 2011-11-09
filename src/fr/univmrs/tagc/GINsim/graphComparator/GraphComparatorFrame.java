@@ -27,7 +27,7 @@ import org.ginsim.graph.Graph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;

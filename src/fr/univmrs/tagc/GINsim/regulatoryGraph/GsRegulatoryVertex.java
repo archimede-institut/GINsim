@@ -12,7 +12,6 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -83,7 +82,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
     public void setInput(boolean input, AbstractGraphFrontend<?,?> graph) {
         if (input != this.isInput) {
             this.isInput = input;
-            graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
+            graph.fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
         }
     }
 	/**
@@ -119,7 +118,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
 	    		}
 	    	}
 	    	maxValue = max;
-    		graph.fireGraphChange(GsGraph.CHANGE_VERTEXUPDATED, this);
+    		graph.fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
     		getInteractionsModel().refreshVertex();
 	    }
 	}

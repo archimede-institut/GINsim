@@ -23,7 +23,7 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
@@ -363,7 +363,7 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 		
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode) it.next();
-			matcher.reset(vertex.statesToString(this.getNodeOrder().size()));
+			matcher.reset(vertex.statesToString(this.getNodeOrderSize()));
 			if (matcher.find()) {
 				v.add(vertex);
 			}
@@ -371,8 +371,40 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 		return v;
 	}
 	
-	private List<NodeInfo> getNodeOrder() {
+	/**
+	 * Return the node order as a List of NodeInfo
+	 * 
+	 * @return the node order as a List of NodeInfo
+	 */
+	public List<NodeInfo> getNodeOrder() {
 		return nodeOrder;
+	}
+	
+    /**
+     * Return the size of the node order
+     * 
+     * @return the size of the node order
+     */
+    @Override
+	public int getNodeOrderSize(){
+		
+		if( nodeOrder != null){
+			return nodeOrder.size();
+		}
+		else{
+			return 0;
+		}
+	}
+	
+    
+	/**
+	 * Set a list of NodeInfo representing the order of vertex as defined by the model
+	 * 
+	 * @param list the list of nodeInfo representing the order of vertex as defined by the model
+	 */
+	public void setNodeOrder( List<NodeInfo> node_order){
+		
+		nodeOrder = node_order;
 	}
 
 	public GsDynamicalHierarchicalNode getNodeForState(byte[] state) {

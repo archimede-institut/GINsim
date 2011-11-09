@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 
@@ -22,7 +24,7 @@ public class PathFinding extends Thread {
 	private Set visitedNodes;
 	private Stack path;
 	private ResultHandler resultHandler;
-	private GsGraphManager graphManager;
+	private Graph graph;
 
 	/**
 	 * Create a new thread that will search a path between start and end
@@ -34,13 +36,13 @@ public class PathFinding extends Thread {
 	 * @param start a node
 	 * @param end a node
 	 */
-	public PathFinding(ResultHandler resultHandler, GsGraphManager graphManager, Object start, Object end) {
+	public PathFinding(ResultHandler resultHandler, Graph graph, Object start, Object end) {
 		this.resultHandler = resultHandler;
 		this.start = start;
 		this.end = end;
 		this.visitedNodes = new HashSet();
 		this.path = new Stack();
-		this.graphManager = graphManager;
+		this.graph = graph;
 	}
 
 	public void run() {
@@ -100,7 +102,7 @@ public class PathFinding extends Thread {
 	 * @return
 	 */
 	public Collection getChildren(Object node) {
-		Collection outgoingEdges = graphManager.getOutgoingEdges(node);
+		Collection outgoingEdges = graph.getOutgoingEdges(node);
 		List children = new ArrayList(outgoingEdges.size());
 		for (Iterator it = outgoingEdges.iterator(); it.hasNext();) {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();

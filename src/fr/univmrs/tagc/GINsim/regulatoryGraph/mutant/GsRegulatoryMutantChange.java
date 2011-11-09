@@ -69,7 +69,7 @@ class GsRegulatoryMutantChange {
     	}
     	if (parser == null) {
     		try {
-				parser = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(vertex));
+				parser = new GsBooleanParser(graph.getIncomingEdges(vertex));
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 				return;

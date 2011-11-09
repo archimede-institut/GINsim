@@ -4,7 +4,6 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.reg2dyn.SimulationQueuedState;
@@ -24,7 +23,7 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 	
 	public GsSTGSimulationHelper(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
 		stateTransitionGraph = new GsDynamicGraph(params.nodeOrder);
-		if (regGraph instanceof GsGraph) {
+		if (regGraph instanceof Graph) {
 			stateTransitionGraph.setAssociatedGraph((GsRegulatoryGraph)regGraph);
 		}
         vreader = stateTransitionGraph.getVertexAttributeReader();

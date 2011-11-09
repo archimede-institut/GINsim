@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
 import JSci.io.MathMLParser;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -122,8 +122,8 @@ public final class SBMLXpathParser {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			vareader = graph.getGraphManager().getVertexAttributesReader();
-			ereader = graph.getGraphManager().getEdgeAttributesReader();
+			vareader = graph.getVertexAttributeReader();
+			ereader = graph.getEdgeAttributeReader();
 
 			Namespace namespace = Namespace.getNamespace("qual",
 					"http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models");
@@ -196,7 +196,7 @@ public final class SBMLXpathParser {
 																				// exception
 					}
 				}
-			} 
+			}
 			graph.setNodeOrder(v_nodeOrder);
 			
 			/** to deal transition list in order to retrieve his all data **/
@@ -655,15 +655,14 @@ public final class SBMLXpathParser {
 		Vector<GsRegulatoryVertex> v_order = new Vector<GsRegulatoryVertex>();
 		String[] t_order = s_nodeOrder.split(" ");
 		for (int i = 0; i < t_order.length; i++) {
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getGraphManager()
-					.getVertexByName(t_order[i]);
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getVertexByName(t_order[i]);
 			if (vertex == null) {
 				// ok = false;
 				break;
 			}
 			v_order.add(vertex);
 		}
-		if (v_order.size() != graph.getGraphManager().getVertexCount()) {
+		if (v_order.size() != graph.getVertexCount()) {
 			// error
 			Tools.error("incoherent nodeOrder, not restoring it", null);
 		} else {
@@ -680,7 +679,7 @@ public final class SBMLXpathParser {
 		try {
 			for (Enumeration<GsRegulatoryVertex> enu_vertex = values.keys(); enu_vertex.hasMoreElements();) {
 				vertex = enu_vertex.nextElement();
-				allowedEdges = graph.getGraphManager().getIncomingEdges(vertex);
+				allowedEdges = graph.getIncomingEdges(vertex);
 				if (allowedEdges.size() > 0) {
 					for (Enumeration<String> enu_values = values.get(vertex).keys(); enu_values
 							.hasMoreElements();) {
@@ -706,7 +705,7 @@ public final class SBMLXpathParser {
 
 	public void addExpression(byte val, GsRegulatoryVertex vertex, String exp) {
 		try {
-			GsBooleanParser tbp = new GsBooleanParser(graph.getGraphManager().getIncomingEdges(
+			GsBooleanParser tbp = new GsBooleanParser(graph.getIncomingEdges(
 					vertex));
 			GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
 			if (!tbp.compile(exp, graph, vertex)) {
@@ -917,7 +916,7 @@ public final class SBMLXpathParser {
 			}
 			
 			/** To set a maxvalue for a regulatory vertex */
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getGraphManager().getVertexByName(node);
+			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getVertexByName(node);
 			if( vertex != null) {
 				maxvalue = vertex.getMaxValue();
 			}			

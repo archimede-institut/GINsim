@@ -19,7 +19,7 @@ import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraph;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
@@ -46,7 +46,6 @@ public class STG2HTG extends AlgoConnectivity {
 	public STG2HTG(JFrame frame, Graph graph) {
 		this.frame = frame;
 		this.graph = graph;
-		this.graphModel = graph.getGraphManager();
 	}
 
 	public void run() {
@@ -69,7 +68,7 @@ public class STG2HTG extends AlgoConnectivity {
 
 		for (Iterator it_sccs = sccs.iterator(); it_sccs.hasNext();) {
 			GsNodeReducedData scc = (GsNodeReducedData) it_sccs.next();
-			if (scc.isTrivial() && scc.isTransient(graphModel)) B.add(scc);
+			if (scc.isTrivial() && scc.isTransient(graph)) B.add(scc);
 			else {
 				A.add(scc);
 				for (Iterator it_scc = scc.getContent().iterator(); it_scc.hasNext();) {
@@ -111,7 +110,7 @@ public class STG2HTG extends AlgoConnectivity {
 	}
 
 	private void dfs(Object source, HashSet image, HashSet visited) {
-		Collection<GsDirectedEdge> outgoingEdges = graphModel.getOutgoingEdges(source);
+		Collection<GsDirectedEdge> outgoingEdges = graph.getOutgoingEdges(source);
 		if (outgoingEdges == null) return;
 		for (GsDirectedEdge edge: outgoingEdges) {
 			Object target = edge.getTarget();
@@ -129,7 +128,7 @@ public class STG2HTG extends AlgoConnectivity {
 	
 	private void colorize() {
 		colors = ColorPalette.createColorPaletteByRange(sigma.size()+A.size());
-		GsVertexAttributesReader vreader = graphModel.getVertexAttributesReader();
+		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
 		int color = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
 			HashSet key = (HashSet) it_sigma.next();
@@ -170,11 +169,11 @@ public class STG2HTG extends AlgoConnectivity {
 				content.addAll(scc.getContent());
 			}
 			GsDynamicNode s = (GsDynamicNode) ((GsNodeReducedData)content.get(0)).getContent().get(0);
-			GsComponentVertex comp = new GsComponentVertex("TT-"+s.getPatternString(this.graphModel), content, key);
-			System.out.println("TT-"+s.getPatternString(this.graphModel));
+			GsComponentVertex comp = new GsComponentVertex("TT-"+s.getPatternString(this.graph), content, key);
+			System.out.println("TT-"+s.getPatternString(this.graph));
 			for (Iterator it = ((GsNodeReducedData)content.get(0)).getContent().iterator(); it.hasNext();) {
 				s = (GsDynamicNode) it.next();
-				System.out.println("\t"+s.getPatternString(this.graphModel)+"\n\t"+s.toString());
+				System.out.println("\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
 			}
 			reducedGraph.addVertex(comp);
 			components.add(comp);
@@ -191,11 +190,11 @@ public class STG2HTG extends AlgoConnectivity {
 			else {
 				HashSet hs = new HashSet();
 				hs.add(scc);
-				comp = new GsComponentVertex(scc, hs, "CC-"+s.getPatternString(this.graphModel));
-				System.out.println("CC-"+s.getPatternString(this.graphModel));
+				comp = new GsComponentVertex(scc, hs, "CC-"+s.getPatternString(this.graph));
+				System.out.println("CC-"+s.getPatternString(this.graph));
 				for (Iterator it = scc.getContent().iterator(); it.hasNext();) {
 					s = (GsDynamicNode) it.next();
-					System.out.println("\t"+s.getPatternString(this.graphModel)+"\n\t"+s.toString());
+					System.out.println("\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
 				}
 			}
 			reducedGraph.addVertex(comp);

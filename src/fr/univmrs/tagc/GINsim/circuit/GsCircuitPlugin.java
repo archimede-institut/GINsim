@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
@@ -42,7 +42,7 @@ public class GsCircuitPlugin implements GsPlugin, GsActionProvider {
         if (actionType != ACTION_ACTION) {
             return;
         }
-        if (graph.getNodeOrder().size() < 1) {
+        if (graph.getNodeOrderSize() < 1) {
             graph.addNotificationMessage(new GsGraphNotificationMessage(graph, Translator.getString("STR_emptyGraph"), GsGraphNotificationMessage.NOTIFICATION_WARNING));
             return;
         }

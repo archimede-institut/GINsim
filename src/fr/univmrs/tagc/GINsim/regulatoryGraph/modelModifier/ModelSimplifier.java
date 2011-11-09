@@ -66,7 +66,7 @@ class RemovedInfo {
  */
 public class ModelSimplifier extends Thread implements Runnable {
 
-	GsGraphManager manager;
+	//GsGraphManager manager;
 	ModelSimplifierConfigDialog dialog;
 	int[] t_remove = null;
 
@@ -94,7 +94,6 @@ public class ModelSimplifier extends Thread implements Runnable {
 		this.m_removed = new HashMap<GsRegulatoryVertex, List<GsRegulatoryVertex>>(config.m_removed);
 		this.it_targets = new TargetEdgesIterator(m_removed);
 		this.strict = config.strict;
-		manager = graph.getGraphManager();
 		
 		if (start) {
 		    start();
@@ -117,7 +116,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 		List<RemovedInfo> l_todo = new ArrayList<RemovedInfo>();
 		for (GsRegulatoryVertex vertex: m_removed.keySet()) {
 			int index = graph.getNodeOrder().indexOf(vertex);
-			RemovedInfo ri = new RemovedInfo(vertex, index, manager.getOutgoingEdges(vertex));
+			RemovedInfo ri = new RemovedInfo(vertex, index, graph.getOutgoingEdges(vertex));
 			l_todo.add(ri);
 		}
 		
@@ -232,16 +231,16 @@ public class ModelSimplifier extends Thread implements Runnable {
 					"\n\n"+note.getComment());
 		}
 		
-		GsGraphManager<GsRegulatoryVertex, GsRegulatoryMultiEdge> simplifiedManager = simplifiedGraph.getGraphManager();
+		//GsGraphManager<GsRegulatoryVertex, GsRegulatoryMultiEdge> simplifiedManager = simplifiedGraph.getGraphManager();
 		List<GsRegulatoryVertex> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
 		
 		// Create all the nodes of the new model
-		GsVertexAttributesReader vreader = manager.getVertexAttributesReader();
-		GsVertexAttributesReader simplified_vreader = simplifiedManager.getVertexAttributesReader();
+		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
+		GsVertexAttributesReader simplified_vreader = simplifiedGraph.getVertexAttributeReader();
 		for (GsRegulatoryVertex vertex: (List<GsRegulatoryVertex>)graph.getNodeOrder()) {
 			if (!m_removed.containsKey(vertex)) {
 				GsRegulatoryVertex clone = (GsRegulatoryVertex)vertex.clone();
-				simplifiedManager.addVertex(clone);
+				simplifiedGraph.addVertex(clone);
 				vreader.setVertex(vertex);
 				simplified_vreader.setVertex(clone);
 				simplified_vreader.copyFrom(vreader);
@@ -251,9 +250,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 		
 		// copy all unaffected edges
-		GsEdgeAttributesReader ereader = manager.getEdgeAttributesReader();
-		GsEdgeAttributesReader simplified_ereader = simplifiedManager.getEdgeAttributesReader();
-		Iterator<GsRegulatoryMultiEdge>it = manager.getEdgeIterator();
+		GsEdgeAttributesReader ereader = graph.getEdgeAttributeReader();
+		GsEdgeAttributesReader simplified_ereader = simplifiedGraph.getEdgeAttributeReader();
+		Iterator<GsRegulatoryMultiEdge>it = graph.getEdges().iterator();
 		while (it.hasNext()) {
 			GsRegulatoryMultiEdge me = it.next();
 			GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(me.getSource());
@@ -261,7 +260,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			if (src != null && target != null) {
 				GsRegulatoryMultiEdge me_clone = new GsRegulatoryMultiEdge(src, target);
 				me_clone.copyFrom(me);
-				Object new_me = simplifiedManager.addEdge(me_clone);
+				Object new_me = simplifiedGraph.addEdge(me_clone);
 				copyMap.put(me, me_clone);
 				ereader.setEdge(me);
 				simplified_ereader.setEdge(new_me);
@@ -307,17 +306,17 @@ public class ModelSimplifier extends Thread implements Runnable {
 			GsRegulatoryVertex target = (GsRegulatoryVertex)copyMap.get(vertex);
 			for (Entry<GsRegulatoryVertex,boolean[]> e: m_edges.entrySet()) {
 				GsRegulatoryVertex src = (GsRegulatoryVertex)copyMap.get(e.getKey());
-				GsRegulatoryMultiEdge de = simplifiedManager.getEdge(src, target);
+				GsRegulatoryMultiEdge de = simplifiedGraph.getEdge(src, target);
 				if (de == null) {
 					de = new GsRegulatoryMultiEdge(src, target);
-					simplifiedManager.addEdge(de);
+					simplifiedGraph.addEdge(de);
 				}
 				boolean[] t_required = e.getValue();
 				de.copyFrom(t_required);
 			}
 			// rebuild the parameters
 			m_edges.clear();
-			Collection<GsRegulatoryMultiEdge> edges = simplifiedManager.getIncomingEdges(clone);
+			Collection<GsRegulatoryMultiEdge> edges = simplifiedGraph.getIncomingEdges(clone);
 			for (GsRegulatoryMultiEdge e: edges) {
 				GsRegulatoryVertex src = e.getSource();
 				

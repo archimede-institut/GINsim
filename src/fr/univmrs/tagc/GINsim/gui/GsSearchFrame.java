@@ -22,7 +22,7 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.SimpleDialog;
@@ -118,7 +118,7 @@ public class GsSearchFrame extends SimpleDialog {
 	
 	private Component getTableInScrollPane() {
 		if (g instanceof GsDynamicalHierarchicalGraph) {
-			tableModel = new MyTableModelForHierarchical(g.getNodeOrder().size());
+			tableModel = new MyTableModelForHierarchical(g.getNodeOrderSize());
 
 		} else {
 			tableModel = new MyTableModel();
@@ -133,7 +133,7 @@ public class GsSearchFrame extends SimpleDialog {
 
 	public void search() {
 		tableModel.setData(new Vector());
-		tableModel.setData(g.searchNodes(searchTextField.getText()));
+		tableModel.setData(g.searchVertices(searchTextField.getText()));
 	}
 
 	public void select() {

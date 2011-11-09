@@ -6,6 +6,8 @@ import java.util.List;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
+import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphDescriptor;
+
 /**
  * Simple LRG, mostly placeholder for now.
  * 
@@ -31,6 +33,18 @@ public class TestGraphImpl extends AbstractGraphFrontend<TestVertex, TestEdge> i
 		TestVertex vertex = new TestVertex();
 		super.addVertex(vertex);
 		return vertex;
+	}
+	
+    @Override
+    public List getSpecificObjectManager() {
+    	
+        return null;
+    }
+    
+    @Override
+	public int getNodeOrderSize(){
+		
+		return 0;
 	}
 
 	

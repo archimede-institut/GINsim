@@ -42,7 +42,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 		this.isEditable  = isEditable;
 		this.data = data;
 		
-		this.statemax = new byte[g.getNodeOrder().size()];
+		this.statemax = new byte[g.getNodeOrderSize()];
 		int i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {
 			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
@@ -55,7 +55,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 	}
 
 	public int getColumnCount() {
-		return g.getNodeOrder().size();
+		return g.getNodeOrderSize();
 	}
 
 	public int getRowCount() {
@@ -89,7 +89,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 	public void setValueAt(Object value, int row, int col) {
 		byte[] state;
 		if (row == data.size()) {
-			state = new byte[g.getNodeOrder().size()];
+			state = new byte[g.getNodeOrderSize()];
 			for (int i = 0; i < state.length; i++) {
 				state[i] = 0;
 			}
@@ -118,7 +118,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 	}
 
 	public void addState(byte[] value) {
-		if (value.length == g.getNodeOrder().size()) {
+		if (value.length == g.getNodeOrderSize()) {
 			data.add(value);
 		}
 		fireTableRowsInserted(data.size()-1, data.size());

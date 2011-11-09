@@ -13,6 +13,7 @@ public class NodeInfo {
 	}
 
 	public NodeInfo(GsRegulatoryVertex vertex) {
-		this(vertex.getId(), vertex.getMaxValue());
+		
+		this( vertex.getId(), vertex.getMaxValue());
 	}
 }

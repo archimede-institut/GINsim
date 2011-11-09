@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
+import org.ginsim.graph.Graph;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.common.Tools;
@@ -115,7 +117,7 @@ public class GsNodeReducedData {
 	 * Indicates the type of component. Unique node, elementaty cycle or complex component.
 	 * @return the type. (see constants)
 	 */
-	public int getType(GsGraphManager gm) {
+	public int getType( Graph gm) {
 		if (content.size() == 1) return SCC_TYPE_UNIQUE_NODE;
 		for (Iterator it = content.iterator(); it.hasNext();) {
 			Object currentNode = it.next();
@@ -124,7 +126,8 @@ public class GsNodeReducedData {
 		return SCC_TYPE_SIMPLE_CYCLE;
 	}
 	
-	public boolean isTransient(GsGraphManager gm) {
+	public boolean isTransient( Graph gm) {
+		
 		for (Iterator it_nodes = content.iterator(); it_nodes.hasNext();) {
 			Object currentNode = it_nodes.next();
 			for (Iterator it_edges = gm.getOutgoingEdges(currentNode).iterator(); it_edges.hasNext();) {
@@ -139,7 +142,8 @@ public class GsNodeReducedData {
 		return content.size() == 1;
 	}
 
-	public String getTypeName(GsGraphManager gm) {
+	public String getTypeName( Graph gm) {
+		
 		switch (getType(gm)) {
 			case SCC_TYPE_UNIQUE_NODE: 		return Translator.getString("STR_connectivity_unique_node"); 
 			case SCC_TYPE_SIMPLE_CYCLE: 	return Translator.getString("STR_connectivity_simple_cycle");

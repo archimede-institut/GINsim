@@ -21,9 +21,10 @@ import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.NodeInfo;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
@@ -112,8 +113,40 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 		graphManager.ready();
 	}
 
+	/**
+	 * Return the node order as a List of NodeInfo
+	 * 
+	 * @return the node order as a List of NodeInfo
+	 */
 	public List<NodeInfo> getNodeOrder() {
 		return nodeOrder;
+	}
+	
+    /**
+     * Return the size of the node order
+     * 
+     * @return the size of the node order
+     */
+    @Override
+	public int getNodeOrderSize(){
+		
+		if( nodeOrder != null){
+			return nodeOrder.size();
+		}
+		else{
+			return 0;
+		}
+	}
+	
+    
+	/**
+	 * Set a list of NodeInfo representing the order of vertex as defined by the model
+	 * 
+	 * @param list the list of NodeInfo representing the order of vertex as defined by the model
+	 */
+	public void setNodeOrder( List<NodeInfo> node_order){
+		
+		nodeOrder = node_order;
 	}
 
 
@@ -360,6 +393,17 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
         }
         return false;
     }
+    
+    /**
+     * Return the Object Managers specialized for this class
+     * 
+     * @return a List of Object Managers
+     */
+    @Override
+    public List getSpecificObjectManager() {
+    	
+        return GsHierarchicalTransitionGraphDescriptor.getObjectManager();
+    }
 		
 /* **************** UNIMPLEMENTED METHODS ************/
 	
@@ -395,7 +439,7 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 		 * 
 		 * not used for this kind of graph: it's not interactively editable
 		 */
-		protected Graph getSubGraph(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
+		public Graph getSubgraph(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
 			return null;
 		}
 		

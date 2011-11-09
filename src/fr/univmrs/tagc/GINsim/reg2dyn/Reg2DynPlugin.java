@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.gui.GsActions;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
@@ -55,7 +55,7 @@ public class Reg2DynPlugin implements GsPlugin, GsActionProvider {
         if (actionType != ACTION_ACTION) {
             return;
         }
-        if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrder().size() < 1) {
+        if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrderSize() < 1) {
             graph.addNotificationMessage(new GsGraphNotificationMessage(graph, 
             		Translator.getString(graph instanceof GsRegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
             		GsGraphNotificationMessage.NOTIFICATION_WARNING));

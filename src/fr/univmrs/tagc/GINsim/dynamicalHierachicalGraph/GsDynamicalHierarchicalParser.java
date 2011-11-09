@@ -11,7 +11,7 @@ import org.xml.sax.SAXException;
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
@@ -69,6 +69,8 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
 			    nodeOrder.add(args[0]);
 			    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
 			}
+			// TODO: REFACTORING ACTION
+			// The nodeOrder is now a list of NodeInfo for this graph.
 			graph.setNodeOrder(nodeOrder);
 			graph.setChildsCount(childCount);
 		} catch (NumberFormatException e) {

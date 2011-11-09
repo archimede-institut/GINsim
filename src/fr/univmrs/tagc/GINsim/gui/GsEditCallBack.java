@@ -59,7 +59,7 @@ public class GsEditCallBack {
 	 */
 	public void selectAllEdges() {
 		Set sel = new HashSet();
-		for (Iterator it = main.getGraph().getGraphManager().getEdgeIterator(); it.hasNext();) {
+		for (Iterator it = main.getGraph().getEdges().iterator(); it.hasNext();) {
 			Object e = (Object) it.next();
 			sel.add(e);
 		}
@@ -84,7 +84,7 @@ public class GsEditCallBack {
 			edges.add(e);
 		}
 		sel = new HashSet();
-		for (Iterator it = main.getGraph().getGraphManager().getEdgeIterator(); it.hasNext();) {
+		for (Iterator it = main.getGraph().getEdges().iterator(); it.hasNext();) {
 			Object e = (Object) it.next();
 			sel.add(e);
 		}
@@ -234,10 +234,9 @@ public class GsEditCallBack {
 
 	public void extendSelectionToIncomingVertices() {
 		Set vertices = new HashSet();
-		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = main.getGraph().getGraphManager().getSelectedVertexIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
-			for (Iterator it2 = gm.getIncomingEdges(v).iterator(); it2.hasNext();) {
+			for (Iterator it2 = main.getGraph().getIncomingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
 				vertices.add(edge.getSource());
 			}
@@ -246,7 +245,7 @@ public class GsEditCallBack {
 			GsDirectedEdge e = (GsDirectedEdge) it.next();
 			vertices.add(e.getSource());
 		}
-		gm.addSelection(vertices);		
+		main.getGraph().getGraphManager().addSelection(vertices);		
 	}
 	
 	public void simpleFunctionEdition(boolean b) {

@@ -25,7 +25,7 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.reg2dyn.SynchronousSimulationUpdater;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -94,7 +94,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			c.gridy = 0;
 			sst = new StateSelectorTable();
 			sst.initPanel(regGraph, "STR_localGraph_descr", true);
-			sst.setState(new byte[regGraph.getNodeOrder().size()]);
+			sst.setState(new byte[regGraph.getNodeOrderSize()]);
 			sst.table.getModel().addTableModelListener(this);
 		    sst.table.getSelectionModel().addListSelectionListener(this);
 		    mainPanel.add(sst, c);
@@ -110,7 +110,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			c.weighty = 0;
 			c.fill = GridBagConstraints.EAST;
 			autoUpdateCheckbox = new JCheckBox(Translator.getString("STR_localGraph_autoUpdate"));
-			autoUpdateCheckbox.setSelected(regGraph.getNodeOrder().size() < THRESHOLD_AUTO_REFRESH);
+			autoUpdateCheckbox.setSelected(regGraph.getNodeOrderSize() < THRESHOLD_AUTO_REFRESH);
 			mainPanel.add(autoUpdateCheckbox, c);
 			
 			c.gridy++;

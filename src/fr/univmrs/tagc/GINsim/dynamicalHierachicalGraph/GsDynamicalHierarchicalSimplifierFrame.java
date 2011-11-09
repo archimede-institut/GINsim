@@ -62,15 +62,15 @@ public class GsDynamicalHierarchicalSimplifierFrame extends StackDialog {
 	 * @param graph the graph that will be altered
 	 */
     public void simplify_through_delete(GsDynamicalHierarchicalGraph graph) {
-		GsGraphManager gm = graph.getGraphManager();
+
 		Set vertexSet = new HashSet(); //cause can't remove and iterate on the same structure.
-		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
+		for (Iterator it = graph.getVertices().iterator(); it.hasNext();) {
 			vertexSet.add(it.next());
 		}
 		for (Iterator it = vertexSet.iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode source = (GsDynamicalHierarchicalNode) it.next();
 			if (source.getType() == GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT) {
-				gm.removeVertex(source);
+				graph.removeVertex( source);
 			}
 		}
 		GsEnv.whatToDoWithGraph(frame, graph, true);

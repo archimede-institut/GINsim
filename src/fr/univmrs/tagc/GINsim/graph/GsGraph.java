@@ -88,7 +88,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     /**  other kind of change */
     public static final int CHANGE_METADATA = 7;
 
-    protected static final String zip_prefix = "GINsim-data/";
+//    protected static final String zip_prefix = "GINsim-data/";
 
 //	protected GsVertexAttributesReader vReader;
 //	protected GsEdgeAttributesReader eReader;

@@ -21,7 +21,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
  */
 public class LocalGraph {
 	private GsRegulatoryGraph g;
-	private GsGraphManager gm;
+	//private GsGraphManager gm;
 	private CascadingStyle cs = null;
 	private LocalGraphSelector selector = null;
 	private List states;
@@ -36,7 +36,6 @@ public class LocalGraph {
 
 	public LocalGraph(GsRegulatoryGraph  g) {
 		this.g = g;
-		this.gm = g.getGraphManager();
 	}
 	public LocalGraph(GsRegulatoryGraph  g, List states) {
 		this(g);
@@ -57,7 +56,7 @@ public class LocalGraph {
 	}
 
 	public void run() {
-		node_to_position = new HashMap((int) (gm.getVertexCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
+		node_to_position = new HashMap((int) (g.getVertexCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
 		int i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {							//Build the map m
 			node_to_position.put(it.next(), Integer.valueOf(i++));
@@ -70,7 +69,7 @@ public class LocalGraph {
 		for (Iterator it_states = states.iterator(); it_states.hasNext();) {
 			byte[] state = (byte[]) it_states.next();
 			int j;
-			for (Iterator it_edges = gm.getAllEdges().iterator(); it_edges.hasNext();) {
+			for (Iterator it_edges = g.getEdges().iterator(); it_edges.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it_edges.next();
 				GsRegulatoryVertex source = (GsRegulatoryVertex) edge.getSource();
 				GsRegulatoryVertex target = (GsRegulatoryVertex) edge.getTarget();
@@ -147,8 +146,8 @@ public class LocalGraph {
             cs.shouldStoreOldStyle = false;
         }
 		
-		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
-		for (Iterator iterator = gm.getEdgeIterator(); iterator.hasNext();) {
+		GsEdgeAttributesReader ereader = g.getEdgeAttributeReader();
+		for (Iterator iterator = g.getEdges().iterator(); iterator.hasNext();) {
 			GsDirectedEdge me = (GsDirectedEdge) iterator.next();
 			ereader.setEdge(me);
 			cs.applyOnEdge(selector, me, ereader);
@@ -157,7 +156,7 @@ public class LocalGraph {
 	}
 	
 	public void undoColorize() {
-		cs.restoreAllEdges(gm.getAllEdges(), gm.getEdgeAttributesReader());
+		cs.restoreAllEdges(g.getEdges(), g.getEdgeAttributeReader());
 	}
 
 

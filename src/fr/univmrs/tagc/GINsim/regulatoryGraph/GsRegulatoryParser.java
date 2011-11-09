@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -523,8 +523,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
           srcString = t_interaction[i];
           indexString = "1";
         }
-        Set<GsRegulatoryMultiEdge> edges;
-        edges = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
+        Collection<GsRegulatoryMultiEdge> edges;
+        edges = interactionList.getGraph().getIncomingEdges(vertex);
         for (GsRegulatoryMultiEdge e: edges) {
           if (e.getSource().getId().equals(srcString)) {
         	  // FIXME: edge definition changed, consistency should be checked

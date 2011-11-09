@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.common.HttpHelper;
 import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;

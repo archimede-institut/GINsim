@@ -12,7 +12,7 @@ import org.ginsim.graph.Graph;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
@@ -152,9 +152,9 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         graph = event.getNewGraph();
         // hack to update selection constraint for the tab after name change
         setTabLabel(Translator.getString(graph.getTabLabel()));
-        
+   
         graph.setMainFrame(this);
-        setGraphView(graph.getGraphManager().getGraphPanel());
+        setGraphView( graph.getGraphManager().getGraphPanel());
         selectionEditPanel.removeAll();
         selectionEditPanel.add(getEmptyPanel(), "empty");
         edgeEditor = graph.getEdgeEditor();

@@ -68,7 +68,7 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
     if (currentVertex != null) treePanel.setEditedObject(obj);
     if (obj != null && obj instanceof GsRegulatoryVertex) {
       currentVertex = (GsRegulatoryVertex)obj;
-      edgeList.setEdge(mainFrame.getGraph().getGraphManager().getIncomingEdges(currentVertex));
+      edgeList.setEdge(mainFrame.getGraph().getIncomingEdges(currentVertex));
       treePanel.setEditedObject(obj);
     }
 		setEditEditorVisible(false);

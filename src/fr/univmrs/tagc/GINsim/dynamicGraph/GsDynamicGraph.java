@@ -18,7 +18,7 @@ import org.ginsim.graph.Graph;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsActions;
@@ -26,6 +26,7 @@ import fr.univmrs.tagc.GINsim.gui.GsEditModeDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -68,8 +69,40 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	    }
 	}
 	
+	/**
+	 * Return the node order as a list of String
+	 * 
+	 * @return the node order as a list of String
+	 */
 	public List<String> getNodeOrder() {
 		return nodeOrder;
+	}
+	
+    /**
+     * Return the size of the node order
+     * 
+     * @return the size of the node order
+     */
+    @Override
+	public int getNodeOrderSize(){
+		
+		if( nodeOrder != null){
+			return nodeOrder.size();
+		}
+		else{
+			return 0;
+		}
+	}
+	
+    
+	/**
+	 * Set a list of String representing the order of vertex as defined by the model
+	 * 
+	 * @param list the list of String representing the order of vertex as defined by the model
+	 */
+	public void setNodeOrder( List<String> node_order){
+		
+		nodeOrder = node_order;
 	}
 	
     protected String getGraphZipName() {
@@ -342,7 +375,8 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 
         return ret;
     }
-    protected Graph getSubGraph(Collection vertex, Collection edges) {
+    
+    public Graph getSubgraph(Collection vertex, Collection edges) {
         // no copy for state transition graphs
         return null;
     }
@@ -419,10 +453,11 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
      * @return the List describing the path or null if none is found
      */
     public List shortestPath(byte[] source, byte[] target) {
+    	
         GsDynamicNode n = new GsDynamicNode(source);
         GsDynamicNode n2 = new GsDynamicNode(target);
         if (containsVertex(n) && containsVertex(n2)) {
-            return graphManager.getShortestPath(n, n2);
+            return getShortestPath(n, n2);
         }
         return null;
     }
@@ -435,6 +470,17 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
             return false;
         }
         return GsRegulatoryGraph.associationValid((GsRegulatoryGraph)graph, this);
+    }
+    
+    /**
+     * Return the Object Managers specialized for this class
+     * 
+     * @return a List of Object Managers
+     */
+    @Override
+    public List getSpecificObjectManager() {
+    	
+        return GsDynamicGraphDescriptor.getObjectManager();
     }
 
     // FIXME: move all this to a new GraphGUIHelper

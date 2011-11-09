@@ -20,7 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -185,8 +185,8 @@ class MaxValues extends TabComponantProvidingAState {
 	private byte[] state1;
 
 	public MaxValues(GsRegulatoryGraph g) {
-		state1 = new byte[g.getNodeOrder().size()];
-		for (int i = 0; i < g.getNodeOrder().size(); i++) {
+		state1 = new byte[g.getNodeOrderSize()];
+		for (int i = 0; i < g.getNodeOrderSize(); i++) {
 			state1[i] = 1;
 		}
 		initPanel(g, "STR_stateInRegGraph_maxValuesdescr", false);

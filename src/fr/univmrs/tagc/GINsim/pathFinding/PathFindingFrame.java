@@ -28,7 +28,7 @@ import javax.swing.SwingConstants;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Tools;
@@ -239,9 +239,9 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		setProgress(0);
 		
 		if (graph instanceof GsRegulatoryGraph) {
-			setProgressMax(graph.getNodeOrder().size());
+			setProgressMax(graph.getNodeOrderSize());
 		} else {
-			setProgressMax(graph.getGraphManager().getAllVertex().size());
+			setProgressMax(graph.getVertices().size());
 		}
 		if (startTextField.getText().length() == 0) {
 			Tools.error(Translator.getString("STR_pathFinding_start")+" "+Translator.getString("STR_isempty"), this);
@@ -255,7 +255,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		if (start == null || end == null) {
 			return;
 		}
-		Thread thread = new PathFinding(this, graph.getGraphManager(), start, end);
+		Thread thread = new PathFinding(this, graph, start, end);
 		thread.start();
 	}
 	
@@ -323,7 +323,8 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	 * @return
 	 */
 	private Object getNode(JTextField textField) {
-		Vector foundNodes = graph.searchNodes(textField.getText());
+		
+		Vector foundNodes = graph.searchVertices( textField.getText());
 		if (foundNodes == null) {
 			Tools.error(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
 			return null;
@@ -349,11 +350,9 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 				selector = new PathFindingSelector();
 			}
 			selector.initCache(path);
-			
-			GsGraphManager gm = graph.getGraphManager();
 		
-			cs.applySelectorOnEdges(selector, gm.getAllEdges(), gm.getEdgeAttributesReader());
-			cs.applySelectorOnNodes(selector, gm.getAllVertex(), gm.getVertexAttributesReader());
+			cs.applySelectorOnEdges(selector, graph.getEdges(), graph.getEdgeAttributeReader());
+			cs.applySelectorOnNodes(selector, graph.getVertices(), graph.getVertexAttributeReader());
 			colorizeButton.setText(Translator.getString("STR_undo_colorize"));
 			isColorized = true;
 		}
@@ -361,8 +360,8 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	
 	private void undoColorize() {
 		if (cs != null) {
-			cs.restoreAllEdges(graph.getGraphManager().getEdgeAttributesReader());
-			cs.restoreAllNodes(graph.getGraphManager().getVertexAttributesReader());
+			cs.restoreAllEdges(graph.getEdgeAttributeReader());
+			cs.restoreAllNodes(graph.getVertexAttributeReader());
 			colorizeButton.setText(Translator.getString("STR_do_colorize"));
 			isColorized = false;
 		}

@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 
 /**

@@ -12,6 +12,7 @@ import java.util.zip.ZipFile;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraph;
@@ -147,13 +148,13 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
                 ZipEntry ze = f.getEntry("ginml");
                 if (ze==null) {
                 	usePrefix = true;
-                	ze = f.getEntry(GsGraph.zip_prefix+GsRegulatoryGraph.zip_mainEntry);
+                	ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX+GsRegulatoryGraph.zip_mainEntry);
                 	if (ze == null) {
-                		ze = f.getEntry(GsGraph.zip_prefix+GsDynamicGraph.zip_mainEntry);
+                		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX+GsDynamicGraph.zip_mainEntry);
                     	if (ze == null) {
-                    		ze = f.getEntry(GsGraph.zip_prefix+GsReducedGraph.zip_mainEntry);
+                    		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX+GsReducedGraph.zip_mainEntry);
                         	if (ze == null) {
-                        		ze = f.getEntry(GsGraph.zip_prefix+GsHierarchicalTransitionGraph.zip_mainEntry);
+                        		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX+GsHierarchicalTransitionGraph.zip_mainEntry);
 	                        	if (ze == null) {
 	                        		// TODO: nicer error here
 	                        		System.out.println("unable to find a known main zip entry");
@@ -171,7 +172,7 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
 	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
-	                        ze = f.getEntry((usePrefix ? GsGraph.zip_prefix:"")+manager.getObjectName());
+	                        ze = f.getEntry((usePrefix ? AbstractGraphFrontend.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
 	                            graph.addObject(manager.getObjectName(), o);
@@ -182,7 +183,7 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
 	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
-	                        ze = f.getEntry((usePrefix ? GsGraph.zip_prefix:"")+manager.getObjectName());
+	                        ze = f.getEntry((usePrefix ? AbstractGraphFrontend.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
 	                            graph.addObject(manager.getObjectName(), o);

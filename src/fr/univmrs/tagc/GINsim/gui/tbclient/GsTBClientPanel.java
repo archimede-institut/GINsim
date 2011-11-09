@@ -43,7 +43,7 @@ import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
@@ -80,7 +80,6 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
   private TBCascadingStyle cs;
   private TBButton testButton = new TBButton("TEST");
   private GsEdgeAttributesReader ereader;
-  private GsGraphManager gm;
 
   public GsTBClientPanel( Graph g) {
     super();
@@ -96,15 +95,14 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
 			Selector.registerSelector(TBSelector.IDENTIFIER, TBSelector.class);
 		}
 		cs = new TBCascadingStyle(true);
-		gm = graph.getGraphManager();
-		ereader = gm.getEdgeAttributesReader();
+		ereader = graph.getEdgeAttributeReader();
 	}
 
 	private void applyEdgeStyle() {
 	    EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
-		for (Iterator it = gm.getVertexIterator(); it.hasNext();) {
+		for (Iterator it = graph.getVertices().iterator(); it.hasNext();) {
 			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-			Collection<GsRegulatoryMultiEdge> edges = gm.getIncomingEdges(v);
+			Collection<GsRegulatoryMultiEdge> edges = graph.getIncomingEdges(v);
 			for (GsRegulatoryMultiEdge me:  edges) {
 				ereader.setEdge(me);
 				cs.applyOnEdge(style, me, ereader);

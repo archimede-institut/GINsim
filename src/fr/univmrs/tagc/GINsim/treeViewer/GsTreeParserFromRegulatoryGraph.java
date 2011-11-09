@@ -36,7 +36,7 @@ public class GsTreeParserFromRegulatoryGraph extends GsTreeParserFromOmdd {
 	public void initRealDepth(GsRegulatoryVertex initialVertex) {
 		realDetph = new int[nodeOrder.size()+1]; //+1 for the leafs
 		int i = 0;
-		for (Iterator it = regGraph.getGraphManager().getIncomingEdges(initialVertex).iterator(); it.hasNext();) {
+		for (Iterator it = regGraph.getIncomingEdges(initialVertex).iterator(); it.hasNext();) {
 			GsDirectedEdge e = ((GsDirectedEdge) it.next());
 			GsRegulatoryVertex source = (GsRegulatoryVertex) e.getSource();
 			i = 0;

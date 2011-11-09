@@ -29,7 +29,7 @@ import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
@@ -173,7 +173,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gc.g1m.getGsGraph().getGraphName()), c);
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gc.g1m.getGraphName()), c);
 
 		//SPECIFIC_G2_COLOR
 		c.gridx = 0;
@@ -184,7 +184,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gc.g2m.getGsGraph().getGraphName()), c);
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gc.g2m.getGraphName()), c);
 		
 		return captionPanel;
 	}
@@ -223,12 +223,12 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	    diffColor.setSelected(true);
 	    radioPanel.add(diffColor);
 
-		name = Translator.getString("STR_gcmp_specificTo")+gc.g1m.getGsGraph().getGraphName()+".";
+		name = Translator.getString("STR_gcmp_specificTo")+gc.g1m.getGraphName()+".";
 	    specG1Color = new JRadioButton(name);
 	    specG1Color.setActionCommand(name);
 	    radioPanel.add(specG1Color);
 
-		name = Translator.getString("STR_gcmp_specificTo")+gc.g2m.getGsGraph().getGraphName()+".";
+		name = Translator.getString("STR_gcmp_specificTo")+gc.g2m.getGraphName()+".";
 	    specG2Color = new JRadioButton(name);
 	    specG2Color.setActionCommand(name);
 	    radioPanel.add(specG2Color);
@@ -281,9 +281,8 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	
     private void doColorize(JRadioButton source) {
     	HashMap styleMap = gc.getStyleMap();
-    	GsGraphManager gm = g.getGraphManager();
-    	GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
-    	GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
+    	GsVertexAttributesReader vreader = g.getVertexAttributeReader();
+    	GsEdgeAttributesReader ereader = g.getEdgeAttributeReader();
     	
     	for (Iterator it = styleMap.keySet().iterator(); it.hasNext();) {
 			Object o = it.next();

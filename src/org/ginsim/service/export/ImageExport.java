@@ -8,7 +8,7 @@ import javax.imageio.ImageIO;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 
 /**
  * export the graph to PNG

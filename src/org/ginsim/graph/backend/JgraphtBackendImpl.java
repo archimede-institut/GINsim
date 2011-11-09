@@ -2,9 +2,11 @@ package org.ginsim.graph.backend;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Edge;
+import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.ListenableDirectedGraph;
 
 import fr.univmrs.tagc.GINsim.jgraph.GsJGraphtBaseGraph;
@@ -102,6 +104,19 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	@Override
     public boolean containsEdge(V from, V to) {
         return super.containsEdge(from, to);
+    }
+	
+	/**
+	 * Find the shortest path between the two given vertices
+	 * 
+	 * @param source the vertex at the beginning of the searched path
+	 * @param target the vertex at the end of the searched path
+	 * @return the list of edges composing the shortest path
+	 */
+	@Override
+    public List<E> getShortestPath(V source, V target) {
+		
+        return DijkstraShortestPath.findPathBetween( this, source, target);
     }
 
 	// TODO is this method useful in back-end? Creation of new object have to pass directly from front-end

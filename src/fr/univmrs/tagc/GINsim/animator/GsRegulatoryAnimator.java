@@ -14,7 +14,7 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
@@ -140,7 +140,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
             return;
         }
         // if path wasn't empty, check that this vertex can be added
-        if (path.size() > 0 && dynGraph.getGraphManager().getEdge(path.get(path.size()-1), vertex) == null) {
+        if (path.size() > 0 && dynGraph.getEdge(path.get(path.size()-1), vertex) == null) {
                return;
         }
         path.add(vertex);
@@ -168,7 +168,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
             dynGas.vreader.setBackgroundColor(Color.BLUE);
             dynGas.vreader.refresh();
 
-            GsDirectedEdge edge = (GsDirectedEdge)dynGraph.getGraphManager().getEdge(vertex, vertex2);
+            GsDirectedEdge edge = (GsDirectedEdge)dynGraph.getEdge(vertex, vertex2);
             dynGas.ensureStoreEdge(edge);
             dynGas.ereader.setLineColor(Color.MAGENTA);
             dynGas.ereader.refresh();
@@ -176,7 +176,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         }
         
         // highlight available edges and vertices
-        Iterator it = dynGraph.getGraphManager().getOutgoingEdges(path.get(path.size()-1)).iterator();
+        Iterator it = dynGraph.getOutgoingEdges(path.get(path.size()-1)).iterator();
         Vector v_highlight = new Vector();
         while (it.hasNext()) {
             v_highlight.add(it.next());

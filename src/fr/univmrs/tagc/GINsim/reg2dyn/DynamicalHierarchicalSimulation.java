@@ -9,7 +9,7 @@ import org.ginsim.graph.Graph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNodeSet;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -41,7 +41,6 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private PrintStream debug_o = System.err;
 	private int totalNode = 0;
 	private GsDynamicalHierarchicalGraph dynGraph;
-	private GsGraphManager rgm;
 	
 	private byte[] childsCount;
 
@@ -72,13 +71,12 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	public Graph do_simulation() {
 		long time = System.currentTimeMillis();
 		this.dynGraph = helper.dynHieGraph;
-		this.rgm = helper.regGraph.getGraphManager();
 		this.mergingStrategy = helper.mergingStrategy; 
 		ready = true;
 		try {
 			nodeSet = new GsDynamicalHierarchicalNodeSet();
 			childsCount = dynGraph.getChildsCount();
-			vertexCount = rgm.getVertexCount();
+			vertexCount = helper.regGraph.getVertexCount();
 			runSimulationOnInitialStates();									// run the simulation for each initial states
 						
 		} catch (GsException e) {
@@ -711,10 +709,10 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 
 	private void updateTerminalCycles(GsDynamicalHierarchicalGraph graph) {
 		log(1,"Updating terminal cycles...");
-		GsVertexAttributesReader vreader = graph.getGraphManager().getVertexAttributesReader();
+		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode dhnode = (GsDynamicalHierarchicalNode) it.next();
-			if (dhnode.getType() == GsDynamicalHierarchicalNode.TYPE_CYCLE && graph.getGraphManager().getOutgoingEdges(dhnode).size() == 0) {
+			if (dhnode.getType() == GsDynamicalHierarchicalNode.TYPE_CYCLE && graph.getOutgoingEdges(dhnode).size() == 0) {
 				dhnode.setType(GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE);
 				vreader.setVertex(dhnode);
 				vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
@@ -747,7 +745,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private void addAllNodeTo(GsDynamicalHierarchicalGraph graph) {
 		int n = 0;
 		log(1,"Adding all nodes to the graph... ("+nodeSet.size()+")");
-		GsVertexAttributesReader vreader = graph.getGraphManager().getVertexAttributesReader();
+		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			n++;
 			GsDynamicalHierarchicalNode dhnode = (GsDynamicalHierarchicalNode) it.next();

@@ -10,7 +10,7 @@ import org.jgraph.layout.TreeLayoutAlgorithm;
 import org.jgrapht.ext.JGraphModelAdapter;
 
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphtGraphManager;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;

@@ -4,7 +4,7 @@ import javax.swing.JPanel;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 
 /**
  * All parameter panels must extend this abstract class to be updated on selection changes

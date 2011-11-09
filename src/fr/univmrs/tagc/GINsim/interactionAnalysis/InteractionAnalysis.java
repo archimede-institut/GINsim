@@ -35,7 +35,6 @@ public class InteractionAnalysis {
 	private GsRegulatoryMutantDef mutant;
 
 	private GsRegulatoryGraph g;
-	private GsGraphManager<GsRegulatoryVertex, GsRegulatoryMultiEdge> gm;
 	private HashMap node_to_position;
 	private Map functionalityMap = null;
 	private CascadingStyle cs = null;
@@ -71,7 +70,6 @@ public class InteractionAnalysis {
 		this.opt_annotate 		= opt_annotate;
 		this.mutant = mutant;
 		this.g = g;
-		this.gm = g.getGraphManager();
 		this.report = new Report();
 		this.selectedNodes = selectedNodes;
 		run();
@@ -102,7 +100,7 @@ public class InteractionAnalysis {
 			mutant.apply(t_tree, g);
 		}
 		
-		node_to_position = new HashMap((int) (gm.getVertexCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
+		node_to_position = new HashMap((int) (g.getVertexCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
 		int i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {							//Build the map m
 			node_to_position.put(it.next(), Integer.valueOf(i++));
@@ -122,7 +120,7 @@ public class InteractionAnalysis {
 			if (target.isInput() || (selectedNodes != null && !selectedNodes.contains(target))) { 	//skip the inputs or unselected nodes
 			    continue;
 			}
-			Collection<GsRegulatoryMultiEdge> l = gm.getIncomingEdges(target);											//  get the list l of incoming edges
+			Collection<GsRegulatoryMultiEdge> l = g.getIncomingEdges(target);											//  get the list l of incoming edges
 			OmddNode omdd = t_tree[i];
 			
 			total_level = 1;																//  Compute the total number of level in the omdd tree
@@ -140,7 +138,7 @@ public class InteractionAnalysis {
 			int m = 0;
 			for (Object obj: g.getNodeOrder()) {
 				GsRegulatoryVertex source = (GsRegulatoryVertex) obj;				
-				if (gm.getEdge(source, target) != null) {
+				if (g.getEdge(source, target) != null) {
 					node_in_subtree.put(source, new Integer(m));
 					subtree_size[m+1] = 1;
 					small_node_order_vertex[m] = source;
@@ -212,7 +210,7 @@ public class InteractionAnalysis {
             cs.shouldStoreOldStyle = false;
         }
 		
-		GsEdgeAttributesReader ereader = gm.getEdgeAttributesReader();
+		GsEdgeAttributesReader ereader = g.getEdgeAttributeReader();
 		for (Iterator iterator = functionalityMap.keySet().iterator(); iterator.hasNext();) {
 			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge) iterator.next();
 			ereader.setEdge(me);
@@ -230,7 +228,7 @@ public class InteractionAnalysis {
 	}
 	
 	public void undoColorize() {
-		cs.restoreAllEdges(functionalityMap.keySet(), gm.getEdgeAttributesReader());
+		cs.restoreAllEdges(functionalityMap.keySet(), g.getEdgeAttributeReader());
 	}
 
 	/**
@@ -411,7 +409,7 @@ public class InteractionAnalysis {
 		dw.startDocument();
 		dw.openHeader(1, Translator.getString("STR_interactionAnalysis"), null);
 		dw.openParagraph(null);
-		dw.writeTextln("Analizing interactions of "+g.getGraphName()+" ("+gm.getVertexCount()+" vertices)");
+		dw.writeTextln("Analizing interactions of "+g.getGraphName()+" ("+g.getVertexCount()+" vertices)");
 		dw.closeParagraph();		
 		
 		writeSummary(dw);
@@ -501,7 +499,7 @@ public class InteractionAnalysis {
 			for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
 				SourceItem sourceItem = (SourceItem) it_sources.next();
 								
-				GsRegulatoryMultiEdge e = gm.getEdge(sourceItem.source, target);
+				GsRegulatoryMultiEdge e = g.getEdge(sourceItem.source, target);
 				dw.openTableRow();
 				dw.openTableCell(sourceItem.source.getId());
 				dw.openTableCell(target.getId());

@@ -15,7 +15,7 @@ import org.ginsim.graph.Graph;
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
@@ -235,17 +235,17 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 	}
 	
 	public void doColorize() {
-		GsGraphManager gm = graph.getGraphManager();
+
 		colorPalette = ColorPalette.defaultPalette;
 		cs = new CascadingStyle(true);
-		GsVertexAttributesReader vreader = gm.getVertexAttributesReader();		
+		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();		
 		int color_index = 2;
 		for (Iterator it = components.iterator(); it.hasNext();) {
 			GsNodeReducedData scc = (GsNodeReducedData) it.next();
-			if (scc.getType(gm) == GsNodeReducedData.SCC_TYPE_UNIQUE_NODE) {
+			if (scc.getType( graph) == GsNodeReducedData.SCC_TYPE_UNIQUE_NODE) {
 				Object node = scc.getContent().get(0);
 				vreader.setVertex(node);
-				if (gm.getOutgoingEdges(node) == null || gm.getOutgoingEdges(node).size() == 0) {
+				if (graph.getOutgoingEdges(node) == null || graph.getOutgoingEdges(node).size() == 0) {
 					cs.applyOnNode(new VertexStyle(colorPalette[1], VertexStyle.NULL_FOREGROUND, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE), node, vreader);
 				} else {
 					cs.applyOnNode(new VertexStyle(colorPalette[0], VertexStyle.NULL_FOREGROUND, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE), node, vreader);
@@ -266,7 +266,7 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
  	}
 	
 	public void undoColorize() {
-		if (cs != null) cs.restoreAllNodes(graph.getGraphManager().getVertexAttributesReader());
+		if (cs != null) cs.restoreAllNodes(graph.getVertexAttributeReader());
     	buttonColorize.setText(Translator.getString("STR_connectivity_colorize_currentGraph"));
     	isColored = false;
 	}

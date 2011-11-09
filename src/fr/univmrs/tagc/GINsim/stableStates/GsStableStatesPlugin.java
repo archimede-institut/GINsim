@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.graph.GsActionProvider;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.plugin.GsPlugin;
@@ -38,7 +38,7 @@ public class GsStableStatesPlugin implements GsPlugin, GsActionProvider {
 
     public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
     	
-    	if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrder().size() < 1) {
+    	if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrderSize() < 1) {
             graph.addNotificationMessage(new GsGraphNotificationMessage(graph, 
             		Translator.getString(graph instanceof GsRegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
             		GsGraphNotificationMessage.NOTIFICATION_WARNING));

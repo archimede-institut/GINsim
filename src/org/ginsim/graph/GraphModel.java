@@ -2,10 +2,12 @@ package org.ginsim.graph;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Vector;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
+import fr.univmrs.tagc.common.GsException;
 
 /**
  * Interface for the main objects: graphs.
@@ -85,7 +87,24 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 */
 	public V getVertexByName( String id);
 	
-    
+    /**
+     * Return the size of the node order
+     * 
+     * @return the size of the node order
+     */
+	public int getNodeOrderSize();
+	
+	
+	/**
+	 * Search the vertices with ID matching the given regular expression. 
+	 * Other kind of graph could overwrite this method. 
+	 * 
+	 * @param regexp the regular expression vertex ID must match to be selected
+	 * @return a Vector of vertices
+	 */
+	public Vector<V> searchVertices( String regexp);
+	
+	
     /**
      * @param source
      * @param target
@@ -129,13 +148,30 @@ public interface GraphModel<V,E extends Edge<V>> {
     public Collection<E> getOutgoingEdges(V vertex);
     
     
+	/**
+	 * Find the shortest path between the two given vertices
+	 * 
+	 * @param source the vertex at the beginning of the searched path
+	 * @param target the vertex at the end of the searched path
+	 * @return the list of edges composing the shortest path
+	 */
+	List<E> getShortestPath(V source, V target);
+	
+    
     /**
      * Give access to the name of the graph
      * 
      * @return the name associated with this graph.
      */
     public String getGraphName();
+   
     
+    /**
+     * Allow to set the name of the graph
+     * 
+     * @param graph_name the name associated with this graph.
+     */
+    public void setGraphName( String graph_name) throws GsException ;
     
     /**
      * Build a graph from the provided vertices and edges based on the current graph
@@ -221,5 +257,8 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * @return the association associated with this graph
 	 */
 	public Annotation getAnnotation();
+
+	
+
 	
 }

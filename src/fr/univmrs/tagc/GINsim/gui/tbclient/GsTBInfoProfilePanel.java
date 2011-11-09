@@ -202,7 +202,7 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
         val += dataSet.getSeries(i).getY(xAxis.getLabelToDraw()).doubleValue();
       val /= sel.length;
       if (clientPanel != null) {
-        GsVertexAttributesReader vReader = clientPanel.getGraph().getGraphManager().getVertexAttributesReader();
+        GsVertexAttributesReader vReader = clientPanel.getGraph().getVertexAttributeReader();
         Vector genes = clientPanel.getSelectedGenes();
         for (Iterator it = genes.iterator(); it.hasNext(); ) {
         	vReader.setVertex(it.next());

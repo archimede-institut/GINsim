@@ -3,9 +3,12 @@ package org.ginsim.graph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
@@ -51,6 +54,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     protected GsGraphDescriptor descriptor = null;
     private static int GRAPH_ID = 0;
     private int id;
+    public static final String ZIP_PREFIX = "GINsim-data/";
 	
 	/**
 	 * Create a new graph with the default back-end.
@@ -195,6 +199,39 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		
 		return graphBackend.getVertexByName( id);
 	}
+
+	
+    /**
+     * Return the size of the node order
+     * 
+     * @return the size of the node order
+     */
+    @Override
+	public abstract int getNodeOrderSize();
+	
+	
+	/**
+	 * Search the vertices with ID matching the given regular expression. 
+	 * Other kind of graph could overwrite this method. 
+	 * 
+	 * @param regexp the regular expression vertex ID must match to be selected
+	 * @return a Vector of vertices
+	 */
+	public Vector<V> searchVertices( String regexp) {
+		
+		Vector<V> v = new Vector<V>();
+		
+		Pattern pattern = Pattern.compile(regexp, Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
+		
+		for (Iterator<V> it = getVertices().iterator(); it.hasNext();) {
+			V vertex = (V) it.next();
+			Matcher matcher = pattern.matcher(vertex.toString());
+			if (matcher.find()) {
+				v.add(vertex);
+			}
+		}
+		return v;
+	}
 	
 	
     /**
@@ -236,6 +273,22 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	public Collection<E> getOutgoingEdges(V vertex) {
 		return graphBackend.getOutgoingEdges(vertex);
 	}
+	
+	
+	/**
+	 * Find the shortest path between the two given vertices
+	 * 
+	 * @param source the vertex at the beginning of the searched path
+	 * @param target the vertex at the end of the searched path
+	 * @return the list of edges composing the shortest path
+	 */
+	@Override
+	public List<E> getShortestPath( V source, V target){
+		
+		return graphBackend.getShortestPath( source, target);
+	}
+	
+	
 	
 	@Override
 	public GsEdgeAttributesReader getEdgeAttributeReader() {
@@ -308,7 +361,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     	
         return graphName;
     }
-    
     
     /**
      * changes (if success) the name associated with this graph.

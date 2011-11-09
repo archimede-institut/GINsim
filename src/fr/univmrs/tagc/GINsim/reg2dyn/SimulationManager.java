@@ -2,7 +2,7 @@ package fr.univmrs.tagc.GINsim.reg2dyn;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 
 
 public interface SimulationManager {

@@ -49,12 +49,12 @@ public class GsStateInRegGraphSelector extends Selector {
 
 	public GsStateInRegGraphSelector(GsRegulatoryGraph g) {
 		super(IDENTIFIER);
-		this.nodeToOrder = new HashMap(g.getNodeOrder().size()*2);
+		this.nodeToOrder = new HashMap(g.getNodeOrderSize()*2);
 		int i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {
 			this.nodeToOrder.put(it.next(), new Integer(i++));
 		}
-		this.size = g.getNodeOrder().size();
+		this.size = g.getNodeOrderSize();
 	}
 
 	public void resetDefaultStyle() {

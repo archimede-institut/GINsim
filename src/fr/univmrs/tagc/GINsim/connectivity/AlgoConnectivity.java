@@ -11,7 +11,7 @@ import java.util.Vector;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.jgraph.GsJgraphtGraphManager;
@@ -25,7 +25,6 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 public class AlgoConnectivity extends Thread {
 
 	protected GsReducedGraph reducedGraph = null;
-	protected GsGraphManager graphModel;
     private Graph g = null;
 
     private static final String S_SEARCH_CC = Translator.getString("STR_connectivity_searching");
@@ -64,7 +63,7 @@ public class AlgoConnectivity extends Thread {
      * @param searchMode MODE_COMPO=only find components; MODE_FULL=also search for path and create the reduced graph
 	 */
 	public void configure( Graph graphm, ProgressListener frame, int searchMode) {
-		this.graphModel = graphm.getGraphManager();
+		
 		this.frame = frame;
         this.g = graphm;
         this.mode = searchMode;
@@ -82,7 +81,7 @@ public class AlgoConnectivity extends Thread {
         reducedGraph = null;
         int nbCompo = 0;
         try {
-            t_vertex = graphModel.getVertexArray();
+            t_vertex = g.getVertices().toArray();
             explored = new boolean[t_vertex.length];
             lastExploration = new int[t_vertex.length];
             firstExploration = new int[t_vertex.length];
@@ -90,8 +89,10 @@ public class AlgoConnectivity extends Thread {
             time = 0;
 
             List component;
-            if (graphModel instanceof GsJgraphtGraphManager) {
-                List jcp = ((GsJgraphtGraphManager)graphModel).getStrongComponent();
+            // TODO : REFACTORING ACTION
+            // TODO : change this test since graphModel is a Graph now
+            if (g instanceof GsJgraphtGraphManager) {
+                List jcp = ((GsJgraphtGraphManager)g).getStrongComponent();
                 nbCompo = jcp.size();
                 component = new ArrayList();
                 String sid;
@@ -142,11 +143,9 @@ public class AlgoConnectivity extends Thread {
                 frame.setProgressText( Translator.getString("STR_connectivity_nbcompo") + " : "+nbCompo+" ; "+Translator.getString("STR_connectivity_finalize"));
             }
             if (mode == MODE_FULL) {
-            	GsGraphManager gm = reducedGraph.getGraphManager();
-                GsVertexAttributesReader vreader = gm.getVertexAttributesReader();
-                	
+                GsVertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
                 if (nbCompo > 1) {
-    	        	createSCCGraphByOutgoingEdges(nbCompo, component, gm, vreader);
+    	        	createSCCGraphByOutgoingEdges(nbCompo, component, reducedGraph, vreader);
                 }           	
             } else if (mode == MODE_COLORIZE) {
             	((ConnectivityFrame)frame).setComponents(component);
@@ -155,7 +154,7 @@ public class AlgoConnectivity extends Thread {
             }
             
         } catch (InterruptedException e) {
-            if (reducedGraph != null && nbCompo != reducedGraph.getGraphManager().getVertexCount()) {
+            if (reducedGraph != null && nbCompo != reducedGraph.getVertexCount()) {
                 reducedGraph = null;
             }
         }
@@ -195,7 +194,7 @@ public class AlgoConnectivity extends Thread {
                     throw new InterruptedException();
                 }
 				Object currentNode = it.next();
-				Collection<GsDirectedEdge> outgoingEdges = graphModel.getOutgoingEdges(currentNode);
+				Collection<GsDirectedEdge> outgoingEdges = g.getOutgoingEdges(currentNode);
 				for (GsDirectedEdge edge: outgoingEdges) {							//    for each edge outgoing from this node
                 	if (canceled) {
                         throw new InterruptedException();
@@ -234,7 +233,7 @@ public class AlgoConnectivity extends Thread {
 		int id = 0;
 		// depth first search on the Graph graphModel
         frame.setProgressText(S_SEARCH_CC+Translator.getString("STR_connectivity_DFS"));
-		depthSearch(t_vertex,graphModel);
+		depthSearch(t_vertex,g);
 		
 		// compute the reverse graph of graphModel
         frame.setProgressText(S_SEARCH_CC+Translator.getString("STR_connectivity_reverse"));
@@ -243,7 +242,7 @@ public class AlgoConnectivity extends Thread {
 	
 		// depth first search on the reverse graph
         frame.setProgressText(S_SEARCH_CC+Translator.getString("STR_connectivity_reverseDFS"));
-		depthSearch(tAllNode,graphModel, true);
+		depthSearch(tAllNode,g, true);
 		
 		// sort the arrays	
 		Tools.increase(firstExploration, tAllNode);		
@@ -284,7 +283,7 @@ public class AlgoConnectivity extends Thread {
 	 * @throws InterruptedException 
 	 */
 	
-	private void explore(int i, Object[] allNode, GsGraphManager graph, boolean reverse) throws InterruptedException  {
+	private void explore(int i, Object[] allNode, Graph graph, boolean reverse) throws InterruptedException  {
 		int allSize = allNode.length; 
 		explored[i] = true;
 		firstExploration[i] = count;
@@ -307,10 +306,12 @@ public class AlgoConnectivity extends Thread {
 	 * @return the list of the last and the first treatment of each node
 	 * @throws InterruptedException 
 	 */
-	private void depthSearch(Object[] allNode,GsGraphManager graph) throws InterruptedException  {
+	private void depthSearch(Object[] allNode, Graph graph) throws InterruptedException  {
+		
 		depthSearch(allNode, graph, false);
 	}
-	private void depthSearch(Object[] allNode,GsGraphManager graph, boolean reverse) throws InterruptedException  {
+	private void depthSearch(Object[] allNode, Graph graph, boolean reverse) throws InterruptedException  {
+		
 		int allSize = allNode.length;  
 		for(int i=0;i<allSize;i++){
 			explored[i] = false;

@@ -30,7 +30,7 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsSelectedEdgeWithVertexIterator;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -552,6 +552,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
             }
         }
     }
+    
     
     public List getShortestPath(V source, V target) {
         return DijkstraShortestPath.findPathBetween(g, source, target);

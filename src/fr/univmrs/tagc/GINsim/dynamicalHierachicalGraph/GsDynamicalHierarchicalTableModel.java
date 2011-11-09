@@ -6,7 +6,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 
 public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 2922634659695976653L;
@@ -19,7 +19,7 @@ public class GsDynamicalHierarchicalTableModel extends AbstractTableModel {
 	public GsDynamicalHierarchicalTableModel( Graph g) {
 		super();
 		this.g = (GsDynamicalHierarchicalGraph) g;
-		colCount = g.getNodeOrder().size();
+		colCount = g.getNodeOrderSize();
 	}
 	
 	/**

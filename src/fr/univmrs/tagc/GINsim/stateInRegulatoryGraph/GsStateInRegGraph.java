@@ -47,8 +47,8 @@ public class GsStateInRegGraph {
 
 		cs = new CascadingStyle(false);  //Create a cs and save the current color manually
 		if (shouldStore) {
-			cs.storeAllEdges(regGraph.getGraphManager().getAllEdges(), regGraph.getGraphManager().getEdgeAttributesReader());
-			cs.storeAllNodes(nodeOrder, regGraph.getGraphManager().getVertexAttributesReader());        	
+			cs.storeAllEdges(regGraph.getEdges(), regGraph.getEdgeAttributeReader());
+			cs.storeAllNodes(nodeOrder, regGraph.getVertexAttributeReader());        	
 		}
 		selector = new GsStateInRegGraphSelector(regGraph);		
 	}
@@ -58,8 +58,8 @@ public class GsStateInRegGraph {
 	 */
 	public void restoreColorization() {
 		if (shouldStore) {
-			cs.restoreAllEdges(regGraph.getGraphManager().getEdgeAttributesReader());  //Restore the original color of the regulatory graph
-			cs.restoreAllNodes(regGraph.getGraphManager().getVertexAttributesReader());
+			cs.restoreAllEdges(regGraph.getEdgeAttributeReader());  //Restore the original color of the regulatory graph
+			cs.restoreAllNodes(regGraph.getVertexAttributeReader());
 		}
 	}
 
@@ -90,10 +90,10 @@ public class GsStateInRegGraph {
 	}
 
 	private void colorizeGraph() {
-		GsVertexAttributesReader vreader = regGraph.getGraphManager().getVertexAttributesReader();
-		GsEdgeAttributesReader ereader = regGraph.getGraphManager().getEdgeAttributesReader();
+		GsVertexAttributesReader vreader = regGraph.getVertexAttributeReader();
+		GsEdgeAttributesReader ereader = regGraph.getEdgeAttributeReader();
 
-		cs.restoreAllEdges(regGraph.getGraphManager().getAllEdges(), ereader);
+		cs.restoreAllEdges(regGraph.getEdges(), ereader);
 		//Cannot use cs.applySelectorOnEdges because we need the multiarcs, so do it manually
 		for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex) it.next();
@@ -103,7 +103,7 @@ public class GsStateInRegGraph {
 			cs.applyOnNode(selector, vertex, vreader);
 
 			// colorize edges
-			Collection<GsRegulatoryMultiEdge> edges = regGraph.getGraphManager().getOutgoingEdges(vertex);
+			Collection<GsRegulatoryMultiEdge> edges = regGraph.getOutgoingEdges(vertex);
 			for (GsRegulatoryMultiEdge edge: edges) {
 				ereader.setEdge(edge);
 				cs.applyOnEdge(selector, edge, ereader);

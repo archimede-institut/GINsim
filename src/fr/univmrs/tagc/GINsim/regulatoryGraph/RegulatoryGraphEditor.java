@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.common.GsException;
@@ -81,7 +81,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 	public boolean setValue(int prop, String value) {
 		try {
 			if (prop == PROP_ID) {
-					graph.setGraphName(value);
+					graph.setGraphName( value);
 					return true;
 			}
 		} catch (Exception e) {

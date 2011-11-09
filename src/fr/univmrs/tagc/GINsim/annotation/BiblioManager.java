@@ -9,7 +9,7 @@ import org.ginsim.graph.Graph;
 import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.GINsim.graph.BasicGraphAssociatedManager;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 

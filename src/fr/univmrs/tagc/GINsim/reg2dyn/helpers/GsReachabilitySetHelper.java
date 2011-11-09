@@ -3,7 +3,7 @@ package fr.univmrs.tagc.GINsim.reg2dyn.helpers;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.reg2dyn.SimulationQueuedState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;

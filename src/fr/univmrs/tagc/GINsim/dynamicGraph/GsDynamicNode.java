@@ -90,7 +90,7 @@ public final class GsDynamicNode {
 	/**
 	 * @return the node's pattern of commutation.
 	 */
-	public String getPatternString(Graph<GsDynamicNode, Edge<GsDynamicNode>> graph) {
+	public String getPatternString( Graph<GsDynamicNode, Edge<GsDynamicNode>> graph) {
 		int[] pattern = getPattern(graph);
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < pattern.length; i++) {

@@ -20,10 +20,10 @@ public class GsRegulatoryMutantDef implements NamedObject, Perturbation {
     Annotation annotation = new Annotation();
 
     boolean check(GsRegulatoryGraph graph) {
-        GsGraphManager gm = graph.getGraphManager();
+    	
         for (int i=0 ; i<v_changes.size() ; i++) {
             GsRegulatoryMutantChange nc = (GsRegulatoryMutantChange)v_changes.get(i);
-            if (!gm.containsVertex(nc.vertex)) {
+            if (!graph.containsVertex(nc.vertex)) {
                 return false;
             }
             if (nc.vertex.getMaxValue() < nc.max) {

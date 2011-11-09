@@ -31,17 +31,18 @@ public class GsDecisionAnalysis extends Thread {
 		this.htg = htg;
 		this.regGraph = (GsRegulatoryGraph) htg.getAssociatedGraph();
 		this.params = params;
-		this.geneCount = htg.getNodeOrder().size();
+		this.geneCount = htg.getNodeOrderSize();
 	}
 
 	public void run() {
-		GsGraphManager<GsHierarchicalNode, GsDecisionOnEdge> gm = htg.getGraphManager();
-		List<GsRegulatoryVertex> nodeOrder = htg.getNodeOrder();
+		
+		// No more used
+		//List<GsRegulatoryVertex> nodeOrder = htg.getNodeOrder();
 		
 		//Iterate on the selected vertex or all of them f node are selected
-		Iterator<GsHierarchicalNode> it = gm.getSelectedVertexIterator();
+		Iterator<GsHierarchicalNode> it = htg.getGraphManager().getSelectedVertexIterator();
 		if (! it.hasNext()) {
-			it = gm.getVertexIterator();
+			it = htg.getVertices().iterator();
 		}
 		for (; it.hasNext();) {
 			GsHierarchicalNode source = it.next();
@@ -52,7 +53,7 @@ public class GsDecisionAnalysis extends Thread {
 					byte[] target_state = ((SimulationQueuedState)(updt.next())).state;
 					GsHierarchicalNode target = htg.getNodeForState(target_state);
 					if (!target.equals(source)) {
-						GsDecisionOnEdge edge = gm.getEdge(source, target);
+						GsDecisionOnEdge edge = htg.getEdge(source, target);
 						 if (edge != null) {
 							 // FIXME: used to call computeChange below, which may create the DecisionOnEdge object
 							 // I hope it was properly moved to edge.init() ....

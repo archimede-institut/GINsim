@@ -10,11 +10,10 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Tools;
 
-public abstract class GsTreeParser {
+public abstract class GsTreeParser<V,E> {
 	public static final String PARAM_NODEORDER = "p_nodeOrder";
-	protected GsTree tree;
+	protected GsTree<V,E> tree;
 	protected List nodeOrder;
-	protected GsGraphManager graphManager;
 	private Map parameters;
 
 	/**
@@ -30,7 +29,6 @@ public abstract class GsTreeParser {
 	 */
 	public void run(int treeMode) {
 		tree.setMode(treeMode);
-		this.graphManager = tree.getGraphManager();
 		this.nodeOrder = (List) getParameter(PARAM_NODEORDER);
 		
 		clearTree();			//Remove all the treeNode from the current tree
@@ -41,7 +39,6 @@ public abstract class GsTreeParser {
 
 	public void setTree(GsTree tree) {
 		this.tree = tree;
-		this.graphManager = tree.getGraphManager();
 	}
 	
 	/**
@@ -58,8 +55,8 @@ public abstract class GsTreeParser {
 	 * Compute the layout for each node in this tree
 	 */
 	public void updateVertexLayout() {
-		GsVertexAttributesReader vreader = tree.getGraphManager().getVertexAttributesReader();
-		for (Iterator it = graphManager.getVertexIterator(); it.hasNext();) {
+		GsVertexAttributesReader vreader = tree.getVertexAttributeReader();
+		for (Iterator it = tree.getVertices().iterator(); it.hasNext();) {
 			GsTreeNode vertex = (GsTreeNode) it.next();
 			updateLayout(vreader, vertex);
 		}		
@@ -69,14 +66,14 @@ public abstract class GsTreeParser {
 	 * Remove all the vertices from the tree
 	 */
 	public void clearTree() {
-		Vector tmp = new Vector(graphManager.getVertexCount());
-		for (Iterator it = graphManager.getVertexIterator(); it.hasNext();) {
-			Object vertex = (Object) it.next();
+		Vector<GsTreeNode> tmp = new Vector( tree.getVertexCount());
+		for (Iterator<GsTreeNode> it = tree.getVertices().iterator(); it.hasNext();) {
+			GsTreeNode vertex = (GsTreeNode) it.next();
 			tmp.add(vertex);
 		}
 		for (Iterator it = tmp.iterator(); it.hasNext();) {
-			Object vertex = (Object) it.next();
-			graphManager.removeVertex(vertex);
+			GsTreeNode vertex = (GsTreeNode) it.next();
+			tree.removeVertex(vertex);
 		}
 	}	
 	

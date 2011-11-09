@@ -28,7 +28,7 @@ public class GsFunctionEditorModel {
   public void init(GsTreeInteractionsModel m, GsFunctionPanel p) {
   	functionPanel = p;
   	oldExp = p.getCurrentText();
-  	Set<GsRegulatoryMultiEdge> ed = m.getGraph().getGraphManager().getIncomingEdges(m.getVertex());
+  	Colection<GsRegulatoryMultiEdge> ed = m.getGraph().getIncomingEdges(m.getVertex());
     interactions.clear();
     for (GsRegulatoryMultiEdge me: ed) {
       interactions.addElement(me);

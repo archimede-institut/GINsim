@@ -1,6 +1,7 @@
 package org.ginsim.graph.backend;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.ginsim.graph.Edge;
 
@@ -113,4 +114,14 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 * @return the view of this graph.
 	 */
 	public GraphViewBackend getGraphViewBackend();
+
+
+	/**
+	 * Find the shortest path between the two given vertices
+	 * 
+	 * @param source the vertex at the beginning of the searched path
+	 * @param target the vertex at the end of the searched path
+	 * @return the list of edges composing the shortest path
+	 */
+	List<E> getShortestPath( V source, V target);
 }

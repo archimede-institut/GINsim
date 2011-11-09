@@ -8,7 +8,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestExport extends TestCase {

@@ -31,7 +31,7 @@ import fr.univmrs.tagc.GINsim.connectivity.AlgoConnectivity;
 import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
@@ -313,8 +313,8 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
                 config.v_list = graph.getNodeOrder();
                 config.minlen = 1;
                 config.maxlen = config.v_list.size();
-                config.t_status = new byte[graph.getNodeOrder().size()];
-                config.t_constraint = new byte[graph.getNodeOrder().size()][3];
+                config.t_status = new byte[graph.getNodeOrderSize()];
+                config.t_constraint = new byte[graph.getNodeOrderSize()][3];
                 for (int i = 0; i < config.t_status.length; i++) {
                     config.t_status[i] = 3;
                     byte max = ((GsRegulatoryVertex) graph.getNodeOrder().get(
@@ -420,12 +420,12 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
                                                        // autoregulation-like
                                                        // circuits
             	if (config.minMust < 2) {
-	                for (int i = 0; i < graph.getNodeOrder().size(); i++) {
+	                for (int i = 0; i < graph.getNodeOrderSize(); i++) {
 	                    GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph
 	                            .getNodeOrder().get(i);
 	                    if (config.minMust == 1 && config.t_status[i] == 1 ||
 	                        config.minMust == 0 && config.t_status[i] == 3) {
-	                    	GsRegulatoryMultiEdge edge = graph.getGraphManager().getEdge(vertex, vertex);
+	                    	GsRegulatoryMultiEdge edge = graph.getEdge(vertex, vertex);
 		                    if (edge != null) {
 		                        GsCircuitDescr circuit = new GsCircuitDescr();
 		                        circuit.t_vertex = new GsRegulatoryVertex[] { vertex };
@@ -447,11 +447,11 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
      * @param v_cc
      */
     private void searchCircuitInSCC(Vector v_cc) {
-        GsGraphManager<GsRegulatoryVertex, GsRegulatoryMultiEdge> graphm = graph.getGraphManager();
+        
         if (v_cc.size() < 2) {
             return;
         }
-        byte[][] t_cc = buildTCC(graphm, v_cc); // int[][] giving edges in
+        byte[][] t_cc = buildTCC(graph, v_cc); // int[][] giving edges in
                                                     // the current SCC
         byte[] t_visited = new byte[t_cc.length]; // remember visited nodes
                                                     // and their position
@@ -555,10 +555,10 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
                 GsRegulatoryVertex target = null;
                 for (int i = 1; i < circuit.t_vertex.length; i++) {
                     target = circuit.t_vertex[i];
-                    circuit.t_me[i - 1] = graphm.getEdge(source, target);
+                    circuit.t_me[i - 1] = graph.getEdge(source, target);
                     source = target;
                 }
-                circuit.t_me[circuit.t_me.length - 1] = graphm.getEdge(target, circuit.t_vertex[0]);
+                circuit.t_me[circuit.t_me.length - 1] = graph.getEdge(target, circuit.t_vertex[0]);
             }
 
             // rewind the path and get ready for the next search, stop if
@@ -650,14 +650,14 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
         }
     }
 
-    private byte[][] buildTCC(GsGraphManager graphm, Vector v_cc) {
+    private byte[][] buildTCC( Graph graph, Vector v_cc) {
         byte[][] t_cc = new byte[v_cc.size()][];
         for (byte i = 0; i < t_cc.length; i++) {
             byte[] t = new byte[t_cc.length - 1];
             int last = 0;
             Object source = v_cc.get(i);
             for (byte j = 0; j < t_cc.length; j++) {
-                if (i != j && graphm.containsEdge(source, v_cc.get(j))) {
+                if (i != j && graph.containsEdge(source, v_cc.get(j))) {
                     t[last++] = j;
                 }
             }

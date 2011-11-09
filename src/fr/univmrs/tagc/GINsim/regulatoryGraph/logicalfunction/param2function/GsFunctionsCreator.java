@@ -35,7 +35,8 @@ public class GsFunctionsCreator {
     return currentVertex;
   }
   public GsParamTree makeTree(int def) {
-	Set<GsRegulatoryMultiEdge> l = graph.getGraphManager().getIncomingEdges(currentVertex);
+	  
+	Collection<GsRegulatoryMultiEdge> l = graph.getIncomingEdges(currentVertex);
     HashMap<GsRegulatoryVertex,Object> h = new HashMap();
 
     for (GsRegulatoryMultiEdge me: l) {
@@ -66,7 +67,7 @@ public class GsFunctionsCreator {
     GsRegulatoryVertex v;
     for (Entry<GsRegulatoryVertex, Object> e: as) {
       v = e.getKey();
-      e.setValue(graph.getGraphManager().getEdge(v, currentVertex));
+      e.setValue(graph.getEdge(v, currentVertex));
     }
     return new GsParamTree(as, def);
   }

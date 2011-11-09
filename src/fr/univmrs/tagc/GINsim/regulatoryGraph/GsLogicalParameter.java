@@ -2,6 +2,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
@@ -145,7 +146,8 @@ public class GsLogicalParameter implements XMLize {
      * @return the t_ac
      */
 	private byte[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, List<GsRegulatoryVertex> nodeOrder) {
-	    Set<GsRegulatoryMultiEdge> incEdges = regGraph.getGraphManager().getIncomingEdges(node);
+		
+	    Collection<GsRegulatoryMultiEdge> incEdges = regGraph.getIncomingEdges(node);
         byte[][] t_ac = new byte[incEdges.size()+1][];
         t_ac[0] = new byte[1];
         t_ac[0][0] = (byte)value;

@@ -18,7 +18,7 @@ import javax.swing.filechooser.FileFilter;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationAction;
 import fr.univmrs.tagc.GINsim.graph.GsGraphNotificationMessage;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -68,9 +68,44 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	return zip_mainEntry;
     }
 
+    
+    /**
+     * Return the node order
+     * 
+     * @return the node order as a list of RegulatoryVertex
+     */
     public List<GsRegulatoryVertex> getNodeOrder() {
+    	
     	return nodeOrder;
     }
+    
+    /**
+     * Return the size of the node order
+     * 
+     * @return the size of the node order
+     */
+    @Override
+	public int getNodeOrderSize(){
+		
+		if( nodeOrder != null){
+			return nodeOrder.size();
+		}
+		else{
+			return 0;
+		}
+	}
+	
+    
+	/**
+	 * Set a list of class dependent objects representing the order of vertex as defined by the model
+	 * 
+	 * @param list the list of objects representing the order of vertex as defined by the model
+	 */
+	public void setNodeOrder( List<GsRegulatoryVertex> list){
+		
+		nodeOrder = list;
+	}
+	
     
     /**
      * @param savefilename
@@ -105,7 +140,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         while ( getVertexByName("G" + nextid) != null) {
         		nextid++;
         }
-        GsRegulatoryVertex obj = new GsRegulatoryVertex(nextid++, (GsRegulatoryGraph)graphManager.getGsGraph());
+        GsRegulatoryVertex obj = new GsRegulatoryVertex(nextid++, this);
         if (addVertex( obj)) {
         		nodeOrder.add(obj);
         		return obj;
@@ -469,7 +504,15 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     public List getSpecificAction() {
         return GsRegulatoryGraphDescriptor.getAction();
     }
+    
+    /**
+     * Return the Object Managers specialized for this class
+     * 
+     * @return a List of Object Managers
+     */
+    @Override
     public List getSpecificObjectManager() {
+    	
         return GsRegulatoryGraphDescriptor.getObjectManager();
     }
 
@@ -539,7 +582,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         nodeOrder.add(vertex);
     }
 
-    protected Graph getSubGraph(Collection<GsRegulatoryVertex> v_vertex, Collection<GsRegulatoryMultiEdge> v_edges) {
+    @Override
+    public Graph getSubgraph(Collection<GsRegulatoryVertex> v_vertex, Collection<GsRegulatoryMultiEdge> v_edges) {
     	
         GsRegulatoryGraph copiedGraph = new GsRegulatoryGraph();
         GsVertexAttributesReader vReader = getVertexAttributeReader();

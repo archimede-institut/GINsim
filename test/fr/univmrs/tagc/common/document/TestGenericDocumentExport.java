@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestGenericDocumentExport extends TestCase {

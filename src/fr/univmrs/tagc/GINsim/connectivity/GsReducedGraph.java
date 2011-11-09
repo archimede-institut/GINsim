@@ -15,9 +15,10 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
-import fr.univmrs.tagc.GINsim.graph.GsGraph;
+
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
+import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraphDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
@@ -76,6 +77,29 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
     	
         this( false);
     }
+    
+    /**
+     * Return the Object Managers specialized for this class
+     * 
+     * @return a List of Object Managers
+     */
+    @Override
+    public List getSpecificObjectManager() {
+    	
+        return GsReducedGraphDescriptor.getObjectManager();
+    }
+    
+    /**
+     * Return 0 since no node order is defined on this king of graph
+     * 
+     * @return 0 since no node order is defined on this king of graph
+     */
+    @Override
+	public int getNodeOrderSize(){
+		
+		return 0;
+	}
+
 
 	/*
 	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
@@ -194,7 +218,7 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
     protected List doMerge(Graph otherGraph) {
         return null;
     }
-    protected Graph getSubGraph(Collection vertex, Collection edges) {
+    public Graph getSubgraph(Collection vertex, Collection edges) {
         // no copy for reduced graphs
         return null;
     }
