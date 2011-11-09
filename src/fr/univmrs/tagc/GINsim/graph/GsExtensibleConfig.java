@@ -2,12 +2,12 @@ package fr.univmrs.tagc.GINsim.graph;
 
 import org.ginsim.graph.Graph;
 
-public class GsExtensibleConfig {
+public class GsExtensibleConfig<G extends Graph> {
 
-	Graph<?,?> graph;
+	G graph;
 	Object specificConfig = null;
 
-	public GsExtensibleConfig( Graph<?,?> graph) {
+	public GsExtensibleConfig( G graph) {
 		this.graph = graph;
 	}
 	public Object getSpecificConfig() {
@@ -18,7 +18,7 @@ public class GsExtensibleConfig {
 		this.specificConfig = specificConfig;
 	}
 	
-	public Graph<?,?> getGraph() {
+	public G getGraph() {
 		
 		return graph;
 	}

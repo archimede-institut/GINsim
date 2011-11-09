@@ -42,12 +42,12 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
 		return null;
 	}
 	
-	protected void doExport(GsExportConfig config) 
+	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) 
 	{
-		Graph<?,?> graph = config.getGraph();
+		GsRegulatoryGraph graph = config.getGraph();
         List v_no = graph.getNodeOrder();
         int len = v_no.size();
-        OmddNode[] t_tree = ((GsRegulatoryGraph) graph).getAllTrees(true);
+        OmddNode[] t_tree = graph.getAllTrees(true);
         List[] t_transition = new List[len];
         byte[][] t_markup = GsPetriNetExport.prepareExport(config, t_transition, t_tree);
 

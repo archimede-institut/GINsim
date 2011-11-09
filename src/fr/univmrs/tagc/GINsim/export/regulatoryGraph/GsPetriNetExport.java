@@ -52,7 +52,7 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
  *      Networks</li>
  *</ul>
  */
-public class GsPetriNetExport extends GsAbstractExport {
+public class GsPetriNetExport extends GsAbstractExport<GsRegulatoryGraph> {
 	static Vector v_format = new Vector();
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 	static {
@@ -160,7 +160,7 @@ public class GsPetriNetExport extends GsAbstractExport {
         t_cst[level][0] = -1;
     }
 
-	protected void doExport(GsExportConfig config) {
+	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) {
 		// nothing needed here: subformat do all the job
 	}
 
@@ -192,7 +192,7 @@ public class GsPetriNetExport extends GsAbstractExport {
 	 * @param t_tree
 	 * @return the initial markup
 	 */
-    protected static byte[][] prepareExport(GsExportConfig config, List[] t_transition, OmddNode[] t_tree) {
+    protected static byte[][] prepareExport(GsExportConfig<GsRegulatoryGraph> config, List[] t_transition, OmddNode[] t_tree) {
     	List nodeOrder = config.getGraph().getNodeOrder();
 		int len = nodeOrder.size();
 		// get the selected initial state

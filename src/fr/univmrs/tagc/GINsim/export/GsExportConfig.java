@@ -7,13 +7,13 @@ import org.ginsim.graph.Graph;
 import fr.univmrs.tagc.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.tagc.common.OptionStore;
 
-public class GsExportConfig extends GsExtensibleConfig {
+public class GsExportConfig<G extends Graph> extends GsExtensibleConfig<G> {
 
 	int ref;
 	int format = -1;
 	String filename;
 	
-	public GsExportConfig( Graph graph, GsAbstractExport export, int ref) {
+	public GsExportConfig( G graph, GsAbstractExport export, int ref) {
 		
 		super(graph);
 		this.ref = ref;

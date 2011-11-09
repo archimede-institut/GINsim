@@ -42,7 +42,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * Regulators of a given node are modifiers of this reaction.
  * Logical parameters (via OMDD) are translated in MathML
  */
-public class SBML3Export extends GsAbstractExport implements OMDDBrowserListener {
+public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements OMDDBrowserListener {
 	
 	public static final String L3_QUALI_URL = "http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models";
 	

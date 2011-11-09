@@ -52,7 +52,7 @@ import fr.univmrs.tagc.common.GsException;
  * &#64;
  *</pre>
  */
-public class GsPetriNetExportINA extends GsAbstractExport {
+public class GsPetriNetExportINA extends GsAbstractExport<GsRegulatoryGraph> {
 
 	protected GsPetriNetExportINA() {
 		id = "INA";
@@ -68,8 +68,8 @@ public class GsPetriNetExportINA extends GsAbstractExport {
 	// FIXME: INA does not like PN with "useless" places. Such places should be removed (with a warning)
 	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
 
-	protected void doExport(GsExportConfig config) {
-        Graph<?,?> graph = config.getGraph();
+	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) {
+        GsRegulatoryGraph graph = config.getGraph();
 
 		List v_no = graph.getNodeOrder();
         int len = v_no.size();

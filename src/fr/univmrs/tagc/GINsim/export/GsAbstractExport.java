@@ -28,7 +28,7 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
  * 
  * <p>The export itself happens within <code>doExport</code>.
  */
-abstract public class GsAbstractExport implements GsPlugin, GsActionProvider  {
+abstract public class GsAbstractExport<G extends Graph> implements GsPlugin, GsActionProvider  {
 
 	protected String id;
 	protected String[] filter = null;
@@ -60,7 +60,7 @@ abstract public class GsAbstractExport implements GsPlugin, GsActionProvider  {
 	    if (actionType != ACTION_EXPORT) {
 	        return;
         }
-	    GsExportConfig config = new GsExportConfig(graph, this, ref);
+	    GsExportConfig<G> config = new GsExportConfig(graph, this, ref);
 		if(needConfig(config)) {
 			new GsExportDialog(this, config).setVisible(true);
 		} else {
@@ -68,8 +68,8 @@ abstract public class GsAbstractExport implements GsPlugin, GsActionProvider  {
 		}
 	}
 	
-	protected void selectFile(GsExportConfig config) throws GsException {
-		GsAbstractExport export;
+	protected void selectFile(GsExportConfig<G> config) throws GsException {
+		GsAbstractExport<G> export;
 		Vector v_format = getSubFormat();
 		if (v_format != null && config.format != -1) {
 			export = (GsAbstractExport)v_format.get(config.format);
@@ -97,22 +97,22 @@ abstract public class GsAbstractExport implements GsPlugin, GsActionProvider  {
 	protected String getID() {
 		return id;
 	}
-	protected String[] getFilter(GsExportConfig config) {
+	protected String[] getFilter(GsExportConfig<G> config) {
 		return filter;
 	}
-	protected String getFilterDescription(GsExportConfig config) {
+	protected String getFilterDescription(GsExportConfig<G> config) {
 		return filterDescr;
 	}
-	protected String getExtension(GsExportConfig config) {
+	protected String getExtension(GsExportConfig<G> config) {
 		return extension;
 	}
 
-	protected boolean needConfig(GsExportConfig config) {
+	protected boolean needConfig(GsExportConfig<G> config) {
 		return false;
 	}
-	protected JComponent getConfigPanel(GsExportConfig config, StackDialog dialog) {
+	protected JComponent getConfigPanel(GsExportConfig<G> config, StackDialog dialog) {
 		return null;
 	}
 
-	abstract protected void doExport(GsExportConfig config);
+	abstract protected void doExport(GsExportConfig<G> config);
 }
