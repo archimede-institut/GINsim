@@ -7,6 +7,7 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsMain;
 import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
+import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * Simple example showing how to create and fill a regulatory graph.
@@ -22,24 +23,32 @@ public class LRGCreator {
 		
 		// create a simple graph
 		GsRegulatoryGraph lrg = new GsRegulatoryGraph();
+		GsVertexAttributesReader vreader = lrg.getVertexAttributeReader();
 		
 		// add a few vertices
 		GsRegulatoryVertex g0, g1, g2;
-		g0 = (GsRegulatoryVertex)lrg.interactiveAddVertex(0, 0, 0);
-		g1 = (GsRegulatoryVertex)lrg.interactiveAddVertex(0, 30, 0);
-		g2 = (GsRegulatoryVertex)lrg.interactiveAddVertex(0, 0, 100);
+		g0 = lrg.addVertex();
+		g1 = lrg.addVertex();
+		g2 = lrg.addVertex();
+		
+		// change their position
+		vreader.setVertex(g0);
+		vreader.setPos(0, 0);
+		vreader.setVertex(g1);
+		vreader.setPos(30, 0);
+		vreader.setVertex(g2);
+		vreader.setPos(0, 100);
 
 		// increase max value for g0
 		// we have to give the lrg as argument for consistency checks and cascading events
 		g0.setMaxValue((byte)2, lrg);
 		
 		// add positive and negative interactions
-		lrg.interactiveAddEdge(g0, g2, 0);
-		lrg.interactiveAddEdge(g1, g2, 1);
+		lrg.addEdge(g0, g2, 1);
+		lrg.addEdge(g1, g2, -1);
 		
 		// get an edge (interactiveAddEdge does not return it)
-		GsGraphManager<GsRegulatoryVertex, GsRegulatoryMultiEdge> manager = lrg.getGraphManager();
-		GsRegulatoryMultiEdge me = manager.getEdge(g0, g2);
+		GsRegulatoryMultiEdge me = lrg.getEdge(g0, g2);
 		// change its threshold
 		me.setMin(0, (byte)2);
 		

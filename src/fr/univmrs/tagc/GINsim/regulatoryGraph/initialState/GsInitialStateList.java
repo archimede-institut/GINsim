@@ -28,7 +28,7 @@ public class GsInitialStateList implements GsGraphListener<GsRegulatoryVertex, G
     public GsInitialStateList( Graph<?,?> graph) {
     	
         this.graph = (GsRegulatoryGraph) graph;
-    	nodeOrder = graph.getNodeOrder();
+    	nodeOrder = this.graph.getNodeOrder();
         graph.addGraphListener( (GsGraphListener) this);
         updateLists();
         

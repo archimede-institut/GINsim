@@ -30,7 +30,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 
     public void doSave(OutputStreamWriter os, Graph graph) {
         GsInitialStateList imanager = (GsInitialStateList)graph.getObject(key, true);
-        List nodeOrder = graph.getNodeOrder();
+        List nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
         if (imanager == null || imanager.isEmpty() || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }

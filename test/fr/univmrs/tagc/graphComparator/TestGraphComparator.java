@@ -3,6 +3,9 @@ package fr.univmrs.tagc.graphComparator;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.ginsim.graph.Edge;
+import org.ginsim.graph.Graph;
+
 import junit.framework.TestCase;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
@@ -69,7 +72,7 @@ public class TestGraphComparator extends TestCase  {
  */
 
 	public void compareGraph(GraphComparator gc, int vertexCount, int edgesCount) {
-		GsGraph g1, g2;
+		Graph g1, g2;
 		g1 = gc.getG1();
 		g2 = gc.getG2();
 		System.out.println("\nTested : Compare g1:"+g1.getGraphName()+" and g2:"+g2.getGraphName()+"\n------\n");
@@ -78,7 +81,7 @@ public class TestGraphComparator extends TestCase  {
 		
 		//printVerticesMap(vm);
 		assertTrue("Wrong number of vertex in the vertex map. ("+vm.size()+" out of "+vertexCount+")", vm.size() == vertexCount);
-		int diffVertexCount = gc.getDiffGraph().getGraphManager().getVertexCount();
+		int diffVertexCount = gc.getDiffGraph().getVertexCount();
 		assertTrue("Wrong number of vertex in the diff graph.("+diffVertexCount+" out of "+vertexCount+")", diffVertexCount == vertexCount);
 		int diffEdgesCount = countEdges(gc);
 		assertTrue("Wrong number of edges in the diff graph.("+diffEdgesCount+" out of "+edgesCount+")", diffEdgesCount == edgesCount);
@@ -94,9 +97,7 @@ public class TestGraphComparator extends TestCase  {
 	}
 	
 	public int countEdges(GraphComparator gc) {
-		int count = 0;
-		for (Iterator it = gc.getDiffGraph().getGraphManager().getEdgeIterator(); it.hasNext(); it.next()) count++; //TODO : another way to get the count of edges ?
-		return count;
+		return gc.getDiffGraph().getEdges().size();
 	}
 
 }
@@ -182,16 +183,15 @@ class GraphExamples {
 	public static  GsDynamicGraph dg1() {
 		GsDynamicGraph g = new  GsDynamicGraph(); 
 		try { g.setGraphName("dynamic_graph_A");} catch (GsException e) {}
-		GsGraphManager<GsDynamicNode, GsDirectedEdge<GsDynamicNode>> gm = g.getGraphManager();
 		
 		g.addVertex(new GsDynamicNode("a00"));
 		g.addVertex(new GsDynamicNode("a01"));
 		g.addVertex(new GsDynamicNode("a10"));
 		
-		g.addEdge(gm.getVertexByName("00"), gm.getVertexByName("01"), false);
-		g.addEdge(gm.getVertexByName("10"), gm.getVertexByName("01"), false);
-		g.addEdge(gm.getVertexByName("01"), gm.getVertexByName("10"), false);
-		g.addEdge(gm.getVertexByName("01"), gm.getVertexByName("00"), false); //added
+		g.addEdge(g.getVertexByName("00"), g.getVertexByName("01"), false);
+		g.addEdge(g.getVertexByName("10"), g.getVertexByName("01"), false);
+		g.addEdge(g.getVertexByName("01"), g.getVertexByName("10"), false);
+		g.addEdge(g.getVertexByName("01"), g.getVertexByName("00"), false); //added
 
 		return g;
 	}
@@ -209,18 +209,17 @@ class GraphExamples {
 	public static  GsDynamicGraph dg2() {
 		GsDynamicGraph g = new  GsDynamicGraph(); 
 		try { g.setGraphName("dynamic_graph_B");} catch (GsException e) {}
-		GsGraphManager<GsDynamicNode, GsDirectedEdge<GsDynamicNode>> gm = g.getGraphManager();
 		
 		g.addVertex(new GsDynamicNode("a00"));
 		g.addVertex(new GsDynamicNode("a01"));
 		g.addVertex(new GsDynamicNode("b10"));//change first letter (should have no effect)
 		g.addVertex(new GsDynamicNode("a11"));//added
 		
-		g.addEdge(gm.getVertexByName("00"), gm.getVertexByName("01"), false);
-		g.addEdge(gm.getVertexByName("10"), gm.getVertexByName("01"), false);
-		g.addEdge(gm.getVertexByName("01"), gm.getVertexByName("10"), true);//multiple to true //TODO: need to detect that change ? yes mais en fait non
-		g.addEdge(gm.getVertexByName("10"), gm.getVertexByName("11"), false);//added
-		g.addEdge(gm.getVertexByName("11"), gm.getVertexByName("00"), false);//added
+		g.addEdge(g.getVertexByName("00"), g.getVertexByName("01"), false);
+		g.addEdge(g.getVertexByName("10"), g.getVertexByName("01"), false);
+		g.addEdge(g.getVertexByName("01"), g.getVertexByName("10"), true);//multiple to true //TODO: need to detect that change ? yes mais en fait non
+		g.addEdge(g.getVertexByName("10"), g.getVertexByName("11"), false);//added
+		g.addEdge(g.getVertexByName("11"), g.getVertexByName("00"), false);//added
 
 		return g;
 	}

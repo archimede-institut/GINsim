@@ -135,20 +135,28 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         canDelete = true;
     }
 
-    protected GsRegulatoryVertex doInteractiveAddVertex(int param) {
+    public GsRegulatoryVertex addVertex() {
 
         while ( getVertexByName("G" + nextid) != null) {
         		nextid++;
         }
         GsRegulatoryVertex obj = new GsRegulatoryVertex(nextid++, this);
         if (addVertex( obj)) {
-        		nodeOrder.add(obj);
-        		return obj;
+    		nodeOrder.add(obj);
+    		return obj;
         }
         return null;
     }
 
-    protected GsRegulatoryMultiEdge doInteractiveAddEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int param) {
+    /**
+     * Add a signed edge
+     * 
+     * @param source
+     * @param target
+     * @param sign
+     * @return
+     */
+    public GsRegulatoryMultiEdge addEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int sign) {
     	GsRegulatoryMultiEdge obj = getEdge(source, target);
     	if (obj != null) {
     		GsGraphNotificationAction action = new GsGraphNotificationAction() {
@@ -172,7 +180,14 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 	    			GsGraphNotificationMessage.NOTIFICATION_WARNING));
     		return obj;
     	}
-    	obj = new GsRegulatoryMultiEdge(source, target, param);
+    	if (sign < 0) {
+    		sign = GsRegulatoryMultiEdge.SIGN_NEGATIVE;
+    	} else if (sign > 0) {
+    		sign = GsRegulatoryMultiEdge.SIGN_POSITIVE;
+    	} else {
+    		sign = GsRegulatoryMultiEdge.SIGN_UNKNOWN;
+    	}
+    	obj = new GsRegulatoryMultiEdge(source, target, sign);
     	addEdge(obj);
     	obj.rescanSign( this);
     	target.incomingEdgeAdded(obj);

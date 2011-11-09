@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.ginsim.graph.Graph;
+
 import junit.framework.TestCase;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
@@ -12,7 +14,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestExport extends TestCase {
-	GsGraph graph;
+	Graph graph;
 	File tmpDir = TestTools.getTempDir();
 
 	public TestExport() throws FileNotFoundException {
