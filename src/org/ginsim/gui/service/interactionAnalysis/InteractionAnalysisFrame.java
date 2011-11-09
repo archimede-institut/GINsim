@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.interactionAnalysis;
+package org.ginsim.gui.service.interactionAnalysis;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;

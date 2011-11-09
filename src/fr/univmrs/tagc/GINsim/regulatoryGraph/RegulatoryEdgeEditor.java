@@ -7,6 +7,7 @@ import javax.swing.Action;
 
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
@@ -222,11 +223,11 @@ class AddEdgeNotificationAction implements NotificationMessageAction {
 	AddEdgeNotificationAction(EdgeList edgeList) {
 		this.edgeList = edgeList;
 	}
-	public boolean timeout( Graph graph, Object data) {
+	public boolean timeout( NotificationMessageHolder graph, Object data) {
 		return true;
 	}
 
-	public boolean perform( Graph graph, Object data, int index) {
+	public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 		if (edgeList.medge == data) {
 			GsRegulatoryVertex vertex = ((GsRegulatoryMultiEdge)data).getSource();
 			vertex.setMaxValue((byte)(vertex.getMaxValue()+1), (GsRegulatoryGraph)graph);

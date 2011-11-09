@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 
@@ -431,7 +432,8 @@ class UpdateMaxBlockedAction implements NotificationMessageAction {
 		return t_action;
 	}
 
-	public boolean perform( Graph graph, Object data, int index) {
+	public boolean perform( NotificationMessageHolder holder, Object data, int index) {
+		GsRegulatoryGraph graph = (GsRegulatoryGraph)holder;
 		if (index == 1) {
 			if (l_conflict.size() > 0) {
 				return false;
@@ -444,7 +446,7 @@ class UpdateMaxBlockedAction implements NotificationMessageAction {
 			while (it.hasNext()) {
 				((GsLogicalParameter)it.next()).setValue(max, graph);
 			}
-			vertex.setMaxValue(max, (GsRegulatoryGraph)graph);
+			vertex.setMaxValue(max, graph);
 			return true;
 		}
 
@@ -452,7 +454,7 @@ class UpdateMaxBlockedAction implements NotificationMessageAction {
 		return true;
 	}
 
-	public boolean timeout( Graph graph, Object data) {
+	public boolean timeout( NotificationMessageHolder graph, Object data) {
 		return true;
 	}
 }

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.circuit;
+package org.ginsim.gui.service.circuit;
 import java.util.List;
 
 /**

@@ -73,55 +73,6 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
 
 	}
 
-	/**
-	 * @param layout
-	 */
-	public static void registerLayoutProvider(GsActionProvider layout) {
-		if (v_layout == null) {
-			v_layout = new Vector();
-		}
-		v_layout.add(layout);
-	}
-	/**
-	 * @return a list of avaible layouts.
-	 */
-	public static Vector getLayout() {
-		return v_layout;
-	}
-
-	/**
-	 * @param export
-	 */
-	public static void registerExportProvider(GsActionProvider export) {
-		if (v_export == null) {
-			v_export = new Vector();
-		}
-		v_export.add(export);
-	}
-	/**
-	 * @return a list of avaible export filters.
-	 */
-	public static Vector getExport() {
-		return v_export;
-	}
-
-	/**
-	 * 
-	 * @param action
-	 */
-	public static void registerActionProvider(GsActionProvider action) {
-		if (v_action == null) {
-			v_action = new Vector();
-		}
-		v_action.add(action);
-	}
-	/**
-	 * @return a list of avaible actions.
-	 */
-	public static Vector getAction() {
-		return v_action;
-	}
-
     /**
      * @param manager
      */

@@ -33,7 +33,7 @@ public class GsMutantListManager implements
     public void doSave(OutputStreamWriter os, Graph graph) {
     	
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject(key, false);
-        List nodeOrder = graph.getNodeOrder();
+        List nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
         if (lMutant == null || lMutant.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }

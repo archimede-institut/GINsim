@@ -5,24 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
-import javax.swing.JFrame;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
-import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.GsActionAction;
-import org.ginsim.gui.service.GsExportAction;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.service.connectivity.ConnectivityService;
-import org.ginsim.service.testservice.TestService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 
 /**
  * register the connectivity service

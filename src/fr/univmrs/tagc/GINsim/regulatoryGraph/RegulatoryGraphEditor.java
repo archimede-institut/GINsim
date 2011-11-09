@@ -4,7 +4,6 @@ import java.awt.GridBagConstraints;
 import java.util.Collection;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
@@ -24,7 +23,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 	public static final int PROP_ANNOTATION = 2;
 	public static final int PROP_RAW = 10;
 	
-	Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph;
+	GsRegulatoryGraph graph;
 	private GsGraphOrderList nodeList;
 
 	public RegulatoryGraphEditor() {
@@ -44,7 +43,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 			if (this.graph != null) {
 				this.graph.removeGraphListener( this);
 			}
-			this.graph = (Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge>) o;
+			this.graph = (GsRegulatoryGraph) o;
 			this.nodeList = new GsGraphOrderList( graph);
 			if (this.graph != null) {
 				this.graph.addGraphListener(this);
@@ -142,7 +141,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 class GsGraphOrderList extends SimpleGenericList {
 	GsRegulatoryGraph graph = null;
 	
-	GsGraphOrderList( Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph) {
+	GsGraphOrderList( GsRegulatoryGraph graph) {
 		super(graph.getNodeOrder());
 		if (graph instanceof GsRegulatoryGraph) {
 			canOrder = true;

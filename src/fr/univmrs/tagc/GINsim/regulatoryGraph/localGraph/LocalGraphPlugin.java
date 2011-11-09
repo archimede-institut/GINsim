@@ -1,46 +1,62 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.localGraph;
 
-import javax.swing.JFrame;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.ginsim.exception.GsException;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.GsServiceGUI;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 
-public class LocalGraphPlugin implements GsActionProvider, GsPlugin {
+@ProviderFor(GsServiceGUI.class)
+public class LocalGraphPlugin implements GsServiceGUI {
 
-	private GsPluggableActionDescriptor[] t_action = null;
-
-	public void registerPlugin() {
-		GsRegulatoryGraphDescriptor.registerActionProvider(this);
-		GsDynamicGraphDescriptor.registerActionProvider(this);
+	static {
 		Selector.registerSelector(LocalGraphSelector.IDENTIFIER, LocalGraphSelector.class);
 	}
-	
-	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		if (actionType != ACTION_ACTION) {
-			return null;
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		List<Action> actions = new ArrayList<Action>();
+		if (graph instanceof GsRegulatoryGraph) {
+			actions.add(new LocalGraphAction((GsRegulatoryGraph)graph));
+		} else if (graph instanceof GsDynamicGraph){
+			actions.add(new LocalGraphAction((GsDynamicGraph)graph));
 		}
-		if (t_action == null) {
-			t_action = new GsPluggableActionDescriptor[1];
-			t_action[0] = new GsPluggableActionDescriptor("STR_localGraph", "STR_localGraph_descr", null, this, ACTION_ACTION, 0);
-		}
-		return t_action;
+		return actions;
 	}
+}
+
+class LocalGraphAction extends AbstractAction {
+
+	private final GsRegulatoryGraph graph;
+	private final GsDynamicGraph dyn;
 	
-	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-		if (actionType != ACTION_ACTION) {
-			return;
-		}
-		if (ref == 0) {
-			if (graph instanceof GsRegulatoryGraph) new LocalGraphFrame(frame, graph);
-			if (graph instanceof GsDynamicGraph) new LocalGraphFrame(frame, ((GsDynamicGraph) graph).getAssociatedGraph(), graph);
+	protected LocalGraphAction(GsRegulatoryGraph graph) {
+		this(graph, null);
+	}
+	protected LocalGraphAction(GsDynamicGraph graph) {
+		this(graph.getAssociatedGraph(), graph);
+	}
+	protected LocalGraphAction(GsRegulatoryGraph graph, GsDynamicGraph dyn) {
+		super("STR_localGraph");
+		this.graph = graph;
+		this.dyn = dyn;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO: find the parent frame
+		if (dyn == null) {
+			new LocalGraphFrame(null, graph);
+		} else {
+			new LocalGraphFrame(null, graph, dyn);
 		}
 	}
 }
