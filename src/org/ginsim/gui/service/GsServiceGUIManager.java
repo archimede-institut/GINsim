@@ -1,7 +1,9 @@
 package org.ginsim.gui.service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -42,11 +44,18 @@ public class GsServiceGUIManager{
 	 * 
 	 */
 	private GsServiceGUIManager(){
+        
+        Iterator<GsServiceGUI> service_list = ServiceLoader.load( GsServiceGUI.class).iterator(); 
+        while (service_list.hasNext()) {
+            try {
+            	GsServiceGUI service = service_list.next();
+            	if( service != null){
+            		services.add( service);
+            	}
+            }
+            catch (ServiceConfigurationError e){
 
-        for (GsServiceGUI service: ServiceLoader.load( GsServiceGUI.class)) {
-        	if( service != null){
-        		services.add( service);
-        	}
+            }
         }
 	}
 	
