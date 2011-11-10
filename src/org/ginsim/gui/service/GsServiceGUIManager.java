@@ -13,6 +13,8 @@ import org.ginsim.graph.Graph;
 import org.ginsim.service.GsService;
 import org.ginsim.service.GsServiceManager;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 /**
  * This manager provides access to the GsServiceGUI corresponding to a specific graph class
@@ -94,9 +96,14 @@ public class GsServiceGUIManager{
 			if( guifor != null){
 				Class<GsService> guifor_class = (Class<GsService>) guifor.value();
 				if (server_services.contains( guifor_class)) {
-					List<Action> service_actions = service.getAvailableActions( graph);
-					if( service_actions != null){
-						result.addAll( service_actions);
+					try{
+						List<Action> service_actions = service.getAvailableActions( graph);
+						if( service_actions != null){
+							result.addAll( service_actions);
+						}
+					}
+					catch( Exception e){
+						Debugger.log( "Service '" + service.getClass().getName() + "' cannot provide Actions due to an exception: " + e);
 					}
 				}
 			}
