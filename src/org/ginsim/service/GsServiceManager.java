@@ -1,9 +1,11 @@
 package org.ginsim.service;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.Vector;
 
 
@@ -28,7 +30,7 @@ public class GsServiceManager{
 	private static GsServiceManager manager = null;
 	
 	// The map establishing the correspondence between graph class and GraphGUIHelper instance
-	private List<GsService> services = new Vector<GsService>();
+	private HashMap<Class<GsService>, GsService> services = new HashMap<Class<GsService>, GsService>();
 	
 	
 	/**
@@ -57,7 +59,7 @@ public class GsServiceManager{
             try {
             	GsService service = service_list.next();
             	if( service != null){
-            		services.add( service);
+            		services.put( (Class<GsService>) service.getClass(), service);
             	}
             }
             catch (ServiceConfigurationError e){
@@ -71,9 +73,9 @@ public class GsServiceManager{
 	 * 
 	 * @return a List of available GsServices
 	 */
-	public List<GsService> getAvailableServices(){
+	public Set<Class<GsService>> getAvailableServices(){
 		
-		return services;
+		return services.keySet();
 	}
 	
 }

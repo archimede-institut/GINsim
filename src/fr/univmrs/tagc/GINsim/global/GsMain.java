@@ -233,7 +233,7 @@ class ReadConfig extends XMLHelper {
 					GsPlugin plugin = (GsPlugin)cl.newInstance();
 					plugin.registerPlugin();
 				} catch (Throwable e) {
-				    if (!"fr.univmrs.tagc.GINsim.gui.tbclient.GsTBPlugin".equals(s)) {
+				    if (!"org.ginsim.gui.service.action.tbclient.TBServiceGUI".equals(s)) {
     					System.err.println("unable to load plugin from class: "+s);
     				}
 				}

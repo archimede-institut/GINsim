@@ -3,6 +3,7 @@ package org.ginsim.gui.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
 
 import javax.swing.Action;
 
@@ -64,7 +65,8 @@ public class GsServiceGUIManager{
 	}
 	
 	/**
-	 * Give access to the list of actions provided by the available services for the given graph type
+	 * Give access to the list of GUI actions provided by the available services for the given graph type
+	 * 
 	 * 
 	 * @param graph The graph for which the available services are providing actions
 	 * @return a List of Action that can be performed.
@@ -72,26 +74,34 @@ public class GsServiceGUIManager{
 	public List<Action> getAvailableActions( Graph<?,?> graph) {
 
 		List<Action> result = new ArrayList<Action>();
+
+		//Retrieve the available service on server side
+		Set<Class<GsService>> server_services = GsServiceManager.getManager().getAvailableServices();
 		
-		List<GsService> server_services = GsServiceManager.getManager().getAvailableServices();
-		for( GsService server_service: server_services){
-			for( GsServiceGUI service: services) {
-				GUIFor gui_for = service.getClass().getAnnotation( GUIFor.class);
-				Class<?> gui_for_class = gui_for.value();
-				if (server_service.getClass().equals( gui_for_class)) {
+		// Parse the existing serviceGUI to detect the ones that must be used
+		for( GsServiceGUI service: services) {
+			// Check if the serviceGUI is related to a server service
+			GUIFor guifor = service.getClass().getAnnotation( GUIFor.class);
+			if( guifor != null){
+				Class<GsService> guifor_class = (Class<GsService>) guifor.value();
+				if (server_services.contains( guifor_class)) {
 					List<Action> service_actions = service.getAvailableActions( graph);
 					if( service_actions != null){
 						result.addAll( service_actions);
 					}
 				}
 			}
-	        
+			// If no server service correspond to the serviceGUI, check if it is a standalone serviceGUI
+			else{
+				StandaloneGUI standalone = service.getClass().getAnnotation( StandaloneGUI.class);
+				if( standalone != null){
+					List<Action> service_actions = service.getAvailableActions( graph);
+					if( service_actions != null){
+						result.addAll( service_actions);
+					}
+				}
+			}
 		}
-		
-//		for( GsServiceGUI service: services) {
-//			List<Action> service_actions = service.getAvailableActions( graph);
-//			result.addAll( service_actions);
-//		}
 
 		return result;
 	}

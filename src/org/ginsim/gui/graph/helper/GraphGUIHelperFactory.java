@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
+import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 /**
@@ -102,7 +103,7 @@ public class GraphGUIHelperFactory {
 	 * @param graph the instance of the graph for which the GUI helper is required
 	 * @return the instance of GraphGUIHelper corresponding to the graph class
 	 */
-	public GraphGUIHelper<?,?,?> getGraphGUIHelper( Graph<?,?> graph) throws ClassNotFoundException, IllegalAccessException, InstantiationException{
+	public GraphGUIHelper<?,?,?> getGraphGUIHelper( Graph graph) throws ClassNotFoundException, IllegalAccessException, InstantiationException{
 		
 		if( graph != null){
 			return getGraphGUIHelper( graph.getClass());

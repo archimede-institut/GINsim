@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.gui.tbclient;
+package org.ginsim.gui.service.action.tbclient;
 
 import java.util.Vector;
 

@@ -61,7 +61,7 @@ public class MainFrame extends Frame implements NotificationSource {
 	
 	private static final boolean alwaysForceClose = false;
 
-	public MainFrame(String id, int w, int h) {
+	public MainFrame(String id, int w, int h, GraphGUI graph_gui) {
 		super(id, w, h);
         setJMenuBar(menubar);
         
@@ -87,6 +87,8 @@ public class MainFrame extends Frame implements NotificationSource {
 		contentPanel.add(getMainSplitPane(), cst);
 
         setContentPane(contentPanel);
+        
+        buildFrameContent( graph_gui);
 	}
 
 	/**
@@ -312,7 +314,7 @@ public class MainFrame extends Frame implements NotificationSource {
     	graphScrollPane.setViewportView( view);
     }
 
-    public void buildFrameContent( GraphGUI<?,?,?> gui) {
+    private void buildFrameContent( GraphGUI<?,?,?> gui) {
     	
     	actionManager.buildActions( gui, menubar, toolbar);
     	fillGraphPane( gui.getGraphComponent());
