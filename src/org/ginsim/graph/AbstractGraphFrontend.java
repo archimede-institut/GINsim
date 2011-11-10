@@ -54,7 +54,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     protected boolean annoted = false;
     protected GsGraphDescriptor descriptor = null;
     private static int GRAPH_ID = 0;
-    private int id;
+    private String id;
     public static final String ZIP_PREFIX = "GINsim-data/";
 	
 	/**
@@ -83,8 +83,8 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
         this( new JgraphtBackendImpl<V, E>());
         this.descriptor = descriptor;
         this.isParsing = parsing;
-        this.id = GRAPH_ID++;
-        GsEnv.registerGraph( this, "[UNSAVED-"+id+"]");
+        this.id = "" + GRAPH_ID++;
+        GsEnv.registerGraph( this, this.id);
 
     }
 
@@ -93,11 +93,17 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * Create a new graph with a back-end of choice.
 	 * @param backend
 	 */
-	public AbstractGraphFrontend(GraphBackend<V, E> backend) {
+	private AbstractGraphFrontend(GraphBackend<V, E> backend) {
 		this.graphBackend = backend;
 		viewBackend = graphBackend.getGraphViewBackend();
 	}
 
+	
+	public String getGraphID(){
+		
+		return id;
+	}
+	
 	/**
 	 * Add a vertex to this graph structure
 	 * 

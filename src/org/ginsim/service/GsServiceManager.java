@@ -63,7 +63,7 @@ public class GsServiceManager{
             	}
             }
             catch (ServiceConfigurationError e){
-                    // For now just ignore the exceptions
+
             }
         }
 	}

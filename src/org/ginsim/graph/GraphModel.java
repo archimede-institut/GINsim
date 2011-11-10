@@ -64,6 +64,11 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 */
 	
     
+    /**
+     * 
+     * @return the ID of the Graph
+     */
+    public String getGraphID();
     
 	
     //----------------------   GRAPH VERTICES AND EDGES MANAGEMENT METHODS -------------------------------
