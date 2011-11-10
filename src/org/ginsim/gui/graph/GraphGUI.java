@@ -54,6 +54,42 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	public JPanel getInfoPanel();
 
 	public EditActionManager getEditActionManager();
+
+	/**
+	 * @return true if this graph has not been modified since the last change
+	 */
+	public boolean isSaved();
+
+	/**
+	 * Save the graph.
+	 * 
+	 * @return true, unless save failed
+	 */
+	public boolean save();
+	
+	/**
+	 * Pick a destination and save the graph.
+	 */
+	public void saveAs();
+
+	/**
+	 * Warn the listeners that the graph will be closed
+	 */
+	public void fireGraphClose();
+
+	/**
+	 * Register a GraphGUIListener
+	 * 
+	 * @param listener
+	 */
+	void addGraphGUIListener(GraphGUIListener<G, V, E> listener);
+
+	/**
+	 * Remove a listener.
+	 * 
+	 * @param listener
+	 */
+	void removeGraphGUIListener(GraphGUIListener<G, V, E> listener);
 	
 // TODO Commented out for quick testing: remove comments	
 

@@ -13,7 +13,7 @@ public abstract class Frame extends JFrame {
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
-				closeEvent();
+				close();
 			}
 		});
 
@@ -22,12 +22,11 @@ public abstract class Frame extends JFrame {
 
 	}
 
-	public void closeEvent() {
-		// TODO: save maximised state
+	public void dispose() {
 		OptionStore.setOption(id+".width", new Integer(getWidth()));
 		OptionStore.setOption(id+".height", new Integer(getHeight()));
-		doClose();
+		super.dispose();
 	}
 
-	abstract public void doClose();
+	abstract public void close();
 }

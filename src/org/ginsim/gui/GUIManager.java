@@ -1,6 +1,11 @@
 package org.ginsim.gui;
 
+import java.awt.AWTEvent;
+import java.awt.Frame;
+import java.awt.event.WindowEvent;
 import java.util.HashMap;
+
+import javax.swing.JOptionPane;
 
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
@@ -13,7 +18,8 @@ import org.ginsim.gui.graph.helper.GraphGUIHelperFactory;
 import org.ginsim.gui.shell.MainFrame;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.common.widgets.Frame;
+import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GUIManager {
 
@@ -127,12 +133,53 @@ public class GUIManager {
 	 * 
 	 * @param graph the graph to close
 	 */
-	public void close( Graph graph){
+	public boolean close( Graph graph){
 		
+		GUIObject o = graphToGUIObject.get(graph);
+		if (!o.graphGUI.isSaved()) {
+			// FIXME: better name
+			String name = "NAME HERE";
+            int aw = JOptionPane.showConfirmDialog(o.frame, Translator.getString("STR_saveQuestion1")+ name +Translator.getString("STR_saveQuestion2"),
+                    Translator.getString("STR_closeConfirm"),
+                    JOptionPane.YES_NO_CANCEL_OPTION);
+            switch (aw) {
+                case JOptionPane.YES_OPTION:
+                	if (!o.graphGUI.save()) {
+                		return false;
+                	}
+                case JOptionPane.NO_OPTION:
+                	break;
+                case JOptionPane.CANCEL_OPTION:
+                default:
+                	return false;
+            }
+		}
+		
+		o.graphGUI.fireGraphClose();
 		graphToGUIObject.remove( graph);
 		GsEnv.unregisterGraph( graph.getGraphID());
+		if (o.frame != null) {
+			o.frame.setVisible(false);
+			o.frame.dispose();
+		}
+		if (graphToGUIObject.size() == 0) {
+			System.exit(0);
+		}
+		return true;
 	}
 	
+	/**
+	 * try to close all frames
+	 */
+	public void quit( ){
+		// FIXME: quit action
+		int nbobjects = graphToGUIObject.size();
+		for (Graph g: graphToGUIObject.keySet()) {
+			if (!close(g)) {
+				break;
+			}
+		}
+	}
 	
 	/**
 	 * Class containing the relationship between a Graph, its GraphGUI the corresponding Frame

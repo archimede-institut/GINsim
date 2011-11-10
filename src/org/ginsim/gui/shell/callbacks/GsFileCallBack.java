@@ -1,5 +1,6 @@
 package org.ginsim.gui.shell.callbacks;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
@@ -14,7 +16,11 @@ import org.ginsim.graph.Graph;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.shell.FrameActionManager;
+
+import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * Callbacks for the "File" menu
@@ -24,7 +30,7 @@ public class GsFileCallBack {
 	private static JMenu recentMenu = new JMenu("Recent files");
 	private static List<String> recentFiles = new ArrayList<String>();
 	
-	protected static void addRecentFile(String path) {
+	public static void addRecentFile(String path) {
 		// add this file on top of the list
 		recentFiles.remove(path);
 		recentFiles.add(0, path);
@@ -116,11 +122,13 @@ class SaveAction extends AbstractAction {
 		this.g = g;
 	}
 	
+	public boolean save() {
+		return GUIManager.getInstance().getGraphGUI(g).save();
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// FIXME: save action
-		System.out.println("TODO: save graph "+g);
-		GsFileCallBack.addRecentFile("saved recent");
+		save();
 	}
 }
 
@@ -136,9 +144,7 @@ class CloseAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		//GraphGUI<?, ?, ?> gui = GUIManager
-		// FIXME: close action
-		System.out.println("TODO: close graph "+g);
+		GUIManager.getInstance().close(g);
 	}
 }
 
@@ -151,7 +157,6 @@ class QuitAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// FIXME: quit action
-		System.out.println("TODO: quit GINsim");
+		GUIManager.getInstance().quit();
 	}
 }

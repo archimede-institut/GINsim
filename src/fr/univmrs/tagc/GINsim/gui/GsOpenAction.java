@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.gui;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Map;
@@ -327,7 +328,7 @@ public class GsOpenAction extends BaseAction {
 	 * @return the path to which we want to save (null if cancelled/protected)
 	 * @throws GsException if an error occured
 	 */
-	public static String selectSaveFile(JFrame frame, FileFilter filter, JComponent accessory, String autoExtension) throws GsException {
+	public static String selectSaveFile(Frame frame, FileFilter filter, JComponent accessory, String autoExtension) throws GsException {
 
 	    getJfc();
 		jfc.setFileFilter(filter);

@@ -16,6 +16,7 @@ import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
 import org.ginsim.exception.NotificationMessage;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
@@ -264,47 +265,25 @@ public class MainFrame extends Frame implements NotificationSource {
     }
 
     /**
-     * close the current window
-     * this will exit if it is the last window
-     */
-    public void doClose() {
-        doClose(true);
-    }
-    /**
      * close the window without exiting:
      *    ie close if it's not the last window
      */
     public void close() {
-        doClose(alwaysForceClose);
+    	GUIManager.getInstance().close(graphGUI.getGraph());
     }
     
     /**
-     * close the window without exiting:
-     *    ie close if it's not the last window
-     * @param force
+     * some things to do before destroying the window
+     * TODO: check if this is actually needed
      */
-    private void doClose(boolean force) {
-        
-        // FIXME: graph not always really closed
-        // --> GsEnv.m_graphs pas vide
-        
-    	if (confirmCloseGraph()) {
-            if (miniMapPanel.isVisible()) {
-                mmapDivLocation = secondarySplitPanel.getWidth() - secondarySplitPanel.getDividerLocation();
-            }
-            OptionStore.setOption("display.minimapsize", new Integer(mmapDivLocation));
-            if (secondaryFrame == null) {
-                OptionStore.setOption("display.dividersize", new Integer(mainSplitPane.getHeight()-mainSplitPane.getDividerLocation()));
-            }
-            // FIXME: unregister the frame instead of exiting blindly
-            System.exit(0);
-//		    if (force || GsEnv.getNbFrame() > 1) {
-//		        GsEnv.delFrame(this);
-//		        dispose();
-//		    } else {
-//		        GsEnv.newGraph(this);
-//		    }
-    	}
+    public void dispose() {
+        if (miniMapPanel.isVisible()) {
+            mmapDivLocation = secondarySplitPanel.getWidth() - secondarySplitPanel.getDividerLocation();
+        }
+        OptionStore.setOption("display.minimapsize", new Integer(mmapDivLocation));
+        if (secondaryFrame == null) {
+            OptionStore.setOption("display.dividersize", new Integer(mainSplitPane.getHeight()-mainSplitPane.getDividerLocation()));
+        }
     }
 
     public boolean confirmCloseGraph() {

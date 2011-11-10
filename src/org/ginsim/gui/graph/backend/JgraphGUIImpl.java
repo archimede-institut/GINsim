@@ -1,8 +1,10 @@
 package org.ginsim.gui.graph.backend;
 
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,15 +14,19 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.helper.GraphGUIHelper;
 import org.ginsim.gui.shell.FrameActionManager;
+import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
@@ -30,6 +36,8 @@ import org.jgrapht.ext.JGraphModelAdapter;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
+import fr.univmrs.tagc.common.Debugger;
 
 public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphViewBackend {
 
@@ -39,6 +47,13 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     private GsJgraph jgraph;
     private final GraphGUIHelper<G,V,E> helper;
     private final EditActionManager editActionManager;
+    
+    private final List<GraphGUIListener<G, V, E>> listeners = new ArrayList<GraphGUIListener<G,V,E>>();
+    
+    // saving memory
+    // FIXME: listen for graph changes and set it as false when needed
+    private boolean isSaved = false;
+    private String savePath = null;
     
     // TODO: should it be static, created later or what ?
     private GsParallelEdgeRouting pedgerouting = new GsParallelEdgeRouting();
@@ -223,6 +238,60 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			m_jgAdapter.cellsChanged(new Object[] {de});
 		}
     }
+
+	@Override
+	public boolean isSaved() {
+		return isSaved;
+	}
+
+	@Override
+	public boolean save() {
+		isSaved = false;
+		if (savePath == null) {
+			saveAs();
+			return isSaved();
+		}
+		
+		// FIXME: actual save, error if failed
+		//graph.save(savePath);
+		
+		Debugger.log("TODO: save...");
+		GsFileCallBack.addRecentFile(savePath);
+		isSaved = true;
+		return true;
+	}
+
+	@Override
+	public void saveAs() {
+		Frame frame = GUIManager.getInstance().getFrame(graph);
+		try {
+			String filename = GsOpenAction.selectSaveFile(frame,	null, null, null);
+			if (filename != null) {
+				savePath = filename;
+				save();
+			}
+		} catch (GsException e) {
+			Debugger.log(e);
+		}
+		
+	}
+
+	@Override
+	public void fireGraphClose() {
+		for (GraphGUIListener<G, V, E> listener: listeners) {
+			listener.graphGUIClosed(this);
+		}
+	}
+
+	@Override
+	public void addGraphGUIListener(GraphGUIListener<G, V, E> listener) {
+		listeners.add(listener);
+	}
+
+	@Override
+	public void removeGraphGUIListener(GraphGUIListener<G, V, E> listener) {
+		listeners.remove(listener);
+	}
 
 }
 
