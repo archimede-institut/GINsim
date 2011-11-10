@@ -12,7 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.ginsim.gui.service.circuit.GsFunctionalityContext;
+import org.ginsim.gui.service.action.circuit.GsFunctionalityContext;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 

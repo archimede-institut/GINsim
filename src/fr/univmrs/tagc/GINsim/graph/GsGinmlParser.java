@@ -4,11 +4,11 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.dynamicgraph.GsDynamicParser;
+import org.ginsim.gui.service.action.connectivity.GsReducedGraphParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraphParser;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicParser;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraphParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryParser;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;

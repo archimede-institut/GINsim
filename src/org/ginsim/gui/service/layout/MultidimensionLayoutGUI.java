@@ -26,9 +26,9 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.service.layout.DynamicLayoutMultidimention;
 
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StockButton;

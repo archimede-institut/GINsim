@@ -4,8 +4,8 @@ import javax.swing.JFrame;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.dynamicgraph.GsDynamicGraphDescriptor;
 
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 
 /**

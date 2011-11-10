@@ -10,6 +10,16 @@ public abstract class GsActionAction extends BaseAction{
 	public GsActionAction(String name) {
 		super(name, null, null, null);
 	}
+
+	/**
+     * 
+     * @param name Entry to insert in the menu
+     * @param tooltip Long description of the action
+     */
+	public GsActionAction(String name, String tooltip) {
+		
+		this(name, null, tooltip, null);
+	}
 	
 	/**
      * 
@@ -19,6 +29,7 @@ public abstract class GsActionAction extends BaseAction{
      * @param accelerator the keyboard bytecut
      */
 	public GsActionAction(String name, ImageIcon icon, String tooltip, KeyStroke accelerator) {
+		
 		super(name, icon, tooltip, accelerator, null);
 	}
 	

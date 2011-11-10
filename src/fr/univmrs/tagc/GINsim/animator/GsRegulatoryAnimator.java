@@ -10,10 +10,10 @@ import javax.swing.JFrame;
 
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;

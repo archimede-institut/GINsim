@@ -12,12 +12,12 @@ import java.util.Vector;
 import javax.swing.JFrame;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+import org.ginsim.gui.service.action.connectivity.AlgoConnectivity;
+import org.ginsim.gui.service.action.connectivity.GsNodeReducedData;
+import org.ginsim.gui.service.action.connectivity.GsReducedGraph;
 
-import fr.univmrs.tagc.GINsim.connectivity.AlgoConnectivity;
-import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
-import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraph;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;

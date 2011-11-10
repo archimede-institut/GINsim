@@ -7,11 +7,11 @@ import java.util.Vector;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.NodeInfo;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;

@@ -3,7 +3,8 @@ package fr.univmrs.tagc.GINsim.stg2htg;
 import java.util.HashSet;
 import java.util.Vector;
 
-import fr.univmrs.tagc.GINsim.connectivity.GsNodeReducedData;
+import org.ginsim.gui.service.action.connectivity.GsNodeReducedData;
+
 
 public class GsComponentVertex extends GsNodeReducedData {
 

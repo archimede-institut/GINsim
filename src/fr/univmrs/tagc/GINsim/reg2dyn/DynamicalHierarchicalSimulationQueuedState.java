@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
 
-import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
 
 public class DynamicalHierarchicalSimulationQueuedState {
 	public byte[] state;

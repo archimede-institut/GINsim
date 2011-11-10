@@ -20,8 +20,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.common.managerresources.Translator;

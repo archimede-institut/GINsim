@@ -6,10 +6,10 @@ import java.util.Set;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
+import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNodeSet;
 
-import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraph;
-import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNode;
-import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalNodeSet;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Tools;

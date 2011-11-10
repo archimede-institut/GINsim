@@ -1,9 +1,9 @@
 package fr.univmrs.tagc.GINsim.reg2dyn.helpers;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.reg2dyn.SimulationQueuedState;

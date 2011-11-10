@@ -15,9 +15,9 @@ import javax.swing.filechooser.FileFilter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.gui.service.action.connectivity.GsReducedGraph;
 
-import fr.univmrs.tagc.GINsim.connectivity.GsReducedGraph;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;

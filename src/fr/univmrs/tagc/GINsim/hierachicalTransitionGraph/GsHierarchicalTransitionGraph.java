@@ -18,13 +18,13 @@ import javax.swing.filechooser.FileFilter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.action.decisionanalysis.GsDecisionOnEdge;
+import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.NodeInfo;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis.GsDecisionOnEdge;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;

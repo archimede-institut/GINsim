@@ -6,9 +6,9 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.action.decisionanalysis.GsDecisionOnEdge;
 
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.DecisionAnalysis.GsDecisionOnEdge;
 
 public class GsHierarchicalEdgeParameterPanel  extends GsParameterPanel {
 	private static final long serialVersionUID = 3342245591953494375L;

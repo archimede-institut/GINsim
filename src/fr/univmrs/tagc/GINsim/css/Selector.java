@@ -4,8 +4,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;

@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Edge;
+import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicGraph;
-import fr.univmrs.tagc.GINsim.dynamicGraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
