@@ -111,9 +111,13 @@ public class GsServiceGUIManager{
 			else{
 				StandaloneGUI standalone = service.getClass().getAnnotation( StandaloneGUI.class);
 				if( standalone != null){
-					List<Action> service_actions = service.getAvailableActions( graph);
-					if( service_actions != null){
-						result.addAll( service_actions);
+					try {
+						List<Action> service_actions = service.getAvailableActions( graph);
+						if( service_actions != null){
+							result.addAll( service_actions);
+						}
+					} catch (Throwable e)  {
+						Debugger.log("Could not create actions for service: "+service);
 					}
 				}
 			}

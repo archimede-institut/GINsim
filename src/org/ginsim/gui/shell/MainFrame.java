@@ -58,6 +58,8 @@ public class MainFrame extends Frame implements NotificationSource {
 	private NotificationPanel notificationPanel = new NotificationPanel(this);
 
 	private final FrameActionManager actionManager = new MainFrameActionManager();
+
+	private final GraphGUI graphGUI;
 	
 	private static final boolean alwaysForceClose = false;
 
@@ -88,7 +90,9 @@ public class MainFrame extends Frame implements NotificationSource {
 
         setContentPane(contentPanel);
         
+        this.graphGUI = graph_gui;
         buildFrameContent( graph_gui);
+        setVisible(true);
 	}
 
 	/**

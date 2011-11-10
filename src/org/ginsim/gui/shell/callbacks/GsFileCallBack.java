@@ -11,6 +11,9 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.testGraph.TestGraph;
+import org.ginsim.graph.testGraph.TestGraphImpl;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.FrameActionManager;
 
 /**
@@ -77,8 +80,14 @@ class NewAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// FIXME: new action
-		System.out.println("TODO: create a new graph");
+		// FIXME: change the default graph type
+		TestGraph lrg = new TestGraphImpl();
+		try {
+			GUIManager.getInstance().newFrame( lrg);
+		} catch (Exception e) {
+			System.err.println("error creating the new frame");
+		}
+		System.out.println("TODO: change new graph type");
 	}
 }
 
@@ -127,6 +136,7 @@ class CloseAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		//GraphGUI<?, ?, ?> gui = GUIManager
 		// FIXME: close action
 		System.out.println("TODO: close graph "+g);
 	}
