@@ -1,10 +1,12 @@
-package fr.univmrs.tagc.GINsim.treeViewer;
+package org.ginsim.gui.service.action.regulatorytreefunction;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.tree.GsTree;
+import org.ginsim.graph.tree.GsTreeNode;
 import org.ginsim.gui.service.action.circuit.OmsddNode;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;

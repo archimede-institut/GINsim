@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.stateInRegulatoryGraph;
+package org.ginsim.gui.service.action.stateinregulatorygraph;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;

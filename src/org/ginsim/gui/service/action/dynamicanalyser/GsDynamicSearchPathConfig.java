@@ -25,8 +25,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableColumn;
 
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.gui.service.action.regulatorygraphanimation.GsAReg2GPConfig;
 
-import fr.univmrs.tagc.GINsim.animator.GsAReg2GPConfig;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;

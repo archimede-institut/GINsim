@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.treeViewer;
+package org.ginsim.graph.tree;
 
 import java.io.File;
 import java.util.Map;

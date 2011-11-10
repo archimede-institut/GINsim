@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.treeViewer;
+package org.ginsim.gui.service.action.regulatorytreefunction;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -12,6 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.graph.tree.GsTree;
 import org.ginsim.gui.service.action.circuit.GsFunctionalityContext;
 
 import fr.univmrs.tagc.common.managerresources.Translator;

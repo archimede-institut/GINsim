@@ -1,10 +1,13 @@
-package fr.univmrs.tagc.GINsim.treeViewer;
+package org.ginsim.gui.service.action.regulatorytreefunction;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import org.ginsim.graph.tree.GsTree;
+import org.ginsim.graph.tree.GsTreeNode;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Tools;

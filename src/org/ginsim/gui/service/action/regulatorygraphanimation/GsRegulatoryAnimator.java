@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.animator;
+package org.ginsim.gui.service.action.regulatorygraphanimation;
 
 import java.awt.Color;
 import java.util.Iterator;
@@ -12,6 +12,7 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+import org.ginsim.gui.service.action.stateinregulatorygraph.GsStateInRegGraph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
@@ -20,7 +21,6 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
 import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.stateInRegulatoryGraph.GsStateInRegGraph;
 
 /**
  * Main class of the animator plugin.

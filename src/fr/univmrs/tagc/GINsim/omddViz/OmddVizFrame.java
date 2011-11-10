@@ -15,13 +15,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.ginsim.graph.tree.GsTree;
+import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParser;
+import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParserFromManualOmdd;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.treeViewer.GsTree;
-import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParser;
-import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParserFromManualOmdd;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 

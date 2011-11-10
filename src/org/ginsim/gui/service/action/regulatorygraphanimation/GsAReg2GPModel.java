@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.animator;
+package org.ginsim.gui.service.action.regulatorygraphanimation;
 
 import java.util.List;
 

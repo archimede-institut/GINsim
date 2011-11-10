@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.treeViewer;
+package org.ginsim.gui.service.action.regulatorytreefunction;
 
 import java.util.List;
 

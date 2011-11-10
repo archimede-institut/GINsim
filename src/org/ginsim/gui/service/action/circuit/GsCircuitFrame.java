@@ -26,8 +26,11 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.graph.tree.GsTree;
 import org.ginsim.gui.service.action.connectivity.AlgoConnectivity;
 import org.ginsim.gui.service.action.connectivity.GsNodeReducedData;
+import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParser;
+import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParserFromCircuit;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -35,9 +38,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.GINsim.treeViewer.GsTree;
-import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParser;
-import fr.univmrs.tagc.GINsim.treeViewer.GsTreeParserFromCircuit;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
