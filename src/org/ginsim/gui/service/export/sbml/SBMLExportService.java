@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
+package org.ginsim.gui.service.export.sbml;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,6 +12,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.service.GsService;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -28,7 +30,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * Logical parameters (via their OMDD representation) are translated into a (dirty?)
  * mathml formula using "&lt;piecewise&gt;" tags.
  */
-public class GsSBMLExport {
+@ProviderFor( GsService.class)
+public class SBMLExportService implements GsService{
 	/**
 	 * @param graph
 	 * @param fileName

@@ -3,7 +3,6 @@ package org.ginsim.gui.service;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import fr.univmrs.tagc.common.widgets.BaseAction;
 
 public abstract class GsActionAction extends BaseAction{
 

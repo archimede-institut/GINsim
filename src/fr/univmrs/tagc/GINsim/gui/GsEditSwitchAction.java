@@ -7,8 +7,9 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import org.ginsim.gui.service.BaseAction;
+
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**
  * Helper action to easily add custom actions (typically layout, export...)

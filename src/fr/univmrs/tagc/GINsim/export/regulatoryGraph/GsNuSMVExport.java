@@ -18,6 +18,7 @@ import javax.swing.JComponent;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
@@ -30,7 +31,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -573,7 +573,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 							.getTreeParameters(sortedVars).reduce();
 				}
 
-				GsSearchStableStates sss = new GsSearchStableStates(graph,
+				StableStatesService sss = new StableStatesService(graph,
 						sortedVars, (GsRegulatoryMutantDef) mutant, tReordered);
 				OmddNode omdds = sss.getStable();
 				int[] stateValues = new int[sortedVars.size()];

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.stableStates;
+package org.ginsim.gui.service.action.stablestates;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 

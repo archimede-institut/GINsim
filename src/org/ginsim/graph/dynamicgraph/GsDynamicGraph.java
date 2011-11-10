@@ -22,6 +22,7 @@ import org.ginsim.graph.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.action.stablestates.StableTableModel;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
@@ -33,7 +34,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryGraphEditor;
-import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.managerresources.Translator;

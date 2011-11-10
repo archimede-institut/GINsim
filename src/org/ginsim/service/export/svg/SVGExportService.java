@@ -1,4 +1,4 @@
-package org.ginsim.service.export;
+package org.ginsim.service.export.svg;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -15,7 +15,9 @@ import java.util.Map;
 
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
+import org.ginsim.service.GsService;
 import org.jgraph.util.Bezier;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -24,7 +26,8 @@ import fr.univmrs.tagc.common.Tools;
 /**
  * export the graph to SVG
  */
-public class GsSVGExport {
+@ProviderFor( GsService.class)
+public class SVGExportService implements GsService{
 
     /**
      * @param graph

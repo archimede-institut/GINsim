@@ -24,6 +24,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.BaseAction;
 import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -39,7 +40,6 @@ import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.AboutDialog;
-import fr.univmrs.tagc.common.widgets.BaseAction;
 
 
 /**

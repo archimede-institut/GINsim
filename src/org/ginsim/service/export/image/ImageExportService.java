@@ -1,14 +1,15 @@
-package org.ginsim.service.export;
+package org.ginsim.service.export.image;
 
 import org.ginsim.graph.Graph;
-
-
+import org.ginsim.service.GsService;
+import org.mangosdk.spi.ProviderFor;
 
 /**
  * export the graph to PNG
  * 
  */
-public class ImageExport {
+@ProviderFor( GsService.class)
+public class ImageExportService implements GsService {
 
     /**
      * @param graph

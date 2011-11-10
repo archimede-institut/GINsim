@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.stableStates;
+package org.ginsim.service.action.stablestates;
 
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +23,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
  * but immediately assembled.
  * The order in which they are considerd is also chosen to keep them small as long as possible.
  */
-public class GsSearchStableStates {
+public class StableStatesService {
 
 	private GsRegulatoryGraph regGraph;
 	List nodeOrder;
@@ -39,7 +39,7 @@ public class GsSearchStableStates {
 	int bestIndex, bestValue;
 	int nbgene, nbremain;
 
-	public GsSearchStableStates( Graph regGraph, List nodeOrder, Perturbation mutant) {
+	public StableStatesService( Graph regGraph, List nodeOrder, Perturbation mutant) {
 		
 		this.regGraph = (GsRegulatoryGraph) regGraph;
 		this.nodeOrder = nodeOrder;
@@ -47,7 +47,7 @@ public class GsSearchStableStates {
 		this.t_param = this.regGraph.getAllTrees(true);
 	}
 
-	public GsSearchStableStates( Graph regGraph, List nodeOrder, Perturbation mutant,
+	public StableStatesService( Graph regGraph, List nodeOrder, Perturbation mutant,
 			OmddNode[] trees) {
 		
 		this.regGraph = (GsRegulatoryGraph) regGraph;

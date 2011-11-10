@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.widgets;
+package org.ginsim.gui.service;
 
 import java.net.URL;
 
@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.widgets.StockButton;
 
 /**
  * this class is used for all actions, it will lookup for an internatiolized string

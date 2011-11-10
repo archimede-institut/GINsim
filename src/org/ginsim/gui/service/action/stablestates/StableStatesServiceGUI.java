@@ -1,4 +1,4 @@
-package org.ginsim.gui.service.action.circuit;
+package org.ginsim.gui.service.action.stablestates;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -12,51 +12,51 @@ import org.ginsim.graph.Graph;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.GsActionAction;
 import org.ginsim.gui.service.GsServiceGUI;
-import org.ginsim.service.action.circuit.CircuitService;
+import org.ginsim.service.action.stablestates.StableStatesService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
- * main method for the circuit service
- * 
- * @author Aurelien Naldi
+ * Define the action for stableStates service
  */
 @ProviderFor( GsServiceGUI.class)
-@GUIFor( CircuitService.class)
-public class CircuitServiceGUI implements GsServiceGUI {
-
+@GUIFor( StableStatesService.class)
+public class StableStatesServiceGUI implements GsServiceGUI {
+    
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		
 		if (graph instanceof GsRegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new CircuitAction((GsRegulatoryGraph)graph));
+			actions.add(new StableStatesAction( (GsRegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
 	}
 }
 
-class CircuitAction extends GsActionAction {
+class StableStatesAction extends GsActionAction {
 
 	private final GsRegulatoryGraph graph;
 	
-	public CircuitAction(GsRegulatoryGraph graph) {
+	public StableStatesAction(GsRegulatoryGraph graph) {
 		
-		super("STR_circuit");
+		super( "STR_stableStates", "STR_stableStates_descr");
 		this.graph = graph;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        if (graph.getNodeOrderSize() < 1) {
+		
+    	if (graph.getNodeOrderSize() < 1) {
             new NotificationMessage( (NotificationMessageHolder) graph, Translator.getString("STR_emptyGraph"), NotificationMessage.NOTIFICATION_WARNING);
-            return;
-        }
-        // TODO : REFACTORING ACTION
-        // TODO: get the parent frame
-        new GsCircuitFrame( null, graph);
+    		return;
+    	}
+
+    	GsStableStateUI ui = new GsStableStateUI( graph);
+    	ui.setVisible(true);
 	}
 	
 }

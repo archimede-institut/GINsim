@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.stableStates;
+package org.ginsim.gui.service.action.stablestates;
 
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
+import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -66,9 +68,9 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	
 	protected void run() {
 		setRunning(true);
-		// Pedro: I changed both this file and GsSearchStableStates.java to separate
+		// Pedro: I changed both this file and StableStatesService.java to separate
 		// GUI/Service and use Service on NuSMVExport. Also removed Thread from GsSearchSS.
-		GsSearchStableStates sss = new GsSearchStableStates(graph,
+		StableStatesService sss = new StableStatesService(graph,
 				graph.getNodeOrder(),
 				(GsRegulatoryMutantDef)mutantstore.getObject(0));
 		setResult(sss.getStable());

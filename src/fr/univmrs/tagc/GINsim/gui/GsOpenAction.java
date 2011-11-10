@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.BaseAction;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
@@ -22,7 +23,6 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphOptionPanel;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**
  * generic action for open methods: uses it's graphDescriptor to open a new graph

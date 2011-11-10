@@ -25,6 +25,8 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.action.stablestates.StableTableModel;
+import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
@@ -47,8 +49,6 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTree
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
-import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
@@ -179,7 +179,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 
 	private void writeMutants() throws IOException {
 		GsRegulatoryMutants mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
-		GsSearchStableStates stableSearcher = new GsSearchStableStates(config.getGraph(), null, null);
+		StableStatesService stableSearcher = new StableStatesService(config.getGraph(), null, null);
 		OmddNode stable;
 		
 		String[] cols;

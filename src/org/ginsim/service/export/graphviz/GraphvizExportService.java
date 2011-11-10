@@ -1,4 +1,4 @@
-package org.ginsim.service.export;
+package org.ginsim.service.export.graphviz;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,6 +9,9 @@ import java.util.Date;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
+import org.ginsim.service.GsService;
+import org.ginsim.service.export.Dotify;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 
@@ -18,7 +21,8 @@ import fr.univmrs.tagc.GINsim.global.GsEnv;
  * but isn't jgraph specific and writes the result to a File instead of putting it in a String.
  * (basically no original code remains..)
  */
-public class GsGraphvizEncoder {
+@ProviderFor( GsService.class)
+public class GraphvizExportService implements GsService {
 
 	/**
 	 * @param graph

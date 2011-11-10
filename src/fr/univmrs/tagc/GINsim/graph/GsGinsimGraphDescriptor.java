@@ -16,6 +16,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.gui.service.BaseAction;
 import org.ginsim.gui.service.action.connectivity.GsReducedGraph;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
@@ -25,7 +26,6 @@ import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**
  * descriptor for regulatoryGraph.

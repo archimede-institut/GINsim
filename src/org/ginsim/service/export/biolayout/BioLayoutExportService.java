@@ -1,4 +1,4 @@
-package org.ginsim.service.export;
+package org.ginsim.service.export.biolayout;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,13 +9,16 @@ import java.util.Iterator;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
+import org.ginsim.service.GsService;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
 
 /**
  * Encode a graph to biolayout format.
  */
-public class GsBioLayoutEncoder {
+@ProviderFor( GsService.class)
+public class BioLayoutExportService implements GsService{
 	static transient Hashtable hash;
 
 	/**

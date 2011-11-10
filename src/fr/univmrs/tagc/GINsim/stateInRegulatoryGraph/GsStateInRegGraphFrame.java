@@ -18,13 +18,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.action.stablestates.StableTableModel;
+import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.GINsim.stableStates.GsSearchStableStates;
-import fr.univmrs.tagc.GINsim.stableStates.StableTableModel;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.datastore.gui.SimpleStateListTableModel;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -224,7 +224,7 @@ class StableState extends TabComponantProvidingAState {
 	private GsRegulatoryGraph g;
 	private JButton computeStableStateButton;
 	
-	private GsSearchStableStates sss;
+	private StableStatesService sss;
 
 	private StableTableModel tableModel;
 
@@ -282,7 +282,7 @@ class StableState extends TabComponantProvidingAState {
 	}
 
 	protected void run() {
-		sss = new GsSearchStableStates(g, g.getNodeOrder(), (GsRegulatoryMutantDef) mutantStore.getObject(0));
+		sss = new StableStatesService(g, g.getNodeOrder(), (GsRegulatoryMutantDef) mutantStore.getObject(0));
 		OmddNode stable = sss.getStable();
 		tableModel.setResult(stable, g);
 	}

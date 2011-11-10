@@ -3,9 +3,9 @@ package fr.univmrs.tagc.GINsim.gui;
 import java.awt.event.ActionEvent;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.gui.service.BaseAction;
 
 import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.common.widgets.BaseAction;
 
 /**
  * Helper action to easily add custom mode (as several kind of vertex or edge to add)
