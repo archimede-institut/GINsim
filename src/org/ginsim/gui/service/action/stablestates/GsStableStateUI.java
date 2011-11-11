@@ -29,7 +29,7 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	JPanel buttonPanel;
 	
 	public GsStableStateUI(GsRegulatoryGraph graph) {
-		super(graph.getGraphManager().getMainFrame(), "display.stableStates", 200, 100);
+		super(graph, "display.stableStates", 200, 100);
 		this.graph = graph;
 		setTitle(Translator.getString("STR_stableStates"));
 

@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -27,6 +27,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.graph.GraphGUI;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -94,8 +95,8 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	/**
 	 * This is the default constructor
 	 */
-	public GsGraphicAttributePanel() {
-		super();
+	public GsGraphicAttributePanel(GraphGUI<?, ?, ?> gui) {
+		super(gui);
 		initialize();
 	}
 
@@ -108,14 +109,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		this.setPreferredSize(new Dimension(400,60));
 		this.add(getJP_attr(), BorderLayout.CENTER);
 		this.add(getJP_bttn(), BorderLayout.EAST);
-	}
-
-	/**
-	 * get the main frame
-	 * @return the main frame
-	 */
-	public GsMainFrame getMainFrame() {
-		return mainFrame;
 	}
 
 	/**
@@ -147,7 +140,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			jButton_bgcolor.setEnabled(false);
 			jButton_bgcolor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					setBackgroundColor(JColorChooser.showDialog(mainFrame,Translator.getString("choose_color"),getBackgroundColor()));
+					setBackgroundColor(JColorChooser.showDialog(frame,Translator.getString("choose_color"),getBackgroundColor()));
 					applyBackgroundColor();
 				}
 			});
@@ -403,7 +396,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			jButton_fgcolor.setEnabled(false);
 			jButton_fgcolor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					setForegroundColor(JColorChooser.showDialog(mainFrame,Translator.getString("choose_color"),null));
+					setForegroundColor(JColorChooser.showDialog(frame,Translator.getString("choose_color"),null));
 					applyForegroundColor();
 				}
 			});
@@ -421,7 +414,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 			jButton_linecolor = new JButton();
 			jButton_linecolor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					setLineColor(JColorChooser.showDialog(mainFrame,Translator.getString("choose_color"),null));
+					setLineColor(JColorChooser.showDialog(frame,Translator.getString("choose_color"),null));
 					applyLineColor();
 				}
 			});
@@ -857,7 +850,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	/*
 	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
 	 */
-	public void setEditedObject(Object obj) {
+	public void setEditedItem(Object obj) {
         allDisabled();
         if (obj == null) {
             whatIsSelected = NOTHINGSELECTED;
@@ -964,14 +957,12 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 	protected void applyToAll() {
 		switch(whatIsSelected) {
 			case EDGESELECTED:
-                Iterator it;
-                if (v_selection != null) {
-                    it = v_selection.iterator();
-                } else {
-                    it = mainFrame.getGraph().getEdges().iterator();
+				Collection edges = v_selection;
+                if (v_selection == null) {
+                    edges = graph.getEdges();
                 }
-				while (it.hasNext()) {
-					eReader.setEdge(it.next());
+				for (Object edge: edges) {
+					eReader.setEdge(edge);
 					if (jCB_selectLineColor.isSelected()) {
 						eReader.setLineColor(jButton_linecolor.getBackground());
 					}
@@ -993,13 +984,12 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 				break;
 			case VERTEXSELECTED:
                 refreshSize();
-                if (v_selection != null) {
-                    it = v_selection.iterator();
-                } else {
-                    it = mainFrame.getGraph().getVertices().iterator();
+                Collection<?> vertices = v_selection;
+                if (v_selection == null) {
+                    vertices = graph.getVertices();
                 }
-				while (it.hasNext()) {
-					vReader.setVertex(it.next());
+				for (Object vertex: vertices) {
+					vReader.setVertex(vertex);
 					if (jCB_selectShape.isSelected()) {
 						vReader.setShape(jComboBox_shape.getSelectedIndex());
 					}

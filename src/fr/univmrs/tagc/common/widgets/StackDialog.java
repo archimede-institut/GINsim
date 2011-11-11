@@ -2,14 +2,17 @@ package fr.univmrs.tagc.common.widgets;
 
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -34,13 +37,21 @@ abstract public class StackDialog extends SimpleDialog {
     protected JButton bclose;
     
     /**
-     * 
+     * @param graph
+     * @param id an id to store the windows size (will be "id.width" and "id.height")
+     * @param w
+     * @param h
+     */
+    public StackDialog(Graph<?,?> graph, String id, int w, int h) {
+    	this(GUIManager.getInstance().getFrame(graph), id, w, h);
+    }
+    /**
      * @param parent
      * @param id an id to store the windows size (will be "id.width" and "id.height")
      * @param w
      * @param h
      */
-    public StackDialog(JFrame parent, String id, int w, int h) {
+    public StackDialog(Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
         JPanel contentPane = (JPanel)getContentPane();
         mainPanel = new JPanel();

@@ -9,6 +9,8 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.common.datastore.GenericList;
@@ -17,10 +19,10 @@ import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class RegulatoryEdgeEditor extends ObjectEditor {
+public class RegulatoryEdgeEditor extends ObjectEditor<GsRegulatoryMultiEdge> {
 
-	Graph graph;
-	GsRegulatoryMultiEdge medge;
+	private final Graph graph;
+	private final GraphGUI gui;
 	GsRegulatoryEdge edge;
 	EdgeList edgeList;
 	
@@ -36,6 +38,7 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	
 	public RegulatoryEdgeEditor(GsRegulatoryGraph graph) {
 		this.graph = graph;
+		this.gui = GUIManager.getInstance().getGraphGUI(graph);
 		master = graph;
 		
 		// info on top
@@ -68,14 +71,14 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 		v_prop.add(pinfo);
 	}
 	
-	public void setEditedObject(Object o) {
-		this.medge = (GsRegulatoryMultiEdge)o;
-		if (medge == null) {
+	@Override
+	public void setEditedItem(GsRegulatoryMultiEdge o) {
+		if (o == null) {
 			return;
 		}
-		this.edge = medge.getEdge(0);
-		edgeList.setMEdge(medge);
-		super.setEditedObject(o);
+		this.edge = o.getEdge(0);
+		edgeList.setMEdge(o);
+		super.setEditedItem(o);
 	}
 
 
@@ -94,8 +97,8 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	public boolean setValue(int prop, int value) {
 		switch (prop) {
 			case EDGES:
-				if (value > -1 && value < medge.getEdgeCount()) {
-					edge = medge.getEdge(value);
+				if (value > -1 && value < o.getEdgeCount()) {
+					edge = o.getEdge(value);
 					
 					// FIXME: hack to trigger a refresh and avoid an infinite loop
 					// it should be replaced by something cleaner...
@@ -112,9 +115,9 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	public String getStringValue(int prop) {
 		switch (prop) {
 			case SOURCE:
-				return medge.getSource().getId();
+				return o.getSource().getId();
 			case TARGET:
-				return medge.getTarget().getId();
+				return o.getTarget().getId();
 		}
 		return null;
 	}
@@ -122,10 +125,10 @@ public class RegulatoryEdgeEditor extends ObjectEditor {
 	public void performAction(int prop) {
 		switch (prop) {
 			case SOURCE:
-				graph.getGraphManager().select(medge.getSource());
+				gui.selectVertex(o.getSource());
 				break;
 			case TARGET:
-				graph.getGraphManager().select(medge.getTarget());
+				gui.selectVertex(o.getTarget());
 				break;
 		}
 	}

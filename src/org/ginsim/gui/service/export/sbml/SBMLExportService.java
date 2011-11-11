@@ -16,10 +16,10 @@ import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
@@ -136,7 +136,7 @@ public class SBMLExportService implements GsService{
             out.closeTag(); // sbml
             os.close();
 		} catch (IOException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		}
 	}
 

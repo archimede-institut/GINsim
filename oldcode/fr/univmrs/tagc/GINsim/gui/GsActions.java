@@ -27,7 +27,6 @@ import org.ginsim.graph.Graph;
 import org.ginsim.gui.service.BaseAction;
 import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;

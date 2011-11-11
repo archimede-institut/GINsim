@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
+import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 import org.ginsim.gui.service.action.decisionanalysis.GsDecisionOnEdge;
 import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
@@ -105,7 +106,6 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	    this( true);
         GsHierarchicalTransitionGraphParser parser = new GsHierarchicalTransitionGraphParser();
         parser.parse(file, map, this);
-		graphManager.ready();
 	}
 
 	/**
@@ -190,9 +190,6 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	}
 	
 	protected JPanel doGetFileChooserPanel() {
-		return getOptionPanel();
-	}
-	private JPanel getOptionPanel() {
 		if (optionPanel == null) {
             Object[] t_mode = { Translator.getString("STR_saveNone"),
                     Translator.getString("STR_savePosition"),
@@ -216,67 +213,50 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
     }
 
 	
-	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
-	       try {
-	            XMLWriter out = new XMLWriter(os, dtdFile);
-		  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-				out.write("\t<graph id=\"" + graphName + "\"");
-				out.write(" class=\"hierarchicalTransitionGraph\"");
-				out.write(" iscompact=\""+this.transientCompactionMode+"\"");
-				out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
-				saveNode(out, mode, selectedOnly);
-				saveEdge(out, mode, selectedOnly);
-	            if (graphAnnotation != null) {
-	            	graphAnnotation.toXML(out, null, 0);
-	            }
-	            // save the ref of the associated regulatory graph!
-	            if (associatedGraph != null) {
-	                associatedID = associatedGraph.getSaveFileName();
-	            }
-	            if (associatedID != null) {
-	                out.write("<link xlink:href=\""+associatedID+"\"/>\n");
-	            }
-		  		out.write("\t</graph>\n");
-		  		out.write("</gxl>\n");
-	        } catch (IOException e) {
-	            throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_unableToSave")+": " +e.getMessage());
-	        }
+	protected void doSave(OutputStreamWriter os, int mode, Collection<GsHierarchicalNode> nodes, Collection<GsDecisionOnEdge> edges) throws GsException {
+       try {
+            XMLWriter out = new XMLWriter(os, dtdFile);
+	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
+			out.write("\t<graph id=\"" + graphName + "\"");
+			out.write(" class=\"hierarchicalTransitionGraph\"");
+			out.write(" iscompact=\""+this.transientCompactionMode+"\"");
+			out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
+			saveNode(out, mode, nodes);
+			saveEdge(out, mode, edges);
+            if (graphAnnotation != null) {
+            	graphAnnotation.toXML(out, null, 0);
+            }
+            // save the ref of the associated regulatory graph!
+            if (associatedGraph != null) {
+                associatedID = associatedGraph.getSaveFileName();
+            }
+            if (associatedID != null) {
+                out.write("<link xlink:href=\""+associatedID+"\"/>\n");
+            }
+	  		out.write("\t</graph>\n");
+	  		out.write("</gxl>\n");
+        } catch (IOException e) {
+            throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_unableToSave")+": " +e.getMessage());
+        }
 	}
 	
-	private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-		Iterator it;
-	     if (selectedOnly) {
-	     		it = graphManager.getFullySelectedEdgeIterator();
-	     } else {
-	     		it = getEdges().iterator();
-	     }
-	     while (it.hasNext()) {
-	     	Object o_edge = it.next();
-	     	if (o_edge instanceof GsDirectedEdge) {
-	     		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-		            String source = ""+((GsHierarchicalNode)edge.getSource()).getUniqueId();
-		            String target =""+((GsHierarchicalNode) edge.getTarget()).getUniqueId();
-		            out.write("\t\t<edge id=\"e"+(++saveEdgeId)+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
-	     	}
+	private void saveEdge(XMLWriter out, int mode, Collection<GsDecisionOnEdge> edges) throws IOException {
+	     for (GsDecisionOnEdge edge: edges) {
+            String source = "" + edge.getSource().getUniqueId();
+            String target = "" + edge.getTarget().getUniqueId();
+            out.write("\t\t<edge id=\"e"+(++saveEdgeId)+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
 	     }
 	 }
 	 
 	 /**
 	  * @param out
 	  * @param mode
-	  * @param selectedOnly
+	  * @param vertices
 	  * @throws IOException
 	  */
-	 private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-	 	Iterator it;
-	 	if (selectedOnly) {
-	 		it = graphManager.getSelectedVertexIterator();
-	 	} else {
-	 		it = getVertices().iterator();
-	 	}
+	 private void saveNode(XMLWriter out, int mode, Collection<GsHierarchicalNode> vertices) throws IOException {
 	 	GsVertexAttributesReader vReader = getVertexAttributeReader();
-	     while (it.hasNext()) {
-	    	 GsHierarchicalNode vertex = (GsHierarchicalNode)it.next();
+	     for (GsHierarchicalNode vertex: vertices) {
 	         vReader.setVertex(vertex);
 	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
 	         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");

@@ -8,8 +8,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
-
 /**
  * describes a kind of graph.
  * Implementors are highly encouraged to offer a static <code>getInstance()</code> method
@@ -33,13 +31,6 @@ public interface GsGraphDescriptor {
      * @return true if this kind of graph can be created interactivly by the user.
      */
     public boolean canCreate();
-    /**
-     * @param m
-     * @return a new graph.
-     */
-    // TODO Remove this method and implement a more specialized one that will create only RegulatoryGraph at startup
-    // or when "New" button is pressed
-    public Graph getNew(GsMainFrame m);
     
 	/**
 	 * @param file

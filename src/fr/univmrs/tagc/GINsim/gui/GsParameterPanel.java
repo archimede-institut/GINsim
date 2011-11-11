@@ -1,8 +1,12 @@
 package fr.univmrs.tagc.GINsim.gui;
 
+import java.awt.Frame;
+
 import javax.swing.JPanel;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 
 
 
@@ -12,28 +16,24 @@ import org.ginsim.graph.Graph;
 public abstract class GsParameterPanel extends JPanel {
 	private static final long	serialVersionUID	= 8326061792159035277L;
 	
-	protected GsMainFrame mainFrame;
-    protected Graph<?,?> graph;
+	protected final GraphGUI<?, ?, ?> gui;
+    protected final Graph<?,?> graph;
+    protected final Frame frame;
     
-    /**
+    public GsParameterPanel(GraphGUI<?, ?, ?> gui) {
+    	this.gui = gui;
+    	this.graph = gui.getGraph();
+    	this.frame = GUIManager.getInstance().getFrame(graph);
+    }
+    
+    public GsParameterPanel(Graph<?,?> graph) {
+		this(GUIManager.getInstance().getGraphGUI(graph));
+	}
+
+	/**
      * inform the panel that the select object changed.
      * @param obj the currently selected object
      */
-    public abstract void setEditedObject(Object obj);
+    public abstract void setEditedItem(Object obj);
 
-    /**
-     * @param mainFrame
-     */
-    public void setMainFrame( GsMainFrame mainFrame) {
-        this.mainFrame = mainFrame;
-        
-        setGraph( mainFrame.getGraph());
-    }
-    
-    /**
-     * @param graph
-     */
-    public void setGraph( Graph<?,?> graph) {
-    	    this.graph = graph;
-    }
 }

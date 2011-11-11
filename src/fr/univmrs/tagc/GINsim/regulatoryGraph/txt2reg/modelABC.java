@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
+import org.ginsim.gui.GUIManager;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
@@ -92,7 +92,7 @@ public final class modelABC {
 		catch (Exception e){};    
 		defineModel();
 		// propose to display the new graph 
-		new GsWhatToDoFrame(null, model, true);
+		GUIManager.getInstance().whatToDoWithGraph(model, true);
 	}				
 
 
@@ -116,9 +116,8 @@ public final class modelABC {
 		// add  vertices
 		GsRegulatoryVertex [] G = new GsRegulatoryVertex [n];
 
-		for (j=0; j<n; j++)
-		{
-			G[j] = (GsRegulatoryVertex)model.interactiveAddVertex(0, j, 2*j);
+		for (j=0; j<n; j++) {
+			G[j] = model.addVertex();
 		}
 
 		// ----------------------------------------------------------------------------------------------------------------------------------		
@@ -155,26 +154,22 @@ public final class modelABC {
 		// search the table to define, for each component, the nb of occurrences of each series of blocs
 		// o[i] is the number of times all the values of i have to be considered
 		int o[]=new int[n];                //the number of occurrences of the blocs for each component
-		for (i=0;i<n;i++)
-		{
+		for (i=0;i<n;i++) {
 			o[i]=1;                        // calculation of the number of occurrences of the series of blocks
-			for ( j=i-1;j>=0;j--)
-			{
+			for ( j=i-1;j>=0;j--) {
 				o[i]=o[i]*(m[j]+1);
 			}
-
 		}
 		// List of the comparisons
 
 		incoming_edges=new List[n];
 		table_interactors=new List[n];
 		byte sign;
-		GsGraphManager manager = model.getGraphManager();  
-		for ( i=0;i<n;i++)
-		{                
+		for ( i=0;i<n;i++) {                
 			incoming_edges[i]=new ArrayList(); //instantiate one list for each component to store the incoming edges
 			table_interactors[i]=new ArrayList();
 		}
+		
 		for ( i=0;i<n;i++)              // for each component i, we want to determine its influence to determine all the interactions
 		{
 			for ( j=0;j<o[i];j++)    // for each occurrence of the series of blocks
@@ -186,16 +181,17 @@ public final class modelABC {
 					{
 						for( int u=n; u<2*n; u++) // running columns of images (second part of the table)
 						{
-							sign=-1; // sign is used to define the type of the interaction (positive/negative)
+							sign = 0; // sign is used to define the type of the interaction (positive/negative)
 
-							if(table_gene[l][u]> table_gene[l+b[i]][u]) sign=1;  // negative interaction
-							else if (table_gene[l][u]< table_gene[l+b[i]][u]) sign=0; // positive interaction
-							if (sign!=-1) 
-							{
-								if ((GsDirectedEdge)manager.getEdge(G[i], G[u-n])==null)
-								{
-									model.interactiveAddEdge(G[i], G[u-n], sign); 
-									GsRegulatoryMultiEdge me =(GsRegulatoryMultiEdge)manager.getEdge(G[i], G[u-n]);
+							if(table_gene[l][u]> table_gene[l+b[i]][u]) {
+								sign = -1;  // negative interaction
+							} else if (table_gene[l][u]< table_gene[l+b[i]][u]) {
+								sign = 1; // positive interaction
+							}
+							if (sign != 0) {
+								if (model.getEdge(G[i], G[u-n]) == null) {
+									model.addEdge(G[i], G[u-n], sign); 
+									GsRegulatoryMultiEdge me = model.getEdge(G[i], G[u-n]);
 									incoming_edges[u-n].add(me.getEdge(0)); 
 									table_interactors[u-n].add(i);
 								}
@@ -222,7 +218,7 @@ public final class modelABC {
 						int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
 						if (table_gene[j][reg]==1 )  
 						{	 
-							GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)manager.getEdge(G[reg], G[i]);
+							GsRegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
 							activeInteractions.add(me.getEdge(0));
 						}
 
@@ -242,34 +238,27 @@ public final class modelABC {
 
 		//----------test-----------
 
-		for (i=0; i<n; i++) 
-		{
+		for (i=0; i<n; i++) {
+			
 			int deg=incoming_edges[i].size();
-			for (j=0; j<L; j++) 
-			{
-				if (table_gene[j][i+n]!=0)  
-				{
+			for (j=0; j<L; j++) {
+				if (table_gene[j][i+n]!=0) {
 					List activeInteractions=new ArrayList();
-					for(k=0;k<deg;k++)
-					{
+					for (k=0 ; k<deg ; k++) {
 						int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
-						if (table_gene[j][reg]==2 )  
-						{	 
-							GsRegulatoryMultiEdge me =(GsRegulatoryMultiEdge)manager.getEdge(G[reg], G[i]);
+						if (table_gene[j][reg]==2 ) {	 
+							GsRegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
 							activeInteractions.add(me.getEdge(0));
 						}
 					}
 
 					listOfParam = G[i].getV_logicalParameters();  
-					if (!listOfParam.contains(activeInteractions)) //check if the parameter already exists in the list if not create it 
-					{ 					 
+					if (!listOfParam.contains(activeInteractions)) { //check if the parameter already exists in the list if not create it 
 						GsLogicalParameter newParam = new GsLogicalParameter(activeInteractions,2); 
 						G[i].addLogicalParameter((newParam),true); 
-
 					}
 				}
 			}	
-
 		}
 	}
 }

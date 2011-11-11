@@ -8,9 +8,11 @@ import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
@@ -39,31 +41,39 @@ import fr.univmrs.tagc.common.xml.XMLize;
 
 public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 
-	Map files = new TreeMap();
-	Map m_references = new HashMap();
-	Map m_used = new HashMap();
-	Ref curRef = null;
-	Graph graph;
-	
-	public BiblioList( Graph graph) {
+	private final Map<String, Date> files = new TreeMap<String, Date>();
+	private final Map<String, Ref> m_references = new HashMap<String, Ref>();
+	private final Set<String> m_used = new HashSet<String>();
+	private final Graph<?,?> graph;
+
+	private Ref curRef = null;
+	private boolean parsing;
+
+	public BiblioList( Graph<?,?> graph, boolean parsing) {
 		this.graph = graph;
+		this.parsing = parsing;
 		graph.addGraphListener(this);
+	}
+	/**
+	 * FIXME: don't use this constructor
+	 * @param graph
+	 */
+	public BiblioList( Graph graph) {
+		this(graph, false);
 	}
 
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
 		out.openTag("biblio");
 		
 		out.openTag("files");
-		Iterator it = files.keySet().iterator();
-		while (it.hasNext()) {
-			out.addTag("file", new String[] {"filename", it.next().toString()});
+		for (String key: files.keySet()) {
+			out.addTag("file", new String[] {"filename", key});
 		}
 		out.closeTag();
 		
 		out.openTag("refs");
-		it = m_used.keySet().iterator();
-		while (it.hasNext()) {
-			Ref ref = (Ref)m_references.get(it.next());
+		for (String key: m_used) {
+			Ref ref = m_references.get(key);
 			if (ref != null) {
 				ref.toXML(out, param, mode);
 			}
@@ -98,7 +108,7 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 		if (!proto.equals("ref")) {
 			return;
 		}
-		m_used.put(value, null);
+		m_used.add(value);
 		if (!m_references.containsKey(value)) {
 			addMissingRefWarning(value);
 		}
@@ -127,18 +137,18 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 		return true;
 	}
 
+	@Override
 	public void endParsing() {
-		Iterator it_used = m_used.keySet().iterator();
-		while (it_used.hasNext()) {
-			Object ref = it_used.next();
-			if (!m_references.containsKey(ref)) {
-				addMissingRefWarning(ref.toString());
+		parsing = false;
+		for (String key: m_used) {
+			if (!m_references.containsKey(key)) {
+				addMissingRefWarning(key);
 				break;
 			}
 		}
 	}
 	public void addMissingRefWarning(String value) {
-		if (graph.isParsing()) {
+		if (parsing) {
 			return;
 		}
 		// just in case: check if one of the source file has been updated

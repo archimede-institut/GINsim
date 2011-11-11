@@ -3,10 +3,10 @@ package org.ginsim.gui.service.action.decisionanalysis;
 import java.util.List;
 
 import org.ginsim.graph.Edge;
+import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
 
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
  * 
@@ -20,9 +20,9 @@ public class GsDecisionOnEdge extends Edge<GsHierarchicalNode> implements ToolTi
 	private static final int CHANGE_DECREASE = -1;
 	private static final int CHANGE_BOTH = 3;
 	private int[] genesUpdated = null;
-	private List<GsRegulatoryVertex> nodeOrder;
+	private List<NodeInfo> nodeOrder;
 
-	public GsDecisionOnEdge(GsHierarchicalNode source, GsHierarchicalNode target, List<GsRegulatoryVertex> nodeOrder) {
+	public GsDecisionOnEdge(GsHierarchicalNode source, GsHierarchicalNode target, List<NodeInfo> nodeOrder) {
 		super(source, target);
         this.nodeOrder = nodeOrder;
 		// FIXME: new constructor for en empty decision, see init method below

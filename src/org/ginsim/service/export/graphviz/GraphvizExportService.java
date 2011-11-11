@@ -13,7 +13,7 @@ import org.ginsim.service.GsService;
 import org.ginsim.service.export.Dotify;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
+import fr.univmrs.tagc.common.Tools;
 
 /**
  * Encode a graph to graphviz format.
@@ -72,7 +72,7 @@ public class GraphvizExportService implements GsService {
 			out.write("\n}");
 			out.close();
 		} catch (IOException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		}
 	}
 }

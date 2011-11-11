@@ -16,12 +16,13 @@ import javax.swing.JTextArea;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
@@ -97,7 +98,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 		try {
 			graph.setGraphName(attributes.getValue("id"));
 		} catch (GsException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+			GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 		}
 
 		vareader = graph.getVertexAttributeReader();
@@ -224,7 +225,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                     try {
                         graph.setGraphName(attributes.getValue("id"));
                     } catch (GsException e) {
-                        GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+                        GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
                     }
                 }
                 pos = POS_OUT;
@@ -393,7 +394,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     		if (m != null) {
     			graph.addNotificationMessage(new NotificationMessage(graph,
     					"inconsistency in some interactions",
-    					new InteractionInconsistencyAction(),
+    					new InteractionInconsistencyAction(graph),
     					m,
     					NotificationMessage.NOTIFICATION_WARNING_LONG));
     		}
@@ -449,7 +450,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     		}
     		if (!ok || v_order.size() != graph.getVertexCount()) {
     			// error
-    			Tools.error("incoherent nodeOrder, not restoring it", null);
+    			Tools.error("incoherent nodeOrder, not restoring it");
     		} else {
     			graph.setNodeOrder(v_order);
     		}
@@ -542,12 +543,18 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 
 class InteractionInconsistencyAction implements NotificationMessageAction {
 
+	private final GsRegulatoryGraph graph;
+	
+	public InteractionInconsistencyAction(GsRegulatoryGraph graph) {
+		this.graph = graph;
+	}
+	
 	public String[] getActionName() {
 		String t[] = { "view" };
 		return t;
 	}
 
-	public boolean perform( Graph graph, Object data, int index) {
+	public boolean perform( NotificationMessageHolder holder, Object data, int index) {
 		StackDialog d = new InteractionInconsistencyDialog((Map)data,
 				graph,
 				"interactionInconststancy",
@@ -556,7 +563,7 @@ class InteractionInconsistencyAction implements NotificationMessageAction {
 		return true;
 	}
 
-	public boolean timeout( Graph graph, Object data) {
+	public boolean timeout( NotificationMessageHolder holder, Object data) {
 		return true;
 	}
 }
@@ -567,12 +574,12 @@ class InvalidFunctionNotificationAction implements NotificationMessageAction {
 		super();
 	}
 	
-	public boolean timeout( Graph graph, Object data) {
+	public boolean timeout( NotificationMessageHolder graph, Object data) {
 		
 		return false;
 	}
 
-	public boolean perform( Graph graph, Object data, int index) {
+	public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 		
 		Vector v = (Vector)data;
 		byte value = ((Short)v.elementAt(0)).byteValue();
@@ -613,7 +620,7 @@ class InteractionInconsistencyDialog extends StackDialog {
 	public InteractionInconsistencyDialog(Map m, Graph graph,
 			String msg, int w, int h) {
 		
-		super( graph.getGraphManager().getMainFrame(), msg, w, h);
+		super( graph, msg, w, h);
 		this.graph = (GsRegulatoryGraph)graph;
 		this.m = m;
 

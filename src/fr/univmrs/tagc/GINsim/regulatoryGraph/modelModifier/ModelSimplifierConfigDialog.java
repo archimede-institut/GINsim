@@ -14,8 +14,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.Tools;
@@ -34,7 +34,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 	boolean isRunning = false;
 	
 	ModelSimplifierConfigDialog(GsRegulatoryGraph graph) {
-		super(graph.getGraphManager().getMainFrame(), "modelSimplifier", 600, 500);
+		super(graph, "modelSimplifier", 600, 500);
 		this.graph = graph;
 		setTitle("select nodes to remove");
 		
@@ -65,10 +65,10 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
     public void endSimu( Graph graph, Exception e) {
     	isRunning = false;
         if (null == graph) {
-            Tools.error(e.getMessage(), this.graph.getGraphManager().getMainFrame());
+            Tools.error(e.getMessage(), this.graph);
             brun.setEnabled(true);
         } else {
-            GsEnv.whatToDoWithGraph(this.graph.getGraphManager().getMainFrame(), graph, false);
+            GUIManager.getInstance().whatToDoWithGraph(this.graph, graph, false);
             cancel();
         }
     }

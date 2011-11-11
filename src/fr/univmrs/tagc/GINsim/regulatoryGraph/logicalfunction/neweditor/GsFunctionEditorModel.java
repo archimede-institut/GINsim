@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 
 import java.awt.Point;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -27,7 +28,7 @@ public class GsFunctionEditorModel {
   public void init(GsTreeInteractionsModel m, GsFunctionPanel p) {
   	functionPanel = p;
   	oldExp = p.getCurrentText();
-  	Colection<GsRegulatoryMultiEdge> ed = m.getGraph().getIncomingEdges(m.getVertex());
+  	Collection<GsRegulatoryMultiEdge> ed = m.getGraph().getIncomingEdges(m.getVertex());
     interactions.clear();
     for (GsRegulatoryMultiEdge me: ed) {
       interactions.addElement(me);

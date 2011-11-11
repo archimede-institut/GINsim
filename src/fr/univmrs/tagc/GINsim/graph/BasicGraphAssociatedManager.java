@@ -5,8 +5,8 @@ import java.io.OutputStreamWriter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
@@ -24,7 +24,7 @@ public abstract class BasicGraphAssociatedManager implements
 	            XMLWriter out = new XMLWriter(os, null);
 				((XMLize)o).toXML(out, graph, 0);
 	        } catch (IOException e) {
-	            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+	            GUIManager.getInstance().error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 	        }
 		}
 	}

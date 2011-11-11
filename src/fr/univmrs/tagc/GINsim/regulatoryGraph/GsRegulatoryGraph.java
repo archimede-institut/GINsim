@@ -18,15 +18,15 @@ import javax.swing.filechooser.FileFilter;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.gui.GsActions;
-import fr.univmrs.tagc.GINsim.gui.GsEditModeDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
@@ -37,16 +37,10 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * The regulatory graph
  */
-public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryVertex, GsRegulatoryMultiEdge> implements GsGenericRegulatoryGraph {
-
-	private JPanel optionPanel = null;
-	private ObjectEditor graphEditor;
+public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
 	private int nextid=0;
 
-    ObjectEditor vertexEditor = null;
-	private ObjectEditor edgeEditor;
-	
 	private List<GsRegulatoryVertex> nodeOrder = new ArrayList<GsRegulatoryVertex>();
 
     private static Graph copiedGraph = null;
@@ -112,7 +106,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     public GsRegulatoryGraph( boolean parsing) {
     	
         super( GsRegulatoryGraphDescriptor.getInstance(), parsing);
-        setDefaults();
+    	// getVertexAttributeReader().setDefaultVertexSize(55, 25);
+    	// getEdgeAttributeReader().setDefaultEdgeSize(2);
     }
     /**
      * @param map
@@ -123,15 +118,6 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         this( true);
         GsRegulatoryParser parser = new GsRegulatoryParser();
         parser.parse(file, map, this);
-		graphManager.ready();
-    }
-
-    private void setDefaults() {
-        tabLabel = "STR_modelAttribute";
-
-    	getVertexAttributeReader().setDefaultVertexSize(55, 25);
-    	getEdgeAttributeReader().setDefaultEdgeSize(2);
-        canDelete = true;
     }
 
     public GsRegulatoryVertex addVertex() {
@@ -148,6 +134,29 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     }
 
     /**
+     * Extracted from the method below, not sure it is really required..
+     */
+    class MEdgeNotificationAction implements NotificationMessageAction {
+    	
+		final String[] t_action = {"go"};
+		final Graph<?, ?> graph;
+		public MEdgeNotificationAction(GsRegulatoryGraph graph) {
+			this.graph = graph;
+		}
+		public boolean timeout( NotificationMessageHolder holder, Object data) {
+			return true;
+		}
+		public boolean perform( NotificationMessageHolder holder, Object data, int index) {
+			GUIManager.getInstance().getGraphGUI(graph).selectEdge((Edge<?>)data);
+			return true;
+		}
+		public String[] getActionName() {
+			return t_action;
+		}
+
+    }
+    
+    /**
      * Add a signed edge
      * 
      * @param source
@@ -158,20 +167,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     public GsRegulatoryMultiEdge addEdge(GsRegulatoryVertex source, GsRegulatoryVertex target, int sign) {
     	GsRegulatoryMultiEdge obj = getEdge(source, target);
     	if (obj != null) {
-    		NotificationMessageAction action = new NotificationMessageAction() {
-    			final String[] t_action = {"go"};
-				public boolean timeout( Graph graph, Object data) {
-					return true;
-				}
-				public boolean perform( Graph graph, Object data, int index) {
-					graph.getGraphManager().select(data);
-					return true;
-				}
-				public String[] getActionName() {
-					return t_action;
-				}
-			
-			};
+    		NotificationMessageAction action = new MEdgeNotificationAction(this);
 	    	this.addNotificationMessage( new NotificationMessage(this,
 	    			Translator.getString("STR_usePanelToAddMoreEdges"),
 	    			action,
@@ -303,28 +299,6 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 //        edge.addEdge(this);
 //    }
 
-    public ObjectEditor getEdgeEditor() {
-    	if (edgeEditor == null) {
-    		edgeEditor = new RegulatoryEdgeEditor(this);
-    	}
-    	return edgeEditor;
-    }
-    public ObjectEditor getVertexEditor() {
-    	if (vertexEditor == null) {
-    		vertexEditor = new RegulatoryVertexEditor(this);
-    	}
-    	return vertexEditor;
-    }
-    
-    public Vector getEditingModes() {
-        Vector v_mode = new Vector();
-        v_mode.add(new GsEditModeDescriptor("STR_addGene", "STR_addGene_descr", ImageLoader.getImageIcon("insertsquare.gif"), GsActions.MODE_ADD_VERTEX, 0, KeyEvent.VK_G));
-        v_mode.add(new GsEditModeDescriptor("STR_addPositivInteraction", "STR_addPositivInteraction_descr", ImageLoader.getImageIcon("insertpositiveedge.gif"), GsActions.MODE_ADD_EDGE, 0, KeyEvent.VK_A));
-        v_mode.add(new GsEditModeDescriptor("STR_addNegativInteraction", "STR_addNegativInteraction_descr", ImageLoader.getImageIcon("insertnegativeedge.gif"), GsActions.MODE_ADD_EDGE, 1, KeyEvent.VK_I));
-        v_mode.add(new GsEditModeDescriptor("STR_addUnknownInteraction", "STR_addUnknownInteraction_descr", ImageLoader.getImageIcon("insertunknownedge.gif"), GsActions.MODE_ADD_EDGE, 2, KeyEvent.VK_U));
-        v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", ImageLoader.getImageIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
-        return v_mode;
-    }
     public boolean idExists(String newId) {
         Iterator it = getVertices().iterator();
         while (it.hasNext()) {
@@ -475,21 +449,6 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 		return ffilter;
 	}
 
-	protected JPanel doGetFileChooserPanel() {
-		return getOptionPanel();
-	}
-
-	private JPanel getOptionPanel() {
-		if (optionPanel == null) {
-
-            Object[] t_mode = { Translator.getString("STR_saveNone"),
-                    Translator.getString("STR_savePosition"),
-                    Translator.getString("STR_saveComplet") };
-			optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, this.saveMode);
-		}
-		return optionPanel;
-	}
-
 	private String stringNodeOrder() {
 		String s = "";
 		for (int i=0 ; i<nodeOrder.size() ; i++) {
@@ -501,24 +460,6 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 		return s;
 	}
 
-	public ObjectEditor getGraphEditor() {
-		if (graphEditor == null) {
-			graphEditor = new RegulatoryGraphEditor();
-			graphEditor.setEditedObject(this);
-		}
-		return graphEditor;
-	}
-
-	public List getSpecificLayout() {
-		return GsRegulatoryGraphDescriptor.getLayout();
-	}
-	public List getSpecificExport() {
-		return GsRegulatoryGraphDescriptor.getExport();
-	}
-    public List getSpecificAction() {
-        return GsRegulatoryGraphDescriptor.getAction();
-    }
-    
     /**
      * Return the Object Managers specialized for this class
      * 

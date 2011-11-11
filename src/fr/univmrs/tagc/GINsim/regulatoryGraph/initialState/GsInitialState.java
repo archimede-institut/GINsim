@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.datastore.NamedObject;
@@ -46,22 +45,16 @@ public class GsInitialState implements NamedObject {
                     for (int j=1 ; j<t_val.length ; j++) {
                         try {
                         	int v = Integer.parseInt(t_val[j]);
-                            Integer val;
-                            if (v>=0 && v < GsEnv.t_integers.length) {
-                            	val = GsEnv.t_integers[v];
-                            } else {
-                            	val = new Integer(v);
-                            }
-                            if (val.intValue() >= 0 && val.intValue() <= vertex.getMaxValue()) {
+                            if (v >= 0 && v <= vertex.getMaxValue()) {
                                 boolean ok = true;
                                 for (int k=0 ; k<v_val.size() ; k++) {
-                                    if (v_val.get(k).equals(val)) {
+                                    if (v_val.get(k).equals(v)) {
                                         ok = false;
                                         break;
                                     }
                                 }
                                 if (ok) {
-                                    v_val.add(val);
+                                    v_val.add(v);
                                 }
                             } else {
                                 // TODO: report error in file

@@ -6,7 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -24,7 +27,7 @@ import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
-import org.ginsim.gui.graph.helper.GraphGUIHelper;
+import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.jgraph.JGraph;
@@ -33,6 +36,7 @@ import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
+import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -292,6 +296,106 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	public void removeGraphGUIListener(GraphGUIListener<G, V, E> listener) {
 		listeners.remove(listener);
 	}
+
+	@Override
+	public boolean isEditAllowed() {
+		// TODO: block edit
+		return true;
+	}
+
+	@Override
+	public void selectVertex(V vertex) {
+		// FIXME: implement selection
+	}
+	@Override
+	public void selectEdge(E edge) {
+		// FIXME: implement selection
+	}
+
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
+    public void selectAll() {
+        jgraph.setSelectionCells(jgraph.getRoots());
+    }
+
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
+    public void select(List l) {
+        jgraph.setSelectionCells( new Object[0]);
+        addSelection(l);
+    }
+    
+ // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
+    public void select(Set s) {
+        jgraph.setSelectionCells( new Object[0]);
+        addSelection(s);
+    }
+
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
+    public void addSelection(List l) {
+        if (l == null) {
+            return;
+        }
+        for (Iterator it = l.iterator(); it.hasNext();) {
+			Object o = (Object) it.next();
+            if (o instanceof GsDirectedEdge) {
+                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
+            } else {
+                jgraph.addSelectionCell(m_jgAdapter.getVertexCell((V)o));
+            }
+        }
+    }
+    
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
+    public void addSelection(Set s) {
+        if (s == null) {
+            return;
+        }
+        for (Iterator it = s.iterator(); it.hasNext();) {
+			Object o = (Object) it.next();
+            if (o instanceof GsDirectedEdge) {
+                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
+            } else {
+                jgraph.addSelectionCell(m_jgAdapter.getVertexCell(o));
+            }
+        }
+    }
+
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
+    public void vertexToFront(boolean b) {
+//        // move all vertex to front;
+//        Object[] t = getVertexArray();
+//        for (int i=0 ; i<t.length ; i++) {
+//            t[i] = m_jgAdapter.getVertexCell(t[i]);
+//        }
+//        if (b) {
+//            m_jgAdapter.toFront(t);
+//        } else {
+//            m_jgAdapter.toBack(t);
+//        }
+    }
+    
+    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
+    public void invertSelection() {
+		Object[] selects = jgraph.getSelectionCells();
+		Object roots[] = jgraph.getRoots();
+		int len = roots.length;
+		int nbsel = selects.length;
+		Vector toselect = new Vector(len - nbsel);
+		for (int i=0 ; i<len ; i++) {
+			toselect.add(roots[i]);
+		}
+		
+		for (int i=len-1 ; i>=0 ; i--) {
+			Object cur = roots[i];
+			for (int j=0 ; j<nbsel ; j++) {
+				if (selects[j] == cur) {
+					toselect.remove(i);
+					break;
+				}
+			}
+		}
+		jgraph.setSelectionCells(toselect.toArray());
+
+    }
 
 }
 

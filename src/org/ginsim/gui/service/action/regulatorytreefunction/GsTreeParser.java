@@ -52,7 +52,6 @@ public abstract class GsTreeParser<V,E> {
 	public abstract void updateLayout(GsVertexAttributesReader vreader, GsTreeNode vertex);
 
 	
-	
 	/**
 	 * Compute the layout for each node in this tree
 	 */
@@ -82,7 +81,7 @@ public abstract class GsTreeParser<V,E> {
 	protected Object getParameter(String key) {
 		Object value = this.parameters.get(key);
 		if (value == null) {
-			Tools.error("expected parameter '"+key+"' not found or null", null);
+			Tools.error("expected parameter '"+key+"' not found or null");
 		}
 		return value;
 	}

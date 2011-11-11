@@ -24,7 +24,6 @@ import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.OptionStore;

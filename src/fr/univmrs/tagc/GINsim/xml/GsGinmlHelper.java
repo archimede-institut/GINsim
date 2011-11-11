@@ -93,7 +93,7 @@ public class GsGinmlHelper {
     					}
     					ereader.setPoints(l);
     			    } catch (Exception e) {
-    			        Tools.error("invalid points", null);
+    			        Tools.error("invalid points");
     			    }
     			}
 			}

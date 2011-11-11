@@ -16,9 +16,6 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 import org.ginsim.gui.service.BaseAction;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
-import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphOptionPanel;
 import fr.univmrs.tagc.common.OptionStore;
@@ -381,7 +378,7 @@ public class GsOpenAction extends BaseAction {
      * @param frame
      * @return the path to the selected file
      */
-    public static String selectFileWithOpenDialog(JFrame frame) {
+    public static String selectFileWithOpenDialog(Frame frame) {
         getJfc();
         int ret = jfc.showOpenDialog(frame);
 

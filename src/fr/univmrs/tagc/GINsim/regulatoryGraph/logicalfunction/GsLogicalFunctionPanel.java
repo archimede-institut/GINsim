@@ -30,12 +30,8 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
   private GenericPropertyInfo	pinfo;
 	private JPanel eastPanel;
 
-  public GsLogicalFunctionPanel() {
-
-  }
   public GsLogicalFunctionPanel(GsRegulatoryGraph graph) {
-    super();
-		this.graph = graph;
+    super(graph);
     initialize();
   }
 
@@ -43,7 +39,6 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
    * This method initializes this
    */
   private void initialize() {
-    setMainFrame(graph.getGraphManager().getMainFrame());
     setLayout(new BorderLayout());
     functionEditor = new GsFunctionEditor();
     add(getTreePanel(), BorderLayout.CENTER);
@@ -71,12 +66,12 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
   public void initEditor(GsTreeInteractionsModel m, GsFunctionPanel fp) {
   	functionEditor.init(m, fp);
   }
-  public void setEditedObject(Object obj) {
-    if (currentVertex != null) treePanel.setEditedObject(obj);
+  public void setEditedItem(Object obj) {
+    if (currentVertex != null) treePanel.setEditedItem(obj);
     if (obj != null && obj instanceof GsRegulatoryVertex) {
       currentVertex = (GsRegulatoryVertex)obj;
-      edgeList.setEdge(mainFrame.getGraph().getIncomingEdges(currentVertex));
-      treePanel.setEditedObject(obj);
+      edgeList.setEdge(graph.getIncomingEdges(currentVertex));
+      treePanel.setEditedItem(obj);
     }
 		setEditEditorVisible(false);
   }
@@ -89,7 +84,7 @@ public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPr
   }
 
   public void refresh(boolean force) {
-    setEditedObject(pinfo.getRawValue());
+    setEditedItem(pinfo.getRawValue());
   }
 
   public void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel) {

@@ -1,12 +1,9 @@
 package org.ginsim;
 
-import org.ginsim.graph.testGraph.TestEdge;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.graph.testGraph.TestVertex;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.shell.MainFrame;
 
 /**
  * Simple, stupid launcher to test the ongoing refactoring

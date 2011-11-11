@@ -70,15 +70,13 @@ public class GsInteractionPanel extends GsParameterPanel
 
 	private GenericPropertyInfo	pinfo;
 
-    public GsInteractionPanel() {
-    }
 	/**
 	 * This method initializes
 	 * @param graph
 	 *
 	 */
     public GsInteractionPanel(GsRegulatoryGraph graph) {
-		super();
+		super(graph);
         this.graph = graph;
 		initialize();
 	}
@@ -192,9 +190,9 @@ public class GsInteractionPanel extends GsParameterPanel
 	}
 
     /**
-     * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
+     * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedItem(java.lang.Object)
      */
-    public void setEditedObject(Object obj) {
+    public void setEditedItem(Object obj) {
 			  if (currentVertex != null) {
             // apply pending changes
         }
@@ -450,7 +448,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	 * and insert them in the selected row in the left table (jSP_Table_Value)
 	 */
 	protected void insertRight2Left() {
-	    if (!graph.isEditAllowed()) {
+	    if (!gui.isEditAllowed()) {
 	        return;
 	    }
 		if (jTable.getSelectedRowCount()<=1) {
@@ -485,7 +483,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	 * delete the selected row in the table
 	 */
 	protected void deleteParameter() {
-	    if (!graph.isEditAllowed()) {
+	    if (!gui.isEditAllowed()) {
 	        return;
 	    }
 		int[] selectedrows = jTable.getSelectedRows();
@@ -576,7 +574,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	public void apply() {
 	}
 	public void refresh(boolean force) {
-		setEditedObject(pinfo.getRawValue());
+		setEditedItem(pinfo.getRawValue());
 	}
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {

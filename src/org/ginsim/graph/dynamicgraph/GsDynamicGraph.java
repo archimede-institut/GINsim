@@ -44,7 +44,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * the dynamic (state transition) graph.
  */
 public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDynamicNode, Edge<GsDynamicNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge> 
-	implements GsGraphListener<GsDynamicNode, Edge<GsDynamicNode>>, GraphChangeListener {
+	implements GraphChangeListener {
 
     public final static String zip_mainEntry = "stateTransitionGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
@@ -136,7 +136,6 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	    this( true);
         GsDynamicParser parser = new GsDynamicParser();
         parser.parse(file, map, this);
-		graphManager.ready();
 	}
 
 	/**
@@ -443,7 +442,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
     public ObjectEditor getGraphEditor() {
 		if (graphEditor == null) {
 			graphEditor = new RegulatoryGraphEditor();
-			graphEditor.setEditedObject(this);
+			graphEditor.setEditedItem(this);
 		}
 		return graphEditor;
     }

@@ -1,11 +1,10 @@
-package org.ginsim.gui.graph.helper;
+package org.ginsim.gui.graphhelper;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
 
 /**

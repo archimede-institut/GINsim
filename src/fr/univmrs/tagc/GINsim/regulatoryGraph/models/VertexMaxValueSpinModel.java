@@ -1,6 +1,10 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.models;
 
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.models.SpinModel;
@@ -11,13 +15,15 @@ import fr.univmrs.tagc.common.datastore.models.SpinModel;
 public class VertexMaxValueSpinModel extends SpinModel {
 
     private GsRegulatoryVertex vertex;
-	private GsRegulatoryGraph graph;
+	private final GsRegulatoryGraph graph;
+	private final GraphGUI<GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge> gui;
 
     /**
      */
     public VertexMaxValueSpinModel(GsRegulatoryGraph graph) {
         super();
         this.graph = graph;
+        this.gui = GUIManager.getInstance().getGraphGUI(graph);
     }
 
 
@@ -30,7 +36,7 @@ public class VertexMaxValueSpinModel extends SpinModel {
 		if (graph == null || vertex == null) {
 			return Tools.IZ;
 		}
-		if (!graph.isEditAllowed()) {
+		if (!gui.isEditAllowed()) {
 			return new Integer(vertex.getMaxValue());
 		}
 		vertex.setMaxValue((byte) (vertex.getMaxValue()+1), graph);
@@ -42,7 +48,7 @@ public class VertexMaxValueSpinModel extends SpinModel {
         if (graph == null || vertex == null) {
             return Tools.IZ;
         }
-	    if (!graph.isEditAllowed()) {
+	    if (!gui.isEditAllowed()) {
 	        return new Integer(vertex.getMaxValue());
 	    }
 	    vertex.setMaxValue((byte) (vertex.getMaxValue()-1), graph);
@@ -59,7 +65,7 @@ public class VertexMaxValueSpinModel extends SpinModel {
 
 
 	public void setValue(Object value) {
-        if (!graph.isEditAllowed()) {
+        if (!gui.isEditAllowed()) {
             return;
         }
         if (value instanceof Integer ){

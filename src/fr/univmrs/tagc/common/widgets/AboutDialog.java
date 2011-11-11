@@ -179,8 +179,10 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 		}
 	}
 
-	public void doClose() {
+	@Override
+	public void close() {
 		setVisible(false);
+		dispose();
 	}
 }
 

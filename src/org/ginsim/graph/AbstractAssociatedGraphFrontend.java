@@ -5,14 +5,12 @@ import java.util.Collection;
 
 import org.ginsim.exception.GsException;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
-import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -51,13 +49,13 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
 
         if (associatedGraph != null) {
             associatedGraph.removeGraphListener( this);
-            associatedGraph.getGraphManager().getEventDispatcher().removeGraphChangeListener(this);
+            associatedGraph.removeGraphChangeListener(this);
             associatedGraph = null;
             return;
         }
         associatedGraph = associated_graph;
         associatedGraph.addGraphListener(this);
-        associated_graph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
+        associated_graph.addGraphChangedListener(this);
     }
 	
     /**
@@ -171,12 +169,6 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
     public GsGraphEventCascade vertexRemoved(AV data) {
         setAssociatedGraph(null);
         return null;
-    }
-
-    public void graphChanged(GsNewGraphEvent event) {
-        if (event.getOldGraph() == associatedGraph) {
-            setAssociatedGraph(null);
-        }
     }
 
     public void graphClosed( Graph graph) {

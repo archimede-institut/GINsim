@@ -5,11 +5,8 @@ import javax.swing.JFrame;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
-import fr.univmrs.tagc.GINsim.gui.GsActions;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 public class SBMLImportPlugin implements GsPlugin, GsActionProvider {

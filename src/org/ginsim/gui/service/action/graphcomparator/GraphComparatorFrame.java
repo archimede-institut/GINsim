@@ -26,10 +26,8 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;

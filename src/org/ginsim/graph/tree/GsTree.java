@@ -98,15 +98,6 @@ public class GsTree<V,E> extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNo
 	
 	/* GsTreeDescriptor mapping */
 
-	public List getSpecificLayout() {
-		return GsTreeDescriptor.getLayout();
-	}
-	public List getSpecificExport() {
-		return GsTreeDescriptor.getExport();
-	}
-    public List getSpecificAction() {
-        return GsTreeDescriptor.getAction();
-    }
     public List getSpecificObjectManager() {
         return GsTreeDescriptor.getObjectManager();
     }

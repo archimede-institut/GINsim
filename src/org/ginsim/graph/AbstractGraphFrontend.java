@@ -18,7 +18,6 @@ import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
@@ -85,7 +84,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
         this.isParsing = parsing;
         this.id = "" + GRAPH_ID++;
         GsEnv.registerGraph( this, this.id);
-
     }
 
 	
@@ -556,12 +554,11 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
     public GsGraphAssociatedObjectManager getSpecificObjectManager(Object key) {
     	
-    	Vector v_OManager = GsRegulatoryGraphDescriptor.getObjectManager();
+    	List<GsGraphAssociatedObjectManager> v_OManager = GsRegulatoryGraphDescriptor.getObjectManager();
     	if (v_OManager == null) {
     		return null;
     	}
-        for (int i=0 ; i < v_OManager.size() ; i++) {
-        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+        for (GsGraphAssociatedObjectManager manager: v_OManager) {
         	if (manager.getObjectName().equals(key)) {
         		return manager;
         	}

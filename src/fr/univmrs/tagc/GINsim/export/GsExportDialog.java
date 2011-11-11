@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;

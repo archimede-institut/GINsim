@@ -7,12 +7,12 @@ import java.util.Vector;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
@@ -61,7 +61,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
 		try {
 			htg.setGraphName(attributes.getValue("id"));
 		} catch (GsException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+			GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 		}
 		try {
 			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
@@ -75,7 +75,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
 			htg.setNodeOrder(nodeOrder);
 			htg.setChildsCount(childCount);
 		} catch (NumberFormatException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
+			GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
 		}
 	}
 
@@ -209,7 +209,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
             			try {
 							htg.setGraphName(attributes.getValue("id"));
 						} catch (GsException e) {
-							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+							GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
 						}
 						try {
 							String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
@@ -223,10 +223,10 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
 							htg.setNodeOrder(nodeOrder);
 							htg.setChildsCount(childCount);
 						} catch (NumberFormatException e) {
-							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
+							GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
 						}
 						int mode = Integer.parseInt(attributes.getValue("iscompact"));
-						if (mode != 1 && mode != 2) GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalid mode (HTG or SCC)"), null);
+						if (mode != 1 && mode != 2) GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalid mode (HTG or SCC)"), null);
 						else htg.setMode(mode);
                 } else if (qName.equals("link")) {
                     htg.setAssociatedGraphID(attributes.getValue("xlink:href"));

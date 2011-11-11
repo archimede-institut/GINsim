@@ -24,7 +24,7 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
  * 
  * <p>The export itself happens within <code>doExport</code>.
  */
-abstract public class GsAbstractExport<G extends Graph> implements GsPlugin, GsActionProvider  {
+abstract public class GsAbstractExport<G extends Graph> implements GsPlugin  {
 
 	protected String id;
 	protected String[] filter = null;
@@ -40,22 +40,12 @@ abstract public class GsAbstractExport<G extends Graph> implements GsPlugin, GsA
 		return null;
 	}
 	
-	/**
-	 * register the plugin as export capable.
-	 * Override this to declare it as subformat if applicable.
-	 */
-	public void registerPlugin() {
-		GsGraphManager.registerExportProvider(this);
-	}
 
 	public String toString() {
 		return id;
 	}
 
 	public void runAction (int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-	    if (actionType != ACTION_EXPORT) {
-	        return;
-        }
 	    GsExportConfig<G> config = new GsExportConfig(graph, this, ref);
 		if(needConfig(config)) {
 			new GsExportDialog(this, config).setVisible(true);

@@ -1,4 +1,4 @@
-package org.ginsim.gui.testgraph;
+package org.ginsim.gui.graphhelper.testgraph;
 
 import java.awt.Component;
 

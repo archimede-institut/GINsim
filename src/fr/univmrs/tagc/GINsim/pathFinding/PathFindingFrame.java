@@ -8,11 +8,11 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -26,6 +26,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -53,8 +55,8 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private JButton selectionForEndButton, selectionForStartButton;
 	
 	
-	public PathFindingFrame(JFrame frame, Graph graph) {
-		super(frame, "pathFinding", 420, 260);
+	public PathFindingFrame( Graph graph) {
+		super(GUIManager.getInstance().getFrame(graph), "pathFinding", 420, 260);
 		this.graph = graph;
         initialize();
     }
@@ -293,9 +295,12 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	}
 	
 	private void getSelectionFromGraph(JTextField textField) {
-		Iterator it = graph.getGraphManager().getSelectedVertexIterator();
-		if (!it.hasNext()) return;
-		textField.setText(it.next().toString());
+		GraphGUI<?, ?, ?> gui = GUIManager.getInstance().getGraphGUI(graph);
+		Collection<?> selected = gui.getSelectedVertices();
+		if (selected.size() < 1) {
+			return;
+		}
+		textField.setText(selected.iterator().next().toString());
 	}
 
 	/**

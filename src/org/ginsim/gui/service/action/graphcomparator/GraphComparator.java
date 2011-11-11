@@ -23,9 +23,9 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
  * @since January 2009
  *
  */
-public abstract class GraphComparator {
+public abstract class GraphComparator<G extends Graph> {
 	
-	protected Graph gm, g1m, g2m;
+	protected G gm, g1m, g2m;
 	protected HashMap stylesMap;
 	protected Set verticesIdsSet;
 	protected GsGraphicalAttributesStore g1gas, g2gas;
@@ -192,17 +192,25 @@ public abstract class GraphComparator {
 	 * Return a merge graph colored to indicates vertices and edges parent graph.
 	 * @return the diff graph
 	 */
-	abstract public Graph getDiffGraph();
+	public G getDiffGraph() {
+		return gm;
+	}
+
 	/**
 	 * Return the first graph to compare
 	 * @return the graph
 	 */
-	abstract public Graph getG1();
+	public G getG1() {
+		return g1m;
+	}
+
 	/**
 	 * Return the second graph to compare
 	 * @return the graph
 	 */
-	abstract public Graph getG2();
+	public G getG2() {
+		return g2m;
+	}
 	
 	/**
 	 * append the string 's' to the log

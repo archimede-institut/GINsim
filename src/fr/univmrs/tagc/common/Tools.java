@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -342,6 +344,18 @@ public class Tools {
 		}
 	}
 
+	/**
+	 * an error occurred, give the user some feedback.
+	 * 
+	 * @param graph: graph to be used to find the parent frame
+	 * @param main
+	 */
+	public static void error(String s, Graph<?, ?> graph) {
+		error(s, GUIManager.getInstance().getFrame(graph));
+	}
+	public static void error(String s) {
+		error(s, (Component)null);
+	}
 	/**
 	 * an error occurred, give the user some feedback.
 	 * 

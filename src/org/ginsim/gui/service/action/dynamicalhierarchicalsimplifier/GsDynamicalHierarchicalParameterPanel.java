@@ -21,15 +21,14 @@ public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
 	/**
 	 */
 	public GsDynamicalHierarchicalParameterPanel( Graph g) {
-		super();
-		this.graph = g;
+		super(g);
 		initialize();
 	}
 	
 	/*
 	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
 	 */
-	public void setEditedObject(Object obj) {
+	public void setEditedItem(Object obj) {
 		if (obj instanceof GsDynamicalHierarchicalNode) {
 			node = (GsDynamicalHierarchicalNode)obj;
 			((GsDynamicalHierarchicalTableModel)getJTable().getModel()).setContent(node);

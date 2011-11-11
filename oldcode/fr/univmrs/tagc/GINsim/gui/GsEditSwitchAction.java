@@ -9,8 +9,6 @@ import javax.swing.KeyStroke;
 
 import org.ginsim.gui.service.BaseAction;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
-
 /**
  * Helper action to easily add custom actions (typically layout, export...)
  */

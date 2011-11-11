@@ -1,14 +1,12 @@
 package org.ginsim.gui.shell.callbacks;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.widgets.AboutDialog;
 
@@ -47,11 +45,8 @@ class HelpAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-        if (new File("/" + GsEnv.getGinsimDir() + "Documentation/html/index.html").exists()) {
-            Tools.openURI("file://" + GsEnv.getGinsimDir() + "Documentation/html/index.html");
-        } else {
-            Tools.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
-            // GsEnv.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_docPathError")), null);
-        }
+		// TODO: search for local help
+		Tools.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
+		// GsEnv.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_docPathError")), null);
 	}
 }

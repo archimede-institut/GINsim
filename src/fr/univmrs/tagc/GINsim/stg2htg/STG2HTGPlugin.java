@@ -1,44 +1,48 @@
 package fr.univmrs.tagc.GINsim.stg2htg;
 
-import javax.swing.JFrame;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.ginsim.exception.GsException;
+import javax.swing.Action;
+
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.GsActionAction;
+import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.StandaloneGUI;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 
-public class STG2HTGPlugin implements GsPlugin, GsActionProvider{
+@ProviderFor(GsServiceGUI.class)
+@StandaloneGUI  // TODO: add a GsService for STG2HTG
+public class STG2HTGPlugin implements GsServiceGUI {
 
-	private GsPluggableActionDescriptor[] t_action = null;
-
-	public void registerPlugin() {
-		GsGraph.registerActionProvider(this);
+	static {
 		Selector.registerSelector(STG2HTGSelector.IDENTIFIER, STG2HTGSelector.class);
 	}
-	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-		if (actionType != ACTION_ACTION) {
-			return null;
-		}
-		if (t_action == null) {
-			t_action = new GsPluggableActionDescriptor[1];
-			t_action[0] = new GsPluggableActionDescriptor("STR_STG2HTG", "STR_STG2HTG_descr", null, this, ACTION_ACTION, 0);
-		}
-		return t_action;
-	}
-	
-	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-		
-		if (actionType != ACTION_ACTION) {
-			return;
-		}
-		if (ref == 0) {
-			Thread thread = new STG2HTG(frame, graph);
-			thread.start();
-		}
+
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(new STG2HTGAction(graph));
+		return actions;
 	}
 
 }
 
+class STG2HTGAction extends GsActionAction {
+	private final Graph<?, ?> graph;
+	
+	public STG2HTGAction(Graph<?, ?> graph) {
+		super("STR_STG2HTG", "STR_STG2HTG_descr");
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		Thread thread = new STG2HTG(graph);
+		thread.start();
+	}
+	
+}

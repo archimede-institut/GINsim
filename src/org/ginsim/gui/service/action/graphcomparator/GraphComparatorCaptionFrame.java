@@ -3,6 +3,7 @@ package org.ginsim.gui.service.action.graphcomparator;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -22,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
@@ -30,13 +32,10 @@ import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -3613649496687281647L;
-//	private GsMainFrame mainFrame;
-//	private JFrame frame;
 	private Graph g;
 	private JPanel mainPanel;
 	private JTextArea resultsPane;
@@ -48,11 +47,9 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, 1);
 	private static final VertexStyle clearVertexStyle = new VertexStyle(Color.white, Color.gray, 1, VertexStyle.NULL_SHAPE);
 	
-	public GraphComparatorCaptionFrame(JFrame frame, Graph g, GsMainFrame mainFrame, GraphComparator gc) {
+	public GraphComparatorCaptionFrame(Graph g, GraphComparator gc) {
         this.g = g;
         this.gc = gc;
-//        this.mainFrame = mainFrame;
-//        this.frame = frame;
         this.cs = new CascadingStyle(false);
 
         initialize();
@@ -62,16 +59,14 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
                 cancel();
             }
         });
-        if (mainFrame != null) mainFrame.addWindowListener(new java.awt.event.WindowAdapter() { 
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                cancel();
-            }
-        });	
-    }
-
-	public GraphComparatorCaptionFrame(JFrame frame, Graph g, GraphComparator gc) {
-		
-        this(frame, g, null, gc);
+        Frame frame = GUIManager.getInstance().getFrame(g);
+        if (frame != null) {
+        	frame.addWindowListener(new java.awt.event.WindowAdapter() { 
+	            public void windowClosing(java.awt.event.WindowEvent e) {
+	                cancel();
+	            }
+	        });	
+        }
     }
 
 	public void initialize() {

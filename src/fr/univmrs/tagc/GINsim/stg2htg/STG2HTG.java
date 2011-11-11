@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.stg2htg;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,16 +10,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JFrame;
-
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.action.connectivity.AlgoConnectivity;
 import org.ginsim.gui.service.action.connectivity.GsNodeReducedData;
 import org.ginsim.gui.service.action.connectivity.GsReducedGraph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
 
@@ -33,7 +32,7 @@ public class STG2HTG extends AlgoConnectivity {
 	private HashSet B;
 	private ArrayList components;
 	private Color[] colors;
-	private JFrame frame;
+	private Frame frame;
 
 	/**
 	 * Create a new thread that will search a path between start and end
@@ -41,15 +40,15 @@ public class STG2HTG extends AlgoConnectivity {
 	 * The resultHandler is informed of the progression during the run() and of the results when the run() is finish.
 	 * 
 	 */
-	public STG2HTG(JFrame frame, Graph graph) {
-		this.frame = frame;
+	public STG2HTG(Graph graph) {
 		this.graph = graph;
+		this.frame = GUIManager.getInstance().getFrame(graph);
 	}
 
 	public void run() {
 		if (frame != null) {
 			compute();
-	    	GsEnv.whatToDoWithGraph(null, reducedGraph, true);
+	    	GUIManager.getInstance().whatToDoWithGraph(reducedGraph, null, true);
 		} else {
 		   compute();
 		}

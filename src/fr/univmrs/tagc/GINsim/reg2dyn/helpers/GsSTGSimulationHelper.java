@@ -7,25 +7,23 @@ import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
 import fr.univmrs.tagc.GINsim.reg2dyn.SimulationQueuedState;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsGenericRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 
 /**
  * This is the SimulationHelper used for the simulation of STG.
- * @author duncan
- *
+ * 
+ * @author Duncan Berenguier
  */
 public class GsSTGSimulationHelper extends SimulationHelper {
 	protected GsDynamicNode node;
 	protected GsDynamicGraph stateTransitionGraph;
 	protected GsVertexAttributesReader vreader;
 	
-	public GsSTGSimulationHelper(GsGenericRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public GsSTGSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		stateTransitionGraph = new GsDynamicGraph(params.nodeOrder);
-		if (regGraph instanceof Graph) {
-			stateTransitionGraph.setAssociatedGraph((GsRegulatoryGraph)regGraph);
-		}
+		stateTransitionGraph.setAssociatedGraph((GsRegulatoryGraph)regGraph);
+		
         vreader = stateTransitionGraph.getVertexAttributeReader();
 	    vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         // add some default comments to the state transition graph

@@ -1,24 +1,24 @@
 package org.ginsim.gui;
 
-import java.awt.AWTEvent;
 import java.awt.Frame;
-import java.awt.event.WindowEvent;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
-import org.ginsim.gui.graph.helper.GraphGUIHelper;
-import org.ginsim.gui.graph.helper.GraphGUIHelperFactory;
+import org.ginsim.gui.graphhelper.GraphGUIHelper;
+import org.ginsim.gui.graphhelper.GraphGUIHelperFactory;
 import org.ginsim.gui.shell.MainFrame;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.OptionStore;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GUIManager {
@@ -51,15 +51,22 @@ public class GUIManager {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	public Frame newFrame( Graph graph) throws ClassNotFoundException, IllegalAccessException, InstantiationException{
+	public Frame newFrame( Graph graph) {
 		
-		GraphGUI graph_gui = createGraphGUI( graph);
-		MainFrame frame = new MainFrame("test", 800, 600, graph_gui);
-		frame.setVisible(true);
-		
-		graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
-		
-		return frame;
+		GraphGUI graph_gui;
+		try {
+			graph_gui = createGraphGUI( graph);
+			MainFrame frame = new MainFrame("test", 800, 600, graph_gui);
+			frame.setVisible(true);
+			
+			graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
+			
+			return frame;
+		} catch (Exception e) {
+			error(new GsException(GsException.GRAVITY_ERROR, e), null);
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	
@@ -157,12 +164,12 @@ public class GUIManager {
 		
 		o.graphGUI.fireGraphClose();
 		graphToGUIObject.remove( graph);
-		GsEnv.unregisterGraph( graph.getGraphID());
 		if (o.frame != null) {
 			o.frame.setVisible(false);
 			o.frame.dispose();
 		}
 		if (graphToGUIObject.size() == 0) {
+			OptionStore.saveOptions();
 			System.exit(0);
 		}
 		return true;
@@ -220,5 +227,24 @@ public class GUIManager {
 		}
 		
 	}
-	
+
+    public static void error(GsException e, Frame main) {
+    	// FIXME: integrate error inside the main frame when possible
+//        if (main instanceof GsMainFrame) {
+//            Graph graph = ((GsMainFrame)main).getGraph();
+//            graph.addNotificationMessage(new NotificationMessage(graph, e));
+//            return;
+//        }
+        Tools.error(e, main);
+    }
+
+	public void whatToDoWithGraph(Graph<?, ?> newGraph, boolean b) {
+		whatToDoWithGraph(newGraph, null, b);
+	}
+
+	public void whatToDoWithGraph(Graph<?, ?> newGraph, Graph<?,?> parentGraph, boolean b) {
+		// FIXME: create a new WhatToDo frame
+		Debugger.log("TODO: implement a new whattodo frame");
+	}
+
 }

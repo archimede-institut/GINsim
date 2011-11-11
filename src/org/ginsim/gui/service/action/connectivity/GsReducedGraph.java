@@ -60,7 +60,6 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 	    this( true);
         GsReducedGraphParser parser = new GsReducedGraphParser();
         parser.parse(file, map, this);
-        graphManager.ready();
 	}
 
 	/**

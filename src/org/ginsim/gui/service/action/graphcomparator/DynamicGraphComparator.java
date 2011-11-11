@@ -20,18 +20,15 @@ import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
  * @since January 2009
  *
  */
-public class DynamicGraphComparator extends GraphComparator {
-	private GsDynamicGraph g, g1, g2; //g is the graph merging g1 and g2, the graphs to compare.
-
+public class DynamicGraphComparator extends GraphComparator<GsDynamicGraph> {
 	public DynamicGraphComparator( Graph g1, Graph g2, Graph g) {
 	    if (g  == null || !(g  instanceof GsDynamicGraph))  return;
 	    if (g1 == null || !(g1 instanceof GsDynamicGraph))  return;
 	    if (g2 == null || !(g2 instanceof GsDynamicGraph))  return;
-		this.g = (GsDynamicGraph)g; 
-		this.g1 = (GsDynamicGraph)g1; 
-		this.g2 = (GsDynamicGraph)g2;
 		
-		g1m = g1; g2m = g2; gm = g;
+		this.g1m = (GsDynamicGraph)g1;
+		this.g2m = (GsDynamicGraph)g2;
+		this.gm = (GsDynamicGraph)g;
 		stylesMap = new HashMap();
 		buildDiffGraph();
 	}
@@ -92,7 +89,7 @@ public class DynamicGraphComparator extends GraphComparator {
 				GsDirectedEdge<GsDynamicNode> e2 = gm.getEdge(source, target);
 				
 				if (e2 == null) //The edge doesn't not already exists.
-					e = g.addEdge(v, e1.getTarget(), false);
+					e = gm.addEdge(v, e1.getTarget(), false);
 				else
 					continue;
 				
@@ -117,21 +114,6 @@ public class DynamicGraphComparator extends GraphComparator {
 	
 
 	
-	public Graph getDiffGraph() {
-		
-		return g;
-	}
-	
-	public Graph getG1() {
-		
-		return g1;
-	}
-	
-	public Graph getG2() {
-		
-		return g2;
-	}
-
 	/**
 	 * Return a common nodeOrder for g1 and g2.
 	 * Return null if there is any kind of incompatibility between both nodeOrder (different sizes, different nodes...) 
@@ -140,7 +122,7 @@ public class DynamicGraphComparator extends GraphComparator {
 	 * @param g2 another graph (in any order)
 	 * @return a node order or null if incompatible.
 	 */
-	public static List getNodeOrder( Graph g1, Graph g2) {
+	public static List getNodeOrder( GsDynamicGraph g1, GsDynamicGraph g2) {
 		List no1 = g1.getNodeOrder();
 		List no2 = g2.getNodeOrder();
 		List gNodeOrder = new ArrayList();

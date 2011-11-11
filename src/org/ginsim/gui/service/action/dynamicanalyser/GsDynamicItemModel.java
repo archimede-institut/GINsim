@@ -11,6 +11,7 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
@@ -165,7 +166,7 @@ class Go2ActionListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        graph.getGraphManager().select(node);
+        GUIManager.getInstance().getGraphGUI(graph).selectVertex(node);
     }
     
 }

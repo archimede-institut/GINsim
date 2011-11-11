@@ -1,41 +1,46 @@
 package fr.univmrs.tagc.GINsim.pathFinding;
 
-import javax.swing.JFrame;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.ginsim.exception.GsException;
+import javax.swing.Action;
+
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.GsActionAction;
+import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.StandaloneGUI;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 
-public class PathFindingPlugin implements GsPlugin, GsActionProvider{
+@ProviderFor(GsServiceGUI.class)
+@StandaloneGUI
+public class PathFindingPlugin implements GsServiceGUI {
 
-	private GsPluggableActionDescriptor[] t_action = null;
-
-	public void registerPlugin() {
-		GsGraph.registerActionProvider(this);
+	static {
 		Selector.registerSelector(PathFindingSelector.IDENTIFIER, PathFindingSelector.class);
 	}
-	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		if (actionType != ACTION_ACTION) {
-			return null;
-		}
-		if (t_action == null) {
-			t_action = new GsPluggableActionDescriptor[1];
-			t_action[0] = new GsPluggableActionDescriptor("STR_pathFinding", "STR_pathFinding_descr", null, this, ACTION_ACTION, 0);
-		}
-		return t_action;
-	}
-	
-	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-		if (actionType != ACTION_ACTION) {
-			return;
-		}
-		if (ref == 0) {
-           new PathFindingFrame(frame, graph);
-		}
-	}
 
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(new PathSearchAction(graph));
+		return actions;
+	}
 }
 
+class PathSearchAction extends GsActionAction {
+
+	private final Graph<?, ?> graph;
+	
+	public PathSearchAction(Graph<?, ?> graph) {
+		super("STR_pathFinding", "STR_pathFinding_descr");
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+        new PathFindingFrame(graph);
+	}
+}

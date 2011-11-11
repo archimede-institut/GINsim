@@ -8,7 +8,6 @@ import java.util.List;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.xml.XMLWriter;

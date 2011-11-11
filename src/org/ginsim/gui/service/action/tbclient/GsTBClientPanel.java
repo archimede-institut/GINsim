@@ -44,7 +44,6 @@ import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
-import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.AbstractTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellEditor;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellRenderer;
@@ -349,11 +348,6 @@ public class GsTBClientPanel extends GsPanel implements GraphChangeListener, Win
   }
   public GeneTreeModel getGeneTreeModel() {
   	return geneTreeModel;
-  }
-
-  public void graphChanged(GsNewGraphEvent event) {
-		graph = (GsRegulatoryGraph)event.getNewGraph();
-		interactionsPanel.init(graph, false);
   }
 
   public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {

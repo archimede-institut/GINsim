@@ -27,12 +27,12 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.tree.GsTree;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.action.connectivity.AlgoConnectivity;
 import org.ginsim.gui.service.action.connectivity.GsNodeReducedData;
 import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParser;
 import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParserFromCircuit;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -717,7 +717,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
 		parser.setParameter(GsTreeParser.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(GsTreeParserFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
 		parser.setParameter(GsTreeParserFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
-		GsEnv.newMainFrame(tree);
+		GUIManager.getInstance().newFrame(tree);
 	}
 	
 	/**

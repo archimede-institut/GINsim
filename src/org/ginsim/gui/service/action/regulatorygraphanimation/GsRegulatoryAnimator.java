@@ -18,7 +18,6 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
-import fr.univmrs.tagc.GINsim.graph.GsNewGraphEvent;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
@@ -214,9 +213,6 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         markAllPath();
     }
     
-    public void graphChanged(GsNewGraphEvent event) {
-        endAnim();
-    }
     public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
         if (event.getNbEdge() == 0 && event.getNbVertex() == 1) {
             colorizer.colorizeGraph( ((GsDynamicNode)event.getV_vertex().get(0)).state );

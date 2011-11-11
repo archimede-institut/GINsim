@@ -33,6 +33,8 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.ginsim.gui.shell.MainFrame;
+
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -136,11 +138,10 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
 	private GsPanelFactory panelFactory;
 
   public GsLogicalFunctionTreePanel(GsRegulatoryGraph graph, GsLogicalFunctionPanel p) {
-    super();
-		panelFactory = new GsPanelFactory(p);
+    super(graph);
+    panelFactory = new GsPanelFactory(p);
     setLayout(new BorderLayout());
     add(new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
-    this.graph = graph;
     menu = new GsTreeMenu(this);
     tree.addMouseListener(this);
     tree.getSelectionModel().addTreeSelectionListener(this);
@@ -149,7 +150,7 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
 		tree.setFocusTraversalKeysEnabled(false);
   }
 
-  public void setEditedObject(Object obj) {
+  public void setEditedItem(Object obj) {
     GsRegulatoryVertex vertex = (GsRegulatoryVertex) obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
@@ -170,14 +171,18 @@ public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyL
       tree.setEditable(true);
       tree.addKeyListener(this);
       dragSource = DragSource.getDefaultDragSource();
-      dropListener = new GsDropListener(this, (GsGlassPane) graph.getGraphManager().getMainFrame().getGlassPane());
-      dragSourceListener = new GsDragSourceListener(tree, (GsGlassPane) graph.getGraphManager().getMainFrame().getGlassPane());
+      GsGlassPane glasspanel = null;
+      if (this.frame instanceof MainFrame) {
+    	  // FIXME: get the Glass panel from the main frame
+      }
+      dropListener = new GsDropListener(this, glasspanel);
+      dragSourceListener = new GsDragSourceListener(tree, glasspanel);
       dragGestureListener = new GsDragGestureListener(tree, dragSourceListener, dropListener);
       dragSource.createDefaultDragGestureRecognizer(tree, DnDConstants.ACTION_COPY_OR_MOVE, dragGestureListener);
       new DropTarget(tree, DnDConstants.ACTION_COPY_OR_MOVE, dropListener, true);
-      motionAdapter = new GsMotionAdapter((GsGlassPane) graph.getGraphManager().getMainFrame().getGlassPane());
+      motionAdapter = new GsMotionAdapter(glasspanel);
       tree.addMouseMotionListener(motionAdapter);
-      componentAdapter = new GsComponentAdapter((GsGlassPane) graph.getGraphManager().getMainFrame().getGlassPane(), "");
+      componentAdapter = new GsComponentAdapter(glasspanel, "");
       tree.addMouseListener(componentAdapter);
       if (System.getProperty("os.name").indexOf("Mac") < 0) {
         TreeUI ui = new GsTreeUI();

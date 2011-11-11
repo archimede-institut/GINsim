@@ -3,8 +3,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.global.GsMain;
-import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
+import org.ginsim.gui.GUIManager;
+
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
@@ -16,9 +16,6 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 public class LRGCreator {
 
 	public static void main(String[] args) {
-		// launch the true main class: not needed if launched from a plugin
-		GsMain.main(args);
-		
 		// create a simple graph
 		GsRegulatoryGraph lrg = new GsRegulatoryGraph();
 		GsVertexAttributesReader vreader = lrg.getVertexAttributeReader();
@@ -60,6 +57,6 @@ public class LRGCreator {
 		g2.addLogicalParameter(parameter, true);  // manual parameter, logical function will call this method with "false"
 		
 		// propose to display the new graph 
-		new GsWhatToDoFrame(null, lrg, true);
+		GUIManager.getInstance().whatToDoWithGraph(lrg, null, true);
 	}
 }

@@ -15,8 +15,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 /**
  * offer save option for regulatory graphs 
  */
-public class GsRegulatoryGraphOptionPanel extends JPanel implements
-		GsGraphOptionPanel {
+public class GsRegulatoryGraphOptionPanel extends JPanel implements GsGraphOptionPanel {
 
 	private static final long serialVersionUID = 4585614812066176148L;
 	private JComboBox comboBox;
@@ -55,10 +54,8 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
         }
         comboBox.setSelectedIndex(mode);
 	}
-	
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraphOptionPanel#getSaveMode()
-	 */
+
+	@Override
 	public int getSaveMode() {
         if (comboBox != null) {
             return comboBox.getSelectedIndex();
@@ -66,11 +63,13 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
 		return 0;
 	}
     
+	@Override
     public boolean isExtended() {
         OptionStore.setOption("extendedSave", extended.isSelected() ? Boolean.TRUE : Boolean.FALSE);
         return extended.isSelected();
     }
 
+	@Override
     public boolean isCompressed() {
     	if (!showCompressed) {
     		return true;
@@ -106,6 +105,7 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements
 		return comboBox;
 	}
 
+	@Override
     public String getExtension() {
         if (extended.isSelected()) {
             return ".zginml";

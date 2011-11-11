@@ -1,19 +1,24 @@
 package fr.univmrs.tagc.common.datastore;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.ginsim.gui.graph.GUIEditor;
+
+import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 
 /**
  * An ObjectEditor acts as proxy between an object and the UI to edit its properties.
  * It knows the available properties, can check if a proposed value is correct
  * and can apply them.
  */
-public abstract class ObjectEditor {
+public abstract class ObjectEditor<T> implements GUIEditor<T> {
 
 	protected List v_listener = null;
 	protected List v_prop = new ArrayList();
-	protected Object o;
+	protected T o;
 	protected Object master;
 	
 	public Object getMasterObject() {
@@ -30,7 +35,7 @@ public abstract class ObjectEditor {
 	abstract public boolean setValue(int prop, String value);
 	abstract public boolean setValue(int prop, int value);
 	
-	public void setEditedObject(Object o) {
+	public void setEditedItem (T o) {
 		this.o = o;
 		refresh(true);
 	}
@@ -64,4 +69,10 @@ public abstract class ObjectEditor {
 	public void performAction(int prop) {
 		System.out.println("override this!");
 	}
+	
+	@Override
+	public Component getComponent() {
+		return new GenericPropertyEditorPanel(this);
+	}
+
 }

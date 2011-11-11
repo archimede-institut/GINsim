@@ -2,6 +2,7 @@ package org.ginsim.gui.service.action.regulatorytreefunction;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,13 +10,14 @@ import javax.swing.Action;
 
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.tree.GsTree;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.GsActionAction;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.service.action.regulatoryfunctiontree.RegulatoryFunctionTreeService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
@@ -40,11 +42,13 @@ class RegulatoryFunctionTreeAction extends GsActionAction {
 	private static final Integer ZERO = new Integer(0);
 	
 	private final GsRegulatoryGraph graph;
+	private final GraphGUI<?, ?, ?> gui;
 	
 	public RegulatoryFunctionTreeAction( GsRegulatoryGraph graph) {
 		
 		super( "STR_treeViewer_regulatoryPlugin", "STR_treeViewer_regulatoryPlugin_descr");
 		this.graph = graph;
+		this.gui = GUIManager.getInstance().getGraphGUI(graph);
 	}
 
 	@Override
@@ -56,22 +60,21 @@ class RegulatoryFunctionTreeAction extends GsActionAction {
 		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_REGGRAPH, graph);
 		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, getSelectedVertex( graph));
-		GsEnv.newMainFrame(tree);
+		GUIManager.getInstance().newFrame(tree);
 	}
 	
 	/**
-	 * Return the index of the first selected gene in the regularoty graph, or 0 if none are selected.
+	 * Return the index of the first selected gene in the regulatory graph, or 0 if none are selected.
 	 * @param regGraph
 	 * @return
 	 */
 	private Integer getSelectedVertex(GsRegulatoryGraph regGraph) {
 		
-		GsRegulatoryVertex selectedNode = null;	
-		Iterator it = regGraph.getGraphManager().getSelectedVertexIterator();
-		if (it.hasNext()) {
-			selectedNode = (GsRegulatoryVertex) it.next();
-		} 
-		else{
+		GsRegulatoryVertex selectedNode = null;
+		Collection<?> vertices = gui.getSelectedVertices();
+		if (vertices != null && vertices.size() > 0) {
+			selectedNode = (GsRegulatoryVertex) vertices.iterator().next();
+		} else {
 			return ZERO;
 		}
 		int i = 0;
@@ -83,5 +86,4 @@ class RegulatoryFunctionTreeAction extends GsActionAction {
 		}
 		return ZERO;
 	}
-	
 }

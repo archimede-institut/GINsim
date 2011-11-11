@@ -5,23 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
-import javax.swing.JFrame;
 
-import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraphDescriptor;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.GsActionAction;
 import org.ginsim.gui.service.GsServiceGUI;
-import org.ginsim.service.action.animregulatorygraph.RegulatoryGraphAniamtionService;
+import org.ginsim.service.action.regulatorygraphanimation.RegulatoryGraphAnimationService;
 import org.mangosdk.spi.ProviderFor;
-
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * register the aRegGraph plugin: animate the regulatory graph 

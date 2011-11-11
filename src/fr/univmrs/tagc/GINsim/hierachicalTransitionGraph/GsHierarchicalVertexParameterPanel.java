@@ -22,31 +22,9 @@ public class GsHierarchicalVertexParameterPanel extends GsParameterPanel {
 
 		private JLabel typeLabel;
 		
-		/**
-		 */
 		public GsHierarchicalVertexParameterPanel( Graph g) {
-			super();
-			this.graph = g;
-			initialize();
-		}
-		
-		/*
-		 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
-		 */
-		public void setEditedObject(Object obj) {
-			if (obj instanceof GsHierarchicalNode) {
-				node = (GsHierarchicalNode)obj;
-				((GsHierarchicalTableModel)getJTable().getModel()).setContent(node);
-	            jTable.getColumnModel().getColumn(0).setMinWidth(10);
-	            jTable.getColumnModel().getColumn(0).setPreferredWidth(10);
-	            typeLabel.setText("Type : "+Translator.getString("STR_"+node.typeToString()));
-			}
-		}
+			super(g);
 
-		/**
-		 * This method initializes this
-		 */
-		private void initialize() {
 	        this.setLayout(new GridBagLayout());
 	        GridBagConstraints c = new GridBagConstraints();
 	        c.gridx = 0;
@@ -59,6 +37,19 @@ public class GsHierarchicalVertexParameterPanel extends GsParameterPanel {
 	        c.weighty = 1;
 	        this.add(getJScrollPane(), c);
 	        this.setMinimumSize(new Dimension(20,20));
+		}
+		
+		/*
+		 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
+		 */
+		public void setEditedItem(Object obj) {
+			if (obj instanceof GsHierarchicalNode) {
+				node = (GsHierarchicalNode)obj;
+				((GsHierarchicalTableModel)getJTable().getModel()).setContent(node);
+	            jTable.getColumnModel().getColumn(0).setMinWidth(10);
+	            jTable.getColumnModel().getColumn(0).setPreferredWidth(10);
+	            typeLabel.setText("Type : "+Translator.getString("STR_"+node.typeToString()));
+			}
 		}
 
 		/**

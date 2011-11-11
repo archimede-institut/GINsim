@@ -3,7 +3,6 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -19,9 +18,7 @@ import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.gui.service.BaseAction;
 import org.ginsim.gui.service.action.connectivity.GsReducedGraph;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
@@ -54,11 +51,6 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
         return true;
     }
 
-    public Graph getNew(GsMainFrame m) {
-        Graph graph = new GsRegulatoryGraph();
-        return graph;
-    }
-
 	public Graph open(File file) {
 	    return open(null, file);
 	}
@@ -69,55 +61,6 @@ public class GsGinsimGraphDescriptor implements GsGraphDescriptor {
 			ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
 		}
 		return ffilter;
-	}
-
-	/**
-	 * @param layout
-	 */
-	public static void registerLayoutProvider(GsActionProvider layout) {
-		if (v_layout == null) {
-			v_layout = new ArrayList();
-		}
-		v_layout.add(layout);
-	}
-	/**
-	 * @return a list of avaible layouts.
-	 */
-	public List getLayout() {
-		return v_layout;
-	}
-
-	/**
-	 * @param export
-	 */
-	public static void registerExportProvider(GsActionProvider export) {
-		if (v_export == null) {
-			v_export = new ArrayList();
-		}
-		v_export.add(export);
-	}
-	/**
-	 * @return a list of avaible export filters.
-	 */
-	public List getExport() {
-		return v_export;
-	}
-
-	/**
-	 * 
-	 * @param action
-	 */
-	public static void registerActionProvider(GsActionProvider action) {
-		if (v_action == null) {
-			v_action = new ArrayList();
-		}
-		v_action.add(action);
-	}
-	/**
-	 * @return a list of avaible actions.
-	 */
-	public List getAction() {
-		return v_action;
 	}
 
 	public ImageIcon getGraphIcon(int mode) {

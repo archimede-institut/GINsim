@@ -1,4 +1,4 @@
-package org.ginsim.gui.testgraph;
+package org.ginsim.gui.graphhelper.testgraph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import org.ginsim.gui.graph.AddEdgeAction;
 import org.ginsim.gui.graph.AddVertexAction;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
-import org.ginsim.gui.graph.helper.GraphGUIHelper;
+import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;

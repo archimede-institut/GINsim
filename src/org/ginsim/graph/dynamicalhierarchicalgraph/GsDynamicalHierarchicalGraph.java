@@ -77,7 +77,6 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 	    this( true);
         GsDynamicalHierarchicalParser parser = new GsDynamicalHierarchicalParser();
         parser.parse(file, map, this);
-		graphManager.ready();
 	}
 
 

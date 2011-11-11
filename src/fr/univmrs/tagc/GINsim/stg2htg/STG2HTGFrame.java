@@ -21,7 +21,7 @@ public class STG2HTGFrame extends StackDialog implements ActionListener {
    }
 
 	protected void run() {
-		Thread thread = new STG2HTG(frame, graph);
+		Thread thread = new STG2HTG(graph);
 		thread.start();
 	}
 	

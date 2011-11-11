@@ -3,10 +3,6 @@ package fr.univmrs.tagc.common.document;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.ginsim.graph.Graph;
-
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
-
 /**
  * This class contain the informations about each kind of document like id, extension, filter and its class.
  */
@@ -99,9 +95,4 @@ public class GenericDocumentFormat {
 		}
 		return v;
 	}
-		
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-		return null;
-	}	
 }

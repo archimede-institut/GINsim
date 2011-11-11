@@ -8,14 +8,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -44,15 +41,6 @@ public class CytoscapeExport extends GsAbstractExport {
 		extension = ".xgmml";
 		filter = new String[] { "xgmml" };
 		filterDescr = "Cytoscape files";
-	}
-
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-		if (graph instanceof GsRegulatoryGraph) {
-			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
-					"STR_cytoscape", "STR_cytoscape_descr", null, this, ACTION_EXPORT, 0) };
-		}
-		return null;
 	}
 
 	protected void doExport(GsExportConfig config) {

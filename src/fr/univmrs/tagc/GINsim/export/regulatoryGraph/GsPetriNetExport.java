@@ -15,7 +15,6 @@ import org.ginsim.graph.Graph;
 
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
 import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParametersManager;
 import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassDefinition;

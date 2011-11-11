@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import fr.univmrs.tagc.GINsim.global.GsWhatToDoFrame;
+import org.ginsim.gui.GUIManager;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
@@ -80,7 +81,7 @@ public final class TruthTableParser {
     	catch (Exception e){};    
     	defineModel();
     	// propose to display the new graph 
-    	new GsWhatToDoFrame(null, model, true);
+    	GUIManager.getInstance().whatToDoWithGraph(model, true);
     }				
 
 
@@ -98,7 +99,7 @@ public final class TruthTableParser {
     	// add  vertices
     	GsRegulatoryVertex [] G = new GsRegulatoryVertex [n];
     	for (j=0; j<n; j++) {
-    		G[j] = (GsRegulatoryVertex)model.interactiveAddVertex(0, j, 2*j);
+    		G[j] = model.addVertex();
     	}	
 
     	
@@ -142,7 +143,6 @@ public final class TruthTableParser {
     	incoming_edges=new List[n];
     	table_interactors=new List[n];
     	byte sign;
-    	GsGraphManager manager = model.getGraphManager();  
     	for ( i=0;i<n;i++) {
     		incoming_edges[i]=new ArrayList(); //instantiate one list for each component to store the incoming edges
     		table_interactors[i]=new ArrayList();
@@ -153,18 +153,18 @@ public final class TruthTableParser {
     				L1=(k+j*(m[i]+1))*b[i];            // the first line of the block  
     				for ( l=L1;l<L1+b[i];l++) {       // for all the lines of the block 	
     					for( int u=n; u<2*n; u++) { //  scan the target values of each component (second column of image states)
-    						sign=-1; // sign defines the type of the interaction (0 positive/1 negative/2 unknown)		
+    						sign = 0; // sign defines the type of the interaction (1 positive/-1 negative/ 0 unknown)		
     						if (table_gene[l][u]> table_gene[l+b[i]][u]) {
-    							sign=1;  // negative interaction
+    							sign = -1;  // negative interaction
     						}
     						else if (table_gene[l][u]< table_gene[l+b[i]][u]) {
-    							sign=0; // positive interaction
+    							sign = 1; // positive interaction
     						}
     						if (sign!=-1) {
-    							GsRegulatoryMultiEdge edge = (GsRegulatoryMultiEdge)manager.getEdge(G[i], G[u-n]);
-    							if (edge==null) {
-    								model.interactiveAddEdge(G[i], G[u-n], sign); 
-    								edge = (GsRegulatoryMultiEdge)manager.getEdge(G[i], G[u-n]);
+    							GsRegulatoryMultiEdge edge = model.getEdge(G[i], G[u-n]);
+    							if (edge == null) {
+    								model.addEdge(G[i], G[u-n], sign); 
+    								edge = model.getEdge(G[i], G[u-n]);
     								incoming_edges[u-n].add(edge.getEdge(0));
     								edge.setMin(0, (byte)table_gene[l+b[i]][i]);
     								table_interactors[u-n].add(i);
@@ -198,7 +198,7 @@ public final class TruthTableParser {
     				for(k=0 ; k<deg ; k++) {
     					int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
     					if (table_gene[j][reg]!=0 ) {  
-    						GsRegulatoryMultiEdge me =(GsRegulatoryMultiEdge)manager.getEdge(G[reg], G[i]);
+    						GsRegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
     						activeInteractions.add(me.getEdge(0));
     					}
     				}

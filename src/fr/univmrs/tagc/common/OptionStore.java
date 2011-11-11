@@ -8,14 +8,15 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -23,7 +24,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -37,7 +37,6 @@ public class OptionStore extends DefaultHandler {
     // some static stuff
     private static Map m_option = new HashMap();
     private static String optionFile = null;
-    private static Vector v_recent = new Vector();
     
     static {
     	switch (Tools.os) {
@@ -77,36 +76,6 @@ public class OptionStore extends DefaultHandler {
             	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
             }
         }
-    }
-    /**
-     * add a recent file to the list
-     * @param path path to the file
-     */
-    public static void addRecent(String path) {
-        if (path != null && new File(path).exists()) {
-            int i = v_recent.indexOf(path);
-            if (i != -1) {
-                v_recent.remove(i);
-                v_recent.add(path);
-            } else {
-                if (v_recent.size() > 9) {
-                    v_recent.remove(0);
-                }
-                v_recent.add(path);
-            }
-            
-            GsEnv.updateRecentMenu();
-        }
-    }
-
-    /**
-     * get the list of recent files.
-     * In the returned list, the most recently used file is the last one
-     * 
-     * @return a Vector containing recent files
-     */
-    public static Vector getRecent() {
-        return v_recent;
     }
     
     /**
@@ -164,16 +133,17 @@ public class OptionStore extends DefaultHandler {
         GsEdgeAttributesReader.saveOptions();
         GsVertexAttributesReader.saveOptions();
         
-        if (v_recent.size() == 0 && m_option.size() == 0) {
+        List<String> recents = GsFileCallBack.getRecentFiles();
+        if (recents.size() == 0 && m_option.size() == 0) {
             return;
         }
         try {
             OutputStreamWriter fos = new OutputStreamWriter(new FileOutputStream(optionFile), "UTF-8");
             XMLWriter out = new XMLWriter(fos, null); 
             out.write("<gsconfig>\n");
-            for (int i=0 ; i<v_recent.size() ; i++) {
+            for (String recent: recents) {
                 out.openTag("recent");
-                out.addAttr("filename", v_recent.get(i).toString());
+                out.addAttr("filename", recent);
                 out.closeTag();
             }
             Iterator it = m_option.keySet().iterator();
@@ -214,7 +184,7 @@ public class OptionStore extends DefaultHandler {
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         if (qName.equals("recent")) {
-            addRecent(attributes.getValue("filename"));
+            GsFileCallBack.addRecentFile(attributes.getValue("filename"));
         } else if (qName.equals("option")) {
             String k = attributes.getValue("key");
             String sv = attributes.getValue("value");

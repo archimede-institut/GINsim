@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.util.Collection;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
@@ -50,7 +51,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListen
 			}
 		}
 		master = o;
-		super.setEditedObject(o);
+		super.setEditedItem(o);
 	}
 	
 	public int getIntValue(int prop) {
@@ -161,7 +162,7 @@ class GsGraphOrderList extends SimpleGenericList {
 	}
 
 	protected void doRun(int row, int col) {
-		graph.getGraphManager().select(v_data.get(row));
+		GUIManager.getInstance().getGraphGUI(graph).selectVertex(v_data.get(row));
 	}
 	
 }

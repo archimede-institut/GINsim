@@ -12,7 +12,7 @@ import org.ginsim.graph.Graph;
 import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
+import fr.univmrs.tagc.common.Tools;
 
 /**
  * Encode a graph to biolayout format.
@@ -48,7 +48,7 @@ public class BioLayoutExportService implements GsService{
 			// Close main tags
 			out.close();
 		} catch (IOException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		}
 	}
 }

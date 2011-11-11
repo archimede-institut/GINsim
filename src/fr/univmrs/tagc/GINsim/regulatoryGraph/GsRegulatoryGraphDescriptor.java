@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -13,7 +14,6 @@ import fr.univmrs.tagc.GINsim.annotation.BiblioManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -21,10 +21,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  */
 public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
 
-    private static Vector v_layout = null;
-    private static Vector v_export = null;
-    private static Vector v_action = null;
-    private static Vector v_OManager = null;
+    private static List<GsGraphAssociatedObjectManager> v_OManager = null;
     private GsFileFilter ffilter;
     private static GsRegulatoryGraphDescriptor instance = null;
 
@@ -53,8 +50,7 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
         return true;
     }
 
-    public Graph getNew(GsMainFrame m) {
-    	
+    public Graph getNew() {
         Graph graph = new GsRegulatoryGraph();
         return graph;
     }
@@ -107,7 +103,7 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
     /**
      * @return associated specific objects manager
      */
-    public static Vector getObjectManager() {
+    public static List<GsGraphAssociatedObjectManager> getObjectManager() {
         return v_OManager;
     }
 

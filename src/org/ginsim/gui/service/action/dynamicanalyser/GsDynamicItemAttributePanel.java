@@ -21,12 +21,11 @@ public class GsDynamicItemAttributePanel extends GsParameterPanel {
 	 * @param graph
 	 */
 	public GsDynamicItemAttributePanel(GsDynamicGraph graph) {
-		super();
-		this.graph = graph;
+		super(graph);
 		initialize();
 	}
 	
-	public void setEditedObject(Object obj) {
+	public void setEditedItem(Object obj) {
         ((GsDynamicItemModel)getJTable().getModel()).setContent(obj);
 	}
 

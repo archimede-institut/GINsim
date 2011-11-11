@@ -8,12 +8,6 @@ import org.ginsim.graph.Graph;
  */
 public interface GraphChangeListener {
 
-    /**
-     * action to take when the graph in the current frame changed.
-     * 
-     * @param event presents the new graph.
-     */
-	public void graphChanged(GsNewGraphEvent event);
 	/**
 	 * action to take when selected object(s) changed.
 	 * @param event presents the new selection.

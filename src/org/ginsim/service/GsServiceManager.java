@@ -2,11 +2,9 @@ package org.ginsim.service;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.Vector;
 
 
 /**

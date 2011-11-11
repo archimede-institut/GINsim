@@ -21,6 +21,8 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.SimpleDialog;
@@ -36,7 +38,8 @@ import fr.univmrs.tagc.common.widgets.SimpleDialog;
 public class GsSearchFrame extends SimpleDialog {
 	private static final long serialVersionUID = 381064983897248950L;
 
-	private Graph g;
+	private GraphGUI<?, ?, ?> gui;
+	private Graph<?,?> g;
 	
 	private JPanel mainPanel;
 	private JTextField searchTextField;
@@ -45,9 +48,10 @@ public class GsSearchFrame extends SimpleDialog {
 	private JTable table;
 	private MyTableModel tableModel;
 	
-	public GsSearchFrame(GsMainFrame main) {
-		super(main, Translator.getString("STR_searchNode_title"),300,400);
-		this.g = main.getGraph();
+	public GsSearchFrame(GraphGUI<?, ?, ?> gui) {
+		super(GUIManager.getInstance().getFrame(gui.getGraph()), Translator.getString("STR_searchNode_title"),300,400);
+		this.gui = gui;
+		this.g = gui.getGraph();
         initialize();
 	}
 	
@@ -135,13 +139,12 @@ public class GsSearchFrame extends SimpleDialog {
 	}
 
 	public void select() {
-		GsGraphManager gm = g.getGraphManager();
 		List l = new Vector();
 		int[] t = table.getSelectedRows();
 		for (int i = 0; i < t.length; i++) {
 			l.add(tableModel.getVertexAt(t[i]));
 		}
-		gm.select(l);
+		gui.selectVertices(l);
 	}
 		
 	public void doClose() {

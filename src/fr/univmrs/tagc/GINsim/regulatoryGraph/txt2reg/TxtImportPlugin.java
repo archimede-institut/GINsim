@@ -37,8 +37,8 @@ class TxtImportAction extends AbstractAction {
 		extension = ".txt";
 
 		// we should add a better way to select a file for import
-		// FIXME: get the main frame for this graph
-		filename = GsOpenAction.selectFileWithOpenDialog(frame);
+		// TODO: get the main frame for this graph (it doesn't matter here)
+		filename = GsOpenAction.selectFileWithOpenDialog(null);
 
 
 		// TODO ...

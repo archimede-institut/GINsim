@@ -1,6 +1,5 @@
 package org.ginsim.gui.shell.callbacks;
 
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -8,7 +7,6 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
-import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
@@ -16,11 +14,7 @@ import org.ginsim.graph.Graph;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.shell.FrameActionManager;
-
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * Callbacks for the "File" menu
@@ -75,6 +69,17 @@ public class GsFileCallBack {
 		menu.add(new QuitAction());
 		
 		return menu;
+	}
+
+	/**
+	 * Get the list of recent files.
+	 * Note: the recent menu will be managed by this class directly,
+	 * this method should only be used to save the list of recent files before closing GINsim
+	 * 
+	 * @return the list of recent files
+	 */
+	public static List<String> getRecentFiles() {
+		return recentFiles;
 	}
 }
 

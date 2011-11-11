@@ -1,4 +1,4 @@
-package org.ginsim.gui.graph.helper;
+package org.ginsim.gui.graphhelper;
 
 import java.util.List;
 

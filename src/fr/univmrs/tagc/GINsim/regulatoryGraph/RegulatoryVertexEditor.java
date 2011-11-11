@@ -15,7 +15,7 @@ import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.datastore.models.SpinModel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class RegulatoryVertexEditor extends ObjectEditor {
+public class RegulatoryVertexEditor extends ObjectEditor<GsRegulatoryVertex> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NAME = 1;
@@ -25,7 +25,6 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	public static final int PROP_RAW = 10;
 	private List l_prop = new ArrayList();
 	
-	GsRegulatoryVertex vertex;
 	GsRegulatoryGraph graph;
 
 	static {
@@ -71,17 +70,12 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		l_prop.add(pinfo);
 	}
 	
-	public void setEditedObject(Object o) {
-		this.vertex = (GsRegulatoryVertex)o;
-		super.setEditedObject(o);
-	}
-	
 	public int getIntValue(int prop) {
 		switch (prop) {
             case PROP_MAX:
-                return vertex.getMaxValue();
+                return o.getMaxValue();
             case PROP_INPUT:
-                return vertex.isInput() ? 1 : 0;
+                return o.isInput() ? 1 : 0;
 		}
 		return 0;
 	}
@@ -93,13 +87,13 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	public String getStringValue(int prop) {
 		switch (prop) {
 			case PROP_ID:
-				return vertex.getId();
+				return o.getId();
 			case PROP_NAME:
-				return vertex.getName();
+				return o.getName();
 			case PROP_MAX:
-				return ""+vertex.getMaxValue();
+				return ""+o.getMaxValue();
             case PROP_INPUT:
-                return ""+vertex.isInput();
+                return ""+o.isInput();
 		}
 		return null;
 	}
@@ -131,10 +125,10 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 		try {
 			switch (prop) {
 				case PROP_ID:
-					graph.changeVertexId(vertex, value);
+					graph.changeVertexId(o, value);
 					return true;
 				case PROP_NAME:
-					vertex.setName(value);
+					o.setName(value);
 					return true;
 			}
 		} catch (Exception e) {
@@ -145,12 +139,12 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	public boolean setValue(int prop, int value) {
 		switch (prop) {
 			case PROP_MAX:
-				vertex.setMaxValue((byte)value, graph);
-				return vertex.getMaxValue() == value;
+				o.setMaxValue((byte)value, graph);
+				return o.getMaxValue() == value;
             case PROP_INPUT:
                 boolean nv = value != 0;
-                vertex.setInput(nv, graph);
-                return vertex.isInput() == nv;
+                o.setInput(nv, graph);
+                return o.isInput() == nv;
 		}
 		return false;
 	}
@@ -158,11 +152,11 @@ public class RegulatoryVertexEditor extends ObjectEditor {
 	public Object getRawValue(int prop) {
 		switch (prop) {
 			case PROP_ANNOTATION:
-				return vertex.getAnnotation();
+				return o.getAnnotation();
 			case PROP_RAW:
-				return vertex;
+				return o;
             case PROP_INPUT:
-                return vertex.isInput() ? Boolean.TRUE : Boolean.FALSE;
+                return o.isInput() ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return null;
 	}

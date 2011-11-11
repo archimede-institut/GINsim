@@ -16,30 +16,9 @@ public class GsHierarchicalEdgeParameterPanel  extends GsParameterPanel {
 
 	private JLabel typeLabel;
 	
-	/**
-	 */
 	public GsHierarchicalEdgeParameterPanel( Graph g) {
-		super();
-		this.graph = g;
-		initialize();
-	}
-	
-	/*
-	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
-	 */
-	public void setEditedObject(Object obj) {
-		if (obj != null && obj instanceof GsDecisionOnEdge) {
-			GsDecisionOnEdge decisions = (GsDecisionOnEdge)obj;
-			typeLabel.setText(decisions.toString());
-		} else {
-			typeLabel.setText("");
-		}
-	}
+		super(g);
 
-	/**
-	 * This method initializes this
-	 */
-	private void initialize() {
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -47,6 +26,18 @@ public class GsHierarchicalEdgeParameterPanel  extends GsParameterPanel {
         c.weightx = 1;
         c.fill = GridBagConstraints.BOTH;
         this.add(getTypeLabel(), c);
+	}
+	
+	/*
+	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
+	 */
+	public void setEditedItem(Object obj) {
+		if (obj != null && obj instanceof GsDecisionOnEdge) {
+			GsDecisionOnEdge decisions = (GsDecisionOnEdge)obj;
+			typeLabel.setText(decisions.toString());
+		} else {
+			typeLabel.setText("");
+		}
 	}
 
 	/**

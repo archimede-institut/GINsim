@@ -90,6 +90,21 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @param listener
 	 */
 	void removeGraphGUIListener(GraphGUIListener<G, V, E> listener);
+
+	public boolean isEditAllowed();
+	
+	/**
+	 * reset selection and select a single vertex.
+	 * 
+	 * @param vertex
+	 */
+	public void selectVertex(V vertex);
+	/**
+	 * reset selection and select a single edge.
+	 * 
+	 * @param vertex
+	 */
+	public void selectEdge(E edge);
 	
 // TODO Commented out for quick testing: remove comments	
 

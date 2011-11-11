@@ -1,40 +1,46 @@
 package fr.univmrs.tagc.GINsim.omddViz;
 
-import javax.swing.JFrame;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.ginsim.exception.GsException;
+import javax.swing.Action;
+
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.GsActionAction;
+import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.StandaloneGUI;
+import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 
-public class OmddVizPlugin implements GsActionProvider, GsPlugin {
+@ProviderFor(GsServiceGUI.class)
+@StandaloneGUI
+public class OmddVizPlugin implements GsServiceGUI {
 
-	private GsPluggableActionDescriptor[] t_action = null;
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		if (graph instanceof GsRegulatoryGraph) {
+			List<Action> actions = new ArrayList<Action>();
+			actions.add(new OMDDVizAction((GsRegulatoryGraph)graph));
+			return actions;
+		}
+		return null;
+	}
+}
 
-	public void registerPlugin() {
-		GsRegulatoryGraphDescriptor.registerActionProvider(this);
+class OMDDVizAction extends GsActionAction {
+
+	private GsRegulatoryGraph graph;
+
+	public OMDDVizAction(GsRegulatoryGraph graph) {
+		super("STR_omddViz", "STR_omddViz_descr");
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		new OmddVizFrame(graph);
 	}
 	
-	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		if (actionType != ACTION_ACTION) {
-			return null;
-		}
-		if (t_action == null) {
-			t_action = new GsPluggableActionDescriptor[1];
-			t_action[0] = new GsPluggableActionDescriptor("STR_omddViz", "STR_omddViz_descr", null, this, ACTION_ACTION, 0);
-		}
-		return t_action;
-	}
-	
-	public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-		if (actionType != ACTION_ACTION) {
-			return;
-		}
-		if (ref == 0) {
-           new OmddVizFrame(frame, (GsRegulatoryGraph)graph);
-		}
-	}
 }

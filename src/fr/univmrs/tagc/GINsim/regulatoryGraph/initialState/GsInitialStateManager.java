@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.xml.XMLHelper;
@@ -40,7 +40,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
             imanager.getInputConfigs().toXML(out, "input");
             out.closeTag();
         } catch (IOException e) {
-            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+            GUIManager.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
         }
     }
 

@@ -18,8 +18,6 @@ import javax.swing.WindowConstants;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
-import fr.univmrs.tagc.GINsim.global.GsEventDispatcher;
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.managerresources.Translator;

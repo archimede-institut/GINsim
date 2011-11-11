@@ -16,10 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.ginsim.graph.tree.GsTree;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParser;
 import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParserFromManualOmdd;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -46,8 +46,8 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 		this.frame = parent;
 	}
 
-	public OmddVizFrame( JFrame frame, GsRegulatoryGraph graph) {
-		super(frame, "STR_omddViz", 475, 260);
+	public OmddVizFrame( GsRegulatoryGraph graph) {
+		super(GUIManager.getInstance().getFrame(graph), "STR_omddViz", 475, 260);
 		this.frame = frame;
 		this.graph = graph;
         initialize();
@@ -143,7 +143,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			parser.setParameter(GsTreeParserFromManualOmdd.PARAM_MANUALOMDD, resOmdd);
 			parser.setParameter(GsTreeParserFromManualOmdd.PARAM_NODEORDER, graph.getNodeOrder());
 			parser.run(GsTree.MODE_DIAGRAM_WITH_MULTIPLE_LEAFS);
-			GsEnv.newMainFrame(tree);
+			GUIManager.getInstance().newFrame(tree);
 
 		}
 	}

@@ -1,23 +1,26 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
+import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.GUIFor;
+import org.ginsim.gui.service.GsActionAction;
+import org.ginsim.gui.service.GsServiceGUI;
+import org.mangosdk.spi.ProviderFor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.global.GsEnv;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.tagc.GINsim.gui.GsActions;
-import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
-import fr.univmrs.tagc.GINsim.gui.GsPluggableActionDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
@@ -28,51 +31,50 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * main method for the model simplification plugin
  */
-public class ModelSimplifierPlugin implements GsPlugin, GsActionProvider {
+@ProviderFor(GsServiceGUI.class)
+@GUIFor(ModelSimplifierService.class)
+public class ModelSimplifierPlugin implements GsServiceGUI {
 
     static {
         if (!GsRegulatoryGraphDescriptor.isObjectManagerRegistred(ModelSimplifierConfigManager.key)) {
             GsRegulatoryGraphDescriptor.registerObjectManager(new ModelSimplifierConfigManager());
         }
     }
-    private GsPluggableActionDescriptor[] t_action = null;
 
-    public void registerPlugin() {
-        GsRegulatoryGraphDescriptor.registerActionProvider(this);
-    }
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		if (graph instanceof GsRegulatoryGraph) {
+			List<Action> actions = new ArrayList<Action>();
+			actions.add(new ModelSimplifierAction((GsRegulatoryGraph)graph));
+			return actions;
+		}
+		return null;
+	}
+}
 
-    public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-        if (actionType != ACTION_ACTION) {
-            return null;
-        }
-        if (t_action == null) {
-            t_action = new GsPluggableActionDescriptor[1];
-            t_action[0] = new GsPluggableActionDescriptor("STR_reduce",
-                    "STR_reduce_descr", null, this, ACTION_ACTION, 0);
-        }
-        return t_action;
-    }
+class ModelSimplifierAction extends GsActionAction {
 
-    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-        if (actionType != ACTION_ACTION) {
-            return;
-        }
-        if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrderSize() < 1) {
+	private final GsRegulatoryGraph graph;
+	public ModelSimplifierAction(GsRegulatoryGraph graph) {
+		super("STR_reduce", "STR_reduce_descr");
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if (graph.getVertexCount() < 1) {
             graph.addNotificationMessage(new NotificationMessage(graph, 
             		Translator.getString(graph instanceof GsRegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
             		NotificationMessage.NOTIFICATION_WARNING));
             return;
-        }
-		if (ref == 0) {
-			GsMainFrame mframe = graph.getGraphManager().getMainFrame();
-			if (mframe != null) {
-				mframe.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
-				new ModelSimplifierConfigDialog((GsRegulatoryGraph)graph);
-			}
 		}
-	}
-}
 
+		// TODO: reset edit mode
+		// mframe.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
+		new ModelSimplifierConfigDialog(graph);
+	}
+	
+}
 
 /**
  * Save/open simulation parameters along with the model.
@@ -90,7 +92,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
 
     public void doSave(OutputStreamWriter os, Graph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
-        List<GsRegulatoryVertex> nodeOrder = graph.getNodeOrder();
+        List<GsRegulatoryVertex> nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
@@ -103,7 +105,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
             }
             out.closeTag();
         } catch (IOException e) {
-            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+            GUIManager.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
         }
     }
 

@@ -25,7 +25,7 @@ public class ReducedParameterPanel extends GsParameterPanel{
 	/*
 	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
 	 */
-	public void setEditedObject(Object obj) {
+	public void setEditedItem(Object obj) {
 		if (obj instanceof GsNodeReducedData) {
 			((ConnectivityTableModel)getJTable().getModel()).setContent( ((GsNodeReducedData)obj).getContent() );
 		}
