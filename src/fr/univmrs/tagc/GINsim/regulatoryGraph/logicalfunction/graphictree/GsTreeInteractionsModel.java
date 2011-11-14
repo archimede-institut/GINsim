@@ -14,6 +14,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.exception.NotificationMessage;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
@@ -234,7 +235,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 			addExpression(val, currentVertex, tbp);
 			fireTreeStructureChanged(root);
 			if (tree != null) tree.expandPath(getPath(val, tbp.getRoot().toString(false)));
-			graph.getVertexEditor().setEditedItem(currentVertex);
+			GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(currentVertex);
 		}
 	}
 	public void setRootInfos() {
@@ -283,7 +284,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 			if (newExp.equals("")) {
 				exp.clearChilds();
 				fireTreeStructureChanged(this.root);
-				graph.getVertexEditor().setEditedItem(node);
+				GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(node);
 				return true;
 			}
 			GsBooleanParser parser = new GsBooleanParser(graph.getIncomingEdges(node), isAutoAddEnabled());
@@ -318,7 +319,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 			parseFunctions();
 			exp.setRoot(root);
 			fireTreeStructureChanged(this.root);
-			graph.getVertexEditor().setEditedItem(node);
+			GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(node);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -336,7 +337,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 		parseFunctions();
 		if (node != null) {
 			node.setInteractionsModel(this);
-			graph.getVertexEditor().setEditedItem(node);
+			GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(node);
 			for (int p = 0 ; p <= node.getMaxValue(); p++) {
 				dis = false;
 				for (int k = 0; k < root.getChildCount(); k++)

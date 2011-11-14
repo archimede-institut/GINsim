@@ -14,7 +14,9 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
-import org.ginsim.gui.service.BaseAction;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.common.BaseAction;
+import org.ginsim.gui.shell.MainFrame;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphOptionPanel;
@@ -39,7 +41,7 @@ public class GsOpenAction extends BaseAction {
     public static final int MODE_RECENT = 3;
 
 	private GsGraphDescriptor gd;
-	private GsMainFrame main;
+	private MainFrame main;
     private String path = null;
 	private int mode;
 
@@ -52,7 +54,7 @@ public class GsOpenAction extends BaseAction {
 	 * @param mode open or create ? (one of MODE_OPEN, MODE_NEW, MODE_NEWFRAME)
 	 * @param main the frame in which we want to open it (can be null)
 	 */
-	public GsOpenAction(GsGraphDescriptor gd, int mode, GsMainFrame main) {
+	public GsOpenAction(GsGraphDescriptor gd, int mode, MainFrame main) {
 		super(gd.getGraphName(), gd.getGraphIcon(mode), gd.getGraphDescription(), null);
 		this.gd = gd;
 		this.main = main;
@@ -69,7 +71,7 @@ public class GsOpenAction extends BaseAction {
 	 * @param descr
      * @param accel
 	 */
-	public GsOpenAction(GsGraphDescriptor gd, int mode, GsMainFrame main, String name, String descr, KeyStroke accel) {
+	public GsOpenAction(GsGraphDescriptor gd, int mode, MainFrame main, String name, String descr, KeyStroke accel) {
 		super(name, gd.getGraphIcon(mode), descr, accel);
 		this.gd = gd;
 		this.main = main;
@@ -83,7 +85,7 @@ public class GsOpenAction extends BaseAction {
      * @param main
      * @param path path to the recent file
      */
-    public GsOpenAction(GsGraphDescriptor gd, GsMainFrame main, String path) {
+    public GsOpenAction(GsGraphDescriptor gd, MainFrame main, String path) {
         super(path.substring(path.lastIndexOf(File.separator)+1, path.length()), null, path, null);
         this.gd = gd;
         this.main = main;
@@ -98,7 +100,7 @@ public class GsOpenAction extends BaseAction {
 	public void actionPerformed(ActionEvent e) {
 		switch (mode) {
         case MODE_OPEN:
-            if (main.getGraph().getVertexCount() <= 0) {
+            if ( main.getGraph().getVertexCount() <= 0) {
                 open(gd, main);
             } else {
                 openInNew(gd);
@@ -118,13 +120,13 @@ public class GsOpenAction extends BaseAction {
                 if (main.getGraph().getVertexCount() <= 0) {
                     GsEventDispatcher.associateGraphWithFrame(graph, main);
                 } else {
-                    GsEnv.newMainFrame(graph);
+                	GUIManager.getInstance().newFrame( graph);
                 }
             }
             break;
        case MODE_OPEN_AND_DO:
-           Graph g = open(gd, (GsMainFrame)null, null);
-    	   new GsWhatToDoFrame(main, g, false);
+           Graph g = open(gd, (MainFrame)null, null);
+    	   new GsWhatToDoFrame( main, g, false);
 		}
 	}
 
@@ -146,9 +148,9 @@ public class GsOpenAction extends BaseAction {
      */
     public static Graph openInNew(GsGraphDescriptor gd) {
     	
-        Graph g = open(gd, (GsMainFrame)null, null);
+        Graph g = open(gd, (MainFrame) null, null);
         if (g != null) {
-            GsEnv.newMainFrame(g);
+            GUIManager.getInstance().newFrame( g);
         }
         return g;
     }
@@ -160,7 +162,7 @@ public class GsOpenAction extends BaseAction {
 	 * @param main the frame in which we want to open it (can be null)
 	 * @return the opened graph (or null if canceled or an error happened)
 	 */
-	public static Graph open(GsGraphDescriptor gd, Map filter, GsMainFrame main) {
+	public static Graph open(GsGraphDescriptor gd, Map filter, MainFrame main) {
 	    return open(gd, main, filter);
 	}
 	/**
@@ -171,7 +173,7 @@ public class GsOpenAction extends BaseAction {
 	 * @param filter if not null, only nodes listed in this Map will be created
 	 * @return the opened graph (or null if canceled or an error happened)
 	 */
-    public static Graph open(GsGraphDescriptor gd, GsMainFrame main, Map filter) {
+    public static Graph open(GsGraphDescriptor gd, MainFrame main, Map filter) {
     	
         return open(gd, main, filter, null);
     }
@@ -185,7 +187,7 @@ public class GsOpenAction extends BaseAction {
      * @param path path to the file to open (will be used only if not null and file exists)
      * @return the opened graph (or null if canceled or an error happened)
      */
-    public static Graph open(GsGraphDescriptor gd, GsMainFrame main, Map filter, String path) {
+    public static Graph open(GsGraphDescriptor gd, MainFrame main, Map filter, String path) {
     	
 	    if (gd == null) {
 	        return null;
@@ -311,7 +313,7 @@ public class GsOpenAction extends BaseAction {
 	public static Graph newFrame(GsGraphDescriptor gd) {
 		
 		Graph graph = gd.getNew(null);
-		GsEnv.newMainFrame(graph);
+		GUIManager.getInstance().newFrame( graph);
 		return graph;
 	}
 

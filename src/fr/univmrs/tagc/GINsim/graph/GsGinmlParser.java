@@ -3,9 +3,10 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicParser;
-import org.ginsim.gui.service.action.connectivity.GsReducedGraphParser;
+import org.ginsim.gui.service.tools.connectivity.GsReducedGraphParser;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -47,23 +48,27 @@ public final class GsGinmlParser extends XMLHelper {
 		return realParser.getGraph();
     }
 
-    public void startElement(String uri, String localName, String qName,
-            Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
 
         if (qName.equals("graph")) {
-            String s_class = attributes.getValue("class");
-            if ("regulatory".equals(s_class)) {
-                realParser = new GsRegulatoryParser(map, attributes, s_dtd, s_filename);
-            } else if ("dynamical".equals(s_class)) {
-                realParser = new GsDynamicParser(map, attributes, s_dtd);
-            } else if ("reduced".equals(s_class)) {
-                realParser = new GsReducedGraphParser(map, attributes, s_dtd, s_filename);
-            } else if ("hierarchicalTransitionGraph".equals(s_class)) {
-                realParser = new GsHierarchicalTransitionGraphParser(map, attributes, s_dtd, s_filename);
-            } else {
-                throw new SAXException("bad type of graph");
-            }
+        	try{
+	            String s_class = attributes.getValue("class");
+	            if ("regulatory".equals(s_class)) {
+	                realParser = new GsRegulatoryParser(map, attributes, s_dtd, s_filename);
+	            } else if ("dynamical".equals(s_class)) {
+	                realParser = new GsDynamicParser(map, attributes, s_dtd);
+	            } else if ("reduced".equals(s_class)) {
+	                realParser = new GsReducedGraphParser(map, attributes, s_dtd, s_filename);
+	            } else if ("hierarchicalTransitionGraph".equals(s_class)) {
+	                realParser = new GsHierarchicalTransitionGraphParser(map, attributes, s_dtd, s_filename);
+	            } else {
+	                throw new SAXException("bad type of graph");
+	            }
+        	}
+        	catch( GsException gs_exception){
+        		throw new SAXException( gs_exception);
+        	}
             xr.setContentHandler(realParser);
         }
     }

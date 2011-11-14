@@ -13,8 +13,8 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
-import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeActionPanel;
-import org.ginsim.gui.service.action.regulatorytreefunction.GsTreeParser;
+import org.ginsim.gui.service.tools.regulatorytreefunction.GsTreeActionPanel;
+import org.ginsim.gui.service.tools.regulatorytreefunction.GsTreeParser;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;

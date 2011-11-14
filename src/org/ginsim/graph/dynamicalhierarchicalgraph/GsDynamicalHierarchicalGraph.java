@@ -19,8 +19,8 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.Edge;
 import org.ginsim.graph.Graph;
-import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.GsDynamicalHierarchicalParameterPanel;
-import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.GsDynamicalHierarchicalParameterPanel;
+import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;

@@ -15,8 +15,8 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.gui.service.BaseAction;
-import org.ginsim.gui.service.action.connectivity.GsReducedGraph;
+import org.ginsim.gui.service.common.BaseAction;
+import org.ginsim.gui.service.tools.connectivity.GsReducedGraph;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;

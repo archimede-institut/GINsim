@@ -76,4 +76,16 @@ public class GsServiceManager{
 		return services.keySet();
 	}
 	
+	
+	/**
+	 * Give access to the service 
+	 * 
+	 * @param service_class
+	 * @return
+	 */
+	public GsService getService( Class<GsService> service_class){
+		
+		return services.get( service_class);
+	}
+	
 }

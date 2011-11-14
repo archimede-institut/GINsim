@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
-import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -51,7 +51,7 @@ public final class GsDynamicParser extends GsXMLHelper {
      * @param s_dtd
      * @param s_filename
      */
-    public GsDynamicParser(Map map, Attributes attributes, String s_dtd) {
+    public GsDynamicParser(Map map, Attributes attributes, String s_dtd)throws GsException {
     	
         this.graph = new GsDynamicGraph( true);
     	this.map = map;
@@ -61,7 +61,7 @@ public final class GsDynamicParser extends GsXMLHelper {
 		try {
 			graph.setGraphName(attributes.getValue("id"));
 		} catch (GsException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
 		String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
 		Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
@@ -179,7 +179,7 @@ public final class GsDynamicParser extends GsXMLHelper {
             			try {
 							graph.setGraphName(attributes.getValue("id"));
 						} catch (GsException e) {
-							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"));
 						}
             			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
             			Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);

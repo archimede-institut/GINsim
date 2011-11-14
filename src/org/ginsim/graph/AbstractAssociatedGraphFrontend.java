@@ -58,11 +58,16 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
         associated_graph.addGraphChangedListener(this);
     }
 	
+	public <C> C createGraph( C classe){
+		
+		classe.
+	}
+	
     /**
      * @return the graph associated with this one.
      */
 	@Override
-    public AG getAssociatedGraph() {
+    public AG getAssociatedGraph() throws GsException{
 
         if ( associatedGraph == null && getAssociatedGraphID() != null) {
             AG ag = (AG) GsEnv.getRegistredGraph( associatedID);
@@ -75,7 +80,7 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
                     GsEnv.newMainFrame(ag);
                     setAssociatedGraph(ag);
                 } else {
-                    GsEnv.error(new GsException(GsException.GRAVITY_INFO, "STR_openAssociatedGraphFailed"+"\n"+associatedID), mainFrame);
+                	throw new GsException(GsException.GRAVITY_INFO, "STR_openAssociatedGraphFailed"+"\n"+associatedID);
                 }
             }
         }

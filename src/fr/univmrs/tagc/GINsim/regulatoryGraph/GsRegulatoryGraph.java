@@ -189,16 +189,16 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	return obj;
     }
 
-    protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
+    protected void doSave( OutputStreamWriter os, int mode, String dtd_file, List<GsRegulatoryVertex> vertices, List<GsRegulatoryMultiEdge> edges) throws GsException {
     	try {
-            XMLWriter out = new XMLWriter(os, dtdFile);
+            XMLWriter out = new XMLWriter(os, dtd_file);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + getGraphName() + "\"");
 			out.write(" class=\"regulatory\"");
 			out.write(" nodeorder=\"" + stringNodeOrder() +"\"");
 			out.write(">\n");
-			saveNode(out, mode, selectedOnly);
-			saveEdge(out, mode, selectedOnly);
+			saveNode(out, mode, vertices);
+			saveEdge(out, mode, edges);
             if (graphAnnotation != null) {
             	graphAnnotation.toXML(out, null, 0);
             }
@@ -215,13 +215,10 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-        Iterator<GsRegulatoryMultiEdge> it;
-        if (selectedOnly) {
-        		it = graphManager.getFullySelectedEdgeIterator();
-        } else {
-        		it = getEdges().iterator();
-        }
+    private void saveEdge(XMLWriter out, int mode, List<GsRegulatoryMultiEdge> edges) throws IOException {
+    	
+        Iterator<GsRegulatoryMultiEdge> it = edges.iterator();
+
         switch (mode) {
 	    	case 2:
 	    	    GsEdgeAttributesReader ereader = getEdgeAttributeReader();
@@ -245,13 +242,10 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-    	Iterator it;
-    	if (selectedOnly) {
-    		it = graphManager.getSelectedVertexIterator();
-    	} else {
-    		it = getVertices().iterator();
-    	}
+    private void saveNode(XMLWriter out, int mode, List<GsRegulatoryVertex> vertices) throws IOException {
+    	
+    	Iterator<GsRegulatoryVertex> it = vertices.iterator();
+    	
     	if ( mode >=0) {
     	}
 
@@ -388,7 +382,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @param sign
      * @return the new edge
      */
-    public GsRegulatoryEdge addNewEdge(String from, String to, byte minvalue, String sign) {
+    public GsRegulatoryEdge addNewEdge(String from, String to, byte minvalue, String sign)  throws GsException{
     	byte vsign = GsRegulatoryMultiEdge.SIGN_UNKNOWN;
     	for (byte i=0 ; i<GsRegulatoryMultiEdge.SIGN.length ; i++) {
     		if (GsRegulatoryMultiEdge.SIGN[i].equals(sign)) {
@@ -398,6 +392,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	}
     	return addNewEdge(from, to, minvalue, vsign);
     }
+    
     /**
      * add an edge from textual parameters (for the parser).
      * @param from
@@ -407,7 +402,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @param sign
      * @return the new edge.
      */
-    public GsRegulatoryEdge addNewEdge(String from, String to, byte minvalue, byte sign) {
+    public GsRegulatoryEdge addNewEdge(String from, String to, byte minvalue, byte sign) throws GsException{
         GsRegulatoryVertex source = null;
         GsRegulatoryVertex target = null;
 
@@ -419,8 +414,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         }
 
         if (source == null || target == null) {
-            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "STR_noSuchVertex"), null);
-            return null;
+            throw new GsException( GsException.GRAVITY_ERROR, "STR_noSuchVertex");
         }
         GsRegulatoryMultiEdge me = getEdge(source, target);
         int index = 0;

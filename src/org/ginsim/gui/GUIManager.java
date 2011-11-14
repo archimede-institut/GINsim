@@ -1,6 +1,5 @@
 package org.ginsim.gui;
 
-import java.awt.Frame;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -20,6 +19,7 @@ import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.widgets.Frame;
 
 public class GUIManager {
 

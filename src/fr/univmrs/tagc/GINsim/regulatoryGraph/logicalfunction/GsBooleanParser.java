@@ -16,6 +16,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
+import fr.univmrs.tagc.common.Debugger;
 
 public class GsBooleanParser extends TBooleanParser {
 	private Hashtable operandList;
@@ -187,8 +188,13 @@ public class GsBooleanParser extends TBooleanParser {
 
 				GsDirectedEdge edge = (GsDirectedEdge)graph.getEdge(source, this.vertex);
 				if (edge == null) {
-					edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, GsRegulatoryMultiEdge.SIGN[0]).me;
-					shouldReInit = true;
+					try{
+						edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, GsRegulatoryMultiEdge.SIGN[0]).me;
+						shouldReInit = true;
+					}
+					catch( GsException gs_exception){
+						Debugger.log( "Unable to create new edge between vertices '" + nodeID + "' and '" + this.vertex.getId() + "' : one of the vertex was not found in the graph");
+					}
 				}
 			}
 		}

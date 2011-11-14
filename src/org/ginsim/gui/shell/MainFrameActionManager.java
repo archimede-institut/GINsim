@@ -10,10 +10,10 @@ import javax.swing.JToolBar;
 import org.ginsim.graph.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.service.GsExportAction;
-import org.ginsim.gui.service.GsImportAction;
-import org.ginsim.gui.service.GsLayoutAction;
 import org.ginsim.gui.service.GsServiceGUIManager;
+import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.GsImportAction;
+import org.ginsim.gui.service.common.GsLayoutAction;
 import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
 

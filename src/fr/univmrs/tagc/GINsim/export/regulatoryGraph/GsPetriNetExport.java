@@ -12,14 +12,14 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
+import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
+import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
+import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
+import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
 
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
-import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
-import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParametersManager;
-import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassDefinition;
-import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassManager;
-import fr.univmrs.tagc.GINsim.reg2dyn.PrioritySelectionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;

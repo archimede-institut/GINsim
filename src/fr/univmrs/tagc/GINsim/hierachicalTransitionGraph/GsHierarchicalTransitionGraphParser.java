@@ -8,7 +8,7 @@ import java.util.Vector;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.service.action.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -51,7 +51,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
      * @param s_dtd
      * @param s_filename
      */
-    public GsHierarchicalTransitionGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) {
+    public GsHierarchicalTransitionGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
     	this.htg = new GsHierarchicalTransitionGraph( true);
     	this.map = map;
@@ -61,7 +61,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
 		try {
 			htg.setGraphName(attributes.getValue("id"));
 		} catch (GsException e) {
-			GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
 		try {
 			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");

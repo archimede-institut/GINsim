@@ -1,8 +1,9 @@
 package fr.univmrs.tagc.GINsim.hierachicalTransitionGraph;
 
-import fr.univmrs.tagc.GINsim.reg2dyn.GsReg2dynPriorityClass;
-import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameters;
-import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassDefinition;
+import org.ginsim.gui.service.tools.reg2dyn.GsReg2dynPriorityClass;
+import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
+import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;

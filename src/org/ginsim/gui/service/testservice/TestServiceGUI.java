@@ -8,10 +8,10 @@ import javax.swing.Action;
 
 import org.ginsim.graph.Graph;
 import org.ginsim.graph.testGraph.TestGraph;
-import org.ginsim.gui.service.GUIFor;
-import org.ginsim.gui.service.GsExportAction;
-import org.ginsim.gui.service.GsImportAction;
 import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.GsImportAction;
 import org.ginsim.service.testservice.TestService;
 import org.mangosdk.spi.ProviderFor;
 

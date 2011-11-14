@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.gui.service.action.stateinregulatorygraph.GsStateInRegGraphSelector;
+import org.ginsim.gui.service.tools.stateinregulatorygraph.GsStateInRegGraphSelector;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;

@@ -25,7 +25,7 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.Graph;
-import org.ginsim.gui.service.action.stablestates.StableTableModel;
+import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;

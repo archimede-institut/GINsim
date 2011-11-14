@@ -1,5 +1,7 @@
 package org.ginsim.graph;
 
+import org.ginsim.exception.GsException;
+
 public interface AssociatedGraph<AG extends Graph<AV, AE>, AV, AE extends Edge<AV>> {
 
     //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
@@ -18,7 +20,7 @@ public interface AssociatedGraph<AG extends Graph<AV, AE>, AV, AE extends Edge<A
      * 
      * @return the graph associated with this one.
      */
-    public AG getAssociatedGraph();
+    public AG getAssociatedGraph() throws GsException;
 
     
     public String getAssociatedGraphID();

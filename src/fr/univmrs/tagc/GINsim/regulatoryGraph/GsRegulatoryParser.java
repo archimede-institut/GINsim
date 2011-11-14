@@ -32,6 +32,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -87,18 +88,18 @@ public final class GsRegulatoryParser extends GsXMLHelper {
      * @param s_filename
      * @throws SAXException
      */
-    public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd,String file_name) throws SAXException {
+    public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd,String file_name) throws GsException {
     	
         graph = new GsRegulatoryGraph( true);
         this.map = map;
 		s_nodeOrder = attributes.getValue("nodeorder");
         if (s_nodeOrder == null) {
-            throw new SAXException("missing nodeOrder");
+            throw new GsException( GsException.GRAVITY_ERROR, "missing nodeOrder");
         }
 		try {
 			graph.setGraphName(attributes.getValue("id"));
 		} catch (GsException e) {
-			GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
 
 		vareader = graph.getVertexAttributeReader();
@@ -267,16 +268,21 @@ public final class GsRegulatoryParser extends GsXMLHelper {
                             String smax = getAttributeValueWithDefault(attributes,"maxvalue", "-1");
                             byte maxvalue = -2;
                             String sign = attributes.getValue("sign");
-                            edge = graph.addNewEdge(from, to, minvalue, sign);
-                            if (smax.startsWith("m")) {
-                            	maxvalue = -1;
-                            } else {
-                            	maxvalue = (byte)Integer.parseInt(smax);
+                            try{
+	                            edge = graph.addNewEdge(from, to, minvalue, sign);
+	                            if (smax.startsWith("m")) {
+	                            	maxvalue = -1;
+	                            } else {
+	                            	maxvalue = (byte)Integer.parseInt(smax);
+	                            }
+	                        	storeMaxValueForCheck(edge, maxvalue);
+	                            m_edges.put(id, edge);
+	                            edge.me.rescanSign(graph);
+	                            ereader.setEdge(edge.me);
                             }
-                        	storeMaxValueForCheck(edge, maxvalue);
-                            m_edges.put(id, edge);
-                            edge.me.rescanSign(graph);
-                            ereader.setEdge(edge.me);
+                            catch (GsException e) {
+								Debugger.log( "Unable to create edge between nodes '" + from + "' and '" + to + "' : One of the node was not found in the graph");
+							}
                         } catch (NumberFormatException e) { throw new SAXException("malformed interaction's parameters"); }
                     } else {
                         pos = POS_FILTERED;

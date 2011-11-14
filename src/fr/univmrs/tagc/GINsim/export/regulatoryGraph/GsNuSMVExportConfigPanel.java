@@ -21,11 +21,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
+import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
+import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
+import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
+
 import fr.univmrs.tagc.GINsim.graph.GsExtensibleConfig;
-import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
-import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParametersManager;
-import fr.univmrs.tagc.GINsim.reg2dyn.PriorityClassDefinition;
-import fr.univmrs.tagc.GINsim.reg2dyn.PrioritySelectionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;

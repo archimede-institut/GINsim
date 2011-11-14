@@ -15,8 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 
-import fr.univmrs.tagc.GINsim.reg2dyn.GsSimulationParameterList;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.widgets.Label;

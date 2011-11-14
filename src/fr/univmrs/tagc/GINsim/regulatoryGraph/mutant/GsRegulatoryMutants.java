@@ -24,11 +24,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.service.tools.reg2dyn.GsRegulatoryMutantListener;
 
 import fr.univmrs.tagc.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
-import fr.univmrs.tagc.GINsim.reg2dyn.GsRegulatoryMutantListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
