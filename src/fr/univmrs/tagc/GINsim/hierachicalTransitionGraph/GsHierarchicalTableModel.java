@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 
 

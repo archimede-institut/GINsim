@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNodeSet;

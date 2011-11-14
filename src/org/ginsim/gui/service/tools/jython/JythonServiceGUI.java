@@ -9,7 +9,7 @@ import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.gui.service.common.StandaloneGUI;

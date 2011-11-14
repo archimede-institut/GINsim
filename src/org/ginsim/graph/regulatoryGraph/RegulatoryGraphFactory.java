@@ -1,64 +1,83 @@
-package fr.univmrs.tagc.GINsim.regulatoryGraph;
+package org.ginsim.graph.regulatoryGraph;
 
-import java.io.File;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.GraphFactory;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.annotation.BiblioManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryParser;
 
 /**
  * descriptor for regulatoryGraph.
  */
-public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
+@ProviderFor( GraphFactory.class)
+public class RegulatoryGraphFactory implements GraphFactory {
 
     private static List<GsGraphAssociatedObjectManager> v_OManager = null;
     private GsFileFilter ffilter;
-    private static GsRegulatoryGraphDescriptor instance = null;
+    private static RegulatoryGraphFactory instance = null;
 
-    public GsRegulatoryGraphDescriptor() {
-    	if (GsRegulatoryGraphDescriptor.instance == null) {
-    		GsRegulatoryGraphDescriptor.instance = this;
-            registerObjectManager(new BiblioManager());
-    	} else {
-    		System.out.println("trying to create a new graphdescriptor!");
+    public RegulatoryGraphFactory() {
+    	
+    	if (instance == null) {
+    		instance = this;
+    		registerObjectManager( new BiblioManager());
     	}
     }
     
+    /**
+     * @return an instance of this graphDescriptor.
+     */
+    public static GraphFactory getInstance() {
+    	
+        if (instance == null) {
+            instance = new RegulatoryGraphFactory();
+        }
+        return instance;
+    }
+    
+    /**
+     * Return the type of graph this factory is managing
+     * 
+     * @return the name of the type of graph this factory is managing
+     */
     public String getGraphType() {
+    	
         return "regulatory";
     }
 
-    public String getGraphName() {
-        return "STR_regulatory";
-    }
 
-    public String getGraphDescription() {
-        return Translator.getString("STR_regulatoryGraph");
-    }
-
-    public boolean canCreate() {
-        return true;
-    }
-
-    public Graph getNew() {
-        Graph graph = new GsRegulatoryGraph();
+    /**
+     * Create a new graph of the type factory is managing
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+    public Graph create() {
+    	
+    	GsRegulatoryGraph graph = new GsRegulatoryGraph();
         return graph;
     }
+    
+    
+	/**
+	 * Return the class of the parser to use to read from file the type
+	 * of graph the factory manager
+	 * 
+	 * @return the class of the parser to use with this factory
+	 */
+    public Class getParser() {
+    	
+    	return GsRegulatoryParser.class;
+    }
 
-	public Graph open(File file) {
-		
-	    return open(null, file);
-	}
 
 	public FileFilter getFileFilter() {
 		if (ffilter == null) {
@@ -107,21 +126,7 @@ public class GsRegulatoryGraphDescriptor implements GsGraphDescriptor {
         return v_OManager;
     }
 
-    public ImageIcon getGraphIcon(int mode) {
-		return null;
-	}
 	
-    /**
-     * @return an instance of this graphDescriptor.
-     */
-    public static GsGraphDescriptor getInstance() {
-        if (instance == null) {
-            instance = new GsRegulatoryGraphDescriptor();
-        }
-        return instance;
-    }
-    public Graph open(Map map, File file) {
-    	
-        return new GsRegulatoryGraph(map, file);
-    }
+
+    
 }

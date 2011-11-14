@@ -3,8 +3,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.io.IOException;
 import java.util.List;
 
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;

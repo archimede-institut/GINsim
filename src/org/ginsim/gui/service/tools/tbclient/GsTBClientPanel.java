@@ -31,7 +31,7 @@ import javax.swing.JTree;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import tbrowser.data.module.TBModule;
 import tbrowser.data.module.TBModuleData;

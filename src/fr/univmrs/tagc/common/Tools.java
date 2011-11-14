@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.managerresources.Translator;

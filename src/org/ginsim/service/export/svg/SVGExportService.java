@@ -13,8 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.service.GsService;
 import org.jgraph.util.Bezier;
 import org.mangosdk.spi.ProviderFor;

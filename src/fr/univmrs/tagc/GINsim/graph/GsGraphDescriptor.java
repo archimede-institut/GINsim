@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 /**
  * describes a kind of graph.

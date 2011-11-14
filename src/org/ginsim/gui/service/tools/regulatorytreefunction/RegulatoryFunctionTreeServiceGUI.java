@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.tree.GsTree;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;

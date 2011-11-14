@@ -21,7 +21,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;

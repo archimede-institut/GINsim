@@ -1,6 +1,6 @@
 package org.ginsim.graph.testGraph;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 public interface TestGraph extends Graph<TestVertex, TestEdge> {
 

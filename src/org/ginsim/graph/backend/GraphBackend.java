@@ -3,7 +3,7 @@ package org.ginsim.graph.backend;
 import java.util.Collection;
 import java.util.List;
 
-import org.ginsim.graph.Edge;
+import org.ginsim.graph.common.Edge;
 
 public interface GraphBackend<V, E extends Edge<V>> {
 

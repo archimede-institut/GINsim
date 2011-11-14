@@ -11,8 +11,8 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractGraphFrontend;
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.regulatorytreefunction.GsTreeActionPanel;
 import org.ginsim.gui.service.tools.regulatorytreefunction.GsTreeParser;
 

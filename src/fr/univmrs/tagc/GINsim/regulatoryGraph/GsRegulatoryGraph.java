@@ -20,9 +20,10 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.AbstractGraphFrontend;
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.regulatoryGraph.RegulatoryGraphFactory;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -47,7 +48,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
 
     static {
-        GsRegulatoryGraphDescriptor.registerObjectManager(new GsMutantListManager());
+        RegulatoryGraphFactory.registerObjectManager(new GsMutantListManager());
     }
 
     /**
@@ -105,7 +106,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      */
     public GsRegulatoryGraph( boolean parsing) {
     	
-        super( GsRegulatoryGraphDescriptor.getInstance(), parsing);
+        super( RegulatoryGraphFactory.getInstance(), parsing);
     	// getVertexAttributeReader().setDefaultVertexSize(55, 25);
     	// getEdgeAttributeReader().setDefaultEdgeSize(2);
     }
@@ -462,7 +463,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     @Override
     public List getSpecificObjectManager() {
     	
-        return GsRegulatoryGraphDescriptor.getObjectManager();
+        return RegulatoryGraphFactory.getObjectManager();
     }
 
     protected Graph getCopiedGraph() {

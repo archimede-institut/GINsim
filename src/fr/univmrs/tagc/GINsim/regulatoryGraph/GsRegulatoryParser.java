@@ -17,7 +17,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -78,7 +78,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
 
     /**
      */
-    public GsRegulatoryParser() {
+    public GsRegulatoryParser(){
     }
 
     /**
@@ -88,7 +88,7 @@ public final class GsRegulatoryParser extends GsXMLHelper {
      * @param s_filename
      * @throws SAXException
      */
-    public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd,String file_name) throws GsException {
+    public GsRegulatoryParser(Map map, Attributes attributes, String s_dtd, String file_name) throws GsException {
     	
         graph = new GsRegulatoryGraph( true);
         this.map = map;

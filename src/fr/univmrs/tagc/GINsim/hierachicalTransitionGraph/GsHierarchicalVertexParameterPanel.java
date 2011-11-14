@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.common.managerresources.Translator;

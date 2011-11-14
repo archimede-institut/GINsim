@@ -10,7 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;

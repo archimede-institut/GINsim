@@ -26,7 +26,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.GraphGUI;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;

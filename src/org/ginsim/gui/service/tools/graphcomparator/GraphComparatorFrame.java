@@ -23,10 +23,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.GraphManager;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.OptionStore;
@@ -250,7 +250,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		Graph g = null;
 		int index = comboBox.getSelectedIndex() ;
 		if (index == 0) { // get from filepath
-			g = GsGinsimGraphDescriptor.getInstance().open(new File(filepath.getText()));
+			g = GraphManager.getInstance().open(new File(filepath.getText()));
 		} else if (index == 1) { //has choose blank element
             Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_blankComboBox")), this.frame);
 		} else {

@@ -1,6 +1,6 @@
 package org.ginsim.gui.service.tools.reg2dyn.helpers;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;

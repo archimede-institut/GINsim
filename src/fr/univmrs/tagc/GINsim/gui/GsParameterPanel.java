@@ -4,7 +4,7 @@ import java.awt.Frame;
 
 import javax.swing.JPanel;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 

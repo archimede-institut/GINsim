@@ -1,4 +1,4 @@
-package org.ginsim.graph;
+package org.ginsim.graph.common;
 
 import java.util.Collection;
 import java.util.List;
@@ -70,7 +70,20 @@ public interface GraphModel<V,E extends Edge<V>> {
      */
     public String getGraphID();
     
+    /**
+     * @return the byte name of this kind of graph (translatable).
+     */
+    public String getGraphName();
     
+    /**
+     * @return a description of this kind of graph (translatable).
+     */
+    public String getGraphDescription();
+    
+    /**
+     * @return true if this kind of graph can be created interactivly by the user.
+     */
+    public boolean canCreate();
 
     //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
     
@@ -183,21 +196,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 */
 	List<E> getShortestPath(V source, V target);
 	
-    
-    /**
-     * Give access to the name of the graph
-     * 
-     * @return the name associated with this graph.
-     */
-    public String getGraphName();
-   
-    
-    /**
-     * Allow to set the name of the graph
-     * 
-     * @param graph_name the name associated with this graph.
-     */
-    public void setGraphName( String graph_name) throws GsException ;
+
     
     /**
      * Build a graph from the provided vertices and edges based on the current graph

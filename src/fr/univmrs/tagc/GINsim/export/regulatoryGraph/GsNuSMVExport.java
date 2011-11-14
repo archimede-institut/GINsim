@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import javax.swing.JComponent;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.reg2dyn.GsReg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 import org.ginsim.service.action.stablestates.StableStatesService;

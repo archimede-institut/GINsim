@@ -3,7 +3,7 @@ package org.ginsim.gui.service.tools.reg2dyn;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.SimulationHelper;

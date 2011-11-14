@@ -18,10 +18,10 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;

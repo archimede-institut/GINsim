@@ -7,7 +7,7 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.HTGSimulationHelper;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;

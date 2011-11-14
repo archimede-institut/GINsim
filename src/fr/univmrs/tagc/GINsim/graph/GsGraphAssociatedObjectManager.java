@@ -3,7 +3,7 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 /**
  * Implement this interface to save/open objects associated to graph automatically.

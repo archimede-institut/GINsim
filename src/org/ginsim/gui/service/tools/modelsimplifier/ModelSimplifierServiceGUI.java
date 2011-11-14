@@ -11,7 +11,8 @@ import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatoryGraph.RegulatoryGraphFactory;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -23,7 +24,6 @@ import org.xml.sax.SAXException;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLHelper;
@@ -37,8 +37,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 public class ModelSimplifierServiceGUI implements GsServiceGUI {
 
     static {
-        if (!GsRegulatoryGraphDescriptor.isObjectManagerRegistred(ModelSimplifierConfigManager.key)) {
-            GsRegulatoryGraphDescriptor.registerObjectManager(new ModelSimplifierConfigManager());
+        if (!RegulatoryGraphFactory.isObjectManagerRegistred(ModelSimplifierConfigManager.key)) {
+            RegulatoryGraphFactory.registerObjectManager(new ModelSimplifierConfigManager());
         }
     }
 

@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.tagc.common.managerresources.Translator;

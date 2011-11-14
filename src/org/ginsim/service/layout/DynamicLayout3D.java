@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Edge;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 

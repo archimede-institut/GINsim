@@ -4,7 +4,7 @@ import java.awt.Insets;
 
 import javax.swing.JFrame;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.common.widgets.StackDialog;
 

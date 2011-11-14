@@ -7,7 +7,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;

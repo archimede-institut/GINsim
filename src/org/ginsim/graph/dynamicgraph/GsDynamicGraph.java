@@ -19,8 +19,8 @@ import javax.swing.JScrollPane;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 

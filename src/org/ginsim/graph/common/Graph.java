@@ -1,4 +1,4 @@
-package org.ginsim.graph;
+package org.ginsim.graph.common;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;

@@ -9,7 +9,7 @@ import java.util.Set;
 
 import javax.swing.Action;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.service.GsService;

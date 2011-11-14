@@ -3,7 +3,7 @@ package org.ginsim.gui.service.tools.reg2dyn.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 

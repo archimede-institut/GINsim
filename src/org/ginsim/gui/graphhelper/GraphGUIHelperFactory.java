@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 /**
  * This factory provides access to the GraphGUIHelper corresponding to a specific graph class

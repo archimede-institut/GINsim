@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.common.Tools;

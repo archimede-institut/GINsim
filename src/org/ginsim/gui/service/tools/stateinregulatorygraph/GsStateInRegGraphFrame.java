@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 import org.ginsim.service.action.stablestates.StableStatesService;
 

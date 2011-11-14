@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.Edge;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.gui.GUIManager;
