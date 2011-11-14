@@ -310,123 +310,123 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     protected String getGraphZipName() {
     	return "ginml";
     }
-    /**
-     *
-     * @param selectedOnly
-     * @param savePath
-     * @param saveMode
-     * @param extended
-     * @param compressed
-     * @throws GsException
-     */
-    // TODO Move to GUI
-    // this is the implementation, it stays on the server side
-    // all interactive-notifications should be replaced by exceptions...
-    private void save(boolean selectedOnly, String savePath, int saveMode, boolean extended, boolean compressed) {
-        try {
-        	File f = new File(savePath != null ? savePath : this.saveFileName);
-        	File ftmp = null;
-        	String fileName = f.getAbsolutePath();;
-        	if (f.exists()) {
-            	// create a temporary file to avoid destroying a good file in case save does not work
-        		try {
-        			ftmp = File.createTempFile(f.getName(), null, f.getParentFile());
-        			fileName = ftmp.getAbsolutePath();
-        		} catch (Exception e) {
-        			// TODO: introduce a clean permission checking
-        			System.out.println("Could not use a tmp file in the same directory");
-//        			ftmp = File.createTempFile(f.getName(), null);
+//    /**
+//     *
+//     * @param selectedOnly
+//     * @param savePath
+//     * @param saveMode
+//     * @param extended
+//     * @param compressed
+//     * @throws GsException
+//     */
+    // TODO : Moved to AbstractGraphFrontend 
+//    // this is the implementation, it stays on the server side
+//    // all interactive-notifications should be replaced by exceptions...
+//    private void save(boolean selectedOnly, String savePath, int saveMode, boolean extended, boolean compressed) {
+//        try {
+//        	File f = new File(savePath != null ? savePath : this.saveFileName);
+//        	File ftmp = null;
+//        	String fileName = f.getAbsolutePath();;
+//        	if (f.exists()) {
+//            	// create a temporary file to avoid destroying a good file in case save does not work
+//        		try {
+//        			ftmp = File.createTempFile(f.getName(), null, f.getParentFile());
 //        			fileName = ftmp.getAbsolutePath();
-        		}
-        	}
-
-            if (!extended) {
-                OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8");
-                doSave(os, saveMode, selectedOnly);
-                os.close();
-            } else {
-                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
-                if (!compressed) {
-                	// FIXME: uncompressed Zip require to set the size and CRC by hand!!
-                	// this must be done for each ZipEntry: save it to a tmpfile,
-                	// mesure the CRC and the size, then put it in the uncompressed zip...
-                	zos.setMethod(ZipOutputStream.STORED);
-                }
-                zos.putNextEntry(new ZipEntry(zip_prefix+getGraphZipName()));
-                OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
-                doSave(osw, saveMode, selectedOnly);
-                osw.flush();
-                zos.closeEntry();
-                // now save associated objects
-                if (v_OManager != null) {
-                    for (int i=0 ; i<v_OManager.size() ; i++) {
-                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
-                        if (manager.needSaving(this)) {
-                            zos.putNextEntry(new ZipEntry(zip_prefix+manager.getObjectName()));
-                            try {
-                                manager.doSave(osw, this);
-                            } catch (Exception e) {
-                                if (mainFrame != null) {
-                                    addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
-                                } else {
-                                    e.printStackTrace();
-                                }
-                            } finally {
-                                osw.flush();
-                                zos.closeEntry();
-                            }
-                        }
-                    }
-                }
-                List v_specManager = getSpecificObjectManager();
-                if (v_specManager != null) {
-                    for (int i=0 ; i<v_specManager.size() ; i++) {
-                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
-                        if (manager.needSaving(this)) {
-                            zos.putNextEntry(new ZipEntry(zip_prefix+manager.getObjectName()));
-                            manager.doSave(osw, this);
-                            osw.flush();
-                        }
-                    }
-                }
-                zos.close();
-            }
-            if (selectedOnly) {
-                if (mainFrame != null) {
-                    addNotificationMessage(new NotificationMessage(this, "selection saved", NotificationMessage.NOTIFICATION_INFO));
-                }
-            } else {
-                saved = true;
-                this.extended = extended;
-                this.compressed = compressed;
-                if (mainFrame != null) {
-                    addNotificationMessage(new NotificationMessage(this, "graph saved", NotificationMessage.NOTIFICATION_INFO));
-                    mainFrame.updateTitle();
-                }
-            }
-
-            if (ftmp != null) {
-            	// Everything went fine, rename the temporary file
-            	boolean r = ftmp.renameTo(f);
-            	if (!r) {
-            		if (f.exists()) {
-            			f.delete();
-            			r = ftmp.renameTo(f);
-            		}
-                	if (!r) {
-                        addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath())));
-                	}
-            	}
-            }
-            OptionStore.addRecent(fileName);
-        } catch (Exception e) {
-            if (mainFrame != null) {
-                addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
-            } else {
-                e.printStackTrace();
-            }
-        }
-    }
+//        		} catch (Exception e) {
+//        			// TODO: introduce a clean permission checking
+//        			System.out.println("Could not use a tmp file in the same directory");
+////        			ftmp = File.createTempFile(f.getName(), null);
+////        			fileName = ftmp.getAbsolutePath();
+//        		}
+//        	}
+//
+//            if (!extended) {
+//                OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8");
+//                doSave(os, saveMode, selectedOnly);
+//                os.close();
+//            } else {
+//                ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
+//                if (!compressed) {
+//                	// FIXME: uncompressed Zip require to set the size and CRC by hand!!
+//                	// this must be done for each ZipEntry: save it to a tmpfile,
+//                	// mesure the CRC and the size, then put it in the uncompressed zip...
+//                	zos.setMethod(ZipOutputStream.STORED);
+//                }
+//                zos.putNextEntry(new ZipEntry(zip_prefix+getGraphZipName()));
+//                OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
+//                doSave(osw, saveMode, selectedOnly);
+//                osw.flush();
+//                zos.closeEntry();
+//                // now save associated objects
+//                if (v_OManager != null) {
+//                    for (int i=0 ; i<v_OManager.size() ; i++) {
+//                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+//                        if (manager.needSaving(this)) {
+//                            zos.putNextEntry(new ZipEntry(zip_prefix+manager.getObjectName()));
+//                            try {
+//                                manager.doSave(osw, this);
+//                            } catch (Exception e) {
+//                                if (mainFrame != null) {
+//                                    addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
+//                                } else {
+//                                    e.printStackTrace();
+//                                }
+//                            } finally {
+//                                osw.flush();
+//                                zos.closeEntry();
+//                            }
+//                        }
+//                    }
+//                }
+//                List v_specManager = getSpecificObjectManager();
+//                if (v_specManager != null) {
+//                    for (int i=0 ; i<v_specManager.size() ; i++) {
+//                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
+//                        if (manager.needSaving(this)) {
+//                            zos.putNextEntry(new ZipEntry(zip_prefix+manager.getObjectName()));
+//                            manager.doSave(osw, this);
+//                            osw.flush();
+//                        }
+//                    }
+//                }
+//                zos.close();
+//            }
+//            if (selectedOnly) {
+//                if (mainFrame != null) {
+//                    addNotificationMessage(new NotificationMessage(this, "selection saved", NotificationMessage.NOTIFICATION_INFO));
+//                }
+//            } else {
+//                saved = true;
+//                this.extended = extended;
+//                this.compressed = compressed;
+//                if (mainFrame != null) {
+//                    addNotificationMessage(new NotificationMessage(this, "graph saved", NotificationMessage.NOTIFICATION_INFO));
+//                    mainFrame.updateTitle();
+//                }
+//            }
+//
+//            if (ftmp != null) {
+//            	// Everything went fine, rename the temporary file
+//            	boolean r = ftmp.renameTo(f);
+//            	if (!r) {
+//            		if (f.exists()) {
+//            			f.delete();
+//            			r = ftmp.renameTo(f);
+//            		}
+//                	if (!r) {
+//                        addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath())));
+//                	}
+//            	}
+//            }
+//            OptionStore.addRecent(fileName);
+//        } catch (Exception e) {
+//            if (mainFrame != null) {
+//                addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
+//            } else {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     /**
      *
