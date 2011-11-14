@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 
 import fr.univmrs.tagc.common.managerresources.Translator;

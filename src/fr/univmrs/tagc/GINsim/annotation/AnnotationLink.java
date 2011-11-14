@@ -3,7 +3,7 @@ package fr.univmrs.tagc.GINsim.annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.common.HttpHelper;
 import fr.univmrs.tagc.common.OpenHelper;

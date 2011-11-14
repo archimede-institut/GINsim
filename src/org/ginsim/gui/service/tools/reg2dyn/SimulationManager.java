@@ -1,6 +1,6 @@
 package org.ginsim.gui.service.tools.reg2dyn;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 
 

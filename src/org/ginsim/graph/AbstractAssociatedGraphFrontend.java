@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.Collection;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
-import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 
@@ -23,9 +23,9 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
     protected String associatedID = null;
 
     
-    public AbstractAssociatedGraphFrontend( GsGraphDescriptor descriptor, boolean parsing) {
+    public AbstractAssociatedGraphFrontend( boolean parsing) {
     	
-    	super( descriptor, parsing);
+    	super( parsing);
     }
     
     

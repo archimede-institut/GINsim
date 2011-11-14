@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.connectivity.AlgoConnectivity;

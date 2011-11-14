@@ -16,15 +16,16 @@ import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatoryGraph.RegulatoryGraphFactory;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphDescriptor;
 
 abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, NotificationMessageHolder {
 
@@ -84,7 +85,8 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
         this.isParsing = parsing;
 		viewBackend = graphBackend.getGraphViewBackend();
         this.id = "" + GRAPH_ID++;
-        GsEnv.registerGraph( this, this.id);
+        // FIXME: register graph ?
+        // GsEnv.registerGraph( this, this.id);
 	}
 
 	
@@ -572,7 +574,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
     public GsGraphAssociatedObjectManager getSpecificObjectManager(Object key) {
     	
-    	List<GsGraphAssociatedObjectManager> v_OManager = GsRegulatoryGraphDescriptor.getObjectManager();
+    	List<GsGraphAssociatedObjectManager> v_OManager = RegulatoryGraphFactory.getObjectManager();
     	if (v_OManager == null) {
     		return null;
     	}

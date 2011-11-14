@@ -25,7 +25,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.tree.GsTree;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.connectivity.AlgoConnectivity;

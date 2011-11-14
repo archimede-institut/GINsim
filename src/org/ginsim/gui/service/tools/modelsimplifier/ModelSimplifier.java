@@ -22,7 +22,6 @@ import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.export.regulatoryGraph.LogicalFunctionBrowser;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;

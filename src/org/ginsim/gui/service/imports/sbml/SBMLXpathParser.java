@@ -22,7 +22,7 @@ import javax.swing.JTextArea;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;

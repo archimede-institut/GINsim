@@ -26,7 +26,7 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import tbrowser.data.TBProbe;
 import tbrowser.data.module.TBModuleData;

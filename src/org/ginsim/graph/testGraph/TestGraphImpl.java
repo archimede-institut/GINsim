@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.ginsim.graph.AbstractGraphFrontend;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 /**
  * Simple LRG, mostly placeholder for now.

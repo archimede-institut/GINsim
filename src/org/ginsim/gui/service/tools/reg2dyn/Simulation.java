@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.GsSTGSimulationHelper;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.SimulationHelper;
 

@@ -22,7 +22,6 @@ import javax.swing.JTextArea;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
-import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**

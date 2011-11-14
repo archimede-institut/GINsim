@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;

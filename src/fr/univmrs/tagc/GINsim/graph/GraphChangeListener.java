@@ -1,6 +1,6 @@
 package fr.univmrs.tagc.GINsim.graph;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 
 /**

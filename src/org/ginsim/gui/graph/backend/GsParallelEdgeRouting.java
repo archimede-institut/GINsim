@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import org.ginsim.graph.Edge;
+import org.ginsim.graph.common.Edge;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.EdgeView;

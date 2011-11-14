@@ -1,6 +1,6 @@
 package org.ginsim.graph.testGraph;
 
-import org.ginsim.graph.Edge;
+import org.ginsim.graph.common.Edge;
 
 /**
  * Placeholder...

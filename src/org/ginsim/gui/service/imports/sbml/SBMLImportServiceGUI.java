@@ -5,26 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
-import javax.swing.JFrame;
 
-import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsImportAction;
-import org.ginsim.gui.service.tools.reg2dyn.GsBatchSimulationFrame;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
-import org.ginsim.gui.service.tools.reg2dyn.GsSingleSimulationFrame;
 import org.ginsim.service.imports.sbml.SBMLImportService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GsServiceGUI.class)

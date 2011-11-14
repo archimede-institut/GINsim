@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

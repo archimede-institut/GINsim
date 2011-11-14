@@ -17,13 +17,11 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.decisionanalysis.GsDecisionOnEdge;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
@@ -98,7 +96,7 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 
 	public GsHierarchicalTransitionGraph( boolean parsing) {
 		
-        super(GsHierarchicalTransitionGraphDescriptor.getInstance(), parsing);
+        super( parsing);
 	}
 
 	public GsHierarchicalTransitionGraph(Map map, File file) {

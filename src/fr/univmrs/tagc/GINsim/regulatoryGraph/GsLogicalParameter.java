@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import org.ginsim.graph.AbstractGraphFrontend;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;

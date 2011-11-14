@@ -2,7 +2,7 @@ package org.ginsim.gui.service.tools.reg2dyn;
 
 import java.util.Collection;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;

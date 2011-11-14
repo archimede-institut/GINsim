@@ -3,7 +3,7 @@ package org.ginsim.gui.service.tools.reg2dyn;
 import java.awt.Frame;
 import java.awt.Insets;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.common.widgets.StackDialog;
 

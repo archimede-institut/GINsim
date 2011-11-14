@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.graph.AbstractGraphFrontend;
-import org.ginsim.graph.Edge;
+import org.ginsim.graph.common.Edge;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.graph.ListenableDirectedGraph;
 

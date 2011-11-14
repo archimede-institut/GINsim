@@ -6,9 +6,9 @@ import javax.swing.JOptionPane;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractGraphFrontend;
-import org.ginsim.graph.Graph;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;

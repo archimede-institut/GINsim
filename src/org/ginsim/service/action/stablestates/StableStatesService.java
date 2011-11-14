@@ -3,7 +3,7 @@ package org.ginsim.service.action.stablestates;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;
 

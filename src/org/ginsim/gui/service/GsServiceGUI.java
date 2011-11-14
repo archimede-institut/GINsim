@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 /**
  * This interface is the central interface for GUIs for GINsim services.

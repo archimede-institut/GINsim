@@ -10,7 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.gui.GUIManager;

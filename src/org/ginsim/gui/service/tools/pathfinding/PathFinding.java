@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 

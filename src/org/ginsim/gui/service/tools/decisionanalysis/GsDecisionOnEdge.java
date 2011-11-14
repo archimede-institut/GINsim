@@ -2,7 +2,7 @@ package org.ginsim.gui.service.tools.decisionanalysis;
 
 import java.util.List;
 
-import org.ginsim.graph.Edge;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;

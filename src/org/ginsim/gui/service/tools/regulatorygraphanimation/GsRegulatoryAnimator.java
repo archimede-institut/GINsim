@@ -9,7 +9,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
 import org.ginsim.exception.NotificationMessage;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.gui.service.tools.stateinregulatorygraph.GsStateInRegGraph;

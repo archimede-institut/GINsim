@@ -7,8 +7,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;
 

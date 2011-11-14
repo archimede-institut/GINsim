@@ -4,14 +4,11 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
-import org.ginsim.graph.dynamicgraph.GsDynamicParser;
-import org.ginsim.gui.service.tools.connectivity.GsReducedGraphParser;
+import org.ginsim.graph.GraphManager;
+import org.ginsim.graph.common.Graph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraphParser;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryParser;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
@@ -54,16 +51,24 @@ public final class GsGinmlParser extends XMLHelper {
         if (qName.equals("graph")) {
         	try{
 	            String s_class = attributes.getValue("class");
-	            if ("regulatory".equals(s_class)) {
-	                realParser = new GsRegulatoryParser(map, attributes, s_dtd, s_filename);
-	            } else if ("dynamical".equals(s_class)) {
-	                realParser = new GsDynamicParser(map, attributes, s_dtd);
-	            } else if ("reduced".equals(s_class)) {
-	                realParser = new GsReducedGraphParser(map, attributes, s_dtd, s_filename);
-	            } else if ("hierarchicalTransitionGraph".equals(s_class)) {
-	                realParser = new GsHierarchicalTransitionGraphParser(map, attributes, s_dtd, s_filename);
-	            } else {
-	                throw new SAXException("bad type of graph");
+	            Class parser_class = GraphManager.getInstance().getParserClass( s_class);
+	            if( parser_class != null){
+		            Class<?> parameter_types[] = new Class[4];
+		            parameter_types[0] = Map.class;
+		            parameter_types[1] = Attributes.class;
+		            parameter_types[2] = String.class;
+		            parameter_types[3] = String.class;
+		            
+		            Object[] arg_list = new Object[4];
+		            arg_list[0] = map;
+		            arg_list[1] = attributes;
+		            arg_list[2] = s_dtd;
+		            arg_list[3] = s_filename;
+		            
+	            	realParser = (GsXMLHelper) parser_class.getConstructor( parameter_types).newInstance( arg_list);
+	            }
+	            else {
+	                throw new SAXException("Bad type of graph : " + s_class);
 	            }
         	}
         	catch( GsException gs_exception){

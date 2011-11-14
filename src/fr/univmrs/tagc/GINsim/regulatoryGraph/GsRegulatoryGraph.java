@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph;
 
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -10,9 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
@@ -20,17 +17,16 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.AbstractGraphFrontend;
-import org.ginsim.graph.Edge;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.regulatoryGraph.RegulatoryGraphFactory;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.tagc.common.datastore.ObjectEditor;
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
@@ -47,7 +43,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
 
     static {
-        GsRegulatoryGraphDescriptor.registerObjectManager(new GsMutantListManager());
+        RegulatoryGraphFactory.registerObjectManager(new GsMutantListManager());
     }
 
     /**
@@ -105,7 +101,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      */
     public GsRegulatoryGraph( boolean parsing) {
     	
-        super( GsRegulatoryGraphDescriptor.getInstance(), parsing);
+        super( parsing);
     	// getVertexAttributeReader().setDefaultVertexSize(55, 25);
     	// getEdgeAttributeReader().setDefaultEdgeSize(2);
     }
@@ -462,7 +458,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     @Override
     public List getSpecificObjectManager() {
     	
-        return GsRegulatoryGraphDescriptor.getObjectManager();
+        return RegulatoryGraphFactory.getObjectManager();
     }
 
     protected Graph getCopiedGraph() {
@@ -637,4 +633,5 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 		
 		return getAllTrees(focal);
 	}
+
 }
