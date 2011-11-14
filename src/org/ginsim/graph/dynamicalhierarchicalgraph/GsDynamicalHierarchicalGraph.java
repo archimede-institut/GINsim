@@ -104,15 +104,6 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 	
 	/* GsDynamicalHierarchicalGraphDescriptor mapping */
 
-	public List getSpecificLayout() {
-		return GsDynamicalHierarchicalGraphDescriptor.getLayout();
-	}
-	public List getSpecificExport() {
-		return GsDynamicalHierarchicalGraphDescriptor.getExport();
-	}
-    public List getSpecificAction() {
-        return GsDynamicalHierarchicalGraphDescriptor.getAction();
-    }
     public List getSpecificObjectManager() {
         return GsDynamicalHierarchicalGraphDescriptor.getObjectManager();
     }

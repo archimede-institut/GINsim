@@ -16,9 +16,10 @@ public class ReducedParameterPanel extends GsParameterPanel{
 	private javax.swing.JTable jTable = null;
 
 	/**
+	 * @param graph 
 	 */
-	public ReducedParameterPanel() {
-		super();
+	public ReducedParameterPanel(GsReducedGraph graph) {
+		super(graph);
 		initialize();
 	}
 	

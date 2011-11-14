@@ -673,7 +673,7 @@ public final class SBMLXpathParser {
 		}
 		if (v_order.size() != graph.getVertexCount()) {
 			// error
-			Tools.error("incoherent nodeOrder, not restoring it", null);
+			Tools.error("incoherent nodeOrder, not restoring it");
 		} else {
 			graph.setNodeOrder(v_order);
 		}

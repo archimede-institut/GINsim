@@ -150,11 +150,11 @@ public class Simulation extends Thread implements Runnable {
 		} catch (GsException e) {
 			System.out.println("simulation was interrupted");
 		} catch (OutOfMemoryError e) {
-		    Tools.error("Out Of Memory", null);
+		    Tools.error("Out Of Memory");
 		    return null;
 		} finally {
 			if (maxDepthReached) {
-				Tools.error("Reached the max depth", null);
+				Tools.error("Reached the max depth");
 				//TODO: explain what happened and give some hints
 			}
 		}

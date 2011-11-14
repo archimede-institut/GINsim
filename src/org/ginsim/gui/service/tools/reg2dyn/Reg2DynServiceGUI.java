@@ -12,6 +12,8 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.Graph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
@@ -89,6 +91,7 @@ public class Reg2DynServiceGUI implements GsServiceGUI {
 class Reg2DynAction extends GsToolsAction {
 
 	private final GsRegulatoryGraph graph;
+	private final boolean batch = false;
 	
 	public Reg2DynAction( GsRegulatoryGraph graph) {
 		super( "STR_reg2dyn", "STR_reg2dyn_descr");
@@ -104,23 +107,21 @@ class Reg2DynAction extends GsToolsAction {
             return;
         }
 		
-		// TODO : Refactoring ACTION
-		// TODO : What is frame? what is mainFrame?
-		// TODO : What do to with this test on ref?
-		//if (ref == 0 || ref == 1) {
-			
-          Frame mainFrame = GUIManager.getInstance().getFrame( graph);
-          if (mainFrame != null) {
-          	mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
-          }
-
-          GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
-          if (ref == 0) {
-              new GsSingleSimulationFrame(frame, paramList).setVisible(true);
-          } else {
-              new GsBatchSimulationFrame(frame, paramList).setVisible(true);
-          }
+		Frame mainFrame = GUIManager.getInstance().getFrame( graph);
+		if (mainFrame != null) {
+			GraphGUI<?, ?, ?> gui = GUIManager.getInstance().getGraphGUI( graph);
+			// TODO: replace this with a mode set on the gui
+			mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
 		}
-		
+
+		GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
+		// TODO : Restore the 
+		//if (ref == 0 || ref == 1) {
+		if (batch) {
+			new GsBatchSimulationFrame(mainFrame, paramList).setVisible(true);
+		} else {
+			new GsSingleSimulationFrame(mainFrame, paramList).setVisible(true);
+		}
 	}
+		
 }

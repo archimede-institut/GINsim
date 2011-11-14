@@ -10,13 +10,12 @@ import org.ginsim.graph.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsActionAction;
+import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.connectivity.ConnectivityService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
-import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 
 /**
  * register the connectivity service
@@ -34,35 +33,33 @@ public class ConnectivityServiceGUI implements GsServiceGUI {
 	}
 }
 
-	class ConnectivityAction extends GsActionAction{
-		
-		private final Graph graph;
-		
-		protected ConnectivityAction( Graph graph) {
-	        super( "STR_connectivityExtract", null, "STR_connectivityExtract_descr", null);
-			this.graph = graph;
-		}
-		
-		@Override
-		public void actionPerformed( ActionEvent arg0) {
-			
-		    if (graph instanceof GsReducedGraph) {
-		        GsGraphDescriptor gd = GsGinsimGraphDescriptor.getInstance();
-	            String s_ag = ((GsReducedGraph) graph).getAssociatedGraphID();
-	            if (s_ag != null) {
-	            	// TODO : REFACTORING ACTION
-	            	// Change the GsOpenAction
-	    	        Graph subgraph = GsOpenAction.open(gd, null, ((GsReducedGraph)graph).getSelectedMap(), s_ag);
-	    	        if (subgraph != null) {
-	    	            GUIManager.getInstance().whatToDoWithGraph( subgraph, graph, true);
-	    	        }
-	            }
-		    } 
-		    else {
-		    	// TODO: get the parent frame
-	            new ConnectivityFrame( null, graph);
-		    }
-		}
+class ConnectivityAction extends GsToolsAction {
+	
+	private final Graph graph;
+	
+	protected ConnectivityAction( Graph graph) {
+        super( "STR_connectivityExtract", null, "STR_connectivityExtract_descr", null);
+		this.graph = graph;
 	}
 	
+	@Override
+	public void actionPerformed( ActionEvent arg0) {
+		
+	    if (graph instanceof GsReducedGraph) {
+	        GsGraphDescriptor gd = GsGinsimGraphDescriptor.getInstance();
+            String s_ag = ((GsReducedGraph) graph).getAssociatedGraphID();
+            if (s_ag != null) {
+            	// TODO : REFACTORING ACTION
+            	// Change the GsOpenAction
+    	        Graph subgraph = GsOpenAction.open(gd, null, ((GsReducedGraph)graph).getSelectedMap(), s_ag);
+    	        if (subgraph != null) {
+    	            GUIManager.getInstance().whatToDoWithGraph( subgraph, graph, true);
+    	        }
+            }
+	    } 
+	    else {
+	    	// TODO: get the parent frame
+            new ConnectivityFrame( null, graph);
+	    }
+	}
 }

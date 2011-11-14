@@ -254,7 +254,7 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 
 	public GsParameterPanel getVertexAttributePanel() {
 		if (parameterPanel == null) {
-			parameterPanel = new ReducedParameterPanel();
+			parameterPanel = new ReducedParameterPanel(this);
 		}
 		return parameterPanel;
 	}

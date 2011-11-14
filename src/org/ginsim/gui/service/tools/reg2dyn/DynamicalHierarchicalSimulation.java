@@ -81,7 +81,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			debug_o.println("Error : "+e.getMessage());
             debug_o.println("simulation was interrupted");
 		} catch (OutOfMemoryError e) {
-		    Tools.error("Out Of Memory", null);
+		    Tools.error("Out Of Memory");
 		    return null;
 		} catch (Exception e) {
 			debug_o.println("Error : "+e.getMessage());

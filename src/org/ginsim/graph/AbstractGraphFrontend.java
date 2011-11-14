@@ -54,7 +54,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
     protected boolean annoted = false;
-    protected GsGraphDescriptor descriptor = null;
     private static int GRAPH_ID = 0;
     private String id;
     public static final String ZIP_PREFIX = "GINsim-data/";
@@ -63,30 +62,16 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * Create a new graph with the default back-end.
 	 */
 	public AbstractGraphFrontend() {
-		this( new JgraphtBackendImpl<V, E>());
-		
+		this( false);
 	}
 	
-    /**
-     * @param descriptor
-     */
-    public AbstractGraphFrontend( GsGraphDescriptor descriptor) {
-    	
-        this( descriptor, false);
-    }
-    
     /**
      *
      * @param descriptor
      * @param saveFileName
      */
-    public AbstractGraphFrontend( GsGraphDescriptor descriptor, boolean parsing) {
-    	
-        this( new JgraphtBackendImpl<V, E>());
-        this.descriptor = descriptor;
-        this.isParsing = parsing;
-        this.id = "" + GRAPH_ID++;
-        GsEnv.registerGraph( this, this.id);
+    public AbstractGraphFrontend( boolean parsing) {
+        this( new JgraphtBackendImpl<V, E>(), parsing);
     }
 
 	
@@ -94,9 +79,12 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * Create a new graph with a back-end of choice.
 	 * @param backend
 	 */
-	private AbstractGraphFrontend(GraphBackend<V, E> backend) {
+	private AbstractGraphFrontend(GraphBackend<V, E> backend, boolean parsing) {
 		this.graphBackend = backend;
+        this.isParsing = parsing;
 		viewBackend = graphBackend.getGraphViewBackend();
+        this.id = "" + GRAPH_ID++;
+        GsEnv.registerGraph( this, this.id);
 	}
 
 	

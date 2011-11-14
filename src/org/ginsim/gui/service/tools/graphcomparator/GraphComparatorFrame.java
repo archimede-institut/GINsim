@@ -217,7 +217,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 				if (opt_display_graph) mainFrame = GsEnv.newMainFrame(g);
 				gc = new DynamicGraphComparator(g1, g2, g);
 			} else {
-				Tools.error("The node orders are different, therefore the comparaison would surelly not make senses.", null);
+				Tools.error("The node orders are different, therefore the comparaison would surelly not make senses.");
 				doClose();
 				return;
 			}

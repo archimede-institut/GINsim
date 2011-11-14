@@ -1,8 +1,7 @@
 package org.ginsim.gui.service.tools.reg2dyn;
 
+import java.awt.Frame;
 import java.awt.Insets;
-
-import javax.swing.JFrame;
 
 import org.ginsim.graph.Graph;
 
@@ -19,7 +18,7 @@ public abstract class GsBaseSimulationFrame extends StackDialog implements Simul
     public abstract void endSimu( Graph graph);
 
 
-    public GsBaseSimulationFrame(JFrame parent, String id, int w, int h) {
+    public GsBaseSimulationFrame(Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
     }
 

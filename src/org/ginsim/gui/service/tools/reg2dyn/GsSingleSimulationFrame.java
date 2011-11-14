@@ -1,6 +1,7 @@
 package org.ginsim.gui.service.tools.reg2dyn;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -23,6 +24,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.Graph;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
@@ -48,7 +50,7 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 	/**
 	 * The regulatoryGraph frame
 	 */
-	private JFrame regGraphFrame;
+	private Frame regGraphFrame;
 	private GsSimulationParameterList paramList;
 	private GsSimulationParameters currentParameter;
 	private Simulation sim;
@@ -82,7 +84,7 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 
 	
 	
-	public GsSingleSimulationFrame(JFrame regGraphFrame, GsSimulationParameterList paramList) {
+	public GsSingleSimulationFrame(Frame regGraphFrame, GsSimulationParameterList paramList) {
 		super(regGraphFrame, "display.simulation", 800, 400);
 		this.regGraphFrame = regGraphFrame;
 		this.paramList = paramList;
@@ -347,7 +349,7 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 		if (null == graph) {
 			Tools.error("no graph generated", regGraphFrame);
 		} else {
-			GsEnv.whatToDoWithGraph( regGraphFrame, graph, true);
+			GUIManager.getInstance().whatToDoWithGraph( graph, true);
 		}
 		cancel();
 	}

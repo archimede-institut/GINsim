@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 
 import org.ginsim.graph.Graph;
 
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
@@ -149,7 +150,7 @@ public class GsBatchSimulationFrame extends GsBaseSimulationFrame {
         result.append("\n");
     }
 
-    public static String nameState(byte[] state, Graph graph) {
+    public static String nameState(byte[] state, GsRegulatoryGraph graph) {
     	
         InitialStateList init = ((GsInitialStateList)graph.getObject(GsInitialStateManager.key, false)).getInitialStates();
         // FIXME: adapt it to deal with input configs !!
