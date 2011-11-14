@@ -59,6 +59,8 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
     protected boolean annoted = false;
+    
+    private static final List<GsGraphAssociatedObjectManager> v_OManager = new ArrayList<GsGraphAssociatedObjectManager>();
     public static final String ZIP_PREFIX = "GINsim-data/";
 	
 	/**
@@ -444,136 +446,124 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	
 	// ----------------------   SAVING METHODS -----------------------------------------------
 	
-    /**
-    *
-    * @param selectedOnly
-    * @param savePath
-    * @param saveMode
-    * @param extended
-    * @param compressed
-    * @throws GsException
-    */
-   // TODO Move to GUI
-   // this is the implementation, it stays on the server side
-   // all interactive-notifications should be replaced by exceptions...
-   private void save(boolean selectedOnly, String save_path, int saveMode, boolean extended, boolean compressed) {
-	   
-       try {
-    	   File f;
-    	   if ( save_path != null ){
-    		   f = new File( save_path);
-    	   }
-    	   else{
-    		   String save_filepath = GraphManager.getInstance().getGraphPath( this);
-    		   if( save_filepath != null){
-    			   f = new File( save_filepath);
-    		   }
-    		   else{
-    			   throw new GsException( GsException.GRAVITY_ERROR, "No save path has been set for this file");
-    		   }
-    	   }
-       		File ftmp = null;
-       		String fileName = f.getAbsolutePath();;
-	       	if (f.exists()) {
-	           	// create a temporary file to avoid destroying a good file in case save does not work
-	       		try {
-	       			ftmp = File.createTempFile(f.getName(), null, f.getParentFile());
-	       			fileName = ftmp.getAbsolutePath();
-	       		} catch (Exception e) {
-	       			// TODO: introduce a clean permission checking
-	       			System.out.println("Could not use a tmp file in the same directory");
-	//       			ftmp = File.createTempFile(f.getName(), null);
-	//       			fileName = ftmp.getAbsolutePath();
-	       		}
-	       	}
+	/**
+	 * 
+	 * @param save_path
+	 * @param vertices
+	 * @param edges
+	 * @param saveMode
+	 * @throws GsException
+	 * 
+	 * 	 TODO should we keep saveMode? 
+	 *   all interactive-notifications should be replaced by exceptions...
+	 * 
+	 */
+	private void save(String save_path, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException {
 
-           if (!extended) {
-               OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8");
-               doSave(os, saveMode, selectedOnly);
-               os.close();
-           } else {
-               ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
-               if (!compressed) {
-               	// FIXME: uncompressed Zip require to set the size and CRC by hand!!
-               	// this must be done for each ZipEntry: save it to a tmpfile,
-               	// mesure the CRC and the size, then put it in the uncompressed zip...
-               	zos.setMethod(ZipOutputStream.STORED);
-               }
-               zos.putNextEntry(new ZipEntry(zip_prefix+getGraphZipName()));
-               OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
-               doSave(osw, saveMode, selectedOnly);
-               osw.flush();
-               zos.closeEntry();
-               // now save associated objects
-               if (v_OManager != null) {
-                   for (int i=0 ; i<v_OManager.size() ; i++) {
-                       GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
-                       if (manager.needSaving(this)) {
-                           zos.putNextEntry(new ZipEntry(zip_prefix+manager.getObjectName()));
-                           try {
-                               manager.doSave(osw, this);
-                           } catch (Exception e) {
-                               if (mainFrame != null) {
-                                   addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
-                               } else {
-                                   e.printStackTrace();
-                               }
-                           } finally {
-                               osw.flush();
-                               zos.closeEntry();
-                           }
-                       }
-                   }
-               }
-               List v_specManager = getSpecificObjectManager();
-               if (v_specManager != null) {
-                   for (int i=0 ; i<v_specManager.size() ; i++) {
-                       GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
-                       if (manager.needSaving(this)) {
-                           zos.putNextEntry(new ZipEntry(zip_prefix+manager.getObjectName()));
-                           manager.doSave(osw, this);
-                           osw.flush();
-                       }
-                   }
-               }
-               zos.close();
-           }
-           if (selectedOnly) {
-               if (mainFrame != null) {
-                   addNotificationMessage(new NotificationMessage(this, "selection saved", NotificationMessage.NOTIFICATION_INFO));
-               }
-           } else {
-               saved = true;
-               this.extended = extended;
-               this.compressed = compressed;
-               if (mainFrame != null) {
-                   addNotificationMessage(new NotificationMessage(this, "graph saved", NotificationMessage.NOTIFICATION_INFO));
-                   mainFrame.updateTitle();
-               }
-           }
+		boolean selected = vertices == null || vertices.size() < getVertexCount();
+		if (!selected) {
+			vertices = getVertices();
+			edges = getEdges();
+		}
+		// TODO: make sure that selected edges don't refer non-selected nodes
 
-           if (ftmp != null) {
-           	// Everything went fine, rename the temporary file
-           	boolean r = ftmp.renameTo(f);
-           	if (!r) {
-           		if (f.exists()) {
-           			f.delete();
-           			r = ftmp.renameTo(f);
-           		}
-               	if (!r) {
-                       addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath())));
-               	}
-           	}
-           }
-           OptionStore.addRecent(fileName);
-       } catch (Exception e) {
-           if (mainFrame != null) {
-               addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
-           } else {
-               e.printStackTrace();
-           }
-       }
-   }
+		File f;
+		if ( save_path != null ){
+			f = new File( save_path);
+		}
+		else {
+			String save_filepath = GraphManager.getInstance().getGraphPath( this);
+			if ( save_filepath != null){
+				f = new File( save_filepath);
+			}
+			else {
+				throw new GsException( GsException.GRAVITY_ERROR, "No save path has been set for this file");
+			}
+		}
+		File ftmp = null;
+		String fileName = f.getAbsolutePath();;
+		if (f.exists()) {
+			// create a temporary file to avoid destroying a good file in case save does not work
+			try {
+				ftmp = File.createTempFile(f.getName(), null, f.getParentFile());
+				fileName = ftmp.getAbsolutePath();
+			} catch (Exception e) {
+				// TODO: introduce a clean permission checking
+				System.out.println("Could not use a tmp file in the same directory");
+				//       			ftmp = File.createTempFile(f.getName(), null);
+				//       			fileName = ftmp.getAbsolutePath();
+			}
+		}
+
+		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
+		// FIXME: uncompressed Zip require to set the size and CRC by hand!!
+		// this must be done for each ZipEntry: save it to a tmpfile,
+		// mesure the CRC and the size, then put it in the uncompressed zip...
+		zos.putNextEntry(new ZipEntry(ZIP_PREFIX+getGraphZipName()));
+		OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
+		
+		// TODO: doSave should take the selection as parameter.
+		// note: this method should be the only caller and ensures that the selection is defined and consistent
+		doSave(osw, vertices, edges, saveMode);
+		osw.flush();
+		zos.closeEntry();
+		// now save associated objects
+		if (v_OManager != null) {
+			for (int i=0 ; i<v_OManager.size() ; i++) {
+				GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+				if (manager.needSaving(this)) {
+					zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
+					try {
+						manager.doSave(osw, this);
+					} catch (Exception e) {
+						if (mainFrame != null) {
+							addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
+						} else {
+							e.printStackTrace();
+						}
+					} finally {
+						osw.flush();
+						zos.closeEntry();
+					}
+				}
+			}
+		}
+		List v_specManager = getSpecificObjectManager();
+		if (v_specManager != null) {
+			for (int i=0 ; i<v_specManager.size() ; i++) {
+				GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
+				if (manager.needSaving(this)) {
+					zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
+					manager.doSave(osw, this);
+					osw.flush();
+				}
+			}
+		}
+		zos.close();
+
+		if (selected) {
+			System.out.println("selection saved");
+		} else {
+			System.out.println("Graph saved");
+			saved = true;
+			// TODO: send "graph saved" event
+			// (the event will mark it as saved in the GUI and add it to the recent files)
+		}
+
+		if (ftmp != null) {
+			// Everything went fine, rename the temporary file
+			boolean r = ftmp.renameTo(f);
+			if (!r) {
+				if (f.exists()) {
+					f.delete();
+					r = ftmp.renameTo(f);
+				}
+				if (!r) {
+					addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath())));
+				}
+			}
+		}
+	}
 	
 	
 	// ====================================================================================
@@ -585,7 +575,15 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	// ----------------------   SAVING METHODS -----------------------------------------------
    
 
-   public abstract void doSave(OutputStreamWriter osw, int saveMode, boolean selectedOnly);
+	/**
+	 * save implementation for a specific graph type.
+	 * 
+	 * @param osw		stream writer
+	 * @param vertices 	vertices that should be saved (can not be null)
+	 * @param edges		edges that should be saved (can not be null)
+	 * @param saveMode	save mode, will probably go away
+	 */
+   public abstract void doSave(OutputStreamWriter osw, Collection<V> vertices, Collection<E> edges, int saveMode);
    
 	
 	// -------------------------  ASSOCIATED OBJECTS METHODS ---------------------------------
