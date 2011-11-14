@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -118,7 +119,7 @@ public final class SBMLXpathParser {
 			/** Retrieve the model ID (graph name)  **/			
 			String modelName = xpa1.valueOf(racine);
 			try {
-				graph.setSaveFileName(modelName);
+				GraphManager.getInstance().registerGraph( graph, modelName);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -1,6 +1,6 @@
 package org.ginsim.gui.service.tools.reg2dyn;
 
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
 
 public class HTGSimulationQueueSCC implements HTGSimulationQueueItem {
 

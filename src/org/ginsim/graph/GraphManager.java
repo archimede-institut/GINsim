@@ -18,12 +18,12 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.gui.service.tools.connectivity.GsReducedGraph;
 
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Debugger;
 
@@ -33,7 +33,8 @@ import fr.univmrs.tagc.common.Debugger;
 public class GraphManager {
 
     private static GraphManager instance = null;
-    private HashMap<String,GraphFactory> graphFactories = new HashMap<String,GraphFactory>();
+    private HashMap<Class, GraphFactory> graphFactories = new HashMap<Class, GraphFactory>();
+    private HashMap<Graph, String> graphFilepath = new HashMap<Graph, String>();
     
 
     private GsFileFilter ffilter;
@@ -53,7 +54,7 @@ public class GraphManager {
             try {
             	GraphFactory factory = factory_list.next();
             	if( factory != null){
-            		graphFactories.put( factory.getGraphType(), factory);
+            		graphFactories.put( factory.getGraphClass(), factory);
             	}
             }
             catch (ServiceConfigurationError e){
@@ -74,32 +75,17 @@ public class GraphManager {
     }
     
     /**
-     * 
-     * 
-     * @param graph_type the type of the graph
-     * @return the class of the parser used to read the given graph type
-     */
-    public Class getParserClass( String graph_type){
-    	
-    	GraphFactory factory = graphFactories.get( graph_type);
-    	
-    	if( factory != null){
-    		return factory.getParser();
-    	}
-    	else{
-    		return null;
-    	}
-    }
-    
-    
-    /**
      * Create a new default RegulatoryGraph
      * 
      * @return
      */
     public GsRegulatoryGraph getNewGraph(){
     	
-    	return new GsRegulatoryGraph();
+    	GraphFactory factory = graphFactories.get( GsRegulatoryGraph.class);
+    	GsRegulatoryGraph graph = (GsRegulatoryGraph) factory.create();
+    	registerGraph( graph);
+    	
+    	return graph;
     }
     
     /**
@@ -110,25 +96,77 @@ public class GraphManager {
      */
     public <C extends Graph> C getNewGraph( Class<C> graph_class){
 
-    	try {
-			return graph_class.newInstance();
-		} catch (InstantiationException e) {
-			Debugger.log( "Unable to create a new Graph of class '" + graph_class + "' : " + e);
-			return null;
-		} catch (IllegalAccessException e) {
-			Debugger.log( "Unable to create a new Graph of class '" + graph_class + "' : " + e);
-			return null;
-		}
+    	GraphFactory factory = graphFactories.get( graph_class);
+    	C graph = (C) factory.create();
+    	registerGraph( graph);
+    	
+    	return graph;
     }
 
+    
+    /**
+     * Search for the factory managing the given graph type and return the corresponding parser
+     * 
+     * @param graph_type the type of the graph
+     * @return the class of the parser used to read the given graph type
+     */
+    public Class getParserClass( String graph_type){
+    	
+    	for (Iterator<GraphFactory> iterator = graphFactories.values().iterator(); iterator.hasNext();) {
+    		GraphFactory factory = (GraphFactory) iterator.next();
+    		if( factory.getGraphType().equals( graph_type)){
+    			return factory.getParser();
+    		}
+			
+		}
+    	
+    	return null;
+    }
+    
+    
+    /**
+     * register a graph without associated file path
+     * 
+     * @param graph the graph
+     */
+    public void registerGraph( Graph graph){
+    	
+    	registerGraph(graph, null);
+    }
+    
+    
+    /**
+     * Memorize the link between the graph and the path of the file the graph has been loaded from or saved to
+     * 
+     * @param graph the graph
+     * @param file_path the path of the file the graph has been loaded from or saved to
+     */
+    public void registerGraph( Graph graph, String file_path){
+    	
+    	graphFilepath.put( graph, file_path);
+    }
+    
+    
+    /**
+     * Return the path of the file the graph has been loaded from or saved to (if it exists)
+     * 
+     * @param graph
+     * @return the path of the file the graph has been loaded from or saved to if it exsists, null if not.
+     */
+    public String getGraphPath( Graph graph){
+    	
+    	return graphFilepath.get( graph);
+    }
+    
 
     /**
      * 
      * @param file the File containing the graph to open
      * @return a graph of the correct type read from the given file
      */
-	public Graph open(File file) {
-	    return open(null, file);
+	public Graph open(File file)  throws GsException{
+		
+		return open(null, file);
 	}
     
     
@@ -137,7 +175,7 @@ public class GraphManager {
      * @param file the File containing the graph to open
      * @return a graph of the correct type read from the given file
      */
-    public Graph open(Map map, File file) {
+    public Graph open(Map map, File file) throws GsException{
         try {
             ZipFile f = new ZipFile(file);
             try {
@@ -154,8 +192,7 @@ public class GraphManager {
                         	if (ze == null) {
                         		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX+GsHierarchicalTransitionGraph.zip_mainEntry);
 	                        	if (ze == null) {
-	                        		// TODO: nicer error here
-	                        		System.out.println("unable to find a known main zip entry");
+	                        		throw new GsException( GsException.GRAVITY_ERROR, "Unable to find a known main zip entry");
 	                        	}
                         	}
                     	}
@@ -189,7 +226,7 @@ public class GraphManager {
 	                    }
 	                }
                 }
-                graph.setSaveFileName(file.getAbsolutePath());
+                registerGraph( graph, file.getAbsolutePath());
                 return graph; 
             } catch (Exception e) {
                 System.out.println("error opening");
@@ -203,11 +240,10 @@ public class GraphManager {
         GsGinmlParser parser = new GsGinmlParser();
         try {
             Graph graph = parser.parse(new FileInputStream(file), map);
-            graph.setSaveFileName(file.getAbsolutePath());
+            registerGraph( graph, file.getAbsolutePath());
             return graph;
         } catch (FileNotFoundException e) {
-            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
-            return null;
+            throw new GsException(GsException.GRAVITY_ERROR, e);
         }
     }
     
@@ -217,5 +253,17 @@ public class GraphManager {
 			ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
 		}
 		return ffilter;
+	}
+	
+	/**
+	 * Remove all the server side association to the graph
+	 * 
+	 * @param graph the graph to close
+	 */
+	public void close( Graph graph){
+		
+		graphFilepath.remove( graph);
+		// TODO : REFACTORING ACTION:
+		// TODO : What to do if the graph is used as an associated graph by another graph? Do we have to remove the association?
 	}
 }

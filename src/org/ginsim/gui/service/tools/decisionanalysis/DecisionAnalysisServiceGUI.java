@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -14,7 +15,6 @@ import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.decisionanalysis.DecisionAnalysisService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 
 @ProviderFor( GsServiceGUI.class)
 @GUIFor( DecisionAnalysisService.class)

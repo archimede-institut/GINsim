@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
@@ -63,10 +65,22 @@ public interface GraphModel<V,E extends Edge<V>> {
 	
     
     /**
+     * Give access to the name of the graph
      * 
-     * @return the ID of the Graph
+     * @return the name associated with this graph.
      */
-    public String getGraphID();
+    public String getGraphName();
+    
+    
+    /**
+     * changes (if success) the name associated with this graph.
+     * By default only valid xmlid are accepted.
+     *
+     * @param graphName the new name.
+     * @throws GsException if the name is invalid.
+     */
+    public void setGraphName( String graph_name) throws GsException;
+    
     
     //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
     

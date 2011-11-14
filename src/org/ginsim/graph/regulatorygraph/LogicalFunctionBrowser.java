@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
+package org.ginsim.graph.regulatorygraph;
 
 import java.util.List;
 

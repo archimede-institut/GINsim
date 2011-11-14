@@ -19,6 +19,7 @@ import javax.swing.JScrollPane;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
@@ -122,7 +123,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	 */
 	public GsDynamicGraph( boolean parsing) {
 		
-        super(GsDynamicGraphDescriptor.getInstance(), parsing);
+        super(GsDynamicGraphFactory.getInstance(), parsing);
         dashpattern = getEdgeAttributeReader().getPattern(1);
 	}
 
@@ -170,7 +171,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
             }
             // save the ref of the associated regulatory graph!
             if (associatedGraph != null) {
-                associatedID = associatedGraph.getSaveFileName();
+                associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
             }
             if (associatedID != null) {
                 out.write("<link xlink:href=\""+associatedID+"\"/>\n");
@@ -480,7 +481,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
     @Override
     public List getSpecificObjectManager() {
     	
-        return GsDynamicGraphDescriptor.getObjectManager();
+        return GsDynamicGraphFactory.getObjectManager();
     }
 
     // FIXME: move all this to a new GraphGUIHelper

@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.GsDynamicalHierarchicalParameterPanel;
@@ -102,10 +103,10 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 	}
 
 	
-	/* GsDynamicalHierarchicalGraphDescriptor mapping */
+	/* DynamicalHierarchicalGraphFactory mapping */
 
     public List getSpecificObjectManager() {
-        return GsDynamicalHierarchicalGraphDescriptor.getObjectManager();
+        return DynamicalHierarchicalGraphFactory.getObjectManager();
     }
     
     /* Save */
@@ -124,7 +125,7 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 	            }
 	            // save the ref of the associated regulatory graph!
 	            if (associatedGraph != null) {
-	                associatedID = associatedGraph.getSaveFileName();
+	                associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
 	            }
 	            if (associatedID != null) {
 	                out.write("<link xlink:href=\""+associatedID+"\"/>\n");

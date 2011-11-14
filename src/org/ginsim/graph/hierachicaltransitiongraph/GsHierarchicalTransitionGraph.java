@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.hierachicalTransitionGraph;
+package org.ginsim.graph.hierachicaltransitiongraph;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.AbstractAssociatedGraphFrontend;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.decisionanalysis.GsDecisionOnEdge;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
@@ -226,7 +227,7 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
             }
             // save the ref of the associated regulatory graph!
             if (associatedGraph != null) {
-                associatedID = associatedGraph.getSaveFileName();
+                associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
             }
             if (associatedID != null) {
                 out.write("<link xlink:href=\""+associatedID+"\"/>\n");
@@ -375,7 +376,7 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
     @Override
     public List getSpecificObjectManager() {
     	
-        return GsHierarchicalTransitionGraphDescriptor.getObjectManager();
+        return HierarchicalTransitionGraphFactory.getObjectManager();
     }
 		
 /* **************** UNIMPLEMENTED METHODS ************/

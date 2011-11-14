@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.graph.GraphManager;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
@@ -75,7 +77,7 @@ public class GsSimulationParameters implements XMLize, NamedObject, GsInitialSta
 
     public String getDescr() {
         String name = param_list.graph.getGraphName();
-        String saveName = param_list.graph.getSaveFileName();
+        String saveName = GraphManager.getInstance().getGraphPath( param_list.graph);
         if (saveName != null) {
             int pos = saveName.lastIndexOf(File.separatorChar);
             if (pos != -1) {

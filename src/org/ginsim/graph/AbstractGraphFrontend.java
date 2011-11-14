@@ -18,7 +18,7 @@ import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatoryGraph.RegulatoryGraphFactory;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraphFactory;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -36,8 +36,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     
 	// The name of the graph
 	protected String graphName = "default_name";
-//	// The list of vertices ordered as defined by the model
-//	protected List<V> nodeOrder = new ArrayList<V>();
 	
 	// List of the registered graph listeners
 	protected List< GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
@@ -55,8 +53,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
     protected boolean annoted = false;
-    private static int GRAPH_ID = 0;
-    private String id;
     public static final String ZIP_PREFIX = "GINsim-data/";
 	
 	/**
@@ -68,8 +64,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	
     /**
      *
-     * @param descriptor
-     * @param saveFileName
+     * @param parsing
      */
     public AbstractGraphFrontend( boolean parsing) {
         this( new JgraphtBackendImpl<V, E>(), parsing);
@@ -84,16 +79,37 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		this.graphBackend = backend;
         this.isParsing = parsing;
 		viewBackend = graphBackend.getGraphViewBackend();
-        this.id = "" + GRAPH_ID++;
-        // FIXME: register graph ?
-        // GsEnv.registerGraph( this, this.id);
 	}
-
 	
-	public String getGraphID(){
-		
-		return id;
-	}
+	
+    /**
+     * Give access to the name of the graph
+     * 
+     * @return the name associated with this graph.
+     */
+    public String getGraphName() {
+    	
+        return graphName;
+    }
+    
+    
+    /**
+     * changes (if success) the name associated with this graph.
+     * By default only valid xmlid are accepted.
+     *
+     * @param graphName the new name.
+     * @throws GsException if the name is invalid.
+     */
+    public void setGraphName( String graph_name) throws GsException {
+
+		if (!graph_name.matches("[a-zA-Z_]+[a-zA-Z0-9_-]*")) {
+		    throw new GsException(GsException.GRAVITY_ERROR, "Invalid name");
+		}
+        this.graphName = graph_name;
+        annoted = true;
+        fireMetaChange();
+    }
+	
 	
 
     //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
@@ -375,34 +391,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 */
 	@Override
 	public abstract Graph<V, E> getSubgraph(Collection<V> vertex, Collection<E> edges);
-
-	
-    /**
-     * Give access to the name of the graph
-     * 
-     * @return the name associated with this graph.
-     */
-    public String getGraphName() {
-    	
-        return graphName;
-    }
-    
-    /**
-     * changes (if success) the name associated with this graph.
-     * By default only valid xmlid are accepted.
-     *
-     * @param graphName the new name.
-     * @throws GsException if the name is invalid.
-     */
-    public void setGraphName( String graph_name) throws GsException {
-
-		if (!graph_name.matches("[a-zA-Z_]+[a-zA-Z0-9_-]*")) {
-		    throw new GsException(GsException.GRAVITY_ERROR, "Invalid name");
-		}
-        this.graphName = graph_name;
-        annoted = true;
-        fireMetaChange();
-    }
     
     
 	

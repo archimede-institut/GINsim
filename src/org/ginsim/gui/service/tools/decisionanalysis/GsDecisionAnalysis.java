@@ -4,12 +4,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationUpdater;
 
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 /**

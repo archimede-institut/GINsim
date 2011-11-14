@@ -100,7 +100,7 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
 	@Override
     public String getAssociatedGraphID() {
         if (associatedGraph != null) {
-            associatedID = associatedGraph.getSaveFileName();
+            associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
             if (associatedID == null) {
                 GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_save")), mainFrame);
                 return null;
@@ -179,7 +179,7 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
     public void graphClosed( Graph graph) {
         // it must be the associated regulatory graph
         if (graph == associatedGraph) {
-            associatedID = associatedGraph.getSaveFileName();
+            associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
             setAssociatedGraph(null);
         }
     }

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.hierachicalTransitionGraph;
+package org.ginsim.graph.hierachicaltransitiongraph;
 
 import java.awt.Color;
 import java.awt.Component;

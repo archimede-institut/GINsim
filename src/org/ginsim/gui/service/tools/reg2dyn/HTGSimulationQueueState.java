@@ -5,8 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNode;
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalNodeSet;
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNodeSet;
+
 
 /**
  * Used to represent the elements in the queue of the HTGSimulation

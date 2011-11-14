@@ -1,4 +1,4 @@
-package org.ginsim.graph.regulatoryGraph;
+package org.ginsim.graph.regulatorygraph;
 
 import java.util.List;
 import java.util.Vector;
@@ -53,6 +53,17 @@ public class RegulatoryGraphFactory implements GraphFactory {
     	
         return "regulatory";
     }
+    
+    /**
+     * Return the class of graph this factory is managing
+     * 
+     * @return the name of the class of graph this factory is managing
+     */
+	public Class getGraphClass(){
+		
+		return GsRegulatoryGraph.class;
+	}
+	
 
 
     /**

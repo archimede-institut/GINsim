@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.hierachicalTransitionGraph;
+package org.ginsim.graph.hierachicaltransitiongraph;
 
 import org.ginsim.gui.service.tools.reg2dyn.GsReg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;

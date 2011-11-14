@@ -10,12 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
 
-import fr.univmrs.tagc.GINsim.hierachicalTransitionGraph.GsHierarchicalTransitionGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
 import fr.univmrs.tagc.common.managerresources.Translator;

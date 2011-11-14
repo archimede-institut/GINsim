@@ -14,6 +14,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
@@ -173,7 +174,7 @@ public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements 
             out.addAttr("qual:required", "true");
             
             out.openTag("model");
-            out.addAttr("id", ""+getPrevFilename(graph.getSaveFileName()));
+            out.addAttr("id", ""+ getPrevFilename( GraphManager.getInstance().getGraphPath( graph)));
             
             out.openTag("listOfCompartments");
             out.openTag("compartment");

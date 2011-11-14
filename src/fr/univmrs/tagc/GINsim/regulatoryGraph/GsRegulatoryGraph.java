@@ -20,7 +20,7 @@ import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.regulatoryGraph.RegulatoryGraphFactory;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraphFactory;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -52,6 +52,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	
         this( false);
     }
+   
 
     protected String getGraphZipName() {
     	return zip_mainEntry;
@@ -97,7 +98,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 	
     
     /**
-     * @param savefilename
+     * @param parsing
      */
     public GsRegulatoryGraph( boolean parsing) {
     	
@@ -105,6 +106,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	// getVertexAttributeReader().setDefaultVertexSize(55, 25);
     	// getEdgeAttributeReader().setDefaultEdgeSize(2);
     }
+    
     /**
      * @param map
      * @param file
