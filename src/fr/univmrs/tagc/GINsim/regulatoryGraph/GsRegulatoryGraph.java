@@ -496,7 +496,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         GsEdgeAttributesReader cereader = otherGraph.getEdgeAttributeReader();
         while (it2.hasNext()) {
         	GsRegulatoryMultiEdge deOri = it2.next();
-        	GsRegulatoryMultiEdge edge = doInteractiveAddEdge((GsRegulatoryVertex)copyMap.get(deOri.getSource()), (GsRegulatoryVertex)copyMap.get(deOri.getTarget()), 0);
+        	GsRegulatoryMultiEdge edge = addEdge((GsRegulatoryVertex)copyMap.get(deOri.getSource()), (GsRegulatoryVertex)copyMap.get(deOri.getTarget()), 0);
             edge.copyFrom(deOri);
             cereader.setEdge(deOri);
             eReader.setEdge(edge);
@@ -553,7 +553,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         	GsEdgeAttributesReader eReader = getEdgeAttributeReader();
             GsEdgeAttributesReader cereader = copiedGraph.getEdgeAttributeReader();
 	        for (GsRegulatoryMultiEdge edgeOri: v_edges) {
-	        	GsRegulatoryMultiEdge edge = copiedGraph.doInteractiveAddEdge((GsRegulatoryVertex)copyMap.get(edgeOri.getSource()), (GsRegulatoryVertex)copyMap.get(edgeOri.getTarget()), 0);
+	        	GsRegulatoryMultiEdge edge = copiedGraph.addEdge((GsRegulatoryVertex)copyMap.get(edgeOri.getSource()), (GsRegulatoryVertex)copyMap.get(edgeOri.getTarget()), 0);
 	            edge.copyFrom(edgeOri);
 	            copyMap.put(edgeOri, edge);
                 eReader.setEdge(edgeOri);

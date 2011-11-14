@@ -30,5 +30,14 @@ public class TestRefactor {
 		
 		GUIManager.getInstance().newFrame(lrg);
 	}
-	
+
+	/**
+	 * Test method to detect the current directory.
+	 * It will be needed for plugins, dynamiic classpath and such
+	 */
+	private static void init() {
+		Class<?> cl = TestRefactor.class;
+		String clname = cl.getName().replace(".",	"/") + ".class";
+		System.out.println(cl.getClassLoader().getResource(clname));
+	}
 }
