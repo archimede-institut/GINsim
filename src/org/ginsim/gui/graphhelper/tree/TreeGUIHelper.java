@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.tree.GsTree;
 import org.ginsim.graph.tree.GsTreeNode;
 import org.ginsim.gui.GUIManager;
@@ -22,6 +23,7 @@ import fr.univmrs.tagc.common.widgets.Frame;
 @ProviderFor( GraphGUIHelper.class)
 public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<GsTreeNode>> {
 
+	
 	/**
 	 * Provide the file filter to apply to a file chooser
 	 * 
@@ -91,8 +93,8 @@ public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<Gs
 
 	@Override
 	public Class<GsTree> getGraphClass() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return GsTree.class;
 	}
 
 	@Override

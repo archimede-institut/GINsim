@@ -87,8 +87,8 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
 
 	@Override
 	public Class<GsDynamicGraph> getGraphClass() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return GsDynamicGraph.class;
 	}
 
 	@Override

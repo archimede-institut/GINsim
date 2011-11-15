@@ -84,8 +84,8 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<GsReducedGraph, GsN
 
 	@Override
 	public Class<GsReducedGraph> getGraphClass() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return GsReducedGraph.class;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraphFactory;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
 import org.ginsim.gui.GUIManager;
@@ -91,8 +92,8 @@ public class DynamicalHierarchicalGraphGUIHelper implements
 
 	@Override
 	public Class<GsDynamicalHierarchicalGraph> getGraphClass() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return GsDynamicalHierarchicalGraph.class;
 	}
 
 	@Override

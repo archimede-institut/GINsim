@@ -93,8 +93,8 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<GsHi
 
 	@Override
 	public Class<GsHierarchicalTransitionGraph> getGraphClass() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return GsHierarchicalTransitionGraph.class;
 	}
 
 	@Override
