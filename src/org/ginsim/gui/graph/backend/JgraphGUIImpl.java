@@ -27,6 +27,7 @@ import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
+import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.callbacks.GsFileCallBack;
@@ -54,6 +55,8 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     private final GraphGUIHelper<G,V,E> helper;
     private final EditActionManager editActionManager;
     
+    private final GraphSelection<V, E> selection = new GraphSelection<V, E>(this);
+    
     private final List<GraphGUIListener<G, V, E>> listeners = new ArrayList<GraphGUIListener<G,V,E>>();
     
     // saving memory
@@ -64,9 +67,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     // TODO: should it be static, created later or what ?
     private GsParallelEdgeRouting pedgerouting = new GsParallelEdgeRouting();
 
-    Collection<E> sel_edges;
-    Collection<V> sel_vertices;
-    
 	public JgraphGUIImpl(G g, JgraphtBackendImpl<V, E> backend, GraphGUIHelper<G,V,E> helper) {
 		this.graph = g;
 		this.backend = backend;
@@ -167,22 +167,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		}			
 		
 		return menu;
-	}
-
-	@Override
-	public Collection<V> getSelectedVertices() {
-		return sel_vertices;
-	}
-
-	@Override
-	public Collection<E> getSelectedEdges() {
-		return sel_edges;
-	}
-
-	public void SelectionChanged(GsGraphSelectionChangeEvent event) {
-		sel_edges = event.getV_edge();
-		sel_vertices = event.getV_vertex();
-		// TODO propagate selection change event
 	}
 
 	@Override
@@ -415,11 +399,22 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			}
 		}
 
-		// FIXME: finish selection propagation
+		selection.setSelection(nodes, edges);
 		for (GraphGUIListener<G, V, E> listener: listeners) {
 			listener.graphSelectionChanged(this);
 		}
 	}
+
+	@Override
+	public void selectionChanged() {
+		// TODO: update jgraph selection based on user request
+	}
+
+	@Override
+	public GraphSelection<V, E> getSelection() {
+		return selection;
+	}
+
 }
 
 enum GUIProperties {

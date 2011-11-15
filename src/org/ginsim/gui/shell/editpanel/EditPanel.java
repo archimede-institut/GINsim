@@ -2,13 +2,13 @@ package org.ginsim.gui.shell.editpanel;
 
 import java.awt.Component;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JTabbedPane;
 
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
+import org.ginsim.gui.graph.GraphSelection;
 
 import fr.univmrs.tagc.GINsim.gui.GsGraphicAttributePanel;
 
@@ -44,44 +44,14 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
     	Component panel = tab.getComponent();
         addTab(name, null, panel, null);
         tabs.add(tab);
-        updateTabs(selectionType);
+        updateTabs( gui.getSelection());
     }
 
-    /**
-     * 
-     * @param vertices the list of selected vertices (can be null)
-     * @param edges the list of selected edges (can be null)
-     * 
-     * @return the current selection type
-     */
-    private SelectionType getCurrentSelectionType(Collection<?> vertices, Collection<?> edges) {
-        int nb_edges = vertices == null ? 0 : vertices.size();
-        int nb_vertices = edges == null ? 0 : edges.size();
-        if (nb_edges == 0) {
-            switch (nb_vertices) {
-                case 0:
-                    return SelectionType.SEL_NONE;
-                case 1:
-                    return SelectionType.SEL_NODE;
-                default:
-                	return SelectionType.SEL_MULTIPLE;
-            }
-        }
-        
-        if (nb_vertices == 0) {
-            if (nb_edges == 1) {
-            	return SelectionType.SEL_EDGE;
-            }
-            return SelectionType.SEL_MULTIPLE;
-        }
-        return SelectionType.SEL_MULTIPLE;
-    }
-    
     /**
      * enable/disable tabs depending on the constraint
      * if the selected tab becomes inactive, select another one
      */
-    private void updateTabs(SelectionType selection) {
+    private void updateTabs( GraphSelection<?, ?> selection) {
         for (int i=0 ; i<tabs.size() ; i++) {
         	boolean enabled = tabs.get(i).isActive(selection);
         	setEnabledAt(i, enabled);
@@ -107,7 +77,7 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
 
 	@Override
 	public void graphSelectionChanged(GraphGUI gui) {
-		updateTabs( getCurrentSelectionType(null, null));
+		updateTabs( gui.getSelection());
 	}
 
 	@Override

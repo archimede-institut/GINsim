@@ -29,6 +29,7 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.editpanel.EditTab;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
@@ -1104,8 +1105,8 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	}
 
 	@Override
-	public boolean isActive(SelectionType selection) {
-		if (selection == SelectionType.SEL_NONE) {
+	public boolean isActive( GraphSelection<?, ?> selection) {
+		if (selection.getSelectionType() == SelectionType.SEL_NONE) {
 			return false;
 		}
 

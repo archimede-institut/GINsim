@@ -270,6 +270,6 @@ public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectio
                 nbVertex++;
             }
         }
-        graphUI.SelectionChanged(new GsGraphSelectionChangeEvent(v_edge, v_vertex));
+        // graphUI.SelectionChanged(new GsGraphSelectionChangeEvent(v_edge, v_vertex));
     }
 }

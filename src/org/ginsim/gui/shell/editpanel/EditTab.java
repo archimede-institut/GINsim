@@ -2,6 +2,8 @@ package org.ginsim.gui.shell.editpanel;
 
 import java.awt.Component;
 
+import org.ginsim.gui.graph.GraphSelection;
+
 public interface EditTab {
 
 	/**
@@ -11,5 +13,5 @@ public interface EditTab {
 
 	public Component getComponent();
 	
-	public boolean isActive( SelectionType selection);
+	public boolean isActive( GraphSelection<?, ?> selection);
 }
