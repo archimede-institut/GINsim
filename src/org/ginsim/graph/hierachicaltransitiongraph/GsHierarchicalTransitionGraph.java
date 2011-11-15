@@ -338,24 +338,22 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 		transientCompactionMode = mode;
 	}
 
-    protected boolean isAssociationValid( Graph graph) {
-    	
-        if (graph instanceof GsRegulatoryGraph) {
-            return true;
-        }
-        return false;
-    }
-    
     /**
-     * Return the Object Managers specialized for this class
+     * Indicates if the given graph can be associated to the current one
      * 
-     * @return a List of Object Managers
+     * @param graph the graph to associate to the current one
+     * @return true is association is possible, false if not
      */
     @Override
-    public List getSpecificObjectManager() {
+    protected boolean isAssociationValid( Graph<?, ?> graph) {
     	
-        return HierarchicalTransitionGraphFactory.getObjectManager();
+    	if( graph instanceof GsRegulatoryGraph){
+    		return true;
+    	}
+    	
+    	return false;
     }
+
 		
 /* **************** UNIMPLEMENTED METHODS ************/
 	

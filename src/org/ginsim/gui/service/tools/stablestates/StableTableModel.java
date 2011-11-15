@@ -7,6 +7,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.common.AssociatedGraph;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -115,7 +116,7 @@ public class StableTableModel extends AbstractTableModel {
 	private void updateMatches( Graph graph) {
 		InitialStateList initstates = null;
 		if (graph != null && graph instanceof GsRegulatoryGraph) {
-		    GsInitialStateList ilist = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
+		    GsInitialStateList ilist = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, GsInitialStateManager.key, false);
 		    if (ilist != null) {
 		        initstates = ilist.getInitialStates();
 		    }

@@ -12,6 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
@@ -319,7 +320,7 @@ class PNExportConfigPanel extends JPanel {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(mutantPanel, c);
 
-		GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
+		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, GsSimulationParametersManager.key, true);
         priorityPanel = new PrioritySelectionPanel(dialog, paramList.pcmanager);
         priorityPanel.setStore(specConfig.store, 1);
 		c = new GridBagConstraints();

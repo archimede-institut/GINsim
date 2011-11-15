@@ -298,7 +298,7 @@ public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements 
             os.flush();
             os.close();
 		} catch (IOException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
 		}
     }
 	

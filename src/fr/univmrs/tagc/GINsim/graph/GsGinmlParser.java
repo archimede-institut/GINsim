@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.graph;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.ginsim.exception.GsException;
@@ -71,9 +72,19 @@ public final class GsGinmlParser extends XMLHelper {
 	                throw new SAXException("Bad type of graph : " + s_class);
 	            }
         	}
-        	catch( GsException gs_exception){
-        		throw new SAXException( gs_exception);
+        	catch( NoSuchMethodException nsme){
+        		throw new SAXException( nsme);
         	}
+        	catch( InvocationTargetException ite){
+        		throw new SAXException( ite);
+        	}
+        	catch( IllegalAccessException iae){
+        		throw new SAXException( iae);
+        	}
+        	catch( InstantiationException ie){
+        		throw new SAXException( ie);
+        	}
+
             xr.setContentHandler(realParser);
         }
     }

@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -47,7 +48,7 @@ public class GsInitialStatePanel extends JPanel {
         }
 	}
     public GsInitialStatePanel(StackDialog dialog, Graph graph, boolean several) {
-        this(dialog, (GsInitialStateList)graph.getObject( GsInitialStateManager.key, true), several);
+        this(dialog, (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, GsInitialStateManager.key, true), several);
     }
     public void setParam(GsInitialStateStore currentParameter) {
         initPanel.setParam(currentParameter.getInitialState());

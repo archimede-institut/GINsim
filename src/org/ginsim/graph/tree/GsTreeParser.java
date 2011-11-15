@@ -76,7 +76,7 @@ public abstract class GsTreeParser<V,E> {
 		}
 	}	
 	
-	protected Object getParameter(String key) {
+	public Object getParameter(String key) {
 		Object value = this.parameters.get(key);
 		if (value == null) {
 			Tools.error("expected parameter '"+key+"' not found or null");

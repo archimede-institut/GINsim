@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -18,7 +19,7 @@ public abstract class BasicGraphAssociatedManager implements
 	
 	public void doSave(OutputStreamWriter os, Graph graph) {
 		
-        Object o = graph.getObject(key, false);
+        Object o =  ObjectAssociationManager.getInstance().getObject(graph, key, false);
         if (o != null && o instanceof XMLize) {
 	        try {
 	            XMLWriter out = new XMLWriter(os, null);
@@ -35,7 +36,7 @@ public abstract class BasicGraphAssociatedManager implements
 
 	public boolean needSaving( Graph graph) {
 		
-		return graph.getObject(key, false) != null;
+		return ObjectAssociationManager.getInstance().getObject(graph, key, false) != null;
 	}
 
 }

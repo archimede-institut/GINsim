@@ -25,6 +25,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableColumn;
 
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.service.tools.regulatorygraphanimation.GsAReg2GPConfig;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -75,7 +76,7 @@ public class GsDynamicSearchPathConfig extends JDialog {
         }
         initialize();
         
-        Object o = graph.getObject("reg2dyn_firstState", false);
+        Object o = ObjectAssociationManager.getInstance().getObject( graph, "reg2dyn_firstState", false);
         if (o != null && o instanceof int[]) {
         	byte[] t1 = (byte[])o;
         	byte[] t2 = new byte[t1.length];

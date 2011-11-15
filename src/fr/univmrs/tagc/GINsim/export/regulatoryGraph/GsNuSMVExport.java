@@ -126,7 +126,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 	 *            store with the configuration specified by the user in the GUI.
 	 */
 	public static void encode(GsRegulatoryGraph graph, String fileName,
-			GsNuSMVConfig config) {
+			GsNuSMVConfig config) throws GsException{
 
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG);
@@ -615,9 +615,7 @@ public class GsNuSMVExport extends GsAbstractExport {
 			out.close();
 
 		} catch (IOException e) {
-			GsEnv.error(
-					new GsException(GsException.GRAVITY_ERROR, e
-							.getLocalizedMessage()), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
@@ -28,7 +29,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) {
-        GsInitialStateList imanager = (GsInitialStateList)graph.getObject(key, true);
+        GsInitialStateList imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, key, true);
         List nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
         if (imanager == null || imanager.isEmpty() || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -49,7 +50,7 @@ public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
 	}
 
     public boolean needSaving( Graph graph) {
-        GsInitialStateList list = (GsInitialStateList)graph.getObject(key, false);
+        GsInitialStateList list = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, key, false);
         return list != null && !list.isEmpty();
     }
 

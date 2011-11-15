@@ -42,7 +42,7 @@ public class GsGNAExport extends GsAbstractExport {
         return null;
 	}
 
-	protected void doExport(GsExportConfig config) {
+	protected void doExport(GsExportConfig config) throws GsException{
 		this.config = config;
 		try {
 			long l = System.currentTimeMillis();
@@ -50,7 +50,7 @@ public class GsGNAExport extends GsAbstractExport {
 			System.out.println("gna export: done in "+(System.currentTimeMillis()-l)+"ms");
 		} catch (IOException e) {
 			e.printStackTrace();
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e);
 		}		
 	}
 

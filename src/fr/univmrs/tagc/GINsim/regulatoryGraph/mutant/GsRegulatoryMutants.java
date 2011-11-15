@@ -24,6 +24,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -52,7 +53,7 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphLis
      * @return a panel to configure mutants
      */
     public static JPanel getMutantConfigPanel(GsRegulatoryGraph graph) {
-        GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
+        GsRegulatoryMutants mutants = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
         MutantPanel mpanel = new MutantPanel();
         Map m = new HashMap();
         m.put(GsRegulatoryMutantDef.class, mpanel);

@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.mutant;
 
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
@@ -15,7 +16,7 @@ public class MutantSelectionPanel extends GenericListSelectionPanel {
 	GsRegulatoryGraph graph;
 	
 	public MutantSelectionPanel(StackDialog dialog, GsRegulatoryGraph graph, ObjectStore store) {
-		super(dialog, (GenericList)graph.getObject(GsMutantListManager.key, false),
+		super(dialog, (GenericList) ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, false),
 				Translator.getString("STR_mutants"), true, Translator.getString("STR_configure_mutants"));
 		this.graph = graph;
 		setStore(store);

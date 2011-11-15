@@ -91,7 +91,7 @@ public class GsTreeActionPanel extends JPanel {
 			c.gridy++;
 			add(new JLabel(Translator.getString("STR_treeviewer_tree_choose_gene")), c);
 			c.gridx++;
-			sourceList = new JComboBox(new Vector((List)parser.getParameter(GsTreeParser.PARAM_NODEORDER)));
+			sourceList = new JComboBox(new Vector((List) parser.getParameter(GsTreeParser.PARAM_NODEORDER)));
 			sourceList.setSelectedIndex(((Integer)parser.getParameter(GsTreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX)).intValue());
 			sourceList.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {

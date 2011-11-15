@@ -65,7 +65,7 @@ public class GsPetriNetExportINA extends GsAbstractExport<GsRegulatoryGraph> {
 	// FIXME: INA does not like PN with "useless" places. Such places should be removed (with a warning)
 	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
 
-	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) {
+	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) throws GsException{
         GsRegulatoryGraph graph = config.getGraph();
 
 		List v_no = graph.getNodeOrder();
@@ -275,7 +275,7 @@ public class GsPetriNetExportINA extends GsAbstractExport<GsRegulatoryGraph> {
 			// Close the file
 			out.close();
 		} catch (IOException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
 		}
 	}
 }

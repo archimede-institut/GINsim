@@ -129,18 +129,14 @@ public class GsAReg2GPConfig extends JDialog {
 	/**
 	 * do the export.
 	 */
-	protected void export() {
+	protected void export() throws GsException{
 		if (combo_choice.getSelectedIndex() == 2) {
 			doSavePathAsPython(path);
 			return;
 		}
 	    String gnuplotsFilename;
-        try {
-            gnuplotsFilename  = GsOpenAction.selectSaveFile(null, null, null, ".gnuplot");
-        } catch (GsException e) {
-            GsEnv.error(e, null);
-            return;
-        }
+        
+        gnuplotsFilename  = GsOpenAction.selectSaveFile(null, null, null, ".gnuplot");
 	    if (gnuplotsFilename == null) {
 	        return;
 	    }
@@ -184,7 +180,7 @@ public class GsAReg2GPConfig extends JDialog {
      * @param nodeOrder
      * @param selected
      */
-    public static void doSaveGnuPlotArrowPath(File scriptfile, File datafile, List path, List nodeOrder, boolean[] selected) {        
+    public static void doSaveGnuPlotArrowPath(File scriptfile, File datafile, List path, List nodeOrder, boolean[] selected) throws GsException{        
         int[] exported = new int[selected.length];
         int nbExported = 0;
         for (int i=0 ; i<selected.length ; i++) {
@@ -244,7 +240,7 @@ public class GsAReg2GPConfig extends JDialog {
             out.close();
 
         } catch (IOException e) {
-            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+            throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
         }
     }
     /**
@@ -254,7 +250,7 @@ public class GsAReg2GPConfig extends JDialog {
      * @param nodeOrder
      * @param selected
      */
-    public static void doSaveGnuPlotMultiPath(File scriptfile, File datafile, List path, List nodeOrder, boolean[] selected) {        
+    public static void doSaveGnuPlotMultiPath(File scriptfile, File datafile, List path, List nodeOrder, boolean[] selected) throws GsException{        
         int[] exported = new int[selected.length];
         int nbExported = 0;
         for (int i=0 ; i<selected.length ; i++) {
@@ -315,7 +311,7 @@ public class GsAReg2GPConfig extends JDialog {
             out.close();
 
         } catch (IOException e) {
-            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+            throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
         }
     }
 

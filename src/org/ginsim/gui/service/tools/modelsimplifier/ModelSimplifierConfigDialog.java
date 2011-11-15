@@ -14,6 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.GUIManager;
@@ -38,7 +39,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		this.graph = graph;
 		setTitle("select nodes to remove");
 		
-        ModelSimplifierConfigList cfgList = (ModelSimplifierConfigList)graph.getObject(ModelSimplifierConfigManager.key, true);
+        ModelSimplifierConfigList cfgList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.key, true);
 		if (cfgList.getNbElements(null) == 0) {
 			cfgList.add();
 		}

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
+import org.ginsim.graph.reducedgraph.GsReducedGraph;
 
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 

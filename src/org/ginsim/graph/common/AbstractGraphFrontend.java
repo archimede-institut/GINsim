@@ -22,6 +22,7 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraphFactory;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
@@ -522,7 +523,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 				}
 			}
 		}
-		List v_specManager = getSpecificObjectManager();
+		List v_specManager = ObjectAssociationManager.getInstance().getObjectManagerList( this.getClass());
 		if (v_specManager != null) {
 			for (int i=0 ; i<v_specManager.size() ; i++) {
 				GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);

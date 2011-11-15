@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
@@ -26,8 +27,8 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
         return parser.getParameters();
     }
 
-    public void doSave(OutputStreamWriter os, Graph graph) {
-        GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
+    public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
+        GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
         List nodeOrder = graph.getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -53,7 +54,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
             }
             out.closeTag();
         } catch (IOException e) {
-            GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+            throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
         }
     }
 
@@ -62,7 +63,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
     }
 
     public boolean needSaving( Graph graph) {
-        GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(key, false);
+        GsSimulationParameterList paramList = (GsSimulationParameterList)  ObjectAssociationManager.getInstance().getObject( graph, key, false);
         return paramList != null && (paramList.getNbElements(null) > 0 || 
         		paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 2);
     }

@@ -47,7 +47,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
      * @param s_dtd
      * @param s_filename
      */
-    public GsDynamicalHierarchicalParser(Map map, Attributes attributes, String s_dtd, String s_filename) {
+    public GsDynamicalHierarchicalParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
     	this.graph = new GsDynamicalHierarchicalGraph( true);
     	this.map = map;
@@ -57,7 +57,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
 		try {
 			graph.setGraphName(attributes.getValue("id"));
 		} catch (GsException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+			throw new GsException(GsException.GRAVITY_ERROR, "Invalid graph Name");
 		}
 		try {
 			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
@@ -71,7 +71,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
 			graph.setNodeOrder(nodeOrder);
 			graph.setChildsCount(childCount);
 		} catch (NumberFormatException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
+			throw new GsException(GsException.GRAVITY_ERROR, "Invalid node order");
 		}
 	}
 
@@ -203,7 +203,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
             			try {
 							graph.setGraphName(attributes.getValue("id"));
 						} catch (GsException e) {
-							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"));
 						}
 						try {
 							String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
@@ -217,7 +217,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
 							graph.setNodeOrder(nodeOrder);
 							graph.setChildsCount(childCount);
 						} catch (NumberFormatException e) {
-							GsEnv.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
+							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "invalid node order"));
 						}
                 } else if (qName.equals("link")) {
                     graph.setAssociatedGraphID(attributes.getValue("xlink:href"));

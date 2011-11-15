@@ -25,6 +25,7 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
@@ -99,7 +100,7 @@ public class GenericDocumentExport extends GsAbstractExport {
         return null;
 	}
 
-	protected void doExport(GsExportConfig config) {
+	protected void doExport(GsExportConfig config) throws GsException{
 		this.config = config;
 		this.specConfig = (DocumentExportConfig)config.getSpecificConfig();
 		if (specConfig == null) {
@@ -116,7 +117,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			run();
 		} catch (IOException e) {
 			e.printStackTrace();
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e);
 		}		
 	}
 
@@ -176,7 +177,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 	}
 
 	private void writeMutants() throws IOException {
-		GsRegulatoryMutants mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
+		GsRegulatoryMutants mutantList = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
 		StableStatesService stableSearcher = new StableStatesService(config.getGraph(), null, null);
 		OmddNode stable;
 		
@@ -338,7 +339,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 	
 	
 	private void writeInitialStates() throws IOException {
-		InitialStateList initStates = ((GsInitialStateList) graph.getObject(
+		InitialStateList initStates = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, 
 				GsInitialStateManager.key, false)).getInitialStates();
 		if (initStates != null && initStates.getNbElements(null) > 0) {
 			GsInitStateTableModel model = new GsInitStateTableModel(null, initStates, false);

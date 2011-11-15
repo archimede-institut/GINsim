@@ -74,14 +74,22 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
         parser.parse(file, map, this);
 	}
 	
-
-
-	
-	/* DynamicalHierarchicalGraphFactory mapping */
-
-    public List getSpecificObjectManager() {
-        return DynamicalHierarchicalGraphFactory.getObjectManager();
+    /**
+     * Indicates if the given graph can be associated to the current one
+     * 
+     * @param graph the graph to associate to the current one
+     * @return true is association is possible, false if not
+     */
+    @Override
+    protected boolean isAssociationValid( Graph<?, ?> graph) {
+    	
+    	if( graph instanceof GsRegulatoryGraph){
+    		return true;
+    	}
+    	
+    	return false;
     }
+
     
     /* Save */
     

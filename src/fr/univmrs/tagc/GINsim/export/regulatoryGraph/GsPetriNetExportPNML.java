@@ -37,7 +37,7 @@ public class GsPetriNetExportPNML extends GsAbstractExport<GsRegulatoryGraph> {
 		return null;
 	}
 	
-	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) {
+	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) throws GsException{
 		GsRegulatoryGraph graph = config.getGraph();
 		List v_no = graph.getNodeOrder();
         int len = v_no.size();
@@ -165,7 +165,7 @@ public class GsPetriNetExportPNML extends GsAbstractExport<GsRegulatoryGraph> {
             out.closeTag();
 			fout.close();
 		} catch (IOException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
 		}
 	}
 	

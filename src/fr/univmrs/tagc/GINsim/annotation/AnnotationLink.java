@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 
 import fr.univmrs.tagc.common.HttpHelper;
 import fr.univmrs.tagc.common.OpenHelper;
@@ -39,7 +40,7 @@ public class AnnotationLink {
 		value = ts[1].trim();
 		String okey = (String)m_helper.get(proto);
 		if (graph!= null && okey != null) {
-			helper = (OpenHelper)graph.getObject(okey, true);
+			helper = (OpenHelper) ObjectAssociationManager.getInstance().getObject(graph, okey, true);
 			if (getHelper() != null) {
 				getHelper().add(proto, value);
 			}

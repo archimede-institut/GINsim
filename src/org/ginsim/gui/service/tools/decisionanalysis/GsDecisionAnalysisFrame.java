@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
@@ -71,7 +72,7 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 
 	
 	private GenericListSelectionPanel getPriorityClassSelector() {
-        GsSimulationParameterList paramList = (GsSimulationParameterList) regGraph.getObject(GsSimulationParametersManager.key, true);
+        GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( regGraph, GsSimulationParametersManager.key, true);
 		if (selectPriorityClass == null) {
 			selectPriorityClass = new PrioritySelectionPanel(this, paramList.pcmanager);
 			this.currentParameter = (GsSimulationParameters)paramList.getElement(null, 0);

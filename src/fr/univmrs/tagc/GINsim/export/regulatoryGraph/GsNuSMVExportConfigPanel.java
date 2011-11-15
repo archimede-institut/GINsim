@@ -21,6 +21,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
@@ -81,8 +82,7 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 		cst.weightx = 0.5;
 		jpTmp.add(mutantPanel, cst);
 
-		GsSimulationParameterList paramList = (GsSimulationParameterList) this.cfg.graph
-				.getObject(GsSimulationParametersManager.key, true);
+		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( this.cfg.graph, GsSimulationParametersManager.key, true);
 		priorityPanel = new PrioritySelectionPanel(dialog, paramList.pcmanager);
 		priorityPanel.setStore(cfg.store, 1);
 		cst = new GridBagConstraints();
@@ -327,8 +327,7 @@ class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 
 	GsNuSMVMutantModel(GsNuSMVConfig cfg) {
 		this.cfg = cfg;
-		this.listMutants = (GsRegulatoryMutants) cfg.graph.getObject(
-				GsMutantListManager.key, true);
+		this.listMutants = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject( cfg.graph, GsMutantListManager.key, true);
 	}
 
 	void setMutantList(GsRegulatoryMutants mutants) {

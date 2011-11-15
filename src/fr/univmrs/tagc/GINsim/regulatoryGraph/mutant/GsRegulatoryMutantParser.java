@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.xml.sax.Attributes;
@@ -44,7 +45,7 @@ public class GsRegulatoryMutantParser extends XMLHelper {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         this.m_call = CALLMAP;
-        mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
+        mutantList = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
     }
 
     protected void endElement(int id) {

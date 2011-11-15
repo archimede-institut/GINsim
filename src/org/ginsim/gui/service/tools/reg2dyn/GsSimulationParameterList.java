@@ -3,6 +3,7 @@ package org.ginsim.gui.service.tools.reg2dyn;
 import java.util.Collection;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -39,7 +40,7 @@ public class GsSimulationParameterList extends SimpleGenericList<GsSimulationPar
     public GsSimulationParameterList( Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph, GsSimulationParameters param) {
     	
         this.graph = (GsRegulatoryGraph) graph;
-        imanager = (GsInitialStateList) graph.getObject( GsInitialStateManager.key, true);
+        imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, GsInitialStateManager.key, true);
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
         pcmanager = new PriorityClassManager(this.graph);
@@ -49,7 +50,7 @@ public class GsSimulationParameterList extends SimpleGenericList<GsSimulationPar
     	canRemove = true;
     	canOrder = true;
         graph.addGraphListener(this);
-        GsRegulatoryMutants mutants = (GsRegulatoryMutants) graph.getObject(GsMutantListManager.key, true);
+        GsRegulatoryMutants mutants = (GsRegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, true);
         mutants.addListener(this);
         if (param == null) {
         	add();

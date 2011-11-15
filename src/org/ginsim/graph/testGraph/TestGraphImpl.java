@@ -32,12 +32,6 @@ public class TestGraphImpl extends AbstractGraphFrontend<TestVertex, TestEdge> i
 		super.addVertex(vertex);
 		return vertex;
 	}
-	
-    @Override
-    public List getSpecificObjectManager() {
-    	
-        return null;
-    }
     
     @Override
 	public int getNodeOrderSize(){

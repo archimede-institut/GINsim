@@ -151,15 +151,15 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 	}
 
 	private int comboBoxItems() {
-		comboBoxEntries = new String[GsEnv.getAllGraphs().size()+2];
+		comboBoxEntries = new String[GraphManager.getInstance().getAllGraphs().size()+2];
 		comboBoxEntries[0] = Translator.getString("STR_gcmp_from_file")+" :";
 		comboBoxEntries[1] = " ";
-		graphList = new ArrayList(GsEnv.getAllGraphs().size());
+		graphList = new ArrayList(GraphManager.getInstance().getAllGraphs().size());
 		HashMap graphNames = new HashMap();
 		int indexToSelect = 0;
 		int i = 2;
 		
-		for (Iterator it = GsEnv.getAllGraphs().values().iterator(); it.hasNext();) {
+		for (Iterator it = GraphManager.getInstance().getAllGraphs().iterator(); it.hasNext();) {
 			
 			Graph graph = (Graph) it.next();
 			String name = graph.getGraphName();

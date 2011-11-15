@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 
@@ -33,7 +34,7 @@ public class GsMutantListManager implements
 
     public void doSave(OutputStreamWriter os, Graph graph) {
     	
-        GsRegulatoryMutants lMutant = (GsRegulatoryMutants)graph.getObject(key, false);
+        GsRegulatoryMutants lMutant = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, key, false);
         List nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
         if (lMutant == null || lMutant.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -57,7 +58,7 @@ public class GsMutantListManager implements
 
     public boolean needSaving( Graph graph) {
     	
-        GsRegulatoryMutants lMutant = (GsRegulatoryMutants) graph.getObject("mutant", false);
+        GsRegulatoryMutants lMutant = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, "mutant", false);
         return lMutant != null && lMutant.getNbElements(null) > 0;
     }
 

@@ -93,7 +93,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) {
-        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
+        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
         List<GsRegulatoryVertex> nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -116,7 +116,7 @@ class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
     }
 
     public boolean needSaving( Graph graph) {
-        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList)graph.getObject(key, false);
+        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
         return paramList != null && paramList.getNbElements(null) > 0;
     }
 
@@ -148,7 +148,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
      */
     public ModelSimplifierConfigParser(GsRegulatoryGraph graph) {
     	this.nodeOrder = graph.getNodeOrder();
-        this.paramList = (ModelSimplifierConfigList)graph.getObject(ModelSimplifierConfigManager.key, true);
+        this.paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.key, true);
     }
     
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

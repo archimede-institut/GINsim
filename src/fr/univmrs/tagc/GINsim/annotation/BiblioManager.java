@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.GINsim.graph.BasicGraphAssociatedManager;
@@ -25,7 +26,7 @@ public class BiblioManager extends BasicGraphAssociatedManager {
 
 	public Object doOpen(InputStream is, Graph graph) {
 		
-		BiblioList bibList = (BiblioList) graph.getObject(key, true);
+		BiblioList bibList = (BiblioList) ObjectAssociationManager.getInstance().getObject(graph, key, true);
 		BiblioParser parser = new BiblioParser(bibList);
 		parser.startParsing(is, false);
 		return bibList;

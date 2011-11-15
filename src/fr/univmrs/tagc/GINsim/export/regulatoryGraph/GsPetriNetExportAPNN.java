@@ -196,7 +196,7 @@ public class GsPetriNetExportAPNN extends GsPetriNetExport
             out.write("\\endnet\n");
 			out.close();
 		} catch (IOException e) {
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
 		}
 	}
 }

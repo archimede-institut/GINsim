@@ -77,17 +77,7 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
     	
         this( false);
     }
-    
-    /**
-     * Return the Object Managers specialized for this class
-     * 
-     * @return a List of Object Managers
-     */
-    @Override
-    public List getSpecificObjectManager() {
-    	
-        return ReducedGraphFactory.getObjectManager();
-    }
+
     
     /**
      * Return 0 since no node order is defined on this king of graph
@@ -99,6 +89,22 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 		
 		return 0;
 	}
+    
+    /**
+     * Indicates if the given graph can be associated to the current one
+     * 
+     * @param graph the graph to associate to the current one
+     * @return true is association is possible, false if not
+     */
+    @Override
+    protected boolean isAssociationValid( Graph<?, ?> graph) {
+    	
+    	if( graph instanceof GsRegulatoryGraph){
+    		return true;
+    	}
+    	
+    	return false;
+    }
 
 
 	/*

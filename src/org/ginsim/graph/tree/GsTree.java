@@ -64,13 +64,6 @@ public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
 		}
 		return false;
 	}
-	
-	
-	/* TreeFactory mapping */
-
-    public List getSpecificObjectManager() {
-        return TreeFactory.getObjectManager();
-    }
     
     /* Save */
     

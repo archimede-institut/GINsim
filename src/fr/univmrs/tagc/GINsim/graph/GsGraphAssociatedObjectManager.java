@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 
 /**
@@ -24,8 +25,9 @@ public interface GsGraphAssociatedObjectManager {
      * 
      * @param out
      * @param graph
+     * @throws GsException 
      */
-    public void doSave(OutputStreamWriter out, Graph graph);
+    public void doSave(OutputStreamWriter out, Graph graph) throws GsException;
     /**
      * open associated object.
      * 

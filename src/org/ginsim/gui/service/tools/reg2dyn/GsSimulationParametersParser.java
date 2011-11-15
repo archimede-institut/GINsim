@@ -3,6 +3,7 @@ package org.ginsim.gui.service.tools.reg2dyn;
 import java.util.HashMap;
 import java.util.List;
 
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.xml.sax.Attributes;
@@ -48,7 +49,7 @@ public class GsSimulationParametersParser extends XMLHelper {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         paramLists = new GsSimulationParameterList(graph);
-        imanager = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, true);
+        imanager = (GsInitialStateList)  ObjectAssociationManager.getInstance().getObject( graph, GsInitialStateManager.key, true);
         initList = imanager.getInitialStates();
         inputList = imanager.getInputConfigs();
     }
@@ -125,7 +126,7 @@ public class GsSimulationParametersParser extends XMLHelper {
                 } else if (qName.equals("mutant")) {
                     String s = attributes.getValue("value");
                     if (!s.trim().equals("")) {
-                    	GsRegulatoryMutants mutantList = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, true);
+                    	GsRegulatoryMutants mutantList = (GsRegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, true);
                     	Object mutant = mutantList.get(s);
                         param.store.setObject(GsSimulationParameters.MUTANT, mutantList.get(s));
                         if (mutant == null) {

@@ -43,13 +43,13 @@ public class GsGNAMLExport extends GsAbstractExport {
         return null;
 	}
 
-	protected void doExport(GsExportConfig config) {
+	protected void doExport(GsExportConfig config) throws GsException{
 		this.config = config;
 		try {
 			run();
 		} catch (IOException e) {
 			e.printStackTrace();
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e);
 		}		
 	}
 

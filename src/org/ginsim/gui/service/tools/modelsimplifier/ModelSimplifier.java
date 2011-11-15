@@ -14,10 +14,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.LogicalFunctionBrowser;
 import org.ginsim.gui.service.tools.reg2dyn.GsReg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
@@ -329,9 +331,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
 		// mutants: only copy mutants that don't affect removed nodes
-		GsRegulatoryMutants mutants = (GsRegulatoryMutants)graph.getObject(GsMutantListManager.key, false);
+		GsRegulatoryMutants mutants = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, false);
 		if (mutants != null && mutants.getNbElements(null) > 0) {
-			GsRegulatoryMutants newMutants = (GsRegulatoryMutants)simplifiedGraph.getObject(GsMutantListManager.key, true);
+			GsRegulatoryMutants newMutants = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, GsMutantListManager.key, true);
 			GsRegulatoryMutantDef mutant, newMutant;
 			int mutantPos=0;
 			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
@@ -366,9 +368,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 		
 		// initial states
-        GsInitialStateList linit = (GsInitialStateList)graph.getObject(GsInitialStateManager.key, false);
+        GsInitialStateList linit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( graph, GsInitialStateManager.key, false);
 		if (linit != null && !linit.isEmpty()) {
-			GsInitialStateList newLinit = (GsInitialStateList)simplifiedGraph.getObject(GsInitialStateManager.key, true);
+			GsInitialStateList newLinit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, GsInitialStateManager.key, true);
             InitialStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
             InitialStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};
 
@@ -395,10 +397,10 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 		
 		// priority classes definition and simulation parameters
-		GsSimulationParameterList params = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, false);
+		GsSimulationParameterList params = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, GsSimulationParametersManager.key, false);
 		if (params != null) {
 			PriorityClassManager pcman = params.pcmanager;
-			GsSimulationParameterList new_params = (GsSimulationParameterList)simplifiedGraph.getObject(GsSimulationParametersManager.key, true);
+			GsSimulationParameterList new_params = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, GsSimulationParametersManager.key, true);
 			PriorityClassManager new_pcman = new_params.pcmanager;
 			for (int i=2 ; i<pcman.getNbElements(null) ; i++) {
 				PriorityClassDefinition pcdef = (PriorityClassDefinition)pcman.getElement(null, i);

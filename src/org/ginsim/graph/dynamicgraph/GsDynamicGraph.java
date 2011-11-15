@@ -462,27 +462,25 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
         }
         return null;
     }
-
+    /**
+     * Indicates if the given graph can be associated to the current one
+     * 
+     * @param graph the graph to associate to the current one
+     * @return true is association is possible, false if not
+     */
+    @Override
     protected boolean isAssociationValid( Graph<?,?> graph) {
+    	
         if (graph == null) {
             return true;
         }
+        
         if (!(graph instanceof GsRegulatoryGraph)) {
             return false;
         }
         return GsRegulatoryGraph.associationValid((GsRegulatoryGraph)graph, this);
     }
-    
-    /**
-     * Return the Object Managers specialized for this class
-     * 
-     * @return a List of Object Managers
-     */
-    @Override
-    public List getSpecificObjectManager() {
-    	
-        return GsDynamicGraphFactory.getObjectManager();
-    }
+  
 
     // FIXME: move all this to a new GraphGUIHelper
 

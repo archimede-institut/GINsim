@@ -1,5 +1,6 @@
 package org.ginsim.graph;
 
+import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -21,6 +23,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
@@ -150,6 +153,17 @@ public class GraphManager {
     
     
     /**
+     * Return the list of registered graphs
+     * 
+     * @return
+     */
+	public Set getAllGraphs() {
+
+		return graphFilepath.keySet();
+	}
+    
+    
+    /**
      * Return the path of the file the graph has been loaded from or saved to (if it exists)
      * 
      * @param graph
@@ -225,25 +239,25 @@ public class GraphManager {
                 if (map == null) {
                 	// try to restore associated data ONLY if no subgraph is selected
                 	// TODO: need to load associated entry with subgraphs
-                	List v_omanager = graph.getObjectManagerList();
+                	List v_omanager = ObjectAssociationManager.getInstance().getObjectManagerList();
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
 	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
 	                        ze = f.getEntry((usePrefix ? AbstractGraphFrontend.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
-	                            graph.addObject(manager.getObjectName(), o);
+	                            ObjectAssociationManager.getInstance().addObject( manager.getObjectName(), o);
 	                        }
 	                    }
 	                }
-	                v_omanager = graph.getSpecificObjectManager();
+	                v_omanager = ObjectAssociationManager.getInstance().getObjectManagerList( graph.getClass());
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
 	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
 	                        ze = f.getEntry((usePrefix ? AbstractGraphFrontend.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
-	                            graph.addObject(manager.getObjectName(), o);
+	                            ObjectAssociationManager.getInstance().addObject(manager.getObjectName(), o);
 	                        }
 	                    }
 	                }
@@ -288,4 +302,6 @@ public class GraphManager {
 		// TODO : REFACTORING ACTION:
 		// TODO : What to do if the graph is used as an associated graph by another graph? Do we have to remove the association?
 	}
+
+
 }
