@@ -211,45 +211,6 @@ public interface GraphModel<V,E extends Edge<V>> {
      */
     public List<?> merge( Graph<V,E> graph);
     
-    
-    //----------------------   ASSOCIATED OBJECTS METHODS --------------------------------------------
-    
-    
-    /**
-     * Give access to the list of registered object managers
-     * 
-     * @return the list of registered object managers
-     */
-    public List<GsGraphAssociatedObjectManager> getObjectManagerList();
-    
-    
-    /**
-     * @return a vector of action related to this kind of graph.
-     */
-    public List getSpecificObjectManager();
-    
-    /**
-     * Allow to associate objects with a graph to retrieve them later.
-     *
-     * @see #getObject(Object)
-     * @see #removeObject(Object)
-     * @param key
-     * @param obj
-     */
-    public void addObject(Object key, Object obj);
-    
-    
-    /**
-     * Allow to associate objects with a graph to retrieve them later.
-     *
-     * @see #addObject(Object, Object)
-     * @param key
-     * @param create if true, a non-defined object will be created
-     * @return the associated object
-     */
-    public Object getObject( Object key, boolean create);
-    
-    
 	
     //----------------------   EVENT MANAGEMENT METHODS --------------------------------------------
 	

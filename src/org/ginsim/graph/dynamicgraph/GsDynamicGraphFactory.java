@@ -1,17 +1,8 @@
 package org.ginsim.graph.dynamicgraph;
 
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
 import org.mangosdk.spi.ProviderFor;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 
 /**
  * descriptor for dynamic (state transition) graphs.
@@ -21,8 +12,12 @@ public class GsDynamicGraphFactory implements GraphFactory {
 
     private static GsDynamicGraphFactory instance = null;
 	
-    private static List v_OManager;
-
+    public GsDynamicGraphFactory(){
+    	
+    	if( instance == null){
+    		instance = this;
+    	}
+    }
     
     /**
      * @return an instance of this graphDescriptor.
@@ -76,21 +71,5 @@ public class GsDynamicGraphFactory implements GraphFactory {
 		return new GsDynamicGraph();
 	}
 
-    /**
-     * @param manager
-     */
-    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
-        if (v_OManager == null) {
-            v_OManager = new Vector();
-        }
-        v_OManager.add(manager);
-    }
-    /**
-     * @return associated object manager
-     */
-    public static List getObjectManager() {
-    	
-        return v_OManager;
-    }
 
 }

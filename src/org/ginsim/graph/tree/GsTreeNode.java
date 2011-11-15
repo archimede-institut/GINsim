@@ -1,7 +1,10 @@
 package org.ginsim.graph.tree;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.service.export.Dotify;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -133,14 +136,14 @@ public class GsTreeNode implements Dotify {
 		if (!(other instanceof GsTreeNode)) return false;
 		return this.uid == ((GsTreeNode)other).uid;
 	}
-	public GsTreeNode deepCopy(GsGraphManager gm) {
+	public GsTreeNode deepCopy( GsTree gm) {
 		GsTreeNode self = new GsTreeNode(this);
 		Debugger.log(self);
 		gm.addVertex(self);
-		for (GsDirectedEdge<GsTreeNode> e: (List<GsDirectedEdge>)gm.getOutgoingEdges(this)) {
-			GsTreeNode target = e.getTarget().deepCopy(gm);
+		for (Edge<GsTreeNode> e: (Collection<Edge<GsTreeNode>>) gm.getOutgoingEdges(this)) {
+			GsTreeNode target = e.getTarget().deepCopy( gm);
 			gm.addVertex(target);
-			GsDirectedEdge<GsTreeNode> edge = new GsDirectedEdge<GsTreeNode>(self, target);
+			Edge<GsTreeNode> edge = new Edge<GsTreeNode>(self, target);
 			gm.addEdge(edge);
 		}
 		return self;

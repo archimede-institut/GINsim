@@ -9,6 +9,7 @@ import javax.swing.Action;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -31,11 +32,11 @@ import fr.univmrs.tagc.common.widgets.Frame;
 public class Reg2DynServiceGUI implements GsServiceGUI {
 
     static {
-        if (!GsRegulatoryGraphDescriptor.isObjectManagerRegistred(GsMutantListManager.key)) {
-            GsRegulatoryGraphDescriptor.registerObjectManager(new GsMutantListManager());
-        }
-        GsRegulatoryGraphDescriptor.registerObjectManager(new GsInitialStateManager());
-        GsRegulatoryGraphDescriptor.registerObjectManager(new GsSimulationParametersManager());
+    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( GsRegulatoryGraph.class, GsMutantListManager.key)){
+    		ObjectAssociationManager.getInstance().registerObjectManager(GsRegulatoryGraph.class, new GsMutantListManager());
+    	}
+        ObjectAssociationManager.getInstance().registerObjectManager( GsRegulatoryGraph.class, new GsInitialStateManager());
+        ObjectAssociationManager.getInstance().registerObjectManager( GsRegulatoryGraph.class, new GsSimulationParametersManager());
     }
     
 
@@ -109,7 +110,7 @@ class Reg2DynAction extends GsToolsAction {
 			mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
 		}
 
-		GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
+		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, GsSimulationParametersManager.key, true);
 		// TODO : Restore the 
 		//if (ref == 0 || ref == 1) {
 		if (batch) {

@@ -28,6 +28,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * february 2008 - april 2008 
  */
 public class CytoscapeExport extends GsAbstractExport {
+	
 	int EDGE_INHIBIT = 1;
 	int EDGE_ACTIVATE = 2;
 	int EDGE_UNDEFINED = 3;
@@ -43,13 +44,13 @@ public class CytoscapeExport extends GsAbstractExport {
 		filterDescr = "Cytoscape files";
 	}
 
-	protected void doExport(GsExportConfig config) {
+	protected void doExport(GsExportConfig config) throws GsException{
+		
 		this.config = config;
 		try {
 			run();
 		} catch (IOException e) {
-			e.printStackTrace();
-			GsEnv.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+			throw new GsException(GsException.GRAVITY_ERROR, e);
 		}
 	}
 	

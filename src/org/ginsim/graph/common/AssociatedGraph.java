@@ -23,6 +23,7 @@ public interface AssociatedGraph<AG extends Graph<AV, AE>, AV, AE extends Edge<A
     public AG getAssociatedGraph() throws GsException;
 
     
-    public String getAssociatedGraphID();
+    public String getAssociatedGraphID() throws GsException;
+    
     public void setAssociatedGraphID(String value);
 }

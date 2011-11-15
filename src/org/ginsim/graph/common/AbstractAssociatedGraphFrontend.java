@@ -72,7 +72,6 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
                 File f = new File( associatedID);
                 if (f.exists()) {
                     ag = (AG) GraphManager.getInstance().open(f);
-                    GsEnv.newMainFrame(ag);
                     setAssociatedGraph(ag);
                 } else {
                 	throw new GsException(GsException.GRAVITY_INFO, "STR_openAssociatedGraphFailed"+"\n"+associatedID);
@@ -93,28 +92,22 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
      * @return the ID (path) of the associated graph.
      */
 	@Override
-    public String getAssociatedGraphID() {
+    public String getAssociatedGraphID() throws GsException{
 		
         if (associatedGraph != null) {
             associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
             if (associatedID == null) {
-                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_save")), mainFrame);
-                return null;
+                throw new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_save"));
             }
         }
 
         if (associatedID != null) {
             File f = new File(associatedID);
             if (!f.exists() || !f.canRead()) {
-                GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_notfound")+associatedID), mainFrame);
-                associatedID = null;
+            	throw new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_notfound")+associatedID);
             }
         } else {
-            GsEnv.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_manual")), mainFrame);
-        }
-
-        if (associatedID == null) {
-            associatedID = GsOpenAction.selectFileWithOpenDialog( mainFrame);
+        	throw new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_manual"));
         }
 
         return associatedID;
@@ -127,10 +120,7 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
      * @param graph
      * @return true if this is a valid associated graph.
      */
-	private boolean isAssociationValid( Graph<?,?> graph) {
-    	
-        return false;
-    }
+	protected abstract boolean isAssociationValid( Graph<?,?> graph);
     
     /**
      * set the path to the associated graph.

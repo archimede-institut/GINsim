@@ -100,5 +100,5 @@ abstract public class GsAbstractExport<G extends Graph> implements GsPlugin  {
 		return null;
 	}
 
-	abstract protected void doExport(GsExportConfig<G> config);
+	abstract protected void doExport(GsExportConfig<G> config) throws GsException;
 }

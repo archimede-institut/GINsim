@@ -1,16 +1,9 @@
 package org.ginsim.graph.reducedgraph;
 
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 
 /**
  * descriptor for regulatoryGraph.
@@ -20,8 +13,12 @@ public class ReducedGraphFactory implements GraphFactory {
 
     private static GraphFactory instance = null;
     
-    private static List<GsGraphAssociatedObjectManager> v_OManager = null;
-    
+    public ReducedGraphFactory(){
+    	
+    	if( instance == null){
+    		instance = this;
+    	}
+    }
     
     /**
      * @return an instance of this graphDescriptor.
@@ -79,25 +76,7 @@ public class ReducedGraphFactory implements GraphFactory {
     }
 
 
-    /**
-     * @param manager
-     */
-    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
-        if (v_OManager == null) {
-            v_OManager = new Vector();
-        }
-        v_OManager.add(manager);
-    }
-    /**
-     * @return associates object managers
-     */
-    public static List getObjectManager() {
-        return v_OManager;
-    }
 
-	public ImageIcon getGraphIcon(int mode) {
-		return null;
-	}
 
 
 

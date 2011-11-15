@@ -84,20 +84,5 @@ public class TreeFactory implements GraphFactory {
     	return GsTreeParser.class;
     }
     
-    /**
-     * @param manager
-     */
-    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
-        if (v_OManager == null) {
-            v_OManager = new Vector();
-        }
-        v_OManager.add(manager);
-    }
-    /**
-     * @return associates object managers
-     */
-    public static Vector getObjectManager() {
-        return v_OManager;
-    }
 
 }

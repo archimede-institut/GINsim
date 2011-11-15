@@ -33,8 +33,6 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.OptionStore;
 
 abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, NotificationMessageHolder {
-
-    private static List<GsGraphAssociatedObjectManager> OBJECT_MANAGERS = null;
 	
 	private final GraphBackend<V,E> graphBackend;
 	private final GraphViewBackend viewBackend;
@@ -47,9 +45,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
-    
-    // The map linking objects associated to the Graph with their representative key
-    private Map<Object,Object> m_objects = null;
     
     // The mode the graph must use when saved
     private int saveMode;
@@ -584,139 +579,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 */
 	protected abstract void doSave(OutputStreamWriter osw, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException;
    
-	
-	// -------------------------  ASSOCIATED OBJECTS METHODS ---------------------------------
-	
-
-
-	/**
-     * Register a manager to open/save associated objects
-     *
-     * @param manager
-     */
-    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
-    	
-        if (OBJECT_MANAGERS == null) {
-        	OBJECT_MANAGERS = new Vector<GsGraphAssociatedObjectManager>();
-        }
-        OBJECT_MANAGERS.add( manager);
-    }
-    
-    
-    /**
-     * Give access to the list of registered object managers
-     * 
-     * @return the list of registered object managers
-     */
-    public List<GsGraphAssociatedObjectManager> getObjectManagerList() {
-    	
-        return OBJECT_MANAGERS;
-    }
-
-    /**
-     * Give access to the Object manager in charge of the given object
-     * 
-     * @return the Object manager in charge of the given object, null if no Manager is defined for this object
-     */
-    public GsGraphAssociatedObjectManager getObjectManager(Object key) {
-    	
-    	if (OBJECT_MANAGERS == null) {
-    		return null;
-    	}
-        for (int i=0 ; i < OBJECT_MANAGERS.size() ; i++) {
-        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager) OBJECT_MANAGERS.get(i);
-        	if (manager.getObjectName().equals( key)) {
-        		return manager;
-        	}
-        }
-        return null;
-    }
-    
-    
-    /**
-     * Allow to associate objects with a graph to retrieve them later.
-     * this (and <code>addObject(key, obj)</code>) makes it easy.
-     *
-     * @see #addObject(Object, Object)
-     * @param key
-     * @param create if true, a non-defined object will be created
-     * @return the associated object
-     */
-    public Object getObject( Object key, boolean create) {
-        if (m_objects == null) {
-        	if (create) {
-        		m_objects = new HashMap();
-        	} else {
-        		return null;
-        	}
-        }
-        Object ret = m_objects.get(key);
-        if (create && ret == null) {
-        	GsGraphAssociatedObjectManager manager = getObjectManager(key);
-        	if (manager == null) {
-        		manager = getSpecificObjectManager(key);
-        	}
-        	if (manager != null) {
-        		ret = manager.doCreate(this);
-        		addObject(key, ret);
-        	}
-        }
-        return ret;
-    }
-
-    /**
-     * Allow to associate objects with a graph to retrieve them later.
-     *
-     * @see #getObject(Object)
-     * @see #removeObject(Object)
-     * @param key
-     * @param obj
-     */
-    public void addObject(Object key, Object obj) {
-        if (m_objects == null) {
-            m_objects = new HashMap();
-        }
-        m_objects.put(key, obj);
-    }
-
-    /**
-     * remove an object previously associated to a graph with <code>addObject(Object, Object)</code>.
-     *
-     * @see #getObject(Object)
-     * @see #addObject(Object, Object)
-     * @param key
-     */
-    public void removeObject(Object key) {
-        if (m_objects == null) {
-            return;
-        }
-        m_objects.remove(key);
-    }
-    
-    
-    /**
-     * @return a vector of action related to this kind of graph.
-     */
-    abstract public List getSpecificObjectManager();
-    
-    
-    /**
-     * @param key
-     * @return the object manager associated with THIS kind of graph and to a given key
-     */
-    public GsGraphAssociatedObjectManager getSpecificObjectManager(Object key) {
-    	
-    	List<GsGraphAssociatedObjectManager> v_OManager = RegulatoryGraphFactory.getObjectManager();
-    	if (v_OManager == null) {
-    		return null;
-    	}
-        for (GsGraphAssociatedObjectManager manager: v_OManager) {
-        	if (manager.getObjectName().equals(key)) {
-        		return manager;
-        	}
-        }
-        return null;
-    }
 
     
 	// -------------------------  EVENT MANAGEMENT METHODS ---------------------------------

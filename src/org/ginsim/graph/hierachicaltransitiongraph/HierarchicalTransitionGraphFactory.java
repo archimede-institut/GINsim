@@ -1,23 +1,8 @@
 package org.ginsim.graph.hierachicaltransitiongraph;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.dynamicgraph.GsDynamicParser;
 import org.mangosdk.spi.ProviderFor;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * descriptor for hierarchical transition graphs.
@@ -26,8 +11,13 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 public class HierarchicalTransitionGraphFactory implements GraphFactory {
 	
     private static HierarchicalTransitionGraphFactory instance = null;
-	
-    private static List<GsGraphAssociatedObjectManager> v_OManager = null;
+    
+    public HierarchicalTransitionGraphFactory(){
+    	
+    	if( instance == null){
+    		instance = this;
+    	}
+    }
     
 	/**
      * @return an instance of this graphDescriptor.
@@ -80,22 +70,6 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory {
 		
 		return new GsHierarchicalTransitionGraph();
 	}
-    
-    /**
-     * @param manager
-     */
-    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
-        if (v_OManager == null) {
-            v_OManager = new Vector();
-        }
-        v_OManager.add(manager);
-    }
-    /**
-     * @return associates object managers
-     */
-    public static List getObjectManager() {
-        return v_OManager;
-    }
 
 
 }

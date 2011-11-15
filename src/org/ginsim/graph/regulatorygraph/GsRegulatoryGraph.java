@@ -20,8 +20,10 @@ import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.GUIManager;
 
+import fr.univmrs.tagc.GINsim.annotation.BiblioManager;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -44,7 +46,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 	public final static String zip_mainEntry = "regulatoryGraph.ginml";
 
     static {
-        RegulatoryGraphFactory.registerObjectManager(new GsMutantListManager());
+    	ObjectAssociationManager.getInstance().registerObjectManager( GsRegulatoryGraph.class, new GsMutantListManager());
+    	ObjectAssociationManager.getInstance().registerObjectManager( GsRegulatoryGraph.class,  new BiblioManager());
     }
 
     /**
@@ -453,17 +456,6 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 		}
 		return s;
 	}
-
-    /**
-     * Return the Object Managers specialized for this class
-     * 
-     * @return a List of Object Managers
-     */
-    @Override
-    public List getSpecificObjectManager() {
-    	
-        return RegulatoryGraphFactory.getObjectManager();
-    }
 
     protected Graph getCopiedGraph() {
     	

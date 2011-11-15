@@ -1,17 +1,9 @@
 package org.ginsim.graph.regulatorygraph;
 
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.annotation.BiblioManager;
-import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 
 /**
  * descriptor for regulatoryGraph.
@@ -20,15 +12,11 @@ import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 public class RegulatoryGraphFactory implements GraphFactory {
 
     private static RegulatoryGraphFactory instance = null;
-	
-    private static List<GsGraphAssociatedObjectManager> v_OManager = null;
-
-
-    public RegulatoryGraphFactory() {
+    
+    public RegulatoryGraphFactory(){
     	
-    	if (instance == null) {
+    	if( instance == null){
     		instance = this;
-    		registerObjectManager( new BiblioManager());
     	}
     }
     
@@ -88,46 +76,6 @@ public class RegulatoryGraphFactory implements GraphFactory {
     	return GsRegulatoryParser.class;
     }
 
-
-    /**
-     * @param manager
-     */
-    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
-        if (v_OManager == null) {
-            v_OManager = new Vector();
-        } else {
-            for (int i=0 ; i<v_OManager.size(); i++) {
-                if (((GsGraphAssociatedObjectManager)v_OManager.get(i)).getObjectName().equals(manager.getObjectName())) {
-                    return;
-                }            }
-        }
-        v_OManager.add(manager);
-    }
-
-    /**
-     * 
-     * @param key
-     * @return true if a manager with this name already exists
-     */
-    public static boolean isObjectManagerRegistred(String key) {
-        if (v_OManager == null) {
-            return false;
-        }
-        for (int i=0 ; i<v_OManager.size() ; i++) {
-            if (((GsGraphAssociatedObjectManager)v_OManager.get(i)).getObjectName().equals(key)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    /**
-     * @return associated specific objects manager
-     */
-    public static List<GsGraphAssociatedObjectManager> getObjectManager() {
-        return v_OManager;
-    }
-
-	
 
     
 }

@@ -1,21 +1,8 @@
 package org.ginsim.graph.dynamicalhierarchicalgraph;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * descriptor for dynamic hierarchical graphs.
@@ -25,8 +12,12 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory {
 	
     private static DynamicalHierarchicalGraphFactory instance = null;
     
-    private static List<GsGraphAssociatedObjectManager> v_OManager = null;
-
+    public DynamicalHierarchicalGraphFactory(){
+    	
+    	if( instance == null){
+    		instance = this;
+    	}
+    }
     
 	/**
      * @return an instance of this graphDescriptor.
@@ -80,24 +71,6 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory {
 		
 		return new GsDynamicalHierarchicalGraph();
 	}
-
-    
-    /**
-     * @param manager
-     */
-    public static void registerObjectManager(GsGraphAssociatedObjectManager manager) {
-        if (v_OManager == null) {
-            v_OManager = new Vector();
-        }
-        v_OManager.add(manager);
-    }
-    /**
-     * @return associates object managers
-     */
-    public static List getObjectManager() {
-    	
-        return v_OManager;
-    }
 
 
 }
