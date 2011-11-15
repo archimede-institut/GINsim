@@ -31,8 +31,11 @@ import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.jgraph.JGraph;
+import org.jgraph.event.GraphSelectionEvent;
+import org.jgraph.event.GraphSelectionListener;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
+import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
@@ -42,7 +45,7 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Debugger;
 
-public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphViewBackend {
+public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphViewBackend, GraphSelectionListener {
 
 	private final G graph;
 	private final JgraphtBackendImpl<V, E> backend;
@@ -70,6 +73,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		this.m_jgAdapter = new JGraphModelAdapter<V, E>(backend);
 		this.jgraph = new GsJgraph(m_jgAdapter);
 		jgraph.setEdgeLabelDisplayed(false);
+		jgraph.addGraphSelectionListener(this);
 		this.helper = helper;
 		backend.setGraphViewBackend(this);
 		
@@ -396,6 +400,26 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
     }
 
+	@Override
+	public void valueChanged(GraphSelectionEvent event) {
+		List<E> edges = new ArrayList<E>();
+		List<V> nodes = new ArrayList<V>();
+		
+		for (Object o: jgraph.getSelectionCells()) {
+			if (o instanceof DefaultEdge) {
+				edges.add((E)((DefaultEdge)o).getUserObject());
+			} else if (o instanceof DefaultGraphCell) {
+				nodes.add((V)((DefaultGraphCell)o).getUserObject());
+			} else {
+				System.err.println("Could not detect the selection: " + o);
+			}
+		}
+
+		// FIXME: finish selection propagation
+		for (GraphGUIListener<G, V, E> listener: listeners) {
+			listener.graphSelectionChanged(this);
+		}
+	}
 }
 
 enum GUIProperties {

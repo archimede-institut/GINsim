@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.gui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -28,6 +29,8 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.shell.editpanel.EditTab;
+import org.ginsim.gui.shell.editpanel.SelectionType;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
@@ -39,7 +42,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  * 	line color for edges
  * 	bg/fg color and shape for nodes
  */
-public class GsGraphicAttributePanel extends GsParameterPanel {
+public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab {
 
 	private static final long serialVersionUID = -1041894738941096989L;
 	
@@ -847,9 +850,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
 		return jCB_selectSize;
 	}
 
-	/*
-	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
-	 */
+	@Override
 	public void setEditedItem(Object obj) {
         allDisabled();
         if (obj == null) {
@@ -1091,4 +1092,24 @@ public class GsGraphicAttributePanel extends GsParameterPanel {
         jTF_height.setText(""+vReader.getHeight());
         jTF_width.setText((""+vReader.getWidth()));
     }
+
+	@Override
+	public Component getComponent() {
+		return this;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Graphics";
+	}
+
+	@Override
+	public boolean isActive(SelectionType selection) {
+		if (selection == SelectionType.SEL_NONE) {
+			return false;
+		}
+
+		// TODO: follow selection
+		return true;
+	}
 }

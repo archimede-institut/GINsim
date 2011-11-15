@@ -33,12 +33,7 @@ public class TestRefactor {
 
 		lrg.addEdge(v1, v2);
 		lrg.addEdge(v1, v3);
-		
-		Class liste = getGraphInterface( GsReducedGraph.class);
-		System.out.println( "Liste = " + liste);
-		Class liste1 = getGraphInterface( GsHierarchicalTransitionGraph.class);
-		System.out.println( "Liste = " + liste1);
-		
+
 		GUIManager.getInstance().newFrame(lrg);
 	}
 

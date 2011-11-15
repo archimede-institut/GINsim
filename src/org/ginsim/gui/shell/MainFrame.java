@@ -20,6 +20,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
+import org.ginsim.gui.shell.editpanel.EditPanel;
 
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -66,6 +67,8 @@ public class MainFrame extends Frame implements NotificationSource {
 
 	public MainFrame(String id, int w, int h, GraphGUI graph_gui) {
 		super(id, w, h);
+        this.graphGUI = graph_gui;
+        
         setJMenuBar(menubar);
         
 		contentPanel = new JPanel();
@@ -91,8 +94,9 @@ public class MainFrame extends Frame implements NotificationSource {
 
         setContentPane(contentPanel);
         
-        this.graphGUI = graph_gui;
-        buildFrameContent( graph_gui);
+    	actionManager.buildActions( graphGUI, menubar, toolbar);
+    	fillGraphPane( graphGUI.getGraphComponent());
+    	
         setVisible(true);
 	}
 
@@ -201,7 +205,7 @@ public class MainFrame extends Frame implements NotificationSource {
 	 */
 	private JTabbedPane getEditTabbedPane() {
 	    if (editTabbedPane == null) {
-			editTabbedPane = new EditPanel();
+			editTabbedPane = new EditPanel( graphGUI);
 			editTabbedPane.setMinimumSize(new Dimension(0, 0));
 		}
 	    return editTabbedPane;
@@ -297,13 +301,6 @@ public class MainFrame extends Frame implements NotificationSource {
     	graphScrollPane.setViewportView( view);
     }
 
-    private void buildFrameContent( GraphGUI<?,?,?> gui) {
-    	
-    	actionManager.buildActions( gui, menubar, toolbar);
-    	fillGraphPane( gui.getGraphComponent());
-    	editTabbedPane.buildEditionPanels( gui);
-    }
-    
 	@Override
 	public NotificationMessage getTopNotification() {
 		// TODO Auto-generated method stub

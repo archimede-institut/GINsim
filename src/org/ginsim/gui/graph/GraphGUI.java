@@ -35,14 +35,14 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	public JMenu getViewMenu(JMenu layoutMenu);
 
 	/**
-	 * @return the list of selected vertices
+	 * @return the list of selected vertices or null
 	 */
 	public Collection<V> getSelectedVertices();
 	/**
-	 * @return the list of selected edges
+	 * @return the list of selected edges or null
 	 */
 	public Collection<E> getSelectedEdges();
-
+	
 	public GUIEditor<G> getMainEditionPanel();
 
 	public String getEditingTabLabel();
@@ -50,7 +50,7 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	public GUIEditor<V> getNodeEditionPanel();
 
 	public GUIEditor<E> getEdgeEditionPanel();
-	
+
 	public JPanel getInfoPanel();
 
 	public EditActionManager getEditActionManager();

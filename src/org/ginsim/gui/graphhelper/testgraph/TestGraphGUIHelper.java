@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.testGraph.TestEdge;
 import org.ginsim.graph.testGraph.TestGraph;
@@ -27,7 +28,9 @@ public class TestGraphGUIHelper implements GraphGUIHelper<TestGraph, TestVertex,
 
 	@Override
 	public GUIEditor<TestGraph> getMainEditionPanel(TestGraph graph) {
-		return new TestGraphEditionPanel();
+		TestEditionPanel<TestGraph> panel = new TestEditionPanel("Graph");
+		panel.setEditedItem(graph);
+		return panel;
 	}
 
 	@Override
@@ -37,12 +40,12 @@ public class TestGraphGUIHelper implements GraphGUIHelper<TestGraph, TestVertex,
 
 	@Override
 	public GUIEditor<TestVertex> getNodeEditionPanel(TestGraph graph) {
-		return new TestVertexEditionPanel();
+		return new TestEditionPanel<TestVertex>("Node");
 	}
 
 	@Override
 	public GUIEditor<TestEdge> getEdgeEditionPanel(TestGraph graph) {
-		return new TestEdgeEditionPanel();
+		return new TestEditionPanel<TestEdge>("Edge");
 	}
 	
 	@Override
@@ -62,6 +65,16 @@ public class TestGraphGUIHelper implements GraphGUIHelper<TestGraph, TestVertex,
 		actions.add(new AddTestVertexAction(graph, "+ TV", reader));
 		actions.add(new AddTestEdgeAction(graph, "+ TE"));
 		return actions;
+	}
+
+	@Override
+	public FileFilter getFileFilter() {
+		return null;
+	}
+
+	@Override
+	public JPanel getSaveOptionPanel(TestGraph graph) {
+		return null;
 	}
 }
 
