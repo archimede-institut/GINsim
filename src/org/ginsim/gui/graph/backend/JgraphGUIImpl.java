@@ -286,8 +286,8 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
 	@Override
 	public boolean isEditAllowed() {
-		// TODO: block edit
-		return true;
+		
+		return GUIManager.getInstance().isEditAllowed( graph);
 	}
 
 	@Override
