@@ -89,7 +89,7 @@ public class RegulatoryEdgeEditor extends ObjectEditor<GsRegulatoryMultiEdge> {
 	public Object getRawValue(int prop) {
 		switch (prop) {
 			case ANNOTATION:
-				return edge.annotation;
+				return edge.getAnnotation();
 			case EDGES:
 				return edgeList;
 			case EDGE:

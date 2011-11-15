@@ -29,7 +29,7 @@ public class GsSimulationParametersManager implements GsGraphAssociatedObjectMan
 
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
         GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
-        List nodeOrder = graph.getNodeOrder();
+        List nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }

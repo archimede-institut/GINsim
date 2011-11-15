@@ -9,8 +9,6 @@ import org.ginsim.gui.shell.editpanel.SelectionType;
 /**
  * Manage the selection for a GraphGUI
  * 
- *   TODO: add methods to change the selection
- * 
  * @author Aurelien Naldi
  *
  * @param <V>
@@ -96,6 +94,14 @@ public class GraphSelection<V, E extends Edge<V>> {
 			return SelectionType.SEL_MULTIPLE;
 		}
 		return SelectionType.SEL_MULTIPLE;
+	}
+
+	
+	
+	
+	// TODO: add methods to change the selection
+	public void selectVertices(List l) {
+		System.err.println("Select vertices not implemented");
 	}
 	
 	

@@ -25,6 +25,10 @@ public class GsRegulatoryEdge {
 		return clone;
 	}
 	
+	public Annotation getAnnotation() {
+		return annotation;
+	}
+	
 	public byte getMin() {
 		return threshold;
 	}

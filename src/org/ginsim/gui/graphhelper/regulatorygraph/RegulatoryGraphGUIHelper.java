@@ -83,6 +83,12 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGrap
 
 		return ffilter;
 	}
+
+	@Override
+	public JPanel getSaveOptionPanel(GsRegulatoryGraph graph) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	// FIXME: option panel?
 //	private JPanel getOptionPanel() {

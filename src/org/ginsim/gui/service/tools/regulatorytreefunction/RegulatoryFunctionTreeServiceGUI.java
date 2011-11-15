@@ -73,7 +73,7 @@ class RegulatoryFunctionTreeAction extends GsToolsAction {
 	private Integer getSelectedVertex(GsRegulatoryGraph regGraph) {
 		
 		GsRegulatoryVertex selectedNode = null;
-		Collection<?> vertices = gui.getSelectedVertices();
+		Collection<?> vertices = gui.getSelection().getSelectedNodes();
 		if (vertices != null && vertices.size() > 0) {
 			selectedNode = (GsRegulatoryVertex) vertices.iterator().next();
 		} else {

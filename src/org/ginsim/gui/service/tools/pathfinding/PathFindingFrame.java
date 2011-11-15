@@ -296,7 +296,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	
 	private void getSelectionFromGraph(JTextField textField) {
 		GraphGUI<?, ?, ?> gui = GUIManager.getInstance().getGraphGUI(graph);
-		Collection<?> selected = gui.getSelectedVertices();
+		Collection<?> selected = gui.getSelection().getSelectedNodes();
 		if (selected.size() < 1) {
 			return;
 		}
