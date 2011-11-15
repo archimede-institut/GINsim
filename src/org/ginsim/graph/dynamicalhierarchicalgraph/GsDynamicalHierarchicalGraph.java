@@ -12,9 +12,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JPanel;
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
@@ -28,9 +25,7 @@ import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -39,7 +34,6 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 
 	public final static String zip_mainEntry = "dynamicalHierarchicalGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
-	private JPanel optionPanel = null;
 	
 	
 	private byte[] childsCount = null;
@@ -79,28 +73,8 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
         GsDynamicalHierarchicalParser parser = new GsDynamicalHierarchicalParser();
         parser.parse(file, map, this);
 	}
-
-
-	/* Files */
 	
-	protected JPanel doGetFileChooserPanel() {
-		return getOptionPanel();
-	}
-	private JPanel getOptionPanel() {
-		if (optionPanel == null) {
-            Object[] t_mode = { Translator.getString("STR_saveNone"),
-                    Translator.getString("STR_savePosition"),
-                    Translator.getString("STR_saveComplet") };
-            optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
-		}
-		return optionPanel ;
-	}
-	
-	protected FileFilter doGetFileFilter() {
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-		return ffilter;
-	}
+
 
 	
 	/* DynamicalHierarchicalGraphFactory mapping */
@@ -111,15 +85,15 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
     
     /* Save */
     
-	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<GsDynamicalHierarchicalNode> vertices, Collection<Edge<GsDynamicalHierarchicalNode>> edges, int mode) throws GsException {
 	       try {
 	            XMLWriter out = new XMLWriter(os, dtdFile);
 		  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 				out.write("\t<graph id=\"" + graphName + "\"");
 				out.write(" class=\"dynamicalHierarchical\"");
 				out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
-				saveNode(out, mode, selectedOnly);
-				saveEdge(out, mode, selectedOnly);
+				saveNode(out, mode, vertices);
+				saveEdge(out, mode, edges);
 	            if (graphAnnotation != null) {
 	            	graphAnnotation.toXML(out, null, 0);
 	            }
@@ -137,13 +111,10 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 	        }
 	}
 	
-    private void saveEdge(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-        Iterator it;
-        if (selectedOnly) {
-        		it = graphManager.getFullySelectedEdgeIterator();
-        } else {
-        		it = getEdges().iterator();
-        }
+    private void saveEdge(XMLWriter out, int mode, Collection<Edge<GsDynamicalHierarchicalNode>> edges) throws IOException {
+    	
+        Iterator<Edge<GsDynamicalHierarchicalNode>> it = edges.iterator();
+
         while (it.hasNext()) {
         	Object o_edge = it.next();
         	if (o_edge instanceof GsDirectedEdge) {
@@ -161,13 +132,10 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, boolean selectedOnly) throws IOException {
-    	Iterator it;
-    	if (selectedOnly) {
-    		it = graphManager.getSelectedVertexIterator();
-    	} else {
-    		it = getVertices().iterator();
-    	}
+    private void saveNode(XMLWriter out, int mode, Collection<GsDynamicalHierarchicalNode> vertices) throws IOException {
+    	
+    	Iterator<GsDynamicalHierarchicalNode> it = vertices.iterator();
+
     	GsVertexAttributesReader vReader = getVertexAttributeReader();
         while (it.hasNext()) {
         	GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode)it.next();

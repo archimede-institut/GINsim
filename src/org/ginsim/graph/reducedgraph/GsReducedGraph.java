@@ -36,7 +36,6 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReducedData, Edge<GsNodeReducedData>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
 	private ReducedParameterPanel parameterPanel = null;
-    private JPanel optionPanel = null;
 
     public static final String zip_mainEntry = "connectedComponent.ginml";
     
@@ -69,7 +68,7 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 	 */
 	public GsReducedGraph( boolean parsing) {
 		
-        super( ReducedGraphFactory.getInstance(), parsing);
+        super( parsing);
 	}
 	/**
      * 
@@ -105,7 +104,7 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 	/*
 	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
 	 */
-	protected void doSave(OutputStreamWriter os, int mode, String dtd_file, Collection<GsNodeReducedData> vertices, Collection<Edge<GsNodeReducedData>> edges) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<GsNodeReducedData> vertices, Collection<Edge<GsNodeReducedData>> edges, int mode) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, dtd_file);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -243,12 +242,6 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
         return map;
     }
 
-    
-    // FIXME: move all this to the GUI Helper
-
-	protected FileFilter doGetFileFilter() {
-		return null;
-	}
 
 	public GsParameterPanel getEdgeAttributePanel() {
 		return null;
@@ -261,17 +254,4 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 		return parameterPanel;
 	}
 
-	protected JPanel doGetFileChooserPanel() {
-		return getOptionPanel();
-	}
-    
-	private JPanel getOptionPanel() {
-		if (optionPanel == null) {
-            Object[] t_mode = { Translator.getString("STR_saveNone"), 
-                    Translator.getString("STR_savePosition"), 
-                    Translator.getString("STR_saveComplet") };
-            optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
-		}
-		return optionPanel;
-	}
 }

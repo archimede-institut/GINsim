@@ -57,11 +57,6 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
         associated_graph.addGraphChangedListener(this);
     }
 	
-	public <C> C createGraph( C classe){
-		
-		classe.
-	}
-	
     /**
      * @return the graph associated with this one.
      */
@@ -69,13 +64,14 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
     public AG getAssociatedGraph() throws GsException{
 
         if ( associatedGraph == null && getAssociatedGraphID() != null) {
-            AG ag = (AG) GsEnv.getRegistredGraph( associatedID);
+        	
+            AG ag = (AG) GraphManager.getInstance().getGraphFromPath( associatedID);
             if (ag != null) {
                 setAssociatedGraph( ag);
             } else {
-                File f = new File(associatedID);
+                File f = new File( associatedID);
                 if (f.exists()) {
-                    ag = (AG) GsGinsimGraphDescriptor.getInstance().open(f);
+                    ag = (AG) GraphManager.getInstance().open(f);
                     GsEnv.newMainFrame(ag);
                     setAssociatedGraph(ag);
                 } else {
@@ -98,6 +94,7 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
      */
 	@Override
     public String getAssociatedGraphID() {
+		
         if (associatedGraph != null) {
             associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
             if (associatedID == null) {

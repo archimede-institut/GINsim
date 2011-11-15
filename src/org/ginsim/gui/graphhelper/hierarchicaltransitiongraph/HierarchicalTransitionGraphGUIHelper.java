@@ -7,6 +7,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
@@ -14,6 +15,9 @@ import org.ginsim.gui.service.tools.decisionanalysis.GsDecisionOnEdge;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
+import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.widgets.Frame;
 
 /**
  * @author spinelli
@@ -37,6 +41,25 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<GsHi
 
 		return ffilter;
 	}
+	
+	/**
+	 * Create a panel containing the option for graph saving 
+	 * 
+	 * @param graph the edited graph
+	 */
+	@Override
+	public JPanel getSaveOptionPanel( GsHierarchicalTransitionGraph graph) {
+		
+		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
+		
+		Object[] t_mode = { Translator.getString("STR_saveNone"),
+							Translator.getString("STR_savePosition"),
+							Translator.getString("STR_saveComplet") };
+		JPanel optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, graph_frame != null ? 2 : 0);
+		
+		return optionPanel ;
+	}
+
 
 	@Override
 	public GUIEditor<GsHierarchicalTransitionGraph> getMainEditionPanel( GsHierarchicalTransitionGraph graph) {

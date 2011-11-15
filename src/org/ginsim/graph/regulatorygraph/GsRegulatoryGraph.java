@@ -188,7 +188,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	return obj;
     }
 
-    protected void doSave( OutputStreamWriter os, int mode, String dtd_file, List<GsRegulatoryVertex> vertices, List<GsRegulatoryMultiEdge> edges) throws GsException {
+	@Override
+    protected void doSave( OutputStreamWriter os, Collection<GsRegulatoryVertex> vertices, Collection<GsRegulatoryMultiEdge> edges, int mode) throws GsException {
     	try {
             XMLWriter out = new XMLWriter(os, dtd_file);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -214,7 +215,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(XMLWriter out, int mode, List<GsRegulatoryMultiEdge> edges) throws IOException {
+    private void saveEdge(XMLWriter out, int mode, Collection<GsRegulatoryMultiEdge> edges) throws IOException {
     	
         Iterator<GsRegulatoryMultiEdge> it = edges.iterator();
 
@@ -241,7 +242,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, List<GsRegulatoryVertex> vertices) throws IOException {
+    private void saveNode(XMLWriter out, int mode, Collection<GsRegulatoryVertex> vertices) throws IOException {
     	
     	Iterator<GsRegulatoryVertex> it = vertices.iterator();
     	
@@ -632,9 +633,11 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 		
 		return getNodeOrder();
 	}
+	
 	public OmddNode[] getParametersForSimulation(boolean focal) {
 		
 		return getAllTrees(focal);
 	}
+
 
 }

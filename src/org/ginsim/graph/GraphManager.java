@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.zip.ZipEntry;
@@ -157,6 +158,26 @@ public class GraphManager {
     public String getGraphPath( Graph graph){
     	
     	return graphFilepath.get( graph);
+    }
+    
+    /**
+     * Return the graph associated to the given file path, if it exists
+     * 
+     * @param path the file path associated to the desired graph
+     * @return the graph associated to the given file path, if it exists, null if not
+     */
+    public Graph getGraphFromPath( String path){
+    	
+    	if( path != null){
+	    	for (Iterator<Entry<Graph,String>> iterator = graphFilepath.entrySet().iterator(); iterator.hasNext();) {
+	    		Entry<Graph,String> entry = iterator.next();
+				if( path.equals( entry.getValue())){
+					return entry.getKey();
+				}
+			}
+    	}
+    	
+    	return null;
     }
     
 

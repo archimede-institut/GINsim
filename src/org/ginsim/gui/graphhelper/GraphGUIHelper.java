@@ -89,4 +89,11 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 */
 	public FileFilter getFileFilter();
 	
+	/**
+	 * Create a panel containing the option for graph saving 
+	 * 
+	 * @param graph the edited graph
+	 */
+	public JPanel getSaveOptionPanel( G graph);
+	
 }

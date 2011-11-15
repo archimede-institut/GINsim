@@ -4,10 +4,8 @@ import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.AbstractGraphFrontend;
@@ -18,11 +16,8 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.regulatorytreefunction.GsTreeActionPanel;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> {
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
@@ -42,8 +37,6 @@ public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
 		}
 	}
 	
-	
-	private JPanel optionPanel = null;
 	
 	private GsRegulatoryGraph regGraph = null;
 	
@@ -71,28 +64,6 @@ public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
 		}
 		return false;
 	}
-
-
-	
-	/* FILE handling */
-	protected JPanel doGetFileChooserPanel() {
-		return getOptionPanel();
-	}
-	private JPanel getOptionPanel() {
-		if (optionPanel == null) {
-            Object[] t_mode = { Translator.getString("STR_saveNone"),
-                    Translator.getString("STR_savePosition"),
-                    Translator.getString("STR_saveComplet") };
-            optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
-		}
-		return optionPanel ;
-	}
-	
-	protected FileFilter doGetFileFilter() {
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-		return ffilter;
-	}
 	
 	
 	/* TreeFactory mapping */
@@ -106,9 +77,7 @@ public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
 	protected void doSave(OutputStreamWriter os, int mode, boolean selectedOnly) throws GsException {
 
 	}
-	
 
-    
     /* edge and vertex panels */
     
 	public GsParameterPanel getEdgeAttributePanel() {
@@ -156,10 +125,19 @@ public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
 		
 	/* Getters/ Setters */
 
-	public int getMode() { return mode; }
-	public void setMode(int treeMode) { this.mode = treeMode; }
-	public GsTreeParser getParser() {return parser; }
+	public int getMode() { 
+		return mode; 
+	}
+	
+	public void setMode(int treeMode) { 
+		this.mode = treeMode; 
+	}
+	public GsTreeParser getParser() {
+		return parser; 
+	}
+	
 	public void setParser(GsTreeParser parser) {
+		
 		this.parser = parser; 
 		parser.setTree(this);
 	}
@@ -182,14 +160,22 @@ public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
 		return regGraph.getNodeOrderSize();
 	}
 
-	/* Not used methods */
-	public 	  void 		removeEdge(GsDirectedEdge<GsTreeNode> obj) {}
-	public    void 		changeVertexId(Object vertex, String newId) throws GsException {}
-	protected void 		setCopiedGraph( Graph graph) {}
-	protected Graph 	getCopiedGraph() {return null;}
-	public Graph 	    getSubgraph(Collection vertex, Collection edges) {return null;}
-	protected GsDirectedEdge<GsTreeNode> 	doInteractiveAddEdge(GsTreeNode source, GsTreeNode target, int param) {return null;}
-	protected GsTreeNode 	doInteractiveAddVertex(int param) {return null;}
-	protected List		doMerge(Graph otherGraph) {return null;}
-	public	  Vector 	searchNodes(String regexp) {return null;}
+	@Override
+	public void doSave(OutputStreamWriter osw, Collection<GsTreeNode> vertices,
+			Collection<Edge<GsTreeNode>> edges, int saveMode) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	protected List<?> doMerge(Graph<GsTreeNode, Edge<GsTreeNode>> graph) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Graph<GsTreeNode, Edge<GsTreeNode>> getSubgraph(
+			Collection<GsTreeNode> vertex, Collection<Edge<GsTreeNode>> edges) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

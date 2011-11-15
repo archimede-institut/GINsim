@@ -114,8 +114,9 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	public void createDiagramFromOmdd(OmddNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
-		tree.root = _createDiagramFromOmdd(root, 0, currentWidthPerDepth, graphManager.getEdgeAttributesReader());
+		tree.root = _createDiagramFromOmdd(root, 0, currentWidthPerDepth, tree.getEdgeAttributeReader());
 	}
+	
 	private GsTreeNode _createDiagramFromOmdd(OmddNode o, int lastLevel, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
 		GsTreeNode treeNode;
 		int mult;
@@ -169,7 +170,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	public void createTreeFromOmdd(OmddNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
-		tree.root = (GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, graphManager.getEdgeAttributesReader()).get(0);
+		tree.root = (GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0);
 	}
 	private List _createTreeFromOmdd(OmddNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
 		GsTreeNode treeNode = null;

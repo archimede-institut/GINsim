@@ -77,12 +77,6 @@ public class ReducedGraphFactory implements GraphFactory {
     	
     	return GsReducedGraphParser.class;
     }
-    
-    
-
-	public FileFilter getFileFilter() {
-		return null;
-	}
 
 
     /**

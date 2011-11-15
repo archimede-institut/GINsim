@@ -582,7 +582,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * @param edges		edges that should be saved (can not be null)
 	 * @param saveMode	save mode, will probably go away
 	 */
-   public abstract void doSave(OutputStreamWriter osw, Collection<V> vertices, Collection<E> edges, int saveMode);
+	protected abstract void doSave(OutputStreamWriter osw, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException;
    
 	
 	// -------------------------  ASSOCIATED OBJECTS METHODS ---------------------------------

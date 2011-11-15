@@ -12,7 +12,7 @@ import fr.univmrs.tagc.common.Tools;
 
 public abstract class GsTreeParser<V,E> {
 	public static final String PARAM_NODEORDER = "p_nodeOrder";
-	protected GsTree<V,E> tree;
+	protected GsTree tree;
 	protected List nodeOrder;
 	private Map parameters;
 

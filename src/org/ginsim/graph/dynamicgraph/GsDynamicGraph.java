@@ -123,7 +123,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	 */
 	public GsDynamicGraph( boolean parsing) {
 		
-        super(GsDynamicGraphFactory.getInstance(), parsing);
+        super( parsing);
         dashpattern = getEdgeAttributeReader().getPattern(1);
 	}
 
@@ -156,7 +156,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 		return null;
 	}
 
-	protected void doSave(OutputStreamWriter os, int mode, Collection<GsDynamicNode> nodes, Collection<Edge<GsDynamicNode>> edges) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<GsDynamicNode> nodes, Collection<Edge<GsDynamicNode>> edges, int mode) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");

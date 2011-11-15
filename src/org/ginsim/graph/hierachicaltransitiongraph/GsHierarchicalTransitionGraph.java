@@ -12,9 +12,6 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JPanel;
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
@@ -27,9 +24,7 @@ import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -52,7 +47,6 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 
 	public final static String zip_mainEntry = "hierarchicalTransitionGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
-	private JPanel optionPanel = null;
 	
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 	
@@ -188,22 +182,6 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 		return vertexPanel;
 	}
 	
-	protected JPanel doGetFileChooserPanel() {
-		if (optionPanel == null) {
-            Object[] t_mode = { Translator.getString("STR_saveNone"),
-                    Translator.getString("STR_savePosition"),
-                    Translator.getString("STR_saveComplet") };
-            optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
-		}
-		return optionPanel ;
-	}
-	
-	protected FileFilter doGetFileFilter() {
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-		return ffilter;
-	}
-	
 		
 /* **************** SAVE ************/	
 		
@@ -212,7 +190,7 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
     }
 
 	
-	protected void doSave(OutputStreamWriter os, int mode, Collection<GsHierarchicalNode> nodes, Collection<GsDecisionOnEdge> edges) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<GsHierarchicalNode> nodes, Collection<GsDecisionOnEdge> edges, int mode) throws GsException {
        try {
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");

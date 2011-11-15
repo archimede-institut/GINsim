@@ -1,4 +1,4 @@
-package org.ginsim.gui.graphhelper.tree;
+package org.ginsim.gui.graphhelper.reducedgraph;
 
 import java.util.List;
 
@@ -6,22 +6,22 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.tree.GsTree;
-import org.ginsim.graph.tree.GsTreeNode;
+import org.ginsim.graph.reducedgraph.GsNodeReducedData;
+import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GraphGUIHelper.class)
-public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<GsTreeNode>> {
+public class ReducedGraphGUIHelper implements GraphGUIHelper<GsReducedGraph, GsNodeReducedData, Edge<GsNodeReducedData>> {
 
+	
 	/**
 	 * Provide the file filter to apply to a file chooser
 	 * 
@@ -30,73 +30,66 @@ public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<Gs
 	@Override
 	public FileFilter getFileFilter() {
 		
-		GsFileFilter ffilter = new GsFileFilter();
-	    //ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-		return ffilter;
+		return null;
 	}
-	
+
 	/**
 	 * Create a panel containing the option for graph saving 
 	 * 
 	 * @param graph the edited graph
 	 */
 	@Override
-	public JPanel getSaveOptionPanel(GsTree graph) {
+	public JPanel getSaveOptionPanel(GsReducedGraph graph) {
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
-		Object[] t_mode = { Translator.getString("STR_saveNone"),
-							Translator.getString("STR_savePosition"),
-							Translator.getString("STR_saveComplet") };
+		Object[] t_mode = { Translator.getString("STR_saveNone"), 
+                    Translator.getString("STR_savePosition"), 
+                    Translator.getString("STR_saveComplet") };
         JPanel optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, graph_frame != null ? 2 : 0);
-		
-		return optionPanel ;
-	}
-	
-	protected FileFilter doGetFileFilter() {
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-		return ffilter;
+        
+		return optionPanel;
 	}
 
 	@Override
-	public GUIEditor<GsTree> getMainEditionPanel(GsTree graph) {
+	public GUIEditor<GsReducedGraph> getMainEditionPanel(GsReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getEditingTabLabel(GsTree graph) {
+	public String getEditingTabLabel(GsReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public GUIEditor<GsTreeNode> getNodeEditionPanel(GsTree graph) {
+	public GUIEditor<GsNodeReducedData> getNodeEditionPanel(GsReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public GUIEditor<Edge<GsTreeNode>> getEdgeEditionPanel(GsTree graph) {
+	public GUIEditor<Edge<GsNodeReducedData>> getEdgeEditionPanel(
+			GsReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JPanel getInfoPanel(GsTree graph) {
+	public JPanel getInfoPanel(GsReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Class<GsTree> getGraphClass() {
+	public Class<GsReducedGraph> getGraphClass() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<EditAction> getEditActions(GsTree graph) {
+	public List<EditAction> getEditActions(GsReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
