@@ -13,6 +13,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.stateinregulatorygraph.GsStateInRegGraph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -98,10 +99,10 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
      */
     private void initAnim() {
         // reset all node's color and save them in the hashmap
-        regGraph.addBlockClose(this);
-        regGraph.addBlockEdit(this);
-        dynGraph.addBlockClose(this);
-        dynGraph.addBlockEdit(this);
+        GUIManager.getInstance().addBlockClose(regGraph, this);
+        GUIManager.getInstance().addBlockEdit( regGraph, this);
+        GUIManager.getInstance().addBlockClose( dynGraph, this);
+        GUIManager.getInstance().addBlockEdit( dynGraph, this);
         colorizer = new GsStateInRegGraph(regGraph);
         dynGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
         ui = new GsAnimatorUI(frame, this);      
@@ -119,10 +120,10 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         revertPath(0);
         colorizer.restoreColorization();
         
-        regGraph.removeBlockClose(this);
-        regGraph.removeBlockEdit(this);
-        dynGraph.removeBlockClose(this);
-        dynGraph.removeBlockEdit(this);
+        GUIManager.getInstance().removeBlockClose( regGraph, this);
+        GUIManager.getInstance().removeBlockEdit( regGraph, this);
+        GUIManager.getInstance().removeBlockClose( dynGraph, this);
+        GUIManager.getInstance().removeBlockEdit( dynGraph, this);
         if (pathPlayer != null && pathPlayer.isAlive()) {
             pathPlayer.notify();
         }

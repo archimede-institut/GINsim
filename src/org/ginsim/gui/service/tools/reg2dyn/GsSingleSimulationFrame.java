@@ -87,7 +87,7 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 		super(regGraphFrame, "display.simulation", 800, 400);
 		this.regGraphFrame = regGraphFrame;
 		this.paramList = paramList;
-		paramList.graph.addBlockEdit(this);
+		GUIManager.getInstance().addBlockEdit( paramList.graph, this);
 		initialize();
 		this.setTitle(Translator.getString("STR_reg2dynRunningTitle"));
 		this.addWindowListener(new java.awt.event.WindowAdapter() { 
@@ -360,7 +360,7 @@ public class GsSingleSimulationFrame extends GsBaseSimulationFrame implements Li
 		if (isrunning) {
 			sim.interrupt();	
 		}
-		paramList.graph.removeBlockEdit(this);
+		GUIManager.getInstance().removeBlockEdit( paramList.graph, this);
 		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
 		OptionStore.setOption(id+".width", new Integer(getWidth()));
 		OptionStore.setOption(id+".height", new Integer(getHeight()));

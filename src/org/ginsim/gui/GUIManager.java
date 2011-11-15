@@ -1,6 +1,7 @@
 package org.ginsim.gui;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -188,6 +189,101 @@ public class GUIManager {
 		}
 	}
 	
+	
+	// ---------------------- METHODS ON BLOCKS MANAGEMENT -----------------------------------
+	
+	/**
+	 * block editing mode for the graph
+	 *
+	 * @param key
+	 */
+	public void addBlockEdit( Graph graph, Object key) {
+		
+		GUIObject obj = graphToGUIObject.get( graph);
+		
+		if( obj != null){
+			obj.addBlockEdit(key);
+		}
+	}
+
+	/**
+	 * Verify if edition is allowed on the graph
+	 * 
+	 * @return true if edit isn't blocked
+	 */
+	public boolean isEditAllowed( Graph graph) {
+		
+		GUIObject obj = graphToGUIObject.get( graph);
+		
+		if( obj != null){
+			return obj.isEditAllowed();
+		}
+		
+		return true;
+	}
+
+	/**
+	 * Remove a block on Edition
+	 * 
+	 * @param key
+	 */
+	public void removeBlockEdit( Graph graph, Object key) {
+		
+		GUIObject obj = graphToGUIObject.get( graph);
+		
+		if( obj != null){
+			obj.removeBlockEdit(key);
+		}
+	}
+	
+	
+	/**
+	 * Block closing of the graph
+	 *
+	 * @param key
+	 */
+	public void addBlockClose( Graph graph, Object key) {
+		
+		GUIObject obj = graphToGUIObject.get( graph);
+		
+		if( obj != null){
+			obj.addBlockClose(key);
+		}
+	}
+	
+    /**
+     * Verify if it is allowed to close the graph can be closed
+     * 
+     * @return true if closing this graph is allowed
+     */
+    public boolean canClose( Graph graph) {
+    	
+		GUIObject obj = graphToGUIObject.get( graph);
+		
+		if( obj != null){
+			return obj.isEditAllowed();
+		}
+		
+		return true;
+    }
+
+	/**
+	 * Remove a block on closing
+	 * 
+	 * @param key
+	 */
+	public void removeBlockClose ( Graph graph, Object key) {
+		
+		GUIObject obj = graphToGUIObject.get( graph);
+		
+		if( obj != null){
+			obj.removeBlockClose(key);
+		}
+	}
+
+
+	
+	
 	/**
 	 * Class containing the relationship between a Graph, its GraphGUI the corresponding Frame
 	 * 
@@ -199,7 +295,8 @@ public class GUIManager {
 		private Graph graph;
 		private GraphGUI graphGUI;
 		private Frame frame;
-		
+		private Vector<Object> blockEdit;
+		private Vector<Object> blockClose;
 		
 		public GUIObject( Graph graph, GraphGUI graph_gui, Frame frame){
 			
@@ -225,6 +322,93 @@ public class GUIManager {
 			
 			return graphGUI;
 		}
+		
+		/**
+		 * block editing mode for the graph
+		 *
+		 * @param key
+		 */
+		public void addBlockEdit(Object key) {
+			
+		    if (key == null) {
+		        return;
+		    }
+		    if (blockEdit == null) {
+		        blockEdit = new Vector<Object>();
+		    }
+		    blockEdit.add(key);
+		}
+
+		/**
+		 * Verify if edition is allowed on the graph
+		 * 
+		 * @return true if edit isn't blocked
+		 */
+		public boolean isEditAllowed() {
+			
+		    return blockEdit == null;
+		}
+
+		/**
+		 * Remove a block on Edition
+		 * 
+		 * @param key
+		 */
+		public void removeBlockEdit (Object key) {
+			
+		    if (blockEdit == null) {
+		        return;
+		    }
+
+		    blockEdit.remove(key);
+		    if (blockEdit.size() == 0) {
+		        blockEdit = null;
+		    }
+		}
+		
+		
+		/**
+		 * Block closing of the graph
+		 *
+		 * @param key
+		 */
+		public void addBlockClose(Object key) {
+			
+		    if (key == null) {
+		        return;
+		    }
+		    if (blockClose == null) {
+		        blockClose = new Vector<Object>();
+		    }
+		    blockClose.add(key);
+		}
+
+		/**
+		 * Remove a block on closing
+		 * 
+		 * @param key
+		 */
+		public void removeBlockClose (Object key) {
+			
+		    if (blockClose == null) {
+		        return;
+		    }
+
+		    blockClose.remove(key);
+		    if (blockClose.size() == 0) {
+		        blockClose = null;
+		    }
+		}
+
+	    /**
+	     * Verify if it is allowed to close the graph can be closed
+	     * 
+	     * @return true if closing this graph is allowed
+	     */
+	    public boolean canClose() {
+	    	
+	        return blockClose == null;
+	    }
 		
 	}
 

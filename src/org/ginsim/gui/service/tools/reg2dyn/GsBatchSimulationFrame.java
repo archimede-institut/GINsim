@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
@@ -46,7 +47,7 @@ public class GsBatchSimulationFrame extends GsBaseSimulationFrame {
     public GsBatchSimulationFrame(JFrame frame, GsSimulationParameterList paramList) {
         super(frame, "display.batchsimulation", 800, 400);
         this.paramList = paramList;
-        paramList.graph.addBlockEdit(this);
+        GUIManager.getInstance().addBlockEdit( paramList.graph, this);
         initialize();
         this.setTitle(Translator.getString("STR_reg2dynRunningTitle"));
         this.addWindowListener(new java.awt.event.WindowAdapter() { 
@@ -135,7 +136,7 @@ public class GsBatchSimulationFrame extends GsBaseSimulationFrame {
         if (sim != null) {
             sim.interrupt();    
         }
-        paramList.graph.removeBlockEdit(this);
+        GUIManager.getInstance().removeBlockEdit( paramList.graph, this);
         super.cancel();
     }
     
