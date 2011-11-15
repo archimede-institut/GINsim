@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -21,6 +20,8 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphSelection;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
@@ -135,8 +136,9 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			isColorized = false;
 		}
 		HashSet selectedNodes = new HashSet();
-		for (Iterator it = graph.getGraphManager().getSelectedVertexIterator(); it.hasNext();) {
-			selectedNodes.add(it.next());
+		GraphSelection<?, ?> selection = GUIManager.getInstance().getGraphGUI(graph).getSelection();
+		for (Object node: selection.getSelectedNodes()) {
+			selectedNodes.add(node);
 		}
 		if (selectedNodes.size() == 0) {
 			selectedNodes = null;

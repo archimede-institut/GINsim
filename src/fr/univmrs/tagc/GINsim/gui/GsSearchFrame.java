@@ -144,7 +144,7 @@ public class GsSearchFrame extends SimpleDialog {
 		for (int i = 0; i < t.length; i++) {
 			l.add(tableModel.getVertexAt(t[i]));
 		}
-		gui.selectVertices(l);
+		gui.getSelection().selectVertices(l);
 	}
 		
 	public void doClose() {

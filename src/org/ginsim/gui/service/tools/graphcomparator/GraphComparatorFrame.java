@@ -27,6 +27,7 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.OptionStore;
@@ -194,7 +195,6 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		Graph g1 = getGraph(g1_modelComboBox, g1_filepath);
 		Graph g2 = getGraph(g2_modelComboBox, g2_filepath);		
 		opt_display_graph = displayGraphCheckBox.getSelectedObjects() != null;//display the graph if displayGraphCheckBox is checked
-		GsMainFrame mainFrame = null;
 		Graph g = null;
 		
 		int g_type= getGraphsType(g1, g2);
@@ -207,14 +207,18 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
             return;
 		case GRAPH_TYPE_REGULATORY:
 			g = new GsRegulatoryGraph();
-			if (opt_display_graph) mainFrame = GsEnv.newMainFrame(g);
+			if (opt_display_graph) {
+				GUIManager.getInstance().newFrame(g);
+			}
 			gc = new RegulatoryGraphComparator(g1, g2, g);
 	        break;
 		case GRAPH_TYPE_DYNAMIC:
 			List nodeOrder = DynamicGraphComparator.getNodeOrder(g1, g2);
 			if (nodeOrder != null) {
 				g = new GsDynamicGraph(nodeOrder);
-				if (opt_display_graph) mainFrame = GsEnv.newMainFrame(g);
+				if (opt_display_graph) {
+					GUIManager.getInstance().newFrame(g);
+				}
 				gc = new DynamicGraphComparator(g1, g2, g);
 			} else {
 				Tools.error("The node orders are different, therefore the comparaison would surelly not make senses.");
@@ -227,7 +231,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		if (opt_display_graph) {
 			new GraphComparatorCaptionFrame( frame, gc.getDiffGraph(), mainFrame, gc);
 		} else {
-			GsEnv.whatToDoWithGraph(frame, gc.getDiffGraph(), false);
+			GUIManager.getInstance().whatToDoWithGraph(gc.getDiffGraph(), false);
 		}
 	}
 	

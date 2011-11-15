@@ -14,8 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;

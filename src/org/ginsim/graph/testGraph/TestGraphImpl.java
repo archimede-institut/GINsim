@@ -1,8 +1,10 @@
 package org.ginsim.graph.testGraph;
 
+import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.List;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Graph;
 
@@ -53,6 +55,13 @@ public class TestGraphImpl extends AbstractGraphFrontend<TestVertex, TestEdge> i
 		TestEdge edge = new TestEdge(source, target);
 		super.addEdge(edge);
 		return edge;
+	}
+
+	@Override
+	protected void doSave(OutputStreamWriter osw,
+			Collection<TestVertex> vertices, Collection<TestEdge> edges,
+			int saveMode) throws GsException {
+		System.err.println("Just a test graph, save is not implemented");
 	}
 
 }

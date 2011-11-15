@@ -64,6 +64,6 @@ class SBMLImportAction extends GsImportAction {
 		}
 		SBMLXpathParser parser = new SBMLXpathParser(filename);
 		Graph newGraph = parser.getGraph();
-		new GsWhatToDoFrame( frame, newGraph, true);
+		GUIManager.getInstance().whatToDoWithGraph(newGraph, true);
 	}
 }

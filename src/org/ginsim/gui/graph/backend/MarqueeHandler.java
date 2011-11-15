@@ -9,7 +9,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Vector;
 
 import org.ginsim.gui.graph.AddEdgeAction;
 import org.ginsim.gui.graph.AddVertexAction;
@@ -17,23 +16,18 @@ import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.EditMode;
 import org.jgraph.JGraph;
-import org.jgraph.event.GraphSelectionEvent;
-import org.jgraph.event.GraphSelectionListener;
 import org.jgraph.graph.BasicMarqueeHandler;
 import org.jgraph.graph.CellHandle;
 import org.jgraph.graph.CellView;
-import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge;
 import org.jgraph.graph.GraphConstants;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 
 /**
  * jgraph marquee handler
  */
 @SuppressWarnings("rawtypes")
-public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectionListener {
+public class MarqueeHandler extends BasicMarqueeHandler {
 	
 	private final JGraph jgraph;
 	private final JgraphGUIImpl graphUI;
@@ -53,7 +47,6 @@ public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectio
 		this.editManager = graphUI.getEditActionManager();
 		
 		jgraph.setMarqueeHandler(this);
-		jgraph.addGraphSelectionListener(this);
 	}
 	/**
 	 * 
@@ -253,23 +246,4 @@ public class MarqueeHandler extends BasicMarqueeHandler implements GraphSelectio
 			jgraph.getUI().paintCell(g, cell, r, true);
 		}
 	}
-	
-	@Override
-    public void valueChanged(GraphSelectionEvent e) {
-        Vector v_vertex = new Vector(1);
-        Vector v_edge = new Vector(1);
-        int nbVertex = 0;
-        int nbEdge = 0;
-        Object[] t_select = jgraph.getSelectionCells();
-        for (int i=0 ; i<t_select.length ; i++) {
-            if (t_select[i] instanceof DefaultEdge) {
-                v_edge.add(((DefaultEdge)t_select[i]).getUserObject());
-                nbEdge++;
-            } else if (t_select[i] instanceof DefaultGraphCell) {
-                v_vertex.add(((DefaultGraphCell)t_select[i]).getUserObject());
-                nbVertex++;
-            }
-        }
-        // graphUI.SelectionChanged(new GsGraphSelectionChangeEvent(v_edge, v_vertex));
-    }
 }
