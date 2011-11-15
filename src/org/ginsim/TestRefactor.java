@@ -6,6 +6,8 @@ import java.util.List;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.graph.testGraph.TestVertex;
@@ -25,14 +27,14 @@ public class TestRefactor {
 	 * @throws ClassNotFoundException 
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-		TestGraph lrg = new TestGraphImpl();
+		GsRegulatoryGraph lrg = new GsRegulatoryGraph();
 
-		TestVertex v1 = lrg.addVertex();
-		TestVertex v2 = lrg.addVertex();
-		TestVertex v3 = lrg.addVertex();
+		GsRegulatoryVertex v1 = lrg.addVertex();
+		GsRegulatoryVertex v2 = lrg.addVertex();
+		GsRegulatoryVertex v3 = lrg.addVertex();
 
-		lrg.addEdge(v1, v2);
-		lrg.addEdge(v1, v3);
+		lrg.addEdge(v1, v2, 1);
+		lrg.addEdge(v1, v3, -1);
 
 		GUIManager.getInstance().newFrame(lrg);
 	}

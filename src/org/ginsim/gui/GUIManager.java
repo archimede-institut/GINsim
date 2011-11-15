@@ -97,6 +97,7 @@ public class GUIManager {
 		}
 	
 
+		graphToGUIObject.put( graph, new GUIObject( graph, graphGUI, null));
 		return graphGUI;
 	}
 	
