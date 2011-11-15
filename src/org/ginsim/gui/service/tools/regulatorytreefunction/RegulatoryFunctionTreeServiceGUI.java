@@ -9,7 +9,11 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.graph.tree.GsTree;
+import org.ginsim.graph.tree.GsTreeParser;
+import org.ginsim.graph.tree.GsTreeParserFromRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsServiceGUI;
@@ -18,8 +22,6 @@ import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.regulatoryfunctiontree.RegulatoryFunctionTreeService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 @ProviderFor( GsServiceGUI.class)
 @GUIFor( RegulatoryFunctionTreeService.class)

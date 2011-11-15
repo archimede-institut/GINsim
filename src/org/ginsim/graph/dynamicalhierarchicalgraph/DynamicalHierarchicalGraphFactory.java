@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
@@ -19,12 +20,12 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 /**
  * descriptor for dynamic hierarchical graphs.
  */
+@ProviderFor( GraphFactory.class)
 public class DynamicalHierarchicalGraphFactory implements GraphFactory {
 	
     private static DynamicalHierarchicalGraphFactory instance = null;
     
     private static List<GsGraphAssociatedObjectManager> v_OManager = null;
-    private static GsFileFilter ffilter = null;
 
     
 	/**
@@ -37,14 +38,6 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory {
         }
         return instance;
     }
-
-	public FileFilter getFileFilter() {
-	    if (ffilter == null) {
-	        ffilter = new GsFileFilter();
-	        ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-	    }
-		return ffilter;
-	}
 
 	
     /**

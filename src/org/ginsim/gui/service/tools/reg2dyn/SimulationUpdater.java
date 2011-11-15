@@ -2,7 +2,8 @@ package org.ginsim.gui.service.tools.reg2dyn;
 
 import java.util.Iterator;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 

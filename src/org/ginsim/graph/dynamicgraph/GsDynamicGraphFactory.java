@@ -8,6 +8,7 @@ import javax.swing.filechooser.FileFilter;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -15,11 +16,11 @@ import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 /**
  * descriptor for dynamic (state transition) graphs.
  */
+@ProviderFor( GraphFactory.class)
 public class GsDynamicGraphFactory implements GraphFactory {
 
     private static GsDynamicGraphFactory instance = null;
 	
-    private static GsFileFilter ffilter = null;
     private static List v_OManager;
 
     
@@ -75,15 +76,6 @@ public class GsDynamicGraphFactory implements GraphFactory {
 		return new GsDynamicGraph();
 	}
 
-
-
-	public FileFilter getFileFilter() {
-	    if (ffilter == null) {
-	        ffilter = new GsFileFilter();
-	        ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
-	    }
-		return ffilter;
-	}
     /**
      * @param manager
      */

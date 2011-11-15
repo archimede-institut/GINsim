@@ -2,7 +2,6 @@ package org.ginsim.graph.regulatorygraph;
 
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public abstract class LogicalFunctionBrowser {

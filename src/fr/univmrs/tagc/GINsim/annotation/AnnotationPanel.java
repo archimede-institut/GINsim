@@ -12,7 +12,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;

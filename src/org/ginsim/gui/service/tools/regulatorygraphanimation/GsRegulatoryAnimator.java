@@ -12,6 +12,7 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.stateinregulatorygraph.GsStateInRegGraph;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
@@ -19,7 +20,6 @@ import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 /**
  * Main class of the animator plugin.

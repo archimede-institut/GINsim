@@ -3,6 +3,8 @@ package org.ginsim.gui.service.tools.connectivity;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import org.ginsim.graph.reducedgraph.GsNodeReducedData;
+
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 
 /**

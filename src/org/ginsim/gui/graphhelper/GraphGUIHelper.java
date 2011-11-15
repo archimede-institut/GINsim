@@ -3,6 +3,7 @@ package org.ginsim.gui.graphhelper;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
@@ -80,4 +81,12 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @return the list of actions or null if none are available
 	 */
 	public List<EditAction> getEditActions(G graph);
+	
+	/**
+	 * Provide the file filter to apply to a file chooser
+	 * 
+	 * @return the file filter to apply to a file chooser
+	 */
+	public FileFilter getFileFilter();
+	
 }

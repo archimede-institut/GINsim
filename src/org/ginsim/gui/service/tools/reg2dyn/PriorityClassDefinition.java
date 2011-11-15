@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.NamedObject;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;

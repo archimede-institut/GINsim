@@ -3,8 +3,9 @@ package org.ginsim.gui.service.tools.reg2dyn;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 

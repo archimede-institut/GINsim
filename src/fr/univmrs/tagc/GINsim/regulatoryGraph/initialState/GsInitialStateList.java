@@ -6,12 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 public class GsInitialStateList implements GsGraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 	GsRegulatoryGraph graph;

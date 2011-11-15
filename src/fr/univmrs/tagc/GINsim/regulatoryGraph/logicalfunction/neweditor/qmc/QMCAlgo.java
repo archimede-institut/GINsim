@@ -8,7 +8,8 @@ import java.util.Vector;
 
 import javax.swing.JProgressBar;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+
 import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class QMCAlgo implements ActionListener {

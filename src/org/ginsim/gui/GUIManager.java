@@ -5,9 +5,9 @@ import java.util.HashMap;
 import javax.swing.JOptionPane;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.AbstractGraphFrontend;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;

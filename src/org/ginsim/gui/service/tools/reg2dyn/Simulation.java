@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.GsSTGSimulationHelper;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.SimulationHelper;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;

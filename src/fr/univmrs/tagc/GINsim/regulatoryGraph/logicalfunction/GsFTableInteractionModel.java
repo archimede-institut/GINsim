@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
 
 public class GsFTableInteractionModel extends GsTableInteractionsModel {

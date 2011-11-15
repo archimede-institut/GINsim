@@ -9,9 +9,9 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNodeSet;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 

@@ -8,7 +8,8 @@ import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 

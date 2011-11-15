@@ -25,6 +25,8 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeTableBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
@@ -34,7 +36,6 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementTo
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DecoTree;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTable;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.common.widgets.GsButton;
 import fr.univmrs.tagc.common.widgets.GsPanel;
 

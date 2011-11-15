@@ -6,6 +6,9 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+
 
 public class RegulatoryEdgeCellEditor extends AbstractCellEditor implements TableCellEditor {
 	private static final long	serialVersionUID	= -2008594909104233122L;

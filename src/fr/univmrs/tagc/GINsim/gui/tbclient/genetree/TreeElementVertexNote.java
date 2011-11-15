@@ -4,8 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import tbrowser.ihm.widget.TBToggleButton;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class TreeElementVertexNote extends TreeElementDeco {

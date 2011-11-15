@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.regulatoryGraph;
+package org.ginsim.graph.regulatorygraph;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,11 +1,12 @@
-package org.ginsim.gui.service.tools.regulatorytreefunction;
+package org.ginsim.graph.tree;
 
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 public class GsTreeParserFromRegulatoryGraph extends GsTreeParserFromOmdd {
 	

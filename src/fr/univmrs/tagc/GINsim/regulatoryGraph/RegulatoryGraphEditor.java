@@ -4,6 +4,9 @@ import java.awt.GridBagConstraints;
 import java.util.Collection;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;

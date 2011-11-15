@@ -3,12 +3,12 @@ package org.ginsim.gui.service.tools.localgraph;
 import java.awt.Color;
 import java.util.Map;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationUpdater;
 
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.css.Style;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 public class LocalGraphSelector extends Selector {
 	public static final String IDENTIFIER = "interaction-analysis";

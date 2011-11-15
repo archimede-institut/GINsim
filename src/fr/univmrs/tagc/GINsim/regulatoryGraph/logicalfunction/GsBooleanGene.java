@@ -1,9 +1,9 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanData;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperand;
 

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.regulatoryGraph;
+package org.ginsim.graph.regulatorygraph;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 

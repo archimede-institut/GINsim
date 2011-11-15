@@ -1,6 +1,6 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 
 public class GsLogicalFunctionListElement implements Comparable {
   private GsRegulatoryMultiEdge edge;

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.regulatoryGraph;
+package org.ginsim.graph.regulatorygraph;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,16 +16,17 @@ import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
-import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraphFactory;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;

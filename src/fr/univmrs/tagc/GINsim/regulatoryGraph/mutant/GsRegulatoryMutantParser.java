@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**

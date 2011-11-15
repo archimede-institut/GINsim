@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.graph.AddEdgeAction;
 import org.ginsim.gui.graph.AddVertexAction;
 import org.ginsim.gui.graph.EditAction;
@@ -13,9 +17,7 @@ import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryEdgeEditor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryGraphEditor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryVertexEditor;
@@ -70,6 +72,16 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGrap
 	public JPanel getInfoPanel(GsRegulatoryGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+
+	@Override
+	public FileFilter getFileFilter() {
+	    
+		GsFileFilter ffilter = new GsFileFilter();
+		ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
+
+		return ffilter;
 	}
 	
 	// FIXME: option panel?

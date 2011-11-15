@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 public class LogicalParameterList extends ArrayList {
 	private static final long serialVersionUID = 5768653095418077753L;
 	private HashSet manualp, functionp;

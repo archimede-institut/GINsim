@@ -1,7 +1,8 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementDeco;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
 
 public class GsListInteraction {
 	private GsRegulatoryMultiEdge grme;

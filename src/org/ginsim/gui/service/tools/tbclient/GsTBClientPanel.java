@@ -32,6 +32,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import tbrowser.data.module.TBModule;
 import tbrowser.data.module.TBModuleData;
@@ -50,9 +53,6 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellRenderer;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeModel;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.TreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.TreeElementNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class GsTBClientPanel extends GsPanel implements GraphChangeListener, WindowListener {

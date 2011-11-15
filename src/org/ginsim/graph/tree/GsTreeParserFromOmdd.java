@@ -1,25 +1,20 @@
-package org.ginsim.gui.service.tools.regulatorytreefunction;
+package org.ginsim.graph.tree;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.tree.GsTree;
-import org.ginsim.graph.tree.GsTreeNode;
-import org.ginsim.gui.service.tools.circuit.OmsddNode;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.ColorPalette;
 
-/**
- * A treeParser for the context of functionality
- *
- */
-public class GsTreeParserFromCircuit extends GsTreeParser {
-	protected final static int debug = 1;
+public abstract class GsTreeParserFromOmdd extends GsTreeParser {
+	protected OmddNode root;
 	
 	
 	/**
@@ -54,60 +49,13 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 	 */
 	protected int max_depth;
 
-	protected OmsddNode root;
-	
-	public static final String PARAM_INITIALCIRCUITDESC = "pcirc_initialCircuitDescr";
-	public static final String PARAM_ALLCONTEXTS = "pcirc_allCircuits";
-	
-	protected List allCircuits;
-
-	public void init() {
-		allCircuits =  (List) getParameter(PARAM_ALLCONTEXTS);
-		root = (OmsddNode) getParameter(PARAM_INITIALCIRCUITDESC);
-		nodeOrder = (List)getParameter(PARAM_NODEORDER);
-
-		widthPerDepth = widthPerDepth_acc = realDetph = null;
-		total_levels = max_depth = 0;
-		max_terminal = 3;
-		initRealDepth(root);
-	}
-
-	
-	/**
-	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial vertex, assuming regGraph is defined
-	 * @param root
-	 */
-	public void initRealDepth(OmsddNode root) {
-		realDetph = new int[nodeOrder.size()+1]; //+1 for the leafs
-		_initRealDepth(root);
-		int next_realDepth = 0;
-		for (int i = 0; i < realDetph.length; i++) {
-			if (realDetph[i] == -1) {
-				total_levels++;
-				realDetph[i] = next_realDepth++;
-			} else realDetph[i] = -2;
-		}
-	}
-    public void _initRealDepth(OmsddNode o) {
-        if (o.next == null) {
-            return ;
-        }
-        realDetph[o.level] = -1;
-        for (int i = 0 ; i < o.next.length ; i++) {
-            _initRealDepth(o.next[i]);
-        }
-    }
-
-	
 
 	/**
 	 * Return the name of the node at level
 	 * @param level the level of the node
-	 * @return the name
+	 * @returnthe name
 	 */
-	protected String getNodeName(int level) {
-		return ((GsRegulatoryVertex)nodeOrder.get(level)).getId();
-	}
+	protected abstract String getNodeName(int level);
 	
 	public void parseOmdd() {
 		if (tree.getMode() == GsTree.MODE_TREE) {
@@ -163,12 +111,12 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		if (last_real != -1) widthPerDepth_acc[max_depth] = widthPerDepth_acc[last_real] * widthPerDepth[last_real];
 	}	
 	
-	public void createDiagramFromOmdd(OmsddNode root) {
+	public void createDiagramFromOmdd(OmddNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
-		tree.root = _createDiagramFromOmdd(root, 0, currentWidthPerDepth, tree.getEdgeAttributeReader());
+		tree.root = _createDiagramFromOmdd(root, 0, currentWidthPerDepth, graphManager.getEdgeAttributesReader());
 	}
-	private GsTreeNode _createDiagramFromOmdd(OmsddNode o, int lastLevel, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
+	private GsTreeNode _createDiagramFromOmdd(OmddNode o, int lastLevel, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
 		GsTreeNode treeNode;
 		int mult;
 		if (o.next == null) {
@@ -187,31 +135,43 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 			return treeNode;
 		}
 		
-		mult = jump(lastLevel, o.level, currentWidthPerDepth);
-
+		
+		mult = 1;
+		for (int j = lastLevel+1 ; (j < o.level && mult == 1) ; j++) { //For all the missing genes
+			if (realDetph[j] != -2) {
+				currentWidthPerDepth[j] += mult;
+				mult *= widthPerDepth[j];
+			}
+		}
+		
 		treeNode = new GsTreeNode(getNodeName(o.level), o.level, ++currentWidthPerDepth[o.level], GsTreeNode.TYPE_BRANCH); 
 		tree.addVertex(treeNode);
-	
+				
 		for (int i = 0 ; i < o.next.length ; i++) { //For all the children
 	    	GsTreeNode child = _createDiagramFromOmdd(o.next[i], o.level, currentWidthPerDepth, ereader);
 	    	linkNode(treeNode, child, i, ereader);
 	    }
 		
 		if (mult > 1) {
-			mult = jump(o.level, max_depth, currentWidthPerDepth);
+			mult = 1;
+			for (int j = o.level ; j < max_depth ; j++) { //For all the missing genes
+				if (realDetph[j] != -2) {
+					currentWidthPerDepth[j] += mult;
+					mult *= widthPerDepth[j];
+				}
+			}
 			if (mult > 1) {
 				currentWidthPerDepth[max_depth] += mult;
 			}
-		}
-	    return treeNode;
+		}	    return treeNode;
 	}
 	
-	public void createTreeFromOmdd(OmsddNode root) {
+	public void createTreeFromOmdd(OmddNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
-		tree.root = (GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0);
+		tree.root = (GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, graphManager.getEdgeAttributesReader()).get(0);
 	}
-	private List _createTreeFromOmdd(OmsddNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
+	private List _createTreeFromOmdd(OmddNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
 		GsTreeNode treeNode = null;
 		List parents = new ArrayList();
 		parents.add(parent);
@@ -264,14 +224,12 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 				currentNodes.add(treeNode);
 		
 				for (int j = 0 ; j < o.next.length ; j++) { //For all the children
-					if (o.next[j] != null) {
-				    	List childs = _createTreeFromOmdd(o.next[j], o.level, treeNode, j, currentWidthPerDepth, ereader);
-						if (childs != null) {
-							for (Iterator it2 = childs.iterator(); it2 .hasNext();) {
-								GsTreeNode child = (GsTreeNode) it2.next();
-								linkNode(treeNode, child, j, ereader);
-								
-							}
+			    	List childs = _createTreeFromOmdd(o.next[j], o.level, treeNode, j, currentWidthPerDepth, ereader);
+					if (childs != null) {
+						for (Iterator it2 = childs.iterator(); it2 .hasNext();) {
+							GsTreeNode child = (GsTreeNode) it2.next();
+							linkNode(treeNode, child, j, ereader);
+							
 						}
 					}
 			    }
@@ -293,7 +251,7 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		}
 	}
 
-	
+
 	private List addChildren(int j, int mult, List parents, int childIndex, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
 		List newParents = new ArrayList(mult);
 		
@@ -366,5 +324,4 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		if (node.getDepth() == GsTreeNode.LEAF_DEFAULT_DEPTH) return getWidthPerDepth_acc()[getMaxDepth()];
 		return getWidthPerDepth_acc()[node.getDepth()];
 	}
-
 }

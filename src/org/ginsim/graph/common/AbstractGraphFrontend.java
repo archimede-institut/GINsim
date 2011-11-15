@@ -1,4 +1,4 @@
-package org.ginsim.graph;
+package org.ginsim.graph.common;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,11 +18,10 @@ import java.util.zip.ZipOutputStream;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageHolder;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraphFactory;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;

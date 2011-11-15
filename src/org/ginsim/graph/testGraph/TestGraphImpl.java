@@ -3,7 +3,7 @@ package org.ginsim.graph.testGraph;
 import java.util.Collection;
 import java.util.List;
 
-import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Graph;
 
 /**

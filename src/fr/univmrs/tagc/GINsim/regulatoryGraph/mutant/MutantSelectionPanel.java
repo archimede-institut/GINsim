@@ -1,7 +1,8 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.mutant;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;

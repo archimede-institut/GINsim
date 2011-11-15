@@ -1,6 +1,6 @@
 package org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 public class NodeInfo {
 	

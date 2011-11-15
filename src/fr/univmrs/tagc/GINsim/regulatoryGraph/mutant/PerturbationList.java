@@ -3,7 +3,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.mutant;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 /**

@@ -1,4 +1,4 @@
-package org.ginsim.gui.service.tools.connectivity;
+package org.ginsim.graph.reducedgraph;
 
 import java.util.Iterator;
 import java.util.Set;

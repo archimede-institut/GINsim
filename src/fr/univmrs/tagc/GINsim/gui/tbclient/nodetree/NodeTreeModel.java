@@ -4,10 +4,11 @@ import java.awt.Color;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import fr.univmrs.tagc.GINsim.annotation.AnnotationLink;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class NodeTreeModel extends DTreeModel {

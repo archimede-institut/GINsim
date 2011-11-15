@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.reducedgraph.GsNodeReducedData;
+import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;

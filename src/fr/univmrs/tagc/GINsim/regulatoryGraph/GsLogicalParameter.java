@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.ginsim.graph.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;

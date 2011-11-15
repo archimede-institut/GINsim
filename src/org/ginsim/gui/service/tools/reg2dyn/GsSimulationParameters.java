@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.graph.GraphManager;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;

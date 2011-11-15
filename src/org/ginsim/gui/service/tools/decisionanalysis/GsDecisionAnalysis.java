@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationUpdater;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 /**
  * Labels a given set of edges from an HTG with the updated genes of their corresponding edges in the STG.

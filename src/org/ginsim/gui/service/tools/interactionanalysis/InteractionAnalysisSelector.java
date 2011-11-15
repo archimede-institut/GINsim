@@ -3,11 +3,12 @@ package org.ginsim.gui.service.tools.interactionanalysis;
 import java.awt.Color;
 import java.util.Map;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 public class InteractionAnalysisSelector extends Selector {

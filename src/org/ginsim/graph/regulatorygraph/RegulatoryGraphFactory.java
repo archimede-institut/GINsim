@@ -12,8 +12,6 @@ import org.mangosdk.spi.ProviderFor;
 import fr.univmrs.tagc.GINsim.annotation.BiblioManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryParser;
 
 /**
  * descriptor for regulatoryGraph.
@@ -21,9 +19,10 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryParser;
 @ProviderFor( GraphFactory.class)
 public class RegulatoryGraphFactory implements GraphFactory {
 
-    private static List<GsGraphAssociatedObjectManager> v_OManager = null;
-    private GsFileFilter ffilter;
     private static RegulatoryGraphFactory instance = null;
+	
+    private static List<GsGraphAssociatedObjectManager> v_OManager = null;
+
 
     public RegulatoryGraphFactory() {
     	
@@ -89,15 +88,6 @@ public class RegulatoryGraphFactory implements GraphFactory {
     	return GsRegulatoryParser.class;
     }
 
-
-	public FileFilter getFileFilter() {
-		if (ffilter == null) {
-			ffilter = new GsFileFilter();
-			ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-		}
-		return ffilter;
-
-	}
 
     /**
      * @param manager

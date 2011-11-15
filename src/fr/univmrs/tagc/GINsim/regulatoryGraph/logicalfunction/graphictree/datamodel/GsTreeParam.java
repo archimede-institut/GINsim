@@ -3,7 +3,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datam
 import java.util.Iterator;
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
+
 
 public class GsTreeParam extends GsTreeElement {
   private List edgeIndexes;

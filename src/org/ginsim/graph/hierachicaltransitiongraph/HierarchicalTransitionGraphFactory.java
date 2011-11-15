@@ -12,6 +12,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicParser;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
@@ -21,11 +22,11 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 /**
  * descriptor for hierarchical transition graphs.
  */
+@ProviderFor( GraphFactory.class)
 public class HierarchicalTransitionGraphFactory implements GraphFactory {
 	
     private static HierarchicalTransitionGraphFactory instance = null;
 	
-    private static GsFileFilter ffilter = null;
     private static List<GsGraphAssociatedObjectManager> v_OManager = null;
     
 	/**
@@ -79,18 +80,6 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory {
 		
 		return new GsHierarchicalTransitionGraph();
 	}
-	
-	
-
-	public FileFilter getFileFilter() {
-	    if (ffilter == null) {
-	        ffilter = new GsFileFilter();
-	        ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-	    }
-		return ffilter;
-	}
-	
-
     
     /**
      * @param manager

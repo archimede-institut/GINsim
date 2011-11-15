@@ -2,7 +2,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.models;
 
 import javax.swing.AbstractListModel;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+
 
 /**
  * model for the table displaying all directed edges of a multiedge

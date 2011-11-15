@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 /**
  * A Selector implementation for GINsim. It intend to be have the same usage than the HTML's CSS one.

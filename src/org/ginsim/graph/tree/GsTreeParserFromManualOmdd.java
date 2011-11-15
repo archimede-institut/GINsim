@@ -1,4 +1,4 @@
-package org.ginsim.gui.service.tools.regulatorytreefunction;
+package org.ginsim.graph.tree;
 
 import java.util.List;
 

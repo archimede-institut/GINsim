@@ -6,11 +6,11 @@ import java.util.Map;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
 public class HTGSimulationHelper  extends SimulationHelper {
 	protected GsHierarchicalNode node;

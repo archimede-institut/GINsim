@@ -3,7 +3,7 @@ package org.ginsim.gui.service.tools.stg2htg;
 import java.util.HashSet;
 import java.util.Vector;
 
-import org.ginsim.gui.service.tools.connectivity.GsNodeReducedData;
+import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 
 
 public class GsComponentVertex extends GsNodeReducedData {

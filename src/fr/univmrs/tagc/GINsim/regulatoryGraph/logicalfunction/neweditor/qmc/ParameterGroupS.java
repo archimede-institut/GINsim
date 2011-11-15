@@ -6,7 +6,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 
 public class ParameterGroupS {

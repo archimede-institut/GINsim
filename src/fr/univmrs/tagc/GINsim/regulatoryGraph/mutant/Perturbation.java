@@ -1,6 +1,7 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.mutant;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 

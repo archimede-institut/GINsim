@@ -27,6 +27,8 @@ import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import tbrowser.data.TBProbe;
 import tbrowser.data.module.TBModuleData;
@@ -36,8 +38,6 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeE
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementButton;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTable;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 import fr.univmrs.tagc.common.widgets.GsButton;
 import fr.univmrs.tagc.common.widgets.GsPanel;
 

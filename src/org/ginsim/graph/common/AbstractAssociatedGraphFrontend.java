@@ -1,11 +1,10 @@
-package org.ginsim.graph;
+package org.ginsim.graph.common;
 
 import java.io.File;
 import java.util.Collection;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.GraphManager;
 
 import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;

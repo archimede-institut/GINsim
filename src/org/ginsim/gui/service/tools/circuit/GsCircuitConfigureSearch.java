@@ -12,7 +12,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import fr.univmrs.tagc.common.datastore.models.MaxSpinModel;
 import fr.univmrs.tagc.common.datastore.models.MinMaxSpinModel;
 import fr.univmrs.tagc.common.datastore.models.MinSpinModel;

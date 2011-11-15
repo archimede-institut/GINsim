@@ -3,8 +3,9 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tr
 import java.util.Hashtable;
 import java.util.Vector;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 
 public class GsParamTreeNode implements GsParamTreeElement {
   private GsRegulatoryVertex vertex;

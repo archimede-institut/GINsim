@@ -6,9 +6,10 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryVertex;
 
 public class VertexNote extends DTreeElementToggleButton {
 	private String proto, value;

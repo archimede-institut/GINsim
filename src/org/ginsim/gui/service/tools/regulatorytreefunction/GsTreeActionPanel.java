@@ -13,6 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.ginsim.graph.tree.GsTree;
+import org.ginsim.graph.tree.GsTreeParser;
+import org.ginsim.graph.tree.GsTreeParserFromCircuit;
+import org.ginsim.graph.tree.GsTreeParserFromRegulatoryGraph;
 import org.ginsim.gui.service.tools.circuit.GsFunctionalityContext;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
