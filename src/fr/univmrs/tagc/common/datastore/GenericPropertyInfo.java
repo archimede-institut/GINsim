@@ -1,8 +1,10 @@
 package fr.univmrs.tagc.common.datastore;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 
@@ -68,14 +70,33 @@ public class GenericPropertyInfo {
 
 	public void build(GenericPropertyHolder panel) {
 		Class cl = GenericPropertyEditorPanel.getSupportClass(type);
-		ObjectPropertyEditorUI widget;
+		ObjectPropertyEditorUI widget = null;
 		try {
 			widget = (ObjectPropertyEditorUI)cl.newInstance();
+		} catch (Exception e) {}
+		
+		if (widget == null) {
+			// try to find a better constructor
+			Object[] args = editor.getArgs();
+			Constructor[] constructors = cl.getConstructors();
+			for (Constructor constructor: constructors) {
+				try {
+					widget = (ObjectPropertyEditorUI)constructor.newInstance(args);
+				} catch (Exception e) {
+					Debugger.log("Constructor failed: " + constructor + " for " + args);
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		if (widget != null) {
 			widget.setEditedProperty(this, panel);
 			editor.addListener(widget);
-		} catch (Exception e) {
-			System.out.println("how to deal with this: "+type);
-			e.printStackTrace();
+		} else {
+			Debugger.log("how to deal with this: "+type + " --> " + cl);
+			for (Object o: editor.getArgs()) {
+				System.err.println("  "+o);
+			}
 		}
 	}
 

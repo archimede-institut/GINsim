@@ -163,4 +163,10 @@ public class RegulatoryVertexEditor extends ObjectEditor<GsRegulatoryVertex> {
 		}
 		return null;
 	}
+
+	@Override
+	public Object[] getArgs() {
+		return new Object[] {graph};
+	}
+
 }

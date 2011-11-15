@@ -74,5 +74,9 @@ public abstract class ObjectEditor<T> implements GUIEditor<T> {
 	public Component getComponent() {
 		return new GenericPropertyEditorPanel(this);
 	}
+	
+	public Object[] getArgs() {
+		return null;
+	}
 
 }
