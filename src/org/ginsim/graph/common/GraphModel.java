@@ -29,21 +29,21 @@ public interface GraphModel<V,E extends Edge<V>> {
 
 	// TODO: this should be done in an enum
     /**  an edged has been added */
-    public static final int CHANGE_EDGEADDED = 0;
+    static final int CHANGE_EDGEADDED = 0;
     /**  an edged has been removed */
-    public static final int CHANGE_EDGEREMOVED = 1;
+    static final int CHANGE_EDGEREMOVED = 1;
     /** a vertex has been added  */
-    public static final int CHANGE_VERTEXADDED = 2;
+    static final int CHANGE_VERTEXADDED = 2;
     /**  a vertex has been removed */
-    public static final int CHANGE_VERTEXREMOVED = 3;
+    static final int CHANGE_VERTEXREMOVED = 3;
     /**  an edge has been modified */
-    public static final int CHANGE_EDGEUPDATED = 4;
+    static final int CHANGE_EDGEUPDATED = 4;
     /**  a vertex has been modified */
-    public static final int CHANGE_VERTEXUPDATED = 5;
+    static final int CHANGE_VERTEXUPDATED = 5;
     /**  a vertex has been modified */
-    public static final int CHANGE_MERGED = 6;
+    static final int CHANGE_MERGED = 6;
     /**  other kind of change */
-    public static final int CHANGE_METADATA = 7;
+    static final int CHANGE_METADATA = 7;
 	
 	/*
 	 * so, what do we want to be able to do here?
@@ -68,7 +68,7 @@ public interface GraphModel<V,E extends Edge<V>> {
      * 
      * @return the name associated with this graph.
      */
-    public String getGraphName();
+    String getGraphName();
     
     
     /**
@@ -78,7 +78,7 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param graphName the new name.
      * @throws GsException if the name is invalid.
      */
-    public void setGraphName( String graph_name) throws GsException;
+    void setGraphName( String graph_name) throws GsException;
     
     
     //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
@@ -89,7 +89,7 @@ public interface GraphModel<V,E extends Edge<V>> {
      * 
      * @param save_mode the mode of saving
      */
-    public void setSaveMode( int save_mode);
+    void setSaveMode( int save_mode);
     
     
     /**
@@ -97,7 +97,7 @@ public interface GraphModel<V,E extends Edge<V>> {
      * 
      * @return the mode the graph must used when saved
      */
-    public int getSaveMode();
+    int getSaveMode();
     
 	
     //----------------------   GRAPH VERTICES AND EDGES MANAGEMENT METHODS -------------------------------
@@ -105,13 +105,13 @@ public interface GraphModel<V,E extends Edge<V>> {
 	/**
 	 * @return the number of vertex in this graph.
 	 */
-	public int getVertexCount();
+	int getVertexCount();
 	
     
     /**
      * @return a Collection of the graph vertices.
      */
-    public Collection<V> getVertices();
+    Collection<V> getVertices();
     
     
 	/**
@@ -120,14 +120,14 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * @param id name of a vertex
 	 * @return the vertex corresponding to this unique id or null if not found.
 	 */
-	public V getVertexByName( String id);
+	V getVertexByName( String id);
 	
     /**
      * Return the size of the node order
      * 
      * @return the size of the node order
      */
-	public int getNodeOrderSize();
+	int getNodeOrderSize();
 	
 	
 	/**
@@ -137,7 +137,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * @param regexp the regular expression vertex ID must match to be selected
 	 * @return a Vector of vertices
 	 */
-	public Vector<V> searchVertices( String regexp);
+	Vector<V> searchVertices( String regexp);
 	
 	
     /**
@@ -145,20 +145,20 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param target
      * @return the edge between source and target or null if not found.
      */
-    public E getEdge(V source, V target);
+    E getEdge(V source, V target);
     
 	
     /**
      * @return a Collection of the graph edges.
      */
-	public Collection<E> getEdges();
+	Collection<E> getEdges();
 
 	
     /**
      * @param vertex
      * @return true if the vertex is in the graph, false if not.
      */
-    public boolean containsVertex(V vertex);
+    boolean containsVertex(V vertex);
     
     
     /**
@@ -166,21 +166,21 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param to
      * @return true if an edge between the two provided vertices exists in the graph, false if not.
      */
-    public boolean containsEdge(V from, V to);
+    boolean containsEdge(V from, V to);
     
     
     /**
      * @param vertex
      * @return incoming edges of the given vertex.
      */
-    public Collection<E> getIncomingEdges(V vertex);
+    Collection<E> getIncomingEdges(V vertex);
     
     
     /**
      * @param vertex
      * @return outgoing edges of the given vertex.
      */
-    public Collection<E> getOutgoingEdges(V vertex);
+    Collection<E> getOutgoingEdges(V vertex);
     
     
 	/**
@@ -201,14 +201,14 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param edges the collection of edges used to create the subgraph
      * @return a Graph composed of the provided vertices and edges and based on the current graph
      */
-    public Graph<V,E> getSubgraph( Collection<V> vertex, Collection<E> edges);
+    Graph<V,E> getSubgraph( Collection<V> vertex, Collection<E> edges);
     
     /**
      * Merge the provided graph with the current one
      * 
      * @param graph The graph to merge with the current graph
      */
-    public List<?> merge( Graph<V,E> graph);
+    List<?> merge( Graph<V,E> graph);
     
 	
     //----------------------   EVENT MANAGEMENT METHODS --------------------------------------------
@@ -218,7 +218,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * 
 	 * @param g_listener the graph listener
 	 */
-    public void addGraphListener(GsGraphListener<V,E> g_listener);
+    void addGraphListener(GsGraphListener<V,E> g_listener);
     
     
 	/**
@@ -226,7 +226,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * 
 	 * @param g_listener the graph listener to remove
 	 */
-    public void removeGraphListener(GsGraphListener<V,E> g_listener);
+    void removeGraphListener(GsGraphListener<V,E> g_listener);
     
 	
     
@@ -238,9 +238,11 @@ public interface GraphModel<V,E extends Edge<V>> {
      * 
 	 * @return the association associated with this graph
 	 */
-	public Annotation getAnnotation();
+	Annotation getAnnotation();
 
-	
+	/**
+	 * @return the list of strongly connected components in this graph
+	 */
+	Collection<Collection<V>> getStronglyConnectedComponents();
 
-	
 }

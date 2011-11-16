@@ -160,4 +160,10 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 		}
 		this.graphViewBackend = backend;
 	}
+
+	@Override
+	public Collection<Collection<V>> getStronglyConnectedComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

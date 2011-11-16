@@ -227,7 +227,12 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	public Collection<V> getVertices() {
 		return graphBackend.getVertices();
 	}
-	
+
+	@Override
+	public Collection<Collection<V>> getStronglyConnectedComponents() {
+		return graphBackend.getStronglyConnectedComponents();
+	}
+
 	/**
 	 * Give access to the vertex named with the given name
 	 * 
@@ -681,5 +686,4 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 			listener.deleteNotificationMessage(message);
 		}
 	}
-
 }

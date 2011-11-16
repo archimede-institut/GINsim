@@ -21,10 +21,13 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.service.tools.reg2dyn.SynchronousSimulationUpdater;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -38,7 +41,6 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
 public class LocalGraphFrame extends StackDialog implements ActionListener, TableModelListener, ListSelectionListener {
 	
 	private final int THRESHOLD_AUTO_REFRESH = 15;
-//	private JFrame frame;
 	private GsRegulatoryGraph regGraph;
 	private GsDynamicGraph dynGraph;
 	private Container mainPanel;
@@ -152,6 +154,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		GraphSelection<GsDynamicNode, Edge<GsDynamicNode>> selection = GUIManager.getInstance().getGraphGUI(dynGraph).getSelection();
 		if (e.getSource() == colorizeButton) {
 			if (lg.getFunctionality() != null) {	
 				if (isColorized) {
@@ -161,22 +164,26 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 				}
 			}
 		} else if (e.getSource() == addStatesButton) {
-			List states = new ArrayList();
-			for (Iterator it = dynGraph.getGraphManager().getSelectedVertexIterator(); it.hasNext();) {
-				GsDynamicNode state = (GsDynamicNode) it.next();
-				states.add(state.state);
-			}
-			lg.setStates(states);
-			sst.setStates(states);
-		} else if (e.getSource() == replaceStatesButton) {
-				sst.ssl.data.clear();
+			List<GsDynamicNode> selected = selection.getSelectedNodes();
+			if (selected != null) {
 				List states = new ArrayList();
-				for (Iterator it = dynGraph.getGraphManager().getSelectedVertexIterator(); it.hasNext();) {
-					GsDynamicNode state = (GsDynamicNode) it.next();
+				for (GsDynamicNode state: selected) {
 					states.add(state.state);
 				}
 				lg.setStates(states);
 				sst.setStates(states);
+			}
+		} else if (e.getSource() == replaceStatesButton) {
+			List<GsDynamicNode> selected = selection.getSelectedNodes();
+			if (selected != null) {
+				sst.ssl.data.clear();
+				List states = new ArrayList();
+				for (GsDynamicNode state: selected) {
+					states.add(state.state);
+				}
+				lg.setStates(states);
+				sst.setStates(states);
+			}
 			}
 
 	}

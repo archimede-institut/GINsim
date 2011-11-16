@@ -124,4 +124,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 * @return the list of edges composing the shortest path
 	 */
 	List<E> getShortestPath( V source, V target);
+	
+	Collection<Collection<V>> getStronglyConnectedComponents();
+
 }

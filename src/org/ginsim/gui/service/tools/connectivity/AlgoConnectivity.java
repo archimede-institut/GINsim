@@ -90,48 +90,32 @@ public class AlgoConnectivity extends Thread {
             List component;
             // TODO : REFACTORING ACTION
             // TODO : change this test since graphModel is a Graph now
-            if (g instanceof GsJgraphtGraphManager) {
-                List jcp = ((GsJgraphtGraphManager)g).getStrongComponent();
-                nbCompo = jcp.size();
-                component = new ArrayList();
-                String sid;
-                int id = 0;
-                if (mode == MODE_FULL) {
-                    reducedGraph = new GsReducedGraph(g);
-                    for (int i=0 ; i<nbCompo; i++) {
-                        Set set = (Set)jcp.get(i);
-                        if (set.size() == 1) {
-                            sid = null;
-                        } else {
-                            sid = "cc-"+id++;
-                        }
-                        GsNodeReducedData node = new GsNodeReducedData(sid, set);
-                        component.add(node);
-                        reducedGraph.addVertex(node);
+            Collection<Collection<?>> jcp = g.getStronglyConnectedComponents();
+            nbCompo = jcp.size();
+            component = new ArrayList();
+            String sid;
+            int id = 0;
+            if (mode == MODE_FULL) {
+                reducedGraph = new GsReducedGraph(g);
+                for (Collection<?> set: jcp) {
+                    if (set.size() == 1) {
+                        sid = null;
+                    } else {
+                        sid = "cc-"+id++;
                     }
-                } else {
-                    for (int i=0 ; i<nbCompo; i++) {
-                        Set set = (Set)jcp.get(i);
-                        if (set.size() == 1) {
-                            sid = null;
-                        } else {
-                            sid = "cc-"+id++;
-                        }
-                        GsNodeReducedData node = new GsNodeReducedData(sid, set);
-                        component.add(node);
-                    }
+                    GsNodeReducedData node = new GsNodeReducedData(sid, set);
+                    component.add(node);
+                    reducedGraph.addVertex(node);
                 }
-           } else {
-                component = findConnectedComponent();
-                if (mode == MODE_FULL) {
-                    reducedGraph = new GsReducedGraph(g);
-                    nbCompo = component.size();
-                    if (frame != null) {
-                        frame.setProgressText("Number of component : "+nbCompo+", creating the new graph");
+            } else {
+                for (Collection<?> set: jcp) {
+                    if (set.size() == 1) {
+                        sid = null;
+                    } else {
+                        sid = "cc-"+id++;
                     }
-                    for (int i=0 ; i<nbCompo && canceled == false; i++) {
-                        reducedGraph.addVertex((GsNodeReducedData)component.get(i));
-                    }
+                    GsNodeReducedData node = new GsNodeReducedData(sid, set);
+                    component.add(node);
                 }
             }
            

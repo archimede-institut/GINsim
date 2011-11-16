@@ -1,5 +1,6 @@
 package org.ginsim.graph.reducedgraph;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
@@ -40,7 +41,7 @@ public class GsNodeReducedData {
 	 * @param id Id of the new node.
 	 * @param set list of vertices in this component.
 	 */
-	public GsNodeReducedData(String id, Set set) {
+	public GsNodeReducedData(String id, Collection set) {
 	    this.content = new Vector(set.size());
 	    Iterator it = set.iterator();
 	    while (it.hasNext()) {
