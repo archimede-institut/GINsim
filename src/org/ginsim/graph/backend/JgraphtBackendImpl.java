@@ -119,28 +119,6 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
         return DijkstraShortestPath.findPathBetween( this, source, target);
     }
 
-	// TODO is this method useful in back-end? Creation of new object have to pass directly from front-end
-//	@Override
-//	public E addEdge(V source, V target, int mode) {
-//		if (frontend == null) {
-//			throw new RuntimeException("No frontend is available to create the new edge");
-//		}
-//		E edge = frontend.createEdge(source, target, mode);
-//		addEdgeInBackend(edge);
-//		return edge;
-//	}
-
-	// TODO is this method useful in back-end? Creation of new object have to pass directly from front-end
-//	@Override
-//	public V addVertex(int mode) {
-//		if (frontend == null) {
-//			throw new RuntimeException("No frontend is available to create the new edge");
-//		}
-//		V vertex = frontend.createVertex(mode);
-//		addVertexInBackend(vertex);
-//		return vertex;
-//	}
-
 	@Override
 	public GraphViewBackend getGraphViewBackend() {
 		if (graphViewBackend == null) {
