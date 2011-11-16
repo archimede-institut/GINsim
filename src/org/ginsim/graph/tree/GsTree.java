@@ -15,7 +15,6 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.regulatorytreefunction.GsTreeActionPanel;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
@@ -104,7 +103,7 @@ public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
 	 * @param target
 	 * @return the new edge
 	 */
-	public GsDirectedEdge<GsTreeNode> addEdge(GsTreeNode source, GsTreeNode target) {
+	public Edge<GsTreeNode> addEdge(GsTreeNode source, GsTreeNode target) {
 		
 		Edge<GsTreeNode> edge = getEdge(source, target);
 		if (edge == null) {

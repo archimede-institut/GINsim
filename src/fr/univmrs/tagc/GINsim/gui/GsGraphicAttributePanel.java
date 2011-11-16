@@ -27,13 +27,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.editpanel.EditTab;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -872,7 +872,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
         if (v_selection != null) {
             jBttn_setDefault.setVisible(true);
         }
-		if (selected instanceof GsDirectedEdge) {
+		if (selected instanceof Edge) {
 			whatIsSelected = EDGESELECTED;
 			eReader.setEdge(selected);
 			lineColorEnabled();

@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
@@ -99,11 +99,11 @@ public class StableStatesService implements GsService{
 		t_reg = new boolean[nbgene][nbgene];
 		bestValue = nbgene+1;
 		for (int i=0 ; i<nbgene ; i++) {
-			Iterator it_reg = regGraph.getIncomingEdges( (GsRegulatoryVertex) nodeOrder.get(i)).iterator();
+			Iterator<GsRegulatoryMultiEdge> it_reg = regGraph.getIncomingEdges( (GsRegulatoryVertex) nodeOrder.get(i)).iterator();
 			int cpt = 0;
 			boolean[] t_regline = t_reg[i];
 			while (it_reg.hasNext()) {
-				int j = nodeOrder.indexOf(((GsDirectedEdge)it_reg.next()).getSource());
+				int j = nodeOrder.indexOf(it_reg.next().getSource());
 				t_regline[j] = true;
 				cpt++;
 			}

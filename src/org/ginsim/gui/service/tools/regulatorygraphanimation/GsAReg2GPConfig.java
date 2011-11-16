@@ -21,6 +21,7 @@ import javax.swing.JTextArea;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+import org.ginsim.gui.FileSelectionHelper;
 
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -137,7 +138,7 @@ public class GsAReg2GPConfig extends JDialog {
 		}
 	    String gnuplotsFilename;
         
-        gnuplotsFilename  = GsOpenAction.selectSaveFile(null, null, null, ".gnuplot");
+        gnuplotsFilename  = FileSelectionHelper.selectSaveFilename( null, ".gnuplot");
 	    if (gnuplotsFilename == null) {
 	        return;
 	    }

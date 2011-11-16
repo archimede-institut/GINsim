@@ -23,7 +23,6 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.GsDynamicalHierarchicalParameterPanel;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
@@ -132,16 +131,10 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 	
     private void saveEdge(XMLWriter out, int mode, Collection<Edge<GsDynamicalHierarchicalNode>> edges) throws IOException {
     	
-        Iterator<Edge<GsDynamicalHierarchicalNode>> it = edges.iterator();
-
-        while (it.hasNext()) {
-        	Object o_edge = it.next();
-        	if (o_edge instanceof GsDirectedEdge) {
-        		GsDirectedEdge edge = (GsDirectedEdge)o_edge;
-	            String source = ""+((GsDynamicalHierarchicalNode)edge.getSource()).getUniqueId();
-	            String target =""+((GsDynamicalHierarchicalNode) edge.getTarget()).getUniqueId();
-	            out.write("\t\t<edge id=\"e"+ source +"_"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
-        	}
+        for (Edge edge: edges) {
+            String source = ""+((GsDynamicalHierarchicalNode)edge.getSource()).getUniqueId();
+            String target =""+((GsDynamicalHierarchicalNode) edge.getTarget()).getUniqueId();
+            out.write("\t\t<edge id=\"e"+ source +"_"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
         }
     }
     
@@ -242,80 +235,7 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 		childsCount = cc;
 	}
 	
-	/* Not used methods */
 	
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#removeEdge(java.lang.Object)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	public void removeEdge(GsDirectedEdge<GsDynamicalHierarchicalNode> obj) {
-	}
-	
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#changeVertexId(java.lang.Object, java.lang.String)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	public void changeVertexId(Object vertex, String newId) throws GsException {
-	}
-	
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#setCopiedGraph(fr.univmrs.tagc.GINsim.graph.GsGraph)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	protected void setCopiedGraph( Graph graph) {
-	}
-	
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#getCopiedGraph()
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	protected  Graph getCopiedGraph() {
-		return null;
-	}
-
-
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#getSubGraph(java.utils.Vector, java.utils.Vector)
-	 * 
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	@Override
-	public Graph getSubgraph(Collection vertex, Collection edges) {
-		return null;
-	}
-	
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddEdge(java.lang.Object, java.lang.Object, int)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	protected GsDirectedEdge<GsDynamicalHierarchicalNode> doInteractiveAddEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target, int param) {
-		return null;
-	}
-
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddVertex(int)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	protected GsDynamicalHierarchicalNode doInteractiveAddVertex(int param) {
-		return null;
-	}
-
-    /**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doMerge(fr.univmrs.tagc.GINsim.graph.GsGraph)
-	 * 
-	 * not used for this kind of graph: it has no meaning
-     */
-	protected List doMerge( Graph otherGraph) {
-        return null;
-    }
-
-
 	public Vector searchNodes(String regexp) {
 		Vector v = new Vector();
 		
@@ -402,6 +322,21 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
 			if (v.getUniqueId() == id) return v;
 		}
+		return null;
+	}
+
+	@Override
+	protected List<?> doMerge(
+			Graph<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>> graph) {
+		// not implemented for this type of graph
+		return null;
+	}
+
+	@Override
+	public Graph<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>> getSubgraph(
+			Collection<GsDynamicalHierarchicalNode> vertex,
+			Collection<Edge<GsDynamicalHierarchicalNode>> edges) {
+		// not implemented for this type of graph
 		return null;
 	}
 }

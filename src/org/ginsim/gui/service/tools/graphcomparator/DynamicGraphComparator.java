@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 
 /**
@@ -76,17 +76,17 @@ public class DynamicGraphComparator extends GraphComparator<GsDynamicGraph> {
 
 	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
 		GsDynamicNode v = (GsDynamicNode) gm_main.getVertexByName(id);
-		GsDirectedEdge<GsDynamicNode> e = null;
+		Edge<GsDynamicNode> e = null;
 		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
 		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 		
 		if (v != null) { //If v is a vertex from the studied graph, we look at its edges
-			Collection<GsDirectedEdge<GsDynamicNode>> edges = gm_main.getOutgoingEdges(v);
-			for (GsDirectedEdge<GsDynamicNode> e1: edges) {
+			Collection<Edge<GsDynamicNode>> edges = gm_main.getOutgoingEdges(v);
+			for (Edge<GsDynamicNode> e1: edges) {
 				String tid = ((GsDynamicNode)e1.getTarget()).toString();
 				GsDynamicNode source = (GsDynamicNode) gm.getVertexByName(id);
 				GsDynamicNode target = (GsDynamicNode) gm.getVertexByName(tid);
-				GsDirectedEdge<GsDynamicNode> e2 = gm.getEdge(source, target);
+				Edge<GsDynamicNode> e2 = gm.getEdge(source, target);
 				
 				if (e2 == null) //The edge doesn't not already exists.
 					e = gm.addEdge(v, e1.getTarget(), false);

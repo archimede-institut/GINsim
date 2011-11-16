@@ -4,12 +4,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsAttributesReader;
 
 /**
@@ -317,7 +317,7 @@ public abstract class Selector {
 	 * @return true if obj is an edge
 	 */
 	protected boolean isEdge(Object obj) {
-		if (obj instanceof GsDirectedEdge) {
+		if (obj instanceof Edge) {
             return true;
         }
 		if (obj instanceof GsRegulatoryEdge) {

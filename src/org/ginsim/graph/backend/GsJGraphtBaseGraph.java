@@ -8,17 +8,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.ginsim.graph.common.Edge;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.AbstractGraph;
-
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 /**
  * a "simple" jgrapht implementation using hashmap.
  * it aims at "low" memory consumption without getting too slow.
  */
-public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractGraph<V, E> implements DirectedGraph<V,E> {
+public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E> implements DirectedGraph<V,E> {
     
     protected Map<V, VInfo<V,E>> m_vertices = new HashMap<V, VInfo<V,E>>(10);
     private EdgeFactory<V,E> ef;
@@ -243,7 +242,7 @@ public class GsJGraphtBaseGraph<V,E extends GsDirectedEdge<V>> extends AbstractG
  * @param <V>
  * @param <E>
  */
-class VInfo<V,E extends GsDirectedEdge<V>> {
+class VInfo<V,E extends Edge<V>> {
     V self;
     Set<E> l_incoming;
     Set<E> l_outgoing;
@@ -320,7 +319,7 @@ class VInfo<V,E extends GsDirectedEdge<V>> {
     }
 }
 
-class EdgeSet<V,E extends GsDirectedEdge<V>> implements Set<E> {
+class EdgeSet<V,E extends Edge<V>> implements Set<E> {
 	
     private final GsJGraphtBaseGraph<V,E> g;
     
@@ -395,7 +394,7 @@ class EdgeSet<V,E extends GsDirectedEdge<V>> implements Set<E> {
 	}
 }
 
-class EdgeIterator<V,E extends GsDirectedEdge<V>> implements Iterator<E> {
+class EdgeIterator<V,E extends Edge<V>> implements Iterator<E> {
 
     E next;
     Iterator<VInfo<V, E>> i_vertices;

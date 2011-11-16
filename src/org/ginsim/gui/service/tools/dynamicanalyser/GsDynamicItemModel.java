@@ -13,8 +13,6 @@ import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-
 /**
  * table model to display a dynamic node or edge.
  * 
@@ -135,7 +133,7 @@ public class GsDynamicItemModel extends AbstractTableModel {
         }
         GsDynamicNode[] ret = new GsDynamicNode[l_related.size()];
         int i=-1;
-        for (GsDirectedEdge<GsDynamicNode> edge: l_related) {
+        for (Edge<GsDynamicNode> edge: l_related) {
         	i++;
         	if (target) {
         		ret[i] = edge.getTarget();

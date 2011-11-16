@@ -28,7 +28,6 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
@@ -159,7 +158,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	 *
 	 * not used for this kind of graph: it's not interactivly editable
 	 */
-	public GsDirectedEdge<GsDynamicNode> doInteractiveAddEdge(GsDynamicNode source, GsDynamicNode target, int param) {
+	public Edge<GsDynamicNode> doInteractiveAddEdge(GsDynamicNode source, GsDynamicNode target, int param) {
 		return null;
 	}
 
@@ -276,20 +275,9 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
         }
     }
 
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#changeVertexId(java.lang.Object, java.lang.String)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	public void changeVertexId(Object vertex, String newId) throws GsException {
-	}
-
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#removeEdge(java.lang.Object)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	public void removeEdge(GsDirectedEdge<GsDynamicNode> obj) {
+	@Override
+	public boolean removeEdge(Edge<GsDynamicNode> obj) {
+		return false;
 	}
 
 	/**
@@ -300,18 +288,6 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 	public boolean addVertex( byte[] state) {
 		return addVertex( new GsDynamicNode(state));
 	}
-	
-	
-//	/**
-//	 * add a vertex to this graph.
-//	 * @param vertex
-//	 * @return the new GsDynamicNode.
-//	 */
-	// TODO REMOVE since it duplicate an existing method of AbstractGraphFrontend
-//	public boolean addVertex(GsDynamicNode vertex) {
-//		return addVertex( vertex);
-//	}
-	
 	
 	/**
 	 * add an edge between source and target
@@ -367,9 +343,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
             ret.add(vertex);
         }
 
-        it = otherGraph.getEdges().iterator();
-        while (it.hasNext()) {
-            GsDirectedEdge edge = (GsDirectedEdge)it.next();
+        for (Edge edge: (Collection<Edge>)otherGraph.getEdges()) {
             GsDynamicNode from = (GsDynamicNode)edge.getSource();
             GsDynamicNode to = (GsDynamicNode)edge.getTarget();
             int c = 0;

@@ -24,11 +24,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableColumn;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.service.tools.regulatorygraphanimation.GsAReg2GPConfig;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
@@ -194,17 +194,17 @@ public class GsDynamicSearchPathConfig extends JDialog {
             path.clear();
         }
         for (int i=1 ; i<v_pathConstraints.size() ; i++) {
-            List l = graph.shortestPath((byte[])v_pathConstraints.get(i-1), (byte[])v_pathConstraints.get(i));
+            List<Edge> l = graph.shortestPath((byte[])v_pathConstraints.get(i-1), (byte[])v_pathConstraints.get(i));
             isPath = true;
             if (l == null) {
                 isPath = false;
                 break;
             }
             if (i == 1 && i<v_pathConstraints.size()) {
-                path.add(((GsDirectedEdge)l.get(0)).getSource());
+                path.add(l.get(0).getSource());
             }
             for (int j=0 ; j<l.size() ; j++) {
-                GsDirectedEdge edge = (GsDirectedEdge)l.get(j);
+            	Edge edge = l.get(j);
                 path.add(edge.getTarget());
             }
         }

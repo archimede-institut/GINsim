@@ -8,6 +8,7 @@ import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -58,7 +59,7 @@ class SBMLImportAction extends GsImportAction {
 		Frame frame = GUIManager.getInstance().getFrame( graph);
 		
 		// we should add a better way to select a file for import
-		filename = GsOpenAction.selectFileWithOpenDialog( frame);
+		filename = FileSelectionHelper.selectSaveFilename( frame);
 		if (filename == null) {
 			return;
 		}

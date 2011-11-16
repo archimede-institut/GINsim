@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.common.Edge;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge.Routing;
@@ -15,7 +16,6 @@ import org.jgraph.graph.PortView;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.common.Tools;
 
@@ -71,13 +71,13 @@ public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
 	}
 
 	public void setEdge(Object obj) {
-	    if (!(obj instanceof GsDirectedEdge)) {
+	    if (!(obj instanceof Edge)) {
 	        attr = null;
 	        cell = null;
 	        return;
 	    }
 	    
-	    GsDirectedEdge edge = (GsDirectedEdge)obj;		
+	    Edge edge = (Edge)obj;		
         cell = m_adaptor.getEdgeCell(edge);
         if (cell != null) {
             attr = cell.getAttributes();

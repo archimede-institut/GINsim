@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Vector;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
 import fr.univmrs.tagc.common.Debugger;
@@ -186,7 +186,7 @@ public class GsBooleanParser extends TBooleanParser {
 				}
 				if (source == null)	source = graph.addNewVertex(nodeID, null, (byte) 1);
 
-				GsDirectedEdge edge = (GsDirectedEdge)graph.getEdge(source, this.vertex);
+				Edge edge = graph.getEdge(source, this.vertex);
 				if (edge == null) {
 					try{
 						edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, GsRegulatoryMultiEdge.SIGN[0]).me;

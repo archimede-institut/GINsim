@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -16,7 +17,6 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -82,8 +82,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			String sid = me.getSource().getId();
 			String tid = me.getTarget().getId();
 			
-			GsDirectedEdge e1 = g1m.getEdge(g1m.getVertexByName(sid), g1m.getVertexByName(tid));
-			GsDirectedEdge e2 = g2m.getEdge(g2m.getVertexByName(sid), g2m.getVertexByName(tid));
+			Edge e1 = g1m.getEdge(g1m.getVertexByName(sid), g1m.getVertexByName(tid));
+			Edge e2 = g2m.getEdge(g2m.getVertexByName(sid), g2m.getVertexByName(tid));
 			
 			String comment = "The edge "+me.toToolTip()+" ";
 			ereader.setEdge(me);
@@ -180,10 +180,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 
 		//If v is a vertex from the studied graph, we look at its edges
 		GsRegulatoryVertex source = (GsRegulatoryVertex) gm.getVertexByName(id);
-		for (Iterator edge_it = gm_main.getOutgoingEdges(v).iterator(); edge_it.hasNext();) {
-			GsDirectedEdge e1 = (GsDirectedEdge) edge_it.next();
-			GsRegulatoryMultiEdge me1 = (GsRegulatoryMultiEdge)e1;
-			String tid = ((GsRegulatoryVertex)e1.getTarget()).getId();
+		for (GsRegulatoryMultiEdge me1: ((GsRegulatoryGraph)gm_main).getOutgoingEdges(v)) {
+			String tid = me1.getTarget().getId();
 			GsRegulatoryVertex target = (GsRegulatoryVertex) gm.getVertexByName(tid);
 			
 			if (gm.getEdge(source, target) != null) {
@@ -192,7 +190,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 
 			GsRegulatoryMultiEdge me2 = null;
 			if (vcol != SPECIFIC_G1_COLOR && vcol != SPECIFIC_G2_COLOR && isCommonVertex(target)) {
-				GsDirectedEdge e2 = (GsDirectedEdge) gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
+				Edge e2 = gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
 				if (e2 != null) {
 					me2 = (GsRegulatoryMultiEdge)e2;
 				}

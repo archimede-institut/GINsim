@@ -16,11 +16,11 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
@@ -39,7 +39,6 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Debugger;
@@ -235,34 +234,34 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
 	@Override
 	public boolean save() {
-		isSaved = false;
 		if (savePath == null) {
+			isSaved = false;
 			saveAs();
 			return isSaved();
 		}
 		
-		// FIXME: actual save, error if failed
-		//graph.save(savePath);
+		try {
+			graph.save(savePath);
+			GsFileCallBack.addRecentFile(savePath);
+			isSaved = true;
+			return true;
+		} catch (Exception e) {
+			// TODO: cleaner error
+			Debugger.log("save failed");
+			e.printStackTrace();
+		}
+		return false;
 		
-		Debugger.log("TODO: save...");
-		GsFileCallBack.addRecentFile(savePath);
-		isSaved = true;
-		return true;
 	}
 
 	@Override
 	public void saveAs() {
 		Frame frame = GUIManager.getInstance().getFrame(graph);
-		try {
-			String filename = GsOpenAction.selectSaveFile(frame, null, null, null);
-			if (filename != null) {
-				savePath = filename;
-				save();
-			}
-		} catch (GsException e) {
-			Debugger.log(e);
+		String filename = FileSelectionHelper.selectSaveFilename(frame);
+		if (filename != null) {
+			savePath = filename;
+			save();
 		}
-		
 	}
 
 	@Override
@@ -321,7 +320,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
         }
         for (Iterator it = l.iterator(); it.hasNext();) {
 			Object o = (Object) it.next();
-            if (o instanceof GsDirectedEdge) {
+            if (o instanceof Edge) {
                 jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
             } else {
                 jgraph.addSelectionCell(m_jgAdapter.getVertexCell((V)o));
@@ -336,7 +335,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
         }
         for (Iterator it = s.iterator(); it.hasNext();) {
 			Object o = (Object) it.next();
-            if (o instanceof GsDirectedEdge) {
+            if (o instanceof Edge) {
                 jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
             } else {
                 jgraph.addSelectionCell(m_jgAdapter.getVertexCell(o));

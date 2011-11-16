@@ -1,5 +1,9 @@
 package org.ginsim.graph.common;
 
+import java.util.Collection;
+
+import org.ginsim.exception.GsException;
+
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
@@ -34,4 +38,19 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * @return the attribute reader of vertices
 	 */
 	public GsVertexAttributesReader getVertexAttributeReader();
+	
+	
+	/**
+	 * Save this graph
+	 * TODO: decide if it should be called by the GraphManager or directly
+	 * @param path
+	 */
+	void save(String path) throws GsException;
+	
+	/**
+	 * Save this graph
+	 * TODO: decide if it should be called by the GraphManager or directly
+	 * @param path
+	 */
+	void save(String path, Collection<V> nodes, Collection<E> edges) throws GsException;
 }

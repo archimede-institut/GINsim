@@ -22,6 +22,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
@@ -29,7 +30,6 @@ import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -300,7 +300,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 				style = is.v2;
 				if (style == null) style = is.v1;
 			}
-			if (o instanceof GsDirectedEdge) { 	//edge
+			if (o instanceof Edge) { 	//edge
 				ereader.setEdge(o);
 				if (style != null) {
 					ereader.setDash(ereader.getPattern(0)); //FIXME : thats dirty, but copy/paste from DynamicGraph.

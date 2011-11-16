@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -47,7 +48,7 @@ class TxtImportAction extends GsImportAction {
 		extension = ".txt";
 
 		// we should add a better way to select a file for import
-		filename = GsOpenAction.selectFileWithOpenDialog( GUIManager.getInstance().getFrame( graph));
+		filename = FileSelectionHelper.selectOpenFilename( GUIManager.getInstance().getFrame( graph));
 
 		// TODO ...
 		TruthTableParser parser = new TruthTableParser(filename);

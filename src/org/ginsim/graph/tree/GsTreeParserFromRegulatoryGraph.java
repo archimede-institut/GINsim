@@ -3,10 +3,10 @@ package org.ginsim.graph.tree;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 public class GsTreeParserFromRegulatoryGraph extends GsTreeParserFromOmdd {
 	
@@ -37,12 +37,10 @@ public class GsTreeParserFromRegulatoryGraph extends GsTreeParserFromOmdd {
 	public void initRealDepth(GsRegulatoryVertex initialVertex) {
 		realDetph = new int[nodeOrder.size()+1]; //+1 for the leafs
 		int i = 0;
-		for (Iterator it = regGraph.getIncomingEdges(initialVertex).iterator(); it.hasNext();) {
-			GsDirectedEdge e = ((GsDirectedEdge) it.next());
-			GsRegulatoryVertex source = (GsRegulatoryVertex) e.getSource();
+		for (GsRegulatoryMultiEdge e: regGraph.getIncomingEdges(initialVertex)) {
+			GsRegulatoryVertex source = e.getSource();
 			i = 0;
-			for (Iterator it2 = nodeOrder.iterator(); it2.hasNext(); i++) {
-				GsRegulatoryVertex v = (GsRegulatoryVertex) it2.next();
+			for (GsRegulatoryVertex v: (List<GsRegulatoryVertex>)nodeOrder) {
 				if (v.equals(source)) {
 					realDetph[i] = -1;
 				}

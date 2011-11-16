@@ -3,7 +3,7 @@ package fr.univmrs.tagc.GINsim.graph;
 import java.util.Iterator;
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import org.ginsim.graph.common.Edge;
 
 /**
  * browse selected edges: very useful to save a subgraph, or copy/paste
@@ -33,7 +33,7 @@ public class GsSelectedEdgeWithVertexIterator implements Iterator {
 	private void doSearchNext() {
 		if (i != -1) {
 			for ( ; i<v_edge.size() ; i++) {
-				GsDirectedEdge edge = (GsDirectedEdge)v_edge.get(i);
+				Edge edge = (Edge)v_edge.get(i);
 				if (v_vertex.contains(edge.getSource()) && v_vertex.contains(edge.getTarget())) {
 					return;
 				}

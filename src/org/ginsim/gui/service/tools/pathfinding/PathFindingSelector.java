@@ -6,11 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.graph.common.Edge;
+
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 public class PathFindingSelector extends Selector {
 	public static final String IDENTIFIER = "pathFinding";
@@ -44,7 +45,7 @@ public class PathFindingSelector extends Selector {
 	}
 	
 	public String getCategoryForEdge(Object obj) {
-		GsDirectedEdge e = (GsDirectedEdge) obj;
+		Edge e = (Edge) obj;
 		List path = getPath();
 		int i = path.indexOf(e.getSource());
 		if (i == -1) return CAT_OUTOFPATH_EDGE;

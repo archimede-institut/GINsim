@@ -2,12 +2,12 @@ package fr.univmrs.tagc.GINsim.graph;
 
 import java.util.Collection;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
+import org.ginsim.graph.common.Edge;
 
 /**
  * listen graph events
  */
-public interface GsGraphListener<V,E extends GsDirectedEdge<V>> {
+public interface GsGraphListener<V,E extends Edge<V>> {
 
     /**
      * an edge was added to the graph.

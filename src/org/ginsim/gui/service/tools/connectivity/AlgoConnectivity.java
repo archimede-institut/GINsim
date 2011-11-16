@@ -5,14 +5,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.Vector;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
@@ -177,8 +176,8 @@ public class AlgoConnectivity extends Thread {
                     throw new InterruptedException();
                 }
 				Object currentNode = it.next();
-				Collection<GsDirectedEdge> outgoingEdges = g.getOutgoingEdges(currentNode);
-				for (GsDirectedEdge edge: outgoingEdges) {							//    for each edge outgoing from this node
+				Collection<Edge<?>> outgoingEdges = g.getOutgoingEdges(currentNode);
+				for (Edge edge: outgoingEdges) {							//    for each edge outgoing from this node
                 	if (canceled) {
                         throw new InterruptedException();
                     }						

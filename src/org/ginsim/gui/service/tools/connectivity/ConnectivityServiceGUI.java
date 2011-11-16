@@ -3,7 +3,6 @@ package org.ginsim.gui.service.tools.connectivity;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.Action;
 
@@ -11,6 +10,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -63,7 +63,7 @@ class ConnectivityExtractAction extends GsToolsAction {
         if (s_ag != null) {
         	List<GsNodeReducedData> selected = GUIManager.getInstance().getGraphGUI(graph).getSelection().getSelectedNodes();
         	
-	        Graph subgraph = GsOpenAction.open( s_ag, graph.getSelectedMap(selected));
+	        Graph subgraph = FileSelectionHelper.open( s_ag, graph.getSelectedMap(selected));
 	        if (subgraph != null) {
 	            GUIManager.getInstance().whatToDoWithGraph( subgraph, graph, true);
 	        }

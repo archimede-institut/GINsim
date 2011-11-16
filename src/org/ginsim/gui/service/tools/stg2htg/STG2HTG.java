@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
@@ -17,7 +18,6 @@ import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.connectivity.AlgoConnectivity;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
 
@@ -107,9 +107,9 @@ public class STG2HTG extends AlgoConnectivity {
 	}
 
 	private void dfs(Object source, HashSet image, HashSet visited) {
-		Collection<GsDirectedEdge> outgoingEdges = graph.getOutgoingEdges(source);
+		Collection<Edge> outgoingEdges = graph.getOutgoingEdges(source);
 		if (outgoingEdges == null) return;
-		for (GsDirectedEdge edge: outgoingEdges) {
+		for (Edge edge: outgoingEdges) {
 			Object target = edge.getTarget();
 			if (!visited.contains(target)) {
 				visited.add(target);

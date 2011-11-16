@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationUpdater;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 
 /**
@@ -69,12 +69,11 @@ public class LocalGraph {
 		for (Iterator it_states = states.iterator(); it_states.hasNext();) {
 			byte[] state = (byte[]) it_states.next();
 			int j;
-			for (Iterator it_edges = g.getEdges().iterator(); it_edges.hasNext();) {
-				GsDirectedEdge edge = (GsDirectedEdge) it_edges.next();
-				GsRegulatoryVertex source = (GsRegulatoryVertex) edge.getSource();
-				GsRegulatoryVertex target = (GsRegulatoryVertex) edge.getTarget();
-				i = ((Integer) node_to_position.get(source)).intValue();
-				j = ((Integer) node_to_position.get(target)).intValue();
+			for (GsRegulatoryMultiEdge edge: g.getEdges()) {
+				GsRegulatoryVertex source = edge.getSource();
+				GsRegulatoryVertex target = edge.getTarget();
+				i = (Integer)node_to_position.get(source);
+				j = (Integer)node_to_position.get(target);
 				byte[] fx = f(state);
 				byte[] fxbi = f(bar_x(state, i));
 //				System.out.println(i+"->"+j);
@@ -147,8 +146,7 @@ public class LocalGraph {
         }
 		
 		GsEdgeAttributesReader ereader = g.getEdgeAttributeReader();
-		for (Iterator iterator = g.getEdges().iterator(); iterator.hasNext();) {
-			GsDirectedEdge me = (GsDirectedEdge) iterator.next();
+		for (GsRegulatoryMultiEdge me: g.getEdges()) {
 			ereader.setEdge(me);
 			cs.applyOnEdge(selector, me, ereader);
 		}

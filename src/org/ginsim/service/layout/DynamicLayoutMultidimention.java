@@ -7,11 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
@@ -69,8 +69,7 @@ public class DynamicLayoutMultidimention {
     	
     	//move the edges
     	it = graph.getEdges().iterator();
-    	while (it.hasNext()) {
-    		GsDirectedEdge edge = (GsDirectedEdge) it.next();
+    	for (Edge edge: graph.getEdges()) {
     		moveEdge(edge, maxValues);
     	}
     }
@@ -104,7 +103,7 @@ public class DynamicLayoutMultidimention {
 	 * @param edge
 	 * @param maxValues
 	 */
-	private void moveEdge(GsDirectedEdge edge, byte[] maxValues) {
+	private void moveEdge(Edge edge, byte[] maxValues) {
 		byte[] diffstate = getDiffStates((GsDynamicNode)edge.getSource(), (GsDynamicNode)edge.getTarget());
 		int change = get_change(diffstate);
 		

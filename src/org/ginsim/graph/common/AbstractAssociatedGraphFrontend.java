@@ -8,7 +8,6 @@ import org.ginsim.graph.GraphManager;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
-import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 

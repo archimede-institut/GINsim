@@ -9,9 +9,8 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 /**
  * A class to find a path in any graph
@@ -101,10 +100,9 @@ public class PathFinding extends Thread {
 	 * @return
 	 */
 	public Collection getChildren(Object node) {
-		Collection outgoingEdges = graph.getOutgoingEdges(node);
+		Collection<Edge> outgoingEdges = graph.getOutgoingEdges(node);
 		List children = new ArrayList(outgoingEdges.size());
-		for (Iterator it = outgoingEdges.iterator(); it.hasNext();) {
-			GsDirectedEdge e = (GsDirectedEdge) it.next();
+		for (Edge e: outgoingEdges) {
 			Object child = e.getTarget();
 			if (!visitedNodes.contains(child))
 				children.add(e.getTarget());

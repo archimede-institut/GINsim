@@ -21,6 +21,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.xml.sax.Attributes;
 
@@ -28,7 +29,6 @@ import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.common.OpenHelper;
@@ -251,15 +251,15 @@ public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
 		files.remove(fileName);
 	}
 
-	public GsGraphEventCascade edgeAdded(GsDirectedEdge data) {
+	public GsGraphEventCascade edgeAdded(Edge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeRemoved(GsDirectedEdge data) {
+	public GsGraphEventCascade edgeRemoved(Edge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeUpdated(GsDirectedEdge data) {
+	public GsGraphEventCascade edgeUpdated(Edge data) {
 		return null;
 	}
 

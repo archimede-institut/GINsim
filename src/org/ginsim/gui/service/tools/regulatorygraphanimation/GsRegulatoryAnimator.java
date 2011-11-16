@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
@@ -21,7 +22,6 @@ import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.service.tools.stateinregulatorygraph.GsStateInRegGraph;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
@@ -170,7 +170,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphGUIL
             dynGas.vreader.setBackgroundColor(Color.BLUE);
             dynGas.vreader.refresh();
 
-            GsDirectedEdge edge = (GsDirectedEdge)dynGraph.getEdge(vertex, vertex2);
+            Edge edge = dynGraph.getEdge(vertex, vertex2);
             dynGas.ensureStoreEdge(edge);
             dynGas.ereader.setLineColor(Color.MAGENTA);
             dynGas.ereader.refresh();
@@ -184,7 +184,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphGUIL
             v_highlight.add(it.next());
         }
         for (int i=0 ; i<v_highlight.size() ; i++) {
-            GsDirectedEdge edge = (GsDirectedEdge)v_highlight.get(i);
+            Edge edge = (Edge)v_highlight.get(i);
             Object target = edge.getTarget();
             dynGas.ensureStoreEdge(edge);
             dynGas.ensureStoreVertex(target);

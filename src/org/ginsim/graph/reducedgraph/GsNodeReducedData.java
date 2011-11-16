@@ -2,12 +2,11 @@ package org.ginsim.graph.reducedgraph;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -130,8 +129,7 @@ public class GsNodeReducedData {
 		
 		for (Iterator it_nodes = content.iterator(); it_nodes.hasNext();) {
 			Object currentNode = it_nodes.next();
-			for (Iterator it_edges = gm.getOutgoingEdges(currentNode).iterator(); it_edges.hasNext();) {
-				GsDirectedEdge edge = (GsDirectedEdge) it_edges.next();
+			for (Edge edge: (Collection<Edge>)gm.getOutgoingEdges(currentNode)) {
 				if (!content.contains(edge.getTarget())) return true; //There is a node that is not in the cycle
 			}
 		}

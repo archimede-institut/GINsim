@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
@@ -78,7 +77,7 @@ public final class GsDynamicNode {
 	public int[] getPattern(Graph<GsDynamicNode, Edge<GsDynamicNode>> graph) {
 		int[] pattern = new int[state.length];
 		Collection<Edge<GsDynamicNode>> oe = graph.getOutgoingEdges(this);
-		for (GsDirectedEdge<GsDynamicNode> e: oe) {
+		for (Edge<GsDynamicNode> e: oe) {
 			GsDynamicNode s = e.getTarget();
 			for (int i = 0; i < s.state.length; i++) {
 				if (s.state[i] < this.state[i]) pattern[i] = MINUS;

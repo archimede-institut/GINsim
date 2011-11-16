@@ -6,9 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 
 
 public class GsGraphicalAttributesStore {
@@ -33,8 +32,8 @@ public class GsGraphicalAttributesStore {
             vreader.setVertex(vertex);
             oldColors.put(vertex, new StoreColor(vreader));
 
-            Collection<GsDirectedEdge> edges = graph.getOutgoingEdges(vertex);
-            for (GsDirectedEdge edge: edges) {
+            Collection<Edge> edges = graph.getOutgoingEdges(vertex);
+            for (Edge edge: edges) {
                 ereader.setEdge(edge);
                 oldColors.put(edge, new StoreColor(ereader));
             }
@@ -45,7 +44,7 @@ public class GsGraphicalAttributesStore {
         Iterator it = oldColors.keySet().iterator();
         while (it.hasNext()) {
             Object obj = it.next();
-            if ( obj instanceof GsDirectedEdge) {
+            if ( obj instanceof Edge) {
                 ereader.setEdge(obj);
                 ((StoreColor)oldColors.get(obj)).restore(ereader);
             } else {
@@ -63,7 +62,7 @@ public class GsGraphicalAttributesStore {
         }
 	}
 	
-	public void ensureStoreEdge(GsDirectedEdge edge) {
+	public void ensureStoreEdge(Edge edge) {
         ereader.setEdge(edge);
         if (!oldColors.containsKey(edge)) {
             oldColors.put(edge, new StoreColor(ereader));

@@ -12,12 +12,12 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -112,9 +112,7 @@ public class SBMLExportService implements GsService{
                 out.closeTag();
                 out.closeTag();
                 out.openTag("listOfModifiers");
-                Iterator it = graph.getIncomingEdges(v_no.get(i)).iterator();
-                while (it.hasNext()) {
-                    GsDirectedEdge edge = (GsDirectedEdge)it.next();
+                for (Edge edge: graph.getIncomingEdges(v_no.get(i))) {
                     out.openTag("modifierSpeciesReference");
                     out.addAttr("species","s_"+edge.getSource().toString());
                     out.closeTag();

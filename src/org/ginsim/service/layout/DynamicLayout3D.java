@@ -10,7 +10,6 @@ import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
@@ -81,7 +80,7 @@ public class DynamicLayout3D {
         vreader.refresh();		
 	}
 
-	private void moveEdge(GsDirectedEdge edge, byte[] maxValues) {
+	private void moveEdge(Edge edge, byte[] maxValues) {
 		ereader.setEdge(edge);		
 		ereader.setRouting(GsEdgeAttributesReader.ROUTING_AUTO);
 		ereader.setPoints(null);

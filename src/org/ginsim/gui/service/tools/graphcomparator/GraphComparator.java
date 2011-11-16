@@ -1,18 +1,19 @@
 package org.ginsim.gui.service.tools.graphcomparator;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
@@ -149,10 +150,9 @@ public abstract class GraphComparator<G extends Graph> {
 	
 	public void setEdgeAutomatingRouting() {
 		Graph gm1 = getG1();
-		for (Iterator it = gm.getEdges().iterator(); it.hasNext();) {
-			GsDirectedEdge e = (GsDirectedEdge) it.next();
+		for (Edge<?> e: (Collection<Edge>)gm.getEdges()) {
 			
-			GsDirectedEdge e1 = (GsDirectedEdge) gm1.getEdge(gm1.getVertexByName(e.getSource().toString()), gm1.getVertexByName(e.getTarget().toString()));
+			Edge e1 = gm1.getEdge(gm1.getVertexByName(e.getSource().toString()), gm1.getVertexByName(e.getTarget().toString()));
 			if (e1 == null) {//The edge is (only or not) in the first graph. So its intermediary point are right.
 				GsEdgeAttributesReader ereader = gm.getEdgeAttributeReader();
 				ereader.setEdge(e);

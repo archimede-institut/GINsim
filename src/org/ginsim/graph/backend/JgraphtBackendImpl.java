@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Edge;
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.ListenableDirectedGraph;

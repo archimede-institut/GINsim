@@ -2,9 +2,7 @@ package org.ginsim.graph.common;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -466,6 +464,12 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	
 	// ----------------------   SAVING METHODS -----------------------------------------------
 	
+	public void save(String save_path) throws GsException {
+		save(save_path, null, null, 0);
+	}
+	public void save(String save_path, Collection<V> vertices, Collection<E> edges) throws GsException {
+		save(save_path, vertices, edges, 0);
+	}
 	/**
 	 * 
 	 * @param save_path
@@ -478,7 +482,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 *   all interactive-notifications should be replaced by exceptions...
 	 * 
 	 */
-	private void save(String save_path, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException, IOException {
+	private void save(String save_path, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException {
 
 		boolean selected = vertices == null || vertices.size() < getVertexCount();
 		if (!selected) {
@@ -515,47 +519,51 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 			}
 		}
 
-		ZipOutputStream zos = new ZipOutputStream( new FileOutputStream(fileName));
-		// FIXME: uncompressed Zip require to set the size and CRC by hand!!
-		// this must be done for each ZipEntry: save it to a tmpfile,
-		// mesure the CRC and the size, then put it in the uncompressed zip...
-		zos.putNextEntry(new ZipEntry(ZIP_PREFIX + getGraphZipName()));
-		OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
-		
-		// TODO: doSave should take the selection as parameter.
-		// note: this method should be the only caller and ensures that the selection is defined and consistent
-		doSave(osw, vertices, edges, saveMode);
-		osw.flush();
-		zos.closeEntry();
-		// now save associated objects
-		if (v_OManager != null) {
-			for (int i=0 ; i<v_OManager.size() ; i++) {
-				GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
-				if (manager.needSaving(this)) {
-					zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
-					try {
-						manager.doSave(osw, this);
-					} catch (GsException e) {
-						throw e;
-					} finally {
-						osw.flush();
-						zos.closeEntry();
+		try {
+			ZipOutputStream zos = new ZipOutputStream( new FileOutputStream(fileName));
+			// FIXME: uncompressed Zip require to set the size and CRC by hand!!
+			// this must be done for each ZipEntry: save it to a tmpfile,
+			// mesure the CRC and the size, then put it in the uncompressed zip...
+			zos.putNextEntry(new ZipEntry(ZIP_PREFIX + getGraphZipName()));
+			OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
+			
+			// TODO: doSave should take the selection as parameter.
+			// note: this method should be the only caller and ensures that the selection is defined and consistent
+			doSave(osw, vertices, edges, saveMode);
+			osw.flush();
+			zos.closeEntry();
+			// now save associated objects
+			if (v_OManager != null) {
+				for (int i=0 ; i<v_OManager.size() ; i++) {
+					GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+					if (manager.needSaving(this)) {
+						zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
+						try {
+							manager.doSave(osw, this);
+						} catch (GsException e) {
+							throw e;
+						} finally {
+							osw.flush();
+							zos.closeEntry();
+						}
 					}
 				}
 			}
-		}
-		List v_specManager = ObjectAssociationManager.getInstance().getObjectManagerList( this.getClass());
-		if (v_specManager != null) {
-			for (int i=0 ; i<v_specManager.size() ; i++) {
-				GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
-				if (manager.needSaving(this)) {
-					zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
-					manager.doSave(osw, this);
-					osw.flush();
+			List v_specManager = ObjectAssociationManager.getInstance().getObjectManagerList( this.getClass());
+			if (v_specManager != null) {
+				for (int i=0 ; i<v_specManager.size() ; i++) {
+					GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
+					if (manager.needSaving(this)) {
+						zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
+						manager.doSave(osw, this);
+						osw.flush();
+					}
 				}
 			}
+			zos.close();
+		} catch (Exception e) {
+			throw new GsException(GsException.GRAVITY_ERROR, e);
 		}
-		zos.close();
 
 		if (ftmp != null) {
 			// Everything went fine, rename the temporary file
