@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.gui.GUIManager;
@@ -14,6 +15,8 @@ import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.decisionanalysis.DecisionAnalysisService;
 import org.mangosdk.spi.ProviderFor;
+
+import fr.univmrs.tagc.common.Debugger;
 
 
 @ProviderFor( GsServiceGUI.class)
@@ -47,7 +50,14 @@ class DecisionAnalysisAction extends GsToolsAction {
         // TODO : REFACTORING ACTION		
 		// TODO : what is ref? Is this test useful? Ref was set to 0 in the GsPluggableActionDescriptor definition in the getT_action
 		//if (ref == 0) {
+		try{
 			new GsDecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph);
+		}
+		catch( GsException ge){
+    		// TODO : REFACTORING ACTION
+    		// TODO : Launch a message box to the user
+    		Debugger.log( "Unable to execute the service" + ge);
+		}
 		//}
 	}
 	

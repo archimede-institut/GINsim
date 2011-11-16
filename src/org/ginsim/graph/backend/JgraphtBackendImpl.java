@@ -3,10 +3,13 @@ package org.ginsim.graph.backend;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Edge;
+import org.jgrapht.DirectedGraph;
 import org.jgrapht.alg.DijkstraShortestPath;
+import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.ListenableDirectedGraph;
 
 public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirectedGraph<V, E> implements GraphBackend<V, E> {
@@ -161,9 +164,15 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 		this.graphViewBackend = backend;
 	}
 
+	
+	/**
+	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * 
+	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
+	 */
 	@Override
-	public Collection<Collection<V>> getStronglyConnectedComponents() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Set<V>> getStronglyConnectedComponents() {
+		
+		return new StrongConnectivityInspector<V, E>( this).stronglyConnectedSets();
 	}
 }

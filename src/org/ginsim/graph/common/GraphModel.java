@@ -2,6 +2,7 @@ package org.ginsim.graph.common;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import org.ginsim.exception.GsException;
@@ -241,8 +242,10 @@ public interface GraphModel<V,E extends Edge<V>> {
 	Annotation getAnnotation();
 
 	/**
-	 * @return the list of strongly connected components in this graph
+	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * 
+	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
 	 */
-	Collection<Collection<V>> getStronglyConnectedComponents();
+	List<Set<V>> getStronglyConnectedComponents();
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -17,6 +18,7 @@ import org.ginsim.service.action.localgraph.LocalGraphService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.css.Selector;
+import fr.univmrs.tagc.common.Debugger;
 
 @ProviderFor( GsServiceGUI.class)
 @GUIFor( LocalGraphService.class)
@@ -31,7 +33,14 @@ public class LocalGraphServiceGUI implements GsServiceGUI {
 		if (graph instanceof GsRegulatoryGraph) {
 			actions.add(new LocalGraphAction((GsRegulatoryGraph)graph));
 		} else if (graph instanceof GsDynamicGraph){
-			actions.add(new LocalGraphAction((GsDynamicGraph)graph));
+			try{
+				actions.add(new LocalGraphAction((GsDynamicGraph)graph));
+			}
+			catch( GsException ge){
+	    		// TODO : REFACTORING ACTION
+	    		// TODO : Indicate the problem to the user?
+	    		Debugger.log( "Unable to add action for this graph since its associated graph was not retrieved" + ge);
+			}
 		}
 		return actions;
 	}
@@ -43,11 +52,13 @@ class LocalGraphAction extends GsToolsAction {
 	private final GsDynamicGraph dyn;
 	
 	protected LocalGraphAction(GsRegulatoryGraph graph) {
-		this(graph, null);
+		this( graph, null);
 	}
-	protected LocalGraphAction(GsDynamicGraph graph) {
-		this(graph.getAssociatedGraph(), graph);
+	
+	protected LocalGraphAction(GsDynamicGraph graph) throws GsException{
+		this( graph.getAssociatedGraph(), graph);
 	}
+	
 	protected LocalGraphAction(GsRegulatoryGraph graph, GsDynamicGraph dyn) {
 		super("STR_localGraph", "STR_localGraph_descr");
 		this.graph = graph;

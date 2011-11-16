@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
@@ -39,7 +40,7 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 		this.frame = parent;
 	}
 
-	public GsDecisionAnalysisFrame(JFrame frame, Graph graph) {
+	public GsDecisionAnalysisFrame(JFrame frame, Graph graph) throws GsException{
 		
 		super(frame, "STR_htg_decision_analysis", 475, 260);
 		this.frame = frame;
@@ -85,7 +86,8 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 
 	
 
-	protected void run() {
+	protected void run() throws GsException{
+		
 		GsDecisionAnalysis gsDecisionAnalysis = new GsDecisionAnalysis(htg, currentParameter);
 		this.brun.setEnabled(false);
 		gsDecisionAnalysis.run( GUIManager.getInstance().getGraphGUI( htg).getSelection().getSelectedNodes());

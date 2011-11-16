@@ -11,9 +11,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -186,7 +188,14 @@ abstract public class StackDialog extends SimpleDialog {
         	brun.setActionCommand("run");
         	brun.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e)  {
-                    run();
+                	try{
+                		run();
+                	}
+                	catch( GsException ge){
+                		// TODO : REFACTORING ACTION
+                		// TODO : Launch a message box to the user
+                		Debugger.log( "Unable to execute the action" + ge);
+                	}
                 }
             });
         }
@@ -217,7 +226,7 @@ abstract public class StackDialog extends SimpleDialog {
         return bottomPanel;
     }
     
-    abstract protected void run();
+    abstract protected void run() throws GsException;
     /**
      * called when the main panel takes the focus back
      */

@@ -34,6 +34,7 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryGraphEditor;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
@@ -414,7 +415,14 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
             // show all stables: quickly done but, it is "good enough" :)
             b_view.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                	viewStable();
+                	try{
+                		viewStable();
+                	}
+                	catch( GsException ge){
+                		// TODO : REFACTORING ACTION
+                		// TODO : Launch a message box to the user
+                		Debugger.log( "Unable to get the stable states" + ge);
+                	}
                 }
             });
             pinfo.add(b_view);
@@ -425,7 +433,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
         return pinfo;
     }
 
-    protected void viewStable() {
+    protected void viewStable() throws GsException{
         JFrame frame = new JFrame(Translator.getString("STR_stableStates"));
         frame.setSize(Math.min(30*(nodeOrder.size()+1), 800),
         		Math.min(25*(v_stables.size()+2), 600));

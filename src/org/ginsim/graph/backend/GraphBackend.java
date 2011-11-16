@@ -2,6 +2,7 @@ package org.ginsim.graph.backend;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.ginsim.graph.common.Edge;
 
@@ -125,6 +126,12 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 */
 	List<E> getShortestPath( V source, V target);
 	
-	Collection<Collection<V>> getStronglyConnectedComponents();
+	
+	/**
+	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * 
+	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
+	 */
+	List<Set<V>> getStronglyConnectedComponents();
 
 }

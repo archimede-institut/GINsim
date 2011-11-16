@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -331,7 +332,14 @@ public class GsAReg2GPConfig extends JDialog {
             but_export = new JButton(Translator.getString("STR_export"));
             but_export.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    export();
+                	try{
+                		export();
+                	}
+                	catch( GsException ge){
+                		// TODO : REFACTORING ACTION
+                		// TODO : Launch a message box to the user
+                		Debugger.log( "Unable to execute the Export : " + ge);
+                	}
                 }
             });
         }

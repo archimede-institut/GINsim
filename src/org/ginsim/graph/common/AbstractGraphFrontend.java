@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -228,8 +229,13 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		return graphBackend.getVertices();
 	}
 
+	/**
+	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * 
+	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
+	 */
 	@Override
-	public Collection<Collection<V>> getStronglyConnectedComponents() {
+	public List<Set<V>> getStronglyConnectedComponents() {
 		return graphBackend.getStronglyConnectedComponents();
 	}
 
