@@ -12,6 +12,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
@@ -40,7 +41,7 @@ public class GsExportDialog extends StackDialog {
 		try {
 			export.selectFile(config);
 		} catch (GsException e) {
-			GsEnv.error(e, null);
+			Tools.error(e, null);
 		}
 		dispose();
 	}

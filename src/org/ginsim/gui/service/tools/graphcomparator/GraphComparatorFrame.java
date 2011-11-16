@@ -213,7 +213,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			gc = new RegulatoryGraphComparator(g1, g2, g);
 	        break;
 		case GRAPH_TYPE_DYNAMIC:
-			List nodeOrder = DynamicGraphComparator.getNodeOrder(g1, g2);
+			List nodeOrder = DynamicGraphComparator.getNodeOrder( (GsDynamicGraph) g1, (GsDynamicGraph) g2);
 			if (nodeOrder != null) {
 				g = new GsDynamicGraph(nodeOrder);
 				if (opt_display_graph) {
@@ -253,8 +253,13 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		
 		Graph g = null;
 		int index = comboBox.getSelectedIndex() ;
-		if (index == 0) { // get from filepath
-			g = GraphManager.getInstance().open(new File(filepath.getText()));
+		if (index == 0) {
+			try{
+				g = GraphManager.getInstance().open(new File(filepath.getText()));
+			}
+			catch( GsException ge){
+				Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_GraphNotOpened")), this.frame);
+			}
 		} else if (index == 1) { //has choose blank element
             Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_blankComboBox")), this.frame);
 		} else {

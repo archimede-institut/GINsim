@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -26,20 +27,21 @@ public class GsDecisionAnalysis extends Thread {
 	/**
 	 * 
 	 */
-	public GsDecisionAnalysis(GsHierarchicalTransitionGraph htg, GsSimulationParameters params) {
+	public GsDecisionAnalysis(GsHierarchicalTransitionGraph htg, GsSimulationParameters params) throws GsException{
+		
 		this.htg = htg;
 		this.regGraph = (GsRegulatoryGraph) htg.getAssociatedGraph();
 		this.params = params;
 		this.geneCount = htg.getNodeOrderSize();
 	}
 
-	public void run() {
+	public void run( List selected_vertices) {
 		
 		// No more used
 		//List<GsRegulatoryVertex> nodeOrder = htg.getNodeOrder();
 		
 		//Iterate on the selected vertex or all of them f node are selected
-		Iterator<GsHierarchicalNode> it = htg.getGraphManager().getSelectedVertexIterator();
+		Iterator<GsHierarchicalNode> it = selected_vertices.iterator();
 		if (! it.hasNext()) {
 			it = htg.getVertices().iterator();
 		}

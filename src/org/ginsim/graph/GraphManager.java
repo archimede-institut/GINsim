@@ -246,7 +246,7 @@ public class GraphManager {
 	                        ze = f.getEntry((usePrefix ? AbstractGraphFrontend.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
-	                            ObjectAssociationManager.getInstance().addObject( manager.getObjectName(), o);
+	                            ObjectAssociationManager.getInstance().addObject( graph, manager.getObjectName(), o);
 	                        }
 	                    }
 	                }
@@ -257,7 +257,7 @@ public class GraphManager {
 	                        ze = f.getEntry((usePrefix ? AbstractGraphFrontend.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
-	                            ObjectAssociationManager.getInstance().addObject(manager.getObjectName(), o);
+	                            ObjectAssociationManager.getInstance().addObject( graph, manager.getObjectName(), o);
 	                        }
 	                    }
 	                }
@@ -299,6 +299,7 @@ public class GraphManager {
 	public void close( Graph graph){
 		
 		graphFilepath.remove( graph);
+		ObjectAssociationManager.getInstance().removeAllObjects( graph);
 		// TODO : REFACTORING ACTION:
 		// TODO : What to do if the graph is used as an associated graph by another graph? Do we have to remove the association?
 	}

@@ -13,6 +13,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
@@ -86,7 +87,7 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 	protected void run() {
 		GsDecisionAnalysis gsDecisionAnalysis = new GsDecisionAnalysis(htg, currentParameter);
 		this.brun.setEnabled(false);
-		gsDecisionAnalysis.run();
+		gsDecisionAnalysis.run( GUIManager.getInstance().getGraphGUI( htg).getSelection().getSelectedNodes());
 		this.brun.setEnabled(true);
 		cancel();
 	}

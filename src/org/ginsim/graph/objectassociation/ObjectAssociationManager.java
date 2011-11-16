@@ -19,7 +19,7 @@ public class ObjectAssociationManager {
 	private HashMap<Class,List<GsGraphAssociatedObjectManager>> specializedObjectManagers = null;
 	
     // The map linking objects associated to the Graph with their representative key
-    private Map<Object,Object> m_objects = null;
+    private HashMap<Graph,Map<Object,Object>> objectsOfGraph = null;
 	
 	private ObjectAssociationManager(){
 		
@@ -153,6 +153,8 @@ public class ObjectAssociationManager {
      */
     public Object getObject( Graph graph, Object key, boolean create) {
     	
+    	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
+    	
         if (m_objects == null) {
         	if ( create) {
         		m_objects = new HashMap<Object,Object>();
@@ -168,7 +170,7 @@ public class ObjectAssociationManager {
         	}
         	if (manager != null) {
         		ret = manager.doCreate( graph);
-        		addObject(key, ret);
+        		addObject(graph, key, ret);
         	}
         }
         return ret;
@@ -182,10 +184,13 @@ public class ObjectAssociationManager {
      * @param key
      * @param obj
      */
-    public void addObject(Object key, Object obj) {
+    public void addObject(Graph graph, Object key, Object obj) {
     	
-        if (m_objects == null) {
+    	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
+    	
+    	if (m_objects == null) {
             m_objects = new HashMap<Object,Object>();
+            objectsOfGraph.put( graph, m_objects);
         }
         m_objects.put(key, obj);
     }
@@ -197,12 +202,33 @@ public class ObjectAssociationManager {
      * @see #addObject(Object, Object)
      * @param key
      */
-    public void removeObject(Object key) {
+    public void removeObject(Graph graph, Object key) {
     	
-        if (m_objects == null) {
-            return;
+    	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
+    	
+        if (m_objects != null) {
+        	m_objects.remove(key);
         }
-        m_objects.remove(key);
+        
+    }
+    
+    /**
+     * Remove all references from associated objects
+     * 
+     * @param graph
+     */
+    public void removeAllObjects( Graph graph){
+    	
+    	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
+    	
+        if (m_objects != null) {
+            for( Object key : m_objects.keySet()){
+            	Object obj = m_objects.get( key);
+            	obj = null;
+            }
+            m_objects.clear();
+            m_objects = null;
+        }
     }
     
     /**

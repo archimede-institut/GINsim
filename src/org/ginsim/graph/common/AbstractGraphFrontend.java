@@ -510,12 +510,8 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 					zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
 					try {
 						manager.doSave(osw, this);
-					} catch (Exception e) {
-						if (mainFrame != null) {
-							addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, e)));
-						} else {
-							e.printStackTrace();
-						}
+					} catch (GsException e) {
+						throw e;
 					} finally {
 						osw.flush();
 						zos.closeEntry();
@@ -535,15 +531,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 			}
 		}
 		zos.close();
-
-		if (selected) {
-			System.out.println("selection saved");
-		} else {
-			System.out.println("Graph saved");
-			saved = true;
-			// TODO: send "graph saved" event
-			// (the event will mark it as saved in the GUI and add it to the recent files)
-		}
 
 		if (ftmp != null) {
 			// Everything went fine, rename the temporary file
@@ -596,8 +583,6 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      * @param data
 	 */
 	public void fireGraphChange(int change, Object data) {
-		
-		// FIXME: saved status should be updated by the GUI
 		
         List<GsGraphEventCascade> l_cascade = new ArrayList<GsGraphEventCascade>();
 		switch (change) {

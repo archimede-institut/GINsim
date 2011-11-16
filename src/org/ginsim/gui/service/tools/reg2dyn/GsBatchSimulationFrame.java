@@ -14,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 
@@ -153,7 +154,7 @@ public class GsBatchSimulationFrame extends GsBaseSimulationFrame {
 
     public static String nameState(byte[] state, GsRegulatoryGraph graph) {
     	
-        InitialStateList init = ((GsInitialStateList)graph.getObject(GsInitialStateManager.key, false)).getInitialStates();
+        InitialStateList init = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, GsInitialStateManager.key, false)).getInitialStates();
         // FIXME: adapt it to deal with input configs !!
         if (init != null && init.getNbElements(null) > 0) {
             List no = graph.getNodeOrder();
