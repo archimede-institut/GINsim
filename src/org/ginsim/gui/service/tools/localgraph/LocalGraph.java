@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationUpdater;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 
 /**
  * 
@@ -145,7 +145,7 @@ public class LocalGraph {
             cs.shouldStoreOldStyle = false;
         }
 		
-		GsEdgeAttributesReader ereader = g.getEdgeAttributeReader();
+		EdgeAttributesReader ereader = g.getEdgeAttributeReader();
 		for (GsRegulatoryMultiEdge me: g.getEdges()) {
 			ereader.setEdge(me);
 			cs.applyOnEdge(selector, me, ereader);

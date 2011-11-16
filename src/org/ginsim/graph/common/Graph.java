@@ -4,8 +4,6 @@ import java.util.Collection;
 
 import org.ginsim.exception.GsException;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * This interface layer add the access to "attribute readers" for vertices and edges.
@@ -29,7 +27,7 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * 
 	 * @return the attribute reader of edges
 	 */
-	public GsEdgeAttributesReader getEdgeAttributeReader();
+	public EdgeAttributesReader getEdgeAttributeReader();
 	
 	
 	/**
@@ -37,7 +35,7 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * 
 	 * @return the attribute reader of vertices
 	 */
-	public GsVertexAttributesReader getVertexAttributeReader();
+	public VertexAttributesReader getVertexAttributeReader();
 	
 	
 	/**

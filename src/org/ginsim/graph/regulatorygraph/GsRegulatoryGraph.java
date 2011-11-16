@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.annotation.BiblioManager;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
@@ -19,13 +20,12 @@ import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.annotation.BiblioManager;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -232,7 +232,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 
         switch (mode) {
 	    	case 2:
-	    	    GsEdgeAttributesReader ereader = getEdgeAttributeReader();
+	    	    EdgeAttributesReader ereader = getEdgeAttributeReader();
 		        while (it.hasNext()) {
 		        	GsRegulatoryMultiEdge edge = it.next();
 		            ereader.setEdge(edge);
@@ -260,7 +260,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	if ( mode >=0) {
     	}
 
-		GsVertexAttributesReader vReader = getVertexAttributeReader(); 
+		VertexAttributesReader vReader = getVertexAttributeReader(); 
     	
     	switch (mode) {
     		case 1:
@@ -477,8 +477,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         List ret = new ArrayList();
         HashMap copyMap = new HashMap();
         Iterator<GsRegulatoryVertex> it = otherGraph.getVertices().iterator();
-        GsVertexAttributesReader vReader = getVertexAttributeReader();
-        GsVertexAttributesReader cvreader = otherGraph.getVertexAttributeReader();
+        VertexAttributesReader vReader = getVertexAttributeReader();
+        VertexAttributesReader cvreader = otherGraph.getVertexAttributeReader();
         while (it.hasNext()) {
             GsRegulatoryVertex vertexOri = (GsRegulatoryVertex)it.next();
             GsRegulatoryVertex vertex = (GsRegulatoryVertex)vertexOri.clone();
@@ -492,8 +492,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         }
 
         Iterator<GsRegulatoryMultiEdge> it2 = otherGraph.getEdges().iterator();
-        GsEdgeAttributesReader eReader = getEdgeAttributeReader();
-        GsEdgeAttributesReader cereader = otherGraph.getEdgeAttributeReader();
+        EdgeAttributesReader eReader = getEdgeAttributeReader();
+        EdgeAttributesReader cereader = otherGraph.getEdgeAttributeReader();
         while (it2.hasNext()) {
         	GsRegulatoryMultiEdge deOri = it2.next();
         	GsRegulatoryMultiEdge edge = addEdge((GsRegulatoryVertex)copyMap.get(deOri.getSource()), (GsRegulatoryVertex)copyMap.get(deOri.getTarget()), 0);
@@ -535,8 +535,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     public Graph getSubgraph(Collection<GsRegulatoryVertex> v_vertex, Collection<GsRegulatoryMultiEdge> v_edges) {
     	
         GsRegulatoryGraph copiedGraph = new GsRegulatoryGraph();
-        GsVertexAttributesReader vReader = getVertexAttributeReader();
-        GsVertexAttributesReader cvreader = copiedGraph.getVertexAttributeReader();
+        VertexAttributesReader vReader = getVertexAttributeReader();
+        VertexAttributesReader cvreader = copiedGraph.getVertexAttributeReader();
         HashMap copyMap = new HashMap();
         if (v_vertex != null) {
             for (GsRegulatoryVertex vertexOri: v_vertex) {
@@ -550,8 +550,8 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
         }
 
         if (v_edges != null) {
-        	GsEdgeAttributesReader eReader = getEdgeAttributeReader();
-            GsEdgeAttributesReader cereader = copiedGraph.getEdgeAttributeReader();
+        	EdgeAttributesReader eReader = getEdgeAttributeReader();
+            EdgeAttributesReader cereader = copiedGraph.getEdgeAttributeReader();
 	        for (GsRegulatoryMultiEdge edgeOri: v_edges) {
 	        	GsRegulatoryMultiEdge edge = copiedGraph.addEdge((GsRegulatoryVertex)copyMap.get(edgeOri.getSource()), (GsRegulatoryVertex)copyMap.get(edgeOri.getTarget()), 0);
 	            edge.copyFrom(edgeOri);

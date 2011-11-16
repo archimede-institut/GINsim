@@ -3,10 +3,11 @@ package org.ginsim.graph.backend;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsFallBackEdgeAttributeReader;
-import fr.univmrs.tagc.GINsim.graph.GsFallbackVertexAttributeReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.FallBackEdgeAttributeReader;
+import org.ginsim.graph.common.FallbackVertexAttributeReader;
+import org.ginsim.graph.common.VertexAttributesReader;
+
 
 public class JgraphtViewBackendImpl implements GraphViewBackend {
 
@@ -14,8 +15,8 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
 	
     private Map evsmap = null;
     private Map vvsmap = null;
-    private GsEdgeAttributesReader fbEReader = null;
-    private GsVertexAttributesReader fbVReader = null;
+    private EdgeAttributesReader fbEReader = null;
+    private VertexAttributesReader fbVReader = null;
 
     GraphViewBackend viewBackend = null;
     
@@ -23,14 +24,14 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
 		this.graphBackend = jgraphtBackendImpl;
 	}
 
-	public GsEdgeAttributesReader getEdgeAttributeReader() {
+	public EdgeAttributesReader getEdgeAttributeReader() {
 		
 		if (viewBackend != null) {
 			return viewBackend.getEdgeAttributeReader();
 		}
         return getFallBackEReader();
 	}
-	public GsVertexAttributesReader getVertexAttributeReader() {
+	public VertexAttributesReader getVertexAttributeReader() {
 		if (viewBackend != null) {
 			return viewBackend.getVertexAttributeReader();
 		}
@@ -68,18 +69,18 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
     /**
      * @return a generic edgeAttribute storing it's data to a local hashMap
      */
-    protected GsEdgeAttributesReader getFallBackEReader() {
+    protected EdgeAttributesReader getFallBackEReader() {
         if (fbEReader == null) {
-            fbEReader = new GsFallBackEdgeAttributeReader(getEdgeVSMap());
+            fbEReader = new FallBackEdgeAttributeReader(getEdgeVSMap());
         }
         return fbEReader;
     }
     /**
      * @return a generic vertexAttributeReader storing it's data to a local hashMap
      */
-    protected GsVertexAttributesReader getFallBackVReader() {
+    protected VertexAttributesReader getFallBackVReader() {
         if (fbVReader == null) {
-            fbVReader = new GsFallbackVertexAttributeReader(getVertexVSMap());
+            fbVReader = new FallbackVertexAttributeReader(getVertexVSMap());
         }
         return fbVReader;
     }

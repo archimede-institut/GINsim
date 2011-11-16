@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.testGraph.TestEdge;
 import org.ginsim.graph.testGraph.TestGraph;
 import org.ginsim.graph.testGraph.TestVertex;
@@ -16,7 +17,6 @@ import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * Simple GUI helper for the test graph.
@@ -61,7 +61,7 @@ public class TestGraphGUIHelper implements GraphGUIHelper<TestGraph, TestVertex,
 	@Override
 	public List<EditAction> getEditActions(TestGraph graph) {
 		List<EditAction> actions = new ArrayList<EditAction>();
-		GsVertexAttributesReader reader = graph.getVertexAttributeReader();
+		VertexAttributesReader reader = graph.getVertexAttributeReader();
 		actions.add(new AddTestVertexAction(graph, "+ TV", reader));
 		actions.add(new AddTestEdgeAction(graph, "+ TE"));
 		return actions;
@@ -81,7 +81,7 @@ public class TestGraphGUIHelper implements GraphGUIHelper<TestGraph, TestVertex,
 class AddTestVertexAction extends AddVertexAction<TestVertex> {
 
 	private final TestGraph graph;
-	public AddTestVertexAction(TestGraph graph, String name, GsVertexAttributesReader reader) {
+	public AddTestVertexAction(TestGraph graph, String name, VertexAttributesReader reader) {
 		super(name, reader);
 		this.graph = graph;
 	}

@@ -6,9 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import fr.univmrs.tagc.GINsim.graph.GsAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.ginsim.graph.common.AttributesReader;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
+
 
 public class CascadingStyle {
 	private Map old_nodes, old_edges;
@@ -27,7 +28,7 @@ public class CascadingStyle {
 	 * @param edge
 	 * @param areader
 	 */
-	public void applyOnEdge(Selector sel, Object edge, GsAttributesReader areader) {
+	public void applyOnEdge(Selector sel, Object edge, AttributesReader areader) {
 		if (shouldStoreOldStyle) old_edges.put(edge, new EdgeStyle(areader));
 		sel.applyStyleForEdge(edge, areader);
 	}
@@ -39,7 +40,7 @@ public class CascadingStyle {
 	 * @param edge
 	 * @param areader
 	 */
-	public void applyOnNode(Selector sel, Object node, GsAttributesReader areader) {
+	public void applyOnNode(Selector sel, Object node, AttributesReader areader) {
 		if (shouldStoreOldStyle) old_nodes.put(node, new VertexStyle(areader));
 		sel.applyStyleForNode(node, areader);
 	}
@@ -51,7 +52,7 @@ public class CascadingStyle {
 	 * @param edge
 	 * @param areader
 	 */
-	public void applyOnEdge(EdgeStyle style, Object edge, GsAttributesReader areader) {
+	public void applyOnEdge(EdgeStyle style, Object edge, AttributesReader areader) {
 		if (shouldStoreOldStyle) old_edges.put(edge, new EdgeStyle(areader));
 		style.apply(areader);
 	}
@@ -63,7 +64,7 @@ public class CascadingStyle {
 	 * @param node
 	 * @param areader
 	 */
-	public void applyOnNode(VertexStyle style, Object node, GsAttributesReader areader) {
+	public void applyOnNode(VertexStyle style, Object node, AttributesReader areader) {
 		if (shouldStoreOldStyle) old_nodes.put(node, new VertexStyle(areader));
 		style.apply(areader);
 	}
@@ -78,7 +79,7 @@ public class CascadingStyle {
 	 * @param edges a collection of edges to apply the selectors on
 	 * @param ereader an edge AttributesReader
 	 */
-	public void applySelectorsOnEdges(List selectors, Collection edges, GsEdgeAttributesReader ereader) {
+	public void applySelectorsOnEdges(List selectors, Collection edges, EdgeAttributesReader ereader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {			//For each edges
 			Object edge = it_edges.next();
 			ereader.setEdge(edge);
@@ -101,7 +102,7 @@ public class CascadingStyle {
 	 * @param nodes a collection of nodes to apply the selectors on
 	 * @param vreader a vertex AttributesReader
 	 */
-	public void applySelectorsOnNodes(List selectors, Collection nodes, GsVertexAttributesReader vreader) {
+	public void applySelectorsOnNodes(List selectors, Collection nodes, VertexAttributesReader vreader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each nodes
 			Object node = it_nodes.next();
 			vreader.setVertex(node);
@@ -124,7 +125,7 @@ public class CascadingStyle {
 	 * @param edges a collection of edges to apply the selectors on
 	 * @param ereader an edge AttributesReader
 	 */
-	public void applySelectorOnEdges(Selector sel, Collection edges, GsEdgeAttributesReader ereader) {
+	public void applySelectorOnEdges(Selector sel, Collection edges, EdgeAttributesReader ereader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {			//For each edge
 			Object edge = it_edges.next();
 			ereader.setEdge(edge);
@@ -143,7 +144,7 @@ public class CascadingStyle {
 	 * @param edges a collection of nodes to apply the selectors on
 	 * @param vreader an vertex AttributesReader
 	 */
-	public void applySelectorOnNodes(Selector sel, Collection nodes, GsVertexAttributesReader vreader) {
+	public void applySelectorOnNodes(Selector sel, Collection nodes, VertexAttributesReader vreader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each edge
 			Object node = it_nodes.next();
 			vreader.setVertex(node);
@@ -158,7 +159,7 @@ public class CascadingStyle {
 	 * @param edge
 	 * @param areader a edge attributesReader (must be set to the right edge)
 	 */
-	public void restoreEdge(Object edge, GsEdgeAttributesReader areader) {
+	public void restoreEdge(Object edge, EdgeAttributesReader areader) {
 		((Style)old_edges.get(edge)).apply(areader);
 	}
 
@@ -167,7 +168,7 @@ public class CascadingStyle {
 	 * @param node
 	 * @param areader a vertex attributesReader (must be set to the right vertex)
 	 */
-	public void restoreNode(Object node, GsVertexAttributesReader areader) {
+	public void restoreNode(Object node, VertexAttributesReader areader) {
 		((Style)old_nodes.get(node)).apply(areader);
 	}
 
@@ -175,7 +176,7 @@ public class CascadingStyle {
 	 * Restore all the edges previously saved.
 	 * @param areader an edge attributesReader
 	 */
-	public void restoreAllEdges(GsEdgeAttributesReader areader) {
+	public void restoreAllEdges(EdgeAttributesReader areader) {
 		for (Iterator it_edges = old_edges.keySet().iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
 			areader.setEdge(edge);
@@ -187,7 +188,7 @@ public class CascadingStyle {
 	 * Restore all the nodes previously saved.
 	 * @param areader a vertex attributesReader
 	 */
-	public void restoreAllNodes(GsVertexAttributesReader areader) {
+	public void restoreAllNodes(VertexAttributesReader areader) {
 		for (Iterator it_nodes = old_nodes.keySet().iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setVertex(node);
@@ -200,7 +201,7 @@ public class CascadingStyle {
 	 * @param edges a collection of edges to restore
 	 * @param areader a edge attributesReader
 	 */
-	public void restoreAllEdges(Collection edges, GsEdgeAttributesReader areader) {
+	public void restoreAllEdges(Collection edges, EdgeAttributesReader areader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
 			areader.setEdge(edge);
@@ -214,7 +215,7 @@ public class CascadingStyle {
 	 * @param nodes a collection of nodes to restore
 	 * @param areader a vertex attributesReader
 	 */
-	public void restoreAllNodes(Collection nodes, GsVertexAttributesReader areader) {
+	public void restoreAllNodes(Collection nodes, VertexAttributesReader areader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setVertex(node);
@@ -228,7 +229,7 @@ public class CascadingStyle {
 	 * @param nodes a collection of nodes to store
 	 * @param areader a vertex attributesReader
 	 */
-	public void storeAllNodes(Collection nodes, GsVertexAttributesReader areader) {
+	public void storeAllNodes(Collection nodes, VertexAttributesReader areader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setVertex(node);
@@ -242,7 +243,7 @@ public class CascadingStyle {
 	 * @param nodes a collection of nodes to store
 	 * @param areader a vertex attributesReader
 	 */
-	public void storeAllEdges(Collection edges, GsEdgeAttributesReader areader) {
+	public void storeAllEdges(Collection edges, EdgeAttributesReader areader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
 			areader.setEdge(edge);

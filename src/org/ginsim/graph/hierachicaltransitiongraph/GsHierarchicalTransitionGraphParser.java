@@ -5,16 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 
@@ -38,8 +38,8 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
     private int vslevel = 0;
     
     private GsHierarchicalNode vertex = null;
-    private GsVertexAttributesReader vareader = null;
-    private GsEdgeAttributesReader ereader = null;
+    private VertexAttributesReader vareader = null;
+    private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
     private Map map;
     private Map<String, GsHierarchicalNode> oldIdToVertex = new HashMap<String, GsHierarchicalNode>();

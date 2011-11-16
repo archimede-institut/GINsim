@@ -20,6 +20,8 @@ import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditActionManager;
@@ -39,8 +41,6 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Debugger;
 
 public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphViewBackend, GraphSelectionListener {
@@ -89,12 +89,12 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	}
 	
 	@Override
-	public GsEdgeAttributesReader getEdgeAttributeReader() {
+	public EdgeAttributesReader getEdgeAttributeReader() {
 		return new GsJgraphEdgeAttribute(backend, m_jgAdapter, null);
 	}
 
 	@Override
-	public GsVertexAttributesReader getVertexAttributeReader() {
+	public VertexAttributesReader getVertexAttributeReader() {
 		return new GsJgraphVertexAttribute(m_jgAdapter, null);
 	}
 

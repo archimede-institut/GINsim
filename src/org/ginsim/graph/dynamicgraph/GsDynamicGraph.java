@@ -22,14 +22,14 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryGraphEditor;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
@@ -212,7 +212,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
         	edges = getEdges();
         }
 
-        GsEdgeAttributesReader eReader = getEdgeAttributeReader();
+        EdgeAttributesReader eReader = getEdgeAttributeReader();
         
         switch (mode) {
         	case 2:
@@ -247,7 +247,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
     		nodes = getVertices();
     	}
     	
-    	GsVertexAttributesReader vReader = getVertexAttributeReader();
+    	VertexAttributesReader vReader = getVertexAttributeReader();
     	
         	switch (mode) {
 	    		case 1:
@@ -303,7 +303,7 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 			return null;
 		}
 		if (multiple) {
-			GsEdgeAttributesReader eReader = getEdgeAttributeReader();
+			EdgeAttributesReader eReader = getEdgeAttributeReader();
 			eReader.setEdge(edge);
 			eReader.setDash(dashpattern);
 		}
@@ -331,8 +331,8 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 
         List ret = new ArrayList();
         Iterator it = otherGraph.getVertices().iterator();
-        GsVertexAttributesReader vReader = getVertexAttributeReader();
-        GsVertexAttributesReader cvreader = otherGraph.getVertexAttributeReader();
+        VertexAttributesReader vReader = getVertexAttributeReader();
+        VertexAttributesReader cvreader = otherGraph.getVertexAttributeReader();
         while (it.hasNext()) {
             GsDynamicNode vertex = (GsDynamicNode)it.next();
             addVertex(vertex);

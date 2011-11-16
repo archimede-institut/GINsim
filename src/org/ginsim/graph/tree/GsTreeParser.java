@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
+
 import fr.univmrs.tagc.common.Tools;
 
 public abstract class GsTreeParser<V,E> {
@@ -46,14 +47,14 @@ public abstract class GsTreeParser<V,E> {
 	public abstract void init();
 
 	public abstract void parseOmdd();
-	public abstract void updateLayout(GsVertexAttributesReader vreader, GsTreeNode vertex);
+	public abstract void updateLayout(VertexAttributesReader vreader, GsTreeNode vertex);
 
 	
 	/**
 	 * Compute the layout for each node in this tree
 	 */
 	public void updateVertexLayout() {
-		GsVertexAttributesReader vreader = tree.getVertexAttributeReader();
+		VertexAttributesReader vreader = tree.getVertexAttributeReader();
 		for (Iterator it = tree.getVertices().iterator(); it.hasNext();) {
 			GsTreeNode vertex = (GsTreeNode) it.next();
 			updateLayout(vreader, vertex);

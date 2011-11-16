@@ -1,6 +1,6 @@
 package org.ginsim.service.layout;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 
 /**
  * level placement of nodes
@@ -8,14 +8,14 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 public class GsRingLayout implements GsLayoutAlgo {
 
     
-    private GsVertexAttributesReader vreader;
+    private VertexAttributesReader vreader;
     
     private int centerx, centery;
     private int rayonRoot, rayonStable, rayonClassic;
     private double phiRoot, phiStable, phiClassic;
     private double tetaRoot, tetaStable, tetaClassic;
     
-    public void configure(GsVertexAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth) {
+    public void configure(VertexAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth) {
         this.vreader = vreader;
         
 		rayonRoot = (nbRoot*150)/8;

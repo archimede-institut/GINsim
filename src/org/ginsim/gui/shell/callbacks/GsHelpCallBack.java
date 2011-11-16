@@ -7,8 +7,9 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import org.ginsim.gui.shell.AboutDialog;
+
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.widgets.AboutDialog;
 
 /**
  * Here are the (few) callback for entry in the "help" menu

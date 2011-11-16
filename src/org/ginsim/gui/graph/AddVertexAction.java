@@ -1,12 +1,12 @@
 package org.ginsim.gui.graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 
 public abstract class AddVertexAction<V> extends EditAction {
 
-	private final GsVertexAttributesReader reader;
+	private final VertexAttributesReader reader;
 	
-	public AddVertexAction(String name, GsVertexAttributesReader reader) {
+	public AddVertexAction(String name, VertexAttributesReader reader) {
 		super(EditMode.NODE, name);
 		this.reader = reader;
 	}

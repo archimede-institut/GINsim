@@ -1,11 +1,11 @@
 package org.ginsim.graph.backend;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 
 public interface GraphViewBackend{
 
-	public GsEdgeAttributesReader getEdgeAttributeReader();
-	public GsVertexAttributesReader getVertexAttributeReader();
+	public EdgeAttributesReader getEdgeAttributeReader();
+	public VertexAttributesReader getVertexAttributeReader();
 
 }

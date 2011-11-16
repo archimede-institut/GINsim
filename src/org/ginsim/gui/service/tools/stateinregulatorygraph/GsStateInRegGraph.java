@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 
 /**
@@ -91,8 +91,8 @@ public class GsStateInRegGraph {
 	}
 
 	private void colorizeGraph() {
-		GsVertexAttributesReader vreader = regGraph.getVertexAttributeReader();
-		GsEdgeAttributesReader ereader = regGraph.getEdgeAttributeReader();
+		VertexAttributesReader vreader = regGraph.getVertexAttributeReader();
+		EdgeAttributesReader ereader = regGraph.getEdgeAttributeReader();
 
 		cs.restoreAllEdges(regGraph.getEdges(), ereader);
 		//Cannot use cs.applySelectorOnEdges because we need the multiarcs, so do it manually

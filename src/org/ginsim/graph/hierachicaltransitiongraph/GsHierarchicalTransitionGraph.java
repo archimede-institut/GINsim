@@ -16,6 +16,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -23,7 +24,6 @@ import org.ginsim.gui.service.tools.decisionanalysis.GsDecisionOnEdge;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -240,7 +240,7 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	  * @throws IOException
 	  */
 	 private void saveNode(XMLWriter out, int mode, Collection<GsHierarchicalNode> vertices) throws IOException {
-	 	GsVertexAttributesReader vReader = getVertexAttributeReader();
+	 	VertexAttributesReader vReader = getVertexAttributeReader();
 	     for (GsHierarchicalNode vertex: vertices) {
 	         vReader.setVertex(vertex);
 	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");

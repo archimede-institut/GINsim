@@ -3,10 +3,10 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.mutant;
 import java.io.IOException;
 import java.util.Vector;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.datastore.NamedObject;
 import fr.univmrs.tagc.common.xml.XMLWriter;

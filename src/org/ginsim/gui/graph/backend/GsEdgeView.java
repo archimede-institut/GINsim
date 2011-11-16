@@ -4,12 +4,12 @@ import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 
+import org.ginsim.graph.common.EdgeAttributesReader;
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.EdgeRenderer;
 import org.jgraph.graph.EdgeView;
 import org.jgraph.graph.GraphConstants;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 
 /**
  * a jgraph edge viewer
@@ -48,7 +48,7 @@ class GsEdgeRenderer extends EdgeRenderer {
 	}
     
     protected Shape createLineEnd(int size, int style, Point2D src, Point2D dst) {
-        if (style == GsEdgeAttributesReader.ARROW_DOUBLE) {
+        if (style == EdgeAttributesReader.ARROW_DOUBLE) {
             
             Shape pl = createLineEnd(size, GraphConstants.ARROW_TECHNICAL, src, dst);
             if (pl == null) {

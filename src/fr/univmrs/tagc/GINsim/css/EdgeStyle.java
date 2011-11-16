@@ -5,8 +5,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import fr.univmrs.tagc.GINsim.graph.GsAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
+import org.ginsim.graph.common.AttributesReader;
+import org.ginsim.graph.common.EdgeAttributesReader;
+
 import fr.univmrs.tagc.common.Tools;
 
 
@@ -59,7 +60,7 @@ public class EdgeStyle implements Style {
 	 * @param shape the shape for the line 
 	 * @param lineEnd the style for the end of the line 
 	 * 
-	 * @see GsEdgeAttributesReader
+	 * @see EdgeAttributesReader
 	 */
 	public EdgeStyle(Color lineColor, int lineEnd, int shape, float border) {
 		this.lineColor	= lineColor;
@@ -72,11 +73,11 @@ public class EdgeStyle implements Style {
 	 * A new style from a GsAttributesReader areader
  	 * @param areader
  	 */
-	public EdgeStyle(GsAttributesReader areader) {
-		lineColor 	= ((GsEdgeAttributesReader) areader).getLineColor();
-		shape 		= ((GsEdgeAttributesReader) areader).getStyle();
-		lineEnd 	= ((GsEdgeAttributesReader) areader).getLineEnd();
-		border	 	= ((GsEdgeAttributesReader) areader).getLineWidth();
+	public EdgeStyle(AttributesReader areader) {
+		lineColor 	= ((EdgeAttributesReader) areader).getLineColor();
+		shape 		= ((EdgeAttributesReader) areader).getStyle();
+		lineEnd 	= ((EdgeAttributesReader) areader).getLineEnd();
+		border	 	= ((EdgeAttributesReader) areader).getLineWidth();
 	}
 	
 	/**
@@ -98,11 +99,11 @@ public class EdgeStyle implements Style {
 		if (((EdgeStyle) s).border != NULL_BORDER)			border 		= ((EdgeStyle) s).border;		
 	}
 
-	public void apply(GsAttributesReader areader) {
-		if (lineColor != NULL_LINECOLOR)	((GsEdgeAttributesReader) areader).setLineColor(lineColor);
-		if (shape != NULL_SHAPE) 			((GsEdgeAttributesReader) areader).setStyle(shape);
-		if (lineEnd != NULL_LINEEND) 		((GsEdgeAttributesReader) areader).setLineEnd(lineEnd);
-		if (border != NULL_BORDER) 			((GsEdgeAttributesReader) areader).setLineWidth(border);
+	public void apply(AttributesReader areader) {
+		if (lineColor != NULL_LINECOLOR)	((EdgeAttributesReader) areader).setLineColor(lineColor);
+		if (shape != NULL_SHAPE) 			((EdgeAttributesReader) areader).setStyle(shape);
+		if (lineEnd != NULL_LINEEND) 		((EdgeAttributesReader) areader).setLineEnd(lineEnd);
+		if (border != NULL_BORDER) 			((EdgeAttributesReader) areader).setLineWidth(border);
 		areader.refresh();
 	}
 
@@ -123,21 +124,21 @@ public class EdgeStyle implements Style {
 			tabs += "\t";
 		}
 		if (lineColor!= NULL_LINECOLOR) s += tabs+CSS_LINECOLOR+": "+Tools.getColorCode(lineColor)+"\n";
-		if (shape != NULL_SHAPE) s += tabs+CSS_SHAPE+": "+(shape == GsEdgeAttributesReader.STYLE_CURVE?CSS_SHAPE_CURVE:CSS_SHAPE_STRAIGHT)+"\n";
+		if (shape != NULL_SHAPE) s += tabs+CSS_SHAPE+": "+(shape == EdgeAttributesReader.STYLE_CURVE?CSS_SHAPE_CURVE:CSS_SHAPE_STRAIGHT)+"\n";
 		if (border != NULL_BORDER) s += tabs+CSS_BORDER+": "+border+"\n";
 		if (lineEnd != NULL_LINEEND) {
 			s += tabs+CSS_LINEEND+": ";
 			switch (lineEnd) {
-			case GsEdgeAttributesReader.ARROW_POSITIVE:
+			case EdgeAttributesReader.ARROW_POSITIVE:
 				s += CSS_LINEEND_POSITIVE;
 				break;
-			case GsEdgeAttributesReader.ARROW_NEGATIVE:
+			case EdgeAttributesReader.ARROW_NEGATIVE:
 				s += CSS_LINEEND_NEGATIVE;
 				break;
-			case GsEdgeAttributesReader.ARROW_DOUBLE:
+			case EdgeAttributesReader.ARROW_DOUBLE:
 				s += CSS_LINEEND_DOUBLE;
 				break;
-			case GsEdgeAttributesReader.ARROW_UNKNOWN:
+			case EdgeAttributesReader.ARROW_UNKNOWN:
 				s += CSS_LINEEND_UNKNOWN;
 				break;
 			}
@@ -174,14 +175,14 @@ public class EdgeStyle implements Style {
 					throw new GsCSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_SHAPE)) {
-				if 		(value.equals(CSS_SHAPE_CURVE)) 	shape = GsEdgeAttributesReader.STYLE_CURVE;
-				else if (value.equals(CSS_SHAPE_STRAIGHT)) 	shape = GsEdgeAttributesReader.STYLE_STRAIGHT;
+				if 		(value.equals(CSS_SHAPE_CURVE)) 	shape = EdgeAttributesReader.STYLE_CURVE;
+				else if (value.equals(CSS_SHAPE_STRAIGHT)) 	shape = EdgeAttributesReader.STYLE_STRAIGHT;
 				else throw new GsCSSSyntaxException("Unknown edge shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_CURVE+" or "+CSS_SHAPE_STRAIGHT);
 			} else if (key.equals(CSS_LINEEND)) {
-				if 		(value.equals(CSS_LINEEND_POSITIVE)) 	lineEnd = GsEdgeAttributesReader.ARROW_POSITIVE;
-				else if (value.equals(CSS_LINEEND_NEGATIVE)) 	lineEnd = GsEdgeAttributesReader.ARROW_NEGATIVE;
-				else if (value.equals(CSS_LINEEND_DOUBLE))	 	lineEnd = GsEdgeAttributesReader.ARROW_DOUBLE;
-				else if (value.equals(CSS_LINEEND_UNKNOWN)) 	lineEnd = GsEdgeAttributesReader.ARROW_UNKNOWN;
+				if 		(value.equals(CSS_LINEEND_POSITIVE)) 	lineEnd = EdgeAttributesReader.ARROW_POSITIVE;
+				else if (value.equals(CSS_LINEEND_NEGATIVE)) 	lineEnd = EdgeAttributesReader.ARROW_NEGATIVE;
+				else if (value.equals(CSS_LINEEND_DOUBLE))	 	lineEnd = EdgeAttributesReader.ARROW_DOUBLE;
+				else if (value.equals(CSS_LINEEND_UNKNOWN)) 	lineEnd = EdgeAttributesReader.ARROW_UNKNOWN;
 				else throw new GsCSSSyntaxException("Unknown edge lineEnd at line "+i+" : "+lines[i]+". Must be "+CSS_LINEEND_POSITIVE+", "+CSS_LINEEND_NEGATIVE+", "+CSS_LINEEND_DOUBLE+" or "+CSS_LINEEND_UNKNOWN);
 			} else {
 				throw new GsCSSSyntaxException("Edge has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_LINECOLOR+", "+CSS_SHAPE+" or "+CSS_LINEEND);

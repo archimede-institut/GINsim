@@ -9,14 +9,14 @@ import java.util.Iterator;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
 import fr.univmrs.tagc.GINsim.export.GsExportConfig;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -106,7 +106,7 @@ public class CytoscapeExport extends GsAbstractExport<Graph<?,?>> {
 		Hashtable gs2cyt_Ids = new Hashtable(graph.getVertexCount());
 		
 		int current_index_of_node_id = -graph.getVertexCount(); // The IDs goes from -vertexCount to -1
-		GsVertexAttributesReader vertexAttributeReader = graph.getVertexAttributeReader();
+		VertexAttributesReader vertexAttributeReader = graph.getVertexAttributeReader();
 		for (Iterator it=graph.getVertices().iterator() ; it.hasNext() ;) {
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
 			
@@ -134,9 +134,9 @@ public class CytoscapeExport extends GsAbstractExport<Graph<?,?>> {
 			out.addAttr("fill", '#'+Tools.getColorCode(vertexAttributeReader.getBackgroundColor()));
 			out.addAttr("y", String.valueOf(vertexAttributeReader.getY()));
 			out.addAttr("x", String.valueOf(vertexAttributeReader.getX()));
-			if (vertexAttributeReader.getShape() == GsVertexAttributesReader.SHAPE_RECTANGLE) {
+			if (vertexAttributeReader.getShape() == VertexAttributesReader.SHAPE_RECTANGLE) {
 				out.addAttr("type", "rectangle");
-			} else if (vertexAttributeReader.getShape() == GsVertexAttributesReader.SHAPE_ELLIPSE) {
+			} else if (vertexAttributeReader.getShape() == VertexAttributesReader.SHAPE_ELLIPSE) {
 				out.addAttr("type", "ellipse");
 			}			
 			out.openTag("att");
@@ -152,7 +152,7 @@ public class CytoscapeExport extends GsAbstractExport<Graph<?,?>> {
 		}
 		
 		//edges
-		GsEdgeAttributesReader edgeAttributeReader = graph.getEdgeAttributeReader();
+		EdgeAttributesReader edgeAttributeReader = graph.getEdgeAttributeReader();
 		for (Iterator<GsRegulatoryMultiEdge> it=graph.getEdges().iterator() ; it.hasNext() ;) {
 			GsRegulatoryMultiEdge edge = it.next();
 
@@ -198,7 +198,7 @@ public class CytoscapeExport extends GsAbstractExport<Graph<?,?>> {
 			out.addTag("att", new String[] {"name", "edgeLineType", "value", "SOLID"});
 			out.addTag("att", new String[] {"name", "sourceArrowColor", "value", '#'+Tools.getColorCode(edgeAttributeReader.getLineColor())});
 			out.addTag("att", new String[] {"name", "targetArrowColor", "value", '#'+Tools.getColorCode(edgeAttributeReader.getLineColor())});
-			if (edgeAttributeReader.getStyle() == GsEdgeAttributesReader.STYLE_STRAIGHT) {
+			if (edgeAttributeReader.getStyle() == EdgeAttributesReader.STYLE_STRAIGHT) {
 				out.addTag("att", new String[] {"name", "curved", "value", "STRAIGHT_LINES"});
 			} else {
 				out.addTag("att", new String[] {"name", "curved", "value", "CURVED_LINES"});

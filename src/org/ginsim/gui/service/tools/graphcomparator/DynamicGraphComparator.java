@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 
 /**
  * Compare 2 GsDynamicGraph
@@ -74,11 +74,11 @@ public class DynamicGraphComparator extends GraphComparator<GsDynamicGraph> {
 		}
 	}
 
-	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
+	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, EdgeAttributesReader ereader) {
 		GsDynamicNode v = (GsDynamicNode) gm_main.getVertexByName(id);
 		Edge<GsDynamicNode> e = null;
-		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
-		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
+		EdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
+		EdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 		
 		if (v != null) { //If v is a vertex from the studied graph, we look at its edges
 			Collection<Edge<GsDynamicNode>> edges = gm_main.getOutgoingEdges(v);

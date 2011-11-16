@@ -10,19 +10,19 @@ import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.VertexRenderer;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Tools;
 
 /**
  * extract info on vertices for jgraph based graphs.
  */
-public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
+public class GsJgraphVertexAttribute extends VertexAttributesReader {
 
 	private JGraphModelAdapter m_adaptor;
 	private AttributeMap defaultVertexAttr;
@@ -59,11 +59,11 @@ public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
 	}
 
 	public static void applyDefault(AttributeMap defaultVertexAttr) {
-        GraphConstants.setBackground(defaultVertexAttr, GsVertexAttributesReader.bg);
-        GraphConstants.setForeground(defaultVertexAttr, GsVertexAttributesReader.fg);
-        GraphConstants.setBorder(defaultVertexAttr, (Border)v_borderRenderer[GsVertexAttributesReader.border]);
-        GraphConstants.setBounds(defaultVertexAttr, new Rectangle(10,10,GsVertexAttributesReader.width,GsVertexAttributesReader.height));
-        int shapeIndex = GsVertexAttributesReader.shape;
+        GraphConstants.setBackground(defaultVertexAttr, VertexAttributesReader.bg);
+        GraphConstants.setForeground(defaultVertexAttr, VertexAttributesReader.fg);
+        GraphConstants.setBorder(defaultVertexAttr, (Border)v_borderRenderer[VertexAttributesReader.border]);
+        GraphConstants.setBounds(defaultVertexAttr, new Rectangle(10,10,VertexAttributesReader.width,VertexAttributesReader.height));
+        int shapeIndex = VertexAttributesReader.shape;
         if (shapeIndex >= 0 && shapeIndex < NBSHAPE) {
             defaultVertexAttr.put("RENDERER", v_shapeRenderer[shapeIndex]);
         } else {
@@ -181,18 +181,18 @@ public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
 	
 	public void setDefaultVertexBackground(Color color) {
 		GraphConstants.setBackground(defaultVertexAttr, color);
-		GsVertexAttributesReader.bg = color;
+		VertexAttributesReader.bg = color;
 	}
 
 	public void setDefaultVertexForeground(Color color) {
 		GraphConstants.setForeground(defaultVertexAttr, color);
-        GsVertexAttributesReader.fg = color;
+        VertexAttributesReader.fg = color;
 	}
 
 	public void setDefaultVertexSize(int w, int h) {
 		GraphConstants.setBounds(defaultVertexAttr, new Rectangle(10,10,w,h));
-        GsVertexAttributesReader.height = h;
-        GsVertexAttributesReader.width = w;
+        VertexAttributesReader.height = h;
+        VertexAttributesReader.width = w;
 	}
 
 	public void setDefaultVertexBorder(int borderIndex) {
@@ -201,7 +201,7 @@ public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
 		}
 		idDefaultBorder = borderIndex;
 		GraphConstants.setBorder(defaultVertexAttr, (Border)v_borderRenderer[borderIndex]);
-        GsVertexAttributesReader.border = borderIndex;
+        VertexAttributesReader.border = borderIndex;
 	}
 
 	public void setBorder(int borderIndex) {
@@ -263,7 +263,7 @@ public class GsJgraphVertexAttribute extends GsVertexAttributesReader {
 		} else {
 			defaultVertexAttr.remove("RENDERER");
 		}
-        GsVertexAttributesReader.shape = shapeIndex;
+        VertexAttributesReader.shape = shapeIndex;
 	}
 
     public Color getDefaultVertexBackground() {

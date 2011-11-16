@@ -10,13 +10,13 @@ import java.util.Set;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * Compare 2 GsGraph
@@ -76,7 +76,7 @@ public abstract class GraphComparator<G extends Graph> {
 		setVerticesColor();
 		log("\n");
 		
-		GsEdgeAttributesReader ereader = gm.getEdgeAttributeReader();
+		EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
 		for (Iterator it = verticesIdsSet.iterator(); it.hasNext();) { 		//For all edges
 			String id = (String) it.next();
 			Color col = ((VertexStyle)((ItemStore)stylesMap.get(gm.getVertexByName(id))).v).background;
@@ -95,7 +95,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param vsourcereader a vertexAttributesReader for the old graph
 	 * @param col the color to apply to its background
 	 */
-	protected void mergeVertexAttributes(Object v, Object source, Object aux, GsVertexAttributesReader vreader, GsVertexAttributesReader vsourcereader, GsVertexAttributesReader vauxreader, Color col) {
+	protected void mergeVertexAttributes(Object v, Object source, Object aux, VertexAttributesReader vreader, VertexAttributesReader vsourcereader, VertexAttributesReader vauxreader, Color col) {
 		vreader.setVertex(v);
 		if (source != null) {
 			vsourcereader.setVertex(source);
@@ -121,7 +121,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param esourcereader a vertexAttributesReader for the graph to copy from
 	 * @param col the color to apply to its lineColor
 	 */
-	protected void mergeEdgeAttributes(Object e, Object source, Object aux, Color col, GsEdgeAttributesReader ereader, GsEdgeAttributesReader esourcereader, GsEdgeAttributesReader eauxreader) {
+	protected void mergeEdgeAttributes(Object e, Object source, Object aux, Color col, EdgeAttributesReader ereader, EdgeAttributesReader esourcereader, EdgeAttributesReader eauxreader) {
 		ereader.setEdge(e);
 		esourcereader.setEdge(source);
 		ereader.copyFrom(esourcereader);
@@ -154,9 +154,9 @@ public abstract class GraphComparator<G extends Graph> {
 			
 			Edge e1 = gm1.getEdge(gm1.getVertexByName(e.getSource().toString()), gm1.getVertexByName(e.getTarget().toString()));
 			if (e1 == null) {//The edge is (only or not) in the first graph. So its intermediary point are right.
-				GsEdgeAttributesReader ereader = gm.getEdgeAttributeReader();
+				EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
 				ereader.setEdge(e);
-				ereader.setRouting(GsEdgeAttributesReader.ROUTING_AUTO);
+				ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
 				ereader.refresh();
 			}
 		}
@@ -186,7 +186,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param ereader an edge attribute reader for the diff graph.
 	 * 
 	 */
-	abstract protected void addEdgesFromGraph( Graph gm, Graph gm_aux, String id, Color col, Color pcol, GsEdgeAttributesReader ereader);
+	abstract protected void addEdgesFromGraph( Graph gm, Graph gm_aux, String id, Color col, Color pcol, EdgeAttributesReader ereader);
 	
 	/**
 	 * Return a merge graph colored to indicates vertices and edges parent graph.

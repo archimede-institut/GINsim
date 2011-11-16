@@ -2,10 +2,10 @@ package org.ginsim.service.layout;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.service.GsService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * This class contains different placement algorithms, 
@@ -24,7 +24,7 @@ public class GsLayoutService implements GsService {
     
     public static void runLayout(int ref, Graph graph) throws GsException {
 		// first count nodes in each category
-		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
+		VertexAttributesReader vreader = graph.getVertexAttributeReader();
 		int nbRoot = 0;
 		int nbStables = 0;
 		int nbClassic = 0;

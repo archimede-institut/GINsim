@@ -12,13 +12,13 @@ import java.util.Vector;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.connectivity.AlgoConnectivity;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
 
 /**
@@ -125,7 +125,7 @@ public class STG2HTG extends AlgoConnectivity {
 	
 	private void colorize() {
 		colors = ColorPalette.createColorPaletteByRange(sigma.size()+A.size());
-		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
+		VertexAttributesReader vreader = graph.getVertexAttributeReader();
 		int color = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
 			HashSet key = (HashSet) it_sigma.next();
@@ -156,7 +156,7 @@ public class STG2HTG extends AlgoConnectivity {
 	
 	private void createReducedGraph() {
         reducedGraph = new GsReducedGraph( graph);
-        GsVertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
+        VertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
         int i = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
 			HashSet key = (HashSet) it_sigma.next();

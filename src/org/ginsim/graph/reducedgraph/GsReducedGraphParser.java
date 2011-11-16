@@ -4,14 +4,14 @@ import java.io.File;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 
@@ -37,8 +37,8 @@ public class GsReducedGraphParser extends GsXMLHelper {
     
     private GsNodeReducedData vertex = null;
     private Vector v_content = null;
-    private GsVertexAttributesReader vareader = null;
-    private GsEdgeAttributesReader ereader = null;
+    private VertexAttributesReader vareader = null;
+    private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
     private Map map;
     

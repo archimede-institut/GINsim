@@ -7,17 +7,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.Debugger;
@@ -76,7 +76,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		super.buildDiffGraph();
 		
 		meMap = new HashMap();
-		GsEdgeAttributesReader ereader = gm.getEdgeAttributeReader();
+		EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
 		for (Iterator<GsRegulatoryMultiEdge> it = gm.getEdges().iterator(); it.hasNext();) {
 			GsRegulatoryMultiEdge me = it.next();
 			String sid = me.getSource().getId();
@@ -87,7 +87,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			
 			String comment = "The edge "+me.toToolTip()+" ";
 			ereader.setEdge(me);
-			ereader.setRouting(GsEdgeAttributesReader.ROUTING_AUTO);
+			ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
 			Color col = ereader.getLineColor();
 			if (col == SPECIFIC_G1_COLOR) comment+= "is specific to g1";
 			else if (col == SPECIFIC_G2_COLOR) comment+= "is specific to g2";
@@ -169,14 +169,14 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	}
 
 	
-	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, GsEdgeAttributesReader ereader) {
+	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, EdgeAttributesReader ereader) {
 		GsRegulatoryVertex v = (GsRegulatoryVertex) gm_main.getVertexByName(id);
 		if (v == null) {
 			return;
 		}
 		GsRegulatoryEdge e = null;
-		GsEdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
-		GsEdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
+		EdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
+		EdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 
 		//If v is a vertex from the studied graph, we look at its edges
 		GsRegulatoryVertex source = (GsRegulatoryVertex) gm.getVertexByName(id);

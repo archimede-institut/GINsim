@@ -13,7 +13,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -27,9 +30,6 @@ import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -236,8 +236,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 		List<GsRegulatoryVertex> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
 		
 		// Create all the nodes of the new model
-		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
-		GsVertexAttributesReader simplified_vreader = simplifiedGraph.getVertexAttributeReader();
+		VertexAttributesReader vreader = graph.getVertexAttributeReader();
+		VertexAttributesReader simplified_vreader = simplifiedGraph.getVertexAttributeReader();
 		for (GsRegulatoryVertex vertex: (List<GsRegulatoryVertex>)graph.getNodeOrder()) {
 			if (!m_removed.containsKey(vertex)) {
 				GsRegulatoryVertex clone = (GsRegulatoryVertex)vertex.clone();
@@ -251,8 +251,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 		
 		// copy all unaffected edges
-		GsEdgeAttributesReader ereader = graph.getEdgeAttributeReader();
-		GsEdgeAttributesReader simplified_ereader = simplifiedGraph.getEdgeAttributeReader();
+		EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
+		EdgeAttributesReader simplified_ereader = simplifiedGraph.getEdgeAttributeReader();
 		Iterator<GsRegulatoryMultiEdge>it = graph.getEdges().iterator();
 		while (it.hasNext()) {
 			GsRegulatoryMultiEdge me = it.next();

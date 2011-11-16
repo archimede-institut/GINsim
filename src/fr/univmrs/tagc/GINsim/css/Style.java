@@ -1,6 +1,6 @@
 package fr.univmrs.tagc.GINsim.css;
 
-import fr.univmrs.tagc.GINsim.graph.GsAttributesReader;
+import org.ginsim.graph.common.AttributesReader;
 
 /**
  * Style are dedicated to store some graphical attributes of graphical elements like node and edges
@@ -16,7 +16,7 @@ public interface Style {
 	 * Apply the style to an element using its GsAttributesReader
 	 * @param areader
 	 */
-	public abstract void apply(GsAttributesReader areader);
+	public abstract void apply(AttributesReader areader);
 	
 	public abstract Object clone();
 }

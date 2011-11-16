@@ -8,12 +8,12 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 public class DynamicLayoutMultidimention {
     private static final int padx = 25;
@@ -24,8 +24,8 @@ public class DynamicLayoutMultidimention {
     
     private int pivot;
    
-	private GsEdgeAttributesReader ereader;
-    private GsVertexAttributesReader vreader;
+	private EdgeAttributesReader ereader;
+    private VertexAttributesReader vreader;
 	
     private final Color[] colorPalette;
 	private final GsDynamicGraph graph;
@@ -145,11 +145,11 @@ public class DynamicLayoutMultidimention {
 		
 		ereader.setLineColor(colorPalette[change]);
 		ereader.setLineWidth(reduceChange(change)*0.5f+1.5f);
-		ereader.setRouting(GsEdgeAttributesReader.ROUTING_NONE);
+		ereader.setRouting(EdgeAttributesReader.ROUTING_NONE);
 		if (p2 != null) {
-			ereader.setStyle(GsEdgeAttributesReader.STYLE_STRAIGHT);
+			ereader.setStyle(EdgeAttributesReader.STYLE_STRAIGHT);
 		} else {
-			ereader.setStyle(GsEdgeAttributesReader.STYLE_CURVE);
+			ereader.setStyle(EdgeAttributesReader.STYLE_CURVE);
 		}
 		ereader.refresh();
 	}

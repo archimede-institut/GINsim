@@ -6,17 +6,17 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
 
 public class DynamicLayout3D {
-	private GsEdgeAttributesReader ereader;
-    private GsVertexAttributesReader vreader;
+	private EdgeAttributesReader ereader;
+    private VertexAttributesReader vreader;
     private Color[] colorPalette;
     private int[] decalx, decaly;
     private int stateWidth = 0;
@@ -82,9 +82,9 @@ public class DynamicLayout3D {
 
 	private void moveEdge(Edge edge, byte[] maxValues) {
 		ereader.setEdge(edge);		
-		ereader.setRouting(GsEdgeAttributesReader.ROUTING_AUTO);
+		ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
 		ereader.setPoints(null);
-		ereader.setStyle(GsEdgeAttributesReader.STYLE_STRAIGHT);
+		ereader.setStyle(EdgeAttributesReader.STYLE_STRAIGHT);
 		
 		byte[] diffstate = getDiffStates((GsDynamicNode)edge.getSource(), (GsDynamicNode)edge.getTarget());
 		int change = get_change(diffstate);

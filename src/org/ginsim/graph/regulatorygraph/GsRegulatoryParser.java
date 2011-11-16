@@ -13,18 +13,18 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -62,8 +62,8 @@ public final class GsRegulatoryParser extends GsXMLHelper {
     private int vslevel = 0;
 
     private GsRegulatoryVertex vertex = null;
-    private GsVertexAttributesReader vareader = null;
-    private GsEdgeAttributesReader ereader = null;
+    private VertexAttributesReader vareader = null;
+    private EdgeAttributesReader ereader = null;
     private GsRegulatoryEdge edge = null;
     private Annotation annotation = null;
     private Map m_edges = new HashMap();

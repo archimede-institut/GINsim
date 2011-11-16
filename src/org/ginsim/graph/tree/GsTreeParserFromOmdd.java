@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.ColorPalette;
 
@@ -64,11 +64,11 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 		}	
 	}
 
-	public void updateLayout(GsVertexAttributesReader vreader, GsTreeNode vertex) {
+	public void updateLayout(VertexAttributesReader vreader, GsTreeNode vertex) {
 		vreader.setVertex(vertex);
 		int total_width = getTerminalWidth()*GsTreeNode.PADDING_HORIZONTAL;
 		if (vertex.getType() == GsTreeNode.TYPE_LEAF) {
-			vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
 			vreader.setBackgroundColor(ColorPalette.defaultPalette[vertex.getValue()+1]);
 			vreader.setBorder(0);
 			if (vertex.getDepth() != -1) {
@@ -77,7 +77,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	    		vreader.setPos((int)((vertex.getWidth()+0.5)*total_width/getMaxTerminal())+100, getTotalLevels()*GsTreeNode.PADDING_VERTICAL+40);
 			}
 		} else {
-			vreader.setShape(GsVertexAttributesReader.SHAPE_RECTANGLE);			
+			vreader.setShape(VertexAttributesReader.SHAPE_RECTANGLE);			
 			if (vertex.getValue() == GsTreeNode.SKIPPED) {
 				vreader.setBackgroundColor(Color.WHITE);
 				vreader.setForegroundColor(Color.GRAY);
@@ -116,7 +116,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 		tree.root = _createDiagramFromOmdd(root, 0, currentWidthPerDepth, tree.getEdgeAttributeReader());
 	}
 	
-	private GsTreeNode _createDiagramFromOmdd(OmddNode o, int lastLevel, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
+	private GsTreeNode _createDiagramFromOmdd(OmddNode o, int lastLevel, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
 		GsTreeNode treeNode;
 		int mult;
 		if (o.next == null) {
@@ -171,7 +171,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
 		tree.root = (GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0);
 	}
-	private List _createTreeFromOmdd(OmddNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
+	private List _createTreeFromOmdd(OmddNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
 		GsTreeNode treeNode = null;
 		List parents = new ArrayList();
 		parents.add(parent);
@@ -252,7 +252,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	}
 
 
-	private List addChildren(int j, int mult, List parents, int childIndex, int[] currentWidthPerDepth, GsEdgeAttributesReader ereader) {
+	private List addChildren(int j, int mult, List parents, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
 		List newParents = new ArrayList(mult);
 		
 		while (realDetph[j] == -2 && j < max_depth) j++; //Get the child level
@@ -298,7 +298,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	 * @param colorIndex
 	 * @param ereader
 	 */
-	private void linkNode(GsTreeNode source, GsTreeNode target, int colorIndex, GsEdgeAttributesReader ereader) {
+	private void linkNode(GsTreeNode source, GsTreeNode target, int colorIndex, EdgeAttributesReader ereader) {
 		Object e = tree.addEdge(source, target);
 		ereader.setEdge(e);
 		ereader.setLineColor(ColorPalette.defaultPalette[colorIndex+1]);

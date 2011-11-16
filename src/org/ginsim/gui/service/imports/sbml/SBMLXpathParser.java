@@ -25,6 +25,8 @@ import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
@@ -42,8 +44,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import JSci.io.MathMLParser;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -61,8 +61,8 @@ public final class SBMLXpathParser {
 	private String s_nodeOrder = "";
 	private GsRegulatoryVertex vertex = null;
 	public GsRegulatoryEdge edge = null;
-	private GsVertexAttributesReader vareader = null;
-	private GsEdgeAttributesReader ereader = null;
+	private VertexAttributesReader vareader = null;
+	private EdgeAttributesReader ereader = null;
 	private int vslevel = 0;
 
 	private HashMap<String, GsRegulatoryEdge> m_edges = new HashMap<String, GsRegulatoryEdge>();

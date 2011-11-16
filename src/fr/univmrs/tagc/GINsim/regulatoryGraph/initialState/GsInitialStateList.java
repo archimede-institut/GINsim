@@ -6,14 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 
-public class GsInitialStateList implements GsGraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+public class GsInitialStateList implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 	GsRegulatoryGraph graph;
 
 	List nodeOrder;
@@ -27,7 +27,7 @@ public class GsInitialStateList implements GsGraphListener<GsRegulatoryVertex, G
     	
         this.graph = (GsRegulatoryGraph) graph;
     	nodeOrder = this.graph.getNodeOrder();
-        graph.addGraphListener( (GsGraphListener) this);
+        graph.addGraphListener( (GraphListener) this);
         updateLists();
         
         initialStates = new InitialStateList(normalNodes, false);

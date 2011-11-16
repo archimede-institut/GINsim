@@ -1,6 +1,6 @@
 package org.ginsim.graph.regulatorygraph;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
+import org.ginsim.annotation.Annotation;
 
 
 public class GsRegulatoryEdge {

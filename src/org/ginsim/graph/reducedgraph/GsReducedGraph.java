@@ -15,12 +15,12 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.connectivity.ReducedParameterPanel;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -173,7 +173,7 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
     	if (vertices == null) {
     		vertices = getVertices();
     	}
-    	GsVertexAttributesReader vReader = getVertexAttributeReader();
+    	VertexAttributesReader vReader = getVertexAttributeReader();
     	switch (mode) {
     		case 1:
 

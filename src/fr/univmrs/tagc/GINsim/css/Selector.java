@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.AttributesReader;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.graph.GsAttributesReader;
 
 /**
  * A Selector implementation for GINsim. It intend to be have the same usage than the HTML's CSS one.
@@ -156,7 +156,7 @@ public abstract class Selector {
 	 * @param category the id of the category
 	 * @return false if the category doesn't exist
 	 */
-	public boolean applyStyle(String category, GsAttributesReader areader) {
+	public boolean applyStyle(String category, AttributesReader areader) {
 		Style s = (Style) m.get(category);
 		if (s != null) {
             s.apply(areader);
@@ -174,7 +174,7 @@ public abstract class Selector {
 	 * @param obj
 	 * @return false if the category doesn't exist
 	 */	
-	public boolean applyStyle(Object obj, GsAttributesReader areader) {
+	public boolean applyStyle(Object obj, AttributesReader areader) {
 		return applyStyle(getCategory(obj), areader);
 	}
 
@@ -183,7 +183,7 @@ public abstract class Selector {
 	 * @param obj a node
 	 * @return false if the category doesn't exist
 	 */	
-	public boolean applyStyleForNode(Object obj, GsAttributesReader areader) {
+	public boolean applyStyleForNode(Object obj, AttributesReader areader) {
 		return applyStyle(getCategoryForNode(obj), areader);
 	}
 	
@@ -192,7 +192,7 @@ public abstract class Selector {
 	 * @param obj an edge
 	 * @return false if the category doesn't exist
 	 */	
-	public boolean applyStyleForEdge(Object obj, GsAttributesReader areader) {
+	public boolean applyStyleForEdge(Object obj, AttributesReader areader) {
 		return applyStyle(getCategoryForEdge(obj), areader);
 	}
 	
@@ -225,7 +225,7 @@ public abstract class Selector {
 	 * @param areader the areader to apply the corresponding style on.
 	 * @return false
 	 */
-	protected boolean missingCategory(String category, GsAttributesReader areader) {
+	protected boolean missingCategory(String category, AttributesReader areader) {
 		return false;
 	}
 

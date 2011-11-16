@@ -1,15 +1,14 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.graph.common;
 
 import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.graph.common.Edge;
 
 /**
  * a generic edgeAttributeReader storing data into a dedicated hashmap
  */
-public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
+public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
 
     private Map dataMap;
     
@@ -25,12 +24,12 @@ public class GsFallBackEdgeAttributeReader extends GsEdgeAttributesReader {
     /**
      * @param dataMap
      */
-    public GsFallBackEdgeAttributeReader(Map dataMap) {
+    public FallBackEdgeAttributeReader(Map dataMap) {
         this.dataMap = dataMap;
     }
     
     public void setDefaultEdgeColor(Color color) {
-    	GsEdgeAttributesReader.color = color;
+    	EdgeAttributesReader.color = color;
     }
 
     public void setDefaultEdgeSize(float s) {

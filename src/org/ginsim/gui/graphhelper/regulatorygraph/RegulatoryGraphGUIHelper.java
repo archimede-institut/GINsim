@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -16,7 +17,6 @@ import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryEdgeEditor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryGraphEditor;
@@ -38,7 +38,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGrap
 	@Override
 	public List<EditAction> getEditActions(GsRegulatoryGraph graph) {
 		List<EditAction> actions = new ArrayList<EditAction>();
-		GsVertexAttributesReader reader = graph.getVertexAttributeReader();
+		VertexAttributesReader reader = graph.getVertexAttributeReader();
 		actions.add(new AddRegulatoryVertexAction(graph, "+ TV", reader));
 		actions.add(new AddTestEdgeAction(graph, "E +", 1));
 		actions.add(new AddTestEdgeAction(graph, "E -", -1));
@@ -105,7 +105,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGrap
 class AddRegulatoryVertexAction extends AddVertexAction<GsRegulatoryVertex> {
 
 	private final GsRegulatoryGraph graph;
-	public AddRegulatoryVertexAction(GsRegulatoryGraph graph, String name, GsVertexAttributesReader reader) {
+	public AddRegulatoryVertexAction(GsRegulatoryGraph graph, String name, VertexAttributesReader reader) {
 		super(name, reader);
 		this.graph = graph;
 	}

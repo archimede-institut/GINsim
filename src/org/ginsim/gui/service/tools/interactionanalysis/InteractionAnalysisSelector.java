@@ -3,12 +3,12 @@ package org.ginsim.gui.service.tools.interactionanalysis;
 import java.awt.Color;
 import java.util.Map;
 
+import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.GINsim.css.Style;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 public class InteractionAnalysisSelector extends Selector {
@@ -18,10 +18,10 @@ public class InteractionAnalysisSelector extends Selector {
 	public static final String CAT_NEGATIVE = "negative";
 	public static final String CAT_DUAL = "dual";
 	
-	public static final EdgeStyle STYLE_NONFUNCTIONNAL	= new EdgeStyle(Color.yellow, 	GsEdgeAttributesReader.ARROW_UNKNOWN,EdgeStyle.NULL_SHAPE,  5);
-	public static final EdgeStyle STYLE_POSITIVE 		= new EdgeStyle(Color.green, 	GsEdgeAttributesReader.ARROW_POSITIVE, EdgeStyle.NULL_SHAPE,  5);
-	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		GsEdgeAttributesReader.ARROW_NEGATIVE, EdgeStyle.NULL_SHAPE,  5);
-	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue, 	GsEdgeAttributesReader.ARROW_DOUBLE, EdgeStyle.NULL_SHAPE,  5);
+	public static final EdgeStyle STYLE_NONFUNCTIONNAL	= new EdgeStyle(Color.yellow, 	EdgeAttributesReader.ARROW_UNKNOWN,EdgeStyle.NULL_SHAPE,  5);
+	public static final EdgeStyle STYLE_POSITIVE 		= new EdgeStyle(Color.green, 	EdgeAttributesReader.ARROW_POSITIVE, EdgeStyle.NULL_SHAPE,  5);
+	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		EdgeAttributesReader.ARROW_NEGATIVE, EdgeStyle.NULL_SHAPE,  5);
+	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue, 	EdgeAttributesReader.ARROW_DOUBLE, EdgeStyle.NULL_SHAPE,  5);
 	
 	private Map cache = null;
 

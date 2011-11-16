@@ -32,6 +32,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -47,7 +48,6 @@ import tbrowser.ihm.widget.TBPanel;
 import tbrowser.io.remote.client.TBClient;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.AbstractTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellEditor;
 import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellRenderer;
@@ -77,7 +77,7 @@ public class GsTBClientPanel extends GsPanel implements GraphGUIListener, Window
 	private TBSelector sel;
 	private TBCascadingStyle cs;
 	private TBButton testButton = new TBButton("TEST");
-	private GsEdgeAttributesReader ereader;
+	private EdgeAttributesReader ereader;
 
 	public GsTBClientPanel( Graph g) {
 		super();

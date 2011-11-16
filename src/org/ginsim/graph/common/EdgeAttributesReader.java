@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.graph.common;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  * this extension of the GsGraphManager is used to get or change visual info on edges objects.
  * It can also change default value (but they aren't persistant yet).
  */
-public abstract class GsEdgeAttributesReader implements GsAttributesReader {
+public abstract class EdgeAttributesReader implements AttributesReader {
 
     protected static Color color = new Color(((Integer)OptionStore.getOption("vs.edgecolor", new Integer(-13395457))).intValue());
     // we don't want to remember other options for now
@@ -198,7 +198,7 @@ public abstract class GsEdgeAttributesReader implements GsAttributesReader {
     /**
      * @param fereader
      */
-    public void copyFrom(GsEdgeAttributesReader fereader) {
+    public void copyFrom(EdgeAttributesReader fereader) {
         setLineColor(fereader.getLineColor());
         setStyle(fereader.getStyle());
         setRouting(fereader.getRouting());
@@ -211,7 +211,7 @@ public abstract class GsEdgeAttributesReader implements GsAttributesReader {
     /**
      * @param fvreader
      */
-    public void copyDefaultFrom(GsEdgeAttributesReader fvreader) {
+    public void copyDefaultFrom(EdgeAttributesReader fvreader) {
         setDefaultEdgeSize(fvreader.getDefaultEdgeSize());
         setDefaultEdgeEndFill(fvreader.getDefaultEdgeEndFill());
         setDefaultStyle(fvreader.getDefaultStyle());

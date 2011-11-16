@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.annotation;
+package org.ginsim.annotation;
 
 import java.io.File;
 import java.io.FileReader;
@@ -23,6 +23,7 @@ import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.GraphListener;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;
@@ -30,7 +31,6 @@ import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -39,7 +39,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
 
-public class BiblioList implements XMLize, OpenHelper, GsGraphListener {
+public class BiblioList implements XMLize, OpenHelper, GraphListener {
 
 	private final Map<String, Date> files = new TreeMap<String, Date>();
 	private final Map<String, Ref> m_references = new HashMap<String, Ref>();

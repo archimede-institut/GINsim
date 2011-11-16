@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.SimulationHelper;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 	
@@ -26,7 +26,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 		if (regGraph instanceof GsRegulatoryGraph) {
 			dynHieGraph.setAssociatedGraph(regGraph);
 		}
-		GsVertexAttributesReader vreader = dynHieGraph.getVertexAttributeReader();
+		VertexAttributesReader vreader = dynHieGraph.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         dynHieGraph.getAnnotation().setComment(params.getDescr()+"\n");
         arcs = new HashMap();

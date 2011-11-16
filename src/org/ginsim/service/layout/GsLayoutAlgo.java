@@ -1,6 +1,6 @@
 package org.ginsim.service.layout;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 
 /**
  * Some common functions for our kind of layout algo.
@@ -18,7 +18,7 @@ public interface GsLayoutAlgo {
      * @param maxHeight height of the taller node
      * @param maxWidth width of the bigger node
      */
-    public void configure (GsVertexAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth);
+    public void configure (VertexAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth);
     
     /**
      * place the next root node.

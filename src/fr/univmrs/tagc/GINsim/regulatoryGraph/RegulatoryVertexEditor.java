@@ -4,11 +4,11 @@ import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.annotation.Annotation;
+import org.ginsim.annotation.AnnotationPanel;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.models.VertexMaxValueSpinModel;
 import fr.univmrs.tagc.common.Tools;

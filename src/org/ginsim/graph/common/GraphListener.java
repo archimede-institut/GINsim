@@ -1,13 +1,13 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.graph.common;
 
 import java.util.Collection;
 
-import org.ginsim.graph.common.Edge;
+import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 
 /**
  * listen graph events
  */
-public interface GsGraphListener<V,E extends Edge<V>> {
+public interface GraphListener<V,E extends Edge<V>> {
 
     /**
      * an edge was added to the graph.

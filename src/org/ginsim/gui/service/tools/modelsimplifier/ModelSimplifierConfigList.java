@@ -3,12 +3,12 @@ package org.ginsim.gui.service.tools.modelsimplifier;
 import java.util.Collection;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 /**
@@ -16,7 +16,7 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
  * Also deals with updating them when the graph is changed
  */
 public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifierConfig>
-	implements GsGraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+	implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
     String s_current;
     GsRegulatoryGraph graph;

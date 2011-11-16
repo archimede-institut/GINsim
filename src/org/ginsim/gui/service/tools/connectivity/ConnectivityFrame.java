@@ -11,13 +11,13 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
@@ -238,7 +238,7 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 
 		colorPalette = ColorPalette.defaultPalette;
 		cs = new CascadingStyle(true);
-		GsVertexAttributesReader vreader = graph.getVertexAttributeReader();		
+		VertexAttributesReader vreader = graph.getVertexAttributeReader();		
 		int color_index = 2;
 		for (Iterator it = components.iterator(); it.hasNext();) {
 			GsNodeReducedData scc = (GsNodeReducedData) it.next();

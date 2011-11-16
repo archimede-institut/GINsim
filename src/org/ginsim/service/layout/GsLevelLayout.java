@@ -1,6 +1,6 @@
 package org.ginsim.service.layout;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 
 /**
  * level placement of nodes
@@ -19,13 +19,13 @@ public class GsLevelLayout implements GsLayoutAlgo {
     private int classicStartx;
     private int classicStarty;
     
-    private GsVertexAttributesReader vreader;
+    private VertexAttributesReader vreader;
     
     private int curRoot;
     private int curStable;
     private int curClassic;
     
-    public void configure(GsVertexAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth) {
+    public void configure(VertexAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth) {
         this.vreader = vreader;
         this.width = maxWidth + 30;
         this.height = maxHeight + 40;

@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.common.Tools;
@@ -210,7 +210,7 @@ public class InteractionAnalysis {
             cs.shouldStoreOldStyle = false;
         }
 		
-		GsEdgeAttributesReader ereader = g.getEdgeAttributeReader();
+		EdgeAttributesReader ereader = g.getEdgeAttributeReader();
 		for (Iterator iterator = functionalityMap.keySet().iterator(); iterator.hasNext();) {
 			GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge) iterator.next();
 			ereader.setEdge(me);

@@ -15,12 +15,12 @@ import java.util.Map;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.service.GsService;
 import org.jgraph.util.Bezier;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Tools;
 
 /**
@@ -38,8 +38,8 @@ public class SVGExportService implements GsService{
 		try {
 	        FileWriter out = new FileWriter(fileName);
 
-            GsVertexAttributesReader vreader = graph.getVertexAttributeReader();
-            GsEdgeAttributesReader ereader = graph.getEdgeAttributeReader();
+            VertexAttributesReader vreader = graph.getVertexAttributeReader();
+            EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
             if (edges == null) {
                 edges = graph.getEdges();
             }
@@ -82,7 +82,7 @@ public class SVGExportService implements GsService{
      * @param ereader edge attribute reader
      * @return a integer array containing x,y max coordinates
      */
-    public static int[] getmax(Collection vertices, Collection<Edge> edges, GsVertexAttributesReader vreader, GsEdgeAttributesReader ereader) {
+    public static int[] getmax(Collection vertices, Collection<Edge> edges, VertexAttributesReader vreader, EdgeAttributesReader ereader) {
         int[] tmax = new int[2];
         int value;
         for (Object v: vertices) {
@@ -118,7 +118,7 @@ public class SVGExportService implements GsService{
         return tmax;
     }
     
-    private static void writeVertex(FileWriter out, Object obj, GsVertexAttributesReader vreader) throws IOException {
+    private static void writeVertex(FileWriter out, Object obj, VertexAttributesReader vreader) throws IOException {
         String id = obj.toString();
         int x = vreader.getX();
         int y = vreader.getY();
@@ -130,7 +130,7 @@ public class SVGExportService implements GsService{
         
 	    out.write("  <g id=\""+id+"\">\n");
         switch (vreader.getShape()) {
-            case GsVertexAttributesReader.SHAPE_ELLIPSE:
+            case VertexAttributesReader.SHAPE_ELLIPSE:
                 out.write("    <ellipse " +
                         " id=\""+id+"_shape\"" +
                         " rx=\""+w/2+"\"" +
@@ -164,7 +164,7 @@ public class SVGExportService implements GsService{
         
     }
     
-    private static void writeEdge(FileWriter out, Rectangle2D box1, Rectangle2D box2, GsEdgeAttributesReader ereader, Map markers) throws IOException {
+    private static void writeEdge(FileWriter out, Rectangle2D box1, Rectangle2D box2, EdgeAttributesReader ereader, Map markers) throws IOException {
         String color = "#"+Tools.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true, w);
@@ -190,7 +190,7 @@ public class SVGExportService implements GsService{
             l_point.add(0, new Point((int)box1.getCenterX(), (int)box1.getCenterY()));
             l_point.add(new Point((int)box2.getCenterX(), (int)box2.getCenterY()));
         }
-        boolean intersect = l_point.size() < 3 || ereader.getStyle() == GsEdgeAttributesReader.STYLE_CURVE;
+        boolean intersect = l_point.size() < 3 || ereader.getStyle() == EdgeAttributesReader.STYLE_CURVE;
         // replace first and last points by bounding box points
         if (box1 != null) {
             l_point.set(0, getIntersection(box1, (Point2D)l_point.get(1), intersect, w));
@@ -212,7 +212,7 @@ public class SVGExportService implements GsService{
         out.write(" d=\"M "+pt1.getX()+" "+pt1.getY());
         Iterator it = l_point.iterator();
         switch (ereader.getStyle()) {
-	    	case GsEdgeAttributesReader.STYLE_CURVE:
+	    	case EdgeAttributesReader.STYLE_CURVE:
                 Point2D[] p = new Point2D[l_point.size()];
                 for (int i=0 ; it.hasNext() ; i++) {
                     p[i] = (Point2D)it.next();
@@ -323,7 +323,7 @@ public class SVGExportService implements GsService{
 	        double v,w;
             float offset = stroke/2;
             switch (markerType) {
-	        	case GsEdgeAttributesReader.ARROW_NEGATIVE:
+	        	case EdgeAttributesReader.ARROW_NEGATIVE:
 	        	    v = stroke<3 ? 5 : 1.8*stroke;
 	                out.write("    <marker\n"+
 	                        "      markerWidth=\"2\""+
@@ -335,7 +335,7 @@ public class SVGExportService implements GsService{
 	  	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
 	        	    out.write("stroke-width=\""+stroke+"\" d=\"M 0 -"+stroke+" L 0 "+stroke+" z\"/>\n");
 			        break;
-	        	case GsEdgeAttributesReader.ARROW_UNKNOWN:
+	        	case EdgeAttributesReader.ARROW_UNKNOWN:
                     v = stroke<3 ? 4 : 1.5*stroke;
                     out.write("    <marker\n"+
                             "      markerWidth=\"2\""+
@@ -347,7 +347,7 @@ public class SVGExportService implements GsService{
       	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
 			        out.write("d=\"M -4,0 a2,2 -30 1,0 0,-0.1\"/>\n");
 			        break;
-                case GsEdgeAttributesReader.ARROW_DOUBLE:
+                case EdgeAttributesReader.ARROW_DOUBLE:
                     v = stroke<3 ? 4 : 1.5*stroke;
                     out.write("    <marker\n"+
                             "      markerWidth=\"2\""+

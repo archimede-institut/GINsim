@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.graph.objectassociation;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;

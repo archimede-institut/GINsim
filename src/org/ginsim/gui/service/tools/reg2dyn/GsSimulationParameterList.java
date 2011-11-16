@@ -3,13 +3,13 @@ package org.ginsim.gui.service.tools.reg2dyn;
 import java.util.Collection;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
@@ -22,7 +22,7 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
  * Also deals with updating them when the graph is changed
  */
 public class GsSimulationParameterList extends SimpleGenericList<GsSimulationParameters> 
-	implements GsGraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge>, GsRegulatoryMutantListener, GenericListListener {
+	implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge>, GsRegulatoryMutantListener, GenericListListener {
 
     String s_current;
     GsRegulatoryGraph graph;

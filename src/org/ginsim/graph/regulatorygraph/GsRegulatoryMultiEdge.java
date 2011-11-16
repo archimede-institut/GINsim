@@ -3,12 +3,12 @@ package org.ginsim.graph.regulatorygraph;
 import java.io.IOException;
 import java.util.List;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
@@ -302,10 +302,10 @@ public class GsRegulatoryMultiEdge extends Edge<GsRegulatoryVertex> implements X
                     this.sign = SIGN_UNKNOWN;
                     break;
                 }
-                this.sign = GsEdgeAttributesReader.ARROW_DOUBLE;
+                this.sign = EdgeAttributesReader.ARROW_DOUBLE;
 			}
 		}
-		GsEdgeAttributesReader ereader = graph.getEdgeAttributeReader();
+		EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
 		ereader.setEdge(this);
 		ereader.setLineEnd(sign);
 		ereader.refresh();

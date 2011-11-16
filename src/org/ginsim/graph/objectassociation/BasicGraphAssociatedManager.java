@@ -1,11 +1,10 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.graph.objectassociation;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;

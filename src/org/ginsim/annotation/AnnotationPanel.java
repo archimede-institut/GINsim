@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.annotation;
+package org.ginsim.annotation;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;

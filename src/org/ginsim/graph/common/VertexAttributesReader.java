@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.graph.common;
 
 import java.awt.Color;
 import java.util.Vector;
@@ -9,7 +9,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 /**
  * extract from graph graphic info on a vertex.
  */
-public abstract class GsVertexAttributesReader implements GsAttributesReader {
+public abstract class VertexAttributesReader implements AttributesReader {
 
     public static Color bg = new Color(((Integer)OptionStore.getOption("vs.vertexbg", new Integer(-26368))).intValue());
     public static Color fg = new Color(((Integer)OptionStore.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
@@ -155,7 +155,7 @@ public abstract class GsVertexAttributesReader implements GsAttributesReader {
 	 * @param shape
 	 */
 	public void setDefaultVertexShape(int shape) {
-		GsVertexAttributesReader.shape = shape;
+		VertexAttributesReader.shape = shape;
 	}
 
     /**
@@ -232,7 +232,7 @@ public abstract class GsVertexAttributesReader implements GsAttributesReader {
     /**
      * @param fvreader
      */
-    public void copyFrom(GsVertexAttributesReader fvreader) {
+    public void copyFrom(VertexAttributesReader fvreader) {
         setPos(fvreader.getX(), fvreader.getY());
         setSize(fvreader.getWidth(), fvreader.getHeight());
         setShape(fvreader.getShape());

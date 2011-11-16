@@ -5,10 +5,10 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.xml.sax.Attributes;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.Tools;
 
 /**
@@ -29,7 +29,7 @@ public class GsGinmlHelper {
      * @param attributes
      * @return 1 if byte VS, 2 otherwise
      */
-	public static int applyNodeVisualSettings(GsVertexAttributesReader vareader, String qName, Attributes attributes) {
+	public static int applyNodeVisualSettings(VertexAttributesReader vareader, String qName, Attributes attributes) {
         if (qName.equals("point")) {
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
             return 1;
@@ -58,13 +58,13 @@ public class GsGinmlHelper {
 	 * @param qName
 	 * @param attributes
 	 */
-	public static void applyEdgeVisualSettings(GsEdgeAttributesReader ereader, String qName, Attributes attributes) {
+	public static void applyEdgeVisualSettings(EdgeAttributesReader ereader, String qName, Attributes attributes) {
 		if (qName.equals("polyline")) {
 			ereader.setLineColor(Tools.getColorFromCode(attributes.getValue("line_color")));
-			int i = GsEdgeAttributesReader.STYLE_STRAIGHT;
+			int i = EdgeAttributesReader.STYLE_STRAIGHT;
 			String s = attributes.getValue("line_style");
 			if (s.equals("curve") || s.equals("13") || s.equals("12") || s.equals("bezier") || s.equals("spline")) {
-			    i = GsEdgeAttributesReader.STYLE_CURVE;
+			    i = EdgeAttributesReader.STYLE_CURVE;
 			}
             try {
                 ereader.setLineWidth(Integer.parseInt(attributes.getValue("line_width")));
@@ -72,10 +72,10 @@ public class GsGinmlHelper {
               catch (NumberFormatException e) {}
               
 			ereader.setStyle(i);
-			i = GsEdgeAttributesReader.ROUTING_AUTO;
+			i = EdgeAttributesReader.ROUTING_AUTO;
 			s = attributes.getValue("routage");
 			if (s.equals("manual") || s.equals("none") || s.equals("simple")) {
-			    i = GsEdgeAttributesReader.ROUTING_NONE;
+			    i = EdgeAttributesReader.ROUTING_NONE;
 			}
 			ereader.setRouting(i);
 			
@@ -111,7 +111,7 @@ public class GsGinmlHelper {
 	 * @param eReader
 	 * @return the corresponding ginml String
 	 */
-	public static String getEdgeVS(GsEdgeAttributesReader eReader) {
+	public static String getEdgeVS(EdgeAttributesReader eReader) {
         String svs = "\t\t\t<edgevisualsetting>\n";
         svs += "\t\t\t\t<polyline";
         String s = "";
@@ -126,7 +126,7 @@ public class GsGinmlHelper {
             }
         }
         switch (eReader.getStyle()) {
-	    	case GsEdgeAttributesReader.STYLE_CURVE:
+	    	case EdgeAttributesReader.STYLE_CURVE:
 	    	    s = "curve";
 	    	    break;
         	default:
@@ -139,7 +139,7 @@ public class GsGinmlHelper {
             svs += " pattern=\"dash\"";
         }
         switch (eReader.getRouting()) {
-        	case GsEdgeAttributesReader.ROUTING_AUTO:
+        	case EdgeAttributesReader.ROUTING_AUTO:
         	    s = "auto";
         	    break;
         	default:
@@ -156,7 +156,7 @@ public class GsGinmlHelper {
 	 * @param vReader
 	 * @return the corresponding ginml String
 	 */
-	public static String getShortNodeVS(GsVertexAttributesReader vReader) {
+	public static String getShortNodeVS(VertexAttributesReader vReader) {
         String svs = "\t\t\t<nodevisualsetting>\n";
         svs += "\t\t\t\t<point x=\""+vReader.getX()+"\" y=\""+vReader.getY()+"\"/>\n";
         svs += "\t\t\t</nodevisualsetting>\n";
@@ -167,10 +167,10 @@ public class GsGinmlHelper {
 	 * @param vReader
 	 * @return the corresponding ginml String
 	 */
-	public static String getFullNodeVS(GsVertexAttributesReader vReader) {
+	public static String getFullNodeVS(VertexAttributesReader vReader) {
         String svs = "\t\t\t<nodevisualsetting>\n";
         switch (vReader.getShape()) {
-        	case GsVertexAttributesReader.SHAPE_RECTANGLE:
+        	case VertexAttributesReader.SHAPE_RECTANGLE:
         		svs += "\t\t\t\t<rect x=\""+vReader.getX()+
 					"\" y=\""+vReader.getY()+
 					"\" width=\""+vReader.getWidth()+
@@ -179,7 +179,7 @@ public class GsGinmlHelper {
 					"\" foregroundColor=\"#"+Tools.getColorCode(vReader.getForegroundColor()) +
 					"\"/>\n";
         		break;
-            case GsVertexAttributesReader.SHAPE_ELLIPSE:
+            case VertexAttributesReader.SHAPE_ELLIPSE:
         		svs += "\t\t\t\t<ellipse x=\""+vReader.getX()+
 				"\" y=\""+vReader.getY()+
 				"\" width=\""+vReader.getWidth()+

@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 public class HTGSimulationHelper  extends SimulationHelper {
 	protected GsHierarchicalNode node;
@@ -28,7 +28,7 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		}
 		this.htg = new GsHierarchicalTransitionGraph(params.nodeOrder, mode);
 		htg.setAssociatedGraph(regGraph);
-		GsVertexAttributesReader vreader = htg.getVertexAttributeReader();
+		VertexAttributesReader vreader = htg.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         htg.getAnnotation().setComment(params.getDescr()+"\n");
         arcs = new HashMap();

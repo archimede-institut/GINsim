@@ -3,15 +3,15 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.awt.GridBagConstraints;
 import java.util.Collection;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
@@ -20,7 +20,7 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 
-public class RegulatoryGraphEditor extends ObjectEditor implements GsGraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NODEORDER = 1;

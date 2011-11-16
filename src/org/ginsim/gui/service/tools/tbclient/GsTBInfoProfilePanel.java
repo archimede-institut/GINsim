@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -36,7 +37,6 @@ import tbrowser.data.TBProbe;
 import tbrowser.data.TBSample;
 import tbrowser.data.module.TBModule;
 import tbrowser.ihm.widget.TBPanel;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListener, ActionListener, ListSelectionListener {
   private static final long serialVersionUID = 7691970870575102225L;
@@ -210,7 +210,7 @@ public class GsTBInfoProfilePanel extends TBPanel implements ChartProgressListen
         val += dataSet.getSeries(i).getY(xAxis.getLabelToDraw()).doubleValue();
       val /= sel.length;
       if (clientPanel != null) {
-        GsVertexAttributesReader vReader = clientPanel.getGraph().getVertexAttributeReader();
+        VertexAttributesReader vReader = clientPanel.getGraph().getVertexAttributeReader();
         Vector genes = clientPanel.getSelectedGenes();
         for (Iterator it = genes.iterator(); it.hasNext(); ) {
         	vReader.setVertex(it.next());

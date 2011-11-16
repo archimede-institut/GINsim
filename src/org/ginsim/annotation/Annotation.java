@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.annotation;
+package org.ginsim.annotation;
 
 import java.io.IOException;
 import java.util.Iterator;

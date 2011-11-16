@@ -12,6 +12,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -23,7 +24,6 @@ import org.ginsim.gui.service.tools.stateinregulatorygraph.GsStateInRegGraph;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * Main class of the animator plugin.
@@ -188,7 +188,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphGUIL
             Object target = edge.getTarget();
             dynGas.ensureStoreEdge(edge);
             dynGas.ensureStoreVertex(target);
-            dynGas.vreader.setBorder(GsVertexAttributesReader.BORDER_STRONG);
+            dynGas.vreader.setBorder(VertexAttributesReader.BORDER_STRONG);
             dynGas.vreader.setForegroundColor(Color.RED);
             dynGas.vreader.refresh();
             dynGas.ereader.setLineColor(Color.GREEN);

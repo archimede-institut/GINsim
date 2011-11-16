@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 /**
  * a vertex in a state transition graph (ie a possible state of the regulatory graph).
@@ -50,11 +50,11 @@ public final class GsDynamicNode {
 	 * @param s
 	 * @param vreader 
 	 */
-	public void setStable(boolean s, GsVertexAttributesReader vreader) {
+	public void setStable(boolean s, VertexAttributesReader vreader) {
 		stable = s;
 		if (stable) {
 			vreader.setVertex(this);
-			vreader.setShape(vreader.getDefaultVertexShape() == GsVertexAttributesReader.SHAPE_RECTANGLE ? GsVertexAttributesReader.SHAPE_ELLIPSE: GsVertexAttributesReader.SHAPE_RECTANGLE);
+			vreader.setShape(vreader.getDefaultVertexShape() == VertexAttributesReader.SHAPE_RECTANGLE ? VertexAttributesReader.SHAPE_ELLIPSE: VertexAttributesReader.SHAPE_RECTANGLE);
 		}
 	}
 	

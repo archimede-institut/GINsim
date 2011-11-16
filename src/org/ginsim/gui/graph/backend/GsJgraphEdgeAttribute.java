@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.EdgeAttributesReader;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge.Routing;
@@ -16,13 +17,12 @@ import org.jgraph.graph.PortView;
 import org.jgrapht.ListenableGraph;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.common.Tools;
 
 /**
  * extract info on jgraph's edges.
  */
-public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
+public class GsJgraphEdgeAttribute extends EdgeAttributesReader {
 
     private JGraphModelAdapter m_adaptor;
     private ListenableGraph g;
@@ -53,7 +53,7 @@ public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
     }
 
     public static void applyDefault(AttributeMap defaultEdgeAttr) {
-        GraphConstants.setLineColor(defaultEdgeAttr, GsEdgeAttributesReader.color);
+        GraphConstants.setLineColor(defaultEdgeAttr, EdgeAttributesReader.color);
     }
     
 	public void setDefaultEdgeSize(float s) {
@@ -66,7 +66,7 @@ public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
 	}
 
 	public void setDefaultEdgeColor(Color color) {
-        GsEdgeAttributesReader.color = color;
+        EdgeAttributesReader.color = color;
 		GraphConstants.setLineColor(defaultEdgeAttr, color);
 	}
 
@@ -196,11 +196,11 @@ public class GsJgraphEdgeAttribute extends GsEdgeAttributesReader {
         int jindex = GraphConstants.getLineEnd(attr);
         switch (jindex) {
 		    case GraphConstants.ARROW_LINE:
-		        return GsEdgeAttributesReader.ARROW_NEGATIVE;
+		        return EdgeAttributesReader.ARROW_NEGATIVE;
             case GraphConstants.ARROW_CIRCLE:
-                return GsEdgeAttributesReader.ARROW_UNKNOWN;
-            case GsEdgeAttributesReader.ARROW_DOUBLE:
-                return GsEdgeAttributesReader.ARROW_DOUBLE;
+                return EdgeAttributesReader.ARROW_UNKNOWN;
+            case EdgeAttributesReader.ARROW_DOUBLE:
+                return EdgeAttributesReader.ARROW_DOUBLE;
         	default: 
         	    return 0;
         }

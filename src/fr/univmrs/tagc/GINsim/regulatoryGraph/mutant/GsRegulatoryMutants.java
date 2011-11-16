@@ -23,16 +23,16 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ginsim.annotation.AnnotationPanel;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.reg2dyn.GsRegulatoryMutantListener;
 
-import fr.univmrs.tagc.GINsim.annotation.AnnotationPanel;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.datastore.ValueList;
@@ -45,7 +45,7 @@ import fr.univmrs.tagc.common.widgets.StockButton;
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.
  */
-public class GsRegulatoryMutants extends SimpleGenericList implements GsGraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+public class GsRegulatoryMutants extends SimpleGenericList implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
     /**
      * edit mutants associated with a graph

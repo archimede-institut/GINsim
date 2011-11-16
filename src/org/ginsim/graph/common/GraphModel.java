@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 
 /**
  * Interface for the main objects: graphs.
@@ -261,7 +260,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * 
 	 * @param g_listener the graph listener
 	 */
-    void addGraphListener(GsGraphListener<V,E> g_listener);
+    void addGraphListener(GraphListener<V,E> g_listener);
     
     
 	/**
@@ -269,7 +268,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * 
 	 * @param g_listener the graph listener to remove
 	 */
-    void removeGraphListener(GsGraphListener<V,E> g_listener);
+    void removeGraphListener(GraphListener<V,E> g_listener);
     
 	
     

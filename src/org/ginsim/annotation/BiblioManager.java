@@ -1,14 +1,14 @@
-package fr.univmrs.tagc.GINsim.annotation;
+package org.ginsim.annotation;
 
 import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.xml.sax.Attributes;
 
-import fr.univmrs.tagc.GINsim.graph.BasicGraphAssociatedManager;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 

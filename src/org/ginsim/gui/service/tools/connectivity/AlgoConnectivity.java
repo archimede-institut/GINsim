@@ -9,10 +9,10 @@ import java.util.Vector;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
 
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -125,7 +125,7 @@ public class AlgoConnectivity extends Thread {
                 frame.setProgressText( Translator.getString("STR_connectivity_nbcompo") + " : "+nbCompo+" ; "+Translator.getString("STR_connectivity_finalize"));
             }
             if (mode == MODE_FULL) {
-                GsVertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
+                VertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
                 if (nbCompo > 1) {
     	        	createSCCGraphByOutgoingEdges(nbCompo, component, reducedGraph, vreader);
                 }           	
@@ -143,7 +143,7 @@ public class AlgoConnectivity extends Thread {
         return reducedGraph;
    }
 
-	public void createSCCGraphByOutgoingEdges(int nbCompo, List component, Graph graph, GsVertexAttributesReader vreader) throws InterruptedException {
+	public void createSCCGraphByOutgoingEdges(int nbCompo, List component, Graph graph, VertexAttributesReader vreader) throws InterruptedException {
 		//Complexity = #nodes + #edges + #component => O(3n+1)
 		if (nbCompo == 1) {
             return;																				//The graph is already created, no edges to add.
@@ -199,7 +199,7 @@ public class AlgoConnectivity extends Thread {
             GsNodeReducedData currentSCCNode = (GsNodeReducedData)component.get(scc_i);
             if (graph.getOutgoingEdges(currentSCCNode).size() == 0) {												//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
             	vreader.setVertex(currentSCCNode);
-                vreader.setShape(GsVertexAttributesReader.SHAPE_ELLIPSE);
+                vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
             }
         }
 	}

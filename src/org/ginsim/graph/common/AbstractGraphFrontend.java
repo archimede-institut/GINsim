@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageHolder;
@@ -21,14 +22,10 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 
-import fr.univmrs.tagc.GINsim.annotation.Annotation;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
 abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, NotificationMessageHolder {
 	
@@ -39,7 +36,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	protected String graphName = "default_name";
 	
 	// List of the registered graph listeners
-	protected List< GsGraphListener<V,E>> listeners = new ArrayList<GsGraphListener<V,E>>();
+	protected List< GraphListener<V,E>> listeners = new ArrayList<GraphListener<V,E>>();
     
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
@@ -358,12 +355,12 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	
 	
 	@Override
-	public GsEdgeAttributesReader getEdgeAttributeReader() {
+	public EdgeAttributesReader getEdgeAttributeReader() {
 		return viewBackend.getEdgeAttributeReader();
 	}
 	
 	@Override
-	public GsVertexAttributesReader getVertexAttributeReader() {
+	public VertexAttributesReader getVertexAttributeReader() {
 		return viewBackend.getVertexAttributeReader();
 	}
 	
@@ -427,7 +424,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * 
 	 * @param g_listener the graph listener
 	 */
-	public void addGraphListener(GsGraphListener<V,E> g_listener) {
+	public void addGraphListener(GraphListener<V,E> g_listener) {
 		
 		listeners.add( g_listener);
 	}
@@ -438,7 +435,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * 
 	 * @param g_listener the graph listener to remove
 	 */
-	public void removeGraphListener( GsGraphListener<V,E> g_listener) {
+	public void removeGraphListener( GraphListener<V,E> g_listener) {
 		
 		listeners.remove( g_listener);
 	}
@@ -621,7 +618,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
         List<GsGraphEventCascade> l_cascade = new ArrayList<GsGraphEventCascade>();
 		switch (change) {
 		case CHANGE_EDGEADDED:
-			for (GsGraphListener<V, E> l: listeners) {
+			for (GraphListener<V, E> l: listeners) {
 				GsGraphEventCascade gec = l.edgeAdded((E) data);
                 if (gec != null) {
                     l_cascade.add(gec);
@@ -629,7 +626,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 			}
 			break;
 		case CHANGE_EDGEREMOVED:
-			for (GsGraphListener<V, E> l: listeners) {
+			for (GraphListener<V, E> l: listeners) {
 				GsGraphEventCascade gec = l.edgeRemoved((E) data);
                 if (gec != null) {
                     l_cascade.add(gec);
@@ -637,7 +634,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 			}
 			break;
 		case CHANGE_VERTEXADDED:
-			for (GsGraphListener<V, E> l: listeners) {
+			for (GraphListener<V, E> l: listeners) {
 				GsGraphEventCascade gec = l.vertexAdded((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
@@ -645,7 +642,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 			}
 			break;
         case CHANGE_VERTEXREMOVED:
-			for (GsGraphListener<V, E> l: listeners) {
+			for (GraphListener<V, E> l: listeners) {
 				GsGraphEventCascade gec = l.vertexRemoved((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
@@ -653,7 +650,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
             }
             break;
         case CHANGE_MERGED:
-			for (GsGraphListener<V, E> l: listeners) {
+			for (GraphListener<V, E> l: listeners) {
 				GsGraphEventCascade gec = l.graphMerged((List<V>) data);
                 if (gec != null) {
                     l_cascade.add(gec);
@@ -661,7 +658,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
             }
             break;
         case CHANGE_VERTEXUPDATED:
-			for (GsGraphListener<V, E> l: listeners) {
+			for (GraphListener<V, E> l: listeners) {
 				GsGraphEventCascade gec = l.vertexUpdated((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
@@ -669,7 +666,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
             }
             break;
         case CHANGE_EDGEUPDATED:
-			for (GsGraphListener<V, E> l: listeners) {
+			for (GraphListener<V, E> l: listeners) {
 				GsGraphEventCascade gec = l.edgeUpdated((E) data);
                 if (gec != null) {
                     l_cascade.add(gec);
@@ -698,7 +695,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      */
 	public void endParsing() {
     	isParsing = false;
-    	for (GsGraphListener<V,E> l: listeners) {
+    	for (GraphListener<V,E> l: listeners) {
     		l.endParsing();
     	}
     }

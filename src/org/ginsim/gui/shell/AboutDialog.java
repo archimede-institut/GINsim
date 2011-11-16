@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.widgets;
+package org.ginsim.gui.shell;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +20,7 @@ import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
+import fr.univmrs.tagc.common.widgets.Frame;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 

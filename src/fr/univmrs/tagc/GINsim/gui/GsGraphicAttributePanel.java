@@ -29,13 +29,13 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.editpanel.EditTab;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -80,8 +80,8 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	private JCheckBox jCB_selectForeground = null;
 	private JCheckBox jCB_selectSize = null;
 
-	private GsVertexAttributesReader vReader = null;
-	private GsEdgeAttributesReader eReader = null;
+	private VertexAttributesReader vReader = null;
+	private EdgeAttributesReader eReader = null;
 
 	private static final int EDGESELECTED = 0;
 	private static final int VERTEXSELECTED = 1;

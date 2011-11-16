@@ -8,7 +8,6 @@ import java.util.Vector;
 
 import org.ginsim.graph.common.Graph;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 
 public class ObjectAssociationManager {
 

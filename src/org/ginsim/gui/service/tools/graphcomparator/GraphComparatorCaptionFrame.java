@@ -24,14 +24,14 @@ import javax.swing.JTextArea;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Style;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {
@@ -274,8 +274,8 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	
     private void doColorize(JRadioButton source) {
     	HashMap styleMap = gc.getStyleMap();
-    	GsVertexAttributesReader vreader = g.getVertexAttributeReader();
-    	GsEdgeAttributesReader ereader = g.getEdgeAttributeReader();
+    	VertexAttributesReader vreader = g.getVertexAttributeReader();
+    	EdgeAttributesReader ereader = g.getEdgeAttributeReader();
     	
     	for (Iterator it = styleMap.keySet().iterator(); it.hasNext();) {
 			Object o = it.next();

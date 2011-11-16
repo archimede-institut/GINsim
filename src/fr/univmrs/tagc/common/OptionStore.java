@@ -16,6 +16,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.shell.callbacks.GsFileCallBack;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -24,8 +26,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
@@ -130,8 +130,8 @@ public class OptionStore extends DefaultHandler {
     public static void saveOptions() {
         
         // FIXME hacky: first call some components that need to save some options
-        GsEdgeAttributesReader.saveOptions();
-        GsVertexAttributesReader.saveOptions();
+        EdgeAttributesReader.saveOptions();
+        VertexAttributesReader.saveOptions();
         
         List<String> recents = GsFileCallBack.getRecentFiles();
         if (recents.size() == 0 && m_option.size() == 0) {

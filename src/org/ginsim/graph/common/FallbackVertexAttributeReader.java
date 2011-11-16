@@ -1,12 +1,13 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.graph.common;
 
 import java.awt.Color;
 import java.util.Map;
 
+
 /**
  * a generic vertexAttributeReader storing data into a dedicated hashmap
  */
-public class GsFallbackVertexAttributeReader extends GsVertexAttributesReader {
+public class FallbackVertexAttributeReader extends VertexAttributesReader {
 
     private Map dataMap = null;
     private VertexVSdata vvsd;
@@ -14,7 +15,7 @@ public class GsFallbackVertexAttributeReader extends GsVertexAttributesReader {
     /**
      * @param map
      */
-    public GsFallbackVertexAttributeReader(Map map) {
+    public FallbackVertexAttributeReader(Map map) {
         this.dataMap = map;
     }
 
