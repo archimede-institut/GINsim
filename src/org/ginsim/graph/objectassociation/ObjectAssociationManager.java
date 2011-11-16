@@ -18,7 +18,7 @@ public class ObjectAssociationManager {
 	private HashMap<Class,List<GsGraphAssociatedObjectManager>> specializedObjectManagers = null;
 	
     // The map linking objects associated to the Graph with their representative key
-    private HashMap<Graph,Map<Object,Object>> objectsOfGraph = null;
+    private HashMap<Graph,Map<Object,Object>> objectsOfGraph = new HashMap<Graph, Map<Object,Object>>();
 	
 	private ObjectAssociationManager(){
 		
