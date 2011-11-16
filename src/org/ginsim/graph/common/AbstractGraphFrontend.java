@@ -144,6 +144,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * @param vertex
 	 * @return the created vertex
 	 */
+	@Override
 	public boolean addVertex( V vertex) {
 		
 		return graphBackend.addVertexInBackend(vertex);
@@ -155,6 +156,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * @param edge
 	 * @return the created edge
 	 */
+	@Override
 	public boolean addEdge(E edge) {
 		
 		return graphBackend.addEdgeInBackend(edge);
@@ -166,7 +168,9 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      * @param vertex
      * @return true if the vertex was effectively removed
      */ 
+	@Override
 	public boolean removeVertex(V vertex) {
+		
 		return graphBackend.removeVertex(vertex);
 	}
 
@@ -177,7 +181,9 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      * @param edge
      * @return true if the edge was effectively removed
      */
+	@Override
 	public boolean removeEdge(E edge) {
+		
 		return graphBackend.removeEdge(edge);
 	}
 

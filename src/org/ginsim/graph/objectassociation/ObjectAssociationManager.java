@@ -18,12 +18,13 @@ public class ObjectAssociationManager {
 	private HashMap<Class,List<GsGraphAssociatedObjectManager>> specializedObjectManagers = null;
 	
     // The map linking objects associated to the Graph with their representative key
-    private HashMap<Graph,Map<Object,Object>> objectsOfGraph = new HashMap<Graph, Map<Object,Object>>();
+    private HashMap<Graph,Map<Object,Object>> objectsOfGraph;
 	
 	private ObjectAssociationManager(){
 		
 		objectManagers = new Vector<GsGraphAssociatedObjectManager>();
 		specializedObjectManagers = new HashMap<Class, List<GsGraphAssociatedObjectManager>>();
+		objectsOfGraph = new HashMap<Graph, Map<Object,Object>>();
 		
 	}
 	
@@ -94,7 +95,9 @@ public class ObjectAssociationManager {
      */
     public List<GsGraphAssociatedObjectManager> getObjectManagerList( Class graph_class) {
     	
-        return specializedObjectManagers.get( graph_class);
+    	Class interface_class = getGraphInterface( graph_class);
+    	
+        return specializedObjectManagers.get( interface_class);
     }
     
 
@@ -125,7 +128,9 @@ public class ObjectAssociationManager {
      */
     public GsGraphAssociatedObjectManager getObjectManager( Class graph_class, Object key) {
     	
-    	List<GsGraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( graph_class);
+    	Class interface_class = getGraphInterface( graph_class);
+    	
+    	List<GsGraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
     	
     	if (specialized_managers == null) {
     		return null;
@@ -161,7 +166,7 @@ public class ObjectAssociationManager {
         		return null;
         	}
         }
-        Object ret = m_objects.get(key);
+        Object ret = m_objects.get( key);
         if (create && ret == null) {
         	GsGraphAssociatedObjectManager manager = getObjectManager( key);
         	if (manager == null) {
@@ -237,7 +242,9 @@ public class ObjectAssociationManager {
      */
     public boolean isObjectManagerRegistred( Class graph_class, String key) {
     	
-    	List<GsGraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( graph_class);
+    	Class interface_class = getGraphInterface( graph_class);
+    	
+    	List<GsGraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
     	
         if (specialized_managers == null) {
             return false;

@@ -103,6 +103,40 @@ public interface GraphModel<V,E extends Edge<V>> {
 	
     //----------------------   GRAPH VERTICES AND EDGES MANAGEMENT METHODS -------------------------------
 
+
+
+	/**
+	 * Add a vertex to this graph structure
+	 * 
+	 * @param vertex
+	 * @return the created vertex
+	 */
+	boolean addVertex( V vertex);
+
+	/**
+	 * Add an edge to this graph structure.
+	 * 
+	 * @param edge
+	 * @return the created edge
+	 */
+	boolean addEdge( E edge);
+
+    /**
+     * Remove a vertex from the graph.
+     * 
+     * @param vertex
+     * @return true if the vertex was effectively removed
+     */ 
+	boolean removeVertex( V vertex);
+
+    /**
+     * Remove an edge from the graph.
+     * 
+     * @param edge
+     * @return true if the edge was effectively removed
+     */
+	boolean removeEdge( E edge);
+	
 	/**
 	 * @return the number of vertex in this graph.
 	 */
@@ -193,6 +227,14 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 */
 	List<E> getShortestPath(V source, V target);
 	
+	
+    
+	/**
+	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * 
+	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
+	 */
+	List<Set<V>> getStronglyConnectedComponents();
 
     
     /**
@@ -241,11 +283,6 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 */
 	Annotation getAnnotation();
 
-	/**
-	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
-	 * 
-	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
-	 */
-	List<Set<V>> getStronglyConnectedComponents();
+
 
 }
