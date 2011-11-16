@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
-
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;

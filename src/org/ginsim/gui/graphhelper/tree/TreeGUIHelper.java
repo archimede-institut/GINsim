@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.tree.GsTree;
 import org.ginsim.graph.tree.GsTreeNode;
 import org.ginsim.gui.GUIManager;

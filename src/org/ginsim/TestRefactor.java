@@ -1,16 +1,7 @@
 package org.ginsim;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
-import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.graph.testGraph.TestGraph;
-import org.ginsim.graph.testGraph.TestGraphImpl;
-import org.ginsim.graph.testGraph.TestVertex;
 import org.ginsim.gui.GUIManager;
 
 /**

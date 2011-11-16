@@ -15,8 +15,6 @@ import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.connectivity.ConnectivityService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
-
 /**
  * register the connectivity service
  */
@@ -46,11 +44,12 @@ class ConnectivityAction extends GsToolsAction {
 	public void actionPerformed( ActionEvent arg0) {
 		
 	    if (graph instanceof GsReducedGraph) {
-	        GsGraphDescriptor gd = GsGinsimGraphDescriptor.getInstance();
             String s_ag = ((GsReducedGraph) graph).getAssociatedGraphID();
             if (s_ag != null) {
             	// TODO : REFACTORING ACTION
             	// Change the GsOpenAction
+            	// TODO: pass the selection to getSelectedMap
+            	// note: gd = old GraphDescriptor
     	        Graph subgraph = GsOpenAction.open(gd, null, ((GsReducedGraph)graph).getSelectedMap(), s_ag);
     	        if (subgraph != null) {
     	            GUIManager.getInstance().whatToDoWithGraph( subgraph, graph, true);

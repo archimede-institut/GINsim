@@ -1,22 +1,10 @@
 package org.ginsim.graph.tree;
 
-import java.io.File;
-import java.util.Map;
 import java.util.Vector;
-
-import javax.swing.ImageIcon;
-import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryParser;
 import org.mangosdk.spi.ProviderFor;
-
-import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
-import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * descriptor for dynamic hierarchical graphs.

@@ -194,7 +194,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 	@Override
     protected void doSave( OutputStreamWriter os, Collection<GsRegulatoryVertex> vertices, Collection<GsRegulatoryMultiEdge> edges, int mode) throws GsException {
     	try {
-            XMLWriter out = new XMLWriter(os, dtd_file);
+            XMLWriter out = new XMLWriter(os, GsGinmlHelper.DEFAULT_URL_DTD_FILE);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + getGraphName() + "\"");
 			out.write(" class=\"regulatory\"");

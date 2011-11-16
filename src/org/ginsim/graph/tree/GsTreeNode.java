@@ -1,13 +1,10 @@
 package org.ginsim.graph.tree;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.service.export.Dotify;
 
-import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.common.Debugger;
 
 public class GsTreeNode implements Dotify {

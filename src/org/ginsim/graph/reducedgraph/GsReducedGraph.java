@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.JPanel;
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
@@ -25,7 +22,6 @@ import org.ginsim.gui.service.tools.connectivity.ReducedParameterPanel;
 
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -112,7 +108,7 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 	 */
 	protected void doSave(OutputStreamWriter os, Collection<GsNodeReducedData> vertices, Collection<Edge<GsNodeReducedData>> edges, int mode) throws GsException {
         try {
-            XMLWriter out = new XMLWriter(os, dtd_file);
+            XMLWriter out = new XMLWriter(os, GsGinmlHelper.DEFAULT_URL_DTD_FILE);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"reduced\">\n");
@@ -235,11 +231,9 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
     /**
      * @return a map referencing all real nodes in the selected CC
      */
-    public Map getSelectedMap() {
+    public Map getSelectedMap(Collection<GsNodeReducedData> selection) {
         Map map = new HashMap();
-        Iterator it = graphManager.getSelectedVertexIterator();
-        while (it.hasNext()) {
-            GsNodeReducedData node = (GsNodeReducedData) it.next();
+        for (GsNodeReducedData node: selection) {
             Vector content = node.getContent();
             for (int i=0 ; i<content.size() ; i++) {
                 map.put(content.get(i).toString(), null);

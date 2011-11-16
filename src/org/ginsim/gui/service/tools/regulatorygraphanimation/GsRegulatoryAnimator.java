@@ -14,11 +14,13 @@ import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphGUIListener;
+import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.service.tools.stateinregulatorygraph.GsStateInRegGraph;
+import org.ginsim.gui.shell.editpanel.SelectionType;
 
 import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
-import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
 import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
 
@@ -27,7 +29,7 @@ import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
  * use the <code>animate</code> static method to run the animation on a dynamic or regulatory graph:
  * It performs some checks and run the GUI once everything looks OK.
  */
-public class GsRegulatoryAnimator extends AbstractListModel implements GraphChangeListener {
+public class GsRegulatoryAnimator extends AbstractListModel implements GraphGUIListener {
 
     private static final long serialVersionUID = 2490572906584434122L;
     
@@ -104,7 +106,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         GUIManager.getInstance().addBlockClose( dynGraph, this);
         GUIManager.getInstance().addBlockEdit( dynGraph, this);
         colorizer = new GsStateInRegGraph(regGraph);
-        dynGraph.getGraphManager().getEventDispatcher().addGraphChangedListener(this);
+        GUIManager.getInstance().getGraphGUI(dynGraph).addGraphGUIListener(this);
         ui = new GsAnimatorUI(frame, this);      
     }
     
@@ -116,7 +118,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
             pathPlayer.interrupt();
         }
         
-        dynGraph.getGraphManager().getEventDispatcher().removeGraphChangeListener(this);
+        GUIManager.getInstance().getGraphGUI(dynGraph).removeGraphGUIListener(this);
         revertPath(0);
         colorizer.restoreColorization();
         
@@ -214,17 +216,6 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
         markAllPath();
     }
     
-    public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
-        if (event.getNbEdge() == 0 && event.getNbVertex() == 1) {
-            colorizer.colorizeGraph( ((GsDynamicNode)event.getV_vertex().get(0)).state );
-            add2path((GsDynamicNode)event.getV_vertex().get(0));
-        }
-    }
-    
-    public void graphClosed( Graph graph) {
-        endAnim();
-    }
-
     public int getSize() {
         return path.size();
     }
@@ -313,5 +304,21 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphChan
 
 	public void updateGraphNotificationMessage( Graph graph) {
 	}
+
+	@Override
+	public void graphSelectionChanged(GraphGUI gui) {
+		GraphSelection<GsDynamicNode, ?> selection = gui.getSelection();
+        if (selection.getSelectionType() == SelectionType.SEL_NODE) {
+        	GsDynamicNode sel = selection.getSelectedNodes().get(0);
+            colorizer.colorizeGraph( sel.state );
+            add2path( sel);
+        }
+	}
+
+	@Override
+	public void graphGUIClosed(GraphGUI gui) {
+        endAnim();
+	}
+	
 }
 

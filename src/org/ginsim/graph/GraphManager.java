@@ -1,6 +1,5 @@
 package org.ginsim.graph;
 
-import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,7 +29,6 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * descriptor for regulatoryGraph.

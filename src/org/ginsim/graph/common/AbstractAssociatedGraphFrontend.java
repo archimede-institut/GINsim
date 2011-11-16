@@ -6,8 +6,6 @@ import java.util.Collection;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 
-import fr.univmrs.tagc.GINsim.graph.GraphChangeListener;
-import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.graph.GsGraphListener;
 import fr.univmrs.tagc.GINsim.graph.GsGraphSelectionChangeEvent;
@@ -16,7 +14,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 
 abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG extends Graph<AV, AE>, AV, AE extends Edge<AV>>
 			 extends AbstractGraphFrontend<V,E>
-			 implements AssociatedGraph<AG, AV, AE>, GsGraphListener<AV,AE>, GraphChangeListener {
+			 implements AssociatedGraph<AG, AV, AE>, GsGraphListener<AV,AE> {
 
     protected AG associatedGraph = null;
     protected String associatedID = null;
@@ -48,13 +46,11 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
 
         if (associatedGraph != null) {
             associatedGraph.removeGraphListener( this);
-            associatedGraph.removeGraphChangeListener(this);
             associatedGraph = null;
             return;
         }
         associatedGraph = associated_graph;
         associatedGraph.addGraphListener(this);
-        associated_graph.addGraphChangedListener(this);
     }
 	
     /**
@@ -162,20 +158,16 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
         return null;
     }
 
+    @Override
     public void graphClosed( Graph graph) {
+    	// TODO: this used to come from the GraphChangeListener, which is now on the GUI side
+    	// association suppression should be done at some other level, but how?
+    	
         // it must be the associated regulatory graph
         if (graph == associatedGraph) {
             associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
             setAssociatedGraph(null);
         }
     }
-
-	@Override
-	public void graphSelectionChanged(GsGraphSelectionChangeEvent event) {
-	}
-
-	@Override
-	public void updateGraphNotificationMessage( Graph graph) {
-	}
 
 }
