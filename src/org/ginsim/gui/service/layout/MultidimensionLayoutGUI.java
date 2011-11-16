@@ -26,10 +26,12 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.service.layout.DynamicLayoutMultidimention;
 
 import fr.univmrs.tagc.common.ColorPalette;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StockButton;
 
@@ -113,7 +115,14 @@ public class MultidimensionLayoutGUI {
 		runButton.setMnemonic(KeyEvent.VK_R);
 		runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
-            	run();
+            	try{
+            		run();
+            	}
+            	catch( GsException ge){
+            		// TODO : REFACTORING ACTION
+            		// TODO : Launch a message box to the user
+            		Debugger.log( "Unable to launch layout : " + ge);
+            	}
             }
         });
 		frame.add(runButton, c);
@@ -127,7 +136,7 @@ public class MultidimensionLayoutGUI {
     protected void moveDown() {
     	tableModel.moveDown(table);
     }
-    protected void run() {
+    protected void run() throws GsException{
     	new DynamicLayoutMultidimention(graph, tableModel.getNewNodeOrder(), straightEdges.isSelected(), colorPalette);
     }
 

@@ -118,7 +118,7 @@ public class HTGSimulation extends Simulation {
 	/**
 	 * Run the simulation, handle exception and build the graph.
 	 */
-	public Graph do_simulation() {
+	public Graph do_simulation() throws GsException{
 		
 		long time = System.currentTimeMillis();
 		this.htg = (GsHierarchicalTransitionGraph) helper.getDynamicGraph();

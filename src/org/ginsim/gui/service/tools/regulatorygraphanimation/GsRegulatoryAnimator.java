@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
@@ -57,7 +58,12 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphGUIL
     public static void animate(JFrame frame, GsDynamicGraph dynGraph) {
     	GsRegulatoryGraph regGraph = null;
     	if (dynGraph != null) {
-    		regGraph = dynGraph.getAssociatedGraph();
+    		try{
+    			regGraph = dynGraph.getAssociatedGraph();
+    		}
+    		catch (GsException ge) {
+				regGraph = null;
+			}
     	}
         if (regGraph == null || dynGraph == null) {
         	new NotificationMessage(dynGraph, "Could not start the animator", NotificationMessage.NOTIFICATION_WARNING);

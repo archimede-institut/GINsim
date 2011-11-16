@@ -12,6 +12,7 @@ import org.ginsim.gui.service.tools.reg2dyn.helpers.GsSTGSimulationHelper;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.SimulationHelper;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -81,9 +82,16 @@ public class Simulation extends Thread implements Runnable {
      */
     public void run() {
     	
-        frame.endSimu( do_simulation());
+    	try{
+    		frame.endSimu( do_simulation());
+    	}
+    	catch ( GsException ge) {
+    		// TODO : REFACTORING ACTION
+    		// TODO : Launch a message for user
+    		Debugger.log( "Unable to start Simulation");
+		}
     }
-	public Graph do_simulation() {
+	public Graph do_simulation() throws GsException {
         ready = true;
 		boolean maxDepthReached = false;
 		try {

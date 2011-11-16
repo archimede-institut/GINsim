@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -31,7 +32,7 @@ public class DynamicLayoutMultidimention {
 	private final byte[] newNodeOrder;
 	private final boolean useStraightEdges;
 
-	public DynamicLayoutMultidimention(GsDynamicGraph graph, byte[] nodeOrder, boolean straightEdges, Color[] colorPalette) {
+	public DynamicLayoutMultidimention(GsDynamicGraph graph, byte[] nodeOrder, boolean straightEdges, Color[] colorPalette) throws GsException{
 		this.graph = graph;
 		this.newNodeOrder = nodeOrder;
 		this.colorPalette = colorPalette;
@@ -41,7 +42,7 @@ public class DynamicLayoutMultidimention {
 	}
     
 
-	public void runLayout() {
+	public void runLayout() throws GsException{
         //Check if it is a DynamicGraph
 		Iterator it = graph.getVertices().iterator();
 		Object v = it.next();
@@ -51,7 +52,8 @@ public class DynamicLayoutMultidimention {
 	    }
 		vreader = graph.getVertexAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
-	    byte[] maxValues = getMaxValues(graph.getAssociatedGraph().getNodeOrder());
+		
+	    byte[] maxValues = getMaxValues( graph.getAssociatedGraph().getNodeOrder());
 	    
 	    //move the nodes
 	    GsDynamicNode vertex = (GsDynamicNode)v;

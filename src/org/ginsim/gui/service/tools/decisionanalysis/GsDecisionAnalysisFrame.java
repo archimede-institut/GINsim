@@ -40,6 +40,7 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 	}
 
 	public GsDecisionAnalysisFrame(JFrame frame, Graph graph) {
+		
 		super(frame, "STR_htg_decision_analysis", 475, 260);
 		this.frame = frame;
 		if (graph instanceof GsHierarchicalTransitionGraph) {

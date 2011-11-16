@@ -1,5 +1,6 @@
 package org.ginsim.gui.service.tools.reg2dyn.helpers;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
@@ -48,7 +49,7 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 		node.setStable(true, vreader);
 	}
 
-	public Graph getRegulatoryGraph() {
+	public Graph getRegulatoryGraph() throws GsException{
 		
 		return this.stateTransitionGraph.getAssociatedGraph();
 	}

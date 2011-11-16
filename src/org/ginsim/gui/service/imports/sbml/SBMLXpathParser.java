@@ -22,12 +22,14 @@ import javax.swing.JTextArea;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.GUIManager;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -201,8 +203,8 @@ public final class SBMLXpathParser {
 			// TODO : REFACTORING ACTION
 			// The NodeOrder of a regulatory graph is now a List of RegulatoryVertex
 			// Moreover the graph.addNewVertex already update the NodeOrder of the graph
-			// So this command seems strange (and should be removed after complete analysis)
-			graph.setNodeOrder(v_nodeOrder);
+			// So the command below seems strange : remove it for the moment
+			// graph.setNodeOrder(v_nodeOrder);
 			
 			/** to deal transition list in order to retrieve his all data **/
 			@SuppressWarnings("unchecked")
@@ -755,15 +757,15 @@ public final class SBMLXpathParser {
 			return t;
 		}
 
-		public boolean perform( Graph graph, Object data, int index) {
+		public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 			
-			StackDialog d = new InteractionInconsistencyDialog((Map) data, graph,
+			StackDialog d = new InteractionInconsistencyDialog((Map) data, (Graph) graph,
 					"interactionInconststancy", 200, 150);
 			d.setVisible(true);
 			return true;
 		}
 
-		public boolean timeout( Graph graph, Object data) {
+		public boolean timeout( NotificationMessageHolder graph, Object data) {
 			
 			return true;
 		}
@@ -779,7 +781,7 @@ public final class SBMLXpathParser {
 
 		public InteractionInconsistencyDialog(Map m, Graph graph, String msg, int w, int h) {
 			
-			super(graph.getGraphManager().getMainFrame(), msg, w, h);
+			super( GUIManager.getInstance().getFrame( graph), msg, w, h);
 			this.graph = (GsRegulatoryGraph) graph;
 			this.m = m;
 			setMainPanel(getMainPanel());
@@ -829,12 +831,12 @@ public final class SBMLXpathParser {
 			super();
 		}
 
-		public boolean timeout( Graph graph, Object data) {
+		public boolean timeout( NotificationMessageHolder graph, Object data) {
 			
 			return false;
 		}
 
-		public boolean perform( Graph graph, Object data, int index) {
+		public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 			Vector v = (Vector) data;
 			byte value = ((Short) v.elementAt(0)).byteValue();
 			GsRegulatoryVertex vertex = (GsRegulatoryVertex) v.elementAt(1);

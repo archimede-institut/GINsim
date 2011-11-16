@@ -254,7 +254,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	public void saveAs() {
 		Frame frame = GUIManager.getInstance().getFrame(graph);
 		try {
-			String filename = GsOpenAction.selectSaveFile(frame,	null, null, null);
+			String filename = GsOpenAction.selectSaveFile(frame, null, null, null);
 			if (filename != null) {
 				savePath = filename;
 				save();

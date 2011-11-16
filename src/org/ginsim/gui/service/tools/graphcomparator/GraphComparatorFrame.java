@@ -229,7 +229,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		}
 		doClose();
 		if (opt_display_graph) {
-			new GraphComparatorCaptionFrame( frame, gc.getDiffGraph(), mainFrame, gc);
+			new GraphComparatorCaptionFrame( gc.getDiffGraph(), gc);
 		} else {
 			GUIManager.getInstance().whatToDoWithGraph(gc.getDiffGraph(), false);
 		}
