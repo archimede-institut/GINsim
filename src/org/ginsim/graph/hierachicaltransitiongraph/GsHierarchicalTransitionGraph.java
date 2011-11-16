@@ -45,7 +45,6 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	public static final int MODE_SCC = 1;
 	public static final int MODE_HTG = 2;
 
-	public final static String zip_mainEntry = "hierarchicalTransitionGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
@@ -185,9 +184,16 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 		
 /* **************** SAVE ************/	
 		
-	protected String getGraphZipName() {
-		return zip_mainEntry;
-    }
+	/**
+	 * Return the zip extension for the graph type
+	 * 
+	 * @return the zip extension for the graph type
+	 */
+	public static String getGraphZipName(){
+		
+		return "hierarchicalTransitionGraph.ginml";
+		
+	}
 
 	
 	protected void doSave(OutputStreamWriter os, Collection<GsHierarchicalNode> nodes, Collection<GsDecisionOnEdge> edges, int mode) throws GsException {

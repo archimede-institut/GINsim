@@ -33,7 +33,6 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 
 	private ReducedParameterPanel parameterPanel = null;
 
-    public static final String zip_mainEntry = "connectedComponent.ginml";
     
 	/**
 	 * @param parent
@@ -44,9 +43,17 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
         setAssociatedGraph( (GsRegulatoryGraph) parent);
 	}
 	
-    protected String getGraphZipName() {
-    	return zip_mainEntry;
-    }
+    
+	/**
+	 * Return the zip extension for the graph type
+	 * 
+	 * @return the zip extension for the graph type
+	 */
+	public static String getGraphZipName(){
+		
+		return "connectedComponent.ginml";
+		
+	}
 
 	/**
 	 * @param map

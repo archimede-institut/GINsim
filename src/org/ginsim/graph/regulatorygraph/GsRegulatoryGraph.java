@@ -43,7 +43,6 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 	private List<GsRegulatoryVertex> nodeOrder = new ArrayList<GsRegulatoryVertex>();
 
     private static Graph copiedGraph = null;
-	public final static String zip_mainEntry = "regulatoryGraph.ginml";
 
     static {
     	ObjectAssociationManager.getInstance().registerObjectManager( GsRegulatoryGraph.class, new GsMutantListManager());
@@ -55,11 +54,6 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     public GsRegulatoryGraph() {
     	
         this( false);
-    }
-   
-
-    protected String getGraphZipName() {
-    	return zip_mainEntry;
     }
 
     
@@ -191,6 +185,17 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
     	return obj;
     }
 
+	/**
+	 * Return the zip extension for the graph type
+	 * 
+	 * @return the zip extension for the graph type
+	 */
+	public static String getGraphZipName(){
+		
+		return "regulatoryGraph.ginml";
+		
+	}
+    
 	@Override
     protected void doSave( OutputStreamWriter os, Collection<GsRegulatoryVertex> vertices, Collection<GsRegulatoryMultiEdge> edges, int mode) throws GsException {
     	try {

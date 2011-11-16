@@ -32,7 +32,6 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFrontend<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
-	public final static String zip_mainEntry = "dynamicalHierarchicalGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	
 	
@@ -92,6 +91,17 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 
     
     /* Save */
+    
+	/**
+	 * Return the zip extension for the graph type
+	 * 
+	 * @return the zip extension for the graph type
+	 */
+	protected static String getGraphZipName(){
+		
+		return "dynamicalHierarchicalGraph.ginml";
+		
+	}
     
 	protected void doSave(OutputStreamWriter os, Collection<GsDynamicalHierarchicalNode> vertices, Collection<Edge<GsDynamicalHierarchicalNode>> edges, int mode) throws GsException {
 	       try {

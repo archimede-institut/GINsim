@@ -45,7 +45,6 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  */
 public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDynamicNode, Edge<GsDynamicNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
-    public final static String zip_mainEntry = "stateTransitionGraph.ginml";
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	private GsRegulatoryGraphOptionPanel optionPanel;
 
@@ -105,11 +104,18 @@ public final class GsDynamicGraph extends AbstractAssociatedGraphFrontend<GsDyna
 		
 		nodeOrder = node_order;
 	}
+    
+	/**
+	 * Return the zip extension for the graph type
+	 * 
+	 * @return the zip extension for the graph type
+	 */
+	public static String getGraphZipName(){
+		
+		return "stateTransitionGraph.ginml";
+		
+	}
 	
-    protected String getGraphZipName() {
-    	return zip_mainEntry;
-    }
-
 	/**
 	 */
 	public GsDynamicGraph() {

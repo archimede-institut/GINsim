@@ -2,7 +2,9 @@ package org.ginsim.graph.common;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -466,7 +468,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 *   all interactive-notifications should be replaced by exceptions...
 	 * 
 	 */
-	private void save(String save_path, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException {
+	private void save(String save_path, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException, IOException {
 
 		boolean selected = vertices == null || vertices.size() < getVertexCount();
 		if (!selected) {
@@ -503,11 +505,20 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 			}
 		}
 
-		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(fileName));
+		ZipOutputStream zos = new ZipOutputStream( new FileOutputStream(fileName));
 		// FIXME: uncompressed Zip require to set the size and CRC by hand!!
 		// this must be done for each ZipEntry: save it to a tmpfile,
 		// mesure the CRC and the size, then put it in the uncompressed zip...
-		zos.putNextEntry(new ZipEntry(ZIP_PREFIX+getGraphZipName()));
+		String graph_zip_name = "";
+		try{
+			graph_zip_name = (String) this.getClass().getDeclaredMethod( "getGraphZipName").invoke( this);
+		}
+		catch( NoSuchMethodException nsme){}
+		catch( SecurityException se){}
+		catch( InvocationTargetException ite){}
+		catch( IllegalAccessException iae){}
+		
+		zos.putNextEntry(new ZipEntry(ZIP_PREFIX + graph_zip_name));
 		OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
 		
 		// TODO: doSave should take the selection as parameter.
@@ -559,6 +570,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 			}
 		}
 	}
+
 	
 	
 	// ====================================================================================
