@@ -18,6 +18,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.AbstractGraphFrontend;
+import org.ginsim.graph.common.AssociatedGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
@@ -29,6 +30,7 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.GINsim.graph.GsGraphAssociatedObjectManager;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
+import fr.univmrs.tagc.common.Debugger;
 
 /**
  * descriptor for regulatoryGraph.
@@ -297,9 +299,25 @@ public class GraphManager {
 	public void close( Graph graph){
 		
 		graphFilepath.remove( graph);
+		
+		// Remove the graph associated objects
 		ObjectAssociationManager.getInstance().removeAllObjects( graph);
-		// TODO : REFACTORING ACTION:
-		// TODO : What to do if the graph is used as an associated graph by another graph? Do we have to remove the association?
+		
+		// Remove the references to the graph as associated graph
+		for( Graph other_graph : graphFilepath.keySet()){
+			if( other_graph instanceof AssociatedGraph){
+				try{
+					Graph associated_graph = ((AssociatedGraph) other_graph).getAssociatedGraph();
+				    if (graph == associated_graph) {
+				    	((AssociatedGraph) other_graph).setAssociatedGraphID( getGraphPath( graph));
+				    	((AssociatedGraph) other_graph).setAssociatedGraph(null);
+				    }
+				}
+				catch( GsException ge){
+					Debugger.log( "Unable to verify the associated graph of graph : " + other_graph.getGraphName());
+				}
+			}
+		}
 	}
 
 

@@ -158,16 +158,4 @@ abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG e
         return null;
     }
 
-    @Override
-    public void graphClosed( Graph graph) {
-    	// TODO: this used to come from the GraphChangeListener, which is now on the GUI side
-    	// association suppression should be done at some other level, but how?
-    	
-        // it must be the associated regulatory graph
-        if (graph == associatedGraph) {
-            associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
-            setAssociatedGraph(null);
-        }
-    }
-
 }
