@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -20,27 +19,18 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 /**
  * Export the logical functions from regulatory graphs to python for use with the Snakes python library.
  * http://lacl.univ-paris12.fr/pommereau/soft/snakes/
- * 
- *
  */
-public class SnakesExport extends GsAbstractExport  {
+public class SnakesExport extends GsAbstractExport<GsRegulatoryGraph>  {
 
 	GsExportConfig config = null;
 	FileWriter out = null;
 
-	public SnakesExport() {
+	public SnakesExport(GsRegulatoryGraph graph) {
+		super(graph, "STR_snakes", "STR_snakes_descr");
 		id = "Logical function to snakes";
 		extension = ".py";
 		filter = new String[] { "py" };
 		filterDescr = "Python files";
-	}
-	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		if (graph instanceof GsRegulatoryGraph) {
-			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
-					"STR_snakes", "STR_snakes_descr", null, this, ACTION_EXPORT, 0) };
-		}
-		return null;
 	}
 	
 	protected void doExport(GsExportConfig config) throws GsException{

@@ -69,7 +69,8 @@ public class GsPetriNetExport extends GsAbstractExport<GsRegulatoryGraph> {
 		v_format.add(new GsPetriNetExportAPNN());
 	}
 
-	public GsPetriNetExport() {
+	public GsPetriNetExport(GsRegulatoryGraph graph) {
+		super(graph, "STR_PetriNet", "STR_PetriNet_descr");
 		id = "PetriNet";
 	}
 
@@ -169,16 +170,6 @@ public class GsPetriNetExport extends GsAbstractExport<GsRegulatoryGraph> {
 
 	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) {
 		// nothing needed here: subformat do all the job
-	}
-
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-        if (graph instanceof GsRegulatoryGraph) {
-        	return new GsPluggableActionDescriptor[] {
-        			new GsPluggableActionDescriptor("STR_PetriNet", "STR_PetriNet_descr", null, this, ACTION_EXPORT, 0)
-        	};
-        }
-        return null;
 	}
 
 	public boolean needConfig(GsExportConfig config) {

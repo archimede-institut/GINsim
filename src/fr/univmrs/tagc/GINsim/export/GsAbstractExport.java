@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.export;
 
+import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.JComponent;
@@ -7,9 +8,10 @@ import javax.swing.JFrame;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.FileSelectionHelper;
+import org.ginsim.gui.service.common.GsExportAction;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
 import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
@@ -24,13 +26,20 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
  * 
  * <p>The export itself happens within <code>doExport</code>.
  */
-abstract public class GsAbstractExport<G extends Graph> implements GsPlugin  {
+abstract public class GsAbstractExport<G extends Graph> extends GsExportAction {
 
 	protected String id;
 	protected String[] filter = null;
 	protected String filterDescr = null;
 	protected String extension = null;
+	
+	protected final G graph;
 
+	public GsAbstractExport(G graph, String name, String tooltip) {
+		super(name, tooltip);
+		this.graph = graph;
+	}
+	
 	/**
 	 * if your export plugin supports several format, override this.
 	 * 
@@ -45,15 +54,6 @@ abstract public class GsAbstractExport<G extends Graph> implements GsPlugin  {
 		return id;
 	}
 
-	public void runAction (int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-	    GsExportConfig<G> config = new GsExportConfig(graph, this, ref);
-		if(needConfig(config)) {
-			new GsExportDialog(this, config).setVisible(true);
-		} else {
-			selectFile(config);
-		}
-	}
-	
 	protected void selectFile(GsExportConfig<G> config) throws GsException {
 		GsAbstractExport<G> export;
 		Vector v_format = getSubFormat();
@@ -69,7 +69,7 @@ abstract public class GsAbstractExport<G extends Graph> implements GsPlugin  {
 			ffilter.setExtensionList(export.getFilter(config), filterDescr);
 		}
 	    
-		config.filename = GsOpenAction.selectSaveFile(null, ffilter, null, export.getExtension(config));
+		config.filename = FileSelectionHelper.selectSaveFilename(null, ffilter, export.getExtension(config));
 		if (config.filename == null) {
 			return;
 		}
@@ -101,4 +101,15 @@ abstract public class GsAbstractExport<G extends Graph> implements GsPlugin  {
 	}
 
 	abstract protected void doExport(GsExportConfig<G> config) throws GsException;
+
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+	    GsExportConfig<G> config = new GsExportConfig(graph, this);
+		if(needConfig(config)) {
+			new GsExportDialog(this, config).setVisible(true);
+		} else {
+			selectFile(config);
+		}
+	}
 }

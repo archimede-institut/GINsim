@@ -79,8 +79,9 @@ public class GenericDocumentExport extends GsAbstractExport {
 	private List nodeOrder;
 	private int len;
 	
-    public GenericDocumentExport() {
-		id = "Documentation";
+    public GenericDocumentExport(GsRegulatoryGraph graph) {
+    	super(graph, "STR_Generic", "STR_Generic_descr");
+    	id = "doc";
     }
 
     /**
@@ -90,16 +91,6 @@ public class GenericDocumentExport extends GsAbstractExport {
 		return v_format;
 	}
    
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-        if (graph instanceof GsRegulatoryGraph) {
-        	return new GsPluggableActionDescriptor[] {
-        			new GsPluggableActionDescriptor("STR_Generic", "STR_Generic_descr", null, this, ACTION_EXPORT, 0)
-        	};
-        }
-        return null;
-	}
-
 	protected void doExport(GsExportConfig config) throws GsException{
 		this.config = config;
 		this.specConfig = (DocumentExportConfig)config.getSpecificConfig();
@@ -661,7 +652,6 @@ class GenericDocumentExportFormat extends GenericDocumentExport {
 	 */
 	public GenericDocumentExportFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
 		this.documentWriterClass = documentWriterClass;
-		this.id = id;
 		this.filter = filter;
 		this.filterDescr = filterDescr;
 		this.extension = extension;		
@@ -671,9 +661,4 @@ class GenericDocumentExportFormat extends GenericDocumentExport {
 		return new GenericDocumentExportFormat(format.documentWriterClass, format.id, format.extensionArray, format.filterDescr, format.defaultExtension);
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-		return null;
-	}
-	
 }

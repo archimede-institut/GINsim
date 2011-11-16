@@ -45,9 +45,10 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
  * </p>
  * 
  */
-public class GsNuSMVExport extends GsAbstractExport {
+public class GsNuSMVExport extends GsAbstractExport<GsRegulatoryGraph> {
 
-	public GsNuSMVExport() {
+	public GsNuSMVExport(GsRegulatoryGraph graph) {
+		super(graph, "STR_NuSMVmodelChecker", "STR_NuSMVmodelChecker_descr");
 		id = "SMV";
 		extension = ".smv";
 		filter = new String[] { "smv" };
@@ -57,17 +58,6 @@ public class GsNuSMVExport extends GsAbstractExport {
 	protected void doExport(GsExportConfig config) {
 		encode((GsRegulatoryGraph) config.getGraph(), config.getFilename(),
 				(GsNuSMVConfig) config.getSpecificConfig());
-	}
-
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-		if (graph instanceof GsRegulatoryGraph) {
-			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
-					"STR_NuSMVmodelChecker",
-					"STR_NuSMVmodelCheckerExport_descr", null, this,
-					ACTION_EXPORT, 0) };
-		}
-		return null;
 	}
 
 	public boolean needConfig(GsExportConfig config) {

@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -27,7 +28,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * @version 1.0
  * february 2008 - april 2008 
  */
-public class CytoscapeExport extends GsAbstractExport {
+public class CytoscapeExport extends GsAbstractExport<Graph<?,?>> {
 	
 	int EDGE_INHIBIT = 1;
 	int EDGE_ACTIVATE = 2;
@@ -37,8 +38,8 @@ public class CytoscapeExport extends GsAbstractExport {
 	FileWriter fout = null;
 	XMLWriter out = null;
 	
-	public CytoscapeExport() {
-		id = "Cytoscape";
+	public CytoscapeExport(Graph graph) {
+		super(graph, "STR_cytoscape", "STR_cytoscape_descr");
 		extension = ".xgmml";
 		filter = new String[] { "xgmml" };
 		filterDescr = "Cytoscape files";

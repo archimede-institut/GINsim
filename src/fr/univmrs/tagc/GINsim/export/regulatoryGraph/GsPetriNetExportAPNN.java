@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
@@ -26,17 +25,12 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class GsPetriNetExportAPNN extends GsPetriNetExport 
 {
-	protected GsPetriNetExportAPNN()
-	{
+	protected GsPetriNetExportAPNN(GsRegulatoryGraph graph) {
+		super(graph);
 		id = "APNN";
 		extension = ".apnn";
 		filter = new String[] { "apnn" };
 		filterDescr = "APNN files (.apnn)";
-	}
-	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) 
-	{
-		return null;
 	}
 	
 	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) 

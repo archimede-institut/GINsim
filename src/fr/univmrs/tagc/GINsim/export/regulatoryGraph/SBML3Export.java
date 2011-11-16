@@ -55,23 +55,14 @@ public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements 
 	 * @param graph
 	 * @param fileName
 	 */
-	public SBML3Export() {
+	public SBML3Export(GsRegulatoryGraph graph) {
+		super(graph, "STR_SBML_L3", "STR_SBML_L3_descr");
 		id = "SBML";
 		extension = ".sbml";
 		filter = new String[] { "sbml" };
 		filterDescr = "SBML files";
 	}
 	
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		if (graph instanceof GsRegulatoryGraph) {
-			return new GsPluggableActionDescriptor[] { new GsPluggableActionDescriptor(
-					"STR_SBML_L3",
-					"STR_SBML_L3_descr", null, this,
-					ACTION_EXPORT, 0) };
-		}
-		return null;
-	}
-
 	public boolean needConfig(GsExportConfig config) {
 		return true;
 	}

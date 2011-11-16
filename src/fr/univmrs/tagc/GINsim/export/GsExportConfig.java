@@ -9,14 +9,12 @@ import fr.univmrs.tagc.common.OptionStore;
 
 public class GsExportConfig<G extends Graph> extends GsExtensibleConfig<G> {
 
-	int ref;
 	int format = -1;
 	String filename;
 	
-	public GsExportConfig( G graph, GsAbstractExport export, int ref) {
+	public GsExportConfig( G graph, GsAbstractExport export) {
 		
 		super(graph);
-		this.ref = ref;
 
 		// set the format
 		Vector v_format = export.getSubFormat();
@@ -45,9 +43,6 @@ public class GsExportConfig<G extends Graph> extends GsExtensibleConfig<G> {
 		}
 	}
 
-	public int getRef() {
-		return ref;
-	}
 	public String getFilename() {
 		return filename;
 	}

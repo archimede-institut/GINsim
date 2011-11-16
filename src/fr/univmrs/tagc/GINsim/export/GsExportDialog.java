@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.export;
 
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -26,7 +27,7 @@ public class GsExportDialog extends StackDialog {
 	
 	public GsExportDialog(GsAbstractExport export, GsExportConfig config) {
 		// TODO: move to the new service GUI and set the right parent frame
-		super(null, "exportDialog_"+export.getID(), 400, 300);
+		super((Frame)null, "exportDialog_"+export.getID(), 400, 300);
 		this.export = export;
 		this.config = config;
 		if (export.getSubFormat() != null) {

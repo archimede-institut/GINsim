@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
@@ -20,29 +19,19 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * 
  * 
  */
-public class GsGNAMLExport extends GsAbstractExport {
+public class GsGNAMLExport extends GsAbstractExport<GsRegulatoryGraph> {
 	private GsExportConfig config = null;
 	private FileWriter fout = null;
 	private XMLWriter out = null;
-	private GsRegulatoryGraph graph;
 
-    public GsGNAMLExport() {
+    public GsGNAMLExport(GsRegulatoryGraph graph) {
+    	super(graph, "STR_GNAML", "STR_GNAML_descr");
 		id = "GNAML";
 		extension = ".gnaml";
 		filter = new String[] { "gnaml" };
 		filterDescr = "GNAML files";
     }
     
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-        if (graph instanceof GsRegulatoryGraph) {
-        	return new GsPluggableActionDescriptor[] {
-        			new GsPluggableActionDescriptor("STR_GNAML", "STR_GNAML_descr", null, this, ACTION_EXPORT, 0)
-        	};
-        }
-        return null;
-	}
-
 	protected void doExport(GsExportConfig config) throws GsException{
 		this.config = config;
 		try {
@@ -54,7 +43,6 @@ public class GsGNAMLExport extends GsAbstractExport {
 	}
 
 	protected synchronized void run() throws IOException {
-		this.graph = (GsRegulatoryGraph) config.getGraph();
 		this.fout = new FileWriter(config.getFilename());
 		this.out = new XMLWriter(fout, null);
   		

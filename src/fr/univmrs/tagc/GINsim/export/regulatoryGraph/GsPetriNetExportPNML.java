@@ -24,19 +24,16 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  *  <li>PIPE2: http://pipe2.sourceforge.net/</li>
  * </ul>
  */
-public class GsPetriNetExportPNML extends GsAbstractExport<GsRegulatoryGraph> {
+public class GsPetriNetExportPNML extends GsPetriNetExport {
 
-	protected GsPetriNetExportPNML() {
+	protected GsPetriNetExportPNML(GsRegulatoryGraph graph) {
+		super(graph);
 		id = "PNML";
 		extension = ".xml";
 		filter = new String[] { "xml" };
 		filterDescr = "PNML files (.xml)";
 	}
 
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		return null;
-	}
-	
 	protected void doExport(GsExportConfig<GsRegulatoryGraph> config) throws GsException{
 		GsRegulatoryGraph graph = config.getGraph();
 		List v_no = graph.getNodeOrder();

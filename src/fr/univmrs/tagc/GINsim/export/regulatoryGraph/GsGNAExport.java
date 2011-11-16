@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.LogicalFunctionBrowser;
@@ -19,29 +18,20 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 /**
  * Encode a graph to GNA format.
  */
-public class GsGNAExport extends GsAbstractExport {
+public class GsGNAExport extends GsAbstractExport<GsRegulatoryGraph> {
 	private GsExportConfig config = null;
 	private FileWriter out = null;
 	private GsRegulatoryGraph graph;
 	private GNAFunctionBrowser f_browser;
 
-    public GsGNAExport() {
-		id = "GNA";
+    public GsGNAExport(GsRegulatoryGraph graph) {
+    	super(graph, "STR_GNA", "STR_GNA_descr");
+		id = "GNAML";
 		extension = ".gna";
 		filter = new String[] { "gna" };
 		filterDescr = "GNA files";
     }
     
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		
-        if (graph instanceof GsRegulatoryGraph) {
-        	return new GsPluggableActionDescriptor[] {
-        			new GsPluggableActionDescriptor("STR_GNA", "STR_GNA_descr", null, this, ACTION_EXPORT, 0)
-        	};
-        }
-        return null;
-	}
-
 	protected void doExport(GsExportConfig config) throws GsException{
 		this.config = config;
 		try {

@@ -49,17 +49,14 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
  * &#64;
  *</pre>
  */
-public class GsPetriNetExportINA extends GsAbstractExport<GsRegulatoryGraph> {
+public class GsPetriNetExportINA extends GsPetriNetExport {
 
-	protected GsPetriNetExportINA() {
+	protected GsPetriNetExportINA(GsRegulatoryGraph graph) {
+		super(graph);
 		id = "INA";
 		extension = ".pnt";
 		filter = new String[] { "pnt" };
 		filterDescr = "INA files (.pnt)";
-	}
-
-	public GsPluggableActionDescriptor[] getT_action(int actionType, Graph graph) {
-		return null;
 	}
 
 	// FIXME: INA does not like PN with "useless" places. Such places should be removed (with a warning)
