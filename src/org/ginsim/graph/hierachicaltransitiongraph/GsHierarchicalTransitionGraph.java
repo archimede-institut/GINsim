@@ -42,6 +42,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFrontend<GsHierarchicalNode, GsDecisionOnEdge, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
+	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
+	
 	public static final int MODE_SCC = 1;
 	public static final int MODE_HTG = 2;
 
@@ -189,9 +191,9 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 	 * 
 	 * @return the zip extension for the graph type
 	 */
-	public static String getGraphZipName(){
+	public String getGraphZipName(){
 		
-		return "hierarchicalTransitionGraph.ginml";
+		return GRAPH_ZIP_NAME;
 		
 	}
 

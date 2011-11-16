@@ -32,8 +32,9 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFrontend<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
-	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
+	public static final String GRAPH_ZIP_NAME = "dynamicalHierarchicalGraph.ginml";
 	
+	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	
 	private byte[] childsCount = null;
 	private GsDynamicalHierarchicalParameterPanel vertexPanel = null;
@@ -97,9 +98,9 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
 	 * 
 	 * @return the zip extension for the graph type
 	 */
-	protected static String getGraphZipName(){
+	protected String getGraphZipName(){
 		
-		return "dynamicalHierarchicalGraph.ginml";
+		return GRAPH_ZIP_NAME; 
 		
 	}
     

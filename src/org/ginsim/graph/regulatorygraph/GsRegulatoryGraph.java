@@ -38,6 +38,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  */
 public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
+	public static final String GRAPH_ZIP_NAME = "regulatoryGraph.ginml";
+	
 	private int nextid=0;
 
 	private List<GsRegulatoryVertex> nodeOrder = new ArrayList<GsRegulatoryVertex>();
@@ -190,9 +192,10 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
 	 * 
 	 * @return the zip extension for the graph type
 	 */
-	public static String getGraphZipName(){
+    @Override
+	protected String getGraphZipName(){
 		
-		return "regulatoryGraph.ginml";
+		return GRAPH_ZIP_NAME;
 		
 	}
     

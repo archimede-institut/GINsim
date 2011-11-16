@@ -20,6 +20,7 @@ import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> {
+	
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
 	public final static int MODE_DIAGRAM = 1;
 	public final static int MODE_TREE = 2;

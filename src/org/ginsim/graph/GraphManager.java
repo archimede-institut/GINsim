@@ -220,13 +220,13 @@ public class GraphManager {
                 ZipEntry ze = f.getEntry("ginml");
                 if (ze==null) {
                 	usePrefix = true;
-                	ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsRegulatoryGraph.getGraphZipName());
+                	ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsRegulatoryGraph.GRAPH_ZIP_NAME);
                 	if (ze == null) {
-                		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsDynamicGraph.getGraphZipName());
+                		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsDynamicGraph.GRAPH_ZIP_NAME);
                     	if (ze == null) {
-                    		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsReducedGraph.getGraphZipName());
+                    		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsReducedGraph.GRAPH_ZIP_NAME);
                         	if (ze == null) {
-                        		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsHierarchicalTransitionGraph.getGraphZipName());
+                        		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsHierarchicalTransitionGraph.GRAPH_ZIP_NAME);
 	                        	if (ze == null) {
 	                        		throw new GsException( GsException.GRAVITY_ERROR, "Unable to find a known main zip entry");
 	                        	}

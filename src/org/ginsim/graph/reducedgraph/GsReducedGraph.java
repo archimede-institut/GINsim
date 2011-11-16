@@ -31,6 +31,8 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  */
 public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReducedData, Edge<GsNodeReducedData>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
+	public static final String GRAPH_ZIP_NAME = "connectedComponent.ginml";
+	
 	private ReducedParameterPanel parameterPanel = null;
 
     
@@ -49,9 +51,9 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
 	 * 
 	 * @return the zip extension for the graph type
 	 */
-	public static String getGraphZipName(){
+	public String getGraphZipName(){
 		
-		return "connectedComponent.ginml";
+		return GRAPH_ZIP_NAME;
 		
 	}
 

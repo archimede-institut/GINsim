@@ -136,6 +136,16 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
     	return saveMode;
     }
     
+	/**
+	 * Return the zip extension for the graph type
+	 * 
+	 * @return the zip extension for the graph type
+	 */
+    protected String getGraphZipName() {
+    	
+    	return "ginml";
+    }
+    
     
     //----------------------   GRAPH VERTICES AND EDGES MANAGEMENT METHODS -------------------------------
 
@@ -509,16 +519,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 		// FIXME: uncompressed Zip require to set the size and CRC by hand!!
 		// this must be done for each ZipEntry: save it to a tmpfile,
 		// mesure the CRC and the size, then put it in the uncompressed zip...
-		String graph_zip_name = "";
-		try{
-			graph_zip_name = (String) this.getClass().getDeclaredMethod( "getGraphZipName").invoke( this);
-		}
-		catch( NoSuchMethodException nsme){}
-		catch( SecurityException se){}
-		catch( InvocationTargetException ite){}
-		catch( IllegalAccessException iae){}
-		
-		zos.putNextEntry(new ZipEntry(ZIP_PREFIX + graph_zip_name));
+		zos.putNextEntry(new ZipEntry(ZIP_PREFIX + getGraphZipName()));
 		OutputStreamWriter osw = new OutputStreamWriter(zos, "UTF-8");
 		
 		// TODO: doSave should take the selection as parameter.
