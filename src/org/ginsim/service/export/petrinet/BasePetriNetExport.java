@@ -1,5 +1,6 @@
 package org.ginsim.service.export.petrinet;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -40,6 +41,14 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
  */
 public class BasePetriNetExport {
 
+	public static final List<BasePetriNetExport> FORMATS = new ArrayList<BasePetriNetExport>();
+	
+	static {
+		FORMATS.add(new GsPetriNetExportINA());
+		FORMATS.add(new GsPetriNetExportPNML());
+		FORMATS.add(new GsPetriNetExportAPNN());
+	}
+	
     /**
      * extract transitions from a tree view of logical parameters.
      *

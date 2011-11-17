@@ -11,9 +11,10 @@ import fr.univmrs.tagc.common.datastore.ObjectStore;
 public class PNConfig implements GsInitialStateStore {
 
 	public final GsRegulatoryGraph graph;
+	public final ObjectStore store = new ObjectStore(2);
+	
     Map m_init = new HashMap();
     Map m_input = new HashMap();
-	ObjectStore store = new ObjectStore(2);
 
 	public PNConfig( GsRegulatoryGraph graph) {
 		this.graph = graph;

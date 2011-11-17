@@ -49,7 +49,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
  */
 public class GsPetriNetExportINA extends BasePetriNetExport {
 
-	protected GsPetriNetExportINA(GsRegulatoryGraph graph) {
+	protected GsPetriNetExportINA() {
 		extension = ".pnt";
 		filter = new String[] { "pnt" };
 		filterDescr = "INA files (.pnt)";

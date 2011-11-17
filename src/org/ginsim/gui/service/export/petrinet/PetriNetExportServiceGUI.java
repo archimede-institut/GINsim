@@ -30,6 +30,7 @@ import org.ginsim.service.export.petrinet.GsPetriNetExportINA;
 import org.ginsim.service.export.petrinet.GsPetriNetExportPNML;
 import org.ginsim.service.export.petrinet.PNConfig;
 
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
@@ -59,31 +60,30 @@ public class PetriNetExportServiceGUI implements GsServiceGUI {
 
 class PetriNetExportAction extends GsExportAction<GsRegulatoryGraph> {
 
-	static List<BasePetriNetExport> formats = new ArrayList<BasePetriNetExport>();
-	
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
-	static {
-		formats.add(new GsPetriNetExportINA());
-		formats.add(new GsPetriNetExportPNML());
-		formats.add(new GsPetriNetExportAPNN());
-	}
 
+	PNConfig config;
+	
 	public PetriNetExportAction(GsRegulatoryGraph graph) {
 		super(graph, "STR_PetriNet", "STR_PetriNet_descr");
-	}
-
-	public List<BasePetriNetExport> getSubFormat() {
-		return formats;
 	}
 
 	protected void doExport( String filename) {
 		// FIXME: call the right subformat to do the job
 	}
 
-
 	@Override
 	public JComponent getConfigPanel() {
+		config = new PNConfig(graph);
 		return new PNExportConfigPanel(config);
+	}
+
+	@Override
+	protected GsFileFilter getFileFilter() {
+		// FIXME return the filter associated to the selected format
+		// return config.format.ffilter
+		
+		return null;
 	}
 
 }
@@ -92,19 +92,16 @@ class PNExportConfigPanel extends JPanel {
     private static final long serialVersionUID = 9043565812912568136L;
 
 	PrioritySelectionPanel priorityPanel = null;
-	PNConfig specConfig = new PNConfig();
 
-	protected PNExportConfigPanel (GsExportConfig config, StackDialog dialog) {
-    	config.setSpecificConfig(specConfig);
-    	
-    	Graph<?,?> graph = config.getGraph();
+	protected PNExportConfigPanel ( PNConfig config, StackDialog dialog) {
+    	GsRegulatoryGraph graph = config.graph;
     	MutantSelectionPanel mutantPanel = null;
     	
     	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
-    	initPanel.setParam(specConfig);
+    	initPanel.setParam(config);
     	
     	setLayout(new GridBagLayout());
-    	mutantPanel = new MutantSelectionPanel(dialog, (GsRegulatoryGraph) graph, specConfig.store);
+    	mutantPanel = new MutantSelectionPanel(dialog, graph, config.store);
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
 		c.gridy = 1;
@@ -113,7 +110,7 @@ class PNExportConfigPanel extends JPanel {
 
 		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, GsSimulationParametersManager.key, true);
         priorityPanel = new PrioritySelectionPanel(dialog, paramList.pcmanager);
-        priorityPanel.setStore(specConfig.store, 1);
+        priorityPanel.setStore(config.store, 1);
 		c = new GridBagConstraints();
 		c.gridx = 1;
 		c.gridy = 1;

@@ -24,7 +24,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  */
 public class GsPetriNetExportPNML extends BasePetriNetExport {
 
-	protected GsPetriNetExportPNML(GsRegulatoryGraph graph) {
+	protected GsPetriNetExportPNML() {
 		extension = ".xml";
 		filter = new String[] { "xml" };
 		filterDescr = "PNML files (.xml)";

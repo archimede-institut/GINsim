@@ -25,7 +25,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class GsPetriNetExportAPNN extends BasePetriNetExport {
 	
-	protected GsPetriNetExportAPNN(GsRegulatoryGraph graph) {
+	protected GsPetriNetExportAPNN() {
 		extension = ".apnn";
 		filter = new String[] { "apnn" };
 		filterDescr = "APNN files (.apnn)";
