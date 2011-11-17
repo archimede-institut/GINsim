@@ -33,6 +33,7 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.graph.tree.GsTree;
 import org.ginsim.graph.tree.GsTreeParser;
 import org.ginsim.graph.tree.GsTreeParserFromCircuit;
+import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.connectivity.AlgoConnectivity;
 
@@ -712,7 +713,7 @@ public class GsCircuitFrame extends StackDialog implements ProgressListener {
      */
 	private void viewContext() {
 		GsTreeParser parser = new GsTreeParserFromCircuit();
-		GsTree tree = new GsTree(parser);
+		GsTree tree = new TreeImpl(parser);
 			
 		parser.setParameter(GsTreeParser.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(GsTreeParserFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());

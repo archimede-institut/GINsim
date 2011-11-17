@@ -57,7 +57,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	protected abstract String getNodeName(int level);
 	
 	public void parseOmdd() {
-		if (tree.getMode() == GsTree.MODE_TREE) {
+		if (tree.getMode() == TreeImpl.MODE_TREE) {
 			createTreeFromOmdd(root);
 		} else {
 			createDiagramFromOmdd(root);
@@ -113,7 +113,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	public void createDiagramFromOmdd(OmddNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
-		tree.root = _createDiagramFromOmdd(root, 0, currentWidthPerDepth, tree.getEdgeAttributeReader());
+		tree.setRoot( _createDiagramFromOmdd(root, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()));
 	}
 	
 	private GsTreeNode _createDiagramFromOmdd(OmddNode o, int lastLevel, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
@@ -122,12 +122,12 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 		if (o.next == null) {
 			mult = jump(lastLevel, max_depth, currentWidthPerDepth);
 		
-			if (tree.getMode() == GsTree.MODE_DIAGRAM_WITH_MULTIPLE_LEAFS) {
+			if (tree.getMode() == TreeImpl.MODE_DIAGRAM_WITH_MULTIPLE_LEAFS) {
 				treeNode = new GsTreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], GsTreeNode.TYPE_LEAF, o.value);
 				if (mult > 1) currentWidthPerDepth[max_depth] += mult-1;
 				tree.addVertex(treeNode);
 			} else { // if (mode == MODE_DIAGRAM) {
-				treeNode = GsTree.leafs[o.value];
+				treeNode = TreeImpl.leafs[o.value];
 				if (!tree.containsNode(treeNode)) {
 					tree.addVertex(treeNode);
 				}
@@ -169,7 +169,7 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 	public void createTreeFromOmdd(OmddNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
-		tree.root = (GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0);
+		tree.setRoot( (GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0));
 	}
 	private List _createTreeFromOmdd(OmddNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
 		GsTreeNode treeNode = null;

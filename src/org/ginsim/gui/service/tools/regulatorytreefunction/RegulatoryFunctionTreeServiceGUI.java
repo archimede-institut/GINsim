@@ -14,6 +14,7 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.graph.tree.GsTree;
 import org.ginsim.graph.tree.GsTreeParser;
 import org.ginsim.graph.tree.GsTreeParserFromRegulatoryGraph;
+import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsServiceGUI;
@@ -57,7 +58,7 @@ class RegulatoryFunctionTreeAction extends GsToolsAction {
 	public void actionPerformed(ActionEvent e) {
 		
 		GsTreeParser parser = new GsTreeParserFromRegulatoryGraph();
-		GsTree tree = new GsTree( parser);
+		GsTree tree = new TreeImpl( parser);
 			
 		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_REGGRAPH, graph);
