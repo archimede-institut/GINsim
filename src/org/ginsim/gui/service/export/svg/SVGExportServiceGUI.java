@@ -1,11 +1,12 @@
 package org.ginsim.gui.service.export.svg;
 
-import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -41,32 +42,20 @@ public class SVGExportServiceGUI implements GsServiceGUI {
  */
 class ExportSVGAction extends GsExportAction {
 
-	private final Graph graph;
+	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"svg"}, "SVG files");
 	
 	public ExportSVGAction( Graph graph) {
-		
-		super( "STR_SVG", "STR_SVG_descr");
-		this.graph = graph;
+		super( graph, "STR_SVG", "STR_SVG_descr");
 	}
 
 	@Override
-	public void actionPerformed( ActionEvent e) {
-		
-		String extension = ".svg";
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
+	}
 
-		GsFileFilter ffilter = new GsFileFilter();
-        ffilter.setExtensionList(new String[] {"svg"}, "SVG files");
-	    
-        // TODO : REFACTORING ACTION
-        // TODO : change the GsOpenAction
-	    String filename = null;
-	    
-		//filename = GsOpenAction.selectSaveFile(null, ffilter, null, extension);
-		if (filename == null) {
-			return;
-		}
+	@Override
+	protected void doExport(String filename) throws GsException, IOException {
 		SVGExportService.exportSVG(graph, null, null, filename);
-
 	}
 }
 

@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.FileOutputStream;
@@ -19,9 +20,9 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.service.common.GsExportAction;
 
-import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OMDDBrowserListener;
@@ -40,10 +41,12 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * Regulators of a given node are modifiers of this reaction.
  * Logical parameters (via OMDD) are translated in MathML
  */
-public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements OMDDBrowserListener {
+public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OMDDBrowserListener {
 	
 	public static final String L3_QUALI_URL = "http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models";
-	
+	private static final GsFileFilter ffilter = new GsFileFilter( new String[] { "sbml" }, "SBML files");
+
+	private SBML3Config config = null;
     List<GsRegulatoryVertex> v_no;
     int len;
     OmddNode[] t_tree;
@@ -56,18 +59,19 @@ public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements 
 	 * @param fileName
 	 */
 	public SBML3Export(GsRegulatoryGraph graph) {
-		super(graph, "STR_SBML_L3", "STR_SBML_L3_descr");
-		id = "SBML";
-		extension = ".sbml";
-		filter = new String[] { "sbml" };
-		filterDescr = "SBML files";
+		super( graph, "STR_SBML_L3", "STR_SBML_L3_descr");
+	}
+
+	@Override
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
 	}
 	
-	public boolean needConfig(GsExportConfig config) {
-		return true;
-	}
-	protected JComponent getConfigPanel(GsExportConfig config, StackDialog dialog) {				
-		return new SBML3ExportConfigPanel(config, dialog);				
+	@Override
+	public Component getConfigPanel( ) {
+		config = new SBML3Config();
+		// FIXME: this panel requires the StackDialog, which will only be created after the panel is returned...
+		return new SBML3ExportConfigPanel( graph, config);				
 	}
     
 	public void leafReached(int value, int depth, int[][] path) {
@@ -121,10 +125,7 @@ public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements 
 	 * This is where the real export is done.
 	 * This method will be called by GsAbstractExport once the export configuration panel has been properly filled.
 	 */
-	protected void doExport(GsExportConfig exportConfig) {
-		GsRegulatoryGraph graph = (GsRegulatoryGraph) exportConfig.getGraph();
-		String filename = exportConfig.getFilename();
-		SBML3Config config = (SBML3Config)exportConfig.getSpecificConfig();
+	protected void doExport( String filename) throws IOException {
 
         v_no = graph.getNodeOrder();
         len = v_no.size();
@@ -152,145 +153,141 @@ public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements 
             }
         }
 
-        try {
-            // FIXME: DTD for SBML ?
-            OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8");
-            out = new XMLWriter(os, null);
-            String s_compartment = "c_"+graph.getGraphName();
-            out.openTag("sbml");
-            out.addAttr("xmlns", "http://www.sbml.org/sbml/level3/version1/core");
-            out.addAttr("level", "3");
-            out.addAttr("version", "1");
-            out.addAttr("xmlns:qual", L3_QUALI_URL);
-            out.addAttr("qual:required", "true");
-            
-            out.openTag("model");
-            out.addAttr("id", ""+ getPrevFilename( GraphManager.getInstance().getGraphPath( graph)));
-            
-            out.openTag("listOfCompartments");
-            out.openTag("compartment");
-            out.addAttr("id", s_compartment);
-            out.closeTag();
-            out.closeTag();
-            
-            // List all components
-            out.openTag("listOfQualitativeSpecies");
-            out.addAttr("xmlns", L3_QUALI_URL);
+        // FIXME: DTD for SBML ?
+        OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8");
+        out = new XMLWriter(os, null);
+        String s_compartment = "c_"+graph.getGraphName();
+        out.openTag("sbml");
+        out.addAttr("xmlns", "http://www.sbml.org/sbml/level3/version1/core");
+        out.addAttr("level", "3");
+        out.addAttr("version", "1");
+        out.addAttr("xmlns:qual", L3_QUALI_URL);
+        out.addAttr("qual:required", "true");
+        
+        out.openTag("model");
+        out.addAttr("id", ""+ getPrevFilename( GraphManager.getInstance().getGraphPath( graph)));
+        
+        out.openTag("listOfCompartments");
+        out.openTag("compartment");
+        out.addAttr("id", s_compartment);
+        out.closeTag();
+        out.closeTag();
+        
+        // List all components
+        out.openTag("listOfQualitativeSpecies");
+        out.addAttr("xmlns", L3_QUALI_URL);
 
-            for (int i=0 ; i<t_tree.length ; i++) {
-                GsRegulatoryVertex node = (GsRegulatoryVertex)v_no.get(i);
-                String s_id = node.getId();
-                String s_name = node.getName();
-                out.openTag("qualitativeSpecies");
-                out.addAttr("id", s_id);
-                if ((s_name != null) && (!s_name.equals("noName"))) {
-                	out.addAttr("name",s_name);
-                } 
-                out.addAttr("compartment",s_compartment);
-                out.addAttr("maxLevel",""+node.getMaxValue());
-                out.addAttr("initialLevel",""+t_markup[i][0]);
-                if (node.isInput()) {
-                    out.addAttr("boundaryCondition", "true");
-                    out.addAttr("constant", "true");
-                }
-                else {
-                	out.addAttr("boundaryCondition", "false");
-                    out.addAttr("constant", "false");
-                }
+        for (int i=0 ; i<t_tree.length ; i++) {
+            GsRegulatoryVertex node = (GsRegulatoryVertex)v_no.get(i);
+            String s_id = node.getId();
+            String s_name = node.getName();
+            out.openTag("qualitativeSpecies");
+            out.addAttr("id", s_id);
+            if ((s_name != null) && (!s_name.equals("noName"))) {
+            	out.addAttr("name",s_name);
+            } 
+            out.addAttr("compartment",s_compartment);
+            out.addAttr("maxLevel",""+node.getMaxValue());
+            out.addAttr("initialLevel",""+t_markup[i][0]);
+            if (node.isInput()) {
+                out.addAttr("boundaryCondition", "true");
+                out.addAttr("constant", "true");
+            }
+            else {
+            	out.addAttr("boundaryCondition", "false");
+                out.addAttr("constant", "false");
+            }
+            out.closeTag();
+        }
+        out.closeTag(); // list of species
+        
+        // Dynamical rules: a transition for each component
+        out.openTag("listOfTransitions");
+        out.addAttr("xmlns", L3_QUALI_URL);
+        for (int i=0 ; i<t_tree.length ; i++) {
+            GsRegulatoryVertex regulatoryVertex = (GsRegulatoryVertex)v_no.get(i);
+            if (regulatoryVertex.isInput()) {
+            	continue;
+            }
+            OmddNode node = t_tree[i];
+            String s_node = regulatoryVertex.getId();
+            out.openTag("transition");
+            out.addAttr("id", "tr_"+s_node);
+            
+            out.openTag("listOfInputs");               
+            String edgeSign = null;
+            for (GsRegulatoryMultiEdge me: graph.getIncomingEdges(v_no.get(i))) {
+                int sign = me.getSign(); 
+                switch (sign) {
+				case 0:
+					edgeSign = "SBO:0000459";
+					break;
+				case 1:
+					edgeSign = "SBO:0000020";
+					break;
+				default:
+					break;
+				}                   
+                out.openTag("input");
+                out.addAttr("qualitativeSpecies", me.getSource().toString());
+                out.addAttr("transitionEffect","none");
+                out.addAttr("sign", ""+edgeSign);
                 out.closeTag();
             }
-            out.closeTag(); // list of species
+            out.closeTag();
+
+            out.openTag("listOfOutputs");
+            out.openTag("output");
+            out.addAttr("qualitativeSpecies", s_node);
+            out.addAttr("transitionEffect","assignmentLevel");
+            out.closeTag();
+            out.closeTag();
+
+            out.openTag("listOfFunctionTerms");
+            out.openTag("defaultTerm");
             
-            // Dynamical rules: a transition for each component
-            out.openTag("listOfTransitions");
-            out.addAttr("xmlns", L3_QUALI_URL);
-            for (int i=0 ; i<t_tree.length ; i++) {
-                GsRegulatoryVertex regulatoryVertex = (GsRegulatoryVertex)v_no.get(i);
-                if (regulatoryVertex.isInput()) {
-                	continue;
+            boolean hasNoBasalValue = true;
+            if (graph.getIncomingEdges(v_no.get(i)).size() == 0) {
+                LogicalParameterList lpl = regulatoryVertex.getV_logicalParameters();
+                if (lpl.size() == 1) {
+                	GsLogicalParameter lp = (GsLogicalParameter) lpl.get(0);
+                	int value = lp.getValue();
+                	if (lpl.isManual(lp)) {
+       			    	out.addAttr("resultLevel", ""+value);
+                	    out.closeTag(); 
+                	    hasNoBasalValue = false;
+                	}
                 }
-                OmddNode node = t_tree[i];
-                String s_node = regulatoryVertex.getId();
-                out.openTag("transition");
-                out.addAttr("id", "tr_"+s_node);
+            } 
+            if (hasNoBasalValue) {
+            out.addAttr("resultLevel", ""+0);
+            out.closeTag();
+            for (curValue=1 ; curValue<=regulatoryVertex.getMaxValue() ; curValue++) {
+                out.openTag("functionTerm");
+                out.addAttr("resultLevel", ""+curValue);
+                out.openTag("math");
+                out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
                 
-                out.openTag("listOfInputs");               
-                String edgeSign = null;
-                for (GsRegulatoryMultiEdge me: graph.getIncomingEdges(v_no.get(i))) {
-                    int sign = me.getSign(); 
-                    switch (sign) {
-					case 0:
-						edgeSign = "SBO:0000459";
-						break;
-					case 1:
-						edgeSign = "SBO:0000020";
-						break;
-					default:
-						break;
-					}                   
-                    out.openTag("input");
-                    out.addAttr("qualitativeSpecies", me.getSource().toString());
-                    out.addAttr("transitionEffect","none");
-                    out.addAttr("sign", ""+edgeSign);
-                    out.closeTag();
-                }
-                out.closeTag();
+                out.openTag("apply");
+                out.addTag("or");    // enforced for now, we should try to avoid it when not needed
+                browser.browse(node); // will call leafReached()
+                out.closeTag();  // apply
 
-                out.openTag("listOfOutputs");
-                out.openTag("output");
-                out.addAttr("qualitativeSpecies", s_node);
-                out.addAttr("transitionEffect","assignmentLevel");
-                out.closeTag();
-                out.closeTag();
-
-                out.openTag("listOfFunctionTerms");
-                out.openTag("defaultTerm");
-                
-                boolean hasNoBasalValue = true;
-                if (graph.getIncomingEdges(v_no.get(i)).size() == 0) {
-                    LogicalParameterList lpl = regulatoryVertex.getV_logicalParameters();
-                    if (lpl.size() == 1) {
-                    	GsLogicalParameter lp = (GsLogicalParameter) lpl.get(0);
-                    	int value = lp.getValue();
-                    	if (lpl.isManual(lp)) {
-           			    	out.addAttr("resultLevel", ""+value);
-                    	    out.closeTag(); 
-                    	    hasNoBasalValue = false;
-                    	}
-                    }
-                } 
-                if (hasNoBasalValue) {
-                out.addAttr("resultLevel", ""+0);
-                out.closeTag();
-                for (curValue=1 ; curValue<=regulatoryVertex.getMaxValue() ; curValue++) {
-	                out.openTag("functionTerm");
-	                out.addAttr("resultLevel", ""+curValue);
-	                out.openTag("math");
-	                out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
-	                
-	                out.openTag("apply");
-	                out.addTag("or");    // enforced for now, we should try to avoid it when not needed
-                    browser.browse(node); // will call leafReached()
-                    out.closeTag();  // apply
-
-                    out.closeTag(); // math
-                    out.closeTag(); // functionTerm
-                }
-                }
-                out.closeTag(); // listOfFunctionTerms
-                out.closeTag(); // transition
+                out.closeTag(); // math
+                out.closeTag(); // functionTerm
             }
-                
-            out.closeTag(); // list of transitions
+            }
+            out.closeTag(); // listOfFunctionTerms
+            out.closeTag(); // transition
+        }
             
-			// Close the file
-            out.closeTag(); // model
-            out.closeTag(); // sbml
-            os.flush();
-            os.close();
-		} catch (IOException e) {
-			throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
-		}
+        out.closeTag(); // list of transitions
+        
+		// Close the file
+        out.closeTag(); // model
+        out.closeTag(); // sbml
+        os.flush();
+        os.close();
     }
 	
 	/**
@@ -305,26 +302,20 @@ public class SBML3Export extends GsAbstractExport<GsRegulatoryGraph> implements 
 			String realName= fullPath.substring(sep + 1, dot);
 			return realName;	
 		    }
-	
 }
 
 
 class SBML3ExportConfigPanel extends JPanel {
 	private static final long serialVersionUID = 9043565812912568136L;
 	
-	protected SBML3Config specConfig;
+	protected final SBML3Config config;
 	
-	protected SBML3ExportConfigPanel(GsExportConfig config, StackDialog dialog) {
+	protected SBML3ExportConfigPanel( Graph graph, SBML3Config config, StackDialog dialog) {
 		super(new GridBagLayout());
-		specConfig = (SBML3Config) config.getSpecificConfig();
-		if (specConfig == null) { 
-			specConfig = new SBML3Config();
-			config.setSpecificConfig(specConfig);
-		}
+		this.config = config;
 		
-		Graph graph = config.getGraph();
 		GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
-		initPanel.setParam(specConfig);
+		initPanel.setParam(config);
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;

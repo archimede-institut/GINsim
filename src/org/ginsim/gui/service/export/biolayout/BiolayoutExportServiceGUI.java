@@ -1,11 +1,12 @@
 package org.ginsim.gui.service.export.biolayout;
 
-import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -41,31 +42,20 @@ public class BiolayoutExportServiceGUI implements GsServiceGUI {
  */
 class ExportBioLayoutAction extends GsExportAction {
 
-	private final Graph graph;
+	static GsFileFilter ffilter = new GsFileFilter(new String[] {"layout"}, "biolayout files");
 	
 	public ExportBioLayoutAction( Graph graph) {
 		
-		super( "STR_biolayout", "STR_biolayout_descr");
-		this.graph = graph;
+		super( graph, "STR_biolayout", "STR_biolayout_descr");
+	}
+
+	public GsFileFilter getFileFilter() {
+		
+		return ffilter;
 	}
 
 	@Override
-	public void actionPerformed( ActionEvent e) {
-		
-		String extension = ".layout";
-        
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] {"layout"}, "biolayout files");
-	    
-        // TODO : REFACTORING ACTION
-        // TODO : change the GsOpenAction
-	    String filename = null;
-	    
-		//filename = GsOpenAction.selectSaveFile(null, ffilter, null, extension);
-		if (filename == null) {
-			return;
-		}
+	protected void doExport(String filename) throws GsException, IOException {
 		BioLayoutExportService.encode(graph, null, filename);
-
 	}
 }

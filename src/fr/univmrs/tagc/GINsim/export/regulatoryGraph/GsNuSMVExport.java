@@ -17,15 +17,14 @@ import java.util.TreeMap;
 import javax.swing.JComponent;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.service.common.GsExportAction;
 import org.ginsim.gui.service.tools.reg2dyn.GsReg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
-import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -45,26 +44,27 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
  * </p>
  * 
  */
-public class GsNuSMVExport extends GsAbstractExport<GsRegulatoryGraph> {
+public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 
+	private static final GsFileFilter ffilter = new GsFileFilter(new String[] { "smv" }, "NuSMV files");
+	
+	private GsNuSMVConfig config;
+	
 	public GsNuSMVExport(GsRegulatoryGraph graph) {
-		super(graph, "STR_NuSMVmodelChecker", "STR_NuSMVmodelChecker_descr");
-		id = "SMV";
-		extension = ".smv";
-		filter = new String[] { "smv" };
-		filterDescr = "NuSMV files";
+		super( graph, "STR_NuSMVmodelChecker", "STR_NuSMVmodelChecker_descr");
 	}
 
-	protected void doExport(GsExportConfig config) {
-		encode((GsRegulatoryGraph) config.getGraph(), config.getFilename(),
-				(GsNuSMVConfig) config.getSpecificConfig());
+	@Override
+	public void doExport( String filename) throws IOException {
+		encode(graph, filename, config);
 	}
 
-	public boolean needConfig(GsExportConfig config) {
-		return true;
+	@Override
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
 	}
 
-	protected JComponent getConfigPanel(GsExportConfig config,
+	protected JComponent getConfigPanel( GsNuSMVConfig config,
 			StackDialog dialog) {
 		return new GsNuSMVExportConfigPanel(config, dialog);
 	}
@@ -116,497 +116,492 @@ public class GsNuSMVExport extends GsAbstractExport<GsRegulatoryGraph> {
 	 *            store with the configuration specified by the user in the GUI.
 	 */
 	public static void encode(GsRegulatoryGraph graph, String fileName,
-			GsNuSMVConfig config) throws GsException{
+			GsNuSMVConfig config) throws IOException{
 
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG);
 		String date = dateformat.format(new Date());
-		try {
-			FileWriter out = new FileWriter(fileName);
-			Iterator<GsInitialState> it = config.getInitialState().keySet()
-					.iterator();
-			Map<GsRegulatoryVertex, List<Integer>> m_initstates;
-			if (it.hasNext()) {
-				m_initstates = it.next().getMap();
-			} else {
-				m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
-			}
-			if (m_initstates == null) {
-				m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
-			}
-			it = config.getInputState().keySet().iterator();
-			Map<GsRegulatoryVertex, List<Integer>> m_initinputs;
-			if (it.hasNext()) {
-				m_initinputs = it.next().getMap();
-			} else {
-				m_initinputs = new HashMap<GsRegulatoryVertex, List<Integer>>();
-			}
-			if (m_initinputs == null) {
-				m_initinputs = new HashMap<GsRegulatoryVertex, List<Integer>>();
-			}
+		FileWriter out = new FileWriter(fileName);
+		Iterator<GsInitialState> it = config.getInitialState().keySet()
+				.iterator();
+		Map<GsRegulatoryVertex, List<Integer>> m_initstates;
+		if (it.hasNext()) {
+			m_initstates = it.next().getMap();
+		} else {
+			m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
+		}
+		if (m_initstates == null) {
+			m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
+		}
+		it = config.getInputState().keySet().iterator();
+		Map<GsRegulatoryVertex, List<Integer>> m_initinputs;
+		if (it.hasNext()) {
+			m_initinputs = it.next().getMap();
+		} else {
+			m_initinputs = new HashMap<GsRegulatoryVertex, List<Integer>>();
+		}
+		if (m_initinputs == null) {
+			m_initinputs = new HashMap<GsRegulatoryVertex, List<Integer>>();
+		}
 
-			GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef) config.store
-					.getObject(0);
-			List<GsRegulatoryVertex> nodeOrder = graph.getNodeOrder();
-			String[] t_regulators = new String[nodeOrder.size()];
-			int[] t_cst = new int[nodeOrder.size()];
-			boolean hasInputVars = false;
-			GsRegulatoryVertex[] t_vertex = new GsRegulatoryVertex[nodeOrder
-					.size()];
-			for (int i = 0; i < t_vertex.length; i++) {
-				GsRegulatoryVertex vertex = nodeOrder.get(i);
-				t_vertex[i] = vertex;
-				t_regulators[i] = vertex.getId();
-				if (vertex.isInput())
-					hasInputVars = true;
+		GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef) config.store
+				.getObject(0);
+		List<GsRegulatoryVertex> nodeOrder = graph.getNodeOrder();
+		String[] t_regulators = new String[nodeOrder.size()];
+		int[] t_cst = new int[nodeOrder.size()];
+		boolean hasInputVars = false;
+		GsRegulatoryVertex[] t_vertex = new GsRegulatoryVertex[nodeOrder
+				.size()];
+		for (int i = 0; i < t_vertex.length; i++) {
+			GsRegulatoryVertex vertex = nodeOrder.get(i);
+			t_vertex[i] = vertex;
+			t_regulators[i] = vertex.getId();
+			if (vertex.isInput())
+				hasInputVars = true;
+		}
+		OmddNode[] t_tree = graph.getAllTrees(true);
+		if (mutant != null) {
+			mutant.apply(t_tree, graph);
+		}
+		boolean bType1 = (config.getExportType() == GsNuSMVConfig.CFG_INPUT_FRONZEN);
+
+		out.write("-- " + date + "\n");
+		out.write("-- GINsim implicit representation for NuSMV --\n");
+		out.write("-- NuSMV version 2.5.1 (or higher) required --\n");
+		out.write("-- ");
+		if (bType1)
+			out.write(Translator.getString("STR_NuSMV_Type1"));
+		else
+			out.write(Translator.getString("STR_NuSMV_Type2"));
+		out.write("\n\nMODULE main\n");
+
+		PriorityClassDefinition priorities = (PriorityClassDefinition) config.store
+				.getObject(1);
+		// classNum -> className
+		TreeMap<Integer, String> tmPcNum2Name = new TreeMap<Integer, String>();
+		// classNum -> RankNum
+		TreeMap<Integer, Integer> tmPcNum2Rank = new TreeMap<Integer, Integer>();
+		// rankNum -> rankName
+		TreeMap<Integer, String> tmPcRank2Name = new TreeMap<Integer, String>();
+		// varNum -> classNum
+		TreeMap<Integer, Integer[]> tmVarNum2PcNum = new TreeMap<Integer, Integer[]>();
+		// varNum-> subClassName
+		TreeMap<Integer, String[]> tmVarNum2SubPcName = new TreeMap<Integer, String[]>();
+
+		String sTmp;
+		boolean bFirst;
+		int[][] iaTmp = null;
+
+		out.write("\nIVAR\n-- Simulation mode declaration --\n");
+		switch (config.getUpdatePolicy()) {
+		case GsNuSMVConfig.CFG_SYNC:
+			out.write("-- Synchronous\n  PCs : { PC_c1 };\n  PC_c1_vars : { ");
+			sTmp = "PC_c1";
+			tmPcNum2Name.put(1, sTmp);
+			// every variable -> 1 class
+			for (int i = 0; i < nodeOrder.size(); i++) {
+				sTmp += "_" + t_regulators[i];
+				tmVarNum2PcNum.put(i, new Integer[] { 0, 1, 0 });
 			}
-			OmddNode[] t_tree = graph.getAllTrees(true);
-			if (mutant != null) {
-				mutant.apply(t_tree, graph);
+			for (int i = 0; i < nodeOrder.size(); i++)
+				tmVarNum2SubPcName
+						.put(i, new String[] { null, sTmp, null });
+			out.write(sTmp + " };\n");
+			break;
+
+		case GsNuSMVConfig.CFG_PCLASS:
+			out.write("-- Priority classes\n  PCs : { ");
+			for (int i = 0; i < priorities.getNbElements(); i++) {
+				GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass) priorities
+						.getElement(null, i);
+				if (i > 0)
+					out.write(", ");
+				sTmp = "PC_" + pc.getName();
+				out.write(sTmp);
+				tmPcNum2Name.put(i + 1, sTmp);
 			}
-			boolean bType1 = (config.getExportType() == GsNuSMVConfig.CFG_INPUT_FRONZEN);
+			out.write(" };\n");
 
-			out.write("-- " + date + "\n");
-			out.write("-- GINsim implicit representation for NuSMV --\n");
-			out.write("-- NuSMV version 2.5.1 (or higher) required --\n");
-			out.write("-- ");
-			if (bType1)
-				out.write(Translator.getString("STR_NuSMV_Type1"));
-			else
-				out.write(Translator.getString("STR_NuSMV_Type2"));
-			out.write("\n\nMODULE main\n");
+			iaTmp = priorities.getPclass(nodeOrder);
+			for (int i = 0; i < iaTmp.length; i++) {
+				sTmp = tmPcNum2Name.get(i + 1);
+				out.write("  " + sTmp + "_vars : { ");
+				tmPcNum2Rank.put(i + 1, iaTmp[i][0]);
 
-			PriorityClassDefinition priorities = (PriorityClassDefinition) config.store
-					.getObject(1);
-			// classNum -> className
-			TreeMap<Integer, String> tmPcNum2Name = new TreeMap<Integer, String>();
-			// classNum -> RankNum
-			TreeMap<Integer, Integer> tmPcNum2Rank = new TreeMap<Integer, Integer>();
-			// rankNum -> rankName
-			TreeMap<Integer, String> tmPcRank2Name = new TreeMap<Integer, String>();
-			// varNum -> classNum
-			TreeMap<Integer, Integer[]> tmVarNum2PcNum = new TreeMap<Integer, Integer[]>();
-			// varNum-> subClassName
-			TreeMap<Integer, String[]> tmVarNum2SubPcName = new TreeMap<Integer, String[]>();
-
-			String sTmp;
-			boolean bFirst;
-			int[][] iaTmp = null;
-
-			out.write("\nIVAR\n-- Simulation mode declaration --\n");
-			switch (config.getUpdatePolicy()) {
-			case GsNuSMVConfig.CFG_SYNC:
-				out.write("-- Synchronous\n  PCs : { PC_c1 };\n  PC_c1_vars : { ");
-				sTmp = "PC_c1";
-				tmPcNum2Name.put(1, sTmp);
-				// every variable -> 1 class
-				for (int i = 0; i < nodeOrder.size(); i++) {
-					sTmp += "_" + t_regulators[i];
-					tmVarNum2PcNum.put(i, new Integer[] { 0, 1, 0 });
-				}
-				for (int i = 0; i < nodeOrder.size(); i++)
-					tmVarNum2SubPcName
-							.put(i, new String[] { null, sTmp, null });
-				out.write(sTmp + " };\n");
-				break;
-
-			case GsNuSMVConfig.CFG_PCLASS:
-				out.write("-- Priority classes\n  PCs : { ");
-				for (int i = 0; i < priorities.getNbElements(); i++) {
-					GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass) priorities
-							.getElement(null, i);
-					if (i > 0)
-						out.write(", ");
-					sTmp = "PC_" + pc.getName();
+				switch (iaTmp[i][1]) {
+				case 0: // Synchronous
+					for (int j = 2; j < iaTmp[i].length; j += 2) {
+						sTmp += "_" + t_regulators[iaTmp[i][j]];
+						Integer[] aiSplits = (tmVarNum2PcNum
+								.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
+								.get(iaTmp[i][j])
+								: new Integer[] { 0, 0, 0 };
+						aiSplits[iaTmp[i][j + 1] + 1] = i + 1;
+						tmVarNum2PcNum.put(iaTmp[i][j], aiSplits);
+						if (iaTmp[i][j + 1] != 0)
+							sTmp += (iaTmp[i][j + 1] == 1) ? "Plus"
+									: "Minus";
+					}
 					out.write(sTmp);
-					tmPcNum2Name.put(i + 1, sTmp);
-				}
-				out.write(" };\n");
-
-				iaTmp = priorities.getPclass(nodeOrder);
-				for (int i = 0; i < iaTmp.length; i++) {
-					sTmp = tmPcNum2Name.get(i + 1);
-					out.write("  " + sTmp + "_vars : { ");
-					tmPcNum2Rank.put(i + 1, iaTmp[i][0]);
-
-					switch (iaTmp[i][1]) {
-					case 0: // Synchronous
-						for (int j = 2; j < iaTmp[i].length; j += 2) {
-							sTmp += "_" + t_regulators[iaTmp[i][j]];
-							Integer[] aiSplits = (tmVarNum2PcNum
-									.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
-									.get(iaTmp[i][j])
-									: new Integer[] { 0, 0, 0 };
-							aiSplits[iaTmp[i][j + 1] + 1] = i + 1;
-							tmVarNum2PcNum.put(iaTmp[i][j], aiSplits);
-							if (iaTmp[i][j + 1] != 0)
-								sTmp += (iaTmp[i][j + 1] == 1) ? "Plus"
-										: "Minus";
-						}
-						out.write(sTmp);
-						for (int j = 2; j < iaTmp[i].length; j += 2) {
-							String[] saTmp = (tmVarNum2SubPcName
-									.containsKey(iaTmp[i][j])) ? tmVarNum2SubPcName
-									.get(iaTmp[i][j]) : new String[] { null,
-									null, null };
-							saTmp[iaTmp[i][j + 1] + 1] = sTmp;
-							tmVarNum2SubPcName.put(iaTmp[i][j], saTmp);
-						}
-						break;
-
-					default: // Asynchronous
-						for (int j = 2; j < iaTmp[i].length; j += 2) {
-							if (j > 2)
-								out.write(", ");
-							String sub = sTmp + "_" + t_regulators[iaTmp[i][j]];
-							if (iaTmp[i][j + 1] != 0)
-								sub += (iaTmp[i][j + 1] == 1) ? "Plus"
-										: "Minus";
-							out.write(sub);
-							String[] saTmp = (tmVarNum2SubPcName
-									.containsKey(iaTmp[i][j])) ? tmVarNum2SubPcName
-									.get(iaTmp[i][j]) : new String[] { null,
-									null, null };
-							saTmp[iaTmp[i][j + 1] + 1] = sub;
-							tmVarNum2SubPcName.put(iaTmp[i][j], saTmp);
-							Integer[] aiSplits = (tmVarNum2PcNum
-									.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
-									.get(iaTmp[i][j])
-									: new Integer[] { 0, 0, 0 };
-							aiSplits[iaTmp[i][j + 1] + 1] = i + 1;
-							tmVarNum2PcNum.put(iaTmp[i][j], aiSplits);
-						}
-						break;
+					for (int j = 2; j < iaTmp[i].length; j += 2) {
+						String[] saTmp = (tmVarNum2SubPcName
+								.containsKey(iaTmp[i][j])) ? tmVarNum2SubPcName
+								.get(iaTmp[i][j]) : new String[] { null,
+								null, null };
+						saTmp[iaTmp[i][j + 1] + 1] = sTmp;
+						tmVarNum2SubPcName.put(iaTmp[i][j], saTmp);
 					}
-					out.write(" };\n");
-				}
-				break;
+					break;
 
-			default:
-				out.write("-- Asynchronous\n  PCs : { ");
-				bFirst = true;
-				for (int i = 0; i < t_vertex.length; i++) {
-					if (t_vertex[i].isInput())
-						continue;
-					if (!bFirst)
-						out.write(", ");
-					else
-						bFirst = false;
-					sTmp = "PC_c" + (i + 1);
-					out.write(sTmp);
-					tmVarNum2PcNum.put(i, new Integer[] { 0, i + 1, 0 });
-					tmPcNum2Name.put(i + 1, sTmp);
-				}
-				out.write(" };\n");
-				for (int i = 0; i < t_vertex.length; i++) {
-					if (t_vertex[i].isInput())
-						continue;
-					sTmp = "PC_c" + (i + 1) + "_" + t_regulators[i];
-					out.write("  PC_c" + (i + 1) + "_vars : { " + sTmp
-							+ " };\n");
-					tmVarNum2SubPcName
-							.put(i, new String[] { null, sTmp, null });
-				}
-				break;
-			}
-
-			if (hasInputVars) {
-				if (bType1)
-					out.write("\nFROZENVAR\n");
-				out.write("-- Input variables declaration\n");
-				for (int i = 0; i < t_vertex.length; i++) {
-					if (t_vertex[i].isInput()) {
-						String s_levels = "0";
-						for (int j = 1; j <= t_vertex[i].getMaxValue(); j++)
-							s_levels += ", " + j;
-						out.write("  " + t_regulators[i] + " : { " + s_levels
-								+ "};\n");
-					}
-				}
-			}
-
-			out.write("\nVAR");
-			// PCrank depends on the state variables
-			// Should therefore be declared after
-			// But after some tests
-			if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS
-					&& iaTmp != null && iaTmp.length > 1) {
-				out.write("\n-- Priority definition\n");
-				out.write("  PCrank : { ");
-				int iLast = 0;
-				sTmp = "";
-				boolean bWrote = false;
-				for (int c = 0; c < iaTmp.length; c++) {
-					if (c == 0 || iaTmp[c][0] > iLast) {
-						iLast = iaTmp[c][0];
-						sTmp = "rank" + iLast;
-					}
-					sTmp += "_" + tmPcNum2Name.get(c + 1);
-					if (c + 1 == iaTmp.length || iaTmp[c + 1][0] > iLast) {
-						if (bWrote)
+				default: // Asynchronous
+					for (int j = 2; j < iaTmp[i].length; j += 2) {
+						if (j > 2)
 							out.write(", ");
-						bWrote = true;
-						out.write(sTmp);
-						tmPcRank2Name.put(iLast, sTmp);
+						String sub = sTmp + "_" + t_regulators[iaTmp[i][j]];
+						if (iaTmp[i][j + 1] != 0)
+							sub += (iaTmp[i][j + 1] == 1) ? "Plus"
+									: "Minus";
+						out.write(sub);
+						String[] saTmp = (tmVarNum2SubPcName
+								.containsKey(iaTmp[i][j])) ? tmVarNum2SubPcName
+								.get(iaTmp[i][j]) : new String[] { null,
+								null, null };
+						saTmp[iaTmp[i][j + 1] + 1] = sub;
+						tmVarNum2SubPcName.put(iaTmp[i][j], saTmp);
+						Integer[] aiSplits = (tmVarNum2PcNum
+								.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
+								.get(iaTmp[i][j])
+								: new Integer[] { 0, 0, 0 };
+						aiSplits[iaTmp[i][j + 1] + 1] = i + 1;
+						tmVarNum2PcNum.put(iaTmp[i][j], aiSplits);
 					}
+					break;
 				}
 				out.write(" };\n");
 			}
+			break;
 
-			// Topological sorting of the state variables
-			HashMap<String, ArrayList<String>> hmRegulators = new HashMap<String, ArrayList<String>>();
+		default:
+			out.write("-- Asynchronous\n  PCs : { ");
+			bFirst = true;
 			for (int i = 0; i < t_vertex.length; i++) {
-				for (int j = 0; j < t_cst.length; j++)
-					t_cst[j] = -1;
-				hmRegulators.put(t_regulators[i], new ArrayList<String>(
-						nodeRegulators(t_tree[i], t_vertex, t_cst)));
+				if (t_vertex[i].isInput())
+					continue;
+				if (!bFirst)
+					out.write(", ");
+				else
+					bFirst = false;
+				sTmp = "PC_c" + (i + 1);
+				out.write(sTmp);
+				tmVarNum2PcNum.put(i, new Integer[] { 0, i + 1, 0 });
+				tmPcNum2Name.put(i + 1, sTmp);
 			}
-			// Starting Nodes
-			ArrayList<Integer> alStarting = new ArrayList<Integer>();
-			int min = hmRegulators.size(), pos = -1;
-			boolean[] visited = new boolean[t_vertex.length];
+			out.write(" };\n");
 			for (int i = 0; i < t_vertex.length; i++) {
-				visited[i] = false;
-				ArrayList<String> alTmp = hmRegulators.get(t_regulators[i]);
-				if (alTmp.isEmpty() || alTmp.get(0) == t_regulators[i])
-					alStarting.add(new Integer(i));
-				else if (alTmp.size() < min) {
-					min = alTmp.size();
-					pos = i;
+				if (t_vertex[i].isInput())
+					continue;
+				sTmp = "PC_c" + (i + 1) + "_" + t_regulators[i];
+				out.write("  PC_c" + (i + 1) + "_vars : { " + sTmp
+						+ " };\n");
+				tmVarNum2SubPcName
+						.put(i, new String[] { null, sTmp, null });
+			}
+			break;
+		}
+
+		if (hasInputVars) {
+			if (bType1)
+				out.write("\nFROZENVAR\n");
+			out.write("-- Input variables declaration\n");
+			for (int i = 0; i < t_vertex.length; i++) {
+				if (t_vertex[i].isInput()) {
+					String s_levels = "0";
+					for (int j = 1; j <= t_vertex[i].getMaxValue(); j++)
+						s_levels += ", " + j;
+					out.write("  " + t_regulators[i] + " : { " + s_levels
+							+ "};\n");
 				}
 			}
-			if (alStarting.isEmpty())
-				alStarting.add(new Integer(pos));
-			ArrayList<Integer> alSorted = new ArrayList<Integer>();
-			ListIterator<Integer> li = alStarting.listIterator();
-			while (li.hasNext())
-				topoSortVisit(hmRegulators, t_regulators, t_vertex,
-						((Integer) li.next()).intValue(), visited, alSorted);
-			Collections.reverse(alSorted);
+		}
 
-			// Print State variables according to the Topological Sort!!!
-			out.write("\n-- State variables declaration\n");
-			for (int i = 0; i < t_vertex.length; i++) {
-				int currIndex = alSorted.get(i).intValue();
-				if (t_vertex[currIndex].isInput())
-					continue;
-				String s_levels = "0";
-
-				for (int j = 1; j <= t_vertex[currIndex].getMaxValue(); j++)
-					s_levels += ", " + j;
-
-				out.write("  " + t_regulators[currIndex] + " : {" + s_levels
-						+ "};\n");
+		out.write("\nVAR");
+		// PCrank depends on the state variables
+		// Should therefore be declared after
+		// But after some tests
+		if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS
+				&& iaTmp != null && iaTmp.length > 1) {
+			out.write("\n-- Priority definition\n");
+			out.write("  PCrank : { ");
+			int iLast = 0;
+			sTmp = "";
+			boolean bWrote = false;
+			for (int c = 0; c < iaTmp.length; c++) {
+				if (c == 0 || iaTmp[c][0] > iLast) {
+					iLast = iaTmp[c][0];
+					sTmp = "rank" + iLast;
+				}
+				sTmp += "_" + tmPcNum2Name.get(c + 1);
+				if (c + 1 == iaTmp.length || iaTmp[c + 1][0] > iLast) {
+					if (bWrote)
+						out.write(", ");
+					bWrote = true;
+					out.write(sTmp);
+					tmPcRank2Name.put(iLast, sTmp);
+				}
 			}
+			out.write(" };\n");
+		}
 
-			out.write("\nASSIGN");
-			if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS
-					&& iaTmp != null && iaTmp.length > 1) {
-				if (tmPcRank2Name.size() > 1) {
-					out.write("\n-- Establishing priorities\n");
-					out.write("  PCrank :=\n    case\n");
-					for (int c = 0; c < iaTmp.length; c++) {
-						sTmp = "      ";
-						if (c + 1 == iaTmp.length) {
-							sTmp += "TRUE";
-						} else {
-							for (int v = 2; v < iaTmp[c].length; v += 2) {
-								if (v > 2)
-									sTmp += " | ";
-								switch (iaTmp[c][v + 1]) {
-								case 1:
-									sTmp += t_regulators[iaTmp[c][v]] + "_inc";
-									break;
-								case -1:
-									sTmp += t_regulators[iaTmp[c][v]] + "_dec";
-									break;
-								default:
-									sTmp += "!" + t_regulators[iaTmp[c][v]]
-											+ "_std";
-								}
+		// Topological sorting of the state variables
+		HashMap<String, ArrayList<String>> hmRegulators = new HashMap<String, ArrayList<String>>();
+		for (int i = 0; i < t_vertex.length; i++) {
+			for (int j = 0; j < t_cst.length; j++)
+				t_cst[j] = -1;
+			hmRegulators.put(t_regulators[i], new ArrayList<String>(
+					nodeRegulators(t_tree[i], t_vertex, t_cst)));
+		}
+		// Starting Nodes
+		ArrayList<Integer> alStarting = new ArrayList<Integer>();
+		int min = hmRegulators.size(), pos = -1;
+		boolean[] visited = new boolean[t_vertex.length];
+		for (int i = 0; i < t_vertex.length; i++) {
+			visited[i] = false;
+			ArrayList<String> alTmp = hmRegulators.get(t_regulators[i]);
+			if (alTmp.isEmpty() || alTmp.get(0) == t_regulators[i])
+				alStarting.add(new Integer(i));
+			else if (alTmp.size() < min) {
+				min = alTmp.size();
+				pos = i;
+			}
+		}
+		if (alStarting.isEmpty())
+			alStarting.add(new Integer(pos));
+		ArrayList<Integer> alSorted = new ArrayList<Integer>();
+		ListIterator<Integer> li = alStarting.listIterator();
+		while (li.hasNext())
+			topoSortVisit(hmRegulators, t_regulators, t_vertex,
+					((Integer) li.next()).intValue(), visited, alSorted);
+		Collections.reverse(alSorted);
+
+		// Print State variables according to the Topological Sort!!!
+		out.write("\n-- State variables declaration\n");
+		for (int i = 0; i < t_vertex.length; i++) {
+			int currIndex = alSorted.get(i).intValue();
+			if (t_vertex[currIndex].isInput())
+				continue;
+			String s_levels = "0";
+
+			for (int j = 1; j <= t_vertex[currIndex].getMaxValue(); j++)
+				s_levels += ", " + j;
+
+			out.write("  " + t_regulators[currIndex] + " : {" + s_levels
+					+ "};\n");
+		}
+
+		out.write("\nASSIGN");
+		if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS
+				&& iaTmp != null && iaTmp.length > 1) {
+			if (tmPcRank2Name.size() > 1) {
+				out.write("\n-- Establishing priorities\n");
+				out.write("  PCrank :=\n    case\n");
+				for (int c = 0; c < iaTmp.length; c++) {
+					sTmp = "      ";
+					if (c + 1 == iaTmp.length) {
+						sTmp += "TRUE";
+					} else {
+						for (int v = 2; v < iaTmp[c].length; v += 2) {
+							if (v > 2)
+								sTmp += " | ";
+							switch (iaTmp[c][v + 1]) {
+							case 1:
+								sTmp += t_regulators[iaTmp[c][v]] + "_inc";
+								break;
+							case -1:
+								sTmp += t_regulators[iaTmp[c][v]] + "_dec";
+								break;
+							default:
+								sTmp += "!" + t_regulators[iaTmp[c][v]]
+										+ "_std";
 							}
 						}
-						out.write(sTmp + " : "
-								+ tmPcRank2Name.get(tmPcNum2Rank.get(c + 1))
-								+ ";\n");
 					}
-					out.write("    esac;\n");
+					out.write(sTmp + " : "
+							+ tmPcRank2Name.get(tmPcNum2Rank.get(c + 1))
+							+ ";\n");
 				}
+				out.write("    esac;\n");
 			}
+		}
 
-			out.write("\n-- Variable update if conditions are met\n");
-			for (int v = 0; v < t_vertex.length; v++) {
-				if (t_vertex[v].isInput())
-					continue;
-				// The real next(Variable) if conditions are satisfied
-				out.write("next(" + t_regulators[v] + ") := \n");
-				out.write("  case\n");
+		out.write("\n-- Variable update if conditions are met\n");
+		for (int v = 0; v < t_vertex.length; v++) {
+			if (t_vertex[v].isInput())
+				continue;
+			// The real next(Variable) if conditions are satisfied
+			out.write("next(" + t_regulators[v] + ") := \n");
+			out.write("  case\n");
 
-				// Class entry conditions
-				Integer[] aiSplits = tmVarNum2PcNum.get(v);
-				out.write("    update_" + t_regulators[v]);
-				if (aiSplits[2] > 0)
-					out.write("Plus");
-				out.write("_OK & (" + t_regulators[v] + "_inc) : ");
-				out.write(((t_vertex[v].getMaxValue() > 1) ? t_regulators[v]
-						+ " + 1" : "1")
-						+ ";\n");
-				out.write("    update_" + t_regulators[v]);
-				if (aiSplits[0] > 0)
-					out.write("Minus");
-				out.write("_OK & (" + t_regulators[v] + "_dec) : ");
-				out.write(((t_vertex[v].getMaxValue() > 1) ? t_regulators[v]
-						+ " - 1" : "0")
-						+ ";\n");
-				out.write("    TRUE : " + t_regulators[v] + ";\n");
-				out.write("  esac;\n");
+			// Class entry conditions
+			Integer[] aiSplits = tmVarNum2PcNum.get(v);
+			out.write("    update_" + t_regulators[v]);
+			if (aiSplits[2] > 0)
+				out.write("Plus");
+			out.write("_OK & (" + t_regulators[v] + "_inc) : ");
+			out.write(((t_vertex[v].getMaxValue() > 1) ? t_regulators[v]
+					+ " + 1" : "1")
+					+ ";\n");
+			out.write("    update_" + t_regulators[v]);
+			if (aiSplits[0] > 0)
+				out.write("Minus");
+			out.write("_OK & (" + t_regulators[v] + "_dec) : ");
+			out.write(((t_vertex[v].getMaxValue() > 1) ? t_regulators[v]
+					+ " - 1" : "0")
+					+ ";\n");
+			out.write("    TRUE : " + t_regulators[v] + ";\n");
+			out.write("  esac;\n");
+		}
+
+		out.write("\nDEFINE\n");
+
+		out.write("-- Variable next level regulation\n");
+		for (int i = 0; i < t_vertex.length; i++) {
+			if (t_vertex[i].isInput())
+				continue;
+			out.write(t_vertex[i].getId() + "_focal :=\n");
+			out.write("  case\n");
+			for (int j = 0; j < t_cst.length; j++)
+				t_cst[j] = -1;
+			node2SMV(t_tree[i], out, t_vertex, t_cst);
+			out.write("  esac;\n");
+		}
+		out.write("\n");
+
+		for (int v = 0; v < t_vertex.length; v++) {
+			if (t_vertex[v].isInput())
+				continue;
+			out.write(t_regulators[v] + "_inc := ");
+			out.write(t_regulators[v] + "_focal > ");
+			out.write(t_regulators[v] + ";\n");
+			out.write(t_regulators[v] + "_dec := ");
+			out.write(t_regulators[v] + "_focal < ");
+			out.write(t_regulators[v] + ";\n");
+			out.write(t_regulators[v] + "_std := ");
+			out.write(t_regulators[v] + "_focal = ");
+			out.write(t_regulators[v] + ";\n\n");
+		}
+
+		for (int v = 0; v < t_vertex.length; v++) {
+			if (t_vertex[v].isInput())
+				continue;
+			Integer[] aiSplits = tmVarNum2PcNum.get(v);
+			String[] saSubName = tmVarNum2SubPcName.get(v);
+			boolean bPlus = (aiSplits[2] > 0);
+			int pc = (bPlus) ? aiSplits[2] : aiSplits[1];
+			String sub = (bPlus) ? saSubName[2] : saSubName[1];
+			out.write("update_" + t_regulators[v] + ((bPlus) ? "Plus" : "")
+					+ "_OK := (PCs = ");
+			out.write(tmPcNum2Name.get(pc) + ") & (");
+			out.write(tmPcNum2Name.get(pc) + "_vars = ");
+			out.write(sub);
+			if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS) {
+				out.write(") & (PCrank = ");
+				out.write((String) tmPcRank2Name.get(tmPcNum2Rank.get(pc)));
 			}
+			out.write(");\n");
 
-			out.write("\nDEFINE\n");
-
-			out.write("-- Variable next level regulation\n");
-			for (int i = 0; i < t_vertex.length; i++) {
-				if (t_vertex[i].isInput())
-					continue;
-				out.write(t_vertex[i].getId() + "_focal :=\n");
-				out.write("  case\n");
-				for (int j = 0; j < t_cst.length; j++)
-					t_cst[j] = -1;
-				node2SMV(t_tree[i], out, t_vertex, t_cst);
-				out.write("  esac;\n");
-			}
-			out.write("\n");
-
-			for (int v = 0; v < t_vertex.length; v++) {
-				if (t_vertex[v].isInput())
-					continue;
-				out.write(t_regulators[v] + "_inc := ");
-				out.write(t_regulators[v] + "_focal > ");
-				out.write(t_regulators[v] + ";\n");
-				out.write(t_regulators[v] + "_dec := ");
-				out.write(t_regulators[v] + "_focal < ");
-				out.write(t_regulators[v] + ";\n");
-				out.write(t_regulators[v] + "_std := ");
-				out.write(t_regulators[v] + "_focal = ");
-				out.write(t_regulators[v] + ";\n\n");
-			}
-
-			for (int v = 0; v < t_vertex.length; v++) {
-				if (t_vertex[v].isInput())
-					continue;
-				Integer[] aiSplits = tmVarNum2PcNum.get(v);
-				String[] saSubName = tmVarNum2SubPcName.get(v);
-				boolean bPlus = (aiSplits[2] > 0);
-				int pc = (bPlus) ? aiSplits[2] : aiSplits[1];
-				String sub = (bPlus) ? saSubName[2] : saSubName[1];
-				out.write("update_" + t_regulators[v] + ((bPlus) ? "Plus" : "")
-						+ "_OK := (PCs = ");
+			if (bPlus) { // There's also a Minus transition
+				pc = aiSplits[0];
+				out.write("update_" + t_regulators[v]
+						+ "Minus_OK := (PCs = ");
 				out.write(tmPcNum2Name.get(pc) + ") & (");
 				out.write(tmPcNum2Name.get(pc) + "_vars = ");
-				out.write(sub);
+				out.write(saSubName[0]);
 				if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS) {
 					out.write(") & (PCrank = ");
-					out.write((String) tmPcRank2Name.get(tmPcNum2Rank.get(pc)));
+					out.write((String) tmPcRank2Name.get(tmPcNum2Rank
+							.get(pc)));
 				}
 				out.write(");\n");
-
-				if (bPlus) { // There's also a Minus transition
-					pc = aiSplits[0];
-					out.write("update_" + t_regulators[v]
-							+ "Minus_OK := (PCs = ");
-					out.write(tmPcNum2Name.get(pc) + ") & (");
-					out.write(tmPcNum2Name.get(pc) + "_vars = ");
-					out.write(saSubName[0]);
-					if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS) {
-						out.write(") & (PCrank = ");
-						out.write((String) tmPcRank2Name.get(tmPcNum2Rank
-								.get(pc)));
-					}
-					out.write(");\n");
-				}
 			}
-
-			out.write("\nstrongSS := ");
-			boolean bIsFirst = true;
-			for (int v = 0; v < t_vertex.length; v++) {
-				if (t_vertex[v].isInput())
-					continue;
-				if (!bIsFirst) {
-					out.write(" & ");
-				}
-				out.write(t_regulators[v] + "_std");
-				bIsFirst = false;
-			}
-			out.write(";\n");
-
-			if (!bType1) {
-				out.write("\nweakSS := FALSE\n");
-				// -- Computing Weak Stable States for compacted STG (type 2) --
-				List<GsRegulatoryVertex> sortedVars = new ArrayList<GsRegulatoryVertex>();
-				List<GsRegulatoryVertex> orderStateVars = new ArrayList<GsRegulatoryVertex>();
-				List<GsRegulatoryVertex> orderInputVars = new ArrayList<GsRegulatoryVertex>();
-				for (int i = 0; i < nodeOrder.size(); i++) {
-					if (nodeOrder.get(i).isInput())
-						orderInputVars.add(nodeOrder.get(i));
-					else {
-						orderStateVars.add(nodeOrder.get(i));
-						sortedVars.add(nodeOrder.get(i));
-					}
-				}
-				sortedVars.addAll(orderInputVars);
-				// OMDDs reordered [ stateVars inputVars]
-				OmddNode[] tReordered = new OmddNode[nodeOrder.size()];
-				for (int i = 0; i < nodeOrder.size(); i++) {
-					tReordered[i] = sortedVars.get(i)
-							.getTreeParameters(sortedVars).reduce();
-				}
-
-				StableStatesService sss = new StableStatesService(graph,
-						sortedVars, (GsRegulatoryMutantDef) mutant, tReordered);
-				OmddNode omdds = sss.getStable();
-				int[] stateValues = new int[sortedVars.size()];
-				for (int i = 0; i < stateValues.length; i++)
-					stateValues[i] = -1;
-
-				out.write(writeStableStates(stateValues, omdds, orderStateVars,
-						0));
-				out.write(";\n");
-			}
-
-			out.write("\nTRANS\n");
-			for (int i = 0; i < t_vertex.length; i++) {
-				if (t_vertex[i].isInput())
-					continue;
-				out.write("next(" + t_regulators[i] + ") != ");
-				out.write(t_regulators[i] + " |\n");
-			}
-			if (bType1)
-				out.write("strongSS;\n");
-			else
-				out.write("weakSS;\n");
-
-			// TODO: make use of the name given by the user
-			// referencing the atomic proposition
-			out.write("\n-- State variables initialization\n");
-			out.write(writeInitialState(t_vertex, false, m_initstates));
-			if (bType1 && hasInputVars) {
-				out.write("-- Input variables initialization\n");
-				out.write(writeInitialState(t_vertex, true, m_initinputs));
-			}
-
-			out.write("\n");
-			out.write("-- Property specification\n");
-			if (bType1)
-				out.write("-- SPEC !EF ( strongSS )\n");
-			else
-				out.write("-- SPEC AF ( weakSS )\n-- LTLSPEC G F ( weakSS )\n");
-
-			// Close main tags
-			out.close();
-
-		} catch (IOException e) {
-			throw new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage());
 		}
+
+		out.write("\nstrongSS := ");
+		boolean bIsFirst = true;
+		for (int v = 0; v < t_vertex.length; v++) {
+			if (t_vertex[v].isInput())
+				continue;
+			if (!bIsFirst) {
+				out.write(" & ");
+			}
+			out.write(t_regulators[v] + "_std");
+			bIsFirst = false;
+		}
+		out.write(";\n");
+
+		if (!bType1) {
+			out.write("\nweakSS := FALSE\n");
+			// -- Computing Weak Stable States for compacted STG (type 2) --
+			List<GsRegulatoryVertex> sortedVars = new ArrayList<GsRegulatoryVertex>();
+			List<GsRegulatoryVertex> orderStateVars = new ArrayList<GsRegulatoryVertex>();
+			List<GsRegulatoryVertex> orderInputVars = new ArrayList<GsRegulatoryVertex>();
+			for (int i = 0; i < nodeOrder.size(); i++) {
+				if (nodeOrder.get(i).isInput())
+					orderInputVars.add(nodeOrder.get(i));
+				else {
+					orderStateVars.add(nodeOrder.get(i));
+					sortedVars.add(nodeOrder.get(i));
+				}
+			}
+			sortedVars.addAll(orderInputVars);
+			// OMDDs reordered [ stateVars inputVars]
+			OmddNode[] tReordered = new OmddNode[nodeOrder.size()];
+			for (int i = 0; i < nodeOrder.size(); i++) {
+				tReordered[i] = sortedVars.get(i)
+						.getTreeParameters(sortedVars).reduce();
+			}
+
+			StableStatesService sss = new StableStatesService(graph,
+					sortedVars, (GsRegulatoryMutantDef) mutant, tReordered);
+			OmddNode omdds = sss.getStable();
+			int[] stateValues = new int[sortedVars.size()];
+			for (int i = 0; i < stateValues.length; i++)
+				stateValues[i] = -1;
+
+			out.write(writeStableStates(stateValues, omdds, orderStateVars,
+					0));
+			out.write(";\n");
+		}
+
+		out.write("\nTRANS\n");
+		for (int i = 0; i < t_vertex.length; i++) {
+			if (t_vertex[i].isInput())
+				continue;
+			out.write("next(" + t_regulators[i] + ") != ");
+			out.write(t_regulators[i] + " |\n");
+		}
+		if (bType1)
+			out.write("strongSS;\n");
+		else
+			out.write("weakSS;\n");
+
+		// TODO: make use of the name given by the user
+		// referencing the atomic proposition
+		out.write("\n-- State variables initialization\n");
+		out.write(writeInitialState(t_vertex, false, m_initstates));
+		if (bType1 && hasInputVars) {
+			out.write("-- Input variables initialization\n");
+			out.write(writeInitialState(t_vertex, true, m_initinputs));
+		}
+
+		out.write("\n");
+		out.write("-- Property specification\n");
+		if (bType1)
+			out.write("-- SPEC !EF ( strongSS )\n");
+		else
+			out.write("-- SPEC AF ( weakSS )\n-- LTLSPEC G F ( weakSS )\n");
+
+		// Close main tags
+		out.close();
 	}
 
 	private static String writeStableStates(int[] stateValues, OmddNode nodes,

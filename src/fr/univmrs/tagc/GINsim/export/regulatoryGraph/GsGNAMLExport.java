@@ -5,45 +5,42 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.service.common.GsExportAction;
 
-import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * Encode a graph to GNAML format.
- * 
- * 
+ *
+ *    TODO: service and serviceGUI
  */
-public class GsGNAMLExport extends GsAbstractExport<GsRegulatoryGraph> {
-	private GsExportConfig config = null;
+public class GsGNAMLExport extends GsExportAction<GsRegulatoryGraph> {
+
+	private static final GsFileFilter ffilter = new GsFileFilter(new String[] { "gnaml" }, "GNAML files");
+	
 	private FileWriter fout = null;
 	private XMLWriter out = null;
 
     public GsGNAMLExport(GsRegulatoryGraph graph) {
-    	super(graph, "STR_GNAML", "STR_GNAML_descr");
-		id = "GNAML";
-		extension = ".gnaml";
-		filter = new String[] { "gnaml" };
-		filterDescr = "GNAML files";
+    	super( graph, "STR_GNAML", "STR_GNAML_descr");
     }
     
-	protected void doExport(GsExportConfig config) throws GsException{
-		this.config = config;
-		try {
-			run();
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new GsException(GsException.GRAVITY_ERROR, e);
-		}		
+	protected void doExport( String filename) throws IOException {
+		run(filename);
 	}
 
-	protected synchronized void run() throws IOException {
-		this.fout = new FileWriter(config.getFilename());
+	@Override
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
+	}
+
+	
+	protected synchronized void run(String filename) throws IOException {
+		this.fout = new FileWriter(filename);
 		this.out = new XMLWriter(fout, null);
   		
   		fout.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

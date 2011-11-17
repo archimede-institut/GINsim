@@ -6,13 +6,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.service.common.GsExportAction;
 
-import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 
@@ -20,34 +19,26 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
  * Export the logical functions from regulatory graphs to python for use with the Snakes python library.
  * http://lacl.univ-paris12.fr/pommereau/soft/snakes/
  */
-public class SnakesExport extends GsAbstractExport<GsRegulatoryGraph>  {
+public class SnakesExport extends GsExportAction<GsRegulatoryGraph>  {
 
-	GsExportConfig config = null;
-	FileWriter out = null;
-
+	private static final GsFileFilter ffilter = new GsFileFilter( new String[] { "py" }, "Python source files");
+	
+	private FileWriter out = null;
+	
 	public SnakesExport(GsRegulatoryGraph graph) {
 		super(graph, "STR_snakes", "STR_snakes_descr");
-		id = "Logical function to snakes";
-		extension = ".py";
-		filter = new String[] { "py" };
-		filterDescr = "Python files";
 	}
 	
-	protected void doExport(GsExportConfig config) throws GsException{
-		this.config = config;
-		try {
-			run();
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new GsException(GsException.GRAVITY_ERROR, e);
-		}		
+	@Override
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
 	}
-
-	protected synchronized void run() throws IOException {
-		out = new FileWriter(config.getFilename());
+	
+	@Override
+	protected void doExport( String filename) throws IOException {
+		out = new FileWriter(filename);
 		
 		//data
-		GsRegulatoryGraph graph = (GsRegulatoryGraph) config.getGraph();
 		List nodeOrder = graph.getNodeOrder();
 		OmddNode[] nodes = graph.getAllTrees(true);
 		
@@ -152,6 +143,4 @@ public class SnakesExport extends GsAbstractExport<GsRegulatoryGraph>  {
 	private String getVertexNameForLevel(int order, List nodeOrder) {
 		return ((GsRegulatoryVertex) nodeOrder.get(order)).getId();
 	}
-	
-
 }

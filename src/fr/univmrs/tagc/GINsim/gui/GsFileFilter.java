@@ -14,6 +14,14 @@ public class GsFileFilter extends FileFilter {
 	private String[] extensionList = null;
 	private String extdescr = null;
 
+	public GsFileFilter() {
+		
+	}
+	public GsFileFilter(String[] extensions, String descr) {
+		this();
+		setExtensionList(extensions, descr);
+	}
+
 	/**
 	 * @param list
 	 * @param descr

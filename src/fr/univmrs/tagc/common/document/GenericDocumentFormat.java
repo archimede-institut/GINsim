@@ -1,16 +1,20 @@
 package fr.univmrs.tagc.common.document;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
+
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 
 /**
  * This class contain the informations about each kind of document like id, extension, filter and its class.
  */
 public class GenericDocumentFormat {
 	
-	public static final GenericDocumentFormat XHTMLDocumentFormat = new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", "xHTML files (.html, .xhtml)", "html", new String[] {"html", "xhtml"});
-	public static final GenericDocumentFormat OOoDocumentFormat = new GenericDocumentFormat(OOoDocumentWriter.class, "OpenDocument", "OpenDocument Text files (.odt)", "odt", new String[] {"odt"});
-	private static Vector formats = new Vector();
+	public static final GenericDocumentFormat XHTMLDocumentFormat = new GenericDocumentFormat(XHTMLDocumentWriter.class, "xHTML", new String[] {"html", "xhtml"}, "xHTML files (.html, .xhtml)");
+	public static final GenericDocumentFormat OOoDocumentFormat = new GenericDocumentFormat(OOoDocumentWriter.class, "OpenDocument", new String[] {"odt"}, "OpenDocument Text files (.odt)");
+	private static List<GenericDocumentFormat> formats = new ArrayList<GenericDocumentFormat>();
 	static {
 		formats.add(XHTMLDocumentFormat);
 		formats.add(OOoDocumentFormat);
@@ -22,24 +26,16 @@ public class GenericDocumentFormat {
 	/**
 	 * The identifier of the document (eg. xHTML)
 	 */
-	public String id;
+	public final String id;
 	/**
 	 * The descritpion of the document (eg. xHTML files)
 	 */
-	public String filterDescr;
+	public final GsFileFilter ffilter;
+	public final String defaultExtension;
 	/**
 	 * The documentWriter to instanciates to write a document of this type (eg. XHTMLDocumentWriter)
 	 */
-	public Class documentWriterClass;
-	/**
-	 * The default file extension without trailing point (eg. html)
-	 */
-	public String defaultExtension;
-		
-	/**
-	 * The files extensions without trailing point (eg. html)
-	 */
-	public String[] extensionArray;
+	public final Class documentWriterClass;
 		
 	/**
 	 * Define a new generic document format.
@@ -49,12 +45,11 @@ public class GenericDocumentFormat {
 	 * @param fillterDescr : a description
 	 * @param extension : the extension to add to the exported file
 	 */
-	public GenericDocumentFormat(Class documentWriterClass, String id, String filterDescr, String defaultExtension, String[] extensionArray) {
+	public GenericDocumentFormat(Class documentWriterClass, String id, String[] extensionArray, String filterDescr) {
 		this.documentWriterClass = documentWriterClass;
 		this.id = id;
-		this.filterDescr = filterDescr;
-		this.defaultExtension = defaultExtension;
-		this.extensionArray = extensionArray;
+		this.ffilter = new GsFileFilter(extensionArray, filterDescr);
+		this.defaultExtension = extensionArray[0];
 	}
 	
 	public static GenericDocumentFormat getFormatById(String id) {
@@ -73,7 +68,7 @@ public class GenericDocumentFormat {
 		return null;
 	}
 	
-	public static Vector getAllFormats() {
+	public static List<GenericDocumentFormat> getAllFormats() {
 		return formats;
 	}
 	

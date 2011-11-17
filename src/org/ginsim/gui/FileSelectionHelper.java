@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.ginsim.graph.common.Graph;
 
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
 
 public class FileSelectionHelper {

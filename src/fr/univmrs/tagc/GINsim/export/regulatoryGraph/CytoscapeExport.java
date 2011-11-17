@@ -3,20 +3,27 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
+
+import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.StandaloneGUI;
+import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -26,43 +33,50 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * 
  * @author BERENGUIER duncan - M1BBSG
  * @version 1.0
- * february 2008 - april 2008 
+ * february 2008 - april 2008
+ * 
+ *    TODO: extract a separated GsService
  */
-public class CytoscapeExport extends GsAbstractExport<Graph<?,?>> {
+@ProviderFor(GsServiceGUI.class)
+@StandaloneGUI
+public class CytoscapeExport implements GsServiceGUI {
+
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		if (graph instanceof GsRegulatoryGraph) {
+			List<Action> actions = new ArrayList<Action>();
+			actions.add(new CytoscapeExportAction((GsRegulatoryGraph)graph));
+			return actions;
+		}
+		return null;
+	}
 	
+}
+
+class CytoscapeExportAction extends GsExportAction<GsRegulatoryGraph> {
+	
+	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"xgmml"}, "Cytoscape graph files");
+
 	int EDGE_INHIBIT = 1;
 	int EDGE_ACTIVATE = 2;
 	int EDGE_UNDEFINED = 3;
-	GsExportConfig config = null;
 	GsRegulatoryMutants mlist = null;
 	FileWriter fout = null;
 	XMLWriter out = null;
 	
-	public CytoscapeExport(Graph graph) {
-		super(graph, "STR_cytoscape", "STR_cytoscape_descr");
-		extension = ".xgmml";
-		filter = new String[] { "xgmml" };
-		filterDescr = "Cytoscape files";
+	protected CytoscapeExportAction(GsRegulatoryGraph graph) {
+		super( graph, "STR_cytoscape", "STR_cytoscape_descr");
 	}
 
-	protected void doExport(GsExportConfig config) throws GsException{
-		
-		this.config = config;
-		try {
-			run();
-		} catch (IOException e) {
-			throw new GsException(GsException.GRAVITY_ERROR, e);
-		}
+	@Override
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
 	}
+
 	
-	/**
-	 * Write the regulatory graph into a file using XMLWriter.
-	 * @throws IOException
-	 */
-	protected synchronized void run() throws IOException {
+	protected void doExport( String filename) throws GsException, IOException {
 		
-		GsRegulatoryGraph graph = (GsRegulatoryGraph) config.getGraph();
-		fout = new FileWriter(config.getFilename());
+		fout = new FileWriter(filename);
 		out = new XMLWriter(fout, null);
 				
 		//Header

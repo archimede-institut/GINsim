@@ -206,15 +206,10 @@ class GenericDocumentFileFilter extends FileFilter {
 
         String extension = f.getName().substring(f.getName().lastIndexOf(".")+1,f.getName().length());
         
-        if (format.extensionArray == null) {
+        if (format.ffilter == null) {
         		return true;
         }
-        for (int i=0 ; i<format.extensionArray.length ; i++) {
-	        	if (extension.equalsIgnoreCase(format.extensionArray[i])) {
-	        		return true;
-	        	}
-        }
-        return false;
+        return format.ffilter.accept(f);
     }
 
     public String getDescription() {

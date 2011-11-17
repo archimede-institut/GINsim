@@ -104,7 +104,7 @@ public class GsServiceGUIManager{
 							result.addAll( service_actions);
 						}
 					}
-					catch( Exception e){
+					catch( Throwable e){
 						Debugger.log( "Service '" + service.getClass().getName() + "' cannot provide Actions due to an exception: " + e);
 					}
 				}

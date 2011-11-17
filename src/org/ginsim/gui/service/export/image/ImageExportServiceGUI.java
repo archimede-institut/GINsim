@@ -1,11 +1,12 @@
 package org.ginsim.gui.service.export.image;
 
-import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -42,32 +43,20 @@ public class ImageExportServiceGUI implements GsServiceGUI {
  */
 class ExportImageAction extends GsExportAction {
 
-	private final Graph graph;
-	
+	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"png"}, "PNG files");
+
 	public ExportImageAction( Graph graph) {
-		
-		super( "STR_Image", "STR_Image_descr");
-		this.graph = graph;
+		super( graph, "STR_Image", "STR_Image_descr");
 	}
 
 	@Override
-	public void actionPerformed( ActionEvent e) {
-		
-		String extension = ".png";
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
+	}
 
-		GsFileFilter ffilter = new GsFileFilter();
-        ffilter.setExtensionList(new String[] {"png"}, "PNG files");
-	    
-        // TODO : REFACTORING ACTION
-        // TODO : change the GsOpenAction
-	    String filename = null;
-	    
-		//filename = GsOpenAction.selectSaveFile(null, ffilter, null, extension);
-		if (filename == null) {
-			return;
-		}
+	@Override
+	protected void doExport(String filename) throws GsException, IOException {
         ImageExportService.exportImage(graph, false, filename);
-
 	}
 }
 

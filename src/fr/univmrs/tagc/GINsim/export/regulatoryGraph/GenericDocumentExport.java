@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.BufferedReader;
@@ -26,15 +27,14 @@ import javax.swing.event.ChangeListener;
 import org.ginsim.annotation.Annotation;
 import org.ginsim.annotation.AnnotationLink;
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.service.common.GsExportAction;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
-import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -61,17 +61,9 @@ import fr.univmrs.tagc.common.widgets.StackDialog;
  * 
  * @see DocumentWriter
  */
-public class GenericDocumentExport extends GsAbstractExport {
-	static public Vector v_format = new Vector();
-	static {
-		for (Iterator it = GenericDocumentFormat.getAllFormats().iterator(); it.hasNext();) {
-			GenericDocumentFormat format = (GenericDocumentFormat) it.next();
-			v_format.add(GenericDocumentExportFormat.createFrom(format));
-		}
-	}
+public class GenericDocumentExport extends GsExportAction<GsRegulatoryGraph> {
 
-	private GsExportConfig config = null;
-	private DocumentExportConfig specConfig;
+	private DocumentExportConfig config;
 	protected DocumentWriter doc = null;
 	protected Class documentWriterClass;
 
@@ -81,48 +73,27 @@ public class GenericDocumentExport extends GsAbstractExport {
 	
     public GenericDocumentExport(GsRegulatoryGraph graph) {
     	super(graph, "STR_Generic", "STR_Generic_descr");
-    	id = "doc";
     }
 
-    /**
-     * get a vector of all the GenericDocumentFormat the genericDocument can use.
-     */
-	public Vector getSubFormat() {
-		return v_format;
+	public Component getConfigPanel() {
+		config = new DocumentExportConfig();
+		// FIXME: this panel want to have access to the StackDialog
+		return new GDExportConfigPanel( graph, config);
 	}
-   
-	protected void doExport(GsExportConfig config) throws GsException{
-		this.config = config;
-		this.specConfig = (DocumentExportConfig)config.getSpecificConfig();
-		if (specConfig == null) {
-			specConfig = new DocumentExportConfig();
-			config.setSpecificConfig(specConfig);
-		}
+
+	@Override
+	protected void doExport( String filename) throws IOException {
 		try {
 			this.doc = (DocumentWriter) documentWriterClass.newInstance();
-			this.doc.setOutput(new File(config.getFilename()));
+			this.doc.setOutput(new File(filename));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		try {
-			run();
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new GsException(GsException.GRAVITY_ERROR, e);
-		}		
-	}
-
-	public boolean needConfig(GsExportConfig config) {
-		return true;
-	}
-
-	protected JComponent getConfigPanel(GsExportConfig config, StackDialog dialog) {
-		return new GDExportConfigPanel(config, dialog);
+		run();
 	}
 
 	
 	protected synchronized void run() throws IOException {
-		this.graph = (GsRegulatoryGraph) config.getGraph();
 		nodeOrder = graph.getNodeOrder();
 		len = nodeOrder.size();
 		setDocumentProperties();
@@ -150,16 +121,16 @@ public class GenericDocumentExport extends GsAbstractExport {
 		// all nodes with comment and logical functions
 		if (true) {
 			doc.openHeader(2, "Nodes", null);
-			writeLogicalFunctionsTable(specConfig.putComment);
+			writeLogicalFunctionsTable(config.putComment);
 		}
 		
 		// initial states
-		if (specConfig.exportInitStates) {
+		if (config.exportInitStates) {
 			doc.openHeader(2, "Initial States", null);
 			writeInitialStates();
 		}
 		// mutant description
-		if (specConfig.exportMutants) {
+		if (config.exportMutants) {
 			doc.openHeader(2, "Mutants and Dynamical Behaviour", null);
 			writeMutants();
 		}
@@ -169,13 +140,13 @@ public class GenericDocumentExport extends GsAbstractExport {
 
 	private void writeMutants() throws IOException {
 		GsRegulatoryMutants mutantList = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
-		StableStatesService stableSearcher = new StableStatesService(config.getGraph(), null, null);
+		StableStatesService stableSearcher = new StableStatesService(graph, null, null);
 		OmddNode stable;
 		
 		String[] cols;
-		if (specConfig.searchStableStates && specConfig.putComment) {
+		if (config.searchStableStates && config.putComment) {
 			cols = new String[] {"", "", "", "", "", "", ""};
-		} else if (specConfig.searchStableStates || specConfig.putComment){
+		} else if (config.searchStableStates || config.putComment){
 			cols = new String[] {"", "", "", "", "", ""};
 		} else {
 			cols = new String[] {"", "", "", "", ""};
@@ -188,10 +159,10 @@ public class GenericDocumentExport extends GsAbstractExport {
 		doc.openTableCell("Min", true);
         doc.openTableCell("Max", true);
         doc.openTableCell("Condition", true);
-		if (specConfig.putComment) {
+		if (config.putComment) {
 			doc.openTableCell("Comment", true);
 		}
-		if (specConfig.searchStableStates) {
+		if (config.searchStableStates) {
 			doc.openTableCell("Stable States", true);
 		}
 		
@@ -200,7 +171,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			GsRegulatoryMutantDef mutant = 
 				i<0 ? null : (GsRegulatoryMutantDef)mutantList.getElement(null, i);
 			
-			if (specConfig.searchStableStates) {
+			if (config.searchStableStates) {
 				stableSearcher.setMutant(mutant);
 				stable = stableSearcher.getStable();
 				model.setResult(stable, graph);
@@ -215,11 +186,11 @@ public class GenericDocumentExport extends GsAbstractExport {
 				doc.openTableCell("-");
                 doc.openTableCell("-");
                 doc.openTableCell("");
-				if (specConfig.putComment) {
+				if (config.putComment) {
 					doc.openTableCell("");
 				}
 			} else {
-				if (!specConfig.multicellular) {
+				if (!config.multicellular) {
 					nbrow = mutant.getNbChanges();
 				} else {
 					nbrow = mutant.getNbChanges();
@@ -260,13 +231,13 @@ public class GenericDocumentExport extends GsAbstractExport {
 				} else {
 				    doc.openTableCell("");
 				}
-				if (specConfig.putComment) {
+				if (config.putComment) {
 					doc.openTableCell(1, nbrow, "", false);
 					writeAnnotation(mutant.getAnnotation());//BUG?
 				}
 			}
 			
-			if (specConfig.searchStableStates) {
+			if (config.searchStableStates) {
 				// the common part: stable states
 				if (model.getRowCount() > 0) {
 					doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states", false);
@@ -296,7 +267,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 			}
 			
 			// more data on stable states:
-			if (specConfig.searchStableStates && model.getRowCount() > 0) {
+			if (config.searchStableStates && model.getRowCount() > 0) {
 				doc.openTableRow(null);
 				doc.openTableCell(nbcol,1, null, false);
 				
@@ -356,7 +327,7 @@ public class GenericDocumentExport extends GsAbstractExport {
 	}
 
 	private void writeLogicalFunctionsTable(boolean putcomment) throws IOException {
-		if (specConfig.putComment) {
+		if (config.putComment) {
 			doc.openTable(null, "table", new String[] { "", "", "", "" });
 		} else {
 			doc.openTable(null, "table", new String[] { "", "", "" });
@@ -545,6 +516,12 @@ public class GenericDocumentExport extends GsAbstractExport {
 				DocumentWriter.META_TITLE, graph.getGraphName()
 		});
 	}
+
+	@Override
+	protected GsFileFilter getFileFilter() {
+		// TODO: add the format to the specific config object
+		return config.format.ffilter;
+	}
   		
 
 }
@@ -557,7 +534,10 @@ class DocumentExportConfig implements GsInitialStateStore {
 	boolean exportMutants = true;
 	boolean searchStableStates = true;
 	boolean putComment = true;
-	// set to true to avoid generating redondant things for multicellular models
+	
+	GenericDocumentFormat format = getSubFormat().get(0);
+	
+	// set to true to avoid generating redundant things for multicellular models
 	boolean multicellular = false;
 	
     public Map getInitialState() {
@@ -567,6 +547,12 @@ class DocumentExportConfig implements GsInitialStateStore {
         return m_input;
     }
 	
+    /**
+     * get a vector of all the GenericDocumentFormat the genericDocument can use.
+     */
+	public List<GenericDocumentFormat> getSubFormat() {
+		return GenericDocumentFormat.getAllFormats();
+	}
 }
 
 class GDExportConfigPanel extends JPanel {
@@ -575,13 +561,9 @@ class GDExportConfigPanel extends JPanel {
     protected DocumentExportConfig cfg;
     JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
     
-	protected GDExportConfigPanel (GsExportConfig config, StackDialog dialog) {
-		cfg = (DocumentExportConfig)config.getSpecificConfig();
-		if (cfg == null) {
-			cfg = new DocumentExportConfig();
-			config.setSpecificConfig(cfg);
-		}
-    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, config.getGraph(), false);
+	protected GDExportConfigPanel ( GsRegulatoryGraph graph, DocumentExportConfig config, StackDialog dialog) {
+		this.cfg = config;
+    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
     	initPanel.setParam(cfg);
 
     	setLayout(new GridBagLayout());
@@ -636,29 +618,4 @@ class GDExportConfigPanel extends JPanel {
             }
         }
 	}
-}
-
-/**
- * This class contain the informations 
- */
-class GenericDocumentExportFormat extends GenericDocumentExport {
-	/**
-	 * Define a new generic document format.
-	 * @param documentWriterClass : The DocumentWriter sub-class for the format
-	 * @param id : The name of the format (for the dropdown menu)
-	 * @param filter : an array of filter for the file extension the format can overwrite
-	 * @param fillterDescr : a description
-	 * @param extention : the extension to add to the exported file
-	 */
-	public GenericDocumentExportFormat(Class documentWriterClass, String id, String[] filter, String filterDescr, String extension) {
-		this.documentWriterClass = documentWriterClass;
-		this.filter = filter;
-		this.filterDescr = filterDescr;
-		this.extension = extension;		
-	}
-	
-	public static GenericDocumentExportFormat createFrom(GenericDocumentFormat format) {
-		return new GenericDocumentExportFormat(format.documentWriterClass, format.id, format.extensionArray, format.filterDescr, format.defaultExtension);
-	}
-
 }

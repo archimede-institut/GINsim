@@ -1,11 +1,13 @@
 package org.ginsim.gui.service.export.sbml;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.GsServiceGUI;
@@ -42,33 +44,21 @@ public class SBMLExportServiceGUI implements GsServiceGUI {
  * @author spinelli
  *
  */
-class ExportSBMLAction extends GsExportAction {
+class ExportSBMLAction extends GsExportAction<GsRegulatoryGraph> {
 
-	private final GsRegulatoryGraph graph;
+	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"sbml"}, "SBML files");
 	
 	public ExportSBMLAction( GsRegulatoryGraph graph) {
-		
-		super( "STR_SBML", "STR_SBML_descr");
-		this.graph = graph;
+		super( graph, "STR_SBML", "STR_SBML_descr");
 	}
 
 	@Override
-	public void actionPerformed( ActionEvent e) {
-		
-		String extension = ".sbml";
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
+	}
 
-		GsFileFilter ffilter = new GsFileFilter();
-        ffilter.setExtensionList(new String[] {"sbml"}, "SBML files");
-	    
-        // TODO : REFACTORING ACTION
-        // TODO : change the GsOpenAction
-	    String filename = null;
-	    
-		//filename = GsOpenAction.selectSaveFile(null, ffilter, null, extension);
-		if (filename == null) {
-			return;
-		}
-        SBMLExportService.export( graph, filename);
-
+	@Override
+	protected void doExport(String filename) throws GsException, IOException {
+		SBMLExportService.export( graph, filename);
 	}
 }

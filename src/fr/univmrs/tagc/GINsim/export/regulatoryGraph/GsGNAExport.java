@@ -3,50 +3,65 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.Action;
+
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.LogicalFunctionBrowser;
+import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.StandaloneGUI;
+import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.export.GsAbstractExport;
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
+import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 /**
  * Encode a graph to GNA format.
+ * 
+ *   TODO: extract a standalone service
  */
-public class GsGNAExport extends GsAbstractExport<GsRegulatoryGraph> {
-	private GsExportConfig config = null;
+@ProviderFor(GsServiceGUI.class)
+@StandaloneGUI
+public class GsGNAExport implements GsServiceGUI {
+
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		if (graph instanceof GsRegulatoryGraph) {
+			List<Action> actions = new ArrayList<Action>();
+			actions.add(new GNAExportAction((GsRegulatoryGraph)graph));
+			return actions;
+		}
+		return null;
+	}
+}
+
+class GNAExportAction extends GsExportAction<GsRegulatoryGraph> {
+
+	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"gna"}, "GNA files");
+	
 	private FileWriter out = null;
-	private GsRegulatoryGraph graph;
 	private GNAFunctionBrowser f_browser;
 
-    public GsGNAExport(GsRegulatoryGraph graph) {
+    public GNAExportAction(GsRegulatoryGraph graph) {
     	super(graph, "STR_GNA", "STR_GNA_descr");
-		id = "GNAML";
-		extension = ".gna";
-		filter = new String[] { "gna" };
-		filterDescr = "GNA files";
     }
-    
-	protected void doExport(GsExportConfig config) throws GsException{
-		this.config = config;
-		try {
-			long l = System.currentTimeMillis();
-			run();
-			System.out.println("gna export: done in "+(System.currentTimeMillis()-l)+"ms");
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new GsException(GsException.GRAVITY_ERROR, e);
-		}		
-	}
 
-	protected synchronized void run() throws IOException {
-		this.graph = (GsRegulatoryGraph) config.getGraph();
-		this.out = new FileWriter(config.getFilename());
+	@Override
+	protected GsFileFilter getFileFilter() {
+		return ffilter;
+	}
+    
+	protected void doExport( String filename) throws GsException, IOException {
+		long l = System.currentTimeMillis();
+
+		this.out = new FileWriter(filename);
   		List nodeOrder = graph.getNodeOrder();
   		f_browser = new GNAFunctionBrowser(nodeOrder, out);
 		Iterator it = nodeOrder.iterator();
@@ -109,6 +124,7 @@ public class GsGNAExport extends GsAbstractExport<GsRegulatoryGraph> {
 			out.write("max_"+id+"\n\n");
 		}
 		out.close();
+		System.out.println("gna export: done in "+(System.currentTimeMillis()-l)+"ms");
 	}
 }
 
