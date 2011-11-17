@@ -54,6 +54,14 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
     private List<NodeInfo> nodeOrder;
     
 	/**
+	 */
+	public DynamicGraphImpl() {
+		
+	    this( false);
+
+	}
+    
+	/**
 	 * create a new GsDynamicGraph.
 	 * @param regGraph
 	 */
@@ -68,10 +76,31 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
 	}
 	
 	/**
+	 * @param filename
+	 */
+	public DynamicGraphImpl( boolean parsing) {
+		
+        super( parsing);
+        dashpattern = getEdgeAttributeReader().getPattern(1);
+	}
+
+	/**
+	 * @param map
+	 * @param file
+	 */
+	public DynamicGraphImpl(Map map, File file) {
+		
+	    this( true);
+        GsDynamicParser parser = new GsDynamicParser();
+        parser.parse(file, map, this);
+	}
+	
+	/**
 	 * Return the node order as a list of String
 	 * 
 	 * @return the node order as a list of String
 	 */
+	@Override
 	public List<NodeInfo> getNodeOrder() {
 		
 		return nodeOrder;
@@ -99,6 +128,7 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
 	 * 
 	 * @param list the list of String representing the order of vertex as defined by the model
 	 */
+	@Override
 	public void setNodeOrder( List<NodeInfo> node_order){
 		
 		nodeOrder = node_order;
@@ -109,57 +139,14 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
 	 * 
 	 * @return the zip extension for the graph type
 	 */
+	@Override
 	protected String getGraphZipName(){
 		
 		return GRAPH_ZIP_NAME;
 		
 	}
-	
-	/**
-	 */
-	public DynamicGraphImpl() {
-		
-	    this( false);
 
-	}
-	/**
-	 * @param filename
-	 */
-	public DynamicGraphImpl( boolean parsing) {
-		
-        super( parsing);
-        dashpattern = getEdgeAttributeReader().getPattern(1);
-	}
-
-	/**
-	 * @param map
-	 * @param file
-	 */
-	public DynamicGraphImpl(Map map, File file) {
-		
-	    this( true);
-        GsDynamicParser parser = new GsDynamicParser();
-        parser.parse(file, map, this);
-	}
-
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddVertex(int)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	public GsDynamicNode doInteractiveAddVertex(int param) {
-		return null;
-	}
-
-	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doInteractiveAddEdge(java.lang.Object, java.lang.Object, int)
-	 *
-	 * not used for this kind of graph: it's not interactivly editable
-	 */
-	public Edge<GsDynamicNode> doInteractiveAddEdge(GsDynamicNode source, GsDynamicNode target, int param) {
-		return null;
-	}
-
+	@Override
 	protected void doSave(OutputStreamWriter os, Collection<GsDynamicNode> nodes, Collection<Edge<GsDynamicNode>> edges, int mode) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, dtdFile);
@@ -188,6 +175,8 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
         }
 	}
 
+	
+	
 	private String stringNodeOrder() {
 		String s = "";
 		for (int i=0 ; i<nodeOrder.size() ; i++) {
@@ -283,7 +272,7 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
 	 * @param state the state we want to add
 	 * @return the new GsDynamicNode.
 	 */
-	public boolean addVertex( byte[] state) {
+	private boolean addVertex( byte[] state) {
 		return addVertex( new GsDynamicNode(state));
 	}
 	
@@ -294,6 +283,7 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
 	 * @param multiple
 	 * @return the new edge
 	 */
+	@Override
 	public Edge<GsDynamicNode> addEdge(GsDynamicNode source, GsDynamicNode target, boolean multiple) {
 		
 		Edge<GsDynamicNode> edge = new Edge<GsDynamicNode>(source, target);
@@ -308,9 +298,8 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
 		return edge;
 	}
 
-    protected Graph getCopiedGraph() {
-        return null;
-    }
+	
+	@Override
     protected List doMerge( Graph otherGraph) {
 
         // first check if this merge is allowed!
@@ -356,18 +345,18 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
         return ret;
     }
     
+	@Override
     public Graph getSubgraph(Collection vertex, Collection edges) {
         // no copy for state transition graphs
         return null;
     }
-    protected void setCopiedGraph( Graph graph) {
-    }
+
 
     /**
      * browse the graph, looking for stable states
      * @return the list of stable states found
      */
-    public List getStableStates() {
+    private List getStableStates() {
         if (v_stables == null) {
             v_stables = new ArrayList();
             Iterator it = getVertices().iterator();
@@ -380,6 +369,8 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
         }
         return v_stables;
     }
+    
+    
     /**
      * override getInfoPanel to show stable states.
      * @return the info panel for the "whattodo" frame
@@ -439,6 +430,7 @@ public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDy
      * @param target
      * @return the List describing the path or null if none is found
      */
+	@Override
     public List shortestPath(byte[] source, byte[] target) {
     	
         GsDynamicNode n = new GsDynamicNode(source);

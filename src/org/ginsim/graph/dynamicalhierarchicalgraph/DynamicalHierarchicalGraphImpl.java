@@ -204,6 +204,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractAssociatedGra
 	 * @param target
 	 * @return the new edge
 	 */
+	@Override
 	public Edge<GsDynamicalHierarchicalNode> addEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target) {
 		
 		Edge<GsDynamicalHierarchicalNode> edge = new Edge<GsDynamicalHierarchicalNode>(source, target);
@@ -220,6 +221,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractAssociatedGra
 	/**
 	 * return an array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
+	@Override
 	public byte[] getChildsCount() {
 		if (childsCount == null) {
 			childsCount = new byte[nodeOrder.size()];
@@ -232,12 +234,14 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractAssociatedGra
 		return childsCount;
 	}
 	
+
+	@Override
 	public void setChildsCount(byte[] cc) {
 		childsCount = cc;
 	}
 	
-	
-	public Vector searchNodes(String regexp) {
+
+	private Vector searchNodes(String regexp) {
 		Vector v = new Vector();
 		
 		StringBuffer s = new StringBuffer();
@@ -273,6 +277,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractAssociatedGra
 	 * 
 	 * @return the node order as a List of NodeInfo
 	 */
+	@Override
 	public List<NodeInfo> getNodeOrder() {
 		return nodeOrder;
 	}
@@ -299,12 +304,14 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractAssociatedGra
 	 * 
 	 * @param list the list of nodeInfo representing the order of vertex as defined by the model
 	 */
+	@Override
 	public void setNodeOrder( List<NodeInfo> node_order){
 		
 		nodeOrder = node_order;
 	}
 
-	public GsDynamicalHierarchicalNode getNodeForState(byte[] state) {
+
+	private GsDynamicalHierarchicalNode getNodeForState(byte[] state) {
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
 			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
 			if (v.contains(state)) return v;
@@ -317,6 +324,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractAssociatedGra
 	 * @param sid a string representation of the id with a letter in first position eg. "s102"
 	 * @return the node with the corresponding id. eg. 102.
 	 */
+	@Override
 	public GsDynamicalHierarchicalNode getNodeById(String sid) {
 		int id = Integer.parseInt(sid.substring(1));
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
