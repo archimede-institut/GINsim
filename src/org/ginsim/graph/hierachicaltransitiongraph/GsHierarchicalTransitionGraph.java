@@ -304,9 +304,8 @@ public class GsHierarchicalTransitionGraph extends AbstractAssociatedGraphFronte
 		if (childsCount == null) {
 			childsCount = new byte[nodeOrder.size()];
 			int i = 0;
-			for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
-				childsCount[i++] = (byte) (v.getMaxValue()+1);
+			for (NodeInfo v: nodeOrder) {
+				childsCount[i++] = (byte) (v.max+1);
 			}			
 		}
 		return childsCount;

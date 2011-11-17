@@ -3,6 +3,7 @@ package org.ginsim.gui.shell.editpanel;
 import java.awt.CardLayout;
 import java.awt.Component;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.ginsim.graph.common.Graph;
@@ -24,9 +25,12 @@ public class MainEditTab extends JPanel implements EditTab {
 		
 		Graph graph = gui.getGraph();
 		this.title = gui.getEditingTabLabel();
-		this.mainPanel = gui.getMainEditionPanel();
-		this.nodePanel = gui.getNodeEditionPanel();
-		this.edgePanel = gui.getEdgeEditionPanel();
+		GUIEditor editor = gui.getMainEditionPanel();
+		this.mainPanel = editor == null ? new DefaultGUIEditor("Empty panel editor") : editor;
+		editor = gui.getNodeEditionPanel();
+		this.nodePanel = editor == null ? new DefaultGUIEditor("Empty node editor") : editor;
+		editor = gui.getEdgeEditionPanel();
+		this.edgePanel = editor == null ? new DefaultGUIEditor("Empty edge editor") : editor;
 		
 		add(mainPanel.getComponent(), GRAPH_NAME);
 		add(nodePanel.getComponent(), NODE_NAME);
@@ -67,5 +71,24 @@ public class MainEditTab extends JPanel implements EditTab {
 		// TODO: provide the selection to the active tab
 		
 		return true;
+	}
+}
+
+class DefaultGUIEditor implements GUIEditor<Object> {
+
+	private final JLabel label; 
+	
+	public DefaultGUIEditor(String text) {
+		this.label = new JLabel(text);
+	}
+	
+	@Override
+	public void setEditedItem(Object item) {
+		
+	}
+
+	@Override
+	public Component getComponent() {
+		return label;
 	}
 }

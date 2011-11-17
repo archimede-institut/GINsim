@@ -442,6 +442,12 @@ public class GUIManager {
 	}
 
 	public void whatToDoWithGraph(Graph<?, ?> newGraph, Graph<?,?> parentGraph, boolean b) {
+		
+		if (newGraph.getNodeOrderSize() < 21) {
+			newFrame(newGraph);
+			return;
+		}
+		
 		// FIXME: create a new WhatToDo frame
 		Debugger.log("TODO: implement a new whattodo frame");
 	}
