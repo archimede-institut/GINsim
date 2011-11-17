@@ -68,7 +68,7 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory {
      */
 	public Graph create(){
 		
-		return new GsHierarchicalTransitionGraph();
+		return new HierarchicalTransitionGraphImpl();
 	}
 
 

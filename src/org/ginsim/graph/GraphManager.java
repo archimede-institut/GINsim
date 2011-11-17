@@ -24,6 +24,7 @@ import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
@@ -230,7 +231,7 @@ public class GraphManager {
                     	if (ze == null) {
                     		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsReducedGraph.GRAPH_ZIP_NAME);
                         	if (ze == null) {
-                        		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsHierarchicalTransitionGraph.GRAPH_ZIP_NAME);
+                        		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + HierarchicalTransitionGraphImpl.GRAPH_ZIP_NAME);
 	                        	if (ze == null) {
 	                        		throw new GsException( GsException.GRAVITY_ERROR, "Unable to find a known main zip entry");
 	                        	}

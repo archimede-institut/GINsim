@@ -7,6 +7,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
@@ -22,11 +23,11 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		this.regGraph = regGraph;
 		int mode;
 		if (params.simulationStrategy == GsSimulationParameters.STRATEGY_HTG) {
-			mode = GsHierarchicalTransitionGraph.MODE_HTG;
+			mode = HierarchicalTransitionGraphImpl.MODE_HTG;
 		} else {
-			mode = GsHierarchicalTransitionGraph.MODE_SCC;
+			mode = HierarchicalTransitionGraphImpl.MODE_SCC;
 		}
-		this.htg = new GsHierarchicalTransitionGraph(params.nodeOrder, mode);
+		this.htg = new HierarchicalTransitionGraphImpl(params.nodeOrder, mode);
 		htg.setAssociatedGraph(regGraph);
 		VertexAttributesReader vreader = htg.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);

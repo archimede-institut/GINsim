@@ -1,0 +1,388 @@
+package org.ginsim.graph.hierachicaltransitiongraph;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
+import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
+import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.service.tools.decisionanalysis.GsDecisionOnEdge;
+import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
+
+import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
+import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.xml.XMLWriter;
+
+public class HierarchicalTransitionGraphImpl extends AbstractAssociatedGraphFrontend<GsHierarchicalNode, GsDecisionOnEdge, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>
+	implements GsHierarchicalTransitionGraph{
+
+	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
+	
+	public static final int MODE_SCC = 1;
+	public static final int MODE_HTG = 2;
+
+	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
+	
+	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
+	
+	/**
+	 * Mode is either SCC or HTG depending if we group the transients component by their atteignability of attractors.
+	 */
+	private int transientCompactionMode;
+	
+	/**
+	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
+	 */
+	private byte[] childsCount = null;
+	private GsHierarchicalVertexParameterPanel vertexPanel = null;
+	private long saveEdgeId;
+	private GsSimulationParameters simulationParameters;
+	private GsHierarchicalEdgeParameterPanel edgePanel;
+
+	
+/* **************** CONSTRUCTORS ************/	
+	
+	
+	/**
+	 * create a new empty GsDynamicalHierarchicalGraph.
+	 */
+	public HierarchicalTransitionGraphImpl() {
+		this( false);
+	}
+				
+	/**
+	 * create a new GsDynamicalHierarchicalGraph with a nodeOrder.
+	 * @param nodeOrder the node order
+	 * @param transientCompactionMode MODE_SCC or MODE_HTG
+	 */
+	public HierarchicalTransitionGraphImpl(List<GsRegulatoryVertex> nodeOrder, int transientCompactionMode) {
+		
+	    this();
+	    for (GsRegulatoryVertex vertex: nodeOrder) {
+	    	this.nodeOrder.add(new NodeInfo(vertex));
+	    }
+	    this.transientCompactionMode = transientCompactionMode;
+	}
+
+	public HierarchicalTransitionGraphImpl( boolean parsing) {
+		
+        super( parsing);
+	}
+
+	public HierarchicalTransitionGraphImpl(Map map, File file) {
+		
+	    this( true);
+        GsHierarchicalTransitionGraphParser parser = new GsHierarchicalTransitionGraphParser();
+        parser.parse(file, map, this);
+	}
+
+	/**
+	 * Return the node order as a List of NodeInfo
+	 * 
+	 * @return the node order as a List of NodeInfo
+	 */
+	@Override
+	public List<NodeInfo> getNodeOrder() {
+		return nodeOrder;
+	}
+	
+    /**
+     * Return the size of the node order
+     * 
+     * @return the size of the node order
+     */
+    @Override
+	public int getNodeOrderSize(){
+		
+		if( nodeOrder != null){
+			return nodeOrder.size();
+		}
+		else{
+			return 0;
+		}
+	}
+	
+    
+	/**
+	 * Set a list of NodeInfo representing the order of vertex as defined by the model
+	 * 
+	 * @param list the list of NodeInfo representing the order of vertex as defined by the model
+	 */
+    @Override
+	public void setNodeOrder( List<NodeInfo> node_order){
+		
+		nodeOrder = node_order;
+	}
+
+
+/* **************** EDITION OF VERTEX AND EDGE ************/	
+
+//	/**
+//	 * add a vertex to this graph.
+//	 * @param vertex
+//	 */
+	// TODO To remove since it duplicates a method existing on AbstractGraphFrontend
+//	public boolean addVertex(GsHierarchicalNode vertex) {
+//		return graphManager.addVertex(vertex);
+//	}
+	/**
+	 * add an edge between source and target
+	 * @param source a GsHierarchicalNode
+	 * @param target a GsHierarchicalNode
+	 * @return the new edge
+	 */
+	@Override
+	public Object addEdge(GsHierarchicalNode source, GsHierarchicalNode target) {
+		
+		Object e = getEdge(source, target);
+		if (e != null) return e;
+		// FIXME: creating an empty GsDecisionOnEdge object: is it even possible?
+		GsDecisionOnEdge edge = new GsDecisionOnEdge( source, target, nodeOrder);
+		return addEdge(edge);
+	}
+
+		
+		
+/* **************** PANELS ************/	
+		
+    
+	public AbstractParameterPanel getEdgeAttributePanel() {
+	    if (edgePanel == null) {
+	    	edgePanel  = new GsHierarchicalEdgeParameterPanel(this);
+	    }
+		return edgePanel;
+	}
+
+	public AbstractParameterPanel getVertexAttributePanel() {
+	    if (vertexPanel == null) {
+	        vertexPanel  = new GsHierarchicalVertexParameterPanel(this);
+	    }
+		return vertexPanel;
+	}
+	
+		
+/* **************** SAVE ************/	
+		
+	/**
+	 * Return the zip extension for the graph type
+	 * 
+	 * @return the zip extension for the graph type
+	 */
+	@Override
+	public String getGraphZipName(){
+		
+		return GRAPH_ZIP_NAME;
+		
+	}
+
+	
+	protected void doSave(OutputStreamWriter os, Collection<GsHierarchicalNode> nodes, Collection<GsDecisionOnEdge> edges, int mode) throws GsException {
+       try {
+            XMLWriter out = new XMLWriter(os, dtdFile);
+	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
+			out.write("\t<graph id=\"" + graphName + "\"");
+			out.write(" class=\"hierarchicalTransitionGraph\"");
+			out.write(" iscompact=\""+this.transientCompactionMode+"\"");
+			out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
+			saveNode(out, mode, nodes);
+			saveEdge(out, mode, edges);
+            if (graphAnnotation != null) {
+            	graphAnnotation.toXML(out, null, 0);
+            }
+            // save the ref of the associated regulatory graph!
+            if (associatedGraph != null) {
+                associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
+            }
+            if (associatedID != null) {
+                out.write("<link xlink:href=\""+associatedID+"\"/>\n");
+            }
+	  		out.write("\t</graph>\n");
+	  		out.write("</gxl>\n");
+        } catch (IOException e) {
+            throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_unableToSave")+": " +e.getMessage());
+        }
+	}
+	
+	private void saveEdge(XMLWriter out, int mode, Collection<GsDecisionOnEdge> edges) throws IOException {
+	     for (GsDecisionOnEdge edge: edges) {
+            String source = "" + edge.getSource().getUniqueId();
+            String target = "" + edge.getTarget().getUniqueId();
+            out.write("\t\t<edge id=\"e"+(++saveEdgeId)+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
+	     }
+	 }
+	 
+	 /**
+	  * @param out
+	  * @param mode
+	  * @param vertices
+	  * @throws IOException
+	  */
+	 private void saveNode(XMLWriter out, int mode, Collection<GsHierarchicalNode> vertices) throws IOException {
+	 	VertexAttributesReader vReader = getVertexAttributeReader();
+	     for (GsHierarchicalNode vertex: vertices) {
+	         vReader.setVertex(vertex);
+	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
+	         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
+	         out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");
+	         out.write(GsGinmlHelper.getFullNodeVS(vReader));
+	         out.write("\t\t</node>\n");
+	     }
+	 }		
+		
+/* **************** NODE SEARCH ************/
+		
+	private Vector searchNodes(String regexp) {
+		Vector v = new Vector();
+		
+		StringBuffer s = new StringBuffer();
+		for (int i = 0; i < regexp.length(); i++) {
+			char c = regexp.charAt(i);
+			if (c == '\\') {
+				s.append(regexp.charAt(++i));
+			} else if (c == '*') {
+				s.append("[0-9\\*]");
+			} else if (c == '0' || (c >= '1' && c <= '9')){
+				s.append("["+c+"\\*]");
+			} else if (c == ' ' || c == '\t') {
+				//pass
+			} else {
+				s.append(c);
+			}
+		}
+		Pattern pattern = Pattern.compile(s.toString(), Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher("");
+		
+		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
+			GsHierarchicalNode vertex = (GsHierarchicalNode) it.next();
+			matcher.reset(vertex.statesToString());
+			if (matcher.find()) {
+				v.add(vertex);
+			}
+		}
+		return v;
+	}
+	
+	@Override
+	public GsHierarchicalNode getNodeForState(byte[] state) {
+		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
+			GsHierarchicalNode v = (GsHierarchicalNode) it.next();
+			if (v.contains(state)) return v;
+		}
+		return null;
+	}
+	
+		
+	
+		
+/* **************** GETTER AND SETTERS ************/
+		
+	/**
+	 * return an array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
+	 */
+	@Override
+	public byte[] getChildsCount() {
+		if (childsCount == null) {
+			childsCount = new byte[nodeOrder.size()];
+			int i = 0;
+			for (NodeInfo v: nodeOrder) {
+				childsCount[i++] = (byte) (v.max+1);
+			}			
+		}
+		return childsCount;
+	}
+	
+	@Override
+	public void setChildsCount(byte[] cc) {
+		childsCount = cc;
+	}
+	
+	/**
+	 * Return a string representation of the nodeOrder
+	 *  
+	 * ex : <tt>G0:1 G1:2 G2:1 G3:3</tt>
+	 * 
+	 * @return
+	 */
+	private String stringNodeOrder() {
+		String s = "";
+		for (NodeInfo v: nodeOrder) {
+			s += v.name+":"+v.max+" ";
+		}
+		if (s.length() > 0) {
+			return s.substring(0, s.length()-1);
+		}
+		return s;
+	}
+	
+	/**
+	 * Return <b>true</b> if the transients are compacted into component by their atteignability of attractors.
+	 * @return
+	 */
+	@Override
+	public boolean areTransientCompacted() {
+		return transientCompactionMode == MODE_HTG;
+	}
+	
+	@Override
+	public void setMode(int mode) {
+		transientCompactionMode = mode;
+	}
+
+    /**
+     * Indicates if the given graph can be associated to the current one
+     * 
+     * @param graph the graph to associate to the current one
+     * @return true is association is possible, false if not
+     */
+    @Override
+    protected boolean isAssociationValid( Graph<?, ?> graph) {
+    	
+    	if( graph instanceof GsRegulatoryGraph){
+    		return true;
+    	}
+    	
+    	return false;
+    }
+
+		
+/* **************** UNIMPLEMENTED METHODS ************/
+
+
+	/**
+	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#getSubGraph(java.utils.Vector, java.utils.Vector)
+	 * 
+	 * not used for this kind of graph: it's not interactively editable
+	 */
+	@Override
+	public Graph getSubgraph(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
+		return null;
+	}
+
+    /**
+	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doMerge(fr.univmrs.tagc.GINsim.graph.GsGraph)
+	 * 
+	 * not used for this kind of graph: it has no meaning
+     */
+	@Override
+	protected List doMerge( Graph otherGraph) {
+        return null;
+    }
+
+
+}

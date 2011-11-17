@@ -53,7 +53,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
      */
     public GsHierarchicalTransitionGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
-    	this.htg = new GsHierarchicalTransitionGraph( true);
+    	this.htg = new HierarchicalTransitionGraphImpl( true);
     	this.map = map;
 		vareader = htg.getVertexAttributeReader();
 		ereader = htg.getEdgeAttributeReader();
