@@ -31,8 +31,8 @@ import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.document.DocumentWriter;
 import fr.univmrs.tagc.common.document.GenericDocumentFileChooser;
 import fr.univmrs.tagc.common.document.GenericDocumentFormat;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class InteractionAnalysisFrame extends StackDialog implements ActionListener {
 	private JFrame frame;

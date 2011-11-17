@@ -32,8 +32,8 @@ import org.ginsim.gui.GUIManager;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class GraphComparatorFrame  extends StackDialog implements ActionListener {
 

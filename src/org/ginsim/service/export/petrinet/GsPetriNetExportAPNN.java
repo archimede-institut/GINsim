@@ -5,10 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.export.petrinet.PetriNetExportServiceGUI;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
@@ -26,9 +24,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 public class GsPetriNetExportAPNN extends BasePetriNetExport {
 	
 	protected GsPetriNetExportAPNN() {
-		extension = ".apnn";
-		filter = new String[] { "apnn" };
-		filterDescr = "APNN files (.apnn)";
+		super(".apnn", "APNN");
 	}
 	
 	protected void doExport( PNConfig config, String filename) throws IOException {

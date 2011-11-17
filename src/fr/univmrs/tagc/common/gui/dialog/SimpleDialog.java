@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.widgets;
+package fr.univmrs.tagc.common.gui.dialog;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;

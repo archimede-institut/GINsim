@@ -24,8 +24,8 @@ import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class OmddVizFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7619253564236142617L;

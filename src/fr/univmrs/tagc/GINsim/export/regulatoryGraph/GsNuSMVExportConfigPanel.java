@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -22,28 +21,24 @@ import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
-import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
 
-import fr.univmrs.tagc.GINsim.graph.GsExtensibleConfig;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
-public class GsNuSMVExportConfigPanel extends JPanel {
+public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = -7398674287463858306L;
 
-	private GsNuSMVConfig cfg;
+	private final GsNuSMVConfig cfg;
 
 	private PrioritySelectionPanel priorityPanel = null;
 	private MutantSelectionPanel mutantPanel = null;
@@ -56,25 +51,15 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 
 	private JRadioButton jrbType2;
 
-	private StackDialog dialog;
-
-	public GsNuSMVExportConfigPanel(GsExtensibleConfig config,
-			StackDialog dialog) {
-		super();
-		this.dialog = dialog;
-		if (config.getSpecificConfig() == null) {
-			config.setSpecificConfig(new GsNuSMVConfig(
-					(GsRegulatoryGraph) config.getGraph()));
-		}
-		this.cfg = (GsNuSMVConfig) config.getSpecificConfig();
-		initialize();
+	public GsNuSMVExportConfigPanel( GsNuSMVConfig config) {
+		this.cfg = config;
 	}
 
-	private void initialize() {
+	protected void init() {
 		setLayout(new BorderLayout());
 
 		JPanel jpTmp = new JPanel(new GridBagLayout());
-		mutantPanel = new MutantSelectionPanel(dialog, cfg.graph, cfg.store);
+		mutantPanel = new MutantSelectionPanel( stack, cfg.graph, cfg.store);
 		GridBagConstraints cst = new GridBagConstraints();
 		cst.gridx = 0;
 		cst.gridy = 0;
@@ -83,7 +68,7 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 		jpTmp.add(mutantPanel, cst);
 
 		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( this.cfg.graph, GsSimulationParametersManager.key, true);
-		priorityPanel = new PrioritySelectionPanel(dialog, paramList.pcmanager);
+		priorityPanel = new PrioritySelectionPanel( stack, paramList.pcmanager);
 		priorityPanel.setStore(cfg.store, 1);
 		cst = new GridBagConstraints();
 		cst.gridx = 1;
@@ -100,7 +85,7 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 			}
 		});
 
-		initPanel = new GsInitialStatePanel(dialog, cfg.graph, false);
+		initPanel = new GsInitialStatePanel( stack, cfg.graph, false);
 		initPanel.setParam(cfg);
 		add(initPanel, BorderLayout.CENTER);
 		this.setMinimumSize(new Dimension(450, 320));
@@ -159,6 +144,12 @@ public class GsNuSMVExportConfigPanel extends JPanel {
 			return (GsRegulatoryMutantDef) mutantModel.getSelectedItem();
 		}
 		return null;
+	}
+
+	@Override
+	public void run() {
+		// TODO run export
+		Debugger.log("TODO: run export");
 	}
 }
 

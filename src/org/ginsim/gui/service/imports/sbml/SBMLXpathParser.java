@@ -51,7 +51,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamo
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 
 public final class SBMLXpathParser {
 	

@@ -213,7 +213,7 @@ class GenericDocumentFileFilter extends FileFilter {
     }
 
     public String getDescription() {
-        return format.filterDescr;
+        return format.ffilter.getDescription();
     }
     
     public GenericDocumentFormat getFormat() {

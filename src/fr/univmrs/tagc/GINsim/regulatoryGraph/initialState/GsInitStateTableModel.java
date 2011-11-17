@@ -10,8 +10,8 @@ import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * model for the initState table.

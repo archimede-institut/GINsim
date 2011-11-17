@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.BufferedReader;
@@ -16,17 +15,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.annotation.AnnotationLink;
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -48,11 +43,13 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTree
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
 import fr.univmrs.tagc.common.document.GenericDocumentFormat;
-import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 
 /**
  * GenericDocumentExport is a plugin to export the documentation of a model into multiples document format.
@@ -75,7 +72,7 @@ public class GenericDocumentExport extends GsExportAction<GsRegulatoryGraph> {
     	super(graph, "STR_Generic", "STR_Generic_descr");
     }
 
-	public Component getConfigPanel() {
+	public StackDialogHandler getConfigPanel() {
 		config = new DocumentExportConfig();
 		// FIXME: this panel want to have access to the StackDialog
 		return new GDExportConfigPanel( graph, config);
@@ -555,15 +552,30 @@ class DocumentExportConfig implements GsInitialStateStore {
 	}
 }
 
-class GDExportConfigPanel extends JPanel {
+class GDExportConfigPanel extends AbstractStackDialogHandler {
     private static final long serialVersionUID = 9043565812912568136L;
     
-    protected DocumentExportConfig cfg;
-    JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
+    protected final DocumentExportConfig cfg;
+	private final GsRegulatoryGraph graph;
+
+	JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
+
     
-	protected GDExportConfigPanel ( GsRegulatoryGraph graph, DocumentExportConfig config, StackDialog dialog) {
+	protected GDExportConfigPanel ( GsRegulatoryGraph graph, DocumentExportConfig config) {
 		this.cfg = config;
-    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
+		this.graph = graph;
+		
+	}
+	
+	@Override
+	public void run() {
+		// FIXME: run export
+		Debugger.log("TODO: run export");
+	}
+	
+	@Override
+	protected void init() {
+    	GsInitialStatePanel initPanel = new GsInitialStatePanel(stack, graph, false);
     	initPanel.setParam(cfg);
 
     	setLayout(new GridBagLayout());

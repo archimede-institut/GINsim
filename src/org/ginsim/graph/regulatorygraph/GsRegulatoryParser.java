@@ -35,7 +35,7 @@ import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 
 /**
  * parses a ginml regulatory graph.

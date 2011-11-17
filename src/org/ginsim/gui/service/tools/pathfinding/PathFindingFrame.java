@@ -32,9 +32,9 @@ import org.ginsim.gui.graph.GraphGUI;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class PathFindingFrame extends StackDialog implements ActionListener, ResultHandler {
 	private static final long serialVersionUID = -7430762236435581864L;

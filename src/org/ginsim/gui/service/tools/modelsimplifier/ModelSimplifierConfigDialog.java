@@ -24,7 +24,7 @@ import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 
 public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener {
 	private static final long	serialVersionUID	= 3618855894072951620L;

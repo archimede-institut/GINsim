@@ -5,7 +5,7 @@ import java.awt.Insets;
 
 import org.ginsim.graph.common.Graph;
 
-import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 
 
 public abstract class GsBaseSimulationFrame extends StackDialog implements SimulationManager {

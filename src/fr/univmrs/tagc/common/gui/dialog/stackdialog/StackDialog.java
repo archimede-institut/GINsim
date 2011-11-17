@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.widgets;
+package fr.univmrs.tagc.common.gui.dialog.stackdialog;
 
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -16,6 +16,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.gui.dialog.SimpleDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**

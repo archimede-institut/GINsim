@@ -49,6 +49,16 @@ public class BasePetriNetExport {
 		FORMATS.add(new GsPetriNetExportAPNN());
 	}
 	
+	// TODO: make extension data available
+	
+	private final String extension;
+	private final String filterDescr;
+	
+	public BasePetriNetExport(String extension, String filterDescr) {
+		this.extension = extension;
+		this.filterDescr = filterDescr;
+	}
+	
     /**
      * extract transitions from a tree view of logical parameters.
      *

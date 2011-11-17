@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 
 import fr.univmrs.tagc.common.datastore.GenericNamedList;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 abstract public class GenericNamedListSelectionPanel<T> extends JPanel implements ActionListener {
 	private static final long	serialVersionUID	= -1200453159340442013L;

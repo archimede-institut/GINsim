@@ -1,6 +1,5 @@
 package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.FileOutputStream;
@@ -11,12 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -31,8 +25,10 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
@@ -68,7 +64,7 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
 	}
 	
 	@Override
-	public Component getConfigPanel( ) {
+	public StackDialogHandler getConfigPanel( ) {
 		config = new SBML3Config();
 		// FIXME: this panel requires the StackDialog, which will only be created after the panel is returned...
 		return new SBML3ExportConfigPanel( graph, config);				
@@ -305,16 +301,23 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
 }
 
 
-class SBML3ExportConfigPanel extends JPanel {
+class SBML3ExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = 9043565812912568136L;
 	
-	protected final SBML3Config config;
+	private final SBML3Config config;
+	private final GsRegulatoryGraph graph;
 	
-	protected SBML3ExportConfigPanel( Graph graph, SBML3Config config, StackDialog dialog) {
-		super(new GridBagLayout());
+	protected SBML3ExportConfigPanel( GsRegulatoryGraph graph, SBML3Config config) {
+		super();
+		setLayout(new GridBagLayout());
 		this.config = config;
+		this.graph = graph;
+	}
+	
+	@Override
+	protected void init() {
 		
-		GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
+		GsInitialStatePanel initPanel = new GsInitialStatePanel( stack, graph, false);
 		initPanel.setParam(config);
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -325,6 +328,12 @@ class SBML3ExportConfigPanel extends JPanel {
 		c.weighty = 1;
 		c.fill = GridBagConstraints.BOTH;
 		add(initPanel, c);
+	}
+
+	@Override
+	public void run() {
+		// TODO run export
+		Debugger.log("Run export");
 	}	
 }
 

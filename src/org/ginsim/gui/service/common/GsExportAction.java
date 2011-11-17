@@ -1,6 +1,5 @@
 package org.ginsim.gui.service.common;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
@@ -10,6 +9,8 @@ import org.ginsim.gui.FileSelectionHelper;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 
 
 public abstract class GsExportAction<G extends Graph> extends BaseAction {
@@ -59,15 +60,18 @@ public abstract class GsExportAction<G extends Graph> extends BaseAction {
 		}
 	}
 
-	public Component getConfigPanel() {
+	public StackDialogHandler getConfigPanel() {
 		return null;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		Component configPanel = getConfigPanel();
-		if (configPanel != null) {
+		StackDialogHandler handler = getConfigPanel();
+		if (handler != null) {
 			Debugger.log("exports with config panel not yet supported");
+			
+			// handler.setStackDialog(new StackDialog(null, "", 200, 500);
+				
 		} else {
 			selectFile();
 		}

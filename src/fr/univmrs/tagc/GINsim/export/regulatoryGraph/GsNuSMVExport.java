@@ -14,9 +14,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.swing.JComponent;
-
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.common.GsExportAction;
@@ -28,8 +25,8 @@ import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 /**
  * GINsim export plugin capable of encoding the working model into a NuSMV
@@ -64,9 +61,9 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 		return ffilter;
 	}
 
-	protected JComponent getConfigPanel( GsNuSMVConfig config,
-			StackDialog dialog) {
-		return new GsNuSMVExportConfigPanel(config, dialog);
+	@Override
+	public StackDialogHandler getConfigPanel() {
+		return new GsNuSMVExportConfigPanel(config);
 	}
 
 	/**

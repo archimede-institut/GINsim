@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.export.petrinet.PetriNetExportServiceGUI;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
@@ -50,9 +48,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 public class GsPetriNetExportINA extends BasePetriNetExport {
 
 	protected GsPetriNetExportINA() {
-		extension = ".pnt";
-		filter = new String[] { "pnt" };
-		filterDescr = "INA files (.pnt)";
+		super("pnt", "INA");
 	}
 
 	// FIXME: INA does not like PN with "useless" places. Such places should be removed (with a warning)

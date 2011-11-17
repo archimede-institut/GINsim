@@ -4,10 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.export.petrinet.PetriNetExportServiceGUI;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -25,9 +23,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 public class GsPetriNetExportPNML extends BasePetriNetExport {
 
 	protected GsPetriNetExportPNML() {
-		extension = ".xml";
-		filter = new String[] { "xml" };
-		filterDescr = "PNML files (.xml)";
+		super("xml", "PNML");
 	}
 
 	protected void doExport( PNConfig config, String filename) throws IOException{

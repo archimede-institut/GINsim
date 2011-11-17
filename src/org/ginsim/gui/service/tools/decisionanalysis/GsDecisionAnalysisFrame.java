@@ -21,8 +21,8 @@ import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
 
 import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 
 public class GsDecisionAnalysisFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7619253564236142617L;

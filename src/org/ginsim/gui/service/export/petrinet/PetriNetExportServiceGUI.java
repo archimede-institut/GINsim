@@ -3,46 +3,30 @@ package org.ginsim.gui.service.export.petrinet;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GsExportAction;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
-import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
-import org.ginsim.service.export.petrinet.BasePetriNetExport;
-import org.ginsim.service.export.petrinet.GsPetriNetExportAPNN;
-import org.ginsim.service.export.petrinet.GsPetriNetExportINA;
-import org.ginsim.service.export.petrinet.GsPetriNetExportPNML;
 import org.ginsim.service.export.petrinet.PNConfig;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 
 /**
  * GUI Action to export a LRG into Petri net
- * 
  */
 public class PetriNetExportServiceGUI implements GsServiceGUI {
 
@@ -55,8 +39,8 @@ public class PetriNetExportServiceGUI implements GsServiceGUI {
 		}
 		return null;
 	}
-	
 }
+
 
 class PetriNetExportAction extends GsExportAction<GsRegulatoryGraph> {
 
@@ -73,7 +57,7 @@ class PetriNetExportAction extends GsExportAction<GsRegulatoryGraph> {
 	}
 
 	@Override
-	public JComponent getConfigPanel() {
+	public StackDialogHandler getConfigPanel() {
 		config = new PNConfig(graph);
 		return new PNExportConfigPanel(config);
 	}
@@ -88,20 +72,26 @@ class PetriNetExportAction extends GsExportAction<GsRegulatoryGraph> {
 
 }
 
-class PNExportConfigPanel extends JPanel {
+class PNExportConfigPanel extends AbstractStackDialogHandler {
     private static final long serialVersionUID = 9043565812912568136L;
 
-	PrioritySelectionPanel priorityPanel = null;
+    private final PNConfig config;
+	private PrioritySelectionPanel priorityPanel = null;
 
-	protected PNExportConfigPanel ( PNConfig config, StackDialog dialog) {
-    	GsRegulatoryGraph graph = config.graph;
+	protected PNExportConfigPanel ( PNConfig config) {
+    	this.config = config;
+	}
+	
+	@Override
+	public void init() {
+		GsRegulatoryGraph graph = config.graph;
     	MutantSelectionPanel mutantPanel = null;
     	
-    	GsInitialStatePanel initPanel = new GsInitialStatePanel(dialog, graph, false);
+    	GsInitialStatePanel initPanel = new GsInitialStatePanel(stack, graph, false);
     	initPanel.setParam(config);
     	
     	setLayout(new GridBagLayout());
-    	mutantPanel = new MutantSelectionPanel(dialog, graph, config.store);
+    	mutantPanel = new MutantSelectionPanel(stack, graph, config.store);
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
 		c.gridy = 1;
@@ -109,7 +99,7 @@ class PNExportConfigPanel extends JPanel {
 		add(mutantPanel, c);
 
 		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, GsSimulationParametersManager.key, true);
-        priorityPanel = new PrioritySelectionPanel(dialog, paramList.pcmanager);
+        priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
         priorityPanel.setStore(config.store, 1);
 		c = new GridBagConstraints();
 		c.gridx = 1;
@@ -127,4 +117,10 @@ class PNExportConfigPanel extends JPanel {
     	c.fill = GridBagConstraints.BOTH;
     	add(initPanel, c);
     }
+
+	@Override
+	public void run() {
+		// TODO: run the export
+		Debugger.log("TODO: run the export");
+	}
 }

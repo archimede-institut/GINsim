@@ -24,8 +24,8 @@ import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 
+import fr.univmrs.tagc.common.gui.dialog.SimpleDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.SimpleDialog;
 
 
 /**

@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 
 import org.ginsim.graph.common.Graph;
 
-import fr.univmrs.tagc.common.widgets.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 
 public class STG2HTGFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7430762236435581864L;

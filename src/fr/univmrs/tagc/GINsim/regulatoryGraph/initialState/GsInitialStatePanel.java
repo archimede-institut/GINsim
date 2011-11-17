@@ -18,10 +18,10 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.widgets.Label;
-import fr.univmrs.tagc.common.widgets.StackDialog;
 import fr.univmrs.tagc.common.widgets.StockButton;
 
 
