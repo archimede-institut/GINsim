@@ -36,6 +36,7 @@ import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementTo
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DecoTree;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTable;
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.widgets.GsButton;
 import fr.univmrs.tagc.common.widgets.GsPanel;
 
@@ -93,10 +94,8 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
   public GsFunctionEditorEditPanel() {
   	super();
   	try {
-			URL url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/resources/icons/notred.png");
-			ic_on = new ImageIcon(url);
-			url = JFrame.class.getResource("/fr/univmrs/tagc/GINsim/resources/icons/notgrey.png");
-			ic_off = new ImageIcon(url);
+			ic_on = ImageLoader.getImageIcon("notred.png");
+  			ic_on = ImageLoader.getImageIcon("notgrey.png");
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();

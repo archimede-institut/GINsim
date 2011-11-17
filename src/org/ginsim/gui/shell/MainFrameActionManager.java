@@ -39,7 +39,6 @@ public class MainFrameActionManager implements FrameActionManager {
 		JMenu layoutMenu = new JMenu( "Layout");
 		JMenu actionMenu = new JMenu( "Actions");
 		for (Action action: actions) {
-			System.out.println( "should add action: "+ action);
 			if (action instanceof GsImportAction) {
 				importMenu.add( action);
 			}

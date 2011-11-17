@@ -44,7 +44,9 @@ public class GsJgraphEdgeAttribute extends EdgeAttributesReader {
         this.m_adaptor = adaptor;
         this.g = g;
         this.defaultEdgeAttr = defaultEdgeAttr;
-    	applyDefault(defaultEdgeAttr);
+        if (defaultEdgeAttr != null) {
+        	applyDefault(defaultEdgeAttr);
+        }
         //this.glc = graphmanager.getJgraph().getGraphLayoutCache();
         // routing aren't static: they need knowledge of the graphManager.
     	v_routingRenderer = new Object[NBROUTING];

@@ -16,10 +16,6 @@ import fr.univmrs.tagc.common.Tools;
  */
 public class GsHelpCallBack {
 	
-	static {
-		AboutDialog.setDOAPFile("/fr/univmrs/tagc/GINsim/resources/GINsim-about.rdf");
-	}
-	
 	public static List<Action> getActions() {
 		List<Action> actions = new ArrayList<Action>();
 		actions.add(new HelpAction());

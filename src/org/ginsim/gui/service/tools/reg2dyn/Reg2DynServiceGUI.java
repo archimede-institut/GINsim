@@ -32,9 +32,6 @@ import fr.univmrs.tagc.common.widgets.Frame;
 public class Reg2DynServiceGUI implements GsServiceGUI {
 
     static {
-    	
-    	System.out.println("register reg2dyn object managers");
-    	
     	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( GsRegulatoryGraph.class, GsMutantListManager.key)){
     		ObjectAssociationManager.getInstance().registerObjectManager(GsRegulatoryGraph.class, new GsMutantListManager());
     	}

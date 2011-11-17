@@ -90,6 +90,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
+		// TODO: provide a default for edges
 		return new GsJgraphEdgeAttribute(backend, m_jgAdapter, null);
 	}
 

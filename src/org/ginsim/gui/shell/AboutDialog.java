@@ -23,7 +23,6 @@ import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.widgets.Frame;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
-
 /**
  * "About dialog" for GINsim
  */

@@ -42,13 +42,6 @@ public class EditActionManager {
 	 */
 	public EditActionManager(List<EditAction> actions) {
 		this.actions = actions;
-		if (actions == null) {
-			System.out.println("| No edit actions..");
-		} else {
-			for (EditAction action: actions) {
-				System.out.println("| --> "+action);
-			}
-		}
 	}
 	
 	/**
@@ -182,7 +175,6 @@ class EditActionSelectButton extends JToggleButton {
 	protected EditActionSelectButton(ChangeEditModeAction action) {
 		super(action);
 		this.action = action.action;
-		System.out.println(getBorder());
 	}
 	
 	protected void setSelectedAction(EditAction action, boolean locked) {

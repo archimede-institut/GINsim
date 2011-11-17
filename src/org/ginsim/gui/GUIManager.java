@@ -6,10 +6,12 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
@@ -42,7 +44,19 @@ public class GUIManager {
 		
 		return manager; 
 	}
-	
+
+	/**
+	 * Create a new graph (of the default type, i.e. a regulatory graph)
+	 * and then a new frame for it.
+	 * 
+	 * @return the new regulatory graph
+	 */
+	public GsRegulatoryGraph newFrame() {
+		GsRegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+		newFrame(graph);
+		return graph;
+	}
+
 	/**
 	 * Build a new frame for the given Graph by creating a suitable GraphGUI and memorize their relationship
 	 * 
