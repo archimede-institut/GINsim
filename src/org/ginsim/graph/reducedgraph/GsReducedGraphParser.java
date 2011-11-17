@@ -50,7 +50,7 @@ public class GsReducedGraphParser extends GsXMLHelper {
      */
     public GsReducedGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
-    	this.graph = new GsReducedGraph( true);
+    	this.graph = new ReducedGraphImpl( true);
     	this.map = map;
 		vareader = graph.getVertexAttributeReader();
 		ereader = graph.getEdgeAttributeReader();

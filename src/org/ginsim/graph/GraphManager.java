@@ -28,6 +28,7 @@ import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphIm
 import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
@@ -229,7 +230,7 @@ public class GraphManager {
                 	if (ze == null) {
                 		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + DynamicGraphImpl.GRAPH_ZIP_NAME);
                     	if (ze == null) {
-                    		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsReducedGraph.GRAPH_ZIP_NAME);
+                    		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + ReducedGraphImpl.GRAPH_ZIP_NAME);
                         	if (ze == null) {
                         		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + HierarchicalTransitionGraphImpl.GRAPH_ZIP_NAME);
 	                        	if (ze == null) {

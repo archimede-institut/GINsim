@@ -12,6 +12,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
 
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
@@ -95,7 +96,7 @@ public class AlgoConnectivity extends Thread {
             String sid;
             int id = 0;
             if (mode == MODE_FULL) {
-                reducedGraph = new GsReducedGraph(g);
+                reducedGraph = new ReducedGraphImpl(g);
                 for (Collection<?> set: jcp) {
                     if (set.size() == 1) {
                         sid = null;

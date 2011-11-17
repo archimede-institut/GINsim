@@ -59,7 +59,7 @@ public class ReducedGraphFactory implements GraphFactory {
      */
     public Graph create() {
     	
-    	GsReducedGraph graph = new GsReducedGraph();
+    	GsReducedGraph graph = new ReducedGraphImpl();
         return graph;
     }
     
