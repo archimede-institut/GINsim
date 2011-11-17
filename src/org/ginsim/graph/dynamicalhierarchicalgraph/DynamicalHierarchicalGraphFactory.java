@@ -69,7 +69,7 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory {
      */
 	public Graph create(){
 		
-		return new GsDynamicalHierarchicalGraph();
+		return new DynamicalHierarchicalGraphImpl();
 	}
 
 

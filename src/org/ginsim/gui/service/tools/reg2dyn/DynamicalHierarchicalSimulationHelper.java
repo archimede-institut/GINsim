@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraphImpl;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -21,7 +22,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 	
 	public DynamicalHierarchicalSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		this.regGraph = regGraph;
-		this.dynHieGraph = new GsDynamicalHierarchicalGraph(params.nodeOrder);
+		this.dynHieGraph = new DynamicalHierarchicalGraphImpl(params.nodeOrder);
 //		this.mergingStrategy = (byte) params.hierarchicalStrategies;
 		if (regGraph instanceof GsRegulatoryGraph) {
 			dynHieGraph.setAssociatedGraph(regGraph);

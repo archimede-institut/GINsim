@@ -49,7 +49,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
      */
     public GsDynamicalHierarchicalParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
-    	this.graph = new GsDynamicalHierarchicalGraph( true);
+    	this.graph = new DynamicalHierarchicalGraphImpl( true);
     	this.map = map;
 		vareader = graph.getVertexAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
