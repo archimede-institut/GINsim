@@ -1,7 +1,10 @@
 package org.ginsim.graph.dynamicalhierarchicalgraph;
 
+import java.util.List;
+
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -67,10 +70,32 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory {
      * 
      * @return an instance of the graph type the factory is managing
      */
-	public Graph create(){
+	public GsDynamicalHierarchicalGraph create(){
 		
 		return new DynamicalHierarchicalGraphImpl();
 	}
-
+	
+	
+    /**
+     * Create a new graph of the type factory is managing from a boolean
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+	public GsDynamicalHierarchicalGraph create( boolean bool){
+		
+		return new DynamicalHierarchicalGraphImpl( bool);
+	}
+	
+	
+    /**
+     * Create a new graph of the type factory is managing from a NodeOrder
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+	public  GsDynamicalHierarchicalGraph create(List<GsRegulatoryVertex> nodeOrder){
+		
+		return new DynamicalHierarchicalGraphImpl( nodeOrder);
+	}
+	
 
 }

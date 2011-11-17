@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 
@@ -36,7 +36,7 @@ public class DynamicGraphComparator extends GraphComparator<GsDynamicGraph> {
 	
 	public DynamicGraphComparator( Graph g1, Graph g2) {
 		
-		this(g1, g2, new DynamicGraphImpl());
+		this(g1, g2, GraphManager.getInstance().getNewGraph( GsDynamicGraph.class));
 	}
 
 

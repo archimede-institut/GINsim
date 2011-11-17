@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
@@ -49,7 +50,7 @@ public class GsDynamicalHierarchicalParser extends GsXMLHelper {
      */
     public GsDynamicalHierarchicalParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
-    	this.graph = new DynamicalHierarchicalGraphImpl( true);
+    	this.graph = GraphManager.getInstance().getNewGraph( GsDynamicalHierarchicalGraph.class, true);
     	this.map = map;
 		vareader = graph.getVertexAttributeReader();
 		ereader = graph.getEdgeAttributeReader();

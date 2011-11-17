@@ -3,6 +3,7 @@ package org.ginsim.gui.service.tools.reg2dyn.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
@@ -27,7 +28,7 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		} else {
 			mode = HierarchicalTransitionGraphImpl.MODE_SCC;
 		}
-		this.htg = new HierarchicalTransitionGraphImpl(params.nodeOrder, mode);
+		this.htg = GraphManager.getInstance().getNewGraph( GsHierarchicalTransitionGraph.class, params.nodeOrder, mode);
 		htg.setAssociatedGraph(regGraph);
 		VertexAttributesReader vreader = htg.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);

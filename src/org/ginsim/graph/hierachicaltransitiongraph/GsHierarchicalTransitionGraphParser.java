@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
@@ -53,7 +54,7 @@ public class GsHierarchicalTransitionGraphParser extends GsXMLHelper {
      */
     public GsHierarchicalTransitionGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
-    	this.htg = new HierarchicalTransitionGraphImpl( true);
+    	this.htg = GraphManager.getInstance().getNewGraph( GsHierarchicalTransitionGraph.class, true);
     	this.map = map;
 		vareader = htg.getVertexAttributeReader();
 		ereader = htg.getEdgeAttributeReader();

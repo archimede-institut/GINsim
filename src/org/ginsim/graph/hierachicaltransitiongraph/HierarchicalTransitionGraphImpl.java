@@ -133,14 +133,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractAssociatedGraphFron
 
 /* **************** EDITION OF VERTEX AND EDGE ************/	
 
-//	/**
-//	 * add a vertex to this graph.
-//	 * @param vertex
-//	 */
-	// TODO To remove since it duplicates a method existing on AbstractGraphFrontend
-//	public boolean addVertex(GsHierarchicalNode vertex) {
-//		return graphManager.addVertex(vertex);
-//	}
 	/**
 	 * add an edge between source and target
 	 * @param source a GsHierarchicalNode

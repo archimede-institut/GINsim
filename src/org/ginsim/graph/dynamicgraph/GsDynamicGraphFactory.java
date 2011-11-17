@@ -1,5 +1,7 @@
 package org.ginsim.graph.dynamicgraph;
 
+import java.util.List;
+
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
@@ -66,10 +68,30 @@ public class GsDynamicGraphFactory implements GraphFactory {
      * 
      * @return an instance of the graph type the factory is managing
      */
-	public Graph create(){
+	public GsDynamicGraph create(){
 		
 		return new DynamicGraphImpl();
 	}
+	
+	
+    /**
+     * Create a new graph of the type factory is managing from a boolean
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+	public GsDynamicGraph create( boolean bool){
+		
+		return new DynamicGraphImpl( bool);
+	}
 
+    /**
+     * Create a new graph of the type factory is managing from a boolean
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+	public GsDynamicGraph create(List<?> nodeOrder){
+		
+		return new DynamicGraphImpl( nodeOrder);
+	}
 
 }

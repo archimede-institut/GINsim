@@ -1,7 +1,10 @@
 package org.ginsim.graph.hierachicaltransitiongraph;
 
+import java.util.List;
+
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -66,9 +69,19 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory {
      * 
      * @return an instance of the graph type the factory is managing
      */
-	public Graph create(){
+	public GsHierarchicalTransitionGraph create(){
 		
 		return new HierarchicalTransitionGraphImpl();
+	}
+	
+	public GsHierarchicalTransitionGraph creat( boolean bool){
+		
+		return new HierarchicalTransitionGraphImpl( bool);
+	}
+	
+	public GsHierarchicalTransitionGraph create(List<GsRegulatoryVertex> nodeOrder, int transientCompactionMode){
+		
+		return new HierarchicalTransitionGraphImpl( nodeOrder, transientCompactionMode);
 	}
 
 

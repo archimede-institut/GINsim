@@ -3,6 +3,8 @@ package org.ginsim.graph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -112,6 +114,45 @@ public class GraphManager {
     	}
     	
     	return null;
+    }
+    
+    /**
+     * 
+     * @param graph_class
+     * @param args
+     * @return
+     */
+    public <C extends Graph> C getNewGraph( Class<C> graph_class, Object... args){
+    	
+    	C graph = null;
+    	
+    	GraphFactory factory = graphFactories.get( graph_class);
+    	if( factory != null){
+    		Class[] args_class = new Class[ args.length];
+    		for( int i = 0; i < args.length; i++){
+    			args_class[ i] = args[i].getClass();
+    		}
+    		try{
+    			Method method = factory.getClass().getDeclaredMethod( "create", args_class);
+    			graph = (C) method.invoke( factory, args);
+    			registerGraph( graph);
+    			return graph;
+    		}
+    		catch( NoSuchMethodException nsme){
+    			Debugger.log( "Unable to create graph of class " + graph_class);
+    		}
+    		catch( InvocationTargetException ite){
+    			Debugger.log( "Unable to create graph of class " + graph_class);
+    		}
+    		catch( IllegalAccessException iae){
+    			Debugger.log( "Unable to create graph of class " + graph_class);
+    		}
+    	}
+    	else{
+    		Debugger.log( "No declared factory for graph class " + graph_class);
+    	}
+    	
+    	return graph;
     }
 
     
