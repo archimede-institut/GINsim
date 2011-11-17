@@ -5,14 +5,14 @@ import java.awt.Dimension;
 
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 
 /**
  * this panel display some info about a strong component node:
  * it'll mainly display the list of "real nodes" present in this node
  */
-public class ReducedParameterPanel extends GsParameterPanel{
+public class ReducedParameterPanel extends AbstractParameterPanel{
 
 	private static final long serialVersionUID = 3085972711359179082L;
 	private javax.swing.JScrollPane jScrollPane = null;

@@ -4,14 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 /**
  * basic info on a vertex of the state transition graph (ie state of the system)
  */
-public class GsDynamicItemAttributePanel extends GsParameterPanel {
+public class GsDynamicItemAttributePanel extends AbstractParameterPanel {
 
     private static final long serialVersionUID = 9208992495538557201L;
 	private javax.swing.JScrollPane jScrollPane = null;  //  @jve:visual-info  decl-index=0 visual-constraint="204,-174"

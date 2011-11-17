@@ -28,8 +28,8 @@ import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
@@ -45,7 +45,7 @@ import fr.univmrs.tagc.common.widgets.StockButton;
 /**
  * Panel to edit interaction of a gene
  */
-public class GsInteractionPanel extends GsParameterPanel
+public class GsInteractionPanel extends AbstractParameterPanel
 	implements ObjectPropertyEditorUI {
 
 	private static final long serialVersionUID = 8583991719735516132L;
@@ -193,7 +193,7 @@ public class GsInteractionPanel extends GsParameterPanel
 	}
 
     /**
-     * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedItem(java.lang.Object)
+     * @see org.ginsim.gui.shell.editpanel.AbstractParameterPanel#setEditedItem(java.lang.Object)
      */
     public void setEditedItem(Object obj) {
 			  if (currentVertex != null) {

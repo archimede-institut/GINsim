@@ -36,8 +36,8 @@ import javax.swing.tree.TreePath;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.shell.MainFrame;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeEditor;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsBooleanFunctionTreeRenderer;
@@ -58,7 +58,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.Gs
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.dnd.GsTransferable;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.GsFunctionsCreator;
 
-public class GsLogicalFunctionTreePanel extends GsParameterPanel implements KeyListener, MouseListener, ActionListener, TreeSelectionListener {
+public class GsLogicalFunctionTreePanel extends AbstractParameterPanel implements KeyListener, MouseListener, ActionListener, TreeSelectionListener {
   private static final long serialVersionUID = -8323666225199589729L;
 
   class GsTreeUI extends BasicTreeUI {

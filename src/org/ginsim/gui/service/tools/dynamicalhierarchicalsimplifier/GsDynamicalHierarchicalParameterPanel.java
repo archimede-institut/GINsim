@@ -8,10 +8,10 @@ import javax.swing.JTable;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 
-public class GsDynamicalHierarchicalParameterPanel extends GsParameterPanel {
+public class GsDynamicalHierarchicalParameterPanel extends AbstractParameterPanel {
 	private static final long serialVersionUID = 3342245591953494375L;
 
 	private GsDynamicalHierarchicalNode node;

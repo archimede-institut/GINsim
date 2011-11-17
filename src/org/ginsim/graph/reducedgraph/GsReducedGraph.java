@@ -20,8 +20,8 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.connectivity.ReducedParameterPanel;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -252,11 +252,11 @@ public class GsReducedGraph extends AbstractAssociatedGraphFrontend<GsNodeReduce
     }
 
 
-	public GsParameterPanel getEdgeAttributePanel() {
+	public AbstractParameterPanel getEdgeAttributePanel() {
 		return null;
 	}
 
-	public GsParameterPanel getVertexAttributePanel() {
+	public AbstractParameterPanel getVertexAttributePanel() {
 		if (parameterPanel == null) {
 			parameterPanel = new ReducedParameterPanel(this);
 		}

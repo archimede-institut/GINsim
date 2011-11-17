@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.gui;
+package org.ginsim.gui.shell.editpanel;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -28,13 +29,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.shell.editpanel.EditTab;
-import org.ginsim.gui.shell.editpanel.SelectionType;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -43,10 +42,10 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  * 	line color for edges
  * 	bg/fg color and shape for nodes
  */
-public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab {
+public class GraphicAttributePanel extends AbstractParameterPanel implements EditTab {
 
 	private static final long serialVersionUID = -1041894738941096989L;
-	
+
 	private String nodeShape=null;
 	private Color backgroundColor=null;
 	private Color foregroundColor=null;
@@ -58,7 +57,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	private JButton jBttn_setDefault = null;
 	private JPanel jP_attr = null;
 	private JPanel jP_bttn = null;
-    private JButton jB_appToAll = null;
+	private JButton jB_appToAll = null;
 	private JButton jButton_fgcolor = null;
 	private JButton jButton_linecolor = null;
 	private JTextField jTF_width = null;
@@ -80,28 +79,32 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	private JCheckBox jCB_selectForeground = null;
 	private JCheckBox jCB_selectSize = null;
 
-	private VertexAttributesReader vReader = null;
-	private EdgeAttributesReader eReader = null;
+	private final VertexAttributesReader vReader;
+	private final EdgeAttributesReader eReader;
 
 	private static final int EDGESELECTED = 0;
 	private static final int VERTEXSELECTED = 1;
 	private static final int NOTHINGSELECTED = 2;
 	private int whatIsSelected;
-    private Object selected;
-    private Vector v_selection;
+	private Object selected;
+	private List v_selection;
 
-    private JCheckBox jCB_selectLinewidth;
+	private JCheckBox jCB_selectLinewidth;
 
-    private JCheckBox jCB_selectLinerouting;
+	private JCheckBox jCB_selectLinerouting;
 
-    private JSpinner jSpinner_linewidth;
+	private JSpinner jSpinner_linewidth;
 
 	/**
 	 * This is the default constructor
 	 */
-	public GsGraphicAttributePanel(GraphGUI<?, ?, ?> gui) {
+	public GraphicAttributePanel(GraphGUI<?, ?, ?> gui) {
 		super(gui);
+		Graph graph = gui.getGraph();
+		vReader = graph.getVertexAttributeReader();
+		eReader = graph.getEdgeAttributeReader();
 		initialize();
+		reload();
 	}
 
 	/**
@@ -239,11 +242,11 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 		jComboBox_shape.setEnabled(true);
 	}
 
-    private void sizeEnabled() {
-        jTF_height.setEnabled(true);
-        jTF_width.setEnabled(true);
-        refreshSize();
-    }
+	private void sizeEnabled() {
+		jTF_height.setEnabled(true);
+		jTF_width.setEnabled(true);
+		refreshSize();
+	}
 
 	/**
 	 * Enabled component for background color
@@ -258,13 +261,13 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	/**
 	 * Enabled component for line color
 	 */
-    private void lineColorEnabled() {
-        jButton_linecolor.setBackground(eReader.getLineColor());
-        jButton_linecolor.setEnabled(true);
-    }
-    private void lineWidthEnabled() {
-        jSpinner_linewidth.setValue(new Integer((int)eReader.getLineWidth()));
-    }
+	private void lineColorEnabled() {
+		jButton_linecolor.setBackground(eReader.getLineColor());
+		jButton_linecolor.setEnabled(true);
+	}
+	private void lineWidthEnabled() {
+		jSpinner_linewidth.setValue(new Integer((int)eReader.getLineWidth()));
+	}
 
 	/**
 	 * Enabled component for width and height
@@ -314,9 +317,9 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	private JButton getJBttn_setDefault() {
 		if(jBttn_setDefault == null) {
 			jBttn_setDefault = new JButton(Translator.getString("STR_set_default"));
-            jBttn_setDefault.setSize(100,25);
+			jBttn_setDefault.setSize(100,25);
 			jBttn_setDefault.setName("jBttn_setDefault");
-            jBttn_setDefault.setToolTipText(Translator.getString("STR_set_default_descr"));
+			jBttn_setDefault.setToolTipText(Translator.getString("STR_set_default_descr"));
 			jBttn_setDefault.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					applyDefault();
@@ -355,14 +358,14 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 			jP_bttn = new javax.swing.JPanel();
 			jP_bttn.setLayout(new GridBagLayout());
 
-            GridBagConstraints c_def = new GridBagConstraints();
-            c_def.gridx = 0;
-            c_def.gridy = 0;
-            c_def.fill = GridBagConstraints.HORIZONTAL;
-            GridBagConstraints c_all = new GridBagConstraints();
-            c_all.gridx = 0;
-            c_all.gridy = 1;
-            c_all.fill = GridBagConstraints.HORIZONTAL;
+			GridBagConstraints c_def = new GridBagConstraints();
+			c_def.gridx = 0;
+			c_def.gridy = 0;
+			c_def.fill = GridBagConstraints.HORIZONTAL;
+			GridBagConstraints c_all = new GridBagConstraints();
+			c_all.gridx = 0;
+			c_all.gridy = 1;
+			c_all.fill = GridBagConstraints.HORIZONTAL;
 			jP_bttn.add(getJBttn_setDefault(), c_def);
 			jP_bttn.add(getJB_appToAll(), c_all);
 			jP_bttn.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -370,24 +373,24 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 		return jP_bttn;
 	}
 
-    /**
-     * This method initializes jB_appToAll
-     *
-     * @return javax.swing.JButton
-     */
-    private JButton getJB_appToAll() {
-        if(jB_appToAll == null) {
-            jB_appToAll = new JButton(Translator.getString("STR_apply_to_all"));
-            jB_appToAll.setSize(100, 25);
-            jB_appToAll.setToolTipText(Translator.getString("STR_apply_to_all_descr"));
-            jB_appToAll.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    applyToAll();
-                }
-            });
-        }
-        return jB_appToAll;
-    }
+	/**
+	 * This method initializes jB_appToAll
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getJB_appToAll() {
+		if(jB_appToAll == null) {
+			jB_appToAll = new JButton(Translator.getString("STR_apply_to_all"));
+			jB_appToAll.setSize(100, 25);
+			jB_appToAll.setToolTipText(Translator.getString("STR_apply_to_all_descr"));
+			jB_appToAll.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					applyToAll();
+				}
+			});
+		}
+		return jB_appToAll;
+	}
 
 	/**
 	 * This method initializes jButton_fgcolor
@@ -426,17 +429,17 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 		return jButton_linecolor;
 	}
 
-    private JSpinner getJSpinner_linewidth() {
-        if (jSpinner_linewidth == null) {
-            jSpinner_linewidth = new JSpinner(new SpinnerNumberModel(1,1,50,1));
-            jSpinner_linewidth.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    applyLineWidth();
-                }
-            });
-        }
-        return jSpinner_linewidth;
-    }
+	private JSpinner getJSpinner_linewidth() {
+		if (jSpinner_linewidth == null) {
+			jSpinner_linewidth = new JSpinner(new SpinnerNumberModel(1,1,50,1));
+			jSpinner_linewidth.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent e) {
+					applyLineWidth();
+				}
+			});
+		}
+		return jSpinner_linewidth;
+	}
 
 	/**
 	 * This method initializes jTF_width
@@ -458,9 +461,9 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 						applyWidthHeight();
 					}
 				}
-                public void focusGained(FocusEvent e) {
-                    refreshSize();
-                }
+				public void focusGained(FocusEvent e) {
+					refreshSize();
+				}
 			});
 		}
 		return jTF_width;
@@ -500,9 +503,9 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 						applyWidthHeight();
 					}
 				}
-                public void focusGained(FocusEvent e) {
-                    refreshSize();
-                }
+				public void focusGained(FocusEvent e) {
+					refreshSize();
+				}
 			});
 		}
 		return jTF_height;
@@ -565,8 +568,8 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 		eReader.refresh();
 	}
 
-	
-	
+
+
 	protected void applyLinePattern() {
 		eReader.setDash((String)jCB_linePattern.getSelectedItem());
 		eReader.refresh();
@@ -583,49 +586,49 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 			jP_edge.setName("jP_edge");
 			jP_edge.setLayout(new java.awt.GridBagLayout());
 
-            GridBagConstraints c = new GridBagConstraints();
+			GridBagConstraints c = new GridBagConstraints();
 
-            c.gridx = 0;
-            c.gridy = 0;
-            c.fill = java.awt.GridBagConstraints.BOTH;
-            c.weightx = 0;
-            c.gridheight = 1;
-            jP_edge.add(new JLabel(Translator.getString("STR_line_color")), c);
+			c.gridx = 0;
+			c.gridy = 0;
+			c.fill = java.awt.GridBagConstraints.BOTH;
+			c.weightx = 0;
+			c.gridheight = 1;
+			jP_edge.add(new JLabel(Translator.getString("STR_line_color")), c);
 
-            c.gridx = 1;
-            c.gridy = 0;
-            c.fill = java.awt.GridBagConstraints.BOTH;
-            c.weightx = 0;
-            c.gridheight = 1;
-            jP_edge.add(getJButton_linecolor(), c);
+			c.gridx = 1;
+			c.gridy = 0;
+			c.fill = java.awt.GridBagConstraints.BOTH;
+			c.weightx = 0;
+			c.gridheight = 1;
+			jP_edge.add(getJButton_linecolor(), c);
 
-            c = new GridBagConstraints();
-            c.gridx = 2;
-            c.gridy = 0;
-            jP_edge.add(getJCB_selectLineColor(), c);
+			c = new GridBagConstraints();
+			c.gridx = 2;
+			c.gridy = 0;
+			jP_edge.add(getJCB_selectLineColor(), c);
 
-            c = new GridBagConstraints();
-            c.gridx = 0;
-            c.gridy = 1;
-            c.fill = java.awt.GridBagConstraints.BOTH;
-            c.weightx = 0;
-            c.gridheight = 1;
-            jP_edge.add(new JLabel(Translator.getString("STR_line_width")), c);
-            
-            c = new GridBagConstraints();
-            c.gridx = 1;
-            c.gridy = 1;
-            c.fill = java.awt.GridBagConstraints.BOTH;
-            c.weightx = 0;
-            c.gridheight = 1;
-            jP_edge.add(getJSpinner_linewidth(), c);
-            
-            c = new GridBagConstraints();
-            c.gridx = 2;
-            c.gridy = 1;
-            jP_edge.add(getJCB_selectLinewidth(), c);
+			c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 1;
+			c.fill = java.awt.GridBagConstraints.BOTH;
+			c.weightx = 0;
+			c.gridheight = 1;
+			jP_edge.add(new JLabel(Translator.getString("STR_line_width")), c);
 
-            c = new GridBagConstraints();
+			c = new GridBagConstraints();
+			c.gridx = 1;
+			c.gridy = 1;
+			c.fill = java.awt.GridBagConstraints.BOTH;
+			c.weightx = 0;
+			c.gridheight = 1;
+			jP_edge.add(getJSpinner_linewidth(), c);
+
+			c = new GridBagConstraints();
+			c.gridx = 2;
+			c.gridy = 1;
+			jP_edge.add(getJCB_selectLinewidth(), c);
+
+			c = new GridBagConstraints();
 			c.gridx = 3;
 			c.gridy = 0;
 			c.fill = java.awt.GridBagConstraints.BOTH;
@@ -637,47 +640,47 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 			c.gridy = 0;
 			c.weightx = 0;
 			c.fill = java.awt.GridBagConstraints.BOTH;
-            jP_edge.add(getJCB_edgeRouting(), c);
+			jP_edge.add(getJCB_edgeRouting(), c);
 
 			c = new GridBagConstraints();
-            c.gridx = 5;
-            c.gridy = 0;
-            jP_edge.add(getJCB_selectLinerouting(), c);
+			c.gridx = 5;
+			c.gridy = 0;
+			jP_edge.add(getJCB_selectLinerouting(), c);
 
-            c = new GridBagConstraints();
-            c.fill = java.awt.GridBagConstraints.BOTH;
+			c = new GridBagConstraints();
+			c.fill = java.awt.GridBagConstraints.BOTH;
 			c.weightx = 0;
 			c.gridx = 3;
 			c.gridy = 1;
 			jP_edge.add(new JLabel(Translator.getString("STR_lineStyle")), c);
 
-            c = new GridBagConstraints();
+			c = new GridBagConstraints();
 			c.gridx = 4;
 			c.gridy = 1;
 			c.weightx = 0;
 			c.fill = java.awt.GridBagConstraints.BOTH;
 			jP_edge.add(getJCB_lineStyle(), c);
 
-            c = new GridBagConstraints();
+			c = new GridBagConstraints();
 			c.gridx = 5;
 			c.gridy = 1;
 			jP_edge.add(getJCB_selectLineStyle(), c);
 
-            c = new GridBagConstraints();
+			c = new GridBagConstraints();
 			c.gridx = 3;
 			c.gridy = 2;
 			jP_edge.add(new JLabel(Translator.getString("STR_linePattern")), c);
-            c = new GridBagConstraints();
+			c = new GridBagConstraints();
 			c.gridx = 4;
 			c.gridy = 2;
 			c.weightx = 0;
 			c.fill = java.awt.GridBagConstraints.BOTH;
 			jP_edge.add(getJCB_linePattern(), c);
-            c = new GridBagConstraints();
+			c = new GridBagConstraints();
 			c.gridx = 5;
 			c.gridy = 2;
 			jP_edge.add(getJCB_selectLinePattern(), c);
-}
+		}
 		return jP_edge;
 	}
 	/**
@@ -787,27 +790,27 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 		return jP_empty;
 	}
 
-    private JCheckBox getJCB_selectLineColor() {
-        if (jCB_selectLineColor == null) {
-            jCB_selectLineColor = new JCheckBox();
-            jCB_selectLineColor.setSelected(true);
-        }
-        return jCB_selectLineColor;
-    }
-    private JCheckBox getJCB_selectLinewidth() {
-        if (jCB_selectLinewidth == null) {
-            jCB_selectLinewidth = new JCheckBox();
-            jCB_selectLinewidth.setSelected(true);
-        }
-        return jCB_selectLinewidth;
-    }
-    private JCheckBox getJCB_selectLinerouting() {
-        if (jCB_selectLinerouting == null) {
-            jCB_selectLinerouting = new JCheckBox();
-            jCB_selectLinerouting.setSelected(true);
-        }
-        return jCB_selectLinerouting;
-    }
+	private JCheckBox getJCB_selectLineColor() {
+		if (jCB_selectLineColor == null) {
+			jCB_selectLineColor = new JCheckBox();
+			jCB_selectLineColor.setSelected(true);
+		}
+		return jCB_selectLineColor;
+	}
+	private JCheckBox getJCB_selectLinewidth() {
+		if (jCB_selectLinewidth == null) {
+			jCB_selectLinewidth = new JCheckBox();
+			jCB_selectLinewidth.setSelected(true);
+		}
+		return jCB_selectLinewidth;
+	}
+	private JCheckBox getJCB_selectLinerouting() {
+		if (jCB_selectLinerouting == null) {
+			jCB_selectLinerouting = new JCheckBox();
+			jCB_selectLinerouting.setSelected(true);
+		}
+		return jCB_selectLinerouting;
+	}
 	private JCheckBox getJCB_selectLineStyle() {
 		if (jCB_selectLineStyle == null) {
 			jCB_selectLineStyle = new JCheckBox();
@@ -851,56 +854,6 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 		return jCB_selectSize;
 	}
 
-	@Override
-	public void setEditedItem(Object obj) {
-        allDisabled();
-        if (obj == null) {
-            whatIsSelected = NOTHINGSELECTED;
-            jB_appToAll.setVisible(false);
-            jBttn_setDefault.setVisible(false);
-            return;
-        }
-        if (obj instanceof Vector) {
-            v_selection = (Vector)obj;
-            selected = v_selection.get(0);
-        } else {
-            v_selection = null;
-            selected = obj;
-        }
-		jB_appToAll.setVisible(true);
-		jBttn_setDefault.setVisible(true);
-        if (v_selection != null) {
-            jBttn_setDefault.setVisible(true);
-        }
-		if (selected instanceof Edge) {
-			whatIsSelected = EDGESELECTED;
-			eReader.setEdge(selected);
-			lineColorEnabled();
-			lineStyleEnabled();
-			linePatternEnabled();
-			edgeRoutingEnabled();
-            lineWidthEnabled();
-			cards.show(jP_attr,getJP_edge().getName());
-		} else {
-			whatIsSelected = VERTEXSELECTED;
-			vReader.setVertex(selected);
-			colorEnabled();
-			shapeEnabled();
-            sizeEnabled();
-			widthHeightEnabled();
-			cards.show(jP_attr,getJP_node().getName());
-		}
-	}
-
-	public void setGraph( Graph graph) {
-		if (graph == null) {
-			return;
-		}
-		vReader = graph.getVertexAttributeReader();
-		eReader = graph.getEdgeAttributeReader();
-		reload();
-	}
-	
 	private void reload() {
 		// apply shape list
 		jComboBox_shape.removeAllItems();
@@ -922,7 +875,7 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 		for (int i=0 ; i<v_tmp.size() ; i++) {
 			jCB_lineStyle.addItem(v_tmp.get(i));
 		}
-		
+
 		// apply line pattern list
 		jCB_linePattern.removeAllItems();
 		v_tmp = eReader.getPatternList();
@@ -958,60 +911,60 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	 */
 	protected void applyToAll() {
 		switch(whatIsSelected) {
-			case EDGESELECTED:
-				Collection edges = v_selection;
-                if (v_selection == null) {
-                    edges = graph.getEdges();
-                }
-				for (Object edge: edges) {
-					eReader.setEdge(edge);
-					if (jCB_selectLineColor.isSelected()) {
-						eReader.setLineColor(jButton_linecolor.getBackground());
-					}
-					if (jCB_selectLineStyle.isSelected()) {
-						eReader.setStyle( jCB_lineStyle.getSelectedIndex());
-					}
-					if (jCB_selectLinePattern.isSelected()) {
-						eReader.setDash((String)jCB_linePattern.getSelectedItem());
-					}
-                    if (jCB_selectLinerouting.isSelected()) {
-                        eReader.setRouting(jCB_edgeRouting.getSelectedIndex());
-                    }
-                    if (jCB_selectLinewidth.isSelected()) {
-                        eReader.setLineWidth( ((Integer)jSpinner_linewidth.getValue()).intValue() );
-                    }
-					eReader.refresh();
+		case EDGESELECTED:
+			Collection edges = v_selection;
+			if (v_selection == null) {
+				edges = graph.getEdges();
+			}
+			for (Object edge: edges) {
+				eReader.setEdge(edge);
+				if (jCB_selectLineColor.isSelected()) {
+					eReader.setLineColor(jButton_linecolor.getBackground());
 				}
-                eReader.setEdge(selected);
-				break;
-			case VERTEXSELECTED:
-                refreshSize();
-                Collection<?> vertices = v_selection;
-                if (v_selection == null) {
-                    vertices = graph.getVertices();
-                }
-				for (Object vertex: vertices) {
-					vReader.setVertex(vertex);
-					if (jCB_selectShape.isSelected()) {
-						vReader.setShape(jComboBox_shape.getSelectedIndex());
-					}
-					if (jCB_selectForeground.isSelected()) {
-						vReader.setForegroundColor(jButton_fgcolor.getBackground());
-					}
-					if (jCB_selectBackground.isSelected()) {
-						vReader.setBackgroundColor(jButton_bgcolor.getBackground());
-					}
-                    if (jCB_selectSize.isSelected()) {
-                        try {
-                            int w = Integer.parseInt(jTF_width.getText());
-                            int h = Integer.parseInt(jTF_height.getText());
-                            vReader.setSize(w,h);
-                        } catch (NumberFormatException e) {}
-                    }
-					vReader.refresh();
+				if (jCB_selectLineStyle.isSelected()) {
+					eReader.setStyle( jCB_lineStyle.getSelectedIndex());
 				}
-                vReader.setVertex(selected);
-				break;
+				if (jCB_selectLinePattern.isSelected()) {
+					eReader.setDash((String)jCB_linePattern.getSelectedItem());
+				}
+				if (jCB_selectLinerouting.isSelected()) {
+					eReader.setRouting(jCB_edgeRouting.getSelectedIndex());
+				}
+				if (jCB_selectLinewidth.isSelected()) {
+					eReader.setLineWidth( ((Integer)jSpinner_linewidth.getValue()).intValue() );
+				}
+				eReader.refresh();
+			}
+			eReader.setEdge(selected);
+			break;
+		case VERTEXSELECTED:
+			refreshSize();
+			Collection<?> vertices = v_selection;
+			if (v_selection == null) {
+				vertices = graph.getVertices();
+			}
+			for (Object vertex: vertices) {
+				vReader.setVertex(vertex);
+				if (jCB_selectShape.isSelected()) {
+					vReader.setShape(jComboBox_shape.getSelectedIndex());
+				}
+				if (jCB_selectForeground.isSelected()) {
+					vReader.setForegroundColor(jButton_fgcolor.getBackground());
+				}
+				if (jCB_selectBackground.isSelected()) {
+					vReader.setBackgroundColor(jButton_bgcolor.getBackground());
+				}
+				if (jCB_selectSize.isSelected()) {
+					try {
+						int w = Integer.parseInt(jTF_width.getText());
+						int h = Integer.parseInt(jTF_height.getText());
+						vReader.setSize(w,h);
+					} catch (NumberFormatException e) {}
+				}
+				vReader.refresh();
+			}
+			vReader.setVertex(selected);
+			break;
 		}
 	}
 	/**
@@ -1019,39 +972,39 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	 */
 	protected void applyDefault() {
 		switch(whatIsSelected) {
-			case EDGESELECTED:
-				if (jCB_selectLineColor.isSelected()) {
-					eReader.setDefaultEdgeColor(jButton_linecolor.getBackground());
-				}
-				if (jCB_selectLineStyle.isSelected()) {
-					eReader.setDefaultStyle( jCB_lineStyle.getSelectedIndex());
-				}
-				if (jCB_selectLinePattern.isSelected()) {
-					// TODO: make it work
-				}
-                if (jCB_selectLinewidth.isSelected()) {
-                    eReader.setDefaultEdgeSize(((Integer)jSpinner_linewidth.getValue()).intValue());
-                }
-				break;
-			case VERTEXSELECTED:
-                refreshSize();
-				if (jCB_selectShape.isSelected()) {
-					vReader.setDefaultVertexShape(jComboBox_shape.getSelectedIndex());
-				}
-				if (jCB_selectForeground.isSelected()) {
-					vReader.setDefaultVertexForeground(jButton_fgcolor.getBackground());
-				}
-				if (jCB_selectBackground.isSelected()) {
-					vReader.setDefaultVertexBackground(jButton_bgcolor.getBackground());
-				}
-                if (jCB_selectSize.isSelected()) {
-                    try {
-                        int w = Integer.parseInt(jTF_width.getText());
-                        int h = Integer.parseInt(jTF_height.getText());
-                        vReader.setDefaultVertexSize(w, h);
-                    } catch (NumberFormatException e) {}
-                }
-				break;
+		case EDGESELECTED:
+			if (jCB_selectLineColor.isSelected()) {
+				eReader.setDefaultEdgeColor(jButton_linecolor.getBackground());
+			}
+			if (jCB_selectLineStyle.isSelected()) {
+				eReader.setDefaultStyle( jCB_lineStyle.getSelectedIndex());
+			}
+			if (jCB_selectLinePattern.isSelected()) {
+				// TODO: make it work
+			}
+			if (jCB_selectLinewidth.isSelected()) {
+				eReader.setDefaultEdgeSize(((Integer)jSpinner_linewidth.getValue()).intValue());
+			}
+			break;
+		case VERTEXSELECTED:
+			refreshSize();
+			if (jCB_selectShape.isSelected()) {
+				vReader.setDefaultVertexShape(jComboBox_shape.getSelectedIndex());
+			}
+			if (jCB_selectForeground.isSelected()) {
+				vReader.setDefaultVertexForeground(jButton_fgcolor.getBackground());
+			}
+			if (jCB_selectBackground.isSelected()) {
+				vReader.setDefaultVertexBackground(jButton_bgcolor.getBackground());
+			}
+			if (jCB_selectSize.isSelected()) {
+				try {
+					int w = Integer.parseInt(jTF_width.getText());
+					int h = Integer.parseInt(jTF_height.getText());
+					vReader.setDefaultVertexSize(w, h);
+				} catch (NumberFormatException e) {}
+			}
+			break;
 		}
 	}
 
@@ -1059,13 +1012,13 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 	 * apply with and height
 	 */
 	protected void applyWidthHeight() {
-        try {
-            int w = Integer.parseInt(jTF_width.getText());
-            int h = Integer.parseInt(jTF_height.getText());
-            vReader.setSize(w,h);
-            vReader.refresh();
-        } catch (NumberFormatException e) {}
-        refreshSize();
+		try {
+			int w = Integer.parseInt(jTF_width.getText());
+			int h = Integer.parseInt(jTF_height.getText());
+			vReader.setSize(w,h);
+			vReader.refresh();
+		} catch (NumberFormatException e) {}
+		refreshSize();
 	}
 
 	/**
@@ -1078,21 +1031,21 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 		}
 	}
 
-    protected void applyLineColor() {
-        eReader.setLineColor(jButton_linecolor.getBackground());
-        eReader.refresh();
-    }
+	protected void applyLineColor() {
+		eReader.setLineColor(jButton_linecolor.getBackground());
+		eReader.refresh();
+	}
 
-    protected void applyLineWidth() {
-        int w = ((Integer)jSpinner_linewidth.getValue()).intValue();
-        eReader.setLineWidth(w);
-        eReader.refresh();
-    }
+	protected void applyLineWidth() {
+		int w = ((Integer)jSpinner_linewidth.getValue()).intValue();
+		eReader.setLineWidth(w);
+		eReader.refresh();
+	}
 
-    protected void refreshSize() {
-        jTF_height.setText(""+vReader.getHeight());
-        jTF_width.setText((""+vReader.getWidth()));
-    }
+	protected void refreshSize() {
+		jTF_height.setText(""+vReader.getHeight());
+		jTF_width.setText((""+vReader.getWidth()));
+	}
 
 	@Override
 	public Component getComponent() {
@@ -1106,11 +1059,70 @@ public class GsGraphicAttributePanel extends GsParameterPanel implements EditTab
 
 	@Override
 	public boolean isActive( GraphSelection<?, ?> selection) {
-		if (selection.getSelectionType() == SelectionType.SEL_NONE) {
+		switch (selection.getSelectionType()) {
+		case SEL_NODE:
+			setEditedItem(selection.getSelectedNodes().get(0));
+			return true;
+		case SEL_EDGE:
+			setEditedItem(selection.getSelectedEdges().get(0));
+			return true;
+		case SEL_MULTIPLE:
+			if (selection.getSelectedNodes() != null) {
+				if (selection.getSelectedNodes().size() == 1) {
+					setEditedItem(selection.getSelectedNodes().get(0));
+				} else {
+					setEditedItem(selection.getSelectedNodes());
+				}
+			} else if (selection.getSelectedEdges().size() == 1) {
+				setEditedItem(selection.getSelectedEdges().get(0));
+			} else {
+				setEditedItem(selection.getSelectedEdges());
+			}
+			return true;
+		default:
 			return false;
 		}
-
-		// TODO: follow selection
-		return true;
 	}
+
+	@Override
+	public void setEditedItem(Object obj) {
+		allDisabled();
+		if (obj == null) {
+			whatIsSelected = NOTHINGSELECTED;
+			jB_appToAll.setVisible(false);
+			jBttn_setDefault.setVisible(false);
+			return;
+		}
+		if (obj instanceof List) {
+			v_selection = (List)obj;
+			selected = v_selection.get(0);
+		} else {
+			v_selection = null;
+			selected = obj;
+		}
+		jB_appToAll.setVisible(true);
+		jBttn_setDefault.setVisible(true);
+		if (v_selection != null) {
+			jBttn_setDefault.setVisible(true);
+		}
+		if (selected instanceof Edge) {
+			whatIsSelected = EDGESELECTED;
+			eReader.setEdge(selected);
+			lineColorEnabled();
+			lineStyleEnabled();
+			linePatternEnabled();
+			edgeRoutingEnabled();
+			lineWidthEnabled();
+			cards.show(jP_attr,getJP_edge().getName());
+		} else {
+			whatIsSelected = VERTEXSELECTED;
+			vReader.setVertex(selected);
+			colorEnabled();
+			shapeEnabled();
+			sizeEnabled();
+			widthHeightEnabled();
+			cards.show(jP_attr,getJP_node().getName());
+		}
+	}
+
 }

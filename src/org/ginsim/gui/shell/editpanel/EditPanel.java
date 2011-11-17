@@ -10,7 +10,6 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;
 
-import fr.univmrs.tagc.GINsim.gui.GsGraphicAttributePanel;
 
 /**
  * Tabbed panel which follows the current selection.
@@ -30,7 +29,7 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
 		this.gui = gui;
 		gui.addGraphGUIListener(this);
 		addTab(new MainEditTab(gui));
-		addTab(new GsGraphicAttributePanel(gui));
+		addTab(new GraphicAttributePanel(gui));
 	}
 	
 	/**

@@ -23,8 +23,8 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.GsDynamicalHierarchicalParameterPanel;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -174,11 +174,11 @@ public class GsDynamicalHierarchicalGraph extends AbstractAssociatedGraphFronten
     
     /* edge and vertex panels */
     
-	public GsParameterPanel getEdgeAttributePanel() {
+	public AbstractParameterPanel getEdgeAttributePanel() {
 		return null;
 	}
 
-	public GsParameterPanel getVertexAttributePanel() {
+	public AbstractParameterPanel getVertexAttributePanel() {
 	    if (vertexPanel == null) {
 	        vertexPanel  = new GsDynamicalHierarchicalParameterPanel(this);
 	    }

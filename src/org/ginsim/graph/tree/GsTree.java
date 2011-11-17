@@ -14,8 +14,8 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.regulatorytreefunction.GsTreeActionPanel;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> {
@@ -73,11 +73,11 @@ public class GsTree extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
 
     /* edge and vertex panels */
     
-	public GsParameterPanel getEdgeAttributePanel() {
+	public AbstractParameterPanel getEdgeAttributePanel() {
 		return null;
 	}
 
-	public GsParameterPanel getVertexAttributePanel() {
+	public AbstractParameterPanel getVertexAttributePanel() {
 		return null;
 	}
 	public JPanel getGraphParameterPanel() {

@@ -7,10 +7,10 @@ import javax.swing.JLabel;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.tools.decisionanalysis.GsDecisionOnEdge;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 
-public class GsHierarchicalEdgeParameterPanel  extends GsParameterPanel {
+public class GsHierarchicalEdgeParameterPanel  extends AbstractParameterPanel {
 	private static final long serialVersionUID = 3342245591953494375L;
 
 

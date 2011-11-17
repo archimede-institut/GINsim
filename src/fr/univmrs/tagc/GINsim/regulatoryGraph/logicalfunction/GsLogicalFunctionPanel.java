@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor.GsFunctionEditor;
@@ -21,7 +21,7 @@ import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 
-public class GsLogicalFunctionPanel extends GsParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {
+public class GsLogicalFunctionPanel extends AbstractParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {
 	private static final long serialVersionUID = -87854595177707062L;
 	private GsIncomingEdgeListModel edgeList = null;
 	private GsRegulatoryVertex currentVertex = null;

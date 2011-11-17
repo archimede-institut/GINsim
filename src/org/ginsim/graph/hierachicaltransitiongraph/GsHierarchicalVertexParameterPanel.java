@@ -9,11 +9,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.gui.GsParameterPanel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class GsHierarchicalVertexParameterPanel extends GsParameterPanel {
+public class GsHierarchicalVertexParameterPanel extends AbstractParameterPanel {
 		private static final long serialVersionUID = 3342245591953494375L;
 
 		private GsHierarchicalNode node;
