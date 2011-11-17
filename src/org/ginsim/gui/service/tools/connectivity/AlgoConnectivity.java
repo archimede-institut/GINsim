@@ -7,12 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
-import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
 
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;
@@ -96,7 +96,7 @@ public class AlgoConnectivity extends Thread {
             String sid;
             int id = 0;
             if (mode == MODE_FULL) {
-                reducedGraph = new ReducedGraphImpl(g);
+                reducedGraph = GraphManager.getInstance().getNewGraph( GsReducedGraph.class, g);
                 for (Collection<?> set: jcp) {
                     if (set.size() == 1) {
                         sid = null;

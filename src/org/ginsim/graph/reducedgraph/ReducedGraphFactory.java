@@ -49,19 +49,6 @@ public class ReducedGraphFactory implements GraphFactory {
 		
 		return GsReducedGraph.class;
 	}
-	
-
-
-    /**
-     * Create a new graph of the type factory is managing
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-    public Graph create() {
-    	
-    	GsReducedGraph graph = new ReducedGraphImpl();
-        return graph;
-    }
     
     
 	/**
@@ -73,6 +60,42 @@ public class ReducedGraphFactory implements GraphFactory {
     public Class getParser() {
     	
     	return GsReducedGraphParser.class;
+    }
+    
+    
+    /**
+     * Create a new graph of the type factory is managing
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+    public GsReducedGraph create() {
+    	
+    	GsReducedGraph graph = new ReducedGraphImpl();
+        return graph;
+    }
+    
+    
+
+
+    /**
+     * Create a new graph of the type factory is managing from a boolean
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+    public GsReducedGraph create( boolean bool) {
+    	
+    	return new ReducedGraphImpl( bool);
+    }
+    
+    
+    /**
+     * Create a new graph of the type factory is managing from a graph
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+    public GsReducedGraph create( Graph graph) {
+    	
+    	return new ReducedGraphImpl( graph);
     }
 
 

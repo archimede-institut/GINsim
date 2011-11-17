@@ -10,13 +10,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
-import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.tools.connectivity.AlgoConnectivity;
 
@@ -156,7 +156,8 @@ public class STG2HTG extends AlgoConnectivity {
 	}
 	
 	private void createReducedGraph() {
-        reducedGraph = new ReducedGraphImpl( graph);
+		
+        reducedGraph = GraphManager.getInstance().getNewGraph( GsReducedGraph.class, graph);
         VertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
         int i = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
