@@ -4,6 +4,8 @@ import java.awt.Component;
 
 import javax.swing.JPanel;
 
+import fr.univmrs.tagc.common.gui.dialog.DefaultDialogSize;
+
 abstract public class AbstractStackDialogHandler extends JPanel implements StackDialogHandler {
 
 	protected StackDialog stack;
@@ -23,6 +25,11 @@ abstract public class AbstractStackDialogHandler extends JPanel implements Stack
 
 	@Override
 	public void close() {
+	}
+
+	@Override
+	public DefaultDialogSize getDefaultSize() {
+		return new DefaultDialogSize(getClass().getName(), 400, 400);
 	}
 
 }

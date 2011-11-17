@@ -9,7 +9,7 @@ import org.ginsim.gui.FileSelectionHelper;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.HandledStackDialog;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 
 
@@ -69,9 +69,7 @@ public abstract class GsExportAction<G extends Graph> extends BaseAction {
 		StackDialogHandler handler = getConfigPanel();
 		if (handler != null) {
 			Debugger.log("exports with config panel not yet supported");
-			
-			// handler.setStackDialog(new StackDialog(null, "", 200, 500);
-				
+			new HandledStackDialog(handler);
 		} else {
 			selectFile();
 		}

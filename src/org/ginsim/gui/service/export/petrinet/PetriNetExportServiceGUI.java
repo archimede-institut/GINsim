@@ -12,11 +12,13 @@ import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
 import org.ginsim.service.export.petrinet.PNConfig;
+import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
@@ -28,6 +30,8 @@ import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 /**
  * GUI Action to export a LRG into Petri net
  */
+@ProviderFor(GsServiceGUI.class)
+@StandaloneGUI
 public class PetriNetExportServiceGUI implements GsServiceGUI {
 
 	@Override

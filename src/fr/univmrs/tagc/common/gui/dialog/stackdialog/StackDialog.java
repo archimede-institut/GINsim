@@ -16,6 +16,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.gui.dialog.DefaultDialogSize;
 import fr.univmrs.tagc.common.gui.dialog.SimpleDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -47,6 +48,9 @@ abstract public class StackDialog extends SimpleDialog {
      */
     public StackDialog(Graph<?,?> graph, String id, int w, int h) {
     	this(GUIManager.getInstance().getFrame(graph), id, w, h);
+    }
+    public StackDialog(Frame parent, DefaultDialogSize defaults) {
+    	this(parent, defaults.ID, defaults.width, defaults.height);
     }
     /**
      * @param parent
