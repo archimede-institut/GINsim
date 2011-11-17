@@ -3,6 +3,7 @@ package org.ginsim.gui.service.tools.reg2dyn.helpers;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -22,7 +23,7 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 	protected VertexAttributesReader vreader;
 	
 	public GsSTGSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
-		stateTransitionGraph = new GsDynamicGraph(params.nodeOrder);
+		stateTransitionGraph = new DynamicGraphImpl(params.nodeOrder);
 		stateTransitionGraph.setAssociatedGraph((GsRegulatoryGraph)regGraph);
 		
         vreader = stateTransitionGraph.getVertexAttributeReader();

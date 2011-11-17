@@ -21,6 +21,7 @@ import org.ginsim.graph.common.AbstractGraphFrontend;
 import org.ginsim.graph.common.AssociatedGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
+import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
@@ -102,10 +103,13 @@ public class GraphManager {
     public <C extends Graph> C getNewGraph( Class<C> graph_class){
 
     	GraphFactory factory = graphFactories.get( graph_class);
-    	C graph = (C) factory.create();
-    	registerGraph( graph);
+    	if( factory != null){
+    		C graph = (C) factory.create();
+    		registerGraph( graph);
+    		return graph;
+    	}
     	
-    	return graph;
+    	return null;
     }
 
     
@@ -222,7 +226,7 @@ public class GraphManager {
                 	usePrefix = true;
                 	ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsRegulatoryGraph.GRAPH_ZIP_NAME);
                 	if (ze == null) {
-                		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsDynamicGraph.GRAPH_ZIP_NAME);
+                		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + DynamicGraphImpl.GRAPH_ZIP_NAME);
                     	if (ze == null) {
                     		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsReducedGraph.GRAPH_ZIP_NAME);
                         	if (ze == null) {

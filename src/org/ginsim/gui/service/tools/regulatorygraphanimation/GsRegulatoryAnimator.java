@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
@@ -66,7 +67,7 @@ public class GsRegulatoryAnimator extends AbstractListModel implements GraphGUIL
 			}
     	}
         if (regGraph == null || dynGraph == null) {
-        	new NotificationMessage(dynGraph, "Could not start the animator", NotificationMessage.NOTIFICATION_WARNING);
+        	new NotificationMessage( (NotificationMessageHolder) dynGraph, "Could not start the animator", NotificationMessage.NOTIFICATION_WARNING);
             return;
         }
         // let's start the animator

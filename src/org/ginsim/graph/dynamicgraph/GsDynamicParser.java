@@ -53,7 +53,7 @@ public final class GsDynamicParser extends GsXMLHelper {
      */
     public GsDynamicParser(Map map, Attributes attributes, String s_dtd)throws GsException {
     	
-        this.graph = new GsDynamicGraph( true);
+        this.graph = new DynamicGraphImpl( true);
     	this.map = map;
 		vareader = graph.getVertexAttributeReader();
 		ereader = graph.getEdgeAttributeReader();

@@ -56,6 +56,7 @@ class LocalGraphAction extends GsToolsAction {
 	}
 	
 	protected LocalGraphAction(GsDynamicGraph graph) throws GsException{
+		
 		this( graph.getAssociatedGraph(), graph);
 	}
 	

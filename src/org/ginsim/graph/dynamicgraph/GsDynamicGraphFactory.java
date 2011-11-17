@@ -68,7 +68,7 @@ public class GsDynamicGraphFactory implements GraphFactory {
      */
 	public Graph create(){
 		
-		return new GsDynamicGraph();
+		return new DynamicGraphImpl();
 	}
 
 

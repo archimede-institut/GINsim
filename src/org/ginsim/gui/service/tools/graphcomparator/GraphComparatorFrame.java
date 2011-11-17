@@ -25,6 +25,7 @@ import javax.swing.JTextField;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
@@ -215,7 +216,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		case GRAPH_TYPE_DYNAMIC:
 			List nodeOrder = DynamicGraphComparator.getNodeOrder( (GsDynamicGraph) g1, (GsDynamicGraph) g2);
 			if (nodeOrder != null) {
-				g = new GsDynamicGraph(nodeOrder);
+				g = new DynamicGraphImpl(nodeOrder);
 				if (opt_display_graph) {
 					GUIManager.getInstance().newFrame(g);
 				}
