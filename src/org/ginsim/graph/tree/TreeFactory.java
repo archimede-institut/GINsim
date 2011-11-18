@@ -42,11 +42,6 @@ public class TreeFactory implements GraphFactory<GsTree> {
         return null;
     }
     
-    @Override
-    public GsTree create(Object param) {
-    	Debugger.log("Param ignored when creating a GsTree");
-        return create();
-    }
 
     @Override
     public Class getParser() {

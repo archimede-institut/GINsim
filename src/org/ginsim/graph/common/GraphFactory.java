@@ -37,6 +37,6 @@ public interface GraphFactory<G extends Graph<?,?>> {
      * 
      * @return an instance of the graph type the factory is managing
      */
-	public G create(Object parameter);
+//	public G create(Object parameter);
 
 }

@@ -3,6 +3,7 @@ package org.ginsim.graph.dynamicalhierarchicalgraph;
 import java.util.List;
 
 import org.ginsim.graph.common.GraphFactory;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;
@@ -57,19 +58,16 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory<GsDynamic
 		
 		return new DynamicalHierarchicalGraphImpl();
 	}
-	
-    @Override
-	public GsDynamicalHierarchicalGraph create( Object param){
+    
+
+	public GsDynamicalHierarchicalGraph create( boolean bool){
 		
-    	if (param instanceof Boolean) {
-    		return new DynamicalHierarchicalGraphImpl( (Boolean)param);
-    	}
-    	
-    	if (param instanceof List) {
-    		return new DynamicalHierarchicalGraphImpl( (List)param);
-    	}
-    	
-    	Debugger.log("Unsupported parameter type when creating a STG: " + param);
-    	return create();
+		return new DynamicalHierarchicalGraphImpl( bool);
+	}
+	
+
+	public GsDynamicalHierarchicalGraph create( List<GsRegulatoryVertex> node_order){
+		
+    	return new DynamicalHierarchicalGraphImpl( node_order);
 	}
 }

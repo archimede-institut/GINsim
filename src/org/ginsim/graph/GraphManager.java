@@ -3,6 +3,8 @@ package org.ginsim.graph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -124,51 +126,56 @@ public class GraphManager {
     		Debugger.log( "No declared factory for graph class " + graph_class);
     		return null;
     	}
-
-
-    	if (args.length < 1) {
-    		Debugger.log( "Trying to use variable args without args ?");
-    		graph = getNewGraph(graph_class);
-    	} else if (args.length == 1) {
-    		graph = factory.create(args[0]);
-    	} else {
-    		graph = factory.create(args);
+    	
+    	Method[] methods = factory.getClass().getMethods();
+    	
+    	Method found_method = null;
+    	for( Method method : methods){
+    		if( method.getName().equals( "create")){
+    			Class[] method_params = method.getParameterTypes();
+    			System.out.println("GraphManager.getNewGraph() : --------------------");
+    			if( method_params.length == args.length){
+    				boolean good_method = true;
+    				for( int i = 0; i < method_params.length && good_method; i++){
+    					Class param_class = method_params[i];
+    					System.out.println("GraphManager.getNewGraph() : param class = " + param_class.getName());
+    					System.out.println("GraphManager.getNewGraph() : arg class = " + args[i].getClass());
+    					try{
+	    					if( param_class.isPrimitive()){
+	    						System.out.println("GraphManager.getNewGraph() : primitive");
+	    						param_class.cast( args[i]);
+	    					}
+	    					else{
+	    						System.out.println("GraphManager.getNewGraph() : Object");
+	    						args[i].getClass().asSubclass( param_class);
+	    					}
+    					}
+    					catch( ClassCastException cce){
+    						System.out.println("GraphManager.getNewGraph() : class cast exception");
+    						good_method = false;
+    					}
+    				}
+    				if( good_method){
+    					found_method = method;
+    					break;
+    				}
+    			}
+    		}
     	}
+    	
+    	try{
+    		graph =(C) found_method.invoke( factory, args);
+    	}
+		catch( InvocationTargetException ite){
+			Debugger.log( "ITE -- Unable to create graph of class " + graph_class);
+		}
+		catch( IllegalAccessException iae){
+			Debugger.log( "IAE -- Unable to create graph of class " + graph_class);
+		}
 		
 		registerGraph( graph);
 		return graph;
 
-		// TODO: remove introspection-based version?
-		
-//		Class[] args_class = new Class[ args.length];
-//		for( int i = 0; i < args.length; i++){
-//			args_class[ i] = args[i].getClass();
-//		}
-//		try {
-//			for (Method method: factory.getClass().getMethods()) {
-//				if (method.getName().equals("create")) {
-//					method.invoke(factory, args);
-//				}
-//			}
-//			Method method = factory.getClass().getMethod( "create", args_class);
-//			graph = (C) method.invoke( factory, args);
-//			registerGraph( graph);
-//			return graph;
-//		}
-//		catch( NoSuchMethodException nsme){
-//			for (Class cl: args_class) {
-//				Debugger.log(cl);
-//			}
-//			Debugger.log( "NSME -- Unable to create graph of class " + graph_class);
-//		}
-//		catch( InvocationTargetException ite){
-//			Debugger.log( "ITE -- Unable to create graph of class " + graph_class);
-//		}
-//		catch( IllegalAccessException iae){
-//			Debugger.log( "IAE -- Unable to create graph of class " + graph_class);
-//		}
-//    	
-//    	return graph;
     }
 
     

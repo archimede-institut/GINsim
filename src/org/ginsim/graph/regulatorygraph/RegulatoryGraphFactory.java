@@ -50,13 +50,7 @@ public class RegulatoryGraphFactory implements GraphFactory<GsRegulatoryGraph> {
     	GsRegulatoryGraph graph = new GsRegulatoryGraph();
         return graph;
     }
-    
-	@Override
-    public GsRegulatoryGraph create(Object param) {
-    	
-		Debugger.log("Parameter ignored when creating a RegulatoryGraph");
-        return create();
-    }
+
     
     
 	@Override

@@ -54,19 +54,18 @@ public class ReducedGraphFactory implements GraphFactory<GsReducedGraph> {
         return graph;
     }
     
-    @Override
-    public GsReducedGraph create( Object param) {
+    public GsReducedGraph create( Graph graph){
     	
-    	if (param instanceof Boolean) {    	
-    		return new ReducedGraphImpl( (Boolean)param);
-    	}
-    	
-    	if (param instanceof Graph) {    	
-    		return new ReducedGraphImpl( (Graph)param);
-    	}
-    	
-    	Debugger.log("Unsupported parameter type when creating a Reduced graph: "+param);
-    	return create();
+    	return new ReducedGraphImpl( graph);
     }
+    
+    public GsReducedGraph create( boolean bool){
+    	
+    	System.out.println("ReducedGraphFactory.create() : GOOD WAY");
+    	
+    	return new ReducedGraphImpl( bool);
+    }
+    
+
 
 }

@@ -1,6 +1,11 @@
 package org.ginsim.graph.hierachicaltransitiongraph;
 
+import java.util.List;
+
 import org.ginsim.graph.common.GraphFactory;
+import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
+import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;
@@ -55,21 +60,14 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory<GsHierar
 		return new HierarchicalTransitionGraphImpl();
 	}
 	
-    @Override
-	public GsHierarchicalTransitionGraph create( Object param){
+    
+    
+	public GsHierarchicalTransitionGraph create( boolean bool){
 		
-    	if (param instanceof Boolean) {
-    		return new HierarchicalTransitionGraphImpl( (Boolean)param);
-    	}
-
-    	// FIXME: finish HTG Factory
-//    	if (param instanceof Array) {
-//    		return new HierarchicalTransitionGraphImpl( nodeOrder, transientCompactionMode);
-//    	}
-    	
-    	Debugger.log("HTG factory is not finished, ignoring parameters");
-    	
-    	return create();
+		return new HierarchicalTransitionGraphImpl( bool);
 	}
+	
+
+
 
 }
