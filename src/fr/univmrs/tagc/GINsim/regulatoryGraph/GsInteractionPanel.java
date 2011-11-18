@@ -24,7 +24,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.graph.common.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
@@ -357,7 +357,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
             }
             selectionModel.addSelectionInterval(min, max);
         }
-        ((AbstractGraphFrontend) graph).fireMetaChange();
+        ((AbstractGraph) graph).fireMetaChange();
     }
     /**
      * This method initializes downButton
@@ -407,7 +407,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
             }
             selectionModel.addSelectionInterval(min, max);
         }
-        ((AbstractGraphFrontend) graph).fireMetaChange();
+        ((AbstractGraph) graph).fireMetaChange();
     }
 
 
@@ -468,7 +468,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
                     edgeindex.add(objs[i]);
                 }
 			}
-			((AbstractGraphFrontend) graph).fireMetaChange();
+			((AbstractGraph) graph).fireMetaChange();
             jTable.clearSelection();
 			if (selectedrow>=0) {
                 interactionList.setActivesEdges(selectedrow,edgeindex);
@@ -492,7 +492,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
 		int[] selectedrows = jTable.getSelectedRows();
         if (selectedrows.length != 0) {
     		    interactionList.removeInteractions(selectedrows);
-    		    ((AbstractGraphFrontend) graph).fireMetaChange();
+    		    ((AbstractGraph) graph).fireMetaChange();
         }
 	}
 

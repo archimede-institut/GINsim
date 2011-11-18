@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
-import org.ginsim.graph.common.AssociatedGraph;
+import org.ginsim.graph.common.AbstractDerivedGraph;
+import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -41,7 +41,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /* **************** GETTER AND SETTERS ************/
 /* **************** UNIMPLEMENTED METHODS ************/
 
-public interface GsHierarchicalTransitionGraph extends Graph<GsHierarchicalNode, GsDecisionOnEdge>, AssociatedGraph<GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
+public interface GsHierarchicalTransitionGraph extends Graph<GsHierarchicalNode, GsDecisionOnEdge>, GraphAssociation<GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
 	
 	/**

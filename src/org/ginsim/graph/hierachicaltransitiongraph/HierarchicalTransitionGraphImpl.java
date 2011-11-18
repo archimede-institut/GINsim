@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
+import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -29,7 +29,7 @@ import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class HierarchicalTransitionGraphImpl extends AbstractAssociatedGraphFrontend<GsHierarchicalNode, GsDecisionOnEdge, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>
+public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHierarchicalNode, GsDecisionOnEdge, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>
 	implements GsHierarchicalTransitionGraph{
 
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";

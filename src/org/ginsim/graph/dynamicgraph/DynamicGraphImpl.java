@@ -19,7 +19,7 @@ import javax.swing.JScrollPane;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
+import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.Graph;
@@ -39,7 +39,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public final class DynamicGraphImpl extends AbstractAssociatedGraphFrontend<GsDynamicNode, Edge<GsDynamicNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge> implements GsDynamicGraph{
+public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, Edge<GsDynamicNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge> implements GsDynamicGraph{
 
 
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";

@@ -10,15 +10,15 @@ import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 
-abstract public class AbstractAssociatedGraphFrontend<V, E extends Edge<V>, AG extends Graph<AV, AE>, AV, AE extends Edge<AV>>
-			 extends AbstractGraphFrontend<V,E>
-			 implements AssociatedGraph<AG, AV, AE>, GraphListener<AV,AE> {
+abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Graph<AV, AE>, AV, AE extends Edge<AV>>
+			 extends AbstractGraph<V,E>
+			 implements GraphAssociation<AG, AV, AE>, GraphListener<AV,AE> {
 
     protected AG associatedGraph = null;
     protected String associatedID = null;
 
     
-    public AbstractAssociatedGraphFrontend( boolean parsing) {
+    public AbstractDerivedGraph( boolean parsing) {
     	
     	super( parsing);
     }

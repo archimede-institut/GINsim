@@ -2,7 +2,7 @@ package org.ginsim.graph.common;
 
 import org.ginsim.exception.GsException;
 
-public interface AssociatedGraph<AG extends Graph<AV, AE>, AV, AE extends Edge<AV>> {
+public interface GraphAssociation<AG extends Graph<AV, AE>, AV, AE extends Edge<AV>> {
 
     //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
 	

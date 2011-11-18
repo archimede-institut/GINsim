@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
 
 /**
@@ -13,7 +13,7 @@ import org.ginsim.graph.common.Graph;
  * 
  * @author Aurelien Naldi
  */
-public class TestGraphImpl extends AbstractGraphFrontend<TestVertex, TestEdge> implements TestGraph {
+public class TestGraphImpl extends AbstractGraph<TestVertex, TestEdge> implements TestGraph {
 
 	@Override
 	protected List doMerge(Graph<TestVertex, TestEdge> graph) {

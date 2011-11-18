@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.ginsim.graph.common.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -70,7 +70,7 @@ public class GsLogicalParameter implements XMLize {
 	public void setValue(int i, Graph graph) {
 		if (i != value) {
 			value = i;
-			((AbstractGraphFrontend) graph).fireMetaChange();
+			((AbstractGraph) graph).fireMetaChange();
 		}
 	}
 

@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.AssociatedGraph;
+import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -111,7 +111,7 @@ public class StableTableModel extends AbstractTableModel {
 	public void setResult(List v_stable, Graph graph) throws GsException{
 		this.v_stable = v_stable;
 		fireTableDataChanged();
-		updateMatches( ((AssociatedGraph) graph).getAssociatedGraph());
+		updateMatches( ((GraphAssociation) graph).getAssociatedGraph());
 	}
 	
 	private void updateMatches( Graph graph) {

@@ -27,7 +27,7 @@ import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 
-abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Graph<V, E>, NotificationMessageHolder {
+abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>, NotificationMessageHolder {
 	
 	private final GraphBackend<V,E> graphBackend;
 	private final GraphViewBackend viewBackend;
@@ -55,7 +55,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	/**
 	 * Create a new graph with the default back-end.
 	 */
-	public AbstractGraphFrontend() {
+	public AbstractGraph() {
 		this( false);
 	}
 	
@@ -63,7 +63,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
      *
      * @param parsing
      */
-    public AbstractGraphFrontend( boolean parsing) {
+    public AbstractGraph( boolean parsing) {
         this( new JgraphtBackendImpl<V, E>(), parsing);
     }
 
@@ -72,7 +72,7 @@ abstract public class AbstractGraphFrontend<V, E extends Edge<V>> implements Gra
 	 * Create a new graph with a back-end of choice.
 	 * @param backend
 	 */
-	private AbstractGraphFrontend(GraphBackend<V, E> backend, boolean parsing) {
+	private AbstractGraph(GraphBackend<V, E> backend, boolean parsing) {
 		this.graphBackend = backend;
         this.isParsing = parsing;
 		viewBackend = graphBackend.getGraphViewBackend();

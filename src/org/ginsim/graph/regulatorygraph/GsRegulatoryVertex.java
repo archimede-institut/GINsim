@@ -11,7 +11,7 @@ import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
-import org.ginsim.graph.common.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
 
 import fr.univmrs.tagc.GINsim.data.ToolTipsable;
@@ -83,7 +83,7 @@ public class GsRegulatoryVertex implements ToolTipsable, XMLize {
     public boolean isInput() {
         return isInput;
     }
-    public void setInput(boolean input, AbstractGraphFrontend<?,?> graph) {
+    public void setInput(boolean input, AbstractGraph<?,?> graph) {
         if (input != this.isInput) {
             this.isInput = input;
             graph.fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);

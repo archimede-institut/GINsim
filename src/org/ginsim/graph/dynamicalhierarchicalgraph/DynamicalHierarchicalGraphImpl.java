@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.AbstractAssociatedGraphFrontend;
+import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
@@ -29,7 +29,7 @@ import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public final class DynamicalHierarchicalGraphImpl  extends AbstractAssociatedGraphFrontend<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>
+public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>
 				implements GsDynamicalHierarchicalGraph{
 
 	public static final String GRAPH_ZIP_NAME = "dynamicalHierarchicalGraph.ginml";

@@ -17,7 +17,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
-import org.ginsim.graph.common.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
@@ -36,7 +36,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * The regulatory graph
  */
-public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+public final class GsRegulatoryGraph extends AbstractGraph<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
 	public static final String GRAPH_ZIP_NAME = "regulatoryGraph.ginml";
 	

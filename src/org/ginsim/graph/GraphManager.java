@@ -19,8 +19,8 @@ import java.util.zip.ZipFile;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.AbstractGraphFrontend;
-import org.ginsim.graph.common.AssociatedGraph;
+import org.ginsim.graph.common.AbstractGraph;
+import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
@@ -267,13 +267,13 @@ public class GraphManager {
                 ZipEntry ze = f.getEntry("ginml");
                 if (ze==null) {
                 	usePrefix = true;
-                	ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + GsRegulatoryGraph.GRAPH_ZIP_NAME);
+                	ze = f.getEntry( AbstractGraph.ZIP_PREFIX + GsRegulatoryGraph.GRAPH_ZIP_NAME);
                 	if (ze == null) {
-                		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + DynamicGraphImpl.GRAPH_ZIP_NAME);
+                		ze = f.getEntry( AbstractGraph.ZIP_PREFIX + DynamicGraphImpl.GRAPH_ZIP_NAME);
                     	if (ze == null) {
-                    		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + ReducedGraphImpl.GRAPH_ZIP_NAME);
+                    		ze = f.getEntry( AbstractGraph.ZIP_PREFIX + ReducedGraphImpl.GRAPH_ZIP_NAME);
                         	if (ze == null) {
-                        		ze = f.getEntry( AbstractGraphFrontend.ZIP_PREFIX + HierarchicalTransitionGraphImpl.GRAPH_ZIP_NAME);
+                        		ze = f.getEntry( AbstractGraph.ZIP_PREFIX + HierarchicalTransitionGraphImpl.GRAPH_ZIP_NAME);
 	                        	if (ze == null) {
 	                        		throw new GsException( GsException.GRAVITY_ERROR, "Unable to find a known main zip entry");
 	                        	}
@@ -290,7 +290,7 @@ public class GraphManager {
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
 	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
-	                        ze = f.getEntry((usePrefix ? AbstractGraphFrontend.ZIP_PREFIX:"")+manager.getObjectName());
+	                        ze = f.getEntry((usePrefix ? AbstractGraph.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
 	                            ObjectAssociationManager.getInstance().addObject( graph, manager.getObjectName(), o);
@@ -301,7 +301,7 @@ public class GraphManager {
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
 	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
-	                        ze = f.getEntry((usePrefix ? AbstractGraphFrontend.ZIP_PREFIX:"")+manager.getObjectName());
+	                        ze = f.getEntry((usePrefix ? AbstractGraph.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
 	                            ObjectAssociationManager.getInstance().addObject( graph, manager.getObjectName(), o);
@@ -352,12 +352,12 @@ public class GraphManager {
 		
 		// Remove the references to the graph as associated graph
 		for( Graph other_graph : graphFilepath.keySet()){
-			if( other_graph instanceof AssociatedGraph){
+			if( other_graph instanceof GraphAssociation){
 				try{
-					Graph associated_graph = ((AssociatedGraph) other_graph).getAssociatedGraph();
+					Graph associated_graph = ((GraphAssociation) other_graph).getAssociatedGraph();
 				    if (graph == associated_graph) {
-				    	((AssociatedGraph) other_graph).setAssociatedGraphID( getGraphPath( graph));
-				    	((AssociatedGraph) other_graph).setAssociatedGraph(null);
+				    	((GraphAssociation) other_graph).setAssociatedGraphID( getGraphPath( graph));
+				    	((GraphAssociation) other_graph).setAssociatedGraph(null);
 				    }
 				}
 				catch( GsException ge){

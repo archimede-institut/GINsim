@@ -2,7 +2,7 @@ package org.ginsim.graph.dynamicgraph;
 
 import java.util.List;
 
-import org.ginsim.graph.common.AssociatedGraph;
+import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -13,7 +13,7 @@ import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 /**
  * the dynamic (state transition) graph.
  */
-public interface GsDynamicGraph extends Graph<GsDynamicNode, Edge<GsDynamicNode>>, AssociatedGraph<GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
+public interface GsDynamicGraph extends Graph<GsDynamicNode, Edge<GsDynamicNode>>, GraphAssociation<GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 
 
 	

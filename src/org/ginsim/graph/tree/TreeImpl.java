@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -18,7 +18,7 @@ import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
-public class TreeImpl  extends AbstractGraphFrontend<GsTreeNode, Edge<GsTreeNode>> 
+public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>> 
 	implements GsTree{
 	
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;

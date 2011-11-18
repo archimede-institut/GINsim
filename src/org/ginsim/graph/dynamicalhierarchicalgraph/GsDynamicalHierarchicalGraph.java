@@ -3,7 +3,7 @@ package org.ginsim.graph.dynamicalhierarchicalgraph;
 
 import java.util.List;
 
-import org.ginsim.graph.common.AssociatedGraph;
+import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
@@ -11,7 +11,7 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 
-public interface GsDynamicalHierarchicalGraph extends Graph<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>>, AssociatedGraph<GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
+public interface GsDynamicalHierarchicalGraph extends Graph<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>>, GraphAssociation<GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>{
 	
 	
 	/**

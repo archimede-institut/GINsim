@@ -9,7 +9,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
-import org.ginsim.graph.common.AbstractGraphFrontend;
+import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.graph.GraphGUI;
@@ -103,8 +103,8 @@ public class GUIManager {
 		
 		// find the GUI component and show the graph...
 		GraphGUI<?,?,?> graphGUI = null;
-		if (graph instanceof AbstractGraphFrontend) {
-			GraphBackend<?,?> graph_backend = ((AbstractGraphFrontend<?, ?>)graph).getBackend();
+		if (graph instanceof AbstractGraph) {
+			GraphBackend<?,?> graph_backend = ((AbstractGraph<?, ?>)graph).getBackend();
 			if (graph_backend instanceof JgraphtBackendImpl) {
 				graphGUI = new JgraphGUIImpl(graph, (JgraphtBackendImpl<?,?>) graph_backend, helper);
 			}
