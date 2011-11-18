@@ -1,7 +1,10 @@
 package org.ginsim.gui;
 
 import java.awt.Frame;
+import java.io.File;
 import java.util.Map;
+
+import javax.swing.JFileChooser;
 
 import org.ginsim.graph.common.Graph;
 
@@ -35,7 +38,13 @@ public class FileSelectionHelper {
 		return selectOpenFilename(parent, null);
 	}
 	public static String selectOpenFilename( Frame parent, String extension) {
-		Debugger.log("TODO: open filechooser");
-		return null;
+		// TODO: remember path and so on
+		JFileChooser chooser = new JFileChooser();
+		chooser.showOpenDialog(parent);
+		File f = chooser.getSelectedFile();
+		if (f == null) {
+			return null;
+		}
+		return f.getAbsolutePath();
 	}
 }

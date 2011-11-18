@@ -6,7 +6,7 @@ import fr.univmrs.tagc.common.gui.dialog.DefaultDialogSize;
 
 public interface StackDialogHandler {
 
-	void setStackDialog( StackDialog dialog);
+	void setStackDialog( HandledStackDialog dialog);
 	
 	Component getMainComponent();
 	

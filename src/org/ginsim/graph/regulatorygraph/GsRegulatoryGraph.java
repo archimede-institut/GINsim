@@ -379,7 +379,7 @@ public final class GsRegulatoryGraph extends AbstractGraph<GsRegulatoryVertex, G
         }
         vertex.setMaxValue(max, this);
         if (addVertex(vertex)) {
-        		nodeOrder.add(vertex);
+        	nodeOrder.add(vertex);
         }
         return vertex;
     }

@@ -10,7 +10,10 @@ import javax.swing.JMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
+import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.FrameActionManager;
 
@@ -110,7 +113,16 @@ class OpenAction extends AbstractAction {
 	public void actionPerformed(ActionEvent arg0) {
 		// FIXME: open action
 		System.out.println("TODO: select and open a new graph");
-		GsFileCallBack.addRecentFile("test recent");
+		String path = FileSelectionHelper.selectOpenFilename(null);
+		if (path != null) {
+			try {
+				Graph g = GraphManager.getInstance().open(path);
+				GsFileCallBack.addRecentFile(path);
+				GUIManager.getInstance().newFrame(g);
+			} catch (GsException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
 

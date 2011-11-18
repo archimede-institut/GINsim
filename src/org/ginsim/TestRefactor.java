@@ -1,7 +1,5 @@
 package org.ginsim;
 
-import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.GUIManager;

@@ -8,12 +8,12 @@ import fr.univmrs.tagc.common.gui.dialog.DefaultDialogSize;
 
 abstract public class AbstractStackDialogHandler extends JPanel implements StackDialogHandler {
 
-	protected StackDialog stack;
+	protected HandledStackDialog stack;
 
 	abstract protected void init();
 	
 	@Override
-	public void setStackDialog(StackDialog stack) {
+	public void setStackDialog(HandledStackDialog stack) {
 		this.stack = stack;
 		init();
 	}

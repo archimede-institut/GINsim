@@ -44,6 +44,10 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
 	 * @param backend
 	 */
 	public void setGraphViewBackend(GraphViewBackend backend) {
+		if (viewBackend != null && backend != null) {
+			backend.getVertexAttributeReader().copyFrom(viewBackend.getVertexAttributeReader());
+			backend.getEdgeAttributeReader().copyFrom(viewBackend.getEdgeAttributeReader());
+		}
 		// FIXME: transfer view info from one to the other
 		this.viewBackend = backend;
 	}
