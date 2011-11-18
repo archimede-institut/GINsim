@@ -21,9 +21,7 @@ import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.GsDynamicalHierarchicalParameterPanel;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
-import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -37,8 +35,6 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
 	
 	private byte[] childsCount = null;
-	private GsDynamicalHierarchicalParameterPanel vertexPanel = null;
-	
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 
 	/**
@@ -172,32 +168,6 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 		return s;
 	}
 
-    
-    /* edge and vertex panels */
-    
-	public AbstractParameterPanel getEdgeAttributePanel() {
-		return null;
-	}
-
-	public AbstractParameterPanel getVertexAttributePanel() {
-	    if (vertexPanel == null) {
-	        vertexPanel  = new GsDynamicalHierarchicalParameterPanel(this);
-	    }
-		return vertexPanel;
-	}
-
-
-	
-	/* adding edge and vertex */
-  
-//	/**
-//	 * add a vertex to this graph.
-//	 * @param vertex
-//	 */
-	// TODO to remove since it override an existing method on AbstractGraphFrontend doing the same thing
-//	public boolean addVertex(GsDynamicalHierarchicalNode vertex) {
-//		return graphManager.addVertex(vertex);
-//	}
 	/**
 	 * add an edge between source and target
 	 * @param source

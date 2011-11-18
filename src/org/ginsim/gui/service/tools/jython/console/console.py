@@ -5,24 +5,22 @@ This uses the basic Jython Interactive Interpreter.
 The UI uses code from Carlos Quiroz's 'Jython Interpreter for JEdit' http://www.jedit.org
 """
 
-from javax.swing import JFrame, JScrollPane, JWindow, JTextPane, Action, KeyStroke, WindowConstants
-from javax.swing.text import JTextComponent, TextAction, SimpleAttributeSet, StyleConstants, DefaultEditorKit
-from java.awt import Color, Font, FontMetrics, Point
+from javax.swing import JFrame, JScrollPane, JTextPane, Action, KeyStroke, WindowConstants
+from javax.swing.text import JTextComponent, TextAction, SimpleAttributeSet, StyleConstants
+from java.awt import Color, Font, Point
 from java.awt.event import  InputEvent, KeyEvent, WindowAdapter
 from java.lang import System
+from java.awt import Toolkit
+from java.awt.datatransfer import DataFlavor
 
 import jintrospect
-from jintrospect import debug
 from popup import Popup
 from tip import Tip
 from history import History
 
-import os
 import sys
-import traceback
 from code import InteractiveInterpreter
 from org.python.util import InteractiveConsole
-from exceptions import KeyboardInterrupt
 
 __author__ = "Don Coleman <dcoleman@chariotsolutions.com>"
 
@@ -43,13 +41,12 @@ class Console:
     include_single_underscore_methods = False
     include_double_underscore_methods = False
 
-    def __init__(self, namespace=None, parent=None):
+    def __init__(self, namespace=None):
         """
             Create a Jython Console.
             namespace is an optional and should be a dictionary or Map
         """
         self.history = History(self)
-        self.parent = parent
 
         if namespace != None:
             self.locals = namespace
@@ -161,7 +158,7 @@ class Console:
         else:
             return (caret > limits[0] and caret <= limits[1])
 
-    def enter(self, event):
+    def enter(self, event=None):
         """ Triggered when enter is pressed """
         text = self.getText()
         self.buffer.append(text)
@@ -177,10 +174,7 @@ class Console:
         self.hide()
 
     def quit(self, event=None):
-        try:
-            self.parent.close()
-        except:
-            sys.exit()
+        sys.exit()
 
     def resetbuffer(self):
         self.buffer = []
@@ -244,8 +238,17 @@ class Console:
             self.text_pane.cut()
 
     def paste(self, event=None):
+        # if getText was smarter, this method would be unnecessary
         if self.inLastLine():
-            self.text_pane.paste()
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+            clipboard.getContents(self.text_pane)
+            contents = clipboard.getData(DataFlavor.stringFlavor)
+
+            lines = contents.split("\n")
+            for line in lines:
+                self.insertText(line)
+                if len(lines) > 1:
+                    self.enter()
 
     def keyTyped(self, event):
         #print >> sys.stderr, "keyTyped", event.getKeyCode()
@@ -341,6 +344,9 @@ class Console:
             (KeyEvent.VK_SPACE, InputEvent.CTRL_MASK, "jython.showPopup", self.showPopup),
             (KeyEvent.VK_SPACE, 0, "jython.space", self.spaceTyped),
 
+            # explicitly set paste since we're overriding functionality
+            (KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), "jython.paste", self.paste),
+
             # Mac/Emacs keystrokes
             (KeyEvent.VK_A, InputEvent.CTRL_MASK, "jython.home", self.home),
             (KeyEvent.VK_E, InputEvent.CTRL_MASK, "jython.end", self.end),
@@ -419,7 +425,6 @@ class KillListener(WindowAdapter):
     Thanks to James Richards for this method
     """
     def windowClosed(self, evt):
-        pass
         import java.lang.System as System
         System.exit(0)
         

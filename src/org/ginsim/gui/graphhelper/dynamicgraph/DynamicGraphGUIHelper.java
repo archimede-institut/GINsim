@@ -3,7 +3,6 @@ package org.ginsim.gui.graphhelper.dynamicgraph;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -13,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
@@ -22,6 +20,7 @@ import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.tools.dynamicanalyser.GsDynamicItemAttributePanel;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 import org.mangosdk.spi.ProviderFor;
 
@@ -70,9 +69,11 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
 	
 	@Override
 	public GUIEditor<GsDynamicGraph> getMainEditionPanel(GsDynamicGraph graph) {
-		RegulatoryGraphEditor editor = new RegulatoryGraphEditor();
-		editor.setEditedObject(graph);
-		return editor;
+//		RegulatoryGraphEditor editor = new RegulatoryGraphEditor();
+//		editor.setEditedObject(graph);
+//		return editor;
+		// TODO: rework the main graph panel
+		return null;
 	}
 
 	@Override
@@ -82,15 +83,13 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
 
 	@Override
 	public GUIEditor<GsDynamicNode> getNodeEditionPanel(GsDynamicGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GsDynamicItemAttributePanel(graph);
 	}
 
 	@Override
 	public GUIEditor<Edge<GsDynamicNode>> getEdgeEditionPanel(
 			GsDynamicGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GsDynamicItemAttributePanel(graph);
 	}
 
     /**

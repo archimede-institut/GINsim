@@ -1,9 +1,8 @@
 """Extend introspect.py for Java based Jython classes."""
 
-from org.python.core import PyJavaClass
-from java.lang import Class
+from org.python.core import PyReflectedFunction
+from java.lang import Class, Object
 from java.lang.reflect import Modifier
-from java.util.logging import Logger
 from introspect import *
 from sets import Set
 import string
@@ -70,7 +69,7 @@ def getAutoCompleteList(command='', locals=None, includeMagic=1, includeSingle=1
     if ispython(object):  # use existing code
         attributes = getAttributeNames(object, includeMagic, includeSingle, includeDouble)
     else:
-        if type(object) == PyJavaClass:
+        if inspect.isclass(object):
             attributes = staticMethodNames(object)
             attributes.extend(staticFieldNames(object))
         else:
@@ -93,7 +92,8 @@ def instanceMethodNames(clazz):
                 method_names.add(property_name)                
                                       
     for eachBase in clazz.__bases__:
-        method_names = method_names | instanceMethodNames(eachBase)
+        if not ispython(eachBase):
+            method_names = method_names | instanceMethodNames(eachBase)
 
     return method_names
 
@@ -108,7 +108,11 @@ def staticMethodNames(clazz):
     methods = static_methods.keys()
     
     for eachBase in clazz.__bases__:
-        methods.extend(staticMethodNames(eachBase)) 
+        # with Jython 2.5 type is a base of Object, which puts asName in the list        
+        # will be a problem for real Java objects that extend Python objects
+        # see similar "fixes" in instanceMethodNames and staticFieldNames
+        if not ispython(eachBase):
+            methods.extend(staticMethodNames(eachBase)) 
     
     return methods
     
@@ -123,7 +127,8 @@ def staticFieldNames(clazz):
     fields = static_fields.keys()   
     
     for eachBase in clazz.__bases__:
-         fields.extend(staticFieldNames(eachBase)) 
+        if not ispython(eachBase):
+            fields.extend(staticFieldNames(eachBase)) 
 
     return fields        
 
@@ -169,15 +174,17 @@ def getCallTipJava(command='', locals=None):
             # paramTypes is an array of classes, we need Strings
             # TODO consider list comprehension
             for param in paramTypes:
-                # TODO translate [B to byte[], [C to char[] etc
                 paramList.append(param.__name__)
             paramString = string.join(paramList,', ')
             tip = "%s(%s)" % (constructor.name, paramString)
             tipList.append(tip)
              
-    elif inspect.ismethod(object):
+    elif inspect.ismethod(object) or isinstance(object, PyReflectedFunction):
         method = object
-        object = method.im_class
+        try:
+            object = method.im_class
+        except: # PyReflectedFunction
+            object = method.argslist[0].declaringClass
 
         # java allows overloading so we may have more than one method
         methodArray = object.getMethods()
@@ -196,7 +203,7 @@ def getCallTipJava(command='', locals=None):
                 # do we want to show the method visibility?  how about exceptions?
                 # note: name, return type and exceptions same for EVERY overload method
 
-                tip = "%s(%s) -> %s" % (eachMethod.name, paramString, eachMethod.returnType)                    
+                tip = "%s(%s) -> %s" % (eachMethod.name, paramString, eachMethod.returnType.name)                    
                 tipList.append(tip)
 
     tip_text = beautify(string.join(tipList,"\n"))
@@ -258,7 +265,7 @@ def ispython22(object):
 
     object_type = type(object)
 
-    if object_type.__name__.startswith("java"):
+    if object_type.__name__.startswith("java") or isinstance(object, PyReflectedFunction):
         python = False
 
     elif object_type is types.MethodType:
@@ -274,11 +281,31 @@ def ispython22(object):
 
     return python
 
+def ispython25(object):
+    """
+    Return true if object is Python code.    
+    """
 
-# Looks like the reflection stuff changed from 2.1 to 2.2b1
+    if isinstance(object, Class):
+        python = False
+    elif isinstance(object, Object):
+        python = False
+    elif isinstance(object, PyReflectedFunction):
+        python = False
+    elif type(object) == types.MethodType and not ispython(object.im_class):
+        python = False
+    else:
+        # assume everything else is python
+        python = True       
+    
+    return python
+
 # Dynamically assign the version of ispython
+# To deal with differences between Jython 2.1, 2.2 and 2.5
 if sys.version == '2.1':
     ispython = ispython21
+elif sys.version.startswith('2.5'):
+    ispython = ispython25
 else:
     ispython = ispython22
     

@@ -52,7 +52,23 @@ class JythonAction extends GsToolsAction {
 }
 
 class JythonConsole extends Thread {
+	
+	static final String pypath;
+	
 	static {
+
+		String consolebase = "/" + JythonConsole.class.getPackage().getName().replace('.', '/')+"/console";
+		
+		
+        URL url = Tools.class.getResource(consolebase);
+        
+    	String path = url.getPath();
+    	// if running from a jar, this looks like "file:path/to/file.jar!/fr/..../console"
+    	if (path.startsWith("file:") && path.endsWith(".jar!"+consolebase)) {
+    		path = path.substring(5, path.length() - consolebase.length()-1) + consolebase;
+    	}
+    	pypath = path;
+
         PySystemState.initialize();
 	}
 	
@@ -70,14 +86,7 @@ class JythonConsole extends Thread {
         // you can pass the python.path to java to avoid hardcoding this
         // java -Dpython.path=/path/to/jythonconsole-0.0.6 EmbedExample
         
-        String consolebase = "/fr/univmrs/tagc/GINsim/jython/console";
-        URL url = Tools.class.getResource(consolebase);
-    	String path = url.getPath();
-    	// if running from a jar, this looks like "file:path/to/file.jar!/fr/..../console"
-    	if (path.startsWith("file:") && path.endsWith(".jar!"+consolebase)) {
-    		path = path.substring(5, path.length() - consolebase.length()-1) + consolebase;
-    	}
-    	pyi.exec("sys.path.append(r'"+path + "')");
+    	pyi.exec("sys.path.append(r'"+pypath + "')");
         pyi.exec("from console import Console");
         // stuff some objects into the namespace
         pyi.set("current_graph", graph);
@@ -85,7 +94,7 @@ class JythonConsole extends Thread {
         pyi.set("frame", frame);
         pyi.set("sp", frame.consoleScrollPanel);
 
-        pyi.exec("console = Console(namespace, frame)");
+        pyi.exec("console = Console(namespace)");
         pyi.exec("sp.setViewportView(console.text_pane)");
         
         // namespace cleanups

@@ -12,6 +12,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
+import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.GsDynamicalHierarchicalParameterPanel;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -72,8 +73,7 @@ public class DynamicalHierarchicalGraphGUIHelper implements
 	@Override
 	public GUIEditor<GsDynamicalHierarchicalNode> getNodeEditionPanel(
 			GsDynamicalHierarchicalGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+        return new GsDynamicalHierarchicalParameterPanel(graph);
 	}
 
 	@Override
