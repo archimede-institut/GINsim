@@ -62,31 +62,28 @@ public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<Gs
 
 	@Override
 	public GUIEditor<GsTree> getMainEditionPanel(GsTree graph) {
-		// TODO Auto-generated method stub
+		// TODO update this edition panel
+		// return new GsTreeActionPanel(graph, parser);
 		return null;
 	}
 
 	@Override
 	public String getEditingTabLabel(GsTree graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return "Tree";
 	}
 
 	@Override
 	public GUIEditor<GsTreeNode> getNodeEditionPanel(GsTree graph) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public GUIEditor<Edge<GsTreeNode>> getEdgeEditionPanel(GsTree graph) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public JPanel getInfoPanel(GsTree graph) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -98,7 +95,6 @@ public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<Gs
 
 	@Override
 	public List<EditAction> getEditActions(GsTree graph) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

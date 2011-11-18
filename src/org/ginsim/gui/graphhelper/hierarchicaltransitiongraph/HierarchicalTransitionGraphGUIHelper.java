@@ -5,8 +5,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalEdgeParameterPanel;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalVertexParameterPanel;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
@@ -69,25 +71,22 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<GsHi
 
 	@Override
 	public String getEditingTabLabel(GsHierarchicalTransitionGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return "HTG";
 	}
 
 	@Override
 	public GUIEditor<GsHierarchicalNode> getNodeEditionPanel( GsHierarchicalTransitionGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GsHierarchicalVertexParameterPanel(graph);
 	}
 
 	@Override
 	public GUIEditor<GsDecisionOnEdge> getEdgeEditionPanel( GsHierarchicalTransitionGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GsHierarchicalEdgeParameterPanel(graph);
 	}
 
 	@Override
 	public JPanel getInfoPanel(GsHierarchicalTransitionGraph graph) {
-		// TODO Auto-generated method stub
+		// TODO: info panel for HTG?
 		return null;
 	}
 
