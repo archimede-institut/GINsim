@@ -4,16 +4,18 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 /**
  * descriptor for regulatoryGraph.
  */
 @ProviderFor( GraphFactory.class)
-public class ReducedGraphFactory implements GraphFactory {
+public class ReducedGraphFactory implements GraphFactory<GsReducedGraph> {
 
-    private static GraphFactory instance = null;
+    private static ReducedGraphFactory instance = null;
     
-    public ReducedGraphFactory(){
+    public ReducedGraphFactory() {
     	
     	if( instance == null){
     		instance = this;
@@ -23,84 +25,48 @@ public class ReducedGraphFactory implements GraphFactory {
     /**
      * @return an instance of this graphDescriptor.
      */
-    public static GraphFactory getInstance() {
+    public static ReducedGraphFactory getInstance() {
         if (instance == null) {
             instance = new ReducedGraphFactory();
         }
         return instance;
     }
     
-    /**
-     * Return the type of graph this factory is managing
-     * 
-     * @return the name of the type of graph this factory is managing
-     */
+    @Override
     public String getGraphType() {
-    	
         return "reduced";
     }
     
-    /**
-     * Return the class of graph this factory is managing
-     * 
-     * @return the name of the class of graph this factory is managing
-     */
-	public Class getGraphClass(){
-		
+    @Override
+	public Class<GsReducedGraph> getGraphClass(){
 		return GsReducedGraph.class;
 	}
     
     
-	/**
-	 * Return the class of the parser to use to read from file the type
-	 * of graph the factory manager
-	 * 
-	 * @return the class of the parser to use with this factory
-	 */
+    @Override
     public Class getParser() {
-    	
     	return GsReducedGraphParser.class;
     }
     
-    
-    /**
-     * Create a new graph of the type factory is managing
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
+    @Override
     public GsReducedGraph create() {
-    	
     	GsReducedGraph graph = new ReducedGraphImpl();
         return graph;
     }
     
-    
-
-
-    /**
-     * Create a new graph of the type factory is managing from a boolean
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-    public GsReducedGraph create( boolean bool) {
+    @Override
+    public GsReducedGraph create( Object param) {
     	
-    	return new ReducedGraphImpl( bool);
-    }
-    
-    
-    /**
-     * Create a new graph of the type factory is managing from a graph
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-    public GsReducedGraph create( Graph graph) {
+    	if (param instanceof Boolean) {    	
+    		return new ReducedGraphImpl( (Boolean)param);
+    	}
     	
-    	return new ReducedGraphImpl( graph);
+    	if (param instanceof Graph) {    	
+    		return new ReducedGraphImpl( (Graph)param);
+    	}
+    	
+    	Debugger.log("Unsupported parameter type when creating a Reduced graph: "+param);
+    	return create();
     }
-
-
-
-
-
 
 }

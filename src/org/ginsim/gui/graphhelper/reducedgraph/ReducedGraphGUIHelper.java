@@ -59,8 +59,7 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<GsReducedGraph, GsN
 
 	@Override
 	public String getEditingTabLabel(GsReducedGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return "SCC";
 	}
 
 	@Override

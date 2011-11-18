@@ -2,16 +2,16 @@ package org.ginsim.graph.dynamicalhierarchicalgraph;
 
 import java.util.List;
 
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.mangosdk.spi.ProviderFor;
+
+import fr.univmrs.tagc.common.Debugger;
 
 /**
  * descriptor for dynamic hierarchical graphs.
  */
 @ProviderFor( GraphFactory.class)
-public class DynamicalHierarchicalGraphFactory implements GraphFactory {
+public class DynamicalHierarchicalGraphFactory implements GraphFactory<GsDynamicalHierarchicalGraph> {
 	
     private static DynamicalHierarchicalGraphFactory instance = null;
     
@@ -25,7 +25,7 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory {
 	/**
      * @return an instance of this graphDescriptor.
      */
-    public static GraphFactory getInstance() {
+    public static DynamicalHierarchicalGraphFactory getInstance() {
     	
         if (instance == null) {
             instance = new DynamicalHierarchicalGraphFactory();
@@ -33,69 +33,43 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory {
         return instance;
     }
 
-	
-    /**
-     * Return the class of graph this factory is managing
-     * 
-     * @return the name of the class of graph this factory is managing
-     */
-	public Class getGraphClass(){
+
+    @Override
+	public Class<GsDynamicalHierarchicalGraph> getGraphClass(){
 		
 		return GsDynamicalHierarchicalGraph.class;
 	}
 	
-    /**
-     * Return the type of graph this factory is managing
-     * 
-     * @return the name of the type of graph this factory is managing
-     */
+    @Override
 	public String getGraphType() {
 		
 		return "dynamicalHierarchicalGraph";
 	}
 	
-	/**
-	 * Return the class of the parser to use to read from file the type
-	 * of graph the factory manager
-	 * 
-	 * @return the class of the parser to use with this factory
-	 */
+    @Override
 	public Class getParser(){
 		
 		return GsDynamicalHierarchicalParser.class;
 	}
 	
-    /**
-     * Create a new graph of the type factory is managing
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
+    @Override
 	public GsDynamicalHierarchicalGraph create(){
 		
 		return new DynamicalHierarchicalGraphImpl();
 	}
 	
-	
-    /**
-     * Create a new graph of the type factory is managing from a boolean
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-	public GsDynamicalHierarchicalGraph create( boolean bool){
+    @Override
+	public GsDynamicalHierarchicalGraph create( Object param){
 		
-		return new DynamicalHierarchicalGraphImpl( bool);
+    	if (param instanceof Boolean) {
+    		return new DynamicalHierarchicalGraphImpl( (Boolean)param);
+    	}
+    	
+    	if (param instanceof List) {
+    		return new DynamicalHierarchicalGraphImpl( (List)param);
+    	}
+    	
+    	Debugger.log("Unsupported parameter type when creating a STG: " + param);
+    	return create();
 	}
-	
-	
-    /**
-     * Create a new graph of the type factory is managing from a NodeOrder
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-	public  GsDynamicalHierarchicalGraph create(List<GsRegulatoryVertex> nodeOrder){
-		
-		return new DynamicalHierarchicalGraphImpl( nodeOrder);
-	}
-	
-
 }

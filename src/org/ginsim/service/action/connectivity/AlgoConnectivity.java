@@ -97,7 +97,7 @@ public class AlgoConnectivity extends Thread {
             String sid;
             int id = 0;
             if (mode == MODE_FULL) {
-                reducedGraph = GraphManager.getInstance().getNewGraph( GsReducedGraph.class, g);
+                reducedGraph = GraphManager.getInstance().getNewGraph( GsReducedGraph.class, (Graph)g);
                 for (Collection<?> set: jcp) {
                     if (set.size() == 1) {
                         sid = null;

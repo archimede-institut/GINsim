@@ -3,8 +3,6 @@ package org.ginsim.graph;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,16 +18,13 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.AbstractGraph;
-import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 
@@ -46,7 +41,6 @@ public class GraphManager {
     private HashMap<Class, GraphFactory> graphFactories = new HashMap<Class, GraphFactory>();
     private HashMap<Graph, String> graphFilepath = new HashMap<Graph, String>();
     
-
     private GsFileFilter ffilter;
 
     public String getGraphType() {
@@ -55,7 +49,6 @@ public class GraphManager {
     
     /**
      * The constructor of the manager retrieve the list of available GraphFactory
-     * 
      */
     private GraphManager(){
     	
@@ -126,33 +119,56 @@ public class GraphManager {
     	
     	C graph = null;
     	
-    	GraphFactory factory = graphFactories.get( graph_class);
-    	if( factory != null){
-    		Class[] args_class = new Class[ args.length];
-    		for( int i = 0; i < args.length; i++){
-    			args_class[ i] = args[i].getClass();
-    		}
-    		try{
-    			Method method = factory.getClass().getDeclaredMethod( "create", args_class);
-    			graph = (C) method.invoke( factory, args);
-    			registerGraph( graph);
-    			return graph;
-    		}
-    		catch( NoSuchMethodException nsme){
-    			Debugger.log( "Unable to create graph of class " + graph_class);
-    		}
-    		catch( InvocationTargetException ite){
-    			Debugger.log( "Unable to create graph of class " + graph_class);
-    		}
-    		catch( IllegalAccessException iae){
-    			Debugger.log( "Unable to create graph of class " + graph_class);
-    		}
-    	}
-    	else{
+    	GraphFactory<C> factory = graphFactories.get( graph_class);
+    	if( factory == null) {
     		Debugger.log( "No declared factory for graph class " + graph_class);
+    		return null;
     	}
-    	
-    	return graph;
+
+
+    	if (args.length < 1) {
+    		Debugger.log( "Trying to use variable args without args ?");
+    		graph = getNewGraph(graph_class);
+    	} else if (args.length == 1) {
+    		graph = factory.create(args[0]);
+    	} else {
+    		graph = factory.create(args);
+    	}
+		
+		registerGraph( graph);
+		return graph;
+
+		// TODO: remove introspection-based version?
+		
+//		Class[] args_class = new Class[ args.length];
+//		for( int i = 0; i < args.length; i++){
+//			args_class[ i] = args[i].getClass();
+//		}
+//		try {
+//			for (Method method: factory.getClass().getMethods()) {
+//				if (method.getName().equals("create")) {
+//					method.invoke(factory, args);
+//				}
+//			}
+//			Method method = factory.getClass().getMethod( "create", args_class);
+//			graph = (C) method.invoke( factory, args);
+//			registerGraph( graph);
+//			return graph;
+//		}
+//		catch( NoSuchMethodException nsme){
+//			for (Class cl: args_class) {
+//				Debugger.log(cl);
+//			}
+//			Debugger.log( "NSME -- Unable to create graph of class " + graph_class);
+//		}
+//		catch( InvocationTargetException ite){
+//			Debugger.log( "ITE -- Unable to create graph of class " + graph_class);
+//		}
+//		catch( IllegalAccessException iae){
+//			Debugger.log( "IAE -- Unable to create graph of class " + graph_class);
+//		}
+//    	
+//    	return graph;
     }
 
     

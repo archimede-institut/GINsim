@@ -1,17 +1,15 @@
 package org.ginsim.graph.hierachicaltransitiongraph;
 
-import java.util.List;
-
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.mangosdk.spi.ProviderFor;
+
+import fr.univmrs.tagc.common.Debugger;
 
 /**
  * descriptor for hierarchical transition graphs.
  */
 @ProviderFor( GraphFactory.class)
-public class HierarchicalTransitionGraphFactory implements GraphFactory {
+public class HierarchicalTransitionGraphFactory implements GraphFactory<GsHierarchicalTransitionGraph> {
 	
     private static HierarchicalTransitionGraphFactory instance = null;
     
@@ -25,64 +23,53 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory {
 	/**
      * @return an instance of this graphDescriptor.
      */
-    public static GraphFactory getInstance() {
+    public static HierarchicalTransitionGraphFactory getInstance() {
     	
         if (instance == null) {
             instance = new HierarchicalTransitionGraphFactory();
         }
         return instance;
     }
-    
-    /**
-     * Return the class of graph this factory is managing
-     * 
-     * @return the name of the class of graph this factory is managing
-     */
-	public Class getGraphClass(){
+
+    @Override
+	public Class<GsHierarchicalTransitionGraph> getGraphClass(){
 		
 		return GsHierarchicalTransitionGraph.class;
 	}
 	
-    /**
-     * Return the type of graph this factory is managing
-     * 
-     * @return the name of the type of graph this factory is managing
-     */
+    @Override
 	public String getGraphType() {
 		
 		return "hierarchicalTransitionGraph";
 	}
 	
-	/**
-	 * Return the class of the parser to use to read from file the type
-	 * of graph the factory manager
-	 * 
-	 * @return the class of the parser to use with this factory
-	 */
+    @Override
 	public Class getParser(){
 		
 		return GsHierarchicalTransitionGraphParser.class;
 	}
 	
-    /**
-     * Create a new graph of the type factory is managing
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
+    @Override
 	public GsHierarchicalTransitionGraph create(){
 		
 		return new HierarchicalTransitionGraphImpl();
 	}
 	
-	public GsHierarchicalTransitionGraph creat( boolean bool){
+    @Override
+	public GsHierarchicalTransitionGraph create( Object param){
 		
-		return new HierarchicalTransitionGraphImpl( bool);
-	}
-	
-	public GsHierarchicalTransitionGraph create(List<GsRegulatoryVertex> nodeOrder, int transientCompactionMode){
-		
-		return new HierarchicalTransitionGraphImpl( nodeOrder, transientCompactionMode);
-	}
+    	if (param instanceof Boolean) {
+    		return new HierarchicalTransitionGraphImpl( (Boolean)param);
+    	}
 
+    	// FIXME: finish HTG Factory
+//    	if (param instanceof Array) {
+//    		return new HierarchicalTransitionGraphImpl( nodeOrder, transientCompactionMode);
+//    	}
+    	
+    	Debugger.log("HTG factory is not finished, ignoring parameters");
+    	
+    	return create();
+	}
 
 }

@@ -2,15 +2,16 @@ package org.ginsim.graph.dynamicgraph;
 
 import java.util.List;
 
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
+
+import fr.univmrs.tagc.common.Debugger;
 
 /**
  * descriptor for dynamic (state transition) graphs.
  */
 @ProviderFor( GraphFactory.class)
-public class GsDynamicGraphFactory implements GraphFactory {
+public class GsDynamicGraphFactory implements GraphFactory<GsDynamicGraph> {
 
     private static GsDynamicGraphFactory instance = null;
 	
@@ -24,74 +25,52 @@ public class GsDynamicGraphFactory implements GraphFactory {
     /**
      * @return an instance of this graphDescriptor.
      */
-    public static GraphFactory getInstance() {
+    public static GsDynamicGraphFactory getInstance() {
     	
         if (instance == null) {
             instance = new GsDynamicGraphFactory();
         }
         return instance;
     }
-    
-    /**
-     * Return the class of graph this factory is managing
-     * 
-     * @return the name of the class of graph this factory is managing
-     */
-	public Class getGraphClass(){
+
+    @Override
+	public Class<GsDynamicGraph> getGraphClass(){
 		
 		return GsDynamicGraph.class;
 	}
 	
-    /**
-     * Return the type of graph this factory is managing
-     * 
-     * @return the name of the type of graph this factory is managing
-     */
+    @Override
 	public String getGraphType() {
 		
 		return "dynamic";
 	}
 	
-	/**
-	 * Return the class of the parser to use to read from file the type
-	 * of graph the factory manager
-	 * 
-	 * @return the class of the parser to use with this factory
-	 */
+    @Override
 	public Class getParser(){
 		
 		return GsDynamicParser.class;
 	}
 	
-    /**
-     * Create a new graph of the type factory is managing
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
+    @Override
 	public GsDynamicGraph create(){
 		
 		return new DynamicGraphImpl();
 	}
 	
 	
-    /**
-     * Create a new graph of the type factory is managing from a boolean
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-	public GsDynamicGraph create( boolean bool){
+    @Override
+	public GsDynamicGraph create( Object param){
 		
-		return new DynamicGraphImpl( bool);
-	}
-
-    /**
-     * Create a new graph of the type factory is managing from a boolean
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-	public GsDynamicGraph create(List<?> nodeOrder){
+    	if (param instanceof Boolean) {
+    		return new DynamicGraphImpl( (Boolean)param);
+    	}
 		
-		return new DynamicGraphImpl( nodeOrder);
+    	if (param instanceof List) {
+    		return new DynamicGraphImpl( (List)param);
+    	}
+    	
+    	Debugger.log("Unsupported parameter type when creating a STG: " + param);
+    	return create();
 	}
 
 }

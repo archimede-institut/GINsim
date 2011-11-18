@@ -20,7 +20,6 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.tools.connectivity.ReducedParameterPanel;
-import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -109,10 +108,6 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
     	return false;
     }
 
-
-	/*
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doSave(java.lang.String, int, boolean)
-	 */
     @Override
 	protected void doSave(OutputStreamWriter os, Collection<GsNodeReducedData> vertices, Collection<Edge<GsNodeReducedData>> edges, int mode) throws GsException {
         try {
@@ -204,14 +199,6 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
         }
     }
 	
-//	/**
-//	 * add a vertex to this graph.
-//	 * @param vertex the vertex to add.
-//	 */
-	// TODO remove since it duplicate a method existing on AbstractGraphFrontEnd
-//	public void addVertex(GsNodeReducedData vertex) {
-//		graphManager.addVertex(vertex);
-//	}
 	/**
 	 * add an edge to this graph.
 	 * @param source source vertex of this edge.
@@ -248,6 +235,4 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
         }
         return map;
     }
-
-
 }

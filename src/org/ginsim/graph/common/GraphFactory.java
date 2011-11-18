@@ -1,6 +1,6 @@
 package org.ginsim.graph.common;
 
-public interface GraphFactory {
+public interface GraphFactory<G extends Graph<?,?>> {
 	
 	
     /**
@@ -8,7 +8,7 @@ public interface GraphFactory {
      * 
      * @return the name of the class of graph this factory is managing
      */
-	public Class getGraphClass();
+	public Class<G> getGraphClass();
 	
     /**
      * Return the type of graph this factory is managing
@@ -30,6 +30,13 @@ public interface GraphFactory {
      * 
      * @return an instance of the graph type the factory is managing
      */
-	public Graph create();
+	public G create();
+
+    /**
+     * Create a new graph of the type factory is managing
+     * 
+     * @return an instance of the graph type the factory is managing
+     */
+	public G create(Object parameter);
 
 }

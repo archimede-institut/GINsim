@@ -24,7 +24,7 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 	
 	public GsSTGSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
 		stateTransitionGraph = GraphManager.getInstance().getNewGraph( GsDynamicGraph.class, params.nodeOrder);
-		stateTransitionGraph.setAssociatedGraph((GsRegulatoryGraph)regGraph);
+		stateTransitionGraph.setAssociatedGraph(regGraph);
 		
         vreader = stateTransitionGraph.getVertexAttributeReader();
 	    vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);

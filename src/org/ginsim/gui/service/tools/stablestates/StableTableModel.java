@@ -108,7 +108,7 @@ public class StableTableModel extends AbstractTableModel {
 		updateMatches( graph);
 	}
 	
-	public void setResult(List v_stable, Graph graph) throws GsException{
+	public void setResult(List v_stable, Graph graph) throws GsException {
 		this.v_stable = v_stable;
 		fireTableDataChanged();
 		updateMatches( ((GraphAssociation) graph).getAssociatedGraph());

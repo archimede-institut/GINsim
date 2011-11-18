@@ -1,15 +1,16 @@
 package org.ginsim.graph.regulatorygraph;
 
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
+
+import fr.univmrs.tagc.common.Debugger;
 
 
 /**
  * descriptor for regulatoryGraph.
  */
 @ProviderFor( GraphFactory.class)
-public class RegulatoryGraphFactory implements GraphFactory {
+public class RegulatoryGraphFactory implements GraphFactory<GsRegulatoryGraph> {
 
     private static RegulatoryGraphFactory instance = null;
     
@@ -23,7 +24,7 @@ public class RegulatoryGraphFactory implements GraphFactory {
     /**
      * @return an instance of this graphDescriptor.
      */
-    public static GraphFactory getInstance() {
+    public static RegulatoryGraphFactory getInstance() {
     	
         if (instance == null) {
             instance = new RegulatoryGraphFactory();
@@ -31,46 +32,34 @@ public class RegulatoryGraphFactory implements GraphFactory {
         return instance;
     }
     
-    /**
-     * Return the type of graph this factory is managing
-     * 
-     * @return the name of the type of graph this factory is managing
-     */
+	@Override
     public String getGraphType() {
     	
         return "regulatory";
     }
     
-    /**
-     * Return the class of graph this factory is managing
-     * 
-     * @return the name of the class of graph this factory is managing
-     */
-	public Class getGraphClass(){
+	@Override
+	public Class<GsRegulatoryGraph> getGraphClass(){
 		
 		return GsRegulatoryGraph.class;
 	}
 	
-
-
-    /**
-     * Create a new graph of the type factory is managing
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-    public Graph create() {
+	@Override
+    public GsRegulatoryGraph create() {
     	
     	GsRegulatoryGraph graph = new GsRegulatoryGraph();
         return graph;
     }
     
+	@Override
+    public GsRegulatoryGraph create(Object param) {
+    	
+		Debugger.log("Parameter ignored when creating a RegulatoryGraph");
+        return create();
+    }
     
-	/**
-	 * Return the class of the parser to use to read from file the type
-	 * of graph the factory manager
-	 * 
-	 * @return the class of the parser to use with this factory
-	 */
+    
+	@Override
     public Class getParser() {
     	
     	return GsRegulatoryParser.class;
