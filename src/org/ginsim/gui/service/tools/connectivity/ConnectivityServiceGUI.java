@@ -14,6 +14,7 @@ import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.GsGenericGraphAction;
 import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.connectivity.ConnectivityService;
 import org.mangosdk.spi.ProviderFor;
@@ -72,13 +73,10 @@ class ConnectivityExtractAction extends GsToolsAction {
 }
 
 
-class ConnectivityAction extends GsToolsAction {
-	
-	private final Graph graph;
+class ConnectivityAction extends GsGenericGraphAction {
 	
 	protected ConnectivityAction( Graph graph) {
-        super( "STR_connectivity", null, "STR_connectivity_descr", null);
-		this.graph = graph;
+        super( graph, "STR_connectivity", null, "STR_connectivity_descr", null);
 	}
 	
 	@Override

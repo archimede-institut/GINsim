@@ -1,4 +1,4 @@
-package org.ginsim.gui.service.tools.connectivity;
+package org.ginsim.service.action.connectivity;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +13,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.gui.service.tools.connectivity.ConnectivityFrame;
 
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;

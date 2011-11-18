@@ -27,6 +27,8 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.common.GsExportAction;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
+import org.ginsim.service.GsServiceManager;
+import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -136,7 +138,7 @@ public class GenericDocumentExport extends GsExportAction<GsRegulatoryGraph> {
 
 	private void writeMutants() throws IOException {
 		GsRegulatoryMutants mutantList = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
-		StableStatesService stableSearcher = new StableStatesService(graph, null, null);
+		StableStateSearcher stableSearcher = GsServiceManager.get(StableStatesService.class).getSearcher(graph);
 		OmddNode stable;
 		
 		String[] cols;
@@ -168,8 +170,8 @@ public class GenericDocumentExport extends GsExportAction<GsRegulatoryGraph> {
 				i<0 ? null : (GsRegulatoryMutantDef)mutantList.getElement(null, i);
 			
 			if (config.searchStableStates) {
-				stableSearcher.setMutant(mutant);
-				stable = stableSearcher.getStable();
+				stableSearcher.setPerturbation(mutant);
+				stable = stableSearcher.getStables();
 				model.setResult(stable, graph);
 			}
 			int nbrow;

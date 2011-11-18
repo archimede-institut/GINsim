@@ -83,9 +83,18 @@ public class GsServiceManager{
 	 * @param service_class
 	 * @return
 	 */
-	public GsService getService( Class<GsService> service_class){
+	public <S extends GsService> S getService( Class<S> service_class){
 		
-		return services.get( service_class);
+		return (S)services.get( service_class);
 	}
-	
+
+	/**
+	 * Get a service directly, i.e. shortcut for getManager().getService( service_class)
+	 * 
+	 * @param service_class
+	 * @return
+	 */
+	public static <S extends GsService> S get( Class<S> service_class) {
+		return getManager().getService( service_class);
+	}
 }

@@ -15,6 +15,7 @@ import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.reducedgraph.GsNodeReducedData;
 import org.ginsim.graph.reducedgraph.GsReducedGraph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.service.action.connectivity.AlgoConnectivity;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.GINsim.css.VertexStyle;

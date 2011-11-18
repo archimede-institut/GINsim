@@ -20,6 +20,8 @@ import javax.swing.event.ListSelectionListener;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
+import org.ginsim.service.GsServiceManager;
+import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -224,7 +226,7 @@ class StableState extends TabComponantProvidingAState {
 	private GsRegulatoryGraph g;
 	private JButton computeStableStateButton;
 	
-	private StableStatesService sss;
+	private StableStateSearcher sss;
 
 	private StableTableModel tableModel;
 
@@ -282,8 +284,9 @@ class StableState extends TabComponantProvidingAState {
 	}
 
 	protected void run() {
-		sss = new StableStatesService(g, g.getNodeOrder(), (GsRegulatoryMutantDef) mutantStore.getObject(0));
-		OmddNode stable = sss.getStable();
+		sss = GsServiceManager.get(StableStatesService.class).getSearcher(g);
+		sss.setPerturbation((GsRegulatoryMutantDef) mutantStore.getObject(0));
+		OmddNode stable = sss.getStables();
 		tableModel.setResult(stable, g);
 	}
 

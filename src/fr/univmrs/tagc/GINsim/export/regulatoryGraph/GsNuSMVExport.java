@@ -19,6 +19,8 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
 import org.ginsim.gui.service.common.GsExportAction;
 import org.ginsim.gui.service.tools.reg2dyn.GsReg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
+import org.ginsim.service.GsServiceManager;
+import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -40,6 +42,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  * variable(s).
  * </p>
  * 
+ * TODO: depends on StableStateService
  */
 public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 
@@ -557,9 +560,10 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 						.getTreeParameters(sortedVars).reduce();
 			}
 
-			StableStatesService sss = new StableStatesService(graph,
-					sortedVars, (GsRegulatoryMutantDef) mutant, tReordered);
-			OmddNode omdds = sss.getStable();
+			StableStateSearcher sss = GsServiceManager.getManager().getService(StableStatesService.class).getSearcher(graph);
+			sss.setNodeOrder(sortedVars, tReordered);
+			sss.setPerturbation(mutant);
+			OmddNode omdds = sss.getStables();
 			int[] stateValues = new int[sortedVars.size()];
 			for (int i = 0; i < stateValues.length; i++)
 				stateValues[i] = -1;

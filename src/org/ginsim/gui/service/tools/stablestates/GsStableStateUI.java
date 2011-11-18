@@ -9,6 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.service.GsServiceManager;
+import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -23,6 +25,7 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	private static final long serialVersionUID = -3605525202652679586L;
 	
 	GsRegulatoryGraph graph;
+	StableStateSearcher algo;
 	StableTableModel tableModel;
 	ObjectStore mutantstore = new ObjectStore();
 	MutantSelectionPanel mutantPanel;
@@ -31,6 +34,8 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	public GsStableStateUI(GsRegulatoryGraph graph) {
 		super(graph, "display.stableStates", 200, 100);
 		this.graph = graph;
+		this.algo = GsServiceManager.get(StableStatesService.class).getSearcher(graph);
+
 		setTitle(Translator.getString("STR_stableStates"));
 
 		Container panel = new JPanel();
@@ -70,10 +75,8 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 		setRunning(true);
 		// Pedro: I changed both this file and StableStatesService.java to separate
 		// GUI/Service and use Service on NuSMVExport. Also removed Thread from GsSearchSS.
-		StableStatesService sss = new StableStatesService(graph,
-				graph.getNodeOrder(),
-				(GsRegulatoryMutantDef)mutantstore.getObject(0));
-		setResult(sss.getStable());
+		algo.setPerturbation((GsRegulatoryMutantDef)mutantstore.getObject(0));
+		setResult(algo.getStables());
 	}
 	
 	public void setResult(OmddNode stable) {

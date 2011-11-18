@@ -11,6 +11,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsServiceGUIManager;
+import org.ginsim.gui.service.common.GsGenericGraphAction;
 import org.ginsim.gui.service.common.GsExportAction;
 import org.ginsim.gui.service.common.GsImportAction;
 import org.ginsim.gui.service.common.GsLayoutAction;
@@ -37,7 +38,8 @@ public class MainFrameActionManager implements FrameActionManager {
 		JMenu importMenu = new JMenu( "Import");
 		JMenu exportMenu = new JMenu( "Export");
 		JMenu layoutMenu = new JMenu( "Layout");
-		JMenu actionMenu = new JMenu( "Actions");
+		JMenu graphMenu = new JMenu( "Graph");
+		JMenu toolsMenu = new JMenu( "Tools");
 		for (Action action: actions) {
 			if (action instanceof GsImportAction) {
 				importMenu.add( action);
@@ -48,8 +50,11 @@ public class MainFrameActionManager implements FrameActionManager {
 			else if (action instanceof GsLayoutAction) {
 				layoutMenu.add( action);
 			}
+			else if (action instanceof GsGenericGraphAction) {
+				graphMenu.add( action);
+			}
 			else {
-				actionMenu.add( action);
+				toolsMenu.add( action);
 			}
 		}
 
@@ -64,11 +69,16 @@ public class MainFrameActionManager implements FrameActionManager {
 		
 		JMenu menu = new JMenu( "Edit");
 		// TODO: edit menu
-		menubar.add( menu);
+		// menubar.add( menu);
 		
 		menubar.add( gui.getViewMenu( layoutMenu));
 		
-		menubar.add( actionMenu);
+		if (graphMenu.getItemCount() > 0) {
+			menubar.add( graphMenu);
+		}
+		if (toolsMenu.getItemCount() > 0) {
+			menubar.add( toolsMenu);
+		}
 		
 		menu = new JMenu("Help");
 		fillMenu(menu, GsHelpCallBack.getActions());
