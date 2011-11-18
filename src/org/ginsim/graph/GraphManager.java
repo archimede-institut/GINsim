@@ -266,6 +266,23 @@ public class GraphManager {
     
 
     /**
+     * Retrieve the Graph stored in the file at the given file path
+     * 
+     * @param file_path the file path of the graph file
+     * @return the Graph stored in the file at the given file path
+     * @throws GsException
+     */
+    public Graph open( String file_path) throws GsException{
+    	
+    	File file = new File( file_path);
+    	if( !file.exists() || !file.isFile()){
+    		throw new GsException( GsException.GRAVITY_ERROR, "No file on path " + file_path);
+    	}
+    	
+    	return open(null, file);
+    }
+    
+    /**
      * 
      * @param file the File containing the graph to open
      * @return a graph of the correct type read from the given file
