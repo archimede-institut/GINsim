@@ -15,7 +15,7 @@ import fr.univmrs.tagc.common.TestTools;
 
 public class TestGenericDocumentExport extends TestCase {
 	GsRegulatoryGraph graph;
-	File tmpDir = TestTools.getTestDir(); //FIXME: replace TestTools.getTtestDir() by tmpDir
+	File tmpDir = TestTools.getTestDir(); //TODO: replace TestTools.getTtestDir() by tmpDir
 	
 	public TestGenericDocumentExport() throws FileNotFoundException {
 		File file = new File(TestTools.getTestDir(), "graph.ginml");
@@ -26,7 +26,7 @@ public class TestGenericDocumentExport extends TestCase {
 		GenericDocumentExport export =  new GenericDocumentExport(graph);
 		String filename = tmpDir.getAbsolutePath()+File.separator+"tmp/graph.html";
 		
-		// FIXME: extract a separate service for the export, then use it
+		// TODO: extract a separate service for the export, then use it
 		fail("TODO: finish document export test");
 		// export.doExport(filename);
 	}

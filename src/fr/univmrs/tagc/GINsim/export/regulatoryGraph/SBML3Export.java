@@ -66,7 +66,6 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
 	@Override
 	public StackDialogHandler getConfigPanel( ) {
 		config = new SBML3Config();
-		// FIXME: this panel requires the StackDialog, which will only be created after the panel is returned...
 		return new SBML3ExportConfigPanel( graph, config);				
 	}
     

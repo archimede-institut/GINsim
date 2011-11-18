@@ -35,7 +35,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private GsDynamicalHierarchicalNode dhnode;
 	private GsDynamicalHierarchicalNodeSet nodeSet;
 	
-	private final byte debug = -1; //FIXME : set debug to -1 for deployment
+	private final byte debug = -1; // -1 for deployment
 	private PrintStream debug_o = System.err;
 	private int totalNode = 0;
 	private GsDynamicalHierarchicalGraph dynGraph;

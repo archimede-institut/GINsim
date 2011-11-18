@@ -290,7 +290,7 @@ public class SVGExportService implements GsService{
             } else if (px < minx) {
                 resultx = minx - offset;
             } else {
-                resultx = px;   // FIXME: slip by a few pixels ?
+                resultx = px;
             }
     
             if (py > maxy) {
@@ -298,7 +298,7 @@ public class SVGExportService implements GsService{
             } else if (py < miny) {
                 resulty = miny - offset;
             } else {
-                resulty = py;  // FIXME: slip by a few pixels ?
+                resulty = py;
             }
         }
         Point r = new Point((int)resultx, (int)resulty);

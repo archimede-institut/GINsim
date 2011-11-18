@@ -43,7 +43,7 @@ public class HTGSimulation extends Simulation {
 	private static final int DBG_DOT = 64; 
 	private static final int DBG_ALL = DBG_MAINLOOPS | DBG_POSTTREATMENT | DBG_APPARTENANCETESTS | DBG_QUEUE | DBG_SIGMA | DBG_MERGE; 
 	
-	private static final byte debug = DBG_DEPLOYMENT; //Work as a mask, use val | val | val .... //FIXME : set to DBG_DEPLOYMENT before deploying
+	private static final byte debug = DBG_DEPLOYMENT; //Work as a mask, use val | val | val ....
 	private PrintStream debug_o = System.err;
 	private StringBuffer log_tabdepth = new StringBuffer();
 	

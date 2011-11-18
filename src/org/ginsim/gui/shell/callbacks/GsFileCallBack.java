@@ -16,6 +16,8 @@ import org.ginsim.graph.testGraph.TestGraphImpl;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.FrameActionManager;
 
+import fr.univmrs.tagc.common.Debugger;
+
 /**
  * Callbacks for the "File" menu
  */
@@ -91,14 +93,11 @@ class NewAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// FIXME: change the default graph type
-		TestGraph lrg = new TestGraphImpl();
 		try {
-			GUIManager.getInstance().newFrame( lrg);
+			GUIManager.getInstance().newFrame();
 		} catch (Exception e) {
-			System.err.println("error creating the new frame");
+			Debugger.log("error creating the new frame");
 		}
-		System.out.println("TODO: change new graph type");
 	}
 }
 

@@ -74,7 +74,6 @@ public class GenericDocumentExport extends GsExportAction<GsRegulatoryGraph> {
 
 	public StackDialogHandler getConfigPanel() {
 		config = new DocumentExportConfig();
-		// FIXME: this panel want to have access to the StackDialog
 		return new GDExportConfigPanel( graph, config);
 	}
 

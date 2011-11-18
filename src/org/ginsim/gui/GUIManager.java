@@ -195,7 +195,6 @@ public class GUIManager {
 	 * try to close all frames
 	 */
 	public void quit( ){
-		// FIXME: quit action
 		int nbobjects = graphToGUIObject.size();
 		for (Graph g: graphToGUIObject.keySet()) {
 			if (!close(g)) {

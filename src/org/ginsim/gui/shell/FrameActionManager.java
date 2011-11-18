@@ -8,9 +8,7 @@ import javax.swing.JToolBar;
 import org.ginsim.gui.graph.GraphGUI;
 
 /**
- * Tentative replacement API for GsAction.
- * 
- * FIXME: plan/implement/polish FrameActionManager
+ * Manager for the list of actions available in a GUI.
  * 
  * @author Aurelien Naldi
  */
