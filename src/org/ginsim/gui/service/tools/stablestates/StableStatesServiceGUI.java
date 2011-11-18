@@ -16,6 +16,7 @@ import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.stablestates.StableStatesService;
 import org.mangosdk.spi.ProviderFor;
 
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.HandledStackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -55,8 +56,7 @@ class StableStatesAction extends GsToolsAction {
     		return;
     	}
 
-    	GsStableStateUI ui = new GsStableStateUI( graph);
-    	ui.setVisible(true);
+    	new HandledStackDialog( new GsStableStateUI( graph));
 	}
 	
 }

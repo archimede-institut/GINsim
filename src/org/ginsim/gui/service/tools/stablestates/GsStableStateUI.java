@@ -1,6 +1,5 @@
 package org.ginsim.gui.service.tools.stablestates;
 
-import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -17,11 +16,11 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
+import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
-public class GsStableStateUI extends StackDialog implements GenericStableStateUI {
+public class GsStableStateUI extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = -3605525202652679586L;
 	
 	GsRegulatoryGraph graph;
@@ -32,26 +31,31 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
 	JPanel buttonPanel;
 	
 	public GsStableStateUI(GsRegulatoryGraph graph) {
-		super(graph, "display.stableStates", 200, 100);
+		
+		// super(graph, "display.stableStates", 200, 100);
 		this.graph = graph;
 		this.algo = GsServiceManager.get(StableStatesService.class).getSearcher(graph);
 
-		setTitle(Translator.getString("STR_stableStates"));
+	}
+	
+	@Override
+	protected void init() {
 
-		Container panel = new JPanel();
-		panel.setLayout(new GridBagLayout());
+		stack.setTitle(Translator.getString("STR_stableStates"));
+
+		setLayout(new GridBagLayout());
 		
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 0;
-		panel.add(new JLabel(Translator.getString("STR_stableStates_title")), c);
+		add(new JLabel(Translator.getString("STR_stableStates_title")), c);
 		c = new GridBagConstraints();
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
-		panel.add(mutantPanel, c);
+		mutantPanel = new MutantSelectionPanel( stack, graph, mutantstore);
+		add(mutantPanel, c);
 
 		c = new GridBagConstraints();
 		c.gridx = 0;
@@ -66,26 +70,16 @@ public class GsStableStateUI extends StackDialog implements GenericStableStateUI
         tableResult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         tableResult.getTableHeader().setReorderingAllowed(false);
 		sp.setViewportView(tableResult);
-		panel.add(sp, c);
-		
-		setMainPanel(panel);
+		add(sp, c);
 	}
 	
-	protected void run() {
-		setRunning(true);
-		// Pedro: I changed both this file and StableStatesService.java to separate
-		// GUI/Service and use Service on NuSMVExport. Also removed Thread from GsSearchSS.
+	public void run() {
 		algo.setPerturbation((GsRegulatoryMutantDef)mutantstore.getObject(0));
 		setResult(algo.getStables());
 	}
 	
 	public void setResult(OmddNode stable) {
 		tableModel.setResult(stable, graph);
-		setRunning(false);
 	}
 	
-	public void doClose() {
-		setVisible(false);
-		dispose();
-	}
 }
