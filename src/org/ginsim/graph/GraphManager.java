@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -133,26 +134,23 @@ public class GraphManager {
     	for( Method method : methods){
     		if( method.getName().equals( "create")){
     			Class[] method_params = method.getParameterTypes();
-    			System.out.println("GraphManager.getNewGraph() : --------------------");
     			if( method_params.length == args.length){
     				boolean good_method = true;
     				for( int i = 0; i < method_params.length && good_method; i++){
     					Class param_class = method_params[i];
-    					System.out.println("GraphManager.getNewGraph() : param class = " + param_class.getName());
-    					System.out.println("GraphManager.getNewGraph() : arg class = " + args[i].getClass());
-    					try{
-	    					if( param_class.isPrimitive()){
-	    						System.out.println("GraphManager.getNewGraph() : primitive");
-	    						param_class.cast( args[i]);
-	    					}
-	    					else{
-	    						System.out.println("GraphManager.getNewGraph() : Object");
-	    						args[i].getClass().asSubclass( param_class);
-	    					}
+    					if( param_class.isPrimitive()){
+    						String arg_class_name = args[i].getClass().getName();
+    						if( !arg_class_name.substring( arg_class_name.lastIndexOf( ".")+1).toLowerCase().startsWith( param_class.getName().toLowerCase())){
+    							good_method = false;
+    						}
     					}
-    					catch( ClassCastException cce){
-    						System.out.println("GraphManager.getNewGraph() : class cast exception");
-    						good_method = false;
+    					else{
+        					try{
+	    						param_class.cast( args[i]);
+        					}
+        					catch( ClassCastException cce){
+        						good_method = false;
+        					}
     					}
     				}
     				if( good_method){
@@ -163,19 +161,21 @@ public class GraphManager {
     		}
     	}
     	
-    	try{
-    		graph =(C) found_method.invoke( factory, args);
+    	if( found_method != null){
+	    	try{
+	    		graph =(C) found_method.invoke( factory, args);
+	    	}
+			catch( InvocationTargetException ite){
+				Debugger.log( "ITE -- Unable to create graph of class " + graph_class);
+			}
+			catch( IllegalAccessException iae){
+				Debugger.log( "IAE -- Unable to create graph of class " + graph_class);
+			}
+			
+			registerGraph( graph);
     	}
-		catch( InvocationTargetException ite){
-			Debugger.log( "ITE -- Unable to create graph of class " + graph_class);
-		}
-		catch( IllegalAccessException iae){
-			Debugger.log( "IAE -- Unable to create graph of class " + graph_class);
-		}
-		
-		registerGraph( graph);
+    	
 		return graph;
-
     }
 
     

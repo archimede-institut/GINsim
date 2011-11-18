@@ -54,16 +54,16 @@ public class ReducedGraphFactory implements GraphFactory<GsReducedGraph> {
         return graph;
     }
     
+
+    public GsReducedGraph create( boolean bool){
+    	
+    	return new ReducedGraphImpl( bool);
+    }
+    
+    
     public GsReducedGraph create( Graph graph){
     	
     	return new ReducedGraphImpl( graph);
-    }
-    
-    public GsReducedGraph create( boolean bool){
-    	
-    	System.out.println("ReducedGraphFactory.create() : GOOD WAY");
-    	
-    	return new ReducedGraphImpl( bool);
     }
     
 
