@@ -12,6 +12,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
+import org.ginsim.gui.service.tools.connectivity.ReducedParameterPanel;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
@@ -64,8 +65,7 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<GsReducedGraph, GsN
 
 	@Override
 	public GUIEditor<GsNodeReducedData> getNodeEditionPanel(GsReducedGraph graph) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ReducedParameterPanel(graph);
 	}
 
 	@Override

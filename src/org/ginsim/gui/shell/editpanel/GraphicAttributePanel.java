@@ -3,7 +3,6 @@ package org.ginsim.gui.shell.editpanel;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -1045,11 +1044,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	protected void refreshSize() {
 		jTF_height.setText(""+vReader.getHeight());
 		jTF_width.setText((""+vReader.getWidth()));
-	}
-
-	@Override
-	public Component getComponent() {
-		return this;
 	}
 
 	@Override

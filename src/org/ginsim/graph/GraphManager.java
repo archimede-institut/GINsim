@@ -38,7 +38,7 @@ import fr.univmrs.tagc.common.Debugger;
 public class GraphManager {
 
     private static GraphManager instance = null;
-    private HashMap<Class, GraphFactory> graphFactories = new HashMap<Class, GraphFactory>();
+    private HashMap<Class<Graph>, GraphFactory> graphFactories = new HashMap<Class<Graph>, GraphFactory>();
     private HashMap<Graph, String> graphFilepath = new HashMap<Graph, String>();
     
     private GsFileFilter ffilter;
