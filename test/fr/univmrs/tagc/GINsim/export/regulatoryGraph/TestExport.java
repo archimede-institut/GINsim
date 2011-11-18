@@ -5,40 +5,38 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+
 import junit.framework.TestCase;
-
-import org.ginsim.graph.Graph;
-
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestExport extends TestCase {
-	Graph graph;
+	GsRegulatoryGraph graph;
 	File tmpDir = TestTools.getTempDir();
 
 	public TestExport() throws FileNotFoundException {
 		File file = new File(TestTools.getTestDir(), "graph.ginml");
 		GsGinmlParser parser = new GsGinmlParser();
-		this.graph = parser.parse(new FileInputStream(file), null);
+		this.graph = (GsRegulatoryGraph)parser.parse(new FileInputStream(file), null);
 	}
 	public void testGNAML() throws IOException {
-		GsGNAMLExport export =  new GsGNAMLExport();
-		GsExportConfig config = new GsExportConfig(graph, export, 0);
-		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.gnaml");
-		export.doExport(config);
+		GsGNAMLExport export =  new GsGNAMLExport(graph);
+		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.gnaml";
+		export.doExport(filename);
 	}
 	public void testSNAKES() throws IOException {
-		SnakesExport export =  new SnakesExport();
-		GsExportConfig config = new GsExportConfig(graph, export, 0);
-		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.py");
-		export.doExport(config);
+		SnakesExport export =  new SnakesExport(graph);
+		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.py";
+		export.doExport(filename);
 	}
 	public void testCytoscape() throws IOException {
 		CytoscapeExport export =  new CytoscapeExport();
-		GsExportConfig config = new GsExportConfig(graph, export, 0);
-		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.xgmml");
-		export.doExport(config);
+		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.xgmml";
+		
+		super.fail("TODO: finish cytoscape export test");
+		// export.doExport(filename);
 	}
 	
 /*	public void testSbml() {

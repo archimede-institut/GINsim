@@ -3,8 +3,10 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 import junit.framework.TestCase;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.gui.service.tools.modelsimplifier.ModelSimplifier;
+import org.ginsim.gui.service.tools.modelsimplifier.ModelSimplifierConfig;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class TestModifier extends TestCase {

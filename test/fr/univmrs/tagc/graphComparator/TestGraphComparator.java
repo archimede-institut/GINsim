@@ -6,15 +6,15 @@ import java.util.Iterator;
 import junit.framework.TestCase;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.Graph;
+import org.ginsim.graph.GraphManager;
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
 import org.ginsim.graph.dynamicgraph.GsDynamicNode;
-import org.ginsim.gui.service.action.graphcomparator.DynamicGraphComparator;
-import org.ginsim.gui.service.action.graphcomparator.GraphComparator;
-import org.ginsim.gui.service.action.graphcomparator.RegulatoryGraphComparator;
-
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.gui.service.tools.graphcomparator.DynamicGraphComparator;
+import org.ginsim.gui.service.tools.graphcomparator.GraphComparator;
+import org.ginsim.gui.service.tools.graphcomparator.RegulatoryGraphComparator;
 
 /**
  * Compare two models.
@@ -69,7 +69,7 @@ public class TestGraphComparator extends TestCase  {
  */
 
 	public void compareGraph(GraphComparator gc, int vertexCount, int edgesCount) {
-		Graph g1, g2;
+		Graph<?, ?> g1, g2;
 		g1 = gc.getG1();
 		g2 = gc.getG2();
 		System.out.println("\nTested : Compare g1:"+g1.getGraphName()+" and g2:"+g2.getGraphName()+"\n------\n");
@@ -121,12 +121,17 @@ class GraphExamples {
 		g.addNewVertex("D", "D", (byte)1);
 		g.addNewVertex("E", "E", (byte)1);
 		
-		g.addNewEdge("A", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
-		g.addNewEdge("A", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);  //added
-		g.addNewEdge("B", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-		g.addNewEdge("C", "D", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-		g.addNewEdge("D", "A", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-		g.addNewEdge("C", "E", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);  //added
+		try {
+			g.addNewEdge("A", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
+			g.addNewEdge("A", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);  //added
+			g.addNewEdge("B", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
+			g.addNewEdge("C", "D", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
+			g.addNewEdge("D", "A", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
+			g.addNewEdge("C", "E", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);  //added
+		} catch (GsException e) {
+			e.printStackTrace();
+		}
+
 		return g;
 	}
 	
@@ -150,14 +155,19 @@ class GraphExamples {
 		g.addNewVertex("F", "F", (byte)1); //added
 		g.addNewVertex("G", "G", (byte)1); //added
 		
-		g.addNewEdge("A", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
-		g.addNewEdge("B", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //different sign
-		g.addNewEdge("C", "D", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //multiarc
-		g.addNewEdge("C", "D", (byte)1, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //multiarc
-		g.addNewEdge("D", "A", (byte)1, GsRegulatoryMultiEdge.SIGN_POSITIVE); //different minvalue
-		g.addNewEdge("C", "F", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
-		g.addNewEdge("F", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
-		g.addNewEdge("F", "G", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
+		try {
+			g.addNewEdge("A", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
+			g.addNewEdge("B", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //different sign
+			g.addNewEdge("C", "D", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //multiarc
+			g.addNewEdge("C", "D", (byte)1, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //multiarc
+			g.addNewEdge("D", "A", (byte)1, GsRegulatoryMultiEdge.SIGN_POSITIVE); //different minvalue
+			g.addNewEdge("C", "F", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
+			g.addNewEdge("F", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
+			g.addNewEdge("F", "G", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
+		} catch (GsException e) {
+			e.printStackTrace();
+		}
+
 		return g;
 	}
 	
@@ -178,7 +188,7 @@ class GraphExamples {
 	 * 
 	 */
 	public static  GsDynamicGraph dg1() {
-		GsDynamicGraph g = new  GsDynamicGraph(); 
+		GsDynamicGraph g = GraphManager.getInstance().getNewGraph(GsDynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_A");} catch (GsException e) {}
 		
 		g.addVertex(new GsDynamicNode("a00"));
@@ -204,7 +214,7 @@ class GraphExamples {
 	 * 
 	 */
 	public static  GsDynamicGraph dg2() {
-		GsDynamicGraph g = new  GsDynamicGraph(); 
+		GsDynamicGraph g = GraphManager.getInstance().getNewGraph(GsDynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_B");} catch (GsException e) {}
 		
 		g.addVertex(new GsDynamicNode("a00"));
@@ -222,7 +232,7 @@ class GraphExamples {
 	}
 
 	public static GsDynamicGraph dgempty() {
-		GsDynamicGraph g = new GsDynamicGraph(); 
+		GsDynamicGraph g = GraphManager.getInstance().getNewGraph(GsDynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_empty");} catch (GsException e) {}
 		return g;
 	}

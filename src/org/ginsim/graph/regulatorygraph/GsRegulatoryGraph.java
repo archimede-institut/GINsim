@@ -413,7 +413,7 @@ public final class GsRegulatoryGraph extends AbstractGraphFrontend<GsRegulatoryV
      * @param sign
      * @return the new edge.
      */
-    public GsRegulatoryEdge addNewEdge(String from, String to, byte minvalue, byte sign) throws GsException{
+    public GsRegulatoryEdge addNewEdge(String from, String to, byte minvalue, byte sign) throws GsException {
         GsRegulatoryVertex source = null;
         GsRegulatoryVertex target = null;
 

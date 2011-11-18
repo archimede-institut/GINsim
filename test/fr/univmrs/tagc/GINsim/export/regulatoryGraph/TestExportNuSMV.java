@@ -5,11 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import junit.framework.TestCase;
-import fr.univmrs.tagc.GINsim.export.GsExportConfig;
-import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraph;
 
-// FIXME: test file should be fixed
+import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+
+import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
+
 public class TestExportNuSMV extends TestCase {
 	
 	String[] sFiles;
@@ -21,7 +21,6 @@ public class TestExportNuSMV extends TestCase {
 		assertEquals(sFiles != null, true);
 		
 		regGraph = new GsRegulatoryGraph[sFiles.length];
-		nusmvExport = new GsNuSMVExport();
 	}
 	
 	public void testLoadModels() throws FileNotFoundException {
@@ -31,9 +30,12 @@ public class TestExportNuSMV extends TestCase {
 			GsGinmlParser parser = new GsGinmlParser();
 			regGraph[i] = (GsRegulatoryGraph) parser.parse(new FileInputStream(fModel), null);
 			
-			GsExportConfig nusmvConfig = new GsExportConfig(regGraph[i], nusmvExport, 0);
-			nusmvConfig.setSpecificConfig(new GsNuSMVConfig(regGraph[i]));
-			nusmvExport.doExport(nusmvConfig);
+			nusmvExport = new GsNuSMVExport(regGraph[i]);
+			GsNuSMVConfig config = new GsNuSMVConfig(regGraph[i]);
+			
+			super.fail("TODO: finish NuSMV export test");
+			// String filename = "";
+			// nusmvExport.doExport(filename);
 		}
 	}
 }
