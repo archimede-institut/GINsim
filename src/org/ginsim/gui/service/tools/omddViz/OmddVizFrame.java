@@ -42,14 +42,9 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 	private String[] operationsOptions = new String[] {"or", "and", "constraint or", "constraint and", "max"};
 	
 	
-	public OmddVizFrame(JFrame parent, String id, int w, int h) {
-		super(parent, id, w, h);
-		this.frame = parent;
-	}
-
 	public OmddVizFrame( GsRegulatoryGraph graph) {
 		super(GUIManager.getInstance().getFrame(graph), "STR_omddViz", 475, 260);
-		this.frame = frame;
+		this.frame = GUIManager.getInstance().getFrame(graph);
 		this.graph = graph;
         initialize();
     }

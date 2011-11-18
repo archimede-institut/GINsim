@@ -152,7 +152,7 @@ abstract public class StackDialog extends SimpleDialog {
      * 
      * @return javax.swing.JButton
      */
-    private javax.swing.JButton getBcancel() {
+    private JButton getBcancel() {
         if(bcancel == null) {
         	bcancel = new javax.swing.JButton(Translator.getString("STR_close"));
         	bcancel.setToolTipText(Translator.getString("STR_closedialog_descr"));
@@ -166,7 +166,7 @@ abstract public class StackDialog extends SimpleDialog {
         }
         return bcancel;
     }
-    private javax.swing.JButton getBclose() {
+    private JButton getBclose() {
         if(bclose == null) {
         	bclose = new javax.swing.JButton(Translator.getString("STR_back"));
         	bclose.setToolTipText(Translator.getString("STR_back_descr"));
@@ -186,7 +186,7 @@ abstract public class StackDialog extends SimpleDialog {
      * 
      * @return javax.swing.JButton
      */
-    private javax.swing.JButton getBrun() {
+    private JButton getBrun() {
         if(brun == null) {
         	brun = new javax.swing.JButton(Translator.getString("STR_run"));
         	brun.getModel().setMnemonic(KeyEvent.VK_R);

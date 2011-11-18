@@ -26,7 +26,6 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GsDecisionAnalysisFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7619253564236142617L;
-	private JFrame frame;
 	private GsHierarchicalTransitionGraph htg;
 	private JPanel mainPanel;
 	private GenericListSelectionPanel selectPriorityClass;
@@ -35,15 +34,9 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 	
 	
 	
-	public GsDecisionAnalysisFrame(JFrame parent, String id, int w, int h) {
-		super(parent, id, w, h);
-		this.frame = parent;
-	}
-
 	public GsDecisionAnalysisFrame(JFrame frame, Graph graph) throws GsException{
-		
 		super(frame, "STR_htg_decision_analysis", 475, 260);
-		this.frame = frame;
+
 		if (graph instanceof GsHierarchicalTransitionGraph) {
 			this.htg = (GsHierarchicalTransitionGraph) graph;
 			this.regGraph = (GsRegulatoryGraph) htg.getAssociatedGraph();
@@ -98,9 +91,5 @@ public class GsDecisionAnalysisFrame extends StackDialog implements ActionListen
 	public void actionPerformed(ActionEvent e) {
 //		if (e.getSource() == leftOperandCB) {
 	}
-	public JFrame getFrame() {
-		return frame;
-	}
-
 	
 }

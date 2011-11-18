@@ -50,10 +50,6 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	private static final String OPT_COLORBYDEFAULT = "functionalityAnalysis.colorByDefault";
 	private static final String OPT_REPORTDIRECTORY = "functionalityAnalysis.reportDirectory";
 
-	public InteractionAnalysisFrame(JFrame parent, String id, int w, int h) {
-		super(parent, id, w, h);
-	}
-
 	public InteractionAnalysisFrame( JFrame frame, Graph graph) {
 		super(frame, "functionalityAnalysis", 420, 260);
 		this.frame = frame;

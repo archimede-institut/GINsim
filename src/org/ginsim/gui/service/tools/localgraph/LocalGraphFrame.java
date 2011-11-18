@@ -56,13 +56,13 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	
 	private static final long serialVersionUID = -9126723853606423085L;
 
-	public LocalGraphFrame(JFrame parent, String id, int w, int h) {
-		super(parent, id, w, h);
+	public LocalGraphFrame(JFrame parent) {
+		super(parent, "STR_localGraph", 420, 260);
 	}
 
 	public LocalGraphFrame(JFrame frame, Graph regGraph) {
 		
-		super(frame, "localGraph", 420, 260);
+		this(frame);
 		this.regGraph = (GsRegulatoryGraph) regGraph;
 		this.dynGraph = null;
 		lg = new LocalGraph((GsRegulatoryGraph) regGraph);
@@ -71,7 +71,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 
 	public LocalGraphFrame(JFrame frame, Graph regulatoryGraph, Graph dynamicGraph) {
 		
-		super(frame, "STR_localGraph", 420, 260);
+		this(frame);
 		this.regGraph = (GsRegulatoryGraph) regulatoryGraph;
 		this.dynGraph = (GsDynamicGraph) dynamicGraph;
 		lg = new LocalGraph(regGraph);
