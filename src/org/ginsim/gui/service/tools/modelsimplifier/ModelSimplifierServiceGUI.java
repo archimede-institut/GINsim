@@ -21,7 +21,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
-import org.ginsim.service.tools.modelsimplifier.ModelSimplifierService;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.mangosdk.spi.ProviderFor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

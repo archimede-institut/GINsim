@@ -13,7 +13,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
-import org.ginsim.service.tools.stablestates.StableStatesService;
+import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.HandledStackDialog;

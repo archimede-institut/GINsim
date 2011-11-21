@@ -15,7 +15,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
-import org.ginsim.service.tools.localgraph.LocalGraphService;
+import org.ginsim.service.tool.localgraph.LocalGraphService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;

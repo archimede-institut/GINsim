@@ -12,7 +12,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
-import org.ginsim.service.tools.dynamicalhierarchicalsimplifier.DynamicalHierarchicalSimplifierService;
+import org.ginsim.service.tool.dynamicalhierarchicalsimplifier.DynamicalHierarchicalSimplifierService;
 import org.mangosdk.spi.ProviderFor;
 
 

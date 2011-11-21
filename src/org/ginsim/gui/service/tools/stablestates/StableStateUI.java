@@ -12,8 +12,8 @@ import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.service.ServiceManager;
-import org.ginsim.service.tools.stablestates.StableStateSearcher;
-import org.ginsim.service.tools.stablestates.StableStatesService;
+import org.ginsim.service.tool.stablestates.StableStateSearcher;
+import org.ginsim.service.tool.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
