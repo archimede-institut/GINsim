@@ -10,7 +10,7 @@ import javax.swing.JToolBar;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.service.GsServiceGUIManager;
+import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.ImportAction;
@@ -32,7 +32,7 @@ public class MainFrameActionManager implements FrameActionManager {
 		Graph<?,?> graph = gui.getGraph();
 		
 		// get Service-related actions
-		List<Action> actions = GsServiceGUIManager.getManager().getAvailableActions(graph);
+		List<Action> actions = ServiceGUIManager.getManager().getAvailableActions(graph);
 
 		// add them to the right menus
 		JMenu importMenu = new JMenu( "Import");

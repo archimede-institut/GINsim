@@ -13,7 +13,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
-import org.ginsim.gui.service.tools.connectivity.ConnectivityFrame;
+import org.ginsim.gui.service.tool.connectivity.ConnectivityFrame;
 
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;

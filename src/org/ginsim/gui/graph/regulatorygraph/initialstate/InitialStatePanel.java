@@ -20,7 +20,7 @@ import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
-import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
+import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
 
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;

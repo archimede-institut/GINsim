@@ -19,7 +19,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
-import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.shell.GsFileFilter;
@@ -37,9 +37,9 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * 
  *    TODO: extract a separated Service
  */
-@ProviderFor(GsServiceGUI.class)
+@ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-public class CytoscapeExport implements GsServiceGUI {
+public class CytoscapeExport implements ServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {

@@ -27,9 +27,9 @@ import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
-import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
-import org.ginsim.gui.service.tools.reg2dyn.SimulationParametersManager;
-import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
+import org.ginsim.gui.service.tool.reg2dyn.PrioritySelectionPanel;
+import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
 
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;

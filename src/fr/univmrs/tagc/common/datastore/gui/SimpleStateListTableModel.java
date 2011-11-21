@@ -8,7 +8,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
-import org.ginsim.gui.service.tools.stateinregulatorygraph.StateInRegGraphSelector;
+import org.ginsim.gui.service.tool.stateinregulatorygraph.StateInRegGraphSelector;
 
 
 

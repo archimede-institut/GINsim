@@ -34,7 +34,7 @@ import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantChange;
 import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 
-import org.ginsim.gui.service.tools.reg2dyn.RegulatoryMutantListener;
+import org.ginsim.gui.service.tool.reg2dyn.RegulatoryMutantListener;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;

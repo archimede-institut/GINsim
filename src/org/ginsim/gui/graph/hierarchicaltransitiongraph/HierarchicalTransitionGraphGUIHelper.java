@@ -13,7 +13,7 @@ import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.GsRegulatoryGraphOptionPanel;
-import org.ginsim.gui.service.tools.decisionanalysis.DecisionOnEdge;
+import org.ginsim.gui.service.tool.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 

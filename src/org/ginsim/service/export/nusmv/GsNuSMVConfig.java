@@ -6,7 +6,7 @@ import java.util.Map;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
+import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
 
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 

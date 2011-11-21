@@ -12,7 +12,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.io.parser.GsGinmlHelper;
 import org.ginsim.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;

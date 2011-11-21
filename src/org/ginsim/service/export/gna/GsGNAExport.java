@@ -15,7 +15,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.shell.GsFileFilter;
@@ -27,9 +27,9 @@ import org.mangosdk.spi.ProviderFor;
  * 
  *   TODO: extract a standalone service
  */
-@ProviderFor(GsServiceGUI.class)
+@ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-public class GsGNAExport implements GsServiceGUI {
+public class GsGNAExport implements ServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {

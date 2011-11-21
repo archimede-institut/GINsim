@@ -9,16 +9,16 @@ import javax.swing.Action;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
-import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.LayoutAction;
 import org.ginsim.service.layout.LayoutService;
 import org.mangosdk.spi.ProviderFor;
 
 
-@ProviderFor(GsServiceGUI.class)
+@ProviderFor(ServiceGUI.class)
 @GUIFor(LayoutService.class)
-public class LayoutServiceGUI implements GsServiceGUI {
+public class LayoutServiceGUI implements ServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {

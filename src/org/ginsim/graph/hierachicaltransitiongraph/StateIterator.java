@@ -3,9 +3,9 @@ package org.ginsim.graph.hierachicaltransitiongraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.service.tools.reg2dyn.Reg2dynPriorityClass;
-import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
-import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
+import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
+import org.ginsim.gui.service.tool.reg2dyn.Reg2dynPriorityClass;
+import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 
 
 public abstract class StateIterator {

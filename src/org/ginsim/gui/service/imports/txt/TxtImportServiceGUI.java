@@ -8,7 +8,7 @@ import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
@@ -17,9 +17,9 @@ import org.ginsim.service.imports.txt.TxtImportService;
 import org.mangosdk.spi.ProviderFor;
 
 
-@ProviderFor(GsServiceGUI.class)
+@ProviderFor(ServiceGUI.class)
 @GUIFor( TxtImportService.class)
-public class TxtImportServiceGUI implements GsServiceGUI {
+public class TxtImportServiceGUI implements ServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {

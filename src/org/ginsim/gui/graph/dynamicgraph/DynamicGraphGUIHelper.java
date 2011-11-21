@@ -21,9 +21,9 @@ import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.GsRegulatoryGraphOptionPanel;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphEditor;
-import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
-import org.ginsim.gui.service.tools.dynamicanalyser.DynamicItemAttributePanel;
-import org.ginsim.gui.service.tools.stablestates.StableTableModel;
+import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.tool.dynamicanalyser.DynamicItemAttributePanel;
+import org.ginsim.gui.service.tool.stablestates.StableTableModel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 

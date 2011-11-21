@@ -39,7 +39,7 @@ import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.common.ExportAction;
-import org.ginsim.gui.service.tools.stablestates.StableTableModel;
+import org.ginsim.gui.service.tool.stablestates.StableTableModel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.stablestates.StableStateSearcher;

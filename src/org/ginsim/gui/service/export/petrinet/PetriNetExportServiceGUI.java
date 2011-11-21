@@ -12,13 +12,13 @@ import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
-import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
-import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
-import org.ginsim.gui.service.tools.reg2dyn.SimulationParametersManager;
-import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
-import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
+import org.ginsim.gui.service.tool.reg2dyn.PriorityClassManager;
+import org.ginsim.gui.service.tool.reg2dyn.PrioritySelectionPanel;
+import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.export.petrinet.PNConfig;
 import org.mangosdk.spi.ProviderFor;
@@ -30,9 +30,9 @@ import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 /**
  * GUI Action to export a LRG into Petri net
  */
-@ProviderFor(GsServiceGUI.class)
+@ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-public class PetriNetExportServiceGUI implements GsServiceGUI {
+public class PetriNetExportServiceGUI implements ServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {

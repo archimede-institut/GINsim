@@ -9,7 +9,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStatesIterator;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
+import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
 
 
 /**

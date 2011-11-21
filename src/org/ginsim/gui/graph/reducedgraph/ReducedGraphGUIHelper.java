@@ -13,7 +13,7 @@ import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.GsRegulatoryGraphOptionPanel;
-import org.ginsim.gui.service.tools.connectivity.ReducedParameterPanel;
+import org.ginsim.gui.service.tool.connectivity.ReducedParameterPanel;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.managerresources.Translator;

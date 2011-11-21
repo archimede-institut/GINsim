@@ -9,7 +9,7 @@ import javax.swing.Action;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
@@ -19,9 +19,9 @@ import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.widgets.Frame;
 
-@ProviderFor( GsServiceGUI.class)
+@ProviderFor( ServiceGUI.class)
 @GUIFor( SBMLImportService.class)
-public class SBMLImportServiceGUI implements GsServiceGUI {
+public class SBMLImportServiceGUI implements ServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {

@@ -10,7 +10,7 @@ import javax.swing.Action;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.gui.service.GsServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.shell.GsFileFilter;
@@ -21,9 +21,9 @@ import org.mangosdk.spi.ProviderFor;
  * Export service to SBML format
  * 
  */
-@ProviderFor( GsServiceGUI.class)
+@ProviderFor( ServiceGUI.class)
 @GUIFor( SBMLExportService.class)
-public class SBMLExportServiceGUI implements GsServiceGUI {
+public class SBMLExportServiceGUI implements ServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {

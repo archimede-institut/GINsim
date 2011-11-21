@@ -6,7 +6,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.gui.service.tools.decisionanalysis.DecisionOnEdge;
+import org.ginsim.gui.service.tool.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 

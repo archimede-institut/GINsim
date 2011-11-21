@@ -8,7 +8,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
-import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 
 /**
  * the dynamic (state transition) graph.

@@ -8,7 +8,7 @@ import java.util.List;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
-import org.ginsim.gui.service.tools.circuit.OmsddNode;
+import org.ginsim.gui.service.tool.circuit.OmsddNode;
 
 import fr.univmrs.tagc.common.ColorPalette;
 
