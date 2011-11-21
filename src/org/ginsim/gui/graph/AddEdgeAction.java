@@ -4,8 +4,11 @@ import org.ginsim.graph.common.Edge;
 
 public abstract class AddEdgeAction<V, E extends Edge<V>> extends EditAction {
 
+	public AddEdgeAction(String name, String icon) {
+		super(EditMode.EDGE, name, icon);
+	}
 	public AddEdgeAction(String name) {
-		super(EditMode.EDGE, name);
+		this(name, null);
 	}
 	
 	public void addEdge( EditActionManager manager, V from, V to) {

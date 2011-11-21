@@ -1,5 +1,9 @@
 package org.ginsim.gui.graph;
 
+import javax.swing.ImageIcon;
+
+import fr.univmrs.tagc.common.managerresources.ImageLoader;
+
 /**
  * Minimalistic description of the available edit types for a Graph.
  * 
@@ -9,10 +13,15 @@ public class EditAction {
 
 	private final EditMode mode;
 	private final String name;
+	private final String icon;
 	
 	public EditAction(EditMode mode, String name) {
+		this(mode, name, null);
+	}
+	public EditAction(EditMode mode, String name, String icon) {
 		this.mode = mode;
 		this.name = name;
+		this.icon = icon;
 	}
 	
 	/**
@@ -27,6 +36,17 @@ public class EditAction {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * @return the icon for this edit mode 
+	 */
+	public ImageIcon getIcon() {
+		if (icon == null) {
+			return null;
+		}
+		
+		return ImageLoader.getImageIcon(icon);
 	}
 	
 	/**

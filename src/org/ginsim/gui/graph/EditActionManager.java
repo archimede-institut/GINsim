@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.border.Border;
@@ -25,8 +27,8 @@ import javax.swing.border.EtchedBorder;
  */
 public class EditActionManager {
 
-	private static final EditAction EDIT_MODE = new EditAction(EditMode.EDIT, "E");
-	private static final EditAction EDGEPOINT_MODE = new EditAction(EditMode.EDGEPOINT, "iP");
+	private static final EditAction EDIT_MODE = new EditAction(EditMode.EDIT, "Select/Move", "editmode.gif");
+	private static final EditAction EDGEPOINT_MODE = new EditAction(EditMode.EDGEPOINT, "Edit edge intermediate points", "customizeedgerouting.gif");
 	
 	private EditAction selectedAction = EDGEPOINT_MODE;
 	private final List<EditAction> actions;
@@ -130,6 +132,10 @@ class ChangeEditModeAction extends AbstractAction {
 	
 	protected ChangeEditModeAction( EditActionManager manager, EditAction action) {
 		super(action.getName());
+		ImageIcon icon = action.getIcon();
+		if (icon != null) {
+			putValue(SMALL_ICON, icon);
+		}
 		this.manager = manager;
 		this.action = action;
 	}
@@ -175,6 +181,10 @@ class EditActionSelectButton extends JToggleButton {
 	protected EditActionSelectButton(ChangeEditModeAction action) {
 		super(action);
 		this.action = action.action;
+		if (action.getValue(Action.SMALL_ICON) != null) {
+			setToolTipText(getText());
+			setText(null);
+		}
 	}
 	
 	protected void setSelectedAction(EditAction action, boolean locked) {

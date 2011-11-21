@@ -39,10 +39,10 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGrap
 	public List<EditAction> getEditActions(GsRegulatoryGraph graph) {
 		List<EditAction> actions = new ArrayList<EditAction>();
 		VertexAttributesReader reader = graph.getVertexAttributeReader();
-		actions.add(new AddRegulatoryVertexAction(graph, "+ TV", reader));
-		actions.add(new AddTestEdgeAction(graph, "E +", 1));
-		actions.add(new AddTestEdgeAction(graph, "E -", -1));
-		actions.add(new AddTestEdgeAction(graph, "E ?", 0));
+		actions.add(new AddRegulatoryVertexAction(graph, "Add components", reader));
+		actions.add(new AddRegulatoryEdgeAction(graph, "Add positive regulations", 1));
+		actions.add(new AddRegulatoryEdgeAction(graph, "Add negative regulations", -1));
+		actions.add(new AddRegulatoryEdgeAction(graph, "Add unknown regulations", 0));
 		return actions;
 	}
 
@@ -106,7 +106,7 @@ class AddRegulatoryVertexAction extends AddVertexAction<GsRegulatoryVertex> {
 
 	private final GsRegulatoryGraph graph;
 	public AddRegulatoryVertexAction(GsRegulatoryGraph graph, String name, VertexAttributesReader reader) {
-		super(name, reader);
+		super(name, reader, "insertsquare.gif");
 		this.graph = graph;
 	}
 
@@ -116,13 +116,23 @@ class AddRegulatoryVertexAction extends AddVertexAction<GsRegulatoryVertex> {
 	}
 }
 
-class AddTestEdgeAction extends AddEdgeAction<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+class AddRegulatoryEdgeAction extends AddEdgeAction<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
 
 	private final GsRegulatoryGraph graph;
 	private final int sign;
+
+	private static String getIcon(int sign) {
+		if (sign < 0) {
+			return "insertnegativeedge.gif";
+		}
+		if (sign > 0) {
+			return "insertpositiveedge.gif";
+		}
+		return "insertunknownedge.gif";
+	}
 	
-	public AddTestEdgeAction(GsRegulatoryGraph graph, String name, int sign) {
-		super(name);
+	public AddRegulatoryEdgeAction(GsRegulatoryGraph graph, String name, int sign) {
+		super(name, getIcon(sign));
 		this.graph = graph;
 		this.sign = sign;
 	}
