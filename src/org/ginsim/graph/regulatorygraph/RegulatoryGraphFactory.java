@@ -1,14 +1,11 @@
 package org.ginsim.graph.regulatorygraph;
 
-import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
-
 
 /**
- * descriptor for regulatoryGraph.
+ * Factory for regulatory graphs.
  */
 @ProviderFor( GraphFactory.class)
 public class RegulatoryGraphFactory implements GraphFactory<RegulatoryGraph> {
@@ -48,18 +45,14 @@ public class RegulatoryGraphFactory implements GraphFactory<RegulatoryGraph> {
 	@Override
     public RegulatoryGraph create() {
     	
-    	RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+    	RegulatoryGraph graph = new RegulatoryGraphImpl();
         return graph;
     }
 
-    
-    
 	@Override
     public Class getParser() {
     	
     	return RegulatoryParser.class;
     }
-
-
     
 }
