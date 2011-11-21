@@ -17,6 +17,7 @@ import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.graph.regulatorygraph.GsRegulatoryGraphOptionPanel;
@@ -381,7 +382,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
         if (!(graph instanceof RegulatoryGraph)) {
             return false;
         }
-        return RegulatoryGraph.associationValid((RegulatoryGraph)graph, this);
+        return RegulatoryGraphImpl.associationValid((RegulatoryGraph)graph, this);
     }
   
 

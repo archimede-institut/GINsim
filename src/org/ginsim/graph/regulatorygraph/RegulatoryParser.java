@@ -18,6 +18,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
@@ -91,7 +92,7 @@ public final class RegulatoryParser extends GsXMLHelper {
      */
     public RegulatoryParser(Map map, Attributes attributes, String s_dtd, String file_name) throws GsException {
     	
-        graph = new RegulatoryGraph( true);
+        graph = GraphManager.getInstance().getNewGraph( RegulatoryGraph.class, true);
         this.map = map;
 		s_nodeOrder = attributes.getValue("nodeorder");
         if (s_nodeOrder == null) {

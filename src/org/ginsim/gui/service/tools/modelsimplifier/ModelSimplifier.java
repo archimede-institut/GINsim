@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
@@ -222,7 +223,7 @@ public class ModelSimplifier extends Thread implements Runnable {
      */
     private RegulatoryGraph extractReducedGraph() {
 		// create the new regulatory graph
-		simplifiedGraph = new RegulatoryGraph();
+		simplifiedGraph = GraphManager.getInstance().getNewGraph();
 		Annotation note = simplifiedGraph.getAnnotation();
 		note.copyFrom(graph.getAnnotation());
 		if (s_comment.length() > 2) {

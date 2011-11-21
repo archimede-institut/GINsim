@@ -83,10 +83,10 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
     public boolean isInput() {
         return isInput;
     }
-    public void setInput(boolean input, AbstractGraph<?,?> graph) {
+    public void setInput(boolean input, Graph graph) {
         if (input != this.isInput) {
             this.isInput = input;
-            graph.fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
+            ((AbstractGraph) graph).fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
         }
     }
 	/**
@@ -122,7 +122,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 	    		}
 	    	}
 	    	maxValue = max;
-    		graph.fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
+    		((AbstractGraph) graph).fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
     		getInteractionsModel().refreshVertex();
 	    }
 	}

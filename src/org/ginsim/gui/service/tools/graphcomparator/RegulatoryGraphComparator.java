@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
@@ -64,7 +65,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	}
 	
 	public RegulatoryGraphComparator(RegulatoryGraph g1, RegulatoryGraph g2) {
-		this(g1, g2, new RegulatoryGraph());
+		this(g1, g2, GraphManager.getInstance().getNewGraph());
 	}
 	
 	public boolean isCommonVertex(Object id) {

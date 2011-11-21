@@ -112,7 +112,7 @@ class GraphExamples {
 	 * 
 	 */
 	public static RegulatoryGraph rg1() {
-		RegulatoryGraph g = new RegulatoryGraph(); 
+		RegulatoryGraph g = GraphManager.getInstance().getNewGraph(); 
 		try { g.setGraphName("regulatory_graph_A");} catch (GsException e) {}
 		
 		g.addNewVertex("A", "A", (byte)1);
@@ -145,7 +145,7 @@ class GraphExamples {
 	 *        
 	 */
 	public static RegulatoryGraph rg2() {
-		RegulatoryGraph g = new RegulatoryGraph(); 
+		RegulatoryGraph g = GraphManager.getInstance().getNewGraph(); 
 		try { g.setGraphName("regulatory_graph_B");} catch (GsException e) {}
 		
 		g.addNewVertex("A", "A", (byte)1);
@@ -172,7 +172,7 @@ class GraphExamples {
 	}
 	
 	public static RegulatoryGraph rgempty() {
-		RegulatoryGraph g = new RegulatoryGraph(); 
+		RegulatoryGraph g = GraphManager.getInstance().getNewGraph(); 
 		try { g.setGraphName("regulatory_graph_empty");} catch (GsException e) {}
 		return g;
 	}

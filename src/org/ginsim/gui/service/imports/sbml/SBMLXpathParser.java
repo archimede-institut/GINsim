@@ -77,7 +77,7 @@ public final class SBMLXpathParser {
 	public SBMLXpathParser(String filename) {
 
 		this._FilePath = new File(filename);
-		this.graph = new RegulatoryGraph();
+		this.graph = GraphManager.getInstance().getNewGraph();
 		values = new Hashtable<RegulatoryVertex, Hashtable<String, Vector<String>>>();
 		initialize();
 	}

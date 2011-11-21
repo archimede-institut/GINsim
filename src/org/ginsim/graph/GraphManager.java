@@ -30,6 +30,7 @@ import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.gui.shell.GsFileFilter;
 
 import fr.univmrs.tagc.common.Debugger;
@@ -306,7 +307,7 @@ public class GraphManager {
                 ZipEntry ze = f.getEntry("ginml");
                 if (ze==null) {
                 	usePrefix = true;
-                	ze = f.getEntry( AbstractGraph.ZIP_PREFIX + RegulatoryGraph.GRAPH_ZIP_NAME);
+                	ze = f.getEntry( AbstractGraph.ZIP_PREFIX + RegulatoryGraphImpl.GRAPH_ZIP_NAME);
                 	if (ze == null) {
                 		ze = f.getEntry( AbstractGraph.ZIP_PREFIX + DynamicGraphImpl.GRAPH_ZIP_NAME);
                     	if (ze == null) {

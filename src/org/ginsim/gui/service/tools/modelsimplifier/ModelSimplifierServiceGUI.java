@@ -11,6 +11,7 @@ import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
+import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
@@ -64,7 +65,7 @@ class ModelSimplifierAction extends GsToolsAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (graph.getVertexCount() < 1) {
-            graph.addNotificationMessage(new NotificationMessage(graph, 
+            graph.addNotificationMessage(new NotificationMessage( (NotificationMessageHolder) graph, 
             		Translator.getString(graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
             		NotificationMessage.NOTIFICATION_WARNING));
             return;

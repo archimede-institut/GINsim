@@ -1,5 +1,6 @@
 package org.ginsim.graph.regulatorygraph;
 
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
 
@@ -47,7 +48,7 @@ public class RegulatoryGraphFactory implements GraphFactory<RegulatoryGraph> {
 	@Override
     public RegulatoryGraph create() {
     	
-    	RegulatoryGraph graph = new RegulatoryGraph();
+    	RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
         return graph;
     }
 

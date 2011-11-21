@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -20,7 +21,7 @@ public class LRGCreator {
 
 	public static void main(String[] args) {
 		// create a simple graph
-		RegulatoryGraph lrg = new RegulatoryGraph();
+		RegulatoryGraph lrg = GraphManager.getInstance().getNewGraph();
 		VertexAttributesReader vreader = lrg.getVertexAttributeReader();
 		
 		// add a few vertices

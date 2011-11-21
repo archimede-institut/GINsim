@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
@@ -26,7 +27,7 @@ public final class TruthTableParser {
     private RegulatoryGraph model;
                     
     public TruthTableParser(String f) {
-    	this.graph = new RegulatoryGraph();
+    	this.graph = GraphManager.getInstance().getNewGraph();
     	this.fileName = f;
     	initialize();
     }
@@ -94,7 +95,7 @@ public final class TruthTableParser {
     	List listOfParam=null;
 
     	// create a simple graph
-    	model = new RegulatoryGraph();
+    	model = GraphManager.getInstance().getNewGraph();
 
     	// add  vertices
     	RegulatoryVertex [] G = new RegulatoryVertex [n];

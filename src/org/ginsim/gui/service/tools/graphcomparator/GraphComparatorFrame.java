@@ -194,7 +194,7 @@ public class GraphComparatorFrame  extends AbstractStackDialogHandler implements
 			Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_graphNull")), this.frame);
 			return;
 		case GRAPH_TYPE_REGULATORY:
-			g = new RegulatoryGraph();
+			g = GraphManager.getInstance().getNewGraph();
 			if (opt_display_graph) {
 				GUIManager.getInstance().newFrame(g);
 			}

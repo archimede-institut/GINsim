@@ -3,6 +3,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 import junit.framework.TestCase;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tools.modelsimplifier.ModelSimplifier;
@@ -11,7 +12,7 @@ import org.ginsim.gui.service.tools.modelsimplifier.ModelSimplifierConfig;
 
 public class TestModifier extends TestCase {
 
-	RegulatoryGraph graph = new RegulatoryGraph();
+	RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
 	ModelSimplifierConfig cfg = new ModelSimplifierConfig();
 	ModelSimplifier simplifier = new ModelSimplifier(graph, cfg, null, true);
 
