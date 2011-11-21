@@ -3,11 +3,11 @@ package org.ginsim.service.action.stablestates;
 import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
 
 /**
  * This implements an analytic search of stable states. A state "x" is stable if, for every gene "i",
@@ -34,13 +34,13 @@ public class StableStatesService implements Service {
 		return new StableStatesAlgoImpl( graph);
 	}
 	
-	public OmddNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant) {
+	public OMDDNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant) {
 		StableStateSearcher searcher = getSearcher(regGraph);
 		searcher.setPerturbation(mutant);
 		return searcher.getStables();
 	}
 
-	public OmddNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant, OmddNode[] trees) {
+	public OMDDNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant, OMDDNode[] trees) {
 		StableStateSearcher algo = getSearcher( regGraph);
 		algo.setPerturbation(mutant);
 		return algo.getStables();

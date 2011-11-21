@@ -16,6 +16,9 @@ import java.util.TreeMap;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tools.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
@@ -24,9 +27,6 @@ import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -122,7 +122,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 				DateFormat.LONG);
 		String date = dateformat.format(new Date());
 		FileWriter out = new FileWriter(fileName);
-		Iterator<GsInitialState> it = config.getInitialState().keySet()
+		Iterator<InitialState> it = config.getInitialState().keySet()
 				.iterator();
 		Map<RegulatoryVertex, List<Integer>> m_initstates;
 		if (it.hasNext()) {
@@ -144,7 +144,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 			m_initinputs = new HashMap<RegulatoryVertex, List<Integer>>();
 		}
 
-		GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef) config.store
+		RegulatoryMutantDef mutant = (RegulatoryMutantDef) config.store
 				.getObject(0);
 		List<RegulatoryVertex> nodeOrder = graph.getNodeOrder();
 		String[] t_regulators = new String[nodeOrder.size()];
@@ -159,7 +159,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 			if (vertex.isInput())
 				hasInputVars = true;
 		}
-		OmddNode[] t_tree = graph.getAllTrees(true);
+		OMDDNode[] t_tree = graph.getAllTrees(true);
 		if (mutant != null) {
 			mutant.apply(t_tree, graph);
 		}
@@ -554,7 +554,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 			}
 			sortedVars.addAll(orderInputVars);
 			// OMDDs reordered [ stateVars inputVars]
-			OmddNode[] tReordered = new OmddNode[nodeOrder.size()];
+			OMDDNode[] tReordered = new OMDDNode[nodeOrder.size()];
 			for (int i = 0; i < nodeOrder.size(); i++) {
 				tReordered[i] = sortedVars.get(i)
 						.getTreeParameters(sortedVars).reduce();
@@ -563,7 +563,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 			StableStateSearcher sss = ServiceManager.getManager().getService(StableStatesService.class).getSearcher(graph);
 			sss.setNodeOrder(sortedVars, tReordered);
 			sss.setPerturbation(mutant);
-			OmddNode omdds = sss.getStables();
+			OMDDNode omdds = sss.getStables();
 			int[] stateValues = new int[sortedVars.size()];
 			for (int i = 0; i < stateValues.length; i++)
 				stateValues[i] = -1;
@@ -605,7 +605,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 		out.close();
 	}
 
-	private static String writeStableStates(int[] stateValues, OmddNode nodes,
+	private static String writeStableStates(int[] stateValues, OMDDNode nodes,
 			List<RegulatoryVertex> stateVars, int level) {
 		String sRet = "";
 		if (nodes.next == null) {
@@ -680,7 +680,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 	 *            Auxiliary variable to help navigate through the tree.
 	 * @return The set of regulator names of a given vertex.
 	 */
-	static private HashSet<String> nodeRegulators(OmddNode node,
+	static private HashSet<String> nodeRegulators(OMDDNode node,
 			RegulatoryVertex[] t_names, int[] t_cst) {
 		HashSet<String> hs = new HashSet<String>();
 		if (node.next == null) {
@@ -711,7 +711,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 	 *            Auxiliary variable to help navigate through the tree.
 	 * @throws IOException
 	 */
-	static private void node2SMV(OmddNode node, FileWriter out,
+	static private void node2SMV(OMDDNode node, FileWriter out,
 			RegulatoryVertex[] t_names, int[] t_cst) throws IOException {
 		if (node.next == null) // this is a leaf, write the constraint
 		{

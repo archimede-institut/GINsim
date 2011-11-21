@@ -1,25 +1,25 @@
 package org.ginsim.graph.hierachicaltransitiongraph;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tools.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 public abstract class StateIterator {
-	protected OmddNode[] t_tree;
+	protected OMDDNode[] t_tree;
 
 	public StateIterator(RegulatoryGraph regGraph, SimulationParameters params) {
         t_tree = regGraph.getParametersForSimulation(true);
-        GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)params.store.getObject(SimulationParameters.MUTANT);
+        RegulatoryMutantDef mutant = (RegulatoryMutantDef)params.store.getObject(SimulationParameters.MUTANT);
         if (mutant != null) {
             mutant.apply(t_tree, regGraph);
         }
 	}
 
-	public StateIterator(RegulatoryGraph regGraph, GsRegulatoryMutantDef mutant) {
+	public StateIterator(RegulatoryGraph regGraph, RegulatoryMutantDef mutant) {
         t_tree = regGraph.getParametersForSimulation(true);
         if (mutant != null) {
             mutant.apply(t_tree, regGraph);
@@ -47,7 +47,7 @@ public abstract class StateIterator {
 
 class AsynchronousStateIterator extends StateIterator {
 	
-	public AsynchronousStateIterator(RegulatoryGraph regGraph, GsRegulatoryMutantDef mutant) {
+	public AsynchronousStateIterator(RegulatoryGraph regGraph, RegulatoryMutantDef mutant) {
 		super(regGraph, mutant);
 	}
 	public AsynchronousStateIterator(RegulatoryGraph regGraph, SimulationParameters params) {

@@ -9,10 +9,10 @@ import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 /**
  * analyse circuits to detect their functionality/functional range.
@@ -48,7 +48,7 @@ public class CircuitAlgo {
     // some context data
     RegulatoryVertex target;
     RegulatoryMultiEdge me;
-    GsLogicalParameter gsi;
+    LogicalParameter gsi;
 
     RegulatoryGraph graph;
 
@@ -56,14 +56,14 @@ public class CircuitAlgo {
     int[] t_maxValues;
     long fullPhaseSpace;
     long score;
-    OmddNode[] t_parameters;
+    OMDDNode[] t_parameters;
     boolean do_cleanup;
 
     /**
      * @param graph the studied graph
      * @param t_constraint constraints on the nodes
      */
-    public CircuitAlgo(RegulatoryGraph graph, byte[][] t_constraint, GsRegulatoryMutantDef mutant, boolean do_cleanup) {
+    public CircuitAlgo(RegulatoryGraph graph, byte[][] t_constraint, RegulatoryMutantDef mutant, boolean do_cleanup) {
         this.do_cleanup = do_cleanup;
         this.t_constraint = t_constraint;
         t_parameters = graph.getAllTrees(true);
@@ -202,7 +202,7 @@ public class CircuitAlgo {
      * @param nextmax
      * @return the context of functionality
      */
-    private OmsddNode getContextFromParameters(OmddNode node, int level, int thresold, int[] t_circuit, int nextmin, int nextmax) {
+    private OmsddNode getContextFromParameters(OMDDNode node, int level, int thresold, int[] t_circuit, int nextmin, int nextmax) {
         if (node.next == null || node.level > level) { // no meeting: not functional
             return OmsddNode.FALSE;
         }
@@ -235,7 +235,7 @@ public class CircuitAlgo {
      * @param nextmax
      * @return the context of functionality
      */
-    private OmsddNode getContextFromParameters(OmddNode node, OmddNode next, int[] t_circuit, int nextmin, int nextmax) {
+    private OmsddNode getContextFromParameters(OMDDNode node, OMDDNode next, int[] t_circuit, int nextmin, int nextmax) {
 
         if (node.next == null) {
             if (next.next == null) {

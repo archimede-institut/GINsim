@@ -3,9 +3,9 @@ package org.ginsim.gui.service.tools.reg2dyn;
 import java.util.Iterator;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 /**
  * This is the part of the simulation in charge for generating the following states.
@@ -24,7 +24,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
  * </ul>
  */
 abstract public class SimulationUpdater implements Iterator {
-	protected OmddNode[] t_tree;
+	protected OMDDNode[] t_tree;
 	protected int length;
 	protected byte[] cur_state;
 	protected byte[] next = null;
@@ -34,14 +34,14 @@ abstract public class SimulationUpdater implements Iterator {
 	
 	public SimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
         t_tree = regGraph.getParametersForSimulation(true);
-        GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)params.store.getObject(SimulationParameters.MUTANT);
+        RegulatoryMutantDef mutant = (RegulatoryMutantDef)params.store.getObject(SimulationParameters.MUTANT);
         if (mutant != null) {
             mutant.apply(t_tree, regGraph);
         }
 		this.length = t_tree.length;
 	}
 
-	public SimulationUpdater(RegulatoryGraph regGraph, GsRegulatoryMutantDef mutant) {
+	public SimulationUpdater(RegulatoryGraph regGraph, RegulatoryMutantDef mutant) {
         t_tree = regGraph.getParametersForSimulation(true);
         if (mutant != null) {
             mutant.apply(t_tree, regGraph);

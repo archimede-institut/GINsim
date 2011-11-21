@@ -13,14 +13,14 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
-import org.ginsim.graph.regulatorygraph.LogicalFunctionBrowser;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 /**
  * Encode a graph to GNA format.
@@ -89,7 +89,7 @@ class GNAExportAction extends ExportAction<RegulatoryGraph> {
 			//synthesis-parameters:
 			out.write("\n  production-parameters: ");
 			tmp = new StringBuffer();
-			OmddNode mdd = node.getTreeParameters(graph).reduce();
+			OMDDNode mdd = node.getTreeParameters(graph).reduce();
 			if (mdd.next == null && mdd.value == 0) {
 				out.write("k_"+id+"0, ");
 			}
@@ -138,13 +138,13 @@ class GNAFunctionBrowser extends LogicalFunctionBrowser {
 		this.out = out;
 	}
 
-	public void browse(OmddNode node, String name) {
+	public void browse(OMDDNode node, String name) {
 		this.nodeID = name;
 		first = true;
 		browse(node);
 	}
 
-	protected void leafReached(OmddNode leaf) {
+	protected void leafReached(OMDDNode leaf) {
 		if (leaf.value == 0) {
 			return;
 		}

@@ -16,10 +16,10 @@ import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.graph.view.css.CascadingStyle;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
@@ -32,7 +32,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  */
 public class InteractionAnalysis {
 	private boolean opt_annotate;
-	private GsRegulatoryMutantDef mutant;
+	private RegulatoryMutantDef mutant;
 
 	private RegulatoryGraph g;
 	private HashMap node_to_position;
@@ -66,7 +66,7 @@ public class InteractionAnalysis {
 	 * @param selectedNodes the set of selected nodes to run the analysis on.
 	 * 
 	 */
-	public InteractionAnalysis(RegulatoryGraph  g, boolean opt_annotate, GsRegulatoryMutantDef mutant, HashSet selectedNodes) {
+	public InteractionAnalysis(RegulatoryGraph  g, boolean opt_annotate, RegulatoryMutantDef mutant, HashSet selectedNodes) {
 		this.opt_annotate 		= opt_annotate;
 		this.mutant = mutant;
 		this.g = g;
@@ -74,7 +74,7 @@ public class InteractionAnalysis {
 		this.selectedNodes = selectedNodes;
 		run();
 	}
-	public InteractionAnalysis(RegulatoryGraph  g, boolean opt_annotate, GsRegulatoryMutantDef mutant) {
+	public InteractionAnalysis(RegulatoryGraph  g, boolean opt_annotate, RegulatoryMutantDef mutant) {
 		this(g, opt_annotate, mutant, null);
 	}
 
@@ -95,7 +95,7 @@ public class InteractionAnalysis {
 		int [] small_node_order_level; //The node order in the omdd.
 		RegulatoryVertex [] small_node_order_vertex; //The node order in the omdd.
 
-		OmddNode[] t_tree =  g.getAllTrees(true);
+		OMDDNode[] t_tree =  g.getAllTrees(true);
 		if (mutant != null) {
 			mutant.apply(t_tree, g);
 		}
@@ -121,7 +121,7 @@ public class InteractionAnalysis {
 			    continue;
 			}
 			Collection<RegulatoryMultiEdge> l = g.getIncomingEdges(target);											//  get the list l of incoming edges
-			OmddNode omdd = t_tree[i];
+			OMDDNode omdd = t_tree[i];
 			
 			total_level = 1;																//  Compute the total number of level in the omdd tree
 			for (RegulatoryMultiEdge edge: l) {
@@ -232,16 +232,16 @@ public class InteractionAnalysis {
 	}
 
 	/**
-	 * Recursive function scanning an OmddNode 'omdd' and call itself on the 'omdd' children.
+	 * Recursive function scanning an OMDDNode 'omdd' and call itself on the 'omdd' children.
 	 * When the function end, the array 'leaf' contains the value of all the real leafs.
 	 * 	 * 
-	 * @param omdd the current OmddNode to scan. Should be the root at the first call.
+	 * @param omdd the current OMDDNode to scan. Should be the root at the first call.
 	 * @param deep the deep call.
 	 * @param leafs the resulting array.
 	 * @param small_node_order 
 	 * @param subtree_size 
 	 */
-	private int scannOmdd(OmddNode omdd, int deep, byte [] leafs, int[] subtree_size, RegulatoryVertex[] small_node_order_vertex, int[] small_node_order_levels) {
+	private int scannOmdd(OMDDNode omdd, int deep, byte [] leafs, int[] subtree_size, RegulatoryVertex[] small_node_order_vertex, int[] small_node_order_levels) {
 		if (omdd.next == null) { 								//If the current node is leaf
 			if (subtree_size[deep] == 1) { 							//a real leaf, ie. all the inputs are present in the branch
 				leafs[i_leafs++] = omdd.value;							//Save the current value.

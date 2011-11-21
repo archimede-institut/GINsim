@@ -5,9 +5,9 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 /* SUMMARY
  * 
@@ -23,7 +23,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 
 /**
- * <p>A wrapper of OmddNode that adds the essentials methods to store states.</p>
+ * <p>A wrapper of OMDDNode that adds the essentials methods to store states.</p>
  * 
  * <p>Each path terminating with a value > 0 indicates the state is present in the set.<br>
  * The value is used to indicates several status.</p>
@@ -66,9 +66,9 @@ public class StatesSet {
 
 	
 	/**
-	 * The root of the diagram (OmddNode) 
+	 * The root of the diagram (OMDDNode) 
 	 */
-	private OmddNode root;
+	private OMDDNode root;
 
 
 /* **************** CONSTRUCTORS ************/	
@@ -93,14 +93,14 @@ public class StatesSet {
 	 * @param newStatus
 	 */
 	public void addState(byte[] state, int newStatus) {
-		OmddNode newState = stateFromArray(state, newStatus);
+		OMDDNode newState = stateFromArray(state, newStatus);
 		if (root == null) {
 			root = newState;
 			size = 1;
 			size_consistancy = true;
 		}
 		else  {
-			root = root.merge(newState, OmddNode.OR);
+			root = root.merge(newState, OMDDNode.OR);
 			size += 1;//Introduce an overapproximation
 			size_consistancy = false;
 		}
@@ -126,11 +126,11 @@ public class StatesSet {
 	 */
 	public void addStates(List states) {
 		if (root == null) {
-			root = OmddNode.multi_or(states, childsCount);
+			root = OMDDNode.multi_or(states, childsCount);
 			size = states.size();
 			size_consistancy = true;
 		} else {
-			root = root.merge(OmddNode.multi_or(states, childsCount), OmddNode.OR);
+			root = root.merge(OMDDNode.multi_or(states, childsCount), OMDDNode.OR);
 			size += states.size();//Introduce an overapproximation
 			size_consistancy = false;
 		}
@@ -142,7 +142,7 @@ public class StatesSet {
 	 */
 	public void merge(StatesSet slaveNodeStateSet) {
 		if (this.root != null && slaveNodeStateSet.root != null) {
-			this.root = this.root.merge(slaveNodeStateSet.root, OmddNode.OR);
+			this.root = this.root.merge(slaveNodeStateSet.root, OMDDNode.OR);
 			this.size += slaveNodeStateSet.getSizeOrOverApproximation();
 			this.size_consistancy = false;
 		}
@@ -171,7 +171,7 @@ public class StatesSet {
 	 * @param coef
 	 * @param counts
 	 */
-	private void updateSize(OmddNode omdd, int last_depth, int coef, int[] counts) {
+	private void updateSize(OMDDNode omdd, int last_depth, int coef, int[] counts) {
 		if (omdd.next == null) {
 			if (omdd.value == 0) return;
 	
@@ -266,7 +266,7 @@ public class StatesSet {
 		int currentStatus = root.testStatus(state);
 		if (currentStatus == newStatus) return true;
 		if (currentStatus > 0) {
-			root = root.merge(stateFromArray(state, 2), OmddNode.MAX);
+			root = root.merge(stateFromArray(state, 2), OMDDNode.MAX);
 			return true;
 		} else {
 			return false;
@@ -292,7 +292,7 @@ public class StatesSet {
 	 * @param state the state to generate
 	 * @return the omdd
 	 */
-	public OmddNode stateFromArray(byte[] state) {
+	public OMDDNode stateFromArray(byte[] state) {
 		return stateFromArray(state, 1);
 	}
 	
@@ -302,18 +302,18 @@ public class StatesSet {
 	 * @param status the value to append at the leaf.
 	 * @return the omdd
 	 */
-	public OmddNode stateFromArray(byte[] state, int status) {
-		OmddNode child = OmddNode.TERMINALS[status];
+	public OMDDNode stateFromArray(byte[] state, int status) {
+		OMDDNode child = OMDDNode.TERMINALS[status];
 		for (int level = state.length-1; level >=0 ; level--) {
-			OmddNode omdd = new OmddNode();
+			OMDDNode omdd = new OMDDNode();
 			omdd.level = level;
 			int nbrChilds = childsCount[level];
-			omdd.next = new OmddNode[nbrChilds];
+			omdd.next = new OMDDNode[nbrChilds];
 			for (int i = 0; i < nbrChilds; i++) {
 				if (i == state[level]) {
 					omdd.next[i] = child;
 				}
-				else omdd.next[i] = OmddNode.TERMINALS[0];
+				else omdd.next[i] = OMDDNode.TERMINALS[0];
 			}
 			child = omdd;
 		}
@@ -325,7 +325,7 @@ public class StatesSet {
 	 * @param state the state to generate
 	 * @return the omdd
 	 */
-	public OmddNode stateFromString(String state) {
+	public OMDDNode stateFromString(String state) {
 		return stateFromString(state, 1);
 	}
 	/**
@@ -333,17 +333,17 @@ public class StatesSet {
 	 * @param state the state to generate
 	 * @return the omdd
 	 */
-	public OmddNode stateFromString(String state, int status) {
-		OmddNode child = OmddNode.TERMINALS[status];
+	public OMDDNode stateFromString(String state, int status) {
+		OMDDNode child = OMDDNode.TERMINALS[status];
 		
 		for (int level = state.length()-1; level >=0 ; level--) {			
-			OmddNode omdd = new OmddNode();
+			OMDDNode omdd = new OMDDNode();
 			omdd.level = level;
 			int nbrChilds = childsCount[level];
-			omdd.next = new OmddNode[nbrChilds];
+			omdd.next = new OMDDNode[nbrChilds];
 			for (int i = 0; i < nbrChilds; i++) {
 				if (i == Integer.parseInt(""+state.charAt(level))) omdd.next[i] = child;
-				else omdd.next[i] = OmddNode.TERMINALS[0];
+				else omdd.next[i] = OMDDNode.TERMINALS[0];
 			}
 			child = omdd;
 		}
@@ -407,7 +407,7 @@ public class StatesSet {
 		statesToSchemaList(root, v, t, -1);	
 	}
 	
-	private void statesToSchemaList(OmddNode omdd, List v, byte[] t, int last_depth) {
+	private void statesToSchemaList(OMDDNode omdd, List v, byte[] t, int last_depth) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return;
         	for (int i = last_depth+1; i < childsCount.length; i++) {
@@ -444,7 +444,7 @@ public class StatesSet {
 		statesToFullList(root, v, t, -1);	
 	}
 	
-	private void statesToFullList(OmddNode omdd, List v, byte[] t, int last_depth) {
+	private void statesToFullList(OMDDNode omdd, List v, byte[] t, int last_depth) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return;
             statesToList_leaf(omdd, v, t, last_depth+1);
@@ -455,7 +455,7 @@ public class StatesSet {
  
 	}
 	
-	private void statesToFullList_inner(OmddNode omdd, List v, byte[] t, int depth, int limit_depth) {
+	private void statesToFullList_inner(OMDDNode omdd, List v, byte[] t, int depth, int limit_depth) {
 		if (depth == limit_depth) {
 	        for (int i = 0 ; i < omdd.next.length ; i++) {
 		    	t[omdd.level] = (byte) i;
@@ -469,7 +469,7 @@ public class StatesSet {
 		}
 	}
 
-	private void statesToList_leaf(OmddNode omdd, List v, byte[] t, int depth) {
+	private void statesToList_leaf(OMDDNode omdd, List v, byte[] t, int depth) {
 		if (depth == childsCount.length) {
 			v.add(t.clone());
 			return;
@@ -507,7 +507,7 @@ public class StatesSet {
 		statesToString(root, s, res, 0, childsCount.length, addValue);			
 		return res;
 	}
-	private void statesToString(OmddNode omdd, StringBuffer s, StringBuffer res, int last_depth, int nbNodes, boolean addValue) {
+	private void statesToString(OMDDNode omdd, StringBuffer s, StringBuffer res, int last_depth, int nbNodes, boolean addValue) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return;
         	for (int i = last_depth+1; i < nbNodes; i++) {
@@ -550,7 +550,7 @@ public class StatesSet {
 	 * @param last_depth
 	 * @return is used internally for the recursion
 	 */
-	private boolean firstStatesToString(OmddNode omdd, StringBuffer s, int last_depth) {
+	private boolean firstStatesToString(OMDDNode omdd, StringBuffer s, int last_depth) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return false;
         	return true;
@@ -573,7 +573,7 @@ public class StatesSet {
 /* **************** PARSING ************/	
 	public void parse(String parse) throws SAXException {
 		try {
-			root = OmddNode.read(parse, childsCount);
+			root = OMDDNode.read(parse, childsCount);
 			reduce();
 			updateSize();
 		} catch (ParseException e) {

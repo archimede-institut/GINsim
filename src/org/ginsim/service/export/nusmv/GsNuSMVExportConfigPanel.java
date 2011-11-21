@@ -22,15 +22,15 @@ import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -42,7 +42,7 @@ public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 	private PrioritySelectionPanel priorityPanel = null;
 	private MutantSelectionPanel mutantPanel = null;
-	private GsInitialStatePanel initPanel;
+	private InitialStatePanel initPanel;
 
 	JButton butCfgMutant = null;
 	JTextArea area;
@@ -85,7 +85,7 @@ public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 			}
 		});
 
-		initPanel = new GsInitialStatePanel( stack, cfg.graph, false);
+		initPanel = new InitialStatePanel( stack, cfg.graph, false);
 		initPanel.setParam(cfg);
 		add(initPanel, BorderLayout.CENTER);
 		this.setMinimumSize(new Dimension(450, 320));
@@ -139,9 +139,9 @@ public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	/**
 	 * @return the selected mutant (can be null)
 	 */
-	public GsRegulatoryMutantDef getMutant() {
-		if (mutantModel.getSelectedItem() instanceof GsRegulatoryMutantDef) {
-			return (GsRegulatoryMutantDef) mutantModel.getSelectedItem();
+	public RegulatoryMutantDef getMutant() {
+		if (mutantModel.getSelectedItem() instanceof RegulatoryMutantDef) {
+			return (RegulatoryMutantDef) mutantModel.getSelectedItem();
 		}
 		return null;
 	}
@@ -313,15 +313,15 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 	private static final long serialVersionUID = 2348678706086666489L;
 
-	GsRegulatoryMutants listMutants;
+	RegulatoryMutants listMutants;
 	GsNuSMVConfig cfg;
 
 	GsNuSMVMutantModel(GsNuSMVConfig cfg) {
 		this.cfg = cfg;
-		this.listMutants = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject( cfg.graph, GsMutantListManager.key, true);
+		this.listMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( cfg.graph, GsMutantListManager.key, true);
 	}
 
-	void setMutantList(GsRegulatoryMutants mutants) {
+	void setMutantList(RegulatoryMutants mutants) {
 		this.listMutants = mutants;
 		fireContentsChanged(this, 0, getSize());
 	}
@@ -335,8 +335,8 @@ class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 
 	public void setSelectedItem(Object anObject) {
 		super.setSelectedItem(anObject);
-		if (anObject instanceof GsRegulatoryMutantDef) {
-			cfg.mutant = (GsRegulatoryMutantDef) anObject;
+		if (anObject instanceof RegulatoryMutantDef) {
+			cfg.mutant = (RegulatoryMutantDef) anObject;
 		} else {
 			cfg.mutant = null;
 		}

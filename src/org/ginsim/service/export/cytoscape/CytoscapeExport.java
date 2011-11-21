@@ -18,13 +18,13 @@ import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
@@ -60,7 +60,7 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 	int EDGE_INHIBIT = 1;
 	int EDGE_ACTIVATE = 2;
 	int EDGE_UNDEFINED = 3;
-	GsRegulatoryMutants mlist = null;
+	RegulatoryMutants mlist = null;
 	FileWriter fout = null;
 	XMLWriter out = null;
 	

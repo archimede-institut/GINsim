@@ -23,7 +23,7 @@ public abstract class GsTreeParser<V,E> {
 	}
 	
 	/**
-	 * Run the parser on the OmddNode root, and fill the tree.
+	 * Run the parser on the OMDDNode root, and fill the tree.
 	 * 
 	 * @param treeMode the kind of tree to parse (tree, diagram or diagramWithAllleafs)
 	 */

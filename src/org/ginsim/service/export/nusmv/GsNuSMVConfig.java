@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 
-public class GsNuSMVConfig implements GsInitialStateStore {
+public class GsNuSMVConfig implements InitialStateStore {
 
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
@@ -23,7 +23,7 @@ public class GsNuSMVConfig implements GsInitialStateStore {
 	Map m_input;
 	// Store has two objects: 0- Mutant & 1- PriorityClass
 	ObjectStore store = new ObjectStore(2);
-	public GsRegulatoryMutantDef mutant;
+	public RegulatoryMutantDef mutant;
 	private int updatePolicy;
 	private int exportType;
 

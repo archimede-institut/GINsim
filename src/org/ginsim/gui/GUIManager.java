@@ -13,9 +13,9 @@ import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphGUIHelper;
+import org.ginsim.gui.graph.GraphGUIHelperFactory;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
-import org.ginsim.gui.graphhelper.GraphGUIHelper;
-import org.ginsim.gui.graphhelper.GraphGUIHelperFactory;
 import org.ginsim.gui.shell.MainFrame;
 
 import fr.univmrs.tagc.common.Debugger;

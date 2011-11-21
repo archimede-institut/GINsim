@@ -10,6 +10,8 @@ import javax.swing.Action;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
@@ -21,8 +23,6 @@ import org.ginsim.service.export.petrinet.PNConfig;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
@@ -91,7 +91,7 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 		RegulatoryGraph graph = config.graph;
     	MutantSelectionPanel mutantPanel = null;
     	
-    	GsInitialStatePanel initPanel = new GsInitialStatePanel(stack, graph, false);
+    	InitialStatePanel initPanel = new InitialStatePanel(stack, graph, false);
     	initPanel.setParam(config);
     	
     	setLayout(new GridBagLayout());

@@ -14,17 +14,17 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDBrowserListener;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNodeBrowser;
+import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.service.common.ExportAction;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OMDDBrowserListener;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OMDDNodeBrowser;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
@@ -45,7 +45,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 	private SBML3Config config = null;
     List<RegulatoryVertex> v_no;
     int len;
-    OmddNode[] t_tree;
+    OMDDNode[] t_tree;
     OMDDNodeBrowser browser;
     int curValue;
     XMLWriter out;
@@ -131,7 +131,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 		Iterator itinit = config.getInitialState().keySet().iterator();
 		Map m_initstates = null;
 		if (itinit.hasNext()) {
-			m_initstates = ((GsInitialState) itinit.next()).getMap();
+			m_initstates = ((InitialState) itinit.next()).getMap();
 		}
 		itinit = null;
 		if (m_initstates == null) {
@@ -204,7 +204,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
             if (regulatoryVertex.isInput()) {
             	continue;
             }
-            OmddNode node = t_tree[i];
+            OMDDNode node = t_tree[i];
             String s_node = regulatoryVertex.getId();
             out.openTag("transition");
             out.addAttr("id", "tr_"+s_node);
@@ -245,7 +245,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
             if (graph.getIncomingEdges(v_no.get(i)).size() == 0) {
                 LogicalParameterList lpl = regulatoryVertex.getV_logicalParameters();
                 if (lpl.size() == 1) {
-                	GsLogicalParameter lp = (GsLogicalParameter) lpl.get(0);
+                	LogicalParameter lp = (LogicalParameter) lpl.get(0);
                 	int value = lp.getValue();
                 	if (lpl.isManual(lp)) {
        			    	out.addAttr("resultLevel", ""+value);
@@ -316,7 +316,7 @@ class SBML3ExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	protected void init() {
 		
-		GsInitialStatePanel initPanel = new GsInitialStatePanel( stack, graph, false);
+		InitialStatePanel initPanel = new InitialStatePanel( stack, graph, false);
 		initPanel.setParam(config);
 		
 		GridBagConstraints c = new GridBagConstraints();
@@ -337,7 +337,7 @@ class SBML3ExportConfigPanel extends AbstractStackDialogHandler {
 }
 
  
-class SBML3Config implements GsInitialStateStore {
+class SBML3Config implements InitialStateStore {
 	Map m_init = new HashMap();
 	Map m_input = new HashMap();
 	ObjectStore store = new ObjectStore(2);

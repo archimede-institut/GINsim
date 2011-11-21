@@ -24,11 +24,11 @@ import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -614,8 +614,8 @@ public final class RegulatoryGraph extends AbstractGraph<RegulatoryVertex, Regul
      * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
      * @return a tree representation of logical parameters
      */
-    public OmddNode[] getAllTrees(boolean focal) {
-        OmddNode[] t_tree = new OmddNode[nodeOrder.size()];
+    public OMDDNode[] getAllTrees(boolean focal) {
+        OMDDNode[] t_tree = new OMDDNode[nodeOrder.size()];
         for (int i=0 ; i<nodeOrder.size() ; i++) {
         	RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
             t_tree[i] = vertex.getTreeParameters(nodeOrder);
@@ -634,7 +634,7 @@ public final class RegulatoryGraph extends AbstractGraph<RegulatoryVertex, Regul
 		return getNodeOrder();
 	}
 	
-	public OmddNode[] getParametersForSimulation(boolean focal) {
+	public OMDDNode[] getParametersForSimulation(boolean focal) {
 		
 		return getAllTrees(focal);
 	}

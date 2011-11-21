@@ -6,15 +6,15 @@ import java.util.List;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
@@ -49,7 +49,7 @@ public class SimulationParametersParser extends XMLHelper {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         paramLists = new SimulationParameterList(graph);
-        imanager = (GsInitialStateList)  ObjectAssociationManager.getInstance().getObject( graph, GsInitialStateManager.key, true);
+        imanager = (GsInitialStateList)  ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.key, true);
         initList = imanager.getInitialStates();
         inputList = imanager.getInputConfigs();
     }
@@ -126,7 +126,7 @@ public class SimulationParametersParser extends XMLHelper {
                 } else if (qName.equals("mutant")) {
                     String s = attributes.getValue("value");
                     if (!s.trim().equals("")) {
-                    	GsRegulatoryMutants mutantList = (GsRegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, true);
+                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, true);
                     	Object mutant = mutantList.get(s);
                         param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
                         if (mutant == null) {
@@ -161,12 +161,12 @@ public class SimulationParametersParser extends XMLHelper {
                     	// old file, do some cleanup
                     	if (pos == POS_INITSTATES) {
                             int index = initList.add();
-                            GsInitialState istate = (GsInitialState)initList.getElement(null, index);
+                            InitialState istate = (InitialState)initList.getElement(null, index);
                             istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
                     	    param.m_initState.put(istate, null);
                     	} else {
                             int index = inputList.add();
-                            GsInitialState istate = (GsInitialState)inputList.getElement(null, index);
+                            InitialState istate = (InitialState)inputList.getElement(null, index);
                             istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
                             param.m_input.put(istate, null);
                     	}

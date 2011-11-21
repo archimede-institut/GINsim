@@ -22,7 +22,16 @@ import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
-import org.ginsim.graph.regulatorygraph.LogicalFunctionBrowser;
+import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.tools.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
@@ -30,15 +39,6 @@ import org.ginsim.gui.service.tools.reg2dyn.SimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 
 class RemovedInfo {
 	RegulatoryVertex vertex;
@@ -79,7 +79,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	Map<Object, Object> copyMap = new HashMap<Object, Object>();
 	Map<RegulatoryVertex, List<RegulatoryVertex>> m_removed;
 	
-	Map<RegulatoryVertex, OmddNode> m_affected = new HashMap<RegulatoryVertex, OmddNode>();
+	Map<RegulatoryVertex, OMDDNode> m_affected = new HashMap<RegulatoryVertex, OMDDNode>();
 	String s_comment = "";
 	List<RegulatoryVertex> l_removed = new ArrayList<RegulatoryVertex>();
 
@@ -181,7 +181,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 		for (RemovedInfo ri: l_todo) {
 			RegulatoryVertex vertex = ri.vertex;
 			List<RegulatoryVertex> targets = new ArrayList<RegulatoryVertex>();
-			OmddNode deleted = m_affected.get(vertex);
+			OMDDNode deleted = m_affected.get(vertex);
 			if (deleted == null) {
 				deleted = vertex.getTreeParameters(graph);
 			}
@@ -198,7 +198,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 					RegulatoryVertex target = (RegulatoryVertex)it_targets.next();
 					if (!target.equals(vertex)) {
 						targets.add(target);
-						OmddNode targetNode = m_affected.get(target);
+						OMDDNode targetNode = m_affected.get(target);
 						if (targetNode == null) {
 							targetNode = target.getTreeParameters(graph);
 						}
@@ -299,7 +299,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			}
 			
 			// this node needs new parameters
-			OmddNode newNode = m_affected.get(vertex);
+			OMDDNode newNode = m_affected.get(vertex);
 
 			// make sure that the needed edges target the affected node
 			m_edges.clear();
@@ -331,15 +331,15 @@ public class ModelSimplifier extends Thread implements Runnable {
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
 		// mutants: only copy mutants that don't affect removed nodes
-		GsRegulatoryMutants mutants = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, false);
+		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, false);
 		if (mutants != null && mutants.getNbElements(null) > 0) {
-			GsRegulatoryMutants newMutants = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, GsMutantListManager.key, true);
-			GsRegulatoryMutantDef mutant, newMutant;
+			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, GsMutantListManager.key, true);
+			RegulatoryMutantDef mutant, newMutant;
 			int mutantPos=0;
 			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
-				mutant = (GsRegulatoryMutantDef)mutants.getElement(null, i);
+				mutant = (RegulatoryMutantDef)mutants.getElement(null, i);
 				mutantPos = newMutants.add();
-				newMutant = (GsRegulatoryMutantDef)newMutants.getElement(null, mutantPos);
+				newMutant = (RegulatoryMutantDef)newMutants.getElement(null, mutantPos);
 				newMutant.setName(mutant.getName());
 				boolean ok = true;
 				for (int j=0 ; j<mutant.getNbChanges() ; j++ ) {
@@ -368,9 +368,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 		
 		// initial states
-        GsInitialStateList linit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( graph, GsInitialStateManager.key, false);
+        GsInitialStateList linit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.key, false);
 		if (linit != null && !linit.isEmpty()) {
-			GsInitialStateList newLinit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, GsInitialStateManager.key, true);
+			GsInitialStateList newLinit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, InitialStateManager.key, true);
             InitialStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
             InitialStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};
 
@@ -379,9 +379,9 @@ public class ModelSimplifier extends Thread implements Runnable {
                 InitialStateList newInit = newInits[i];
     			if (init != null && init.getNbElements(null) > 0) {
     				for (int j=0 ; j<init.getNbElements(null) ; j++) {
-    					GsInitialState istate = (GsInitialState)init.getElement(null, j);
+    					InitialState istate = (InitialState)init.getElement(null, j);
     					int epos = newInit.add();
-    					GsInitialState newIstate = (GsInitialState)newInit.getElement(null, epos);
+    					InitialState newIstate = (InitialState)newInit.getElement(null, epos);
     					newIstate.setName(istate.getName());
     					m_alldata.put(istate, newIstate);
     					Map<RegulatoryVertex, List<Integer>> m_init = newIstate.getMap();
@@ -449,7 +449,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * extract the list of required edges for a given logical function.
 	 * @param node
 	 */
-	private void extractEdgesFromNode(Map<RegulatoryVertex,boolean[]> m_edges, OmddNode node) {
+	private void extractEdgesFromNode(Map<RegulatoryVertex,boolean[]> m_edges, OMDDNode node) {
 		if (node.next == null) {
 			return;
 		}
@@ -463,7 +463,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			m_edges.put(vertex, t_threshold);
 		}
 
-		OmddNode child = null;
+		OMDDNode child = null;
 		for (int i=0 ; i<node.next.length ; i++) {
 			if (child != node.next[i]) {
 				if (child != null) {
@@ -487,7 +487,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	/**
 	 * Preliminary check: a node should not be self-regulated: check it
 	 */
-	private void checkNoSelfReg(OmddNode node, int level) throws GsException {
+	private void checkNoSelfReg(OMDDNode node, int level) throws GsException {
 		if (node.next == null || node.level > level) {
 			return;
 		}
@@ -509,7 +509,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * @param level
 	 * @return
 	 */
-	public OmddNode remove(OmddNode node, OmddNode regulator, int level) throws GsException {
+	public OMDDNode remove(OMDDNode node, OMDDNode regulator, int level) throws GsException {
 		if (node.next == null || node.level > level) {
 			return node;
 		}
@@ -524,22 +524,22 @@ public class ModelSimplifier extends Thread implements Runnable {
 			return remove(node.next, regulator);
 		}
 		
-		OmddNode ret = new OmddNode();
+		OMDDNode ret = new OMDDNode();
 		if (regulator.next == null || regulator.level > node.level) {
 			ret.level = node.level;
-			ret.next = new OmddNode[node.next.length];
+			ret.next = new OMDDNode[node.next.length];
 			for (int i=0 ; i<ret.next.length ; i++) {
 				ret.next[i] = remove(node.next[i], regulator, level);
 			}
 		} else if (node.level > regulator.level) {
 			ret.level = regulator.level;
-			ret.next = new OmddNode[regulator.next.length];
+			ret.next = new OMDDNode[regulator.next.length];
 			for (int i=0 ; i<ret.next.length ; i++) {
 				ret.next[i] = remove(node, regulator.next[i], level);
 			}
 		} else {
 			ret.level = node.level;
-			ret.next = new OmddNode[node.next.length];
+			ret.next = new OMDDNode[node.next.length];
 			for (int i=0 ; i<ret.next.length ; i++) {
 				ret.next[i] = remove(node.next[i], regulator.next[i], level);
 			}
@@ -558,7 +558,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * @param regulator
 	 * @return
 	 */
-	public OmddNode remove(OmddNode[] t_ori, OmddNode regulator) {
+	public OMDDNode remove(OMDDNode[] t_ori, OMDDNode regulator) {
 		if (regulator.next == null) {
 			return t_ori[regulator.value];
 		}
@@ -566,7 +566,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 		int best = regulator.level;
 		int index = -1;
 		for (int i=0 ; i<t_ori.length ; i++) {
-			OmddNode node = t_ori[i];
+			OMDDNode node = t_ori[i];
 			if (node.next != null && node.level <= best) { 
 				// also update when equal to avoid stupid optimisations...
 				best = node.level;
@@ -574,19 +574,19 @@ public class ModelSimplifier extends Thread implements Runnable {
 			}
 		}
 		
-		OmddNode ret = new OmddNode();
+		OMDDNode ret = new OMDDNode();
 		ret.level = best;
 		if (index == -1) {
-			ret.next = new OmddNode[regulator.next.length];
+			ret.next = new OMDDNode[regulator.next.length];
 			for (int i=0 ; i<ret.next.length ; i++) {
 				ret.next[i] = remove(t_ori, regulator.next[i]);
 			}
 		} else {
-			ret.next = new OmddNode[t_ori[index].next.length];
+			ret.next = new OMDDNode[t_ori[index].next.length];
 			for (int i=0 ; i<ret.next.length ; i++) {
-				OmddNode[] t_recur = new OmddNode[t_ori.length];
+				OMDDNode[] t_recur = new OMDDNode[t_ori.length];
 				for (int j=0 ; j<t_recur.length ; j++) {
-					OmddNode node = t_ori[j];
+					OMDDNode node = t_ori[j];
 					if (node.next == null || node.level > best) {
 						t_recur[j] = node;
 					} else {
@@ -665,7 +665,7 @@ class TargetEdgesIterator implements Iterator<RegulatoryVertex> {
 }
 
 class ParameterGenerator extends LogicalFunctionBrowser {
-	private List<GsLogicalParameter> paramList;
+	private List<LogicalParameter> paramList;
 	private int[][] t_values;
 	private RegulatoryMultiEdge[] t_me;
 	private Map<RegulatoryVertex, Integer> m_orderPos;
@@ -675,8 +675,8 @@ class ParameterGenerator extends LogicalFunctionBrowser {
 		this.m_orderPos = m_orderPos;
 	}
 
-	public void browse(Collection<RegulatoryMultiEdge> edges, RegulatoryVertex targetVertex, OmddNode node) {
-		this.paramList = new ArrayList<GsLogicalParameter>();
+	public void browse(Collection<RegulatoryMultiEdge> edges, RegulatoryVertex targetVertex, OMDDNode node) {
+		this.paramList = new ArrayList<LogicalParameter>();
 		t_values = new int[edges.size()][4];
 		t_me = new RegulatoryMultiEdge[t_values.length];
 		
@@ -691,7 +691,7 @@ class ParameterGenerator extends LogicalFunctionBrowser {
 		targetVertex.getV_logicalParameters().setManualParameters(paramList);
 	}
 	
-	protected void leafReached(OmddNode leaf) {
+	protected void leafReached(OMDDNode leaf) {
 		if (leaf.value == 0) {
 			return;
 		}
@@ -757,7 +757,7 @@ class ParameterGenerator extends LogicalFunctionBrowser {
 				}
 			}
 			
-			paramList.add(new GsLogicalParameter(l, leaf.value));
+			paramList.add(new LogicalParameter(l, leaf.value));
 
 			// stop if no free value was found
 			if (lastIndex == -1) {

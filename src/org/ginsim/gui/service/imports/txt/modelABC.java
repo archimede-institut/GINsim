@@ -9,9 +9,9 @@ import java.util.List;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 
 
 /**
@@ -227,7 +227,7 @@ public final class modelABC {
 					listOfParam = G[i].getV_logicalParameters();  
 					if (!listOfParam.contains(activeInteractions)) //check if the parameter already exists in the list if not create it 
 					{ 					 
-						GsLogicalParameter newParam = new GsLogicalParameter(activeInteractions,1); 
+						LogicalParameter newParam = new LogicalParameter(activeInteractions,1); 
 						G[i].addLogicalParameter((newParam),true); 
 
 					}
@@ -254,7 +254,7 @@ public final class modelABC {
 
 					listOfParam = G[i].getV_logicalParameters();  
 					if (!listOfParam.contains(activeInteractions)) { //check if the parameter already exists in the list if not create it 
-						GsLogicalParameter newParam = new GsLogicalParameter(activeInteractions,2); 
+						LogicalParameter newParam = new LogicalParameter(activeInteractions,2); 
 						G[i].addLogicalParameter((newParam),true); 
 					}
 				}

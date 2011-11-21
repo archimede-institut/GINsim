@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.service.export.Dotify;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class DynamicalHierarchicalNode implements Dotify {
 	public static final byte TYPE_TRANSIENT_COMPONENT = 0;
@@ -37,7 +37,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 	/**
 	 * The root of the decision diagram storing the states.
 	 */
-	public OmddNode root;
+	public OMDDNode root;
 
 	/**
 	 * The type (transient, terminal cycle or stable state) of the component.
@@ -120,9 +120,9 @@ public class DynamicalHierarchicalNode implements Dotify {
 	public void addPileToOmdd(byte[] childsCount) {
 		if (statePile == null) return;
 		if (root == null) {
-			root = OmddNode.multi_or(statePile, childsCount);
+			root = OMDDNode.multi_or(statePile, childsCount);
 		} else {
-			root = root.merge(OmddNode.multi_or(statePile, childsCount), OmddNode.OR);			
+			root = root.merge(OMDDNode.multi_or(statePile, childsCount), OMDDNode.OR);			
 		}
 		statePile = null;
 		updateSize(childsCount);
@@ -153,7 +153,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 		if (root == null) {
 			root = stateFromString(state, childsCount);
 		} else {
-			root = root.merge(stateFromString(state, childsCount), OmddNode.OR);		
+			root = root.merge(stateFromString(state, childsCount), OMDDNode.OR);		
 		}
 		size++;
 	}
@@ -168,7 +168,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 		if (root == null) {
 			root = stateFromArray(state, childsCount, childValue);
 		} else {
-			root = root.merge(stateFromArray(state, childsCount, childValue), OmddNode.OR);
+			root = root.merge(stateFromArray(state, childsCount, childValue), OMDDNode.OR);
 		}
 		size++;
 	}
@@ -202,7 +202,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 	 * @param childsCount
 	 * @return the omdd
 	 */
-	public OmddNode stateFromArray(byte[] state, byte[] childsCount) {
+	public OMDDNode stateFromArray(byte[] state, byte[] childsCount) {
 		return stateFromArray(state, childsCount, 1);
 	}
 	
@@ -214,18 +214,18 @@ public class DynamicalHierarchicalNode implements Dotify {
 	 * @param child_value the value to append at the leaf.
 	 * @return the omdd
 	 */
-	public OmddNode stateFromArray(byte[] state, byte[] childsCount, int child_value) {
-		OmddNode child = OmddNode.TERMINALS[child_value];
+	public OMDDNode stateFromArray(byte[] state, byte[] childsCount, int child_value) {
+		OMDDNode child = OMDDNode.TERMINALS[child_value];
 		for (int level = state.length-1; level >=0 ; level--) {
-			OmddNode omdd = new OmddNode();
+			OMDDNode omdd = new OMDDNode();
 			omdd.level = level;
 			int nbrChilds = childsCount[level];
-			omdd.next = new OmddNode[nbrChilds];
+			omdd.next = new OMDDNode[nbrChilds];
 			for (int i = 0; i < nbrChilds; i++) {
 				if (i == state[level]) {
 					omdd.next[i] = child;
 				}
-				else omdd.next[i] = OmddNode.TERMINALS[0];
+				else omdd.next[i] = OMDDNode.TERMINALS[0];
 			}
 			child = omdd;
 		}
@@ -238,17 +238,17 @@ public class DynamicalHierarchicalNode implements Dotify {
 	 * @param childsCount
 	 * @return the omdd
 	 */
-	public OmddNode stateFromString(String state, byte[] childsCount) {
-		OmddNode child = OmddNode.TERMINALS[1];
+	public OMDDNode stateFromString(String state, byte[] childsCount) {
+		OMDDNode child = OMDDNode.TERMINALS[1];
 		
 		for (int level = state.length()-1; level >=0 ; level--) {			
-			OmddNode omdd = new OmddNode();
+			OMDDNode omdd = new OMDDNode();
 			omdd.level = level;
 			int nbrChilds = childsCount[level];
-			omdd.next = new OmddNode[nbrChilds];
+			omdd.next = new OMDDNode[nbrChilds];
 			for (int i = 0; i < nbrChilds; i++) {
 				if (i == Integer.parseInt(""+state.charAt(level))) omdd.next[i] = child;
-				else omdd.next[i] = OmddNode.TERMINALS[0];
+				else omdd.next[i] = OMDDNode.TERMINALS[0];
 			}
 			child = omdd;
 		}
@@ -362,7 +362,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 		return res.toString();
 	}
 		
-	private void statesToString(OmddNode omdd, StringBuffer s, StringBuffer res, int last_depth, int nbNodes, boolean addValue) {
+	private void statesToString(OMDDNode omdd, StringBuffer s, StringBuffer res, int last_depth, int nbNodes, boolean addValue) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return;
         	for (int i = last_depth+1; i < nbNodes; i++) {
@@ -405,7 +405,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 		return v;
 	}
 	
-	private void statesToList(OmddNode omdd, List v, byte[] t, int last_depth, int nbNodes) {
+	private void statesToList(OMDDNode omdd, List v, byte[] t, int last_depth, int nbNodes) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return;
         	for (int i = last_depth+1; i < nbNodes; i++) {
@@ -440,7 +440,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 		}
 		return s;
 	}
-	private boolean firstStatesToString(OmddNode omdd, StringBuffer s, int last_depth) {
+	private boolean firstStatesToString(OMDDNode omdd, StringBuffer s, int last_depth) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return false;
         	return true;
@@ -517,7 +517,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 			throw new Exception("Error merging two node of different types : "+slaveNode.toLongString(nbNodes)+" in "+this.toLongString(nbNodes)); //FIXME : remove me
 		}
 		if (this.root != null && slaveNode.root != null) {
-			this.root = this.root.merge(slaveNode.root, OmddNode.OR);
+			this.root = this.root.merge(slaveNode.root, OMDDNode.OR);
 		}
 		
 		if (slaveNode.in != null) {
@@ -583,7 +583,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 	}
 	
 	
-	private void updateSize(OmddNode omdd, int last_depth, int coef, byte[] childsCount) {
+	private void updateSize(OMDDNode omdd, int last_depth, int coef, byte[] childsCount) {
 		if (omdd.next == null) {
 			if (omdd.value == 0) return;
 
@@ -654,7 +654,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 	
 	public void processState(byte[] state, byte[] childsCount) {
 		if (root.testStatus(state) == 1) {
-			root = root.merge(stateFromArray(state, childsCount, 2), OmddNode.MAX);
+			root = root.merge(stateFromArray(state, childsCount, 2), OMDDNode.MAX);
 			processed++;
 		}
 	}
@@ -673,7 +673,7 @@ public class DynamicalHierarchicalNode implements Dotify {
 
 	public void parse(String parse, byte[] childCount) throws SAXException {
 		try {
-			root = OmddNode.read(parse, childCount);
+			root = OMDDNode.read(parse, childCount);
 			reduce();
 			updateSize(childCount);
 		} catch (ParseException e) {

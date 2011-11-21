@@ -4,10 +4,10 @@ import junit.framework.TestCase;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tools.modelsimplifier.ModelSimplifier;
 import org.ginsim.gui.service.tools.modelsimplifier.ModelSimplifierConfig;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class TestModifier extends TestCase {
 
@@ -24,47 +24,47 @@ public class TestModifier extends TestCase {
     	/* deleted node (level 3):
     	 *   !A & D
     	 */
-    	OmddNode tmp = new OmddNode();
+    	OMDDNode tmp = new OMDDNode();
     	tmp.level = 4;
-    	tmp.next = new OmddNode[2];
-    	tmp.next[0] = OmddNode.TERMINALS[0];
-    	tmp.next[1] = OmddNode.TERMINALS[1];
+    	tmp.next = new OMDDNode[2];
+    	tmp.next[0] = OMDDNode.TERMINALS[0];
+    	tmp.next[1] = OMDDNode.TERMINALS[1];
     	
-    	OmddNode deleted = new OmddNode();
+    	OMDDNode deleted = new OMDDNode();
     	deleted.level = 1;
-    	deleted.next = new OmddNode[2];
+    	deleted.next = new OMDDNode[2];
     	deleted.next[0] = tmp;
-    	deleted.next[1] = OmddNode.TERMINALS[0];
+    	deleted.next[1] = OMDDNode.TERMINALS[0];
 
     	/* original node:
     	 *   (A & !C) | B | C 
     	 */
-    	tmp = new OmddNode();
+    	tmp = new OMDDNode();
     	tmp.level = 3;
-    	tmp.next = new OmddNode[2];
-    	tmp.next[0] = OmddNode.TERMINALS[0];
-    	tmp.next[1] = OmddNode.TERMINALS[1];
+    	tmp.next = new OMDDNode[2];
+    	tmp.next[0] = OMDDNode.TERMINALS[0];
+    	tmp.next[1] = OMDDNode.TERMINALS[1];
     	
-    	OmddNode tmp2 = new OmddNode();
+    	OMDDNode tmp2 = new OMDDNode();
     	tmp2.level = 2;
-    	tmp2.next = new OmddNode[2];
+    	tmp2.next = new OMDDNode[2];
     	tmp2.next[0] = tmp;
-    	tmp2.next[1] = OmddNode.TERMINALS[1];
+    	tmp2.next[1] = OMDDNode.TERMINALS[1];
 
-    	tmp = new OmddNode();
+    	tmp = new OMDDNode();
     	tmp.level = 3;
-    	tmp.next = new OmddNode[2];
-    	tmp.next[0] = OmddNode.TERMINALS[1];
-    	tmp.next[1] = OmddNode.TERMINALS[0];
+    	tmp.next = new OMDDNode[2];
+    	tmp.next[0] = OMDDNode.TERMINALS[1];
+    	tmp.next[1] = OMDDNode.TERMINALS[0];
 
-    	OmddNode ori = new OmddNode();
+    	OMDDNode ori = new OMDDNode();
     	ori.level = 1;
-    	ori.next = new OmddNode[2];
+    	ori.next = new OMDDNode[2];
     	ori.next[0] = tmp2;
     	ori.next[1] = tmp;
 
     	ModelSimplifier simplifier = new ModelSimplifier(graph, cfg, null, true);
-    	OmddNode result = simplifier.remove(ori, deleted, 3);
+    	OMDDNode result = simplifier.remove(ori, deleted, 3);
     	
     	/*  expected result:
     	 *    A | B | D
@@ -76,37 +76,37 @@ public class TestModifier extends TestCase {
     	/* deleted node (level 3):
     	 *   !A & D
     	 */
-    	OmddNode tmp = new OmddNode();
+    	OMDDNode tmp = new OMDDNode();
     	tmp.level = 4;
-    	tmp.next = new OmddNode[2];
-    	tmp.next[0] = OmddNode.TERMINALS[0];
-    	tmp.next[1] = OmddNode.TERMINALS[1];
+    	tmp.next = new OMDDNode[2];
+    	tmp.next[0] = OMDDNode.TERMINALS[0];
+    	tmp.next[1] = OMDDNode.TERMINALS[1];
     	
-    	OmddNode deleted = new OmddNode();
+    	OMDDNode deleted = new OMDDNode();
     	deleted.level = 1;
-    	deleted.next = new OmddNode[2];
+    	deleted.next = new OMDDNode[2];
     	deleted.next[0] = tmp;
-    	deleted.next[1] = OmddNode.TERMINALS[0];
+    	deleted.next[1] = OMDDNode.TERMINALS[0];
 
     	/* original node:
     	 *   A | B 
     	 */
-    	tmp = new OmddNode();
+    	tmp = new OMDDNode();
     	tmp.level = 2;
-    	tmp.next = new OmddNode[2];
-    	tmp.next[0] = OmddNode.TERMINALS[0];
-    	tmp.next[1] = OmddNode.TERMINALS[1];
+    	tmp.next = new OMDDNode[2];
+    	tmp.next[0] = OMDDNode.TERMINALS[0];
+    	tmp.next[1] = OMDDNode.TERMINALS[1];
     	
-    	OmddNode ori = new OmddNode();
+    	OMDDNode ori = new OMDDNode();
     	ori.level = 1;
-    	ori.next = new OmddNode[2];
+    	ori.next = new OMDDNode[2];
     	ori.next[0] = tmp;
-    	ori.next[1] = OmddNode.TERMINALS[1];
+    	ori.next[1] = OMDDNode.TERMINALS[1];
 
     	/*  expected result:
     	 *    A | B
     	 */
-    	OmddNode result = simplifier.remove(ori, deleted, 3);
+    	OMDDNode result = simplifier.remove(ori, deleted, 3);
         assertEquals(result.toString(), "((N[1]=0 && ((N[2]=0 && 0) ; (N[2]=1 && 1))) ; (N[1]=1 && 1))");
         
         // some other trivial tests:
@@ -123,31 +123,31 @@ public class TestModifier extends TestCase {
      */
     public void testComplexStuff() throws GsException {
     	// can we remove a regulator with an auto-regulation if it is not functional ?
-    	OmddNode tmp = new OmddNode();
+    	OMDDNode tmp = new OMDDNode();
     	tmp.level = 2;
-    	tmp.next = new OmddNode[2];
-    	tmp.next[0] = OmddNode.TERMINALS[0];
-    	tmp.next[1] = OmddNode.TERMINALS[1];
-    	OmddNode deleted = new OmddNode();
+    	tmp.next = new OMDDNode[2];
+    	tmp.next[0] = OMDDNode.TERMINALS[0];
+    	tmp.next[1] = OMDDNode.TERMINALS[1];
+    	OMDDNode deleted = new OMDDNode();
     	deleted.level = 1;
-    	deleted.next = new OmddNode[2];
+    	deleted.next = new OMDDNode[2];
     	deleted.next[0] = tmp;
-    	deleted.next[1] = OmddNode.TERMINALS[1];
+    	deleted.next[1] = OMDDNode.TERMINALS[1];
     	
-    	tmp = new OmddNode();
+    	tmp = new OMDDNode();
     	tmp.level = 2;
-    	tmp.next = new OmddNode[2];
-    	tmp.next[0] = OmddNode.TERMINALS[0];
-    	tmp.next[1] = OmddNode.TERMINALS[1];
-    	OmddNode target = new OmddNode();
+    	tmp.next = new OMDDNode[2];
+    	tmp.next[0] = OMDDNode.TERMINALS[0];
+    	tmp.next[1] = OMDDNode.TERMINALS[1];
+    	OMDDNode target = new OMDDNode();
     	target.level = 1;
-    	target.next = new OmddNode[2];
-    	target.next[0] = OmddNode.TERMINALS[0];
+    	target.next = new OMDDNode[2];
+    	target.next[0] = OMDDNode.TERMINALS[0];
     	target.next[1] = tmp;
     	
-    	OmddNode result = simplifier.remove(target, deleted, 2);
+    	OMDDNode result = simplifier.remove(target, deleted, 2);
     	assertEquals(result.level, 1);
-    	assertEquals(result.next[0], OmddNode.TERMINALS[0]);
-    	assertEquals(result.next[1], OmddNode.TERMINALS[1]);
+    	assertEquals(result.next[0], OMDDNode.TERMINALS[0]);
+    	assertEquals(result.next[1], OMDDNode.TERMINALS[1]);
     }
 }

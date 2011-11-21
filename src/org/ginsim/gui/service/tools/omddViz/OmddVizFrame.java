@@ -17,13 +17,13 @@ import javax.swing.JTextField;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.graph.tree.Tree;
 import org.ginsim.graph.tree.GsTreeParser;
 import org.ginsim.graph.tree.GsTreeParserFromManualOmdd;
 import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -37,7 +37,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 	private JComboBox  leftOperandCB, rightOperandCB, operatorCB;
 	private JTextField  resultTextField;
 	private JButton displayTreeButton;
-	private OmddNode leftOmdd, rightOmdd, resOmdd;
+	private OMDDNode leftOmdd, rightOmdd, resOmdd;
 	
 	private String[] operationsOptions = new String[] {"or", "and", "constraint or", "constraint and", "max"};
 	

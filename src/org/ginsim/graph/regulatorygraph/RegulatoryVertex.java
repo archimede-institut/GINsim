@@ -14,15 +14,15 @@ import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.ToolTipsable;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeString;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -50,7 +50,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 	private Annotation	gsa = new Annotation();
 	private String 		id;
 
-	private GsTreeInteractionsModel interactionsModel;
+	private TreeInteractionsModel interactionsModel;
 	private RegulatoryGraph graph;
 
     private static final String S_ID   = Translator.getString("STR_id")+" : ";
@@ -67,7 +67,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 		super();
 		this.id = id;
 		this.graph = graph;
-		interactionsModel = new GsTreeInteractionsModel(graph);
+		interactionsModel = new TreeInteractionsModel(graph);
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 		super();
 		this.id = "G"+num;
 		this.graph = graph;
-		interactionsModel = new GsTreeInteractionsModel(graph);
+		interactionsModel = new TreeInteractionsModel(graph);
 	}
 
     public boolean isInput() {
@@ -150,7 +150,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 	 * @param I
 	 * @return true if the logical parameter has been added
 	 */
-	public boolean addLogicalParameter (GsLogicalParameter I, boolean manual) {
+	public boolean addLogicalParameter (LogicalParameter I, boolean manual) {
 		return v_logicalParameters.addLogicalParameter(I, manual);
 	}
 
@@ -158,19 +158,19 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 	 * Removes the specified interaction to the interactions of the node
 	 * @param I
 	 */
-	public void removeInteraction (GsLogicalParameter I) {
+	public void removeInteraction (LogicalParameter I) {
 		v_logicalParameters.remove(I);
 	}
 
 	/**
 	 * Returns the interaction at the specified position index
 	 * @param index
-	 * @return GsLogicalParameter
+	 * @return LogicalParameter
 	 */
-	public GsLogicalParameter getInteraction(int index) {
+	public LogicalParameter getInteraction(int index) {
 		try
 		{
-			return (GsLogicalParameter)v_logicalParameters.get(index);
+			return (LogicalParameter)v_logicalParameters.get(index);
 		}
 		catch (java.lang.ArrayIndexOutOfBoundsException e)
 		{
@@ -229,7 +229,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 	public LogicalParameterList getV_logicalParameters() {
 		return v_logicalParameters;
 	}
-	public OmddNode getTreeParameters(RegulatoryGraph graph) {
+	public OMDDNode getTreeParameters(RegulatoryGraph graph) {
 		return getTreeParameters(graph.getNodeOrder());
 	}
 
@@ -237,26 +237,26 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
      * get the DAG representation of logical parameters.
      *
      * @param graph
-     * @return an OmddNode representing logical parameters associated to this vertex.
+     * @return an OMDDNode representing logical parameters associated to this vertex.
      */
-    public OmddNode getTreeParameters(List<RegulatoryVertex> nodeOrder) {
-        OmddNode root;
+    public OMDDNode getTreeParameters(List<RegulatoryVertex> nodeOrder) {
+        OMDDNode root;
         if (isInput) {
-            root = new OmddNode();
+            root = new OMDDNode();
             root.level = nodeOrder.indexOf(this);
-            root.next = new OmddNode[maxValue+1];
+            root.next = new OMDDNode[maxValue+1];
             for (int i=0 ; i<root.next.length ; i++) {
-                root.next[i] = OmddNode.TERMINALS[i];
+                root.next[i] = OMDDNode.TERMINALS[i];
             }
         } else {
-            root = OmddNode.TERMINALS[0];
-            OmddNode curNode;
+            root = OMDDNode.TERMINALS[0];
+            OMDDNode curNode;
             Iterator it = v_logicalParameters.iterator();
             while (it.hasNext()) {
-                GsLogicalParameter gsi = (GsLogicalParameter)it.next();
+                LogicalParameter gsi = (LogicalParameter)it.next();
                 curNode = gsi.buildTree(graph, this, nodeOrder);
                 if (curNode != null) {
-                    root = root.merge(curNode, OmddNode.OR);
+                    root = root.merge(curNode, OMDDNode.OR);
                 }
             }
         }
@@ -285,7 +285,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 		 	LogicalParameterList lpl = this.getV_logicalParameters();
 		 	Iterator it = lpl.iterator();
     	    while (it.hasNext()) {
-		 		GsLogicalParameter lp = (GsLogicalParameter) it.next();
+		 		LogicalParameter lp = (LogicalParameter) it.next();
 		 		if(lpl.isManual(lp))
 		 			 lp.toXML(out, null, mode);		 			    
 		 	} 
@@ -365,36 +365,36 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
         RegulatoryVertex myClone = (RegulatoryVertex) copyMap.get(this);
         Iterator it = v_logicalParameters.iterator();
         while (it.hasNext()) {
-            ((GsLogicalParameter)it.next()).applyNewGraph(myClone, copyMap);
+            ((LogicalParameter)it.next()).applyNewGraph(myClone, copyMap);
             // TODO: copy the logical functions as well
             // if pasted into a new graph, the "interactionModel" should be
             // recreated/updated for the new graph
         }
     }
 
-    public void setInteractionsModel(GsTreeInteractionsModel model) {
+    public void setInteractionsModel(TreeInteractionsModel model) {
       interactionsModel = model;
       v_logicalParameters.setFunctionParameters(interactionsModel.getLogicalParameters());
     }
 
-    public GsTreeInteractionsModel getInteractionsModel() {
+    public TreeInteractionsModel getInteractionsModel() {
       return interactionsModel;
     }
 
     public void saveInteractionsModel(XMLWriter out, int mode) throws IOException {
-      GsTreeString root = (GsTreeString)interactionsModel.getRoot();
-      GsTreeValue val;
-      GsTreeElement exp;
+      TreeString root = (TreeString)interactionsModel.getRoot();
+      TreeValue val;
+      TreeElement exp;
 
       for (int i = 0; i < root.getChildCount(); i++) {
-        val = (GsTreeValue)root.getChild(i);
+        val = (TreeValue)root.getChild(i);
         out.openTag("value");
         out.addAttr("val", ""+val.getValue());
         for (int j = 0; j < val.getChildCount(); j++) {
           exp = val.getChild(j);
-          if (exp instanceof GsTreeExpression) {
+          if (exp instanceof TreeExpression) {
             out.openTag("exp");
-            ((GsTreeExpression)exp).refreshRoot();
+            ((TreeExpression)exp).refreshRoot();
             out.addAttr("str", exp.toString());
             out.closeTag();
           }
@@ -447,7 +447,7 @@ class UpdateMaxBlockedAction implements NotificationMessageAction {
 			}
 			it = l_parameters.iterator();
 			while (it.hasNext()) {
-				((GsLogicalParameter)it.next()).setValue(max, graph);
+				((LogicalParameter)it.next()).setValue(max, graph);
 			}
 			vertex.setMaxValue(max, graph);
 			return true;

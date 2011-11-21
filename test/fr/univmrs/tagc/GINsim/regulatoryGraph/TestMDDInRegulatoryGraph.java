@@ -7,6 +7,7 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 import fr.univmrs.tagc.common.TestTools;
 
@@ -17,7 +18,7 @@ public class TestMDDInRegulatoryGraph extends TestCase {
 	RegulatoryGraph graph;
 
 	public void testOMDD() {
-		OmddNode[] t_omdd = graph.getAllTrees(true);
+		OMDDNode[] t_omdd = graph.getAllTrees(true);
 		System.out.println("as OMDD");
 		for (int i=0 ; i<t_omdd.length ; i++) {
 			System.out.println(i+": "+t_omdd[i]);
@@ -28,22 +29,22 @@ public class TestMDDInRegulatoryGraph extends TestCase {
 	public void testMultiMergeOMDD() {
 	    byte[][] states = { {0,1,2}, {0,0,1}, {0,0,2}, {0,0,0} };
 	    byte[] max = {1,1,2}; 
-	    OmddNode node = OmddNode.multi_or(states, max);
+	    OMDDNode node = OMDDNode.multi_or(states, max);
 	    
 	    List l = new ArrayList();
 	    l.add(node);
         states[0][0] = 1;
         states[2][0] = 1;
-	    l.add(OmddNode.multi_or(states, max));
+	    l.add(OMDDNode.multi_or(states, max));
 	    
-	    node = OmddNode.multi_or(l).reduce();
+	    node = OMDDNode.multi_or(l).reduce();
 	    
 	    // path leading to 1:  0,0,* ; 0,1,2 ; 1,*,2
 	    System.out.println(node);
 	}
 	
 	public void testReduce() {
-		OmddNode r = getFixtureForReduce();
+		OMDDNode r = getFixtureForReduce();
 		System.out.println(r.getString(0));
 		r.reduce();
 		System.out.println(r.getString(0));
@@ -69,7 +70,7 @@ public class TestMDDInRegulatoryGraph extends TestCase {
 
 	 * @return
 	 */
-	private OmddNode getFixtureForReduce() {
+	private OMDDNode getFixtureForReduce() {
 		int[][] t_states = {
 				{0,0,0,0,0,0,0,1,-1,0},
 				{0,0,0,0,1,0,1,0,0,0},
@@ -81,11 +82,11 @@ public class TestMDDInRegulatoryGraph extends TestCase {
 				{0,1,1,0,1,0,1,0,0,0},
 				{0,1,1,1,-1,0,1,0,0,0},
 		};
-		OmddNode L0 = OmddNode.TERMINALS[0];
-		OmddNode L2 = OmddNode.TERMINALS[2];
-		OmddNode root = L0;
+		OMDDNode L0 = OMDDNode.TERMINALS[0];
+		OMDDNode L2 = OMDDNode.TERMINALS[2];
+		OMDDNode root = L0;
 		for (int i=0 ; i<t_states.length ; i++) {
-			OmddNode other = L2;
+			OMDDNode other = L2;
 			for (int j=t_states[i].length-1 ; j>=0 ; j--) {
 				if (t_states[i][j] == 0) {
 					other = O(j,other,L0);
@@ -93,15 +94,15 @@ public class TestMDDInRegulatoryGraph extends TestCase {
 					other = O(j,L0, other);
 				}
 			}
-			root = root.merge(other,OmddNode.OR);
+			root = root.merge(other,OMDDNode.OR);
 		}
 		return root;
 	}
 	
-	private OmddNode O(int level, OmddNode c0, OmddNode c1) {
-		OmddNode o = new OmddNode();
+	private OMDDNode O(int level, OMDDNode c0, OMDDNode c1) {
+		OMDDNode o = new OMDDNode();
 		o.level = level;
-		o.next = new OmddNode[2];
+		o.next = new OMDDNode[2];
 		o.next[0] = c0;
 		o.next[1] = c1;
 		return o;

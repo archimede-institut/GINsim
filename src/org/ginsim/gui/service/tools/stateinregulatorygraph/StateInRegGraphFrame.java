@@ -19,14 +19,14 @@ import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.datastore.gui.SimpleStateListTableModel;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
@@ -285,8 +285,8 @@ class StableState extends TabComponantProvidingAState {
 
 	protected void run() {
 		sss = ServiceManager.get(StableStatesService.class).getSearcher(g);
-		sss.setPerturbation((GsRegulatoryMutantDef) mutantStore.getObject(0));
-		OmddNode stable = sss.getStables();
+		sss.setPerturbation((RegulatoryMutantDef) mutantStore.getObject(0));
+		OMDDNode stable = sss.getStables();
 		tableModel.setResult(stable, g);
 	}
 

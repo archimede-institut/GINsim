@@ -8,13 +8,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -74,11 +74,11 @@ public class StableStateUI extends AbstractStackDialogHandler {
 	}
 	
 	public void run() {
-		algo.setPerturbation((GsRegulatoryMutantDef)mutantstore.getObject(0));
+		algo.setPerturbation((RegulatoryMutantDef)mutantstore.getObject(0));
 		setResult(algo.getStables());
 	}
 	
-	public void setResult(OmddNode stable) {
+	public void setResult(OMDDNode stable) {
 		tableModel.setResult(stable, graph);
 	}
 	

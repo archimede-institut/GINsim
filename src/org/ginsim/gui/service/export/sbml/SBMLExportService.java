@@ -15,10 +15,10 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -40,7 +40,7 @@ public class SBMLExportService implements Service{
 		
         List<RegulatoryVertex> v_no = graph.getNodeOrder();
         int len = v_no.size();
-        OmddNode[] t_tree = ((RegulatoryGraph)graph).getAllTrees(true);
+        OMDDNode[] t_tree = ((RegulatoryGraph)graph).getAllTrees(true);
         byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
             RegulatoryVertex vertex = (RegulatoryVertex)v_no.get(i);
@@ -97,7 +97,7 @@ public class SBMLExportService implements Service{
             // transitions data
             out.openTag("listOfReactions");
             for (int i=0 ; i<t_tree.length ; i++) {
-                OmddNode node = t_tree[i];
+                OMDDNode node = t_tree[i];
                 String s_node = v_no.get(i).toString();
                 int max = ((RegulatoryVertex)v_no.get(i)).getMaxValue();
                 out.openTag("reaction");
@@ -138,7 +138,7 @@ public class SBMLExportService implements Service{
 		}
 	}
 
-    private static void writeNode(XMLWriter out, OmddNode node, List v_no, String s_node, int max, int index, int val) throws IOException {
+    private static void writeNode(XMLWriter out, OMDDNode node, List v_no, String s_node, int max, int index, int val) throws IOException {
         if (node.next == null) {
             if (val != -1) { // self-regulation
                 if (val > node.value) {

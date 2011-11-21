@@ -16,10 +16,10 @@ import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.graph.view.css.VertexStyle;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.Debugger;
 
 /**
@@ -250,15 +250,15 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 */
 	private String compareLogicalFunction(RegulatoryVertex v1, RegulatoryVertex v2, Color[] color) {
 		String comment = "";
-		OmddNode omdd1 = v1.getTreeParameters(g1);
-		OmddNode omdd2 = v2.getTreeParameters(g2);
+		OMDDNode omdd1 = v1.getTreeParameters(g1);
+		OMDDNode omdd2 = v2.getTreeParameters(g2);
 		if (!compareLogicalFunction(omdd1, omdd2)) {
 			comment = "   logical functions are differents : \n      "+omdd1+"\n      "+omdd2;
 			color[0] = COMMON_COLOR_DIFF_FUNCTIONS;
 		}
 		return comment;
 	}
-	private boolean compareLogicalFunction(OmddNode omdd1, OmddNode omdd2) {
+	private boolean compareLogicalFunction(OMDDNode omdd1, OMDDNode omdd2) {
 		if (omdd1.level != omdd2.level) return false;
 		//if (omdd1.min 	!= omdd2.min) 	return false; //TODO : usefull to compare ?
 		//if (omdd1.max 	!= omdd2.max) 	return false;

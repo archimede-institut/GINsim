@@ -3,16 +3,16 @@ package org.ginsim.gui.service.tools.reg2dyn.helpers;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class GsReachabilitySetHelper extends SimulationHelper {
 	protected DynamicNode node;
 	protected int[] t_max;
 	protected int length;
-	protected OmddNode dd_reachable = OmddNode.TERMINALS[0];
+	protected OMDDNode dd_reachable = OMDDNode.TERMINALS[0];
 	
 	GsReachabilitySetHelper(SimulationParameters params) {
 		length = params.nodeOrder.size();
@@ -24,7 +24,7 @@ public class GsReachabilitySetHelper extends SimulationHelper {
 	
 	public boolean addNode(SimulationQueuedState item) {
 		
-		OmddNode newReachable = addReachable(dd_reachable, item.state, 0);
+		OMDDNode newReachable = addReachable(dd_reachable, item.state, 0);
 		if (newReachable != null) {
 			dd_reachable = newReachable.reduce();
 			return true;
@@ -47,41 +47,41 @@ public class GsReachabilitySetHelper extends SimulationHelper {
 	public void setStable() {
 	}
 	
-	protected OmddNode addReachable(OmddNode reachable, byte[] vstate, int depth) {
+	protected OMDDNode addReachable(OMDDNode reachable, byte[] vstate, int depth) {
 		if (depth == vstate.length) {
-			if (reachable.equals(OmddNode.TERMINALS[1])) {
+			if (reachable.equals(OMDDNode.TERMINALS[1])) {
 				return null;
 			}
-			return OmddNode.TERMINALS[1];
+			return OMDDNode.TERMINALS[1];
 		}
 		byte curval = vstate[depth];
 		if (reachable.next == null) {
 			if (reachable.value == 1) {
 				return null;
 			}
-			OmddNode ret = new OmddNode();
+			OMDDNode ret = new OMDDNode();
 			ret.level = depth;
-			ret.next = new OmddNode[t_max[depth]];
+			ret.next = new OMDDNode[t_max[depth]];
 			for (int i=0 ; i<ret.next.length ; i++) {
 				if (i==curval) {
 					ret.next[i] = addReachable(reachable, vstate, depth+1);
 				} else {
-					ret.next[i] = OmddNode.TERMINALS[0];
+					ret.next[i] = OMDDNode.TERMINALS[0];
 				}
 			}
 			return ret;
 		}
 		// reachable is not a leaf: first explore it and then create a new node if needed
-		OmddNode child;
+		OMDDNode child;
 		if (reachable.level > depth) {
 			child = addReachable(reachable, vstate, depth+1);
 		} else {
 			child = addReachable(reachable.next[curval], vstate, depth+1);
 		}
 		if (child != null) {
-			OmddNode ret = new OmddNode();
+			OMDDNode ret = new OMDDNode();
 			ret.level = depth;
-			ret.next = new OmddNode[t_max[depth]];
+			ret.next = new OMDDNode[t_max[depth]];
 			for (int i=0 ; i<ret.next.length ; i++) {
 				if (i==curval) {
 					ret.next[i] = child;

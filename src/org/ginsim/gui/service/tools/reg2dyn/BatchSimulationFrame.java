@@ -16,12 +16,12 @@ import javax.swing.JTextArea;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -112,7 +112,7 @@ public class BatchSimulationFrame extends BaseSimulationFrame {
             // TODO: add other anlyses (SCC,... ?)
         }
         if (initIterator != null && initIterator.hasNext()) {
-            GsInitialState o_init = (GsInitialState)initIterator.next();
+            InitialState o_init = (InitialState)initIterator.next();
             s_init = o_init.getName();
             m_init.clear();
             m_init.put(o_init, null);
@@ -154,12 +154,12 @@ public class BatchSimulationFrame extends BaseSimulationFrame {
 
     public static String nameState(byte[] state, RegulatoryGraph graph) {
     	
-        InitialStateList init = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, GsInitialStateManager.key, false)).getInitialStates();
+        InitialStateList init = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.key, false)).getInitialStates();
         // FIXME: adapt it to deal with input configs !!
         if (init != null && init.getNbElements(null) > 0) {
             List no = graph.getNodeOrder();
             for (int i=0 ; i<init.getNbElements(null) ; i++) {
-                GsInitialState istate = (GsInitialState)init.getElement(null, i);
+                InitialState istate = (InitialState)init.getElement(null, i);
                 Map m_istate = istate.getMap();
                 boolean ok = true;
                 for (int j=0 ; j<no.size() ; j++) {

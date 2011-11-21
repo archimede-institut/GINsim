@@ -5,11 +5,11 @@ import java.util.Map;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Selector;
 import org.ginsim.graph.view.css.Style;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 public class InteractionAnalysisSelector extends Selector {
 	public static final String IDENTIFIER = "interaction-analysis";
@@ -61,7 +61,7 @@ public class InteractionAnalysisSelector extends Selector {
 		return this.cache;
 	}
 	
-	public Map initCache(RegulatoryGraph g, boolean opt_annotate, boolean opt_verbose, GsRegulatoryMutantDef mutant) {
+	public Map initCache(RegulatoryGraph g, boolean opt_annotate, boolean opt_verbose, RegulatoryMutantDef mutant) {
 		InteractionAnalysis fii = new InteractionAnalysis(g, opt_annotate, mutant);
 		this.cache = fii.getFunctionality();
 		return this.cache;

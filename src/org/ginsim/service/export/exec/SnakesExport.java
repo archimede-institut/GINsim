@@ -9,10 +9,10 @@ import java.util.List;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.common.ExportAction;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 
 /**
@@ -40,7 +40,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 		
 		//data
 		List nodeOrder = graph.getNodeOrder();
-		OmddNode[] nodes = graph.getAllTrees(true);
+		OMDDNode[] nodes = graph.getAllTrees(true);
 		
 		out.write("class Toy(Module):\n");
 		int [][] parcours = new int[nodeOrder.size()][4];
@@ -93,7 +93,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 		out.close(); //Close filewriter
 	}
 	
-	protected void exploreNode(int[][] parcours, int deep, OmddNode node, List nodeOrder) throws IOException {
+	protected void exploreNode(int[][] parcours, int deep, OMDDNode node, List nodeOrder) throws IOException {
 		if (node.next == null) {
 			if (node.value > 0) {
 				String nodeName;
@@ -118,7 +118,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 			}
 			return ;
 		}
-		OmddNode currentChild;
+		OMDDNode currentChild;
 		for (int i = 0 ; i < node.next.length ; i++) {
 			currentChild = node.next[i];
 			int begin = i;

@@ -26,12 +26,12 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.service.tools.reg2dyn.SynchronousSimulationUpdater;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.datastore.gui.SimpleStateListTableModel;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
@@ -50,7 +50,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	private boolean isColorized = false;
 	private MutantSelectionPanel mutantSelectionPanel;
 	private ObjectStore mutantStore;
-	private GsRegulatoryMutantDef mutant;
+	private RegulatoryMutantDef mutant;
 	private StateSelectorTable sst;
 	private JCheckBox autoUpdateCheckbox;
 	
@@ -141,7 +141,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			isColorized = false;
 		}
 		
-		mutant = (GsRegulatoryMutantDef) mutantStore.getObject(0);
+		mutant = (RegulatoryMutantDef) mutantStore.getObject(0);
 		lg.setUpdater(new SynchronousSimulationUpdater(regGraph, mutant));
 		List states = sst.getStates();
 		if (states == null) return;

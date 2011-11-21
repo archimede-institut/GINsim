@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 /**
  * Export a regulatory graph to petri net (APNN format).
@@ -31,7 +31,7 @@ public class PetriNetExportAPNN extends BasePetriNetExport {
 		RegulatoryGraph graph = config.graph;
         List v_no = graph.getNodeOrder();
         int len = v_no.size();
-        OmddNode[] t_tree = graph.getAllTrees(true);
+        OMDDNode[] t_tree = graph.getAllTrees(true);
         List[] t_transition = new List[len];
         byte[][] t_markup = prepareExport(config, t_transition, t_tree);
 

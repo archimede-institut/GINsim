@@ -21,16 +21,16 @@ import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 import fr.univmrs.tagc.common.Debugger;
@@ -246,7 +246,7 @@ public final class RegulatoryParser extends GsXMLHelper {
                         	if (s_basal != null) {
                         		byte basevalue = (byte)Integer.parseInt(s_basal);
                         		if (basevalue != 0) {
-                        			vertex.addLogicalParameter(new GsLogicalParameter(basevalue), true);
+                        			vertex.addLogicalParameter(new LogicalParameter(basevalue), true);
                         		}
                         	}
                         	String input = attributes.getValue("input");
@@ -409,7 +409,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 
     	for (int i=0 ; i<v_waitingInteractions.size() ; i+=3) {
     		RegulatoryVertex vertex = (RegulatoryVertex)v_waitingInteractions.get(i);
-    		GsLogicalParameter gsi = new GsLogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)));
+    		LogicalParameter gsi = new LogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)));
     		String s_interactions = (String) v_waitingInteractions.get(i+2);
     		if (s_interactions != null) {
 	    		String[] t_interactions = s_interactions.split(" ");
@@ -481,7 +481,7 @@ public final class RegulatoryParser extends GsXMLHelper {
             }
             vertex.getInteractionsModel().parseFunctions();
             if (vertex.getMaxValue() + 1 == ((Hashtable)values.get(vertex)).size()) {
-              ((GsTreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
+              ((TreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
             }
           }
         }
@@ -493,8 +493,8 @@ public final class RegulatoryParser extends GsXMLHelper {
 
     public void addExpression(byte val, RegulatoryVertex vertex, String exp) {
     	try {
-        GsBooleanParser tbp = new GsBooleanParser( graph.getIncomingEdges(vertex));
-        GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
+        BooleanParser tbp = new BooleanParser( graph.getIncomingEdges(vertex));
+        TreeInteractionsModel interactionList = vertex.getInteractionsModel();
         if (!tbp.compile(exp, graph, vertex)) {
         	InvalidFunctionNotificationAction a = new InvalidFunctionNotificationAction();
         	Vector o = new Vector();
@@ -513,9 +513,9 @@ public final class RegulatoryParser extends GsXMLHelper {
       }
     }
     public void addParam(byte val, RegulatoryVertex vertex, String par) throws Exception {
-      GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
+      TreeInteractionsModel interactionList = vertex.getInteractionsModel();
 //      Set<GsDirectedEdge> l = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
-      GsTreeParam param = interactionList.addEmptyParameter(val, vertex);
+      TreeParam param = interactionList.addEmptyParameter(val, vertex);
       String[] t_interaction = par.split(" ");
       Vector v = new Vector();
       String srcString, indexString;
@@ -596,8 +596,8 @@ class InvalidFunctionNotificationAction implements NotificationMessageAction {
 		switch (index) {
 		  case 0 :
 		  	try {
-		  	  GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
-		  	  GsTreeExpression texp = interactionList.addEmptyExpression(value, vertex);
+		  	  TreeInteractionsModel interactionList = vertex.getInteractionsModel();
+		  	  TreeExpression texp = interactionList.addEmptyExpression(value, vertex);
       	  texp.setText(exp);
           texp.setProperty("invalid", new Boolean("true"));
         }

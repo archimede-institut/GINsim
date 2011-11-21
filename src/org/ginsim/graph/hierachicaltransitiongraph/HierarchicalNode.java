@@ -54,11 +54,11 @@ public class HierarchicalNode implements Comparable, Dotify {
 	public static final Color TYPE_EDEN_TRANSIENT_COMPONENT_COLOR = new Color(120, 160, 40);
 
 //	/**
-//	 * OmddNode status to indicate the state is present in the GsStateSet but unprocessed 
+//	 * OMDDNode status to indicate the state is present in the GsStateSet but unprocessed 
 //	 */
 //	public static final int STATUS_UNPROCESSED = 1;
 //	/**
-//	 * OmddNode status to indicate the state is present in the GsStateSet and processed 
+//	 * OMDDNode status to indicate the state is present in the GsStateSet and processed 
 //	 */
 //	public static final int STATUS_PROCESSED = 2;
 	

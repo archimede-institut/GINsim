@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 
-public class PNConfig implements GsInitialStateStore {
+public class PNConfig implements InitialStateStore {
 
 	public final RegulatoryGraph graph;
 	public final ObjectStore store = new ObjectStore(2);

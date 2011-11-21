@@ -31,7 +31,12 @@ import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -44,11 +49,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import JSci.io.MathMLParser;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
@@ -179,7 +179,7 @@ public final class SBMLXpathParser {
 							byte basevalue = (byte)Integer.parseInt(s_basal);
 							if(basevalue !=0)
 							{
-								vertex.addLogicalParameter(new GsLogicalParameter(basevalue), true);
+								vertex.addLogicalParameter(new LogicalParameter(basevalue), true);
 							}
 						}
 						
@@ -261,7 +261,7 @@ public final class SBMLXpathParser {
 							String vertexName = vertex.toString();
 							if(qualSpecies.equals(vertexName))
 							{								
-								vertex.addLogicalParameter(new GsLogicalParameter(dft_value), true); 
+								vertex.addLogicalParameter(new LogicalParameter(dft_value), true); 
 							}
 						}
 					}
@@ -704,7 +704,7 @@ public final class SBMLXpathParser {
 					}
 					vertex.getInteractionsModel().parseFunctions(); 
 					if (vertex.getMaxValue() + 1 == values.get(vertex).size()) {
-						((GsTreeElement) vertex.getInteractionsModel().getRoot()).setProperty(
+						((TreeElement) vertex.getInteractionsModel().getRoot()).setProperty(
 								"add", new Boolean(false));
 					}
 				}
@@ -717,9 +717,9 @@ public final class SBMLXpathParser {
 
 	public void addExpression(byte val, RegulatoryVertex vertex, String exp) {
 		try {
-			GsBooleanParser tbp = new GsBooleanParser(graph.getIncomingEdges(
+			BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(
 					vertex));
-			GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
+			TreeInteractionsModel interactionList = vertex.getInteractionsModel();
 			if (!tbp.compile(exp, graph, vertex)) {
 				InvalidFunctionNotificationAction a = new InvalidFunctionNotificationAction();
 				Vector<Object> o = new Vector<Object>();
@@ -845,8 +845,8 @@ public final class SBMLXpathParser {
 			switch (index) {
 			case 0:
 				try {
-					GsTreeInteractionsModel interactionList = vertex.getInteractionsModel();
-					GsTreeExpression texp = interactionList.addEmptyExpression(value, vertex);
+					TreeInteractionsModel interactionList = vertex.getInteractionsModel();
+					TreeExpression texp = interactionList.addEmptyExpression(value, vertex);
 					texp.setText(exp);
 					texp.setProperty("invalid", new Boolean("true"));
 				} catch (Exception ex) {

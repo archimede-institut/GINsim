@@ -8,12 +8,12 @@ import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
@@ -40,7 +40,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     public SimulationParameterList( Graph<RegulatoryVertex,RegulatoryMultiEdge> graph, SimulationParameters param) {
     	
         this.graph = (RegulatoryGraph) graph;
-        imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, GsInitialStateManager.key, true);
+        imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.key, true);
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
         pcmanager = new PriorityClassManager(this.graph);
@@ -50,7 +50,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	canRemove = true;
     	canOrder = true;
         graph.addGraphListener(this);
-        GsRegulatoryMutants mutants = (GsRegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, true);
+        RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, true);
         mutants.addListener(this);
         if (param == null) {
         	add();

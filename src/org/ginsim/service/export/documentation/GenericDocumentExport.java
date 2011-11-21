@@ -25,6 +25,19 @@ import org.ginsim.annotation.AnnotationLink;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
+import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 import org.ginsim.service.ServiceManager;
@@ -32,19 +45,6 @@ import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitStateTableModel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutants;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.document.DocumentStyle;
@@ -137,9 +137,9 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 	}
 
 	private void writeMutants() throws IOException {
-		GsRegulatoryMutants mutantList = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
+		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
 		StableStateSearcher stableSearcher = ServiceManager.get(StableStatesService.class).getSearcher(graph);
-		OmddNode stable;
+		OMDDNode stable;
 		
 		String[] cols;
 		if (config.searchStableStates && config.putComment) {
@@ -166,8 +166,8 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 		
 		StableTableModel model = new StableTableModel(nodeOrder);
 		for (int i=-1 ; i<mutantList.getNbElements(null) ; i++) {
-			GsRegulatoryMutantDef mutant = 
-				i<0 ? null : (GsRegulatoryMutantDef)mutantList.getElement(null, i);
+			RegulatoryMutantDef mutant = 
+				i<0 ? null : (RegulatoryMutantDef)mutantList.getElement(null, i);
 			
 			if (config.searchStableStates) {
 				stableSearcher.setPerturbation(mutant);
@@ -300,9 +300,9 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 	
 	private void writeInitialStates() throws IOException {
 		InitialStateList initStates = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, 
-				GsInitialStateManager.key, false)).getInitialStates();
+				InitialStateManager.key, false)).getInitialStates();
 		if (initStates != null && initStates.getNbElements(null) > 0) {
-			GsInitStateTableModel model = new GsInitStateTableModel(null, initStates, false);
+			InitStateTableModel model = new InitStateTableModel(null, initStates, false);
 			String[] t_cols = new String[len+1];
 			for (int i=0 ; i<=len ; i++) {
 				t_cols[i] = "";
@@ -340,7 +340,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 		
 		for (Iterator it=graph.getNodeOrder().iterator() ; it.hasNext() ;) {
 			RegulatoryVertex vertex = (RegulatoryVertex)it.next();
-			GsTreeInteractionsModel lfunc = vertex.getInteractionsModel();
+			TreeInteractionsModel lfunc = vertex.getInteractionsModel();
 			int nbval = 0;
 			Object funcRoot = null;
 			List[] t_val = new List[vertex.getMaxValue()+1];
@@ -353,7 +353,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 				}
 				// put all values from function
 				for (int i=0 ; i<nbval ; i++) {
-					GsTreeValue val = (GsTreeValue)lfunc.getChild(funcRoot, i);
+					TreeValue val = (TreeValue)lfunc.getChild(funcRoot, i);
 					int v = val.getValue();
 					if (lfunc.getChildCount(val) > 0) {
 						t_val[v] = new ArrayList();
@@ -365,7 +365,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 			// and add logical parameters as well
 			Iterator it_param = vertex.getV_logicalParameters().iterator(true);
 			while (it_param.hasNext()) {
-				GsLogicalParameter param = (GsLogicalParameter)it_param.next();
+				LogicalParameter param = (LogicalParameter)it_param.next();
 				if (!param.isDup()) {
 					int v = param.getValue();
 					if (t_val[v] == null) {
@@ -410,13 +410,13 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 		doc.closeTable();		
 	}
 	
-	private void doWriteParameters(int value, List data, GsTreeInteractionsModel lfunc) throws IOException {
+	private void doWriteParameters(int value, List data, TreeInteractionsModel lfunc) throws IOException {
 		doc.openTableCell(""+value); //Values
 		doc.openTableCell(null); //logical function
 		doc.openList("L1");
 		for (Iterator it_all=data.iterator() ; it_all.hasNext() ; ) {
 			Object o = it_all.next();
-			if (o instanceof GsTreeValue) {
+			if (o instanceof TreeValue) {
 				int nbfunc = lfunc.getChildCount(o);
 				for (int j=0 ; j<nbfunc ; j++) {
 					Object func = lfunc.getChild(o, j);
@@ -524,7 +524,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 
 }
 
-class DocumentExportConfig implements GsInitialStateStore {
+class DocumentExportConfig implements InitialStateStore {
     Map m_init = new HashMap();
     Map m_input = new HashMap();
 
@@ -576,7 +576,7 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
 	
 	@Override
 	protected void init() {
-    	GsInitialStatePanel initPanel = new GsInitialStatePanel(stack, graph, false);
+    	InitialStatePanel initPanel = new InitialStatePanel(stack, graph, false);
     	initPanel.setParam(cfg);
 
     	setLayout(new GridBagLayout());

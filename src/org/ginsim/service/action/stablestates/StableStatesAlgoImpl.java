@@ -6,9 +6,9 @@ import java.util.List;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
 
 /**
  * This implements an analytic search of stable states. A state "x" is stable if, for every gene "i",
@@ -25,8 +25,8 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 
 	private final RegulatoryGraph regGraph;
 	List nodeOrder;
-	OmddNode[] t_param;
-	OmddNode dd_stable;
+	OMDDNode[] t_param;
+	OMDDNode dd_stable;
 	Perturbation mutant;
 	boolean[][] t_reg;
 	int[][] t_newreg;
@@ -49,12 +49,12 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	}
 	
 	@Override
-	public void setNodeOrder(List<RegulatoryVertex> sortedVars, OmddNode[] tReordered) {
+	public void setNodeOrder(List<RegulatoryVertex> sortedVars, OMDDNode[] tReordered) {
 		throw new RuntimeException("Custom node order in stable state search needs love");
 	}
 	
 	@Override
-	public OmddNode getStables() {
+	public OMDDNode getStables() {
 		if (ORDERTEST) {
 			buildAdjTable();
 		}
@@ -64,7 +64,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 			mutant.apply(t_param, regGraph);
 		}
 		
-		dd_stable = OmddNode.TERMINALS[1];
+		dd_stable = OMDDNode.TERMINALS[1];
 		for (int i=0 ; i<t_param.length ; i++) {
 			if (ORDERTEST) {
 				int sel = selectNext();
@@ -149,43 +149,43 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	}
 	
 	// "stupid" method
-	private OmddNode buildStableConditionFromParam(int order, int nbChild, OmddNode param) {
+	private OMDDNode buildStableConditionFromParam(int order, int nbChild, OMDDNode param) {
 		if (param.next == null || param.level > order) {
-			OmddNode stable = new OmddNode();
+			OMDDNode stable = new OMDDNode();
 			stable.level = order;
-			stable.next = new OmddNode[nbChild];
+			stable.next = new OMDDNode[nbChild];
 			for (int i=0 ; i<stable.next.length ; i++) {
 				stable.next[i] = isStable(i, param);
 			}
 			return stable;
 		}
 		if (param.level == order) {
-			OmddNode stable = new OmddNode();
+			OMDDNode stable = new OMDDNode();
 			stable.level = order;
-			stable.next = new OmddNode[nbChild];
+			stable.next = new OMDDNode[nbChild];
 			for (int i=0 ; i<stable.next.length ; i++) {
 				stable.next[i] = isStable(i, param.next[i]);
 			}
 			return stable;
 		}
-		OmddNode stable = new OmddNode();
+		OMDDNode stable = new OMDDNode();
 		stable.level = param.level;
-		stable.next = new OmddNode[param.next.length];
+		stable.next = new OMDDNode[param.next.length];
 		for (int i=0 ; i<stable.next.length ; i++) {
 			stable.next[i] = buildStableConditionFromParam(order, nbChild, param.next[i]);
 		}
 		return stable;
 	}
-	private OmddNode isStable(int value, OmddNode param) {
+	private OMDDNode isStable(int value, OMDDNode param) {
 		if (param.next == null) {
 			if (param.value == value) {
-				return OmddNode.TERMINALS[1];
+				return OMDDNode.TERMINALS[1];
 			}
-			return OmddNode.TERMINALS[0];
+			return OMDDNode.TERMINALS[0];
 		}
-		OmddNode stable = new OmddNode();
+		OMDDNode stable = new OMDDNode();
 		stable.level = param.level;
-		stable.next = new OmddNode[param.next.length];
+		stable.next = new OMDDNode[param.next.length];
 		for (int i=0 ; i<stable.next.length ; i++) {
 			stable.next[i] = isStable(value, param.next[i]);
 		}
@@ -194,24 +194,24 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 
 
 	// smarter method
-	private OmddNode buildStableConditionFromParam(int order, int nbChild, OmddNode param, OmddNode known) {
+	private OMDDNode buildStableConditionFromParam(int order, int nbChild, OMDDNode param, OMDDNode known) {
 		if (known.next == null) {
 			if (known.value == 0) {
-				return OmddNode.TERMINALS[0];
+				return OMDDNode.TERMINALS[0];
 			}
 			return buildStableConditionFromParam(order, nbChild, param);
 		}
 
-		OmddNode stable = new OmddNode();
+		OMDDNode stable = new OMDDNode();
 		if ((param.next == null || param.level > order) && known.level > order) {
 			stable.level = order;
-			stable.next = new OmddNode[nbChild];
+			stable.next = new OMDDNode[nbChild];
 			for (int i=0 ; i<stable.next.length ; i++) {
 				stable.next[i] = isStable(i, param, known);
 			}
 		} else if (param.next == null || param.level > known.level) {
 			stable.level = known.level;
-			stable.next = new OmddNode[known.next.length];
+			stable.next = new OMDDNode[known.next.length];
 			if (stable.level == order) {
 				for (int i=0 ; i<stable.next.length ; i++) {
  					stable.next[i] = isStable(i, param, known.next[i]);
@@ -223,7 +223,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 			}
 		} else if (param.level < known.level) {
 			stable.level = param.level;
-			stable.next = new OmddNode[param.next.length];
+			stable.next = new OMDDNode[param.next.length];
 			if (stable.level == order) {
 				for (int i=0 ; i<stable.next.length ; i++) {
  					stable.next[i] = isStable(i, param.next[i], known);
@@ -236,7 +236,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 		} else {
 			// param.level = known.level
 			stable.level = param.level;
-			stable.next = new OmddNode[param.next.length];
+			stable.next = new OMDDNode[param.next.length];
 			if (stable.level == order) {
 				for (int i=0 ; i<stable.next.length ; i++) {
 					stable.next[i] = isStable(i, param.next[i], known.next[i]);
@@ -250,10 +250,10 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 		return stable;
 	}
 	
-	private OmddNode isStable(int value, OmddNode param, OmddNode known) {
+	private OMDDNode isStable(int value, OMDDNode param, OMDDNode known) {
 		if (known.next == null) {
 			if (known.value == 0) {
-				return OmddNode.TERMINALS[0];
+				return OMDDNode.TERMINALS[0];
 			}
 			return isStable(value, param);
 		}
@@ -261,31 +261,31 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 			if (param.value == value) {
 				return known;
 			}
-			return OmddNode.TERMINALS[0];
+			return OMDDNode.TERMINALS[0];
 		}
 		
 		if (param.level < known.level) {
-			OmddNode stable = new OmddNode();
+			OMDDNode stable = new OMDDNode();
 			stable.level = param.level;
-			stable.next = new OmddNode[param.next.length];
+			stable.next = new OMDDNode[param.next.length];
 			for (int i=0 ; i<stable.next.length ; i++) {
 				stable.next[i] = isStable(value, param.next[i], known);
 			}
 			return stable;
 		}
 		if (param.level > known.level) {
-			OmddNode stable = new OmddNode();
+			OMDDNode stable = new OMDDNode();
 			stable.level = known.level;
-			stable.next = new OmddNode[known.next.length];
+			stable.next = new OMDDNode[known.next.length];
 			for (int i=0 ; i<stable.next.length ; i++) {
 				stable.next[i] = isStable(value, param, known.next[i]);
 			}
 			return stable;
 		}
 		// param.level == known.level
-		OmddNode stable = new OmddNode();
+		OMDDNode stable = new OMDDNode();
 		stable.level = param.level;
-		stable.next = new OmddNode[param.next.length];
+		stable.next = new OMDDNode[param.next.length];
 		for (int i=0 ; i<stable.next.length ; i++) {
 			stable.next[i] = isStable(value, param.next[i], known.next[i]);
 		}
@@ -294,7 +294,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	
 	
 	// show stable state
-	private void showStableState (OmddNode stable) {
+	private void showStableState (OMDDNode stable) {
 		int[] state = new int[nodeOrder.size()];
 		for (int i=0 ; i<state.length ; i++) {
 			state[i] = -1;
@@ -302,7 +302,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 		findStableState(state, stable);
 	}
 	
-	private void findStableState(int[] state, OmddNode stable) {
+	private void findStableState(int[] state, OMDDNode stable) {
 		if (stable.next == null) {
 			if (stable.value == 1) {
 				// we have a stable state:

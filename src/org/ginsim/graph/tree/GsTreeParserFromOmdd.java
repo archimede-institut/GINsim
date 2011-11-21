@@ -8,12 +8,12 @@ import java.util.List;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.ColorPalette;
 
 public abstract class GsTreeParserFromOmdd extends GsTreeParser {
-	protected OmddNode root;
+	protected OMDDNode root;
 	
 	
 	/**
@@ -110,13 +110,13 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 		if (last_real != -1) widthPerDepth_acc[max_depth] = widthPerDepth_acc[last_real] * widthPerDepth[last_real];
 	}	
 	
-	public void createDiagramFromOmdd(OmddNode root) {
+	public void createDiagramFromOmdd(OMDDNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
 		tree.setRoot( _createDiagramFromOmdd(root, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()));
 	}
 	
-	private GsTreeNode _createDiagramFromOmdd(OmddNode o, int lastLevel, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
+	private GsTreeNode _createDiagramFromOmdd(OMDDNode o, int lastLevel, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
 		GsTreeNode treeNode;
 		int mult;
 		if (o.next == null) {
@@ -166,12 +166,12 @@ public abstract class GsTreeParserFromOmdd extends GsTreeParser {
 		}	    return treeNode;
 	}
 	
-	public void createTreeFromOmdd(OmddNode root) {
+	public void createTreeFromOmdd(OMDDNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
 		tree.setRoot( (GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0));
 	}
-	private List _createTreeFromOmdd(OmddNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
+	private List _createTreeFromOmdd(OMDDNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
 		GsTreeNode treeNode = null;
 		List parents = new ArrayList();
 		parents.add(parent);

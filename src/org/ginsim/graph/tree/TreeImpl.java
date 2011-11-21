@@ -13,10 +13,10 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tools.regulatorytreefunction.TreeActionPanel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>> 
 	implements Tree{
@@ -26,14 +26,14 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 	public final static int MODE_TREE = 2;
 
 	/**
-	 * The tree pendant to OmddNode.TERMINALS
+	 * The tree pendant to OMDDNode.TERMINALS
 	 */
 	public static GsTreeNode[] leafs;
 
 	static {
-		leafs = new GsTreeNode[OmddNode.TERMINALS.length];
+		leafs = new GsTreeNode[OMDDNode.TERMINALS.length];
 		
-		for (byte i = 0; i < OmddNode.TERMINALS.length; i++) {
+		for (byte i = 0; i < OMDDNode.TERMINALS.length; i++) {
 			leafs[i] = new GsTreeNode(""+i,-1, i, GsTreeNode.TYPE_LEAF, i);
 		}
 	}

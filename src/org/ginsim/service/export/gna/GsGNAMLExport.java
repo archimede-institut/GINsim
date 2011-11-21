@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.common.ExportAction;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
@@ -112,7 +112,7 @@ public class GsGNAMLExport extends ExportAction<RegulatoryGraph> {
 		out.openTag("apply");
 		out.addTag("minus");
 
-		OmddNode mdd = node.getTreeParameters(graph).reduce();
+		OMDDNode mdd = node.getTreeParameters(graph).reduce();
 		if (mdd.next != null) {
 			List nodeOrder = graph.getNodeOrder();
 			int [][] parcours = new int[nodeOrder.size()][4];
@@ -140,7 +140,7 @@ public class GsGNAMLExport extends ExportAction<RegulatoryGraph> {
 		out.closeTag();//apply minus
 		out.closeTag();//math
 	}
-	private int countNonZeroPath(OmddNode mdd) {
+	private int countNonZeroPath(OMDDNode mdd) {
 		if (mdd.next == null) {
 			if (mdd.value > 0) {
 				return 1;
@@ -148,9 +148,9 @@ public class GsGNAMLExport extends ExportAction<RegulatoryGraph> {
 			return 0;
 		}
 		int ret = 0;
-		OmddNode refNode = null;
+		OMDDNode refNode = null;
 		for (int i=0 ; i<mdd.next.length ; i++) {
-			OmddNode nextNode = mdd.next[i];
+			OMDDNode nextNode = mdd.next[i];
 			if (nextNode != refNode) {
 				refNode = nextNode;
 				ret += countNonZeroPath(mdd.next[i]);
@@ -158,7 +158,7 @@ public class GsGNAMLExport extends ExportAction<RegulatoryGraph> {
 		}
 		return ret;
 	}
-	protected void exploreNode(int[][] parcours, int deep, String topNodeId, OmddNode node, List nodeOrder) throws IOException {
+	protected void exploreNode(int[][] parcours, int deep, String topNodeId, OMDDNode node, List nodeOrder) throws IOException {
 		if (node.next == null) {
 			if (node.value > 0) {
 				if (deep > 0) {
@@ -182,7 +182,7 @@ public class GsGNAMLExport extends ExportAction<RegulatoryGraph> {
 			}
 			return ;
 		}
-		OmddNode currentChild;
+		OMDDNode currentChild;
 		for (int i = 0 ; i < node.next.length ; i++) {
 			currentChild = node.next[i];
 			int begin = i;

@@ -24,9 +24,9 @@ import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStatePanel;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.MutantSelectionPanel;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
@@ -63,7 +63,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	private JPanel graphSizeLimits;
 	private MutantSelectionPanel mutantPanel;
 	private GenericListPanel listPanel;
-	private GsInitialStatePanel initStatePanel = null;
+	private InitialStatePanel initStatePanel = null;
 	
 	private ChangeListener radioChangeListener = null;
 	
@@ -149,7 +149,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			mainPanel.add(getPriorityClassSelector(), c);
 			
 			// initial state
-			initStatePanel = new GsInitialStatePanel(this, paramList.graph, true);
+			initStatePanel = new InitialStatePanel(this, paramList.graph, true);
 			c.gridx = 0;
 			c.gridy++;
 			c.gridwidth = 2;

@@ -11,16 +11,16 @@ import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.reg2dyn.Reg2DynService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 
@@ -35,7 +35,7 @@ public class Reg2DynServiceGUI implements GsServiceGUI {
     	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, GsMutantListManager.key)){
     		ObjectAssociationManager.getInstance().registerObjectManager(RegulatoryGraph.class, new GsMutantListManager());
     	}
-        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new GsInitialStateManager());
+        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new InitialStateManager());
         ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new SimulationParametersManager());
     }
     

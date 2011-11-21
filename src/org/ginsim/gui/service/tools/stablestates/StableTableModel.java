@@ -10,12 +10,12 @@ import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateList;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateManager;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStateList;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class StableTableModel extends AbstractTableModel {
@@ -93,7 +93,7 @@ public class StableTableModel extends AbstractTableModel {
 		return ""+val;
 	}
 
-	public void setResult(OmddNode stable, Graph graph) {
+	public void setResult(OMDDNode stable, Graph graph) {
 		v_stable.clear();
 		
 		byte[] state = new byte[nodeOrder.size()];
@@ -117,7 +117,7 @@ public class StableTableModel extends AbstractTableModel {
 	private void updateMatches( Graph graph) {
 		InitialStateList initstates = null;
 		if (graph != null && graph instanceof RegulatoryGraph) {
-		    GsInitialStateList ilist = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, GsInitialStateManager.key, false);
+		    GsInitialStateList ilist = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.key, false);
 		    if (ilist != null) {
 		        initstates = ilist.getInitialStates();
 		    }
@@ -129,20 +129,20 @@ public class StableTableModel extends AbstractTableModel {
 		int len = v_stable.size();
 		matches = new String[len];
 		int nbinit = initstates.getNbElements();
-		OmddNode[] t_initMDD = new OmddNode[nbinit];
+		OMDDNode[] t_initMDD = new OMDDNode[nbinit];
 		for (int init=0 ; init<nbinit ; init++) {
-			t_initMDD[init] = ((GsInitialState)initstates.getElement(null, init)).getMDD(nodeOrder);
+			t_initMDD[init] = ((InitialState)initstates.getElement(null, init)).getMDD(nodeOrder);
 		}
 		for (int line=0 ; line<len ; line++) {
 			byte[] curstate = (byte[])v_stable.get(line);
 			for (int i=0 ; i<nbinit ; i++) {
-				OmddNode node = t_initMDD[i];
+				OMDDNode node = t_initMDD[i];
 				while (node.next != null) {
 					byte value = curstate[node.level];
 					if (value == -1) {
-						OmddNode next = node.next[0];
+						OMDDNode next = node.next[0];
 						for (int val=0 ; val<node.next.length ; val++) {
-							OmddNode maybenext = node.next[val];
+							OMDDNode maybenext = node.next[val];
 							if (maybenext.next != null || maybenext.value != 0) {
 								next = maybenext;
 								break;
@@ -154,7 +154,7 @@ public class StableTableModel extends AbstractTableModel {
 					}
 				}
 				if (node.value == 1) {
-					String name = ((GsInitialState)initstates.getElement(null, i)).getName();
+					String name = ((InitialState)initstates.getElement(null, i)).getName();
 					if (matches[line] != null) {
 						matches[line] += " ; "+name; 
 					} else {
@@ -179,7 +179,7 @@ public class StableTableModel extends AbstractTableModel {
 		return nodeOrder.get(column-1).toString();
 	}
 
-	private void findStableState(byte[] state, OmddNode stable) {
+	private void findStableState(byte[] state, OMDDNode stable) {
 		if (stable.next == null) {
 			if (stable.value == 1) {
 				v_stable.add(state.clone());

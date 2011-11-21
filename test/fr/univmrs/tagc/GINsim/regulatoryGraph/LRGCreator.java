@@ -7,6 +7,7 @@ import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.gui.GUIManager;
 
 /**
@@ -53,7 +54,7 @@ public class LRGCreator {
 		// it takes a value and a list of interactions
 		List edges = new ArrayList();
 		edges.add(me.getEdge(0));  // interaction == one of the edges inside a MultiEdge
-		GsLogicalParameter parameter = new GsLogicalParameter(edges, 1);
+		LogicalParameter parameter = new LogicalParameter(edges, 1);
 		
 		// add the logical parameter on g2
 		g2.addLogicalParameter(parameter, true);  // manual parameter, logical function will call this method with "false"

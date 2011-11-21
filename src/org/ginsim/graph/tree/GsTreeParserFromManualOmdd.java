@@ -2,7 +2,8 @@ package org.ginsim.graph.tree;
 
 import java.util.List;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+
 
 public class GsTreeParserFromManualOmdd extends GsTreeParserFromOmdd {
 
@@ -14,7 +15,7 @@ public class GsTreeParserFromManualOmdd extends GsTreeParserFromOmdd {
 
 	public void init() {
 		nodeOrder = (List)getParameter(PARAM_NODEORDER);
-		root = (OmddNode)getParameter(PARAM_MANUALOMDD);
+		root = (OMDDNode)getParameter(PARAM_MANUALOMDD);
 		initRealDepth(root);
 	}
 
@@ -23,7 +24,7 @@ public class GsTreeParserFromManualOmdd extends GsTreeParserFromOmdd {
 	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial vertex, assuming regGraph is defined
 	 * @param root
 	 */
-	public void initRealDepth(OmddNode root) {
+	public void initRealDepth(OMDDNode root) {
 		realDetph = new int[nodeOrder.size()+1]; //+1 for the leafs
 		_initRealDepth(root);
 		int next_realDepth = 0;
@@ -34,7 +35,7 @@ public class GsTreeParserFromManualOmdd extends GsTreeParserFromOmdd {
 			} else realDetph[i] = -2;
 		}
 	}
-    public void _initRealDepth(OmddNode o) {
+    public void _initRealDepth(OMDDNode o) {
         if (o.next == null) {
             return ;
         }

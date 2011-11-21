@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Vector;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.initialstate.InitialStatesIterator;
+import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 
-import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.InitialStatesIterator;
-import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 /**
  * Export a regulatory graph to petri net (shared methods).
@@ -68,7 +68,7 @@ public class BasePetriNetExport {
      * @param v_node all nodes
      * @param len number of nodes in the original graph
      */
-    protected void browse(List v_result, OmddNode node, int[][] t_priorities, int nodeIndex, List v_node, int len) {
+    protected void browse(List v_result, OMDDNode node, int[][] t_priorities, int nodeIndex, List v_node, int len) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
@@ -89,7 +89,7 @@ public class BasePetriNetExport {
         }
     }
 
-    private void browse(List v_result, int[][] t_cst, int level, OmddNode node, int[][] t_priorities, int nodeIndex, List v_node) {
+    private void browse(List v_result, int[][] t_cst, int level, OMDDNode node, int[][] t_priorities, int nodeIndex, List v_node) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
@@ -130,7 +130,7 @@ public class BasePetriNetExport {
         // specify on which node constraints are added
         t_cst[level][0] = node.level;
         for (int i=0 ; i<node.next.length ; i++) {
-            OmddNode next = node.next[i];
+            OMDDNode next = node.next[i];
             int j=i+1;
             while(j<node.next.length) {
                 if (node.next[j] == next) {
@@ -159,7 +159,7 @@ public class BasePetriNetExport {
 	 * @param t_tree
 	 * @return the initial markup
 	 */
-    protected byte[][] prepareExport( PNConfig config, List[] t_transition, OmddNode[] t_tree) {
+    protected byte[][] prepareExport( PNConfig config, List[] t_transition, OMDDNode[] t_tree) {
     	List nodeOrder = config.graph.getNodeOrder();
 		int len = nodeOrder.size();
 		// get the selected initial state
@@ -167,7 +167,7 @@ public class BasePetriNetExport {
 		byte[] t_state = (byte[])it_state.next();
 
 		// apply mutant
-		GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)config.store.getObject(0);
+		RegulatoryMutantDef mutant = (RegulatoryMutantDef)config.store.getObject(0);
 		if (mutant != null) {
 			mutant.apply(t_tree, config.graph);
 		}
@@ -200,7 +200,7 @@ public class BasePetriNetExport {
 		
 		byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
-            OmddNode node = t_tree[i];
+            OMDDNode node = t_tree[i];
             RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
 
 //            if (manager.getIncomingEdges(vertex).size() == 0) {
@@ -246,11 +246,11 @@ class TransitionData {
      */
     public int[][] t_cst;
     
-    public GsRegulatoryMutantDef mutant;
-    public GsRegulatoryMutantDef getMutant() {
+    public RegulatoryMutantDef mutant;
+    public RegulatoryMutantDef getMutant() {
         return mutant;
     }
-	public void setMutant(GsRegulatoryMutantDef mutant) {
+	public void setMutant(RegulatoryMutantDef mutant) {
 		this.mutant = mutant;
 	}
 	
