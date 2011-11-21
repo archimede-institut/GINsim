@@ -15,9 +15,9 @@ import org.ginsim.gui.graph.AddVertexAction;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 
 /**
  * GUI helper for the regulatory graph.

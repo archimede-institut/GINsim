@@ -14,9 +14,9 @@ import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.GsRegulatoryGraphOptionPanel;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.DynamicalHierarchicalParameterPanel;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 

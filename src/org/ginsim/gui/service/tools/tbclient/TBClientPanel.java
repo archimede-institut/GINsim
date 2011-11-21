@@ -41,6 +41,12 @@ import org.ginsim.graph.view.css.Selector;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;
+import org.ginsim.gui.tbclient.genetree.AbstractTreeElement;
+import org.ginsim.gui.tbclient.genetree.GeneTreeCellEditor;
+import org.ginsim.gui.tbclient.genetree.GeneTreeCellRenderer;
+import org.ginsim.gui.tbclient.genetree.GeneTreeModel;
+import org.ginsim.gui.tbclient.genetree.TreeElement;
+import org.ginsim.gui.tbclient.genetree.TreeElementNode;
 
 import tbrowser.data.module.TBModule;
 import tbrowser.data.module.TBModuleData;
@@ -48,12 +54,6 @@ import tbrowser.data.module.TBModules;
 import tbrowser.ihm.widget.TBButton;
 import tbrowser.ihm.widget.TBPanel;
 import tbrowser.io.remote.client.TBClient;
-import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.AbstractTreeElement;
-import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellEditor;
-import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeCellRenderer;
-import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.GeneTreeModel;
-import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.TreeElement;
-import fr.univmrs.tagc.GINsim.gui.tbclient.genetree.TreeElementNode;
 import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class TBClientPanel extends GsPanel implements GraphGUIListener, WindowListener {

@@ -11,11 +11,11 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 
 /**
  * parses a ginml regulatory graph.

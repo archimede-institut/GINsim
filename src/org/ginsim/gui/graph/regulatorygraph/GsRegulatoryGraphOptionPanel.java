@@ -8,7 +8,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphOptionPanel;
+import org.ginsim.gui.graph.GsGraphOptionPanel;
+
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.managerresources.Translator;
 

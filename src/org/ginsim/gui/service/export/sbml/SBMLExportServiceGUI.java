@@ -13,9 +13,9 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 
 /**
  * Export service to SBML format

@@ -30,9 +30,8 @@ import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.shell.GsFileFilter;
 
-import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
 
 /**

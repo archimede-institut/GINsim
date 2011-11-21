@@ -27,9 +27,9 @@ import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.io.parser.GsGinmlHelper;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
-import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 

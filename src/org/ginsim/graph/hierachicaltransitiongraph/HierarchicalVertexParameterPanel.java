@@ -9,6 +9,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.graph.hierarchicaltransitiongraph.HierarchicalCellRenderer;
+import org.ginsim.gui.graph.hierarchicaltransitiongraph.HierarchicalTableModel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.common.managerresources.Translator;

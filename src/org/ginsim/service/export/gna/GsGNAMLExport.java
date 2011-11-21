@@ -9,8 +9,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.shell.GsFileFilter;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**

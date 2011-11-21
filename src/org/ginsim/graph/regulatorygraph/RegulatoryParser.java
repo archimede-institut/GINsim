@@ -28,11 +28,11 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.Tr
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
-import fr.univmrs.tagc.GINsim.xml.GsXMLHelper;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;

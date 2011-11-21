@@ -5,9 +5,9 @@ import java.io.IOException;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.gui.FileSelectionHelper;
+import org.ginsim.gui.shell.FileSelectionHelper;
+import org.ginsim.gui.shell.GsFileFilter;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.HandledStackDialog;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;

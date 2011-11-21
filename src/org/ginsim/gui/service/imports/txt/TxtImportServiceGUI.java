@@ -7,15 +7,15 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ImportAction;
+import org.ginsim.gui.shell.FileSelectionHelper;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.imports.txt.TxtImportService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 
 @ProviderFor(GsServiceGUI.class)
 @GUIFor( TxtImportService.class)

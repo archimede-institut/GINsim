@@ -5,7 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
+import org.ginsim.gui.shell.GsFileFilter;
+
 
 /**
  * This class contain the informations about each kind of document like id, extension, filter and its class.

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.ginsim.graph.GsGinmlParser;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.export.cytoscape.CytoscapeExport;
@@ -12,7 +13,6 @@ import org.ginsim.service.export.exec.SnakesExport;
 import org.ginsim.service.export.gna.GsGNAMLExport;
 
 import junit.framework.TestCase;
-import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestExport extends TestCase {

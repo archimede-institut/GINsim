@@ -40,11 +40,11 @@ import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInte
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.document.DocumentStyle;

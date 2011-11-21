@@ -22,11 +22,11 @@ import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tools.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
 

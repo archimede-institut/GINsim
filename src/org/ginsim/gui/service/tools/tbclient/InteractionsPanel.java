@@ -29,15 +29,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
+import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
+import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
+import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementButton;
+import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
+import org.ginsim.gui.tbclient.decotreetable.table.DecoTreeTable;
 
 import tbrowser.data.TBProbe;
 import tbrowser.data.module.TBModuleData;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeTableBuilder;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementButton;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTable;
 import fr.univmrs.tagc.common.widgets.GsButton;
 import fr.univmrs.tagc.common.widgets.GsPanel;
 

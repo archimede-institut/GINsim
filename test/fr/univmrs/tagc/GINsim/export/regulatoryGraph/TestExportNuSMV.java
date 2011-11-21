@@ -6,11 +6,11 @@ import java.io.FileNotFoundException;
 
 import junit.framework.TestCase;
 
+import org.ginsim.graph.GsGinmlParser;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.export.nusmv.GsNuSMVConfig;
 import org.ginsim.service.export.nusmv.GsNuSMVExport;
 
-import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 
 public class TestExportNuSMV extends TestCase {
 	

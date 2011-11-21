@@ -13,8 +13,8 @@ import javax.swing.KeyStroke;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 
 import fr.univmrs.tagc.common.Debugger;

@@ -1,0 +1,207 @@
+package org.ginsim.gui.shell;
+
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.AbstractTableModel;
+
+import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
+
+import fr.univmrs.tagc.common.gui.dialog.SimpleDialog;
+import fr.univmrs.tagc.common.managerresources.Translator;
+
+
+/**
+ * This class provide a frame to search the nodes of a graph correponding to a certain pattern.
+ * On a regular graph, search using the node toString() method
+ * 
+ * The nodes founds are displayed into a list supporting multiple selection. A button allow to select in the graph, the node selected in the list.
+ *
+ */
+public class GsSearchFrame extends SimpleDialog {
+	private static final long serialVersionUID = 381064983897248950L;
+
+	private GraphGUI<?, ?, ?> gui;
+	private Graph<?,?> g;
+	
+	private JPanel mainPanel;
+	private JTextField searchTextField;
+	private JButton searchButton;
+	private JButton selectButton;
+	private JTable table;
+	private MyTableModel tableModel;
+	
+	public GsSearchFrame(GraphGUI<?, ?, ?> gui) {
+		super(GUIManager.getInstance().getFrame(gui.getGraph()), Translator.getString("STR_searchNode_title"),300,400);
+		this.gui = gui;
+		this.g = gui.getGraph();
+        initialize();
+	}
+	
+	private void initialize() {
+		this.add(getMainPanel());
+		this.setVisible(true);
+	}
+
+	private Component getMainPanel() {
+		if (mainPanel == null) {
+			mainPanel = new JPanel();
+			mainPanel.setLayout(new GridBagLayout());
+			GridBagConstraints c = new GridBagConstraints();
+			
+			c.gridx = 0;
+			c.gridy = 0;
+			c.weightx = 1;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			searchTextField = new JTextField();
+			searchTextField.addKeyListener(new KeyListener() {
+				public void keyPressed(KeyEvent arg0) {
+				}
+				public void keyReleased(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						search();
+					}
+				}
+				public void keyTyped(KeyEvent arg0) {
+				}
+			});
+			mainPanel.add(searchTextField, c);
+			
+			c.gridx++;
+			c.weightx = 0;
+			c.weighty = 0;
+			searchButton = new JButton(Translator.getString("STR_searchNode_search"));
+			searchButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					search();
+				}
+			});
+			mainPanel.add(searchButton, c);
+			
+			c.gridx = 0;
+			c.gridy++;
+			c.gridwidth = 2;
+			c.weightx = 1;
+			c.weighty = 1;
+			c.fill = GridBagConstraints.BOTH;
+			mainPanel.add(getTableInScrollPane(), c);
+			
+			c.gridy++;
+			c.weightx = 0;
+			c.weighty = 0;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			selectButton = new JButton(Translator.getString("STR_searchNode_selectNodes"));
+			selectButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					select();
+				}
+			});
+			mainPanel.add(selectButton, c);
+		}
+		return mainPanel;
+	}
+	
+	private Component getTableInScrollPane() {
+		if (g instanceof DynamicalHierarchicalGraph) {
+			tableModel = new MyTableModelForHierarchical(g.getNodeOrderSize());
+
+		} else {
+			tableModel = new MyTableModel();
+		}
+		table = new JTable(tableModel);
+		table.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		table.setColumnSelectionAllowed(false);
+		
+		JScrollPane scrollPane = new JScrollPane(table);		
+		return scrollPane;
+	}
+
+	public void search() {
+		tableModel.setData(new Vector());
+		tableModel.setData(g.searchVertices(searchTextField.getText()));
+	}
+
+	public void select() {
+		List l = new Vector();
+		int[] t = table.getSelectedRows();
+		for (int i = 0; i < t.length; i++) {
+			l.add(tableModel.getVertexAt(t[i]));
+		}
+		gui.getSelection().selectVertices(l);
+	}
+		
+	public void doClose() {
+		this.setVisible(false);
+	}
+
+}
+
+class MyTableModel extends AbstractTableModel {
+	private static final long serialVersionUID = -9107751311783717887L;
+	private static Object[] tableHeaders = {Translator.getString("STR_node")};
+
+	public List ldata;
+	
+	public MyTableModel() {
+		super();
+		ldata = new ArrayList();
+	}
+	
+	public String getColumnName(int col) {
+        return tableHeaders[col].toString();
+    }
+	
+    public int getRowCount() { 
+    	return ldata.size(); 
+    }
+    public int getColumnCount() { 
+    	return tableHeaders.length; 
+    }
+    
+    public Object getValueAt(int row, int col) {
+        return ldata.get(row);
+    }
+
+    public Object getVertexAt(int row) {
+        return ldata.get(row);
+    }
+
+    public boolean isCellEditable(int row, int col) { return false; }
+    
+    public void setData(List ldata) {
+    	this.ldata = ldata;
+    	fireTableDataChanged();
+    }
+}
+
+class MyTableModelForHierarchical extends MyTableModel {
+	public int nbNodes;
+	private static final long serialVersionUID = -89665179425980671L;
+
+	public MyTableModelForHierarchical(int nbNodes) {
+		super();
+		this.nbNodes = nbNodes;
+	}
+
+	public Object getValueAt(int row, int col) {
+        return ((DynamicalHierarchicalNode)ldata.get(row)).toString(nbNodes);
+    }
+	
+}

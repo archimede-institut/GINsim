@@ -12,10 +12,10 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.export.graphviz.GraphvizExportService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 
 /**
  * Export services to Graphviz format

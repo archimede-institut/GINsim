@@ -28,8 +28,8 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.shell.GsFileFilter;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;

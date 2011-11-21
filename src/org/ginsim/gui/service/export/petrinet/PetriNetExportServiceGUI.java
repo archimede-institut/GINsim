@@ -19,10 +19,10 @@ import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.export.petrinet.PNConfig;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;

@@ -26,16 +26,16 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
+import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
+import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
+import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElement;
+import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
+import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeModel;
+import org.ginsim.gui.tbclient.decotreetable.decotree.DecoTree;
+import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable.JCB;
+import org.ginsim.gui.tbclient.decotreetable.table.DecoTreeTable;
 
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeTableBuilder;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElement;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable.JCB;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DecoTree;
-import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.table.DecoTreeTable;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.widgets.GsButton;
 import fr.univmrs.tagc.common.widgets.GsPanel;

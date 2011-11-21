@@ -23,8 +23,8 @@ import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNodeBrowser;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.shell.GsFileFilter;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;

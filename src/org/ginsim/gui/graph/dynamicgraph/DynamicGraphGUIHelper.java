@@ -24,9 +24,9 @@ import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphEditor;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tools.dynamicanalyser.DynamicItemAttributePanel;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;

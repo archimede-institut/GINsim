@@ -20,12 +20,13 @@ import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.graph.hierarchicaltransitiongraph.HierarchicalEdgeParameterPanel;
 import org.ginsim.gui.service.tools.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
+import org.ginsim.io.parser.GsGinmlHelper;
 
-import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 

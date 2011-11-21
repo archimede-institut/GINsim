@@ -21,7 +21,7 @@ import javax.swing.JTextArea;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
-import org.ginsim.gui.FileSelectionHelper;
+import org.ginsim.gui.shell.FileSelectionHelper;
 
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.managerresources.Translator;
