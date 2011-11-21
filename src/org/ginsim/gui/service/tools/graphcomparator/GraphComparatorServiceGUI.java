@@ -11,7 +11,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
-import org.ginsim.service.action.graphcomparator.GraphComparatorService;
+import org.ginsim.service.tools.graphcomparator.GraphComparatorService;
 import org.mangosdk.spi.ProviderFor;
 
 

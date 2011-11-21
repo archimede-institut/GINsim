@@ -18,7 +18,7 @@ import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.service.action.connectivity.AlgoConnectivity;
+import org.ginsim.service.tools.connectivity.AlgoConnectivity;
 
 import fr.univmrs.tagc.common.ColorPalette;
 

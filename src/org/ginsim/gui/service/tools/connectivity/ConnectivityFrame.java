@@ -17,7 +17,7 @@ import org.ginsim.graph.reducedgraph.ReducedGraph;
 import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.graph.view.css.VertexStyle;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.service.action.connectivity.AlgoConnectivity;
+import org.ginsim.service.tools.connectivity.AlgoConnectivity;
 
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.ProgressListener;

@@ -37,7 +37,7 @@ import org.ginsim.graph.tree.GsTreeParserFromCircuit;
 import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
-import org.ginsim.service.action.connectivity.AlgoConnectivity;
+import org.ginsim.service.tools.connectivity.AlgoConnectivity;
 
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.ProgressListener;

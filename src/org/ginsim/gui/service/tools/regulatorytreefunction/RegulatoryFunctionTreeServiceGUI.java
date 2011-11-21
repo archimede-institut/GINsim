@@ -20,7 +20,7 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
-import org.ginsim.service.action.regulatoryfunctiontree.RegulatoryFunctionTreeService;
+import org.ginsim.service.tools.regulatoryfunctiontree.RegulatoryFunctionTreeService;
 import org.mangosdk.spi.ProviderFor;
 
 

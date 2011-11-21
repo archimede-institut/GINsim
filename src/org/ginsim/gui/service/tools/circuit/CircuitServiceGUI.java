@@ -14,7 +14,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
-import org.ginsim.service.action.circuit.CircuitService;
+import org.ginsim.service.tools.circuit.CircuitService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.managerresources.Translator;

@@ -24,8 +24,8 @@ import org.ginsim.gui.service.tools.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
-import org.ginsim.service.action.stablestates.StableStateSearcher;
-import org.ginsim.service.action.stablestates.StableStatesService;
+import org.ginsim.service.tools.stablestates.StableStateSearcher;
+import org.ginsim.service.tools.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;

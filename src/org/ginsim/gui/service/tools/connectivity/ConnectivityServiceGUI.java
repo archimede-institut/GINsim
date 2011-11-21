@@ -16,7 +16,7 @@ import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
-import org.ginsim.service.action.connectivity.ConnectivityService;
+import org.ginsim.service.tools.connectivity.ConnectivityService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;

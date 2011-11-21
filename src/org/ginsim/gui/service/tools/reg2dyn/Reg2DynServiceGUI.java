@@ -18,7 +18,7 @@ import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
-import org.ginsim.service.action.reg2dyn.Reg2DynService;
+import org.ginsim.service.tools.reg2dyn.Reg2DynService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.managerresources.Translator;

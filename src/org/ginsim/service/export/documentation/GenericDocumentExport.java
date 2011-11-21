@@ -42,8 +42,8 @@ import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
-import org.ginsim.service.action.stablestates.StableStateSearcher;
-import org.ginsim.service.action.stablestates.StableStatesService;
+import org.ginsim.service.tools.stablestates.StableStateSearcher;
+import org.ginsim.service.tools.stablestates.StableStatesService;
 
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
