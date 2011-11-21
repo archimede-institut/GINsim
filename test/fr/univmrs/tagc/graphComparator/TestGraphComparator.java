@@ -8,10 +8,10 @@ import junit.framework.TestCase;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.dynamicgraph.GsDynamicNode;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicNode;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.gui.service.tools.graphcomparator.DynamicGraphComparator;
 import org.ginsim.gui.service.tools.graphcomparator.GraphComparator;
 import org.ginsim.gui.service.tools.graphcomparator.RegulatoryGraphComparator;
@@ -22,8 +22,8 @@ import org.ginsim.gui.service.tools.graphcomparator.RegulatoryGraphComparator;
  *
  */
 public class TestGraphComparator extends TestCase  {
-	GsRegulatoryGraph rg1, rg2, rgempty;
-	GsDynamicGraph dg1, dg2, dgempty;
+	RegulatoryGraph rg1, rg2, rgempty;
+	DynamicGraph dg1, dg2, dgempty;
 	
 	public TestGraphComparator() {
 		this.rg1 = GraphExamples.rg1();
@@ -111,8 +111,8 @@ class GraphExamples {
 	 *        D <-  C  -> E
 	 * 
 	 */
-	public static GsRegulatoryGraph rg1() {
-		GsRegulatoryGraph g = new GsRegulatoryGraph(); 
+	public static RegulatoryGraph rg1() {
+		RegulatoryGraph g = new RegulatoryGraph(); 
 		try { g.setGraphName("regulatory_graph_A");} catch (GsException e) {}
 		
 		g.addNewVertex("A", "A", (byte)1);
@@ -122,12 +122,12 @@ class GraphExamples {
 		g.addNewVertex("E", "E", (byte)1);
 		
 		try {
-			g.addNewEdge("A", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
-			g.addNewEdge("A", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);  //added
-			g.addNewEdge("B", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-			g.addNewEdge("C", "D", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-			g.addNewEdge("D", "A", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);
-			g.addNewEdge("C", "E", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE);  //added
+			g.addNewEdge("A", "B", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE);
+			g.addNewEdge("A", "C", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE);  //added
+			g.addNewEdge("B", "C", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE);
+			g.addNewEdge("C", "D", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE);
+			g.addNewEdge("D", "A", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE);
+			g.addNewEdge("C", "E", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE);  //added
 		} catch (GsException e) {
 			e.printStackTrace();
 		}
@@ -144,8 +144,8 @@ class GraphExamples {
 	 *        D <-  C  -> F
 	 *        
 	 */
-	public static GsRegulatoryGraph rg2() {
-		GsRegulatoryGraph g = new GsRegulatoryGraph(); 
+	public static RegulatoryGraph rg2() {
+		RegulatoryGraph g = new RegulatoryGraph(); 
 		try { g.setGraphName("regulatory_graph_B");} catch (GsException e) {}
 		
 		g.addNewVertex("A", "A", (byte)1);
@@ -156,14 +156,14 @@ class GraphExamples {
 		g.addNewVertex("G", "G", (byte)1); //added
 		
 		try {
-			g.addNewEdge("A", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE);
-			g.addNewEdge("B", "C", (byte)0, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //different sign
-			g.addNewEdge("C", "D", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //multiarc
-			g.addNewEdge("C", "D", (byte)1, GsRegulatoryMultiEdge.SIGN_NEGATIVE); //multiarc
-			g.addNewEdge("D", "A", (byte)1, GsRegulatoryMultiEdge.SIGN_POSITIVE); //different minvalue
-			g.addNewEdge("C", "F", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
-			g.addNewEdge("F", "B", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
-			g.addNewEdge("F", "G", (byte)0, GsRegulatoryMultiEdge.SIGN_POSITIVE); //added
+			g.addNewEdge("A", "B", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE);
+			g.addNewEdge("B", "C", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE); //different sign
+			g.addNewEdge("C", "D", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE); //multiarc
+			g.addNewEdge("C", "D", (byte)1, RegulatoryMultiEdge.SIGN_NEGATIVE); //multiarc
+			g.addNewEdge("D", "A", (byte)1, RegulatoryMultiEdge.SIGN_POSITIVE); //different minvalue
+			g.addNewEdge("C", "F", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE); //added
+			g.addNewEdge("F", "B", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE); //added
+			g.addNewEdge("F", "G", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE); //added
 		} catch (GsException e) {
 			e.printStackTrace();
 		}
@@ -171,8 +171,8 @@ class GraphExamples {
 		return g;
 	}
 	
-	public static GsRegulatoryGraph rgempty() {
-		GsRegulatoryGraph g = new GsRegulatoryGraph(); 
+	public static RegulatoryGraph rgempty() {
+		RegulatoryGraph g = new RegulatoryGraph(); 
 		try { g.setGraphName("regulatory_graph_empty");} catch (GsException e) {}
 		return g;
 	}
@@ -187,13 +187,13 @@ class GraphExamples {
 	 *       10     11
 	 * 
 	 */
-	public static  GsDynamicGraph dg1() {
-		GsDynamicGraph g = GraphManager.getInstance().getNewGraph(GsDynamicGraph.class); 
+	public static  DynamicGraph dg1() {
+		DynamicGraph g = GraphManager.getInstance().getNewGraph( DynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_A");} catch (GsException e) {}
 		
-		g.addVertex(new GsDynamicNode("a00"));
-		g.addVertex(new GsDynamicNode("a01"));
-		g.addVertex(new GsDynamicNode("a10"));
+		g.addVertex(new DynamicNode("a00"));
+		g.addVertex(new DynamicNode("a01"));
+		g.addVertex(new DynamicNode("a10"));
 		
 		g.addEdge(g.getVertexByName("00"), g.getVertexByName("01"), false);
 		g.addEdge(g.getVertexByName("10"), g.getVertexByName("01"), false);
@@ -213,14 +213,14 @@ class GraphExamples {
 	 *       10  -> 11
 	 * 
 	 */
-	public static  GsDynamicGraph dg2() {
-		GsDynamicGraph g = GraphManager.getInstance().getNewGraph(GsDynamicGraph.class); 
+	public static  DynamicGraph dg2() {
+		DynamicGraph g = GraphManager.getInstance().getNewGraph(DynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_B");} catch (GsException e) {}
 		
-		g.addVertex(new GsDynamicNode("a00"));
-		g.addVertex(new GsDynamicNode("a01"));
-		g.addVertex(new GsDynamicNode("b10"));//change first letter (should have no effect)
-		g.addVertex(new GsDynamicNode("a11"));//added
+		g.addVertex(new DynamicNode("a00"));
+		g.addVertex(new DynamicNode("a01"));
+		g.addVertex(new DynamicNode("b10"));//change first letter (should have no effect)
+		g.addVertex(new DynamicNode("a11"));//added
 		
 		g.addEdge(g.getVertexByName("00"), g.getVertexByName("01"), false);
 		g.addEdge(g.getVertexByName("10"), g.getVertexByName("01"), false);
@@ -231,8 +231,8 @@ class GraphExamples {
 		return g;
 	}
 
-	public static GsDynamicGraph dgempty() {
-		GsDynamicGraph g = GraphManager.getInstance().getNewGraph(GsDynamicGraph.class); 
+	public static DynamicGraph dgempty() {
+		DynamicGraph g = GraphManager.getInstance().getNewGraph(DynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_empty");} catch (GsException e) {}
 		return g;
 	}

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.css;
+package org.ginsim.graph.view.css;
 
 /**
  * 

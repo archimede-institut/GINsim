@@ -12,10 +12,10 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.view.css.EdgeStyle;
+import org.ginsim.graph.view.css.Style;
+import org.ginsim.graph.view.css.VertexStyle;
 
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Style;
-import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
 
 /**

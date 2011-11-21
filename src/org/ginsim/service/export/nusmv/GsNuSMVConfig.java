@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
+package org.ginsim.service.export.nusmv;
 
 import java.util.HashMap;
 import java.util.Map;

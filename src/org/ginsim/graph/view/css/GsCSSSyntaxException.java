@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.css;
+package org.ginsim.graph.view.css;
 
 public class GsCSSSyntaxException extends Exception {
 	private static final long serialVersionUID = -178881160709719504L;

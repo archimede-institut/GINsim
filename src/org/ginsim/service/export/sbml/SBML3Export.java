@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
+package org.ginsim.service.export.sbml;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

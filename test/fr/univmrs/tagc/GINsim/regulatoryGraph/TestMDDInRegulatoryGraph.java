@@ -6,7 +6,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 
 import fr.univmrs.tagc.common.TestTools;
 
@@ -14,7 +14,7 @@ import fr.univmrs.tagc.common.TestTools;
 public class TestMDDInRegulatoryGraph extends TestCase {
 	File file = new File(TestTools.getTestDir(), "graph.ginml");
 
-	GsRegulatoryGraph graph;
+	RegulatoryGraph graph;
 
 	public void testOMDD() {
 		OmddNode[] t_omdd = graph.getAllTrees(true);

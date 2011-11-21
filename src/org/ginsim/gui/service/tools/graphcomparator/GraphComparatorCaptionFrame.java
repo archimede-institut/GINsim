@@ -26,12 +26,12 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.view.css.CascadingStyle;
+import org.ginsim.graph.view.css.EdgeStyle;
+import org.ginsim.graph.view.css.Style;
+import org.ginsim.graph.view.css.VertexStyle;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Style;
-import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {

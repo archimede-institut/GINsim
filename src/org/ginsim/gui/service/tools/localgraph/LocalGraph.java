@@ -10,9 +10,9 @@ import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationUpdater;
 
-import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 
 /**
  * 

@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.data;
+package org.ginsim.graph.common;
 
 /**
  * interface for "tooltipsables" objects

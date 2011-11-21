@@ -13,8 +13,8 @@ import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.common.ToolTipsable;
 
-import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;

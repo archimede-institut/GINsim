@@ -10,6 +10,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.view.css.Selector;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -17,7 +18,6 @@ import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.localgraph.LocalGraphService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.css.Selector;
 import fr.univmrs.tagc.common.Debugger;
 
 @ProviderFor( GsServiceGUI.class)

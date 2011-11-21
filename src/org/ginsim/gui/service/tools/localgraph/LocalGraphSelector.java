@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.view.css.EdgeStyle;
+import org.ginsim.graph.view.css.Selector;
+import org.ginsim.graph.view.css.Style;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationUpdater;
 
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.css.Style;
 
 public class LocalGraphSelector extends Selector {
 	public static final String IDENTIFIER = "interaction-analysis";

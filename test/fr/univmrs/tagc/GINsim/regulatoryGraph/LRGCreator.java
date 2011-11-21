@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 
 /**
@@ -19,11 +19,11 @@ public class LRGCreator {
 
 	public static void main(String[] args) {
 		// create a simple graph
-		GsRegulatoryGraph lrg = new GsRegulatoryGraph();
+		RegulatoryGraph lrg = new RegulatoryGraph();
 		VertexAttributesReader vreader = lrg.getVertexAttributeReader();
 		
 		// add a few vertices
-		GsRegulatoryVertex g0, g1, g2;
+		RegulatoryVertex g0, g1, g2;
 		g0 = lrg.addVertex();
 		g1 = lrg.addVertex();
 		g2 = lrg.addVertex();
@@ -45,7 +45,7 @@ public class LRGCreator {
 		lrg.addEdge(g1, g2, -1);
 		
 		// get an edge (interactiveAddEdge does not return it)
-		GsRegulatoryMultiEdge me = lrg.getEdge(g0, g2);
+		RegulatoryMultiEdge me = lrg.getEdge(g0, g2);
 		// change its threshold
 		me.setMin(0, (byte)2);
 		

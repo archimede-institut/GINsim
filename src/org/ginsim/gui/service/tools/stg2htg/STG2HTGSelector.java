@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.view.css.EdgeStyle;
+import org.ginsim.graph.view.css.Selector;
+import org.ginsim.graph.view.css.Style;
+import org.ginsim.graph.view.css.VertexStyle;
 
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.css.Style;
-import fr.univmrs.tagc.GINsim.css.VertexStyle;
 
 public class STG2HTGSelector extends Selector {
 	public static final String IDENTIFIER = "pathFinding";

@@ -7,20 +7,20 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.service.export.documentation.GenericDocumentExport;
 
-import fr.univmrs.tagc.GINsim.export.regulatoryGraph.GenericDocumentExport;
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestGenericDocumentExport extends TestCase {
-	GsRegulatoryGraph graph;
+	RegulatoryGraph graph;
 	File tmpDir = TestTools.getTestDir(); //TODO: replace TestTools.getTtestDir() by tmpDir
 	
 	public TestGenericDocumentExport() throws FileNotFoundException {
 		File file = new File(TestTools.getTestDir(), "graph.ginml");
 		GsGinmlParser parser = new GsGinmlParser();
-		this.graph = (GsRegulatoryGraph)parser.parse(new FileInputStream(file), null);
+		this.graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);
 	}
 	public void testGenericDocument() throws IOException {
 		GenericDocumentExport export =  new GenericDocumentExport(graph);

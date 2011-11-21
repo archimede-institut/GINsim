@@ -27,10 +27,10 @@ import javax.swing.SwingConstants;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 
-import fr.univmrs.tagc.GINsim.css.CascadingStyle;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;

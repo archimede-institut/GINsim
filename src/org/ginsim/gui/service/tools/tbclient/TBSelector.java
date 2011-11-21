@@ -1,8 +1,8 @@
 package org.ginsim.gui.service.tools.tbclient;
 
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.css.Style;
+import org.ginsim.graph.view.css.EdgeStyle;
+import org.ginsim.graph.view.css.Selector;
+import org.ginsim.graph.view.css.Style;
 
 public class TBSelector extends Selector {
 	public static final String IDENTIFIER = "TBLinkValidator";

@@ -6,21 +6,23 @@ import java.io.FileNotFoundException;
 
 import junit.framework.TestCase;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.service.export.nusmv.GsNuSMVConfig;
+import org.ginsim.service.export.nusmv.GsNuSMVExport;
 
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 
 public class TestExportNuSMV extends TestCase {
 	
 	String[] sFiles;
-	GsRegulatoryGraph[] regGraph;
+	RegulatoryGraph[] regGraph;
 	GsNuSMVExport nusmvExport;
 
 	public TestExportNuSMV() throws FileNotFoundException {
 		// sFiles = TestTools.getAllModels();
 		assertEquals(sFiles != null, true);
 		
-		regGraph = new GsRegulatoryGraph[sFiles.length];
+		regGraph = new RegulatoryGraph[sFiles.length];
 	}
 	
 	public void testLoadModels() throws FileNotFoundException {
@@ -28,7 +30,7 @@ public class TestExportNuSMV extends TestCase {
 			System.out.println("[" + sFiles[i] + "]");
 			File fModel = new File(sFiles[i]);
 			GsGinmlParser parser = new GsGinmlParser();
-			regGraph[i] = (GsRegulatoryGraph) parser.parse(new FileInputStream(fModel), null);
+			regGraph[i] = (RegulatoryGraph) parser.parse(new FileInputStream(fModel), null);
 			
 			nusmvExport = new GsNuSMVExport(regGraph[i]);
 			GsNuSMVConfig config = new GsNuSMVConfig(regGraph[i]);

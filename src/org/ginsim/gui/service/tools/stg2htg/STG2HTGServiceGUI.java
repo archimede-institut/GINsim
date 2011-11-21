@@ -7,13 +7,13 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.graph.view.css.Selector;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.service.action.stg2htg.STG2HTGService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.GINsim.css.Selector;
 
 @ProviderFor(GsServiceGUI.class)
 @GUIFor( STG2HTGService.class)

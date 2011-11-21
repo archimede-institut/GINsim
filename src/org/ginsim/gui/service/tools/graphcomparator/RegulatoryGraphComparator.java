@@ -16,8 +16,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.view.css.VertexStyle;
 
-import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.Debugger;

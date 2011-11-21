@@ -14,11 +14,11 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
+import org.ginsim.graph.view.css.CascadingStyle;
+import org.ginsim.graph.view.css.VertexStyle;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.action.connectivity.AlgoConnectivity;
 
-import fr.univmrs.tagc.GINsim.css.CascadingStyle;
-import fr.univmrs.tagc.GINsim.css.VertexStyle;
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.ProgressListener;
 import fr.univmrs.tagc.common.Tools;

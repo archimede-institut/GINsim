@@ -2,13 +2,13 @@ package org.ginsim.gui.graph.backend;
 
 import java.awt.event.MouseEvent;
 
+import org.ginsim.graph.common.ToolTipsable;
 import org.jgraph.JGraph;
 import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.common.OptionStore;
 
 /**

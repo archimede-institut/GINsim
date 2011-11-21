@@ -8,10 +8,10 @@ import java.util.Map;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.view.css.EdgeStyle;
+import org.ginsim.graph.view.css.Selector;
+import org.ginsim.graph.view.css.VertexStyle;
 
-import fr.univmrs.tagc.GINsim.css.EdgeStyle;
-import fr.univmrs.tagc.GINsim.css.Selector;
-import fr.univmrs.tagc.GINsim.css.VertexStyle;
 
 /**
  * A selector to colorize the regulatory graph depending on a state value.

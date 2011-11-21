@@ -7,8 +7,8 @@ import org.ginsim.annotation.Annotation;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.common.ToolTipsable;
 
-import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
@@ -169,7 +169,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryVertex> implements XMLiz
     }
 
 	/**
-	 * @see fr.univmrs.tagc.GINsim.data.ToolTipsable#toToolTip()
+	 * @see org.ginsim.graph.common.ToolTipsable#toToolTip()
 	 */
 	public String toToolTip() {
 		return ""+source+" -> "+target+ (edgecount > 1 ? " ; "+edgecount : "");

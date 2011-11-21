@@ -1,6 +1,5 @@
 package org.ginsim.graph.common;
 
-import fr.univmrs.tagc.GINsim.data.ToolTipsable;
 
 /**
  * Base class for all edges: store the source and target nodes.
