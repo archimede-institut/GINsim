@@ -19,7 +19,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 
@@ -99,7 +99,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		    
 		    c.gridy++;
 		    mutantStore = new ObjectStore();
-			mutantSelectionPanel = new MutantSelectionPanel(this, (GsRegulatoryGraph) graph, mutantStore);
+			mutantSelectionPanel = new MutantSelectionPanel(this, (RegulatoryGraph) graph, mutantStore);
 			mainPanel.add(mutantSelectionPanel, c);
 
 		    
@@ -139,7 +139,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		if (selectedNodes.size() == 0) {
 			selectedNodes = null;
 		}
-		fii = new InteractionAnalysis((GsRegulatoryGraph) graph, getOption(0), (GsRegulatoryMutantDef) mutantStore.getObject(0), selectedNodes);
+		fii = new InteractionAnalysis((RegulatoryGraph) graph, getOption(0), (GsRegulatoryMutantDef) mutantStore.getObject(0), selectedNodes);
 	    saveReportButton.setEnabled(true);
 		colorizeButton.setEnabled(true);
 		if (getOption(2)) {

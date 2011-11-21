@@ -17,20 +17,20 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.tools.decisionanalysis.GsDecisionOnEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.tools.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHierarchicalNode, GsDecisionOnEdge, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>
-	implements GsHierarchicalTransitionGraph{
+public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>
+	implements HierarchicalTransitionGraph{
 
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
 	
@@ -50,31 +50,31 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
 	private byte[] childsCount = null;
-	private GsHierarchicalVertexParameterPanel vertexPanel = null;
+	private HierarchicalVertexParameterPanel vertexPanel = null;
 	private long saveEdgeId;
-	private GsSimulationParameters simulationParameters;
-	private GsHierarchicalEdgeParameterPanel edgePanel;
+	private SimulationParameters simulationParameters;
+	private HierarchicalEdgeParameterPanel edgePanel;
 
 	
 /* **************** CONSTRUCTORS ************/	
 	
 	
 	/**
-	 * create a new empty GsDynamicalHierarchicalGraph.
+	 * create a new empty DynamicalHierarchicalGraph.
 	 */
 	public HierarchicalTransitionGraphImpl() {
 		this( false);
 	}
 				
 	/**
-	 * create a new GsDynamicalHierarchicalGraph with a nodeOrder.
+	 * create a new DynamicalHierarchicalGraph with a nodeOrder.
 	 * @param nodeOrder the node order
 	 * @param transientCompactionMode MODE_SCC or MODE_HTG
 	 */
-	public HierarchicalTransitionGraphImpl(List<GsRegulatoryVertex> nodeOrder, int transientCompactionMode) {
+	public HierarchicalTransitionGraphImpl(List<RegulatoryVertex> nodeOrder, int transientCompactionMode) {
 		
 	    this();
-	    for (GsRegulatoryVertex vertex: nodeOrder) {
+	    for (RegulatoryVertex vertex: nodeOrder) {
 	    	this.nodeOrder.add(new NodeInfo(vertex));
 	    }
 	    this.transientCompactionMode = transientCompactionMode;
@@ -88,7 +88,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
 	public HierarchicalTransitionGraphImpl(Map map, File file) {
 		
 	    this( true);
-        GsHierarchicalTransitionGraphParser parser = new GsHierarchicalTransitionGraphParser();
+        HierarchicalTransitionGraphParser parser = new HierarchicalTransitionGraphParser();
         parser.parse(file, map, this);
 	}
 
@@ -135,17 +135,17 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
 
 	/**
 	 * add an edge between source and target
-	 * @param source a GsHierarchicalNode
-	 * @param target a GsHierarchicalNode
+	 * @param source a HierarchicalNode
+	 * @param target a HierarchicalNode
 	 * @return the new edge
 	 */
 	@Override
-	public Object addEdge(GsHierarchicalNode source, GsHierarchicalNode target) {
+	public Object addEdge(HierarchicalNode source, HierarchicalNode target) {
 		
 		Object e = getEdge(source, target);
 		if (e != null) return e;
-		// FIXME: creating an empty GsDecisionOnEdge object: is it even possible?
-		GsDecisionOnEdge edge = new GsDecisionOnEdge( source, target, nodeOrder);
+		// FIXME: creating an empty DecisionOnEdge object: is it even possible?
+		DecisionOnEdge edge = new DecisionOnEdge( source, target, nodeOrder);
 		return addEdge(edge);
 	}
 
@@ -156,14 +156,14 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
     
 	public AbstractParameterPanel getEdgeAttributePanel() {
 	    if (edgePanel == null) {
-	    	edgePanel  = new GsHierarchicalEdgeParameterPanel(this);
+	    	edgePanel  = new HierarchicalEdgeParameterPanel(this);
 	    }
 		return edgePanel;
 	}
 
 	public AbstractParameterPanel getVertexAttributePanel() {
 	    if (vertexPanel == null) {
-	        vertexPanel  = new GsHierarchicalVertexParameterPanel(this);
+	        vertexPanel  = new HierarchicalVertexParameterPanel(this);
 	    }
 		return vertexPanel;
 	}
@@ -184,7 +184,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
 	}
 
 	
-	protected void doSave(OutputStreamWriter os, Collection<GsHierarchicalNode> nodes, Collection<GsDecisionOnEdge> edges, int mode) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<HierarchicalNode> nodes, Collection<DecisionOnEdge> edges, int mode) throws GsException {
        try {
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -211,8 +211,8 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
         }
 	}
 	
-	private void saveEdge(XMLWriter out, int mode, Collection<GsDecisionOnEdge> edges) throws IOException {
-	     for (GsDecisionOnEdge edge: edges) {
+	private void saveEdge(XMLWriter out, int mode, Collection<DecisionOnEdge> edges) throws IOException {
+	     for (DecisionOnEdge edge: edges) {
             String source = "" + edge.getSource().getUniqueId();
             String target = "" + edge.getTarget().getUniqueId();
             out.write("\t\t<edge id=\"e"+(++saveEdgeId)+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
@@ -225,9 +225,9 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
 	  * @param vertices
 	  * @throws IOException
 	  */
-	 private void saveNode(XMLWriter out, int mode, Collection<GsHierarchicalNode> vertices) throws IOException {
+	 private void saveNode(XMLWriter out, int mode, Collection<HierarchicalNode> vertices) throws IOException {
 	 	VertexAttributesReader vReader = getVertexAttributeReader();
-	     for (GsHierarchicalNode vertex: vertices) {
+	     for (HierarchicalNode vertex: vertices) {
 	         vReader.setVertex(vertex);
 	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
 	         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
@@ -261,7 +261,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
 		Matcher matcher = pattern.matcher("");
 		
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
-			GsHierarchicalNode vertex = (GsHierarchicalNode) it.next();
+			HierarchicalNode vertex = (HierarchicalNode) it.next();
 			matcher.reset(vertex.statesToString());
 			if (matcher.find()) {
 				v.add(vertex);
@@ -271,9 +271,9 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
 	}
 	
 	@Override
-	public GsHierarchicalNode getNodeForState(byte[] state) {
+	public HierarchicalNode getNodeForState(byte[] state) {
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
-			GsHierarchicalNode v = (GsHierarchicalNode) it.next();
+			HierarchicalNode v = (HierarchicalNode) it.next();
 			if (v.contains(state)) return v;
 		}
 		return null;
@@ -345,7 +345,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
     @Override
     protected boolean isAssociationValid( Graph<?, ?> graph) {
     	
-    	if( graph instanceof GsRegulatoryGraph){
+    	if( graph instanceof RegulatoryGraph){
     		return true;
     	}
     	
@@ -362,7 +362,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<GsHier
 	 * not used for this kind of graph: it's not interactively editable
 	 */
 	@Override
-	public Graph getSubgraph(Collection<GsHierarchicalNode> vertex, Collection<GsDecisionOnEdge> edges) {
+	public Graph getSubgraph(Collection<HierarchicalNode> vertex, Collection<DecisionOnEdge> edges) {
 		return null;
 	}
 

@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import javax.swing.AbstractListModel;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 
 
@@ -17,7 +17,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	
 	private static final long serialVersionUID = 6359093601750388688L;
 	//list of incoming edge
-	private Collection<GsRegulatoryMultiEdge> edge;
+	private Collection<RegulatoryMultiEdge> edge;
 	//size of the list
 	private int size;
 	
@@ -48,7 +48,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 			return;
 		} 
 		int count=0; 
-		for (GsRegulatoryMultiEdge me: edge) {
+		for (RegulatoryMultiEdge me: edge) {
 			//increase the size of the number of interaction 
 			count += me.getEdgeCount();
 		}
@@ -63,7 +63,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 			return null; //no data
 		}
 		int j=0;
-		for (GsRegulatoryMultiEdge me: edge) {
+		for (RegulatoryMultiEdge me: edge) {
 			if (me.getEdgeCount() + j <= index) {
 				//if index is not in the current edge
 				j += me.getEdgeCount();
@@ -79,7 +79,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	 * get the list of incoming edge
 	 * @return the list of incoming edge
 	 */
-	public Collection<GsRegulatoryMultiEdge> getEdge() {
+	public Collection<RegulatoryMultiEdge> getEdge() {
 		return edge;
 	}
 
@@ -87,7 +87,7 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	 * set the list of incoming edge
 	 * @param list the list of incoming edge
 	 */
-	public void setEdge(Collection<GsRegulatoryMultiEdge> list) {
+	public void setEdge(Collection<RegulatoryMultiEdge> list) {
 		edge = list;
 		updateSize();
 		fireContentsChanged(this,0,size);
@@ -98,12 +98,12 @@ public class GsIncomingEdgeListModel extends AbstractListModel {
 	 * @param e an GsEdgeIndex object
 	 * @return it's index in the edge list
 	 */
-	public int getIndex(GsRegulatoryEdge e) {
+	public int getIndex(RegulatoryEdge e) {
 		if (edge == null) {
             return 0;
         }
 		int j = 0;
-		for (GsRegulatoryMultiEdge me: edge) {
+		for (RegulatoryMultiEdge me: edge) {
 			if (e.me == me) {
 				return j+e.index;
 			}

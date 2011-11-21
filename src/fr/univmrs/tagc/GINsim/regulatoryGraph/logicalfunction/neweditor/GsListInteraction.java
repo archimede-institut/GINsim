@@ -1,21 +1,21 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementDeco;
 
 public class GsListInteraction {
-	private GsRegulatoryMultiEdge grme;
+	private RegulatoryMultiEdge grme;
 	private int index;
 	private boolean not;
 	private DTreeElementDeco node;
 
-	public GsListInteraction(GsRegulatoryMultiEdge e, int i, boolean n) {
+	public GsListInteraction(RegulatoryMultiEdge e, int i, boolean n) {
 		grme = e;
 		index = i;
 		not = n;
 	}
-	public GsRegulatoryMultiEdge getEdge() {
+	public RegulatoryMultiEdge getEdge() {
 		return grme;
 	}
 	public int getIndex() {
@@ -44,7 +44,7 @@ public class GsListInteraction {
 	public String getSign() {
 		String s = "";
 		if (index >= 0)
-			s = GsRegulatoryMultiEdge.SIGN_SHORT[grme.getSign(index)];
+			s = RegulatoryMultiEdge.SIGN_SHORT[grme.getSign(index)];
 		return s;
 	}
 	public boolean equals(Object o) {

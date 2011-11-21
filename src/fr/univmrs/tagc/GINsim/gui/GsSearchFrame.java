@@ -19,8 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 
@@ -119,7 +119,7 @@ public class GsSearchFrame extends SimpleDialog {
 	}
 	
 	private Component getTableInScrollPane() {
-		if (g instanceof GsDynamicalHierarchicalGraph) {
+		if (g instanceof DynamicalHierarchicalGraph) {
 			tableModel = new MyTableModelForHierarchical(g.getNodeOrderSize());
 
 		} else {
@@ -201,7 +201,7 @@ class MyTableModelForHierarchical extends MyTableModel {
 	}
 
 	public Object getValueAt(int row, int col) {
-        return ((GsDynamicalHierarchicalNode)ldata.get(row)).toString(nbNodes);
+        return ((DynamicalHierarchicalNode)ldata.get(row)).toString(nbNodes);
     }
 	
 }

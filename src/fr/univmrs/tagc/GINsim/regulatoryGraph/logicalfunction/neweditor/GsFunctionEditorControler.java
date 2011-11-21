@@ -9,8 +9,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
@@ -51,8 +51,8 @@ public class GsFunctionEditorControler {
 	private GsFunctionEditorModel editorModel;
 	private GsFunctionEditorEditPanel editPanel;
 	private GsFunctionEditorDisplayPanel displayPanel;
-	private GsRegulatoryVertex vertex;
-	private GsRegulatoryGraph graph;
+	private RegulatoryVertex vertex;
+	private RegulatoryGraph graph;
 	private JTree tree;
 
 	public GsFunctionEditorControler(GsFunctionEditorEditPanel p1, GsFunctionEditorDisplayPanel p2) {
@@ -65,7 +65,7 @@ public class GsFunctionEditorControler {
   	functionPanel = p;
     editorModel = m;
 	}
-	public void init(GsRegulatoryVertex v, GsRegulatoryGraph g, JTree t, GsFunctionEditorModel m) {
+	public void init(RegulatoryVertex v, RegulatoryGraph g, JTree t, GsFunctionEditorModel m) {
 		vertex = v;
 		graph = g;
 		tree = t;

@@ -9,7 +9,7 @@ import java.util.Date;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.service.GsService;
+import org.ginsim.service.Service;
 import org.ginsim.service.export.Dotify;
 import org.mangosdk.spi.ProviderFor;
 
@@ -21,8 +21,8 @@ import fr.univmrs.tagc.common.Tools;
  * but isn't jgraph specific and writes the result to a File instead of putting it in a String.
  * (basically no original code remains..)
  */
-@ProviderFor( GsService.class)
-public class GraphvizExportService implements GsService {
+@ProviderFor( Service.class)
+public class GraphvizExportService implements Service {
 
 	/**
 	 * @param graph

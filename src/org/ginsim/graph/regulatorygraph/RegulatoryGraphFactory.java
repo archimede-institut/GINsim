@@ -10,7 +10,7 @@ import fr.univmrs.tagc.common.Debugger;
  * descriptor for regulatoryGraph.
  */
 @ProviderFor( GraphFactory.class)
-public class RegulatoryGraphFactory implements GraphFactory<GsRegulatoryGraph> {
+public class RegulatoryGraphFactory implements GraphFactory<RegulatoryGraph> {
 
     private static RegulatoryGraphFactory instance = null;
     
@@ -39,15 +39,15 @@ public class RegulatoryGraphFactory implements GraphFactory<GsRegulatoryGraph> {
     }
     
 	@Override
-	public Class<GsRegulatoryGraph> getGraphClass(){
+	public Class<RegulatoryGraph> getGraphClass(){
 		
-		return GsRegulatoryGraph.class;
+		return RegulatoryGraph.class;
 	}
 	
 	@Override
-    public GsRegulatoryGraph create() {
+    public RegulatoryGraph create() {
     	
-    	GsRegulatoryGraph graph = new GsRegulatoryGraph();
+    	RegulatoryGraph graph = new RegulatoryGraph();
         return graph;
     }
 
@@ -56,7 +56,7 @@ public class RegulatoryGraphFactory implements GraphFactory<GsRegulatoryGraph> {
 	@Override
     public Class getParser() {
     	
-    	return GsRegulatoryParser.class;
+    	return RegulatoryParser.class;
     }
 
 

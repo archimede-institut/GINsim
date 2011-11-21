@@ -18,17 +18,17 @@ import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>
-				implements GsDynamicalHierarchicalGraph{
+public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<DynamicalHierarchicalNode, Edge<DynamicalHierarchicalNode>, RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>
+				implements DynamicalHierarchicalGraph{
 
 	public static final String GRAPH_ZIP_NAME = "dynamicalHierarchicalGraph.ginml";
 	
@@ -38,19 +38,19 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 
 	/**
-	 * create a new GsDynamicalHierarchicalGraph with a nodeOrder.
+	 * create a new DynamicalHierarchicalGraph with a nodeOrder.
 	 * @param nodeOrder the node order
 	 */
-	public DynamicalHierarchicalGraphImpl(List<GsRegulatoryVertex> nodeOrder) {
+	public DynamicalHierarchicalGraphImpl(List<RegulatoryVertex> nodeOrder) {
 		
 	    this( false);
-	    for (GsRegulatoryVertex vertex: nodeOrder) {
+	    for (RegulatoryVertex vertex: nodeOrder) {
 	    	this.nodeOrder.add(new NodeInfo(vertex.getId(), vertex.getMaxValue()));
 	    }
 	}
 	
 	/**
-	 * create a new empty GsDynamicalHierarchicalGraph.
+	 * create a new empty DynamicalHierarchicalGraph.
 	 */
 	public DynamicalHierarchicalGraphImpl() {
 		
@@ -66,7 +66,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	public DynamicalHierarchicalGraphImpl(Map map, File file) {
 		
 	    this( true);
-        GsDynamicalHierarchicalParser parser = new GsDynamicalHierarchicalParser();
+        DynamicalHierarchicalParser parser = new DynamicalHierarchicalParser();
         parser.parse(file, map, this);
 	}
 	
@@ -79,7 +79,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
     @Override
     protected boolean isAssociationValid( Graph<?, ?> graph) {
     	
-    	if( graph instanceof GsRegulatoryGraph){
+    	if( graph instanceof RegulatoryGraph){
     		return true;
     	}
     	
@@ -100,7 +100,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 		
 	}
     
-	protected void doSave(OutputStreamWriter os, Collection<GsDynamicalHierarchicalNode> vertices, Collection<Edge<GsDynamicalHierarchicalNode>> edges, int mode) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<DynamicalHierarchicalNode> vertices, Collection<Edge<DynamicalHierarchicalNode>> edges, int mode) throws GsException {
 	       try {
 	            XMLWriter out = new XMLWriter(os, dtdFile);
 		  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -126,11 +126,11 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	        }
 	}
 	
-    private void saveEdge(XMLWriter out, int mode, Collection<Edge<GsDynamicalHierarchicalNode>> edges) throws IOException {
+    private void saveEdge(XMLWriter out, int mode, Collection<Edge<DynamicalHierarchicalNode>> edges) throws IOException {
     	
         for (Edge edge: edges) {
-            String source = ""+((GsDynamicalHierarchicalNode)edge.getSource()).getUniqueId();
-            String target =""+((GsDynamicalHierarchicalNode) edge.getTarget()).getUniqueId();
+            String source = ""+((DynamicalHierarchicalNode)edge.getSource()).getUniqueId();
+            String target =""+((DynamicalHierarchicalNode) edge.getTarget()).getUniqueId();
             out.write("\t\t<edge id=\"e"+ source +"_"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
         }
     }
@@ -141,13 +141,13 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, Collection<GsDynamicalHierarchicalNode> vertices) throws IOException {
+    private void saveNode(XMLWriter out, int mode, Collection<DynamicalHierarchicalNode> vertices) throws IOException {
     	
-    	Iterator<GsDynamicalHierarchicalNode> it = vertices.iterator();
+    	Iterator<DynamicalHierarchicalNode> it = vertices.iterator();
 
     	VertexAttributesReader vReader = getVertexAttributeReader();
         while (it.hasNext()) {
-        	GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode)it.next();
+        	DynamicalHierarchicalNode vertex = (DynamicalHierarchicalNode)it.next();
             vReader.setVertex(vertex);
             out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
             out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
@@ -175,9 +175,9 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	 * @return the new edge
 	 */
 	@Override
-	public Edge<GsDynamicalHierarchicalNode> addEdge(GsDynamicalHierarchicalNode source, GsDynamicalHierarchicalNode target) {
+	public Edge<DynamicalHierarchicalNode> addEdge(DynamicalHierarchicalNode source, DynamicalHierarchicalNode target) {
 		
-		Edge<GsDynamicalHierarchicalNode> edge = new Edge<GsDynamicalHierarchicalNode>(source, target);
+		Edge<DynamicalHierarchicalNode> edge = new Edge<DynamicalHierarchicalNode>(source, target);
 		if (addEdge(edge)) {
 			return edge;
 		}
@@ -197,7 +197,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 			childsCount = new byte[nodeOrder.size()];
 			int i = 0;
 			for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-				GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+				RegulatoryVertex v = (RegulatoryVertex) it.next();
 				childsCount[i++] = (byte) (v.getMaxValue()+1);
 			}			
 		}
@@ -233,7 +233,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 		Matcher matcher = pattern.matcher("");
 		
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
-			GsDynamicalHierarchicalNode vertex = (GsDynamicalHierarchicalNode) it.next();
+			DynamicalHierarchicalNode vertex = (DynamicalHierarchicalNode) it.next();
 			matcher.reset(vertex.statesToString(this.getNodeOrderSize()));
 			if (matcher.find()) {
 				v.add(vertex);
@@ -281,9 +281,9 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	}
 
 
-	private GsDynamicalHierarchicalNode getNodeForState(byte[] state) {
+	private DynamicalHierarchicalNode getNodeForState(byte[] state) {
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
-			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
+			DynamicalHierarchicalNode v = (DynamicalHierarchicalNode) it.next();
 			if (v.contains(state)) return v;
 		}
 		return null;
@@ -295,10 +295,10 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	 * @return the node with the corresponding id. eg. 102.
 	 */
 	@Override
-	public GsDynamicalHierarchicalNode getNodeById(String sid) {
+	public DynamicalHierarchicalNode getNodeById(String sid) {
 		int id = Integer.parseInt(sid.substring(1));
 		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
-			GsDynamicalHierarchicalNode v = (GsDynamicalHierarchicalNode) it.next();
+			DynamicalHierarchicalNode v = (DynamicalHierarchicalNode) it.next();
 			if (v.getUniqueId() == id) return v;
 		}
 		return null;
@@ -306,15 +306,15 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 
 	@Override
 	protected List<?> doMerge(
-			Graph<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>> graph) {
+			Graph<DynamicalHierarchicalNode, Edge<DynamicalHierarchicalNode>> graph) {
 		// not implemented for this type of graph
 		return null;
 	}
 
 	@Override
-	public Graph<GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>> getSubgraph(
-			Collection<GsDynamicalHierarchicalNode> vertex,
-			Collection<Edge<GsDynamicalHierarchicalNode>> edges) {
+	public Graph<DynamicalHierarchicalNode, Edge<DynamicalHierarchicalNode>> getSubgraph(
+			Collection<DynamicalHierarchicalNode> vertex,
+			Collection<Edge<DynamicalHierarchicalNode>> edges) {
 		// not implemented for this type of graph
 		return null;
 	}

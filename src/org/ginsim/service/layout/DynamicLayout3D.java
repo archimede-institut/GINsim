@@ -8,9 +8,9 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.dynamicgraph.GsDynamicNode;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicNode;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.common.ColorPalette;
 
@@ -23,15 +23,15 @@ public class DynamicLayout3D {
 
     private static int MARGIN = 10;
 	
-    public static void runLayout(GsDynamicGraph graph) throws GsException {
+    public static void runLayout(DynamicGraph graph) throws GsException {
     	DynamicLayout3D algo = new DynamicLayout3D();
     	algo.layout(graph);
     }
     
-    public void layout(GsDynamicGraph graph) throws GsException {
+    public void layout(DynamicGraph graph) throws GsException {
 		Iterator it = graph.getVertices().iterator();
 		Object v = it.next();
-	    if (v == null || !(v instanceof GsDynamicNode)) {
+	    if (v == null || !(v instanceof DynamicNode)) {
 			System.out.println("wrong type of graph for this layout");
 	    	return;
 	    }
@@ -41,14 +41,14 @@ public class DynamicLayout3D {
 	    byte[] maxValues = getMaxValues(nodeOrder);
         initColorPalette(maxValues.length);
 	    //move the nodes
-	    GsDynamicNode vertex = (GsDynamicNode)v;
+	    DynamicNode vertex = (DynamicNode)v;
 	    vreader.setVertex(vertex);
 	    stateWidth = vreader.getWidth()+MARGIN;
         initDecal(maxValues);
 	    
 	    do {
 	    	moveVertex(vertex, maxValues);
-		    vertex = (GsDynamicNode)it.next();
+		    vertex = (DynamicNode)it.next();
 		} while (it.hasNext());
     	moveVertex(vertex, maxValues);
     	
@@ -64,7 +64,7 @@ public class DynamicLayout3D {
 	 * @param vertex
 	 * @param maxValues
 	 */
-	private void moveVertex(GsDynamicNode vertex, byte[] maxValues) {
+	private void moveVertex(DynamicNode vertex, byte[] maxValues) {
 	    vreader.setVertex(vertex);
     	byte[] state = vertex.state;
   	
@@ -86,7 +86,7 @@ public class DynamicLayout3D {
 		ereader.setPoints(null);
 		ereader.setStyle(EdgeAttributesReader.STYLE_STRAIGHT);
 		
-		byte[] diffstate = getDiffStates((GsDynamicNode)edge.getSource(), (GsDynamicNode)edge.getTarget());
+		byte[] diffstate = getDiffStates((DynamicNode)edge.getSource(), (DynamicNode)edge.getTarget());
 		int change = get_change(diffstate);
 	
 		ereader.setLineColor(colorPalette[change]);
@@ -130,7 +130,7 @@ public class DynamicLayout3D {
      * @param targetVertex
      * @return
      */
-	private byte[] getDiffStates(GsDynamicNode sourceVertex, GsDynamicNode targetVertex) {
+	private byte[] getDiffStates(DynamicNode sourceVertex, DynamicNode targetVertex) {
 		byte[] delta = new byte[sourceVertex.state.length];
 		for (int i = 0; i < delta.length; i++) {
 			delta[i] = (byte) Math.abs(getState(sourceVertex.state,i) - getState(targetVertex.state,i));
@@ -145,7 +145,7 @@ public class DynamicLayout3D {
     	byte[] maxValues = new byte[nodeOrder.size()];
     	int i = 0;
     	for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-    		GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+    		RegulatoryVertex v = (RegulatoryVertex) it.next();
     		maxValues[i++] = (byte) (v.getMaxValue());
     	}			
     	return maxValues;

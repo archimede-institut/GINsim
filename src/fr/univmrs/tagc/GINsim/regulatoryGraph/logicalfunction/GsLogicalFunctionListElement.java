@@ -1,12 +1,12 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 public class GsLogicalFunctionListElement implements Comparable {
-  private GsRegulatoryMultiEdge edge;
+  private RegulatoryMultiEdge edge;
   private int index;
 
-  public GsLogicalFunctionListElement(GsRegulatoryMultiEdge e, int k) {
+  public GsLogicalFunctionListElement(RegulatoryMultiEdge e, int k) {
     edge = e;
     index = k;
   }
@@ -16,7 +16,7 @@ public class GsLogicalFunctionListElement implements Comparable {
 	}
     return edge.getId(index);
   }
-  public GsRegulatoryMultiEdge getEdge() {
+  public RegulatoryMultiEdge getEdge() {
     return edge;
   }
   public int getIndex() {

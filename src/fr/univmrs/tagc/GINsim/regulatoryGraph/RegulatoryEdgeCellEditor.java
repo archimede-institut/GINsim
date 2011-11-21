@@ -6,8 +6,8 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 
 
 public class RegulatoryEdgeCellEditor extends AbstractCellEditor implements TableCellEditor {
@@ -15,13 +15,13 @@ public class RegulatoryEdgeCellEditor extends AbstractCellEditor implements Tabl
 
 	RegulatoryEdgeEditPanel panel;
 	
-	public RegulatoryEdgeCellEditor(GsRegulatoryGraph graph) {
+	public RegulatoryEdgeCellEditor(RegulatoryGraph graph) {
 		panel = new RegulatoryEdgeEditPanel(graph);
 	}
 	
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected, int row, int column) {
-		panel.setEdge((GsRegulatoryEdge)value);
+		panel.setEdge((RegulatoryEdge)value);
 		return panel;
 	}
 

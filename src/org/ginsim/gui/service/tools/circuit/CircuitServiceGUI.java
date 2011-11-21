@@ -9,7 +9,7 @@ import javax.swing.Action;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -30,9 +30,9 @@ public class CircuitServiceGUI implements GsServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new CircuitAction((GsRegulatoryGraph)graph));
+			actions.add(new CircuitAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -41,9 +41,9 @@ public class CircuitServiceGUI implements GsServiceGUI {
 
 class CircuitAction extends GsToolsAction {
 
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	
-	public CircuitAction(GsRegulatoryGraph graph) {
+	public CircuitAction(RegulatoryGraph graph) {
 		
 		super("STR_circuit");
 		this.graph = graph;
@@ -56,7 +56,7 @@ class CircuitAction extends GsToolsAction {
             return;
         }
 
-        new GsCircuitFrame( GUIManager.getInstance().getFrame( graph), graph);
+        new CircuitFrame( GUIManager.getInstance().getFrame( graph), graph);
 	}
 	
 }

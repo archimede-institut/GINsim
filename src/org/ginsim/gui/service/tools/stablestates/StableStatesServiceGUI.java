@@ -9,7 +9,7 @@ import javax.swing.Action;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GsToolsAction;
@@ -29,9 +29,9 @@ public class StableStatesServiceGUI implements GsServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new StableStatesAction( (GsRegulatoryGraph)graph));
+			actions.add(new StableStatesAction( (RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -40,9 +40,9 @@ public class StableStatesServiceGUI implements GsServiceGUI {
 
 class StableStatesAction extends GsToolsAction {
 
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	
-	public StableStatesAction(GsRegulatoryGraph graph) {
+	public StableStatesAction(RegulatoryGraph graph) {
 		
 		super( "STR_stableStates", "STR_stableStates_descr");
 		this.graph = graph;
@@ -56,7 +56,7 @@ class StableStatesAction extends GsToolsAction {
     		return;
     	}
 
-    	new HandledStackDialog( new GsStableStateUI( graph));
+    	new HandledStackDialog( new StableStateUI( graph));
 	}
 	
 }

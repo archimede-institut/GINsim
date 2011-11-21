@@ -5,8 +5,8 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.LogicalParameterList;
@@ -23,8 +23,8 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	private LogicalParameterList interactions;
 
 	//the current selected node
-	private GsRegulatoryVertex node;
-    private GsRegulatoryGraph graph;
+	private RegulatoryVertex node;
+    private RegulatoryGraph graph;
 
     /**
      * default constructor
@@ -32,7 +32,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
      * @param graph
      * @param v_ok
      */
-	public GsTableInteractionsModel(GsRegulatoryGraph graph, Vector v_ok) {
+	public GsTableInteractionsModel(RegulatoryGraph graph, Vector v_ok) {
 		super();
 		this.interactions = null;
         this.graph = graph;
@@ -43,7 +43,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 *
 	 * @param no the currently selected node
 	 */
-	public GsTableInteractionsModel(GsRegulatoryVertex no) {
+	public GsTableInteractionsModel(RegulatoryVertex no) {
 		super();
 		node = no;
 		this.interactions = node.getV_logicalParameters();
@@ -161,7 +161,7 @@ public class GsTableInteractionsModel extends AbstractTableModel {
 	 *
 	 * @param no the current node
 	 */
-	public void setNode(GsRegulatoryVertex no) {
+	public void setNode(RegulatoryVertex no) {
 		node = no;
 		if (node != null) {
 			this.interactions = node.getV_logicalParameters();

@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.common.ExportAction;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -18,14 +18,14 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  *
  *    TODO: service and serviceGUI
  */
-public class GsGNAMLExport extends GsExportAction<GsRegulatoryGraph> {
+public class GsGNAMLExport extends ExportAction<RegulatoryGraph> {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] { "gnaml" }, "GNAML files");
 	
 	private FileWriter fout = null;
 	private XMLWriter out = null;
 
-    public GsGNAMLExport(GsRegulatoryGraph graph) {
+    public GsGNAMLExport(RegulatoryGraph graph) {
     	super( graph, "STR_GNAML", "STR_GNAML_descr");
     }
     
@@ -62,15 +62,15 @@ public class GsGNAMLExport extends GsExportAction<GsRegulatoryGraph> {
   		fout.close();
 	}
   		
-	protected void writeStatesVariables(XMLWriter out, GsRegulatoryGraph graph) throws IOException {
+	protected void writeStatesVariables(XMLWriter out, RegulatoryGraph graph) throws IOException {
 		List nodeOrder = graph.getNodeOrder();
 		Iterator it = nodeOrder.iterator();
 		while (it.hasNext()) {
-			writeStateVariable((GsRegulatoryVertex) it.next());
+			writeStateVariable((RegulatoryVertex) it.next());
 		}
 	}
 	
-	protected void writeStateVariable(GsRegulatoryVertex node) throws IOException {
+	protected void writeStateVariable(RegulatoryVertex node) throws IOException {
 		int thresholdLevels = node.getMaxValue();
 		String id = node.getId();
 		out.openTag("state-variable");
@@ -106,7 +106,7 @@ public class GsGNAMLExport extends GsExportAction<GsRegulatoryGraph> {
 		out.closeTag();//state-variable
 	}
 	
-	protected void writeStateEquation(GsRegulatoryVertex node, int thresholdLevels, String id) throws IOException {
+	protected void writeStateEquation(RegulatoryVertex node, int thresholdLevels, String id) throws IOException {
 		out.openTag("math");
 		out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
 		out.openTag("apply");
@@ -213,7 +213,7 @@ public class GsGNAMLExport extends GsExportAction<GsRegulatoryGraph> {
 		out.closeTag();
 	}
 	
-	protected void writeParameterInequalities(GsRegulatoryVertex node, int thresholdLevels, String id) throws IOException {
+	protected void writeParameterInequalities(RegulatoryVertex node, int thresholdLevels, String id) throws IOException {
 		String g = "g_"+id;
 		String K = "k_"+id+"_";
 		String t = "t_"+id+"_";
@@ -245,6 +245,6 @@ public class GsGNAMLExport extends GsExportAction<GsRegulatoryGraph> {
 	 * @return the ID as string
 	 */
 	protected String getVertexNameForLevel(int level, List nodeOrder) {
-		return ((GsRegulatoryVertex) nodeOrder.get(level)).getId();
+		return ((RegulatoryVertex) nodeOrder.get(level)).getId();
 	}
 }

@@ -11,8 +11,8 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.reducedgraph.GsNodeReducedData;
-import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.graph.reducedgraph.NodeReducedData;
+import org.ginsim.graph.reducedgraph.ReducedGraph;
 import org.ginsim.gui.service.tools.connectivity.ConnectivityFrame;
 
 import fr.univmrs.tagc.common.ProgressListener;
@@ -24,7 +24,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  */
 public class AlgoConnectivity extends Thread {
 
-	protected GsReducedGraph reducedGraph = null;
+	protected ReducedGraph reducedGraph = null;
     private Graph g = null;
 
     private static final String S_SEARCH_CC = Translator.getString("STR_connectivity_searching");
@@ -97,14 +97,14 @@ public class AlgoConnectivity extends Thread {
             String sid;
             int id = 0;
             if (mode == MODE_FULL) {
-                reducedGraph = GraphManager.getInstance().getNewGraph( GsReducedGraph.class, (Graph)g);
+                reducedGraph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, (Graph)g);
                 for (Collection<?> set: jcp) {
                     if (set.size() == 1) {
                         sid = null;
                     } else {
                         sid = "cc-"+id++;
                     }
-                    GsNodeReducedData node = new GsNodeReducedData(sid, set);
+                    NodeReducedData node = new NodeReducedData(sid, set);
                     component.add(node);
                     reducedGraph.addVertex(node);
                 }
@@ -115,7 +115,7 @@ public class AlgoConnectivity extends Thread {
                     } else {
                         sid = "cc-"+id++;
                     }
-                    GsNodeReducedData node = new GsNodeReducedData(sid, set);
+                    NodeReducedData node = new NodeReducedData(sid, set);
                     component.add(node);
                 }
             }
@@ -150,13 +150,13 @@ public class AlgoConnectivity extends Thread {
 		if (nbCompo == 1) {
             return;																				//The graph is already created, no edges to add.
         }
-		HashMap<Object, GsNodeReducedData> nodeParentSCC = new HashMap(); //Map the a node to its parent SCC
+		HashMap<Object, NodeReducedData> nodeParentSCC = new HashMap(); //Map the a node to its parent SCC
 		
 		for (int scc_i=0 ; scc_i<nbCompo; scc_i++) {															//for each SCC
             if (canceled) {
                 break;
             }
-            GsNodeReducedData currentSCCNode = (GsNodeReducedData)component.get(scc_i);
+            NodeReducedData currentSCCNode = (NodeReducedData)component.get(scc_i);
             Vector nodesInSCC = currentSCCNode.getContent();
             for (Iterator it = nodesInSCC.iterator(); it.hasNext();) {											//  for each nodes in the SCC
             	if (canceled) {
@@ -171,7 +171,7 @@ public class AlgoConnectivity extends Thread {
             if (canceled) {
                 break;
             }
-            GsNodeReducedData currentSCCNode = (GsNodeReducedData)component.get(scc_i);
+            NodeReducedData currentSCCNode = (NodeReducedData)component.get(scc_i);
             Vector nodesInSCC = currentSCCNode.getContent();
             for (Iterator it = nodesInSCC.iterator(); it.hasNext();) {											//  for each nodes in the SCC
             	if (canceled) {
@@ -184,7 +184,7 @@ public class AlgoConnectivity extends Thread {
                         throw new InterruptedException();
                     }						
 					Object targetNode = edge.getTarget();
-					GsNodeReducedData targetParent = nodeParentSCC.get(targetNode);
+					NodeReducedData targetParent = nodeParentSCC.get(targetNode);
 					if (nodeParentSCC.get(targetNode) != currentSCCNode) {			//      if the target of the edge is not in the SCC
 						reducedGraph.addEdge(currentSCCNode, targetParent);
 					//	targets.put(targetNode.toString(), currentSCCNode);			//      add it to the targets map <=> say the current SCC is targeting the SCC containing targetNode
@@ -198,7 +198,7 @@ public class AlgoConnectivity extends Thread {
             if (canceled) {
                 break;
             }
-            GsNodeReducedData currentSCCNode = (GsNodeReducedData)component.get(scc_i);
+            NodeReducedData currentSCCNode = (NodeReducedData)component.get(scc_i);
             if (graph.getOutgoingEdges(currentSCCNode).size() == 0) {												//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
             	vreader.setVertex(currentSCCNode);
                 vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
@@ -251,9 +251,9 @@ public class AlgoConnectivity extends Thread {
 			if (!temp.isEmpty()){
 			    if (temp.size() == 1) {
                     // add a prefix even if alone in it's CC: it must be a valid id
-			        components.add(new GsNodeReducedData("u-"+temp.get(0), temp));
+			        components.add(new NodeReducedData("u-"+temp.get(0), temp));
 			    } else {
-			        components.add(new GsNodeReducedData("cc-"+id++, temp));
+			        components.add(new NodeReducedData("cc-"+id++, temp));
 			    }
 			}
 		}

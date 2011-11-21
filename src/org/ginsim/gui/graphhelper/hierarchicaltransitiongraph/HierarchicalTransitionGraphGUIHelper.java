@@ -5,15 +5,15 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalEdgeParameterPanel;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalVertexParameterPanel;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalEdgeParameterPanel;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalVertexParameterPanel;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
-import org.ginsim.gui.service.tools.decisionanalysis.GsDecisionOnEdge;
+import org.ginsim.gui.service.tools.decisionanalysis.DecisionOnEdge;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -27,7 +27,7 @@ import fr.univmrs.tagc.common.widgets.Frame;
  */
 
 @ProviderFor( GraphGUIHelper.class)
-public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<GsHierarchicalTransitionGraph, GsHierarchicalNode, GsDecisionOnEdge> {
+public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<HierarchicalTransitionGraph, HierarchicalNode, DecisionOnEdge> {
 
 	
 	/**
@@ -50,7 +50,7 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<GsHi
 	 * @param graph the edited graph
 	 */
 	@Override
-	public JPanel getSaveOptionPanel( GsHierarchicalTransitionGraph graph) {
+	public JPanel getSaveOptionPanel( HierarchicalTransitionGraph graph) {
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
@@ -64,40 +64,40 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<GsHi
 
 
 	@Override
-	public GUIEditor<GsHierarchicalTransitionGraph> getMainEditionPanel( GsHierarchicalTransitionGraph graph) {
+	public GUIEditor<HierarchicalTransitionGraph> getMainEditionPanel( HierarchicalTransitionGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getEditingTabLabel(GsHierarchicalTransitionGraph graph) {
+	public String getEditingTabLabel(HierarchicalTransitionGraph graph) {
 		return "HTG";
 	}
 
 	@Override
-	public GUIEditor<GsHierarchicalNode> getNodeEditionPanel( GsHierarchicalTransitionGraph graph) {
-		return new GsHierarchicalVertexParameterPanel(graph);
+	public GUIEditor<HierarchicalNode> getNodeEditionPanel( HierarchicalTransitionGraph graph) {
+		return new HierarchicalVertexParameterPanel(graph);
 	}
 
 	@Override
-	public GUIEditor<GsDecisionOnEdge> getEdgeEditionPanel( GsHierarchicalTransitionGraph graph) {
-		return new GsHierarchicalEdgeParameterPanel(graph);
+	public GUIEditor<DecisionOnEdge> getEdgeEditionPanel( HierarchicalTransitionGraph graph) {
+		return new HierarchicalEdgeParameterPanel(graph);
 	}
 
 	@Override
-	public JPanel getInfoPanel(GsHierarchicalTransitionGraph graph) {
+	public JPanel getInfoPanel(HierarchicalTransitionGraph graph) {
 		// TODO: info panel for HTG?
 		return null;
 	}
 
 	@Override
-	public Class<GsHierarchicalTransitionGraph> getGraphClass() {
+	public Class<HierarchicalTransitionGraph> getGraphClass() {
 		
-		return GsHierarchicalTransitionGraph.class;
+		return HierarchicalTransitionGraph.class;
 	}
 
 	@Override
-	public List<EditAction> getEditActions(GsHierarchicalTransitionGraph graph) {
+	public List<EditAction> getEditActions(HierarchicalTransitionGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}

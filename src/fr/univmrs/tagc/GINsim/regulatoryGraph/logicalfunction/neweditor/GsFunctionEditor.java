@@ -2,8 +2,8 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.neweditor;
 
 import javax.swing.JTree;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -42,7 +42,7 @@ public class GsFunctionEditor {
     controler.init(p, model);
   	editPanel.init(model);
 	}
-	public void init(GsTreeExpression e, GsRegulatoryVertex v, GsRegulatoryGraph graph, JTree t) {
+	public void init(GsTreeExpression e, RegulatoryVertex v, RegulatoryGraph graph, JTree t) {
 		model.init((GsTreeInteractionsModel)t.getModel(), e.getGraphicPanel());
 		controler.init(v, graph, t, model);
 		displayPanel.init(e);

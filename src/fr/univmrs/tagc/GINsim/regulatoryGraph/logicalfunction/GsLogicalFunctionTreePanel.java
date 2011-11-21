@@ -33,8 +33,8 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
@@ -137,7 +137,7 @@ public class GsLogicalFunctionTreePanel extends AbstractParameterPanel implement
   private GsTransferable transferable = null, current_transferable = null;
 	private GsPanelFactory panelFactory;
 
-  public GsLogicalFunctionTreePanel(GsRegulatoryGraph graph, GsLogicalFunctionPanel p) {
+  public GsLogicalFunctionTreePanel(RegulatoryGraph graph, GsLogicalFunctionPanel p) {
     super(graph);
     panelFactory = new GsPanelFactory(p);
     setLayout(new BorderLayout());
@@ -151,7 +151,7 @@ public class GsLogicalFunctionTreePanel extends AbstractParameterPanel implement
   }
 
   public void setEditedItem(Object obj) {
-    GsRegulatoryVertex vertex = (GsRegulatoryVertex) obj;
+    RegulatoryVertex vertex = (RegulatoryVertex) obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
     interactionList.setView(this);
@@ -160,7 +160,7 @@ public class GsLogicalFunctionTreePanel extends AbstractParameterPanel implement
     tree.setModel(interactionList);
  }
 
-  private JTree getJTree(GsRegulatoryGraph graph) {
+  private JTree getJTree(RegulatoryGraph graph) {
     if (tree == null) {
       interactionList = new GsTreeInteractionsModel(graph);
       tree = new JTree(interactionList);
@@ -528,7 +528,7 @@ public class GsLogicalFunctionTreePanel extends AbstractParameterPanel implement
       lp.setEdges(((GsTreeParam) params[i]).getEdgeIndexes());
       v.addElement(lp);
     }
-    c = new GsFunctionsCreator((GsRegulatoryGraph) graph, v, interactionList.getVertex());
+    c = new GsFunctionsCreator((RegulatoryGraph) graph, v, interactionList.getVertex());
 
     Hashtable h = c.doIt(false);
 

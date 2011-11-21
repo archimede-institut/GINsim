@@ -11,7 +11,7 @@ import fr.univmrs.tagc.common.Debugger;
  * descriptor for regulatoryGraph.
  */
 @ProviderFor( GraphFactory.class)
-public class ReducedGraphFactory implements GraphFactory<GsReducedGraph> {
+public class ReducedGraphFactory implements GraphFactory<ReducedGraph> {
 
     private static ReducedGraphFactory instance = null;
     
@@ -38,30 +38,30 @@ public class ReducedGraphFactory implements GraphFactory<GsReducedGraph> {
     }
     
     @Override
-	public Class<GsReducedGraph> getGraphClass(){
-		return GsReducedGraph.class;
+	public Class<ReducedGraph> getGraphClass(){
+		return ReducedGraph.class;
 	}
     
     
     @Override
     public Class getParser() {
-    	return GsReducedGraphParser.class;
+    	return ReducedGraphParser.class;
     }
     
     @Override
-    public GsReducedGraph create() {
-    	GsReducedGraph graph = new ReducedGraphImpl();
+    public ReducedGraph create() {
+    	ReducedGraph graph = new ReducedGraphImpl();
         return graph;
     }
     
 
-    public GsReducedGraph create( boolean bool){
+    public ReducedGraph create( boolean bool){
     	
     	return new ReducedGraphImpl( bool);
     }
     
     
-    public GsReducedGraph create( Graph graph){
+    public ReducedGraph create( Graph graph){
     	
     	return new ReducedGraphImpl( graph);
     }

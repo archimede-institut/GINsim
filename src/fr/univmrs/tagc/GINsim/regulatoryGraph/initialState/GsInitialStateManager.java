@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
+import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -17,20 +17,20 @@ import org.xml.sax.SAXException;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class GsInitialStateManager implements GsGraphAssociatedObjectManager {
+public class GsInitialStateManager implements GraphAssociatedObjectManager {
 
 	public static final String key = "initialState";
 	
     public Object doOpen(InputStream is, Graph graph) {
     	
-        initStateParser parser = new initStateParser((GsRegulatoryGraph)graph);
+        initStateParser parser = new initStateParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) {
         GsInitialStateList imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, key, true);
-        List nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
+        List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (imanager == null || imanager.isEmpty() || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
@@ -68,7 +68,7 @@ class initStateParser extends XMLHelper {
     /**
      * @param graph expected node order
      */
-    public initStateParser(GsRegulatoryGraph graph) {
+    public initStateParser(RegulatoryGraph graph) {
         imanager = new GsInitialStateList( graph);
         list = imanager.getInitialStates();
         inputs = imanager.getInputConfigs();

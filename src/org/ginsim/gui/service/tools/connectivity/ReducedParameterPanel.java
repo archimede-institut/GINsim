@@ -6,8 +6,8 @@ import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import org.ginsim.graph.reducedgraph.GsNodeReducedData;
-import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.graph.reducedgraph.NodeReducedData;
+import org.ginsim.graph.reducedgraph.ReducedGraph;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 
@@ -15,7 +15,7 @@ import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
  * this panel display some info about a strong component node:
  * it'll mainly display the list of "real nodes" present in this node
  */
-public class ReducedParameterPanel extends AbstractParameterPanel<GsNodeReducedData> {
+public class ReducedParameterPanel extends AbstractParameterPanel<NodeReducedData> {
 
 	private static final long serialVersionUID = 3085972711359179082L;
 	private javax.swing.JScrollPane jScrollPane = null;
@@ -24,13 +24,13 @@ public class ReducedParameterPanel extends AbstractParameterPanel<GsNodeReducedD
 	/**
 	 * @param graph 
 	 */
-	public ReducedParameterPanel(GsReducedGraph graph) {
+	public ReducedParameterPanel(ReducedGraph graph) {
 		super(graph);
 		initialize();
 	}
 	
 	@Override
-	public void setEditedItem(GsNodeReducedData obj) {
+	public void setEditedItem(NodeReducedData obj) {
 		((ConnectivityTableModel)getJTable().getModel()).setContent( obj.getContent() );
 	}
 

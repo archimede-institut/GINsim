@@ -4,9 +4,9 @@ import java.util.Collection;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
@@ -16,14 +16,14 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
  * Also deals with updating them when the graph is changed
  */
 public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifierConfig>
-	implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+	implements GraphListener<RegulatoryVertex, RegulatoryMultiEdge> {
 
     String s_current;
-    GsRegulatoryGraph graph;
+    RegulatoryGraph graph;
 
-    public ModelSimplifierConfigList( Graph<GsRegulatoryVertex, GsRegulatoryMultiEdge> graph) {
+    public ModelSimplifierConfigList( Graph<RegulatoryVertex, RegulatoryMultiEdge> graph) {
     	
-        this.graph = (GsRegulatoryGraph) graph;
+        this.graph = (RegulatoryGraph) graph;
     	prefix = "parameter_";
     	canAdd = true;
     	canEdit = true;
@@ -32,14 +32,14 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
         graph.addGraphListener(this);
     }
 
-    public GsGraphEventCascade vertexAdded(GsRegulatoryVertex data) {
+    public GsGraphEventCascade vertexAdded(RegulatoryVertex data) {
         return null;
     }
-	public GsGraphEventCascade graphMerged(Collection<GsRegulatoryVertex> data) {
+	public GsGraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
 		return null;
 	}
     
-    public GsGraphEventCascade vertexRemoved(GsRegulatoryVertex data) {
+    public GsGraphEventCascade vertexRemoved(RegulatoryVertex data) {
     	for (int i=0 ; i<v_data.size() ; i++) {
     		ModelSimplifierConfig cfg = (ModelSimplifierConfig)v_data.get(i);
     		cfg.m_removed.remove(data);
@@ -47,7 +47,7 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
         return null;
     }
 
-    public GsGraphEventCascade vertexUpdated(GsRegulatoryVertex data) {
+    public GsGraphEventCascade vertexUpdated(RegulatoryVertex data) {
     	return null;
     }
 
@@ -56,13 +56,13 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
 		config.setName(name);
 		return config;
 	}
-	public GsGraphEventCascade edgeAdded(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
 		return null;
 	}
-	public GsGraphEventCascade edgeRemoved(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
 		return null;
 	}
-	public GsGraphEventCascade edgeUpdated(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
 		return null;
 	}
 	public void endParsing() {

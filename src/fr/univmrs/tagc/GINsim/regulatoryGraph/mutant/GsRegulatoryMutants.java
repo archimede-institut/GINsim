@@ -27,10 +27,10 @@ import org.ginsim.annotation.AnnotationPanel;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.tools.reg2dyn.GsRegulatoryMutantListener;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.tools.reg2dyn.RegulatoryMutantListener;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
@@ -45,14 +45,14 @@ import fr.univmrs.tagc.common.widgets.StockButton;
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.
  */
-public class GsRegulatoryMutants extends SimpleGenericList implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+public class GsRegulatoryMutants extends SimpleGenericList implements GraphListener<RegulatoryVertex, RegulatoryMultiEdge> {
 
     /**
      * edit mutants associated with a graph
      * @param graph
      * @return a panel to configure mutants
      */
-    public static JPanel getMutantConfigPanel(GsRegulatoryGraph graph) {
+    public static JPanel getMutantConfigPanel(RegulatoryGraph graph) {
         GsRegulatoryMutants mutants = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
         MutantPanel mpanel = new MutantPanel();
         Map m = new HashMap();
@@ -64,13 +64,13 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GraphListe
     }
 
     Vector v_listeners = new Vector();
-    Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph;
+    Graph<RegulatoryVertex,RegulatoryMultiEdge> graph;
     
     /**
      * edit mutants associated with the graph
      * @param graph
      */
-    public GsRegulatoryMutants( Graph<GsRegulatoryVertex,GsRegulatoryMultiEdge> graph) {
+    public GsRegulatoryMutants( Graph<RegulatoryVertex,RegulatoryMultiEdge> graph) {
         this.graph = graph;
         graph.addGraphListener(this);
         
@@ -81,16 +81,16 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GraphListe
         canEdit = true;
     }
     
-    public GsGraphEventCascade edgeAdded(GsRegulatoryMultiEdge data) {
+    public GsGraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
         return null;
     }
-    public GsGraphEventCascade edgeRemoved(GsRegulatoryMultiEdge data) {
+    public GsGraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
         return null;
     }
-    public GsGraphEventCascade vertexAdded(GsRegulatoryVertex data) {
+    public GsGraphEventCascade vertexAdded(RegulatoryVertex data) {
         return null;
     }
-    public GsGraphEventCascade vertexRemoved(GsRegulatoryVertex data) {
+    public GsGraphEventCascade vertexRemoved(RegulatoryVertex data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
             GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_data.get(i);
@@ -107,10 +107,10 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GraphListe
         }
         return null;
     }
-	public GsGraphEventCascade graphMerged(Collection<GsRegulatoryVertex> data) {
+	public GsGraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
 		return null;
 	}
-    public GsGraphEventCascade vertexUpdated(GsRegulatoryVertex data) {
+    public GsGraphEventCascade vertexUpdated(RegulatoryVertex data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
             GsRegulatoryMutantDef m = (GsRegulatoryMutantDef)v_data.get(i);
@@ -118,7 +118,7 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GraphListe
                 GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)m.v_changes.get(j);
                 if (change.vertex == data) {
                     // check that it is up to date
-                    GsRegulatoryVertex vertex = (GsRegulatoryVertex)data;
+                    RegulatoryVertex vertex = (RegulatoryVertex)data;
                     if (change.max > vertex.getMaxValue()) {
                         change.max = vertex.getMaxValue();
                         if (change.min > vertex.getMaxValue()) {
@@ -134,7 +134,7 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GraphListe
         }
         return null;
     }
-    public GsGraphEventCascade edgeUpdated(GsRegulatoryMultiEdge data) {
+    public GsGraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
         return null;
     }
     
@@ -149,14 +149,14 @@ public class GsRegulatoryMutants extends SimpleGenericList implements GraphListe
      * register a new listener for this object
      * @param listener
      */
-    public void addListener(GsRegulatoryMutantListener listener) {
+    public void addListener(RegulatoryMutantListener listener) {
         v_listeners.add(listener);
     }
     /**
      * un-register a listener
      * @param listener
      */
-    public void removeListener(GsRegulatoryMutantListener listener) {
+    public void removeListener(RegulatoryMutantListener listener) {
         v_listeners.remove(listener);
     }
 
@@ -210,7 +210,7 @@ class MutantPanel extends SplitPane {
     EnhancedJTable table_change;
     GsRegulatoryMutantDef curMutant = null;
     private GsRegulatoryMutants mutants;
-    GsRegulatoryGraph graph;
+    RegulatoryGraph graph;
     AnnotationPanel ap;
 
     public MutantPanel() { 
@@ -296,7 +296,7 @@ class MutantPanel extends SplitPane {
        ap.setEditedObject(curMutant.annotation);
     }
     
-    void setEditedObject(GsRegulatoryMutants mutants, GenericListPanel lp, GsRegulatoryGraph graph) {
+    void setEditedObject(GsRegulatoryMutants mutants, GenericListPanel lp, RegulatoryGraph graph) {
     	this.lp = lp;
         this.mutants = mutants;
         this.graph = graph;
@@ -372,7 +372,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
     private static final long serialVersionUID = 864660594916225977L;
 
     private GsRegulatoryMutantDef curMutant;
-    private GsRegulatoryGraph graph;
+    private RegulatoryGraph graph;
     ValueList vlist;
     
     /**
@@ -380,7 +380,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
      * @param curMutant
      * @param v_node_order
      */
-    public void setEditedObject(GsRegulatoryMutantDef curMutant, GsRegulatoryGraph graph) {
+    public void setEditedObject(GsRegulatoryMutantDef curMutant, RegulatoryGraph graph) {
     	this.graph = graph;
         this.curMutant = curMutant;
         List nodeOrder = graph.getNodeOrder();
@@ -497,7 +497,7 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         if (rowIndex == curMutant.getNbChanges()) {
             if (columnIndex == 0) {
                     ValueList value = (ValueList)getValueAt(rowIndex, columnIndex);
-                    curMutant.addChange((GsRegulatoryVertex)value.get(value.getSelectedIndex()));
+                    curMutant.addChange((RegulatoryVertex)value.get(value.getSelectedIndex()));
                     fireTableDataChanged();
             }
             return;

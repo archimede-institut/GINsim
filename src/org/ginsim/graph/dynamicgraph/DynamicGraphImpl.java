@@ -16,9 +16,9 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsRegulatoryGraphOptionPanel;
@@ -28,7 +28,7 @@ import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, Edge<GsDynamicNode>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge> implements GsDynamicGraph{
+public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Edge<DynamicNode>, RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge> implements DynamicGraph{
 
 
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";
@@ -51,7 +51,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 	}
     
 	/**
-	 * create a new GsDynamicGraph.
+	 * create a new DynamicGraph.
 	 * @param regGraph
 	 */
 	public DynamicGraphImpl(List<?> nodeOrder) {
@@ -80,7 +80,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 	public DynamicGraphImpl(Map map, File file) {
 		
 	    this( true);
-        GsDynamicParser parser = new GsDynamicParser();
+        DynamicParser parser = new DynamicParser();
         parser.parse(file, map, this);
 	}
 	
@@ -136,7 +136,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 	}
 
 	@Override
-	protected void doSave(OutputStreamWriter os, Collection<GsDynamicNode> nodes, Collection<Edge<GsDynamicNode>> edges, int mode) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<DynamicNode> nodes, Collection<Edge<DynamicNode>> edges, int mode) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -183,7 +183,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(XMLWriter out, int mode, Collection<Edge<GsDynamicNode>> edges) throws IOException {
+    private void saveEdge(XMLWriter out, int mode, Collection<Edge<DynamicNode>> edges) throws IOException {
         if (edges == null) {
         	edges = getEdges();
         }
@@ -192,7 +192,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
         
         switch (mode) {
         	case 2:
-		        for (Edge<GsDynamicNode> edge: edges) {
+		        for (Edge<DynamicNode> edge: edges) {
 	        	    eReader.setEdge(edge);
 		            String source = edge.getSource().toString();
 		            String target = edge.getTarget().toString();
@@ -202,7 +202,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 		        }
         	    break;
 	    	default:
-		        for (Edge<GsDynamicNode> edge: edges) {
+		        for (Edge<DynamicNode> edge: edges) {
 	        	    eReader.setEdge(edge);
 		            String source = edge.getSource().toString();
 		            String target = edge.getTarget().toString();
@@ -218,7 +218,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, Collection<GsDynamicNode> nodes) throws IOException {
+    private void saveNode(XMLWriter out, int mode, Collection<DynamicNode> nodes) throws IOException {
     	if (nodes == null) {
     		nodes = getVertices();
     	}
@@ -227,7 +227,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
     	
         	switch (mode) {
 	    		case 1:
-	                for (GsDynamicNode node: nodes) {
+	                for (DynamicNode node: nodes) {
 	                    vReader.setVertex(node);
 	                    String svs = GsGinmlHelper.getShortNodeVS(vReader);
 	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
@@ -236,7 +236,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 	                }
 	    			break;
 				case 2:
-	                for (GsDynamicNode node: nodes) {
+	                for (DynamicNode node: nodes) {
 	                    vReader.setVertex(node);
 	                    String svs = GsGinmlHelper.getFullNodeVS(vReader);
 	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
@@ -245,24 +245,24 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 	                }
 	    			break;
         		default:
-	                for (GsDynamicNode node: nodes) {
+	                for (DynamicNode node: nodes) {
         	            out.write("\t\t<node id=\""+node.getId()+"\"/>\n");
         	        }
         }
     }
 
 	@Override
-	public boolean removeEdge(Edge<GsDynamicNode> obj) {
+	public boolean removeEdge(Edge<DynamicNode> obj) {
 		return false;
 	}
 
 	/**
 	 * add a vertex to this graph.
 	 * @param state the state we want to add
-	 * @return the new GsDynamicNode.
+	 * @return the new DynamicNode.
 	 */
 	private boolean addVertex( byte[] state) {
-		return addVertex( new GsDynamicNode(state));
+		return addVertex( new DynamicNode(state));
 	}
 	
 	/**
@@ -273,9 +273,9 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 	 * @return the new edge
 	 */
 	@Override
-	public Edge<GsDynamicNode> addEdge(GsDynamicNode source, GsDynamicNode target, boolean multiple) {
+	public Edge<DynamicNode> addEdge(DynamicNode source, DynamicNode target, boolean multiple) {
 		
-		Edge<GsDynamicNode> edge = new Edge<GsDynamicNode>(source, target);
+		Edge<DynamicNode> edge = new Edge<DynamicNode>(source, target);
 		if (!addEdge(edge)) {
 			return null;
 		}
@@ -292,10 +292,10 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
     protected List doMerge( Graph otherGraph) {
 
         // first check if this merge is allowed!
-        if (!(otherGraph instanceof GsDynamicGraph)) {
+        if (!(otherGraph instanceof DynamicGraph)) {
             return null;
         }
-        List v_order = ((GsDynamicGraph)otherGraph).getNodeOrder();
+        List v_order = ((DynamicGraph)otherGraph).getNodeOrder();
         if (v_order.size() != nodeOrder.size()) {
             return null;
         }
@@ -310,7 +310,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
         VertexAttributesReader vReader = getVertexAttributeReader();
         VertexAttributesReader cvreader = otherGraph.getVertexAttributeReader();
         while (it.hasNext()) {
-            GsDynamicNode vertex = (GsDynamicNode)it.next();
+            DynamicNode vertex = (DynamicNode)it.next();
             addVertex(vertex);
             cvreader.setVertex(vertex);
             vReader.setVertex(vertex);
@@ -320,8 +320,8 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
         }
 
         for (Edge edge: (Collection<Edge>)otherGraph.getEdges()) {
-            GsDynamicNode from = (GsDynamicNode)edge.getSource();
-            GsDynamicNode to = (GsDynamicNode)edge.getTarget();
+            DynamicNode from = (DynamicNode)edge.getSource();
+            DynamicNode to = (DynamicNode)edge.getTarget();
             int c = 0;
             for ( int i=0 ; i<from.state.length ; i++) {
             	if (from.state[i] != to.state[i]) {
@@ -358,8 +358,8 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 	@Override
     public List shortestPath(byte[] source, byte[] target) {
     	
-        GsDynamicNode n = new GsDynamicNode(source);
-        GsDynamicNode n2 = new GsDynamicNode(target);
+        DynamicNode n = new DynamicNode(source);
+        DynamicNode n2 = new DynamicNode(target);
         if (containsVertex(n) && containsVertex(n2)) {
             return getShortestPath(n, n2);
         }
@@ -378,10 +378,10 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
             return true;
         }
         
-        if (!(graph instanceof GsRegulatoryGraph)) {
+        if (!(graph instanceof RegulatoryGraph)) {
             return false;
         }
-        return GsRegulatoryGraph.associationValid((GsRegulatoryGraph)graph, this);
+        return RegulatoryGraph.associationValid((RegulatoryGraph)graph, this);
     }
   
 
@@ -397,14 +397,14 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<GsDynamicNode, 
 //    }
 //	public GsParameterPanel getEdgeAttributePanel() {
 //	    if (edgePanel == null) {
-//	        edgePanel = new GsDynamicItemAttributePanel(this);
+//	        edgePanel = new DynamicItemAttributePanel(this);
 //	    }
 //		return edgePanel;
 //	}
 //
 //	public GsParameterPanel getVertexAttributePanel() {
 //	    if (vertexPanel == null) {
-//	        vertexPanel = new GsDynamicItemAttributePanel(this);
+//	        vertexPanel = new DynamicItemAttributePanel(this);
 //	    }
 //		return vertexPanel;
 //	}

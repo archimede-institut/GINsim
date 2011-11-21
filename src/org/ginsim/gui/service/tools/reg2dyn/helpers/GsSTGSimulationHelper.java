@@ -4,10 +4,10 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.dynamicgraph.GsDynamicNode;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicNode;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 
 
@@ -18,12 +18,12 @@ import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
  * @author Duncan Berenguier
  */
 public class GsSTGSimulationHelper extends SimulationHelper {
-	protected GsDynamicNode node;
-	protected GsDynamicGraph stateTransitionGraph;
+	protected DynamicNode node;
+	protected DynamicGraph stateTransitionGraph;
 	protected VertexAttributesReader vreader;
 	
-	public GsSTGSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
-		stateTransitionGraph = GraphManager.getInstance().getNewGraph( GsDynamicGraph.class, params.nodeOrder);
+	public GsSTGSimulationHelper(RegulatoryGraph regGraph, SimulationParameters params) {
+		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, params.nodeOrder);
 		stateTransitionGraph.setAssociatedGraph(regGraph);
 		
         vreader = stateTransitionGraph.getVertexAttributeReader();
@@ -33,10 +33,10 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 	}
 
 	public boolean addNode(SimulationQueuedState item) {
-		node = new GsDynamicNode(item.state);
+		node = new DynamicNode(item.state);
 		boolean isnew = stateTransitionGraph.addVertex(node);
 		if (item.previous != null) {
-			stateTransitionGraph.addEdge((GsDynamicNode)item.previous, node, item.multiple);
+			stateTransitionGraph.addEdge((DynamicNode)item.previous, node, item.multiple);
 		}
 		return isnew;
 	}
@@ -65,7 +65,7 @@ public class GsSTGSimulationHelper extends SimulationHelper {
 	}
 	
 	public void setNode(Object node) {
-		this.node = (GsDynamicNode) node;
+		this.node = (DynamicNode) node;
 	}
 }
 

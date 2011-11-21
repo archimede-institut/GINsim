@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 
@@ -29,13 +29,13 @@ public class GsParamTree {
     while (it.hasNext()) {
       e = (Entry)it.next();
       if (e.getValue() != null) {
-				addLevel(++depth, (GsRegulatoryVertex)e.getKey(), (GsRegulatoryMultiEdge)e.getValue());
+				addLevel(++depth, (RegulatoryVertex)e.getKey(), (RegulatoryMultiEdge)e.getValue());
       }
     }
     addLeaves(dv);
     defaultValue = dv;
   }
-  private void addLevel(int level, GsRegulatoryVertex v, GsRegulatoryMultiEdge me) {
+  private void addLevel(int level, RegulatoryVertex v, RegulatoryMultiEdge me) {
     GsParamTreeNode e;
     if (level == 0) {
 		root = new GsParamTreeNode(v, me, null, -1);

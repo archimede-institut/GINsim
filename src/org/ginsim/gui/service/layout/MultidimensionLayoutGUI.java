@@ -27,7 +27,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.service.layout.DynamicLayoutMultidimention;
 
 import fr.univmrs.tagc.common.ColorPalette;
@@ -41,7 +41,7 @@ public class MultidimensionLayoutGUI {
 
 	private MdLayoutTableModel tableModel;
 	private JCheckBox straightEdges;
-	private GsDynamicGraph graph;
+	private DynamicGraph graph;
 	private JTable table;
 	private JDialog frame;
 

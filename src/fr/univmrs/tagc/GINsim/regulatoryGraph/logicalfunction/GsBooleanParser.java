@@ -9,10 +9,10 @@ import java.util.Vector;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanParser;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTreeNode;
@@ -23,14 +23,14 @@ public class GsBooleanParser extends TBooleanParser {
 	private static String returnClassName = "fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionList";
 	private static String operandClassName = "fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene";
 	private Object[] allParams;
-	private GsRegulatoryGraph graph;
-	private GsRegulatoryVertex vertex;
+	private RegulatoryGraph graph;
+	private RegulatoryVertex vertex;
 	private boolean shouldAutoAddNewElements;
 
-	public GsBooleanParser( Collection<GsRegulatoryMultiEdge> edgesList) throws ClassNotFoundException {
+	public GsBooleanParser( Collection<RegulatoryMultiEdge> edgesList) throws ClassNotFoundException {
 		this(edgesList, false);
 	}
-	public GsBooleanParser( Collection<GsRegulatoryMultiEdge> edgesList, boolean shouldAutoAddNewElements) throws ClassNotFoundException {
+	public GsBooleanParser( Collection<RegulatoryMultiEdge> edgesList, boolean shouldAutoAddNewElements) throws ClassNotFoundException {
 		super(returnClassName, operandClassName);
 		nodeFactory = new GsBooleanTreeNodeFactory(returnClassName, operandClassName, this);
 		if (edgesList != null && edgesList.size() > 0) {
@@ -45,14 +45,14 @@ public class GsBooleanParser extends TBooleanParser {
 //		List v = new ArrayList();
 //		Object o;
 //		Iterator it = operandList.keySet().iterator();
-//		GsRegulatoryEdge re;
+//		RegulatoryEdge re;
 //		GsDirectedEdge e;
-//		GsRegulatoryVertex source;
+//		RegulatoryVertex source;
 //
 //		while (it.hasNext()) {
 //			o = it.next();
-//			if (o instanceof GsRegulatoryEdge) {
-//				re = (GsRegulatoryEdge) o;
+//			if (o instanceof RegulatoryEdge) {
+//				re = (RegulatoryEdge) o;
 //				source = re.me.getSource();
 //				v.add(source.getId());
 //				for (int i = 0; i < re.me.getEdgeCount(); i++) {
@@ -61,17 +61,17 @@ public class GsBooleanParser extends TBooleanParser {
 //			}
 //			else if (o instanceof GsDirectedEdge) {
 //				e = (GsDirectedEdge) o;
-//				source = (GsRegulatoryVertex)e.getSourceVertex();
+//				source = (RegulatoryVertex)e.getSourceVertex();
 //				v.add(source.getId() + "#1");
 //			}
-//			else if (o instanceof GsRegulatoryVertex) {
-//				source = (GsRegulatoryVertex)o;
+//			else if (o instanceof RegulatoryVertex) {
+//				source = (RegulatoryVertex)o;
 //				v.add(source.getId());
 //			}
 //		}
 //		return v.containsAll(list);
 	}
-	protected void setAllData(Collection<GsRegulatoryMultiEdge> edgesList) {
+	protected void setAllData(Collection<RegulatoryMultiEdge> edgesList) {
 		List[] F = new List[operandList.size()];
 		int[] N = new int[operandList.size()];
 		int[] K = new int[operandList.size()];
@@ -82,7 +82,7 @@ public class GsBooleanParser extends TBooleanParser {
 
 		i = 0;
 		p = 1;
-		for (GsRegulatoryMultiEdge me: edgesList) {
+		for (RegulatoryMultiEdge me: edgesList) {
 			n = me.getEdgeCount();
 			F[i] = new ArrayList(n + 1);
 			F[i].add(new GsLogicalFunctionListElement(null, -1));
@@ -133,12 +133,12 @@ public class GsBooleanParser extends TBooleanParser {
 	public Object[] getAllParams() {
 		return allParams;
 	}
-	private void makeOperandList(Collection<GsRegulatoryMultiEdge> edgesList) {
-		GsRegulatoryVertex source;
-		GsRegulatoryEdge re;
+	private void makeOperandList(Collection<RegulatoryMultiEdge> edgesList) {
+		RegulatoryVertex source;
+		RegulatoryEdge re;
 
 		operandList = new Hashtable();
-		for (GsRegulatoryMultiEdge me: edgesList) {
+		for (RegulatoryMultiEdge me: edgesList) {
 			source = me.getSource();
 			operandList.put(source, source.getId());
 			for (int i = 0; i < me.getEdgeCount(); i++) {
@@ -167,7 +167,7 @@ public class GsBooleanParser extends TBooleanParser {
 		this.root = root;
 	}
 	
-	public boolean compile(String v, GsRegulatoryGraph graph, GsRegulatoryVertex vertex) {
+	public boolean compile(String v, RegulatoryGraph graph, RegulatoryVertex vertex) {
 		this.graph = graph;
 		this.vertex = vertex;
 		boolean shouldReInit = false;
@@ -175,9 +175,9 @@ public class GsBooleanParser extends TBooleanParser {
 			List sourceVertices = getSourceVertices(v);
 			for (Iterator it = sourceVertices.iterator(); it.hasNext();) {
 				String nodeID = (String) it.next();
-				GsRegulatoryVertex source = null;
+				RegulatoryVertex source = null;
 				for (Iterator itno = graph.getNodeOrder().iterator(); itno.hasNext();) {
-					GsRegulatoryVertex node = (GsRegulatoryVertex) itno.next();
+					RegulatoryVertex node = (RegulatoryVertex) itno.next();
 					if (node.getId().equals(nodeID)) {
 						source = node;
 						shouldReInit = true;
@@ -189,7 +189,7 @@ public class GsBooleanParser extends TBooleanParser {
 				Edge edge = graph.getEdge(source, this.vertex);
 				if (edge == null) {
 					try{
-						edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, GsRegulatoryMultiEdge.SIGN[0]).me;
+						edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, RegulatoryMultiEdge.SIGN[0]).me;
 						shouldReInit = true;
 					}
 					catch( GsException gs_exception){
@@ -258,10 +258,10 @@ public class GsBooleanParser extends TBooleanParser {
 			nodeID = value;
 		}
 		Iterator it = graph.getNodeOrder().iterator();
-		GsRegulatoryVertex vertex = null;
+		RegulatoryVertex vertex = null;
 		boolean found = false;
 		while (it.hasNext()) {
-			vertex = (GsRegulatoryVertex)it.next();
+			vertex = (RegulatoryVertex)it.next();
 			if (vertex.getId().equals(nodeID)) {
 				found = true;
 				break;
@@ -270,12 +270,12 @@ public class GsBooleanParser extends TBooleanParser {
 		if (!found) {
 			throw new GsException(GsException.GRAVITY_NORMAL, "The node is not defined in the graph");
 		}
-		GsRegulatoryMultiEdge me = graph.getEdge(vertex, this.vertex);
+		RegulatoryMultiEdge me = graph.getEdge(vertex, this.vertex);
 		if (me == null) {
 			throw new GsException(GsException.GRAVITY_NORMAL, "The node is not linked by any edge in the graph");
 		}
 		if (edgeTh != -1) {
-			GsRegulatoryEdge edge = me.getEdgeForThreshold(edgeTh);
+			RegulatoryEdge edge = me.getEdgeForThreshold(edgeTh);
 			if (edge == null) {
 				throw new GsException(GsException.GRAVITY_NORMAL, "no such edge threshold");
 			}

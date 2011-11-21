@@ -7,11 +7,11 @@ import tbrowser.ihm.results.TBInfoPanel;
 
 public class GsTBInfoPanel extends TBInfoPanel {
   private static final long serialVersionUID = -5932617499905893848L;
-  GsTBInfoProfilePanel profilePanel;
+  TBInfoProfilePanel profilePanel;
 
-  public GsTBInfoPanel(GsTBClientPanel p) {
+  public GsTBInfoPanel(TBClientPanel p) {
     super("Info");
-    profilePanel = new GsTBInfoProfilePanel(p);
+    profilePanel = new TBInfoProfilePanel(p);
     addTab(profilePanel);
   }
   public void initModule(TBModule m, Vector g) {

@@ -1,9 +1,9 @@
 package org.ginsim.service.imports.txt;
 
-import org.ginsim.service.GsService;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-@ProviderFor( GsService.class)
-public class TxtImportService implements GsService {
+@ProviderFor( Service.class)
+public class TxtImportService implements Service {
 
 }

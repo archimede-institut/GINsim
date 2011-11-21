@@ -6,25 +6,25 @@ import java.util.Map;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.SimulationHelper;
 
 
 public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 	
-	protected GsDynamicalHierarchicalNode node;
-	protected GsDynamicalHierarchicalGraph dynHieGraph;
+	protected DynamicalHierarchicalNode node;
+	protected DynamicalHierarchicalGraph dynHieGraph;
 	public Map arcs;
-	protected GsRegulatoryGraph regGraph;
+	protected RegulatoryGraph regGraph;
 	protected byte mergingStrategy;
 	
-	public DynamicalHierarchicalSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public DynamicalHierarchicalSimulationHelper(RegulatoryGraph regGraph, SimulationParameters params) {
 		this.regGraph = regGraph;
-		this.dynHieGraph = GraphManager.getInstance().getNewGraph( GsDynamicalHierarchicalGraph.class, params.nodeOrder);
+		this.dynHieGraph = GraphManager.getInstance().getNewGraph( DynamicalHierarchicalGraph.class, params.nodeOrder);
 //		this.mergingStrategy = (byte) params.hierarchicalStrategies;
-		if (regGraph instanceof GsRegulatoryGraph) {
+		if (regGraph instanceof RegulatoryGraph) {
 			dynHieGraph.setAssociatedGraph(regGraph);
 		}
 		VertexAttributesReader vreader = dynHieGraph.getVertexAttributeReader();
@@ -50,7 +50,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 	}
 	
 	public void setNode(Object node) {
-		this.node = (GsDynamicalHierarchicalNode) node;
+		this.node = (DynamicalHierarchicalNode) node;
 	}
 	
 	public Graph getRegulatoryGraph() {
@@ -62,7 +62,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 		return this.dynHieGraph;
 	}
 
-	public void addEdge(GsDynamicalHierarchicalNode from, GsDynamicalHierarchicalNode to) {
+	public void addEdge(DynamicalHierarchicalNode from, DynamicalHierarchicalNode to) {
 		from.getOutgoingEdges().add(to);
 		to.getIncomingEdges().add(from);
 	}

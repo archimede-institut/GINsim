@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.ginsim.annotation.AnnotationLink;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeModel;
@@ -13,7 +13,7 @@ import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class NodeTreeModel extends DTreeModel {
 	
-  public void addGene(GsRegulatoryVertex vertex, Vector par) {
+  public void addGene(RegulatoryVertex vertex, Vector par) {
     AnnotationLink al;
     Vector v2 = new Vector();
     String[] field, sfield;

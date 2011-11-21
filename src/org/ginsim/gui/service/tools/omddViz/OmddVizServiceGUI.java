@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GsToolsAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
@@ -20,9 +20,9 @@ public class OmddVizServiceGUI implements GsServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new OMDDVizAction((GsRegulatoryGraph)graph));
+			actions.add(new OMDDVizAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -31,9 +31,9 @@ public class OmddVizServiceGUI implements GsServiceGUI {
 
 class OMDDVizAction extends GsToolsAction {
 
-	private GsRegulatoryGraph graph;
+	private RegulatoryGraph graph;
 
-	public OMDDVizAction(GsRegulatoryGraph graph) {
+	public OMDDVizAction(RegulatoryGraph graph) {
 		super("STR_omddViz", "STR_omddViz_descr");
 		this.graph = graph;
 	}

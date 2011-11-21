@@ -16,17 +16,17 @@ import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.tools.connectivity.ReducedParameterPanel;
 
 import fr.univmrs.tagc.GINsim.xml.GsGinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, Edge<GsNodeReducedData>, GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge>
-	implements GsReducedGraph{
+public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>
+	implements ReducedGraph{
 
 	public static final String GRAPH_ZIP_NAME = "connectedComponent.ginml";
 	
@@ -39,7 +39,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
 	public ReducedGraphImpl( Graph parent) {
 		
 	    this( false);
-        setAssociatedGraph( (GsRegulatoryGraph) parent);
+        setAssociatedGraph( (RegulatoryGraph) parent);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
 	public ReducedGraphImpl(Map map, File file) {
 		
 	    this( true);
-        GsReducedGraphParser parser = new GsReducedGraphParser();
+        ReducedGraphParser parser = new ReducedGraphParser();
         parser.parse(file, map, this);
 	}
 
@@ -101,7 +101,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
     @Override
     protected boolean isAssociationValid( Graph<?, ?> graph) {
     	
-    	if( graph instanceof GsRegulatoryGraph){
+    	if( graph instanceof RegulatoryGraph){
     		return true;
     	}
     	
@@ -109,7 +109,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
     }
 
     @Override
-	protected void doSave(OutputStreamWriter os, Collection<GsNodeReducedData> vertices, Collection<Edge<GsNodeReducedData>> edges, int mode) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<NodeReducedData> vertices, Collection<Edge<NodeReducedData>> edges, int mode) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, GsGinmlHelper.DEFAULT_URL_DTD_FILE);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -140,16 +140,16 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(XMLWriter out, int mode, Collection<Edge<GsNodeReducedData>> edges) throws IOException {
-        Iterator<Edge<GsNodeReducedData>> it;
+    private void saveEdge(XMLWriter out, int mode, Collection<Edge<NodeReducedData>> edges) throws IOException {
+        Iterator<Edge<NodeReducedData>> it;
     	if (edges == null) {
     		edges = getEdges();
     	}
         switch (mode) {
         	default:
-		        for (Edge<GsNodeReducedData> edge: edges) {
-		            GsNodeReducedData source = edge.getSource();
-		            GsNodeReducedData target = edge.getTarget();
+		        for (Edge<NodeReducedData> edge: edges) {
+		            NodeReducedData source = edge.getSource();
+		            NodeReducedData target = edge.getTarget();
 		            out.write("\t\t<edge id=\""+ source +"_"+target+"\" from=\""+source+"\" to=\""+target+"\"/>\n");
 		        }
 		        break;
@@ -162,7 +162,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveVertices(XMLWriter out, int mode, Collection<GsNodeReducedData> vertices) throws IOException {
+    private void saveVertices(XMLWriter out, int mode, Collection<NodeReducedData> vertices) throws IOException {
     	Iterator it;
     	if (vertices == null) {
     		vertices = getVertices();
@@ -171,7 +171,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
     	switch (mode) {
     		case 1:
 
-                for (GsNodeReducedData vertex: vertices) {
+                for (NodeReducedData vertex: vertices) {
                     String content = vertex.getContentString();
                     out.write("\t\t<node id=\""+vertex+"\">\n");
                     out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
@@ -180,9 +180,9 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
                 }
     			break;
 			case 2:
-                for (GsNodeReducedData vertex: vertices) {
+                for (NodeReducedData vertex: vertices) {
                     vReader.setVertex(vertex);
-                    String content = ((GsNodeReducedData)vertex).getContentString();
+                    String content = ((NodeReducedData)vertex).getContentString();
                     out.write("\t\t<node id=\""+vertex+"\">\n");
                     out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
                     out.write(GsGinmlHelper.getFullNodeVS(vReader));
@@ -190,7 +190,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
                 }
     			break;
     		default:
-                for (GsNodeReducedData vertex: vertices) {
+                for (NodeReducedData vertex: vertices) {
                     String content = vertex.getContentString();
                     out.write("\t\t<node id=\""+vertex+"\">\n");
                     out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
@@ -205,8 +205,8 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
 	 * @param target target vertex of this edge.
 	 */
     @Override
-	public void addEdge(GsNodeReducedData source, GsNodeReducedData target) {
-		Edge<GsNodeReducedData> edge = new Edge<GsNodeReducedData>(source, target);
+	public void addEdge(NodeReducedData source, NodeReducedData target) {
+		Edge<NodeReducedData> edge = new Edge<NodeReducedData>(source, target);
 		addEdge( edge);
 	}
 	
@@ -225,9 +225,9 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<GsNodeReducedData, E
      * @return a map referencing all real nodes in the selected CC
      */
     @Override
-    public Map getSelectedMap(Collection<GsNodeReducedData> selection) {
+    public Map getSelectedMap(Collection<NodeReducedData> selection) {
         Map map = new HashMap();
-        for (GsNodeReducedData node: selection) {
+        for (NodeReducedData node: selection) {
             Vector content = node.getContent();
             for (int i=0 ; i<content.size() ; i++) {
                 map.put(content.get(i).toString(), null);

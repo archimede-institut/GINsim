@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.annotation.AnnotationPanel;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.models.VertexMaxValueSpinModel;
@@ -18,7 +18,7 @@ import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.datastore.models.SpinModel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class RegulatoryVertexEditor extends ObjectEditor<GsRegulatoryVertex> {
+public class RegulatoryVertexEditor extends ObjectEditor<RegulatoryVertex> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NAME = 1;
@@ -28,15 +28,15 @@ public class RegulatoryVertexEditor extends ObjectEditor<GsRegulatoryVertex> {
 	public static final int PROP_RAW = 10;
 	private List l_prop = new ArrayList();
 	
-	GsRegulatoryGraph graph;
+	RegulatoryGraph graph;
 
 	static {
 		GenericPropertyEditorPanel.addSupportedClass(Annotation.class, AnnotationPanel.class);
-		GenericPropertyEditorPanel.addSupportedClass(GsRegulatoryVertex.class, GsInteractionPanel.class);
+		GenericPropertyEditorPanel.addSupportedClass(RegulatoryVertex.class, GsInteractionPanel.class);
 		GenericPropertyEditorPanel.addSupportedClass(GsLogicalFunctionPanel.class, GsLogicalFunctionPanel.class);
 	}
 	
-	public RegulatoryVertexEditor(GsRegulatoryGraph graph) {
+	public RegulatoryVertexEditor(RegulatoryGraph graph) {
 		this.graph = graph;
 		master = graph;
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_id"), String.class);
@@ -57,7 +57,7 @@ public class RegulatoryVertexEditor extends ObjectEditor<GsRegulatoryVertex> {
 		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
 		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
 		t[0] = pinfo;
-		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_parameters"), GsRegulatoryVertex.class);
+		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_parameters"), RegulatoryVertex.class);
 		pinfo.data = graph;
 		t[1] = pinfo;
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_function"), GsLogicalFunctionPanel.class);

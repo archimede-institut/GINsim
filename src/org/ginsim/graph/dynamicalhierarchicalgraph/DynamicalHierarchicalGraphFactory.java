@@ -3,7 +3,7 @@ package org.ginsim.graph.dynamicalhierarchicalgraph;
 import java.util.List;
 
 import org.ginsim.graph.common.GraphFactory;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;
@@ -12,7 +12,7 @@ import fr.univmrs.tagc.common.Debugger;
  * descriptor for dynamic hierarchical graphs.
  */
 @ProviderFor( GraphFactory.class)
-public class DynamicalHierarchicalGraphFactory implements GraphFactory<GsDynamicalHierarchicalGraph> {
+public class DynamicalHierarchicalGraphFactory implements GraphFactory<DynamicalHierarchicalGraph> {
 	
     private static DynamicalHierarchicalGraphFactory instance = null;
     
@@ -36,9 +36,9 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory<GsDynamic
 
 
     @Override
-	public Class<GsDynamicalHierarchicalGraph> getGraphClass(){
+	public Class<DynamicalHierarchicalGraph> getGraphClass(){
 		
-		return GsDynamicalHierarchicalGraph.class;
+		return DynamicalHierarchicalGraph.class;
 	}
 	
     @Override
@@ -50,23 +50,23 @@ public class DynamicalHierarchicalGraphFactory implements GraphFactory<GsDynamic
     @Override
 	public Class getParser(){
 		
-		return GsDynamicalHierarchicalParser.class;
+		return DynamicalHierarchicalParser.class;
 	}
 	
     @Override
-	public GsDynamicalHierarchicalGraph create(){
+	public DynamicalHierarchicalGraph create(){
 		
 		return new DynamicalHierarchicalGraphImpl();
 	}
     
 
-	public GsDynamicalHierarchicalGraph create( boolean bool){
+	public DynamicalHierarchicalGraph create( boolean bool){
 		
 		return new DynamicalHierarchicalGraphImpl( bool);
 	}
 	
 
-	public GsDynamicalHierarchicalGraph create( List<GsRegulatoryVertex> node_order){
+	public DynamicalHierarchicalGraph create( List<RegulatoryVertex> node_order){
 		
     	return new DynamicalHierarchicalGraphImpl( node_order);
 	}

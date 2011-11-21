@@ -9,7 +9,7 @@ import fr.univmrs.tagc.common.Debugger;
  * descriptor for dynamic hierarchical graphs.
  */
 @ProviderFor( GraphFactory.class)
-public class TreeFactory implements GraphFactory<GsTree> {
+public class TreeFactory implements GraphFactory<Tree> {
 	
     private static TreeFactory instance = null;
 	
@@ -31,14 +31,14 @@ public class TreeFactory implements GraphFactory<GsTree> {
     }
     
     @Override
-	public Class<GsTree> getGraphClass(){
+	public Class<Tree> getGraphClass(){
 		
-		return GsTree.class;
+		return Tree.class;
 	}
 	
     @Override
-    public GsTree create() {
-    	Debugger.log("GsTree factory not finished");
+    public Tree create() {
+    	Debugger.log("Tree factory not finished");
         return null;
     }
     

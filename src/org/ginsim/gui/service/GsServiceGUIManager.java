@@ -12,8 +12,8 @@ import javax.swing.Action;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.StandaloneGUI;
-import org.ginsim.service.GsService;
-import org.ginsim.service.GsServiceManager;
+import org.ginsim.service.Service;
+import org.ginsim.service.ServiceManager;
 
 import fr.univmrs.tagc.common.Debugger;
 
@@ -89,14 +89,14 @@ public class GsServiceGUIManager{
 		List<Action> result = new ArrayList<Action>();
 
 		//Retrieve the available service on server side
-		Set<Class<GsService>> server_services = GsServiceManager.getManager().getAvailableServices();
+		Set<Class<Service>> server_services = ServiceManager.getManager().getAvailableServices();
 		
 		// Parse the existing serviceGUI to detect the ones that must be used
 		for( GsServiceGUI service: services) {
 			// Check if the serviceGUI is related to a server service
 			GUIFor guifor = service.getClass().getAnnotation( GUIFor.class);
 			if( guifor != null){
-				Class<GsService> guifor_class = (Class<GsService>) guifor.value();
+				Class<Service> guifor_class = (Class<Service>) guifor.value();
 				if (server_services.contains( guifor_class)) {
 					try{
 						List<Action> service_actions = service.getAvailableActions( graph);

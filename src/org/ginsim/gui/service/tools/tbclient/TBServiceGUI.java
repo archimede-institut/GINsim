@@ -8,7 +8,7 @@ import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GsToolsAction;
@@ -22,9 +22,9 @@ public class TBServiceGUI implements GsServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph && GUIManager.getInstance().getFrame(graph) != null) {
+		if (graph instanceof RegulatoryGraph && GUIManager.getInstance().getFrame(graph) != null) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add( new TBAction( (GsRegulatoryGraph) graph));
+			actions.add( new TBAction( (RegulatoryGraph) graph));
 			return actions;
 		}
 		return null;
@@ -33,10 +33,10 @@ public class TBServiceGUI implements GsServiceGUI {
 
 class TBAction extends GsToolsAction {
 
-	private final GsRegulatoryGraph graph;
-	private GsTBClientPanel clientPanel;
+	private final RegulatoryGraph graph;
+	private TBClientPanel clientPanel;
 
-	public TBAction( GsRegulatoryGraph graph) {
+	public TBAction( RegulatoryGraph graph) {
 
 		super( "Show TBrowser tab", "Open a socket connexion with a running instance of TBrowser");
 		this.graph = graph;
@@ -52,7 +52,7 @@ class TBAction extends GsToolsAction {
 
 //		TBrowser.getInstance();
 //		if (!((BaseMainFrame) frame).removeTab("TBrowser")) {
-//			clientPanel = new GsTBClientPanel(graph);
+//			clientPanel = new TBClientPanel(graph);
 //			((BaseMainFrame) frame).addTab("TBrowser", clientPanel, true, BaseMainFrame.FLAG_ANY);
 //			WindowListener[] wl = frame.getWindowListeners();
 //			for (int i = 0; i < wl.length; i++) {

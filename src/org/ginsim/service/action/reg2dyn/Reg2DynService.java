@@ -1,9 +1,9 @@
 package org.ginsim.service.action.reg2dyn;
 
-import org.ginsim.service.GsService;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-@ProviderFor( GsService.class)
-public class Reg2DynService implements GsService {
+@ProviderFor( Service.class)
+public class Reg2DynService implements Service {
 
 }

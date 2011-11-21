@@ -25,9 +25,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.graph.common.AbstractGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -50,7 +50,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
 
 	private static final long serialVersionUID = 8583991719735516132L;
 
-	private GsRegulatoryVertex currentVertex = null;
+	private RegulatoryVertex currentVertex = null;
 
 	protected JTable jTable = null;
 	private JScrollPane jScrollPane = null;
@@ -63,7 +63,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
 
 	private GsIncomingEdgeListModel edgeList = null;
 	private GsTableInteractionsModel interactionList = null;
-	private GsRegulatoryGraph graph;
+	private RegulatoryGraph graph;
 	private LogicalParameterCellRenderer cellRenderer;
 
 	private JSplitPane jSplitPane = null;
@@ -78,7 +78,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
 	 * @param graph
 	 *
 	 */
-    public GsInteractionPanel(GsRegulatoryGraph graph) {
+    public GsInteractionPanel(RegulatoryGraph graph) {
 		super(graph);
         this.graph = graph;
 		initialize();
@@ -199,8 +199,8 @@ public class GsInteractionPanel extends AbstractParameterPanel
 			  if (currentVertex != null) {
             // apply pending changes
         }
-        if (obj != null && obj instanceof GsRegulatoryVertex) {
-            currentVertex = (GsRegulatoryVertex)obj;
+        if (obj != null && obj instanceof RegulatoryVertex) {
+            currentVertex = (RegulatoryVertex)obj;
 						edgeList.setEdge(graph.getIncomingEdges(currentVertex));
             interactionList.setNode(currentVertex);
             cellRenderer.setVertex(currentVertex);
@@ -436,7 +436,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
     		if (edges != null) {
     			int[] indices = new int[edges.size()];
     			for (int i=0 ; i<edges.size() ; i++) {
-    				indices[i] = edgeList.getIndex(((GsRegulatoryEdge)edges.get(i)));
+    				indices[i] = edgeList.getIndex(((RegulatoryEdge)edges.get(i)));
     			}
     			jList.setSelectedIndices(indices);
     		}
@@ -582,7 +582,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
-		this.graph = (GsRegulatoryGraph)pinfo.data;
+		this.graph = (RegulatoryGraph)pinfo.data;
 		initialize();
 		panel.addField(this, pinfo, 0);
 	}
@@ -592,15 +592,15 @@ class LogicalParameterCellRenderer extends DefaultTableCellRenderer {
 	private static final long	serialVersionUID	= -1799999900862412151L;
 
 	private GsTableInteractionsModel model;
-	private GsRegulatoryGraph graph;
-	private GsRegulatoryVertex	vertex;
+	private RegulatoryGraph graph;
+	private RegulatoryVertex	vertex;
 
-	public LogicalParameterCellRenderer(GsRegulatoryGraph graph, GsTableInteractionsModel model) {
+	public LogicalParameterCellRenderer(RegulatoryGraph graph, GsTableInteractionsModel model) {
 		this.model = model;
 		this.graph = graph;
 	}
 
-	public void setVertex(GsRegulatoryVertex vertex) {
+	public void setVertex(RegulatoryVertex vertex) {
 		this.vertex = vertex;
 	}
 

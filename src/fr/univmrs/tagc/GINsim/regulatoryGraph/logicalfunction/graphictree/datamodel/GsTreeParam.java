@@ -3,7 +3,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datam
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 
 
 public class GsTreeParam extends GsTreeElement {
@@ -21,10 +21,10 @@ public class GsTreeParam extends GsTreeElement {
   }
   public String toString() {
     String s = "";
-    GsRegulatoryEdge ei;
+    RegulatoryEdge ei;
     if (edgeIndexes != null) {
       for (Iterator it = edgeIndexes.iterator(); it.hasNext(); ) {
-        ei = (GsRegulatoryEdge)it.next();
+        ei = (RegulatoryEdge)it.next();
         s = s + " " + ei.me.getEdge(ei.index).getShortInfo();
       }
     }

@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNodeSet;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNodeSet;
 
 
 /**
@@ -129,10 +129,10 @@ public class HTGSimulationQueueState implements HTGSimulationQueueItem  {
 	 * @param queue
 	 * @return
 	 */
-	public GsHierarchicalNode getInCycle(GsHierarchicalNodeSet nodeSet, List queue) {
+	public HierarchicalNode getInCycle(HierarchicalNodeSet nodeSet, List queue) {
 		if (inCycle == null) return null;
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
-			GsHierarchicalNode n = (GsHierarchicalNode) it.next();
+			HierarchicalNode n = (HierarchicalNode) it.next();
 			if (n.contains(state)) return n;
 		}
 		for (ListIterator it = queue.listIterator(queue.size()); it.hasPrevious();) {

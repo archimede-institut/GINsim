@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -16,13 +16,13 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsLogicalFunctionL
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 class GsRegulatoryMutantChange {
-    GsRegulatoryVertex vertex;
+    RegulatoryVertex vertex;
     byte min;
     byte max;
     GsBooleanParser parser = null;
     String s_condition = null;
     
-    GsRegulatoryMutantChange(GsRegulatoryVertex vertex) {
+    GsRegulatoryMutantChange(RegulatoryVertex vertex) {
         this.vertex = vertex;
         this.min = this.max = -1;
     }
@@ -62,7 +62,7 @@ class GsRegulatoryMutantChange {
     	return parser.getRoot().toString();
     }
     
-    public void setCondition(String condition, GsRegulatoryGraph graph) {
+    public void setCondition(String condition, RegulatoryGraph graph) {
 		s_condition = null;
     	if (condition == null || condition.trim() == "") {
     		parser = null;
@@ -80,7 +80,7 @@ class GsRegulatoryMutantChange {
     		s_condition = condition;
     	}
     }
-    protected OmddNode apply(OmddNode node, GsRegulatoryGraph graph) {
+    protected OmddNode apply(OmddNode node, RegulatoryGraph graph) {
         int maxValue = vertex.getMaxValue();
         if (min == 0 && max == maxValue) {
             // no change here!

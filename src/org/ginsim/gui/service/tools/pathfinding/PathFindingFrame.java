@@ -26,7 +26,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 
@@ -238,7 +238,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		setProgressionText("searching...");
 		setProgress(0);
 		
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			setProgressMax(graph.getNodeOrderSize());
 		} else {
 			setProgressMax(graph.getVertices().size());

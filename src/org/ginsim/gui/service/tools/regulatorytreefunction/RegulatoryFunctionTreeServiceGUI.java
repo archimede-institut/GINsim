@@ -9,9 +9,9 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.graph.tree.GsTree;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.tree.Tree;
 import org.ginsim.graph.tree.GsTreeParser;
 import org.ginsim.graph.tree.GsTreeParserFromRegulatoryGraph;
 import org.ginsim.graph.tree.TreeImpl;
@@ -30,9 +30,9 @@ public class RegulatoryFunctionTreeServiceGUI implements GsServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new RegulatoryFunctionTreeAction( (GsRegulatoryGraph)graph));
+			actions.add(new RegulatoryFunctionTreeAction( (RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -44,10 +44,10 @@ class RegulatoryFunctionTreeAction extends GsToolsAction {
 
 	private static final Integer ZERO = new Integer(0);
 	
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	private final GraphGUI<?, ?, ?> gui;
 	
-	public RegulatoryFunctionTreeAction( GsRegulatoryGraph graph) {
+	public RegulatoryFunctionTreeAction( RegulatoryGraph graph) {
 		
 		super( "STR_treeViewer_regulatoryPlugin", "STR_treeViewer_regulatoryPlugin_descr");
 		this.graph = graph;
@@ -58,7 +58,7 @@ class RegulatoryFunctionTreeAction extends GsToolsAction {
 	public void actionPerformed(ActionEvent e) {
 		
 		GsTreeParser parser = new GsTreeParserFromRegulatoryGraph();
-		GsTree tree = new TreeImpl( parser);
+		Tree tree = new TreeImpl( parser);
 			
 		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_REGGRAPH, graph);
@@ -71,18 +71,18 @@ class RegulatoryFunctionTreeAction extends GsToolsAction {
 	 * @param regGraph
 	 * @return
 	 */
-	private Integer getSelectedVertex(GsRegulatoryGraph regGraph) {
+	private Integer getSelectedVertex(RegulatoryGraph regGraph) {
 		
-		GsRegulatoryVertex selectedNode = null;
+		RegulatoryVertex selectedNode = null;
 		Collection<?> vertices = gui.getSelection().getSelectedNodes();
 		if (vertices != null && vertices.size() > 0) {
-			selectedNode = (GsRegulatoryVertex) vertices.iterator().next();
+			selectedNode = (RegulatoryVertex) vertices.iterator().next();
 		} else {
 			return ZERO;
 		}
 		int i = 0;
 		for (Iterator it2 = regGraph.getNodeOrder().iterator(); it2.hasNext(); i++) {
-			GsRegulatoryVertex v = (GsRegulatoryVertex) it2.next();
+			RegulatoryVertex v = (RegulatoryVertex) it2.next();
 			if (v.equals(selectedNode)) {
 				return new Integer(i);
 			}

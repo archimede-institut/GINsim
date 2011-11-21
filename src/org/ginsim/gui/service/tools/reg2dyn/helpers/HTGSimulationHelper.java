@@ -6,29 +6,29 @@ import java.util.Map;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 
 
 public class HTGSimulationHelper  extends SimulationHelper {
-	protected GsHierarchicalNode node;
-	protected GsHierarchicalTransitionGraph htg;
+	protected HierarchicalNode node;
+	protected HierarchicalTransitionGraph htg;
 	public Map arcs;
-	protected GsRegulatoryGraph regGraph;
+	protected RegulatoryGraph regGraph;
 	
-	public HTGSimulationHelper(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public HTGSimulationHelper(RegulatoryGraph regGraph, SimulationParameters params) {
 		this.regGraph = regGraph;
 		int mode;
-		if (params.simulationStrategy == GsSimulationParameters.STRATEGY_HTG) {
+		if (params.simulationStrategy == SimulationParameters.STRATEGY_HTG) {
 			mode = HierarchicalTransitionGraphImpl.MODE_HTG;
 		} else {
 			mode = HierarchicalTransitionGraphImpl.MODE_SCC;
 		}
-		this.htg = GraphManager.getInstance().getNewGraph( GsHierarchicalTransitionGraph.class, params.nodeOrder, mode);
+		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, params.nodeOrder, mode);
 		htg.setAssociatedGraph(regGraph);
 		VertexAttributesReader vreader = htg.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
@@ -53,7 +53,7 @@ public class HTGSimulationHelper  extends SimulationHelper {
 	}
 	
 	public void setNode(Object node) {
-		this.node = (GsHierarchicalNode) node;
+		this.node = (HierarchicalNode) node;
 	}
 	
 	public Graph getRegulatoryGraph() {

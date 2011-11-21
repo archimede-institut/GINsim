@@ -10,7 +10,7 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsServiceGUI;
@@ -32,11 +32,11 @@ import fr.univmrs.tagc.common.widgets.Frame;
 public class Reg2DynServiceGUI implements GsServiceGUI {
 
     static {
-    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( GsRegulatoryGraph.class, GsMutantListManager.key)){
-    		ObjectAssociationManager.getInstance().registerObjectManager(GsRegulatoryGraph.class, new GsMutantListManager());
+    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, GsMutantListManager.key)){
+    		ObjectAssociationManager.getInstance().registerObjectManager(RegulatoryGraph.class, new GsMutantListManager());
     	}
-        ObjectAssociationManager.getInstance().registerObjectManager( GsRegulatoryGraph.class, new GsInitialStateManager());
-        ObjectAssociationManager.getInstance().registerObjectManager( GsRegulatoryGraph.class, new GsSimulationParametersManager());
+        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new GsInitialStateManager());
+        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new SimulationParametersManager());
     }
     
 
@@ -44,9 +44,9 @@ public class Reg2DynServiceGUI implements GsServiceGUI {
 //        if (actionType != ACTION_ACTION) {
 //            return;
 //        }
-//        if (!(graph instanceof GsRegulatoryGraph) || graph.getNodeOrderSize() < 1) {
+//        if (!(graph instanceof RegulatoryGraph) || graph.getNodeOrderSize() < 1) {
 //            graph.addNotificationMessage(new NotificationMessage(graph, 
-//            		Translator.getString(graph instanceof GsRegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
+//            		Translator.getString(graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
 //            		NotificationMessage.NOTIFICATION_WARNING));
 //            return;
 //        }
@@ -56,17 +56,17 @@ public class Reg2DynServiceGUI implements GsServiceGUI {
 ////                m_params = new HashMap();
 ////                graph.addObject("reg2dyn_parameters", m_params);
 ////            }
-////            new Reg2dynFrame(frame, (GsRegulatoryGraph)graph, m_params).setVisible(true);
+////            new Reg2dynFrame(frame, (RegulatoryGraph)graph, m_params).setVisible(true);
 //            GsMainFrame mainFrame = graph.getGraphManager().getMainFrame();
 //            if (mainFrame != null) {
 //            	mainFrame.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
 //            }
 //
-//            GsSimulationParameterList paramList = (GsSimulationParameterList)graph.getObject(GsSimulationParametersManager.key, true);
+//            SimulationParameterList paramList = (SimulationParameterList)graph.getObject(SimulationParametersManager.key, true);
 //            if (ref == 0) {
-//                new GsSingleSimulationFrame(frame, paramList).setVisible(true);
+//                new SingleSimulationFrame(frame, paramList).setVisible(true);
 //            } else {
-//                new GsBatchSimulationFrame(frame, paramList).setVisible(true);
+//                new BatchSimulationFrame(frame, paramList).setVisible(true);
 //            }
 //		}
 //	}
@@ -74,9 +74,9 @@ public class Reg2DynServiceGUI implements GsServiceGUI {
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		
-		if( graph instanceof GsRegulatoryGraph){
+		if( graph instanceof RegulatoryGraph){
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new Reg2DynAction( (GsRegulatoryGraph) graph));
+			actions.add(new Reg2DynAction( (RegulatoryGraph) graph));
 			return actions;
 		}
 		return null;
@@ -86,10 +86,10 @@ public class Reg2DynServiceGUI implements GsServiceGUI {
 
 class Reg2DynAction extends GsToolsAction {
 
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	private final boolean batch = false;
 	
-	public Reg2DynAction( GsRegulatoryGraph graph) {
+	public Reg2DynAction( RegulatoryGraph graph) {
 		super( "STR_reg2dyn", "STR_reg2dyn_descr");
 		this.graph = graph;
 	}
@@ -110,13 +110,13 @@ class Reg2DynAction extends GsToolsAction {
 			// mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
 		}
 
-		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, GsSimulationParametersManager.key, true);
+		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.key, true);
 		// TODO : Restore the 
 		//if (ref == 0 || ref == 1) {
 		if (batch) {
-			new GsBatchSimulationFrame(mainFrame, paramList).setVisible(true);
+			new BatchSimulationFrame(mainFrame, paramList).setVisible(true);
 		} else {
-			new GsSingleSimulationFrame(mainFrame, paramList).setVisible(true);
+			new SingleSimulationFrame(mainFrame, paramList).setVisible(true);
 		}
 	}
 		

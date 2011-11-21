@@ -11,7 +11,7 @@ import org.ginsim.gui.FileSelectionHelper;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsImportAction;
+import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.service.imports.txt.TxtImportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -29,7 +29,7 @@ public class TxtImportServiceGUI implements GsServiceGUI {
 	}
 }
 
-class TxtImportAction extends GsImportAction {
+class TxtImportAction extends ImportAction {
 
 	private final Graph<?,?> graph;
 	

@@ -11,7 +11,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.service.export.graphviz.GraphvizExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -41,7 +41,7 @@ public class GraphvizExportServiceGUI implements GsServiceGUI {
  * @author spinelli
  *
  */
-class ExportGraphVizAction extends GsExportAction {
+class ExportGraphVizAction extends ExportAction {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"dot"}, "dot (graphviz) files");
 	

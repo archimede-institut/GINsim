@@ -13,9 +13,9 @@ import javax.swing.table.DefaultTableModel;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.service.GsService;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -30,20 +30,20 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * Logical parameters (via their OMDD representation) are translated into a (dirty?)
  * mathml formula using "&lt;piecewise&gt;" tags.
  */
-@ProviderFor( GsService.class)
-public class SBMLExportService implements GsService{
+@ProviderFor( Service.class)
+public class SBMLExportService implements Service{
 	/**
 	 * @param graph
 	 * @param fileName
 	 */
-	public static void export( GsRegulatoryGraph graph, String fileName) {
+	public static void export( RegulatoryGraph graph, String fileName) {
 		
-        List<GsRegulatoryVertex> v_no = graph.getNodeOrder();
+        List<RegulatoryVertex> v_no = graph.getNodeOrder();
         int len = v_no.size();
-        OmddNode[] t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
+        OmddNode[] t_tree = ((RegulatoryGraph)graph).getAllTrees(true);
         byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
-            GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_no.get(i);
+            RegulatoryVertex vertex = (RegulatoryVertex)v_no.get(i);
             if ( graph.getIncomingEdges(vertex).size() == 0) {
                 // input node: no transition, use basal value as initial markup
             	
@@ -84,7 +84,7 @@ public class SBMLExportService implements GsService{
             out.openTag("listOfSpecies");
             for (int i=0 ; i<t_tree.length ; i++) {
                 String s_id = v_no.get(i).toString();
-                String s_name = ((GsRegulatoryVertex)v_no.get(i)).getName();
+                String s_name = ((RegulatoryVertex)v_no.get(i)).getName();
                 out.openTag("species");
                 out.addAttr("id", "s_"+s_id);
                 out.addAttr("name",s_name);
@@ -99,7 +99,7 @@ public class SBMLExportService implements GsService{
             for (int i=0 ; i<t_tree.length ; i++) {
                 OmddNode node = t_tree[i];
                 String s_node = v_no.get(i).toString();
-                int max = ((GsRegulatoryVertex)v_no.get(i)).getMaxValue();
+                int max = ((RegulatoryVertex)v_no.get(i)).getMaxValue();
                 out.openTag("reaction");
                 out.addAttr("id", "r_"+s_node);
                 out.addAttr("reversible", "true");

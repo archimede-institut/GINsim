@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.tools.stateinregulatorygraph.GsStateInRegGraphSelector;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.tools.stateinregulatorygraph.StateInRegGraphSelector;
 
 
 
@@ -20,7 +20,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 7616168924487846012L;
 	private static final int STAR = 10;
 	
-	private GsRegulatoryGraph g;
+	private RegulatoryGraph g;
 	
 	/**
 	 * A list of state : byte[]
@@ -29,16 +29,16 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 	private boolean isEditable;
 	private byte[] statemax;
 
-	public SimpleStateListTableModel(GsRegulatoryGraph g) {
+	public SimpleStateListTableModel(RegulatoryGraph g) {
 		this(g, false, new ArrayList());
 	}
-	public SimpleStateListTableModel(GsRegulatoryGraph g, List data) {
+	public SimpleStateListTableModel(RegulatoryGraph g, List data) {
 		this(g, false, data);
 	}
-	public SimpleStateListTableModel(GsRegulatoryGraph g, boolean isEditable) {
+	public SimpleStateListTableModel(RegulatoryGraph g, boolean isEditable) {
 		this(g, isEditable, new ArrayList());
 	}
-	public SimpleStateListTableModel(GsRegulatoryGraph g, boolean isEditable, List data) {
+	public SimpleStateListTableModel(RegulatoryGraph g, boolean isEditable, List data) {
 		this.g = g;
 		this.isEditable  = isEditable;
 		this.data = data;
@@ -46,7 +46,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 		this.statemax = new byte[g.getNodeOrderSize()];
 		int i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {
-			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+			RegulatoryVertex v = (RegulatoryVertex) it.next();
 			this.statemax[i++] = v.getMaxValue();
 		}
 	}
@@ -71,7 +71,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 
 		byte[] state = (byte[]) data.get(rowIndex);
 		int val = state[columnIndex];
-		if (val == GsStateInRegGraphSelector.STAR) {
+		if (val == StateInRegGraphSelector.STAR) {
 			return "0";
 		}
 		if (val == statemax[columnIndex]) {

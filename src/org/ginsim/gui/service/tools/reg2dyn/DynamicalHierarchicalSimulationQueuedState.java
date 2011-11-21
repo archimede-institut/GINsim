@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 
 
 public class DynamicalHierarchicalSimulationQueuedState {
@@ -53,7 +53,7 @@ public class DynamicalHierarchicalSimulationQueuedState {
 	 * Append 'dhnode' to the parent child list of 'this'. If the child list doesn't exists, it creates it.
 	 * @param dhnode a child to append.
 	 */
-	public void setParentNextChild(GsDynamicalHierarchicalNode node) {
+	public void setParentNextChild(DynamicalHierarchicalNode node) {
 		if (previous != null) {
 			if (previous.childs == null) {
 				previous.childs = new LinkedList();

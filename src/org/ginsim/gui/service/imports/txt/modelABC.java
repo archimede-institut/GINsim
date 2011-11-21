@@ -6,9 +6,9 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
@@ -20,14 +20,14 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
  */
 public final class modelABC {
 
-	private GsRegulatoryGraph graph;
+	private RegulatoryGraph graph;
 	private String fileName;
 	protected File _FilePath;
 
 	private byte table_gene[][];           // the whole table including all states and their images
 	private List table_interactors[];      // store for each component, its regulators id
 	private 	int L,n;                   // L total number of lines of the table ie number of states, n number of components
-	private GsRegulatoryGraph model;
+	private RegulatoryGraph model;
 
 
 	public modelABC() {
@@ -35,7 +35,7 @@ public final class modelABC {
 
 	public modelABC(String f) 
 	{
-		this.graph = new GsRegulatoryGraph();
+		this.graph = new RegulatoryGraph();
 		this.fileName = f;
 		initialize();
 	}
@@ -108,13 +108,13 @@ public final class modelABC {
 		// ----------------------------------------------------------------------------------------------------------------------------------
 
 		// create a simple graph
-		model = new GsRegulatoryGraph();
+		model = new RegulatoryGraph();
 
 		// ----------------------------------------------------------------------------------------------------------------------------------			
 
 
 		// add  vertices
-		GsRegulatoryVertex [] G = new GsRegulatoryVertex [n];
+		RegulatoryVertex [] G = new RegulatoryVertex [n];
 
 		for (j=0; j<n; j++) {
 			G[j] = model.addVertex();
@@ -191,7 +191,7 @@ public final class modelABC {
 							if (sign != 0) {
 								if (model.getEdge(G[i], G[u-n]) == null) {
 									model.addEdge(G[i], G[u-n], sign); 
-									GsRegulatoryMultiEdge me = model.getEdge(G[i], G[u-n]);
+									RegulatoryMultiEdge me = model.getEdge(G[i], G[u-n]);
 									incoming_edges[u-n].add(me.getEdge(0)); 
 									table_interactors[u-n].add(i);
 								}
@@ -218,7 +218,7 @@ public final class modelABC {
 						int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
 						if (table_gene[j][reg]==1 )  
 						{	 
-							GsRegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
+							RegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
 							activeInteractions.add(me.getEdge(0));
 						}
 
@@ -247,7 +247,7 @@ public final class modelABC {
 					for (k=0 ; k<deg ; k++) {
 						int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
 						if (table_gene[j][reg]==2 ) {	 
-							GsRegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
+							RegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
 							activeInteractions.add(me.getEdge(0));
 						}
 					}

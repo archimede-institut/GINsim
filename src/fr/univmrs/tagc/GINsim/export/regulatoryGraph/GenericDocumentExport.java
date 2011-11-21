@@ -23,11 +23,11 @@ import javax.swing.event.ChangeListener;
 import org.ginsim.annotation.Annotation;
 import org.ginsim.annotation.AnnotationLink;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
-import org.ginsim.service.GsServiceManager;
+import org.ginsim.service.ServiceManager;
 import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
@@ -60,17 +60,17 @@ import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
  * 
  * @see DocumentWriter
  */
-public class GenericDocumentExport extends GsExportAction<GsRegulatoryGraph> {
+public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 
 	private DocumentExportConfig config;
 	protected DocumentWriter doc = null;
 	protected Class documentWriterClass;
 
-	private GsRegulatoryGraph graph;
+	private RegulatoryGraph graph;
 	private List nodeOrder;
 	private int len;
 	
-    public GenericDocumentExport(GsRegulatoryGraph graph) {
+    public GenericDocumentExport(RegulatoryGraph graph) {
     	super(graph, "STR_Generic", "STR_Generic_descr");
     }
 
@@ -138,7 +138,7 @@ public class GenericDocumentExport extends GsExportAction<GsRegulatoryGraph> {
 
 	private void writeMutants() throws IOException {
 		GsRegulatoryMutants mutantList = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
-		StableStateSearcher stableSearcher = GsServiceManager.get(StableStatesService.class).getSearcher(graph);
+		StableStateSearcher stableSearcher = ServiceManager.get(StableStatesService.class).getSearcher(graph);
 		OmddNode stable;
 		
 		String[] cols;
@@ -339,7 +339,7 @@ public class GenericDocumentExport extends GsExportAction<GsRegulatoryGraph> {
 		}
 		
 		for (Iterator it=graph.getNodeOrder().iterator() ; it.hasNext() ;) {
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+			RegulatoryVertex vertex = (RegulatoryVertex)it.next();
 			GsTreeInteractionsModel lfunc = vertex.getInteractionsModel();
 			int nbval = 0;
 			Object funcRoot = null;
@@ -557,12 +557,12 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
     private static final long serialVersionUID = 9043565812912568136L;
     
     protected final DocumentExportConfig cfg;
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 
 	JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
 
     
-	protected GDExportConfigPanel ( GsRegulatoryGraph graph, DocumentExportConfig config) {
+	protected GDExportConfigPanel ( RegulatoryGraph graph, DocumentExportConfig config) {
 		this.cfg = config;
 		this.graph = graph;
 		

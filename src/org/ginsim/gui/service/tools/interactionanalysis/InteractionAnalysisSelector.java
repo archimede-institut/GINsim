@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Map;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.css.EdgeStyle;
 import fr.univmrs.tagc.GINsim.css.Selector;
@@ -56,12 +56,12 @@ public class InteractionAnalysisSelector extends Selector {
 		this.cache = cache;
 	}
 	
-	public Map initCache(GsRegulatoryGraph g) {
+	public Map initCache(RegulatoryGraph g) {
 		this.cache = initCache(g, false, false, null);
 		return this.cache;
 	}
 	
-	public Map initCache(GsRegulatoryGraph g, boolean opt_annotate, boolean opt_verbose, GsRegulatoryMutantDef mutant) {
+	public Map initCache(RegulatoryGraph g, boolean opt_annotate, boolean opt_verbose, GsRegulatoryMutantDef mutant) {
 		InteractionAnalysis fii = new InteractionAnalysis(g, opt_annotate, mutant);
 		this.cache = fii.getFunctionality();
 		return this.cache;

@@ -7,10 +7,10 @@ import java.util.Set;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNodeSet;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNodeSet;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -32,27 +32,27 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	protected DynamicalHierarchicalSimulationHelper helper;
 	private int depth = 0;
 	private DynamicalHierarchicalSimulationQueuedState e, next;
-	private GsDynamicalHierarchicalNode dhnode;
-	private GsDynamicalHierarchicalNodeSet nodeSet;
+	private DynamicalHierarchicalNode dhnode;
+	private DynamicalHierarchicalNodeSet nodeSet;
 	
 	private final byte debug = -1; // -1 for deployment
 	private PrintStream debug_o = System.err;
 	private int totalNode = 0;
-	private GsDynamicalHierarchicalGraph dynGraph;
+	private DynamicalHierarchicalGraph dynGraph;
 	
 	private byte[] childsCount;
 
 	private int vertexCount;
 	
-	public DynamicalHierarchicalSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params) {
+	public DynamicalHierarchicalSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
 		this(regGraph, frame, params, true, true);
 	}
 
-	public DynamicalHierarchicalSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow) {
+	public DynamicalHierarchicalSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow) {
 		this(regGraph, frame, params, runNow, true);
 	}
 
-    public DynamicalHierarchicalSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow, boolean useInit) {
+    public DynamicalHierarchicalSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow, boolean useInit) {
 		super(regGraph, frame, params, false, useInit);
 		
 		helper = new DynamicalHierarchicalSimulationHelper(regGraph, params);
@@ -72,7 +72,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		this.mergingStrategy = helper.mergingStrategy; 
 		ready = true;
 		try {
-			nodeSet = new GsDynamicalHierarchicalNodeSet();
+			nodeSet = new DynamicalHierarchicalNodeSet();
 			childsCount = dynGraph.getChildsCount();
 			vertexCount = helper.regGraph.getVertexCount();
 			runSimulationOnInitialStates();									// run the simulation for each initial states
@@ -87,9 +87,9 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			debug_o.println("Error : "+e.getMessage());
 			e.printStackTrace();
 		}
-		addAllNodeTo((GsDynamicalHierarchicalGraph) helper.getDynamicGraph());									// add all nodes to the graph
-		addAllEdgesTo((GsDynamicalHierarchicalGraph) helper.getDynamicGraph());									// add all the edges to the graph
-		updateTerminalCycles((GsDynamicalHierarchicalGraph) helper.getDynamicGraph());							// indicates if a cycle is terminal
+		addAllNodeTo((DynamicalHierarchicalGraph) helper.getDynamicGraph());									// add all nodes to the graph
+		addAllEdgesTo((DynamicalHierarchicalGraph) helper.getDynamicGraph());									// add all the edges to the graph
+		updateTerminalCycles((DynamicalHierarchicalGraph) helper.getDynamicGraph());							// indicates if a cycle is terminal
 		log(-100, "Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		return helper.endSimulation();
 	}
@@ -158,7 +158,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		if (dhnode == null) {														//If it has no dhnode associated
 			log(1,"      => Stable state, no next");
 			dhnode = createNodefrom(e, 2);													// - create a new node
-			dhnode.setType(GsDynamicalHierarchicalNode.TYPE_STABLE_STATE);				// - its type is STABLE_STATE
+			dhnode.setType(DynamicalHierarchicalNode.TYPE_STABLE_STATE);				// - its type is STABLE_STATE
 			nodeSet.add(dhnode);														// - add the dhnode to the set of all dhnode.
 		} else {																	//Else
 			log(5,"      => Stable state, no next (already processed)");				//It has already been treated do nothing
@@ -189,7 +189,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
         }
 
 		if (updater.hasNext()) {
-			GsDynamicalHierarchicalNode master = nodeSet.getDHNodeForState(e.state);
+			DynamicalHierarchicalNode master = nodeSet.getDHNodeForState(e.state);
 			do {
 				e.totalChild++;																//  increase the count of child of qs
 								//  create a new QueuedState
@@ -229,7 +229,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @param cycleqs one of its children
 	 * @throws Exception 
 	 */
-	private void addToTheBuildingCycle(GsDynamicalHierarchicalNode master) throws Exception {
+	private void addToTheBuildingCycle(DynamicalHierarchicalNode master) throws Exception {
 		DynamicalHierarchicalSimulationQueuedState cur = e;
 		while (cur != null && !dhnode.equals(master)) {									// for state from e from parent to parent, while the state is not in the cycle
 			if (master != null) {														//     If the current state is associated with a node
@@ -261,13 +261,13 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		if (next.previous != e) {
             throw new Exception("FAIL next.previous != e");
         }
-		GsDynamicalHierarchicalNode master = null;
+		DynamicalHierarchicalNode master = null;
 		if (alreadyInTheQueue(next)) { 													// If 'next' is already in the queue : there is a path from 'next' to ... to 'next' => its a cycle
 			log(10,"        ?alreadyInTheQueue==true => creating a cycle");
 			master = nodeSet.getDHNodeForState(e.state);
 			if (master == null) {														//     If e is not already processed
 				dhnode = createNodefrom(next);											//			create a new dhnode from next
-				dhnode.setType(GsDynamicalHierarchicalNode.TYPE_CYCLE);					//			mark it as a cycle
+				dhnode.setType(DynamicalHierarchicalNode.TYPE_CYCLE);					//			mark it as a cycle
 				log(5,"          creating a new Node");
 				log(10,"            with state  "+print_t(next.state));
 			} else {																	//		Else cur is already in a CFC (!! prove its a cycle)
@@ -320,7 +320,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @param master
 	 * @throws Exception
 	 */
-	private void encounterANodeInACycle(DynamicalHierarchicalSimulationQueuedState cur, GsDynamicalHierarchicalNode master) throws Exception {
+	private void encounterANodeInACycle(DynamicalHierarchicalSimulationQueuedState cur, DynamicalHierarchicalNode master) throws Exception {
 		if (master.isCycle()) {													//			If the node is a cycle
 			dhnode.merge(master, nodeSet, vertexCount, childsCount);		//				merge the current building cycle (dhnode) with the cycle of cur
 		} else if (master.isTransient()) {										//			else if the node is transient
@@ -354,7 +354,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			}
 			mergeTransient();
 			for (Iterator it = e.childs.iterator(); it.hasNext();) {												//		For each children of the current set
-				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) it.next();						
+				DynamicalHierarchicalNode child = (DynamicalHierarchicalNode) it.next();						
 				if (!child.equals(dhnode)) {																		//			If the child is not the current node
 					helper.addEdge(dhnode, child);																	//				Add an edge from the current node to the child
 				}
@@ -379,14 +379,14 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	}	
 	
 	private void mergeTransient() throws Exception {
-		GsDynamicalHierarchicalNode dh;
+		DynamicalHierarchicalNode dh;
 		switch (mergingStrategy) {
 		case MERGING_NONE:
 			break;
 		case MERGING_FULLTRANSIENT:
 			boolean merge = true;
 			for (Iterator it = e.childs.iterator(); it.hasNext();) {
-				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) it.next();
+				DynamicalHierarchicalNode child = (DynamicalHierarchicalNode) it.next();
 				if (!child.isTransient()) {
 					merge = false;
 					break;
@@ -401,7 +401,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				dh = dhnode;
 			}
 			for (Iterator it = e.childs.iterator(); it.hasNext();) {
-				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) it.next();
+				DynamicalHierarchicalNode child = (DynamicalHierarchicalNode) it.next();
 				if (child.isTransient()) {
 					if (dh == null) {
 						dh = child;
@@ -420,16 +420,16 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			dh = null;
 			if (!dhnode.isTerminal()) {
 				dh = dhnode;
-				dh.setType(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+				dh.setType(DynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 			}
 			for (Iterator it = e.childs.iterator(); it.hasNext();) {
-				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) it.next();
+				DynamicalHierarchicalNode child = (DynamicalHierarchicalNode) it.next();
 				if (!child.isTerminal()) {
 					if (dh == null) {
 						dh = child;
-						dh.setType(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+						dh.setType(DynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 					} else {
-						child.setType(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+						child.setType(DynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 						dh.merge(child, nodeSet, vertexCount, childsCount);
 					}
 				}
@@ -441,7 +441,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			break;*/
 		case MERGING_STRICT:
 			if (e.childs.size() == 1) {
-				GsDynamicalHierarchicalNode child = (GsDynamicalHierarchicalNode) e.childs.get(0);
+				DynamicalHierarchicalNode child = (DynamicalHierarchicalNode) e.childs.get(0);
 				if (child.isTransient() && dhnode.isTransient()) {
 					log(5,"         }merging e with its only child "+e+" :: "+child.toLongString(vertexCount));
 					child.merge(dhnode, nodeSet, vertexCount, childsCount);
@@ -458,18 +458,18 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 /*	private HashMap getBassinForTerminals() throws Exception {
 		HashMap level1 = new HashMap(e.childs.size());
 		HashMap terminals = new HashMap(2);
-		GsDynamicalHierarchicalNode c1,c2;
+		DynamicalHierarchicalNode c1,c2;
 		Set s, s1, tmp;
 		
 		for (Iterator it = e.childs.iterator(); it.hasNext();) {			//Fetch level 1 nodes
-			c1 = (GsDynamicalHierarchicalNode) it.next();
+			c1 = (DynamicalHierarchicalNode) it.next();
 			level1.put(c1, voidSet);
 		}
 		for (Iterator it = e.childs.iterator(); it.hasNext();) { 			//Fetch direct path to level 2 nodes
-			c1 = (GsDynamicalHierarchicalNode) it.next();
+			c1 = (DynamicalHierarchicalNode) it.next();
 			if (c1.isTransient()) {
 				for (Iterator it2 = c1.getOutgoingEdges().iterator(); it2.hasNext();) {
-					c2 = (GsDynamicalHierarchicalNode) it2.next();
+					c2 = (DynamicalHierarchicalNode) it2.next();
 					s = (Set) level1.get(c2);
 					if (s != null) { //If c2 is a level1 node 
 						if (s == voidSet) {
@@ -489,12 +489,12 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			}
 		}
 		for (Iterator it = terminals.keySet().iterator(); it.hasNext();) {	//Fetch indirect path to level 2 nodes
-			c2 = (GsDynamicalHierarchicalNode) it.next();
+			c2 = (DynamicalHierarchicalNode) it.next();
 			s = (Set) terminals.get(c2);
 			if (s != null) {
 				tmp = new HashSet(2);
 				for (Iterator it2 = s.iterator(); it2.hasNext();) {
-					c1 = (GsDynamicalHierarchicalNode) it2.next();
+					c1 = (DynamicalHierarchicalNode) it2.next();
 					s1 = (Set) level1.get(c1);
 					if (s1 != null && s1 != voidSet) {
 						tmp.add(s1);
@@ -503,7 +503,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 				for (Iterator it2 = tmp.iterator(); it2.hasNext();) {
 					s1 = (Set) it2.next();
 					for (Iterator it3 = s1.iterator(); it3.hasNext();) {
-						c1 = (GsDynamicalHierarchicalNode) it3.next();
+						c1 = (DynamicalHierarchicalNode) it3.next();
 						s.add(c1);						
 					}
 				}
@@ -522,15 +522,15 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private boolean mergeTransientChilds() throws Exception {
 		Map terminals;
 		HashSetForSet results, s, sprime, s1,s2;
-		GsDynamicalHierarchicalNode c1, c2;
+		DynamicalHierarchicalNode c1, c2;
 		
 		terminals = new HashMap(2);
 		log(-127, "  e : "+e);
 		for (Iterator it1 = e.childs.iterator(); it1.hasNext();) {
-			c1 = (GsDynamicalHierarchicalNode) it1.next();
+			c1 = (DynamicalHierarchicalNode) it1.next();
 			if (c1.isTransient()) {
 				for (Iterator it2 = c1.getOutgoingEdges().iterator(); it2.hasNext();) {
-					c2 = (GsDynamicalHierarchicalNode) it2.next();
+					c2 = (DynamicalHierarchicalNode) it2.next();
 					s = (HashSetForSet) terminals.get(c2);
 					if (s == null) {
 						s = new HashSetForSet(2);
@@ -543,11 +543,11 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		}
 		
 		for (Iterator it = terminals.keySet().iterator(); it.hasNext();) {
-			GsDynamicalHierarchicalNode key = (GsDynamicalHierarchicalNode)it.next();
+			DynamicalHierarchicalNode key = (DynamicalHierarchicalNode)it.next();
 			Set terminal = (Set) terminals.get(key);
 			log(-127, "  "+key.getShortId()+" <- ");
 			for (Iterator it3 = terminal.iterator(); it3.hasNext();) {
-				GsDynamicalHierarchicalNode node = (GsDynamicalHierarchicalNode) it3.next();
+				DynamicalHierarchicalNode node = (DynamicalHierarchicalNode) it3.next();
 				log(-127, "     "+node.getShortId());
 			}
 		} 
@@ -556,13 +556,13 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		s = null;
 		for (Iterator it = terminals.values().iterator(); it.hasNext();) {
 			HashSetForSet terminal = (HashSetForSet) it.next();
-			for (Iterator ita = terminal.iterator(); ita.hasNext();) { log(-127, "   on terminal : "+((GsDynamicalHierarchicalNode)ita.next()).getShortId());}
+			for (Iterator ita = terminal.iterator(); ita.hasNext();) { log(-127, "   on terminal : "+((DynamicalHierarchicalNode)ita.next()).getShortId());}
 			for (Iterator it2 = results.iterator(); it2.hasNext();) {
 				HashSetForSet result = (HashSetForSet) it2.next();
-				for (Iterator ita = result.iterator(); ita.hasNext();) { log(-127, "      on result : "+((GsDynamicalHierarchicalNode)ita.next()).getShortId());}
+				for (Iterator ita = result.iterator(); ita.hasNext();) { log(-127, "      on result : "+((DynamicalHierarchicalNode)ita.next()).getShortId());}
 				if (terminal.size() == 1 && result.size() == 1) {
 					for (Iterator it3 = terminal.iterator(); it3.hasNext();) {
-						GsDynamicalHierarchicalNode node = (GsDynamicalHierarchicalNode) it3.next();
+						DynamicalHierarchicalNode node = (DynamicalHierarchicalNode) it3.next();
 						if (result.remove(node)) { //Try to remove, and if succeed
 							it3.remove();
 						}
@@ -576,7 +576,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 					s1 = terminal;
 				}
 				for (Iterator it3 = s1.iterator(); it3.hasNext();) {
-					GsDynamicalHierarchicalNode node = (GsDynamicalHierarchicalNode) it3.next();
+					DynamicalHierarchicalNode node = (DynamicalHierarchicalNode) it3.next();
 					log(-127, "          on node "+node.getShortId());
 					if (s2.remove(node)) { //Try to remove, and if succeed
 						it3.remove();
@@ -602,12 +602,12 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			}
 			if (s != null && s.size() > 0) {
 				results.add(s);
-				for (Iterator ita = s.iterator(); ita.hasNext();) { log(-127, "   adding s : "+((GsDynamicalHierarchicalNode)ita.next()).getShortId());}
+				for (Iterator ita = s.iterator(); ita.hasNext();) { log(-127, "   adding s : "+((DynamicalHierarchicalNode)ita.next()).getShortId());}
 			}
 			s = null;
 			if (terminal.size() > 0) {
 				results.add(terminal);
-				for (Iterator ita = terminal.iterator(); ita.hasNext();) { log(-127, "   adding terminal : "+((GsDynamicalHierarchicalNode)ita.next()).getShortId());}
+				for (Iterator ita = terminal.iterator(); ita.hasNext();) { log(-127, "   adding terminal : "+((DynamicalHierarchicalNode)ita.next()).getShortId());}
 			}
 		}
 		
@@ -616,7 +616,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			log(-127, "    ["+set.size());
 
 			for (Iterator it2 = set.iterator(); it2.hasNext();) {
-				GsDynamicalHierarchicalNode node = (GsDynamicalHierarchicalNode) it2.next();
+				DynamicalHierarchicalNode node = (DynamicalHierarchicalNode) it2.next();
 				log(-127, "       "+node.getShortId());
 			}
 		}
@@ -624,9 +624,9 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			Set set = (Set) it.next();
 			if (set.size() > 1) {
 				Iterator it2 = set.iterator(); 
-				GsDynamicalHierarchicalNode n0 = (GsDynamicalHierarchicalNode) it2.next();
+				DynamicalHierarchicalNode n0 = (DynamicalHierarchicalNode) it2.next();
 				while (it2.hasNext()) {
-					GsDynamicalHierarchicalNode n1 = (GsDynamicalHierarchicalNode) it2.next();
+					DynamicalHierarchicalNode n1 = (DynamicalHierarchicalNode) it2.next();
 					log(-127, "   merging "+n0.getShortId()+" et "+n1.getShortId());
 					n0.merge(n1, nodeSet, vertexCount, childsCount);
 				}
@@ -665,7 +665,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @param qs
 	 * @return
 	 */
-	private GsDynamicalHierarchicalNode createNodefrom(DynamicalHierarchicalSimulationQueuedState qs) {
+	private DynamicalHierarchicalNode createNodefrom(DynamicalHierarchicalSimulationQueuedState qs) {
 		return createNodefrom(qs, 1);
 	}
 	
@@ -674,8 +674,8 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	 * @param qs
 	 * @return
 	 */
-	private GsDynamicalHierarchicalNode createNodefrom(DynamicalHierarchicalSimulationQueuedState qs, int childValue) {
-		GsDynamicalHierarchicalNode dhnode = new GsDynamicalHierarchicalNode(qs.state, childsCount, childValue);
+	private DynamicalHierarchicalNode createNodefrom(DynamicalHierarchicalSimulationQueuedState qs, int childValue) {
+		DynamicalHierarchicalNode dhnode = new DynamicalHierarchicalNode(qs.state, childsCount, childValue);
 		nodeSet.add(dhnode);
 		log(10,"        %create a new node from state "+qs+" dhnode: "+dhnode);
 		return dhnode;
@@ -705,31 +705,31 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	}
 
 
-	private void updateTerminalCycles(GsDynamicalHierarchicalGraph graph) {
+	private void updateTerminalCycles(DynamicalHierarchicalGraph graph) {
 		log(1,"Updating terminal cycles...");
 		VertexAttributesReader vreader = graph.getVertexAttributeReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
-			GsDynamicalHierarchicalNode dhnode = (GsDynamicalHierarchicalNode) it.next();
-			if (dhnode.getType() == GsDynamicalHierarchicalNode.TYPE_CYCLE && graph.getOutgoingEdges(dhnode).size() == 0) {
-				dhnode.setType(GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE);
+			DynamicalHierarchicalNode dhnode = (DynamicalHierarchicalNode) it.next();
+			if (dhnode.getType() == DynamicalHierarchicalNode.TYPE_CYCLE && graph.getOutgoingEdges(dhnode).size() == 0) {
+				dhnode.setType(DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE);
 				vreader.setVertex(dhnode);
 				vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
-				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
+				vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 				vreader.refresh();
 			}
 		}
 		log(1,"done");
 	}
 
-	private void addAllEdgesTo(GsDynamicalHierarchicalGraph graph) {
+	private void addAllEdgesTo(DynamicalHierarchicalGraph graph) {
 		log(1,"Adding all arcs to the graph...");
 		int nbarc = 0;
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
-			GsDynamicalHierarchicalNode from = (GsDynamicalHierarchicalNode) it.next();
+			DynamicalHierarchicalNode from = (DynamicalHierarchicalNode) it.next();
 			log(15,"  from "+from);
 			Set targets = from.getOutgoingEdges();
 			for (Iterator it2 = targets.iterator(); it2.hasNext();) {
-				GsDynamicalHierarchicalNode target = (GsDynamicalHierarchicalNode) it2.next();
+				DynamicalHierarchicalNode target = (DynamicalHierarchicalNode) it2.next();
 				if (!from.equals(target)) {
                     graph.addEdge(from, target);
                     nbarc++;
@@ -740,33 +740,33 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		log(1," ("+nbarc+") done");
 	}
 
-	private void addAllNodeTo(GsDynamicalHierarchicalGraph graph) {
+	private void addAllNodeTo(DynamicalHierarchicalGraph graph) {
 		int n = 0;
 		log(1,"Adding all nodes to the graph... ("+nodeSet.size()+")");
 		VertexAttributesReader vreader = graph.getVertexAttributeReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			n++;
-			GsDynamicalHierarchicalNode dhnode = (GsDynamicalHierarchicalNode) it.next();
+			DynamicalHierarchicalNode dhnode = (DynamicalHierarchicalNode) it.next();
 			dhnode.addPileToOmdd(childsCount);
 			dhnode.reduce();
 			dhnode.updateSize(childsCount);
 			graph.addVertex(dhnode);
 			vreader.setVertex(dhnode);
 			switch (dhnode.getType()) {
-			case GsDynamicalHierarchicalNode.TYPE_STABLE_STATE:
+			case DynamicalHierarchicalNode.TYPE_STABLE_STATE:
 				vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
-				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_STABLE_STATE_COLOR);
+				vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_STABLE_STATE_COLOR);
 				break;
-			case GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE:
+			case DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE:
 				vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
-				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
+				vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 				break;
-			case GsDynamicalHierarchicalNode.TYPE_CYCLE:
-				vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_CYCLE_COLOR);
+			case DynamicalHierarchicalNode.TYPE_CYCLE:
+				vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_CYCLE_COLOR);
 				break;
-			case GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT:
-				if (dhnode.size() > 1) vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR);
-				else vreader.setBackgroundColor(GsDynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR);
+			case DynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT:
+				if (dhnode.size() > 1) vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR);
+				else vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR);
 				break;
 			default:
 				break;

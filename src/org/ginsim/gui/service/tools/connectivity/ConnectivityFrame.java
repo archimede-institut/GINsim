@@ -12,8 +12,8 @@ import javax.swing.JOptionPane;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.reducedgraph.GsNodeReducedData;
-import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.graph.reducedgraph.NodeReducedData;
+import org.ginsim.graph.reducedgraph.ReducedGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.action.connectivity.AlgoConnectivity;
 
@@ -213,8 +213,8 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
     
     public void setResult(Object result) {
         if (result != null) {
-        	if (result instanceof GsReducedGraph) {
-        		GUIManager.getInstance().whatToDoWithGraph((GsReducedGraph)result, graph, true);
+        	if (result instanceof ReducedGraph) {
+        		GUIManager.getInstance().whatToDoWithGraph((ReducedGraph)result, graph, true);
             }
         }
         buttonOpenSCC.setText(Translator.getString("STR_connectivity_create_reducedGraph"));
@@ -242,8 +242,8 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 		VertexAttributesReader vreader = graph.getVertexAttributeReader();		
 		int color_index = 2;
 		for (Iterator it = components.iterator(); it.hasNext();) {
-			GsNodeReducedData scc = (GsNodeReducedData) it.next();
-			if (scc.getType( graph) == GsNodeReducedData.SCC_TYPE_UNIQUE_NODE) {
+			NodeReducedData scc = (NodeReducedData) it.next();
+			if (scc.getType( graph) == NodeReducedData.SCC_TYPE_UNIQUE_NODE) {
 				Object node = scc.getContent().get(0);
 				vreader.setVertex(node);
 				if (graph.getOutgoingEdges(node) == null || graph.getOutgoingEdges(node).size() == 0) {

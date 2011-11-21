@@ -25,8 +25,8 @@ import javax.swing.JTextField;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -194,16 +194,16 @@ public class GraphComparatorFrame  extends AbstractStackDialogHandler implements
 			Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_graphNull")), this.frame);
 			return;
 		case GRAPH_TYPE_REGULATORY:
-			g = new GsRegulatoryGraph();
+			g = new RegulatoryGraph();
 			if (opt_display_graph) {
 				GUIManager.getInstance().newFrame(g);
 			}
 			gc = new RegulatoryGraphComparator(g1, g2, g);
 			break;
 		case GRAPH_TYPE_DYNAMIC:
-			List nodeOrder = DynamicGraphComparator.getNodeOrder( (GsDynamicGraph) g1, (GsDynamicGraph) g2);
+			List nodeOrder = DynamicGraphComparator.getNodeOrder( (DynamicGraph) g1, (DynamicGraph) g2);
 			if (nodeOrder != null) {
-				g = GraphManager.getInstance().getNewGraph( GsDynamicGraph.class, nodeOrder);
+				g = GraphManager.getInstance().getNewGraph( DynamicGraph.class, nodeOrder);
 				if (opt_display_graph) {
 					GUIManager.getInstance().newFrame(g);
 				}
@@ -226,10 +226,10 @@ public class GraphComparatorFrame  extends AbstractStackDialogHandler implements
 
 	private int getGraphsType( Graph g1, Graph g2) {
 		if (g1 == null || g2 == null) return GRAPH_TYPE_NULL;
-		if (g1  instanceof GsRegulatoryGraph) {
-			if (g2 instanceof GsRegulatoryGraph) 
+		if (g1  instanceof RegulatoryGraph) {
+			if (g2 instanceof RegulatoryGraph) 
 				return GRAPH_TYPE_REGULATORY ;
-		} else if ((g1  instanceof GsDynamicGraph) 	&& (g2 instanceof GsDynamicGraph)) 		return GRAPH_TYPE_DYNAMIC ;
+		} else if ((g1  instanceof DynamicGraph) 	&& (g2 instanceof DynamicGraph)) 		return GRAPH_TYPE_DYNAMIC ;
 		return GRAPH_TYPE_UNCOMPATIBLE;
 	}
 

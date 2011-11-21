@@ -1,7 +1,7 @@
 package org.ginsim;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.AboutDialog;
 
@@ -24,11 +24,11 @@ public class TestRefactor {
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 
 		initGUI();
-		GsRegulatoryGraph lrg = GUIManager.getInstance().newFrame();
+		RegulatoryGraph lrg = GUIManager.getInstance().newFrame();
 
-		GsRegulatoryVertex v1 = lrg.addVertex();
-		GsRegulatoryVertex v2 = lrg.addVertex();
-		GsRegulatoryVertex v3 = lrg.addVertex();
+		RegulatoryVertex v1 = lrg.addVertex();
+		RegulatoryVertex v2 = lrg.addVertex();
+		RegulatoryVertex v3 = lrg.addVertex();
 
 		lrg.addEdge(v1, v2, 1);
 		lrg.addEdge(v1, v3, -1);

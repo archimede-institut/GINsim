@@ -7,9 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.graph.AddEdgeAction;
 import org.ginsim.gui.graph.AddVertexAction;
 import org.ginsim.gui.graph.EditAction;
@@ -28,15 +28,15 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.RegulatoryVertexEditor;
  * @author Aurelien Naldi
  */
 @ProviderFor( GraphGUIHelper.class)
-public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGraph, GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge> {
 
 	@Override
 	public Class getGraphClass() {
-		return GsRegulatoryGraph.class;
+		return RegulatoryGraph.class;
 	}
 
 	@Override
-	public List<EditAction> getEditActions(GsRegulatoryGraph graph) {
+	public List<EditAction> getEditActions(RegulatoryGraph graph) {
 		List<EditAction> actions = new ArrayList<EditAction>();
 		VertexAttributesReader reader = graph.getVertexAttributeReader();
 		actions.add(new AddRegulatoryVertexAction(graph, "Add components", reader));
@@ -47,29 +47,29 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGrap
 	}
 
 	@Override
-	public GUIEditor<GsRegulatoryGraph> getMainEditionPanel( GsRegulatoryGraph graph) {
+	public GUIEditor<RegulatoryGraph> getMainEditionPanel( RegulatoryGraph graph) {
 		RegulatoryGraphEditor editor = new RegulatoryGraphEditor();
 		editor.setEditedObject(graph);
 		return editor;
 	}
 
 	@Override
-	public String getEditingTabLabel( GsRegulatoryGraph graph) {
+	public String getEditingTabLabel( RegulatoryGraph graph) {
 		return "STR_modelAttribute";
 	}
 
 	@Override
-	public GUIEditor<GsRegulatoryVertex> getNodeEditionPanel( GsRegulatoryGraph graph) {
+	public GUIEditor<RegulatoryVertex> getNodeEditionPanel( RegulatoryGraph graph) {
 		return new RegulatoryVertexEditor(graph);
 	}
 
 	@Override
-	public GUIEditor<GsRegulatoryMultiEdge> getEdgeEditionPanel( GsRegulatoryGraph graph) {
+	public GUIEditor<RegulatoryMultiEdge> getEdgeEditionPanel( RegulatoryGraph graph) {
 		return new RegulatoryEdgeEditor(graph);
 	}
 
 	@Override
-	public JPanel getInfoPanel(GsRegulatoryGraph graph) {
+	public JPanel getInfoPanel(RegulatoryGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -85,7 +85,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGrap
 	}
 
 	@Override
-	public JPanel getSaveOptionPanel(GsRegulatoryGraph graph) {
+	public JPanel getSaveOptionPanel(RegulatoryGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -102,23 +102,23 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<GsRegulatoryGrap
 
 }
 
-class AddRegulatoryVertexAction extends AddVertexAction<GsRegulatoryVertex> {
+class AddRegulatoryVertexAction extends AddVertexAction<RegulatoryVertex> {
 
-	private final GsRegulatoryGraph graph;
-	public AddRegulatoryVertexAction(GsRegulatoryGraph graph, String name, VertexAttributesReader reader) {
+	private final RegulatoryGraph graph;
+	public AddRegulatoryVertexAction(RegulatoryGraph graph, String name, VertexAttributesReader reader) {
 		super(name, reader, "insertsquare.gif");
 		this.graph = graph;
 	}
 
 	@Override
-	protected GsRegulatoryVertex getNewVertex() {
+	protected RegulatoryVertex getNewVertex() {
 		return graph.addVertex();
 	}
 }
 
-class AddRegulatoryEdgeAction extends AddEdgeAction<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+class AddRegulatoryEdgeAction extends AddEdgeAction<RegulatoryVertex, RegulatoryMultiEdge> {
 
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	private final int sign;
 
 	private static String getIcon(int sign) {
@@ -131,14 +131,14 @@ class AddRegulatoryEdgeAction extends AddEdgeAction<GsRegulatoryVertex, GsRegula
 		return "insertunknownedge.gif";
 	}
 	
-	public AddRegulatoryEdgeAction(GsRegulatoryGraph graph, String name, int sign) {
+	public AddRegulatoryEdgeAction(RegulatoryGraph graph, String name, int sign) {
 		super(name, getIcon(sign));
 		this.graph = graph;
 		this.sign = sign;
 	}
 
 	@Override
-	protected GsRegulatoryMultiEdge getNewEdge(GsRegulatoryVertex source, GsRegulatoryVertex target) {
+	protected RegulatoryMultiEdge getNewEdge(RegulatoryVertex source, RegulatoryVertex target) {
 		return graph.addEdge(source, target, sign);
 	}
 }

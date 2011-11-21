@@ -26,10 +26,10 @@ import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
-import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
+import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.graph.GsGinmlParser;
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -85,10 +85,10 @@ public class GraphManager {
      * 
      * @return
      */
-    public GsRegulatoryGraph getNewGraph(){
+    public RegulatoryGraph getNewGraph(){
     	
-    	GraphFactory factory = graphFactories.get( GsRegulatoryGraph.class);
-    	GsRegulatoryGraph graph = (GsRegulatoryGraph) factory.create();
+    	GraphFactory factory = graphFactories.get( RegulatoryGraph.class);
+    	RegulatoryGraph graph = (RegulatoryGraph) factory.create();
     	registerGraph( graph);
     	
     	return graph;
@@ -307,7 +307,7 @@ public class GraphManager {
                 ZipEntry ze = f.getEntry("ginml");
                 if (ze==null) {
                 	usePrefix = true;
-                	ze = f.getEntry( AbstractGraph.ZIP_PREFIX + GsRegulatoryGraph.GRAPH_ZIP_NAME);
+                	ze = f.getEntry( AbstractGraph.ZIP_PREFIX + RegulatoryGraph.GRAPH_ZIP_NAME);
                 	if (ze == null) {
                 		ze = f.getEntry( AbstractGraph.ZIP_PREFIX + DynamicGraphImpl.GRAPH_ZIP_NAME);
                     	if (ze == null) {
@@ -329,7 +329,7 @@ public class GraphManager {
                 	List v_omanager = ObjectAssociationManager.getInstance().getObjectManagerList();
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
-	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
+	                        GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager)v_omanager.get(i);
 	                        ze = f.getEntry((usePrefix ? AbstractGraph.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
@@ -340,7 +340,7 @@ public class GraphManager {
 	                v_omanager = ObjectAssociationManager.getInstance().getObjectManagerList( graph.getClass());
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
-	                        GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_omanager.get(i);
+	                        GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager)v_omanager.get(i);
 	                        ze = f.getEntry((usePrefix ? AbstractGraph.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
 	                            Object o = manager.doOpen(f.getInputStream(ze), graph);

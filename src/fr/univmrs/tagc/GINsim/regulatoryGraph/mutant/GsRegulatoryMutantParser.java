@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
@@ -32,7 +32,7 @@ public class GsRegulatoryMutantParser extends XMLHelper {
 	}
 	
     GsRegulatoryMutants mutantList = null;
-    GsRegulatoryGraph graph;
+    RegulatoryGraph graph;
     List nodeOrder;
     String[] t_order;
     GsRegulatoryMutantDef mutant;
@@ -41,7 +41,7 @@ public class GsRegulatoryMutantParser extends XMLHelper {
     /**
      * @param graph
      */
-    public GsRegulatoryMutantParser(GsRegulatoryGraph graph) {
+    public GsRegulatoryMutantParser(RegulatoryGraph graph) {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         this.m_call = CALLMAP;
@@ -70,7 +70,7 @@ public class GsRegulatoryMutantParser extends XMLHelper {
 			case CHANGE:
 	            String s_vertex = attributes.getValue("target");
 	            for (int i=0 ; i<nodeOrder.size() ; i++) {
-	                GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+	                RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
 	                if (vertex.getId().equals(s_vertex)) {
 	                    GsRegulatoryMutantChange change = new GsRegulatoryMutantChange(vertex);
 	                    change.setMin((byte)Integer.parseInt(attributes.getValue("min")));

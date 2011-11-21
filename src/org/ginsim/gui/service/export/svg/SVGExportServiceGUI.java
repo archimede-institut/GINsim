@@ -10,7 +10,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.service.export.svg.SVGExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -40,7 +40,7 @@ public class SVGExportServiceGUI implements GsServiceGUI {
  * @author spinelli
  *
  */
-class ExportSVGAction extends GsExportAction {
+class ExportSVGAction extends ExportAction {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"svg"}, "SVG files");
 	

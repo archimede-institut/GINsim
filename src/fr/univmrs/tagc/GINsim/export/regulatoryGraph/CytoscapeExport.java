@@ -15,11 +15,11 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.GsServiceGUI;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
@@ -35,7 +35,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * @version 1.0
  * february 2008 - april 2008
  * 
- *    TODO: extract a separated GsService
+ *    TODO: extract a separated Service
  */
 @ProviderFor(GsServiceGUI.class)
 @StandaloneGUI
@@ -43,9 +43,9 @@ public class CytoscapeExport implements GsServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new CytoscapeExportAction((GsRegulatoryGraph)graph));
+			actions.add(new CytoscapeExportAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -53,7 +53,7 @@ public class CytoscapeExport implements GsServiceGUI {
 	
 }
 
-class CytoscapeExportAction extends GsExportAction<GsRegulatoryGraph> {
+class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 	
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"xgmml"}, "Cytoscape graph files");
 
@@ -64,7 +64,7 @@ class CytoscapeExportAction extends GsExportAction<GsRegulatoryGraph> {
 	FileWriter fout = null;
 	XMLWriter out = null;
 	
-	protected CytoscapeExportAction(GsRegulatoryGraph graph) {
+	protected CytoscapeExportAction(RegulatoryGraph graph) {
 		super( graph, "STR_cytoscape", "STR_cytoscape_descr");
 	}
 
@@ -122,7 +122,7 @@ class CytoscapeExportAction extends GsExportAction<GsRegulatoryGraph> {
 		int current_index_of_node_id = -graph.getVertexCount(); // The IDs goes from -vertexCount to -1
 		VertexAttributesReader vertexAttributeReader = graph.getVertexAttributeReader();
 		for (Iterator it=graph.getVertices().iterator() ; it.hasNext() ;) {
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+			RegulatoryVertex vertex = (RegulatoryVertex)it.next();
 			
 			String name = vertex.getName();//The complete name (label) of the edge
 			if (name.length() == 0) {
@@ -167,19 +167,19 @@ class CytoscapeExportAction extends GsExportAction<GsRegulatoryGraph> {
 		
 		//edges
 		EdgeAttributesReader edgeAttributeReader = graph.getEdgeAttributeReader();
-		for (Iterator<GsRegulatoryMultiEdge> it=graph.getEdges().iterator() ; it.hasNext() ;) {
-			GsRegulatoryMultiEdge edge = it.next();
+		for (Iterator<RegulatoryMultiEdge> it=graph.getEdges().iterator() ; it.hasNext() ;) {
+			RegulatoryMultiEdge edge = it.next();
 
-			String source_id = ((GsRegulatoryVertex)edge.getTarget()).getId(); //C1
-			String target_id = ((GsRegulatoryVertex)edge.getSource()).getId(); //C2
+			String source_id = ((RegulatoryVertex)edge.getTarget()).getId(); //C1
+			String target_id = ((RegulatoryVertex)edge.getSource()).getId(); //C2
 			String edge_type; //inhibit | activate | undefined
 			String edge_cyt_id; //15 | 3 | 12
 			switch (edge.getSign()) {
-				case GsRegulatoryMultiEdge.SIGN_NEGATIVE: 
+				case RegulatoryMultiEdge.SIGN_NEGATIVE: 
 					edge_type = "inhibit";
 					edge_cyt_id = "15";
 					break;
-				case GsRegulatoryMultiEdge.SIGN_POSITIVE: 
+				case RegulatoryMultiEdge.SIGN_POSITIVE: 
 					edge_type = "activate"; 
 					edge_cyt_id = "3";
 					break;

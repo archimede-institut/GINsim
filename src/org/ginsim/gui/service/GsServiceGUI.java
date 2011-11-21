@@ -22,9 +22,9 @@ public interface GsServiceGUI {
 	/**
 	 * Give access to the list of the actions that the service provides for the given graph.
 	 * These actions can be divided into four types:
-	 *  - Import : data import from file of various format. Represented by the GsImportAction class
-	 *  - Export : data export to file of various format. Represented by the GsExportAction class
-	 *  - Layout : Perform a graph layout. Represented by the GsLayoutAction class
+	 *  - Import : data import from file of various format. Represented by the ImportAction class
+	 *  - Export : data export to file of various format. Represented by the ExportAction class
+	 *  - Layout : Perform a graph layout. Represented by the LayoutAction class
 	 *  - Action : various data management algorithm. Represented by the GsMiscAction class
 	 * 
 	 * @return the list of actions provided by the service to the given graph type

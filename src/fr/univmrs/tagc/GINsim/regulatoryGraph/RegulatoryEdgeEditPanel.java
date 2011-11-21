@@ -11,9 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
 import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
@@ -25,8 +25,8 @@ public class RegulatoryEdgeEditPanel extends JPanel
 	implements ActionListener, ObjectPropertyEditorUI {
 	private static final long	serialVersionUID	= 5147198338786927504L;
 
-	GsRegulatoryEdge edge;
-	GsRegulatoryGraph graph;
+	RegulatoryEdge edge;
+	RegulatoryGraph graph;
 	GenericPropertyInfo pinfo;
 	
 	private EdgeThresholdModel thmodel = null;
@@ -34,7 +34,7 @@ public class RegulatoryEdgeEditPanel extends JPanel
 
 	public RegulatoryEdgeEditPanel() {
         thmodel = new EdgeThresholdModel();
-        signcombo = new JComboBox(GsRegulatoryMultiEdge.SIGN_SHORT);
+        signcombo = new JComboBox(RegulatoryMultiEdge.SIGN_SHORT);
         setLayout(new GridBagLayout());
         
         GridBagConstraints c = new GridBagConstraints();
@@ -55,38 +55,38 @@ public class RegulatoryEdgeEditPanel extends JPanel
         add(signcombo, c);
         signcombo.addActionListener(this); 
 	}
-	public RegulatoryEdgeEditPanel(GsRegulatoryGraph graph) {
+	public RegulatoryEdgeEditPanel(RegulatoryGraph graph) {
 		this();
 		this.graph = graph;
 	}
-	public void setEdge(GsRegulatoryEdge edge) {
+	public void setEdge(RegulatoryEdge edge) {
 		this.edge = edge;
 		thmodel.setSelection(edge);
 		signcombo.setSelectedIndex(edge.sign);
 	}
 	public void actionPerformed(ActionEvent e) {
 		byte s = (byte)signcombo.getSelectedIndex();
-		if (s != edge.sign && s >= 0 && s<GsRegulatoryMultiEdge.SIGN_SHORT.length) {
+		if (s != edge.sign && s >= 0 && s<RegulatoryMultiEdge.SIGN_SHORT.length) {
 			edge.me.setSign(edge.index, s, graph);
 		}
 	}
 	public void apply() {
 	}
 	public void refresh(boolean force) {
-		setEdge((GsRegulatoryEdge)pinfo.getRawValue());
+		setEdge((RegulatoryEdge)pinfo.getRawValue());
 	}
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
-		this.graph = (GsRegulatoryGraph)pinfo.data;
+		this.graph = (RegulatoryGraph)pinfo.data;
 		panel.addField(this, pinfo, 0);
 	}
 }
 
 class EdgeThresholdModel extends AbstractSpinnerModel {
-	GsRegulatoryEdge edge;
+	RegulatoryEdge edge;
 	
-	public void setSelection(GsRegulatoryEdge edge) {
+	public void setSelection(RegulatoryEdge edge) {
 		this.edge = edge;
 		fireStateChanged();
 	}

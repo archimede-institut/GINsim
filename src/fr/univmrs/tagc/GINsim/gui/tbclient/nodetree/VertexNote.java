@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
@@ -26,7 +26,7 @@ public class VertexNote extends DTreeElementToggleButton {
     value = (String)v.elementAt(2);
     tb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GsRegulatoryVertex vertex = (GsRegulatoryVertex)((Vector)getUserObject()).firstElement();
+				RegulatoryVertex vertex = (RegulatoryVertex)((Vector)getUserObject()).firstElement();
         String proto = (String)((Vector)getUserObject()).elementAt(1);
         String value = (String)((Vector)getUserObject()).elementAt(2);
         setNote(tb.isSelected());
@@ -35,7 +35,7 @@ public class VertexNote extends DTreeElementToggleButton {
 	}
 	public void setNote(boolean b) {
     super.check(b);
-    GsRegulatoryVertex vertex = (GsRegulatoryVertex)((Vector)getUserObject()).firstElement();
+    RegulatoryVertex vertex = (RegulatoryVertex)((Vector)getUserObject()).firstElement();
     proto = (String)((Vector)getUserObject()).elementAt(1);
     value = (String)((Vector)getUserObject()).elementAt(2);
     if (b)

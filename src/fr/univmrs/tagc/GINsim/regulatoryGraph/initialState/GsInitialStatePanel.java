@@ -16,7 +16,7 @@ import javax.swing.table.TableColumn;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
 
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -65,7 +65,7 @@ class StateListPanel extends JPanel {
     private JButton buttonDelStateRow = null;
     private JButton buttonCopyStateRow = null;
 
-    GsSimulationParameterList paramList;
+    SimulationParameterList paramList;
 
     Insets topInset = new Insets(20,0,0,0);
 	private InitialStateList stateList;

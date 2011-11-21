@@ -6,10 +6,10 @@ import java.util.Map;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.AttributesReader;
-import org.ginsim.graph.dynamicgraph.GsDynamicNode;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.dynamicgraph.DynamicNode;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 
 /**
@@ -303,10 +303,10 @@ public abstract class Selector {
 	 * @return true if obj is a node
 	 */
 	protected boolean isNode(Object obj) {
-		if (obj instanceof GsRegulatoryVertex) {
+		if (obj instanceof RegulatoryVertex) {
             return true;
         }
-		if (obj instanceof GsDynamicNode) {
+		if (obj instanceof DynamicNode) {
             return true;
         }
 		return false;
@@ -320,10 +320,10 @@ public abstract class Selector {
 		if (obj instanceof Edge) {
             return true;
         }
-		if (obj instanceof GsRegulatoryEdge) {
+		if (obj instanceof RegulatoryEdge) {
             return true;
         }
-		if (obj instanceof GsRegulatoryMultiEdge) {
+		if (obj instanceof RegulatoryMultiEdge) {
             return true;
         }
 		return false;

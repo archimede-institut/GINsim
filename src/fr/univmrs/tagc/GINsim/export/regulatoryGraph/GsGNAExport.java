@@ -11,11 +11,11 @@ import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.LogicalFunctionBrowser;
 import org.ginsim.gui.service.GsServiceGUI;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
@@ -33,23 +33,23 @@ public class GsGNAExport implements GsServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new GNAExportAction((GsRegulatoryGraph)graph));
+			actions.add(new GNAExportAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
 	}
 }
 
-class GNAExportAction extends GsExportAction<GsRegulatoryGraph> {
+class GNAExportAction extends ExportAction<RegulatoryGraph> {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"gna"}, "GNA files");
 	
 	private FileWriter out = null;
 	private GNAFunctionBrowser f_browser;
 
-    public GNAExportAction(GsRegulatoryGraph graph) {
+    public GNAExportAction(RegulatoryGraph graph) {
     	super(graph, "STR_GNA", "STR_GNA_descr");
     }
 
@@ -66,7 +66,7 @@ class GNAExportAction extends GsExportAction<GsRegulatoryGraph> {
   		f_browser = new GNAFunctionBrowser(nodeOrder, out);
 		Iterator it = nodeOrder.iterator();
 		while (it.hasNext()) {
-			GsRegulatoryVertex node = (GsRegulatoryVertex) it.next();
+			RegulatoryVertex node = (RegulatoryVertex) it.next();
 			int thresholdLevels = node.getMaxValue();
 			String id = node.getId();
 			// TODO: use "input-variable" instead of "state-variable" for "constant" variables
@@ -157,7 +157,7 @@ class GNAFunctionBrowser extends LogicalFunctionBrowser {
 			out.write("k_"+nodeID+leaf.value);
 			for (int i=0 ; i<path.length ; i++) {
 				if (path[i][0] != -1) {
-					String nodeName = ((GsRegulatoryVertex)nodeOrder.get(i)).getId();
+					String nodeName = ((RegulatoryVertex)nodeOrder.get(i)).getId();
 					int begin = path[i][0];
 					int end = path[i][1]+1;
 					if (begin > 0) {

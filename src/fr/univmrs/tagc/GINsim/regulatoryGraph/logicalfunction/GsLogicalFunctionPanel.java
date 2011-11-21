@@ -9,8 +9,8 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
@@ -24,14 +24,14 @@ import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 public class GsLogicalFunctionPanel extends AbstractParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {
 	private static final long serialVersionUID = -87854595177707062L;
 	private GsIncomingEdgeListModel edgeList = null;
-	private GsRegulatoryVertex currentVertex = null;
+	private RegulatoryVertex currentVertex = null;
 	private GsLogicalFunctionTreePanel treePanel = null;
 	private GsFunctionEditor functionEditor = null;
-	private GsRegulatoryGraph graph;
+	private RegulatoryGraph graph;
 	private GenericPropertyInfo	pinfo;
 	private JPanel eastPanel;
 
-	public GsLogicalFunctionPanel(GsRegulatoryGraph graph) {
+	public GsLogicalFunctionPanel(RegulatoryGraph graph) {
 		super(graph);
 		this.graph = graph;
 		initialize();
@@ -70,8 +70,8 @@ public class GsLogicalFunctionPanel extends AbstractParameterPanel implements Ob
 	}
 	public void setEditedItem(Object obj) {
 		if (currentVertex != null) treePanel.setEditedItem(obj);
-		if (obj != null && obj instanceof GsRegulatoryVertex) {
-			currentVertex = (GsRegulatoryVertex)obj;
+		if (obj != null && obj instanceof RegulatoryVertex) {
+			currentVertex = (RegulatoryVertex)obj;
 			edgeList.setEdge(graph.getIncomingEdges(currentVertex));
 			treePanel.setEditedItem(obj);
 		}
@@ -93,7 +93,7 @@ public class GsLogicalFunctionPanel extends AbstractParameterPanel implements Ob
 
 	public void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
-		this.graph = (GsRegulatoryGraph)pinfo.data;
+		this.graph = (RegulatoryGraph)pinfo.data;
 		initialize();
 		panel.addField(this, pinfo, 0);
 	}

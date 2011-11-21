@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;
@@ -14,7 +14,7 @@ import fr.univmrs.tagc.common.Debugger;
  * descriptor for hierarchical transition graphs.
  */
 @ProviderFor( GraphFactory.class)
-public class HierarchicalTransitionGraphFactory implements GraphFactory<GsHierarchicalTransitionGraph> {
+public class HierarchicalTransitionGraphFactory implements GraphFactory<HierarchicalTransitionGraph> {
 	
     private static HierarchicalTransitionGraphFactory instance = null;
     
@@ -37,9 +37,9 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory<GsHierar
     }
 
     @Override
-	public Class<GsHierarchicalTransitionGraph> getGraphClass(){
+	public Class<HierarchicalTransitionGraph> getGraphClass(){
 		
-		return GsHierarchicalTransitionGraph.class;
+		return HierarchicalTransitionGraph.class;
 	}
 	
     @Override
@@ -51,18 +51,18 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory<GsHierar
     @Override
 	public Class getParser(){
 		
-		return GsHierarchicalTransitionGraphParser.class;
+		return HierarchicalTransitionGraphParser.class;
 	}
 	
     @Override
-	public GsHierarchicalTransitionGraph create(){
+	public HierarchicalTransitionGraph create(){
 		
 		return new HierarchicalTransitionGraphImpl();
 	}
 	
     
     
-	public GsHierarchicalTransitionGraph create( boolean bool){
+	public HierarchicalTransitionGraph create( boolean bool){
 		
 		return new HierarchicalTransitionGraphImpl( bool);
 	}

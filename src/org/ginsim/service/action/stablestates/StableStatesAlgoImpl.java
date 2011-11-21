@@ -3,9 +3,9 @@ package org.ginsim.service.action.stablestates;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
@@ -23,7 +23,7 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
  */
 public class StableStatesAlgoImpl implements StableStateSearcher {
 
-	private final GsRegulatoryGraph regGraph;
+	private final RegulatoryGraph regGraph;
 	List nodeOrder;
 	OmddNode[] t_param;
 	OmddNode dd_stable;
@@ -37,7 +37,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	int bestIndex, bestValue;
 	int nbgene, nbremain;
 	
-	public StableStatesAlgoImpl( GsRegulatoryGraph regGraph) {
+	public StableStatesAlgoImpl( RegulatoryGraph regGraph) {
 		
 		this.regGraph = regGraph;
 		this.nodeOrder = regGraph.getNodeOrder();
@@ -49,7 +49,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	}
 	
 	@Override
-	public void setNodeOrder(List<GsRegulatoryVertex> sortedVars, OmddNode[] tReordered) {
+	public void setNodeOrder(List<RegulatoryVertex> sortedVars, OmddNode[] tReordered) {
 		throw new RuntimeException("Custom node order in stable state search needs love");
 	}
 	
@@ -69,7 +69,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 			if (ORDERTEST) {
 				int sel = selectNext();
 				dd_stable = buildStableConditionFromParam(sel, 
-						((GsRegulatoryVertex)nodeOrder.get(sel)).getMaxValue()+1,
+						((RegulatoryVertex)nodeOrder.get(sel)).getMaxValue()+1,
 						t_param[sel],
 						dd_stable).reduce();
 			} else {
@@ -77,7 +77,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 					System.out.println("  "+i);
 				}
 				dd_stable = buildStableConditionFromParam(i, 
-						((GsRegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1,
+						((RegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1,
 						t_param[i],
 						dd_stable).reduce();
 			}
@@ -91,7 +91,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 		t_reg = new boolean[nbgene][nbgene];
 		bestValue = nbgene+1;
 		for (int i=0 ; i<nbgene ; i++) {
-			Iterator<GsRegulatoryMultiEdge> it_reg = regGraph.getIncomingEdges( (GsRegulatoryVertex) nodeOrder.get(i)).iterator();
+			Iterator<RegulatoryMultiEdge> it_reg = regGraph.getIncomingEdges( (RegulatoryVertex) nodeOrder.get(i)).iterator();
 			int cpt = 0;
 			boolean[] t_regline = t_reg[i];
 			while (it_reg.hasNext()) {

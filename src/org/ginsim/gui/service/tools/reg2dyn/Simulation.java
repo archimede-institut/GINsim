@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.GsSTGSimulationHelper;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.SimulationHelper;
 
@@ -42,18 +42,18 @@ public class Simulation extends Thread implements Runnable {
 	 * @param frame
 	 * @param params
 	 */
-    public Simulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params) {
+    public Simulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
         this(regGraph, frame, params, true, true);
     }
-    public Simulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow) {
+    public Simulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow) {
         this(regGraph, frame, params, runNow, true);
     }
-    public Simulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow, boolean useInit) {
+    public Simulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow, boolean useInit) {
 		this.frame = frame;
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
 
-		if (params.simulationStrategy == GsSimulationParameters.STRATEGY_STG) {
+		if (params.simulationStrategy == SimulationParameters.STRATEGY_STG) {
 			helper = new GsSTGSimulationHelper(regGraph, params);
 		}
 		breadthFirst = params.breadthFirst;

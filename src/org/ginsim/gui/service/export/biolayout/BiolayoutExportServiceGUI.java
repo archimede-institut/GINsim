@@ -10,7 +10,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.service.export.biolayout.BioLayoutExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -40,7 +40,7 @@ public class BiolayoutExportServiceGUI implements GsServiceGUI {
  * @author spinelli
  *
  */
-class ExportBioLayoutAction extends GsExportAction {
+class ExportBioLayoutAction extends ExportAction {
 
 	static GsFileFilter ffilter = new GsFileFilter(new String[] {"layout"}, "biolayout files");
 	

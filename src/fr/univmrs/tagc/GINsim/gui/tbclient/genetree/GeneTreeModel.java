@@ -13,7 +13,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.annotation.AnnotationLink;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.common.Tools;
 
@@ -25,7 +25,7 @@ public class GeneTreeModel implements TreeModel {
     root = r;
   }
   public void init(Hashtable genes) {
-    GsRegulatoryVertex vertex;
+    RegulatoryVertex vertex;
     TreeElement te;
     TreeElementNode ten;
     TreeElementValue tev;
@@ -41,7 +41,7 @@ public class GeneTreeModel implements TreeModel {
 		((TreeElementNode)root).sons.clear();
     try {
       for (Enumeration enu = genes.keys(); enu.hasMoreElements(); ) {
-        vertex = (GsRegulatoryVertex)enu.nextElement();
+        vertex = (RegulatoryVertex)enu.nextElement();
         te = new TreeElement(vertex.toString());
         ten = new TreeElementNode(te);
         nodeNode = new TreeElementSelectable(ten, false, vertex, this);

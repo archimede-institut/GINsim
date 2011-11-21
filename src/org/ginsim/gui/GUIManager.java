@@ -11,7 +11,7 @@ import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
@@ -51,8 +51,8 @@ public class GUIManager {
 	 * 
 	 * @return the new regulatory graph
 	 */
-	public GsRegulatoryGraph newFrame() {
-		GsRegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+	public RegulatoryGraph newFrame() {
+		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
 		newFrame(graph);
 		return graph;
 	}

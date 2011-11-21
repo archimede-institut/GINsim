@@ -13,16 +13,16 @@ public class ObjectAssociationManager {
 
 	private static ObjectAssociationManager instance;
 	
-	private List<GsGraphAssociatedObjectManager> objectManagers = null;
-	private HashMap<Class,List<GsGraphAssociatedObjectManager>> specializedObjectManagers = null;
+	private List<GraphAssociatedObjectManager> objectManagers = null;
+	private HashMap<Class,List<GraphAssociatedObjectManager>> specializedObjectManagers = null;
 	
     // The map linking objects associated to the Graph with their representative key
     private HashMap<Graph,Map<Object,Object>> objectsOfGraph;
 	
 	private ObjectAssociationManager(){
 		
-		objectManagers = new Vector<GsGraphAssociatedObjectManager>();
-		specializedObjectManagers = new HashMap<Class, List<GsGraphAssociatedObjectManager>>();
+		objectManagers = new Vector<GraphAssociatedObjectManager>();
+		specializedObjectManagers = new HashMap<Class, List<GraphAssociatedObjectManager>>();
 		objectsOfGraph = new HashMap<Graph, Map<Object,Object>>();
 		
 	}
@@ -42,7 +42,7 @@ public class ObjectAssociationManager {
      *
      * @param manager
      */
-    public void registerObjectManager( GsGraphAssociatedObjectManager manager) {
+    public void registerObjectManager( GraphAssociatedObjectManager manager) {
     	
     	objectManagers.add( manager);
     }
@@ -52,23 +52,23 @@ public class ObjectAssociationManager {
      * 
      * @param manager
      */
-    public void registerObjectManager( Class graph_class, GsGraphAssociatedObjectManager manager) {
+    public void registerObjectManager( Class graph_class, GraphAssociatedObjectManager manager) {
     	
     	Class interface_class = getGraphInterface( graph_class);
     	
     	if( interface_class != null){
     	
-	    	List<GsGraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
+	    	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
 	    	
 	    	if( specialized_managers != null){
 		    	for (int i=0 ; i<specialized_managers.size(); i++) {
-		    		if (((GsGraphAssociatedObjectManager)specialized_managers.get(i)).getObjectName().equals(manager.getObjectName())) {
+		    		if (((GraphAssociatedObjectManager)specialized_managers.get(i)).getObjectName().equals(manager.getObjectName())) {
 		    			return;
 		    		}            
 		    	}
 	    	}
 	    	else{
-	    		specialized_managers = new Vector<GsGraphAssociatedObjectManager>();
+	    		specialized_managers = new Vector<GraphAssociatedObjectManager>();
 	    		specializedObjectManagers.put( interface_class, specialized_managers);
 	    	}
 	    	
@@ -82,7 +82,7 @@ public class ObjectAssociationManager {
      * 
      * @return the list of registered object managers
      */
-    public List<GsGraphAssociatedObjectManager> getObjectManagerList() {
+    public List<GraphAssociatedObjectManager> getObjectManagerList() {
     	
         return objectManagers;
     }
@@ -92,7 +92,7 @@ public class ObjectAssociationManager {
      * 
      * @return the list of registered object managers
      */
-    public List<GsGraphAssociatedObjectManager> getObjectManagerList( Class graph_class) {
+    public List<GraphAssociatedObjectManager> getObjectManagerList( Class graph_class) {
     	
     	Class interface_class = getGraphInterface( graph_class);
     	
@@ -105,13 +105,13 @@ public class ObjectAssociationManager {
      * 
      * @return the Object manager in charge of the given object, null if no Manager is defined for this object
      */
-    public GsGraphAssociatedObjectManager getObjectManager( Object key) {
+    public GraphAssociatedObjectManager getObjectManager( Object key) {
     	
     	if (objectManagers == null) {
     		return null;
     	}
         for (int i=0 ; i < objectManagers.size() ; i++) {
-        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager) objectManagers.get(i);
+        	GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager) objectManagers.get(i);
         	if (manager.getObjectName().equals( key)) {
         		return manager;
         	}
@@ -125,18 +125,18 @@ public class ObjectAssociationManager {
      * 
      * @return the Object manager in charge of the given object, null if no Manager is defined for this object
      */
-    public GsGraphAssociatedObjectManager getObjectManager( Class graph_class, Object key) {
+    public GraphAssociatedObjectManager getObjectManager( Class graph_class, Object key) {
     	
     	Class interface_class = getGraphInterface( graph_class);
     	
-    	List<GsGraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
+    	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
     	
     	if (specialized_managers == null) {
     		return null;
     	}
     	
         for (int i=0 ; i < specialized_managers.size() ; i++) {
-        	GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager) specialized_managers.get(i);
+        	GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager) specialized_managers.get(i);
         	if (manager.getObjectName().equals( key)) {
         		return manager;
         	}
@@ -167,7 +167,7 @@ public class ObjectAssociationManager {
         }
         Object ret = m_objects.get( key);
         if (create && ret == null) {
-        	GsGraphAssociatedObjectManager manager = getObjectManager( key);
+        	GraphAssociatedObjectManager manager = getObjectManager( key);
         	if (manager == null) {
         		manager = getObjectManager( graph.getClass(), key);
         	}
@@ -243,13 +243,13 @@ public class ObjectAssociationManager {
     	
     	Class interface_class = getGraphInterface( graph_class);
     	
-    	List<GsGraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
+    	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
     	
         if (specialized_managers == null) {
             return false;
         }
         for (int i=0 ; i<specialized_managers.size() ; i++) {
-            if (((GsGraphAssociatedObjectManager)specialized_managers.get(i)).getObjectName().equals(key)) {
+            if (((GraphAssociatedObjectManager)specialized_managers.get(i)).getObjectName().equals(key)) {
                 return true;
             }
         }

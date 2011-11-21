@@ -31,7 +31,7 @@ import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.ginsim.gui.shell.FrameActionManager;
-import org.ginsim.gui.shell.callbacks.GsFileCallBack;
+import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
@@ -62,7 +62,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     private String savePath = null;
     
     // TODO: should it be static, created later or what ?
-    private GsParallelEdgeRouting pedgerouting = new GsParallelEdgeRouting();
+    private ParallelEdgeRouting pedgerouting = new ParallelEdgeRouting();
 
 	public JgraphGUIImpl(G g, JgraphtBackendImpl<V, E> backend, GraphGUIHelper<G,V,E> helper) {
 		this.graph = g;
@@ -243,7 +243,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		
 		try {
 			graph.save(savePath);
-			GsFileCallBack.addRecentFile(savePath);
+			FileCallBack.addRecentFile(savePath);
 			isSaved = true;
 			return true;
 		} catch (Exception e) {

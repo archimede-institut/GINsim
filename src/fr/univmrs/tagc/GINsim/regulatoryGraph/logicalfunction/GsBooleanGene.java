@@ -1,16 +1,16 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanData;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanOperand;
 
 public class GsBooleanGene extends TBooleanOperand {
   private GsLogicalFunctionList il;
-  private GsRegulatoryMultiEdge me;
-  private GsRegulatoryEdge edge;
+  private RegulatoryMultiEdge me;
+  private RegulatoryEdge edge;
 
   public GsBooleanGene() {
     super();
@@ -41,15 +41,15 @@ public class GsBooleanGene extends TBooleanOperand {
 	  setParser(parser);
 	  setValue(value);
 	  Object o = parser.getEdge(value);
-	  if (o instanceof GsRegulatoryMultiEdge) {
-		  me = (GsRegulatoryMultiEdge)o;
+	  if (o instanceof RegulatoryMultiEdge) {
+		  me = (RegulatoryMultiEdge)o;
 	  } else {
-		  edge = (GsRegulatoryEdge)o;
+		  edge = (RegulatoryEdge)o;
 		  me = edge.me;
 	  }
   }
   public boolean hasEdge(GsLogicalFunctionListElement element) {
-	  GsRegulatoryMultiEdge me = element.getEdge();
+	  RegulatoryMultiEdge me = element.getEdge();
 	  if (me == null) {
 		  return false;
 	  }

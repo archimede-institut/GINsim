@@ -10,10 +10,10 @@ import java.util.TreeSet;
 
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
@@ -79,13 +79,13 @@ public class GsLogicalParameter implements XMLize {
 	 * @param me
 	 * @param index
 	 */
-	public void addEdge(GsRegulatoryEdge edge) {
+	public void addEdge(RegulatoryEdge edge) {
 		edge_index.add(edge);
 	}
 
 	public boolean isDurty() {
 		for (int i=0 ; i<edge_index.size() ; i++) {
-			if (((GsRegulatoryEdge)edge_index.get(i)).index == -1) {
+			if (((RegulatoryEdge)edge_index.get(i)).index == -1) {
 				return true;
 			}
 		}
@@ -96,9 +96,9 @@ public class GsLogicalParameter implements XMLize {
 	 * @param index
 	 * @return the GsEdgeIndex at the specified position index in the parameter.
 	 */
-	public GsRegulatoryEdge getEdge(int index) {
+	public RegulatoryEdge getEdge(int index) {
 		try{
-			return (GsRegulatoryEdge)edge_index.get(index);
+			return (RegulatoryEdge)edge_index.get(index);
 		}
 		catch (java.lang.ArrayIndexOutOfBoundsException e) {return null;}
 	}
@@ -146,9 +146,9 @@ public class GsLogicalParameter implements XMLize {
      * @param node
      * @return the t_ac
      */
-	private byte[][] buildTac(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, List<GsRegulatoryVertex> nodeOrder) {
+	private byte[][] buildTac(RegulatoryGraph regGraph, RegulatoryVertex node, List<RegulatoryVertex> nodeOrder) {
 		
-	    Collection<GsRegulatoryMultiEdge> incEdges = regGraph.getIncomingEdges(node);
+	    Collection<RegulatoryMultiEdge> incEdges = regGraph.getIncomingEdges(node);
         byte[][] t_ac = new byte[incEdges.size()+1][];
         t_ac[0] = new byte[1];
         t_ac[0][0] = (byte)value;
@@ -158,9 +158,9 @@ public class GsLogicalParameter implements XMLize {
         }
         boolean ok = false;
         int i = 0;
-        for (GsRegulatoryMultiEdge me: incEdges) {
+        for (RegulatoryMultiEdge me: incEdges) {
         	i++;
-            GsRegulatoryVertex vertex = me.getSource();
+            RegulatoryVertex vertex = me.getSource();
             int max = vertex.getMaxValue();
             byte[] t_val = new byte[max+2];
             t_val[0] = (byte)nodeOrder.indexOf(vertex);
@@ -210,11 +210,11 @@ public class GsLogicalParameter implements XMLize {
      * @param node
      * @return true if this logical parameter is activable
      */
-    public boolean activable(GsRegulatoryGraph regGraph, GsRegulatoryVertex node) {
+    public boolean activable(RegulatoryGraph regGraph, RegulatoryVertex node) {
         return buildTac(regGraph, node, regGraph.getNodeOrder()) != null;
     }
 
-	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node,
+	public OmddNode buildTree(RegulatoryGraph regGraph, RegulatoryVertex node,
 			OmddNode valueNode) {
 		return buildTree(regGraph, node, valueNode, regGraph.getNodeOrder());
 	}
@@ -225,10 +225,10 @@ public class GsLogicalParameter implements XMLize {
      * @param node
      * @return the OmddNode representation of this logical parameter
      */
-    public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node, List nodeOrder) {
+    public OmddNode buildTree(RegulatoryGraph regGraph, RegulatoryVertex node, List nodeOrder) {
     	return buildTree(regGraph, node, OmddNode.TERMINALS[this.value], nodeOrder);
     }
-	public OmddNode buildTree(GsRegulatoryGraph regGraph, GsRegulatoryVertex node,
+	public OmddNode buildTree(RegulatoryGraph regGraph, RegulatoryVertex node,
 			OmddNode valueNode, List nodeOrder) {
         byte[][] t_ac = buildTac(regGraph, node, nodeOrder);
         byte[] t_tmp;
@@ -297,7 +297,7 @@ public class GsLogicalParameter implements XMLize {
 		if (len != 0) {
 			String sEdges = "";
 			for (int i=0 ; i<len ; i++) {
-				GsRegulatoryEdge e = (GsRegulatoryEdge) edge_index.get(i);
+				RegulatoryEdge e = (RegulatoryEdge) edge_index.get(i);
 				sEdges = sEdges + " " + e.getLongInfo(":");
 			}
     		out.addAttr("idActiveInteractions", sEdges);
@@ -319,11 +319,11 @@ public class GsLogicalParameter implements XMLize {
 
 	public int hashCode() {
 		Iterator it = edge_index.iterator();
-		GsRegulatoryEdge ed;
+		RegulatoryEdge ed;
 		StringBuffer sb = new StringBuffer();
 		TreeSet ts = new TreeSet();
 		while (it.hasNext()) {
-			ed = (GsRegulatoryEdge)it.next();
+			ed = (RegulatoryEdge)it.next();
 			ts.add(ed.getShortInfo());
 		}
 		it = ts.iterator();
@@ -335,11 +335,11 @@ public class GsLogicalParameter implements XMLize {
      * @param clone
      * @param copyMap
      */
-    public void applyNewGraph(GsRegulatoryVertex clone, Map copyMap) {
+    public void applyNewGraph(RegulatoryVertex clone, Map copyMap) {
     	List newEI = new ArrayList();
         for (int i=0 ; i<edge_index.size() ; i++) {
-        	GsRegulatoryEdge ei = (GsRegulatoryEdge)edge_index.get(i);
-            GsRegulatoryMultiEdge me = (GsRegulatoryMultiEdge)copyMap.get(ei.me);
+        	RegulatoryEdge ei = (RegulatoryEdge)edge_index.get(i);
+            RegulatoryMultiEdge me = (RegulatoryMultiEdge)copyMap.get(ei.me);
             if (me != null) {
                 newEI.add(me.getEdge(ei.index));
             } else {

@@ -8,8 +8,8 @@ import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -30,11 +30,11 @@ public class LocalGraphServiceGUI implements GsServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
-		if (graph instanceof GsRegulatoryGraph) {
-			actions.add(new LocalGraphAction((GsRegulatoryGraph)graph));
-		} else if (graph instanceof GsDynamicGraph){
+		if (graph instanceof RegulatoryGraph) {
+			actions.add(new LocalGraphAction((RegulatoryGraph)graph));
+		} else if (graph instanceof DynamicGraph){
 			try{
-				actions.add(new LocalGraphAction((GsDynamicGraph)graph));
+				actions.add(new LocalGraphAction((DynamicGraph)graph));
 			}
 			catch( GsException ge){
 	    		// TODO : REFACTORING ACTION
@@ -48,19 +48,19 @@ public class LocalGraphServiceGUI implements GsServiceGUI {
 
 class LocalGraphAction extends GsToolsAction {
 
-	private final GsRegulatoryGraph graph;
-	private final GsDynamicGraph dyn;
+	private final RegulatoryGraph graph;
+	private final DynamicGraph dyn;
 	
-	protected LocalGraphAction(GsRegulatoryGraph graph) {
+	protected LocalGraphAction(RegulatoryGraph graph) {
 		this( graph, null);
 	}
 	
-	protected LocalGraphAction(GsDynamicGraph graph) throws GsException{
+	protected LocalGraphAction(DynamicGraph graph) throws GsException{
 		
 		this( graph.getAssociatedGraph(), graph);
 	}
 	
-	protected LocalGraphAction(GsRegulatoryGraph graph, GsDynamicGraph dyn) {
+	protected LocalGraphAction(RegulatoryGraph graph, DynamicGraph dyn) {
 		super("STR_localGraph", "STR_localGraph_descr");
 		this.graph = graph;
 		this.dyn = dyn;

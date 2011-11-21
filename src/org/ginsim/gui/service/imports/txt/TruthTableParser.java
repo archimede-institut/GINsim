@@ -7,26 +7,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 
 public final class TruthTableParser {
 	
-    private GsRegulatoryGraph graph;
+    private RegulatoryGraph graph;
     private String fileName;
     protected File _FilePath;
 	
     private byte table_gene[][];       // the whole table including all states and their images
     private List table_interactors[];  // store for each component, its regulators id
     private int L,n;                   // L total number of lines of the table ie number of states, n number of components
-    private GsRegulatoryGraph model;
+    private RegulatoryGraph model;
                     
     public TruthTableParser(String f) {
-    	this.graph = new GsRegulatoryGraph();
+    	this.graph = new RegulatoryGraph();
     	this.fileName = f;
     	initialize();
     }
@@ -94,10 +94,10 @@ public final class TruthTableParser {
     	List listOfParam=null;
 
     	// create a simple graph
-    	model = new GsRegulatoryGraph();
+    	model = new RegulatoryGraph();
 
     	// add  vertices
-    	GsRegulatoryVertex [] G = new GsRegulatoryVertex [n];
+    	RegulatoryVertex [] G = new RegulatoryVertex [n];
     	for (j=0; j<n; j++) {
     		G[j] = model.addVertex();
     	}	
@@ -161,7 +161,7 @@ public final class TruthTableParser {
     							sign = 1; // positive interaction
     						}
     						if (sign!=-1) {
-    							GsRegulatoryMultiEdge edge = model.getEdge(G[i], G[u-n]);
+    							RegulatoryMultiEdge edge = model.getEdge(G[i], G[u-n]);
     							if (edge == null) {
     								model.addEdge(G[i], G[u-n], sign); 
     								edge = model.getEdge(G[i], G[u-n]);
@@ -171,7 +171,7 @@ public final class TruthTableParser {
     							}
     							/*else // an edge already exists TO BE FIXED.... in the case of a multi-arc encompassing several arcs..
 		    			     {   
-			    			    GsRegulatoryMultiEdge me=(GsRegulatoryMultiEdge)(edge.getUserObject());
+			    			    RegulatoryMultiEdge me=(RegulatoryMultiEdge)(edge.getUserObject());
 			    			    System.out.println("nb edges"+me.getEdgeCount()+"states of "+u+" "+table_gene[l][u]+" "+table_gene[l+b[i]][u]);
 			    				//either the arc already exists with this threshold or it has to be added
 			    			    if (me.getMax(me.getEdgeCount())<table_gene[l+b[i]][i]){
@@ -198,7 +198,7 @@ public final class TruthTableParser {
     				for(k=0 ; k<deg ; k++) {
     					int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
     					if (table_gene[j][reg]!=0 ) {  
-    						GsRegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
+    						RegulatoryMultiEdge me = model.getEdge(G[reg], G[i]);
     						activeInteractions.add(me.getEdge(0));
     					}
     				}
@@ -229,7 +229,7 @@ public final class TruthTableParser {
 					int reg=((Integer)table_interactors[i].get(k)).intValue(); // get the index of the k.th regulator of i
 					if (table_gene[j][reg]==2 )  
 					 {	 
-					 GsRegulatoryMultiEdge me =(GsRegulatoryMultiEdge)((GsDirectedEdge)manager.getEdge(G[reg], G[i])).getUserObject();
+					 RegulatoryMultiEdge me =(RegulatoryMultiEdge)((GsDirectedEdge)manager.getEdge(G[reg], G[i])).getUserObject();
 					   activeInteractions.add(me.getEdge(0));
 					 }
 

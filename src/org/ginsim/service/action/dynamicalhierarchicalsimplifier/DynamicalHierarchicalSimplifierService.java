@@ -1,9 +1,9 @@
 package org.ginsim.service.action.dynamicalhierarchicalsimplifier;
 
-import org.ginsim.service.GsService;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-@ProviderFor( GsService.class)
-public class DynamicalHierarchicalSimplifierService implements GsService {
+@ProviderFor( Service.class)
+public class DynamicalHierarchicalSimplifierService implements Service {
 
 }

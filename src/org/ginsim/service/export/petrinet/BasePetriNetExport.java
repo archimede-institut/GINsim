@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -44,9 +44,9 @@ public class BasePetriNetExport {
 	public static final List<BasePetriNetExport> FORMATS = new ArrayList<BasePetriNetExport>();
 	
 	static {
-		FORMATS.add(new GsPetriNetExportINA());
-		FORMATS.add(new GsPetriNetExportPNML());
-		FORMATS.add(new GsPetriNetExportAPNN());
+		FORMATS.add(new PetriNetExportINA());
+		FORMATS.add(new PetriNetExportPNML());
+		FORMATS.add(new PetriNetExportAPNN());
 	}
 	
 	// TODO: make extension data available
@@ -72,7 +72,7 @@ public class BasePetriNetExport {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
-            td.maxValue = ((GsRegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
+            td.maxValue = ((RegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
             td.nodeIndex = nodeIndex;
             td.t_cst = null;
             if (t_priorities != null) {
@@ -93,7 +93,7 @@ public class BasePetriNetExport {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
-            td.maxValue = ((GsRegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
+            td.maxValue = ((RegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
             td.nodeIndex = nodeIndex;
             if (t_priorities != null) {
 				td.increasePriority = t_priorities[nodeIndex][0];
@@ -112,7 +112,7 @@ public class BasePetriNetExport {
                 } else {
                     td.t_cst[ti][0] = index;
                     td.t_cst[ti][1] = t_cst[i][1];
-                    td.t_cst[ti][2] = ((GsRegulatoryVertex)v_node.get(index)).getMaxValue() - t_cst[i][2];
+                    td.t_cst[ti][2] = ((RegulatoryVertex)v_node.get(index)).getMaxValue() - t_cst[i][2];
                     if (td.t_cst[ti][1] > 0 || td.t_cst[ti][2] > 0) {
                         ti++;
                     }
@@ -201,7 +201,7 @@ public class BasePetriNetExport {
 		byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
             OmddNode node = t_tree[i];
-            GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+            RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
 
 //            if (manager.getIncomingEdges(vertex).size() == 0) {
 //                // input node: no regulator, use basal value as initial markup ??

@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
+import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -21,13 +21,13 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * Save/open simulation parameters along with the model.
  */
 public class GsMutantListManager implements
-        GsGraphAssociatedObjectManager {
+        GraphAssociatedObjectManager {
 
 	public static final String key = "mutant";
 	
     public Object doOpen(InputStream is, Graph graph) {
     	
-        GsRegulatoryMutantParser parser = new GsRegulatoryMutantParser((GsRegulatoryGraph) graph);
+        GsRegulatoryMutantParser parser = new GsRegulatoryMutantParser((RegulatoryGraph) graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
@@ -35,7 +35,7 @@ public class GsMutantListManager implements
     public void doSave(OutputStreamWriter os, Graph graph) {
     	
         GsRegulatoryMutants lMutant = (GsRegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, key, false);
-        List nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
+        List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (lMutant == null || lMutant.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
@@ -64,6 +64,6 @@ public class GsMutantListManager implements
 
 	public Object doCreate( Graph graph) {
 		
-		return new GsRegulatoryMutants( (GsRegulatoryGraph)graph);
+		return new GsRegulatoryMutants( (RegulatoryGraph)graph);
 	}
 }

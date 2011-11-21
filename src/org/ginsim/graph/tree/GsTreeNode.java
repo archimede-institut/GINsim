@@ -133,7 +133,7 @@ public class GsTreeNode implements Dotify {
 		if (!(other instanceof GsTreeNode)) return false;
 		return this.uid == ((GsTreeNode)other).uid;
 	}
-	public GsTreeNode deepCopy( GsTree gm) {
+	public GsTreeNode deepCopy( Tree gm) {
 		GsTreeNode self = new GsTreeNode(this);
 		Debugger.log(self);
 		gm.addVertex(self);

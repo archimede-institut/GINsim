@@ -10,9 +10,9 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.dynamicgraph.GsDynamicNode;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicNode;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 
 public class DynamicLayoutMultidimention {
@@ -28,11 +28,11 @@ public class DynamicLayoutMultidimention {
     private VertexAttributesReader vreader;
 	
     private final Color[] colorPalette;
-	private final GsDynamicGraph graph;
+	private final DynamicGraph graph;
 	private final byte[] newNodeOrder;
 	private final boolean useStraightEdges;
 
-	public DynamicLayoutMultidimention(GsDynamicGraph graph, byte[] nodeOrder, boolean straightEdges, Color[] colorPalette) throws GsException{
+	public DynamicLayoutMultidimention(DynamicGraph graph, byte[] nodeOrder, boolean straightEdges, Color[] colorPalette) throws GsException{
 		this.graph = graph;
 		this.newNodeOrder = nodeOrder;
 		this.colorPalette = colorPalette;
@@ -46,7 +46,7 @@ public class DynamicLayoutMultidimention {
         //Check if it is a DynamicGraph
 		Iterator it = graph.getVertices().iterator();
 		Object v = it.next();
-	    if (v == null || !(v instanceof GsDynamicNode)) {
+	    if (v == null || !(v instanceof DynamicNode)) {
 			System.out.println("wrong type of graph for this layout");
 	    	return;
 	    }
@@ -56,14 +56,14 @@ public class DynamicLayoutMultidimention {
 	    byte[] maxValues = getMaxValues( graph.getAssociatedGraph().getNodeOrder());
 	    
 	    //move the nodes
-	    GsDynamicNode vertex = (GsDynamicNode)v;
+	    DynamicNode vertex = (DynamicNode)v;
 	    vreader.setVertex(vertex);
 	    this.width = vreader.getWidth() + padx*maxValues.length/2;
 	    this.height = vreader.getHeight() + pady*maxValues.length/2;	   
 	    
 	    do {
 	    	moveVertex(vertex, maxValues);
-		    vertex = (GsDynamicNode)it.next();
+		    vertex = (DynamicNode)it.next();
 		} while (it.hasNext());
     	moveVertex(vertex, maxValues);
     	
@@ -79,7 +79,7 @@ public class DynamicLayoutMultidimention {
 	 * @param vertex
 	 * @param maxValues
 	 */
-	private void moveVertex(GsDynamicNode vertex, byte[] maxValues) {
+	private void moveVertex(DynamicNode vertex, byte[] maxValues) {
 	    vreader.setVertex(vertex);
     	byte[] state = vertex.state;
        	int x = 0;
@@ -104,7 +104,7 @@ public class DynamicLayoutMultidimention {
 	 * @param maxValues
 	 */
 	private void moveEdge(Edge edge, byte[] maxValues) {
-		byte[] diffstate = getDiffStates((GsDynamicNode)edge.getSource(), (GsDynamicNode)edge.getTarget());
+		byte[] diffstate = getDiffStates((DynamicNode)edge.getSource(), (DynamicNode)edge.getTarget());
 		int change = get_change(diffstate);
 		
 		ereader.setEdge(edge);
@@ -236,7 +236,7 @@ public class DynamicLayoutMultidimention {
      * @param targetVertex
      * @return
      */
-	private byte[] getDiffStates(GsDynamicNode sourceVertex, GsDynamicNode targetVertex) {
+	private byte[] getDiffStates(DynamicNode sourceVertex, DynamicNode targetVertex) {
 		byte[] delta = new byte[sourceVertex.state.length];
 		for (int i = 0; i < delta.length; i++) {
 			delta[i] = (byte) Math.abs(getState(sourceVertex.state,i) - getState(targetVertex.state,i));
@@ -262,7 +262,7 @@ public class DynamicLayoutMultidimention {
     	byte[] maxValues = new byte[nodeOrder.size()];
     	int i = 0;
     	for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-    		GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+    		RegulatoryVertex v = (RegulatoryVertex) it.next();
     		maxValues[newNodeOrder[i++]] = (byte) (v.getMaxValue()+1);
     	}			
     	return maxValues;

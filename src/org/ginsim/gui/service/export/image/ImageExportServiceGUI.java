@@ -10,7 +10,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.service.export.image.ImageExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -41,7 +41,7 @@ public class ImageExportServiceGUI implements GsServiceGUI {
  * @author spinelli
  *
  */
-class ExportImageAction extends GsExportAction {
+class ExportImageAction extends ExportAction {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"png"}, "PNG files");
 

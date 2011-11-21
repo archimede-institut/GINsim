@@ -10,36 +10,36 @@ import java.util.Hashtable;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTree;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tree.GsParamTreeLeafPattern;
 
 public class GsFunctionsCreator {
-  private GsRegulatoryGraph graph;
+  private RegulatoryGraph graph;
   private Collection<GsLogicalParameter> interactions;
-  private GsRegulatoryVertex currentVertex;
+  private RegulatoryVertex currentVertex;
 
-  public GsFunctionsCreator(GsRegulatoryGraph graph, Collection<GsLogicalParameter> interactions, GsRegulatoryVertex currentVertex) {
+  public GsFunctionsCreator(RegulatoryGraph graph, Collection<GsLogicalParameter> interactions, RegulatoryVertex currentVertex) {
     this.graph = graph;
     this.interactions = interactions;
     this.currentVertex = currentVertex;
   }
-  public GsRegulatoryGraph getGraph() {
+  public RegulatoryGraph getGraph() {
     return graph;
   }
-  public GsRegulatoryVertex getCurrentVertex() {
+  public RegulatoryVertex getCurrentVertex() {
     return currentVertex;
   }
   public GsParamTree makeTree(int def) {
 	  
-	Collection<GsRegulatoryMultiEdge> l = graph.getIncomingEdges(currentVertex);
-    HashMap<GsRegulatoryVertex,Object> h = new HashMap();
+	Collection<RegulatoryMultiEdge> l = graph.getIncomingEdges(currentVertex);
+    HashMap<RegulatoryVertex,Object> h = new HashMap();
 
-    for (GsRegulatoryMultiEdge me: l) {
+    for (RegulatoryMultiEdge me: l) {
       h.put(me.getSource(), new Integer(0));
     }
     if (interactions != null) {
@@ -51,7 +51,7 @@ public class GsFunctionsCreator {
         }
       }
     }
-    ArrayList<Entry<GsRegulatoryVertex, Object>> as = new ArrayList(h.entrySet());
+    ArrayList<Entry<RegulatoryVertex, Object>> as = new ArrayList(h.entrySet());
     Collections.sort(as, new Comparator() {
       public int compare(Object o1, Object o2) {
         Entry e1 = (Entry) o1;
@@ -61,11 +61,11 @@ public class GsFunctionsCreator {
         if (first.compareTo(second) != 0) {
           return first.compareTo(second);
         }
-        return ((GsRegulatoryVertex)e1.getKey()).getName().compareTo(((GsRegulatoryVertex) e2.getKey()).getName());
+        return ((RegulatoryVertex)e1.getKey()).getName().compareTo(((RegulatoryVertex) e2.getKey()).getName());
       }
     });
-    GsRegulatoryVertex v;
-    for (Entry<GsRegulatoryVertex, Object> e: as) {
+    RegulatoryVertex v;
+    for (Entry<RegulatoryVertex, Object> e: as) {
       v = e.getKey();
       e.setValue(graph.getEdge(v, currentVertex));
     }

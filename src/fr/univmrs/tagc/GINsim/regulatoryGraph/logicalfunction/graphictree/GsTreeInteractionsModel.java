@@ -14,10 +14,10 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.exception.NotificationMessage;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
@@ -35,14 +35,14 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.parser.TBooleanTre
 
 public class GsTreeInteractionsModel implements TreeModel {
 	//the current selected node
-	private GsRegulatoryVertex node;
-	private GsRegulatoryGraph graph;
+	private RegulatoryVertex node;
+	private RegulatoryGraph graph;
 	private GsTreeString root;
 
 	private GsLogicalFunctionTreePanel view = null;
 	private Vector treeModelListeners = new Vector();
 
-	public GsTreeInteractionsModel(GsRegulatoryGraph graph) {
+	public GsTreeInteractionsModel(RegulatoryGraph graph) {
 		root = new GsTreeString(null, "Function list");
 		root.setProperty("add", new Boolean(true));
 		this.graph = graph;
@@ -57,7 +57,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 		root = new GsTreeString(null, "Function list");
 		root.setProperty("add", new Boolean(true));
 	}
-	public void setNode(GsRegulatoryVertex no) {
+	public void setNode(RegulatoryVertex no) {
 		node = no;
 		for (int i = 0; i < root.getChildCount(); i++) {
 			GsTreeValue val = (GsTreeValue)root.getChild(i);
@@ -67,7 +67,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 			}
 		}
 	}
-	public void removeEdge(GsRegulatoryMultiEdge multiEdge, int index) {
+	public void removeEdge(RegulatoryMultiEdge multiEdge, int index) {
 		GsTreeValue val;
 		GsTreeElement exp;
 
@@ -87,7 +87,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 		}
 	}
 
-	public void removeEdge(GsRegulatoryMultiEdge multiEdge) {
+	public void removeEdge(RegulatoryMultiEdge multiEdge) {
 		GsTreeValue val;
 		GsTreeElement exp;
 
@@ -111,7 +111,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 				}
 			}
 	}
-	public void addEdge(GsRegulatoryMultiEdge multiEdge) {
+	public void addEdge(RegulatoryMultiEdge multiEdge) {
 		GsTreeValue val;
 		GsTreeElement exp;
 
@@ -175,14 +175,14 @@ public class GsTreeInteractionsModel implements TreeModel {
 		return null;
 	}
 
-	public void addExpression(byte val, GsRegulatoryVertex currentVertex, GsBooleanParser parser) throws Exception {
+	public void addExpression(byte val, RegulatoryVertex currentVertex, GsBooleanParser parser) throws Exception {
 
 		TBooleanTreeNode root = parser.getRoot();
 		GsLogicalFunctionList functionList = (GsLogicalFunctionList)parser.eval();
 		Vector params = parser.getParams(functionList.getData());
 		Iterator it = params.iterator(), it2;
 		Vector v;
-		GsRegulatoryEdge edge;
+		RegulatoryEdge edge;
 		GsLogicalFunctionListElement element;
 		GsTreeParam param;
 
@@ -226,7 +226,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 		}
 		return n;
 	}
-	public void addExpression(JTree tree, byte val, GsRegulatoryVertex currentVertex, String expression) throws Exception {
+	public void addExpression(JTree tree, byte val, RegulatoryVertex currentVertex, String expression) throws Exception {
 		GsBooleanParser tbp = new GsBooleanParser(graph.getIncomingEdges(currentVertex), isAutoAddEnabled());
 		if (!tbp.compile(expression, graph, currentVertex))
 			graph.addNotificationMessage(new NotificationMessage(graph, "invalid formula",
@@ -243,13 +243,13 @@ public class GsTreeInteractionsModel implements TreeModel {
 		if (isBasalValueDefined()) s = s + ", basal value defined";
 		root.setString(s);
 	}
-	public GsTreeExpression addEmptyExpression(byte val, GsRegulatoryVertex currentVertex) throws Exception {
+	public GsTreeExpression addEmptyExpression(byte val, RegulatoryVertex currentVertex) throws Exception {
 		setNode(currentVertex);
 		addValue(val);
 		currentVertex.setInteractionsModel(this);
 		return addExpression(val, (TBooleanTreeNode)null);
 	}
-	public GsTreeParam addEmptyParameter(byte val, GsRegulatoryVertex currentVertex) throws Exception {
+	public GsTreeParam addEmptyParameter(byte val, RegulatoryVertex currentVertex) throws Exception {
 		GsTreeParam param = null;
 
 		setNode(currentVertex);
@@ -443,7 +443,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 		}
 		return new TreePath(path);
 	}
-	public GsRegulatoryVertex getVertex() {
+	public RegulatoryVertex getVertex() {
 		return node;
 	}
 	public boolean isMaxCompatible(int max) {
@@ -460,7 +460,7 @@ public class GsTreeInteractionsModel implements TreeModel {
 		return comp;
 	}
 
-	public GsRegulatoryGraph getGraph() {
+	public RegulatoryGraph getGraph() {
 		return graph;
 	}
 

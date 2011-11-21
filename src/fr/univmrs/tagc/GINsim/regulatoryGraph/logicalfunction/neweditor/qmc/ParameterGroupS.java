@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeParam;
 
@@ -17,10 +17,10 @@ public class ParameterGroupS {
 	private int nbParameters;
 	private QMCAlgo algo;
 
-	public ParameterGroupS(Collection<GsRegulatoryMultiEdge> inters, List parameters, boolean cnf, QMCAlgo a) {
+	public ParameterGroupS(Collection<RegulatoryMultiEdge> inters, List parameters, boolean cnf, QMCAlgo a) {
 		Vector vi = new Vector(), vp = new Vector();
 		algo = a;
-		for (GsRegulatoryMultiEdge me: inters) {
+		for (RegulatoryMultiEdge me: inters) {
 			for (int k = 0; k < me.getEdgeCount(); k++)
 				vi.addElement(me.getEdge(k).getShortInfo());
 		}

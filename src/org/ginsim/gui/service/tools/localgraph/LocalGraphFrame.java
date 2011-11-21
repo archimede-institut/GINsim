@@ -23,9 +23,9 @@ import javax.swing.event.TableModelListener;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.dynamicgraph.GsDynamicNode;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicNode;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.service.tools.reg2dyn.SynchronousSimulationUpdater;
@@ -41,8 +41,8 @@ import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 public class LocalGraphFrame extends StackDialog implements ActionListener, TableModelListener, ListSelectionListener {
 	
 	private final int THRESHOLD_AUTO_REFRESH = 15;
-	private GsRegulatoryGraph regGraph;
-	private GsDynamicGraph dynGraph;
+	private RegulatoryGraph regGraph;
+	private DynamicGraph dynGraph;
 	private Container mainPanel;
 	private JButton colorizeButton, addStatesButton, replaceStatesButton;
 	
@@ -63,17 +63,17 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	public LocalGraphFrame(JFrame frame, Graph regGraph) {
 		
 		this(frame);
-		this.regGraph = (GsRegulatoryGraph) regGraph;
+		this.regGraph = (RegulatoryGraph) regGraph;
 		this.dynGraph = null;
-		lg = new LocalGraph((GsRegulatoryGraph) regGraph);
+		lg = new LocalGraph((RegulatoryGraph) regGraph);
         initialize();
     }
 
 	public LocalGraphFrame(JFrame frame, Graph regulatoryGraph, Graph dynamicGraph) {
 		
 		this(frame);
-		this.regGraph = (GsRegulatoryGraph) regulatoryGraph;
-		this.dynGraph = (GsDynamicGraph) dynamicGraph;
+		this.regGraph = (RegulatoryGraph) regulatoryGraph;
+		this.dynGraph = (DynamicGraph) dynamicGraph;
 		lg = new LocalGraph(regGraph);
         initialize();
 	}
@@ -154,7 +154,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		GraphSelection<GsDynamicNode, Edge<GsDynamicNode>> selection = GUIManager.getInstance().getGraphGUI(dynGraph).getSelection();
+		GraphSelection<DynamicNode, Edge<DynamicNode>> selection = GUIManager.getInstance().getGraphGUI(dynGraph).getSelection();
 		if (e.getSource() == colorizeButton) {
 			if (lg.getFunctionality() != null) {	
 				if (isColorized) {
@@ -164,21 +164,21 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 				}
 			}
 		} else if (e.getSource() == addStatesButton) {
-			List<GsDynamicNode> selected = selection.getSelectedNodes();
+			List<DynamicNode> selected = selection.getSelectedNodes();
 			if (selected != null) {
 				List states = new ArrayList();
-				for (GsDynamicNode state: selected) {
+				for (DynamicNode state: selected) {
 					states.add(state.state);
 				}
 				lg.setStates(states);
 				sst.setStates(states);
 			}
 		} else if (e.getSource() == replaceStatesButton) {
-			List<GsDynamicNode> selected = selection.getSelectedNodes();
+			List<DynamicNode> selected = selection.getSelectedNodes();
 			if (selected != null) {
 				sst.ssl.data.clear();
 				List states = new ArrayList();
-				for (GsDynamicNode state: selected) {
+				for (DynamicNode state: selected) {
 					states.add(state.state);
 				}
 				lg.setStates(states);
@@ -274,7 +274,7 @@ class StateSelectorTable extends JPanel {
 		ssl.addState(state);
 	}
 
-	protected GridBagConstraints initPanel(GsRegulatoryGraph g, String desckey, boolean isEditable) {
+	protected GridBagConstraints initPanel(RegulatoryGraph g, String desckey, boolean isEditable) {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 

@@ -11,15 +11,15 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.tools.regulatorytreefunction.GsTreeActionPanel;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.tools.regulatorytreefunction.TreeActionPanel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>> 
-	implements GsTree{
+	implements Tree{
 	
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
 	public final static int MODE_DIAGRAM = 1;
@@ -39,7 +39,7 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 	}
 	
 	
-	private GsRegulatoryGraph regGraph = null;
+	private RegulatoryGraph regGraph = null;
 	
 	private int mode;
 	public GsTreeNode root = null;
@@ -72,7 +72,7 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 	// TODO : Does this method has to be moved to GUI side?
 	public JPanel getGraphParameterPanel() {
         if (graphEditor == null) {
-            graphEditor = new GsTreeActionPanel(this, parser);
+            graphEditor = new TreeActionPanel(this, parser);
 		}
 		return graphEditor;	
 	}

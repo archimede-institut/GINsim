@@ -8,7 +8,7 @@ import java.util.Vector;
 
 import javax.swing.JProgressBar;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 import fr.univmrs.tagc.common.widgets.GsButton;
 
@@ -26,7 +26,7 @@ public class QMCAlgo implements ActionListener {
 		progressBar = jpb;
 		cancelButton = b;
 	}
-	public void init(Collection<GsRegulatoryMultiEdge> interactions, List parameters) {
+	public void init(Collection<RegulatoryMultiEdge> interactions, List parameters) {
 		groups = new ParameterGroupS(interactions, parameters, cnf, this);
 		function = "";
 	}

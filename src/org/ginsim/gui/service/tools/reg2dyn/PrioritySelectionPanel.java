@@ -21,7 +21,7 @@ public class PrioritySelectionPanel extends GenericListSelectionPanel {
 	
 	protected void configure() {
     	if (pcpanel == null) {
-    		GsReg2dynPriorityClassConfig p = new GsReg2dynPriorityClassConfig(pcmanager.nodeOrder);
+    		Reg2dynPriorityClassConfig p = new Reg2dynPriorityClassConfig(pcmanager.nodeOrder);
     		Map m = new HashMap();
     		m.put(PriorityClassDefinition.class, p);
     		pcpanel = new GenericListPanel(m, "pclassList");

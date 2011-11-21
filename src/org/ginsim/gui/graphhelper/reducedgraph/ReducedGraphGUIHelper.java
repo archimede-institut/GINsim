@@ -6,8 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.reducedgraph.GsNodeReducedData;
-import org.ginsim.graph.reducedgraph.GsReducedGraph;
+import org.ginsim.graph.reducedgraph.NodeReducedData;
+import org.ginsim.graph.reducedgraph.ReducedGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
@@ -20,7 +20,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GraphGUIHelper.class)
-public class ReducedGraphGUIHelper implements GraphGUIHelper<GsReducedGraph, GsNodeReducedData, Edge<GsNodeReducedData>> {
+public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph, NodeReducedData, Edge<NodeReducedData>> {
 
 	
 	/**
@@ -40,7 +40,7 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<GsReducedGraph, GsN
 	 * @param graph the edited graph
 	 */
 	@Override
-	public JPanel getSaveOptionPanel(GsReducedGraph graph) {
+	public JPanel getSaveOptionPanel(ReducedGraph graph) {
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
@@ -53,42 +53,42 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<GsReducedGraph, GsN
 	}
 
 	@Override
-	public GUIEditor<GsReducedGraph> getMainEditionPanel(GsReducedGraph graph) {
+	public GUIEditor<ReducedGraph> getMainEditionPanel(ReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getEditingTabLabel(GsReducedGraph graph) {
+	public String getEditingTabLabel(ReducedGraph graph) {
 		return "SCC";
 	}
 
 	@Override
-	public GUIEditor<GsNodeReducedData> getNodeEditionPanel(GsReducedGraph graph) {
+	public GUIEditor<NodeReducedData> getNodeEditionPanel(ReducedGraph graph) {
 		return new ReducedParameterPanel(graph);
 	}
 
 	@Override
-	public GUIEditor<Edge<GsNodeReducedData>> getEdgeEditionPanel(
-			GsReducedGraph graph) {
+	public GUIEditor<Edge<NodeReducedData>> getEdgeEditionPanel(
+			ReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JPanel getInfoPanel(GsReducedGraph graph) {
+	public JPanel getInfoPanel(ReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Class<GsReducedGraph> getGraphClass() {
+	public Class<ReducedGraph> getGraphClass() {
 		
-		return GsReducedGraph.class;
+		return ReducedGraph.class;
 	}
 
 	@Override
-	public List<EditAction> getEditActions(GsReducedGraph graph) {
+	public List<EditAction> getEditActions(ReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}

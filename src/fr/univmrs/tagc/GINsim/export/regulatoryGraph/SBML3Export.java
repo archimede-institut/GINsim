@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.common.ExportAction;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsLogicalParameter;
@@ -37,13 +37,13 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * Regulators of a given node are modifiers of this reaction.
  * Logical parameters (via OMDD) are translated in MathML
  */
-public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OMDDBrowserListener {
+public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBrowserListener {
 	
 	public static final String L3_QUALI_URL = "http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models";
 	private static final GsFileFilter ffilter = new GsFileFilter( new String[] { "sbml" }, "SBML files");
 
 	private SBML3Config config = null;
-    List<GsRegulatoryVertex> v_no;
+    List<RegulatoryVertex> v_no;
     int len;
     OmddNode[] t_tree;
     OMDDNodeBrowser browser;
@@ -54,7 +54,7 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
 	 * @param graph
 	 * @param fileName
 	 */
-	public SBML3Export(GsRegulatoryGraph graph) {
+	public SBML3Export(RegulatoryGraph graph) {
 		super( graph, "STR_SBML_L3", "STR_SBML_L3_descr");
 	}
 
@@ -124,7 +124,7 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
 
         v_no = graph.getNodeOrder();
         len = v_no.size();
-        t_tree = ((GsRegulatoryGraph)graph).getAllTrees(true);
+        t_tree = ((RegulatoryGraph)graph).getAllTrees(true);
         browser = new OMDDNodeBrowser(this, t_tree.length);
         
         byte[][] t_markup = new byte[len][2];
@@ -138,7 +138,7 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
 			m_initstates = new HashMap();
 		}
         for (int i=0 ; i<len ; i++) {
-            GsRegulatoryVertex vertex = (GsRegulatoryVertex)v_no.get(i);
+            RegulatoryVertex vertex = (RegulatoryVertex)v_no.get(i);
             // default initial markup = 0
             t_markup[i][0] = 0;
             t_markup[i][1] = vertex.getMaxValue();
@@ -173,7 +173,7 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
         out.addAttr("xmlns", L3_QUALI_URL);
 
         for (int i=0 ; i<t_tree.length ; i++) {
-            GsRegulatoryVertex node = (GsRegulatoryVertex)v_no.get(i);
+            RegulatoryVertex node = (RegulatoryVertex)v_no.get(i);
             String s_id = node.getId();
             String s_name = node.getName();
             out.openTag("qualitativeSpecies");
@@ -200,7 +200,7 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
         out.openTag("listOfTransitions");
         out.addAttr("xmlns", L3_QUALI_URL);
         for (int i=0 ; i<t_tree.length ; i++) {
-            GsRegulatoryVertex regulatoryVertex = (GsRegulatoryVertex)v_no.get(i);
+            RegulatoryVertex regulatoryVertex = (RegulatoryVertex)v_no.get(i);
             if (regulatoryVertex.isInput()) {
             	continue;
             }
@@ -211,7 +211,7 @@ public class SBML3Export extends GsExportAction<GsRegulatoryGraph> implements OM
             
             out.openTag("listOfInputs");               
             String edgeSign = null;
-            for (GsRegulatoryMultiEdge me: graph.getIncomingEdges(v_no.get(i))) {
+            for (RegulatoryMultiEdge me: graph.getIncomingEdges(v_no.get(i))) {
                 int sign = me.getSign(); 
                 switch (sign) {
 				case 0:
@@ -304,9 +304,9 @@ class SBML3ExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = 9043565812912568136L;
 	
 	private final SBML3Config config;
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	
-	protected SBML3ExportConfigPanel( GsRegulatoryGraph graph, SBML3Config config) {
+	protected SBML3ExportConfigPanel( RegulatoryGraph graph, SBML3Config config) {
 		super();
 		setLayout(new GridBagLayout());
 		this.config = config;

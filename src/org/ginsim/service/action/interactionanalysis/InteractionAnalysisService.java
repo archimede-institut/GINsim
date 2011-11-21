@@ -1,9 +1,9 @@
 package org.ginsim.service.action.interactionanalysis;
 
-import org.ginsim.service.GsService;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-@ProviderFor( GsService.class)
-public class InteractionAnalysisService implements GsService {
+@ProviderFor( Service.class)
+public class InteractionAnalysisService implements Service {
 
 }

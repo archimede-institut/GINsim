@@ -12,7 +12,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
 
 
 public abstract class BasicGraphAssociatedManager implements
-		GsGraphAssociatedObjectManager {
+		GraphAssociatedObjectManager {
 
 	protected String key;
 	

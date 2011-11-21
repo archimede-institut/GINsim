@@ -22,7 +22,7 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
-import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
+import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
@@ -49,7 +49,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     private boolean isParsing = false;
     protected boolean annoted = false;
     
-    private static final List<GsGraphAssociatedObjectManager> v_OManager = new ArrayList<GsGraphAssociatedObjectManager>();
+    private static final List<GraphAssociatedObjectManager> v_OManager = new ArrayList<GraphAssociatedObjectManager>();
     public static final String ZIP_PREFIX = "GINsim-data/";
 	
 	/**
@@ -532,7 +532,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			// now save associated objects
 			if (v_OManager != null) {
 				for (int i=0 ; i<v_OManager.size() ; i++) {
-					GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_OManager.get(i);
+					GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager)v_OManager.get(i);
 					if (manager.needSaving(this)) {
 						zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
 						try {
@@ -549,7 +549,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			List v_specManager = ObjectAssociationManager.getInstance().getObjectManagerList( this.getClass());
 			if (v_specManager != null) {
 				for (int i=0 ; i<v_specManager.size() ; i++) {
-					GsGraphAssociatedObjectManager manager = (GsGraphAssociatedObjectManager)v_specManager.get(i);
+					GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager)v_specManager.get(i);
 					if (manager.needSaving(this)) {
 						zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
 						manager.doSave(osw, this);

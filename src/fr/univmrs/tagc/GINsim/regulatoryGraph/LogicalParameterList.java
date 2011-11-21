@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 public class LogicalParameterList extends ArrayList {
 	private static final long serialVersionUID = 5768653095418077753L;
@@ -245,7 +245,7 @@ public class LogicalParameterList extends ArrayList {
 		}
 		refreshDupAndConflicts();
 	}
-	public void applyNewMaxValue(byte max, GsRegulatoryGraph graph, List l) {
+	public void applyNewMaxValue(byte max, RegulatoryGraph graph, List l) {
 		Iterator it = manualp.iterator();
 		while (it.hasNext()) {
 			GsLogicalParameter param = (GsLogicalParameter)it.next();
@@ -254,7 +254,7 @@ public class LogicalParameterList extends ArrayList {
 			}
 		}
 	}
-	public void setParameterValue(int rowIndex, int value, GsRegulatoryGraph graph) {
+	public void setParameterValue(int rowIndex, int value, RegulatoryGraph graph) {
 		GsLogicalParameter param = (GsLogicalParameter)get(rowIndex);
 		param.setValue(value, graph);
 		if (param.hasConflict || param.isDup) {
@@ -280,7 +280,7 @@ public class LogicalParameterList extends ArrayList {
 	 * @param clone the vertex from the new graph
 	 * @param copyMap a map of multi-edge from the old graph to the new one.
 	 */
-	public void applyNewGraph(GsRegulatoryVertex clone, Map copyMap) {
+	public void applyNewGraph(RegulatoryVertex clone, Map copyMap) {
 		for (Iterator it = iterator(); it.hasNext();) {
 			GsLogicalParameter param = (GsLogicalParameter)it.next();
 			param.applyNewGraph(clone, copyMap);

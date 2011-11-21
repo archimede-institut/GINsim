@@ -2,7 +2,7 @@ package org.ginsim.gui.service.tools.reg2dyn;
 
 import java.util.Iterator;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
@@ -32,16 +32,16 @@ abstract public class SimulationUpdater implements Iterator {
 	protected Object node;
 	protected boolean multiple;
 	
-	public SimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public SimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
         t_tree = regGraph.getParametersForSimulation(true);
-        GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)params.store.getObject(GsSimulationParameters.MUTANT);
+        GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef)params.store.getObject(SimulationParameters.MUTANT);
         if (mutant != null) {
             mutant.apply(t_tree, regGraph);
         }
 		this.length = t_tree.length;
 	}
 
-	public SimulationUpdater(GsRegulatoryGraph regGraph, GsRegulatoryMutantDef mutant) {
+	public SimulationUpdater(RegulatoryGraph regGraph, GsRegulatoryMutantDef mutant) {
         t_tree = regGraph.getParametersForSimulation(true);
         if (mutant != null) {
             mutant.apply(t_tree, regGraph);
@@ -104,11 +104,11 @@ abstract public class SimulationUpdater implements Iterator {
 		return 0;
 	}
 	
-    static public SimulationUpdater getInstance(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
+    static public SimulationUpdater getInstance(RegulatoryGraph regGraph, SimulationParameters params) {
 		PriorityClassDefinition pcdef = params.getPriorityClassDefinition();
 		if (pcdef.getNbElements(null) < 2) {
-			GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null,0);
-			if (pc.getMode() == GsReg2dynPriorityClass.SYNCHRONOUS) {
+			Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null,0);
+			if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
 				return new SynchronousSimulationUpdater(regGraph, params);
 			}
 			return new AsynchronousSimulationUpdater(regGraph, params);
@@ -125,7 +125,7 @@ class AsynchronousSimulationUpdater extends SimulationUpdater {
 	int nextChange = -1;
 	int nextUpdate;
 
-	public AsynchronousSimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public AsynchronousSimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
 		super(regGraph, params);
 	}
 
@@ -189,7 +189,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
     int priority;
 
 	
-    public PrioritySimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
+    public PrioritySimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
 		super(regGraph, params);
 		pclass = params.getPriorityClassDefinition().getPclass(params.nodeOrder);
 	}
@@ -239,7 +239,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         }
         next = (byte[])cur_state.clone();
         nextIndex = 1;
-        if (classChangesList[0] == GsReg2dynPriorityClass.SYNCHRONOUS) {
+        if (classChangesList[0] == Reg2dynPriorityClass.SYNCHRONOUS) {
         	for ( ; nextIndex<classChangesList.length ; nextIndex++) {
         		next[classChangesList[nextIndex++]] += classChangesList[nextIndex];
         	}
@@ -312,7 +312,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         }
         next = (byte[])cur_state.clone();
         nextIndex = 1;
-        if (classChangesList[0] == GsReg2dynPriorityClass.SYNCHRONOUS) {
+        if (classChangesList[0] == Reg2dynPriorityClass.SYNCHRONOUS) {
         	for ( ; nextIndex<classChangesList.length ; nextIndex++) {
         		next[classChangesList[nextIndex++]] += classChangesList[nextIndex];
         	}

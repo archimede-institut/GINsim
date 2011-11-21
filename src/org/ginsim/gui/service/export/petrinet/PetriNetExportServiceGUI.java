@@ -9,12 +9,12 @@ import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.GsServiceGUI;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassManager;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
 import org.ginsim.service.export.petrinet.PNConfig;
@@ -36,9 +36,9 @@ public class PetriNetExportServiceGUI implements GsServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new PetriNetExportAction((GsRegulatoryGraph)graph));
+			actions.add(new PetriNetExportAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -46,13 +46,13 @@ public class PetriNetExportServiceGUI implements GsServiceGUI {
 }
 
 
-class PetriNetExportAction extends GsExportAction<GsRegulatoryGraph> {
+class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 
 	PNConfig config;
 	
-	public PetriNetExportAction(GsRegulatoryGraph graph) {
+	public PetriNetExportAction(RegulatoryGraph graph) {
 		super(graph, "STR_PetriNet", "STR_PetriNet_descr");
 	}
 
@@ -88,7 +88,7 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 	
 	@Override
 	public void init() {
-		GsRegulatoryGraph graph = config.graph;
+		RegulatoryGraph graph = config.graph;
     	MutantSelectionPanel mutantPanel = null;
     	
     	GsInitialStatePanel initPanel = new GsInitialStatePanel(stack, graph, false);
@@ -102,7 +102,7 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(mutantPanel, c);
 
-		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, GsSimulationParametersManager.key, true);
+		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, SimulationParametersManager.key, true);
         priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
         priorityPanel.setStore(config.store, 1);
 		c = new GridBagConstraints();

@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -24,9 +24,9 @@ public class StateInRegulatoryGraphServiceGUI implements GsServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new StateInRegulatoryGraphAction((GsRegulatoryGraph)graph));
+			actions.add(new StateInRegulatoryGraphAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -36,9 +36,9 @@ public class StateInRegulatoryGraphServiceGUI implements GsServiceGUI {
 
 class StateInRegulatoryGraphAction extends GsToolsAction {
 
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	
-	public StateInRegulatoryGraphAction(GsRegulatoryGraph graph) {
+	public StateInRegulatoryGraphAction(RegulatoryGraph graph) {
 		
 		super( "STR_stateInRegGraph", "STR_stateInRegGraph_descr");
 		this.graph = graph;
@@ -47,7 +47,7 @@ class StateInRegulatoryGraphAction extends GsToolsAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-        new GsStateInRegGraphFrame( GUIManager.getInstance().getFrame( graph), graph);
+        new StateInRegGraphFrame( GUIManager.getInstance().getFrame( graph), graph);
 	}
 	
 }

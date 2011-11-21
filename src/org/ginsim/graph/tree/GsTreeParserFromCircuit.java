@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.tools.circuit.OmsddNode;
 
 import fr.univmrs.tagc.common.ColorPalette;
@@ -104,7 +104,7 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 	 * @return the name
 	 */
 	protected String getNodeName(int level) {
-		return ((GsRegulatoryVertex)nodeOrder.get(level)).getId();
+		return ((RegulatoryVertex)nodeOrder.get(level)).getId();
 	}
 	
 	public void parseOmdd() {
@@ -148,7 +148,7 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 
 		Iterator it = nodeOrder.iterator();
 		for (int i = 0 ; it.hasNext() ; i++) {
-			GsRegulatoryVertex v = (GsRegulatoryVertex) it.next();
+			RegulatoryVertex v = (RegulatoryVertex) it.next();
 			if (realDetph[i] != -2) {
 				int max = v.getMaxValue()+1;
 				widthPerDepth[i] = max;

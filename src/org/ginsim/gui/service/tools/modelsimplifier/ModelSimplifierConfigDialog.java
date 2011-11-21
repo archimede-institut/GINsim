@@ -15,8 +15,8 @@ import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.Tools;
@@ -29,12 +29,12 @@ import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener {
 	private static final long	serialVersionUID	= 3618855894072951620L;
 
-	GsRegulatoryGraph graph;
+	RegulatoryGraph graph;
 	GenericListPanel<ModelSimplifierConfig> lp;
 	SimplifierConfigContentList ctlist;
 	boolean isRunning = false;
 	
-	ModelSimplifierConfigDialog(GsRegulatoryGraph graph) {
+	ModelSimplifierConfigDialog(RegulatoryGraph graph) {
 		super(graph, "modelSimplifier", 600, 500);
 		this.graph = graph;
 		setTitle("select nodes to remove");
@@ -94,9 +94,9 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 }
 
 
-class SimplifierConfigContentList extends SimpleGenericList<GsRegulatoryVertex> {
+class SimplifierConfigContentList extends SimpleGenericList<RegulatoryVertex> {
 
-	SimplifierConfigContentList(List<GsRegulatoryVertex> nodeOrder) {
+	SimplifierConfigContentList(List<RegulatoryVertex> nodeOrder) {
 		super(nodeOrder);
 		canAdd = false;
 		canOrder = false;
@@ -108,7 +108,7 @@ class SimplifierConfigContentList extends SimpleGenericList<GsRegulatoryVertex> 
 	}
 }
 
-class SimplifierConfigConfigurePanel extends GenericListPanel<GsRegulatoryVertex> 
+class SimplifierConfigConfigurePanel extends GenericListPanel<RegulatoryVertex> 
 	implements GenericListListener, ChangeListener {
 	private static final long serialVersionUID = -2219030309910143737L;
 	JCheckBox checkbox;
@@ -123,7 +123,7 @@ class SimplifierConfigConfigurePanel extends GenericListPanel<GsRegulatoryVertex
 	}
 	
 	@Override
-    public void setList(GenericList<GsRegulatoryVertex> list) {
+    public void setList(GenericList<RegulatoryVertex> list) {
     	super.setList(list);
     	list.addListListener(this);
     }

@@ -8,27 +8,27 @@ import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsLayoutAction;
-import org.ginsim.service.layout.GsLayoutService;
+import org.ginsim.gui.service.common.LayoutAction;
+import org.ginsim.service.layout.LayoutService;
 import org.mangosdk.spi.ProviderFor;
 
 
 @ProviderFor(GsServiceGUI.class)
-@GUIFor(GsLayoutService.class)
+@GUIFor(LayoutService.class)
 public class LayoutServiceGUI implements GsServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
 		for (LayoutType type: LayoutType.values()) {
-			actions.add( new LayoutAction(graph, type));
+			actions.add( new BasicLayoutAction(graph, type));
 		}
 		
-		if (graph instanceof GsDynamicGraph) {
-			GsDynamicGraph dynGraph = (GsDynamicGraph)graph;
+		if (graph instanceof DynamicGraph) {
+			DynamicGraph dynGraph = (DynamicGraph)graph;
 			for (DynamicalLayoutType type: DynamicalLayoutType.values()) {
 				actions.add( new DynamicalLayoutAction(dynGraph, type));
 			}
@@ -38,10 +38,10 @@ public class LayoutServiceGUI implements GsServiceGUI {
 }
 
 enum LayoutType {
-	LEVEL("Level layout", GsLayoutService.LEVEL),
-	LEVEL_INV("Inversed level layout", GsLayoutService.LEVEL_INV),
-	RING("Ring layout", GsLayoutService.RING),
-	RING_INV("Inverser ring layout", GsLayoutService.RING_INV);
+	LEVEL("Level layout", LayoutService.LEVEL),
+	LEVEL_INV("Inversed level layout", LayoutService.LEVEL_INV),
+	RING("Ring layout", LayoutService.RING),
+	RING_INV("Inverser ring layout", LayoutService.RING_INV);
 	
 	public final String name;
 	public final int key;
@@ -52,12 +52,12 @@ enum LayoutType {
 	}
 }
 
-class LayoutAction extends GsLayoutAction {
+class BasicLayoutAction extends LayoutAction {
 
 	private final Graph<?,?> graph;
 	private final LayoutType type;
 	
-	protected LayoutAction( Graph<?,?> graph, LayoutType type) {
+	protected BasicLayoutAction( Graph<?,?> graph, LayoutType type) {
 		super(type.name);
 		this.graph = graph;
 		this.type = type;
@@ -66,7 +66,7 @@ class LayoutAction extends GsLayoutAction {
 	@Override
 	public void actionPerformed( ActionEvent arg0) {
 		try {
-			GsLayoutService.runLayout(type.key, graph);
+			LayoutService.runLayout(type.key, graph);
 		} catch (GsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,8 +75,8 @@ class LayoutAction extends GsLayoutAction {
 }
 
 enum DynamicalLayoutType {
-	LAYOUT_3D("3D layout", GsLayoutService.LEVEL),
-	LAYOUT_MD("Multidimension layout", GsLayoutService.LEVEL_INV);
+	LAYOUT_3D("3D layout", LayoutService.LEVEL),
+	LAYOUT_MD("Multidimension layout", LayoutService.LEVEL_INV);
 	
 	public final String name;
 	public final int key;
@@ -87,12 +87,12 @@ enum DynamicalLayoutType {
 	}
 }
 
-class DynamicalLayoutAction extends GsLayoutAction {
+class DynamicalLayoutAction extends LayoutAction {
 
-	private final GsDynamicGraph graph;
+	private final DynamicGraph graph;
 	private final DynamicalLayoutType type;
 	
-	protected DynamicalLayoutAction( GsDynamicGraph graph, DynamicalLayoutType type) {
+	protected DynamicalLayoutAction( DynamicGraph graph, DynamicalLayoutType type) {
 		super(type.name);
 		this.graph = graph;
 		this.type = type;

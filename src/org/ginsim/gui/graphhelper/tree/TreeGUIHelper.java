@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.tree.GsTree;
+import org.ginsim.graph.tree.Tree;
 import org.ginsim.graph.tree.GsTreeNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
@@ -20,7 +20,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GraphGUIHelper.class)
-public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<GsTreeNode>> {
+public class TreeGUIHelper implements GraphGUIHelper<Tree, GsTreeNode, Edge<GsTreeNode>> {
 
 	
 	/**
@@ -42,7 +42,7 @@ public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<Gs
 	 * @param graph the edited graph
 	 */
 	@Override
-	public JPanel getSaveOptionPanel(GsTree graph) {
+	public JPanel getSaveOptionPanel(Tree graph) {
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
@@ -61,40 +61,40 @@ public class TreeGUIHelper implements GraphGUIHelper<GsTree, GsTreeNode, Edge<Gs
 	}
 
 	@Override
-	public GUIEditor<GsTree> getMainEditionPanel(GsTree graph) {
+	public GUIEditor<Tree> getMainEditionPanel(Tree graph) {
 		// TODO update this edition panel
-		// return new GsTreeActionPanel(graph, parser);
+		// return new TreeActionPanel(graph, parser);
 		return null;
 	}
 
 	@Override
-	public String getEditingTabLabel(GsTree graph) {
+	public String getEditingTabLabel(Tree graph) {
 		return "Tree";
 	}
 
 	@Override
-	public GUIEditor<GsTreeNode> getNodeEditionPanel(GsTree graph) {
+	public GUIEditor<GsTreeNode> getNodeEditionPanel(Tree graph) {
 		return null;
 	}
 
 	@Override
-	public GUIEditor<Edge<GsTreeNode>> getEdgeEditionPanel(GsTree graph) {
+	public GUIEditor<Edge<GsTreeNode>> getEdgeEditionPanel(Tree graph) {
 		return null;
 	}
 
 	@Override
-	public JPanel getInfoPanel(GsTree graph) {
+	public JPanel getInfoPanel(Tree graph) {
 		return null;
 	}
 
 	@Override
-	public Class<GsTree> getGraphClass() {
+	public Class<Tree> getGraphClass() {
 		
-		return GsTree.class;
+		return Tree.class;
 	}
 
 	@Override
-	public List<EditAction> getEditActions(GsTree graph) {
+	public List<EditAction> getEditActions(Tree graph) {
 		return null;
 	}
 }

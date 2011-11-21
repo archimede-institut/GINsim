@@ -14,12 +14,12 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.common.GsExportAction;
-import org.ginsim.gui.service.tools.reg2dyn.GsReg2dynPriorityClass;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.tools.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
-import org.ginsim.service.GsServiceManager;
+import org.ginsim.service.ServiceManager;
 import org.ginsim.service.action.stablestates.StableStateSearcher;
 import org.ginsim.service.action.stablestates.StableStatesService;
 
@@ -44,13 +44,13 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  * 
  * TODO: depends on StableStateService
  */
-public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
+public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] { "smv" }, "NuSMV files");
 	
 	private GsNuSMVConfig config;
 	
-	public GsNuSMVExport(GsRegulatoryGraph graph) {
+	public GsNuSMVExport(RegulatoryGraph graph) {
 		super( graph, "STR_NuSMVmodelChecker", "STR_NuSMVmodelChecker_descr");
 	}
 
@@ -70,7 +70,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 	}
 
 	/**
-	 * Gets the set of values of a given @see {@link GsRegulatoryVertex}
+	 * Gets the set of values of a given @see {@link RegulatoryVertex}
 	 * 
 	 * @param vertex
 	 *            The vertex containing the values to be written.
@@ -78,9 +78,9 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 	 *            The map containing the initial values of all the vertexes.
 	 * @return A string of values in the NuSMV format.
 	 */
-	private static String writeInitialState(GsRegulatoryVertex[] t_vertex,
+	private static String writeInitialState(RegulatoryVertex[] t_vertex,
 			boolean input,
-			Map<GsRegulatoryVertex, List<Integer>> mInitStates) {
+			Map<RegulatoryVertex, List<Integer>> mInitStates) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < t_vertex.length; i++) {
 			if (t_vertex[i].isInput() != input)
@@ -106,7 +106,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 
 	/**
 	 * Main method that knows how to export a given graph @see
-	 * {@link GsRegulatoryGraph} and write it to a specific file.
+	 * {@link RegulatoryGraph} and write it to a specific file.
 	 * 
 	 * @param graph
 	 *            The graph object to be exported.
@@ -115,7 +115,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 	 * @param config
 	 *            store with the configuration specified by the user in the GUI.
 	 */
-	public static void encode(GsRegulatoryGraph graph, String fileName,
+	public static void encode(RegulatoryGraph graph, String fileName,
 			GsNuSMVConfig config) throws IOException{
 
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
@@ -124,36 +124,36 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 		FileWriter out = new FileWriter(fileName);
 		Iterator<GsInitialState> it = config.getInitialState().keySet()
 				.iterator();
-		Map<GsRegulatoryVertex, List<Integer>> m_initstates;
+		Map<RegulatoryVertex, List<Integer>> m_initstates;
 		if (it.hasNext()) {
 			m_initstates = it.next().getMap();
 		} else {
-			m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
+			m_initstates = new HashMap<RegulatoryVertex, List<Integer>>();
 		}
 		if (m_initstates == null) {
-			m_initstates = new HashMap<GsRegulatoryVertex, List<Integer>>();
+			m_initstates = new HashMap<RegulatoryVertex, List<Integer>>();
 		}
 		it = config.getInputState().keySet().iterator();
-		Map<GsRegulatoryVertex, List<Integer>> m_initinputs;
+		Map<RegulatoryVertex, List<Integer>> m_initinputs;
 		if (it.hasNext()) {
 			m_initinputs = it.next().getMap();
 		} else {
-			m_initinputs = new HashMap<GsRegulatoryVertex, List<Integer>>();
+			m_initinputs = new HashMap<RegulatoryVertex, List<Integer>>();
 		}
 		if (m_initinputs == null) {
-			m_initinputs = new HashMap<GsRegulatoryVertex, List<Integer>>();
+			m_initinputs = new HashMap<RegulatoryVertex, List<Integer>>();
 		}
 
 		GsRegulatoryMutantDef mutant = (GsRegulatoryMutantDef) config.store
 				.getObject(0);
-		List<GsRegulatoryVertex> nodeOrder = graph.getNodeOrder();
+		List<RegulatoryVertex> nodeOrder = graph.getNodeOrder();
 		String[] t_regulators = new String[nodeOrder.size()];
 		int[] t_cst = new int[nodeOrder.size()];
 		boolean hasInputVars = false;
-		GsRegulatoryVertex[] t_vertex = new GsRegulatoryVertex[nodeOrder
+		RegulatoryVertex[] t_vertex = new RegulatoryVertex[nodeOrder
 				.size()];
 		for (int i = 0; i < t_vertex.length; i++) {
-			GsRegulatoryVertex vertex = nodeOrder.get(i);
+			RegulatoryVertex vertex = nodeOrder.get(i);
 			t_vertex[i] = vertex;
 			t_regulators[i] = vertex.getId();
 			if (vertex.isInput())
@@ -212,7 +212,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 		case GsNuSMVConfig.CFG_PCLASS:
 			out.write("-- Priority classes\n  PCs : { ");
 			for (int i = 0; i < priorities.getNbElements(); i++) {
-				GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass) priorities
+				Reg2dynPriorityClass pc = (Reg2dynPriorityClass) priorities
 						.getElement(null, i);
 				if (i > 0)
 					out.write(", ");
@@ -541,9 +541,9 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 		if (!bType1) {
 			out.write("\nweakSS := FALSE\n");
 			// -- Computing Weak Stable States for compacted STG (type 2) --
-			List<GsRegulatoryVertex> sortedVars = new ArrayList<GsRegulatoryVertex>();
-			List<GsRegulatoryVertex> orderStateVars = new ArrayList<GsRegulatoryVertex>();
-			List<GsRegulatoryVertex> orderInputVars = new ArrayList<GsRegulatoryVertex>();
+			List<RegulatoryVertex> sortedVars = new ArrayList<RegulatoryVertex>();
+			List<RegulatoryVertex> orderStateVars = new ArrayList<RegulatoryVertex>();
+			List<RegulatoryVertex> orderInputVars = new ArrayList<RegulatoryVertex>();
 			for (int i = 0; i < nodeOrder.size(); i++) {
 				if (nodeOrder.get(i).isInput())
 					orderInputVars.add(nodeOrder.get(i));
@@ -560,7 +560,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 						.getTreeParameters(sortedVars).reduce();
 			}
 
-			StableStateSearcher sss = GsServiceManager.getManager().getService(StableStatesService.class).getSearcher(graph);
+			StableStateSearcher sss = ServiceManager.getManager().getService(StableStatesService.class).getSearcher(graph);
 			sss.setNodeOrder(sortedVars, tReordered);
 			sss.setPerturbation(mutant);
 			OmddNode omdds = sss.getStables();
@@ -606,7 +606,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 	}
 
 	private static String writeStableStates(int[] stateValues, OmddNode nodes,
-			List<GsRegulatoryVertex> stateVars, int level) {
+			List<RegulatoryVertex> stateVars, int level) {
 		String sRet = "";
 		if (nodes.next == null) {
 			if (nodes.value == 1 && level > stateVars.size()) {
@@ -651,7 +651,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 	 */
 	static private void topoSortVisit(
 			HashMap<String, ArrayList<String>> hmRegulators,
-			String[] t_regulators, GsRegulatoryVertex[] t_vertex,
+			String[] t_regulators, RegulatoryVertex[] t_vertex,
 			int currindex, boolean[] visited, ArrayList<Integer> alSorted) {
 		if (visited[currindex])
 			return;
@@ -681,7 +681,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 	 * @return The set of regulator names of a given vertex.
 	 */
 	static private HashSet<String> nodeRegulators(OmddNode node,
-			GsRegulatoryVertex[] t_names, int[] t_cst) {
+			RegulatoryVertex[] t_names, int[] t_cst) {
 		HashSet<String> hs = new HashSet<String>();
 		if (node.next == null) {
 			for (int i = 0; i < t_cst.length; i++)
@@ -712,7 +712,7 @@ public class GsNuSMVExport extends GsExportAction<GsRegulatoryGraph> {
 	 * @throws IOException
 	 */
 	static private void node2SMV(OmddNode node, FileWriter out,
-			GsRegulatoryVertex[] t_names, int[] t_cst) throws IOException {
+			RegulatoryVertex[] t_names, int[] t_cst) throws IOException {
 		if (node.next == null) // this is a leaf, write the constraint
 		{
 			String s = "";

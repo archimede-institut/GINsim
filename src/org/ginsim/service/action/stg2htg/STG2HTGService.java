@@ -1,9 +1,9 @@
 package org.ginsim.service.action.stg2htg;
 
-import org.ginsim.service.GsService;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-@ProviderFor( GsService.class)
-public class STG2HTGService implements GsService {
+@ProviderFor( Service.class)
+public class STG2HTGService implements Service {
 
 }

@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.common.ExportAction;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -19,13 +19,13 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
  * Export the logical functions from regulatory graphs to python for use with the Snakes python library.
  * http://lacl.univ-paris12.fr/pommereau/soft/snakes/
  */
-public class SnakesExport extends GsExportAction<GsRegulatoryGraph>  {
+public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 
 	private static final GsFileFilter ffilter = new GsFileFilter( new String[] { "py" }, "Python source files");
 	
 	private FileWriter out = null;
 	
-	public SnakesExport(GsRegulatoryGraph graph) {
+	public SnakesExport(RegulatoryGraph graph) {
 		super(graph, "STR_snakes", "STR_snakes_descr");
 	}
 	
@@ -46,8 +46,8 @@ public class SnakesExport extends GsExportAction<GsRegulatoryGraph>  {
 		int [][] parcours = new int[nodeOrder.size()][4];
 		for (int node_i = 0; node_i < nodes.length; node_i++) {
 			//generate the argument list from incoming edges : a, b, _a, _b
-			GsRegulatoryVertex current_node = (GsRegulatoryVertex) nodeOrder.get(node_i);
-			Collection<GsRegulatoryMultiEdge> incomingEdges = graph.getIncomingEdges(current_node);
+			RegulatoryVertex current_node = (RegulatoryVertex) nodeOrder.get(node_i);
+			Collection<RegulatoryMultiEdge> incomingEdges = graph.getIncomingEdges(current_node);
 			String current_node_name = getVertexNameForLevel(node_i, nodeOrder);
 			if (incomingEdges.size() == 0) {
 				out.write("    # specification of component \""+current_node_name+"\"\n");
@@ -63,9 +63,9 @@ public class SnakesExport extends GsExportAction<GsRegulatoryGraph>  {
 			}
 			
 			StringBuffer s = new StringBuffer();
-			GsRegulatoryMultiEdge edge;
-			GsRegulatoryVertex source;
-			Iterator<GsRegulatoryMultiEdge> it = incomingEdges.iterator();
+			RegulatoryMultiEdge edge;
+			RegulatoryVertex source;
+			Iterator<RegulatoryMultiEdge> it = incomingEdges.iterator();
 			while (true) {
 				edge = it.next();
 				source = edge.getSource();
@@ -141,6 +141,6 @@ public class SnakesExport extends GsExportAction<GsRegulatoryGraph>  {
 	 * @return the ID as string
 	 */
 	private String getVertexNameForLevel(int order, List nodeOrder) {
-		return ((GsRegulatoryVertex) nodeOrder.get(order)).getId();
+		return ((RegulatoryVertex) nodeOrder.get(order)).getId();
 	}
 }

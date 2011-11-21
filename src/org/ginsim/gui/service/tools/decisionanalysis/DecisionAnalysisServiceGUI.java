@@ -8,7 +8,7 @@ import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -25,9 +25,9 @@ public class DecisionAnalysisServiceGUI implements GsServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsHierarchicalTransitionGraph) {
+		if (graph instanceof HierarchicalTransitionGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new DecisionAnalysisAction((GsHierarchicalTransitionGraph)graph));
+			actions.add(new DecisionAnalysisAction((HierarchicalTransitionGraph)graph));
 			return actions;
 		}
 		return null;
@@ -37,9 +37,9 @@ public class DecisionAnalysisServiceGUI implements GsServiceGUI {
 
 class DecisionAnalysisAction extends GsToolsAction {
 
-	private final GsHierarchicalTransitionGraph graph;
+	private final HierarchicalTransitionGraph graph;
 	
-	public DecisionAnalysisAction( GsHierarchicalTransitionGraph graph) {
+	public DecisionAnalysisAction( HierarchicalTransitionGraph graph) {
 		
 		super( "STR_htg_decision_analysis", "STR_htg_decision_analysis_descr");
 		this.graph = graph;
@@ -51,7 +51,7 @@ class DecisionAnalysisAction extends GsToolsAction {
 		// TODO : what is ref? Is this test useful? Ref was set to 0 in the GsPluggableActionDescriptor definition in the getT_action
 		//if (ref == 0) {
 		try{
-			new GsDecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph);
+			new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph);
 		}
 		catch( GsException ge){
     		// TODO : REFACTORING ACTION

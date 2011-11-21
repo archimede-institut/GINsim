@@ -15,9 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.graph.tree.GsTree;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.tree.Tree;
 import org.ginsim.graph.tree.GsTreeParser;
 import org.ginsim.graph.tree.GsTreeParserFromManualOmdd;
 import org.ginsim.graph.tree.TreeImpl;
@@ -30,7 +30,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 public class OmddVizFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7619253564236142617L;
 	private JFrame frame;
-	private GsRegulatoryGraph graph;
+	private RegulatoryGraph graph;
 	private Container mainPanel;
 	
 	private JPanel calcPanel, resPanel;
@@ -42,7 +42,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 	private String[] operationsOptions = new String[] {"or", "and", "constraint or", "constraint and", "max"};
 	
 	
-	public OmddVizFrame( GsRegulatoryGraph graph) {
+	public OmddVizFrame( RegulatoryGraph graph) {
 		super(GUIManager.getInstance().getFrame(graph), "STR_omddViz", 475, 260);
 		this.frame = GUIManager.getInstance().getFrame(graph);
 		this.graph = graph;
@@ -122,19 +122,19 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == leftOperandCB) {
-			GsRegulatoryVertex item = (GsRegulatoryVertex) leftOperandCB.getSelectedItem();
+			RegulatoryVertex item = (RegulatoryVertex) leftOperandCB.getSelectedItem();
 			if (item != null) {
-				leftOmdd = item.getTreeParameters((GsRegulatoryGraph) graph);
+				leftOmdd = item.getTreeParameters((RegulatoryGraph) graph);
 			}
 		} else if (e.getSource() == rightOperandCB) {
-			GsRegulatoryVertex item = (GsRegulatoryVertex) rightOperandCB.getSelectedItem();
+			RegulatoryVertex item = (RegulatoryVertex) rightOperandCB.getSelectedItem();
 			if (item != null) {
-				rightOmdd = item.getTreeParameters((GsRegulatoryGraph) graph);
+				rightOmdd = item.getTreeParameters((RegulatoryGraph) graph);
 			}
 		} else if (e.getSource() == displayTreeButton) {
 			run();
 			GsTreeParser parser = new GsTreeParserFromManualOmdd();
-			GsTree tree = new TreeImpl(parser);
+			Tree tree = new TreeImpl(parser);
 				
 			parser.setParameter(GsTreeParserFromManualOmdd.PARAM_MANUALOMDD, resOmdd);
 			parser.setParameter(GsTreeParserFromManualOmdd.PARAM_NODEORDER, graph.getNodeOrder());

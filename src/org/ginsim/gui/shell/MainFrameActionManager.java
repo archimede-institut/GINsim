@@ -11,12 +11,12 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.GsServiceGUIManager;
-import org.ginsim.gui.service.common.GsGenericGraphAction;
-import org.ginsim.gui.service.common.GsExportAction;
-import org.ginsim.gui.service.common.GsImportAction;
-import org.ginsim.gui.service.common.GsLayoutAction;
-import org.ginsim.gui.shell.callbacks.GsFileCallBack;
-import org.ginsim.gui.shell.callbacks.GsHelpCallBack;
+import org.ginsim.gui.service.common.GenericGraphAction;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.ImportAction;
+import org.ginsim.gui.service.common.LayoutAction;
+import org.ginsim.gui.shell.callbacks.FileCallBack;
+import org.ginsim.gui.shell.callbacks.HelpCallBack;
 
 public class MainFrameActionManager implements FrameActionManager {
 
@@ -41,16 +41,16 @@ public class MainFrameActionManager implements FrameActionManager {
 		JMenu graphMenu = new JMenu( "Graph");
 		JMenu toolsMenu = new JMenu( "Tools");
 		for (Action action: actions) {
-			if (action instanceof GsImportAction) {
+			if (action instanceof ImportAction) {
 				importMenu.add( action);
 			}
-			else if (action instanceof GsExportAction) {
+			else if (action instanceof ExportAction) {
 				exportMenu.add( action);
 			}
-			else if (action instanceof GsLayoutAction) {
+			else if (action instanceof LayoutAction) {
 				layoutMenu.add( action);
 			}
-			else if (action instanceof GsGenericGraphAction) {
+			else if (action instanceof GenericGraphAction) {
 				graphMenu.add( action);
 			}
 			else {
@@ -61,7 +61,7 @@ public class MainFrameActionManager implements FrameActionManager {
 		// fill the menu bar
 		menubar.removeAll();
 		toolbar.removeAll();
-		menubar.add( GsFileCallBack.getFileMenu(graph, importMenu, exportMenu));
+		menubar.add( FileCallBack.getFileMenu(graph, importMenu, exportMenu));
 		// TODO: the file menu should add some stuff to the toolbar as well
 		
 		EditActionManager editManager = gui.getEditActionManager();
@@ -81,7 +81,7 @@ public class MainFrameActionManager implements FrameActionManager {
 		}
 		
 		menu = new JMenu("Help");
-		fillMenu(menu, GsHelpCallBack.getActions());
+		fillMenu(menu, HelpCallBack.getActions());
 		menubar.add(menu);
 	}
 

@@ -13,14 +13,14 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
-import org.ginsim.graph.dynamicgraph.GsDynamicNode;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
 import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.NodeInfo;
-import org.ginsim.gui.service.tools.dynamicanalyser.GsDynamicItemAttributePanel;
+import org.ginsim.gui.service.tools.dynamicanalyser.DynamicItemAttributePanel;
 import org.ginsim.gui.service.tools.stablestates.StableTableModel;
 import org.mangosdk.spi.ProviderFor;
 
@@ -33,7 +33,7 @@ import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GraphGUIHelper.class)
-public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsDynamicNode, Edge<GsDynamicNode>> {
+public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, DynamicNode, Edge<DynamicNode>> {
 
 	/**
 	 * Provide the file filter to apply to a file chooser
@@ -55,7 +55,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
 	 * @param graph the edited graph
 	 */
 	@Override
-	public JPanel getSaveOptionPanel( GsDynamicGraph graph) {
+	public JPanel getSaveOptionPanel( DynamicGraph graph) {
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
@@ -68,7 +68,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
 	}
 	
 	@Override
-	public GUIEditor<GsDynamicGraph> getMainEditionPanel(GsDynamicGraph graph) {
+	public GUIEditor<DynamicGraph> getMainEditionPanel(DynamicGraph graph) {
 //		RegulatoryGraphEditor editor = new RegulatoryGraphEditor();
 //		editor.setEditedObject(graph);
 //		return editor;
@@ -77,30 +77,30 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
 	}
 
 	@Override
-	public String getEditingTabLabel(GsDynamicGraph graph) {
+	public String getEditingTabLabel(DynamicGraph graph) {
 		return "STG";
 	}
 
 	@Override
-	public GUIEditor<GsDynamicNode> getNodeEditionPanel(GsDynamicGraph graph) {
-		return new GsDynamicItemAttributePanel(graph);
+	public GUIEditor<DynamicNode> getNodeEditionPanel(DynamicGraph graph) {
+		return new DynamicItemAttributePanel(graph);
 	}
 
 	@Override
-	public GUIEditor<Edge<GsDynamicNode>> getEdgeEditionPanel(
-			GsDynamicGraph graph) {
-		return new GsDynamicItemAttributePanel(graph);
+	public GUIEditor<Edge<DynamicNode>> getEdgeEditionPanel(
+			DynamicGraph graph) {
+		return new DynamicItemAttributePanel(graph);
 	}
 
     /**
      * browse the graph, looking for stable states
      * @return the list of stable states found
      */
-    private List getStableStates( GsDynamicGraph graph) {
+    private List getStableStates( DynamicGraph graph) {
     	// TODO: use cache from the graph itself?
     	
     	List<byte[]> stables = new ArrayList<byte[]>();
-        for (GsDynamicNode node: graph.getVertices()) {
+        for (DynamicNode node: graph.getVertices()) {
             if (node.isStable()) {
                 stables.add(node.state);
             }
@@ -112,7 +112,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
 	/**
 	 * Callback for the info panel: open a dialog with the list of stable states
 	 */
-	protected void viewStable( GsDynamicGraph graph, List<byte[]> stables) {
+	protected void viewStable( DynamicGraph graph, List<byte[]> stables) {
 		List<NodeInfo> nodeOrder = graph.getNodeOrder();
         JFrame frame = new JFrame(Translator.getString("STR_stableStates"));
         frame.setSize(Math.min(30*(nodeOrder.size()+1), 800),
@@ -130,7 +130,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
 	}
 	
 	@Override
-	public JPanel getInfoPanel( GsDynamicGraph graph) {
+	public JPanel getInfoPanel( DynamicGraph graph) {
         JPanel pinfo = new JPanel();
         List<byte[]> stables = getStableStates( graph);
 
@@ -162,12 +162,12 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<GsDynamicGraph, GsD
         return pinfo;	}
 
 	@Override
-	public Class<GsDynamicGraph> getGraphClass() {
-		return GsDynamicGraph.class;
+	public Class<DynamicGraph> getGraphClass() {
+		return DynamicGraph.class;
 	}
 
 	@Override
-	public List<EditAction> getEditActions(GsDynamicGraph graph) {
+	public List<EditAction> getEditActions(DynamicGraph graph) {
 		return null;
 	}
 }

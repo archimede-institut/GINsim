@@ -3,18 +3,18 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.param2function.tr
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 
 public class GsParamTreeNode implements GsParamTreeElement {
-  private GsRegulatoryVertex vertex;
+  private RegulatoryVertex vertex;
   private GsParamTreeElement[] sons;
-  private GsRegulatoryMultiEdge edge;
+  private RegulatoryMultiEdge edge;
   private GsParamTreeNode parent;
   private int parentIndex;
 
-  public GsParamTreeNode(GsRegulatoryVertex v, GsRegulatoryMultiEdge me, GsParamTreeNode p, int pi) {
+  public GsParamTreeNode(RegulatoryVertex v, RegulatoryMultiEdge me, GsParamTreeNode p, int pi) {
     super();
     vertex = v;
     edge = me;

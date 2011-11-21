@@ -27,10 +27,10 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -56,19 +56,19 @@ import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 public final class SBMLXpathParser {
 	
 	/** Creates a new instance of SbmlXpathParser */
-	private GsRegulatoryGraph graph;
+	private RegulatoryGraph graph;
 	protected File _FilePath;
 	private String s_nodeOrder = "";
-	private GsRegulatoryVertex vertex = null;
-	public GsRegulatoryEdge edge = null;
+	private RegulatoryVertex vertex = null;
+	public RegulatoryEdge edge = null;
 	private VertexAttributesReader vareader = null;
 	private EdgeAttributesReader ereader = null;
 	private int vslevel = 0;
 
-	private HashMap<String, GsRegulatoryEdge> m_edges = new HashMap<String, GsRegulatoryEdge>();
+	private HashMap<String, RegulatoryEdge> m_edges = new HashMap<String, RegulatoryEdge>();
 	static Pattern pattern;
 
-	private Hashtable<GsRegulatoryVertex, Hashtable<String, Vector<String>>> values;
+	private Hashtable<RegulatoryVertex, Hashtable<String, Vector<String>>> values;
 	private Vector<String> v_function;
 
 	public SBMLXpathParser() {
@@ -77,8 +77,8 @@ public final class SBMLXpathParser {
 	public SBMLXpathParser(String filename) {
 
 		this._FilePath = new File(filename);
-		this.graph = new GsRegulatoryGraph();
-		values = new Hashtable<GsRegulatoryVertex, Hashtable<String, Vector<String>>>();
+		this.graph = new RegulatoryGraph();
+		values = new Hashtable<RegulatoryVertex, Hashtable<String, Vector<String>>>();
 		initialize();
 	}
 
@@ -255,7 +255,7 @@ public final class SBMLXpathParser {
 					byte dft_value = (byte)Integer.parseInt(dft_resulLevel);		
 					if(!(dft_resulLevel.equals("0"))){
 						//for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
-						for (Enumeration<GsRegulatoryVertex> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						for (Enumeration<RegulatoryVertex> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
 							vertex = enumvertex.nextElement();
 							String vertexName = vertex.toString();
@@ -281,7 +281,7 @@ public final class SBMLXpathParser {
 						}
 			
 						//for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
-						for (Enumeration<GsRegulatoryVertex> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						for (Enumeration<RegulatoryVertex> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
 							vertex = enumvertex.nextElement();
 							String vertexName = vertex.getId();
@@ -308,9 +308,9 @@ public final class SBMLXpathParser {
 			parseBooleanFunctions();
 		}
 		@SuppressWarnings("unchecked")
-		Iterator<GsRegulatoryVertex> it = graph.getNodeOrder().iterator();
+		Iterator<RegulatoryVertex> it = graph.getNodeOrder().iterator();
 		while (it.hasNext()) {
-			GsRegulatoryVertex vertex = it.next();
+			RegulatoryVertex vertex = it.next();
 			vertex.getV_logicalParameters().cleanupDup();
 		}
 	} // void parse(File _FilePath)
@@ -393,7 +393,7 @@ public final class SBMLXpathParser {
 	 * @param node_to_id : to identify a regulatory vertex target 
 	 * @param input_to_sign: a map that contains every regulatory vertex source and his sign. */
 	
-	private void createMutliEdges( FunctionTerm function_term, String node_to_id, HashMap<String, String> input_to_sign, GsRegulatoryGraph graph){		
+	private void createMutliEdges( FunctionTerm function_term, String node_to_id, HashMap<String, String> input_to_sign, RegulatoryGraph graph){		
 				
 		List<Condition> l_condition = function_term.getConditionList();
 		Iterator<Condition> it_cond = l_condition.iterator();
@@ -407,13 +407,13 @@ public final class SBMLXpathParser {
 				String sign_code = input_to_sign.get( node_from_id);
 				byte sign;
 				if ( "SBO:0000020".equals(sign_code)){
-					sign = GsRegulatoryMultiEdge.SIGN_NEGATIVE;
+					sign = RegulatoryMultiEdge.SIGN_NEGATIVE;
 				}
 				else if ( "SBO:0000459".equals(sign_code)){
-					sign = GsRegulatoryMultiEdge.SIGN_POSITIVE;
+					sign = RegulatoryMultiEdge.SIGN_POSITIVE;
 				}
 				else{
-					sign = GsRegulatoryMultiEdge.SIGN_UNKNOWN;
+					sign = RegulatoryMultiEdge.SIGN_UNKNOWN;
 				}	
 				Vector<String> list_cases = expression.getAllCases();
 				
@@ -664,10 +664,10 @@ public final class SBMLXpathParser {
 
 	/** To place every node in the graph **/
 	private void placeNodeOrder() {
-		Vector<GsRegulatoryVertex> v_order = new Vector<GsRegulatoryVertex>();
+		Vector<RegulatoryVertex> v_order = new Vector<RegulatoryVertex>();
 		String[] t_order = s_nodeOrder.split(" ");
 		for (int i = 0; i < t_order.length; i++) {
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getVertexByName(t_order[i]);
+			RegulatoryVertex vertex = (RegulatoryVertex) graph.getVertexByName(t_order[i]);
 			if (vertex == null) {
 				// ok = false;
 				break;
@@ -685,11 +685,11 @@ public final class SBMLXpathParser {
 	/** To parse each logical function **/
 	@SuppressWarnings("unchecked")
 	private void parseBooleanFunctions() {
-		Collection<GsRegulatoryMultiEdge> allowedEdges;
-		GsRegulatoryVertex vertex;
+		Collection<RegulatoryMultiEdge> allowedEdges;
+		RegulatoryVertex vertex;
 		String value, exp;
 		try {
-			for (Enumeration<GsRegulatoryVertex> enu_vertex = values.keys(); enu_vertex.hasMoreElements();) {
+			for (Enumeration<RegulatoryVertex> enu_vertex = values.keys(); enu_vertex.hasMoreElements();) {
 				vertex = enu_vertex.nextElement();
 				allowedEdges = graph.getIncomingEdges(vertex);
 				if (allowedEdges.size() > 0) {
@@ -715,7 +715,7 @@ public final class SBMLXpathParser {
 		}
 	}
 
-	public void addExpression(byte val, GsRegulatoryVertex vertex, String exp) {
+	public void addExpression(byte val, RegulatoryVertex vertex, String exp) {
 		try {
 			GsBooleanParser tbp = new GsBooleanParser(graph.getIncomingEdges(
 					vertex));
@@ -775,14 +775,14 @@ public final class SBMLXpathParser {
 	class InteractionInconsistencyDialog extends StackDialog {
 		private static final long serialVersionUID = 4607140440879983498L;
 
-		GsRegulatoryGraph graph;
+		RegulatoryGraph graph;
 		Map m;
 		JPanel panel = null;
 
 		public InteractionInconsistencyDialog(Map m, Graph graph, String msg, int w, int h) {
 			
 			super( GUIManager.getInstance().getFrame( graph), msg, w, h);
-			this.graph = (GsRegulatoryGraph) graph;
+			this.graph = (RegulatoryGraph) graph;
 			this.m = m;
 			setMainPanel(getMainPanel());
 		}
@@ -797,7 +797,7 @@ public final class SBMLXpathParser {
 				while (it.hasNext()) {
 					Entry entry = (Entry) it.next();
 					Entry e2 = (Entry) entry.getKey();
-					GsRegulatoryEdge edge = (GsRegulatoryEdge) e2.getKey();
+					RegulatoryEdge edge = (RegulatoryEdge) e2.getKey();
 					byte oldmax = ((Integer) e2.getValue()).byteValue();
 					if (entry.getValue() == null) {
 						s1 += edge.getLongDetail(" ") + ": max should be "
@@ -839,7 +839,7 @@ public final class SBMLXpathParser {
 		public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 			Vector v = (Vector) data;
 			byte value = ((Short) v.elementAt(0)).byteValue();
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex) v.elementAt(1);
+			RegulatoryVertex vertex = (RegulatoryVertex) v.elementAt(1);
 			String exp = (String) v.elementAt(2);
 			boolean ok = true;
 			switch (index) {
@@ -904,7 +904,7 @@ public final class SBMLXpathParser {
 		 * @param str : a String that contains a needed data for an expression
 		 * For instance : str = "G0<1", where G0 is a node id and. "<" is an operator and "1" is a threshold value*/
 		
-		public Expression(String str, GsRegulatoryGraph graph) {
+		public Expression(String str, RegulatoryGraph graph) {
 			
 			int index = str.indexOf("<");
 			if( index >= 0) {
@@ -928,7 +928,7 @@ public final class SBMLXpathParser {
 			}
 			
 			/** To set a maxvalue for a regulatory vertex */
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex) graph.getVertexByName(node);
+			RegulatoryVertex vertex = (RegulatoryVertex) graph.getVertexByName(node);
 			if( vertex != null) {
 				maxvalue = vertex.getMaxValue();
 			}			

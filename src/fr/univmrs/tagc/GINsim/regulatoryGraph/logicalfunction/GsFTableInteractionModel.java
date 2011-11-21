@@ -1,15 +1,15 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.models.GsTableInteractionsModel;
 
 public class GsFTableInteractionModel extends GsTableInteractionsModel {
 	private static final long serialVersionUID = 6944736425274853595L;
-	/* public GsFTableInteractionModel(GsRegulatoryGraph graph, Vector v_ok) {
+	/* public GsFTableInteractionModel(RegulatoryGraph graph, Vector v_ok) {
         super(graph, v_ok);
     }*/
-    public GsFTableInteractionModel(GsRegulatoryVertex no) {
+    public GsFTableInteractionModel(RegulatoryVertex no) {
         super(no);
     }
     public int getRowCount() {

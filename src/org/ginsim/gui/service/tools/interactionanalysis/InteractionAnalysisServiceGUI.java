@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -22,9 +22,9 @@ public class InteractionAnalysisServiceGUI implements GsServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new InteractionAnalysisAction((GsRegulatoryGraph)graph));
+			actions.add(new InteractionAnalysisAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -33,9 +33,9 @@ public class InteractionAnalysisServiceGUI implements GsServiceGUI {
 
 class InteractionAnalysisAction extends GsToolsAction {
 	
-	private final GsRegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	
-	public InteractionAnalysisAction(GsRegulatoryGraph graph) {
+	public InteractionAnalysisAction(RegulatoryGraph graph) {
 		
 		super("STR_interactionAnalysis");
 		this.graph = graph;

@@ -5,22 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.datastore.NamedObject;
 
 public class GsInitialState implements NamedObject {
 	String name;
-	Map<GsRegulatoryVertex, List<Integer>> m = new HashMap<GsRegulatoryVertex, List<Integer>>();
+	Map<RegulatoryVertex, List<Integer>> m = new HashMap<RegulatoryVertex, List<Integer>>();
 	
-    public void setState(int[] state, List<GsRegulatoryVertex> nodeOrder) {
+    public void setState(int[] state, List<RegulatoryVertex> nodeOrder) {
         setState(state, nodeOrder, false);
     }
-    public void setState(int[] state, List<GsRegulatoryVertex> nodeOrder, boolean input) {
+    public void setState(int[] state, List<RegulatoryVertex> nodeOrder, boolean input) {
         String[] t_s = new String[state.length];
         for (int i=0 ; i<t_s.length ; i++) {
-            GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+            RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
             if (vertex.isInput() == input) {
                 t_s[i] = vertex + ";" + state[i];
             } else {
@@ -30,14 +30,14 @@ public class GsInitialState implements NamedObject {
         setData(t_s, nodeOrder);
     }
     
-	public void setData(String[] t_s, List<GsRegulatoryVertex> nodeOrder) {
+	public void setData(String[] t_s, List<RegulatoryVertex> nodeOrder) {
         for (int i=0 ; i<t_s.length ; i++) {
-            GsRegulatoryVertex vertex = null;
+            RegulatoryVertex vertex = null;
             String[] t_val = t_s[i].split(";");
             if (t_val.length > 1) {
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
-                    if (((GsRegulatoryVertex)nodeOrder.get(j)).getId().equals(t_val[0])) {
-                        vertex = (GsRegulatoryVertex)nodeOrder.get(j);
+                    if (((RegulatoryVertex)nodeOrder.get(j)).getId().equals(t_val[0])) {
+                        vertex = (RegulatoryVertex)nodeOrder.get(j);
                         break;
                     }
                 }
@@ -77,14 +77,14 @@ public class GsInitialState implements NamedObject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Map<GsRegulatoryVertex,List<Integer>> getMap() {
+	public Map<RegulatoryVertex,List<Integer>> getMap() {
 		return m;
 	}
-	public OmddNode getMDD(List<GsRegulatoryVertex> nodeOrder) {
+	public OmddNode getMDD(List<RegulatoryVertex> nodeOrder) {
 		OmddNode falseNode = OmddNode.TERMINALS[0];
 		OmddNode ret = OmddNode.TERMINALS[1];
 		for (int i=nodeOrder.size()-1 ; i>-1 ; i--) {
-			GsRegulatoryVertex vertex = (GsRegulatoryVertex)nodeOrder.get(i);
+			RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
 			Object o = m.get(vertex);
 			if (o != null) {
 				OmddNode newNode = new OmddNode();

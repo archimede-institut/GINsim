@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import tbrowser.ihm.widget.TBToggleButton;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
@@ -24,7 +24,7 @@ public class TreeElementVertexNote extends TreeElementDeco {
     b.setFocusPainted(false);
     b.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {
-      	GsRegulatoryVertex vertex = (GsRegulatoryVertex)((Vector)userObject).firstElement();
+      	RegulatoryVertex vertex = (RegulatoryVertex)((Vector)userObject).firstElement();
         String proto = (String)((Vector)userObject).elementAt(1);
         String value = (String)((Vector)userObject).elementAt(2);
         setNote(b.isSelected());
@@ -43,7 +43,7 @@ public class TreeElementVertexNote extends TreeElementDeco {
   }
   public void setNote(boolean b) {
     super.check(b);
-    GsRegulatoryVertex vertex = (GsRegulatoryVertex)((Vector)userObject).firstElement();
+    RegulatoryVertex vertex = (RegulatoryVertex)((Vector)userObject).firstElement();
     proto = (String)((Vector)userObject).elementAt(1);
     value = (String)((Vector)userObject).elementAt(2);
     if (b)

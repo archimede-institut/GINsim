@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationUpdater;
 
 import fr.univmrs.tagc.GINsim.css.CascadingStyle;
@@ -20,7 +20,7 @@ import fr.univmrs.tagc.GINsim.css.CascadingStyle;
  * 
  */
 public class LocalGraph {
-	private GsRegulatoryGraph g;
+	private RegulatoryGraph g;
 	//private GsGraphManager gm;
 	private CascadingStyle cs = null;
 	private LocalGraphSelector selector = null;
@@ -34,10 +34,10 @@ public class LocalGraph {
 	static final byte FUNC_POSITIVE = 2;
 	static final byte FUNC_NEGATIVE = 3;
 
-	public LocalGraph(GsRegulatoryGraph  g) {
+	public LocalGraph(RegulatoryGraph  g) {
 		this.g = g;
 	}
-	public LocalGraph(GsRegulatoryGraph  g, List states) {
+	public LocalGraph(RegulatoryGraph  g, List states) {
 		this(g);
 		this.states = states;		
 	}
@@ -69,9 +69,9 @@ public class LocalGraph {
 		for (Iterator it_states = states.iterator(); it_states.hasNext();) {
 			byte[] state = (byte[]) it_states.next();
 			int j;
-			for (GsRegulatoryMultiEdge edge: g.getEdges()) {
-				GsRegulatoryVertex source = edge.getSource();
-				GsRegulatoryVertex target = edge.getTarget();
+			for (RegulatoryMultiEdge edge: g.getEdges()) {
+				RegulatoryVertex source = edge.getSource();
+				RegulatoryVertex target = edge.getTarget();
 				i = (Integer)node_to_position.get(source);
 				j = (Integer)node_to_position.get(target);
 				byte[] fx = f(state);
@@ -146,7 +146,7 @@ public class LocalGraph {
         }
 		
 		EdgeAttributesReader ereader = g.getEdgeAttributeReader();
-		for (GsRegulatoryMultiEdge me: g.getEdges()) {
+		for (RegulatoryMultiEdge me: g.getEdges()) {
 			ereader.setEdge(me);
 			cs.applyOnEdge(selector, me, ereader);
 		}

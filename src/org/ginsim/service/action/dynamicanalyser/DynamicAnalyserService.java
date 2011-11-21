@@ -1,9 +1,9 @@
 package org.ginsim.service.action.dynamicanalyser;
 
-import org.ginsim.service.GsService;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-@ProviderFor( GsService.class)
-public class DynamicAnalyserService implements GsService {
+@ProviderFor( Service.class)
+public class DynamicAnalyserService implements Service {
 
 }

@@ -6,13 +6,13 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalGraph;
-import org.ginsim.graph.dynamicalhierarchicalgraph.GsDynamicalHierarchicalNode;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
+import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graphhelper.GraphGUIHelper;
-import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.GsDynamicalHierarchicalParameterPanel;
+import org.ginsim.gui.service.tools.dynamicalhierarchicalsimplifier.DynamicalHierarchicalParameterPanel;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -22,7 +22,7 @@ import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GraphGUIHelper.class)
 public class DynamicalHierarchicalGraphGUIHelper implements
-		GraphGUIHelper<GsDynamicalHierarchicalGraph, GsDynamicalHierarchicalNode, Edge<GsDynamicalHierarchicalNode>> {
+		GraphGUIHelper<DynamicalHierarchicalGraph, DynamicalHierarchicalNode, Edge<DynamicalHierarchicalNode>> {
 
 	/**
 	 * Provide the file filter to apply to a file chooser
@@ -44,7 +44,7 @@ public class DynamicalHierarchicalGraphGUIHelper implements
 	 * @param graph the edited graph
 	 */
 	@Override
-	public JPanel getSaveOptionPanel(GsDynamicalHierarchicalGraph graph) {
+	public JPanel getSaveOptionPanel(DynamicalHierarchicalGraph graph) {
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
@@ -58,45 +58,45 @@ public class DynamicalHierarchicalGraphGUIHelper implements
 
 
 	@Override
-	public GUIEditor<GsDynamicalHierarchicalGraph> getMainEditionPanel(
-			GsDynamicalHierarchicalGraph graph) {
+	public GUIEditor<DynamicalHierarchicalGraph> getMainEditionPanel(
+			DynamicalHierarchicalGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getEditingTabLabel(GsDynamicalHierarchicalGraph graph) {
+	public String getEditingTabLabel(DynamicalHierarchicalGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public GUIEditor<GsDynamicalHierarchicalNode> getNodeEditionPanel(
-			GsDynamicalHierarchicalGraph graph) {
-        return new GsDynamicalHierarchicalParameterPanel(graph);
+	public GUIEditor<DynamicalHierarchicalNode> getNodeEditionPanel(
+			DynamicalHierarchicalGraph graph) {
+        return new DynamicalHierarchicalParameterPanel(graph);
 	}
 
 	@Override
-	public GUIEditor<Edge<GsDynamicalHierarchicalNode>> getEdgeEditionPanel(
-			GsDynamicalHierarchicalGraph graph) {
+	public GUIEditor<Edge<DynamicalHierarchicalNode>> getEdgeEditionPanel(
+			DynamicalHierarchicalGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JPanel getInfoPanel(GsDynamicalHierarchicalGraph graph) {
+	public JPanel getInfoPanel(DynamicalHierarchicalGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Class<GsDynamicalHierarchicalGraph> getGraphClass() {
+	public Class<DynamicalHierarchicalGraph> getGraphClass() {
 		
-		return GsDynamicalHierarchicalGraph.class;
+		return DynamicalHierarchicalGraph.class;
 	}
 
 	@Override
-	public List<EditAction> getEditActions(GsDynamicalHierarchicalGraph graph) {
+	public List<EditAction> getEditActions(DynamicalHierarchicalGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}

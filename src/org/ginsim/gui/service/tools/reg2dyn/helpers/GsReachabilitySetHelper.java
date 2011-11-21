@@ -1,24 +1,24 @@
 package org.ginsim.gui.service.tools.reg2dyn.helpers;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicgraph.GsDynamicNode;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameters;
+import org.ginsim.graph.dynamicgraph.DynamicNode;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tools.reg2dyn.SimulationQueuedState;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 
 public class GsReachabilitySetHelper extends SimulationHelper {
-	protected GsDynamicNode node;
+	protected DynamicNode node;
 	protected int[] t_max;
 	protected int length;
 	protected OmddNode dd_reachable = OmddNode.TERMINALS[0];
 	
-	GsReachabilitySetHelper(GsSimulationParameters params) {
+	GsReachabilitySetHelper(SimulationParameters params) {
 		length = params.nodeOrder.size();
 		t_max = new int[length];
 		for (int i=0 ; i<length ; i++) {
-			t_max[i] = ((GsRegulatoryVertex)params.nodeOrder.get(i)).getMaxValue()+1;
+			t_max[i] = ((RegulatoryVertex)params.nodeOrder.get(i)).getMaxValue()+1;
 		}
 	}
 	
@@ -107,6 +107,6 @@ public class GsReachabilitySetHelper extends SimulationHelper {
 	}
 	
 	public void setNode(Object node) {
-		this.node = (GsDynamicNode) node;
+		this.node = (DynamicNode) node;
 	}
 }

@@ -9,7 +9,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialState;
@@ -116,7 +116,7 @@ public class StableTableModel extends AbstractTableModel {
 	
 	private void updateMatches( Graph graph) {
 		InitialStateList initstates = null;
-		if (graph != null && graph instanceof GsRegulatoryGraph) {
+		if (graph != null && graph instanceof RegulatoryGraph) {
 		    GsInitialStateList ilist = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, GsInitialStateManager.key, false);
 		    if (ilist != null) {
 		        initstates = ilist.getInitialStates();

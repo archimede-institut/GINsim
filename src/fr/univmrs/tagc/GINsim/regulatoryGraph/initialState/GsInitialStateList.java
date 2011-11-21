@@ -7,14 +7,14 @@ import java.util.List;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
 
-public class GsInitialStateList implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
-	GsRegulatoryGraph graph;
+public class GsInitialStateList implements GraphListener<RegulatoryVertex, RegulatoryMultiEdge> {
+	RegulatoryGraph graph;
 
 	List nodeOrder;
     List inputNodes = new ArrayList();
@@ -25,7 +25,7 @@ public class GsInitialStateList implements GraphListener<GsRegulatoryVertex, GsR
     
     public GsInitialStateList( Graph<?,?> graph) {
     	
-        this.graph = (GsRegulatoryGraph) graph;
+        this.graph = (RegulatoryGraph) graph;
     	nodeOrder = this.graph.getNodeOrder();
         graph.addGraphListener( (GraphListener) this);
         updateLists();
@@ -39,7 +39,7 @@ public class GsInitialStateList implements GraphListener<GsRegulatoryVertex, GsR
 	    normalNodes.clear();
 	    Iterator it = nodeOrder.iterator();
 	    while (it.hasNext()) {
-	        GsRegulatoryVertex vertex = (GsRegulatoryVertex)it.next();
+	        RegulatoryVertex vertex = (RegulatoryVertex)it.next();
 	        if (vertex.isInput()) {
 	            inputNodes.add(vertex);
 	        } else {
@@ -48,20 +48,20 @@ public class GsInitialStateList implements GraphListener<GsRegulatoryVertex, GsR
 	    }
 	}
 
-	public GsGraphEventCascade edgeAdded(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeRemoved(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeUpdated(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade vertexAdded(GsRegulatoryVertex data) {
-	    if (((GsRegulatoryVertex)data).isInput()) {
+	public GsGraphEventCascade vertexAdded(RegulatoryVertex data) {
+	    if (((RegulatoryVertex)data).isInput()) {
             inputNodes.add(data);
         } else {
             normalNodes.add(data);
@@ -69,11 +69,11 @@ public class GsInitialStateList implements GraphListener<GsRegulatoryVertex, GsR
 		return null;
 	}
 
-	public GsGraphEventCascade graphMerged(Collection<GsRegulatoryVertex> data) {
+	public GsGraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
 		return null;
 	}
 
-	public GsGraphEventCascade vertexRemoved(GsRegulatoryVertex data) {
+	public GsGraphEventCascade vertexRemoved(RegulatoryVertex data) {
 	    // update lists
         inputNodes.remove(data);
         normalNodes.remove(data);
@@ -87,7 +87,7 @@ public class GsInitialStateList implements GraphListener<GsRegulatoryVertex, GsR
         return null;
 	}
 
-	public GsGraphEventCascade vertexUpdated(GsRegulatoryVertex data) {
+	public GsGraphEventCascade vertexUpdated(RegulatoryVertex data) {
         List l_changes = new ArrayList();
 	    // update lists
 	    if (data.isInput() ? normalNodes.contains(data) : inputNodes.contains(data)) {

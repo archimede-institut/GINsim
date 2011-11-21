@@ -12,7 +12,7 @@ import fr.univmrs.tagc.common.Tools;
 
 public abstract class GsTreeParser<V,E> {
 	public static final String PARAM_NODEORDER = "p_nodeOrder";
-	protected GsTree tree;
+	protected Tree tree;
 	protected List nodeOrder;
 	private Map parameters;
 
@@ -37,7 +37,7 @@ public abstract class GsTreeParser<V,E> {
 		updateVertexLayout();	//Refresh the position and style of the GsTreeNodes
 	}
 
-	public void setTree(GsTree tree) {
+	public void setTree(Tree tree) {
 		this.tree = tree;
 	}
 	

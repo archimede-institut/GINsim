@@ -2,7 +2,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.models;
 
 import javax.swing.AbstractListModel;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 
 /**
@@ -11,7 +11,7 @@ import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
 public class GsDirectedEdgeListModel extends AbstractListModel {
 
 	private static final long serialVersionUID = 1155066949151354432L;
-	private GsRegulatoryMultiEdge edge = null;
+	private RegulatoryMultiEdge edge = null;
 	
 	public int getSize() {
 	    if (edge == null) {
@@ -33,7 +33,7 @@ public class GsDirectedEdgeListModel extends AbstractListModel {
     /**
      * @param edge
      */
-    public void setEdge(GsRegulatoryMultiEdge edge) {
+    public void setEdge(RegulatoryMultiEdge edge) {
         this.edge = edge;
         fireContentsChanged(this, 0, edge.getEdgeCount());
     }

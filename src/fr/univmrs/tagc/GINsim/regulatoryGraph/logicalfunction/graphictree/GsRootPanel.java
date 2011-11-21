@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeElement;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeValue;
@@ -40,7 +40,7 @@ public class GsRootPanel extends GsBooleanFunctionTreePanel implements ActionLis
     add(label, BorderLayout.CENTER);
   }
   public void actionPerformed(ActionEvent e) {
-    GsRegulatoryVertex vertex;
+    RegulatoryVertex vertex;
     boolean ok = true;
     byte i;
 

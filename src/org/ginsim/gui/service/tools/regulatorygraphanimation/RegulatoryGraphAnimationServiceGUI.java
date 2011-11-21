@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicgraph.GsDynamicGraph;
+import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -26,9 +26,9 @@ public class RegulatoryGraphAnimationServiceGUI implements GsServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
-		if (graph instanceof GsDynamicGraph) {
+		if (graph instanceof DynamicGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new AnimRegGraphAction((GsDynamicGraph)graph));
+			actions.add(new AnimRegGraphAction((DynamicGraph)graph));
 			return actions;
 		}
 		return null;
@@ -37,9 +37,9 @@ public class RegulatoryGraphAnimationServiceGUI implements GsServiceGUI {
 
 class AnimRegGraphAction extends GsToolsAction {
 
-	private final GsDynamicGraph graph;
+	private final DynamicGraph graph;
 	
-	public AnimRegGraphAction( GsDynamicGraph graph) {
+	public AnimRegGraphAction( DynamicGraph graph) {
 		
 		super( "STR_aRegGraph", "STR_aRegGraph_descr");
 		this.graph = graph;
@@ -48,7 +48,7 @@ class AnimRegGraphAction extends GsToolsAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-        GsRegulatoryAnimator.animate( GUIManager.getInstance().getFrame( graph), graph);
+        RegulatoryAnimator.animate( GUIManager.getInstance().getFrame( graph), graph);
 	}
 	
 }

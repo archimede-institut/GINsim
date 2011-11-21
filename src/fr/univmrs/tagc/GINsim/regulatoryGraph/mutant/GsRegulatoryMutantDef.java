@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Vector;
 
 import org.ginsim.annotation.Annotation;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
 import fr.univmrs.tagc.common.datastore.NamedObject;
@@ -19,7 +19,7 @@ public class GsRegulatoryMutantDef implements NamedObject, Perturbation {
     Vector v_changes = new Vector();
     Annotation annotation = new Annotation();
 
-    boolean check(GsRegulatoryGraph graph) {
+    boolean check(RegulatoryGraph graph) {
     	
         for (int i=0 ; i<v_changes.size() ; i++) {
             GsRegulatoryMutantChange nc = (GsRegulatoryMutantChange)v_changes.get(i);
@@ -103,19 +103,19 @@ public class GsRegulatoryMutantDef implements NamedObject, Perturbation {
         ((GsRegulatoryMutantChange)v_changes.get(index)).setMax(val);
     }
     
-    public void addChange(GsRegulatoryVertex vertex) {
+    public void addChange(RegulatoryVertex vertex) {
         if (vertex != null) {
             addChange(vertex, (byte)0, vertex.getMaxValue());
         }
     }
-    public void addChange(GsRegulatoryVertex vertex, byte min, byte max) {
+    public void addChange(RegulatoryVertex vertex, byte min, byte max) {
         GsRegulatoryMutantChange change = new GsRegulatoryMutantChange(vertex);
         change.setMin(min);
         change.setMax(max);
         v_changes.add(change);
     }
 
-    public void apply(OmddNode[] t_tree, GsRegulatoryGraph graph) {
+    public void apply(OmddNode[] t_tree, RegulatoryGraph graph) {
         for (int i=0 ; i<v_changes.size() ; i++) {
             GsRegulatoryMutantChange change = (GsRegulatoryMutantChange)v_changes.get(i);
             int index = graph.getNodeOrderForSimulation().indexOf(change.vertex);
@@ -145,7 +145,7 @@ public class GsRegulatoryMutantDef implements NamedObject, Perturbation {
 		return ((GsRegulatoryMutantChange)v_changes.get(index)).getCondition();
 	}
 	
-	public void setCondition(int index, GsRegulatoryGraph graph, String condition) {
+	public void setCondition(int index, RegulatoryGraph graph, String condition) {
 		((GsRegulatoryMutantChange)v_changes.get(index)).setCondition(condition, graph);
 	}
 	

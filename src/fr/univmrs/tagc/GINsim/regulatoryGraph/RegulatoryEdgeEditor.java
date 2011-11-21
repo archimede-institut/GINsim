@@ -10,10 +10,10 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageAction;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 
@@ -23,11 +23,11 @@ import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class RegulatoryEdgeEditor extends ObjectEditor<GsRegulatoryMultiEdge> {
+public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> {
 
 	private final Graph graph;
 	private final GraphGUI gui;
-	GsRegulatoryEdge edge;
+	RegulatoryEdge edge;
 	EdgeList edgeList;
 	
 	private static final int ANNOTATION = 0; 
@@ -37,10 +37,10 @@ public class RegulatoryEdgeEditor extends ObjectEditor<GsRegulatoryMultiEdge> {
 	private static final int TARGET = 12;
 	
 	static {
-		GenericPropertyEditorPanel.addSupportedClass(GsRegulatoryEdge.class, RegulatoryEdgeEditPanel.class);
+		GenericPropertyEditorPanel.addSupportedClass(RegulatoryEdge.class, RegulatoryEdgeEditPanel.class);
 	}
 	
-	public RegulatoryEdgeEditor(GsRegulatoryGraph graph) {
+	public RegulatoryEdgeEditor(RegulatoryGraph graph) {
 		this.graph = graph;
 		this.gui = GUIManager.getInstance().getGraphGUI(graph);
 		master = graph;
@@ -64,7 +64,7 @@ public class RegulatoryEdgeEditor extends ObjectEditor<GsRegulatoryMultiEdge> {
 		v_prop.add(pinfo);
 		
 		// edge edit panel
-		pinfo = new GenericPropertyInfo(this, EDGE, null, GsRegulatoryEdge.class);
+		pinfo = new GenericPropertyInfo(this, EDGE, null, RegulatoryEdge.class);
 		pinfo.data = graph;
 		pinfo.addPosition(0, 2, 5, 1, 1, 0, GridBagConstraints.SOUTH);
 		v_prop.add(pinfo);
@@ -76,7 +76,7 @@ public class RegulatoryEdgeEditor extends ObjectEditor<GsRegulatoryMultiEdge> {
 	}
 	
 	@Override
-	public void setEditedItem(GsRegulatoryMultiEdge o) {
+	public void setEditedItem(RegulatoryMultiEdge o) {
 		if (o == null) {
 			return;
 		}
@@ -152,20 +152,20 @@ public class RegulatoryEdgeEditor extends ObjectEditor<GsRegulatoryMultiEdge> {
 
 class EdgeList extends GenericList {
 
-	GsRegulatoryGraph graph;
-	GsRegulatoryMultiEdge medge;
+	RegulatoryGraph graph;
+	RegulatoryMultiEdge medge;
 	
-	EdgeList(GsRegulatoryGraph graph) {
+	EdgeList(RegulatoryGraph graph) {
 		this.graph = graph;
 		addOptions = new ArrayList();
 		canAdd = true;
 		canEdit = true;
 		canRemove = true;
 		t_type = new Class[1];
-		t_type[0] = GsRegulatoryEdge.class;
+		t_type[0] = RegulatoryEdge.class;
 	}
 	
-	void setMEdge(GsRegulatoryMultiEdge medge) {
+	void setMEdge(RegulatoryMultiEdge medge) {
 		this.medge = medge;
 		addOptions.clear();
 	    int[] t = medge.getFreeValues();
@@ -179,7 +179,7 @@ class EdgeList extends GenericList {
 	}
 
     protected void addEdge(int value) {
-		int index = medge.addEdge(GsRegulatoryMultiEdge.SIGN_POSITIVE, value, graph);
+		int index = medge.addEdge(RegulatoryMultiEdge.SIGN_POSITIVE, value, graph);
 		if (index != -1) {
 			setMEdge(medge);
 		}
@@ -236,8 +236,8 @@ class AddEdgeNotificationAction implements NotificationMessageAction {
 
 	public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 		if (edgeList.medge == data) {
-			GsRegulatoryVertex vertex = ((GsRegulatoryMultiEdge)data).getSource();
-			vertex.setMaxValue((byte)(vertex.getMaxValue()+1), (GsRegulatoryGraph)graph);
+			RegulatoryVertex vertex = ((RegulatoryMultiEdge)data).getSource();
+			vertex.setMaxValue((byte)(vertex.getMaxValue()+1), (RegulatoryGraph)graph);
 			edgeList.add();
 			return true;
 		}

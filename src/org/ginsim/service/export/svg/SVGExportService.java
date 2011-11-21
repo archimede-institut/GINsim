@@ -17,7 +17,7 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.service.GsService;
+import org.ginsim.service.Service;
 import org.jgraph.util.Bezier;
 import org.mangosdk.spi.ProviderFor;
 
@@ -26,8 +26,8 @@ import fr.univmrs.tagc.common.Tools;
 /**
  * export the graph to SVG
  */
-@ProviderFor( GsService.class)
-public class SVGExportService implements GsService{
+@ProviderFor( Service.class)
+public class SVGExportService implements Service{
 
     /**
      * @param graph

@@ -3,7 +3,7 @@ package fr.univmrs.tagc.GINsim.export.regulatoryGraph;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.PriorityClassDefinition;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.initialState.GsInitialStateStore;
@@ -18,7 +18,7 @@ public class GsNuSMVConfig implements GsInitialStateStore {
 	public static final int CFG_INPUT_FRONZEN = 10;
 	public static final int CFG_INPUT_IVAR = 11;
 
-	GsRegulatoryGraph graph;
+	RegulatoryGraph graph;
 	Map m_initStates;
 	Map m_input;
 	// Store has two objects: 0- Mutant & 1- PriorityClass
@@ -30,7 +30,7 @@ public class GsNuSMVConfig implements GsInitialStateStore {
 	/**
 	 * @param graph
 	 */
-	public GsNuSMVConfig(GsRegulatoryGraph graph) {
+	public GsNuSMVConfig(RegulatoryGraph graph) {
 		m_initStates = new HashMap();
 		m_input = new HashMap();
 		this.graph = graph;

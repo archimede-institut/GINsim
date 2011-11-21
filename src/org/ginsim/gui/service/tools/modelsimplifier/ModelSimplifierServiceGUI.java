@@ -12,10 +12,10 @@ import javax.swing.Action;
 import org.ginsim.exception.GsException;
 import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.objectassociation.GsGraphAssociatedObjectManager;
+import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -37,16 +37,16 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 public class ModelSimplifierServiceGUI implements GsServiceGUI {
 
     static {
-    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( GsRegulatoryGraph.class, ModelSimplifierConfigManager.key)){
-    		ObjectAssociationManager.getInstance().registerObjectManager( GsRegulatoryGraph.class, new ModelSimplifierConfigManager());
+    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, ModelSimplifierConfigManager.key)){
+    		ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new ModelSimplifierConfigManager());
         }
     }
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new ModelSimplifierAction((GsRegulatoryGraph)graph));
+			actions.add(new ModelSimplifierAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -55,8 +55,8 @@ public class ModelSimplifierServiceGUI implements GsServiceGUI {
 
 class ModelSimplifierAction extends GsToolsAction {
 
-	private final GsRegulatoryGraph graph;
-	public ModelSimplifierAction(GsRegulatoryGraph graph) {
+	private final RegulatoryGraph graph;
+	public ModelSimplifierAction(RegulatoryGraph graph) {
 		super("STR_reduce", "STR_reduce_descr");
 		this.graph = graph;
 	}
@@ -65,7 +65,7 @@ class ModelSimplifierAction extends GsToolsAction {
 	public void actionPerformed(ActionEvent arg0) {
 		if (graph.getVertexCount() < 1) {
             graph.addNotificationMessage(new NotificationMessage(graph, 
-            		Translator.getString(graph instanceof GsRegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
+            		Translator.getString(graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
             		NotificationMessage.NOTIFICATION_WARNING));
             return;
 		}
@@ -80,20 +80,20 @@ class ModelSimplifierAction extends GsToolsAction {
 /**
  * Save/open simulation parameters along with the model.
  */
-class ModelSimplifierConfigManager implements GsGraphAssociatedObjectManager {
+class ModelSimplifierConfigManager implements GraphAssociatedObjectManager {
 
 	public static final String key = "modelSimplifier";
 	
     public Object doOpen(InputStream is, Graph graph) {
     	
-        ModelSimplifierConfigParser parser = new ModelSimplifierConfigParser((GsRegulatoryGraph)graph);
+        ModelSimplifierConfigParser parser = new ModelSimplifierConfigParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
-        List<GsRegulatoryVertex> nodeOrder = ((GsRegulatoryGraph)graph).getNodeOrder();
+        List<RegulatoryVertex> nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
@@ -139,13 +139,13 @@ class ModelSimplifierConfigParser extends XMLHelper {
         return null;
     }
     
-    List<GsRegulatoryVertex> nodeOrder;
+    List<RegulatoryVertex> nodeOrder;
     ModelSimplifierConfigList paramList;
     
     /**
      * @param graph expected node order
      */
-    public ModelSimplifierConfigParser(GsRegulatoryGraph graph) {
+    public ModelSimplifierConfigParser(RegulatoryGraph graph) {
     	this.nodeOrder = graph.getNodeOrder();
         this.paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.key, true);
     }
@@ -163,7 +163,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
         	}
         	String[] t_remove = attributes.getValue("removeList").split(" ");
         	for (int i=0 ; i<t_remove.length ; i++) {
-        		for (GsRegulatoryVertex vertex: nodeOrder) {
+        		for (RegulatoryVertex vertex: nodeOrder) {
         			if (vertex.getId().equals(t_remove[i])) {
         				cfg.m_removed.put(vertex, null);
         			}

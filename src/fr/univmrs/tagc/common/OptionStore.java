@@ -18,7 +18,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.gui.shell.callbacks.GsFileCallBack;
+import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -133,7 +133,7 @@ public class OptionStore extends DefaultHandler {
         EdgeAttributesReader.saveOptions();
         VertexAttributesReader.saveOptions();
         
-        List<String> recents = GsFileCallBack.getRecentFiles();
+        List<String> recents = FileCallBack.getRecentFiles();
         if (recents.size() == 0 && m_option.size() == 0) {
             return;
         }
@@ -184,7 +184,7 @@ public class OptionStore extends DefaultHandler {
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         if (qName.equals("recent")) {
-            GsFileCallBack.addRecentFile(attributes.getValue("filename"));
+            FileCallBack.addRecentFile(attributes.getValue("filename"));
         } else if (qName.equals("option")) {
             String k = attributes.getValue("key");
             String sv = attributes.getValue("value");

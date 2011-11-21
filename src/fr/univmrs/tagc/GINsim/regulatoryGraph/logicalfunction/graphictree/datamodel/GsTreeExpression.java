@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanGene;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.GsBooleanParser;
@@ -77,14 +77,14 @@ public class GsTreeExpression extends GsTreeElement {
           userExpression = root.toString(false);
       }
   }
-  public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge) {
+  public TBooleanTreeNode remove(RegulatoryMultiEdge multiEdge) {
   	if (root != null) {
   		root = remove(multiEdge.getSource().getId(), root);
   		userExpression = "";
   	}
     return root;
   }
-  public TBooleanTreeNode remove(GsRegulatoryMultiEdge multiEdge, int index) {
+  public TBooleanTreeNode remove(RegulatoryMultiEdge multiEdge, int index) {
     root = remove(multiEdge.getSource().getId() + ":" + (index + 1), root);
     if (root != null) {
       decIndexes(root, multiEdge, index);
@@ -92,7 +92,7 @@ public class GsTreeExpression extends GsTreeElement {
     }
     return root;
   }
-  private void decIndexes(TBooleanTreeNode node, GsRegulatoryMultiEdge multiEdge, int index) {
+  private void decIndexes(TBooleanTreeNode node, RegulatoryMultiEdge multiEdge, int index) {
     String oldId;
     int oldIndex, i;
 

@@ -25,7 +25,7 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import fr.univmrs.tagc.GINsim.gui.tbclient.decotreetable.DTreeTableBuilder;
@@ -164,7 +164,7 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
 		tb.clearTree(logicalParametersTable);
 
 		for (int i = 0; i < editorModel.getInteractions().size(); i++) {
-			GsRegulatoryMultiEdge o = (GsRegulatoryMultiEdge)editorModel.getInteractions().elementAt(i);
+			RegulatoryMultiEdge o = (RegulatoryMultiEdge)editorModel.getInteractions().elementAt(i);
 			tb.newNode("", darkGreen);
 			nb.setNode();
 			nb.setSelectable(false, this);
@@ -185,7 +185,7 @@ public class GsFunctionEditorEditPanel extends GsPanel implements ItemListener, 
 				node.setUserObject(new GsListInteraction(o, j, false));
 				al.setNode(node);
 				nb.addLabel(o.getEdge(j).getShortInfo(), lightGreen);
-    		nb.addValue(GsRegulatoryMultiEdge.SIGN_SHORT[o.getSign(j)], false).addValue(new Integer(o.getMin(j)), false).addValue(o.getEdge(j).getMaxAsString(), false);
+    		nb.addValue(RegulatoryMultiEdge.SIGN_SHORT[o.getSign(j)], false).addValue(new Integer(o.getMin(j)), false).addValue(o.getEdge(j).getMaxAsString(), false);
     		node = nb.getNode();
     		tb.addNode(node);
       }

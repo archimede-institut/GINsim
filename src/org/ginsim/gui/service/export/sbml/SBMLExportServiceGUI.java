@@ -9,10 +9,10 @@ import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.GsServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsExportAction;
+import org.ginsim.gui.service.common.ExportAction;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.gui.GsFileFilter;
@@ -30,8 +30,8 @@ public class SBMLExportServiceGUI implements GsServiceGUI {
 		
 		List<Action> actions = new ArrayList<Action>();
 		
-		if (graph instanceof GsRegulatoryGraph) {
-			//actions.add( new ExportSBMLAction( (GsRegulatoryGraph) graph));
+		if (graph instanceof RegulatoryGraph) {
+			//actions.add( new ExportSBMLAction( (RegulatoryGraph) graph));
 		}
 		return actions;
 	}
@@ -44,11 +44,11 @@ public class SBMLExportServiceGUI implements GsServiceGUI {
  * @author spinelli
  *
  */
-class ExportSBMLAction extends GsExportAction<GsRegulatoryGraph> {
+class ExportSBMLAction extends ExportAction<RegulatoryGraph> {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"sbml"}, "SBML files");
 	
-	public ExportSBMLAction( GsRegulatoryGraph graph) {
+	public ExportSBMLAction( RegulatoryGraph graph) {
 		super( graph, "STR_SBML", "STR_SBML_descr");
 	}
 

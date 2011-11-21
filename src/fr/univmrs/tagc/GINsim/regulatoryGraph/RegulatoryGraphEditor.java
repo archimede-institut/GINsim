@@ -6,9 +6,9 @@ import java.util.Collection;
 import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.GraphListener;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
@@ -20,14 +20,14 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 
-public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener<GsRegulatoryVertex, GsRegulatoryMultiEdge> {
+public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener<RegulatoryVertex, RegulatoryMultiEdge> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NODEORDER = 1;
 	public static final int PROP_ANNOTATION = 2;
 	public static final int PROP_RAW = 10;
 	
-	GsRegulatoryGraph graph;
+	RegulatoryGraph graph;
 	private GsGraphOrderList nodeList;
 
 	public RegulatoryGraphEditor() {
@@ -47,7 +47,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 			if (this.graph != null) {
 				this.graph.removeGraphListener( this);
 			}
-			this.graph = (GsRegulatoryGraph) o;
+			this.graph = (RegulatoryGraph) o;
 			this.nodeList = new GsGraphOrderList( graph);
 			if (this.graph != null) {
 				this.graph.addGraphListener(this);
@@ -107,33 +107,33 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 		return null;
 	}
 
-	public GsGraphEventCascade edgeAdded(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeRemoved(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeUpdated(GsRegulatoryMultiEdge data) {
+	public GsGraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade graphMerged(Collection<GsRegulatoryVertex> data) {
+	public GsGraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
 		return null;
 	}
 
-	public GsGraphEventCascade vertexAdded(GsRegulatoryVertex data) {
+	public GsGraphEventCascade vertexAdded(RegulatoryVertex data) {
 		refresh(true);
 		return null;
 	}
 
-	public GsGraphEventCascade vertexRemoved(GsRegulatoryVertex data) {
+	public GsGraphEventCascade vertexRemoved(RegulatoryVertex data) {
 		refresh(true);
 		return null;
 	}
 
-	public GsGraphEventCascade vertexUpdated(GsRegulatoryVertex data) {
+	public GsGraphEventCascade vertexUpdated(RegulatoryVertex data) {
 		refresh(true);
 		return null;
 	}
@@ -143,15 +143,15 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 }
 
 class GsGraphOrderList extends SimpleGenericList {
-	GsRegulatoryGraph graph = null;
+	RegulatoryGraph graph = null;
 	
-	GsGraphOrderList( GsRegulatoryGraph graph) {
+	GsGraphOrderList( RegulatoryGraph graph) {
 		super(graph.getNodeOrder());
-		if (graph instanceof GsRegulatoryGraph) {
+		if (graph instanceof RegulatoryGraph) {
 			canOrder = true;
 			canEdit = true;
 			nbAction = 1;
-			this.graph = (GsRegulatoryGraph) graph;
+			this.graph = (RegulatoryGraph) graph;
 		}
 	}
 	

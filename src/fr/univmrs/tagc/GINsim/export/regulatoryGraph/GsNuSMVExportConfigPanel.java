@@ -21,9 +21,9 @@ import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParameterList;
-import org.ginsim.gui.service.tools.reg2dyn.GsSimulationParametersManager;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParameterList;
+import org.ginsim.gui.service.tools.reg2dyn.SimulationParametersManager;
 import org.ginsim.gui.service.tools.reg2dyn.PrioritySelectionPanel;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.GsMutantListManager;
@@ -67,7 +67,7 @@ public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 		cst.weightx = 0.5;
 		jpTmp.add(mutantPanel, cst);
 
-		GsSimulationParameterList paramList = (GsSimulationParameterList) ObjectAssociationManager.getInstance().getObject( this.cfg.graph, GsSimulationParametersManager.key, true);
+		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( this.cfg.graph, SimulationParametersManager.key, true);
 		priorityPanel = new PrioritySelectionPanel( stack, paramList.pcmanager);
 		priorityPanel.setStore(cfg.store, 1);
 		cst = new GridBagConstraints();
@@ -132,7 +132,7 @@ public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	 * 
 	 * @param nodeOrder
 	 */
-	public void refresh(Vector<GsRegulatoryVertex> nodeOrder) {
+	public void refresh(Vector<RegulatoryVertex> nodeOrder) {
 		model.refresh(nodeOrder);
 	}
 
@@ -159,8 +159,8 @@ public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 class GsNuSMVConfigModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 864660594916225977L;
-	private Vector<GsRegulatoryVertex> nodeOrder;
-	Map<GsRegulatoryVertex, Integer> m_initstates;
+	private Vector<RegulatoryVertex> nodeOrder;
+	Map<RegulatoryVertex, Integer> m_initstates;
 
 	/**
 	 * @param nodeOrder
@@ -168,8 +168,8 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param t_max
 	 * @param initstates
 	 */
-	public GsNuSMVConfigModel(Vector<GsRegulatoryVertex> nodeOrder,
-			Map<GsRegulatoryVertex, Integer> m_initstates) {
+	public GsNuSMVConfigModel(Vector<RegulatoryVertex> nodeOrder,
+			Map<RegulatoryVertex, Integer> m_initstates) {
 		this.nodeOrder = nodeOrder;
 		this.m_initstates = m_initstates;
 	}
@@ -283,7 +283,7 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 			return;
 		}
 		if (val < 0
-				|| val > ((GsRegulatoryVertex) nodeOrder.get(rowIndex))
+				|| val > ((RegulatoryVertex) nodeOrder.get(rowIndex))
 						.getMaxValue()) {
 			return;
 		}
@@ -304,7 +304,7 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param minBlock
 	 * @param maxBlock
 	 */
-	public void refresh(Vector<GsRegulatoryVertex> nodeOrder) {
+	public void refresh(Vector<RegulatoryVertex> nodeOrder) {
 		this.nodeOrder = nodeOrder;
 		fireTableStructureChanged();
 	}

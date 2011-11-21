@@ -1,13 +1,13 @@
 package org.ginsim.gui.service.tools.reg2dyn;
 
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
 
 public class HTGSimulationQueueSCC implements HTGSimulationQueueItem {
 
 	/**
 	 * The state itself
 	 */
-	private GsHierarchicalNode scc;
+	private HierarchicalNode scc;
 	/**
 	 * It's associated index. The k-th state to be discovered, will have its index = k. See Tarjan Algorithm's
 	 */
@@ -24,7 +24,7 @@ public class HTGSimulationQueueSCC implements HTGSimulationQueueItem {
 	 * @param low_index
 	 * @param updater
 	 */
-	public HTGSimulationQueueSCC(GsHierarchicalNode scc, int index, int low_index) {
+	public HTGSimulationQueueSCC(HierarchicalNode scc, int index, int low_index) {
 		this.setSCC(scc);
 		this.setIndex(index);
 		this.setLow_index(low_index);
@@ -68,14 +68,14 @@ public class HTGSimulationQueueSCC implements HTGSimulationQueueItem {
 	/* (non-Javadoc)
 	 * @see org.ginsim.gui.service.tools.reg2dyn.HTGSimulationQueueItem#setState(byte[])
 	 */
-	public void setSCC(GsHierarchicalNode scc) {
+	public void setSCC(HierarchicalNode scc) {
 		this.scc = scc;
 	}
 
 	/* (non-Javadoc)
 	 * @see org.ginsim.gui.service.tools.reg2dyn.HTGSimulationQueueItem#getState()
 	 */
-	public GsHierarchicalNode getSCC() {
+	public HierarchicalNode getSCC() {
 		return scc;
 	}
 

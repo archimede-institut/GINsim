@@ -6,24 +6,24 @@ import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.datamodel.GsTreeExpression;
 import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class QMCThread extends Thread {
 	private boolean cnf;
-	private GsRegulatoryVertex vertex;
+	private RegulatoryVertex vertex;
 	private GsTreeExpression expression;
-	private GsRegulatoryGraph graph;
+	private RegulatoryGraph graph;
 	private QMCAlgo algo;
 	private JTree tree;
 	private JProgressBar progressBar;
 	private GsButton cancelButton;
 
-	public QMCThread(boolean cnf, GsRegulatoryGraph g, GsRegulatoryVertex v, GsTreeExpression e, JTree t, JProgressBar jpb, GsButton b) {
+	public QMCThread(boolean cnf, RegulatoryGraph g, RegulatoryVertex v, GsTreeExpression e, JTree t, JProgressBar jpb, GsButton b) {
 		this.cnf = cnf;
 		vertex = v;
 		expression = e;
@@ -34,7 +34,7 @@ public class QMCThread extends Thread {
 	}
 	public void run() {
 		algo = new QMCAlgo(cnf, progressBar, cancelButton);
-		Collection<GsRegulatoryMultiEdge> l = graph.getIncomingEdges(vertex);
+		Collection<RegulatoryMultiEdge> l = graph.getIncomingEdges(vertex);
 		algo.init(l, expression.getChilds());
 		algo.exec();
 		TreePath sel_path = tree.getLeadSelectionPath();

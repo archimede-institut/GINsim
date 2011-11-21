@@ -1,16 +1,16 @@
 package org.ginsim.gui.service.tools.reg2dyn;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.GsRegulatoryMutantDef;
 
 public class SynchronousSimulationUpdater extends SimulationUpdater {
 
-	public SynchronousSimulationUpdater(GsRegulatoryGraph regGraph, GsSimulationParameters params) {
+	public SynchronousSimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
 		super(regGraph, params);
 	}
 
-	public SynchronousSimulationUpdater(GsRegulatoryGraph regGraph, GsRegulatoryMutantDef mutant) {
+	public SynchronousSimulationUpdater(RegulatoryGraph regGraph, GsRegulatoryMutantDef mutant) {
 		super(regGraph, mutant);
 	}
 

@@ -6,7 +6,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryMultiEdge;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsFunctionPanel;
 import fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.graphictree.GsTreeInteractionsModel;
@@ -29,9 +29,9 @@ public class GsFunctionEditorModel {
   public void init(GsTreeInteractionsModel m, GsFunctionPanel p) {
   	functionPanel = p;
   	oldExp = p.getCurrentText();
-  	Collection<GsRegulatoryMultiEdge> ed = m.getGraph().getIncomingEdges(m.getVertex());
+  	Collection<RegulatoryMultiEdge> ed = m.getGraph().getIncomingEdges(m.getVertex());
     interactions.clear();
-    for (GsRegulatoryMultiEdge me: ed) {
+    for (RegulatoryMultiEdge me: ed) {
       interactions.addElement(me);
     }
     Vector v = new Vector();
@@ -79,7 +79,7 @@ public class GsFunctionEditorModel {
   }
 	private Vector getInteractionList(String s) {
 		Vector le = new Vector();
-		GsRegulatoryMultiEdge ed = null;
+		RegulatoryMultiEdge ed = null;
 		int k = -1;
 		boolean not, found = false;
 
@@ -91,7 +91,7 @@ public class GsFunctionEditorModel {
 				not = t[i].startsWith("!");
 				if (not) t[i] = t[i].substring(1);
 				for (Enumeration enu = interactions.elements(); enu.hasMoreElements(); ) {
-					ed = (GsRegulatoryMultiEdge)enu.nextElement();
+					ed = (RegulatoryMultiEdge)enu.nextElement();
 					found = false;
 					k = -1;
 					if (t[i].equals(ed.getSource().toString()))

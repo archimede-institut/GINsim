@@ -2,8 +2,8 @@ package org.ginsim.service.action.stablestates;
 
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.service.GsService;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.GINsim.regulatoryGraph.OmddNode;
@@ -20,8 +20,8 @@ import fr.univmrs.tagc.GINsim.regulatoryGraph.mutant.Perturbation;
  * but immediately assembled.
  * The order in which they are considerd is also chosen to keep them small as long as possible.
  */
-@ProviderFor( GsService.class)
-public class StableStatesService implements GsService {
+@ProviderFor( Service.class)
+public class StableStatesService implements Service {
 
 	/**
 	 * This constructor should be called by the service manager,
@@ -30,17 +30,17 @@ public class StableStatesService implements GsService {
 	public StableStatesService() {
 	}
 
-	public StableStateSearcher getSearcher(GsRegulatoryGraph graph) {
+	public StableStateSearcher getSearcher(RegulatoryGraph graph) {
 		return new StableStatesAlgoImpl( graph);
 	}
 	
-	public OmddNode run( GsRegulatoryGraph regGraph, List nodeOrder, Perturbation mutant) {
+	public OmddNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant) {
 		StableStateSearcher searcher = getSearcher(regGraph);
 		searcher.setPerturbation(mutant);
 		return searcher.getStables();
 	}
 
-	public OmddNode run( GsRegulatoryGraph regGraph, List nodeOrder, Perturbation mutant, OmddNode[] trees) {
+	public OmddNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant, OmddNode[] trees) {
 		StableStateSearcher algo = getSearcher( regGraph);
 		algo.setPerturbation(mutant);
 		return algo.getStables();

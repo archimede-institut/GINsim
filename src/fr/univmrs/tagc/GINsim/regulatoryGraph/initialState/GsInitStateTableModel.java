@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 import fr.univmrs.tagc.common.widgets.EnhancedJTable;
@@ -96,7 +96,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 		}
         Map m_row = ((GsInitialState)imanager.getElement(null, rowIndex)).m;
         element = (List)m_row.get(nodeOrder.get(ci));
-        return showValue(element, ((GsRegulatoryVertex)nodeOrder.get(ci)).getMaxValue());
+        return showValue(element, ((RegulatoryVertex)nodeOrder.get(ci)).getMaxValue());
     }
     
     /**
@@ -229,7 +229,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 	
 	public void doSetValueAt(Object aValue, int rowIndex, int columnIndex) {
 		int ci = columnIndex - 2;
-		int maxvalue = ((GsRegulatoryVertex)nodeOrder.get(ci)).getMaxValue();
+		int maxvalue = ((RegulatoryVertex)nodeOrder.get(ci)).getMaxValue();
         if (aValue == null || ((String)aValue).trim().equals("") || ((String)aValue).trim().equals("*")) {
             if (rowIndex >= 0 && rowIndex < getRowCount()-1) {
                 Map m_line = ((GsInitialState)imanager.getElement(null, rowIndex)).m;
@@ -317,7 +317,7 @@ public class GsInitStateTableModel extends AbstractTableModel {
 		if (columnIndex == 1) {
 			return "use";
 		}
-		return ((GsRegulatoryVertex)nodeOrder.get(columnIndex-2)).toString();
+		return ((RegulatoryVertex)nodeOrder.get(columnIndex-2)).toString();
 	}
 
 	public int getColumnCount() {

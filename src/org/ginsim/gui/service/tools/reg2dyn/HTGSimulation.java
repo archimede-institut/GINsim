@@ -9,12 +9,12 @@ import java.util.Set;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNode;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalNodeSet;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalSigmaSet;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalSigmaSetFactory;
-import org.ginsim.graph.hierachicaltransitiongraph.GsHierarchicalTransitionGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNodeSet;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalSigmaSet;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalSigmaSetFactory;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.tools.reg2dyn.helpers.HTGSimulationHelper;
 
 import fr.univmrs.tagc.common.Debugger;
@@ -55,20 +55,20 @@ public class HTGSimulation extends Simulation {
 	/**
 	 * The HierarchicalTransitionGraph in construction
 	 */
-	private GsHierarchicalTransitionGraph htg;
+	private HierarchicalTransitionGraph htg;
 	/**
 	 * The regulatory graph
 	 */
-	private GsRegulatoryGraph regGraph;
+	private RegulatoryGraph regGraph;
 	
 	/**
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
 	private byte[] childsCount;
 	/**
-	 * A HashSet&lt;GsHierarchicalNode&gt; containg all the masters nodes.
+	 * A HashSet&lt;HierarchicalNode&gt; containg all the masters nodes.
 	 */
-	private GsHierarchicalNodeSet nodeSet;
+	private HierarchicalNodeSet nodeSet;
 	/**
 	 * The index of the next state found during the dfs.
 	 */
@@ -88,22 +88,22 @@ public class HTGSimulation extends Simulation {
 	/**
 	 * The simulation parameters
 	 */
-	private GsSimulationParameters params;
+	private SimulationParameters params;
 	
-	private GsHierarchicalSigmaSetFactory sigmaFactory;
+	private HierarchicalSigmaSetFactory sigmaFactory;
 	
 	private VertexAttributesReader vreader;
 
 	
-	public HTGSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params) {
+	public HTGSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
 		this(regGraph, frame, params, true, true);
 	}
 
-	public HTGSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow) {
+	public HTGSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow) {
 		this(regGraph, frame, params, runNow, true);
 	}
 
-    public HTGSimulation(GsRegulatoryGraph regGraph, SimulationManager frame, GsSimulationParameters params, boolean runNow, boolean useInit) {
+    public HTGSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow, boolean useInit) {
 		super(regGraph, frame, params, false, useInit);
 		
 		helper = new HTGSimulationHelper(regGraph, params);
@@ -121,11 +121,11 @@ public class HTGSimulation extends Simulation {
 	public Graph do_simulation() throws GsException{
 		
 		long time = System.currentTimeMillis();
-		this.htg = (GsHierarchicalTransitionGraph) helper.getDynamicGraph();
+		this.htg = (HierarchicalTransitionGraph) helper.getDynamicGraph();
 		this.vreader = htg.getVertexAttributeReader();
 		this.shouldCompactSCC = htg.areTransientCompacted();
-		this.regGraph = (GsRegulatoryGraph) helper.getRegulatoryGraph();
-		this.sigmaFactory = new GsHierarchicalSigmaSetFactory();
+		this.regGraph = (RegulatoryGraph) helper.getRegulatoryGraph();
+		this.sigmaFactory = new HierarchicalSigmaSetFactory();
 		Debugger.setDebug(debug);
 		
 //		try {
@@ -171,7 +171,7 @@ public class HTGSimulation extends Simulation {
 	 * </pre>
 	 */
 	private void runSimulationOnInitialStates() throws Exception {
-		nodeSet = new GsHierarchicalNodeSet();
+		nodeSet = new HierarchicalNodeSet();
 		childsCount = htg.getChildsCount();
 		index = 0;
 
@@ -180,7 +180,7 @@ public class HTGSimulation extends Simulation {
 			nbinitialstates++;
 			Debugger.log(DBG_MAINLOOPS,log_tabdepth+"New initial state :"+print_state(state));               						
 			                                                                                        						
-			GsHierarchicalNode processed_hnode = nodeSet.getHNodeForState(state);											//  Search __state__ in the nodeSet
+			HierarchicalNode processed_hnode = nodeSet.getHNodeForState(state);											//  Search __state__ in the nodeSet
 			if (processed_hnode  == null) { 																				//  If the new state was not in the nodeSet, that is has not been processed
 				SimulationUpdater updater = getUpdaterForState(state);														//    Get the updater of the state
 				if (!updater.hasNext()) {                                                                                   //    If it has no successor
@@ -202,7 +202,7 @@ public class HTGSimulation extends Simulation {
 	 * The recursive function of the algorithm.
 	 *
 	 */
-	private GsHierarchicalNode explore(HTGSimulationQueueState e, SimulationUpdater e_updater) throws Exception {
+	private HierarchicalNode explore(HTGSimulationQueueState e, SimulationUpdater e_updater) throws Exception {
 		checkStopConditions();
 		
 		HTGSimulationQueueItem n = null;
@@ -234,7 +234,7 @@ public class HTGSimulation extends Simulation {
 					Debugger.log(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=black]");                          							
 				} else {																						   				//Else the state is not in the queue
 					Debugger.log(DBG_APPARTENANCETESTS,log_tabdepth+"not in P"+queue);                         				   				 
-					GsHierarchicalNode n_hnode = nodeSet.getHNodeForState(n_state);								   				//  If it already processed (in the nodeSet)	
+					HierarchicalNode n_hnode = nodeSet.getHNodeForState(n_state);								   				//  If it already processed (in the nodeSet)	
 					if (n_hnode != null) {                                                                         				
 						Debugger.log(DBG_APPARTENANCETESTS,log_tabdepth+"in N :"+n_hnode.getUniqueId());                    				
 						Debugger.log(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=gray, style=dotted]");                          							
@@ -252,7 +252,7 @@ public class HTGSimulation extends Simulation {
 		}
 		Debugger.log(DBG_MAINLOOPS,log_tabdepth+"Comparing indexes "+e);
 		if (e.isCycle() || e.getIndex() == e.getLow_index()) {
-			GsHierarchicalNode hnode = buildSCC(e);
+			HierarchicalNode hnode = buildSCC(e);
 			log_tabdepth.deleteCharAt(log_tabdepth.length()-1);
 			return hnode;
 		}
@@ -274,8 +274,8 @@ public class HTGSimulation extends Simulation {
 			return (HTGSimulationQueueSCC) stopItemInQueue;
 		}
 		Debugger.log(DBG_QUEUE,log_tabdepth+"Cycle Found up to  "+stopItemInQueue);
-		GsHierarchicalNode cycle = new GsHierarchicalNode(childsCount);
-		cycle.setType(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE);
+		HierarchicalNode cycle = new HierarchicalNode(childsCount);
+		cycle.setType(HierarchicalNode.TYPE_TRANSIENT_CYCLE);
 		HTGSimulationQueueSCC newCycleItem = new HTGSimulationQueueSCC(cycle, index, low_index);
 		newCycleItem .setSCC(cycle);
 		HTGSimulationQueueItem n;
@@ -298,14 +298,14 @@ public class HTGSimulation extends Simulation {
 	
 	/**
 	 * Called when a head of a SCC is found on the stateItem __e__, to construct the new GSHierarchicalNode.
-	 * If __e__ is not already in a GsHierarchicalNode (because it is in a cycle), it is added into a new GsHierarchicalNode.
+	 * If __e__ is not already in a HierarchicalNode (because it is in a cycle), it is added into a new HierarchicalNode.
 	 * The GsHierarhicalNode __scc__, is added to the nodeSet, and its edges and its sigma is computed.
 	 * @param e
 	 * @return scc
 	 */
-	private GsHierarchicalNode buildSCC(HTGSimulationQueueItem e) {
-		GsHierarchicalNode scc;
-		GsHierarchicalNode inCycle = ((HTGSimulationQueueState) e).getInCycle(nodeSet, queue);
+	private HierarchicalNode buildSCC(HTGSimulationQueueItem e) {
+		HierarchicalNode scc;
+		HierarchicalNode inCycle = ((HTGSimulationQueueState) e).getInCycle(nodeSet, queue);
 		boolean isCycle;
 		//Init the scc
 		if (inCycle != null) {
@@ -313,9 +313,9 @@ public class HTGSimulation extends Simulation {
 			scc = inCycle;
 			isCycle = true;
 		} else {
-			scc = new GsHierarchicalNode(childsCount);
+			scc = new HierarchicalNode(childsCount);
 			scc.addState(((HTGSimulationQueueState) e).getState(), 1);
-			scc.setType(GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT);
+			scc.setType(HierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 			isCycle = false;
 		}
 		nodeSet.add(scc);
@@ -334,7 +334,7 @@ public class HTGSimulation extends Simulation {
 			SimulationUpdater updater = getUpdaterForState(state);						//    Get the updater of the state
 			while (updater.hasNext()) {
 				SimulationQueuedState successor = (SimulationQueuedState) updater.next();
-				GsHierarchicalNode hnode = nodeSet.getHNodeForState(successor.state);
+				HierarchicalNode hnode = nodeSet.getHNodeForState(successor.state);
 				if (!hnode.equals(scc)) {
 					isTerminal = false;
 					if (shouldCompactSCC) {
@@ -345,7 +345,7 @@ public class HTGSimulation extends Simulation {
 				}
 			}
 		}
-		GsHierarchicalSigmaSet sigma = null;
+		HierarchicalSigmaSet sigma = null;
 		if (shouldCompactSCC) {
 			sigma = sigmaFactory.endNewSigma();
 			scc.setSigma(sigma);
@@ -354,9 +354,9 @@ public class HTGSimulation extends Simulation {
 		}
 		if (isCycle) {
 			if (isTerminal) {
-				scc.setType(GsHierarchicalNode.TYPE_TERMINAL_CYCLE);
+				scc.setType(HierarchicalNode.TYPE_TERMINAL_CYCLE);
 			} else {
-				scc.setType(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE);
+				scc.setType(HierarchicalNode.TYPE_TRANSIENT_CYCLE);
 			}
 		} else {
 			if (shouldCompactSCC) {
@@ -376,10 +376,10 @@ public class HTGSimulation extends Simulation {
 	 * If the state is not already processed, ie. a HierarchicalNode exists, a new HierarchicalNode is created.
 	 * 
 	 * @param state
-	 * @return the GsHierarchicalNode (newly created or already processed) of the stable state
+	 * @return the HierarchicalNode (newly created or already processed) of the stable state
 	 */
-	private GsHierarchicalNode processStableState(byte[] state) {
-		GsHierarchicalNode hnode = nodeSet.getHNodeForState(state);									//  If it already processed (in the nodeSet)	
+	private HierarchicalNode processStableState(byte[] state) {
+		HierarchicalNode hnode = nodeSet.getHNodeForState(state);									//  If it already processed (in the nodeSet)	
 		if (hnode != null) {
 			Debugger.log(DBG_MAINLOOPS,log_tabdepth+"found stable state :"+print_state(state));
 			return hnode;
@@ -389,9 +389,9 @@ public class HTGSimulation extends Simulation {
 		Debugger.log(DBG_MAINLOOPS,log_tabdepth+"found NEW stable state :"+print_state(state));
 		Debugger.log(DBG_DOT,"DOT::"+print_state(state)+"[label=\""+print_state(state)+"/"+index+"\",shape=\"rectangle\", rank=\""+index+"\"]");
 		Debugger.log(DBG_DOT,"NODES::"+print_state(state)+"/"+index);
-		hnode = new GsHierarchicalNode(childsCount);
+		hnode = new HierarchicalNode(childsCount);
 		hnode.addState(state, 1);
-		hnode.setType(GsHierarchicalNode.TYPE_STABLE_STATE);
+		hnode.setType(HierarchicalNode.TYPE_STABLE_STATE);
 		if (shouldCompactSCC) {
 			sigmaFactory.beginNewSigma();
 			sigmaFactory.addToNewSigma(hnode);
@@ -432,28 +432,28 @@ public class HTGSimulation extends Simulation {
 	 * Define the graphical properties (color, shape) of a hnode.
 	 * @param hnode
 	 */
-	private void setHnodeGraphicalProperties(GsHierarchicalNode hnode) {
+	private void setHnodeGraphicalProperties(HierarchicalNode hnode) {
 		vreader.setVertex(hnode);
 		switch (hnode.getType()) {
-		case GsHierarchicalNode.TYPE_STABLE_STATE:
+		case HierarchicalNode.TYPE_STABLE_STATE:
 			vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
-			vreader.setBackgroundColor(GsHierarchicalNode.TYPE_STABLE_STATE_COLOR);
+			vreader.setBackgroundColor(HierarchicalNode.TYPE_STABLE_STATE_COLOR);
 			break;
-		case GsHierarchicalNode.TYPE_TRANSIENT_CYCLE:
-			vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
+		case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
+			vreader.setBackgroundColor(HierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
 			break;
-		case GsHierarchicalNode.TYPE_TERMINAL_CYCLE:
+		case HierarchicalNode.TYPE_TERMINAL_CYCLE:
 			vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
-			vreader.setBackgroundColor(GsHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
+			vreader.setBackgroundColor(HierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 			break;
-		case GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT:
+		case HierarchicalNode.TYPE_TRANSIENT_COMPONENT:
 			Color color = null;
 			if (hnode.getIn().isEmpty()) {
-				color = GsHierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR;
+				color = HierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR;
 			} else if (hnode.statesSet.getSizeOrOverApproximation() > 1) {
-				color = GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR;
+				color = HierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR;
 			} else {
-				color = GsHierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR;
+				color = HierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR;
 			}
 			vreader.setBackgroundColor(color);
 			break;
@@ -468,7 +468,7 @@ public class HTGSimulation extends Simulation {
 	 */
 	private void addAllNodeTo() {
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
-			GsHierarchicalNode node = (GsHierarchicalNode) it.next();
+			HierarchicalNode node = (HierarchicalNode) it.next();
 			node.updateSize();
 			htg.addVertex(node);
 			setHnodeGraphicalProperties(node);
@@ -482,11 +482,11 @@ public class HTGSimulation extends Simulation {
 		Debugger.log(DBG_POSTTREATMENT,"Adding all arcs to the graph...");
 		int nbarc = 0;
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
-			GsHierarchicalNode from = (GsHierarchicalNode) it.next();
+			HierarchicalNode from = (HierarchicalNode) it.next();
 			Debugger.log(DBG_POSTTREATMENT,"\tto "+from);
 			Set tos = from.getOut();
 			for (Iterator it2 = tos.iterator(); it2.hasNext();) {
-				GsHierarchicalNode to = (GsHierarchicalNode) it2.next();
+				HierarchicalNode to = (HierarchicalNode) it2.next();
 				Object b = htg.addEdge(from, to);
 				if (b != null) nbarc++;
 				Debugger.log(DBG_POSTTREATMENT,"\tfrom "+to+" --- "+b);

@@ -3,8 +3,8 @@ package org.ginsim.gui.service.tools.reg2dyn;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.GsRegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.GsRegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
@@ -13,11 +13,11 @@ public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinit
 
 	public static final String SYNCHRONOUS = "synchronous", ASYNCHRONOUS = "asynchronous"; 
 	
-	List<GsRegulatoryVertex> nodeOrder;
+	List<RegulatoryVertex> nodeOrder;
 	public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
 	
-	private List<GsRegulatoryVertex> filterInputVariables(List<GsRegulatoryVertex> nodeOrder) {
-		List<GsRegulatoryVertex> alFiltered = new ArrayList<GsRegulatoryVertex>();
+	private List<RegulatoryVertex> filterInputVariables(List<RegulatoryVertex> nodeOrder) {
+		List<RegulatoryVertex> alFiltered = new ArrayList<RegulatoryVertex>();
 		for (int i = 0; i < nodeOrder.size(); i++) {
 			if (!nodeOrder.get(i).isInput())
 				alFiltered.add(nodeOrder.get(i));
@@ -25,7 +25,7 @@ public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinit
 		return alFiltered;
 	}
 	
-	public PriorityClassManager(GsRegulatoryGraph graph) {
+	public PriorityClassManager(RegulatoryGraph graph) {
 		this.nodeOrder = filterInputVariables(graph.getNodeOrder());
 		canAdd = true;
 		canOrder = true;
@@ -42,30 +42,30 @@ public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinit
 		int index = add();
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)getElement(null, index);
 		pcdef.setName(ASYNCHRONOUS);
-		GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, 0);
+		Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null, 0);
 		pc.setName("all");
-		pc.setMode(GsReg2dynPriorityClass.ASYNCHRONOUS);
+		pc.setMode(Reg2dynPriorityClass.ASYNCHRONOUS);
 		pcdef.lock();
 		index = add();
 		pcdef = (PriorityClassDefinition)getElement(null, index);
 		pcdef.setName(SYNCHRONOUS);
-		pc = (GsReg2dynPriorityClass)pcdef.getElement(null, 0);
+		pc = (Reg2dynPriorityClass)pcdef.getElement(null, 0);
 		pc.setName("all");
-		pc.setMode(GsReg2dynPriorityClass.SYNCHRONOUS);
+		pc.setMode(Reg2dynPriorityClass.SYNCHRONOUS);
 		pcdef.lock();
 	}
 	
 	public PriorityClassDefinition doCreate(String name, int mode) {
 		PriorityClassDefinition pcdef = new PriorityClassDefinition(nodeOrder, name);
         Object lastClass = pcdef.v_data.get(0);
-        GsReg2dynPriorityClass currentClass;
+        Reg2dynPriorityClass currentClass;
         switch (mode) {
             case 1:
                 // should be equivalent to the old priority system: add one class per node
             	pcdef.v_data.clear();
             	pcdef.m_elt.clear();
                 for (int i=0 ; i<nodeOrder.size() ; i++) {
-                    currentClass = new GsReg2dynPriorityClass();
+                    currentClass = new Reg2dynPriorityClass();
                     pcdef.v_data.add(i, currentClass);
                     pcdef.m_elt.put(nodeOrder.get(i), currentClass);
                     currentClass.setName(""+nodeOrder.get(i));
@@ -110,8 +110,8 @@ public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinit
 			int l = pcdef.getNbElements();
 			boolean hasSync = false;
 			for (int i=0 ; i<l ; i++) {
-				GsReg2dynPriorityClass pc = (GsReg2dynPriorityClass)pcdef.getElement(null, i);
-				if (pc.getMode() == GsReg2dynPriorityClass.SYNCHRONOUS) {
+				Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null, i);
+				if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
 					hasSync = true;
 					break;
 				}
