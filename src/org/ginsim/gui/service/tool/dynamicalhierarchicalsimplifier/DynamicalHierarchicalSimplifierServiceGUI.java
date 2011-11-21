@@ -11,7 +11,7 @@ import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.dynamicalhierarchicalsimplifier.DynamicalHierarchicalSimplifierService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -32,7 +32,7 @@ public class DynamicalHierarchicalSimplifierServiceGUI implements ServiceGUI {
 
 }
 
-class DynamicalHierarchicalSimplifierAction extends GsToolsAction {
+class DynamicalHierarchicalSimplifierAction extends ToolAction {
 
 	private final DynamicalHierarchicalGraph graph;
 	

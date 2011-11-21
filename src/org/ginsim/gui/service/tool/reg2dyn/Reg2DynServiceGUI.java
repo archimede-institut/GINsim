@@ -17,7 +17,7 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.reg2dyn.Reg2DynService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -84,7 +84,7 @@ public class Reg2DynServiceGUI implements ServiceGUI {
 }
 
 
-class Reg2DynAction extends GsToolsAction {
+class Reg2DynAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
 	private final boolean batch = false;

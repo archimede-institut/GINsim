@@ -11,7 +11,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
@@ -31,7 +31,7 @@ public class TBServiceGUI implements ServiceGUI {
 	}
 }
 
-class TBAction extends GsToolsAction {
+class TBAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
 	private TBClientPanel clientPanel;

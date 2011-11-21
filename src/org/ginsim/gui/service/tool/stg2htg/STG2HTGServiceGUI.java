@@ -10,7 +10,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.view.css.Selector;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.stg2htg.STG2HTGService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -32,7 +32,7 @@ public class STG2HTGServiceGUI implements ServiceGUI {
 
 }
 
-class STG2HTGAction extends GsToolsAction {
+class STG2HTGAction extends ToolAction {
 	
 	private final Graph<?, ?> graph;
 	

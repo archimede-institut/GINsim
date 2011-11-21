@@ -14,7 +14,7 @@ import org.ginsim.graph.view.css.Selector;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.localgraph.LocalGraphService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -46,7 +46,7 @@ public class LocalGraphServiceGUI implements ServiceGUI {
 	}
 }
 
-class LocalGraphAction extends GsToolsAction {
+class LocalGraphAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
 	private final DynamicGraph dyn;

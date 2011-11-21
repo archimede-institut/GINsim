@@ -11,7 +11,7 @@ import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.regulatorygraphanimation.RegulatoryGraphAnimationService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -35,7 +35,7 @@ public class RegulatoryGraphAnimationServiceGUI implements ServiceGUI {
 	}
 }
 
-class AnimRegGraphAction extends GsToolsAction {
+class AnimRegGraphAction extends ToolAction {
 
 	private final DynamicGraph graph;
 	

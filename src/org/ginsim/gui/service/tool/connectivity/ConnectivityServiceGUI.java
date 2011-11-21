@@ -14,7 +14,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GenericGraphAction;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
 import org.mangosdk.spi.ProviderFor;
@@ -41,7 +41,7 @@ public class ConnectivityServiceGUI implements ServiceGUI {
 	}
 }
 
-class ConnectivityExtractAction extends GsToolsAction {
+class ConnectivityExtractAction extends ToolAction {
 	
 	private final ReducedGraph graph;
 	

@@ -12,7 +12,7 @@ import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.decisionanalysis.DecisionAnalysisService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -35,7 +35,7 @@ public class DecisionAnalysisServiceGUI implements ServiceGUI {
 }
 
 
-class DecisionAnalysisAction extends GsToolsAction {
+class DecisionAnalysisAction extends ToolAction {
 
 	private final HierarchicalTransitionGraph graph;
 	

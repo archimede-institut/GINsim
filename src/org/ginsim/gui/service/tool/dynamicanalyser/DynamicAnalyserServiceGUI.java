@@ -11,7 +11,7 @@ import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.dynamicanalyser.DynamicAnalyserService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -34,7 +34,7 @@ public class DynamicAnalyserServiceGUI implements ServiceGUI {
 	
 }
 
-class DynamicAnalyserAction extends GsToolsAction {
+class DynamicAnalyserAction extends ToolAction {
 
 	private final DynamicGraph graph;
 	

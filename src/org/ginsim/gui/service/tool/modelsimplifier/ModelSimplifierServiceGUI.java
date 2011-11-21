@@ -20,7 +20,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.mangosdk.spi.ProviderFor;
 import org.xml.sax.Attributes;
@@ -54,7 +54,7 @@ public class ModelSimplifierServiceGUI implements ServiceGUI {
 	}
 }
 
-class ModelSimplifierAction extends GsToolsAction {
+class ModelSimplifierAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
 	public ModelSimplifierAction(RegulatoryGraph graph) {

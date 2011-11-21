@@ -11,7 +11,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -31,7 +31,7 @@ public class InteractionAnalysisServiceGUI implements ServiceGUI {
 	}
 }
 
-class InteractionAnalysisAction extends GsToolsAction {
+class InteractionAnalysisAction extends ToolAction {
 	
 	private final RegulatoryGraph graph;
 	

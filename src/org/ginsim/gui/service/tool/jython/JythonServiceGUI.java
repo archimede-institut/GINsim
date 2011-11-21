@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 import org.python.core.PySystemState;
@@ -35,7 +35,7 @@ public class JythonServiceGUI implements ServiceGUI {
 
 }
 
-class JythonAction extends GsToolsAction {
+class JythonAction extends ToolAction {
 
 	private final Graph<?, ?> graph;
 

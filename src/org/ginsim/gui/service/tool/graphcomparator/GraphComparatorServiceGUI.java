@@ -10,7 +10,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -29,7 +29,7 @@ public class GraphComparatorServiceGUI implements ServiceGUI{
 
 }
 
-class GraphComparatorAction extends GsToolsAction {
+class GraphComparatorAction extends ToolAction {
 
 	private final Graph graph;
 	

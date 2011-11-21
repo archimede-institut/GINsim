@@ -19,7 +19,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GsToolsAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.regulatoryfunctiontree.RegulatoryFunctionTreeService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -40,7 +40,7 @@ public class RegulatoryFunctionTreeServiceGUI implements ServiceGUI {
 
 }
 
-class RegulatoryFunctionTreeAction extends GsToolsAction {
+class RegulatoryFunctionTreeAction extends ToolAction {
 
 	private static final Integer ZERO = new Integer(0);
 	

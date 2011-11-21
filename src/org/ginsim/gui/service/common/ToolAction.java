@@ -4,9 +4,9 @@ import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 
-public abstract class GsToolsAction extends BaseAction{
+public abstract class ToolAction extends BaseAction{
 
-	public GsToolsAction(String name) {
+	public ToolAction(String name) {
 		super(name, null, null, null);
 	}
 
@@ -15,7 +15,7 @@ public abstract class GsToolsAction extends BaseAction{
      * @param name Entry to insert in the menu
      * @param tooltip Long description of the action
      */
-	public GsToolsAction(String name, String tooltip) {
+	public ToolAction(String name, String tooltip) {
 		
 		this(name, null, tooltip, null);
 	}
@@ -27,7 +27,7 @@ public abstract class GsToolsAction extends BaseAction{
      * @param tooltip Long description of the action
      * @param accelerator the keyboard bytecut
      */
-	public GsToolsAction(String name, ImageIcon icon, String tooltip, KeyStroke accelerator) {
+	public ToolAction(String name, ImageIcon icon, String tooltip, KeyStroke accelerator) {
 		
 		super(name, icon, tooltip, accelerator, null);
 	}
