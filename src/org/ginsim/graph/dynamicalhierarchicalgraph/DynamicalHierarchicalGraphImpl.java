@@ -22,7 +22,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
-import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GinmlHelper;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -32,7 +32,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 
 	public static final String GRAPH_ZIP_NAME = "dynamicalHierarchicalGraph.ginml";
 	
-	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
+	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
 	
 	private byte[] childsCount = null;
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
@@ -152,7 +152,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
             out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
             out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
             out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");
-            out.write(GsGinmlHelper.getFullNodeVS(vReader));
+            out.write(GinmlHelper.getFullNodeVS(vReader));
             out.write("\t\t</node>\n");
         }
     }

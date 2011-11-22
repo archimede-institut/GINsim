@@ -25,7 +25,7 @@ import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>, NotificationMessageHolder {
 	
@@ -615,11 +615,11 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 */
 	public void fireGraphChange(int change, Object data) {
 		
-        List<GsGraphEventCascade> l_cascade = new ArrayList<GsGraphEventCascade>();
+        List<GraphEventCascade> l_cascade = new ArrayList<GraphEventCascade>();
 		switch (change) {
 		case CHANGE_EDGEADDED:
 			for (GraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.edgeAdded((E) data);
+				GraphEventCascade gec = l.edgeAdded((E) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -627,7 +627,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			break;
 		case CHANGE_EDGEREMOVED:
 			for (GraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.edgeRemoved((E) data);
+				GraphEventCascade gec = l.edgeRemoved((E) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -635,7 +635,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			break;
 		case CHANGE_VERTEXADDED:
 			for (GraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.vertexAdded((V) data);
+				GraphEventCascade gec = l.vertexAdded((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -643,7 +643,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			break;
         case CHANGE_VERTEXREMOVED:
 			for (GraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.vertexRemoved((V) data);
+				GraphEventCascade gec = l.vertexRemoved((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -651,7 +651,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
             break;
         case CHANGE_MERGED:
 			for (GraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.graphMerged((List<V>) data);
+				GraphEventCascade gec = l.graphMerged((List<V>) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -659,7 +659,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
             break;
         case CHANGE_VERTEXUPDATED:
 			for (GraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.vertexUpdated((V) data);
+				GraphEventCascade gec = l.vertexUpdated((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -667,7 +667,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
             break;
         case CHANGE_EDGEUPDATED:
 			for (GraphListener<V, E> l: listeners) {
-				GsGraphEventCascade gec = l.edgeUpdated((E) data);
+				GraphEventCascade gec = l.edgeUpdated((E) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -676,7 +676,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		}
         if (l_cascade.size() > 0) {
         	// FIXME: add back message upon modification cascade
-            //addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GsGraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
+            //addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
         }
 	}
 	

@@ -32,8 +32,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.tree.Tree;
-import org.ginsim.graph.tree.GsTreeParser;
-import org.ginsim.graph.tree.GsTreeParserFromCircuit;
+import org.ginsim.graph.tree.TreeParser;
+import org.ginsim.graph.tree.TreeParserFromCircuit;
 import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
@@ -712,12 +712,12 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
      * if a context is selected in the treeTable, it will use it, else it will use a "random" context (the first in v_circuit)
      */
 	private void viewContext() {
-		GsTreeParser parser = new GsTreeParserFromCircuit();
+		TreeParser parser = new TreeParserFromCircuit();
 		Tree tree = new TreeImpl(parser);
 			
-		parser.setParameter(GsTreeParser.PARAM_NODEORDER, graph.getNodeOrder());
-		parser.setParameter(GsTreeParserFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
-		parser.setParameter(GsTreeParserFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
+		parser.setParameter(TreeParser.PARAM_NODEORDER, graph.getNodeOrder());
+		parser.setParameter(TreeParserFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
+		parser.setParameter(TreeParserFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
 		GUIManager.getInstance().newFrame(tree);
 	}
 	

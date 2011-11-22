@@ -33,10 +33,10 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tool.stablestates.StableTableModel;
@@ -137,7 +137,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 	}
 
 	private void writeMutants() throws IOException {
-		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
+		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.key, true);
 		StableStateSearcher stableSearcher = ServiceManager.get(StableStatesService.class).getSearcher(graph);
 		OMDDNode stable;
 		

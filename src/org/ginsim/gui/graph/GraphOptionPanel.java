@@ -3,7 +3,7 @@ package org.ginsim.gui.graph;
 /**
  * offer save options to the user.
  */
-public interface GsGraphOptionPanel {
+public interface GraphOptionPanel {
 
     /**
      * @return the save mode selected by the user.

@@ -8,7 +8,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import org.ginsim.gui.graph.GsGraphOptionPanel;
+import org.ginsim.gui.graph.GraphOptionPanel;
 
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -16,7 +16,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 /**
  * offer save option for regulatory graphs 
  */
-public class GsRegulatoryGraphOptionPanel extends JPanel implements GsGraphOptionPanel {
+public class RegulatoryGraphOptionPanel extends JPanel implements GraphOptionPanel {
 
 	private static final long serialVersionUID = 4585614812066176148L;
 	private JComboBox comboBox;
@@ -31,7 +31,7 @@ public class GsRegulatoryGraphOptionPanel extends JPanel implements GsGraphOptio
 	 * @param t_mode allowed save mode
      * @param mode selected save mode
 	 */
-	public GsRegulatoryGraphOptionPanel (Object[] t_mode, int mode) {
+	public RegulatoryGraphOptionPanel (Object[] t_mode, int mode) {
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;

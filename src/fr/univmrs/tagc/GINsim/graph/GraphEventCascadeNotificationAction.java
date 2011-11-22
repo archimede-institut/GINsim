@@ -12,7 +12,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 /**
  * Actions associated with the eventCascade notification message
  */
-public class GsGraphEventCascadeNotificationAction implements NotificationMessageAction {
+public class GraphEventCascadeNotificationAction implements NotificationMessageAction {
 
     public String[] getActionName() {
         String[] t_action = { Translator.getString("STR_details") };

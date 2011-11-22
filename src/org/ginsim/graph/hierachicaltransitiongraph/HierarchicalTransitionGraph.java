@@ -25,7 +25,7 @@ import org.ginsim.gui.service.tool.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
-import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GinmlHelper;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;

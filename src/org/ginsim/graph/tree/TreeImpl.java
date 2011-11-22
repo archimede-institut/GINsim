@@ -18,7 +18,7 @@ import org.ginsim.gui.service.tool.regulatorytreefunction.TreeActionPanel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 
-public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>> 
+public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>> 
 	implements Tree{
 	
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
@@ -28,13 +28,13 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 	/**
 	 * The tree pendant to OMDDNode.TERMINALS
 	 */
-	public static GsTreeNode[] leafs;
+	public static TreeNode[] leafs;
 
 	static {
-		leafs = new GsTreeNode[OMDDNode.TERMINALS.length];
+		leafs = new TreeNode[OMDDNode.TERMINALS.length];
 		
 		for (byte i = 0; i < OMDDNode.TERMINALS.length; i++) {
-			leafs[i] = new GsTreeNode(""+i,-1, i, GsTreeNode.TYPE_LEAF, i);
+			leafs[i] = new TreeNode(""+i,-1, i, TreeNode.TYPE_LEAF, i);
 		}
 	}
 	
@@ -42,11 +42,11 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 	private RegulatoryGraph regGraph = null;
 	
 	private int mode;
-	public GsTreeNode root = null;
+	public TreeNode root = null;
 	private JPanel graphEditor = null;
-	private GsTreeParser parser;
+	private TreeParser parser;
 	
-	public TreeImpl(GsTreeParser parser) {
+	public TreeImpl(TreeParser parser) {
 		super();
 		this.parser = parser;
 		parser.setTree(this);
@@ -58,10 +58,10 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
      * @return true if the tree contains the node
      */
 	@Override
-    public boolean containsNode(GsTreeNode node) {
+    public boolean containsNode(TreeNode node) {
     	
     	for (Iterator it = getVertices().iterator(); it.hasNext();) {
-    		GsTreeNode treeNode = (GsTreeNode) it.next();
+    		TreeNode treeNode = (TreeNode) it.next();
     		if (treeNode == node) return true;
 		}
 		return false;
@@ -83,7 +83,7 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 //	 * @param vertex
 //	 */
 	// TODO REMOVE since it duplicates a method existing in AbstractGraphFrontend
-//	public boolean addVertex(GsTreeNode vertex) {
+//	public boolean addVertex(TreeNode vertex) {
 //		
 //		return graphManager.addVertex(vertex);
 //	}
@@ -94,11 +94,11 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 	 * @return the new edge
 	 */
 	@Override
-	public Edge<GsTreeNode> addEdge(GsTreeNode source, GsTreeNode target) {
+	public Edge<TreeNode> addEdge(TreeNode source, TreeNode target) {
 		
-		Edge<GsTreeNode> edge = getEdge(source, target);
+		Edge<TreeNode> edge = getEdge(source, target);
 		if (edge == null) {
-			edge = new Edge<GsTreeNode>(source, target);
+			edge = new Edge<TreeNode>(source, target);
 			if (!addEdge(edge)) {
 				return null;
 			}
@@ -111,7 +111,7 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 
 
 	@Override
-	public void setRoot( GsTreeNode root) {
+	public void setRoot( TreeNode root) {
 		
 		this.root = root;
 	}
@@ -128,12 +128,12 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 	}
 	
 	@Override
-	public GsTreeParser getParser() {
+	public TreeParser getParser() {
 		
 		return parser; 
 	}
 	
-	private void setParser(GsTreeParser parser) {
+	private void setParser(TreeParser parser) {
 		
 		this.parser = parser; 
 		parser.setTree(this);
@@ -152,20 +152,20 @@ public class TreeImpl  extends AbstractGraph<GsTreeNode, Edge<GsTreeNode>>
 	}
 
 	@Override
-	public void doSave(OutputStreamWriter osw, Collection<GsTreeNode> vertices,
-			Collection<Edge<GsTreeNode>> edges, int saveMode) {
+	public void doSave(OutputStreamWriter osw, Collection<TreeNode> vertices,
+			Collection<Edge<TreeNode>> edges, int saveMode) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	protected List<?> doMerge(Graph<GsTreeNode, Edge<GsTreeNode>> graph) {
+	protected List<?> doMerge(Graph<TreeNode, Edge<TreeNode>> graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Graph<GsTreeNode, Edge<GsTreeNode>> getSubgraph(
-			Collection<GsTreeNode> vertex, Collection<Edge<GsTreeNode>> edges) {
+	public Graph<TreeNode, Edge<TreeNode>> getSubgraph(
+			Collection<TreeNode> vertex, Collection<Edge<TreeNode>> edges) {
 		// TODO Auto-generated method stub
 		return null;
 	}

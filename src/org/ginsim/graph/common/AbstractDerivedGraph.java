@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 
@@ -125,33 +125,33 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
         associatedID = value;
     }
 
-    public GsGraphEventCascade edgeAdded(AE data) {
+    public GraphEventCascade edgeAdded(AE data) {
         setAssociatedGraph(null);
         return null;
     }
-    public GsGraphEventCascade edgeRemoved(AE data) {
+    public GraphEventCascade edgeRemoved(AE data) {
         setAssociatedGraph(null);
         return null;
     }
-    public GsGraphEventCascade edgeUpdated(AE data) {
+    public GraphEventCascade edgeUpdated(AE data) {
         return null;
     }
 
 
-    public GsGraphEventCascade vertexAdded(AV data) {
+    public GraphEventCascade vertexAdded(AV data) {
         setAssociatedGraph(null);
         return null;
     }
 
-	public GsGraphEventCascade graphMerged(Collection<AV> data) {
+	public GraphEventCascade graphMerged(Collection<AV> data) {
         setAssociatedGraph(null);
 		return null;
 	}
-    public GsGraphEventCascade vertexUpdated(AV data) {
+    public GraphEventCascade vertexUpdated(AV data) {
         return null;
     }
 
-    public GsGraphEventCascade vertexRemoved(AV data) {
+    public GraphEventCascade vertexRemoved(AV data) {
         setAssociatedGraph(null);
         return null;
     }

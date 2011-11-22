@@ -27,9 +27,9 @@ import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GinmlHelper;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -46,7 +46,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryVertex, 
     private static Graph copiedGraph = null;
 
     static {
-    	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new GsMutantListManager());
+    	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new MutantListManager());
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class,  new BiblioManager());
     }
 
@@ -204,7 +204,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryVertex, 
 	@Override
     protected void doSave( OutputStreamWriter os, Collection<RegulatoryVertex> vertices, Collection<RegulatoryMultiEdge> edges, int mode) throws GsException {
     	try {
-            XMLWriter out = new XMLWriter(os, GsGinmlHelper.DEFAULT_URL_DTD_FILE);
+            XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + getGraphName() + "\"");
 			out.write(" class=\"regulatory\"");
@@ -238,7 +238,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryVertex, 
 		        while (it.hasNext()) {
 		        	RegulatoryMultiEdge edge = it.next();
 		            ereader.setEdge(edge);
-		            edge.toXML(out, GsGinmlHelper.getEdgeVS(ereader), mode);
+		            edge.toXML(out, GinmlHelper.getEdgeVS(ereader), mode);
 		        }
 		        break;
         	default:
@@ -270,7 +270,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryVertex, 
     	            Object vertex = it.next();
     	            String svs = "";
 	                vReader.setVertex(vertex);
-	                svs = GsGinmlHelper.getShortNodeVS( vReader);
+	                svs = GinmlHelper.getShortNodeVS( vReader);
     	            ((RegulatoryVertex)vertex).toXML(out, svs, mode);
     	        }
     			break;
@@ -279,7 +279,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryVertex, 
     	            Object vertex = it.next();
     	            String svs = "";
 	                vReader.setVertex(vertex);
-	                svs = GsGinmlHelper.getFullNodeVS(vReader);
+	                svs = GinmlHelper.getFullNodeVS(vReader);
     	            ((RegulatoryVertex)vertex).toXML(out, svs, mode);
     	        }
     			break;

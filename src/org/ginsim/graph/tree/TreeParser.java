@@ -10,7 +10,7 @@ import org.ginsim.graph.common.VertexAttributesReader;
 
 import fr.univmrs.tagc.common.Tools;
 
-public abstract class GsTreeParser<V,E> {
+public abstract class TreeParser<V,E> {
 	public static final String PARAM_NODEORDER = "p_nodeOrder";
 	protected Tree tree;
 	protected List nodeOrder;
@@ -19,7 +19,7 @@ public abstract class GsTreeParser<V,E> {
 	/**
 	 * Create a new parser, knowing a nodeOrder and the tree to fill.
 	 */
-	public GsTreeParser() {
+	public TreeParser() {
 	}
 	
 	/**
@@ -47,7 +47,7 @@ public abstract class GsTreeParser<V,E> {
 	public abstract void init();
 
 	public abstract void parseOmdd();
-	public abstract void updateLayout(VertexAttributesReader vreader, GsTreeNode vertex);
+	public abstract void updateLayout(VertexAttributesReader vreader, TreeNode vertex);
 
 	
 	/**
@@ -56,7 +56,7 @@ public abstract class GsTreeParser<V,E> {
 	public void updateVertexLayout() {
 		VertexAttributesReader vreader = tree.getVertexAttributeReader();
 		for (Iterator it = tree.getVertices().iterator(); it.hasNext();) {
-			GsTreeNode vertex = (GsTreeNode) it.next();
+			TreeNode vertex = (TreeNode) it.next();
 			updateLayout(vreader, vertex);
 		}		
 	}
@@ -65,13 +65,13 @@ public abstract class GsTreeParser<V,E> {
 	 * Remove all the vertices from the tree
 	 */
 	public void clearTree() {
-		Vector<GsTreeNode> tmp = new Vector( tree.getVertexCount());
-		for (Iterator<GsTreeNode> it = tree.getVertices().iterator(); it.hasNext();) {
-			GsTreeNode vertex = (GsTreeNode) it.next();
+		Vector<TreeNode> tmp = new Vector( tree.getVertexCount());
+		for (Iterator<TreeNode> it = tree.getVertices().iterator(); it.hasNext();) {
+			TreeNode vertex = (TreeNode) it.next();
 			tmp.add(vertex);
 		}
 		for (Iterator it = tmp.iterator(); it.hasNext();) {
-			GsTreeNode vertex = (GsTreeNode) it.next();
+			TreeNode vertex = (TreeNode) it.next();
 			tree.removeVertex(vertex);
 		}
 	}	

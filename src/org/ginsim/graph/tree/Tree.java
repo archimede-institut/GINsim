@@ -3,10 +3,10 @@ package org.ginsim.graph.tree;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 
-public interface Tree extends Graph<GsTreeNode, Edge<GsTreeNode>>{
+public interface Tree extends Graph<TreeNode, Edge<TreeNode>>{
 	
 	
-	public GsTreeParser getParser();
+	public TreeParser getParser();
 	
 	
 	public void setMode(int treeMode);
@@ -14,7 +14,7 @@ public interface Tree extends Graph<GsTreeNode, Edge<GsTreeNode>>{
 	public int getMode();
 	
 	
-	public void setRoot( GsTreeNode root);
+	public void setRoot( TreeNode root);
 	
 	/**
 	 * add an edge between source and target
@@ -22,7 +22,7 @@ public interface Tree extends Graph<GsTreeNode, Edge<GsTreeNode>>{
 	 * @param target
 	 * @return the new edge
 	 */
-	public Edge<GsTreeNode> addEdge(GsTreeNode source, GsTreeNode target);
+	public Edge<TreeNode> addEdge(TreeNode source, TreeNode target);
 	
 	
 	/**
@@ -30,5 +30,5 @@ public interface Tree extends Graph<GsTreeNode, Edge<GsTreeNode>>{
      * @param node
      * @return true if the tree contains the node
      */
-    public boolean containsNode(GsTreeNode node);
+    public boolean containsNode(TreeNode node);
 }

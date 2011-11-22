@@ -12,8 +12,8 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.tree.Tree;
-import org.ginsim.graph.tree.GsTreeParser;
-import org.ginsim.graph.tree.GsTreeParserFromRegulatoryGraph;
+import org.ginsim.graph.tree.TreeParser;
+import org.ginsim.graph.tree.TreeParserFromRegulatoryGraph;
 import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -57,12 +57,12 @@ class RegulatoryFunctionTreeAction extends ToolAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		GsTreeParser parser = new GsTreeParserFromRegulatoryGraph();
+		TreeParser parser = new TreeParserFromRegulatoryGraph();
 		Tree tree = new TreeImpl( parser);
 			
-		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
-		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_REGGRAPH, graph);
-		parser.setParameter(GsTreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, getSelectedVertex( graph));
+		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
+		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_REGGRAPH, graph);
+		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, getSelectedVertex( graph));
 		GUIManager.getInstance().newFrame(tree);
 	}
 	

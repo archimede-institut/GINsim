@@ -10,7 +10,7 @@ import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
 
 import fr.univmrs.tagc.common.datastore.ObjectStore;
 
-public class GsNuSMVConfig implements InitialStateStore {
+public class NuSMVConfig implements InitialStateStore {
 
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
@@ -30,7 +30,7 @@ public class GsNuSMVConfig implements InitialStateStore {
 	/**
 	 * @param graph
 	 */
-	public GsNuSMVConfig(RegulatoryGraph graph) {
+	public NuSMVConfig(RegulatoryGraph graph) {
 		m_initStates = new HashMap();
 		m_input = new HashMap();
 		this.graph = graph;

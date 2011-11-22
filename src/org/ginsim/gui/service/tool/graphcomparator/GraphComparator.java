@@ -16,7 +16,7 @@ import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Style;
 import org.ginsim.graph.view.css.VertexStyle;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
+import fr.univmrs.tagc.GINsim.graph.GraphicalAttributesStore;
 
 /**
  * Compare 2 GsGraph
@@ -29,7 +29,7 @@ public abstract class GraphComparator<G extends Graph> {
 	protected G gm, g1m, g2m;
 	protected HashMap stylesMap;
 	protected Set verticesIdsSet;
-	protected GsGraphicalAttributesStore g1gas, g2gas;
+	protected GraphicalAttributesStore g1gas, g2gas;
 	protected StringBuffer log;
 	
 	public static Color SPECIFIC_G1_COLOR = new Color(0, 255, 0); //green
@@ -71,8 +71,8 @@ public abstract class GraphComparator<G extends Graph> {
 		addVerticesFromGraph(g1m);
 		addVerticesFromGraph(g2m);
 		
-		g1gas = new GsGraphicalAttributesStore(g1m);
-		g2gas = new GsGraphicalAttributesStore(g2m);
+		g1gas = new GraphicalAttributesStore(g1m);
+		g2gas = new GraphicalAttributesStore(g2m);
 		setVerticesColor();
 		log("\n");
 		

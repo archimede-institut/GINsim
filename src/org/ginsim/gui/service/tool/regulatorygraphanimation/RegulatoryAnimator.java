@@ -24,7 +24,7 @@ import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.service.tool.stateinregulatorygraph.StateInRegGraph;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphicalAttributesStore;
+import fr.univmrs.tagc.GINsim.graph.GraphicalAttributesStore;
 
 /**
  * Main class of the animator plugin.
@@ -40,7 +40,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 
     private Vector<DynamicNode> path = new Vector();
     
-    private GsGraphicalAttributesStore dynGas;
+    private GraphicalAttributesStore dynGas;
     
     private List nodeOrder;
     private PathPlayer pathPlayer = null;
@@ -84,7 +84,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         this.regGraph = regGraph;
         this.dynGraph = dynGraph;
         nodeOrder = regGraph.getNodeOrder();
-        dynGas = new GsGraphicalAttributesStore(dynGraph);
+        dynGas = new GraphicalAttributesStore(dynGraph);
         initAnim();
     }
 

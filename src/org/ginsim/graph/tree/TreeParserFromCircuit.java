@@ -16,7 +16,7 @@ import fr.univmrs.tagc.common.ColorPalette;
  * A treeParser for the context of functionality
  *
  */
-public class GsTreeParserFromCircuit extends GsTreeParser {
+public class TreeParserFromCircuit extends TreeParser {
 	protected final static int debug = 1;
 	
 	
@@ -115,26 +115,26 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		}	
 	}
 
-	public void updateLayout(VertexAttributesReader vreader, GsTreeNode vertex) {
+	public void updateLayout(VertexAttributesReader vreader, TreeNode vertex) {
 		vreader.setVertex(vertex);
-		int total_width = getTerminalWidth()*GsTreeNode.PADDING_HORIZONTAL;
-		if (vertex.getType() == GsTreeNode.TYPE_LEAF) {
+		int total_width = getTerminalWidth()*TreeNode.PADDING_HORIZONTAL;
+		if (vertex.getType() == TreeNode.TYPE_LEAF) {
 			vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
 			vreader.setBackgroundColor(ColorPalette.defaultPalette[vertex.getValue()+1]);
 			vreader.setBorder(0);
 			if (vertex.getDepth() != -1) {
-	    		vreader.setPos((int)((vertex.getWidth()-0.5)*total_width/getWidthPerDepth_acc(vertex))+100, getTotalLevels()*GsTreeNode.PADDING_VERTICAL+40);
+	    		vreader.setPos((int)((vertex.getWidth()-0.5)*total_width/getWidthPerDepth_acc(vertex))+100, getTotalLevels()*TreeNode.PADDING_VERTICAL+40);
 			} else {
-	    		vreader.setPos((int)((vertex.getWidth()+0.5)*total_width/getMaxTerminal())+100, getTotalLevels()*GsTreeNode.PADDING_VERTICAL+40);
+	    		vreader.setPos((int)((vertex.getWidth()+0.5)*total_width/getMaxTerminal())+100, getTotalLevels()*TreeNode.PADDING_VERTICAL+40);
 			}
 		} else {
 			vreader.setShape(VertexAttributesReader.SHAPE_RECTANGLE);			
-			if (vertex.getValue() == GsTreeNode.SKIPPED) {
+			if (vertex.getValue() == TreeNode.SKIPPED) {
 				vreader.setBackgroundColor(Color.WHITE);
 				vreader.setForegroundColor(Color.GRAY);
 			}
 			else vreader.setBackgroundColor(ColorPalette.defaultPalette[0]);
-			vreader.setPos((int)((vertex.getWidth()-0.5)*total_width/getWidthPerDepth_acc(vertex))+100, (getRealDepth(vertex)+1)*GsTreeNode.PADDING_VERTICAL-40);
+			vreader.setPos((int)((vertex.getWidth()-0.5)*total_width/getWidthPerDepth_acc(vertex))+100, (getRealDepth(vertex)+1)*TreeNode.PADDING_VERTICAL-40);
 		}
 		vreader.refresh();
 	}
@@ -166,14 +166,14 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
 		tree.setRoot( _createDiagramFromOmdd(root, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()));
 	}
-	private GsTreeNode _createDiagramFromOmdd(OmsddNode o, int lastLevel, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
-		GsTreeNode treeNode;
+	private TreeNode _createDiagramFromOmdd(OmsddNode o, int lastLevel, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
+		TreeNode treeNode;
 		int mult;
 		if (o.next == null) {
 			mult = jump(lastLevel, max_depth, currentWidthPerDepth);
 		
 			if (tree.getMode() == TreeImpl.MODE_DIAGRAM_WITH_MULTIPLE_LEAFS) {
-				treeNode = new GsTreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], GsTreeNode.TYPE_LEAF, o.value);
+				treeNode = new TreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], TreeNode.TYPE_LEAF, o.value);
 				if (mult > 1) currentWidthPerDepth[max_depth] += mult-1;
 				tree.addVertex(treeNode);
 			} else { // if (mode == MODE_DIAGRAM) {
@@ -187,11 +187,11 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		
 		mult = jump(lastLevel, o.level, currentWidthPerDepth);
 
-		treeNode = new GsTreeNode(getNodeName(o.level), o.level, ++currentWidthPerDepth[o.level], GsTreeNode.TYPE_BRANCH); 
+		treeNode = new TreeNode(getNodeName(o.level), o.level, ++currentWidthPerDepth[o.level], TreeNode.TYPE_BRANCH); 
 		tree.addVertex(treeNode);
 	
 		for (int i = 0 ; i < o.next.length ; i++) { //For all the children
-	    	GsTreeNode child = _createDiagramFromOmdd(o.next[i], o.level, currentWidthPerDepth, ereader);
+	    	TreeNode child = _createDiagramFromOmdd(o.next[i], o.level, currentWidthPerDepth, ereader);
 	    	linkNode(treeNode, child, i, ereader);
 	    }
 		
@@ -207,10 +207,10 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 	public void createTreeFromOmdd(OmsddNode root) {
 		computeWidthPerDepthFromRegGraph();
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
-		tree.setRoot ((GsTreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0));
+		tree.setRoot ((TreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0));
 	}
-	private List _createTreeFromOmdd(OmsddNode o, int lastLevel, GsTreeNode parent, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
-		GsTreeNode treeNode = null;
+	private List _createTreeFromOmdd(OmsddNode o, int lastLevel, TreeNode parent, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
+		TreeNode treeNode = null;
 		List parents = new ArrayList();
 		parents.add(parent);
 		int mult, last_real;
@@ -226,15 +226,15 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 				}
 			}
 			for (Iterator it = parents.iterator(); it.hasNext();) {
-				GsTreeNode p = (GsTreeNode) it.next();
+				TreeNode p = (TreeNode) it.next();
 				if (mult > 1) {
 					for (int i = 0; i < widthPerDepth[last_real]; i++) {
-						treeNode = new GsTreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], GsTreeNode.TYPE_LEAF, o.value);
+						treeNode = new TreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], TreeNode.TYPE_LEAF, o.value);
 						tree.addVertex(treeNode);
 				    	linkNode(p, treeNode, i, ereader);
 					}
 				} else {
-					treeNode = new GsTreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], GsTreeNode.TYPE_LEAF, o.value);
+					treeNode = new TreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], TreeNode.TYPE_LEAF, o.value);
 					tree.addVertex(treeNode);
 			    	linkNode(p, treeNode, childIndex, ereader);	
 				}
@@ -257,7 +257,7 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		if (mult > 1) nodeCountToCreate = widthPerDepth[last_real];
 		for (int k = 0; k < skippedParents.size(); k++) {
 			for (int i = 0; i < nodeCountToCreate; i++) {
-				treeNode = new GsTreeNode(getNodeName(o.level), o.level, ++currentWidthPerDepth[o.level], GsTreeNode.TYPE_BRANCH); 
+				treeNode = new TreeNode(getNodeName(o.level), o.level, ++currentWidthPerDepth[o.level], TreeNode.TYPE_BRANCH); 
 				tree.addVertex(treeNode);
 				currentNodes.add(treeNode);
 		
@@ -266,7 +266,7 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 				    	List childs = _createTreeFromOmdd(o.next[j], o.level, treeNode, j, currentWidthPerDepth, ereader);
 						if (childs != null) {
 							for (Iterator it2 = childs.iterator(); it2 .hasNext();) {
-								GsTreeNode child = (GsTreeNode) it2.next();
+								TreeNode child = (TreeNode) it2.next();
 								linkNode(treeNode, child, j, ereader);
 								
 							}
@@ -281,9 +281,9 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		} else {
 			int max = currentNodes.size()/skippedParents.size();
 			for (int i = 0; i < skippedParents.size(); i++) {
-				GsTreeNode p = (GsTreeNode)skippedParents.get(i);
+				TreeNode p = (TreeNode)skippedParents.get(i);
 				for (int j = 0; j < max; j++) {
-					GsTreeNode child = (GsTreeNode)currentNodes.get(j+i*max);
+					TreeNode child = (TreeNode)currentNodes.get(j+i*max);
 					linkNode(p, child, j, ereader);
 				}
 			}
@@ -300,9 +300,9 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 		String parentId = getNodeName(j);
 		
 		for (Iterator it = parents.iterator(); it.hasNext();) {
-			GsTreeNode o  = (GsTreeNode) it.next();
+			TreeNode o  = (TreeNode) it.next();
 			for (int i = 0 ; i < mult ; i++) {
-				GsTreeNode treeNode = new GsTreeNode(parentId, j, ++currentWidthPerDepth[j], GsTreeNode.TYPE_BRANCH, GsTreeNode.SKIPPED);
+				TreeNode treeNode = new TreeNode(parentId, j, ++currentWidthPerDepth[j], TreeNode.TYPE_BRANCH, TreeNode.SKIPPED);
 				newParents.add(treeNode);
 				tree.addVertex(treeNode);
 				linkNode(o, treeNode, childIndex, ereader);
@@ -338,7 +338,7 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 	 * @param colorIndex
 	 * @param ereader
 	 */
-	private void linkNode(GsTreeNode source, GsTreeNode target, int colorIndex, EdgeAttributesReader ereader) {
+	private void linkNode(TreeNode source, TreeNode target, int colorIndex, EdgeAttributesReader ereader) {
 		Object e = tree.addEdge(source, target);
 		ereader.setEdge(e);
 		ereader.setLineColor(ColorPalette.defaultPalette[colorIndex+1]);
@@ -356,12 +356,12 @@ public class GsTreeParserFromCircuit extends GsTreeParser {
 	public int getTerminalWidth() { return widthPerDepth_acc[max_depth]; }
 	public int getTotalLevels() { return total_levels; }
 	
-	protected int getRealDepth(GsTreeNode node) {
-		if (node.getDepth() == GsTreeNode.LEAF_DEFAULT_DEPTH) return getMaxDepth();
+	protected int getRealDepth(TreeNode node) {
+		if (node.getDepth() == TreeNode.LEAF_DEFAULT_DEPTH) return getMaxDepth();
 		return getRealDetph()[node.getDepth()];
 	}
-	protected int getWidthPerDepth_acc(GsTreeNode node) {
-		if (node.getDepth() == GsTreeNode.LEAF_DEFAULT_DEPTH) return getWidthPerDepth_acc()[getMaxDepth()];
+	protected int getWidthPerDepth_acc(TreeNode node) {
+		if (node.getDepth() == TreeNode.LEAF_DEFAULT_DEPTH) return getWidthPerDepth_acc()[getMaxDepth()];
 		return getWidthPerDepth_acc()[node.getDepth()];
 	}
 

@@ -30,7 +30,7 @@ import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
-import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -251,31 +251,31 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 		files.remove(fileName);
 	}
 
-	public GsGraphEventCascade edgeAdded(Edge data) {
+	public GraphEventCascade edgeAdded(Edge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeRemoved(Edge data) {
+	public GraphEventCascade edgeRemoved(Edge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade edgeUpdated(Edge data) {
+	public GraphEventCascade edgeUpdated(Edge data) {
 		return null;
 	}
 
-	public GsGraphEventCascade graphMerged(Collection data) {
+	public GraphEventCascade graphMerged(Collection data) {
 		return null;
 	}
 
-	public GsGraphEventCascade vertexAdded(Object data) {
+	public GraphEventCascade vertexAdded(Object data) {
 		return null;
 	}
 
-	public GsGraphEventCascade vertexRemoved(Object data) {
+	public GraphEventCascade vertexRemoved(Object data) {
 		return null;
 	}
 
-	public GsGraphEventCascade vertexUpdated(Object data) {
+	public GraphEventCascade vertexUpdated(Object data) {
 		return null;
 	}
 }

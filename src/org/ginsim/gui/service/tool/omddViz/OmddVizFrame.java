@@ -19,8 +19,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.graph.tree.Tree;
-import org.ginsim.graph.tree.GsTreeParser;
-import org.ginsim.graph.tree.GsTreeParserFromManualOmdd;
+import org.ginsim.graph.tree.TreeParser;
+import org.ginsim.graph.tree.TreeParserFromManualOmdd;
 import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 
@@ -133,11 +133,11 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			}
 		} else if (e.getSource() == displayTreeButton) {
 			run();
-			GsTreeParser parser = new GsTreeParserFromManualOmdd();
+			TreeParser parser = new TreeParserFromManualOmdd();
 			Tree tree = new TreeImpl(parser);
 				
-			parser.setParameter(GsTreeParserFromManualOmdd.PARAM_MANUALOMDD, resOmdd);
-			parser.setParameter(GsTreeParserFromManualOmdd.PARAM_NODEORDER, graph.getNodeOrder());
+			parser.setParameter(TreeParserFromManualOmdd.PARAM_MANUALOMDD, resOmdd);
+			parser.setParameter(TreeParserFromManualOmdd.PARAM_NODEORDER, graph.getNodeOrder());
 			parser.run(TreeImpl.MODE_DIAGRAM_WITH_MULTIPLE_LEAFS);
 			GUIManager.getInstance().newFrame(tree);
 

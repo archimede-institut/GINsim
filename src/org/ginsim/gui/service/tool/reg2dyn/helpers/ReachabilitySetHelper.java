@@ -8,13 +8,13 @@ import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationQueuedState;
 
 
-public class GsReachabilitySetHelper extends SimulationHelper {
+public class ReachabilitySetHelper extends SimulationHelper {
 	protected DynamicNode node;
 	protected int[] t_max;
 	protected int length;
 	protected OMDDNode dd_reachable = OMDDNode.TERMINALS[0];
 	
-	GsReachabilitySetHelper(SimulationParameters params) {
+	ReachabilitySetHelper(SimulationParameters params) {
 		length = params.nodeOrder.size();
 		t_max = new int[length];
 		for (int i=0 ; i<length ; i++) {

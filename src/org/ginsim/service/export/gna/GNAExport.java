@@ -29,7 +29,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-public class GsGNAExport implements ServiceGUI {
+public class GNAExport implements ServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {

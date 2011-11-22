@@ -9,7 +9,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStatesIterator;
-import org.ginsim.gui.service.tool.reg2dyn.helpers.GsSTGSimulationHelper;
+import org.ginsim.gui.service.tool.reg2dyn.helpers.STGSimulationHelper;
 import org.ginsim.gui.service.tool.reg2dyn.helpers.SimulationHelper;
 
 import fr.univmrs.tagc.common.Debugger;
@@ -54,7 +54,7 @@ public class Simulation extends Thread implements Runnable {
 		this.maxnodes = params.maxnodes;
 
 		if (params.simulationStrategy == SimulationParameters.STRATEGY_STG) {
-			helper = new GsSTGSimulationHelper(regGraph, params);
+			helper = new STGSimulationHelper(regGraph, params);
 		}
 		breadthFirst = params.breadthFirst;
    		updater = SimulationUpdater.getInstance(regGraph, params);

@@ -5,7 +5,7 @@ import java.util.List;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 
-public class GsTreeParserFromManualOmdd extends GsTreeParserFromOmdd {
+public class TreeParserFromManualOmdd extends TreeParserFromOmdd {
 
 	public static final String PARAM_MANUALOMDD = "p_manual_omdd";
 

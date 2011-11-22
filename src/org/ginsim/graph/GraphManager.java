@@ -302,7 +302,7 @@ public class GraphManager {
         try {
             ZipFile f = new ZipFile(file);
             try {
-                GsGinmlParser parser = new GsGinmlParser();
+                GinmlParser parser = new GinmlParser();
                 boolean usePrefix = false;
                 ZipEntry ze = f.getEntry("ginml");
                 if (ze==null) {
@@ -360,7 +360,7 @@ public class GraphManager {
         }
 
         // not a zip file
-        GsGinmlParser parser = new GsGinmlParser();
+        GinmlParser parser = new GinmlParser();
         try {
             Graph graph = parser.parse(new FileInputStream(file), map);
             registerGraph( graph, file.getAbsolutePath());

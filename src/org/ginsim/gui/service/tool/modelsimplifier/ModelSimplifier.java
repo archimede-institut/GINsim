@@ -31,7 +31,7 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
 import org.ginsim.gui.service.tool.reg2dyn.PriorityClassManager;
@@ -332,9 +332,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
 		// mutants: only copy mutants that don't affect removed nodes
-		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, false);
+		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.key, false);
 		if (mutants != null && mutants.getNbElements(null) > 0) {
-			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, GsMutantListManager.key, true);
+			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, MutantListManager.key, true);
 			RegulatoryMutantDef mutant, newMutant;
 			int mutantPos=0;
 			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {

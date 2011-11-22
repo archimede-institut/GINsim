@@ -2,7 +2,7 @@ package org.ginsim.graph.common;
 
 import java.util.Collection;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 
 /**
  * listen graph events
@@ -14,45 +14,45 @@ public interface GraphListener<V,E extends Edge<V>> {
      * @param data
      * @return an object to describe/undo cascade event
      */
-	public GsGraphEventCascade edgeAdded(E data);
+	public GraphEventCascade edgeAdded(E data);
     /**
      * an edge was removed from the graph.
      * @param data
      * @return an object to describe/undo cascade event
      */
-	public GsGraphEventCascade edgeRemoved(E data);
+	public GraphEventCascade edgeRemoved(E data);
     /**
      * an edge was updated.
      * @param data
      * @return an object to describe/undo cascade event
      */
-    public GsGraphEventCascade edgeUpdated(E data);
+    public GraphEventCascade edgeUpdated(E data);
 
     /**
      * a vertex was added to the graph.
      * @param data
      * @return an object to describe/undo cascade event
      */
-    public GsGraphEventCascade vertexAdded(V data);
+    public GraphEventCascade vertexAdded(V data);
     /**
      * a vertex was removed from the graph.
      * @param data
      * @return an object to describe/undo cascade event
      */
-    public GsGraphEventCascade vertexRemoved(V data);
+    public GraphEventCascade vertexRemoved(V data);
     /**
      * a vertex was updated.
      * @param data
      * @return an object to describe/undo cascade event
      */
-    public GsGraphEventCascade vertexUpdated(V data);
+    public GraphEventCascade vertexUpdated(V data);
     
     /**
      * the graph was merged with another one
      * @param nodes list of all merged in vertices
      * @return an object to describe/undo cascade event
      */
-    public GsGraphEventCascade graphMerged(Collection<V> nodes);
+    public GraphEventCascade graphMerged(Collection<V> nodes);
     
 	/** graph parsing is finished */
     public void endParsing();

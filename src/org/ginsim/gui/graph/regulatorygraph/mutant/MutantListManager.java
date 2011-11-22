@@ -1,4 +1,4 @@
-package org.ginsim.gui.graph.regulatorygraph;
+package org.ginsim.gui.graph.regulatorygraph.mutant;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,14 +13,13 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantParser;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * Save/open simulation parameters along with the model.
  */
-public class GsMutantListManager implements
+public class MutantListManager implements
         GraphAssociatedObjectManager {
 
 	public static final String key = "mutant";

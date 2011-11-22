@@ -89,11 +89,11 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 	
 	// FIXME: option panel?
 //	private JPanel getOptionPanel() {
-//		GsRegulatoryGraphOptionPanel optionPanel;
+//		RegulatoryGraphOptionPanel optionPanel;
 //        Object[] t_mode = { Translator.getString("STR_saveNone"),
 //                Translator.getString("STR_savePosition"),
 //                Translator.getString("STR_saveComplet") };
-//		optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, this.saveMode);
+//		optionPanel = new RegulatoryGraphOptionPanel(t_mode, this.saveMode);
 //		return optionPanel;
 //	}
 

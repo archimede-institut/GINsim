@@ -25,7 +25,7 @@ import org.ginsim.gui.service.tool.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
-import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GinmlHelper;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -38,7 +38,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	public static final int MODE_SCC = 1;
 	public static final int MODE_HTG = 2;
 
-	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
+	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
 	
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 	
@@ -233,7 +233,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
 	         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
 	         out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");
-	         out.write(GsGinmlHelper.getFullNodeVS(vReader));
+	         out.write(GinmlHelper.getFullNodeVS(vReader));
 	         out.write("\t\t</node>\n");
 	     }
 	 }		

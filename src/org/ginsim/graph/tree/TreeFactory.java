@@ -46,7 +46,7 @@ public class TreeFactory implements GraphFactory<Tree> {
     @Override
     public Class getParser() {
     	
-    	return GsTreeParser.class;
+    	return TreeParser.class;
     }
 
 }

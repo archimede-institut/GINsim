@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.xml.sax.Attributes;
 
@@ -46,7 +46,7 @@ public class RegulatoryMutantParser extends XMLHelper {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         this.m_call = CALLMAP;
-        mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
+        mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.key, true);
     }
 
     protected void endElement(int id) {

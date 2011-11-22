@@ -20,10 +20,10 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
-import org.ginsim.gui.graph.regulatorygraph.GsRegulatoryGraphOptionPanel;
+import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphEditor;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
-import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GinmlHelper;
 
 import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -34,8 +34,8 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";
 	
-	private String dtdFile = GsGinmlHelper.DEFAULT_URL_DTD_FILE;
-	private GsRegulatoryGraphOptionPanel optionPanel;
+	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
+	private RegulatoryGraphOptionPanel optionPanel;
 
 	protected List v_stables = null;
     private ObjectEditor graphEditor = null;
@@ -198,7 +198,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 		            String source = edge.getSource().toString();
 		            String target = edge.getTarget().toString();
 		            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\">\n");
-		            out.write(GsGinmlHelper.getEdgeVS(eReader));
+		            out.write(GinmlHelper.getEdgeVS(eReader));
 		            out.write("</edge>");
 		        }
         	    break;
@@ -230,7 +230,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	    		case 1:
 	                for (DynamicNode node: nodes) {
 	                    vReader.setVertex(node);
-	                    String svs = GsGinmlHelper.getShortNodeVS(vReader);
+	                    String svs = GinmlHelper.getShortNodeVS(vReader);
 	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
 	                    out.write(svs);
 	                    out.write("\t\t</node>\n");
@@ -239,7 +239,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 				case 2:
 	                for (DynamicNode node: nodes) {
 	                    vReader.setVertex(node);
-	                    String svs = GsGinmlHelper.getFullNodeVS(vReader);
+	                    String svs = GinmlHelper.getFullNodeVS(vReader);
 	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
 	                    out.write(svs);
 	                    out.write("\t\t</node>\n");
@@ -429,7 +429,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 //            Object[] t_mode = { Translator.getString("STR_saveNone"),
 //                    Translator.getString("STR_savePosition"),
 //                    Translator.getString("STR_saveComplet") };
-//            optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
+//            optionPanel = new RegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
 //		}
 //		return optionPanel;
 //	}

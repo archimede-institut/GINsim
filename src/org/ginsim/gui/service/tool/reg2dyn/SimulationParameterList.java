@@ -10,10 +10,10 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
@@ -50,7 +50,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	canRemove = true;
     	canOrder = true;
         graph.addGraphListener(this);
-        RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, true);
+        RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.key, true);
         mutants.addListener(this);
         if (param == null) {
         	add();
@@ -59,19 +59,19 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         }
     }
 
-    public GsGraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
+    public GraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
         return null;
     }
 
-    public GsGraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
+    public GraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
         return null;
     }
 
-    public GsGraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
+    public GraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
         return null;
     }
 
-    public GsGraphEventCascade vertexAdded(RegulatoryVertex data) {
+    public GraphEventCascade vertexAdded(RegulatoryVertex data) {
         // if needed, add it to the default priority class!
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
@@ -82,14 +82,14 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         return null;
     }
 
-	public GsGraphEventCascade graphMerged(Collection<RegulatoryVertex> nodes) {
+	public GraphEventCascade graphMerged(Collection<RegulatoryVertex> nodes) {
 		for (RegulatoryVertex v: nodes) {
 			vertexAdded(v);
 		}
 		return null;
 	}
     
-    public GsGraphEventCascade vertexRemoved(RegulatoryVertex data) {
+    public GraphEventCascade vertexRemoved(RegulatoryVertex data) {
         // remove it from priority classes
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
@@ -100,7 +100,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         return null;
     }
 
-    public GsGraphEventCascade vertexUpdated(RegulatoryVertex data) {
+    public GraphEventCascade vertexUpdated(RegulatoryVertex data) {
     	return null;
     }
 

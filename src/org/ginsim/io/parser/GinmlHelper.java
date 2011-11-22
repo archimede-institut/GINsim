@@ -15,7 +15,7 @@ import fr.univmrs.tagc.common.Tools;
  * some help function to parse/write ginml files.
  * it is mainly here to share visual settings's code
  */
-public class GsGinmlHelper {
+public class GinmlHelper {
 	
     /** default URL of the DTD */
     public static final String DEFAULT_URL_DTD_FILE = "http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd";

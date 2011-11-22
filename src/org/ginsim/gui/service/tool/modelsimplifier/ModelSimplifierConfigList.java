@@ -8,7 +8,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 /**
@@ -32,14 +32,14 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
         graph.addGraphListener(this);
     }
 
-    public GsGraphEventCascade vertexAdded(RegulatoryVertex data) {
+    public GraphEventCascade vertexAdded(RegulatoryVertex data) {
         return null;
     }
-	public GsGraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
+	public GraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
 		return null;
 	}
     
-    public GsGraphEventCascade vertexRemoved(RegulatoryVertex data) {
+    public GraphEventCascade vertexRemoved(RegulatoryVertex data) {
     	for (int i=0 ; i<v_data.size() ; i++) {
     		ModelSimplifierConfig cfg = (ModelSimplifierConfig)v_data.get(i);
     		cfg.m_removed.remove(data);
@@ -47,7 +47,7 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
         return null;
     }
 
-    public GsGraphEventCascade vertexUpdated(RegulatoryVertex data) {
+    public GraphEventCascade vertexUpdated(RegulatoryVertex data) {
     	return null;
     }
 
@@ -56,13 +56,13 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
 		config.setName(name);
 		return config;
 	}
-	public GsGraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
+	public GraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
 		return null;
 	}
-	public GsGraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
+	public GraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
 		return null;
 	}
-	public GsGraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
+	public GraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
 		return null;
 	}
 	public void endParsing() {

@@ -7,7 +7,7 @@ import org.ginsim.service.export.Dotify;
 
 import fr.univmrs.tagc.common.Debugger;
 
-public class GsTreeNode implements Dotify {
+public class TreeNode implements Dotify {
 	public static long nextUid = 0;
 	
 	public static final byte TYPE_LEAF = 0;
@@ -62,10 +62,10 @@ public class GsTreeNode implements Dotify {
 	 * @param width
 	 * @param type
 	 */
-	public GsTreeNode(String label, int depth, int width, byte type) {
+	public TreeNode(String label, int depth, int width, byte type) {
 		this(label, depth, width, type, (byte) LEAF_DEFAULT_DEPTH);
 	}
-	public GsTreeNode(String label, int depth, int width, byte type, byte value) {
+	public TreeNode(String label, int depth, int width, byte type, byte value) {
 		this.uid = nextUid++;
 		this.label = label;
 		this.type = type;
@@ -74,7 +74,7 @@ public class GsTreeNode implements Dotify {
 		this.value = value;
 	}
 	
-	public GsTreeNode(GsTreeNode other) {
+	public TreeNode(TreeNode other) {
 		this.uid = nextUid++;
 		this.label = other.label;
 		this.type = other.type;
@@ -126,21 +126,21 @@ public class GsTreeNode implements Dotify {
 	}
 
 	public String toDot(Object to) {
-		return  this.getUniqueId()+" -> "+((GsTreeNode) to).getUniqueId()+";";
+		return  this.getUniqueId()+" -> "+((TreeNode) to).getUniqueId()+";";
 	}
 
 	public boolean equals(Object other) {
-		if (!(other instanceof GsTreeNode)) return false;
-		return this.uid == ((GsTreeNode)other).uid;
+		if (!(other instanceof TreeNode)) return false;
+		return this.uid == ((TreeNode)other).uid;
 	}
-	public GsTreeNode deepCopy( Tree gm) {
-		GsTreeNode self = new GsTreeNode(this);
+	public TreeNode deepCopy( Tree gm) {
+		TreeNode self = new TreeNode(this);
 		Debugger.log(self);
 		gm.addVertex(self);
-		for (Edge<GsTreeNode> e: (Collection<Edge<GsTreeNode>>) gm.getOutgoingEdges(this)) {
-			GsTreeNode target = e.getTarget().deepCopy( gm);
+		for (Edge<TreeNode> e: (Collection<Edge<TreeNode>>) gm.getOutgoingEdges(this)) {
+			TreeNode target = e.getTarget().deepCopy( gm);
 			gm.addVertex(target);
-			Edge<GsTreeNode> edge = new Edge<GsTreeNode>(self, target);
+			Edge<TreeNode> edge = new Edge<TreeNode>(self, target);
 			gm.addEdge(edge);
 		}
 		return self;

@@ -47,7 +47,7 @@ import fr.univmrs.tagc.common.widgets.StockButton;
 /**
  * Panel to edit interaction of a gene
  */
-public class GsInteractionPanel extends AbstractParameterPanel
+public class InteractionPanel extends AbstractParameterPanel
 	implements ObjectPropertyEditorUI {
 
 	private static final long serialVersionUID = 8583991719735516132L;
@@ -80,7 +80,7 @@ public class GsInteractionPanel extends AbstractParameterPanel
 	 * @param graph
 	 *
 	 */
-    public GsInteractionPanel(RegulatoryGraph graph) {
+    public InteractionPanel(RegulatoryGraph graph) {
 		super(graph);
         this.graph = graph;
 		initialize();

@@ -17,12 +17,12 @@ import org.ginsim.gui.service.tool.reg2dyn.SimulationQueuedState;
  * 
  * @author Duncan Berenguier
  */
-public class GsSTGSimulationHelper extends SimulationHelper {
+public class STGSimulationHelper extends SimulationHelper {
 	protected DynamicNode node;
 	protected DynamicGraph stateTransitionGraph;
 	protected VertexAttributesReader vreader;
 	
-	public GsSTGSimulationHelper(RegulatoryGraph regGraph, SimulationParameters params) {
+	public STGSimulationHelper(RegulatoryGraph regGraph, SimulationParameters params) {
 		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, params.nodeOrder);
 		stateTransitionGraph.setAssociatedGraph(regGraph);
 		

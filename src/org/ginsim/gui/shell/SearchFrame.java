@@ -35,7 +35,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  * The nodes founds are displayed into a list supporting multiple selection. A button allow to select in the graph, the node selected in the list.
  *
  */
-public class GsSearchFrame extends SimpleDialog {
+public class SearchFrame extends SimpleDialog {
 	private static final long serialVersionUID = 381064983897248950L;
 
 	private GraphGUI<?, ?, ?> gui;
@@ -48,7 +48,7 @@ public class GsSearchFrame extends SimpleDialog {
 	private JTable table;
 	private MyTableModel tableModel;
 	
-	public GsSearchFrame(GraphGUI<?, ?, ?> gui) {
+	public SearchFrame(GraphGUI<?, ?, ?> gui) {
 		super(GUIManager.getInstance().getFrame(gui.getGraph()), Translator.getString("STR_searchNode_title"),300,400);
 		this.gui = gui;
 		this.g = gui.getGraph();

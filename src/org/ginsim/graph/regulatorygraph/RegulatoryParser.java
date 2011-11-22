@@ -29,7 +29,7 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.Tr
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
-import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GinmlHelper;
 import org.ginsim.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -336,10 +336,10 @@ public final class RegulatoryParser extends GsXMLHelper {
                 break; // POS_EDGE
 
             case POS_EDGE_VS:
-            	GsGinmlHelper.applyEdgeVisualSettings(ereader, qName, attributes);
+            	GinmlHelper.applyEdgeVisualSettings(ereader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
-            	vslevel = GsGinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
+            	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
                 break; // POS_VERTEX_VS
             case POS_VERTEX_NOTES:
                 if (qName.equals("linklist")) {

@@ -8,7 +8,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 
-public class GsTreeParserFromRegulatoryGraph extends GsTreeParserFromOmdd {
+public class TreeParserFromRegulatoryGraph extends TreeParserFromOmdd {
 	
 	public static final String PARAM_REGGRAPH = "pfrg_regGraph";
 	public static final String PARAM_INITIALVERTEXINDEX = "pfrg_initialVertex";

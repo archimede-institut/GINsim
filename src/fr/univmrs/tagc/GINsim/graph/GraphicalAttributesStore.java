@@ -12,7 +12,7 @@ import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.VertexAttributesReader;
 
 
-public class GsGraphicalAttributesStore {
+public class GraphicalAttributesStore {
 
 	public EdgeAttributesReader ereader;
 	public VertexAttributesReader vreader;
@@ -20,7 +20,7 @@ public class GsGraphicalAttributesStore {
 	Map oldColors = new HashMap();
 	Graph graph;
 	
-	public GsGraphicalAttributesStore( Graph graph) {
+	public GraphicalAttributesStore( Graph graph) {
 		
 		this.graph = graph;
 		this.ereader = graph.getEdgeAttributeReader();

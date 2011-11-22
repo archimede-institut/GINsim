@@ -14,7 +14,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ToolAction;
@@ -32,8 +32,8 @@ import fr.univmrs.tagc.common.widgets.Frame;
 public class Reg2DynServiceGUI implements ServiceGUI {
 
     static {
-    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, GsMutantListManager.key)){
-    		ObjectAssociationManager.getInstance().registerObjectManager(RegulatoryGraph.class, new GsMutantListManager());
+    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, MutantListManager.key)){
+    		ObjectAssociationManager.getInstance().registerObjectManager(RegulatoryGraph.class, new MutantListManager());
     	}
         ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new InitialStateManager());
         ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new SimulationParametersManager());

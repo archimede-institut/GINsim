@@ -14,7 +14,7 @@ import fr.univmrs.tagc.common.xml.XMLHelper;
 /**
  * parses a ginml regulatory graph.
  */
-public final class GsGinmlParser extends XMLHelper {
+public final class GinmlParser extends XMLHelper {
     
     private Map map;
     private GsXMLHelper realParser = null;

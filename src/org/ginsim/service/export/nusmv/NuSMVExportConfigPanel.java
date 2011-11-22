@@ -23,8 +23,8 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.tool.reg2dyn.PrioritySelectionPanel;
@@ -35,10 +35,10 @@ import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
+public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = -7398674287463858306L;
 
-	private final GsNuSMVConfig cfg;
+	private final NuSMVConfig cfg;
 
 	private PrioritySelectionPanel priorityPanel = null;
 	private MutantSelectionPanel mutantPanel = null;
@@ -51,7 +51,7 @@ public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 	private JRadioButton jrbType2;
 
-	public GsNuSMVExportConfigPanel( GsNuSMVConfig config) {
+	public NuSMVExportConfigPanel( NuSMVConfig config) {
 		this.cfg = config;
 	}
 
@@ -122,8 +122,8 @@ public class GsNuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	}
 
 	public void changeExportType() {
-		int type = (jrbType2.isSelected()) ? GsNuSMVConfig.CFG_INPUT_IVAR
-				: GsNuSMVConfig.CFG_INPUT_FRONZEN;
+		int type = (jrbType2.isSelected()) ? NuSMVConfig.CFG_INPUT_IVAR
+				: NuSMVConfig.CFG_INPUT_FRONZEN;
 		this.cfg.setExportType(type);
 	}
 
@@ -314,11 +314,11 @@ class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 	private static final long serialVersionUID = 2348678706086666489L;
 
 	RegulatoryMutants listMutants;
-	GsNuSMVConfig cfg;
+	NuSMVConfig cfg;
 
-	GsNuSMVMutantModel(GsNuSMVConfig cfg) {
+	GsNuSMVMutantModel(NuSMVConfig cfg) {
 		this.cfg = cfg;
-		this.listMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( cfg.graph, GsMutantListManager.key, true);
+		this.listMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( cfg.graph, MutantListManager.key, true);
 	}
 
 	void setMutantList(RegulatoryMutants mutants) {

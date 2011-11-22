@@ -32,11 +32,10 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantChange;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
 
 import org.ginsim.gui.service.tool.reg2dyn.RegulatoryMutantListener;
 
-import fr.univmrs.tagc.GINsim.graph.GsGraphEventCascade;
+import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.datastore.ValueList;
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
@@ -56,7 +55,7 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
      * @return a panel to configure mutants
      */
     public static JPanel getMutantConfigPanel(RegulatoryGraph graph) {
-        RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, GsMutantListManager.key, true);
+        RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.key, true);
         MutantPanel mpanel = new MutantPanel();
         Map m = new HashMap();
         m.put(RegulatoryMutantDef.class, mpanel);
@@ -84,16 +83,16 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
         canEdit = true;
     }
     
-    public GsGraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
+    public GraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
         return null;
     }
-    public GsGraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
+    public GraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
         return null;
     }
-    public GsGraphEventCascade vertexAdded(RegulatoryVertex data) {
+    public GraphEventCascade vertexAdded(RegulatoryVertex data) {
         return null;
     }
-    public GsGraphEventCascade vertexRemoved(RegulatoryVertex data) {
+    public GraphEventCascade vertexRemoved(RegulatoryVertex data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
             RegulatoryMutantDef m = (RegulatoryMutantDef)v_data.get(i);
@@ -110,10 +109,10 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
         }
         return null;
     }
-	public GsGraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
+	public GraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
 		return null;
 	}
-    public GsGraphEventCascade vertexUpdated(RegulatoryVertex data) {
+    public GraphEventCascade vertexUpdated(RegulatoryVertex data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
             RegulatoryMutantDef m = (RegulatoryMutantDef)v_data.get(i);
@@ -137,7 +136,7 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
         }
         return null;
     }
-    public GsGraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
+    public GraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
         return null;
     }
     
@@ -188,7 +187,7 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
 	}
 }
 
-class MutantCascadeUpdate implements GsGraphEventCascade {
+class MutantCascadeUpdate implements GraphEventCascade {
     protected MutantCascadeUpdate(Vector v) {
         this.v = v;
     }

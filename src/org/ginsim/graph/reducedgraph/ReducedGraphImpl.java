@@ -20,7 +20,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
 import org.ginsim.gui.service.tool.connectivity.ReducedParameterPanel;
-import org.ginsim.io.parser.GsGinmlHelper;
+import org.ginsim.io.parser.GinmlHelper;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -111,7 +111,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
     @Override
 	protected void doSave(OutputStreamWriter os, Collection<NodeReducedData> vertices, Collection<Edge<NodeReducedData>> edges, int mode) throws GsException {
         try {
-            XMLWriter out = new XMLWriter(os, GsGinmlHelper.DEFAULT_URL_DTD_FILE);
+            XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"reduced\">\n");
@@ -175,7 +175,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
                     String content = vertex.getContentString();
                     out.write("\t\t<node id=\""+vertex+"\">\n");
                     out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-                    out.write(GsGinmlHelper.getShortNodeVS(vReader));
+                    out.write(GinmlHelper.getShortNodeVS(vReader));
                     out.write("\t\t</node>\n");
                 }
     			break;
@@ -185,7 +185,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
                     String content = ((NodeReducedData)vertex).getContentString();
                     out.write("\t\t<node id=\""+vertex+"\">\n");
                     out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-                    out.write(GsGinmlHelper.getFullNodeVS(vReader));
+                    out.write(GinmlHelper.getFullNodeVS(vReader));
                     out.write("\t\t</node>\n");
                 }
     			break;

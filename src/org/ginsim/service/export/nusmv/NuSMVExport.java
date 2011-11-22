@@ -44,13 +44,13 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  * 
  * TODO: depends on StableStateService
  */
-public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
+public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] { "smv" }, "NuSMV files");
 	
-	private GsNuSMVConfig config;
+	private NuSMVConfig config;
 	
-	public GsNuSMVExport(RegulatoryGraph graph) {
+	public NuSMVExport(RegulatoryGraph graph) {
 		super( graph, "STR_NuSMVmodelChecker", "STR_NuSMVmodelChecker_descr");
 	}
 
@@ -66,7 +66,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 
 	@Override
 	public StackDialogHandler getConfigPanel() {
-		return new GsNuSMVExportConfigPanel(config);
+		return new NuSMVExportConfigPanel(config);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 	 *            store with the configuration specified by the user in the GUI.
 	 */
 	public static void encode(RegulatoryGraph graph, String fileName,
-			GsNuSMVConfig config) throws IOException{
+			NuSMVConfig config) throws IOException{
 
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG);
@@ -163,7 +163,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 		if (mutant != null) {
 			mutant.apply(t_tree, graph);
 		}
-		boolean bType1 = (config.getExportType() == GsNuSMVConfig.CFG_INPUT_FRONZEN);
+		boolean bType1 = (config.getExportType() == NuSMVConfig.CFG_INPUT_FRONZEN);
 
 		out.write("-- " + date + "\n");
 		out.write("-- GINsim implicit representation for NuSMV --\n");
@@ -194,7 +194,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 
 		out.write("\nIVAR\n-- Simulation mode declaration --\n");
 		switch (config.getUpdatePolicy()) {
-		case GsNuSMVConfig.CFG_SYNC:
+		case NuSMVConfig.CFG_SYNC:
 			out.write("-- Synchronous\n  PCs : { PC_c1 };\n  PC_c1_vars : { ");
 			sTmp = "PC_c1";
 			tmPcNum2Name.put(1, sTmp);
@@ -209,7 +209,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 			out.write(sTmp + " };\n");
 			break;
 
-		case GsNuSMVConfig.CFG_PCLASS:
+		case NuSMVConfig.CFG_PCLASS:
 			out.write("-- Priority classes\n  PCs : { ");
 			for (int i = 0; i < priorities.getNbElements(); i++) {
 				Reg2dynPriorityClass pc = (Reg2dynPriorityClass) priorities
@@ -328,7 +328,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 		// PCrank depends on the state variables
 		// Should therefore be declared after
 		// But after some tests
-		if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS
+		if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS
 				&& iaTmp != null && iaTmp.length > 1) {
 			out.write("\n-- Priority definition\n");
 			out.write("  PCrank : { ");
@@ -399,7 +399,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 		}
 
 		out.write("\nASSIGN");
-		if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS
+		if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS
 				&& iaTmp != null && iaTmp.length > 1) {
 			if (tmPcRank2Name.size() > 1) {
 				out.write("\n-- Establishing priorities\n");
@@ -503,7 +503,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 			out.write(tmPcNum2Name.get(pc) + ") & (");
 			out.write(tmPcNum2Name.get(pc) + "_vars = ");
 			out.write(sub);
-			if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS) {
+			if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS) {
 				out.write(") & (PCrank = ");
 				out.write((String) tmPcRank2Name.get(tmPcNum2Rank.get(pc)));
 			}
@@ -516,7 +516,7 @@ public class GsNuSMVExport extends ExportAction<RegulatoryGraph> {
 				out.write(tmPcNum2Name.get(pc) + ") & (");
 				out.write(tmPcNum2Name.get(pc) + "_vars = ");
 				out.write(saSubName[0]);
-				if (config.getUpdatePolicy() == GsNuSMVConfig.CFG_PCLASS) {
+				if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS) {
 					out.write(") & (PCrank = ");
 					out.write((String) tmPcRank2Name.get(tmPcNum2Rank
 							.get(pc)));

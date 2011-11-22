@@ -18,14 +18,14 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  *
  *    TODO: service and serviceGUI
  */
-public class GsGNAMLExport extends ExportAction<RegulatoryGraph> {
+public class GNAMLExport extends ExportAction<RegulatoryGraph> {
 
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] { "gnaml" }, "GNAML files");
 	
 	private FileWriter fout = null;
 	private XMLWriter out = null;
 
-    public GsGNAMLExport(RegulatoryGraph graph) {
+    public GNAMLExport(RegulatoryGraph graph) {
     	super( graph, "STR_GNAML", "STR_GNAML_descr");
     }
     

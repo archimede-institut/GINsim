@@ -32,7 +32,7 @@ public class RegulatoryVertexEditor extends ObjectEditor<RegulatoryVertex> {
 
 	static {
 		GenericPropertyEditorPanel.addSupportedClass(Annotation.class, AnnotationPanel.class);
-		GenericPropertyEditorPanel.addSupportedClass(RegulatoryVertex.class, GsInteractionPanel.class);
+		GenericPropertyEditorPanel.addSupportedClass(RegulatoryVertex.class, InteractionPanel.class);
 		GenericPropertyEditorPanel.addSupportedClass(LogicalFunctionPanel.class, LogicalFunctionPanel.class);
 	}
 	

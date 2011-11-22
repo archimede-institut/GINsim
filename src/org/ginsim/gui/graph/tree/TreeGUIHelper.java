@@ -7,12 +7,12 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.tree.Tree;
-import org.ginsim.graph.tree.GsTreeNode;
+import org.ginsim.graph.tree.TreeNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
-import org.ginsim.gui.graph.regulatorygraph.GsRegulatoryGraphOptionPanel;
+import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 
@@ -20,7 +20,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GraphGUIHelper.class)
-public class TreeGUIHelper implements GraphGUIHelper<Tree, GsTreeNode, Edge<GsTreeNode>> {
+public class TreeGUIHelper implements GraphGUIHelper<Tree, TreeNode, Edge<TreeNode>> {
 
 	
 	/**
@@ -49,7 +49,7 @@ public class TreeGUIHelper implements GraphGUIHelper<Tree, GsTreeNode, Edge<GsTr
 		Object[] t_mode = { Translator.getString("STR_saveNone"),
 							Translator.getString("STR_savePosition"),
 							Translator.getString("STR_saveComplet") };
-        JPanel optionPanel = new GsRegulatoryGraphOptionPanel(t_mode, graph_frame != null ? 2 : 0);
+        JPanel optionPanel = new RegulatoryGraphOptionPanel(t_mode, graph_frame != null ? 2 : 0);
 		
 		return optionPanel ;
 	}
@@ -73,12 +73,12 @@ public class TreeGUIHelper implements GraphGUIHelper<Tree, GsTreeNode, Edge<GsTr
 	}
 
 	@Override
-	public GUIEditor<GsTreeNode> getNodeEditionPanel(Tree graph) {
+	public GUIEditor<TreeNode> getNodeEditionPanel(Tree graph) {
 		return null;
 	}
 
 	@Override
-	public GUIEditor<Edge<GsTreeNode>> getEdgeEditionPanel(Tree graph) {
+	public GUIEditor<Edge<TreeNode>> getEdgeEditionPanel(Tree graph) {
 		return null;
 	}
 

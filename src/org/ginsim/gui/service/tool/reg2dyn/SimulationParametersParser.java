@@ -10,7 +10,7 @@ import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.gui.graph.regulatorygraph.GsMutantListManager;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -126,7 +126,7 @@ public class SimulationParametersParser extends XMLHelper {
                 } else if (qName.equals("mutant")) {
                     String s = attributes.getValue("value");
                     if (!s.trim().equals("")) {
-                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, GsMutantListManager.key, true);
+                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.key, true);
                     	Object mutant = mutantList.get(s);
                         param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
                         if (mutant == null) {
