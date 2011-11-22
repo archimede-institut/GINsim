@@ -10,70 +10,39 @@ import org.jgraph.JGraph;
 import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellHandle;
-import org.jgraph.graph.CellMapper;
 import org.jgraph.graph.CellView;
+import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.EdgeView;
-import org.jgraph.graph.GraphCellEditor;
+import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphContext;
 import org.jgraph.graph.GraphLayoutCache;
-import org.jgraph.graph.GraphModel;
 
-public class RawNodeView implements CellView {
+import fr.univmrs.tagc.common.Debugger;
+
+/**
+ * Cell view that will use data from the attribute readers to draw nodes.
+ * It a perfect world it would only implement CellView, but jgraph can only interactively move items
+ * which extend AbstractCellView (using the translate method).
+ * It contains a fake attribute map, but really relies on the attribute reader.
+ * 
+ * @author Aurelien Naldi
+ */
+public class RawNodeView extends AbstractCellView implements CellView {
 
 	private final RawNodeRenderer renderer;
-	private final DefaultGraphCell cell;
-
 	public final Object user;
-	
-	private final AttributeMap attributes = new AttributeMap();
-	
-	private static RawNodeView FIRST = null;
-	private static boolean first = true;
+
+	private final FakeAttributeMap attributes;
 	
 	private Rectangle bounds = null;
-	private CellView parent = null;
 	
 	public RawNodeView(Object cell, RawNodeRenderer vertexRenderer) {
 		this.cell = (DefaultGraphCell)cell;
-		this.user = this.cell.getUserObject();
+		this.user = ((DefaultGraphCell)cell).getUserObject();
 		this.renderer = vertexRenderer;
 		
-		System.out.println("new view: "+ user);
-		System.out.println(vertexRenderer.getBounds(user));
-		if (first) {
-			first = false;
-			FIRST = new RawNodeView(cell, vertexRenderer);
-		}
-	}
-
-	@Override
-	public Object getCell() {
-		return cell;
-	}
-
-	@Override
-	public void refresh(GraphLayoutCache cache, CellMapper mapper, boolean createDependentViews) {
-		
-		if (FIRST == this) {
-			System.out.println("refresh");
-		}
-
-		// Re-read global attributes
-		GraphModel model = cache.getModel();
-		// Cache Parent View
-		if (mapper != null && model != null) {
-			// Create parent only if it's visible in the graph
-			Object par = model.getParent(cell);
-			CellView tmp = mapper.getMapping(par, createDependentViews);
-			if (tmp != parent) {
-				removeFromParent();
-			}
-			parent = tmp;
-		}
-		// Cache Cell Attributes in View
-		update(cache);
-		
+		attributes = new FakeAttributeMap(this);
 	}
 
 	@Override
@@ -82,43 +51,8 @@ public class RawNodeView implements CellView {
 	}
 
 	@Override
-	public void childUpdated() {
-		if (FIRST == this) {
-			System.out.println("updated");
-		}
-		bounds = null;
-		if (parent != null) {
-			parent.childUpdated();
-		}
-	}
-
-	@Override
-	public CellView getParentView() {
-		if (FIRST == this) {
-			System.out.println("parent");
-		}
-		return parent;
-	}
-
-	@Override
 	public CellView[] getChildViews() {
 		return new CellView[] {};
-	}
-
-	@Override
-	public void removeFromParent() {
-		if (FIRST == this) {
-			System.out.println("remove from parent");
-		}
-		if (parent instanceof AbstractCellView) {
-			// TODO: how can I do this?
-			// ((AbstractCellView) parent).childViews.remove(this);
-		}
-	}
-
-	@Override
-	public boolean isLeaf() {
-		return true;
 	}
 
 	@Override
@@ -169,9 +103,7 @@ public class RawNodeView implements CellView {
 
 	@Override
 	public Map changeAttributes(GraphLayoutCache cache, Map map) {
-		if (FIRST == this) {
-			System.out.println("change attributes");
-		}
+		// just ignore it, we don't support undo anyway
 		return attributes;
 	}
 
@@ -187,25 +119,53 @@ public class RawNodeView implements CellView {
 
 	@Override
 	public Component getRendererComponent(JGraph graph, boolean selected, boolean focus, boolean preview) {
-		renderer.setView(this);
+		renderer.setView(this, selected, preview);
 		return renderer;
 	}
 
 	@Override
 	public CellHandle getHandle(GraphContext context) {
-		// TODO Auto-generated method stub
-		if (FIRST == this) {
-			System.out.println("handle");
-		}
-		return null;
-	}
-
-	@Override
-	public GraphCellEditor getEditor() {
 		return null;
 	}
 
 	public String toString() {
 		return user.toString();
+	}
+
+	@Override
+	public CellViewRenderer getRenderer() {
+		Debugger.log("get renderer through abstractcellview method");
+		return null;
+	}
+}
+
+class FakeAttributeMap extends AttributeMap {
+
+	private final RawNodeView view;
+	
+	public FakeAttributeMap(RawNodeView view) {
+		this.view = view;
+	}
+
+	@Override
+	public synchronized Object get(Object key) {
+		if (GraphConstants.BOUNDS.equals(key)) {
+			return view.getBounds(); 
+		}
+		return null;
+	}
+
+	@Override
+	public synchronized Object put(Object key, Object value) {
+		if (GraphConstants.BOUNDS.equals(key) && value instanceof Rectangle) {
+			view.setBounds((Rectangle)value);
+		}
+		return get(key);
+	}
+
+	@Override
+	public Object clone() {
+		// as far as I can tell, cloning is useless as this object is empty
+		return this;
 	}
 }

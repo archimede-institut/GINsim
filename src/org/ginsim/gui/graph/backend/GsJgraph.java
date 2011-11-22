@@ -1,11 +1,9 @@
 package org.ginsim.gui.graph.backend;
 
-import java.awt.Color;
 import java.awt.event.MouseEvent;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.ToolTipsable;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.jgraph.JGraph;
 import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultGraphCell;
@@ -25,35 +23,26 @@ public class GsJgraph extends JGraph {
     
     public GsJgraph(JGraphModelAdapter ma, Graph<?,?> g) {
         super(ma);
-        if (g.getNodeCount() == 3) {
-        	NodeAttributesReader vreader = g.getNodeAttributeReader();
-        	vreader.setNode(g.getNodes().iterator().next());
-        	vreader.setPos(30, 100);
-        	vreader.setBackgroundColor(Color.GRAY);
-        	vreader.refresh();
-        }
         setCellViewFactory(ma, new GsCellViewFactory(this, g));
-        
     }
 
     private void setCellViewFactory(JGraphModelAdapter ma, CellViewFactory cvf) {
         
         setGraphLayoutCache(new GraphLayoutCache(ma, cvf));
-		setGridVisible(((Boolean)OptionStore.getOption("display.grid", Boolean.FALSE)).booleanValue());
-		setGridEnabled(((Boolean)OptionStore.getOption("display.gridactive", Boolean.FALSE)).booleanValue());
+		setGridVisible((Boolean)OptionStore.getOption("display.grid", false));
+		setGridEnabled((Boolean)OptionStore.getOption("display.gridactive", false));
 		setDisconnectable(false);
 		edgeLabelDisplayed = false;
         setAntiAliased(true);
 
-		// WHY is this necessary ??
+		// this is necessary to be able to show tooltips for graph items later on
         setToolTipText("");
     }
 
     /**
-     * get nice tooltips for objects implementing <code>ToolTipsable</code>
-     * 
-     * @see org.jgraph.JGraph#getToolTipText(java.awt.event.MouseEvent)
+     * get tooltips for objects implementing <code>ToolTipsable</code>
      */
+    @Override
     public String getToolTipText(MouseEvent e) {
 		if (e!=null) {
 			Object cell=getFirstCellForLocation(e.getX(),e.getY());
@@ -68,10 +57,9 @@ public class GsJgraph extends JGraph {
     }
     
     /**
-     * always refuse to edit cells: cell editing is STUPID in jgraph: replaces the node with a string!
-     * 
-     * @see org.jgraph.JGraph#isCellEditable(java.lang.Object)
+     * Refuse to edit cells (jgraph would replace the node with a string, unless we provide a custom editor)
      */
+    @Override
     public boolean isCellEditable(Object cell) {
         return false;
     }

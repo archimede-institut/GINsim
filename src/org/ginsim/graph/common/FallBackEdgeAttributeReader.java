@@ -4,17 +4,21 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.graph.backend.GraphViewBackend;
+
 
 /**
  * a generic edgeAttributeReader storing data into a dedicated hashmap
  */
 public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
 
-    private Map dataMap;
+	private final GraphViewBackend backend;
+    private final Map dataMap;
     
     private float defaultsize = 1;
     private boolean defaultfill = true;
     
+    private Edge<?> edge;
     private EdgeVSdata evsd = null;
 
     private int defaultstyle;
@@ -24,7 +28,8 @@ public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
     /**
      * @param dataMap
      */
-    public FallBackEdgeAttributeReader(Map dataMap) {
+    public FallBackEdgeAttributeReader(GraphViewBackend backend, Map dataMap) {
+    	this.backend = backend;
         this.dataMap = dataMap;
     }
     
@@ -55,6 +60,7 @@ public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
     }
 
     public void setEdge(Object obj) {
+    	edge = (Edge)obj;
         evsd = (EdgeVSdata)dataMap.get(obj);
         if (evsd == null && obj instanceof Edge) {
             evsd = (EdgeVSdata)dataMap.get(obj);
@@ -86,7 +92,9 @@ public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
     }
 
     public void refresh() {
-        // nothing to do here!
+    	if (edge != null) {
+    		backend.refresh(edge);
+    	}
     }
 
     public int getRouting() {

@@ -8,7 +8,6 @@ import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 
 import org.ginsim.gui.graph.AddEdgeAction;
 import org.ginsim.gui.graph.AddNodeAction;
@@ -18,10 +17,8 @@ import org.ginsim.gui.graph.EditMode;
 import org.jgraph.JGraph;
 import org.jgraph.graph.BasicMarqueeHandler;
 import org.jgraph.graph.CellHandle;
-import org.jgraph.graph.CellView;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge;
-import org.jgraph.graph.GraphConstants;
 
 /**
  * jgraph marquee handler
@@ -75,6 +72,7 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 	
 	@Override
 	public void mouseDragged(MouseEvent event) {
+
 		// If remembered Start Point is Valid
 		if (start != null && !event.isConsumed() && !(editManager.getSelectedAction().getMode() == EditMode.EDGEPOINT)) {
 			// Fetch Graphics from Graph
@@ -128,6 +126,7 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 	@Override
 	public void mousePressed(MouseEvent event) {
 		EditAction currentAction = editManager.getSelectedAction();
+		
 		if ( currentObject != null 
 			&& !(currentObject instanceof Edge) 
 			&& currentAction.getMode() == EditMode.EDGE ) {
@@ -139,21 +138,6 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 			// Remember First Object
 			firstObject = currentObject;
 
-//			CellHandle hd = jgraph.getUI().getHandle();
-//			if (hd != null) {
-//				if (GsGraphConstants.getRouting(((DefaultGraphCell)currentObject).getAttributes())!=null) { 
-//					jgraph.getGraphEditor().setLineStyle(currentObject,GsGraphConstants.STYLE_ORTHOGONAL);
-//					jgraph.getGraphEditor().setEdgeRouting(currentObject,null);
-//					jgraph.getGraphLayoutCache().reload();
-//				} else {
-//					MouseEvent ev = new MouseEvent((Component)event.getSource(),MouseEvent.MOUSE_PRESSED,0,MouseEvent.BUTTON3_DOWN_MASK ,event.getX(),event.getY(),event.getClickCount(),event.isPopupTrigger(),	MouseEvent.BUTTON3 );
-//					hd.mousePressed(ev);
-//					ev = new MouseEvent((Component)event.getSource(),MouseEvent.MOUSE_RELEASED,0,MouseEvent.BUTTON3_DOWN_MASK ,event.getX(),event.getY(),event.getClickCount(),event.isPopupTrigger(),	MouseEvent.BUTTON3 );
-//					hd.mouseReleased(ev);
-//					jgraph.getGraphLayoutCache().reload();
-//				}
-//			}
-				
 			// Consume Event
 			event.consume();
 		} else super.mousePressed(event);
@@ -216,8 +200,6 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 		g.setColor(fg);
 		// Set Xor-Mode Color
 		g.setXORMode(bg);
-		// Highlight the Current Port
-		hightLightObj(jgraph.getGraphics());
 		// If Valid First Port, Start and Current Point
 		if (firstObject != null && start != null && current != null) {
 			// Then Draw A Line From Start to Current Point
@@ -225,25 +207,4 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 		}
 	}
 
-	/**
-	 * Use the Preview Flag to Draw a Highlighted Port
-	 * @param g
-	 */
-	protected void hightLightObj(Graphics g) {
-		CellView cell=null;
-		// If Current Port is Valid
-		if (currentObject instanceof CellView) cell =(CellView) currentObject;
-		if (cell != null) {
-			// If Not Floating Port...
-			boolean o = (GraphConstants.getOffset(cell.getAttributes()) != null);
-			// ...Then use Parent's Bounds
-			Rectangle2D r = (o) ? cell.getBounds() : cell.getParentView().getBounds();
-			// Scale from Model to Screen
-			r = jgraph.toScreen(r);
-			// Add Space For the Highlight Border
-			r.setFrame(r.getX()-3, r.getY()-3, r.getWidth()+6, r.getHeight()+6);
-			// Paint Port in Preview (=Highlight) Mode
-			jgraph.getUI().paintCell(g, cell, r, true);
-		}
-	}
 }

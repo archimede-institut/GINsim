@@ -1,6 +1,7 @@
 package org.ginsim.graph.common;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.util.Map;
 
 import org.ginsim.graph.backend.GraphViewBackend;
@@ -33,8 +34,7 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
             vvsd.bgcolor = bg;
             vvsd.fgcolor = fg;
             vvsd.border = border;
-            vvsd.w = width;
-            vvsd.h = height;
+            vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), width, height);
             vvsd.shape = shape;
             dataMap.put(vertex, vvsd);
         }
@@ -44,28 +44,28 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
         if (vvsd == null) {
             return 0;
         }
-        return vvsd.x;
+        return (int)vvsd.bounds.getX();
     }
 
     public int getY() {
         if (vvsd == null) {
             return 0;
         }
-        return vvsd.y;
+        return (int)vvsd.bounds.getY();
     }
 
     public int getHeight() {
         if (vvsd == null) {
             return 0;
         }
-        return vvsd.h;
+        return (int)vvsd.bounds.getHeight();
     }
 
     public int getWidth() {
         if (vvsd == null) {
             return 0;
         }
-        return vvsd.w;
+        return (int)vvsd.bounds.getWidth();
     }
 
     public Color getForegroundColor() {
@@ -106,16 +106,14 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
         if (vvsd == null) {
             return;
         }
-        vvsd.x = x;
-        vvsd.y = y;
+        vvsd.bounds.setFrame(x,y, vvsd.bounds.getWidth(), vvsd.bounds.getHeight());
     }
 
     public void setSize(int w, int h) {
         if (vvsd == null) {
             return;
         }
-        vvsd.w = w;
-        vvsd.h = h;
+        vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), w, h);
     }
 
     public void setBorder(int index) {
@@ -148,11 +146,28 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
 
     
     class NodeVSdata {
-        protected int x, y, w, h;
+    	protected Rectangle bounds = new Rectangle();
         protected Color fgcolor;
         protected Color bgcolor;
         
         protected int shape;
         protected int border;
     }
+
+	@Override
+	public Rectangle getBounds() {
+		if (vvsd != null) {
+			return vvsd.bounds;
+		}
+		return null;
+	}
+	@Override
+	public Rectangle setBounds(Rectangle bounds) {
+		if (vvsd != null) {
+			Rectangle old = vvsd.bounds;
+			vvsd.bounds = bounds;
+			return old;
+		}
+		return null;
+	}
 }

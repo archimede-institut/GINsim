@@ -1,6 +1,7 @@
 package org.ginsim.graph.common;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.util.Vector;
 
 import fr.univmrs.tagc.common.OptionStore;
@@ -120,6 +121,9 @@ public abstract class NodeAttributesReader implements AttributesReader {
      * @param h
      */
     abstract public void setSize(int w, int h);
+    
+    abstract public Rectangle getBounds();
+    
     /**
      * set the default background color for vertices.
      * @param color
@@ -240,5 +244,13 @@ public abstract class NodeAttributesReader implements AttributesReader {
         setForegroundColor(fvreader.getForegroundColor());
         setBorder(fvreader.getBorder());
     }
+
+    /**
+     * Set the position and size at once
+     * 
+     * @param bounds the new bounds
+     * @return the old bounds
+     */
+	abstract public Rectangle setBounds(Rectangle bounds);
     
 }

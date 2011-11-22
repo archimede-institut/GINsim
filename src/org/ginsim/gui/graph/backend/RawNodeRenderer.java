@@ -16,6 +16,9 @@ class RawNodeRenderer extends JLabel {
 	private final NodeAttributesReader reader;
 	
 	private Color fgColor, bgColor;
+	private boolean selected, preview;
+
+	private int pcount;
 	
 	
 	public RawNodeRenderer(NodeAttributesReader vertexAttributeReader) {
@@ -24,16 +27,20 @@ class RawNodeRenderer extends JLabel {
 		setHorizontalAlignment(CENTER);
 	}
 
-	public void setView(RawNodeView view) {
+	public void setView(RawNodeView view, boolean selected, boolean preview) {
 		
 		setText(view.toString());
-		setBounds(view.getBounds());
+		this.selected = selected;
+		this.preview = preview;
+		
+		Rectangle rect = view.getBounds();
+		super.setBounds(rect.x, rect.y, rect.width, rect.height);
 		reader.setNode(view.user);
 	}
 	
 	public Rectangle getBounds(Object user) {
 		reader.setNode(user);
-		return new Rectangle(reader.getX(), reader.getY(), reader.getWidth()+1, reader.getHeight()+1);
+		return reader.getBounds();
 	}
 
 	@Override
@@ -44,9 +51,20 @@ class RawNodeRenderer extends JLabel {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setColor(reader.getBackgroundColor());
 		g2d.fill(s);
-		g2d.setColor(reader.getForegroundColor());
+		if (selected) {
+			g2d.setColor(Color.red);
+		} else {
+			g2d.setColor(reader.getForegroundColor());
+		}
 		g2d.draw(s);
 		
 		super.paint(g);
+	}
+
+	public Rectangle setBounds(Object user, Rectangle bounds) {
+		reader.setNode(user);
+		Rectangle old = reader.getBounds();
+		reader.setBounds(bounds);
+		return old;
 	}
 }

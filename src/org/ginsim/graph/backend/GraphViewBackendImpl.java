@@ -9,33 +9,18 @@ import org.ginsim.graph.common.FallbackNodeAttributeReader;
 import org.ginsim.graph.common.NodeAttributesReader;
 
 
-public class JgraphtViewBackendImpl implements GraphViewBackend {
+public class GraphViewBackendImpl implements GraphViewBackend {
 
-	JgraphtBackendImpl<?, ?> graphBackend;
-	
     private Map evsmap = null;
     private Map vvsmap = null;
-    private EdgeAttributesReader fbEReader = null;
-    private NodeAttributesReader fbVReader = null;
 
 	private GraphViewListener listener;
     
-	public JgraphtViewBackendImpl(JgraphtBackendImpl<?,?> jgraphtBackendImpl) {
-		this.graphBackend = jgraphtBackendImpl;
-	}
-
 	public EdgeAttributesReader getEdgeAttributeReader() {
-        if (fbEReader == null) {
-            fbEReader = new FallBackEdgeAttributeReader(getEdgeVSMap());
-        }
-        return fbEReader;
+		return  new FallBackEdgeAttributeReader(this, getEdgeVSMap());
 	}
 	public NodeAttributesReader getNodeAttributeReader() {
-        if (fbVReader == null) {
-        	System.out.println("create fallback");
-            fbVReader = new FallbackNodeAttributeReader(this, getNodeVSMap());
-        }
-        return fbVReader;
+		return new FallbackNodeAttributeReader(this, getNodeVSMap());
 	}
 
 	/**

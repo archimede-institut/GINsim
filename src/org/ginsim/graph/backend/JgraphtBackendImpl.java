@@ -15,11 +15,12 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	private static final long serialVersionUID = -7766943723639796018L;
 	
 	private AbstractGraph<V,E> frontend = null;
-	private GraphViewBackend graphViewBackend;
+	private final GraphViewBackend graphViewBackend;
 
 	public JgraphtBackendImpl() {
 		// FIXME: remove the edgeFactory (with better integration with the underlying graph)
 		super(new GsJGraphtBaseGraph<V, E>(new GsJgraphtEdgeFactory()));
+		graphViewBackend = new GraphViewBackendImpl();
 	}
 	
 	/**
@@ -132,9 +133,6 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 
 	@Override
 	public GraphViewBackend getGraphViewBackend() {
-		if (graphViewBackend == null) {
-			graphViewBackend = new JgraphtViewBackendImpl(this);
-		}
 		return graphViewBackend;
 	}
 
