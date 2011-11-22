@@ -11,11 +11,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
 import org.ginsim.graph.view.css.CascadingStyle;
-import org.ginsim.graph.view.css.VertexStyle;
+import org.ginsim.graph.view.css.NodeStyle;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.connectivity.AlgoConnectivity;
 
@@ -239,7 +239,7 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 
 		colorPalette = ColorPalette.defaultPalette;
 		cs = new CascadingStyle(true);
-		VertexAttributesReader vreader = graph.getVertexAttributeReader();		
+		NodeAttributesReader vreader = graph.getVertexAttributeReader();		
 		int color_index = 2;
 		for (Iterator it = components.iterator(); it.hasNext();) {
 			NodeReducedData scc = (NodeReducedData) it.next();
@@ -247,16 +247,16 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 				Object node = scc.getContent().get(0);
 				vreader.setVertex(node);
 				if (graph.getOutgoingEdges(node) == null || graph.getOutgoingEdges(node).size() == 0) {
-					cs.applyOnNode(new VertexStyle(colorPalette[1], VertexStyle.NULL_FOREGROUND, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE), node, vreader);
+					cs.applyOnNode(new NodeStyle(colorPalette[1], NodeStyle.NULL_FOREGROUND, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE), node, vreader);
 				} else {
-					cs.applyOnNode(new VertexStyle(colorPalette[0], VertexStyle.NULL_FOREGROUND, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE), node, vreader);
+					cs.applyOnNode(new NodeStyle(colorPalette[0], NodeStyle.NULL_FOREGROUND, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE), node, vreader);
 				}
 				vreader.refresh();
 			} else {
 				for (Iterator it2 = scc.getContent().iterator(); it2.hasNext();) {
 					Object node = (Object) it2.next();
 					vreader.setVertex(node);
-					cs.applyOnNode(new VertexStyle(colorPalette[color_index], VertexStyle.NULL_FOREGROUND, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE), node, vreader);
+					cs.applyOnNode(new NodeStyle(colorPalette[color_index], NodeStyle.NULL_FOREGROUND, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE), node, vreader);
 					vreader.refresh();
 				}
 				color_index++;

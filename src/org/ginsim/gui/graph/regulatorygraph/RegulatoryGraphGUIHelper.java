@@ -6,12 +6,12 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.AddEdgeAction;
-import org.ginsim.gui.graph.AddVertexAction;
+import org.ginsim.gui.graph.AddNodeAction;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
@@ -25,7 +25,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Aurelien Naldi
  */
 @ProviderFor( GraphGUIHelper.class)
-public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge> {
+public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 
 	@Override
 	public Class getGraphClass() {
@@ -35,7 +35,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 	@Override
 	public List<EditAction> getEditActions(RegulatoryGraph graph) {
 		List<EditAction> actions = new ArrayList<EditAction>();
-		VertexAttributesReader reader = graph.getVertexAttributeReader();
+		NodeAttributesReader reader = graph.getVertexAttributeReader();
 		actions.add(new AddRegulatoryVertexAction(graph, "Add components", reader));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add positive regulations", 1));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add negative regulations", -1));
@@ -56,8 +56,8 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 	}
 
 	@Override
-	public GUIEditor<RegulatoryVertex> getNodeEditionPanel( RegulatoryGraph graph) {
-		return new RegulatoryVertexEditor(graph);
+	public GUIEditor<RegulatoryNode> getNodeEditionPanel( RegulatoryGraph graph) {
+		return new RegulatoryNodeEditor(graph);
 	}
 
 	@Override
@@ -99,21 +99,21 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 
 }
 
-class AddRegulatoryVertexAction extends AddVertexAction<RegulatoryVertex> {
+class AddRegulatoryVertexAction extends AddNodeAction<RegulatoryNode> {
 
 	private final RegulatoryGraph graph;
-	public AddRegulatoryVertexAction(RegulatoryGraph graph, String name, VertexAttributesReader reader) {
+	public AddRegulatoryVertexAction(RegulatoryGraph graph, String name, NodeAttributesReader reader) {
 		super(name, reader, "insertsquare.gif");
 		this.graph = graph;
 	}
 
 	@Override
-	protected RegulatoryVertex getNewVertex() {
+	protected RegulatoryNode getNewVertex() {
 		return graph.addVertex();
 	}
 }
 
-class AddRegulatoryEdgeAction extends AddEdgeAction<RegulatoryVertex, RegulatoryMultiEdge> {
+class AddRegulatoryEdgeAction extends AddEdgeAction<RegulatoryNode, RegulatoryMultiEdge> {
 
 	private final RegulatoryGraph graph;
 	private final int sign;
@@ -135,7 +135,7 @@ class AddRegulatoryEdgeAction extends AddEdgeAction<RegulatoryVertex, Regulatory
 	}
 
 	@Override
-	protected RegulatoryMultiEdge getNewEdge(RegulatoryVertex source, RegulatoryVertex target) {
+	protected RegulatoryMultiEdge getNewEdge(RegulatoryNode source, RegulatoryNode target) {
 		return graph.addEdge(source, target, sign);
 	}
 }

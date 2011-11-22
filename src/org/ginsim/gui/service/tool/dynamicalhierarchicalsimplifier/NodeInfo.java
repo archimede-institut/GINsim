@@ -1,6 +1,6 @@
 package org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 public class NodeInfo {
 	
@@ -21,7 +21,7 @@ public class NodeInfo {
 		this.max = max;
 	}
 
-	public NodeInfo(RegulatoryVertex vertex) {
+	public NodeInfo(RegulatoryNode vertex) {
 		
 		this( vertex.getId(), vertex.getMaxValue());
 	}

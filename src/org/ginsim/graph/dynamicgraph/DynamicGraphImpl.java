@@ -15,11 +15,11 @@ import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphEditor;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
@@ -29,7 +29,7 @@ import fr.univmrs.tagc.common.datastore.ObjectEditor;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Edge<DynamicNode>, RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge> implements DynamicGraph{
+public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Edge<DynamicNode>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> implements DynamicGraph{
 
 
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";
@@ -224,7 +224,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
     		nodes = getVertices();
     	}
     	
-    	VertexAttributesReader vReader = getVertexAttributeReader();
+    	NodeAttributesReader vReader = getVertexAttributeReader();
     	
         	switch (mode) {
 	    		case 1:
@@ -308,8 +308,8 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 
         List ret = new ArrayList();
         Iterator it = otherGraph.getVertices().iterator();
-        VertexAttributesReader vReader = getVertexAttributeReader();
-        VertexAttributesReader cvreader = otherGraph.getVertexAttributeReader();
+        NodeAttributesReader vReader = getVertexAttributeReader();
+        NodeAttributesReader cvreader = otherGraph.getVertexAttributeReader();
         while (it.hasNext()) {
             DynamicNode vertex = (DynamicNode)it.next();
             addVertex(vertex);

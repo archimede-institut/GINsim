@@ -2,7 +2,7 @@ package org.ginsim.service.layout;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -24,7 +24,7 @@ public class LayoutService implements Service {
     
     public static void runLayout(int ref, Graph graph) throws GsException {
 		// first count nodes in each category
-		VertexAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getVertexAttributeReader();
 		int nbRoot = 0;
 		int nbStables = 0;
 		int nbClassic = 0;

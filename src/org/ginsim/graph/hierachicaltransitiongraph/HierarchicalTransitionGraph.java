@@ -17,10 +17,10 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.GraphAssociation;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.service.tool.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
@@ -41,7 +41,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /* **************** GETTER AND SETTERS ************/
 /* **************** UNIMPLEMENTED METHODS ************/
 
-public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, DecisionOnEdge>, GraphAssociation<RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>{
+public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, DecisionOnEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 
 	
 	/**

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
@@ -30,7 +30,7 @@ public class InitBasedPerturbation implements Perturbation {
         List norder = graph.getNodeOrder();
         for (Iterator it=m_init.entrySet().iterator() ; it.hasNext() ;) {
             Entry e = (Entry)it.next();
-            RegulatoryVertex vertex = (RegulatoryVertex)e.getKey();
+            RegulatoryNode vertex = (RegulatoryNode)e.getKey();
             List values = (List)e.getValue();
             if (values == null || values.size() < 1) {
                 continue; // nothing to apply here

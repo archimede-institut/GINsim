@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.Tools;
@@ -94,9 +94,9 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 }
 
 
-class SimplifierConfigContentList extends SimpleGenericList<RegulatoryVertex> {
+class SimplifierConfigContentList extends SimpleGenericList<RegulatoryNode> {
 
-	SimplifierConfigContentList(List<RegulatoryVertex> nodeOrder) {
+	SimplifierConfigContentList(List<RegulatoryNode> nodeOrder) {
 		super(nodeOrder);
 		canAdd = false;
 		canOrder = false;
@@ -108,7 +108,7 @@ class SimplifierConfigContentList extends SimpleGenericList<RegulatoryVertex> {
 	}
 }
 
-class SimplifierConfigConfigurePanel extends GenericListPanel<RegulatoryVertex> 
+class SimplifierConfigConfigurePanel extends GenericListPanel<RegulatoryNode> 
 	implements GenericListListener, ChangeListener {
 	private static final long serialVersionUID = -2219030309910143737L;
 	JCheckBox checkbox;
@@ -123,7 +123,7 @@ class SimplifierConfigConfigurePanel extends GenericListPanel<RegulatoryVertex>
 	}
 	
 	@Override
-    public void setList(GenericList<RegulatoryVertex> list) {
+    public void setList(GenericList<RegulatoryNode> list) {
     	super.setList(list);
     	list.addListListener(this);
     }

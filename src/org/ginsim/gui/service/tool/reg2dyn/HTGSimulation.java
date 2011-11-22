@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNodeSet;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalSigmaSet;
@@ -92,7 +92,7 @@ public class HTGSimulation extends Simulation {
 	
 	private HierarchicalSigmaSetFactory sigmaFactory;
 	
-	private VertexAttributesReader vreader;
+	private NodeAttributesReader vreader;
 
 	
 	public HTGSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
@@ -436,14 +436,14 @@ public class HTGSimulation extends Simulation {
 		vreader.setVertex(hnode);
 		switch (hnode.getType()) {
 		case HierarchicalNode.TYPE_STABLE_STATE:
-			vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_STABLE_STATE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TERMINAL_CYCLE:
-			vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TRANSIENT_COMPONENT:

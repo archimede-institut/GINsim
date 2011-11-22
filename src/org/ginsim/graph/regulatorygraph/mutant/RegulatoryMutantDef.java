@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 import fr.univmrs.tagc.common.datastore.NamedObject;
@@ -123,12 +123,12 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
         ((RegulatoryMutantChange)v_changes.get(index)).setMax(val);
     }
     
-    public void addChange(RegulatoryVertex vertex) {
+    public void addChange(RegulatoryNode vertex) {
         if (vertex != null) {
             addChange(vertex, (byte)0, vertex.getMaxValue());
         }
     }
-    public void addChange(RegulatoryVertex vertex, byte min, byte max) {
+    public void addChange(RegulatoryNode vertex, byte min, byte max) {
         RegulatoryMutantChange change = new RegulatoryMutantChange(vertex);
         change.setMin(min);
         change.setMax(max);

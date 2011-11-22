@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 
@@ -55,7 +55,7 @@ public class PetriNetExportAPNN extends BasePetriNetExport {
         {
         	List v_transition = t_transition[i];
             String s_node = v_no.get(i).toString();
-            int max = ((RegulatoryVertex)v_no.get(i)).getMaxValue();
+            int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
             int c = 0;
             
             if (v_transition != null) 
@@ -83,7 +83,7 @@ public class PetriNetExportAPNN extends BasePetriNetExport {
         {
         	List v_transition = t_transition[i];
             String s_node = v_no.get(i).toString();
-            int max = ((RegulatoryVertex)v_no.get(i)).getMaxValue();
+            int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
             
             if (v_transition != null) 
             {

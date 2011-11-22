@@ -6,7 +6,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
@@ -16,12 +16,12 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
  * Also deals with updating them when the graph is changed
  */
 public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifierConfig>
-	implements GraphListener<RegulatoryVertex, RegulatoryMultiEdge> {
+	implements GraphListener<RegulatoryNode, RegulatoryMultiEdge> {
 
     String s_current;
     RegulatoryGraph graph;
 
-    public ModelSimplifierConfigList( Graph<RegulatoryVertex, RegulatoryMultiEdge> graph) {
+    public ModelSimplifierConfigList( Graph<RegulatoryNode, RegulatoryMultiEdge> graph) {
     	
         this.graph = (RegulatoryGraph) graph;
     	prefix = "parameter_";
@@ -32,14 +32,14 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
         graph.addGraphListener(this);
     }
 
-    public GraphEventCascade vertexAdded(RegulatoryVertex data) {
+    public GraphEventCascade vertexAdded(RegulatoryNode data) {
         return null;
     }
-	public GraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
+	public GraphEventCascade graphMerged(Collection<RegulatoryNode> data) {
 		return null;
 	}
     
-    public GraphEventCascade vertexRemoved(RegulatoryVertex data) {
+    public GraphEventCascade vertexRemoved(RegulatoryNode data) {
     	for (int i=0 ; i<v_data.size() ; i++) {
     		ModelSimplifierConfig cfg = (ModelSimplifierConfig)v_data.get(i);
     		cfg.m_removed.remove(data);
@@ -47,7 +47,7 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
         return null;
     }
 
-    public GraphEventCascade vertexUpdated(RegulatoryVertex data) {
+    public GraphEventCascade vertexUpdated(RegulatoryNode data) {
     	return null;
     }
 

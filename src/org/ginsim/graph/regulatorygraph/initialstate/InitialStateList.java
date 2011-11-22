@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -46,7 +46,7 @@ public class InitialStateList extends SimpleGenericList {
 
 	public void vertexUpdated(Object data, List v) {
 	    // remove unavailable values from initial states
-        RegulatoryVertex vertex = (RegulatoryVertex)data;
+        RegulatoryNode vertex = (RegulatoryNode)data;
         for (int i=0 ; i<v_data.size() ; i++) {
             InitialState is = (InitialState)v_data.get(i);
             List v_val = (List)is.m.get(data);
@@ -95,7 +95,7 @@ public class InitialStateList extends SimpleGenericList {
             String s = "";
             Iterator it_line = is.m.keySet().iterator();
             while (it_line.hasNext()) {
-                RegulatoryVertex vertex = (RegulatoryVertex)it_line.next();
+                RegulatoryNode vertex = (RegulatoryNode)it_line.next();
                 List v_val = (List)is.m.get(vertex);
                 s += vertex.getId();
                 for (int j=0 ; j<v_val.size() ; j++) {

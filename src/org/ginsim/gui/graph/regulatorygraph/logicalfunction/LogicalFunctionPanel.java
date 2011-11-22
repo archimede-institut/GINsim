@@ -10,7 +10,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor.FunctionEditor;
@@ -24,7 +24,7 @@ import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 public class LogicalFunctionPanel extends AbstractParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {
 	private static final long serialVersionUID = -87854595177707062L;
 	private IncomingEdgeListModel edgeList = null;
-	private RegulatoryVertex currentVertex = null;
+	private RegulatoryNode currentVertex = null;
 	private LogicalFunctionTreePanel treePanel = null;
 	private FunctionEditor functionEditor = null;
 	private RegulatoryGraph graph;
@@ -70,8 +70,8 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 	}
 	public void setEditedItem(Object obj) {
 		if (currentVertex != null) treePanel.setEditedItem(obj);
-		if (obj != null && obj instanceof RegulatoryVertex) {
-			currentVertex = (RegulatoryVertex)obj;
+		if (obj != null && obj instanceof RegulatoryNode) {
+			currentVertex = (RegulatoryNode)obj;
 			edgeList.setEdge(graph.getIncomingEdges(currentVertex));
 			treePanel.setEditedItem(obj);
 		}

@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.graph.tree.Tree;
 import org.ginsim.graph.tree.TreeParser;
@@ -122,12 +122,12 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == leftOperandCB) {
-			RegulatoryVertex item = (RegulatoryVertex) leftOperandCB.getSelectedItem();
+			RegulatoryNode item = (RegulatoryNode) leftOperandCB.getSelectedItem();
 			if (item != null) {
 				leftOmdd = item.getTreeParameters((RegulatoryGraph) graph);
 			}
 		} else if (e.getSource() == rightOperandCB) {
-			RegulatoryVertex item = (RegulatoryVertex) rightOperandCB.getSelectedItem();
+			RegulatoryNode item = (RegulatoryNode) rightOperandCB.getSelectedItem();
 			if (item != null) {
 				rightOmdd = item.getTreeParameters((RegulatoryGraph) graph);
 			}

@@ -8,7 +8,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
@@ -20,7 +20,7 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 
-public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener<RegulatoryVertex, RegulatoryMultiEdge> {
+public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener<RegulatoryNode, RegulatoryMultiEdge> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NODEORDER = 1;
@@ -119,21 +119,21 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 		return null;
 	}
 
-	public GraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
+	public GraphEventCascade graphMerged(Collection<RegulatoryNode> data) {
 		return null;
 	}
 
-	public GraphEventCascade vertexAdded(RegulatoryVertex data) {
+	public GraphEventCascade vertexAdded(RegulatoryNode data) {
 		refresh(true);
 		return null;
 	}
 
-	public GraphEventCascade vertexRemoved(RegulatoryVertex data) {
+	public GraphEventCascade vertexRemoved(RegulatoryNode data) {
 		refresh(true);
 		return null;
 	}
 
-	public GraphEventCascade vertexUpdated(RegulatoryVertex data) {
+	public GraphEventCascade vertexUpdated(RegulatoryNode data) {
 		refresh(true);
 		return null;
 	}

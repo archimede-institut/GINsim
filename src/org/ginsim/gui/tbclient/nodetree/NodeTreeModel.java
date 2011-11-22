@@ -5,7 +5,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.ginsim.annotation.AnnotationLink;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 
@@ -13,7 +13,7 @@ import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class NodeTreeModel extends DTreeModel {
 	
-  public void addGene(RegulatoryVertex vertex, Vector par) {
+  public void addGene(RegulatoryNode vertex, Vector par) {
     AnnotationLink al;
     Vector v2 = new Vector();
     String[] field, sfield;
@@ -65,7 +65,7 @@ public class NodeTreeModel extends DTreeModel {
         v2.addElement("entrez");
         v2.addElement(field[3]);
         tev = new TreeElementValue(te, field[3]);
-        tevn = new TreeElementVertexNote(tev, v2);
+        tevn = new TreeElementNodeNote(tev, v2);
         al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
         tevn.setSelected(vertex.getAnnotation().containsLink(al));
         tel = new TreeElementLink(tevn, new URL(Tools.getLink("entrez", field[3])), vertex);
@@ -87,7 +87,7 @@ public class NodeTreeModel extends DTreeModel {
               v2.setElementAt("hugo", 1);
               v2.setElementAt(field[7], 2);
               tev = new TreeElementValue(te, field[7]);
-              tevn = new TreeElementVertexNote(tev, v2);
+              tevn = new TreeElementNodeNote(tev, v2);
               al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
               tevn.setSelected(vertex.getAnnotation().containsLink(al));
               if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
@@ -100,7 +100,7 @@ public class NodeTreeModel extends DTreeModel {
               v2.setElementAt("swissprot", 1);
               v2.setElementAt(field[6], 2);
               tev = new TreeElementValue(te, field[6]);
-              tevn = new TreeElementVertexNote(tev, v2);
+              tevn = new TreeElementNodeNote(tev, v2);
               al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
               tevn.setSelected(vertex.getAnnotation().containsLink(al));
               if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
@@ -115,7 +115,7 @@ public class NodeTreeModel extends DTreeModel {
               for (j = 0; j < sfield.length; j++) {
                 v2.setElementAt(sfield[j], 2);
                 te = new TreeElement(sfield[j]);
-                tevn = new TreeElementVertexNote(te, v2);
+                tevn = new TreeElementNodeNote(te, v2);
                 al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
                 tevn.setSelected(vertex.getAnnotation().containsLink(al));
                 if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
@@ -132,7 +132,7 @@ public class NodeTreeModel extends DTreeModel {
               for (j = 0; j < sfield.length; j++) {
                 v2.setElementAt(sfield[j], 2);
                 te = new TreeElement(sfield[j]);
-                tevn = new TreeElementVertexNote(te, v2);
+                tevn = new TreeElementNodeNote(te, v2);
                 al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
                 tevn.setSelected(vertex.getAnnotation().containsLink(al));
                 if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);

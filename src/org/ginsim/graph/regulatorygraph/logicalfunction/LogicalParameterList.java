@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 
 public class LogicalParameterList extends ArrayList {
@@ -281,7 +281,7 @@ public class LogicalParameterList extends ArrayList {
 	 * @param clone the vertex from the new graph
 	 * @param copyMap a map of multi-edge from the old graph to the new one.
 	 */
-	public void applyNewGraph(RegulatoryVertex clone, Map copyMap) {
+	public void applyNewGraph(RegulatoryNode clone, Map copyMap) {
 		for (Iterator it = iterator(); it.hasNext();) {
 			LogicalParameter param = (LogicalParameter)it.next();
 			param.applyNewGraph(clone, copyMap);

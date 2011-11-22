@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -50,7 +50,7 @@ public class PetriNetExportPNML extends BasePetriNetExport {
         for (int i=0 ; i<t_transition.length ; i++) {
         	List v_transition = t_transition[i];
             String s_node = v_no.get(i).toString();
-            int max = ((RegulatoryVertex)v_no.get(i)).getMaxValue();
+            int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
             int c = 0;
             if (v_transition != null) {
                 for (int j=0 ; j<v_transition.size() ; j++) {
@@ -72,7 +72,7 @@ public class PetriNetExportPNML extends BasePetriNetExport {
         for (int i=0 ; i<t_transition.length ; i++) {
         	List v_transition = t_transition[i];
             String s_node = v_no.get(i).toString();
-            int max = ((RegulatoryVertex)v_no.get(i)).getMaxValue();
+            int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
             if (v_transition != null) {
                 for (int j=0 ; j<v_transition.size() ; j++) {
                     

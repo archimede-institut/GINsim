@@ -7,7 +7,7 @@ import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
@@ -22,7 +22,7 @@ import fr.univmrs.tagc.common.datastore.SimpleGenericList;
  * Also deals with updating them when the graph is changed
  */
 public class SimulationParameterList extends SimpleGenericList<SimulationParameters> 
-	implements GraphListener<RegulatoryVertex, RegulatoryMultiEdge>, RegulatoryMutantListener, GenericListListener {
+	implements GraphListener<RegulatoryNode, RegulatoryMultiEdge>, RegulatoryMutantListener, GenericListListener {
 
     String s_current;
     RegulatoryGraph graph;
@@ -37,7 +37,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	this(graph, null);
     }
 
-    public SimulationParameterList( Graph<RegulatoryVertex,RegulatoryMultiEdge> graph, SimulationParameters param) {
+    public SimulationParameterList( Graph<RegulatoryNode,RegulatoryMultiEdge> graph, SimulationParameters param) {
     	
         this.graph = (RegulatoryGraph) graph;
         imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.key, true);
@@ -71,25 +71,25 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         return null;
     }
 
-    public GraphEventCascade vertexAdded(RegulatoryVertex data) {
+    public GraphEventCascade vertexAdded(RegulatoryNode data) {
         // if needed, add it to the default priority class!
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
     		if (pcdef.m_elt != null) {
-    			pcdef.m_elt.put((RegulatoryVertex)data, pcdef.getElement(null, 0));
+    			pcdef.m_elt.put((RegulatoryNode)data, pcdef.getElement(null, 0));
     		}
         }
         return null;
     }
 
-	public GraphEventCascade graphMerged(Collection<RegulatoryVertex> nodes) {
-		for (RegulatoryVertex v: nodes) {
+	public GraphEventCascade graphMerged(Collection<RegulatoryNode> nodes) {
+		for (RegulatoryNode v: nodes) {
 			vertexAdded(v);
 		}
 		return null;
 	}
     
-    public GraphEventCascade vertexRemoved(RegulatoryVertex data) {
+    public GraphEventCascade vertexRemoved(RegulatoryNode data) {
         // remove it from priority classes
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
@@ -100,7 +100,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         return null;
     }
 
-    public GraphEventCascade vertexUpdated(RegulatoryVertex data) {
+    public GraphEventCascade vertexUpdated(RegulatoryNode data) {
     	return null;
     }
 

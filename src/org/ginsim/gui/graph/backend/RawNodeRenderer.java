@@ -8,23 +8,23 @@ import java.awt.Shape;
 
 import javax.swing.JLabel;
 
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 
 
-class RawVertexRenderer extends JLabel {
+class RawNodeRenderer extends JLabel {
 	
-	private final VertexAttributesReader reader;
+	private final NodeAttributesReader reader;
 	
 	private Color fgColor, bgColor;
 	
 	
-	public RawVertexRenderer(VertexAttributesReader vertexAttributeReader) {
+	public RawNodeRenderer(NodeAttributesReader vertexAttributeReader) {
 		this.reader = vertexAttributeReader;
 		setHorizontalTextPosition(CENTER);
 		setHorizontalAlignment(CENTER);
 	}
 
-	public void setView(RawVertexView view) {
+	public void setView(RawNodeView view) {
 		
 		setText(view.toString());
 		setBounds(view.getBounds());

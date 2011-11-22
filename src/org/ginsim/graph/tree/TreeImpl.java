@@ -12,7 +12,7 @@ import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tool.regulatorytreefunction.TreeActionPanel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;

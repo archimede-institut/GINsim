@@ -10,7 +10,7 @@ import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
@@ -51,7 +51,7 @@ public class FunctionEditorControler {
 	private FunctionEditorModel editorModel;
 	private FunctionEditorEditPanel editPanel;
 	private FunctionEditorDisplayPanel displayPanel;
-	private RegulatoryVertex vertex;
+	private RegulatoryNode vertex;
 	private RegulatoryGraph graph;
 	private JTree tree;
 
@@ -65,7 +65,7 @@ public class FunctionEditorControler {
   	functionPanel = p;
     editorModel = m;
 	}
-	public void init(RegulatoryVertex v, RegulatoryGraph g, JTree t, FunctionEditorModel m) {
+	public void init(RegulatoryNode v, RegulatoryGraph g, JTree t, FunctionEditorModel m) {
 		vertex = v;
 		graph = g;
 		tree = t;

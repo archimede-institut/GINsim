@@ -1,6 +1,6 @@
 package org.ginsim.gui.graph.regulatorygraph.logicalfunction;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.regulatorygraph.models.TableInteractionsModel;
 
 
@@ -9,7 +9,7 @@ public class FTableInteractionModel extends TableInteractionsModel {
 	/* public FTableInteractionModel(RegulatoryGraph graph, Vector v_ok) {
         super(graph, v_ok);
     }*/
-    public FTableInteractionModel(RegulatoryVertex no) {
+    public FTableInteractionModel(RegulatoryNode no) {
         super(no);
     }
     public int getRowCount() {

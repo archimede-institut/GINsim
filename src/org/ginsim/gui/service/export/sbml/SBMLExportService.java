@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
@@ -38,12 +38,12 @@ public class SBMLExportService implements Service{
 	 */
 	public static void export( RegulatoryGraph graph, String fileName) {
 		
-        List<RegulatoryVertex> v_no = graph.getNodeOrder();
+        List<RegulatoryNode> v_no = graph.getNodeOrder();
         int len = v_no.size();
         OMDDNode[] t_tree = ((RegulatoryGraph)graph).getAllTrees(true);
         byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
-            RegulatoryVertex vertex = (RegulatoryVertex)v_no.get(i);
+            RegulatoryNode vertex = (RegulatoryNode)v_no.get(i);
             if ( graph.getIncomingEdges(vertex).size() == 0) {
                 // input node: no transition, use basal value as initial markup
             	
@@ -84,7 +84,7 @@ public class SBMLExportService implements Service{
             out.openTag("listOfSpecies");
             for (int i=0 ; i<t_tree.length ; i++) {
                 String s_id = v_no.get(i).toString();
-                String s_name = ((RegulatoryVertex)v_no.get(i)).getName();
+                String s_name = ((RegulatoryNode)v_no.get(i)).getName();
                 out.openTag("species");
                 out.addAttr("id", "s_"+s_id);
                 out.addAttr("name",s_name);
@@ -99,7 +99,7 @@ public class SBMLExportService implements Service{
             for (int i=0 ; i<t_tree.length ; i++) {
                 OMDDNode node = t_tree[i];
                 String s_node = v_no.get(i).toString();
-                int max = ((RegulatoryVertex)v_no.get(i)).getMaxValue();
+                int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
                 out.openTag("reaction");
                 out.addAttr("id", "r_"+s_node);
                 out.addAttr("reversible", "true");

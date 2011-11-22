@@ -5,7 +5,7 @@ import java.util.List;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraphImpl;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;
@@ -67,7 +67,7 @@ public class DynamicGraphFactory implements GraphFactory<DynamicGraph> {
 	}
 	
 
-	public DynamicGraph create( List<RegulatoryVertex> node_order){
+	public DynamicGraph create( List<RegulatoryNode> node_order){
 		
     	return new DynamicGraphImpl( node_order);
 	}

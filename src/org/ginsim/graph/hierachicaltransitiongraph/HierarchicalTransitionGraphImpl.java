@@ -16,10 +16,10 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.hierarchicaltransitiongraph.HierarchicalEdgeParameterPanel;
 import org.ginsim.gui.service.tool.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
@@ -30,7 +30,7 @@ import org.ginsim.io.parser.GinmlHelper;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>
+public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
 	implements HierarchicalTransitionGraph{
 
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
@@ -51,7 +51,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
 	private byte[] childsCount = null;
-	private HierarchicalVertexParameterPanel vertexPanel = null;
+	private HierarchicalNodeParameterPanel vertexPanel = null;
 	private long saveEdgeId;
 	private SimulationParameters simulationParameters;
 	private HierarchicalEdgeParameterPanel edgePanel;
@@ -72,10 +72,10 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 * @param nodeOrder the node order
 	 * @param transientCompactionMode MODE_SCC or MODE_HTG
 	 */
-	public HierarchicalTransitionGraphImpl(List<RegulatoryVertex> nodeOrder, int transientCompactionMode) {
+	public HierarchicalTransitionGraphImpl(List<RegulatoryNode> nodeOrder, int transientCompactionMode) {
 		
 	    this();
-	    for (RegulatoryVertex vertex: nodeOrder) {
+	    for (RegulatoryNode vertex: nodeOrder) {
 	    	this.nodeOrder.add(new NodeInfo(vertex));
 	    }
 	    this.transientCompactionMode = transientCompactionMode;
@@ -164,7 +164,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 
 	public AbstractParameterPanel getVertexAttributePanel() {
 	    if (vertexPanel == null) {
-	        vertexPanel  = new HierarchicalVertexParameterPanel(this);
+	        vertexPanel  = new HierarchicalNodeParameterPanel(this);
 	    }
 		return vertexPanel;
 	}
@@ -227,7 +227,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	  * @throws IOException
 	  */
 	 private void saveNode(XMLWriter out, int mode, Collection<HierarchicalNode> vertices) throws IOException {
-	 	VertexAttributesReader vReader = getVertexAttributeReader();
+	 	NodeAttributesReader vReader = getVertexAttributeReader();
 	     for (HierarchicalNode vertex: vertices) {
 	         vReader.setVertex(vertex);
 	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");

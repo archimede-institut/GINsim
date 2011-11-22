@@ -2,7 +2,7 @@ package org.ginsim.graph.regulatorygraph.logicalfunction;
 
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 
@@ -16,7 +16,7 @@ public abstract class LogicalFunctionBrowser {
 		this.path = new int[nodeOrder.size()][3];
 		for (int i=0 ; i<path.length ; i++) {
 			path[i][0] = path[i][1] = -1;
-			path[i][2] = ((RegulatoryVertex)nodeOrder.get(i)).getMaxValue();
+			path[i][2] = ((RegulatoryNode)nodeOrder.get(i)).getMaxValue();
 		}
 	}
 	

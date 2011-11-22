@@ -12,7 +12,7 @@ import java.util.Vector;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.param2function.tree.ParamTree;
 import org.ginsim.graph.regulatorygraph.logicalfunction.param2function.tree.ParamTreeLeafPattern;
@@ -21,9 +21,9 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.param2function.tree.Para
 public class FunctionsCreator {
   private RegulatoryGraph graph;
   private Collection<LogicalParameter> interactions;
-  private RegulatoryVertex currentVertex;
+  private RegulatoryNode currentVertex;
 
-  public FunctionsCreator(RegulatoryGraph graph, Collection<LogicalParameter> interactions, RegulatoryVertex currentVertex) {
+  public FunctionsCreator(RegulatoryGraph graph, Collection<LogicalParameter> interactions, RegulatoryNode currentVertex) {
     this.graph = graph;
     this.interactions = interactions;
     this.currentVertex = currentVertex;
@@ -31,13 +31,13 @@ public class FunctionsCreator {
   public RegulatoryGraph getGraph() {
     return graph;
   }
-  public RegulatoryVertex getCurrentVertex() {
+  public RegulatoryNode getCurrentVertex() {
     return currentVertex;
   }
   public ParamTree makeTree(int def) {
 	  
 	Collection<RegulatoryMultiEdge> l = graph.getIncomingEdges(currentVertex);
-    HashMap<RegulatoryVertex,Object> h = new HashMap();
+    HashMap<RegulatoryNode,Object> h = new HashMap();
 
     for (RegulatoryMultiEdge me: l) {
       h.put(me.getSource(), new Integer(0));
@@ -51,7 +51,7 @@ public class FunctionsCreator {
         }
       }
     }
-    ArrayList<Entry<RegulatoryVertex, Object>> as = new ArrayList(h.entrySet());
+    ArrayList<Entry<RegulatoryNode, Object>> as = new ArrayList(h.entrySet());
     Collections.sort(as, new Comparator() {
       public int compare(Object o1, Object o2) {
         Entry e1 = (Entry) o1;
@@ -61,11 +61,11 @@ public class FunctionsCreator {
         if (first.compareTo(second) != 0) {
           return first.compareTo(second);
         }
-        return ((RegulatoryVertex)e1.getKey()).getName().compareTo(((RegulatoryVertex) e2.getKey()).getName());
+        return ((RegulatoryNode)e1.getKey()).getName().compareTo(((RegulatoryNode) e2.getKey()).getName());
       }
     });
-    RegulatoryVertex v;
-    for (Entry<RegulatoryVertex, Object> e: as) {
+    RegulatoryNode v;
+    for (Entry<RegulatoryNode, Object> e: as) {
       v = e.getKey();
       e.setValue(graph.getEdge(v, currentVertex));
     }

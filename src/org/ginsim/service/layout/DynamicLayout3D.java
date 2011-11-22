@@ -7,16 +7,16 @@ import java.util.List;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.ColorPalette;
 
 public class DynamicLayout3D {
 	private EdgeAttributesReader ereader;
-    private VertexAttributesReader vreader;
+    private NodeAttributesReader vreader;
     private Color[] colorPalette;
     private int[] decalx, decaly;
     private int stateWidth = 0;
@@ -145,7 +145,7 @@ public class DynamicLayout3D {
     	byte[] maxValues = new byte[nodeOrder.size()];
     	int i = 0;
     	for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-    		RegulatoryVertex v = (RegulatoryVertex) it.next();
+    		RegulatoryNode v = (RegulatoryNode) it.next();
     		maxValues[i++] = (byte) (v.getMaxValue());
     	}			
     	return maxValues;

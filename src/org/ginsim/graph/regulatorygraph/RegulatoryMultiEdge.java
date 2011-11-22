@@ -15,7 +15,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
 /**
  * This edge object allows to have several edges from a vertex to another
  */
-public class RegulatoryMultiEdge extends Edge<RegulatoryVertex> implements XMLize, ToolTipsable {
+public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize, ToolTipsable {
 
 	/** array of sign's names */
 	static public final String[] SIGN = {"positive","negative","unknown"};
@@ -28,7 +28,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryVertex> implements XMLiz
 	/** an unknown edge */
 	static public final byte SIGN_UNKNOWN = 2;
 
-	private RegulatoryEdge[] edges = new RegulatoryEdge[RegulatoryVertex.MAXVALUE+1];
+	private RegulatoryEdge[] edges = new RegulatoryEdge[RegulatoryNode.MAXVALUE+1];
 	private int edgecount = 0;
     private int sign = 0;
 
@@ -37,10 +37,10 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryVertex> implements XMLiz
      * @param target
      * @param param
      */
-    public RegulatoryMultiEdge(RegulatoryVertex source, RegulatoryVertex target, int param) {
+    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target, int param) {
     	this(source, target, param, (byte)1);
     }
-    public RegulatoryMultiEdge(RegulatoryVertex source, RegulatoryVertex target, int param, byte threshold) {
+    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target, int param, byte threshold) {
     	super(source, target);
         RegulatoryEdge edge = new RegulatoryEdge(this);
         edge.sign = (byte)param;
@@ -58,7 +58,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryVertex> implements XMLiz
      * @param target
      *
      */
-    public RegulatoryMultiEdge(RegulatoryVertex source, RegulatoryVertex target) {
+    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target) {
     	this(source, target, 0, (byte)1);
     }
 

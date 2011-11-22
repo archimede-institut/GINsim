@@ -12,7 +12,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.datastore.models.MaxSpinModel;
 import fr.univmrs.tagc.common.datastore.models.MinMaxSpinModel;
@@ -124,7 +124,7 @@ public class CircuitConfigureSearch extends JPanel {
     }
     protected void reset() {
         for (int i=0 ; i<nodeOrder.size() ; i++) {
-            RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
+            RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
             config.t_status[i] = 3;
             config.t_constraint[i][0] = 0;
             config.t_constraint[i][1] = vertex.getMaxValue();
@@ -215,7 +215,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
                 }
                 return ""+t_constraint[row][0];
             case 5:
-                if (t_constraint[row][1] == ((RegulatoryVertex)v_list.get(row)).getMaxValue()) {
+                if (t_constraint[row][1] == ((RegulatoryNode)v_list.get(row)).getMaxValue()) {
                     return "";
                 }
                 return ""+t_constraint[row][1];
@@ -233,7 +233,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
                 t_constraint[row][0] = 0;
             } else {
                 byte val = ((Integer)aValue).byteValue();
-                if (val > 0 && val <= ((RegulatoryVertex)v_list.get(row)).getMaxValue()) {
+                if (val > 0 && val <= ((RegulatoryNode)v_list.get(row)).getMaxValue()) {
                     t_constraint[row][0] = val;
                     if (t_constraint[row][0] > t_constraint[row][1]) {
                         t_constraint[row][1] = t_constraint[row][0];
@@ -244,10 +244,10 @@ class GsCircuitConfigModel extends DefaultTableModel {
             frame.updateStatus(CircuitFrame.STATUS_NONE);
         } else if (column == 5) {
             if (aValue == null) {
-                t_constraint[row][1] = ((RegulatoryVertex)v_list.get(row)).getMaxValue();
+                t_constraint[row][1] = ((RegulatoryNode)v_list.get(row)).getMaxValue();
             } else {
                 byte val = ((Integer)aValue).byteValue();
-                if (val > 0 && val <= ((RegulatoryVertex)v_list.get(row)).getMaxValue()) {
+                if (val > 0 && val <= ((RegulatoryNode)v_list.get(row)).getMaxValue()) {
                     t_constraint[row][1] = val;
                     if (t_constraint[row][0] > t_constraint[row][1]) {
                         t_constraint[row][0] = t_constraint[row][1];

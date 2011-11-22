@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.service.tool.stateinregulatorygraph.StateInRegGraphSelector;
 
 
@@ -46,7 +46,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 		this.statemax = new byte[g.getNodeOrderSize()];
 		int i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {
-			RegulatoryVertex v = (RegulatoryVertex) it.next();
+			RegulatoryNode v = (RegulatoryNode) it.next();
 			this.statemax[i++] = v.getMaxValue();
 		}
 	}

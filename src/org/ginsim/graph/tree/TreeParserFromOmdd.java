@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 import fr.univmrs.tagc.common.ColorPalette;
@@ -64,11 +64,11 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 		}	
 	}
 
-	public void updateLayout(VertexAttributesReader vreader, TreeNode vertex) {
+	public void updateLayout(NodeAttributesReader vreader, TreeNode vertex) {
 		vreader.setVertex(vertex);
 		int total_width = getTerminalWidth()*TreeNode.PADDING_HORIZONTAL;
 		if (vertex.getType() == TreeNode.TYPE_LEAF) {
-			vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
 			vreader.setBackgroundColor(ColorPalette.defaultPalette[vertex.getValue()+1]);
 			vreader.setBorder(0);
 			if (vertex.getDepth() != -1) {
@@ -77,7 +77,7 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 	    		vreader.setPos((int)((vertex.getWidth()+0.5)*total_width/getMaxTerminal())+100, getTotalLevels()*TreeNode.PADDING_VERTICAL+40);
 			}
 		} else {
-			vreader.setShape(VertexAttributesReader.SHAPE_RECTANGLE);			
+			vreader.setShape(NodeAttributesReader.SHAPE_RECTANGLE);			
 			if (vertex.getValue() == TreeNode.SKIPPED) {
 				vreader.setBackgroundColor(Color.WHITE);
 				vreader.setForegroundColor(Color.GRAY);
@@ -97,7 +97,7 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 
 		Iterator it = nodeOrder.iterator();
 		for (int i = 0 ; it.hasNext() ; i++) {
-			RegulatoryVertex v = (RegulatoryVertex) it.next();
+			RegulatoryNode v = (RegulatoryNode) it.next();
 			if (realDetph[i] != -2) {
 				int max = v.getMaxValue()+1;
 				widthPerDepth[i] = max;

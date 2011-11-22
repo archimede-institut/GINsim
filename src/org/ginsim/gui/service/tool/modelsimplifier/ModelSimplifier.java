@@ -17,12 +17,12 @@ import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
@@ -42,10 +42,10 @@ import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
 
 
 class RemovedInfo {
-	RegulatoryVertex vertex;
+	RegulatoryNode vertex;
 	int pos;
 	Collection<RegulatoryMultiEdge> targets;
-	public RemovedInfo(RegulatoryVertex vertex, int pos, Collection<RegulatoryMultiEdge> targets) {
+	public RemovedInfo(RegulatoryNode vertex, int pos, Collection<RegulatoryMultiEdge> targets) {
 		super();
 		this.vertex = vertex;
 		this.pos = pos;
@@ -73,16 +73,16 @@ public class ModelSimplifier extends Thread implements Runnable {
 	int[] t_remove = null;
 
 	RegulatoryGraph graph;
-	List<RegulatoryVertex> oldNodeOrder;
+	List<RegulatoryNode> oldNodeOrder;
 	RegulatoryGraph simplifiedGraph;
 
-	Map<RegulatoryVertex,boolean[]> m_edges = new HashMap<RegulatoryVertex, boolean[]>();
+	Map<RegulatoryNode,boolean[]> m_edges = new HashMap<RegulatoryNode, boolean[]>();
 	Map<Object, Object> copyMap = new HashMap<Object, Object>();
-	Map<RegulatoryVertex, List<RegulatoryVertex>> m_removed;
+	Map<RegulatoryNode, List<RegulatoryNode>> m_removed;
 	
-	Map<RegulatoryVertex, OMDDNode> m_affected = new HashMap<RegulatoryVertex, OMDDNode>();
+	Map<RegulatoryNode, OMDDNode> m_affected = new HashMap<RegulatoryNode, OMDDNode>();
 	String s_comment = "";
-	List<RegulatoryVertex> l_removed = new ArrayList<RegulatoryVertex>();
+	List<RegulatoryNode> l_removed = new ArrayList<RegulatoryNode>();
 
 	TargetEdgesIterator it_targets;
 	
@@ -93,7 +93,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 		this.graph = graph;
 		this.oldNodeOrder = graph.getNodeOrder();
 		this.dialog = dialog;
-		this.m_removed = new HashMap<RegulatoryVertex, List<RegulatoryVertex>>(config.m_removed);
+		this.m_removed = new HashMap<RegulatoryNode, List<RegulatoryNode>>(config.m_removed);
 		this.it_targets = new TargetEdgesIterator(m_removed);
 		this.strict = config.strict;
 		
@@ -116,7 +116,7 @@ public class ModelSimplifier extends Thread implements Runnable {
     public RegulatoryGraph do_reduction() {
     	// prepare the list of removal requests
 		List<RemovedInfo> l_todo = new ArrayList<RemovedInfo>();
-		for (RegulatoryVertex vertex: m_removed.keySet()) {
+		for (RegulatoryNode vertex: m_removed.keySet()) {
 			int index = graph.getNodeOrder().indexOf(vertex);
 			RemovedInfo ri = new RemovedInfo(vertex, index, graph.getOutgoingEdges(vertex));
 			l_todo.add(ri);
@@ -140,7 +140,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			} else {
 				// it failed, trigger an error message
 				StringBuffer sb = new StringBuffer("Reduction failed.\n  Removed: ");
-				for (RegulatoryVertex v: l_removed) {
+				for (RegulatoryNode v: l_removed) {
 					sb.append(" "+v);
 				}
 				sb.append("\n  Failed: ");
@@ -180,8 +180,8 @@ public class ModelSimplifier extends Thread implements Runnable {
     	List<RemovedInfo> l_failed = new ArrayList<RemovedInfo>();
     	
 		for (RemovedInfo ri: l_todo) {
-			RegulatoryVertex vertex = ri.vertex;
-			List<RegulatoryVertex> targets = new ArrayList<RegulatoryVertex>();
+			RegulatoryNode vertex = ri.vertex;
+			List<RegulatoryNode> targets = new ArrayList<RegulatoryNode>();
 			OMDDNode deleted = m_affected.get(vertex);
 			if (deleted == null) {
 				deleted = vertex.getTreeParameters(graph);
@@ -196,7 +196,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				// mark all its targets as affected
 				it_targets.setOutgoingList(ri.targets);
 				while (it_targets.hasNext()) {
-					RegulatoryVertex target = (RegulatoryVertex)it_targets.next();
+					RegulatoryNode target = (RegulatoryNode)it_targets.next();
 					if (!target.equals(vertex)) {
 						targets.add(target);
 						OMDDNode targetNode = m_affected.get(target);
@@ -206,7 +206,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 						m_affected.put(target, remove(targetNode, deleted, ri.pos).reduce());
 					}
 				}
-				m_removed.put(ri.vertex, new ArrayList<RegulatoryVertex>(targets));
+				m_removed.put(ri.vertex, new ArrayList<RegulatoryNode>(targets));
 				l_removed.add(vertex);
 			} catch (GsException e) {
 				// this removal failed, remember that we may get a second chance
@@ -233,15 +233,15 @@ public class ModelSimplifier extends Thread implements Runnable {
 					"\n\n"+note.getComment());
 		}
 		
-		//GsGraphManager<RegulatoryVertex, RegulatoryMultiEdge> simplifiedManager = simplifiedGraph.getGraphManager();
-		List<RegulatoryVertex> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
+		//GsGraphManager<RegulatoryNode, RegulatoryMultiEdge> simplifiedManager = simplifiedGraph.getGraphManager();
+		List<RegulatoryNode> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
 		
 		// Create all the nodes of the new model
-		VertexAttributesReader vreader = graph.getVertexAttributeReader();
-		VertexAttributesReader simplified_vreader = simplifiedGraph.getVertexAttributeReader();
-		for (RegulatoryVertex vertex: (List<RegulatoryVertex>)graph.getNodeOrder()) {
+		NodeAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader simplified_vreader = simplifiedGraph.getVertexAttributeReader();
+		for (RegulatoryNode vertex: (List<RegulatoryNode>)graph.getNodeOrder()) {
 			if (!m_removed.containsKey(vertex)) {
-				RegulatoryVertex clone = (RegulatoryVertex)vertex.clone();
+				RegulatoryNode clone = (RegulatoryNode)vertex.clone();
 				simplifiedGraph.addVertex(clone);
 				vreader.setVertex(vertex);
 				simplified_vreader.setVertex(clone);
@@ -257,8 +257,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 		Iterator<RegulatoryMultiEdge>it = graph.getEdges().iterator();
 		while (it.hasNext()) {
 			RegulatoryMultiEdge me = it.next();
-			RegulatoryVertex src = (RegulatoryVertex)copyMap.get(me.getSource());
-			RegulatoryVertex target = (RegulatoryVertex)copyMap.get(me.getTarget());
+			RegulatoryNode src = (RegulatoryNode)copyMap.get(me.getSource());
+			RegulatoryNode target = (RegulatoryNode)copyMap.get(me.getTarget());
 			if (src != null && target != null) {
 				RegulatoryMultiEdge me_clone = new RegulatoryMultiEdge(src, target);
 				me_clone.copyFrom(me);
@@ -271,14 +271,14 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 
 		// build a mapping between new nodes and old position
-		Map<RegulatoryVertex, Integer> m_orderPos = new HashMap<RegulatoryVertex, Integer>();
-		Iterator<RegulatoryVertex> it_oldOrder = oldNodeOrder.iterator();
+		Map<RegulatoryNode, Integer> m_orderPos = new HashMap<RegulatoryNode, Integer>();
+		Iterator<RegulatoryNode> it_oldOrder = oldNodeOrder.iterator();
 		int pos = -1;
-		for (RegulatoryVertex vertex: simplified_nodeOrder) {;
+		for (RegulatoryNode vertex: simplified_nodeOrder) {;
 			String id = vertex.getId();
 			while (it_oldOrder.hasNext()) {
 				pos++;
-				RegulatoryVertex oldVertex = it_oldOrder.next();
+				RegulatoryNode oldVertex = it_oldOrder.next();
 				if (id.equals(oldVertex.getId())) {
 					m_orderPos.put(vertex, new Integer(pos));
 					break;
@@ -289,8 +289,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 		pgen = new ParameterGenerator(oldNodeOrder, m_orderPos);
 
 		// copy parameters/logical functions on the unaffected nodes
-		for (RegulatoryVertex vertex: oldNodeOrder) {
-			RegulatoryVertex clone = (RegulatoryVertex)copyMap.get(vertex);
+		for (RegulatoryNode vertex: oldNodeOrder) {
+			RegulatoryNode clone = (RegulatoryNode)copyMap.get(vertex);
 			if (m_removed.containsKey(vertex)) {
 				continue;
 			}
@@ -305,9 +305,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 			// make sure that the needed edges target the affected node
 			m_edges.clear();
 			extractEdgesFromNode(m_edges, newNode);
-			RegulatoryVertex target = (RegulatoryVertex)copyMap.get(vertex);
-			for (Entry<RegulatoryVertex,boolean[]> e: m_edges.entrySet()) {
-				RegulatoryVertex src = (RegulatoryVertex)copyMap.get(e.getKey());
+			RegulatoryNode target = (RegulatoryNode)copyMap.get(vertex);
+			for (Entry<RegulatoryNode,boolean[]> e: m_edges.entrySet()) {
+				RegulatoryNode src = (RegulatoryNode)copyMap.get(e.getKey());
 				RegulatoryMultiEdge de = simplifiedGraph.getEdge(src, target);
 				if (de == null) {
 					de = new RegulatoryMultiEdge(src, target);
@@ -320,7 +320,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			m_edges.clear();
 			Collection<RegulatoryMultiEdge> edges = simplifiedGraph.getIncomingEdges(clone);
 			for (RegulatoryMultiEdge e: edges) {
-				RegulatoryVertex src = e.getSource();
+				RegulatoryNode src = e.getSource();
 				
 				// FIXME: not sure what this should be! (used to be a integer[])
 				boolean[] t_val = {false, true};
@@ -345,8 +345,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 				boolean ok = true;
 				for (int j=0 ; j<mutant.getNbChanges() ; j++ ) {
 					String id = mutant.getName(j);
-					RegulatoryVertex vertex = null;
-					for (RegulatoryVertex v: simplified_nodeOrder) {
+					RegulatoryNode vertex = null;
+					for (RegulatoryNode v: simplified_nodeOrder) {
 						if (id.equals(v.getId())) {
 							vertex = v;
 							break;
@@ -385,9 +385,9 @@ public class ModelSimplifier extends Thread implements Runnable {
     					InitialState newIstate = (InitialState)newInit.getElement(null, epos);
     					newIstate.setName(istate.getName());
     					m_alldata.put(istate, newIstate);
-    					Map<RegulatoryVertex, List<Integer>> m_init = newIstate.getMap();
-    					for (Entry<RegulatoryVertex, List<Integer>> e: istate.getMap().entrySet()) {
-    						RegulatoryVertex o = (RegulatoryVertex)copyMap.get(e.getKey());
+    					Map<RegulatoryNode, List<Integer>> m_init = newIstate.getMap();
+    					for (Entry<RegulatoryNode, List<Integer>> e: istate.getMap().entrySet()) {
+    						RegulatoryNode o = (RegulatoryNode)copyMap.get(e.getKey());
     						if (o != null) {
     							m_init.put( o, e.getValue());
     						}
@@ -425,7 +425,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				
 				// properly place nodes
 				for (Entry<?,?> e: pcdef.m_elt.entrySet()) {
-					RegulatoryVertex vertex = (RegulatoryVertex)copyMap.get(e.getKey());
+					RegulatoryNode vertex = (RegulatoryNode)copyMap.get(e.getKey());
 					if (vertex != null) {
 						new_pcdef.m_elt.put(vertex,	m_pclass.get(e.getValue()));
 					}
@@ -450,11 +450,11 @@ public class ModelSimplifier extends Thread implements Runnable {
 	 * extract the list of required edges for a given logical function.
 	 * @param node
 	 */
-	private void extractEdgesFromNode(Map<RegulatoryVertex,boolean[]> m_edges, OMDDNode node) {
+	private void extractEdgesFromNode(Map<RegulatoryNode,boolean[]> m_edges, OMDDNode node) {
 		if (node.next == null) {
 			return;
 		}
-		RegulatoryVertex vertex = (RegulatoryVertex)oldNodeOrder.get(node.level);
+		RegulatoryNode vertex = (RegulatoryNode)oldNodeOrder.get(node.level);
 		boolean[] t_threshold = (boolean[])m_edges.get(vertex);
 		if (t_threshold == null) {
 			t_threshold = new boolean[vertex.getMaxValue()+1];
@@ -606,15 +606,15 @@ public class ModelSimplifier extends Thread implements Runnable {
 }
 
 
-class TargetEdgesIterator implements Iterator<RegulatoryVertex> {
+class TargetEdgesIterator implements Iterator<RegulatoryNode> {
 
-	LinkedList<RegulatoryVertex> queue = new LinkedList<RegulatoryVertex>();
-	Set<RegulatoryVertex> m_visited = new HashSet<RegulatoryVertex>();
-	Map<RegulatoryVertex, List<RegulatoryVertex>> m_removed;
+	LinkedList<RegulatoryNode> queue = new LinkedList<RegulatoryNode>();
+	Set<RegulatoryNode> m_visited = new HashSet<RegulatoryNode>();
+	Map<RegulatoryNode, List<RegulatoryNode>> m_removed;
 	
-	RegulatoryVertex next;
+	RegulatoryNode next;
 	
-	public TargetEdgesIterator(Map<RegulatoryVertex, List<RegulatoryVertex>> m_removed) {
+	public TargetEdgesIterator(Map<RegulatoryNode, List<RegulatoryNode>> m_removed) {
 		this.m_removed = m_removed;
 	}
 	
@@ -622,21 +622,21 @@ class TargetEdgesIterator implements Iterator<RegulatoryVertex> {
 		return next != null;
 	}
 
-	public RegulatoryVertex next() {
-		RegulatoryVertex ret = next;
+	public RegulatoryNode next() {
+		RegulatoryNode ret = next;
 		
 		// find the next.
 		// it can be a "normal next target" if it was not removed
 		// if it was removed, it may be one of the targets of the removed node
 		next = null;
 		while (queue.size() > 0) {
-			RegulatoryVertex vertex = queue.removeFirst();
+			RegulatoryNode vertex = queue.removeFirst();
 			if (m_visited.contains(vertex)) {
 				// this node was checked already, skip it
 				continue;
 			}
 			m_visited.add(vertex);
-			List<RegulatoryVertex> targets = m_removed.get(vertex);
+			List<RegulatoryNode> targets = m_removed.get(vertex);
 			if (targets == null) {
 				// "clean" node: go for it!
 				next = vertex;
@@ -644,7 +644,7 @@ class TargetEdgesIterator implements Iterator<RegulatoryVertex> {
 			}
 			
 			// "dirty" node: enqueue its targets
-			for (RegulatoryVertex v: targets) {
+			for (RegulatoryNode v: targets) {
 				queue.addLast(v);
 			}
 		}
@@ -669,14 +669,14 @@ class ParameterGenerator extends LogicalFunctionBrowser {
 	private List<LogicalParameter> paramList;
 	private int[][] t_values;
 	private RegulatoryMultiEdge[] t_me;
-	private Map<RegulatoryVertex, Integer> m_orderPos;
+	private Map<RegulatoryNode, Integer> m_orderPos;
 	
-	public ParameterGenerator(List<RegulatoryVertex> nodeOrder, Map<RegulatoryVertex, Integer> m_orderPos) {
+	public ParameterGenerator(List<RegulatoryNode> nodeOrder, Map<RegulatoryNode, Integer> m_orderPos) {
 		super(nodeOrder);
 		this.m_orderPos = m_orderPos;
 	}
 
-	public void browse(Collection<RegulatoryMultiEdge> edges, RegulatoryVertex targetVertex, OMDDNode node) {
+	public void browse(Collection<RegulatoryMultiEdge> edges, RegulatoryNode targetVertex, OMDDNode node) {
 		this.paramList = new ArrayList<LogicalParameter>();
 		t_values = new int[edges.size()][4];
 		t_me = new RegulatoryMultiEdge[t_values.length];

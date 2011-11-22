@@ -14,10 +14,10 @@ import javax.swing.Action;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
@@ -120,9 +120,9 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 		Hashtable gs2cyt_Ids = new Hashtable(graph.getVertexCount());
 		
 		int current_index_of_node_id = -graph.getVertexCount(); // The IDs goes from -vertexCount to -1
-		VertexAttributesReader vertexAttributeReader = graph.getVertexAttributeReader();
+		NodeAttributesReader vertexAttributeReader = graph.getVertexAttributeReader();
 		for (Iterator it=graph.getVertices().iterator() ; it.hasNext() ;) {
-			RegulatoryVertex vertex = (RegulatoryVertex)it.next();
+			RegulatoryNode vertex = (RegulatoryNode)it.next();
 			
 			String name = vertex.getName();//The complete name (label) of the edge
 			if (name.length() == 0) {
@@ -148,9 +148,9 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 			out.addAttr("fill", '#'+Tools.getColorCode(vertexAttributeReader.getBackgroundColor()));
 			out.addAttr("y", String.valueOf(vertexAttributeReader.getY()));
 			out.addAttr("x", String.valueOf(vertexAttributeReader.getX()));
-			if (vertexAttributeReader.getShape() == VertexAttributesReader.SHAPE_RECTANGLE) {
+			if (vertexAttributeReader.getShape() == NodeAttributesReader.SHAPE_RECTANGLE) {
 				out.addAttr("type", "rectangle");
-			} else if (vertexAttributeReader.getShape() == VertexAttributesReader.SHAPE_ELLIPSE) {
+			} else if (vertexAttributeReader.getShape() == NodeAttributesReader.SHAPE_ELLIPSE) {
 				out.addAttr("type", "ellipse");
 			}			
 			out.openTag("att");
@@ -170,8 +170,8 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 		for (Iterator<RegulatoryMultiEdge> it=graph.getEdges().iterator() ; it.hasNext() ;) {
 			RegulatoryMultiEdge edge = it.next();
 
-			String source_id = ((RegulatoryVertex)edge.getTarget()).getId(); //C1
-			String target_id = ((RegulatoryVertex)edge.getSource()).getId(); //C2
+			String source_id = ((RegulatoryNode)edge.getTarget()).getId(); //C1
+			String target_id = ((RegulatoryNode)edge.getSource()).getId(); //C2
 			String edge_type; //inhibit | activate | undefined
 			String edge_cyt_id; //15 | 3 | 12
 			switch (edge.getSign()) {

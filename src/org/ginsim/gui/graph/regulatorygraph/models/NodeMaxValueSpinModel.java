@@ -2,7 +2,7 @@ package org.ginsim.gui.graph.regulatorygraph.models;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 
@@ -10,17 +10,17 @@ import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.models.SpinModel;
 
 /**
- * model controlling spin buttons for base and max value of a RegulatoryVertex
+ * model controlling spin buttons for base and max value of a RegulatoryNode
  */
-public class VertexMaxValueSpinModel extends SpinModel {
+public class NodeMaxValueSpinModel extends SpinModel {
 
-    private RegulatoryVertex vertex;
+    private RegulatoryNode vertex;
 	private final RegulatoryGraph graph;
-	private final GraphGUI<RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge> gui;
+	private final GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui;
 
     /**
      */
-    public VertexMaxValueSpinModel(RegulatoryGraph graph) {
+    public NodeMaxValueSpinModel(RegulatoryGraph graph) {
         super();
         this.graph = graph;
         this.gui = GUIManager.getInstance().getGraphGUI(graph);
@@ -28,7 +28,7 @@ public class VertexMaxValueSpinModel extends SpinModel {
 
 
 	public void setEditedObject(Object rawValue) {
-        this.vertex = (RegulatoryVertex)rawValue;
+        this.vertex = (RegulatoryNode)rawValue;
         fireStateChanged();
 	}
 

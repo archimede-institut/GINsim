@@ -13,7 +13,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.annotation.AnnotationLink;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.Tools;
 
@@ -25,12 +25,12 @@ public class GeneTreeModel implements TreeModel {
     root = r;
   }
   public void init(Hashtable genes) {
-    RegulatoryVertex vertex;
+    RegulatoryNode vertex;
     TreeElement te;
     TreeElementNode ten;
     TreeElementValue tev;
     TreeElementLink tel;
-    TreeElementVertexNote tevn;
+    TreeElementNodeNote tevn;
     AnnotationLink al;
     AbstractTreeElement nodeNode, gsNode, ezNode, desNode, swNode, rsNode, rsvNode, upNode, upvNode, alNode, huNode;
     Vector v, v2 = new Vector();
@@ -41,7 +41,7 @@ public class GeneTreeModel implements TreeModel {
 		((TreeElementNode)root).sons.clear();
     try {
       for (Enumeration enu = genes.keys(); enu.hasMoreElements(); ) {
-        vertex = (RegulatoryVertex)enu.nextElement();
+        vertex = (RegulatoryNode)enu.nextElement();
         te = new TreeElement(vertex.toString());
         ten = new TreeElementNode(te);
         nodeNode = new TreeElementSelectable(ten, false, vertex, this);
@@ -65,7 +65,7 @@ public class GeneTreeModel implements TreeModel {
           v2.addElement("entrez");
           v2.addElement(field[3]);
           tev = new TreeElementValue(te, field[3]);
-          tevn = new TreeElementVertexNote(tev, v2);
+          tevn = new TreeElementNodeNote(tev, v2);
           al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
           tevn.setSelected(vertex.getAnnotation().containsLink(al));
           tel = new TreeElementLink(tevn, new URL(Tools.getLink("entrez", field[3])), vertex);
@@ -87,7 +87,7 @@ public class GeneTreeModel implements TreeModel {
               v2.setElementAt("hugo", 1);
               v2.setElementAt(field[7], 2);
               tev = new TreeElementValue(te, field[7]);
-              tevn = new TreeElementVertexNote(tev, v2);
+              tevn = new TreeElementNodeNote(tev, v2);
               al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
               tevn.setSelected(vertex.getAnnotation().containsLink(al));
               if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
@@ -100,7 +100,7 @@ public class GeneTreeModel implements TreeModel {
               v2.setElementAt("swissprot", 1);
               v2.setElementAt(field[6], 2);
               tev = new TreeElementValue(te, field[6]);
-              tevn = new TreeElementVertexNote(tev, v2);
+              tevn = new TreeElementNodeNote(tev, v2);
               al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
               tevn.setSelected(vertex.getAnnotation().containsLink(al));
               if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
@@ -115,7 +115,7 @@ public class GeneTreeModel implements TreeModel {
               for (j = 0; j < sfield.length; j++) {
                 v2.setElementAt(sfield[j], 2);
                 te = new TreeElement(sfield[j]);
-                tevn = new TreeElementVertexNote(te, v2);
+                tevn = new TreeElementNodeNote(te, v2);
                 al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
                 tevn.setSelected(vertex.getAnnotation().containsLink(al));
                 if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
@@ -132,7 +132,7 @@ public class GeneTreeModel implements TreeModel {
               for (j = 0; j < sfield.length; j++) {
                 v2.setElementAt(sfield[j], 2);
                 te = new TreeElement(sfield[j]);
-                tevn = new TreeElementVertexNote(te, v2);
+                tevn = new TreeElementNodeNote(te, v2);
                 al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
                 tevn.setSelected(vertex.getAnnotation().containsLink(al));
                 if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);

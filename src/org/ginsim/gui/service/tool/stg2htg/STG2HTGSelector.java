@@ -10,7 +10,7 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Selector;
 import org.ginsim.graph.view.css.Style;
-import org.ginsim.graph.view.css.VertexStyle;
+import org.ginsim.graph.view.css.NodeStyle;
 
 
 public class STG2HTGSelector extends Selector {
@@ -21,9 +21,9 @@ public class STG2HTGSelector extends Selector {
 	public static final String CAT_OUTOFPATH_EDGE = "outpath-edge";
 	
 	public static final EdgeStyle STYLE_PATH_EDGE			= new EdgeStyle(Color.blue, 	EdgeStyle.NULL_LINEEND,EdgeStyle.NULL_SHAPE,  3);
-	public static final VertexStyle STYLE_PATH_NODE			= new VertexStyle(Color.green, Color.white, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE);
+	public static final NodeStyle STYLE_PATH_NODE			= new NodeStyle(Color.green, Color.white, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE);
 	public static final EdgeStyle STYLE_OUTOFPATH_EDGE		= new EdgeStyle(Color.gray, 	EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE,  1);
-	public static final VertexStyle STYLE_OUTOFPATH_NODE	= new VertexStyle(Color.white, Color.gray, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE);
+	public static final NodeStyle STYLE_OUTOFPATH_NODE	= new NodeStyle(Color.white, Color.gray, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE);
 	
 	private static final Object CACHE_PATH = "PATH";
 	

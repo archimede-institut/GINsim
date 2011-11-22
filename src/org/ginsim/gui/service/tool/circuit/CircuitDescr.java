@@ -4,13 +4,13 @@ import java.util.Vector;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class CircuitDescr {
     /** vertices in this circuit */
-    public RegulatoryVertex[] t_vertex;
+    public RegulatoryNode[] t_vertex;
     /** GsRegulatoryMultiEdges in this circuit */
     public RegulatoryMultiEdge[] t_me;
 

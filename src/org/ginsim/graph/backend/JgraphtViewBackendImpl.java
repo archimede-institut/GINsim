@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.FallBackEdgeAttributeReader;
-import org.ginsim.graph.common.FallbackVertexAttributeReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.FallbackNodeAttributeReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 
 
 public class JgraphtViewBackendImpl implements GraphViewBackend {
@@ -16,7 +16,7 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
     private Map evsmap = null;
     private Map vvsmap = null;
     private EdgeAttributesReader fbEReader = null;
-    private VertexAttributesReader fbVReader = null;
+    private NodeAttributesReader fbVReader = null;
 
 	private GraphViewListener listener;
     
@@ -30,10 +30,10 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
         }
         return fbEReader;
 	}
-	public VertexAttributesReader getVertexAttributeReader() {
+	public NodeAttributesReader getVertexAttributeReader() {
         if (fbVReader == null) {
         	System.out.println("create fallback");
-            fbVReader = new FallbackVertexAttributeReader(this, getVertexVSMap());
+            fbVReader = new FallbackNodeAttributeReader(this, getVertexVSMap());
         }
         return fbVReader;
 	}

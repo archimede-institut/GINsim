@@ -35,7 +35,7 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * 
 	 * @return the attribute reader of vertices
 	 */
-	public VertexAttributesReader getVertexAttributeReader();
+	public NodeAttributesReader getVertexAttributeReader();
 	
 	
 	/**

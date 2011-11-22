@@ -16,7 +16,7 @@ import java.util.Map;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.service.Service;
 import org.jgraph.util.Bezier;
 import org.mangosdk.spi.ProviderFor;
@@ -38,7 +38,7 @@ public class SVGExportService implements Service{
 		try {
 	        FileWriter out = new FileWriter(fileName);
 
-            VertexAttributesReader vreader = graph.getVertexAttributeReader();
+            NodeAttributesReader vreader = graph.getVertexAttributeReader();
             EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
             if (edges == null) {
                 edges = graph.getEdges();
@@ -82,7 +82,7 @@ public class SVGExportService implements Service{
      * @param ereader edge attribute reader
      * @return a integer array containing x,y max coordinates
      */
-    public static int[] getmax(Collection vertices, Collection<Edge> edges, VertexAttributesReader vreader, EdgeAttributesReader ereader) {
+    public static int[] getmax(Collection vertices, Collection<Edge> edges, NodeAttributesReader vreader, EdgeAttributesReader ereader) {
         int[] tmax = new int[2];
         int value;
         for (Object v: vertices) {
@@ -118,7 +118,7 @@ public class SVGExportService implements Service{
         return tmax;
     }
     
-    private static void writeVertex(FileWriter out, Object obj, VertexAttributesReader vreader) throws IOException {
+    private static void writeVertex(FileWriter out, Object obj, NodeAttributesReader vreader) throws IOException {
         String id = obj.toString();
         int x = vreader.getX();
         int y = vreader.getY();
@@ -130,7 +130,7 @@ public class SVGExportService implements Service{
         
 	    out.write("  <g id=\""+id+"\">\n");
         switch (vreader.getShape()) {
-            case VertexAttributesReader.SHAPE_ELLIPSE:
+            case NodeAttributesReader.SHAPE_ELLIPSE:
                 out.write("    <ellipse " +
                         " id=\""+id+"_shape\"" +
                         " rx=\""+w/2+"\"" +

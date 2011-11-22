@@ -5,10 +5,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.view.css.CascadingStyle;
 
 
@@ -91,13 +91,13 @@ public class StateInRegGraph {
 	}
 
 	private void colorizeGraph() {
-		VertexAttributesReader vreader = regGraph.getVertexAttributeReader();
+		NodeAttributesReader vreader = regGraph.getVertexAttributeReader();
 		EdgeAttributesReader ereader = regGraph.getEdgeAttributeReader();
 
 		cs.restoreAllEdges(regGraph.getEdges(), ereader);
 		//Cannot use cs.applySelectorOnEdges because we need the multiarcs, so do it manually
 		for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-			RegulatoryVertex vertex = (RegulatoryVertex) it.next();
+			RegulatoryNode vertex = (RegulatoryNode) it.next();
 
 			// apply the vertex's colour
 			vreader.setVertex(vertex);

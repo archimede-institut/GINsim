@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.shell.GsFileFilter;
@@ -66,11 +66,11 @@ public class GNAMLExport extends ExportAction<RegulatoryGraph> {
 		List nodeOrder = graph.getNodeOrder();
 		Iterator it = nodeOrder.iterator();
 		while (it.hasNext()) {
-			writeStateVariable((RegulatoryVertex) it.next());
+			writeStateVariable((RegulatoryNode) it.next());
 		}
 	}
 	
-	protected void writeStateVariable(RegulatoryVertex node) throws IOException {
+	protected void writeStateVariable(RegulatoryNode node) throws IOException {
 		int thresholdLevels = node.getMaxValue();
 		String id = node.getId();
 		out.openTag("state-variable");
@@ -106,7 +106,7 @@ public class GNAMLExport extends ExportAction<RegulatoryGraph> {
 		out.closeTag();//state-variable
 	}
 	
-	protected void writeStateEquation(RegulatoryVertex node, int thresholdLevels, String id) throws IOException {
+	protected void writeStateEquation(RegulatoryNode node, int thresholdLevels, String id) throws IOException {
 		out.openTag("math");
 		out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
 		out.openTag("apply");
@@ -213,7 +213,7 @@ public class GNAMLExport extends ExportAction<RegulatoryGraph> {
 		out.closeTag();
 	}
 	
-	protected void writeParameterInequalities(RegulatoryVertex node, int thresholdLevels, String id) throws IOException {
+	protected void writeParameterInequalities(RegulatoryNode node, int thresholdLevels, String id) throws IOException {
 		String g = "g_"+id;
 		String K = "k_"+id+"_";
 		String t = "t_"+id+"_";
@@ -245,6 +245,6 @@ public class GNAMLExport extends ExportAction<RegulatoryGraph> {
 	 * @return the ID as string
 	 */
 	protected String getVertexNameForLevel(int level, List nodeOrder) {
-		return ((RegulatoryVertex) nodeOrder.get(level)).getId();
+		return ((RegulatoryNode) nodeOrder.get(level)).getId();
 	}
 }

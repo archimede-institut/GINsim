@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStatesIterator;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
@@ -72,7 +72,7 @@ public class BasePetriNetExport {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
-            td.maxValue = ((RegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
+            td.maxValue = ((RegulatoryNode)v_node.get(nodeIndex)).getMaxValue();
             td.nodeIndex = nodeIndex;
             td.t_cst = null;
             if (t_priorities != null) {
@@ -93,7 +93,7 @@ public class BasePetriNetExport {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
-            td.maxValue = ((RegulatoryVertex)v_node.get(nodeIndex)).getMaxValue();
+            td.maxValue = ((RegulatoryNode)v_node.get(nodeIndex)).getMaxValue();
             td.nodeIndex = nodeIndex;
             if (t_priorities != null) {
 				td.increasePriority = t_priorities[nodeIndex][0];
@@ -112,7 +112,7 @@ public class BasePetriNetExport {
                 } else {
                     td.t_cst[ti][0] = index;
                     td.t_cst[ti][1] = t_cst[i][1];
-                    td.t_cst[ti][2] = ((RegulatoryVertex)v_node.get(index)).getMaxValue() - t_cst[i][2];
+                    td.t_cst[ti][2] = ((RegulatoryNode)v_node.get(index)).getMaxValue() - t_cst[i][2];
                     if (td.t_cst[ti][1] > 0 || td.t_cst[ti][2] > 0) {
                         ti++;
                     }
@@ -201,7 +201,7 @@ public class BasePetriNetExport {
 		byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
             OMDDNode node = t_tree[i];
-            RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
+            RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
 
 //            if (manager.getIncomingEdges(vertex).size() == 0) {
 //                // input node: no regulator, use basal value as initial markup ??

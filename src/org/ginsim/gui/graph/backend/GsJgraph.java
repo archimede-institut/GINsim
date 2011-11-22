@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.ToolTipsable;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.jgraph.JGraph;
 import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultGraphCell;
@@ -26,7 +26,7 @@ public class GsJgraph extends JGraph {
     public GsJgraph(JGraphModelAdapter ma, Graph<?,?> g) {
         super(ma);
         if (g.getVertexCount() == 3) {
-        	VertexAttributesReader vreader = g.getVertexAttributeReader();
+        	NodeAttributesReader vreader = g.getVertexAttributeReader();
         	vreader.setVertex(g.getVertices().iterator().next());
         	vreader.setPos(30, 100);
         	vreader.setBackgroundColor(Color.GRAY);

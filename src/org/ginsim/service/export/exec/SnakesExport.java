@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.shell.GsFileFilter;
@@ -46,7 +46,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 		int [][] parcours = new int[nodeOrder.size()][4];
 		for (int node_i = 0; node_i < nodes.length; node_i++) {
 			//generate the argument list from incoming edges : a, b, _a, _b
-			RegulatoryVertex current_node = (RegulatoryVertex) nodeOrder.get(node_i);
+			RegulatoryNode current_node = (RegulatoryNode) nodeOrder.get(node_i);
 			Collection<RegulatoryMultiEdge> incomingEdges = graph.getIncomingEdges(current_node);
 			String current_node_name = getVertexNameForLevel(node_i, nodeOrder);
 			if (incomingEdges.size() == 0) {
@@ -64,7 +64,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 			
 			StringBuffer s = new StringBuffer();
 			RegulatoryMultiEdge edge;
-			RegulatoryVertex source;
+			RegulatoryNode source;
 			Iterator<RegulatoryMultiEdge> it = incomingEdges.iterator();
 			while (true) {
 				edge = it.next();
@@ -141,6 +141,6 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 	 * @return the ID as string
 	 */
 	private String getVertexNameForLevel(int order, List nodeOrder) {
-		return ((RegulatoryVertex) nodeOrder.get(order)).getId();
+		return ((RegulatoryNode) nodeOrder.get(order)).getId();
 	}
 }

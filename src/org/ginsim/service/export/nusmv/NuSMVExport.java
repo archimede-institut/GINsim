@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
@@ -70,7 +70,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	}
 
 	/**
-	 * Gets the set of values of a given @see {@link RegulatoryVertex}
+	 * Gets the set of values of a given @see {@link RegulatoryNode}
 	 * 
 	 * @param vertex
 	 *            The vertex containing the values to be written.
@@ -78,9 +78,9 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	 *            The map containing the initial values of all the vertexes.
 	 * @return A string of values in the NuSMV format.
 	 */
-	private static String writeInitialState(RegulatoryVertex[] t_vertex,
+	private static String writeInitialState(RegulatoryNode[] t_vertex,
 			boolean input,
-			Map<RegulatoryVertex, List<Integer>> mInitStates) {
+			Map<RegulatoryNode, List<Integer>> mInitStates) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < t_vertex.length; i++) {
 			if (t_vertex[i].isInput() != input)
@@ -124,36 +124,36 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 		FileWriter out = new FileWriter(fileName);
 		Iterator<InitialState> it = config.getInitialState().keySet()
 				.iterator();
-		Map<RegulatoryVertex, List<Integer>> m_initstates;
+		Map<RegulatoryNode, List<Integer>> m_initstates;
 		if (it.hasNext()) {
 			m_initstates = it.next().getMap();
 		} else {
-			m_initstates = new HashMap<RegulatoryVertex, List<Integer>>();
+			m_initstates = new HashMap<RegulatoryNode, List<Integer>>();
 		}
 		if (m_initstates == null) {
-			m_initstates = new HashMap<RegulatoryVertex, List<Integer>>();
+			m_initstates = new HashMap<RegulatoryNode, List<Integer>>();
 		}
 		it = config.getInputState().keySet().iterator();
-		Map<RegulatoryVertex, List<Integer>> m_initinputs;
+		Map<RegulatoryNode, List<Integer>> m_initinputs;
 		if (it.hasNext()) {
 			m_initinputs = it.next().getMap();
 		} else {
-			m_initinputs = new HashMap<RegulatoryVertex, List<Integer>>();
+			m_initinputs = new HashMap<RegulatoryNode, List<Integer>>();
 		}
 		if (m_initinputs == null) {
-			m_initinputs = new HashMap<RegulatoryVertex, List<Integer>>();
+			m_initinputs = new HashMap<RegulatoryNode, List<Integer>>();
 		}
 
 		RegulatoryMutantDef mutant = (RegulatoryMutantDef) config.store
 				.getObject(0);
-		List<RegulatoryVertex> nodeOrder = graph.getNodeOrder();
+		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
 		String[] t_regulators = new String[nodeOrder.size()];
 		int[] t_cst = new int[nodeOrder.size()];
 		boolean hasInputVars = false;
-		RegulatoryVertex[] t_vertex = new RegulatoryVertex[nodeOrder
+		RegulatoryNode[] t_vertex = new RegulatoryNode[nodeOrder
 				.size()];
 		for (int i = 0; i < t_vertex.length; i++) {
-			RegulatoryVertex vertex = nodeOrder.get(i);
+			RegulatoryNode vertex = nodeOrder.get(i);
 			t_vertex[i] = vertex;
 			t_regulators[i] = vertex.getId();
 			if (vertex.isInput())
@@ -541,9 +541,9 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 		if (!bType1) {
 			out.write("\nweakSS := FALSE\n");
 			// -- Computing Weak Stable States for compacted STG (type 2) --
-			List<RegulatoryVertex> sortedVars = new ArrayList<RegulatoryVertex>();
-			List<RegulatoryVertex> orderStateVars = new ArrayList<RegulatoryVertex>();
-			List<RegulatoryVertex> orderInputVars = new ArrayList<RegulatoryVertex>();
+			List<RegulatoryNode> sortedVars = new ArrayList<RegulatoryNode>();
+			List<RegulatoryNode> orderStateVars = new ArrayList<RegulatoryNode>();
+			List<RegulatoryNode> orderInputVars = new ArrayList<RegulatoryNode>();
 			for (int i = 0; i < nodeOrder.size(); i++) {
 				if (nodeOrder.get(i).isInput())
 					orderInputVars.add(nodeOrder.get(i));
@@ -606,7 +606,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	}
 
 	private static String writeStableStates(int[] stateValues, OMDDNode nodes,
-			List<RegulatoryVertex> stateVars, int level) {
+			List<RegulatoryNode> stateVars, int level) {
 		String sRet = "";
 		if (nodes.next == null) {
 			if (nodes.value == 1 && level > stateVars.size()) {
@@ -651,7 +651,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	 */
 	static private void topoSortVisit(
 			HashMap<String, ArrayList<String>> hmRegulators,
-			String[] t_regulators, RegulatoryVertex[] t_vertex,
+			String[] t_regulators, RegulatoryNode[] t_vertex,
 			int currindex, boolean[] visited, ArrayList<Integer> alSorted) {
 		if (visited[currindex])
 			return;
@@ -681,7 +681,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	 * @return The set of regulator names of a given vertex.
 	 */
 	static private HashSet<String> nodeRegulators(OMDDNode node,
-			RegulatoryVertex[] t_names, int[] t_cst) {
+			RegulatoryNode[] t_names, int[] t_cst) {
 		HashSet<String> hs = new HashSet<String>();
 		if (node.next == null) {
 			for (int i = 0; i < t_cst.length; i++)
@@ -712,7 +712,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	 * @throws IOException
 	 */
 	static private void node2SMV(OMDDNode node, FileWriter out,
-			RegulatoryVertex[] t_names, int[] t_cst) throws IOException {
+			RegulatoryNode[] t_names, int[] t_cst) throws IOException {
 		if (node.next == null) // this is a leaf, write the constraint
 		{
 			String s = "";

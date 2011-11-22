@@ -5,22 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 import fr.univmrs.tagc.common.datastore.NamedObject;
 
 public class InitialState implements NamedObject {
 	String name;
-	Map<RegulatoryVertex, List<Integer>> m = new HashMap<RegulatoryVertex, List<Integer>>();
+	Map<RegulatoryNode, List<Integer>> m = new HashMap<RegulatoryNode, List<Integer>>();
 	
-    public void setState(int[] state, List<RegulatoryVertex> nodeOrder) {
+    public void setState(int[] state, List<RegulatoryNode> nodeOrder) {
         setState(state, nodeOrder, false);
     }
-    public void setState(int[] state, List<RegulatoryVertex> nodeOrder, boolean input) {
+    public void setState(int[] state, List<RegulatoryNode> nodeOrder, boolean input) {
         String[] t_s = new String[state.length];
         for (int i=0 ; i<t_s.length ; i++) {
-            RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
+            RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
             if (vertex.isInput() == input) {
                 t_s[i] = vertex + ";" + state[i];
             } else {
@@ -30,24 +30,24 @@ public class InitialState implements NamedObject {
         setData(t_s, nodeOrder);
     }
     
-    public Map<RegulatoryVertex, List<Integer>> getMaxValueTable() {
+    public Map<RegulatoryNode, List<Integer>> getMaxValueTable() {
     	
 		return m;
 	}
     
-    public void setMaxValueTable( Map<RegulatoryVertex, List<Integer>> m) {
+    public void setMaxValueTable( Map<RegulatoryNode, List<Integer>> m) {
     	
 		this.m = m;
 	}
     
-	public void setData(String[] t_s, List<RegulatoryVertex> nodeOrder) {
+	public void setData(String[] t_s, List<RegulatoryNode> nodeOrder) {
         for (int i=0 ; i<t_s.length ; i++) {
-            RegulatoryVertex vertex = null;
+            RegulatoryNode vertex = null;
             String[] t_val = t_s[i].split(";");
             if (t_val.length > 1) {
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
-                    if (((RegulatoryVertex)nodeOrder.get(j)).getId().equals(t_val[0])) {
-                        vertex = (RegulatoryVertex)nodeOrder.get(j);
+                    if (((RegulatoryNode)nodeOrder.get(j)).getId().equals(t_val[0])) {
+                        vertex = (RegulatoryNode)nodeOrder.get(j);
                         break;
                     }
                 }
@@ -87,14 +87,14 @@ public class InitialState implements NamedObject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Map<RegulatoryVertex,List<Integer>> getMap() {
+	public Map<RegulatoryNode,List<Integer>> getMap() {
 		return m;
 	}
-	public OMDDNode getMDD(List<RegulatoryVertex> nodeOrder) {
+	public OMDDNode getMDD(List<RegulatoryNode> nodeOrder) {
 		OMDDNode falseNode = OMDDNode.TERMINALS[0];
 		OMDDNode ret = OMDDNode.TERMINALS[1];
 		for (int i=nodeOrder.size()-1 ; i>-1 ; i--) {
-			RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
+			RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
 			Object o = m.get(vertex);
 			if (o != null) {
 				OMDDNode newNode = new OMDDNode();

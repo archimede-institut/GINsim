@@ -9,7 +9,7 @@ import org.ginsim.graph.common.AttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 
 /**
@@ -303,7 +303,7 @@ public abstract class Selector {
 	 * @return true if obj is a node
 	 */
 	protected boolean isNode(Object obj) {
-		if (obj instanceof RegulatoryVertex) {
+		if (obj instanceof RegulatoryNode) {
             return true;
         }
 		if (obj instanceof DynamicNode) {

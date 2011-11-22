@@ -26,11 +26,11 @@ import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
@@ -59,16 +59,16 @@ public final class SBMLXpathParser {
 	private RegulatoryGraph graph;
 	protected File _FilePath;
 	private String s_nodeOrder = "";
-	private RegulatoryVertex vertex = null;
+	private RegulatoryNode vertex = null;
 	public RegulatoryEdge edge = null;
-	private VertexAttributesReader vareader = null;
+	private NodeAttributesReader vareader = null;
 	private EdgeAttributesReader ereader = null;
 	private int vslevel = 0;
 
 	private HashMap<String, RegulatoryEdge> m_edges = new HashMap<String, RegulatoryEdge>();
 	static Pattern pattern;
 
-	private Hashtable<RegulatoryVertex, Hashtable<String, Vector<String>>> values;
+	private Hashtable<RegulatoryNode, Hashtable<String, Vector<String>>> values;
 	private Vector<String> v_function;
 
 	public SBMLXpathParser() {
@@ -78,7 +78,7 @@ public final class SBMLXpathParser {
 
 		this._FilePath = new File(filename);
 		this.graph = GraphManager.getInstance().getNewGraph();
-		values = new Hashtable<RegulatoryVertex, Hashtable<String, Vector<String>>>();
+		values = new Hashtable<RegulatoryNode, Hashtable<String, Vector<String>>>();
 		initialize();
 	}
 
@@ -201,7 +201,7 @@ public final class SBMLXpathParser {
 				}
 			}
 			// TODO : REFACTORING ACTION
-			// The NodeOrder of a regulatory graph is now a List of RegulatoryVertex
+			// The NodeOrder of a regulatory graph is now a List of RegulatoryNode
 			// Moreover the graph.addNewVertex already update the NodeOrder of the graph
 			// So the command below seems strange : remove it for the moment
 			// graph.setNodeOrder(v_nodeOrder);
@@ -255,7 +255,7 @@ public final class SBMLXpathParser {
 					byte dft_value = (byte)Integer.parseInt(dft_resulLevel);		
 					if(!(dft_resulLevel.equals("0"))){
 						//for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
-						for (Enumeration<RegulatoryVertex> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						for (Enumeration<RegulatoryNode> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
 							vertex = enumvertex.nextElement();
 							String vertexName = vertex.toString();
@@ -281,7 +281,7 @@ public final class SBMLXpathParser {
 						}
 			
 						//for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
-						for (Enumeration<RegulatoryVertex> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+						for (Enumeration<RegulatoryNode> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
 						{
 							vertex = enumvertex.nextElement();
 							String vertexName = vertex.getId();
@@ -308,9 +308,9 @@ public final class SBMLXpathParser {
 			parseBooleanFunctions();
 		}
 		@SuppressWarnings("unchecked")
-		Iterator<RegulatoryVertex> it = graph.getNodeOrder().iterator();
+		Iterator<RegulatoryNode> it = graph.getNodeOrder().iterator();
 		while (it.hasNext()) {
-			RegulatoryVertex vertex = it.next();
+			RegulatoryNode vertex = it.next();
 			vertex.getV_logicalParameters().cleanupDup();
 		}
 	} // void parse(File _FilePath)
@@ -664,10 +664,10 @@ public final class SBMLXpathParser {
 
 	/** To place every node in the graph **/
 	private void placeNodeOrder() {
-		Vector<RegulatoryVertex> v_order = new Vector<RegulatoryVertex>();
+		Vector<RegulatoryNode> v_order = new Vector<RegulatoryNode>();
 		String[] t_order = s_nodeOrder.split(" ");
 		for (int i = 0; i < t_order.length; i++) {
-			RegulatoryVertex vertex = (RegulatoryVertex) graph.getVertexByName(t_order[i]);
+			RegulatoryNode vertex = (RegulatoryNode) graph.getVertexByName(t_order[i]);
 			if (vertex == null) {
 				// ok = false;
 				break;
@@ -686,10 +686,10 @@ public final class SBMLXpathParser {
 	@SuppressWarnings("unchecked")
 	private void parseBooleanFunctions() {
 		Collection<RegulatoryMultiEdge> allowedEdges;
-		RegulatoryVertex vertex;
+		RegulatoryNode vertex;
 		String value, exp;
 		try {
-			for (Enumeration<RegulatoryVertex> enu_vertex = values.keys(); enu_vertex.hasMoreElements();) {
+			for (Enumeration<RegulatoryNode> enu_vertex = values.keys(); enu_vertex.hasMoreElements();) {
 				vertex = enu_vertex.nextElement();
 				allowedEdges = graph.getIncomingEdges(vertex);
 				if (allowedEdges.size() > 0) {
@@ -715,7 +715,7 @@ public final class SBMLXpathParser {
 		}
 	}
 
-	public void addExpression(byte val, RegulatoryVertex vertex, String exp) {
+	public void addExpression(byte val, RegulatoryNode vertex, String exp) {
 		try {
 			BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(
 					vertex));
@@ -839,7 +839,7 @@ public final class SBMLXpathParser {
 		public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 			Vector v = (Vector) data;
 			byte value = ((Short) v.elementAt(0)).byteValue();
-			RegulatoryVertex vertex = (RegulatoryVertex) v.elementAt(1);
+			RegulatoryNode vertex = (RegulatoryNode) v.elementAt(1);
 			String exp = (String) v.elementAt(2);
 			boolean ok = true;
 			switch (index) {
@@ -928,7 +928,7 @@ public final class SBMLXpathParser {
 			}
 			
 			/** To set a maxvalue for a regulatory vertex */
-			RegulatoryVertex vertex = (RegulatoryVertex) graph.getVertexByName(node);
+			RegulatoryNode vertex = (RegulatoryNode) graph.getVertexByName(node);
 			if( vertex != null) {
 				maxvalue = vertex.getMaxValue();
 			}			

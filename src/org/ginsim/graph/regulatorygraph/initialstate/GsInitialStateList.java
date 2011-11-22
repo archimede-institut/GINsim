@@ -9,11 +9,11 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 
-public class GsInitialStateList implements GraphListener<RegulatoryVertex, RegulatoryMultiEdge> {
+public class GsInitialStateList implements GraphListener<RegulatoryNode, RegulatoryMultiEdge> {
 	RegulatoryGraph graph;
 
 	List nodeOrder;
@@ -39,7 +39,7 @@ public class GsInitialStateList implements GraphListener<RegulatoryVertex, Regul
 	    normalNodes.clear();
 	    Iterator it = nodeOrder.iterator();
 	    while (it.hasNext()) {
-	        RegulatoryVertex vertex = (RegulatoryVertex)it.next();
+	        RegulatoryNode vertex = (RegulatoryNode)it.next();
 	        if (vertex.isInput()) {
 	            inputNodes.add(vertex);
 	        } else {
@@ -70,8 +70,8 @@ public class GsInitialStateList implements GraphListener<RegulatoryVertex, Regul
 		return null;
 	}
 
-	public GraphEventCascade vertexAdded(RegulatoryVertex data) {
-	    if (((RegulatoryVertex)data).isInput()) {
+	public GraphEventCascade vertexAdded(RegulatoryNode data) {
+	    if (((RegulatoryNode)data).isInput()) {
             inputNodes.add(data);
         } else {
             normalNodes.add(data);
@@ -79,11 +79,11 @@ public class GsInitialStateList implements GraphListener<RegulatoryVertex, Regul
 		return null;
 	}
 
-	public GraphEventCascade graphMerged(Collection<RegulatoryVertex> data) {
+	public GraphEventCascade graphMerged(Collection<RegulatoryNode> data) {
 		return null;
 	}
 
-	public GraphEventCascade vertexRemoved(RegulatoryVertex data) {
+	public GraphEventCascade vertexRemoved(RegulatoryNode data) {
 	    // update lists
         inputNodes.remove(data);
         normalNodes.remove(data);
@@ -97,7 +97,7 @@ public class GsInitialStateList implements GraphListener<RegulatoryVertex, Regul
         return null;
 	}
 
-	public GraphEventCascade vertexUpdated(RegulatoryVertex data) {
+	public GraphEventCascade vertexUpdated(RegulatoryNode data) {
         List l_changes = new ArrayList();
 	    // update lists
 	    if (data.isInput() ? normalNodes.contains(data) : inputNodes.contains(data)) {

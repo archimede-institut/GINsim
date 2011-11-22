@@ -9,7 +9,7 @@ import java.util.Map;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationUpdater;
 
@@ -70,8 +70,8 @@ public class LocalGraph {
 			byte[] state = (byte[]) it_states.next();
 			int j;
 			for (RegulatoryMultiEdge edge: g.getEdges()) {
-				RegulatoryVertex source = edge.getSource();
-				RegulatoryVertex target = edge.getTarget();
+				RegulatoryNode source = edge.getSource();
+				RegulatoryNode target = edge.getTarget();
 				i = (Integer)node_to_position.get(source);
 				j = (Integer)node_to_position.get(target);
 				byte[] fx = f(state);

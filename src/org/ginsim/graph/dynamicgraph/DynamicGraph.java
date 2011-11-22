@@ -7,13 +7,13 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 
 /**
  * the dynamic (state transition) graph.
  */
-public interface DynamicGraph extends Graph<DynamicNode, Edge<DynamicNode>>, GraphAssociation<RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>{
+public interface DynamicGraph extends Graph<DynamicNode, Edge<DynamicNode>>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 
 
 	

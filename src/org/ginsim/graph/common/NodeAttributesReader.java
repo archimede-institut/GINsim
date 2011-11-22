@@ -9,7 +9,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 /**
  * extract from graph graphic info on a vertex.
  */
-public abstract class VertexAttributesReader implements AttributesReader {
+public abstract class NodeAttributesReader implements AttributesReader {
 
     public static Color bg = new Color(((Integer)OptionStore.getOption("vs.vertexbg", new Integer(-26368))).intValue());
     public static Color fg = new Color(((Integer)OptionStore.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
@@ -155,7 +155,7 @@ public abstract class VertexAttributesReader implements AttributesReader {
 	 * @param shape
 	 */
 	public void setDefaultVertexShape(int shape) {
-		VertexAttributesReader.shape = shape;
+		NodeAttributesReader.shape = shape;
 	}
 
     /**
@@ -232,7 +232,7 @@ public abstract class VertexAttributesReader implements AttributesReader {
     /**
      * @param fvreader
      */
-    public void copyFrom(VertexAttributesReader fvreader) {
+    public void copyFrom(NodeAttributesReader fvreader) {
         setPos(fvreader.getX(), fvreader.getY());
         setSize(fvreader.getWidth(), fvreader.getHeight());
         setShape(fvreader.getShape());

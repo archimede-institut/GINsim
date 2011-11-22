@@ -35,7 +35,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Selector;
 import org.ginsim.gui.graph.GraphGUI;
@@ -99,7 +99,7 @@ public class TBClientPanel extends GsPanel implements GraphGUIListener, WindowLi
 	private void applyEdgeStyle() {
 		EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
 		for (Iterator it = graph.getVertices().iterator(); it.hasNext();) {
-			RegulatoryVertex v = (RegulatoryVertex) it.next();
+			RegulatoryNode v = (RegulatoryNode) it.next();
 			Collection<RegulatoryMultiEdge> edges = graph.getIncomingEdges(v);
 			for (RegulatoryMultiEdge me:  edges) {
 				ereader.setEdge(me);
@@ -355,12 +355,12 @@ public class TBClientPanel extends GsPanel implements GraphGUIListener, WindowLi
 		return graph;
 	}
 	public void updateGeneTree(Vector v) {
-		RegulatoryVertex vertex;
+		RegulatoryNode vertex;
 		Vector par;
 		Hashtable genes = new Hashtable();
 		if (v != null) {
 			for (int i = 0; i < v.size(); i++) {
-				vertex = (RegulatoryVertex)v.elementAt(i);
+				vertex = (RegulatoryNode)v.elementAt(i);
 				par = (Vector)getClient().getGeneInfos(vertex.getName().equals("") ? vertex.getId() : vertex.getName());
 				genes.put(vertex, par);
 			}
@@ -416,7 +416,7 @@ public class TBClientPanel extends GsPanel implements GraphGUIListener, WindowLi
 		}
 		setGenes(v);
 		if (v.size() > 0) {
-			graph = ((RegulatoryVertex)v.firstElement()).getInteractionsModel().getGraph();
+			graph = ((RegulatoryNode)v.firstElement()).getInteractionsModel().getGraph();
 		} else {
 			graph = null;
 		}

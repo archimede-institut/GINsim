@@ -38,7 +38,7 @@ public class DecisionAnalysis extends Thread {
 	public void run( List selected_vertices) {
 		
 		// No more used
-		//List<RegulatoryVertex> nodeOrder = htg.getNodeOrder();
+		//List<RegulatoryNode> nodeOrder = htg.getNodeOrder();
 		
 		//Iterate on the selected vertex or all of them f node are selected
 		Iterator<HierarchicalNode> it = selected_vertices.iterator();
@@ -74,7 +74,7 @@ public class DecisionAnalysis extends Thread {
 	 * FIXME: this is still here just to remind to check for missing initialisation
 	 * should not be used anymore...
 	 */
-//	private DecisionOnEdge computeChange(byte[] source_state, byte[] target_state, DecisionOnEdge decisions, List<RegulatoryVertex> nodeOrder) {
+//	private DecisionOnEdge computeChange(byte[] source_state, byte[] target_state, DecisionOnEdge decisions, List<RegulatoryNode> nodeOrder) {
 //		if (decisions == null) {
 //			decisions = new DecisionOnEdge(geneCount, nodeOrder);
 //		}

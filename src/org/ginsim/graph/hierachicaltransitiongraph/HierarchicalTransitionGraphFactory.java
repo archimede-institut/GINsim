@@ -5,7 +5,7 @@ import java.util.List;
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;

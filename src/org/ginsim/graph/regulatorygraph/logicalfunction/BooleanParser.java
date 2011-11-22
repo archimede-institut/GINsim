@@ -12,7 +12,7 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.parser.TBooleanParser;
 import org.ginsim.graph.regulatorygraph.logicalfunction.parser.TBooleanTreeNode;
 
@@ -24,7 +24,7 @@ public class BooleanParser extends TBooleanParser {
 	private static String operandClassName = "fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.BooleanGene";
 	private Object[] allParams;
 	private RegulatoryGraph graph;
-	private RegulatoryVertex vertex;
+	private RegulatoryNode vertex;
 	private boolean shouldAutoAddNewElements;
 
 	public BooleanParser( Collection<RegulatoryMultiEdge> edgesList) throws ClassNotFoundException {
@@ -47,7 +47,7 @@ public class BooleanParser extends TBooleanParser {
 //		Iterator it = operandList.keySet().iterator();
 //		RegulatoryEdge re;
 //		GsDirectedEdge e;
-//		RegulatoryVertex source;
+//		RegulatoryNode source;
 //
 //		while (it.hasNext()) {
 //			o = it.next();
@@ -61,11 +61,11 @@ public class BooleanParser extends TBooleanParser {
 //			}
 //			else if (o instanceof GsDirectedEdge) {
 //				e = (GsDirectedEdge) o;
-//				source = (RegulatoryVertex)e.getSourceVertex();
+//				source = (RegulatoryNode)e.getSourceVertex();
 //				v.add(source.getId() + "#1");
 //			}
-//			else if (o instanceof RegulatoryVertex) {
-//				source = (RegulatoryVertex)o;
+//			else if (o instanceof RegulatoryNode) {
+//				source = (RegulatoryNode)o;
 //				v.add(source.getId());
 //			}
 //		}
@@ -134,7 +134,7 @@ public class BooleanParser extends TBooleanParser {
 		return allParams;
 	}
 	private void makeOperandList(Collection<RegulatoryMultiEdge> edgesList) {
-		RegulatoryVertex source;
+		RegulatoryNode source;
 		RegulatoryEdge re;
 
 		operandList = new Hashtable();
@@ -167,7 +167,7 @@ public class BooleanParser extends TBooleanParser {
 		this.root = root;
 	}
 	
-	public boolean compile(String v, RegulatoryGraph graph, RegulatoryVertex vertex) {
+	public boolean compile(String v, RegulatoryGraph graph, RegulatoryNode vertex) {
 		this.graph = graph;
 		this.vertex = vertex;
 		boolean shouldReInit = false;
@@ -175,9 +175,9 @@ public class BooleanParser extends TBooleanParser {
 			List sourceVertices = getSourceVertices(v);
 			for (Iterator it = sourceVertices.iterator(); it.hasNext();) {
 				String nodeID = (String) it.next();
-				RegulatoryVertex source = null;
+				RegulatoryNode source = null;
 				for (Iterator itno = graph.getNodeOrder().iterator(); itno.hasNext();) {
-					RegulatoryVertex node = (RegulatoryVertex) itno.next();
+					RegulatoryNode node = (RegulatoryNode) itno.next();
 					if (node.getId().equals(nodeID)) {
 						source = node;
 						shouldReInit = true;
@@ -258,10 +258,10 @@ public class BooleanParser extends TBooleanParser {
 			nodeID = value;
 		}
 		Iterator it = graph.getNodeOrder().iterator();
-		RegulatoryVertex vertex = null;
+		RegulatoryNode vertex = null;
 		boolean found = false;
 		while (it.hasNext()) {
-			vertex = (RegulatoryVertex)it.next();
+			vertex = (RegulatoryNode)it.next();
 			if (vertex.getId().equals(nodeID)) {
 				found = true;
 				break;

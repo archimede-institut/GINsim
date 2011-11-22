@@ -21,7 +21,7 @@ import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
@@ -36,14 +36,14 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * The regulatory graph
  */
-public interface RegulatoryGraph extends Graph<RegulatoryVertex, RegulatoryMultiEdge>, NotificationMessageHolder{
+public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEdge>, NotificationMessageHolder{
 	
     /**
      * Return the node order
      * 
-     * @return the node order as a list of RegulatoryVertex
+     * @return the node order as a list of RegulatoryNode
      */
-    public List<RegulatoryVertex> getNodeOrder();
+    public List<RegulatoryNode> getNodeOrder();
     
     /**
      * add a vertex from textual parameters (for the parser).
@@ -53,13 +53,13 @@ public interface RegulatoryGraph extends Graph<RegulatoryVertex, RegulatoryMulti
      * @param max
      * @return the new vertex.
      */
-    public RegulatoryVertex addNewVertex(String id, String name, byte max);
+    public RegulatoryNode addNewVertex(String id, String name, byte max);
     
     /**
      * 
      * @return
      */
-    public RegulatoryVertex addVertex();
+    public RegulatoryNode addVertex();
     
     
     /**
@@ -100,7 +100,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryVertex, RegulatoryMulti
      * @param sign
      * @return
      */
-    public RegulatoryMultiEdge addEdge(RegulatoryVertex source, RegulatoryVertex target, int sign);
+    public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, int sign);
     
     
     /**
@@ -138,7 +138,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryVertex, RegulatoryMulti
 	 * 
 	 * @param list the list of objects representing the order of vertex as defined by the model
 	 */
-	public void setNodeOrder( List<RegulatoryVertex> list);
+	public void setNodeOrder( List<RegulatoryNode> list);
 	
 	
     /**
@@ -148,6 +148,6 @@ public interface RegulatoryGraph extends Graph<RegulatoryVertex, RegulatoryMulti
      * @param l_fixable
      * @param l_conflict
      */
-	public void canApplyNewMaxValue(RegulatoryVertex vertex, byte newMax, List l_fixable, List l_conflict);
+	public void canApplyNewMaxValue(RegulatoryNode vertex, byte newMax, List l_fixable, List l_conflict);
     
 }

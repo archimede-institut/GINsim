@@ -2,7 +2,7 @@ package org.ginsim.gui.service.tool.reg2dyn.helpers;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationQueuedState;
@@ -18,7 +18,7 @@ public class ReachabilitySetHelper extends SimulationHelper {
 		length = params.nodeOrder.size();
 		t_max = new int[length];
 		for (int i=0 ; i<length ; i++) {
-			t_max[i] = ((RegulatoryVertex)params.nodeOrder.get(i)).getMaxValue()+1;
+			t_max[i] = ((RegulatoryNode)params.nodeOrder.get(i)).getMaxValue()+1;
 		}
 	}
 	

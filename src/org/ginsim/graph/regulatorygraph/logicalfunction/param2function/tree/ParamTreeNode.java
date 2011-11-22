@@ -4,17 +4,17 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 
 public class ParamTreeNode implements ParamTreeElement {
-  private RegulatoryVertex vertex;
+  private RegulatoryNode vertex;
   private ParamTreeElement[] sons;
   private RegulatoryMultiEdge edge;
   private ParamTreeNode parent;
   private int parentIndex;
 
-  public ParamTreeNode(RegulatoryVertex v, RegulatoryMultiEdge me, ParamTreeNode p, int pi) {
+  public ParamTreeNode(RegulatoryNode v, RegulatoryMultiEdge me, ParamTreeNode p, int pi) {
     super();
     vertex = v;
     edge = me;

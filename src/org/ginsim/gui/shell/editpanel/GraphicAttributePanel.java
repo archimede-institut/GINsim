@@ -30,7 +30,7 @@ import javax.swing.event.ChangeListener;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 
@@ -78,7 +78,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private JCheckBox jCB_selectForeground = null;
 	private JCheckBox jCB_selectSize = null;
 
-	private final VertexAttributesReader vReader;
+	private final NodeAttributesReader vReader;
 	private final EdgeAttributesReader eReader;
 
 	private static final int EDGESELECTED = 0;

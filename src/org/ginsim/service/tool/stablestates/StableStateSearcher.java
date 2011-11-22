@@ -2,7 +2,7 @@ package org.ginsim.service.tool.stablestates;
 
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
@@ -13,5 +13,5 @@ public interface StableStateSearcher {
 	
 	OMDDNode getStables();
 
-	void setNodeOrder(List<RegulatoryVertex> sortedVars, OMDDNode[] tReordered);
+	void setNodeOrder(List<RegulatoryNode> sortedVars, OMDDNode[] tReordered);
 }

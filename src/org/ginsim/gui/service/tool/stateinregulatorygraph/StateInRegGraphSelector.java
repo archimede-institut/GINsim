@@ -7,10 +7,10 @@ import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Selector;
-import org.ginsim.graph.view.css.VertexStyle;
+import org.ginsim.graph.view.css.NodeStyle;
 
 
 /**
@@ -29,17 +29,17 @@ public class StateInRegGraphSelector extends Selector {
 
 	public static final int MAX_STYLES = 9; 
 	public static final int STAR = MAX_STYLES+1;
-	public static final VertexStyle[] STYLE_NODES = new VertexStyle[MAX_STYLES+2];
+	public static final NodeStyle[] STYLE_NODES = new NodeStyle[MAX_STYLES+2];
 	public static final String[] CAT_NODES = new String[MAX_STYLES+2];
 
 
 	static {	
 		int step = 256/(MAX_STYLES+1);
 		for (int k = 0 ; k <= MAX_STYLES ; k++) {
-			STYLE_NODES[k] = new VertexStyle(new Color(255-k*step,  255, 255-k*step), 	Color.black, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE);
+			STYLE_NODES[k] = new NodeStyle(new Color(255-k*step,  255, 255-k*step), 	Color.black, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE);
 			CAT_NODES[k] = String.valueOf(k);
 		}
-		STYLE_NODES[STAR] = new VertexStyle(new Color(0, 127, 255), Color.black, VertexStyle.NULL_BORDER, VertexStyle.NULL_SHAPE);
+		STYLE_NODES[STAR] = new NodeStyle(new Color(0, 127, 255), Color.black, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE);
 		CAT_NODES[STAR] = "*";
 	}	
 
@@ -138,7 +138,7 @@ public class StateInRegGraphSelector extends Selector {
 		if (state == null) {
 			return null;
 		}
-		RegulatoryVertex v = (RegulatoryVertex) obj;
+		RegulatoryNode v = (RegulatoryNode) obj;
 		int max = v.getMaxValue();
 		int order = ((Integer)nodeToOrder.get(v)).intValue();
 		int val = state[order];

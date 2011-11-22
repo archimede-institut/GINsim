@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.NamedObject;
@@ -19,11 +19,11 @@ import fr.univmrs.tagc.common.xml.XMLize;
 
 public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityClass> implements NamedObject, XMLize {
 
-	public Map<RegulatoryVertex,Object> m_elt;
+	public Map<RegulatoryNode,Object> m_elt;
 	String name;
 	boolean locked;
 
-	public PriorityClassDefinition(List<RegulatoryVertex> elts, String name) {
+	public PriorityClassDefinition(List<RegulatoryNode> elts, String name) {
 		canAdd = true;
 		canRemove = true;
 		canOrder = true;
@@ -37,7 +37,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		add();
 		m_elt = new HashMap();
 		Reg2dynPriorityClass newclass = (Reg2dynPriorityClass)getElement(null, 0);
-		for (RegulatoryVertex v: elts) {
+		for (RegulatoryNode v: elts) {
 			m_elt.put(v, newclass);
 		}
 	}
@@ -122,9 +122,9 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
             		}
             	}
             }
-            Set<RegulatoryVertex> elts = m_elt.keySet();
+            Set<RegulatoryNode> elts = m_elt.keySet();
             Reg2dynPriorityClass lastClass = v_data.get(v_data.size()-1);
-            for (RegulatoryVertex v: elts) {
+            for (RegulatoryNode v: elts) {
                 Object cl = m_elt.get(v); 
                 if (cl == c) {
                     m_elt.put(v,lastClass);
@@ -302,8 +302,8 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
             out.addAttr("mode", ""+pc.getMode());
             out.addAttr("rank", ""+pc.rank);
 			s_tmp = new StringBuffer();
-            for (Entry<RegulatoryVertex, Object> e: m_elt.entrySet()) {
-            	RegulatoryVertex v = e.getKey();
+            for (Entry<RegulatoryNode, Object> e: m_elt.entrySet()) {
+            	RegulatoryNode v = e.getKey();
                 Object oc = e.getValue();
                 if (oc instanceof Reg2dynPriorityClass) {
                     if (oc == pc) {
@@ -336,7 +336,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      *
      * bytely: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
      */
-    public int[][] getPclass(List<RegulatoryVertex> nodeOrder) {
+    public int[][] getPclass(List<RegulatoryNode> nodeOrder) {
 
         Integer zaroo = new Integer(0);
         Integer one = new Integer(1);

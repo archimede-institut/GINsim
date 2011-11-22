@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -27,7 +27,7 @@ public class DynamicalHierarchicalSimulationHelper extends SimulationHelper {
 		if (regGraph instanceof RegulatoryGraph) {
 			dynHieGraph.setAssociatedGraph(regGraph);
 		}
-		VertexAttributesReader vreader = dynHieGraph.getVertexAttributeReader();
+		NodeAttributesReader vreader = dynHieGraph.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         dynHieGraph.getAnnotation().setComment(params.getDescr()+"\n");
         arcs = new HashMap();

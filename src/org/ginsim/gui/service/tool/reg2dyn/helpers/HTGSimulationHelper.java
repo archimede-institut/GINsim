@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
@@ -30,7 +30,7 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		}
 		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, params.nodeOrder, mode);
 		htg.setAssociatedGraph(regGraph);
-		VertexAttributesReader vreader = htg.getVertexAttributeReader();
+		NodeAttributesReader vreader = htg.getVertexAttributeReader();
 		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
         htg.getAnnotation().setComment(params.getDescr()+"\n");
         arcs = new HashMap();

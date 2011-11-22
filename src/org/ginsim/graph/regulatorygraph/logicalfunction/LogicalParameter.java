@@ -13,7 +13,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
@@ -151,7 +151,7 @@ public class LogicalParameter implements XMLize {
      * @param node
      * @return the t_ac
      */
-	private byte[][] buildTac(RegulatoryGraph regGraph, RegulatoryVertex node, List<RegulatoryVertex> nodeOrder) {
+	private byte[][] buildTac(RegulatoryGraph regGraph, RegulatoryNode node, List<RegulatoryNode> nodeOrder) {
 		
 	    Collection<RegulatoryMultiEdge> incEdges = regGraph.getIncomingEdges(node);
         byte[][] t_ac = new byte[incEdges.size()+1][];
@@ -165,7 +165,7 @@ public class LogicalParameter implements XMLize {
         int i = 0;
         for (RegulatoryMultiEdge me: incEdges) {
         	i++;
-            RegulatoryVertex vertex = me.getSource();
+            RegulatoryNode vertex = me.getSource();
             int max = vertex.getMaxValue();
             byte[] t_val = new byte[max+2];
             t_val[0] = (byte)nodeOrder.indexOf(vertex);
@@ -215,11 +215,11 @@ public class LogicalParameter implements XMLize {
      * @param node
      * @return true if this logical parameter is activable
      */
-    public boolean activable(RegulatoryGraph regGraph, RegulatoryVertex node) {
+    public boolean activable(RegulatoryGraph regGraph, RegulatoryNode node) {
         return buildTac(regGraph, node, regGraph.getNodeOrder()) != null;
     }
 
-	public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryVertex node,
+	public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryNode node,
 			OMDDNode valueNode) {
 		return buildTree(regGraph, node, valueNode, regGraph.getNodeOrder());
 	}
@@ -230,10 +230,10 @@ public class LogicalParameter implements XMLize {
      * @param node
      * @return the OMDDNode representation of this logical parameter
      */
-    public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryVertex node, List nodeOrder) {
+    public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryNode node, List nodeOrder) {
     	return buildTree(regGraph, node, OMDDNode.TERMINALS[this.value], nodeOrder);
     }
-	public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryVertex node,
+	public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryNode node,
 			OMDDNode valueNode, List nodeOrder) {
         byte[][] t_ac = buildTac(regGraph, node, nodeOrder);
         byte[] t_tmp;
@@ -340,7 +340,7 @@ public class LogicalParameter implements XMLize {
      * @param clone
      * @param copyMap
      */
-    public void applyNewGraph(RegulatoryVertex clone, Map copyMap) {
+    public void applyNewGraph(RegulatoryNode clone, Map copyMap) {
     	List newEI = new ArrayList();
         for (int i=0 ; i<edge_index.size() ; i++) {
         	RegulatoryEdge ei = (RegulatoryEdge)edge_index.get(i);

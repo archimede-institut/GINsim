@@ -15,7 +15,7 @@ import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class HierarchicalVertexParameterPanel extends AbstractParameterPanel {
+public class HierarchicalNodeParameterPanel extends AbstractParameterPanel {
 		private static final long serialVersionUID = 3342245591953494375L;
 
 		private HierarchicalNode node;
@@ -24,7 +24,7 @@ public class HierarchicalVertexParameterPanel extends AbstractParameterPanel {
 
 		private JLabel typeLabel;
 		
-		public HierarchicalVertexParameterPanel( Graph g) {
+		public HierarchicalNodeParameterPanel( Graph g) {
 			super(g);
 
 	        this.setLayout(new GridBagLayout());

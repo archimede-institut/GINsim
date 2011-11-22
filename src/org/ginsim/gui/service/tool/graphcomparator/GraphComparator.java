@@ -11,10 +11,10 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Style;
-import org.ginsim.graph.view.css.VertexStyle;
+import org.ginsim.graph.view.css.NodeStyle;
 
 import fr.univmrs.tagc.GINsim.graph.GraphicalAttributesStore;
 
@@ -55,7 +55,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * Indicates if a vertex corresponding to the id is common to both graphs.
 	 */
 	public boolean isCommonVertex(Object id) {
-		return ((VertexStyle)((ItemStore)stylesMap.get(id)).v).background == COMMON_COLOR;
+		return ((NodeStyle)((ItemStore)stylesMap.get(id)).v).background == COMMON_COLOR;
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public abstract class GraphComparator<G extends Graph> {
 		EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
 		for (Iterator it = verticesIdsSet.iterator(); it.hasNext();) { 		//For all edges
 			String id = (String) it.next();
-			Color col = ((VertexStyle)((ItemStore)stylesMap.get(gm.getVertexByName(id))).v).background;
+			Color col = ((NodeStyle)((ItemStore)stylesMap.get(gm.getVertexByName(id))).v).background;
 			
 			addEdgesFromGraph(g1m, g2m, id, col, SPECIFIC_G1_COLOR, ereader);
 			addEdgesFromGraph(g2m, g1m, id, col, SPECIFIC_G2_COLOR, ereader);
@@ -95,7 +95,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param vsourcereader a vertexAttributesReader for the old graph
 	 * @param col the color to apply to its background
 	 */
-	protected void mergeVertexAttributes(Object v, Object source, Object aux, VertexAttributesReader vreader, VertexAttributesReader vsourcereader, VertexAttributesReader vauxreader, Color col) {
+	protected void mergeVertexAttributes(Object v, Object source, Object aux, NodeAttributesReader vreader, NodeAttributesReader vsourcereader, NodeAttributesReader vauxreader, Color col) {
 		vreader.setVertex(v);
 		if (source != null) {
 			vsourcereader.setVertex(source);
@@ -104,11 +104,11 @@ public abstract class GraphComparator<G extends Graph> {
 		vreader.setBackgroundColor(col);
 		vreader.refresh();
 
-		if (col == SPECIFIC_G1_COLOR) stylesMap.put(v, new ItemStore(new VertexStyle(vsourcereader), null, new VertexStyle(vreader)));
-		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(v, new ItemStore(null, new VertexStyle(vsourcereader), new VertexStyle(vreader)));
+		if (col == SPECIFIC_G1_COLOR) stylesMap.put(v, new ItemStore(new NodeStyle(vsourcereader), null, new NodeStyle(vreader)));
+		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(v, new ItemStore(null, new NodeStyle(vsourcereader), new NodeStyle(vreader)));
 		else {
 			vauxreader.setVertex(aux);
-			stylesMap.put(v, new ItemStore(new VertexStyle(vsourcereader), new VertexStyle(vauxreader), new VertexStyle(vreader)));
+			stylesMap.put(v, new ItemStore(new NodeStyle(vsourcereader), new NodeStyle(vauxreader), new NodeStyle(vreader)));
 		}
 	}
 

@@ -7,9 +7,9 @@ import java.util.List;
 import org.ginsim.annotation.Annotation;
 import org.ginsim.annotation.AnnotationPanel;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
-import org.ginsim.gui.graph.regulatorygraph.models.VertexMaxValueSpinModel;
+import org.ginsim.gui.graph.regulatorygraph.models.NodeMaxValueSpinModel;
 
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
@@ -18,7 +18,7 @@ import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 import fr.univmrs.tagc.common.datastore.models.SpinModel;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
-public class RegulatoryVertexEditor extends ObjectEditor<RegulatoryVertex> {
+public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NAME = 1;
@@ -32,11 +32,11 @@ public class RegulatoryVertexEditor extends ObjectEditor<RegulatoryVertex> {
 
 	static {
 		GenericPropertyEditorPanel.addSupportedClass(Annotation.class, AnnotationPanel.class);
-		GenericPropertyEditorPanel.addSupportedClass(RegulatoryVertex.class, InteractionPanel.class);
+		GenericPropertyEditorPanel.addSupportedClass(RegulatoryNode.class, InteractionPanel.class);
 		GenericPropertyEditorPanel.addSupportedClass(LogicalFunctionPanel.class, LogicalFunctionPanel.class);
 	}
 	
-	public RegulatoryVertexEditor(RegulatoryGraph graph) {
+	public RegulatoryNodeEditor(RegulatoryGraph graph) {
 		this.graph = graph;
 		master = graph;
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_id"), String.class);
@@ -44,7 +44,7 @@ public class RegulatoryVertexEditor extends ObjectEditor<RegulatoryVertex> {
 		pinfo = new GenericPropertyInfo(this, PROP_NAME, Translator.getString("STR_name"), String.class);
 		l_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_max"), SpinModel.class);
-		pinfo.data = new VertexMaxValueSpinModel(graph);
+		pinfo.data = new NodeMaxValueSpinModel(graph);
 		pinfo.addPosition(0,3);
 		pinfo.addPosition(1, 3);
 		pinfo.addPosition(0, 2);
@@ -57,7 +57,7 @@ public class RegulatoryVertexEditor extends ObjectEditor<RegulatoryVertex> {
 		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
 		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
 		t[0] = pinfo;
-		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_parameters"), RegulatoryVertex.class);
+		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_parameters"), RegulatoryNode.class);
 		pinfo.data = graph;
 		t[1] = pinfo;
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_function"), LogicalFunctionPanel.class);

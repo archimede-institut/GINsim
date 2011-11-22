@@ -8,7 +8,7 @@ import org.ginsim.graph.common.Edge;
 /**
  * browse selected edges: very useful to save a subgraph, or copy/paste
  */
-public class SelectedEdgeWithVertexIterator implements Iterator {
+public class SelectedEdgeWithNodeIterator implements Iterator {
 
 	List v_edge;
 	List v_vertex;
@@ -19,7 +19,7 @@ public class SelectedEdgeWithVertexIterator implements Iterator {
 	 * @param v_vertex
 	 * @param v_edge
 	 */
-	public SelectedEdgeWithVertexIterator(List v_vertex, List v_edge) {
+	public SelectedEdgeWithNodeIterator(List v_vertex, List v_edge) {
 		this.v_vertex = v_vertex;
 		this.v_edge = v_edge;
 		if ( v_vertex == null || v_edge == null) {

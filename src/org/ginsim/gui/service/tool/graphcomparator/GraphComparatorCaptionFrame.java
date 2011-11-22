@@ -25,11 +25,11 @@ import javax.swing.JTextArea;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Style;
-import org.ginsim.graph.view.css.VertexStyle;
+import org.ginsim.graph.view.css.NodeStyle;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -45,7 +45,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private JButton automaticRoutingButton;
 	
 	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, 1);
-	private static final VertexStyle clearVertexStyle = new VertexStyle(Color.white, Color.gray, 1, VertexStyle.NULL_SHAPE);
+	private static final NodeStyle clearVertexStyle = new NodeStyle(Color.white, Color.gray, 1, NodeStyle.NULL_SHAPE);
 	
 	public GraphComparatorCaptionFrame(Graph g, GraphComparator gc) {
         this.g = g;
@@ -274,7 +274,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	
     private void doColorize(JRadioButton source) {
     	HashMap styleMap = gc.getStyleMap();
-    	VertexAttributesReader vreader = g.getVertexAttributeReader();
+    	NodeAttributesReader vreader = g.getVertexAttributeReader();
     	EdgeAttributesReader ereader = g.getEdgeAttributeReader();
     	
     	for (Iterator it = styleMap.keySet().iterator(); it.hasNext();) {
@@ -312,7 +312,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 			} else { //vertex
 				vreader.setVertex(o);
 				if (style != null) {
-					cs.applyOnNode((VertexStyle)style, o, vreader);
+					cs.applyOnNode((NodeStyle)style, o, vreader);
 				} else {
 					cs.applyOnNode(clearVertexStyle, o, vreader);
 				}

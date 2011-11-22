@@ -13,7 +13,7 @@ import java.util.Map;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
@@ -43,7 +43,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 	private static final GsFileFilter ffilter = new GsFileFilter( new String[] { "sbml" }, "SBML files");
 
 	private SBML3Config config = null;
-    List<RegulatoryVertex> v_no;
+    List<RegulatoryNode> v_no;
     int len;
     OMDDNode[] t_tree;
     OMDDNodeBrowser browser;
@@ -138,7 +138,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 			m_initstates = new HashMap();
 		}
         for (int i=0 ; i<len ; i++) {
-            RegulatoryVertex vertex = (RegulatoryVertex)v_no.get(i);
+            RegulatoryNode vertex = (RegulatoryNode)v_no.get(i);
             // default initial markup = 0
             t_markup[i][0] = 0;
             t_markup[i][1] = vertex.getMaxValue();
@@ -173,7 +173,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
         out.addAttr("xmlns", L3_QUALI_URL);
 
         for (int i=0 ; i<t_tree.length ; i++) {
-            RegulatoryVertex node = (RegulatoryVertex)v_no.get(i);
+            RegulatoryNode node = (RegulatoryNode)v_no.get(i);
             String s_id = node.getId();
             String s_name = node.getName();
             out.openTag("qualitativeSpecies");
@@ -200,12 +200,12 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
         out.openTag("listOfTransitions");
         out.addAttr("xmlns", L3_QUALI_URL);
         for (int i=0 ; i<t_tree.length ; i++) {
-            RegulatoryVertex regulatoryVertex = (RegulatoryVertex)v_no.get(i);
-            if (regulatoryVertex.isInput()) {
+            RegulatoryNode regulatoryNode = (RegulatoryNode)v_no.get(i);
+            if (regulatoryNode.isInput()) {
             	continue;
             }
             OMDDNode node = t_tree[i];
-            String s_node = regulatoryVertex.getId();
+            String s_node = regulatoryNode.getId();
             out.openTag("transition");
             out.addAttr("id", "tr_"+s_node);
             
@@ -243,7 +243,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
             
             boolean hasNoBasalValue = true;
             if (graph.getIncomingEdges(v_no.get(i)).size() == 0) {
-                LogicalParameterList lpl = regulatoryVertex.getV_logicalParameters();
+                LogicalParameterList lpl = regulatoryNode.getV_logicalParameters();
                 if (lpl.size() == 1) {
                 	LogicalParameter lp = (LogicalParameter) lpl.get(0);
                 	int value = lp.getValue();
@@ -257,7 +257,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
             if (hasNoBasalValue) {
             out.addAttr("resultLevel", ""+0);
             out.closeTag();
-            for (curValue=1 ; curValue<=regulatoryVertex.getMaxValue() ; curValue++) {
+            for (curValue=1 ; curValue<=regulatoryNode.getMaxValue() ; curValue++) {
                 out.openTag("functionTerm");
                 out.addAttr("resultLevel", ""+curValue);
                 out.openTag("math");

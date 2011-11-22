@@ -15,17 +15,17 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.service.tool.connectivity.ReducedParameterPanel;
 import org.ginsim.io.parser.GinmlHelper;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>
+public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
 	implements ReducedGraph{
 
 	public static final String GRAPH_ZIP_NAME = "connectedComponent.ginml";
@@ -167,7 +167,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
     	if (vertices == null) {
     		vertices = getVertices();
     	}
-    	VertexAttributesReader vReader = getVertexAttributeReader();
+    	NodeAttributesReader vReader = getVertexAttributeReader();
     	switch (mode) {
     		case 1:
 

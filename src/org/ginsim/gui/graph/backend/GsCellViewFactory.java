@@ -15,7 +15,7 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 	/** */
 	private static final long serialVersionUID = 7666430579571102018L;
 	private final GsEdgeRenderer edgeRenderer;
-	private final RawVertexRenderer rawVertexRenderer;
+	private final RawNodeRenderer rawNodeRenderer;
 
 	
 	/**
@@ -25,7 +25,7 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 	 */
 	public GsCellViewFactory(GsJgraph jgraph, Graph<?, ?> g) {
 		this.edgeRenderer = new GsEdgeRenderer(jgraph, g.getEdgeAttributeReader());
-		this.rawVertexRenderer = new RawVertexRenderer(g.getVertexAttributeReader());
+		this.rawNodeRenderer = new RawNodeRenderer(g.getVertexAttributeReader());
 	}
 
 	public CellView createView(GraphModel model, Object cell) {
@@ -51,6 +51,6 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 	}
 
 	protected CellView createRawVertexView(Object cell) {
-		return new RawVertexView(cell, rawVertexRenderer);
+		return new RawNodeView(cell, rawNodeRenderer);
 	}
 }

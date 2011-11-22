@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 
 
 /**
@@ -50,11 +50,11 @@ public final class DynamicNode {
 	 * @param s
 	 * @param vreader 
 	 */
-	public void setStable(boolean s, VertexAttributesReader vreader) {
+	public void setStable(boolean s, NodeAttributesReader vreader) {
 		stable = s;
 		if (stable) {
 			vreader.setVertex(this);
-			vreader.setShape(vreader.getDefaultVertexShape() == VertexAttributesReader.SHAPE_RECTANGLE ? VertexAttributesReader.SHAPE_ELLIPSE: VertexAttributesReader.SHAPE_RECTANGLE);
+			vreader.setShape(vreader.getDefaultVertexShape() == NodeAttributesReader.SHAPE_RECTANGLE ? NodeAttributesReader.SHAPE_ELLIPSE: NodeAttributesReader.SHAPE_RECTANGLE);
 		}
 	}
 	

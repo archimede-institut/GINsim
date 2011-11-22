@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
@@ -118,7 +118,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
                 Map m_init = ((InitialState)it.next()).getMap();
                 s += "\n      ";
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
-                    RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(j);
+                    RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(j);
                     s += "  "+InitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
                 }
             }
@@ -136,7 +136,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
                     Map m_init = init.getMap();
                     s += "\n      ";
                     for (int j=0 ; j<nodeOrder.size() ; j++) {
-                        RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(j);
+                        RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(j);
                         s += "  "+InitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
                     }
                 }

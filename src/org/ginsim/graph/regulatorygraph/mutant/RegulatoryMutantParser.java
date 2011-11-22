@@ -6,7 +6,7 @@ import java.util.TreeMap;
 
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.xml.sax.Attributes;
@@ -71,7 +71,7 @@ public class RegulatoryMutantParser extends XMLHelper {
 			case CHANGE:
 	            String s_vertex = attributes.getValue("target");
 	            for (int i=0 ; i<nodeOrder.size() ; i++) {
-	                RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
+	                RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
 	                if (vertex.getId().equals(s_vertex)) {
 	                    RegulatoryMutantChange change = new RegulatoryMutantChange(vertex);
 	                    change.setMin((byte)Integer.parseInt(attributes.getValue("min")));

@@ -13,7 +13,7 @@ public class AllSelector extends Selector {
 	public static final String CAT_NODES = "nodes";
 	public static final String CAT_EDGES = "edges";
 	
-	public static final VertexStyle STYLE_NODES = new VertexStyle();
+	public static final NodeStyle STYLE_NODES = new NodeStyle();
 	public static final EdgeStyle   STYLE_EDGES = new EdgeStyle();
 
 	public AllSelector() {

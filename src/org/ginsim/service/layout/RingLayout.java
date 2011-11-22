@@ -1,6 +1,6 @@
 package org.ginsim.service.layout;
 
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 
 /**
  * level placement of nodes
@@ -8,14 +8,14 @@ import org.ginsim.graph.common.VertexAttributesReader;
 public class RingLayout implements LayoutAlgo {
 
     
-    private VertexAttributesReader vreader;
+    private NodeAttributesReader vreader;
     
     private int centerx, centery;
     private int rayonRoot, rayonStable, rayonClassic;
     private double phiRoot, phiStable, phiClassic;
     private double tetaRoot, tetaStable, tetaClassic;
     
-    public void configure(VertexAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth) {
+    public void configure(NodeAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth) {
         this.vreader = vreader;
         
 		rayonRoot = (nbRoot*150)/8;

@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 
 
@@ -29,13 +29,13 @@ public class ParamTree {
     while (it.hasNext()) {
       e = (Entry)it.next();
       if (e.getValue() != null) {
-				addLevel(++depth, (RegulatoryVertex)e.getKey(), (RegulatoryMultiEdge)e.getValue());
+				addLevel(++depth, (RegulatoryNode)e.getKey(), (RegulatoryMultiEdge)e.getValue());
       }
     }
     addLeaves(dv);
     defaultValue = dv;
   }
-  private void addLevel(int level, RegulatoryVertex v, RegulatoryMultiEdge me) {
+  private void addLevel(int level, RegulatoryNode v, RegulatoryMultiEdge me) {
     ParamTreeNode e;
     if (level == 0) {
 		root = new ParamTreeNode(v, me, null, -1);

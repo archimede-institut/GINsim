@@ -24,7 +24,7 @@ import org.ginsim.annotation.Annotation;
 import org.ginsim.annotation.AnnotationLink;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
@@ -339,7 +339,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 		}
 		
 		for (Iterator it=graph.getNodeOrder().iterator() ; it.hasNext() ;) {
-			RegulatoryVertex vertex = (RegulatoryVertex)it.next();
+			RegulatoryNode vertex = (RegulatoryNode)it.next();
 			TreeInteractionsModel lfunc = vertex.getInteractionsModel();
 			int nbval = 0;
 			Object funcRoot = null;

@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import org.ginsim.gui.graph.AddEdgeAction;
-import org.ginsim.gui.graph.AddVertexAction;
+import org.ginsim.gui.graph.AddNodeAction;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.EditMode;
@@ -178,9 +178,9 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 			// Consume Event
 			event.consume();
 			jgraph.clearSelection();
-		} else if (event != null && currentAction instanceof AddVertexAction) { 
+		} else if (event != null && currentAction instanceof AddNodeAction) { 
 
-			AddVertexAction action = (AddVertexAction)currentAction;
+			AddNodeAction action = (AddNodeAction)currentAction;
 			action.addVertex(editManager, (int)event.getPoint().getX(), (int)event.getPoint().getY());
 		} else if (event != null && currentAction.getMode() == EditMode.EDGEPOINT) {
 

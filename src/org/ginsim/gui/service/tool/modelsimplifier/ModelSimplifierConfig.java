@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.annotation.Annotation;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.datastore.MultiColHelper;
 import fr.univmrs.tagc.common.datastore.NamedObject;
@@ -14,10 +14,10 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
 
-public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelper<RegulatoryVertex> {
+public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelper<RegulatoryNode> {
 	String name;
 	Annotation note = new Annotation();
-	Map<RegulatoryVertex, List<RegulatoryVertex>> m_removed = new HashMap<RegulatoryVertex, List<RegulatoryVertex>>();
+	Map<RegulatoryNode, List<RegulatoryNode>> m_removed = new HashMap<RegulatoryNode, List<RegulatoryNode>>();
 	boolean	strict = true;
 
 	@Override
@@ -41,7 +41,7 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 			return;
 		}
 		String s_removed = "";
-		for (RegulatoryVertex v: m_removed.keySet()) {
+		for (RegulatoryNode v: m_removed.keySet()) {
 			s_removed += " "+v;
 		}
 		out.openTag("simplificationConfig");
@@ -53,14 +53,14 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 	}
 	
 	@Override
-	public Object getVal(RegulatoryVertex o, int index) {
+	public Object getVal(RegulatoryNode o, int index) {
 		if (index == 1) {
 			return m_removed.containsKey(o) ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return o;
 	}
 	@Override
-	public boolean setVal(RegulatoryVertex vertex, int index, Object value) {
+	public boolean setVal(RegulatoryNode vertex, int index, Object value) {
 		if (index == 1) {
 			if (value.equals(Boolean.TRUE)) {
 				m_removed.put(vertex, null);

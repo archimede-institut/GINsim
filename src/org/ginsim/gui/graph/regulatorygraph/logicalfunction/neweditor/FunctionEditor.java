@@ -3,7 +3,7 @@ package org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor;
 import javax.swing.JTree;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
@@ -42,7 +42,7 @@ public class FunctionEditor {
     controler.init(p, model);
   	editPanel.init(model);
 	}
-	public void init(TreeExpression e, RegulatoryVertex v, RegulatoryGraph graph, JTree t) {
+	public void init(TreeExpression e, RegulatoryNode v, RegulatoryGraph graph, JTree t) {
 		model.init((TreeInteractionsModel)t.getModel(), e.getGraphicPanel());
 		controler.init(v, graph, t, model);
 		displayPanel.init(e);

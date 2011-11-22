@@ -16,10 +16,10 @@ import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.graph.view.css.VertexStyle;
+import org.ginsim.graph.view.css.NodeStyle;
 
 import fr.univmrs.tagc.common.Debugger;
 
@@ -69,7 +69,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	}
 	
 	public boolean isCommonVertex(Object id) {
-		VertexStyle style = (VertexStyle)((ItemStore)stylesMap.get(id)).v;
+		NodeStyle style = (NodeStyle)((ItemStore)stylesMap.get(id)).v;
 		return style.background != SPECIFIC_G1_COLOR && style.background != SPECIFIC_G2_COLOR;
 	}
 	
@@ -109,10 +109,10 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	
 	protected void setVerticesColor() {
 		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
-			RegulatoryVertex v, v1, v2;
+			RegulatoryNode v, v1, v2;
 			String id = (String)it.next();
-			v1 = (RegulatoryVertex)g1m.getVertexByName(id);
-			v2 = (RegulatoryVertex)g2m.getVertexByName(id);
+			v1 = (RegulatoryNode)g1m.getVertexByName(id);
+			v2 = (RegulatoryNode)g2m.getVertexByName(id);
 			String comment = null;
 			
 			//Check which graph own the vertex, set the appropriate color to it and if it is owned by both graph, compare its attributes.
@@ -164,14 +164,14 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	
 	protected void addVerticesFromGraph( Graph gm) {
 		for (Iterator it=gm.getVertices().iterator() ; it.hasNext() ;) {
-			RegulatoryVertex vertex = (RegulatoryVertex)it.next();
+			RegulatoryNode vertex = (RegulatoryNode)it.next();
 			verticesIdsSet.add(vertex.getId());
 		}
 	}
 
 	
 	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, EdgeAttributesReader ereader) {
-		RegulatoryVertex v = (RegulatoryVertex) gm_main.getVertexByName(id);
+		RegulatoryNode v = (RegulatoryNode) gm_main.getVertexByName(id);
 		if (v == null) {
 			return;
 		}
@@ -180,10 +180,10 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		EdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 
 		//If v is a vertex from the studied graph, we look at its edges
-		RegulatoryVertex source = (RegulatoryVertex) gm.getVertexByName(id);
+		RegulatoryNode source = (RegulatoryNode) gm.getVertexByName(id);
 		for (RegulatoryMultiEdge me1: ((RegulatoryGraph)gm_main).getOutgoingEdges(v)) {
 			String tid = me1.getTarget().getId();
-			RegulatoryVertex target = (RegulatoryVertex) gm.getVertexByName(tid);
+			RegulatoryNode target = (RegulatoryNode) gm.getVertexByName(tid);
 			
 			if (gm.getEdge(source, target) != null) {
 				continue;
@@ -222,7 +222,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	}
 
 
-	public String compareVertices(RegulatoryVertex v, RegulatoryVertex v1, RegulatoryVertex v2, Color[] color) {
+	public String compareVertices(RegulatoryNode v, RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
 		String comment = "";
 		if (!v1.getName().equals(v2.getName())) {
 			String n1 = v1.getName();
@@ -249,7 +249,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 * @param v1 
 	 * @param v2
 	 */
-	private String compareLogicalFunction(RegulatoryVertex v1, RegulatoryVertex v2, Color[] color) {
+	private String compareLogicalFunction(RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
 		String comment = "";
 		OMDDNode omdd1 = v1.getTreeParameters(g1);
 		OMDDNode omdd2 = v2.getTreeParameters(g2);
@@ -282,8 +282,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 * @param v_source
 	 * @param g_source
 	 */
-	private void setLogicalFunction(RegulatoryVertex v, RegulatoryVertex v_source, Graph g_source) { //TODO : do we really want to do that ?
-		RegulatoryVertex[] t = new RegulatoryVertex[2];
+	private void setLogicalFunction(RegulatoryNode v, RegulatoryNode v_source, Graph g_source) { //TODO : do we really want to do that ?
+		RegulatoryNode[] t = new RegulatoryNode[2];
 		t[0] = v;
 		t[1] = v_source;
 		logicalFunctionPending.add(t);
@@ -291,7 +291,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	
 	private void setAllLogicalFunctions() {
 		for (Iterator it = logicalFunctionPending.iterator(); it.hasNext();) {
-			RegulatoryVertex[] t = (RegulatoryVertex[]) it.next();
+			RegulatoryNode[] t = (RegulatoryNode[]) it.next();
 			LogicalParameterList lpl = t[1].getV_logicalParameters();
 			lpl.applyNewGraph(t[0], meMap);			
 		}
@@ -350,7 +350,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		int i = 0;
 		Iterator it = nodeOrder.iterator();
 		while (it.hasNext()) {
-			RegulatoryVertex v = (RegulatoryVertex) it.next();
+			RegulatoryNode v = (RegulatoryNode) it.next();
 			s[i++] = v.getId();
 		}
 		return s;

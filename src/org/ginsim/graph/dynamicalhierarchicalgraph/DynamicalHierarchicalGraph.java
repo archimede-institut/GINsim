@@ -8,10 +8,10 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 
-public interface DynamicalHierarchicalGraph extends Graph<DynamicalHierarchicalNode, Edge<DynamicalHierarchicalNode>>, GraphAssociation<RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>{
+public interface DynamicalHierarchicalGraph extends Graph<DynamicalHierarchicalNode, Edge<DynamicalHierarchicalNode>>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 	
 	
 	/**

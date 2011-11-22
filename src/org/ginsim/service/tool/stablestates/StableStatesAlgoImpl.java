@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
@@ -49,7 +49,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	}
 	
 	@Override
-	public void setNodeOrder(List<RegulatoryVertex> sortedVars, OMDDNode[] tReordered) {
+	public void setNodeOrder(List<RegulatoryNode> sortedVars, OMDDNode[] tReordered) {
 		throw new RuntimeException("Custom node order in stable state search needs love");
 	}
 	
@@ -69,7 +69,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 			if (ORDERTEST) {
 				int sel = selectNext();
 				dd_stable = buildStableConditionFromParam(sel, 
-						((RegulatoryVertex)nodeOrder.get(sel)).getMaxValue()+1,
+						((RegulatoryNode)nodeOrder.get(sel)).getMaxValue()+1,
 						t_param[sel],
 						dd_stable).reduce();
 			} else {
@@ -77,7 +77,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 					System.out.println("  "+i);
 				}
 				dd_stable = buildStableConditionFromParam(i, 
-						((RegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1,
+						((RegulatoryNode)nodeOrder.get(i)).getMaxValue()+1,
 						t_param[i],
 						dd_stable).reduce();
 			}
@@ -91,7 +91,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 		t_reg = new boolean[nbgene][nbgene];
 		bestValue = nbgene+1;
 		for (int i=0 ; i<nbgene ; i++) {
-			Iterator<RegulatoryMultiEdge> it_reg = regGraph.getIncomingEdges( (RegulatoryVertex) nodeOrder.get(i)).iterator();
+			Iterator<RegulatoryMultiEdge> it_reg = regGraph.getIncomingEdges( (RegulatoryNode) nodeOrder.get(i)).iterator();
 			int cpt = 0;
 			boolean[] t_regline = t_reg[i];
 			while (it_reg.hasNext()) {

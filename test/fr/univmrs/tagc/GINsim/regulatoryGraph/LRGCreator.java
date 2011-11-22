@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.gui.GUIManager;
 
@@ -22,10 +22,10 @@ public class LRGCreator {
 	public static void main(String[] args) {
 		// create a simple graph
 		RegulatoryGraph lrg = GraphManager.getInstance().getNewGraph();
-		VertexAttributesReader vreader = lrg.getVertexAttributeReader();
+		NodeAttributesReader vreader = lrg.getVertexAttributeReader();
 		
 		// add a few vertices
-		RegulatoryVertex g0, g1, g2;
+		RegulatoryNode g0, g1, g2;
 		g0 = lrg.addVertex();
 		g1 = lrg.addVertex();
 		g2 = lrg.addVertex();

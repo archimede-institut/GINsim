@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNodeSet;
@@ -707,13 +707,13 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 
 	private void updateTerminalCycles(DynamicalHierarchicalGraph graph) {
 		log(1,"Updating terminal cycles...");
-		VertexAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getVertexAttributeReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			DynamicalHierarchicalNode dhnode = (DynamicalHierarchicalNode) it.next();
 			if (dhnode.getType() == DynamicalHierarchicalNode.TYPE_CYCLE && graph.getOutgoingEdges(dhnode).size() == 0) {
 				dhnode.setType(DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE);
 				vreader.setVertex(dhnode);
-				vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
+				vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
 				vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 				vreader.refresh();
 			}
@@ -743,7 +743,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private void addAllNodeTo(DynamicalHierarchicalGraph graph) {
 		int n = 0;
 		log(1,"Adding all nodes to the graph... ("+nodeSet.size()+")");
-		VertexAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getVertexAttributeReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			n++;
 			DynamicalHierarchicalNode dhnode = (DynamicalHierarchicalNode) it.next();
@@ -754,11 +754,11 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			vreader.setVertex(dhnode);
 			switch (dhnode.getType()) {
 			case DynamicalHierarchicalNode.TYPE_STABLE_STATE:
-				vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
+				vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
 				vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_STABLE_STATE_COLOR);
 				break;
 			case DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE:
-				vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
+				vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
 				vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 				break;
 			case DynamicalHierarchicalNode.TYPE_CYCLE:

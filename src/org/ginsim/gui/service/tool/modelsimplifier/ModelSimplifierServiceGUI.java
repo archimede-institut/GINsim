@@ -16,7 +16,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -94,7 +94,7 @@ class ModelSimplifierConfigManager implements GraphAssociatedObjectManager {
 
     public void doSave(OutputStreamWriter os, Graph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
-        List<RegulatoryVertex> nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
+        List<RegulatoryNode> nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
         }
@@ -140,7 +140,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
         return null;
     }
     
-    List<RegulatoryVertex> nodeOrder;
+    List<RegulatoryNode> nodeOrder;
     ModelSimplifierConfigList paramList;
     
     /**
@@ -164,7 +164,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
         	}
         	String[] t_remove = attributes.getValue("removeList").split(" ");
         	for (int i=0 ; i<t_remove.length ; i++) {
-        		for (RegulatoryVertex vertex: nodeOrder) {
+        		for (RegulatoryNode vertex: nodeOrder) {
         			if (vertex.getId().equals(t_remove[i])) {
         				cfg.m_removed.put(vertex, null);
         			}

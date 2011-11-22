@@ -1,6 +1,6 @@
 package org.ginsim.service.layout;
 
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 
 /**
  * level placement of nodes
@@ -19,13 +19,13 @@ public class LevelLayout implements LayoutAlgo {
     private int classicStartx;
     private int classicStarty;
     
-    private VertexAttributesReader vreader;
+    private NodeAttributesReader vreader;
     
     private int curRoot;
     private int curStable;
     private int curClassic;
     
-    public void configure(VertexAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth) {
+    public void configure(NodeAttributesReader vreader, int nbRoot, int nbStable, int nbClassic, int maxHeight, int maxWidth) {
         this.vreader = vreader;
         this.width = maxWidth + 30;
         this.height = maxHeight + 40;

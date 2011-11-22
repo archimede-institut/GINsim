@@ -4,16 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import tbrowser.ihm.widget.TBToggleButton;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
-public class TreeElementVertexNote extends TreeElementDeco {
+public class TreeElementNodeNote extends TreeElementDeco {
   private TBToggleButton b;
   private String proto, value;
   
-  public TreeElementVertexNote(AbstractTreeElement e) {
+  public TreeElementNodeNote(AbstractTreeElement e) {
     super(e);
     b = new TBToggleButton(ImageLoader.getImageIcon("annotation_off.png"));
     b.setSelectedIcon(ImageLoader.getImageIcon("annotation.png"));
@@ -24,7 +24,7 @@ public class TreeElementVertexNote extends TreeElementDeco {
     b.setFocusPainted(false);
     b.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {
-      	RegulatoryVertex vertex = (RegulatoryVertex)((Vector)userObject).firstElement();
+      	RegulatoryNode vertex = (RegulatoryNode)((Vector)userObject).firstElement();
         String proto = (String)((Vector)userObject).elementAt(1);
         String value = (String)((Vector)userObject).elementAt(2);
         setNote(b.isSelected());
@@ -34,7 +34,7 @@ public class TreeElementVertexNote extends TreeElementDeco {
   public void setSelected(boolean s) {
   	b.setSelected(s);
   }
-  public TreeElementVertexNote(AbstractTreeElement e, Object o) {
+  public TreeElementNodeNote(AbstractTreeElement e, Object o) {
     this(e);
     userObject = new Vector();
     ((Vector)userObject).addAll((Vector)o);
@@ -43,7 +43,7 @@ public class TreeElementVertexNote extends TreeElementDeco {
   }
   public void setNote(boolean b) {
     super.check(b);
-    RegulatoryVertex vertex = (RegulatoryVertex)((Vector)userObject).firstElement();
+    RegulatoryNode vertex = (RegulatoryNode)((Vector)userObject).firstElement();
     proto = (String)((Vector)userObject).elementAt(1);
     value = (String)((Vector)userObject).elementAt(2);
     if (b)

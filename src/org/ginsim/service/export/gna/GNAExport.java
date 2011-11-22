@@ -12,7 +12,7 @@ import javax.swing.Action;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.ServiceGUI;
@@ -66,7 +66,7 @@ class GNAExportAction extends ExportAction<RegulatoryGraph> {
   		f_browser = new GNAFunctionBrowser(nodeOrder, out);
 		Iterator it = nodeOrder.iterator();
 		while (it.hasNext()) {
-			RegulatoryVertex node = (RegulatoryVertex) it.next();
+			RegulatoryNode node = (RegulatoryNode) it.next();
 			int thresholdLevels = node.getMaxValue();
 			String id = node.getId();
 			// TODO: use "input-variable" instead of "state-variable" for "constant" variables
@@ -157,7 +157,7 @@ class GNAFunctionBrowser extends LogicalFunctionBrowser {
 			out.write("k_"+nodeID+leaf.value);
 			for (int i=0 ; i<path.length ; i++) {
 				if (path[i][0] != -1) {
-					String nodeName = ((RegulatoryVertex)nodeOrder.get(i)).getId();
+					String nodeName = ((RegulatoryNode)nodeOrder.get(i)).getId();
 					int begin = path[i][0];
 					int end = path[i][1]+1;
 					if (begin > 0) {

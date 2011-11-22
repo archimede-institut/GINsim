@@ -19,22 +19,22 @@ import org.jgraph.graph.GraphContext;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
-public class RawVertexView implements CellView {
+public class RawNodeView implements CellView {
 
-	private final RawVertexRenderer renderer;
+	private final RawNodeRenderer renderer;
 	private final DefaultGraphCell cell;
 
 	public final Object user;
 	
 	private final AttributeMap attributes = new AttributeMap();
 	
-	private static RawVertexView FIRST = null;
+	private static RawNodeView FIRST = null;
 	private static boolean first = true;
 	
 	private Rectangle bounds = null;
 	private CellView parent = null;
 	
-	public RawVertexView(Object cell, RawVertexRenderer vertexRenderer) {
+	public RawNodeView(Object cell, RawNodeRenderer vertexRenderer) {
 		this.cell = (DefaultGraphCell)cell;
 		this.user = this.cell.getUserObject();
 		this.renderer = vertexRenderer;
@@ -43,7 +43,7 @@ public class RawVertexView implements CellView {
 		System.out.println(vertexRenderer.getBounds(user));
 		if (first) {
 			first = false;
-			FIRST = new RawVertexView(cell, vertexRenderer);
+			FIRST = new RawNodeView(cell, vertexRenderer);
 		}
 	}
 

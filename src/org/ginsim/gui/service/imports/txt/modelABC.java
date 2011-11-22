@@ -9,7 +9,7 @@ import java.util.List;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.gui.GUIManager;
 
@@ -115,7 +115,7 @@ public final class modelABC {
 
 
 		// add  vertices
-		RegulatoryVertex [] G = new RegulatoryVertex [n];
+		RegulatoryNode [] G = new RegulatoryNode [n];
 
 		for (j=0; j<n; j++) {
 			G[j] = model.addVertex();

@@ -8,7 +8,7 @@ import java.util.Map;
 
 import org.ginsim.graph.common.AttributesReader;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 
 
 public class CascadingStyle {
@@ -41,7 +41,7 @@ public class CascadingStyle {
 	 * @param areader
 	 */
 	public void applyOnNode(Selector sel, Object node, AttributesReader areader) {
-		if (shouldStoreOldStyle) old_nodes.put(node, new VertexStyle(areader));
+		if (shouldStoreOldStyle) old_nodes.put(node, new NodeStyle(areader));
 		sel.applyStyleForNode(node, areader);
 	}
 
@@ -64,8 +64,8 @@ public class CascadingStyle {
 	 * @param node
 	 * @param areader
 	 */
-	public void applyOnNode(VertexStyle style, Object node, AttributesReader areader) {
-		if (shouldStoreOldStyle) old_nodes.put(node, new VertexStyle(areader));
+	public void applyOnNode(NodeStyle style, Object node, AttributesReader areader) {
+		if (shouldStoreOldStyle) old_nodes.put(node, new NodeStyle(areader));
 		style.apply(areader);
 	}
 
@@ -102,11 +102,11 @@ public class CascadingStyle {
 	 * @param nodes a collection of nodes to apply the selectors on
 	 * @param vreader a vertex AttributesReader
 	 */
-	public void applySelectorsOnNodes(List selectors, Collection nodes, VertexAttributesReader vreader) {
+	public void applySelectorsOnNodes(List selectors, Collection nodes, NodeAttributesReader vreader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each nodes
 			Object node = it_nodes.next();
 			vreader.setVertex(node);
-			VertexStyle style = new VertexStyle(vreader);							//  get the style
+			NodeStyle style = new NodeStyle(vreader);							//  get the style
 			if (shouldStoreOldStyle) old_nodes.put(node, style.clone());					//  save a copy if needed
 			for (Iterator it_sel = selectors.iterator(); it_sel.hasNext();) {		//  For each selector
 				Selector sel = (Selector) it_sel.next();
@@ -144,13 +144,13 @@ public class CascadingStyle {
 	 * @param edges a collection of nodes to apply the selectors on
 	 * @param vreader an vertex AttributesReader
 	 */
-	public void applySelectorOnNodes(Selector sel, Collection nodes, VertexAttributesReader vreader) {
+	public void applySelectorOnNodes(Selector sel, Collection nodes, NodeAttributesReader vreader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each edge
 			Object node = it_nodes.next();
 			vreader.setVertex(node);
-			VertexStyle style = new VertexStyle(vreader);								//  get the style
+			NodeStyle style = new NodeStyle(vreader);								//  get the style
 			if (shouldStoreOldStyle) old_nodes.put(node, style.clone());					//  save a copy if needed
-			((VertexStyle)sel.getStyleForNode(node)).apply(vreader);	//  apply the style to the node.
+			((NodeStyle)sel.getStyleForNode(node)).apply(vreader);	//  apply the style to the node.
 		}
 	}
 
@@ -168,7 +168,7 @@ public class CascadingStyle {
 	 * @param node
 	 * @param areader a vertex attributesReader (must be set to the right vertex)
 	 */
-	public void restoreNode(Object node, VertexAttributesReader areader) {
+	public void restoreNode(Object node, NodeAttributesReader areader) {
 		((Style)old_nodes.get(node)).apply(areader);
 	}
 
@@ -188,7 +188,7 @@ public class CascadingStyle {
 	 * Restore all the nodes previously saved.
 	 * @param areader a vertex attributesReader
 	 */
-	public void restoreAllNodes(VertexAttributesReader areader) {
+	public void restoreAllNodes(NodeAttributesReader areader) {
 		for (Iterator it_nodes = old_nodes.keySet().iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setVertex(node);
@@ -215,7 +215,7 @@ public class CascadingStyle {
 	 * @param nodes a collection of nodes to restore
 	 * @param areader a vertex attributesReader
 	 */
-	public void restoreAllNodes(Collection nodes, VertexAttributesReader areader) {
+	public void restoreAllNodes(Collection nodes, NodeAttributesReader areader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setVertex(node);
@@ -229,11 +229,11 @@ public class CascadingStyle {
 	 * @param nodes a collection of nodes to store
 	 * @param areader a vertex attributesReader
 	 */
-	public void storeAllNodes(Collection nodes, VertexAttributesReader areader) {
+	public void storeAllNodes(Collection nodes, NodeAttributesReader areader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setVertex(node);
-			VertexStyle style = new VertexStyle(areader);
+			NodeStyle style = new NodeStyle(areader);
 			old_nodes.put(node, style);
 		}
 	}

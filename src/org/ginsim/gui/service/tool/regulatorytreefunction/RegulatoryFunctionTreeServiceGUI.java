@@ -10,7 +10,7 @@ import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.tree.Tree;
 import org.ginsim.graph.tree.TreeParser;
 import org.ginsim.graph.tree.TreeParserFromRegulatoryGraph;
@@ -73,16 +73,16 @@ class RegulatoryFunctionTreeAction extends ToolAction {
 	 */
 	private Integer getSelectedVertex(RegulatoryGraph regGraph) {
 		
-		RegulatoryVertex selectedNode = null;
+		RegulatoryNode selectedNode = null;
 		Collection<?> vertices = gui.getSelection().getSelectedNodes();
 		if (vertices != null && vertices.size() > 0) {
-			selectedNode = (RegulatoryVertex) vertices.iterator().next();
+			selectedNode = (RegulatoryNode) vertices.iterator().next();
 		} else {
 			return ZERO;
 		}
 		int i = 0;
 		for (Iterator it2 = regGraph.getNodeOrder().iterator(); it2.hasNext(); i++) {
-			RegulatoryVertex v = (RegulatoryVertex) it2.next();
+			RegulatoryNode v = (RegulatoryNode) it2.next();
 			if (v.equals(selectedNode)) {
 				return new Integer(i);
 			}

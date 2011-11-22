@@ -9,13 +9,13 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 
 /**
  * reduced Graph.
  */
-public interface ReducedGraph extends Graph<NodeReducedData, Edge<NodeReducedData>>, GraphAssociation<RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>{
+public interface ReducedGraph extends Graph<NodeReducedData, Edge<NodeReducedData>>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 	
 	
 	/**

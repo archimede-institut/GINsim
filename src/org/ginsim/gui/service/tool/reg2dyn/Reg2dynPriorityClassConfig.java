@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
@@ -39,7 +39,7 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
     private JButton but_insert;
     private JButton but_remove;
     
-    private List<RegulatoryVertex> nodeOrder;
+    private List<RegulatoryNode> nodeOrder;
     GenericListPanel contentPanel;
     GenericListPanel availablePanel;
     SimpleGenericList<PriorityMember> contentList = new SimpleGenericList<PriorityMember>();
@@ -60,7 +60,7 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
      * @param nodeOrder
      * @param param
      */
-    public Reg2dynPriorityClassConfig(List<RegulatoryVertex> nodeOrder) {
+    public Reg2dynPriorityClassConfig(List<RegulatoryNode> nodeOrder) {
     	super(new HashMap<Class<?>, Component>(), "pclassConfig");
         this.nodeOrder = nodeOrder;
         initialize();
@@ -320,7 +320,7 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
             but_remove.setEnabled(true);
         }
         
-        for (RegulatoryVertex v: nodeOrder) {
+        for (RegulatoryNode v: nodeOrder) {
             PriorityMember k = new PriorityMember(v, NONE);
             Object target = pcdef.m_elt.get(v);
             if (target instanceof Object[]) {
@@ -385,10 +385,10 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
 }
 
 class PriorityMember {
-	RegulatoryVertex vertex;
+	RegulatoryNode vertex;
 	int type;
 	
-	public PriorityMember(RegulatoryVertex vertex, int type) {
+	public PriorityMember(RegulatoryNode vertex, int type) {
 		this.vertex = vertex;
 		this.type = type;
 	}

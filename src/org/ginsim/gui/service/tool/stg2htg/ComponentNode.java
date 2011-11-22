@@ -6,21 +6,21 @@ import java.util.Vector;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 
 
-public class ComponentVertex extends NodeReducedData {
+public class ComponentNode extends NodeReducedData {
 
 	private HashSet sigma;
 
-	public ComponentVertex(String id, Vector content, Object sigma) {
+	public ComponentNode(String id, Vector content, Object sigma) {
 		super(id, content);
 		this.sigma = (HashSet) sigma;
 	}
 
-	public ComponentVertex(NodeReducedData scc, Object sigma) {
+	public ComponentNode(NodeReducedData scc, Object sigma) {
 		super(scc.getId(), scc.getContent());
 		this.sigma = (HashSet)sigma;
 	}
 	
-	public ComponentVertex(NodeReducedData scc, Object sigma, String id) {
+	public ComponentNode(NodeReducedData scc, Object sigma, String id) {
 		super(id, scc.getContent());
 		this.sigma = (HashSet)sigma;
 	}

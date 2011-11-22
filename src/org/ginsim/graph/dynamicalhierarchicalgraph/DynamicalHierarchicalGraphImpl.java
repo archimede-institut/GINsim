@@ -17,17 +17,17 @@ import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractDerivedGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.io.parser.GinmlHelper;
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
-public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<DynamicalHierarchicalNode, Edge<DynamicalHierarchicalNode>, RegulatoryGraph, RegulatoryVertex, RegulatoryMultiEdge>
+public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<DynamicalHierarchicalNode, Edge<DynamicalHierarchicalNode>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
 				implements DynamicalHierarchicalGraph{
 
 	public static final String GRAPH_ZIP_NAME = "dynamicalHierarchicalGraph.ginml";
@@ -41,10 +41,10 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	 * create a new DynamicalHierarchicalGraph with a nodeOrder.
 	 * @param nodeOrder the node order
 	 */
-	public DynamicalHierarchicalGraphImpl(List<RegulatoryVertex> nodeOrder) {
+	public DynamicalHierarchicalGraphImpl(List<RegulatoryNode> nodeOrder) {
 		
 	    this( false);
-	    for (RegulatoryVertex vertex: nodeOrder) {
+	    for (RegulatoryNode vertex: nodeOrder) {
 	    	this.nodeOrder.add(new NodeInfo(vertex.getId(), vertex.getMaxValue()));
 	    }
 	}
@@ -145,7 +145,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
     	
     	Iterator<DynamicalHierarchicalNode> it = vertices.iterator();
 
-    	VertexAttributesReader vReader = getVertexAttributeReader();
+    	NodeAttributesReader vReader = getVertexAttributeReader();
         while (it.hasNext()) {
         	DynamicalHierarchicalNode vertex = (DynamicalHierarchicalNode)it.next();
             vReader.setVertex(vertex);
@@ -197,7 +197,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 			childsCount = new byte[nodeOrder.size()];
 			int i = 0;
 			for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-				RegulatoryVertex v = (RegulatoryVertex) it.next();
+				RegulatoryNode v = (RegulatoryNode) it.next();
 				childsCount[i++] = (byte) (v.getMaxValue()+1);
 			}			
 		}

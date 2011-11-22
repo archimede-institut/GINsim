@@ -6,19 +6,19 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.ginsim.graph.common.AttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 
 import fr.univmrs.tagc.common.Tools;
 
 /**
- * VertexStyle store some graphical attributes of a vertex
+ * NodeStyle store some graphical attributes of a vertex
  * Attributes : 
  *     - background : the color for the background = any Color
  *     - foreground : the color for the text and the border = any Color
  *     - border : the style of theborder = simple, raised or strong
  *     - shape : the shape = ellipse or rectangle
  */
-public class VertexStyle implements Style {
+public class NodeStyle implements Style {
 	public static final Color NULL_BACKGROUND = null;
 	public static final Color NULL_FOREGROUND = null;
 	public static final int NULL_BORDER = -99;
@@ -44,7 +44,7 @@ public class VertexStyle implements Style {
 	/**
 	 * A new style from the with all values to NULL
 	 */
-	public VertexStyle() {
+	public NodeStyle() {
 		this.background = NULL_BACKGROUND;
 		this.foreground = NULL_FOREGROUND;
 		this.border 	= NULL_BORDER;
@@ -58,9 +58,9 @@ public class VertexStyle implements Style {
 	 * @param border the style for the line 
 	 * @param shape the shape for the line 
 	 * 
-	 * @see VertexAttributesReader
+	 * @see NodeAttributesReader
 	 */
-	public VertexStyle(Color background, Color foreGround, int border, int shape) {
+	public NodeStyle(Color background, Color foreGround, int border, int shape) {
 		this.background = background;
 		this.foreground = foreGround;
 		this.border 	= border;
@@ -71,37 +71,37 @@ public class VertexStyle implements Style {
 	 * A new style from a GsAttributesReader areader
  	 * @param areader
  	 */
-	public VertexStyle(AttributesReader areader) {
-		background 	= ((VertexAttributesReader) areader).getBackgroundColor();
-		foreground 	= ((VertexAttributesReader) areader).getForegroundColor();
-		border 		= ((VertexAttributesReader) areader).getBorder();
-		shape 		= ((VertexAttributesReader) areader).getShape();
+	public NodeStyle(AttributesReader areader) {
+		background 	= ((NodeAttributesReader) areader).getBackgroundColor();
+		foreground 	= ((NodeAttributesReader) areader).getForegroundColor();
+		border 		= ((NodeAttributesReader) areader).getBorder();
+		shape 		= ((NodeAttributesReader) areader).getShape();
 	}
 	
 	/**
 	 * A new style copied from another
 	 * @param s
 	 */
-	public VertexStyle(Style s) {
-		background 	= ((VertexStyle) s).background;
-		foreground 	= ((VertexStyle) s).foreground;
-		border 		= ((VertexStyle) s).border;
-		shape 		= ((VertexStyle) s).shape;
+	public NodeStyle(Style s) {
+		background 	= ((NodeStyle) s).background;
+		foreground 	= ((NodeStyle) s).foreground;
+		border 		= ((NodeStyle) s).border;
+		shape 		= ((NodeStyle) s).shape;
 	}
 	
 	public void merge(Style s) {
 		if (s == null) return;
-		if (((VertexStyle) s).background != NULL_BACKGROUND)	background 	= ((VertexStyle) s).background;
-		if (((VertexStyle) s).foreground != NULL_FOREGROUND)	foreground 	= ((VertexStyle) s).foreground;
-		if (((VertexStyle) s).border != NULL_BORDER)			border 		= ((VertexStyle) s).border;		
-		if (((VertexStyle) s).shape != NULL_SHAPE)				shape 		= ((VertexStyle) s).shape;
+		if (((NodeStyle) s).background != NULL_BACKGROUND)	background 	= ((NodeStyle) s).background;
+		if (((NodeStyle) s).foreground != NULL_FOREGROUND)	foreground 	= ((NodeStyle) s).foreground;
+		if (((NodeStyle) s).border != NULL_BORDER)			border 		= ((NodeStyle) s).border;		
+		if (((NodeStyle) s).shape != NULL_SHAPE)				shape 		= ((NodeStyle) s).shape;
 	}
 
 	public void apply(AttributesReader areader) {
-		if (background != NULL_BACKGROUND) 	((VertexAttributesReader) areader).setBackgroundColor(background);
-		if (foreground != NULL_FOREGROUND) 	((VertexAttributesReader) areader).setForegroundColor(foreground);
-		if (border != NULL_BORDER) 			((VertexAttributesReader) areader).setBorder(border);
-		if (shape != NULL_SHAPE)			((VertexAttributesReader) areader).setShape(shape);
+		if (background != NULL_BACKGROUND) 	((NodeAttributesReader) areader).setBackgroundColor(background);
+		if (foreground != NULL_FOREGROUND) 	((NodeAttributesReader) areader).setForegroundColor(foreground);
+		if (border != NULL_BORDER) 			((NodeAttributesReader) areader).setBorder(border);
+		if (shape != NULL_SHAPE)			((NodeAttributesReader) areader).setShape(shape);
 		areader.refresh();
 	}
 	
@@ -127,19 +127,19 @@ public class VertexStyle implements Style {
 		if (border != NULL_BORDER) {
 			s += tabs+CSS_BORDER+": ";
 			switch (border) {
-			case VertexAttributesReader.BORDER_SIMPLE:
+			case NodeAttributesReader.BORDER_SIMPLE:
 				s += CSS_BORDER_SIMPLE;
 				break;
-			case VertexAttributesReader.BORDER_RAISED:
+			case NodeAttributesReader.BORDER_RAISED:
 				s += CSS_BORDER_RAISED;
 				break;
-			case VertexAttributesReader.BORDER_STRONG:
+			case NodeAttributesReader.BORDER_STRONG:
 				s += CSS_BORDER_STRONG;
 				break;
 			}
 			s += "\n";
 		}
-		if (shape != NULL_SHAPE) s += tabs+CSS_SHAPE+": "+(shape == VertexAttributesReader.SHAPE_ELLIPSE?CSS_SHAPE_ELLIPSE:CSS_SHAPE_RECTANGLE)+"\n";
+		if (shape != NULL_SHAPE) s += tabs+CSS_SHAPE+": "+(shape == NodeAttributesReader.SHAPE_ELLIPSE?CSS_SHAPE_ELLIPSE:CSS_SHAPE_RECTANGLE)+"\n";
 		return s;
 	}
 	
@@ -178,21 +178,21 @@ public class VertexStyle implements Style {
 					throw new GsCSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_SHAPE)) {
-				if 		(value.equals(CSS_SHAPE_ELLIPSE)) 	shape = VertexAttributesReader.SHAPE_ELLIPSE;
-				else if (value.equals(CSS_SHAPE_RECTANGLE)) shape = VertexAttributesReader.SHAPE_RECTANGLE;
+				if 		(value.equals(CSS_SHAPE_ELLIPSE)) 	shape = NodeAttributesReader.SHAPE_ELLIPSE;
+				else if (value.equals(CSS_SHAPE_RECTANGLE)) shape = NodeAttributesReader.SHAPE_RECTANGLE;
 				else throw new GsCSSSyntaxException("Unknown vertex shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_ELLIPSE+" or "+CSS_SHAPE_RECTANGLE);
 			} else if (key.equals(CSS_BORDER)) {
-				if 		(value.equals(CSS_BORDER_SIMPLE)) 	border = VertexAttributesReader.BORDER_SIMPLE;
-				else if (value.equals(CSS_BORDER_RAISED)) 	border = VertexAttributesReader.BORDER_RAISED;
-				else if (value.equals(CSS_BORDER_STRONG)) 	border = VertexAttributesReader.BORDER_STRONG;
+				if 		(value.equals(CSS_BORDER_SIMPLE)) 	border = NodeAttributesReader.BORDER_SIMPLE;
+				else if (value.equals(CSS_BORDER_RAISED)) 	border = NodeAttributesReader.BORDER_RAISED;
+				else if (value.equals(CSS_BORDER_STRONG)) 	border = NodeAttributesReader.BORDER_STRONG;
 				else throw new GsCSSSyntaxException("Unknown vertex border at line "+i+" : "+lines[i]+". Must be "+CSS_BORDER_SIMPLE+", "+CSS_BORDER_RAISED+" or "+CSS_BORDER_STRONG);
 			} else {
 				throw new GsCSSSyntaxException("Vertex has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);
 			}
 		}
-		return new VertexStyle(background, foreground, border, shape);
+		return new NodeStyle(background, foreground, border, shape);
 	}
 	public Object clone() {
-		return new VertexStyle(this);
+		return new NodeStyle(this);
 	}
 }

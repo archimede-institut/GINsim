@@ -6,7 +6,7 @@ import java.util.Vector;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 
@@ -23,7 +23,7 @@ public class TableInteractionsModel extends AbstractTableModel {
 	private LogicalParameterList interactions;
 
 	//the current selected node
-	private RegulatoryVertex node;
+	private RegulatoryNode node;
     private RegulatoryGraph graph;
 
     /**
@@ -43,7 +43,7 @@ public class TableInteractionsModel extends AbstractTableModel {
 	 *
 	 * @param no the currently selected node
 	 */
-	public TableInteractionsModel(RegulatoryVertex no) {
+	public TableInteractionsModel(RegulatoryNode no) {
 		super();
 		node = no;
 		this.interactions = node.getV_logicalParameters();
@@ -161,7 +161,7 @@ public class TableInteractionsModel extends AbstractTableModel {
 	 *
 	 * @param no the current node
 	 */
-	public void setNode(RegulatoryVertex no) {
+	public void setNode(RegulatoryNode no) {
 		node = no;
 		if (node != null) {
 			this.interactions = node.getV_logicalParameters();

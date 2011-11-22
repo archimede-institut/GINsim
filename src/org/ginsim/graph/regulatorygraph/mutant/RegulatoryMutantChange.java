@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionList;
@@ -16,13 +16,13 @@ import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class RegulatoryMutantChange {
-    RegulatoryVertex vertex;
+    RegulatoryNode vertex;
     byte min;
     byte max;
     BooleanParser parser = null;
     String s_condition = null;
     
-    RegulatoryMutantChange(RegulatoryVertex vertex) {
+    RegulatoryMutantChange(RegulatoryNode vertex) {
         this.vertex = vertex;
         this.min = this.max = -1;
     }
@@ -51,7 +51,7 @@ public class RegulatoryMutantChange {
             this.min = max;
         }
     }
-    public RegulatoryVertex getVertex() {
+    public RegulatoryNode getVertex() {
 		return vertex;
 	}
     

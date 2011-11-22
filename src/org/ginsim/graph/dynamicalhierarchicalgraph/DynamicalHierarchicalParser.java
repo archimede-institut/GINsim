@@ -9,7 +9,7 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 import org.ginsim.io.parser.GinmlHelper;
 import org.ginsim.io.parser.GsXMLHelper;
@@ -37,7 +37,7 @@ public class DynamicalHierarchicalParser extends GsXMLHelper {
     private int vslevel = 0;
     
     private DynamicalHierarchicalNode vertex = null;
-    private VertexAttributesReader vareader = null;
+    private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
     private Map map;

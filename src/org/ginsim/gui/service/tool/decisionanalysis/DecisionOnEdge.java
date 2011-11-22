@@ -29,7 +29,7 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 	}
 
     // FIXME: do we need this constructor? it would have to define source and target
-//	public DecisionOnEdge(int geneCount, List<RegulatoryVertex> nodeOrder) {
+//	public DecisionOnEdge(int geneCount, List<RegulatoryNode> nodeOrder) {
 //        this.genesUpdated = new int[geneCount];
 //        this.nodeOrder = nodeOrder;
 //    }

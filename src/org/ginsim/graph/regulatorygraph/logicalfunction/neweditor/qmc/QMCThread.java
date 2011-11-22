@@ -8,14 +8,14 @@ import javax.swing.tree.TreePath;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 
 import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class QMCThread extends Thread {
 	private boolean cnf;
-	private RegulatoryVertex vertex;
+	private RegulatoryNode vertex;
 	private TreeExpression expression;
 	private RegulatoryGraph graph;
 	private QMCAlgo algo;
@@ -23,7 +23,7 @@ public class QMCThread extends Thread {
 	private JProgressBar progressBar;
 	private GsButton cancelButton;
 
-	public QMCThread(boolean cnf, RegulatoryGraph g, RegulatoryVertex v, TreeExpression e, JTree t, JProgressBar jpb, GsButton b) {
+	public QMCThread(boolean cnf, RegulatoryGraph g, RegulatoryNode v, TreeExpression e, JTree t, JProgressBar jpb, GsButton b) {
 		this.cnf = cnf;
 		vertex = v;
 		expression = e;

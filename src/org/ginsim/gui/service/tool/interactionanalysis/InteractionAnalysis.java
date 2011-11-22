@@ -15,7 +15,7 @@ import java.util.Set;
 import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.graph.view.css.CascadingStyle;
@@ -93,7 +93,7 @@ public class InteractionAnalysis {
 		HashMap node_in_subtree;//The level of each node in the subtree regarding the nodeOrder
 
 		int [] small_node_order_level; //The node order in the omdd.
-		RegulatoryVertex [] small_node_order_vertex; //The node order in the omdd.
+		RegulatoryNode [] small_node_order_vertex; //The node order in the omdd.
 
 		OMDDNode[] t_tree =  g.getAllTrees(true);
 		if (mutant != null) {
@@ -116,7 +116,7 @@ public class InteractionAnalysis {
 		i = -1;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {					//  For each vertex v in the graph
 		    i++;
-			RegulatoryVertex target = (RegulatoryVertex) it.next();
+			RegulatoryNode target = (RegulatoryNode) it.next();
 			if (target.isInput() || (selectedNodes != null && !selectedNodes.contains(target))) { 	//skip the inputs or unselected nodes
 			    continue;
 			}
@@ -125,7 +125,7 @@ public class InteractionAnalysis {
 			
 			total_level = 1;																//  Compute the total number of level in the omdd tree
 			for (RegulatoryMultiEdge edge: l) {
-				RegulatoryVertex source = edge.getSource();
+				RegulatoryNode source = edge.getSource();
 				total_level *= source.getMaxValue()+1;
 			}
 			leafs = new byte[total_level];
@@ -133,11 +133,11 @@ public class InteractionAnalysis {
 						
 			subtree_size = new int[l.size()+1];											//Compute the size of the subtrees
 			subtree_size[0] = total_level;
-			small_node_order_vertex = new RegulatoryVertex[l.size()];
+			small_node_order_vertex = new RegulatoryNode[l.size()];
 			small_node_order_level = new int[l.size()];
 			int m = 0;
 			for (Object obj: g.getNodeOrder()) {
-				RegulatoryVertex source = (RegulatoryVertex) obj;				
+				RegulatoryNode source = (RegulatoryNode) obj;				
 				if (g.getEdge(source, target) != null) {
 					node_in_subtree.put(source, new Integer(m));
 					subtree_size[m+1] = 1;
@@ -152,7 +152,7 @@ public class InteractionAnalysis {
 		    scannOmdd(omdd, 0, leafs, subtree_size, small_node_order_vertex, small_node_order_level);												//  scan the logical function of v
 
 			for (RegulatoryMultiEdge me: l) {									//	For each incoming edge
-				RegulatoryVertex source = me.getSource();
+				RegulatoryNode source = me.getSource();
 //				for (int k = 0; k < me.getEdgeCount(); k++) {									// 		For each sub-edge of the multiedge
 //					RegulatoryEdge e = me.getEdge(k);
 					SourceItem sourceItem = report.reportFor(target, source);
@@ -241,7 +241,7 @@ public class InteractionAnalysis {
 	 * @param small_node_order 
 	 * @param subtree_size 
 	 */
-	private int scannOmdd(OMDDNode omdd, int deep, byte [] leafs, int[] subtree_size, RegulatoryVertex[] small_node_order_vertex, int[] small_node_order_levels) {
+	private int scannOmdd(OMDDNode omdd, int deep, byte [] leafs, int[] subtree_size, RegulatoryNode[] small_node_order_vertex, int[] small_node_order_levels) {
 		if (omdd.next == null) { 								//If the current node is leaf
 			if (subtree_size[deep] == 1) { 							//a real leaf, ie. all the inputs are present in the branch
 				leafs[i_leafs++] = omdd.value;							//Save the current value.
@@ -294,7 +294,7 @@ public class InteractionAnalysis {
 	 * @param small_node_order the node order in the subtree
 	 * @return
 	 */
-	private byte computeFunctionality(int count_childs, int node_index, byte[] leafs, int[] subtree_size_t, RegulatoryVertex[] small_node_order) {
+	private byte computeFunctionality(int count_childs, int node_index, byte[] leafs, int[] subtree_size_t, RegulatoryNode[] small_node_order) {
 		int size_of_subtree = subtree_size_t[node_index+1];
 		
 		ReportItem ri = null;
@@ -351,9 +351,9 @@ public class InteractionAnalysis {
 	 * @param subtree_size_t a table of all the subtree size.
 	 * @param small_node_order the node order in the subtree.
 	 */
-	private void log_path(int index, int node_index, ReportItem ri, int[] subtree_size_t, RegulatoryVertex[] small_node_order) {
+	private void log_path(int index, int node_index, ReportItem ri, int[] subtree_size_t, RegulatoryNode[] small_node_order) {
 		for (int k = 0; k < small_node_order.length; k++) {
-			RegulatoryVertex v = small_node_order[k];
+			RegulatoryNode v = small_node_order[k];
 			byte count = (byte) (index/subtree_size_t[k+1]%(v.getMaxValue()+1));
 			if (k != node_index) {
 				PathItem pi = new PathItem();
@@ -416,7 +416,7 @@ public class InteractionAnalysis {
 				
 		dw.openHeader(2, "Report", null);
 		for (Iterator it_target = report.iterator(); it_target.hasNext();) {
-			RegulatoryVertex target = (RegulatoryVertex) it_target.next();
+			RegulatoryNode target = (RegulatoryNode) it_target.next();
 			dw.openHeader(3, target.getId(), null);
 
 			for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
@@ -495,7 +495,7 @@ public class InteractionAnalysis {
 		
 		
 		for (Iterator it_target = report.iterator(); it_target.hasNext();) {
-			RegulatoryVertex target = (RegulatoryVertex) it_target.next();
+			RegulatoryNode target = (RegulatoryNode) it_target.next();
 			for (Iterator it_sources = report.get(target).iterator(); it_sources.hasNext();) {
 				SourceItem sourceItem = (SourceItem) it_sources.next();
 								
@@ -536,13 +536,13 @@ public class InteractionAnalysis {
 
 class SourceItem {
 	List reportItems = new LinkedList();
-	RegulatoryVertex source;
+	RegulatoryNode source;
 	byte sign;
 }
 
 class PathItem {
 	byte targetValue_low, targetValue_high = -1;
-	RegulatoryVertex vertex;
+	RegulatoryNode vertex;
 }
 
 /**
@@ -585,7 +585,7 @@ class Report {
 		return report.keySet().iterator();
 	}
 
-	public SourceItem reportFor(RegulatoryVertex target, RegulatoryVertex source) {
+	public SourceItem reportFor(RegulatoryNode target, RegulatoryNode source) {
 		List l = (List) report.get(target);
 		if (l == null) {
 			l = new LinkedList();
@@ -597,7 +597,7 @@ class Report {
 		return si;
 	}
 	
-	public List get(RegulatoryVertex target) {
+	public List get(RegulatoryNode target) {
 		return (List) report.get(target);
 	}
 }

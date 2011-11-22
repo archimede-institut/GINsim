@@ -8,7 +8,7 @@ import java.util.Vector;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
@@ -46,7 +46,7 @@ public class CircuitAlgo {
     private byte[][] t_constraint;
 
     // some context data
-    RegulatoryVertex target;
+    RegulatoryNode target;
     RegulatoryMultiEdge me;
     LogicalParameter gsi;
 
@@ -71,7 +71,7 @@ public class CircuitAlgo {
         t_maxValues = new int[t_parameters.length];
         fullPhaseSpace = 1;
         for (int i=0 ; i<t_maxValues.length ; i++) {
-        	t_maxValues[i] = ((RegulatoryVertex)nodeOrder.get(i)).getMaxValue()+1;
+        	t_maxValues[i] = ((RegulatoryNode)nodeOrder.get(i)).getMaxValue()+1;
         	fullPhaseSpace *= t_maxValues[i];
         }
         this.graph = graph;
@@ -116,7 +116,7 @@ public class CircuitAlgo {
             m_report.put(me, t_report);
         }
 
-        RegulatoryVertex source = me.getSource();
+        RegulatoryNode source = me.getSource();
         target = me.getTarget();
 
         byte min = me.getMin(ei.index);

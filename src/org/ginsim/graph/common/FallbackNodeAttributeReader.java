@@ -9,7 +9,7 @@ import org.ginsim.graph.backend.GraphViewBackend;
 /**
  * a generic vertexAttributeReader storing data into a dedicated hashmap
  */
-public class FallbackVertexAttributeReader extends VertexAttributesReader {
+public class FallbackNodeAttributeReader extends NodeAttributesReader {
 
 	private final GraphViewBackend backend;
     private Map dataMap = null;
@@ -20,7 +20,7 @@ public class FallbackVertexAttributeReader extends VertexAttributesReader {
     /**
      * @param map
      */
-    public FallbackVertexAttributeReader(GraphViewBackend backend, Map map) {
+    public FallbackNodeAttributeReader(GraphViewBackend backend, Map map) {
     	this.backend = backend;
         this.dataMap = map;
     }

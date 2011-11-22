@@ -28,7 +28,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
@@ -78,9 +78,9 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 	}
 	class ButtonListener implements ActionListener {
 		private DTreeElementButton node;
-		private RegulatoryVertex srcVertex, dstVertex;
+		private RegulatoryNode srcVertex, dstVertex;
 
-		public ButtonListener(RegulatoryVertex src, RegulatoryVertex dst) {
+		public ButtonListener(RegulatoryNode src, RegulatoryNode dst) {
 			super();
 			srcVertex = src;
 			dstVertex = dst;
@@ -207,19 +207,19 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 				Vector v;
 				SigKey sk;
 				String org, gene1, gene2;
-				RegulatoryVertex v1, v2, tmp;
+				RegulatoryNode v1, v2, tmp;
 				int ns, w;
 
 				table.clearSelection();
 				org = orgComboBox.getSelectedItem().toString();
 				for (int i = 0; i < root.getChildCount(); i++) {
 					node = root.getChild(i);
-					v1 = (RegulatoryVertex)node.getUserObject();
+					v1 = (RegulatoryNode)node.getUserObject();
 					gene1 = v1.getName();
 					if (gene1.equals("")) gene1 = v1.getId();
 					for (int j = 0; j < node.getChildCount(); j++)
 						if (node.getChild(j).isSelected()) {
-							v2 = (RegulatoryVertex)node.getChild(j).getUserObject();
+							v2 = (RegulatoryNode)node.getChild(j).getUserObject();
 							gene2 = v2.getName();
 							if (gene2.equals("")) gene2 = v2.getId();
 							sk = new SigKey(org, gene1, gene2);
@@ -288,12 +288,12 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 				org = orgComboBox.getSelectedItem().toString();
 				for (int i = 0; i < root.getChildCount(); i++) {
 					node = root.getChild(i);
-					gene1 = ((RegulatoryVertex)node.getUserObject()).getName().toLowerCase();
-					if (gene1.equals("")) gene1 = ((RegulatoryVertex)node.getUserObject()).getId().toLowerCase();
+					gene1 = ((RegulatoryNode)node.getUserObject()).getName().toLowerCase();
+					if (gene1.equals("")) gene1 = ((RegulatoryNode)node.getUserObject()).getId().toLowerCase();
 					for (int j = 0; j < node.getChildCount(); j++) {
 						if (node.getChild(j).isSelected()) {
-							gene2 = ((RegulatoryVertex)node.getChild(j).getUserObject()).getName().toLowerCase();
-							if (gene2.equals("")) gene2 = ((RegulatoryVertex)node.getChild(j).getUserObject()).getId().toLowerCase();
+							gene2 = ((RegulatoryNode)node.getChild(j).getUserObject()).getName().toLowerCase();
+							if (gene2.equals("")) gene2 = ((RegulatoryNode)node.getChild(j).getUserObject()).getId().toLowerCase();
 							sk = new SigKey(org,	gene1, gene2);
 							if (!signatures.containsKey(sk)) {
 								v = new Vector();
@@ -359,10 +359,10 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 		node = nb.getNode();
 
 		Iterator it = graph.getVertices().iterator();
-		RegulatoryVertex vertex;
+		RegulatoryNode vertex;
 
 		while (it.hasNext()) {
-			vertex = (RegulatoryVertex)it.next();
+			vertex = (RegulatoryNode)it.next();
 			tb.newNode(vertex.getId(), Color.black);
 			nb.setNode();
 			nb.getNode().setUserObject(vertex);
@@ -373,7 +373,7 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 					for (int k = 0; k < edge.getEdgeCount(); k++) {
 						tb.newNode(edge.getTarget().toString() + "   ", Color.black);
 						if (vertex != edge.getTarget())	{
-							al = new ButtonListener(vertex, (RegulatoryVertex)edge.getTarget());
+							al = new ButtonListener(vertex, (RegulatoryNode)edge.getTarget());
 							nb.addButton(show, null, al, null);
 							nb.setSelectable(false, this);
 						}
@@ -392,7 +392,7 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 				for (RegulatoryMultiEdge edge: edges) {
 					for (int k = 0; k < edge.getEdgeCount(); k++) {
 						tb.newNode(edge.getSource().toString() + "   ", Color.black);
-						al = new ButtonListener((RegulatoryVertex)edge.getSource(), vertex);
+						al = new ButtonListener((RegulatoryNode)edge.getSource(), vertex);
 						if (vertex != edge.getSource()) {
 							nb.addButton(show, null, al, null);
 							nb.setSelectable(false, this);

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 
 public class InitialStatesIterator implements Iterator {
@@ -109,7 +109,7 @@ final class Reg2DynStatesIterator implements Iterator {
         
 		line = new int[nodeOrder.size()][];
 		for (int i=0 ; i<nodeOrder.size() ; i++) {
-			RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(i);
+			RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
 			List v_val = (List)m_line.get(vertex);
 			if (v_val == null || v_val.size() == 0) {
 			    if (refLine != null && refLine[i] == -1) {

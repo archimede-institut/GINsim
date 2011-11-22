@@ -21,7 +21,7 @@ import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
@@ -62,8 +62,8 @@ public final class RegulatoryParser extends GsXMLHelper {
 
     private int vslevel = 0;
 
-    private RegulatoryVertex vertex = null;
-    private VertexAttributesReader vareader = null;
+    private RegulatoryNode vertex = null;
+    private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private RegulatoryEdge edge = null;
     private Annotation annotation = null;
@@ -203,7 +203,7 @@ public final class RegulatoryParser extends GsXMLHelper {
                     }
                     Iterator it = graph.getNodeOrder().iterator();
                     while (it.hasNext()) {
-                    	RegulatoryVertex vertex = (RegulatoryVertex)it.next();
+                    	RegulatoryNode vertex = (RegulatoryNode)it.next();
                     	vertex.getV_logicalParameters().cleanupDup();
                     }
 				}
@@ -409,7 +409,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     	}
 
     	for (int i=0 ; i<v_waitingInteractions.size() ; i+=3) {
-    		RegulatoryVertex vertex = (RegulatoryVertex)v_waitingInteractions.get(i);
+    		RegulatoryNode vertex = (RegulatoryNode)v_waitingInteractions.get(i);
     		LogicalParameter gsi = new LogicalParameter(Integer.parseInt( (String)v_waitingInteractions.get(i+1)));
     		String s_interactions = (String) v_waitingInteractions.get(i+2);
     		if (s_interactions != null) {
@@ -437,7 +437,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     		boolean ok = true;
     		if (map == null) {
 	    		for (int i=0 ; i<t_order.length ; i++) {
-	    			RegulatoryVertex vertex = (RegulatoryVertex)graph.getVertexByName(t_order[i]);
+	    			RegulatoryNode vertex = (RegulatoryNode)graph.getVertexByName(t_order[i]);
 	    			if (vertex == null) {
 	    				ok = false;
 	    				break;
@@ -447,7 +447,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     		} else {
 	    		for (int i=0 ; i<t_order.length ; i++) {
 	    		    if (map.containsKey(t_order[i])) {
-	    		        RegulatoryVertex vertex = (RegulatoryVertex)graph.getVertexByName(t_order[i]);
+	    		        RegulatoryNode vertex = (RegulatoryNode)graph.getVertexByName(t_order[i]);
 	    		        if (vertex == null) {
 	    		            ok = false;
 	    		            break;
@@ -466,11 +466,11 @@ public final class RegulatoryParser extends GsXMLHelper {
 
     private void parseBooleanFunctions() {
       Collection<RegulatoryMultiEdge> allowedEdges;
-      RegulatoryVertex vertex;
+      RegulatoryNode vertex;
       String value, exp;
       try {
         for (Enumeration enu_vertex = values.keys(); enu_vertex.hasMoreElements(); ) {
-          vertex = (RegulatoryVertex)enu_vertex.nextElement();
+          vertex = (RegulatoryNode)enu_vertex.nextElement();
           allowedEdges = graph.getIncomingEdges(vertex);
           if (allowedEdges.size() > 0) {
             for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
@@ -492,7 +492,7 @@ public final class RegulatoryParser extends GsXMLHelper {
       }
     }
 
-    public void addExpression(byte val, RegulatoryVertex vertex, String exp) {
+    public void addExpression(byte val, RegulatoryNode vertex, String exp) {
     	try {
         BooleanParser tbp = new BooleanParser( graph.getIncomingEdges(vertex));
         TreeInteractionsModel interactionList = vertex.getInteractionsModel();
@@ -513,7 +513,7 @@ public final class RegulatoryParser extends GsXMLHelper {
         ex.printStackTrace();
       }
     }
-    public void addParam(byte val, RegulatoryVertex vertex, String par) throws Exception {
+    public void addParam(byte val, RegulatoryNode vertex, String par) throws Exception {
       TreeInteractionsModel interactionList = vertex.getInteractionsModel();
 //      Set<GsDirectedEdge> l = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
       TreeParam param = interactionList.addEmptyParameter(val, vertex);
@@ -591,7 +591,7 @@ class InvalidFunctionNotificationAction implements NotificationMessageAction {
 		
 		Vector v = (Vector)data;
 		byte value = ((Short)v.elementAt(0)).byteValue();
-		RegulatoryVertex vertex = (RegulatoryVertex)v.elementAt(1);
+		RegulatoryNode vertex = (RegulatoryNode)v.elementAt(1);
 		String exp = (String)v.elementAt(2);
 		boolean ok = true;
 		switch (index) {

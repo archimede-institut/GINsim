@@ -20,7 +20,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -210,7 +210,7 @@ public class TBInfoProfilePanel extends TBPanel implements ChartProgressListener
         val += dataSet.getSeries(i).getY(xAxis.getLabelToDraw()).doubleValue();
       val /= sel.length;
       if (clientPanel != null) {
-        VertexAttributesReader vReader = clientPanel.getGraph().getVertexAttributeReader();
+        NodeAttributesReader vReader = clientPanel.getGraph().getVertexAttributeReader();
         Vector genes = clientPanel.getSelectedGenes();
         for (Iterator it = genes.iterator(); it.hasNext(); ) {
         	vReader.setVertex(it.next());

@@ -40,7 +40,7 @@ import fr.univmrs.tagc.common.xml.XMLize;
  *			which the gene tends when some incoming edges are actives </li>
  * </ul>
  */
-public class RegulatoryVertex implements ToolTipsable, XMLize {
+public class RegulatoryNode implements ToolTipsable, XMLize {
 
 	private byte 	maxValue = 1;
 	private boolean isInput = false;
@@ -63,7 +63,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 	 * Constructs an empty vector and set the baseValue (0) and the maxValue (1)
 	 * @param id
 	 */
-	public RegulatoryVertex(String id, RegulatoryGraph graph) {
+	public RegulatoryNode(String id, RegulatoryGraph graph) {
 		super();
 		this.id = id;
 		this.graph = graph;
@@ -73,7 +73,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 	/**
 	 * @param num number of the gene.
 	 */
-	public RegulatoryVertex(int num, RegulatoryGraph graph) {
+	public RegulatoryNode(int num, RegulatoryGraph graph) {
 		super();
 		this.id = "G"+num;
 		this.graph = graph;
@@ -239,7 +239,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
      * @param graph
      * @return an OMDDNode representing logical parameters associated to this vertex.
      */
-    public OMDDNode getTreeParameters(List<RegulatoryVertex> nodeOrder) {
+    public OMDDNode getTreeParameters(List<RegulatoryNode> nodeOrder) {
         OMDDNode root;
         if (isInput) {
             root = new OMDDNode();
@@ -315,7 +315,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
 	}
 
 	public Object clone() {
-		RegulatoryVertex clone = new RegulatoryVertex(id, graph);
+		RegulatoryNode clone = new RegulatoryNode(id, graph);
 		clone.maxValue = maxValue;
 		clone.name = name;
 		clone.setGsa((Annotation)gsa.clone());
@@ -362,7 +362,7 @@ public class RegulatoryVertex implements ToolTipsable, XMLize {
      * @param copyMap
      */
     public void cleanupInteractionForNewGraph(Map copyMap) {
-        RegulatoryVertex myClone = (RegulatoryVertex) copyMap.get(this);
+        RegulatoryNode myClone = (RegulatoryNode) copyMap.get(this);
         Iterator it = v_logicalParameters.iterator();
         while (it.hasNext()) {
             ((LogicalParameter)it.next()).applyNewGraph(myClone, copyMap);
@@ -411,11 +411,11 @@ class UpdateMaxBlockedAction implements NotificationMessageAction {
 
 	String[] t_action;
 
-	RegulatoryVertex vertex;
+	RegulatoryNode vertex;
 	byte max;
 	List l_fixable, l_conflict, l_parameters;
 
-	public UpdateMaxBlockedAction(RegulatoryVertex vertex,
+	public UpdateMaxBlockedAction(RegulatoryNode vertex,
 			byte max, List l_fixable, List l_conflict, List l_parameters) {
 		this.vertex = vertex;
 		this.max = max;

@@ -360,7 +360,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 	
 	@Override
-	public VertexAttributesReader getVertexAttributeReader() {
+	public NodeAttributesReader getVertexAttributeReader() {
 		return viewBackend.getVertexAttributeReader();
 	}
 	

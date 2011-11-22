@@ -13,7 +13,7 @@ import java.util.Vector;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
@@ -126,7 +126,7 @@ public class STG2HTG extends AlgoConnectivity {
 	
 	private void colorize() {
 		colors = ColorPalette.createColorPaletteByRange(sigma.size()+A.size());
-		VertexAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getVertexAttributeReader();
 		int color = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
 			HashSet key = (HashSet) it_sigma.next();
@@ -158,7 +158,7 @@ public class STG2HTG extends AlgoConnectivity {
 	private void createReducedGraph() {
 		
         reducedGraph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, graph);
-        VertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
+        NodeAttributesReader vreader = reducedGraph.getVertexAttributeReader();
         int i = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
 			HashSet key = (HashSet) it_sigma.next();
@@ -168,7 +168,7 @@ public class STG2HTG extends AlgoConnectivity {
 				content.addAll(scc.getContent());
 			}
 			DynamicNode s = (DynamicNode) ((NodeReducedData)content.get(0)).getContent().get(0);
-			ComponentVertex comp = new ComponentVertex("TT-"+s.getPatternString(this.graph), content, key);
+			ComponentNode comp = new ComponentNode("TT-"+s.getPatternString(this.graph), content, key);
 			System.out.println("TT-"+s.getPatternString(this.graph));
 			for (Iterator it = ((NodeReducedData)content.get(0)).getContent().iterator(); it.hasNext();) {
 				s = (DynamicNode) it.next();
@@ -184,12 +184,12 @@ public class STG2HTG extends AlgoConnectivity {
 		for (Iterator it_sigma = A.iterator(); it_sigma.hasNext();) {
 			NodeReducedData scc = (NodeReducedData) it_sigma.next();
 			DynamicNode s = (DynamicNode) scc.getContent().get(0);
-			ComponentVertex comp;
-			if ( scc.isTrivial() ) comp = new ComponentVertex(scc, null);
+			ComponentNode comp;
+			if ( scc.isTrivial() ) comp = new ComponentNode(scc, null);
 			else {
 				HashSet hs = new HashSet();
 				hs.add(scc);
-				comp = new ComponentVertex(scc, hs, "CC-"+s.getPatternString(this.graph));
+				comp = new ComponentNode(scc, hs, "CC-"+s.getPatternString(this.graph));
 				System.out.println("CC-"+s.getPatternString(this.graph));
 				for (Iterator it = scc.getContent().iterator(); it.hasNext();) {
 					s = (DynamicNode) it.next();

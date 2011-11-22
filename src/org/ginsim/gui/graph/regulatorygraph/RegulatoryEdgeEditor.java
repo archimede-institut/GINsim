@@ -13,7 +13,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 
@@ -236,7 +236,7 @@ class AddEdgeNotificationAction implements NotificationMessageAction {
 
 	public boolean perform( NotificationMessageHolder graph, Object data, int index) {
 		if (edgeList.medge == data) {
-			RegulatoryVertex vertex = ((RegulatoryMultiEdge)data).getSource();
+			RegulatoryNode vertex = ((RegulatoryMultiEdge)data).getSource();
 			vertex.setMaxValue((byte)(vertex.getMaxValue()+1), (RegulatoryGraph)graph);
 			edgeList.add();
 			return true;

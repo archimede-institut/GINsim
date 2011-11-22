@@ -10,7 +10,7 @@ import java.util.Vector;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
 import org.ginsim.gui.service.tool.connectivity.ConnectivityFrame;
@@ -127,7 +127,7 @@ public class AlgoConnectivity extends Thread {
                 frame.setProgressText( Translator.getString("STR_connectivity_nbcompo") + " : "+nbCompo+" ; "+Translator.getString("STR_connectivity_finalize"));
             }
             if (mode == MODE_FULL) {
-                VertexAttributesReader vreader = reducedGraph.getVertexAttributeReader();
+                NodeAttributesReader vreader = reducedGraph.getVertexAttributeReader();
                 if (nbCompo > 1) {
     	        	createSCCGraphByOutgoingEdges(nbCompo, component, reducedGraph, vreader);
                 }           	
@@ -145,7 +145,7 @@ public class AlgoConnectivity extends Thread {
         return reducedGraph;
    }
 
-	public void createSCCGraphByOutgoingEdges(int nbCompo, List component, Graph graph, VertexAttributesReader vreader) throws InterruptedException {
+	public void createSCCGraphByOutgoingEdges(int nbCompo, List component, Graph graph, NodeAttributesReader vreader) throws InterruptedException {
 		//Complexity = #nodes + #edges + #component => O(3n+1)
 		if (nbCompo == 1) {
             return;																				//The graph is already created, no edges to add.
@@ -201,7 +201,7 @@ public class AlgoConnectivity extends Thread {
             NodeReducedData currentSCCNode = (NodeReducedData)component.get(scc_i);
             if (graph.getOutgoingEdges(currentSCCNode).size() == 0) {												//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
             	vreader.setVertex(currentSCCNode);
-                vreader.setShape(VertexAttributesReader.SHAPE_ELLIPSE);
+                vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
             }
         }
 	}

@@ -7,7 +7,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
-import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalVertexParameterPanel;
+import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNodeParameterPanel;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
@@ -75,7 +75,7 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<Hier
 
 	@Override
 	public GUIEditor<HierarchicalNode> getNodeEditionPanel( HierarchicalTransitionGraph graph) {
-		return new HierarchicalVertexParameterPanel(graph);
+		return new HierarchicalNodeParameterPanel(graph);
 	}
 
 	@Override

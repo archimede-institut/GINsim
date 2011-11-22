@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
@@ -33,7 +33,7 @@ public class SimulationParametersParser extends XMLHelper {
     InitialStateList initList = null;
     InitialStateList inputList = null;
     RegulatoryGraph graph;
-    List<RegulatoryVertex> nodeOrder;
+    List<RegulatoryNode> nodeOrder;
     String[] t_order;
     int pos = POS_OUT;
     int posback = POS_OUT;
@@ -236,7 +236,7 @@ public class SimulationParametersParser extends XMLHelper {
             	pclass_fine = true;
                 String s_vertex = t_content[i].substring(0, t_content[i].length()-2);
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
-                    RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(j);
+                    RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(j);
                     if (vertex.getId().equals(s_vertex)) {
                         Object oc = pcdef.m_elt.get(vertex);
                         Object[] t;
@@ -260,7 +260,7 @@ public class SimulationParametersParser extends XMLHelper {
             } else { // not fine grained
                 // find the corresponding gene
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
-                    RegulatoryVertex vertex = (RegulatoryVertex)nodeOrder.get(j);
+                    RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(j);
                     if (vertex.getId().equals(t_content[i])) {
                     	pcdef.m_elt.put(vertex, pc);
                         break;
@@ -275,7 +275,7 @@ public class SimulationParametersParser extends XMLHelper {
     private void closeClass() {
         // some consistency checking
         if (pclass_fine) {
-        	for (RegulatoryVertex vertex: nodeOrder) {
+        	for (RegulatoryNode vertex: nodeOrder) {
         		Object oc = pcdef.m_elt.get(vertex);
         		Object[] t;
         		if (oc instanceof Reg2dynPriorityClass) {

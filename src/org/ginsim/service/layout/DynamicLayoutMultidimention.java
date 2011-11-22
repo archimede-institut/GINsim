@@ -9,10 +9,10 @@ import java.util.List;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 
 public class DynamicLayoutMultidimention {
@@ -25,7 +25,7 @@ public class DynamicLayoutMultidimention {
     private int pivot;
    
 	private EdgeAttributesReader ereader;
-    private VertexAttributesReader vreader;
+    private NodeAttributesReader vreader;
 	
     private final Color[] colorPalette;
 	private final DynamicGraph graph;
@@ -262,7 +262,7 @@ public class DynamicLayoutMultidimention {
     	byte[] maxValues = new byte[nodeOrder.size()];
     	int i = 0;
     	for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-    		RegulatoryVertex v = (RegulatoryVertex) it.next();
+    		RegulatoryNode v = (RegulatoryNode) it.next();
     		maxValues[newNodeOrder[i++]] = (byte) (v.getMaxValue()+1);
     	}			
     	return maxValues;

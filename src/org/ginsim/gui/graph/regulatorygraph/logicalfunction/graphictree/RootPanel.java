@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 
@@ -40,7 +40,7 @@ public class RootPanel extends BooleanFunctionTreePanel implements ActionListene
     add(label, BorderLayout.CENTER);
   }
   public void actionPerformed(ActionEvent e) {
-    RegulatoryVertex vertex;
+    RegulatoryNode vertex;
     boolean ok = true;
     byte i;
 

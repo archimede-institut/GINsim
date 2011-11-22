@@ -13,7 +13,7 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.exception.NotificationMessageHolder;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -189,7 +189,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
             Object target = edge.getTarget();
             dynGas.ensureStoreEdge(edge);
             dynGas.ensureStoreVertex(target);
-            dynGas.vreader.setBorder(VertexAttributesReader.BORDER_STRONG);
+            dynGas.vreader.setBorder(NodeAttributesReader.BORDER_STRONG);
             dynGas.vreader.setForegroundColor(Color.RED);
             dynGas.vreader.refresh();
             dynGas.ereader.setLineColor(Color.GREEN);

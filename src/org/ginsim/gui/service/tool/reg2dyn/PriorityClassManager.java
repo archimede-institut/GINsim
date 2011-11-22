@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
@@ -13,11 +13,11 @@ public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinit
 
 	public static final String SYNCHRONOUS = "synchronous", ASYNCHRONOUS = "asynchronous"; 
 	
-	List<RegulatoryVertex> nodeOrder;
+	List<RegulatoryNode> nodeOrder;
 	public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
 	
-	private List<RegulatoryVertex> filterInputVariables(List<RegulatoryVertex> nodeOrder) {
-		List<RegulatoryVertex> alFiltered = new ArrayList<RegulatoryVertex>();
+	private List<RegulatoryNode> filterInputVariables(List<RegulatoryNode> nodeOrder) {
+		List<RegulatoryNode> alFiltered = new ArrayList<RegulatoryNode>();
 		for (int i = 0; i < nodeOrder.size(); i++) {
 			if (!nodeOrder.get(i).isInput())
 				alFiltered.add(nodeOrder.get(i));

@@ -9,13 +9,13 @@ import java.util.Map;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 
 
 public class GraphicalAttributesStore {
 
 	public EdgeAttributesReader ereader;
-	public VertexAttributesReader vreader;
+	public NodeAttributesReader vreader;
 
 	Map oldColors = new HashMap();
 	Graph graph;
@@ -88,7 +88,7 @@ class StoreColor {
     /**
      * @param vreader
      */
-    protected StoreColor (VertexAttributesReader vreader) {
+    protected StoreColor (NodeAttributesReader vreader) {
         background = vreader.getBackgroundColor();
         foreGround = vreader.getForegroundColor();
         border = vreader.getBorder();
@@ -106,7 +106,7 @@ class StoreColor {
         border = 0;
     }
     
-    protected void restore (VertexAttributesReader vreader) {
+    protected void restore (NodeAttributesReader vreader) {
         vreader.setBackgroundColor(background);
         vreader.setForegroundColor(foreGround);
         vreader.setBorder(border);

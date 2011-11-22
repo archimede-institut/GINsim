@@ -29,7 +29,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.tree.Tree;
 import org.ginsim.graph.tree.TreeParser;
@@ -232,7 +232,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
     			+ "    ct = circuittest.CircuitTester(node_order=[");
         Iterator it = no.iterator();
         while (it.hasNext()) {
-            s.append("\""+((RegulatoryVertex)it.next()).getId()+"\",");
+            s.append("\""+((RegulatoryNode)it.next()).getId()+"\",");
         }
     	s.append("])\n");
     	it = l_func.iterator();
@@ -315,7 +315,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
                 config.t_constraint = new byte[graph.getNodeOrderSize()][3];
                 for (int i = 0; i < config.t_status.length; i++) {
                     config.t_status[i] = 3;
-                    byte max = ((RegulatoryVertex) graph.getNodeOrder().get(
+                    byte max = ((RegulatoryNode) graph.getNodeOrder().get(
                             i)).getMaxValue();
                     config.t_constraint[i][0] = 0;
                     config.t_constraint[i][1] = max;
@@ -419,14 +419,14 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
                                                        // circuits
             	if (config.minMust < 2) {
 	                for (int i = 0; i < graph.getNodeOrderSize(); i++) {
-	                    RegulatoryVertex vertex = (RegulatoryVertex) graph
+	                    RegulatoryNode vertex = (RegulatoryNode) graph
 	                            .getNodeOrder().get(i);
 	                    if (config.minMust == 1 && config.t_status[i] == 1 ||
 	                        config.minMust == 0 && config.t_status[i] == 3) {
 	                    	RegulatoryMultiEdge edge = graph.getEdge(vertex, vertex);
 		                    if (edge != null) {
 		                        CircuitDescr circuit = new CircuitDescr();
-		                        circuit.t_vertex = new RegulatoryVertex[] { vertex };
+		                        circuit.t_vertex = new RegulatoryNode[] { vertex };
 		                        circuit.t_me = new RegulatoryMultiEdge[] { edge };
 		                        v_circuit.add(new CircuitDescrInTree(circuit, true, CircuitDescr.ALL));
 		                    }
@@ -536,21 +536,21 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
                     && !t_history[cur]) {
                 CircuitDescr circuit = new CircuitDescr();
                 v_circuit.add(new CircuitDescrInTree(circuit, true, CircuitDescr.ALL));
-                circuit.t_vertex = new RegulatoryVertex[pos - t_visited[cur]
+                circuit.t_vertex = new RegulatoryNode[pos - t_visited[cur]
                         + 1];
                 int p = 0;
                 int a = t_visited[cur];
-                circuit.t_vertex[p++] = (RegulatoryVertex) v_cc
+                circuit.t_vertex[p++] = (RegulatoryNode) v_cc
                         .get(t_path[a][0]);
                 a++;
                 for (; a <= pos; a++) {
-                    circuit.t_vertex[p++] = (RegulatoryVertex) v_cc
+                    circuit.t_vertex[p++] = (RegulatoryNode) v_cc
                             .get(t_path[a][0]);
                 }
 
                 circuit.t_me = new RegulatoryMultiEdge[circuit.t_vertex.length];
-                RegulatoryVertex source = circuit.t_vertex[0];
-                RegulatoryVertex target = null;
+                RegulatoryNode source = circuit.t_vertex[0];
+                RegulatoryNode target = null;
                 for (int i = 1; i < circuit.t_vertex.length; i++) {
                     target = circuit.t_vertex[i];
                     circuit.t_me[i - 1] = graph.getEdge(source, target);

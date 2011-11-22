@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
+import org.ginsim.graph.common.NodeAttributesReader;
 import org.xml.sax.Attributes;
 
 import fr.univmrs.tagc.common.Tools;
@@ -29,7 +29,7 @@ public class GinmlHelper {
      * @param attributes
      * @return 1 if byte VS, 2 otherwise
      */
-	public static int applyNodeVisualSettings(VertexAttributesReader vareader, String qName, Attributes attributes) {
+	public static int applyNodeVisualSettings(NodeAttributesReader vareader, String qName, Attributes attributes) {
         if (qName.equals("point")) {
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
             return 1;
@@ -156,7 +156,7 @@ public class GinmlHelper {
 	 * @param vReader
 	 * @return the corresponding ginml String
 	 */
-	public static String getShortNodeVS(VertexAttributesReader vReader) {
+	public static String getShortNodeVS(NodeAttributesReader vReader) {
         String svs = "\t\t\t<nodevisualsetting>\n";
         svs += "\t\t\t\t<point x=\""+vReader.getX()+"\" y=\""+vReader.getY()+"\"/>\n";
         svs += "\t\t\t</nodevisualsetting>\n";
@@ -167,10 +167,10 @@ public class GinmlHelper {
 	 * @param vReader
 	 * @return the corresponding ginml String
 	 */
-	public static String getFullNodeVS(VertexAttributesReader vReader) {
+	public static String getFullNodeVS(NodeAttributesReader vReader) {
         String svs = "\t\t\t<nodevisualsetting>\n";
         switch (vReader.getShape()) {
-        	case VertexAttributesReader.SHAPE_RECTANGLE:
+        	case NodeAttributesReader.SHAPE_RECTANGLE:
         		svs += "\t\t\t\t<rect x=\""+vReader.getX()+
 					"\" y=\""+vReader.getY()+
 					"\" width=\""+vReader.getWidth()+
@@ -179,7 +179,7 @@ public class GinmlHelper {
 					"\" foregroundColor=\"#"+Tools.getColorCode(vReader.getForegroundColor()) +
 					"\"/>\n";
         		break;
-            case VertexAttributesReader.SHAPE_ELLIPSE:
+            case NodeAttributesReader.SHAPE_ELLIPSE:
         		svs += "\t\t\t\t<ellipse x=\""+vReader.getX()+
 				"\" y=\""+vReader.getY()+
 				"\" width=\""+vReader.getWidth()+

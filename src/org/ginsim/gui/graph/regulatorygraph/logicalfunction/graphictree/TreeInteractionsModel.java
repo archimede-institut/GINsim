@@ -17,7 +17,7 @@ import org.ginsim.exception.NotificationMessage;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionList;
@@ -35,7 +35,7 @@ import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionTreeP
 
 public class TreeInteractionsModel implements TreeModel {
 	//the current selected node
-	private RegulatoryVertex node;
+	private RegulatoryNode node;
 	private RegulatoryGraph graph;
 	private TreeString root;
 
@@ -57,7 +57,7 @@ public class TreeInteractionsModel implements TreeModel {
 		root = new TreeString(null, "Function list");
 		root.setProperty("add", new Boolean(true));
 	}
-	public void setNode(RegulatoryVertex no) {
+	public void setNode(RegulatoryNode no) {
 		node = no;
 		for (int i = 0; i < root.getChildCount(); i++) {
 			TreeValue val = (TreeValue)root.getChild(i);
@@ -175,7 +175,7 @@ public class TreeInteractionsModel implements TreeModel {
 		return null;
 	}
 
-	public void addExpression(byte val, RegulatoryVertex currentVertex, BooleanParser parser) throws Exception {
+	public void addExpression(byte val, RegulatoryNode currentVertex, BooleanParser parser) throws Exception {
 
 		TBooleanTreeNode root = parser.getRoot();
 		LogicalFunctionList functionList = (LogicalFunctionList)parser.eval();
@@ -226,7 +226,7 @@ public class TreeInteractionsModel implements TreeModel {
 		}
 		return n;
 	}
-	public void addExpression(JTree tree, byte val, RegulatoryVertex currentVertex, String expression) throws Exception {
+	public void addExpression(JTree tree, byte val, RegulatoryNode currentVertex, String expression) throws Exception {
 		BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(currentVertex), isAutoAddEnabled());
 		if (!tbp.compile(expression, graph, currentVertex))
 			graph.addNotificationMessage(new NotificationMessage(graph, "invalid formula",
@@ -243,13 +243,13 @@ public class TreeInteractionsModel implements TreeModel {
 		if (isBasalValueDefined()) s = s + ", basal value defined";
 		root.setString(s);
 	}
-	public TreeExpression addEmptyExpression(byte val, RegulatoryVertex currentVertex) throws Exception {
+	public TreeExpression addEmptyExpression(byte val, RegulatoryNode currentVertex) throws Exception {
 		setNode(currentVertex);
 		addValue(val);
 		currentVertex.setInteractionsModel(this);
 		return addExpression(val, (TBooleanTreeNode)null);
 	}
-	public TreeParam addEmptyParameter(byte val, RegulatoryVertex currentVertex) throws Exception {
+	public TreeParam addEmptyParameter(byte val, RegulatoryNode currentVertex) throws Exception {
 		TreeParam param = null;
 
 		setNode(currentVertex);
@@ -443,7 +443,7 @@ public class TreeInteractionsModel implements TreeModel {
 		}
 		return new TreePath(path);
 	}
-	public RegulatoryVertex getVertex() {
+	public RegulatoryNode getVertex() {
 		return node;
 	}
 	public boolean isMaxCompatible(int max) {

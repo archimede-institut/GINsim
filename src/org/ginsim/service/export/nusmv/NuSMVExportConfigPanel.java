@@ -21,7 +21,7 @@ import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
@@ -132,7 +132,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	 * 
 	 * @param nodeOrder
 	 */
-	public void refresh(Vector<RegulatoryVertex> nodeOrder) {
+	public void refresh(Vector<RegulatoryNode> nodeOrder) {
 		model.refresh(nodeOrder);
 	}
 
@@ -159,8 +159,8 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 class GsNuSMVConfigModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 864660594916225977L;
-	private Vector<RegulatoryVertex> nodeOrder;
-	Map<RegulatoryVertex, Integer> m_initstates;
+	private Vector<RegulatoryNode> nodeOrder;
+	Map<RegulatoryNode, Integer> m_initstates;
 
 	/**
 	 * @param nodeOrder
@@ -168,8 +168,8 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param t_max
 	 * @param initstates
 	 */
-	public GsNuSMVConfigModel(Vector<RegulatoryVertex> nodeOrder,
-			Map<RegulatoryVertex, Integer> m_initstates) {
+	public GsNuSMVConfigModel(Vector<RegulatoryNode> nodeOrder,
+			Map<RegulatoryNode, Integer> m_initstates) {
 		this.nodeOrder = nodeOrder;
 		this.m_initstates = m_initstates;
 	}
@@ -283,7 +283,7 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 			return;
 		}
 		if (val < 0
-				|| val > ((RegulatoryVertex) nodeOrder.get(rowIndex))
+				|| val > ((RegulatoryNode) nodeOrder.get(rowIndex))
 						.getMaxValue()) {
 			return;
 		}
@@ -304,7 +304,7 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	 * @param minBlock
 	 * @param maxBlock
 	 */
-	public void refresh(Vector<RegulatoryVertex> nodeOrder) {
+	public void refresh(Vector<RegulatoryNode> nodeOrder) {
 		this.nodeOrder = nodeOrder;
 		fireTableStructureChanged();
 	}

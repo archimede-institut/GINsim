@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
@@ -52,7 +52,7 @@ public class InteractionPanel extends AbstractParameterPanel
 
 	private static final long serialVersionUID = 8583991719735516132L;
 
-	private RegulatoryVertex currentVertex = null;
+	private RegulatoryNode currentVertex = null;
 
 	protected JTable jTable = null;
 	private JScrollPane jScrollPane = null;
@@ -201,8 +201,8 @@ public class InteractionPanel extends AbstractParameterPanel
 			  if (currentVertex != null) {
             // apply pending changes
         }
-        if (obj != null && obj instanceof RegulatoryVertex) {
-            currentVertex = (RegulatoryVertex)obj;
+        if (obj != null && obj instanceof RegulatoryNode) {
+            currentVertex = (RegulatoryNode)obj;
 						edgeList.setEdge(graph.getIncomingEdges(currentVertex));
             interactionList.setNode(currentVertex);
             cellRenderer.setVertex(currentVertex);
@@ -595,14 +595,14 @@ class LogicalParameterCellRenderer extends DefaultTableCellRenderer {
 
 	private TableInteractionsModel model;
 	private RegulatoryGraph graph;
-	private RegulatoryVertex	vertex;
+	private RegulatoryNode	vertex;
 
 	public LogicalParameterCellRenderer(RegulatoryGraph graph, TableInteractionsModel model) {
 		this.model = model;
 		this.graph = graph;
 	}
 
-	public void setVertex(RegulatoryVertex vertex) {
+	public void setVertex(RegulatoryNode vertex) {
 		this.vertex = vertex;
 	}
 

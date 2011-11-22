@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
 
@@ -76,7 +76,7 @@ public class PetriNetExportINA extends BasePetriNetExport {
         for (int i=0 ; i<len ; i++) {
             String vertex = v_no.get(i).toString();
             if (t_transition[i] != null) {
-                int maxvalue = ((RegulatoryVertex)v_no.get(i)).getMaxValue();
+                int maxvalue = ((RegulatoryNode)v_no.get(i)).getMaxValue();
                 List v_trst = t_transition[i];
                 for (int j=0 ; j<v_trst.size() ; j++) {
                     TransitionData td = (TransitionData)v_trst.get(j);
@@ -247,7 +247,7 @@ public class PetriNetExportINA extends BasePetriNetExport {
         // places data
         out.write("@\nplace nr.  name \t capacity time\n");
         for (int i=0 ; i<t_tree.length ; i++) {
-        	RegulatoryVertex vertex = (RegulatoryVertex)v_no.get(i);
+        	RegulatoryNode vertex = (RegulatoryNode)v_no.get(i);
         	String s = vertex + " \t "+vertex.getMaxValue()+ " 0\n";
             out.write(2*i+1+":  "+s);
             out.write(2*i+2+": -"+s);

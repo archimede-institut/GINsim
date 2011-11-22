@@ -34,7 +34,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryVertex;
+import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
@@ -151,7 +151,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
   }
 
   public void setEditedItem(Object obj) {
-    RegulatoryVertex vertex = (RegulatoryVertex) obj;
+    RegulatoryNode vertex = (RegulatoryNode) obj;
     interactionList = vertex.getInteractionsModel();
     interactionList.setNode(vertex);
     interactionList.setView(this);
