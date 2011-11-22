@@ -66,7 +66,7 @@ public class DynamicalHierarchicalSimplifierFrame extends StackDialog {
     public void simplify_through_delete(DynamicalHierarchicalGraph graph) {
 
 		Set vertexSet = new HashSet(); //cause can't remove and iterate on the same structure.
-		for (Iterator it = graph.getVertices().iterator(); it.hasNext();) {
+		for (Iterator it = graph.getNodes().iterator(); it.hasNext();) {
 			vertexSet.add(it.next());
 		}
 		for (Iterator it = vertexSet.iterator(); it.hasNext();) {

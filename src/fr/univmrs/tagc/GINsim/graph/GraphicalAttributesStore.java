@@ -28,7 +28,7 @@ public class GraphicalAttributesStore {
 	}
 	
 	public void storeAll() {
-        Iterator it = graph.getVertices().iterator();
+        Iterator it = graph.getNodes().iterator();
         while (it.hasNext()) {
             Object vertex = it.next();
             vreader.setNode(vertex);

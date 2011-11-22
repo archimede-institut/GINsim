@@ -210,37 +210,40 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 		childsCount = cc;
 	}
 	
-
-	private Vector searchNodes(String regexp) {
-		Vector v = new Vector();
-		
-		StringBuffer s = new StringBuffer();
-		for (int i = 0; i < regexp.length(); i++) {
-			char c = regexp.charAt(i);
-			if (c == '\\') {
-				s.append(regexp.charAt(++i));
-			} else if (c == '*') {
-				s.append("[0-9\\*]");
-			} else if (c == '0' || (c >= '1' && c <= '9')){
-				s.append("["+c+"\\*]");
-			} else if (c == ' ' || c == '\t') {
-				//pass
-			} else {
-				s.append(c);
-			}
-		}
-		Pattern pattern = Pattern.compile(s.toString(), Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
-		Matcher matcher = pattern.matcher("");
-		
-		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
-			DynamicalHierarchicalNode vertex = (DynamicalHierarchicalNode) it.next();
-			matcher.reset(vertex.statesToString(this.getNodeOrderSize()));
-			if (matcher.find()) {
-				v.add(vertex);
-			}
-		}
-		return v;
-	}
+	// TODO : REFACTORING ACTION
+	// TODO : The renaming of "Vertices" to "Nodes" has generate a collision between this method (originally named searchNodes)
+	// and the one in AbstractGraph, originaly named searchVertices. However, this method seems to be unused (private and no
+	 // local call) : do we have to keep it?
+//	private Vector searchNodes(String regexp) {
+//		Vector v = new Vector();
+//		
+//		StringBuffer s = new StringBuffer();
+//		for (int i = 0; i < regexp.length(); i++) {
+//			char c = regexp.charAt(i);
+//			if (c == '\\') {
+//				s.append(regexp.charAt(++i));
+//			} else if (c == '*') {
+//				s.append("[0-9\\*]");
+//			} else if (c == '0' || (c >= '1' && c <= '9')){
+//				s.append("["+c+"\\*]");
+//			} else if (c == ' ' || c == '\t') {
+//				//pass
+//			} else {
+//				s.append(c);
+//			}
+//		}
+//		Pattern pattern = Pattern.compile(s.toString(), Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
+//		Matcher matcher = pattern.matcher("");
+//		
+//		for (Iterator it = this.getNodes().iterator(); it.hasNext();) {
+//			DynamicalHierarchicalNode vertex = (DynamicalHierarchicalNode) it.next();
+//			matcher.reset(vertex.statesToString(this.getNodeOrderSize()));
+//			if (matcher.find()) {
+//				v.add(vertex);
+//			}
+//		}
+//		return v;
+//	}
 	
 	/**
 	 * Return the node order as a List of NodeInfo
@@ -282,7 +285,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 
 
 	private DynamicalHierarchicalNode getNodeForState(byte[] state) {
-		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
+		for (Iterator it = this.getNodes().iterator(); it.hasNext();) {
 			DynamicalHierarchicalNode v = (DynamicalHierarchicalNode) it.next();
 			if (v.contains(state)) return v;
 		}
@@ -297,7 +300,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	@Override
 	public DynamicalHierarchicalNode getNodeById(String sid) {
 		int id = Integer.parseInt(sid.substring(1));
-		for (Iterator it = this.getVertices().iterator(); it.hasNext();) {
+		for (Iterator it = this.getNodes().iterator(); it.hasNext();) {
 			DynamicalHierarchicalNode v = (DynamicalHierarchicalNode) it.next();
 			if (v.getUniqueId() == id) return v;
 		}

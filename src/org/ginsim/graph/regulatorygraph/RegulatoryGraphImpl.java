@@ -313,7 +313,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      */
     @Override
     public boolean idExists(String newId) {
-        Iterator it = getVertices().iterator();
+        Iterator it = getNodes().iterator();
         while (it.hasNext()) {
             if (newId.equals(((RegulatoryNode)it.next()).getId())) {
                 return true;
@@ -501,7 +501,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         }
         List ret = new ArrayList();
         HashMap copyMap = new HashMap();
-        Iterator<RegulatoryNode> it = otherGraph.getVertices().iterator();
+        Iterator<RegulatoryNode> it = otherGraph.getNodes().iterator();
         NodeAttributesReader vReader = getNodeAttributeReader();
         NodeAttributesReader cvreader = otherGraph.getNodeAttributeReader();
         while (it.hasNext()) {
@@ -531,7 +531,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
             ret.add(edge);
         }
 
-        it = otherGraph.getVertices().iterator();
+        it = otherGraph.getNodes().iterator();
         while (it.hasNext()) {
             it.next().cleanupInteractionForNewGraph(copyMap);
         }

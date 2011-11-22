@@ -41,7 +41,7 @@ public class GraphvizExportService implements Service {
 	        
 			// Create external keys for nodes
 	        if (vertices == null) {
-	        	vertices = graph.getVertices();
+	        	vertices = graph.getNodes();
 	        }
 
             // Process Nodes

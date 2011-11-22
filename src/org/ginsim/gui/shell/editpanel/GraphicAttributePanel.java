@@ -940,7 +940,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			refreshSize();
 			Collection<?> vertices = v_selection;
 			if (v_selection == null) {
-				vertices = graph.getVertices();
+				vertices = graph.getNodes();
 			}
 			for (Object vertex: vertices) {
 				vReader.setNode(vertex);

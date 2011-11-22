@@ -44,7 +44,7 @@ public class DynamicLayoutMultidimention {
 
 	public void runLayout() throws GsException{
         //Check if it is a DynamicGraph
-		Iterator it = graph.getVertices().iterator();
+		Iterator it = graph.getNodes().iterator();
 		Object v = it.next();
 	    if (v == null || !(v instanceof DynamicNode)) {
 			System.out.println("wrong type of graph for this layout");

@@ -100,7 +100,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
     	// TODO: use cache from the graph itself?
     	
     	List<byte[]> stables = new ArrayList<byte[]>();
-        for (DynamicNode node: graph.getVertices()) {
+        for (DynamicNode node: graph.getNodes()) {
             if (node.isStable()) {
                 stables.add(node.state);
             }

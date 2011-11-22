@@ -60,20 +60,20 @@ public abstract class GraphComparator<G extends Graph> {
 	
 	/**
 	 * Build the basic topology for the diff graph (vertex+edges) by calling others functions
-	 *  1) addVerticesFromGraph on both graphs
-	 *  2) setVerticesColor
+	 *  1) addNodesFromGraph on both graphs
+	 *  2) setNodesColor
 	 *  3) addEdgesFromGraph on each node on both graphs
 	 */
 	public void buildDiffGraph() {
 		log("Comparing graphs : \n");
 		setDiffGraphName();
 		log("\n");
-		addVerticesFromGraph(g1m);
-		addVerticesFromGraph(g2m);
+		addNodesFromGraph(g1m);
+		addNodesFromGraph(g2m);
 		
 		g1gas = new GraphicalAttributesStore(g1m);
 		g2gas = new GraphicalAttributesStore(g2m);
-		setVerticesColor();
+		setNodesColor();
 		log("\n");
 		
 		EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
@@ -168,12 +168,12 @@ public abstract class GraphComparator<G extends Graph> {
 	 * The value should be null for the moment.
 	 * @param gm the graph manager for the graph containing the vertices.
 	 */
-	abstract protected void addVerticesFromGraph( Graph gm);
+	abstract protected void addNodesFromGraph( Graph gm);
 
 	 /**
 	 * Set the value for the vertex to the right color in the verticeMap.
 	 */
-	abstract protected void setVerticesColor() ;
+	abstract protected void setNodesColor() ;
 	
 	/**
 	 * Add the edges for one vertex from one graph to the merge graph.

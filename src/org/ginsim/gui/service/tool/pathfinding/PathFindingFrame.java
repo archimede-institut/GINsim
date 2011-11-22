@@ -241,7 +241,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		if (graph instanceof RegulatoryGraph) {
 			setProgressMax(graph.getNodeOrderSize());
 		} else {
-			setProgressMax(graph.getVertices().size());
+			setProgressMax(graph.getNodes().size());
 		}
 		if (startTextField.getText().length() == 0) {
 			Tools.error(Translator.getString("STR_pathFinding_start")+" "+Translator.getString("STR_isempty"), this);
@@ -327,7 +327,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	 */
 	private Object getNode(JTextField textField) {
 		
-		Vector foundNodes = graph.searchVertices( textField.getText());
+		Vector foundNodes = graph.searchNodes( textField.getText());
 		if (foundNodes == null) {
 			Tools.error(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
 			return null;
@@ -355,7 +355,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			selector.initCache(path);
 		
 			cs.applySelectorOnEdges(selector, graph.getEdges(), graph.getEdgeAttributeReader());
-			cs.applySelectorOnNodes(selector, graph.getVertices(), graph.getNodeAttributeReader());
+			cs.applySelectorOnNodes(selector, graph.getNodes(), graph.getNodeAttributeReader());
 			colorizeButton.setText(Translator.getString("STR_undo_colorize"));
 			isColorized = true;
 		}

@@ -358,7 +358,7 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 		tb.clearTree(table);
 		node = nb.getNode();
 
-		Iterator it = graph.getVertices().iterator();
+		Iterator it = graph.getNodes().iterator();
 		RegulatoryNode vertex;
 
 		while (it.hasNext()) {

@@ -252,7 +252,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 */
     // TODO Move to GUI side
 	public void saveSubGraph() throws GsException {
-	    GsGraph subGraph = getSubGraph( mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges() );
+	    GsGraph subGraph = getSubGraph( mainFrame.getSelectedNodes(), mainFrame.getSelectedEdges() );
 	    if (subGraph != null) {
 	        subGraph.saveAs();
 	        subGraph.saveMode = saveMode;
@@ -958,7 +958,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 			return;
 		}
 		List v_edges = new Vector();
-		List v_vertex = mainFrame.getSelectedVertices();
+		List v_vertex = mainFrame.getSelectedNodes();
         if (v_vertex == null) {
             // stop here if nothing to copy: avoid loosing copied graph for nothing...
             return;

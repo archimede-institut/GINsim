@@ -67,7 +67,7 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	}
 
 	@Override
-	public Collection<V> getVertices() {
+	public Collection<V> getNodes() {
 		return vertexSet();
 	}
 	
@@ -78,7 +78,7 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	 * @return the vertex corresponding to this unique id or null if not found.
 	 */
 	public V getNodeByName( String id) {
-		Iterator<V> it = getVertices().iterator();
+		Iterator<V> it = getNodes().iterator();
 		while (it.hasNext()) {
 			V vertex = it.next();
 			if (id.equals(vertex.toString())) {

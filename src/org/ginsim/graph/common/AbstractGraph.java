@@ -238,8 +238,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      * @return a Collection of the graph vertices.
      */
 	@Override
-	public Collection<V> getVertices() {
-		return graphBackend.getVertices();
+	public Collection<V> getNodes() {
+		return graphBackend.getNodes();
 	}
 
 	/**
@@ -281,13 +281,13 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @param regexp the regular expression vertex ID must match to be selected
 	 * @return a Vector of vertices
 	 */
-	public Vector<V> searchVertices( String regexp) {
+	public Vector<V> searchNodes( String regexp) {
 		
 		Vector<V> v = new Vector<V>();
 		
 		Pattern pattern = Pattern.compile(regexp, Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
 		
-		for (Iterator<V> it = getVertices().iterator(); it.hasNext();) {
+		for (Iterator<V> it = getNodes().iterator(); it.hasNext();) {
 			V vertex = (V) it.next();
 			Matcher matcher = pattern.matcher(vertex.toString());
 			if (matcher.find()) {
@@ -483,7 +483,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 		boolean selected = vertices == null || vertices.size() < getNodeCount();
 		if (!selected) {
-			vertices = getVertices();
+			vertices = getNodes();
 			edges = getEdges();
 		}
 		// TODO: make sure that selected edges don't refer non-selected nodes

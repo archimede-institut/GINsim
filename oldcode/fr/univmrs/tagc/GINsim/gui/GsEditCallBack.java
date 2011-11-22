@@ -156,7 +156,7 @@ public class GsEditCallBack {
 		gm.select(edges);
 	}
 
-	public void selectOutgoingVertices() {
+	public void selectOutgoingNodes() {
 		Set vertices = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
 		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
@@ -173,7 +173,7 @@ public class GsEditCallBack {
 		gm.select(vertices);		
 	}
 
-	public void selectIncomingVertices() {
+	public void selectIncomingNodes() {
 		Set vertices = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
 		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
@@ -214,7 +214,7 @@ public class GsEditCallBack {
 		gm.addSelection(edges);		
 	}
 
-	public void extendSelectionToOutgoingVertices() {
+	public void extendSelectionToOutgoingNodes() {
 		Set vertices = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
 		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
@@ -231,7 +231,7 @@ public class GsEditCallBack {
 		gm.addSelection(vertices);		
 	}
 
-	public void extendSelectionToIncomingVertices() {
+	public void extendSelectionToIncomingNodes() {
 		Set vertices = new HashSet();
 		for (Iterator it = main.getGraph().getGraphManager().getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();

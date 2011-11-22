@@ -60,7 +60,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	@Override
     public boolean containsNode(TreeNode node) {
     	
-    	for (Iterator it = getVertices().iterator(); it.hasNext();) {
+    	for (Iterator it = getNodes().iterator(); it.hasNext();) {
     		TreeNode treeNode = (TreeNode) it.next();
     		if (treeNode == node) return true;
 		}

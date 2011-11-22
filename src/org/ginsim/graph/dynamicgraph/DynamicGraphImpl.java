@@ -221,7 +221,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
      */
     private void saveNode(XMLWriter out, int mode, Collection<DynamicNode> nodes) throws IOException {
     	if (nodes == null) {
-    		nodes = getVertices();
+    		nodes = getNodes();
     	}
     	
     	NodeAttributesReader vReader = getNodeAttributeReader();
@@ -307,7 +307,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
         }
 
         List ret = new ArrayList();
-        Iterator it = otherGraph.getVertices().iterator();
+        Iterator it = otherGraph.getNodes().iterator();
         NodeAttributesReader vReader = getNodeAttributeReader();
         NodeAttributesReader cvreader = otherGraph.getNodeAttributeReader();
         while (it.hasNext()) {

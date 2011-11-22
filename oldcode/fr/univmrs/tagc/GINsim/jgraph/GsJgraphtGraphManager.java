@@ -366,7 +366,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 
 	public Iterator<E> getFullySelectedEdgeIterator() {
 		if (visible) {
-			return new GsSelectedEdgeWithNodeIterator(mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges());
+			return new GsSelectedEdgeWithNodeIterator(mainFrame.getSelectedNodes(), mainFrame.getSelectedEdges());
 		}
         return g.edgeSet().iterator();
 	}
@@ -379,7 +379,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 
 	public Iterator<V> getSelectedNodeIterator() {
 		if (visible) {
-			return mainFrame.getSelectedVertices().iterator();
+			return mainFrame.getSelectedNodes().iterator();
 		}
         return g.vertexSet().iterator();
 	}

@@ -324,7 +324,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
     /**
      * @return the list of currently selected vertices
      */
-    public List getSelectedVertices() {
+    public List getSelectedNodes() {
     	return v_vertex;
     }
     

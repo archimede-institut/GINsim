@@ -135,7 +135,7 @@ public class SearchFrame extends SimpleDialog {
 
 	public void search() {
 		tableModel.setData(new Vector());
-		tableModel.setData(g.searchVertices(searchTextField.getText()));
+		tableModel.setData(g.searchNodes(searchTextField.getText()));
 	}
 
 	public void select() {
@@ -144,7 +144,7 @@ public class SearchFrame extends SimpleDialog {
 		for (int i = 0; i < t.length; i++) {
 			l.add(tableModel.getNodeAt(t[i]));
 		}
-		gui.getSelection().selectVertices(l);
+		gui.getSelection().selectNodes(l);
 	}
 		
 	public void doClose() {

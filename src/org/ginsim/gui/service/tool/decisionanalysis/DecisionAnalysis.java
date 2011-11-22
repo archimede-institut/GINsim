@@ -43,7 +43,7 @@ public class DecisionAnalysis extends Thread {
 		//Iterate on the selected vertex or all of them f node are selected
 		Iterator<HierarchicalNode> it = selected_vertices.iterator();
 		if (! it.hasNext()) {
-			it = htg.getVertices().iterator();
+			it = htg.getNodes().iterator();
 		}
 		for (; it.hasNext();) {
 			HierarchicalNode source = it.next();

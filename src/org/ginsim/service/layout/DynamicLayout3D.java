@@ -29,7 +29,7 @@ public class DynamicLayout3D {
     }
     
     public void layout(DynamicGraph graph) throws GsException {
-		Iterator it = graph.getVertices().iterator();
+		Iterator it = graph.getNodes().iterator();
 		Object v = it.next();
 	    if (v == null || !(v instanceof DynamicNode)) {
 			System.out.println("wrong type of graph for this layout");

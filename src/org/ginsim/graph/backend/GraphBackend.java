@@ -63,7 +63,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
     /**
      * @return a Collection of the graph vertices.
      */
-    public Collection<V> getVertices();
+    public Collection<V> getNodes();
 	
     
 	/**

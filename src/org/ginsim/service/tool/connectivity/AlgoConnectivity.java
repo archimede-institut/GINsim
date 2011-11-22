@@ -81,7 +81,7 @@ public class AlgoConnectivity extends Thread {
         reducedGraph = null;
         int nbCompo = 0;
         try {
-            t_vertex = g.getVertices().toArray();
+            t_vertex = g.getNodes().toArray();
             explored = new boolean[t_vertex.length];
             lastExploration = new int[t_vertex.length];
             firstExploration = new int[t_vertex.length];

@@ -145,7 +145,7 @@ public interface GraphModel<V,E extends Edge<V>> {
     /**
      * @return a Collection of the graph vertices.
      */
-    Collection<V> getVertices();
+    Collection<V> getNodes();
     
     
 	/**
@@ -171,7 +171,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * @param regexp the regular expression vertex ID must match to be selected
 	 * @return a Vector of vertices
 	 */
-	Vector<V> searchVertices( String regexp);
+	Vector<V> searchNodes( String regexp);
 	
 	
     /**

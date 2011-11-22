@@ -107,7 +107,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		logicalFunctionPending = null;
 	}
 	
-	protected void setVerticesColor() {
+	protected void setNodesColor() {
 		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
 			RegulatoryNode v, v1, v2;
 			String id = (String)it.next();
@@ -130,7 +130,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 				comment = "The vertex "+id+" is common to both graphs\n";
 				v = g.addNewNode(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
 				Color[] color = {COMMON_COLOR};
-				comment += compareVertices(v ,v1, v2, color);
+				comment += compareNodes(v ,v1, v2, color);
 				mergeNodeAttributes(v, v1, v2, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), g2m.getNodeAttributeReader(), color[0]);
 				setLogicalFunction(v, v1, g1);
 			}
@@ -162,8 +162,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		}
 	}
 	
-	protected void addVerticesFromGraph( Graph gm) {
-		for (Iterator it=gm.getVertices().iterator() ; it.hasNext() ;) {
+	protected void addNodesFromGraph( Graph gm) {
+		for (Iterator it=gm.getNodes().iterator() ; it.hasNext() ;) {
 			RegulatoryNode vertex = (RegulatoryNode)it.next();
 			verticesIdsSet.add(vertex.getId());
 		}
@@ -222,7 +222,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	}
 
 
-	public String compareVertices(RegulatoryNode v, RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
+	public String compareNodes(RegulatoryNode v, RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
 		String comment = "";
 		if (!v1.getName().equals(v2.getName())) {
 			String n1 = v1.getName();

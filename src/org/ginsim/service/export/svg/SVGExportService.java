@@ -44,7 +44,7 @@ public class SVGExportService implements Service{
                 edges = graph.getEdges();
             }
             if (vertices == null) {
-                vertices = graph.getVertices();
+                vertices = graph.getNodes();
             }
             int[] tmax = getmax(vertices, edges, vreader, ereader);
 

@@ -126,12 +126,12 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionDisplayMiniMap;
 	private AbstractAction		actionSelectIncomingArcs;
 	private AbstractAction		actionSelectOutgoingArcs;
-	private AbstractAction		actionSelectIncomingVertices;
-	private AbstractAction		actionSelectOutgoingVertices;
+	private AbstractAction		actionSelectIncomingNodes;
+	private AbstractAction		actionSelectOutgoingNodes;
 	private AbstractAction		actionExtendSelectionToIncomingArcs;
 	private AbstractAction		actionExtendSelectionToOutgoingArcs;
-	private AbstractAction		actionExtendSelectionToIncomingVertices;
-	private AbstractAction		actionExtendSelectionToOutgoingVertices;
+	private AbstractAction		actionExtendSelectionToIncomingNodes;
+	private AbstractAction		actionExtendSelectionToOutgoingNodes;
 	private AbstractAction      actionSimpleFunctionEdition;
 
 	// Check Box Menu Item
@@ -514,22 +514,22 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionExtendSelectionToIncomingVertices = new BaseAction("STR_extendSelectionToIncomingVertices", null,
-				"STR_extendSelectionToIncomingVertices_descr", null) {
+		actionExtendSelectionToIncomingNodes = new BaseAction("STR_extendSelectionToIncomingNodes", null,
+				"STR_extendSelectionToIncomingNodes_descr", null) {
 
 			private static final long	serialVersionUID	= 7152250065865101484L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				editcallback.extendSelectionToIncomingVertices();
+				editcallback.extendSelectionToIncomingNodes();
 			}
 		};
-		actionExtendSelectionToOutgoingVertices = new BaseAction("STR_extendSelectionToOutgoingVertices", null,
-				"STR_extendSelectionToOutgoingVertices_descr", null) {
+		actionExtendSelectionToOutgoingNodes = new BaseAction("STR_extendSelectionToOutgoingNodes", null,
+				"STR_extendSelectionToOutgoingNodes_descr", null) {
 
 			private static final long	serialVersionUID	= 7152250065865101484L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				editcallback.extendSelectionToOutgoingVertices();
+				editcallback.extendSelectionToOutgoingNodes();
 			}
 		};
 		actionExtendSelectionToIncomingArcs = new BaseAction("STR_extendSelectionToIncomingArcs", null,
@@ -551,22 +551,22 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 		
-		actionSelectIncomingVertices = new BaseAction("STR_selectIncomingVertices", null,
-				"STR_selectIncomingVertices_descr", null) {
+		actionSelectIncomingNodes = new BaseAction("STR_selectIncomingNodes", null,
+				"STR_selectIncomingNodes_descr", null) {
 
 			private static final long	serialVersionUID	= 7152250065865101484L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				editcallback.selectIncomingVertices();
+				editcallback.selectIncomingNodes();
 			}
 		};
-		actionSelectOutgoingVertices = new BaseAction("STR_selectOutgoingVertices", null,
-				"STR_selectOutgoingVertices_descr", null) {
+		actionSelectOutgoingNodes = new BaseAction("STR_selectOutgoingNodes", null,
+				"STR_selectOutgoingNodes_descr", null) {
 
 			private static final long	serialVersionUID	= 7152250065865101484L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				editcallback.selectOutgoingVertices();
+				editcallback.selectOutgoingNodes();
 			}
 		};
 		actionSelectIncomingArcs = new BaseAction("STR_selectIncomingArcs", null,
@@ -669,13 +669,13 @@ public class GsActions implements GraphChangeListener {
 		selectAllMenu.add(actionSelectAllNodes);
 		selectAllMenu.add(actionSelectAllEdges);
 
-		editSelectMenu.add(actionSelectIncomingVertices);
-		editSelectMenu.add(actionSelectOutgoingVertices);
+		editSelectMenu.add(actionSelectIncomingNodes);
+		editSelectMenu.add(actionSelectOutgoingNodes);
 		editSelectMenu.add(actionSelectIncomingArcs);
 		editSelectMenu.add(actionSelectOutgoingArcs);
 		
-		editExtendSelectionMenu.add(actionExtendSelectionToIncomingVertices);
-		editExtendSelectionMenu.add(actionExtendSelectionToOutgoingVertices);
+		editExtendSelectionMenu.add(actionExtendSelectionToIncomingNodes);
+		editExtendSelectionMenu.add(actionExtendSelectionToOutgoingNodes);
 		editExtendSelectionMenu.add(actionExtendSelectionToIncomingArcs);
 		editExtendSelectionMenu.add(actionExtendSelectionToOutgoingArcs);
 		

@@ -30,7 +30,7 @@ public class LayoutService implements Service {
 		int nbClassic = 0;
 		int maxHeight = 0;
 		int maxWidth = 0;
-		for (Object vertex: graph.getVertices()) {
+		for (Object vertex: graph.getNodes()) {
 		    vreader.setNode(vertex);
 		    int tmp = vreader.getHeight();
 		    maxHeight = (tmp > maxHeight) ? tmp : maxHeight;
@@ -63,7 +63,7 @@ public class LayoutService implements Service {
 		
 		// then rebrowse all nodes to do the actual placement
         if (inversed) {
-            for (Object vertex: graph.getVertices()) {
+            for (Object vertex: graph.getNodes()) {
                 vreader.setNode(vertex);
                 if (graph.getIncomingEdges(vertex).size() == 0) {
                     algo.placeNextStable();
@@ -75,7 +75,7 @@ public class LayoutService implements Service {
                 vreader.refresh();
             }
         } else {
-            for (Object vertex: graph.getVertices()) {
+            for (Object vertex: graph.getNodes()) {
     		    vreader.setNode(vertex);
     		    if (graph.getIncomingEdges(vertex).size() == 0) {
     		        algo.placeNextRoot();

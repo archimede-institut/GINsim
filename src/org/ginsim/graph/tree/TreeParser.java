@@ -55,7 +55,7 @@ public abstract class TreeParser<V,E> {
 	 */
 	public void updateNodeLayout() {
 		NodeAttributesReader vreader = tree.getNodeAttributeReader();
-		for (Iterator it = tree.getVertices().iterator(); it.hasNext();) {
+		for (Iterator it = tree.getNodes().iterator(); it.hasNext();) {
 			TreeNode vertex = (TreeNode) it.next();
 			updateLayout(vreader, vertex);
 		}		
@@ -66,7 +66,7 @@ public abstract class TreeParser<V,E> {
 	 */
 	public void clearTree() {
 		Vector<TreeNode> tmp = new Vector( tree.getNodeCount());
-		for (Iterator<TreeNode> it = tree.getVertices().iterator(); it.hasNext();) {
+		for (Iterator<TreeNode> it = tree.getNodes().iterator(); it.hasNext();) {
 			TreeNode vertex = (TreeNode) it.next();
 			tmp.add(vertex);
 		}

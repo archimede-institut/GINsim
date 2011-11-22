@@ -121,7 +121,7 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 		
 		int current_index_of_node_id = -graph.getNodeCount(); // The IDs goes from -vertexCount to -1
 		NodeAttributesReader vertexAttributeReader = graph.getNodeAttributeReader();
-		for (Iterator it=graph.getVertices().iterator() ; it.hasNext() ;) {
+		for (Iterator it=graph.getNodes().iterator() ; it.hasNext() ;) {
 			RegulatoryNode vertex = (RegulatoryNode)it.next();
 			
 			String name = vertex.getName();//The complete name (label) of the edge

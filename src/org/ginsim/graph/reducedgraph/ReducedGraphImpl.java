@@ -115,7 +115,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"reduced\">\n");
-			saveVertices(out, mode, vertices);
+			saveNodes(out, mode, vertices);
 			saveEdge(out, mode, edges);
             if (graphAnnotation != null) {
             	graphAnnotation.toXML(out, null, 0);
@@ -162,10 +162,10 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveVertices(XMLWriter out, int mode, Collection<NodeReducedData> vertices) throws IOException {
+    private void saveNodes(XMLWriter out, int mode, Collection<NodeReducedData> vertices) throws IOException {
     	Iterator it;
     	if (vertices == null) {
-    		vertices = getVertices();
+    		vertices = getNodes();
     	}
     	NodeAttributesReader vReader = getNodeAttributeReader();
     	switch (mode) {

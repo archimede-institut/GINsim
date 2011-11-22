@@ -40,7 +40,7 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 	}
 
 
-	protected void setVerticesColor() {
+	protected void setNodesColor() {
 		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
 			DynamicNode v, v1, v2;
 			String id = (String)it.next();
@@ -62,13 +62,13 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 				v = new DynamicNode(v1.state);
 				gm.addNode(v);
 				mergeNodeAttributes(v, v1, v2, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), g2m.getNodeAttributeReader(), COMMON_COLOR);
-				//compareVertices(v ,v1, v2);
+				//compareNodes(v ,v1, v2);
 			}
 		}
 	}
 
-	protected void addVerticesFromGraph( Graph gm) {
-		for (Iterator it=gm.getVertices().iterator() ; it.hasNext() ;) {
+	protected void addNodesFromGraph( Graph gm) {
+		for (Iterator it=gm.getNodes().iterator() ; it.hasNext() ;) {
 			DynamicNode vertex = (DynamicNode)it.next();
 			String id = vertex.toString(); //Beware, the real node id is not getId, but toString
 			verticesIdsSet.add(id); 

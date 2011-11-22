@@ -27,7 +27,7 @@ public class GsJgraph extends JGraph {
         super(ma);
         if (g.getNodeCount() == 3) {
         	NodeAttributesReader vreader = g.getNodeAttributeReader();
-        	vreader.setNode(g.getVertices().iterator().next());
+        	vreader.setNode(g.getNodes().iterator().next());
         	vreader.setPos(30, 100);
         	vreader.setBackgroundColor(Color.GRAY);
         	vreader.refresh();

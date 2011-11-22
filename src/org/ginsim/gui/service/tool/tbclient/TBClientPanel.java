@@ -98,7 +98,7 @@ public class TBClientPanel extends GsPanel implements GraphGUIListener, WindowLi
 
 	private void applyEdgeStyle() {
 		EdgeStyle	style = (EdgeStyle)sel.getStyle(TBSelector.CAT_DEFAULT);
-		for (Iterator it = graph.getVertices().iterator(); it.hasNext();) {
+		for (Iterator it = graph.getNodes().iterator(); it.hasNext();) {
 			RegulatoryNode v = (RegulatoryNode) it.next();
 			Collection<RegulatoryMultiEdge> edges = graph.getIncomingEdges(v);
 			for (RegulatoryMultiEdge me:  edges) {

@@ -100,7 +100,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 	
 	
 	// TODO: add methods to change the selection
-	public void selectVertices(List l) {
+	public void selectNodes(List l) {
 		System.err.println("Select vertices not implemented");
 	}
 	

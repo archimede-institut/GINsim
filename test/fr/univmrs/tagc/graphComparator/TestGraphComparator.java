@@ -76,7 +76,7 @@ public class TestGraphComparator extends TestCase  {
 		HashMap vm = gc.getStyleMap();
 
 		
-		//printVerticesMap(vm);
+		//printNodesMap(vm);
 		assertTrue("Wrong number of vertex in the vertex map. ("+vm.size()+" out of "+vertexCount+")", vm.size() == vertexCount);
 		int diffNodeCount = gc.getDiffGraph().getNodeCount();
 		assertTrue("Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")", diffNodeCount == vertexCount);
@@ -85,8 +85,8 @@ public class TestGraphComparator extends TestCase  {
 		
 	}
 		
-	public void printVerticesMap(HashMap vm) {
-		System.out.println("\nVertices Map : ");
+	public void printNodesMap(HashMap vm) {
+		System.out.println("\nNodes Map : ");
 		for (Iterator it = vm.keySet().iterator(); it.hasNext();) {
 			String id = (String) it.next();
 			System.out.println("vertex : "+id+" ; color : "+vm.get(id));

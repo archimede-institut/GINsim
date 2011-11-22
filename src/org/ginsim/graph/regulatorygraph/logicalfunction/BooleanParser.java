@@ -172,8 +172,8 @@ public class BooleanParser extends TBooleanParser {
 		this.vertex = vertex;
 		boolean shouldReInit = false;
 		if (shouldAutoAddNewElements) {
-			List sourceVertices = getSourceVertices(v);
-			for (Iterator it = sourceVertices.iterator(); it.hasNext();) {
+			List sourceNodes = getSourceNodes(v);
+			for (Iterator it = sourceNodes.iterator(); it.hasNext();) {
 				String nodeID = (String) it.next();
 				RegulatoryNode source = null;
 				for (Iterator itno = graph.getNodeOrder().iterator(); itno.hasNext();) {
@@ -216,15 +216,15 @@ public class BooleanParser extends TBooleanParser {
 			return false;
 		}
 	}
-	private List getSourceVertices(String v) {
+	private List getSourceNodes(String v) {
 		String[] split = v.split("(!|&|\\||\\(|\\)|\\s|:\\d+)");
-		List sourceVertices = new ArrayList(split.length);
+		List sourceNodes = new ArrayList(split.length);
 		for (int i = 0; i < split.length; i++) {
 			if (split[i].length() > 0) {
-				sourceVertices.add(split[i]);
+				sourceNodes.add(split[i]);
 			}
 		}
-		return sourceVertices;
+		return sourceNodes;
 	}
 	public Object getEdge(String value) throws GsException {
 		String nodeID;
