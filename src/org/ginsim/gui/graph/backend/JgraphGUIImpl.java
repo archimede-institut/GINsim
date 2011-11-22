@@ -16,12 +16,10 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import org.ginsim.graph.backend.GraphViewBackend;
+import org.ginsim.graph.backend.GraphViewListener;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.VertexAttributesReader;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
@@ -43,7 +41,7 @@ import org.jgrapht.ext.JGraphModelAdapter;
 
 import fr.univmrs.tagc.common.Debugger;
 
-public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphViewBackend, GraphSelectionListener {
+public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphSelectionListener, GraphViewListener {
 
 	private final G graph;
 	private final JgraphtBackendImpl<V, E> backend;
@@ -68,11 +66,13 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		this.graph = g;
 		this.backend = backend;
 		this.m_jgAdapter = new JGraphModelAdapter<V, E>(backend);
-		this.jgraph = new GsJgraph(m_jgAdapter);
+		this.jgraph = new GsJgraph(m_jgAdapter, g);
+		
 		jgraph.setEdgeLabelDisplayed(false);
 		jgraph.addGraphSelectionListener(this);
 		this.helper = helper;
-		backend.setGraphViewBackend(this);
+		backend.addViewListener(this);
+		//backend.setGraphViewBackend(this);
 		
 		// create the action manager and marquee handler
 		editActionManager = new EditActionManager(helper.getEditActions(graph));
@@ -88,17 +88,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		return jgraph;
 	}
 	
-	@Override
-	public EdgeAttributesReader getEdgeAttributeReader() {
-		// TODO: provide a default for edges
-		return new GsJgraphEdgeAttribute(backend, m_jgAdapter, null);
-	}
-
-	@Override
-	public VertexAttributesReader getVertexAttributeReader() {
-		return new GsJgraphVertexAttribute(m_jgAdapter, null);
-	}
-
 	/**
 	 * Change a Boolean property
 	 * 
@@ -411,6 +400,20 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	@Override
 	public GraphSelection<V, E> getSelection() {
 		return selection;
+	}
+
+	@Override
+	public void refresh(Object o) {
+		Object cell = null;
+		if (o instanceof Edge) {
+			cell = m_jgAdapter.getEdgeCell((E)o);
+		} else {
+			cell = m_jgAdapter.getVertexCell(o);
+		}
+		
+		if (cell != null) {
+			m_jgAdapter.cellsChanged(new Object[] {cell});
+		}
 	}
 
 }

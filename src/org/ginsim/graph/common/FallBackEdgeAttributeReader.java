@@ -173,10 +173,16 @@ public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
     }
 
 	public void setDash(float[] dashArray) {
+		if (evsd == null) {
+			return;
+		}
 		evsd.dash = dashArray;
 	}
 
 	public float[] getDash() {
+		if (evsd == null) {
+			return null;
+		}
 		return evsd.dash;
 	}
 }

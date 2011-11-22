@@ -1,8 +1,11 @@
 package org.ginsim.gui.graph.backend;
 
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 
+import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.ToolTipsable;
+import org.ginsim.graph.common.VertexAttributesReader;
 import org.jgraph.JGraph;
 import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultGraphCell;
@@ -20,9 +23,17 @@ public class GsJgraph extends JGraph {
 	private boolean edgeLabelDisplayed;
     private boolean nodeLabelDisplayed;
     
-    public GsJgraph(JGraphModelAdapter ma) {
+    public GsJgraph(JGraphModelAdapter ma, Graph<?,?> g) {
         super(ma);
-        setCellViewFactory(ma, new GsCellViewFactory(this));
+        if (g.getVertexCount() == 3) {
+        	VertexAttributesReader vreader = g.getVertexAttributeReader();
+        	vreader.setVertex(g.getVertices().iterator().next());
+        	vreader.setPos(30, 100);
+        	vreader.setBackgroundColor(Color.GRAY);
+        	vreader.refresh();
+        }
+        setCellViewFactory(ma, new GsCellViewFactory(this, g));
+        
     }
 
     private void setCellViewFactory(JGraphModelAdapter ma, CellViewFactory cvf) {

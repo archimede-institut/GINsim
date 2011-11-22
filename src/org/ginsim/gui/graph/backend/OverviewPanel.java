@@ -46,6 +46,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.ginsim.graph.common.Graph;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphLayoutCacheEvent;
 import org.jgraph.event.GraphLayoutCacheListener;
@@ -75,11 +76,11 @@ public class OverviewPanel
 	 * @param g
 	 * @param sp
 	 */
-	protected OverviewPanel(JGraph g, JGraphModelAdapter<?,?> ma, JScrollPane sp) {
-		originalGraph = g;
+	protected OverviewPanel(Graph<?, ?> g, JGraph jg, JGraphModelAdapter<?,?> ma, JScrollPane sp) {
+		this.originalGraph = jg;
 		v = new PannerViewfinder(this, sp);
 		GraphLayoutCache view = new ViewRedirector(originalGraph.getGraphLayoutCache());
-		graph = new GsJgraph(ma);
+		graph = new GsJgraph(ma, g);
 		graph.setGraphLayoutCache(view);
 		graph.setGridVisible(false);
 		graph.setAntiAliased(false);
@@ -101,11 +102,11 @@ public class OverviewPanel
 	 * @param sp
 	 * @return the overview panel
 	 */
-	public static JPanel createOverviewPanel(JGraph g, JGraphModelAdapter<?,?> ma, JScrollPane sp){
+	public static JPanel createOverviewPanel(Graph<?,?> g, JGraph jg, JGraphModelAdapter<?,?> ma, JScrollPane sp){
 		JPanel panelWithInternalOffset = new JPanel();
 		panelWithInternalOffset.setLayout(new BorderLayout());
 		panelWithInternalOffset.setBorder(new MatteBorder(PANEL_BUFFER,PANEL_BUFFER,PANEL_BUFFER,PANEL_BUFFER,Color.WHITE));
-		panelWithInternalOffset.add(new OverviewPanel(g, ma, sp), BorderLayout.CENTER);
+		panelWithInternalOffset.add(new OverviewPanel(g, jg, ma, sp), BorderLayout.CENTER);
 		return panelWithInternalOffset;
 	}
 

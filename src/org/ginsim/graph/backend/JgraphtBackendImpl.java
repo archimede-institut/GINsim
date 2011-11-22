@@ -16,7 +16,7 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	
 	private AbstractGraph<V,E> frontend = null;
 	private GraphViewBackend graphViewBackend;
-	
+
 	public JgraphtBackendImpl() {
 		// FIXME: remove the edgeFactory (with better integration with the underlying graph)
 		super(new GsJGraphtBaseGraph<V, E>(new GsJgraphtEdgeFactory()));
@@ -126,21 +126,9 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 		return graphViewBackend;
 	}
 
-	/**
-	 * Change the back-end used for graph view.
-	 * Used to switch from the generic back-end to a jgraph one.
-	 * @param backend
-	 */
-	public void setGraphViewBackend(GraphViewBackend backend) {
-		if (graphViewBackend != null) {
-			if (graphViewBackend instanceof JgraphtViewBackendImpl) {
-				((JgraphtViewBackendImpl)graphViewBackend).setGraphViewBackend(backend);
-			}
-			// FIXME: transfer view info from one to the other
-		}
-		this.graphViewBackend = backend;
+	public void addViewListener(GraphViewListener listener) {
+		getGraphViewBackend().addViewListener(listener);
 	}
-
 	
 	/**
 	 * Return a list of set of vertex, each set containing a strongly connected component of the graph

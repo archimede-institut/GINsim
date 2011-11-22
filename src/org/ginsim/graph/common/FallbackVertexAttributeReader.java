@@ -3,23 +3,30 @@ package org.ginsim.graph.common;
 import java.awt.Color;
 import java.util.Map;
 
+import org.ginsim.graph.backend.GraphViewBackend;
+
 
 /**
  * a generic vertexAttributeReader storing data into a dedicated hashmap
  */
 public class FallbackVertexAttributeReader extends VertexAttributesReader {
 
+	private final GraphViewBackend backend;
     private Map dataMap = null;
+    
     private VertexVSdata vvsd;
+    private Object vertex;
     
     /**
      * @param map
      */
-    public FallbackVertexAttributeReader(Map map) {
+    public FallbackVertexAttributeReader(GraphViewBackend backend, Map map) {
+    	this.backend = backend;
         this.dataMap = map;
     }
 
     public void setVertex(Object vertex) {
+    	this.vertex = vertex;
         vvsd = (VertexVSdata)dataMap.get(vertex);
         if (vvsd == null) {
             vvsd = new VertexVSdata();
@@ -90,6 +97,9 @@ public class FallbackVertexAttributeReader extends VertexAttributesReader {
     }
 
     public void refresh() {
+    	if (vertex != null) {
+    		backend.refresh(vertex);
+    	}
     }
 
     public void setPos(int x, int y) {

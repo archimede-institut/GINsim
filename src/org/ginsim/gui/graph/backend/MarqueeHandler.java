@@ -100,9 +100,9 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 			drawLine(jgraph.getBackground(), Color.black, g);
 			// Consume Event
 			event.consume();
+		} else {
+			super.mouseDragged(event);
 		}
-		// Call Superclass
-		super.mouseDragged(event);
 	}
 
 	@Override

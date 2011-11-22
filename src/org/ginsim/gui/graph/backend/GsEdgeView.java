@@ -29,6 +29,7 @@ public class GsEdgeView extends EdgeView {
 		this.renderer = renderer;
 	}
 
+	@Override
 	public CellViewRenderer getRenderer() {
 		return renderer;
 	}
@@ -38,15 +39,19 @@ class GsEdgeRenderer extends EdgeRenderer {
 
 	private static final long serialVersionUID = 6746746786967887L;
 	private GsJgraph jgraph;
+	private final EdgeAttributesReader reader;
 	
-	protected GsEdgeRenderer(GsJgraph jgraph) {
+	protected GsEdgeRenderer(GsJgraph jgraph, EdgeAttributesReader edgeAttributesReader) {
 		this.jgraph = jgraph;
+		this.reader = edgeAttributesReader;
 	}
 	
+	@Override
 	public void paintLabel(java.awt.Graphics g, String label, Point2D point, boolean b) {
 		if (jgraph.isEdgeLabelDisplayed()) super.paintLabel(g,label, point, b);
 	}
     
+	@Override
     protected Shape createLineEnd(int size, int style, Point2D src, Point2D dst) {
         if (style == EdgeAttributesReader.ARROW_DOUBLE) {
             
