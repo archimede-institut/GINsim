@@ -46,7 +46,7 @@ public class RootPanel extends BooleanFunctionTreePanel implements ActionListene
 
     if (e.getSource() == button) {
       try {
-        vertex = ((TreeInteractionsModel)tree.getModel()).getVertex();
+        vertex = ((TreeInteractionsModel)tree.getModel()).getNode();
         Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
         for (i = 1 ; i <= vertex.getMaxValue(); i++) {
           ok = true;

@@ -117,10 +117,10 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 		
 		//vertex
 		//We need a Hashtable to translate GINSim IDs into cytoscapes IDs.
-		Hashtable gs2cyt_Ids = new Hashtable(graph.getVertexCount());
+		Hashtable gs2cyt_Ids = new Hashtable(graph.getNodeCount());
 		
-		int current_index_of_node_id = -graph.getVertexCount(); // The IDs goes from -vertexCount to -1
-		NodeAttributesReader vertexAttributeReader = graph.getVertexAttributeReader();
+		int current_index_of_node_id = -graph.getNodeCount(); // The IDs goes from -vertexCount to -1
+		NodeAttributesReader vertexAttributeReader = graph.getNodeAttributeReader();
 		for (Iterator it=graph.getVertices().iterator() ; it.hasNext() ;) {
 			RegulatoryNode vertex = (RegulatoryNode)it.next();
 			
@@ -139,7 +139,7 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 			out.addTag("att", new String[] {"name", "hiddenLabel", "label", "hiddenLabel", "type", "string"});
 			out.addTag("att", new String[] {"name", "canonicalName", "label", "canonicalName", "type", "string", "value", name});
 			
-			vertexAttributeReader.setVertex(vertex);
+			vertexAttributeReader.setNode(vertex);
 			out.openTag("graphics");
 			out.addAttr("w", String.valueOf(vertexAttributeReader.getWidth()));
 			out.addAttr("h", String.valueOf(vertexAttributeReader.getHeight()));

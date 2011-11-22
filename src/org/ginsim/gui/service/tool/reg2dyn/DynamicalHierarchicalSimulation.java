@@ -74,7 +74,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 		try {
 			nodeSet = new DynamicalHierarchicalNodeSet();
 			childsCount = dynGraph.getChildsCount();
-			vertexCount = helper.regGraph.getVertexCount();
+			vertexCount = helper.regGraph.getNodeCount();
 			runSimulationOnInitialStates();									// run the simulation for each initial states
 						
 		} catch (GsException e) {
@@ -707,12 +707,12 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 
 	private void updateTerminalCycles(DynamicalHierarchicalGraph graph) {
 		log(1,"Updating terminal cycles...");
-		NodeAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getNodeAttributeReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			DynamicalHierarchicalNode dhnode = (DynamicalHierarchicalNode) it.next();
 			if (dhnode.getType() == DynamicalHierarchicalNode.TYPE_CYCLE && graph.getOutgoingEdges(dhnode).size() == 0) {
 				dhnode.setType(DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE);
-				vreader.setVertex(dhnode);
+				vreader.setNode(dhnode);
 				vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
 				vreader.setBackgroundColor(DynamicalHierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 				vreader.refresh();
@@ -743,15 +743,15 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 	private void addAllNodeTo(DynamicalHierarchicalGraph graph) {
 		int n = 0;
 		log(1,"Adding all nodes to the graph... ("+nodeSet.size()+")");
-		NodeAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getNodeAttributeReader();
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			n++;
 			DynamicalHierarchicalNode dhnode = (DynamicalHierarchicalNode) it.next();
 			dhnode.addPileToOmdd(childsCount);
 			dhnode.reduce();
 			dhnode.updateSize(childsCount);
-			graph.addVertex(dhnode);
-			vreader.setVertex(dhnode);
+			graph.addNode(dhnode);
+			vreader.setNode(dhnode);
 			switch (dhnode.getType()) {
 			case DynamicalHierarchicalNode.TYPE_STABLE_STATE:
 				vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);

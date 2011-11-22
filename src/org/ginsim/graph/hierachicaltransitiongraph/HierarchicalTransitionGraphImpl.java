@@ -162,7 +162,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 		return edgePanel;
 	}
 
-	public AbstractParameterPanel getVertexAttributePanel() {
+	public AbstractParameterPanel getNodeAttributePanel() {
 	    if (vertexPanel == null) {
 	        vertexPanel  = new HierarchicalNodeParameterPanel(this);
 	    }
@@ -227,9 +227,9 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	  * @throws IOException
 	  */
 	 private void saveNode(XMLWriter out, int mode, Collection<HierarchicalNode> vertices) throws IOException {
-	 	NodeAttributesReader vReader = getVertexAttributeReader();
+	 	NodeAttributesReader vReader = getNodeAttributeReader();
 	     for (HierarchicalNode vertex: vertices) {
-	         vReader.setVertex(vertex);
+	         vReader.setNode(vertex);
 	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
 	         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
 	         out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");

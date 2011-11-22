@@ -68,7 +68,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		this(g1, g2, GraphManager.getInstance().getNewGraph());
 	}
 	
-	public boolean isCommonVertex(Object id) {
+	public boolean isCommonNode(Object id) {
 		NodeStyle style = (NodeStyle)((ItemStore)stylesMap.get(id)).v;
 		return style.background != SPECIFIC_G1_COLOR && style.background != SPECIFIC_G2_COLOR;
 	}
@@ -83,8 +83,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			String sid = me.getSource().getId();
 			String tid = me.getTarget().getId();
 			
-			Edge e1 = g1m.getEdge(g1m.getVertexByName(sid), g1m.getVertexByName(tid));
-			Edge e2 = g2m.getEdge(g2m.getVertexByName(sid), g2m.getVertexByName(tid));
+			Edge e1 = g1m.getEdge(g1m.getNodeByName(sid), g1m.getNodeByName(tid));
+			Edge e2 = g2m.getEdge(g2m.getNodeByName(sid), g2m.getNodeByName(tid));
 			
 			String comment = "The edge "+me.toToolTip()+" ";
 			ereader.setEdge(me);
@@ -111,27 +111,27 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
 			RegulatoryNode v, v1, v2;
 			String id = (String)it.next();
-			v1 = (RegulatoryNode)g1m.getVertexByName(id);
-			v2 = (RegulatoryNode)g2m.getVertexByName(id);
+			v1 = (RegulatoryNode)g1m.getNodeByName(id);
+			v2 = (RegulatoryNode)g2m.getNodeByName(id);
 			String comment = null;
 			
 			//Check which graph own the vertex, set the appropriate color to it and if it is owned by both graph, compare its attributes.
 			if (v1 == null) {
 				comment = "The vertex "+id+" is specific to "+g2.getGraphName()+"\n";
-				v = g.addNewVertex(id, v2.getName(), v2.getMaxValue());
-				mergeVertexAttributes(v, v2, null, gm.getVertexAttributeReader(), g2m.getVertexAttributeReader(), null, SPECIFIC_G2_COLOR);
+				v = g.addNewNode(id, v2.getName(), v2.getMaxValue());
+				mergeNodeAttributes(v, v2, null, gm.getNodeAttributeReader(), g2m.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
 				setLogicalFunction(v, v2, g2);
 			} else if (v2 == null) {
 				comment = "The vertex "+id+" is specific to "+g1.getGraphName()+"\n";
-				v = g.addNewVertex(id, v1.getName(), v1.getMaxValue());
-				mergeVertexAttributes(v, v1, null, gm.getVertexAttributeReader(), g1m.getVertexAttributeReader(), null, SPECIFIC_G1_COLOR);
+				v = g.addNewNode(id, v1.getName(), v1.getMaxValue());
+				mergeNodeAttributes(v, v1, null, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
 				setLogicalFunction(v, v1, g1);
 			} else {
 				comment = "The vertex "+id+" is common to both graphs\n";
-				v = g.addNewVertex(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
+				v = g.addNewNode(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
 				Color[] color = {COMMON_COLOR};
 				comment += compareVertices(v ,v1, v2, color);
-				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributeReader(), g1m.getVertexAttributeReader(), g2m.getVertexAttributeReader(), color[0]);
+				mergeNodeAttributes(v, v1, v2, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), g2m.getNodeAttributeReader(), color[0]);
 				setLogicalFunction(v, v1, g1);
 			}
 			Annotation gsa = v.getAnnotation();
@@ -171,7 +171,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 
 	
 	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, EdgeAttributesReader ereader) {
-		RegulatoryNode v = (RegulatoryNode) gm_main.getVertexByName(id);
+		RegulatoryNode v = (RegulatoryNode) gm_main.getNodeByName(id);
 		if (v == null) {
 			return;
 		}
@@ -180,18 +180,18 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		EdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 
 		//If v is a vertex from the studied graph, we look at its edges
-		RegulatoryNode source = (RegulatoryNode) gm.getVertexByName(id);
+		RegulatoryNode source = (RegulatoryNode) gm.getNodeByName(id);
 		for (RegulatoryMultiEdge me1: ((RegulatoryGraph)gm_main).getOutgoingEdges(v)) {
 			String tid = me1.getTarget().getId();
-			RegulatoryNode target = (RegulatoryNode) gm.getVertexByName(tid);
+			RegulatoryNode target = (RegulatoryNode) gm.getNodeByName(tid);
 			
 			if (gm.getEdge(source, target) != null) {
 				continue;
 			}
 
 			RegulatoryMultiEdge me2 = null;
-			if (vcol != SPECIFIC_G1_COLOR && vcol != SPECIFIC_G2_COLOR && isCommonVertex(target)) {
-				Edge e2 = gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
+			if (vcol != SPECIFIC_G1_COLOR && vcol != SPECIFIC_G2_COLOR && isCommonNode(target)) {
+				Edge e2 = gm_aux.getEdge(gm_aux.getNodeByName(id), gm_aux.getNodeByName(tid));
 				if (e2 != null) {
 					me2 = (RegulatoryMultiEdge)e2;
 				}

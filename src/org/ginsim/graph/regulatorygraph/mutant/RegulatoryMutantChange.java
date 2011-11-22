@@ -51,7 +51,7 @@ public class RegulatoryMutantChange {
             this.min = max;
         }
     }
-    public RegulatoryNode getVertex() {
+    public RegulatoryNode getNode() {
 		return vertex;
 	}
     

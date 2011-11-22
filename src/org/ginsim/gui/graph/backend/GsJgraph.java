@@ -25,9 +25,9 @@ public class GsJgraph extends JGraph {
     
     public GsJgraph(JGraphModelAdapter ma, Graph<?,?> g) {
         super(ma);
-        if (g.getVertexCount() == 3) {
-        	NodeAttributesReader vreader = g.getVertexAttributeReader();
-        	vreader.setVertex(g.getVertices().iterator().next());
+        if (g.getNodeCount() == 3) {
+        	NodeAttributesReader vreader = g.getNodeAttributeReader();
+        	vreader.setNode(g.getVertices().iterator().next());
         	vreader.setPos(30, 100);
         	vreader.setBackgroundColor(Color.GRAY);
         	vreader.refresh();

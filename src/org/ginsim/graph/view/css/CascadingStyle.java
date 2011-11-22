@@ -105,7 +105,7 @@ public class CascadingStyle {
 	public void applySelectorsOnNodes(List selectors, Collection nodes, NodeAttributesReader vreader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each nodes
 			Object node = it_nodes.next();
-			vreader.setVertex(node);
+			vreader.setNode(node);
 			NodeStyle style = new NodeStyle(vreader);							//  get the style
 			if (shouldStoreOldStyle) old_nodes.put(node, style.clone());					//  save a copy if needed
 			for (Iterator it_sel = selectors.iterator(); it_sel.hasNext();) {		//  For each selector
@@ -147,7 +147,7 @@ public class CascadingStyle {
 	public void applySelectorOnNodes(Selector sel, Collection nodes, NodeAttributesReader vreader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each edge
 			Object node = it_nodes.next();
-			vreader.setVertex(node);
+			vreader.setNode(node);
 			NodeStyle style = new NodeStyle(vreader);								//  get the style
 			if (shouldStoreOldStyle) old_nodes.put(node, style.clone());					//  save a copy if needed
 			((NodeStyle)sel.getStyleForNode(node)).apply(vreader);	//  apply the style to the node.
@@ -191,7 +191,7 @@ public class CascadingStyle {
 	public void restoreAllNodes(NodeAttributesReader areader) {
 		for (Iterator it_nodes = old_nodes.keySet().iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
-			areader.setVertex(node);
+			areader.setNode(node);
 			((Style)old_nodes.get(node)).apply(areader);
 		}
 	}
@@ -218,7 +218,7 @@ public class CascadingStyle {
 	public void restoreAllNodes(Collection nodes, NodeAttributesReader areader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
-			areader.setVertex(node);
+			areader.setNode(node);
 			Style style = (Style)old_nodes.get(node);
 			if (style != null) style.apply(areader);
 		}
@@ -232,7 +232,7 @@ public class CascadingStyle {
 	public void storeAllNodes(Collection nodes, NodeAttributesReader areader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
-			areader.setVertex(node);
+			areader.setNode(node);
 			NodeStyle style = new NodeStyle(areader);
 			old_nodes.put(node, style);
 		}

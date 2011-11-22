@@ -7,7 +7,7 @@ public interface GraphViewBackend{
 
 	public EdgeAttributesReader getEdgeAttributeReader();
 	
-	public NodeAttributesReader getVertexAttributeReader();
+	public NodeAttributesReader getNodeAttributeReader();
 	
 	public void addViewListener(GraphViewListener listener);
 

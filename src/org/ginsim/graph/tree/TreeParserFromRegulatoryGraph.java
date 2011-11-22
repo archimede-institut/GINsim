@@ -11,7 +11,7 @@ import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 public class TreeParserFromRegulatoryGraph extends TreeParserFromOmdd {
 	
 	public static final String PARAM_REGGRAPH = "pfrg_regGraph";
-	public static final String PARAM_INITIALVERTEXINDEX = "pfrg_initialVertex";
+	public static final String PARAM_INITIALVERTEXINDEX = "pfrg_initialNode";
 	
 	protected RegulatoryGraph regGraph;
 
@@ -21,23 +21,23 @@ public class TreeParserFromRegulatoryGraph extends TreeParserFromOmdd {
 		nodeOrder = (List)getParameter(PARAM_NODEORDER);
 		regGraph = (RegulatoryGraph)getParameter(PARAM_REGGRAPH);
 
-		RegulatoryNode initialVertex = (RegulatoryNode) nodeOrder.get(initial_gene_id);
+		RegulatoryNode initialNode = (RegulatoryNode) nodeOrder.get(initial_gene_id);
 		
-		this.root = initialVertex.getTreeParameters(regGraph).reduce();
+		this.root = initialNode.getTreeParameters(regGraph).reduce();
 		widthPerDepth = widthPerDepth_acc = realDetph = null;
 		total_levels = max_depth = 0;
-		max_terminal = initialVertex.getMaxValue()+1;
-		initRealDepth(initialVertex);
+		max_terminal = initialNode.getMaxValue()+1;
+		initRealDepth(initialNode);
 	}
 	
 	/**
 	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial vertex, assuming regGraph is defined
-	 * @param initialVertex
+	 * @param initialNode
 	 */
-	public void initRealDepth(RegulatoryNode initialVertex) {
+	public void initRealDepth(RegulatoryNode initialNode) {
 		realDetph = new int[nodeOrder.size()+1]; //+1 for the leafs
 		int i = 0;
-		for (RegulatoryMultiEdge e: regGraph.getIncomingEdges(initialVertex)) {
+		for (RegulatoryMultiEdge e: regGraph.getIncomingEdges(initialNode)) {
 			RegulatoryNode source = e.getSource();
 			i = 0;
 			for (RegulatoryNode v: (List<RegulatoryNode>)nodeOrder) {

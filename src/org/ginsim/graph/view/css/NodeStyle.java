@@ -187,7 +187,7 @@ public class NodeStyle implements Style {
 				else if (value.equals(CSS_BORDER_STRONG)) 	border = NodeAttributesReader.BORDER_STRONG;
 				else throw new GsCSSSyntaxException("Unknown vertex border at line "+i+" : "+lines[i]+". Must be "+CSS_BORDER_SIMPLE+", "+CSS_BORDER_RAISED+" or "+CSS_BORDER_STRONG);
 			} else {
-				throw new GsCSSSyntaxException("Vertex has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);
+				throw new GsCSSSyntaxException("Node has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);
 			}
 		}
 		return new NodeStyle(background, foreground, border, shape);

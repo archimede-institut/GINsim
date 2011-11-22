@@ -62,7 +62,7 @@ class RegulatoryFunctionTreeAction extends ToolAction {
 			
 		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_REGGRAPH, graph);
-		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, getSelectedVertex( graph));
+		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, getSelectedNode( graph));
 		GUIManager.getInstance().newFrame(tree);
 	}
 	
@@ -71,7 +71,7 @@ class RegulatoryFunctionTreeAction extends ToolAction {
 	 * @param regGraph
 	 * @return
 	 */
-	private Integer getSelectedVertex(RegulatoryGraph regGraph) {
+	private Integer getSelectedNode(RegulatoryGraph regGraph) {
 		
 		RegulatoryNode selectedNode = null;
 		Collection<?> vertices = gui.getSelection().getSelectedNodes();

@@ -52,7 +52,7 @@ public class DynamicalHierarchicalParser extends GsXMLHelper {
     	
     	this.graph = GraphManager.getInstance().getNewGraph( DynamicalHierarchicalGraph.class, true);
     	this.map = map;
-		vareader = graph.getVertexAttributeReader();
+		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 		
 		try {
@@ -92,7 +92,7 @@ public class DynamicalHierarchicalParser extends GsXMLHelper {
     public void parse(File file, Map map, Graph graph) {
     	this.graph = (DynamicalHierarchicalGraph) graph;
     	this.map = map;
-		vareader = graph.getVertexAttributeReader();
+		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 
 		startParsing(file);
@@ -184,7 +184,7 @@ public class DynamicalHierarchicalParser extends GsXMLHelper {
                     if (map == null || map.containsKey(id)) {
                         pos = POS_VERTEX;
                         vertex = new DynamicalHierarchicalNode(id);
-                        graph.addVertex(vertex);
+                        graph.addNode(vertex);
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -244,7 +244,7 @@ public class DynamicalHierarchicalParser extends GsXMLHelper {
                     pos = POS_VERTEX_STATES;
                 } else if (vareader != null && qName.equals("nodevisualsetting")) {
                     pos = POS_VERTEX_VS;
-                    vareader.setVertex(vertex);
+                    vareader.setNode(vertex);
                 }
                 break; // POS_VERTEX
 

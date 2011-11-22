@@ -43,7 +43,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
     private Map map;
-    private Map<String, HierarchicalNode> oldIdToVertex = new HashMap<String, HierarchicalNode>();
+    private Map<String, HierarchicalNode> oldIdToNode = new HashMap<String, HierarchicalNode>();
 	private byte[] childCount;
     
     /**
@@ -56,7 +56,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     	
     	this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, true);
     	this.map = map;
-		vareader = htg.getVertexAttributeReader();
+		vareader = htg.getNodeAttributeReader();
 		ereader = htg.getEdgeAttributeReader();
 		
 		try {
@@ -97,7 +97,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     	
     	this.htg = (HierarchicalTransitionGraph) graph;
     	this.map = map;
-		vareader = graph.getVertexAttributeReader();
+		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 
 		startParsing(file);
@@ -189,8 +189,8 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                     if (map == null || map.containsKey(id)) {
                         pos = POS_VERTEX;
                         vertex = new HierarchicalNode(childCount);
-                        oldIdToVertex.put(id, vertex);
-                        htg.addVertex(vertex);
+                        oldIdToNode.put(id, vertex);
+                        htg.addNode(vertex);
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -199,7 +199,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                     String s_to = attributes.getValue("to");
                     if (map == null || map.containsKey(s_from) && map.containsKey(s_to)) {
                         pos = POS_EDGE;
-                        htg.addEdge(oldIdToVertex.get(s_from), oldIdToVertex.get(s_to));
+                        htg.addEdge(oldIdToNode.get(s_from), oldIdToNode.get(s_to));
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -253,7 +253,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                     pos = POS_VERTEX_STATES;
                 } else if (vareader != null && qName.equals("nodevisualsetting")) {
                     pos = POS_VERTEX_VS;
-                    vareader.setVertex(vertex);
+                    vareader.setNode(vertex);
                 }
                 break; // POS_VERTEX
 

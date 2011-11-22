@@ -55,7 +55,7 @@ public class NodeTreeModel extends DTreeModel {
         v2.addElement(field[3]);
         nb.addLabel(field[3], Color.black);
         tb.newNode("Entrez ID: ", Color.blue, v2);
-        nb.addVertexNote(ImageLoader.getImageIcon("annotation_off.png"), v2, 
+        nb.addNodeNote(ImageLoader.getImageIcon("annotation_off.png"), v2, 
         		ImageLoader.getImageIcon("annotation_on.png"));
         tb.addNode(nb.getNode());
         /*te = new TreeElement("Entrez ID: ");

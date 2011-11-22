@@ -164,7 +164,7 @@ class Go2ActionListener implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e) {
-        GUIManager.getInstance().getGraphGUI(graph).selectVertex(node);
+        GUIManager.getInstance().getGraphGUI(graph).selectNode(node);
     }
     
 }

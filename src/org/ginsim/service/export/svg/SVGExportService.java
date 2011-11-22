@@ -38,7 +38,7 @@ public class SVGExportService implements Service{
 		try {
 	        FileWriter out = new FileWriter(fileName);
 
-            NodeAttributesReader vreader = graph.getVertexAttributeReader();
+            NodeAttributesReader vreader = graph.getNodeAttributeReader();
             EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
             if (edges == null) {
                 edges = graph.getEdges();
@@ -55,8 +55,8 @@ public class SVGExportService implements Service{
 	        Map boxes = new HashMap();
 	        Map m_marker = new HashMap();
 	        for (Object obj: vertices) {
-	            vreader.setVertex(obj);
-	            writeVertex(out, obj, vreader);
+	            vreader.setNode(obj);
+	            writeNode(out, obj, vreader);
 	            boxes.put(obj, new Rectangle(vreader.getX(), vreader.getY(), vreader.getWidth(), vreader.getHeight()));
 	        }
 	        
@@ -86,7 +86,7 @@ public class SVGExportService implements Service{
         int[] tmax = new int[2];
         int value;
         for (Object v: vertices) {
-            vreader.setVertex(v);
+            vreader.setNode(v);
             value = vreader.getX() + vreader.getWidth();
             if (value > tmax[0]) {
                 tmax[0] = value;
@@ -118,7 +118,7 @@ public class SVGExportService implements Service{
         return tmax;
     }
     
-    private static void writeVertex(FileWriter out, Object obj, NodeAttributesReader vreader) throws IOException {
+    private static void writeNode(FileWriter out, Object obj, NodeAttributesReader vreader) throws IOException {
         String id = obj.toString();
         int x = vreader.getX();
         int y = vreader.getY();

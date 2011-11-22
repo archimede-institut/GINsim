@@ -78,8 +78,8 @@ public class TestGraphComparator extends TestCase  {
 		
 		//printVerticesMap(vm);
 		assertTrue("Wrong number of vertex in the vertex map. ("+vm.size()+" out of "+vertexCount+")", vm.size() == vertexCount);
-		int diffVertexCount = gc.getDiffGraph().getVertexCount();
-		assertTrue("Wrong number of vertex in the diff graph.("+diffVertexCount+" out of "+vertexCount+")", diffVertexCount == vertexCount);
+		int diffNodeCount = gc.getDiffGraph().getNodeCount();
+		assertTrue("Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")", diffNodeCount == vertexCount);
 		int diffEdgesCount = countEdges(gc);
 		assertTrue("Wrong number of edges in the diff graph.("+diffEdgesCount+" out of "+edgesCount+")", diffEdgesCount == edgesCount);
 		
@@ -115,11 +115,11 @@ class GraphExamples {
 		RegulatoryGraph g = GraphManager.getInstance().getNewGraph(); 
 		try { g.setGraphName("regulatory_graph_A");} catch (GsException e) {}
 		
-		g.addNewVertex("A", "A", (byte)1);
-		g.addNewVertex("B", "B", (byte)1);
-		g.addNewVertex("C", "C", (byte)1);
-		g.addNewVertex("D", "D", (byte)1);
-		g.addNewVertex("E", "E", (byte)1);
+		g.addNewNode("A", "A", (byte)1);
+		g.addNewNode("B", "B", (byte)1);
+		g.addNewNode("C", "C", (byte)1);
+		g.addNewNode("D", "D", (byte)1);
+		g.addNewNode("E", "E", (byte)1);
 		
 		try {
 			g.addNewEdge("A", "B", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE);
@@ -148,12 +148,12 @@ class GraphExamples {
 		RegulatoryGraph g = GraphManager.getInstance().getNewGraph(); 
 		try { g.setGraphName("regulatory_graph_B");} catch (GsException e) {}
 		
-		g.addNewVertex("A", "A", (byte)1);
-		g.addNewVertex("B", "B", (byte)1);
-		g.addNewVertex("C", "C", (byte)1);
-		g.addNewVertex("D", "D", (byte)2); //different maxValue
-		g.addNewVertex("F", "F", (byte)1); //added
-		g.addNewVertex("G", "G", (byte)1); //added
+		g.addNewNode("A", "A", (byte)1);
+		g.addNewNode("B", "B", (byte)1);
+		g.addNewNode("C", "C", (byte)1);
+		g.addNewNode("D", "D", (byte)2); //different maxValue
+		g.addNewNode("F", "F", (byte)1); //added
+		g.addNewNode("G", "G", (byte)1); //added
 		
 		try {
 			g.addNewEdge("A", "B", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE);
@@ -191,14 +191,14 @@ class GraphExamples {
 		DynamicGraph g = GraphManager.getInstance().getNewGraph( DynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_A");} catch (GsException e) {}
 		
-		g.addVertex(new DynamicNode("a00"));
-		g.addVertex(new DynamicNode("a01"));
-		g.addVertex(new DynamicNode("a10"));
+		g.addNode(new DynamicNode("a00"));
+		g.addNode(new DynamicNode("a01"));
+		g.addNode(new DynamicNode("a10"));
 		
-		g.addEdge(g.getVertexByName("00"), g.getVertexByName("01"), false);
-		g.addEdge(g.getVertexByName("10"), g.getVertexByName("01"), false);
-		g.addEdge(g.getVertexByName("01"), g.getVertexByName("10"), false);
-		g.addEdge(g.getVertexByName("01"), g.getVertexByName("00"), false); //added
+		g.addEdge(g.getNodeByName("00"), g.getNodeByName("01"), false);
+		g.addEdge(g.getNodeByName("10"), g.getNodeByName("01"), false);
+		g.addEdge(g.getNodeByName("01"), g.getNodeByName("10"), false);
+		g.addEdge(g.getNodeByName("01"), g.getNodeByName("00"), false); //added
 
 		return g;
 	}
@@ -217,16 +217,16 @@ class GraphExamples {
 		DynamicGraph g = GraphManager.getInstance().getNewGraph(DynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_B");} catch (GsException e) {}
 		
-		g.addVertex(new DynamicNode("a00"));
-		g.addVertex(new DynamicNode("a01"));
-		g.addVertex(new DynamicNode("b10"));//change first letter (should have no effect)
-		g.addVertex(new DynamicNode("a11"));//added
+		g.addNode(new DynamicNode("a00"));
+		g.addNode(new DynamicNode("a01"));
+		g.addNode(new DynamicNode("b10"));//change first letter (should have no effect)
+		g.addNode(new DynamicNode("a11"));//added
 		
-		g.addEdge(g.getVertexByName("00"), g.getVertexByName("01"), false);
-		g.addEdge(g.getVertexByName("10"), g.getVertexByName("01"), false);
-		g.addEdge(g.getVertexByName("01"), g.getVertexByName("10"), true);//multiple to true //TODO: need to detect that change ? yes mais en fait non
-		g.addEdge(g.getVertexByName("10"), g.getVertexByName("11"), false);//added
-		g.addEdge(g.getVertexByName("11"), g.getVertexByName("00"), false);//added
+		g.addEdge(g.getNodeByName("00"), g.getNodeByName("01"), false);
+		g.addEdge(g.getNodeByName("10"), g.getNodeByName("01"), false);
+		g.addEdge(g.getNodeByName("01"), g.getNodeByName("10"), true);//multiple to true //TODO: need to detect that change ? yes mais en fait non
+		g.addEdge(g.getNodeByName("10"), g.getNodeByName("11"), false);//added
+		g.addEdge(g.getNodeByName("11"), g.getNodeByName("00"), false);//added
 
 		return g;
 	}

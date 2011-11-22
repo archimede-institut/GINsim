@@ -35,8 +35,8 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 	@Override
 	public List<EditAction> getEditActions(RegulatoryGraph graph) {
 		List<EditAction> actions = new ArrayList<EditAction>();
-		NodeAttributesReader reader = graph.getVertexAttributeReader();
-		actions.add(new AddRegulatoryVertexAction(graph, "Add components", reader));
+		NodeAttributesReader reader = graph.getNodeAttributeReader();
+		actions.add(new AddRegulatoryNodeAction(graph, "Add components", reader));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add positive regulations", 1));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add negative regulations", -1));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add unknown regulations", 0));
@@ -99,17 +99,17 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 
 }
 
-class AddRegulatoryVertexAction extends AddNodeAction<RegulatoryNode> {
+class AddRegulatoryNodeAction extends AddNodeAction<RegulatoryNode> {
 
 	private final RegulatoryGraph graph;
-	public AddRegulatoryVertexAction(RegulatoryGraph graph, String name, NodeAttributesReader reader) {
+	public AddRegulatoryNodeAction(RegulatoryGraph graph, String name, NodeAttributesReader reader) {
 		super(name, reader, "insertsquare.gif");
 		this.graph = graph;
 	}
 
 	@Override
-	protected RegulatoryNode getNewVertex() {
-		return graph.addVertex();
+	protected RegulatoryNode getNewNode() {
+		return graph.addNode();
 	}
 }
 

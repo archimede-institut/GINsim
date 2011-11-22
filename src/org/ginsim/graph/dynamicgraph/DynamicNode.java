@@ -53,8 +53,8 @@ public final class DynamicNode {
 	public void setStable(boolean s, NodeAttributesReader vreader) {
 		stable = s;
 		if (stable) {
-			vreader.setVertex(this);
-			vreader.setShape(vreader.getDefaultVertexShape() == NodeAttributesReader.SHAPE_RECTANGLE ? NodeAttributesReader.SHAPE_ELLIPSE: NodeAttributesReader.SHAPE_RECTANGLE);
+			vreader.setNode(this);
+			vreader.setShape(vreader.getDefaultNodeShape() == NodeAttributesReader.SHAPE_RECTANGLE ? NodeAttributesReader.SHAPE_ELLIPSE: NodeAttributesReader.SHAPE_RECTANGLE);
 		}
 	}
 	

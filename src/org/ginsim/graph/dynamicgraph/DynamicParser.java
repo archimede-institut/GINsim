@@ -56,7 +56,7 @@ public final class DynamicParser extends GsXMLHelper {
     	
         this.graph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, true);
     	this.map = map;
-		vareader = graph.getVertexAttributeReader();
+		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 		
 		try {
@@ -84,7 +84,7 @@ public final class DynamicParser extends GsXMLHelper {
     	
     	this.graph = (DynamicGraph) graph;
     	this.map = map;
-		vareader = graph.getVertexAttributeReader();
+		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 
 		startParsing(file);
@@ -152,7 +152,7 @@ public final class DynamicParser extends GsXMLHelper {
                     if (map == null || map.containsKey(id.substring(1))) {
 	                    pos = POS_VERTEX;
 	                    vertex = new DynamicNode(id);
-	                    graph.addVertex(vertex);
+	                    graph.addNode(vertex);
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -211,7 +211,7 @@ public final class DynamicParser extends GsXMLHelper {
             case POS_VERTEX:
                 if (vareader != null && qName.equals("nodevisualsetting")) {
                 	pos = POS_VERTEX_VS;
-                	vareader.setVertex(vertex);
+                	vareader.setNode(vertex);
                 }
                 break; // POS_VERTEX
                 

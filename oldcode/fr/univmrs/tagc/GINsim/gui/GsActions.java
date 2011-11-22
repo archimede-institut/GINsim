@@ -59,7 +59,7 @@ public class GsActions implements GraphChangeListener {
 	private int					mode				= MODE_DEFAULT;
 	private int					submode				= 0;
 	private boolean				locked				= false;
-	private int					nbEditVertexSubmode	= 0;
+	private int					nbEditNodeSubmode	= 0;
 	private int					nbEditEdgeSubmode	= 0;
 
 	private JMenuBar			menuBar				= null;
@@ -85,7 +85,7 @@ public class GsActions implements GraphChangeListener {
 	private JMenu 				importMenu 					= null;
 	private JMenu				layoutMenu					= null;
 	private JMenu				addEdgeMenu					= null;
-	private JMenu				addVertexMenu				= null;
+	private JMenu				addNodeMenu				= null;
 	private JMenu				recentMenu					= null;
 	private JMenu				editSelectMenu				= null;
 	private JMenu				editExtendSelectionMenu		= null;
@@ -110,7 +110,7 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionSelectAllEdges;
 	private AbstractAction		actionInvertSelection;
 	private AbstractAction		actionInvertEdgeSelection;
-	private AbstractAction		actionInvertVertexSelection;
+	private AbstractAction		actionInvertNodeSelection;
 	private AbstractAction		actionDelete;
 	private AbstractAction		actionUndo;
 	private AbstractAction		actionRedo;
@@ -119,7 +119,7 @@ public class GsActions implements GraphChangeListener {
 	private AbstractAction		actionZoomOut;
 	private AbstractAction		actionNormalSize;
 	private AbstractAction		actionDisplayEdgeName;
-	private AbstractAction		actionVertexToFront;
+	private AbstractAction		actionNodeToFront;
 	private AbstractAction		actionDivideWindow;
 	private AbstractAction		actionDisplayGrid;
 	private AbstractAction		actionGridActive;
@@ -193,7 +193,7 @@ public class GsActions implements GraphChangeListener {
 		layoutMenu = new JMenu(Translator.getString("STR_layout"));
 		exportMenu = new JMenu(Translator.getString("STR_export"));
 		importMenu = new JMenu(Translator.getString("STR_import"));
-		addVertexMenu = new JMenu(Translator.getString("STR_addVertex"));
+		addNodeMenu = new JMenu(Translator.getString("STR_addNode"));
 		addEdgeMenu = new JMenu(Translator.getString("STR_addEdge"));
 		editSelectMenu = new JMenu(Translator.getString("STR_editSelectMenu"));
 		editExtendSelectionMenu = new JMenu(Translator.getString("STR_editExtendSelectionMenu"));
@@ -338,13 +338,13 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionInvertVertexSelection = new BaseAction("STR_invertVertexSelection", null,
+		actionInvertNodeSelection = new BaseAction("STR_invertNodeSelection", null,
 				"STR_invertEdgeSelection_descr",  null) {
 
 			private static final long	serialVersionUID	= -2792926833599149035L;
 
 			public void actionPerformed(java.awt.event.ActionEvent e) {
-				editcallback.invertVertexSelection();
+				editcallback.invertNodeSelection();
 			}
 		};
 
@@ -427,7 +427,7 @@ public class GsActions implements GraphChangeListener {
 			}
 		};
 
-		actionVertexToFront = new BaseAction("STR_vertextofront", null,
+		actionNodeToFront = new BaseAction("STR_vertextofront", null,
 				"STR_vertextofront_descr", null) {
 
 			private static final long	serialVersionUID	= 1884358515751192901L;
@@ -649,7 +649,7 @@ public class GsActions implements GraphChangeListener {
 		editMenu.add(actionPaste);
 		sepEdit = new JSeparator();
 		editMenu.add(sepEdit);
-		editMenu.add(addVertexMenu);
+		editMenu.add(addNodeMenu);
 		editMenu.add(addEdgeMenu);
 		editMenu.add(new JSeparator());
 		editMenu.add(actionSearchNode);
@@ -662,7 +662,7 @@ public class GsActions implements GraphChangeListener {
 		editMenu.add(btt_simpleFunctionEdition);
 
 		invertSelectionMenu.add(actionInvertSelection);
-		invertSelectionMenu.add(actionInvertVertexSelection);
+		invertSelectionMenu.add(actionInvertNodeSelection);
 		invertSelectionMenu.add(actionInvertEdgeSelection);
 
 		selectAllMenu.add(actionSelectAll);
@@ -687,7 +687,7 @@ public class GsActions implements GraphChangeListener {
 		btt_displayGrid = new JCheckBoxMenuItem(actionDisplayGrid);
 		btt_gridActive = new JCheckBoxMenuItem(actionGridActive);
 		btt_displayMiniMap = new JCheckBoxMenuItem(actionDisplayMiniMap);
-		btt_vertextofront = new JCheckBoxMenuItem(actionVertexToFront);
+		btt_vertextofront = new JCheckBoxMenuItem(actionNodeToFront);
 		btt_displayGrid.setSelected(true);
 		btt_displayMiniMap.setSelected(true);
 		viewMenu.add(actionZoomIn);
@@ -812,7 +812,7 @@ public class GsActions implements GraphChangeListener {
 		editMenu.remove(mi_delete);
 		editMenu.remove(sepEdit);
 		editMenu.remove(addEdgeMenu);
-		editMenu.remove(addVertexMenu);
+		editMenu.remove(addNodeMenu);
 
 		Graph graph = event.getNewGraph();
 		if (graph == null) {
@@ -834,12 +834,12 @@ public class GsActions implements GraphChangeListener {
 		}
 
 		Vector v_modes = graph.getEditingModes();
-		addVertexMenu.removeAll();
+		addNodeMenu.removeAll();
 		addEdgeMenu.removeAll();
 		if (v_modes != null) {
 			// customize edit toolbar and edit submenus
 			nbEditEdgeSubmode = 0;
-			nbEditVertexSubmode = 0;
+			nbEditNodeSubmode = 0;
 
 			JToggleButton bt = new JToggleButton(actionEditDefault);
 			bt.setText("");
@@ -858,8 +858,8 @@ public class GsActions implements GraphChangeListener {
 
 				int mode = ((GsEditModeDescriptor)v_modes.get(i)).mode;
 				if (mode == MODE_ADD_VERTEX) {
-					nbEditVertexSubmode++;
-					addVertexMenu.add(sa);
+					nbEditNodeSubmode++;
+					addNodeMenu.add(sa);
 				} else if (mode == MODE_ADD_EDGE) {
 					nbEditEdgeSubmode++;
 					addEdgeMenu.add(sa);
@@ -871,7 +871,7 @@ public class GsActions implements GraphChangeListener {
 			}
 			editMenu.add(mi_edit, 4);
 			editMenu.add(addEdgeMenu, 5);
-			editMenu.add(addVertexMenu, 6);
+			editMenu.add(addNodeMenu, 6);
 		}
 
 		// fill export menu
@@ -1002,7 +1002,7 @@ public class GsActions implements GraphChangeListener {
 		switch (mode) {
 			case MODE_ADD_VERTEX:
 				this.mode = mode;
-				if (submode >= nbEditVertexSubmode) {
+				if (submode >= nbEditNodeSubmode) {
 					this.submode = 0;
 				} else {
 					this.submode = submode;
@@ -1020,14 +1020,14 @@ public class GsActions implements GraphChangeListener {
 				this.mode = mode;
 				this.submode = submode;
 				this.locked = locked;
-				selected = 1 + nbEditVertexSubmode + this.submode;
+				selected = 1 + nbEditNodeSubmode + this.submode;
 				break;
 
 			case MODE_ADD_EDGE_POINT:
 				this.mode = mode;
 				this.submode = 0;
 				this.locked = locked;
-				selected = 1 + nbEditVertexSubmode + nbEditEdgeSubmode;
+				selected = 1 + nbEditNodeSubmode + nbEditEdgeSubmode;
 				break;
 			default:
 				this.mode = mode;

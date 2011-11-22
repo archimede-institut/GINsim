@@ -30,10 +30,10 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
         }
         return fbEReader;
 	}
-	public NodeAttributesReader getVertexAttributeReader() {
+	public NodeAttributesReader getNodeAttributeReader() {
         if (fbVReader == null) {
         	System.out.println("create fallback");
-            fbVReader = new FallbackNodeAttributeReader(this, getVertexVSMap());
+            fbVReader = new FallbackNodeAttributeReader(this, getNodeVSMap());
         }
         return fbVReader;
 	}
@@ -49,7 +49,7 @@ public class JgraphtViewBackendImpl implements GraphViewBackend {
         return evsmap;
     }
     
-    protected Map getVertexVSMap() {
+    protected Map getNodeVSMap() {
         if (vvsmap == null) {
             vvsmap = new HashMap();
         }

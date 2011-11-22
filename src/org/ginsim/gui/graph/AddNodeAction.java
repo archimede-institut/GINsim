@@ -14,13 +14,13 @@ public abstract class AddNodeAction<V> extends EditAction {
 		this.reader = reader;
 	}
 	
-	public void addVertex( EditActionManager manager, int x, int y) {
-		V vertex = getNewVertex();
-		reader.setVertex(vertex);
+	public void addNode( EditActionManager manager, int x, int y) {
+		V vertex = getNewNode();
+		reader.setNode(vertex);
 		reader.setPos(x, y);
 		reader.refresh();
 		manager.actionPerformed(this);
 	}
 	
-	abstract protected V getNewVertex();
+	abstract protected V getNewNode();
 }

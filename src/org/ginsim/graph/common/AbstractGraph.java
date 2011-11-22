@@ -152,9 +152,9 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @return the created vertex
 	 */
 	@Override
-	public boolean addVertex( V vertex) {
+	public boolean addNode( V vertex) {
 		
-		return graphBackend.addVertexInBackend(vertex);
+		return graphBackend.addNodeInBackend(vertex);
 	}
 	
 	/**
@@ -176,9 +176,9 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      * @return true if the vertex was effectively removed
      */ 
 	@Override
-	public boolean removeVertex(V vertex) {
+	public boolean removeNode(V vertex) {
 		
-		return graphBackend.removeVertex(vertex);
+		return graphBackend.removeNode(vertex);
 	}
 
 	
@@ -208,8 +208,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @return the number of vertex in this graph.
 	 */
 	@Override
-	public int getVertexCount() {
-		return graphBackend.getVertexCount();
+	public int getNodeCount() {
+		return graphBackend.getNodeCount();
 	}
 
 	
@@ -259,9 +259,9 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @return the vertex corresponding to this unique id or null if not found.
 	 */
 	@Override
-	public V getVertexByName( String id) {
+	public V getNodeByName( String id) {
 		
-		return graphBackend.getVertexByName( id);
+		return graphBackend.getNodeByName( id);
 	}
 
 	
@@ -303,8 +303,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      * @return true if the vertex is in the graph, false if not.
      */
 	@Override
-    public boolean containsVertex(V vertex) {
-        return graphBackend.containsVertex(vertex);
+    public boolean containsNode(V vertex) {
+        return graphBackend.containsNode(vertex);
     }
     
 	
@@ -360,8 +360,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 	
 	@Override
-	public NodeAttributesReader getVertexAttributeReader() {
-		return viewBackend.getVertexAttributeReader();
+	public NodeAttributesReader getNodeAttributeReader() {
+		return viewBackend.getNodeAttributeReader();
 	}
 	
 	
@@ -369,7 +369,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      * @return true is the graph is empty
      */
     public boolean isEmpty() {
-        return !annoted && getAnnotation().isEmpty() && getVertexCount() == 0;
+        return !annoted && getAnnotation().isEmpty() && getNodeCount() == 0;
     }
 	
 	
@@ -481,7 +481,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 */
 	private void save(String save_path, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException {
 
-		boolean selected = vertices == null || vertices.size() < getVertexCount();
+		boolean selected = vertices == null || vertices.size() < getNodeCount();
 		if (!selected) {
 			vertices = getVertices();
 			edges = getEdges();

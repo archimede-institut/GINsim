@@ -87,7 +87,7 @@ public class GsWhatToDoFrame extends JDialog {
 	 * Initialization
 	 */
 	private void initialize() {
-		size = graph.getVertexCount();
+		size = graph.getNodeCount();
 		this.setSize(500, 280);
 		this.setContentPane(getTheContentPane());
 		this.setVisible(true);

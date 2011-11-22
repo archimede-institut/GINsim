@@ -237,14 +237,14 @@ public class ModelSimplifier extends Thread implements Runnable {
 		List<RegulatoryNode> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
 		
 		// Create all the nodes of the new model
-		NodeAttributesReader vreader = graph.getVertexAttributeReader();
-		NodeAttributesReader simplified_vreader = simplifiedGraph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getNodeAttributeReader();
+		NodeAttributesReader simplified_vreader = simplifiedGraph.getNodeAttributeReader();
 		for (RegulatoryNode vertex: (List<RegulatoryNode>)graph.getNodeOrder()) {
 			if (!m_removed.containsKey(vertex)) {
 				RegulatoryNode clone = (RegulatoryNode)vertex.clone();
-				simplifiedGraph.addVertex(clone);
-				vreader.setVertex(vertex);
-				simplified_vreader.setVertex(clone);
+				simplifiedGraph.addNode(clone);
+				vreader.setNode(vertex);
+				simplified_vreader.setNode(clone);
 				simplified_vreader.copyFrom(vreader);
 				copyMap.put(vertex, clone);
 				simplified_nodeOrder.add(clone);
@@ -278,8 +278,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 			String id = vertex.getId();
 			while (it_oldOrder.hasNext()) {
 				pos++;
-				RegulatoryNode oldVertex = it_oldOrder.next();
-				if (id.equals(oldVertex.getId())) {
+				RegulatoryNode oldNode = it_oldOrder.next();
+				if (id.equals(oldNode.getId())) {
 					m_orderPos.put(vertex, new Integer(pos));
 					break;
 				}
@@ -676,7 +676,7 @@ class ParameterGenerator extends LogicalFunctionBrowser {
 		this.m_orderPos = m_orderPos;
 	}
 
-	public void browse(Collection<RegulatoryMultiEdge> edges, RegulatoryNode targetVertex, OMDDNode node) {
+	public void browse(Collection<RegulatoryMultiEdge> edges, RegulatoryNode targetNode, OMDDNode node) {
 		this.paramList = new ArrayList<LogicalParameter>();
 		t_values = new int[edges.size()][4];
 		t_me = new RegulatoryMultiEdge[t_values.length];
@@ -689,7 +689,7 @@ class ParameterGenerator extends LogicalFunctionBrowser {
 		}
 
 		browse(node);
-		targetVertex.getV_logicalParameters().setManualParameters(paramList);
+		targetNode.getV_logicalParameters().setManualParameters(paramList);
 	}
 	
 	protected void leafReached(OMDDNode leaf) {

@@ -116,7 +116,7 @@ public class TreeParserFromCircuit extends TreeParser {
 	}
 
 	public void updateLayout(NodeAttributesReader vreader, TreeNode vertex) {
-		vreader.setVertex(vertex);
+		vreader.setNode(vertex);
 		int total_width = getTerminalWidth()*TreeNode.PADDING_HORIZONTAL;
 		if (vertex.getType() == TreeNode.TYPE_LEAF) {
 			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
@@ -175,11 +175,11 @@ public class TreeParserFromCircuit extends TreeParser {
 			if (tree.getMode() == TreeImpl.MODE_DIAGRAM_WITH_MULTIPLE_LEAFS) {
 				treeNode = new TreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], TreeNode.TYPE_LEAF, o.value);
 				if (mult > 1) currentWidthPerDepth[max_depth] += mult-1;
-				tree.addVertex(treeNode);
+				tree.addNode(treeNode);
 			} else { // if (mode == MODE_DIAGRAM) {
 				treeNode = TreeImpl.leafs[o.value];
 				if (!tree.containsNode(treeNode)) {
-					tree.addVertex(treeNode);
+					tree.addNode(treeNode);
 				}
 			}
 			return treeNode;
@@ -188,7 +188,7 @@ public class TreeParserFromCircuit extends TreeParser {
 		mult = jump(lastLevel, o.level, currentWidthPerDepth);
 
 		treeNode = new TreeNode(getNodeName(o.level), o.level, ++currentWidthPerDepth[o.level], TreeNode.TYPE_BRANCH); 
-		tree.addVertex(treeNode);
+		tree.addNode(treeNode);
 	
 		for (int i = 0 ; i < o.next.length ; i++) { //For all the children
 	    	TreeNode child = _createDiagramFromOmdd(o.next[i], o.level, currentWidthPerDepth, ereader);
@@ -230,12 +230,12 @@ public class TreeParserFromCircuit extends TreeParser {
 				if (mult > 1) {
 					for (int i = 0; i < widthPerDepth[last_real]; i++) {
 						treeNode = new TreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], TreeNode.TYPE_LEAF, o.value);
-						tree.addVertex(treeNode);
+						tree.addNode(treeNode);
 				    	linkNode(p, treeNode, i, ereader);
 					}
 				} else {
 					treeNode = new TreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], TreeNode.TYPE_LEAF, o.value);
-					tree.addVertex(treeNode);
+					tree.addNode(treeNode);
 			    	linkNode(p, treeNode, childIndex, ereader);	
 				}
 			}
@@ -258,7 +258,7 @@ public class TreeParserFromCircuit extends TreeParser {
 		for (int k = 0; k < skippedParents.size(); k++) {
 			for (int i = 0; i < nodeCountToCreate; i++) {
 				treeNode = new TreeNode(getNodeName(o.level), o.level, ++currentWidthPerDepth[o.level], TreeNode.TYPE_BRANCH); 
-				tree.addVertex(treeNode);
+				tree.addNode(treeNode);
 				currentNodes.add(treeNode);
 		
 				for (int j = 0 ; j < o.next.length ; j++) { //For all the children
@@ -304,7 +304,7 @@ public class TreeParserFromCircuit extends TreeParser {
 			for (int i = 0 ; i < mult ; i++) {
 				TreeNode treeNode = new TreeNode(parentId, j, ++currentWidthPerDepth[j], TreeNode.TYPE_BRANCH, TreeNode.SKIPPED);
 				newParents.add(treeNode);
-				tree.addVertex(treeNode);
+				tree.addNode(treeNode);
 				linkNode(o, treeNode, childIndex, ereader);
 			}
 		}

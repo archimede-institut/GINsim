@@ -23,7 +23,7 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
     	
         for (int i=0 ; i<v_changes.size() ; i++) {
             RegulatoryMutantChange nc = (RegulatoryMutantChange)v_changes.get(i);
-            if (!graph.containsVertex(nc.vertex)) {
+            if (!graph.containsNode(nc.vertex)) {
                 return false;
             }
             if (nc.vertex.getMaxValue() < nc.max) {

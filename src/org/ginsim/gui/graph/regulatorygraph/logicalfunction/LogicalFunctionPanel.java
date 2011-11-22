@@ -24,7 +24,7 @@ import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 public class LogicalFunctionPanel extends AbstractParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {
 	private static final long serialVersionUID = -87854595177707062L;
 	private IncomingEdgeListModel edgeList = null;
-	private RegulatoryNode currentVertex = null;
+	private RegulatoryNode currentNode = null;
 	private LogicalFunctionTreePanel treePanel = null;
 	private FunctionEditor functionEditor = null;
 	private RegulatoryGraph graph;
@@ -69,10 +69,10 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 		functionEditor.init(m, fp);
 	}
 	public void setEditedItem(Object obj) {
-		if (currentVertex != null) treePanel.setEditedItem(obj);
+		if (currentNode != null) treePanel.setEditedItem(obj);
 		if (obj != null && obj instanceof RegulatoryNode) {
-			currentVertex = (RegulatoryNode)obj;
-			edgeList.setEdge(graph.getIncomingEdges(currentVertex));
+			currentNode = (RegulatoryNode)obj;
+			edgeList.setEdge(graph.getIncomingEdges(currentNode));
 			treePanel.setEditedItem(obj);
 		}
 		setEditEditorVisible(false);
@@ -124,7 +124,7 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 			TreeExpression exp = treePanel.getSelectedFunction();
 			if ((exp != null) && !((Boolean) exp.getProperty("invalid")).booleanValue()) {
 				setDisplayEditorVisible(true);
-				functionEditor.init(exp, currentVertex, graph, treePanel.getTree());
+				functionEditor.init(exp, currentNode, graph, treePanel.getTree());
 			}
 		}*/
 	}

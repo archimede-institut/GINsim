@@ -56,7 +56,7 @@ public class LocalGraph {
 	}
 
 	public void run() {
-		node_to_position = new HashMap((int) (g.getVertexCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
+		node_to_position = new HashMap((int) (g.getNodeCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
 		int i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {							//Build the map m
 			node_to_position.put(it.next(), Integer.valueOf(i++));

@@ -157,7 +157,7 @@ class GsGraphOrderList extends SimpleGenericList {
 	
 	protected boolean doEdit(Object data, Object value) {
 		try {
-			graph.changeVertexId(data, (String)value);
+			graph.changeNodeId(data, (String)value);
 			return true;
 		} catch (GsException e) {
 			return false;
@@ -165,7 +165,7 @@ class GsGraphOrderList extends SimpleGenericList {
 	}
 
 	protected void doRun(int row, int col) {
-		GUIManager.getInstance().getGraphGUI(graph).selectVertex(v_data.get(row));
+		GUIManager.getInstance().getGraphGUI(graph).selectNode(v_data.get(row));
 	}
 	
 }

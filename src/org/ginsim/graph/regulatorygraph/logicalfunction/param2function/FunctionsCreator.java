@@ -21,22 +21,22 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.param2function.tree.Para
 public class FunctionsCreator {
   private RegulatoryGraph graph;
   private Collection<LogicalParameter> interactions;
-  private RegulatoryNode currentVertex;
+  private RegulatoryNode currentNode;
 
-  public FunctionsCreator(RegulatoryGraph graph, Collection<LogicalParameter> interactions, RegulatoryNode currentVertex) {
+  public FunctionsCreator(RegulatoryGraph graph, Collection<LogicalParameter> interactions, RegulatoryNode currentNode) {
     this.graph = graph;
     this.interactions = interactions;
-    this.currentVertex = currentVertex;
+    this.currentNode = currentNode;
   }
   public RegulatoryGraph getGraph() {
     return graph;
   }
-  public RegulatoryNode getCurrentVertex() {
-    return currentVertex;
+  public RegulatoryNode getCurrentNode() {
+    return currentNode;
   }
   public ParamTree makeTree(int def) {
 	  
-	Collection<RegulatoryMultiEdge> l = graph.getIncomingEdges(currentVertex);
+	Collection<RegulatoryMultiEdge> l = graph.getIncomingEdges(currentNode);
     HashMap<RegulatoryNode,Object> h = new HashMap();
 
     for (RegulatoryMultiEdge me: l) {
@@ -67,7 +67,7 @@ public class FunctionsCreator {
     RegulatoryNode v;
     for (Entry<RegulatoryNode, Object> e: as) {
       v = e.getKey();
-      e.setValue(graph.getEdge(v, currentVertex));
+      e.setValue(graph.getEdge(v, currentNode));
     }
     return new ParamTree(as, def);
   }

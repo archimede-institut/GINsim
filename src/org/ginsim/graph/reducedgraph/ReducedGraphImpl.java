@@ -167,7 +167,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
     	if (vertices == null) {
     		vertices = getVertices();
     	}
-    	NodeAttributesReader vReader = getVertexAttributeReader();
+    	NodeAttributesReader vReader = getNodeAttributeReader();
     	switch (mode) {
     		case 1:
 
@@ -181,7 +181,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
     			break;
 			case 2:
                 for (NodeReducedData vertex: vertices) {
-                    vReader.setVertex(vertex);
+                    vReader.setNode(vertex);
                     String content = ((NodeReducedData)vertex).getContentString();
                     out.write("\t\t<node id=\""+vertex+"\">\n");
                     out.write("<attr name=\"content\"><string>"+content+"</string></attr>");

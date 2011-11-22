@@ -175,7 +175,7 @@ public class TreeInteractionsModel implements TreeModel {
 		return null;
 	}
 
-	public void addExpression(byte val, RegulatoryNode currentVertex, BooleanParser parser) throws Exception {
+	public void addExpression(byte val, RegulatoryNode currentNode, BooleanParser parser) throws Exception {
 
 		TBooleanTreeNode root = parser.getRoot();
 		LogicalFunctionList functionList = (LogicalFunctionList)parser.eval();
@@ -186,7 +186,7 @@ public class TreeInteractionsModel implements TreeModel {
 		LogicalFunctionListElement element;
 		TreeParam param;
 
-		setNode(currentVertex);
+		setNode(currentNode);
 		addValue(val);
 		TreeExpression exp = addExpression(val, root);
 		if (exp != null)
@@ -203,7 +203,7 @@ public class TreeInteractionsModel implements TreeModel {
 				exp.addChild(param, -1);
 			}
 		parseFunctions();
-		currentVertex.setInteractionsModel(this);
+		currentNode.setInteractionsModel(this);
 	}
 	public boolean isBasalValueDefined() {
 		List parameters = getLogicalParameters();
@@ -226,16 +226,16 @@ public class TreeInteractionsModel implements TreeModel {
 		}
 		return n;
 	}
-	public void addExpression(JTree tree, byte val, RegulatoryNode currentVertex, String expression) throws Exception {
-		BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(currentVertex), isAutoAddEnabled());
-		if (!tbp.compile(expression, graph, currentVertex))
+	public void addExpression(JTree tree, byte val, RegulatoryNode currentNode, String expression) throws Exception {
+		BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(currentNode), isAutoAddEnabled());
+		if (!tbp.compile(expression, graph, currentNode))
 			graph.addNotificationMessage(new NotificationMessage(graph, "invalid formula",
 					NotificationMessage.NOTIFICATION_WARNING));
 		else {
-			addExpression(val, currentVertex, tbp);
+			addExpression(val, currentNode, tbp);
 			fireTreeStructureChanged(root);
 			if (tree != null) tree.expandPath(getPath(val, tbp.getRoot().toString(false)));
-			GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(currentVertex);
+			GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(currentNode);
 		}
 	}
 	public void setRootInfos() {
@@ -243,16 +243,16 @@ public class TreeInteractionsModel implements TreeModel {
 		if (isBasalValueDefined()) s = s + ", basal value defined";
 		root.setString(s);
 	}
-	public TreeExpression addEmptyExpression(byte val, RegulatoryNode currentVertex) throws Exception {
-		setNode(currentVertex);
+	public TreeExpression addEmptyExpression(byte val, RegulatoryNode currentNode) throws Exception {
+		setNode(currentNode);
 		addValue(val);
-		currentVertex.setInteractionsModel(this);
+		currentNode.setInteractionsModel(this);
 		return addExpression(val, (TBooleanTreeNode)null);
 	}
-	public TreeParam addEmptyParameter(byte val, RegulatoryNode currentVertex) throws Exception {
+	public TreeParam addEmptyParameter(byte val, RegulatoryNode currentNode) throws Exception {
 		TreeParam param = null;
 
-		setNode(currentVertex);
+		setNode(currentNode);
 		addValue(val);
 		return param;
 	}
@@ -269,7 +269,7 @@ public class TreeInteractionsModel implements TreeModel {
 				break;
 			}
 		}
-		refreshVertex();
+		refreshNode();
 	}
 
 	private boolean isAutoAddEnabled() {
@@ -331,7 +331,7 @@ public class TreeInteractionsModel implements TreeModel {
 		TreeModelEvent e = new TreeModelEvent(this, new Object[] {element});
 		for (Iterator it = treeModelListeners.iterator(); it.hasNext(); ) ((TreeModelListener)it.next()).treeStructureChanged(e);
 	}
-	public void refreshVertex() {
+	public void refreshNode() {
 		boolean dis = false;
 
 		parseFunctions();
@@ -443,7 +443,7 @@ public class TreeInteractionsModel implements TreeModel {
 		}
 		return new TreePath(path);
 	}
-	public RegulatoryNode getVertex() {
+	public RegulatoryNode getNode() {
 		return node;
 	}
 	public boolean isMaxCompatible(int max) {

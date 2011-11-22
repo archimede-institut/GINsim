@@ -142,7 +142,7 @@ public class SearchFrame extends SimpleDialog {
 		List l = new Vector();
 		int[] t = table.getSelectedRows();
 		for (int i = 0; i < t.length; i++) {
-			l.add(tableModel.getVertexAt(t[i]));
+			l.add(tableModel.getNodeAt(t[i]));
 		}
 		gui.getSelection().selectVertices(l);
 	}
@@ -179,7 +179,7 @@ class MyTableModel extends AbstractTableModel {
         return ldata.get(row);
     }
 
-    public Object getVertexAt(int row) {
+    public Object getNodeAt(int row) {
         return ldata.get(row);
     }
 

@@ -65,7 +65,7 @@ public abstract class NodeAttributesReader implements AttributesReader {
      * change the edited vertex.
      * @param vertex the vertex to edit
      */
-    abstract public void setVertex(Object vertex); 
+    abstract public void setNode(Object vertex); 
 
     /**
      * @return the horizontal position of the vertex.
@@ -124,21 +124,21 @@ public abstract class NodeAttributesReader implements AttributesReader {
      * set the default background color for vertices.
      * @param color
      */
-	public void setDefaultVertexBackground(Color color) {
+	public void setDefaultNodeBackground(Color color) {
 		bg = color;
 	}
     /**
      * set the default foreground color for vertices.
      * @param color
      */
-	public void setDefaultVertexForeground(Color color) {
+	public void setDefaultNodeForeground(Color color) {
 		fg = color;
 	}
     /**
      * set the default kind of border for vertices.
      * @param index
      */
-	public void setDefaultVertexBorder(int index) {
+	public void setDefaultNodeBorder(int index) {
 		border = index;
 	}
 	/**
@@ -146,7 +146,7 @@ public abstract class NodeAttributesReader implements AttributesReader {
 	 * @param w
 	 * @param h
 	 */
-	public void setDefaultVertexSize(int w, int h) {
+	public void setDefaultNodeSize(int w, int h) {
 		width = w;
 		height = h;
 	}
@@ -154,44 +154,44 @@ public abstract class NodeAttributesReader implements AttributesReader {
 	 * set the default shape for vertices.
 	 * @param shape
 	 */
-	public void setDefaultVertexShape(int shape) {
+	public void setDefaultNodeShape(int shape) {
 		NodeAttributesReader.shape = shape;
 	}
 
     /**
      * @return the default background color for vertices.
      */
-	public Color getDefaultVertexBackground() {
+	public Color getDefaultNodeBackground() {
 		return bg;
 	}
     /**
      * @return the default foreground color for vertices.
      */
-	public Color getDefaultVertexForeground() {
+	public Color getDefaultNodeForeground() {
 		return fg;
 	}
     /**
      * @return the default kind of border for vertices.
      */
-	public int getDefaultVertexBorder() {
+	public int getDefaultNodeBorder() {
 		return border;
 	}
 	/**
 	 * @return the default width for vertices.
 	 */
-	public int getDefaultVertexWidth() {
+	public int getDefaultNodeWidth() {
 		return width;
 	}
 	/**
 	 * @return the default height for vertices.
 	 */
-	public int getDefaultVertexHeight() {
+	public int getDefaultNodeHeight() {
 		return height;
 	}
 	/**
 	 * @return the default shape for vertices.
 	 */
-	public int getDefaultVertexShape() {
+	public int getDefaultNodeShape() {
 		return shape;
 	}
 

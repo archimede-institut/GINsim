@@ -168,7 +168,7 @@ public class GNAMLExport extends ExportAction<RegulatoryGraph> {
 				out.addTagWithContent("ci", "k_"+topNodeId+"_"+node.value);
 				String nodeName;
 				for (int i = 0; i < deep; i++) {
-					nodeName = getVertexNameForLevel(parcours[i][2], nodeOrder);//level
+					nodeName = getNodeNameForLevel(parcours[i][2], nodeOrder);//level
 					if (parcours[i][0] > 0) {
 						stepPlus(nodeName, parcours[i][0]);
 					}
@@ -244,7 +244,7 @@ public class GNAMLExport extends ExportAction<RegulatoryGraph> {
 	 * @param nodeOrder : The node order (in the graph)
 	 * @return the ID as string
 	 */
-	protected String getVertexNameForLevel(int level, List nodeOrder) {
+	protected String getNodeNameForLevel(int level, List nodeOrder) {
 		return ((RegulatoryNode) nodeOrder.get(level)).getId();
 	}
 }

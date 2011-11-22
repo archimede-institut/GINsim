@@ -48,7 +48,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 			//generate the argument list from incoming edges : a, b, _a, _b
 			RegulatoryNode current_node = (RegulatoryNode) nodeOrder.get(node_i);
 			Collection<RegulatoryMultiEdge> incomingEdges = graph.getIncomingEdges(current_node);
-			String current_node_name = getVertexNameForLevel(node_i, nodeOrder);
+			String current_node_name = getNodeNameForLevel(node_i, nodeOrder);
 			if (incomingEdges.size() == 0) {
 				out.write("    # specification of component \""+current_node_name+"\"\n");
 				out.write("    range_"+current_node_name+"=(0, "+current_node.getMaxValue()+")\n");
@@ -100,7 +100,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 				String indent = "        ";
 				boolean and;
 				for (int i = 0; i < deep; i++, indent+="    ") {
-					nodeName = getVertexNameForLevel(parcours[i][2], nodeOrder);//level
+					nodeName = getNodeNameForLevel(parcours[i][2], nodeOrder);//level
 					out.write(indent+"if ");
 					and = false;
 					if (parcours[i][0] > 0) {
@@ -140,7 +140,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 	 * @param nodeOrder : The node order (in the graph)
 	 * @return the ID as string
 	 */
-	private String getVertexNameForLevel(int order, List nodeOrder) {
+	private String getNodeNameForLevel(int order, List nodeOrder) {
 		return ((RegulatoryNode) nodeOrder.get(order)).getId();
 	}
 }

@@ -210,10 +210,10 @@ public class TBInfoProfilePanel extends TBPanel implements ChartProgressListener
         val += dataSet.getSeries(i).getY(xAxis.getLabelToDraw()).doubleValue();
       val /= sel.length;
       if (clientPanel != null) {
-        NodeAttributesReader vReader = clientPanel.getGraph().getVertexAttributeReader();
+        NodeAttributesReader vReader = clientPanel.getGraph().getNodeAttributeReader();
         Vector genes = clientPanel.getSelectedGenes();
         for (Iterator it = genes.iterator(); it.hasNext(); ) {
-        	vReader.setVertex(it.next());
+        	vReader.setNode(it.next());
         	vReader.setBackgroundColor(Color.green);
         }
   		  vReader.refresh();

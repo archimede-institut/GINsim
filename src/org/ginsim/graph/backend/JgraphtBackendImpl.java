@@ -40,12 +40,24 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
      * @return true if the vertex was correctly added, false if not.
      */
 	@Override
-	public boolean addVertexInBackend(V vertex) {
+	public boolean addNodeInBackend(V vertex) {
 		return super.addVertex(vertex);
 	}
 	
+	/**
+	 * remove a node from the JgraphT graph
+	 * 
+	 * @param node the node to remove
+	 * @return true if the node was correctly removed, false if not
+	 */
 	@Override
-	public int getVertexCount() {
+	public boolean removeNode(V node) {
+		
+		return super.removeVertex( node);
+	}
+	
+	@Override
+	public int getNodeCount() {
 		return vertexSet().size();
 	}
 
@@ -65,7 +77,7 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	 * @param id name of a vertex
 	 * @return the vertex corresponding to this unique id or null if not found.
 	 */
-	public V getVertexByName( String id) {
+	public V getNodeByName( String id) {
 		Iterator<V> it = getVertices().iterator();
 		while (it.hasNext()) {
 			V vertex = it.next();
@@ -91,7 +103,7 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
      * @return true if the vertex is in the graph, false if not.
      */
 	@Override
-    public boolean containsVertex(V vertex) {
+    public boolean containsNode(V vertex) {
         return super.containsVertex(vertex);
     }
     

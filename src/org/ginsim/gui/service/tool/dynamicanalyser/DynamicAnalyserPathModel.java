@@ -44,7 +44,7 @@ public class DynamicAnalyserPathModel extends DefaultTableModel {
         if (v.size() == 0 ) {
             v.add(new byte[len]);
             v.add(new byte[len]);
-            if (graph.containsVertex(new DynamicNode((byte[])v.get(0)))) {
+            if (graph.containsNode(new DynamicNode((byte[])v.get(0)))) {
                 v_in.add(Boolean.TRUE);
                 v_in.add(Boolean.TRUE);
                 nbBad = 0;
@@ -76,7 +76,7 @@ public class DynamicAnalyserPathModel extends DefaultTableModel {
         	byte[] t = (byte[])v.get(row);
             try {
                 t[column] = Byte.parseByte((String)aValue);
-                if (graph.containsVertex(new DynamicNode(t))) {
+                if (graph.containsNode(new DynamicNode(t))) {
                     if (v_in.get(row).equals(Boolean.FALSE)) {
                         nbBad--;
                     }

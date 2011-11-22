@@ -104,7 +104,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
 
-		vareader = graph.getVertexAttributeReader();
+		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
         pos = POS_OUT;
         values = new Hashtable();
@@ -120,7 +120,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     public void parse(File file, Map map, Graph<?,?> graph) {
     	this.graph = (RegulatoryGraph) graph;
     	this.map = map;
-		  vareader = graph.getVertexAttributeReader();
+		  vareader = graph.getNodeAttributeReader();
 		  ereader = graph.getEdgeAttributeReader();
 		  startParsing(file);
    	}
@@ -241,7 +241,7 @@ public final class RegulatoryParser extends GsXMLHelper {
                         try {
                             byte maxvalue = (byte)Integer.parseInt(attributes.getValue("maxvalue"));
                             String name = attributes.getValue("name");
-                            vertex = graph.addNewVertex(id, name, maxvalue);
+                            vertex = graph.addNewNode(id, name, maxvalue);
                             vertex.getV_logicalParameters().setUpdateDup(false);
                         	String s_basal = attributes.getValue("basevalue");
                         	if (s_basal != null) {
@@ -310,7 +310,7 @@ public final class RegulatoryParser extends GsXMLHelper {
             case POS_VERTEX:
                 if (vareader != null && qName.equals("nodevisualsetting")) {
                 	pos = POS_VERTEX_VS;
-                	vareader.setVertex(vertex);
+                	vareader.setNode(vertex);
                 } else if (qName.equals("annotation")) {
                     pos = POS_VERTEX_NOTES;
                     annotation = vertex.getAnnotation();
@@ -437,7 +437,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     		boolean ok = true;
     		if (map == null) {
 	    		for (int i=0 ; i<t_order.length ; i++) {
-	    			RegulatoryNode vertex = (RegulatoryNode)graph.getVertexByName(t_order[i]);
+	    			RegulatoryNode vertex = (RegulatoryNode)graph.getNodeByName(t_order[i]);
 	    			if (vertex == null) {
 	    				ok = false;
 	    				break;
@@ -447,7 +447,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     		} else {
 	    		for (int i=0 ; i<t_order.length ; i++) {
 	    		    if (map.containsKey(t_order[i])) {
-	    		        RegulatoryNode vertex = (RegulatoryNode)graph.getVertexByName(t_order[i]);
+	    		        RegulatoryNode vertex = (RegulatoryNode)graph.getNodeByName(t_order[i]);
 	    		        if (vertex == null) {
 	    		            ok = false;
 	    		            break;
@@ -456,7 +456,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 	    		    }
 	    		}
     		}
-    		if (!ok || v_order.size() != graph.getVertexCount()) {
+    		if (!ok || v_order.size() != graph.getNodeCount()) {
     			// error
     			Tools.error("incoherent nodeOrder, not restoring it");
     		} else {

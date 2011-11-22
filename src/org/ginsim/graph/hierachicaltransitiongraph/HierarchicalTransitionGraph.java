@@ -54,10 +54,10 @@ public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, Dec
 	
 	/**
 	 * 
-	 * Return the Vertex with the given state
+	 * Return the Node with the given state
 	 * 
 	 * @param state
-	 * @return the Vertex with the given state
+	 * @return the Node with the given state
 	 */
 	public HierarchicalNode getNodeForState(byte[] state);
 	

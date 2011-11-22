@@ -15,7 +15,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 * @param vertex
 	 * @return
 	 */
-	public boolean addVertexInBackend (V vertex);
+	public boolean addNodeInBackend (V vertex);
 	
 	
 	/**
@@ -32,7 +32,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
      * @param vertex
      * @return true if the vertex is in the graph, false if not.
      */
-    public boolean containsVertex(V vertex);
+    public boolean containsNode(V vertex);
     
 	
     /**
@@ -49,7 +49,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
      * @param vertex
      * @return true if the vertex was correctly removed, false if not.
      */
-	public boolean removeVertex(V vertex);
+	public boolean removeNode(V node);
 
 	
     /**
@@ -72,12 +72,12 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 * @param id name of a vertex
 	 * @return the vertex corresponding to this unique id or null if not found.
 	 */
-	public V getVertexByName( String id);
+	public V getNodeByName( String id);
     
 	/**
 	 * @return the number of vertex in this graph.
 	 */
-	public int getVertexCount();
+	public int getNodeCount();
 	
     
     /**

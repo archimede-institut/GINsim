@@ -104,7 +104,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     public RegulatoryGraphImpl( boolean parsing) {
     	
         super( parsing);
-    	// getVertexAttributeReader().setDefaultVertexSize(55, 25);
+    	// getNodeAttributeReader().setDefaultNodeSize(55, 25);
     	// getEdgeAttributeReader().setDefaultEdgeSize(2);
     }
     
@@ -119,13 +119,13 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         parser.parse(file, map, this);
     }
 
-    public RegulatoryNode addVertex() {
+    public RegulatoryNode addNode() {
 
-        while ( getVertexByName("G" + nextid) != null) {
+        while ( getNodeByName("G" + nextid) != null) {
         		nextid++;
         }
         RegulatoryNode obj = new RegulatoryNode(nextid++, this);
-        if (addVertex( obj)) {
+        if (addNode( obj)) {
     		nodeOrder.add(obj);
     		return obj;
         }
@@ -262,14 +262,14 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	if ( mode >=0) {
     	}
 
-		NodeAttributesReader vReader = getVertexAttributeReader(); 
+		NodeAttributesReader vReader = getNodeAttributeReader(); 
     	
     	switch (mode) {
     		case 1:
     	        while (it.hasNext()) {
     	            Object vertex = it.next();
     	            String svs = "";
-	                vReader.setVertex(vertex);
+	                vReader.setNode(vertex);
 	                svs = GinmlHelper.getShortNodeVS( vReader);
     	            ((RegulatoryNode)vertex).toXML(out, svs, mode);
     	        }
@@ -278,7 +278,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	        while (it.hasNext()) {
     	            Object vertex = it.next();
     	            String svs = "";
-	                vReader.setVertex(vertex);
+	                vReader.setNode(vertex);
 	                svs = GinmlHelper.getFullNodeVS(vReader);
     	            ((RegulatoryNode)vertex).toXML(out, svs, mode);
     	        }
@@ -329,7 +329,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * @throws GsException
      */
     @Override
-    public void changeVertexId(Object vertex, String newId) throws GsException {
+    public void changeNodeId(Object vertex, String newId) throws GsException {
         RegulatoryNode rvertex = (RegulatoryNode)vertex;
         if (newId.equals(rvertex.getId())) {
             return;
@@ -370,11 +370,11 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
        return true;
     }
 
-    public boolean removeVertex(RegulatoryNode obj) {
+    public boolean removeNode(RegulatoryNode obj) {
         for (RegulatoryMultiEdge me: getOutgoingEdges(obj)) {
             removeEdge(me);
         }
-        super.removeVertex( obj);
+        super.removeNode( obj);
         nodeOrder.remove(obj);
         fireGraphChange(CHANGE_VERTEXREMOVED, obj);
         return true;
@@ -389,13 +389,13 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * @return the new vertex.
      */
     @Override
-    public RegulatoryNode addNewVertex(String id, String name, byte max) {
+    public RegulatoryNode addNewNode(String id, String name, byte max) {
         RegulatoryNode vertex = new RegulatoryNode(id, this);
         if (name != null) {
             vertex.setName(name);
         }
         vertex.setMaxValue(max, this);
-        if (addVertex(vertex)) {
+        if (addNode(vertex)) {
         	nodeOrder.add(vertex);
         }
         return vertex;
@@ -436,15 +436,15 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         RegulatoryNode source = null;
         RegulatoryNode target = null;
 
-        source = (RegulatoryNode) getVertexByName(from);
+        source = (RegulatoryNode) getNodeByName(from);
         if (from.equals(to)) {
             target = source;
         } else {
-            target = (RegulatoryNode) getVertexByName(to);
+            target = (RegulatoryNode) getNodeByName(to);
         }
 
         if (source == null || target == null) {
-            throw new GsException( GsException.GRAVITY_ERROR, "STR_noSuchVertex");
+            throw new GsException( GsException.GRAVITY_ERROR, "STR_noSuchNode");
         }
         RegulatoryMultiEdge me = getEdge(source, target);
         int index = 0;
@@ -502,14 +502,14 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         List ret = new ArrayList();
         HashMap copyMap = new HashMap();
         Iterator<RegulatoryNode> it = otherGraph.getVertices().iterator();
-        NodeAttributesReader vReader = getVertexAttributeReader();
-        NodeAttributesReader cvreader = otherGraph.getVertexAttributeReader();
+        NodeAttributesReader vReader = getNodeAttributeReader();
+        NodeAttributesReader cvreader = otherGraph.getNodeAttributeReader();
         while (it.hasNext()) {
             RegulatoryNode vertexOri = (RegulatoryNode)it.next();
             RegulatoryNode vertex = (RegulatoryNode)vertexOri.clone();
-            addVertexWithNewId(vertex);
-            cvreader.setVertex(vertexOri);
-            vReader.setVertex(vertex);
+            addNodeWithNewId(vertex);
+            cvreader.setNode(vertexOri);
+            vReader.setNode(vertex);
             vReader.copyFrom(cvreader);
             vReader.refresh();
             copyMap.put(vertexOri, vertex);
@@ -542,19 +542,19 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     /**
      * @param vertex
      */
-    private void addVertexWithNewId(RegulatoryNode vertex) {
+    private void addNodeWithNewId(RegulatoryNode vertex) {
         String id = vertex.getId();
-        if (getVertexByName(id) == null) {
-            addVertex(vertex);
+        if (getNodeByName(id) == null) {
+            addNode(vertex);
             nodeOrder.add(vertex);
             return;
         }
         int addon = 1;
-        while ( getVertexByName(id+"_"+addon) != null) {
+        while ( getNodeByName(id+"_"+addon) != null) {
             addon++;
         }
         vertex.setId(id+"_"+addon);
-        addVertex(vertex);
+        addNode(vertex);
         nodeOrder.add(vertex);
     }
 
@@ -562,15 +562,15 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     public Graph getSubgraph(Collection<RegulatoryNode> v_vertex, Collection<RegulatoryMultiEdge> v_edges) {
     	
         RegulatoryGraph copiedGraph = GraphManager.getInstance().getNewGraph();
-        NodeAttributesReader vReader = getVertexAttributeReader();
-        NodeAttributesReader cvreader = copiedGraph.getVertexAttributeReader();
+        NodeAttributesReader vReader = getNodeAttributeReader();
+        NodeAttributesReader cvreader = copiedGraph.getNodeAttributeReader();
         HashMap copyMap = new HashMap();
         if (v_vertex != null) {
             for (RegulatoryNode vertexOri: v_vertex) {
                 RegulatoryNode vertex = (RegulatoryNode)vertexOri.clone();
-                ((RegulatoryGraphImpl)copiedGraph).addVertexWithNewId(vertex);
-                vReader.setVertex(vertexOri);
-                cvreader.setVertex(vertex);
+                ((RegulatoryGraphImpl)copiedGraph).addNodeWithNewId(vertex);
+                vReader.setNode(vertexOri);
+                cvreader.setNode(vertex);
                 cvreader.copyFrom(vReader);
                 copyMap.put( vertexOri, vertex);
             }

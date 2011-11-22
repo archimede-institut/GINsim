@@ -201,7 +201,7 @@ public class FunctionPanel extends BooleanFunctionTreePanel implements ActionLis
     if (!ok && !oldText.equals("")) tree.startEditingAtPath(sel_path);
     interactionsModel.setRootInfos();
     interactionsModel.fireTreeStructureChanged((TreeElement)interactionsModel.getRoot());
-    interactionsModel.refreshVertex();
+    interactionsModel.refreshNode();
     while (exp_path.hasMoreElements()) tree.expandPath((TreePath)exp_path.nextElement());
     tree.setSelectionPath(sel_path);
   }

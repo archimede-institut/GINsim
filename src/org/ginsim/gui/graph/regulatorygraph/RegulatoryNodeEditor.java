@@ -128,7 +128,7 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 		try {
 			switch (prop) {
 				case PROP_ID:
-					graph.changeVertexId(o, value);
+					graph.changeNodeId(o, value);
 					return true;
 				case PROP_NAME:
 					o.setName(value);

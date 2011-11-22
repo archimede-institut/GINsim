@@ -11,7 +11,7 @@ public class GraphSelectionChangeEvent {
     private List v_edge;
     private List v_vertex;
     private int nbEdge;
-    private int nbVertex;
+    private int nbNode;
     
     /**
      * @param v_edge
@@ -22,7 +22,7 @@ public class GraphSelectionChangeEvent {
         this.v_edge = v_edge;
         this.v_vertex = v_vertex;
         this.nbEdge = v_edge.size();
-        this.nbVertex = v_vertex.size();
+        this.nbNode = v_vertex.size();
     }
     /**
      * @return the number of edges in the new selected.
@@ -33,8 +33,8 @@ public class GraphSelectionChangeEvent {
     /**
      * @return the number of vertices in the new selected.
      */
-    public int getNbVertex() {
-        return nbVertex;
+    public int getNbNode() {
+        return nbNode;
     }
     /**
      * @return the list of edges in the new selection.

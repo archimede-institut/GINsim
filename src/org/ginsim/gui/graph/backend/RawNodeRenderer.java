@@ -28,11 +28,11 @@ class RawNodeRenderer extends JLabel {
 		
 		setText(view.toString());
 		setBounds(view.getBounds());
-		reader.setVertex(view.user);
+		reader.setNode(view.user);
 	}
 	
 	public Rectangle getBounds(Object user) {
-		reader.setVertex(user);
+		reader.setNode(user);
 		return new Rectangle(reader.getX(), reader.getY(), reader.getWidth()+1, reader.getHeight()+1);
 	}
 

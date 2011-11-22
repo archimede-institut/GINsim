@@ -95,7 +95,7 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * 
 	 * @param vertex
 	 */
-	void selectVertex(V vertex);
+	void selectNode(V vertex);
 	/**
 	 * reset selection and select a single edge.
 	 * 

@@ -78,22 +78,22 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 	}
 	class ButtonListener implements ActionListener {
 		private DTreeElementButton node;
-		private RegulatoryNode srcVertex, dstVertex;
+		private RegulatoryNode srcNode, dstNode;
 
 		public ButtonListener(RegulatoryNode src, RegulatoryNode dst) {
 			super();
-			srcVertex = src;
-			dstVertex = dst;
+			srcNode = src;
+			dstNode = dst;
 		}
 		public void setNode(AbstractDTreeElement n) {
 			node = (DTreeElementButton)n;
 		}
 		public void actionPerformed(ActionEvent e) {
 			Vector v = new Vector();
-			v.addElement(srcVertex);
-			v.addElement(dstVertex);
+			v.addElement(srcNode);
+			v.addElement(dstNode);
 			clientPanel.updateGeneTree(v);
-			//v = (Vector)signatures.get(new SigKey(orgComboBox.getSelectedItem().toString(),	srcVertex.getName(), dstVertex.getName()));
+			//v = (Vector)signatures.get(new SigKey(orgComboBox.getSelectedItem().toString(),	srcNode.getName(), dstNode.getName()));
 			//clientPanel.setModuleList(v);
 		}
 	}

@@ -94,10 +94,10 @@ public class GsEditCallBack {
 	/**
 	 * select all previously unselected nodes and vice-versa
 	 */
-	public void invertVertexSelection() {
+	public void invertNodeSelection() {
 		Set sel, vertices = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			vertices.add(v);
 		}
@@ -139,7 +139,7 @@ public class GsEditCallBack {
 	public void selectOutgoingArcs() {
 		Set edges = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			edges.addAll(gm.getOutgoingEdges(v));
 		}
@@ -149,7 +149,7 @@ public class GsEditCallBack {
 	public void selectIncomingArcs() {
 		Set edges = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			edges.addAll(gm.getIncomingEdges(v));
 		}
@@ -159,7 +159,7 @@ public class GsEditCallBack {
 	public void selectOutgoingVertices() {
 		Set vertices = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			for (Iterator it2 = gm.getOutgoingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
@@ -176,7 +176,7 @@ public class GsEditCallBack {
 	public void selectIncomingVertices() {
 		Set vertices = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			for (Iterator it2 = gm.getIncomingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
@@ -193,7 +193,7 @@ public class GsEditCallBack {
 	public void extendSelectionToOutgoingArcs() {
 		Set edges = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			edges.addAll(gm.getOutgoingEdges(v));
 		}
@@ -207,7 +207,7 @@ public class GsEditCallBack {
 	public void extendSelectionToIncomingArcs() {
 		Set edges = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			edges.addAll(gm.getIncomingEdges(v));
 		}
@@ -217,7 +217,7 @@ public class GsEditCallBack {
 	public void extendSelectionToOutgoingVertices() {
 		Set vertices = new HashSet();
 		GsGraphManager gm = main.getGraph().getGraphManager();
-		for (Iterator it = gm.getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = gm.getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			for (Iterator it2 = gm.getOutgoingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();
@@ -233,7 +233,7 @@ public class GsEditCallBack {
 
 	public void extendSelectionToIncomingVertices() {
 		Set vertices = new HashSet();
-		for (Iterator it = main.getGraph().getGraphManager().getSelectedVertexIterator(); it.hasNext();) {
+		for (Iterator it = main.getGraph().getGraphManager().getSelectedNodeIterator(); it.hasNext();) {
 			Object v = (Object) it.next();
 			for (Iterator it2 = main.getGraph().getIncomingEdges(v).iterator(); it2.hasNext();) {
 				GsDirectedEdge edge = (GsDirectedEdge) it2.next();

@@ -83,9 +83,9 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 //	 * @param vertex
 //	 */
 	// TODO REMOVE since it duplicates a method existing in AbstractGraphFrontend
-//	public boolean addVertex(TreeNode vertex) {
+//	public boolean addNode(TreeNode vertex) {
 //		
-//		return graphManager.addVertex(vertex);
+//		return graphManager.addNode(vertex);
 //	}
 	/**
 	 * add an edge between source and target

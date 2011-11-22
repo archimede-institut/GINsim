@@ -129,10 +129,10 @@ public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> {
 	public void performAction(int prop) {
 		switch (prop) {
 			case SOURCE:
-				gui.selectVertex(o.getSource());
+				gui.selectNode(o.getSource());
 				break;
 			case TARGET:
-				gui.selectVertex(o.getTarget());
+				gui.selectNode(o.getTarget());
 				break;
 		}
 	}

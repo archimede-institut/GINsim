@@ -72,7 +72,7 @@ public class DynamicalHierarchicalSimplifierFrame extends StackDialog {
 		for (Iterator it = vertexSet.iterator(); it.hasNext();) {
 			DynamicalHierarchicalNode source = (DynamicalHierarchicalNode) it.next();
 			if (source.getType() == DynamicalHierarchicalNode.TYPE_TRANSIENT_COMPONENT) {
-				graph.removeVertex( source);
+				graph.removeNode( source);
 			}
 		}
 		GUIManager.getInstance().whatToDoWithGraph(graph, true);

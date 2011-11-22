@@ -123,7 +123,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	    	}
 	    	maxValue = max;
     		((AbstractGraph) graph).fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
-    		getInteractionsModel().refreshVertex();
+    		getInteractionsModel().refreshNode();
 	    }
 	}
 

@@ -106,7 +106,7 @@ public class AlgoConnectivity extends Thread {
                     }
                     NodeReducedData node = new NodeReducedData(sid, set);
                     component.add(node);
-                    reducedGraph.addVertex(node);
+                    reducedGraph.addNode(node);
                 }
             } else {
                 for (Collection<?> set: jcp) {
@@ -127,7 +127,7 @@ public class AlgoConnectivity extends Thread {
                 frame.setProgressText( Translator.getString("STR_connectivity_nbcompo") + " : "+nbCompo+" ; "+Translator.getString("STR_connectivity_finalize"));
             }
             if (mode == MODE_FULL) {
-                NodeAttributesReader vreader = reducedGraph.getVertexAttributeReader();
+                NodeAttributesReader vreader = reducedGraph.getNodeAttributeReader();
                 if (nbCompo > 1) {
     	        	createSCCGraphByOutgoingEdges(nbCompo, component, reducedGraph, vreader);
                 }           	
@@ -138,7 +138,7 @@ public class AlgoConnectivity extends Thread {
             }
             
         } catch (InterruptedException e) {
-            if (reducedGraph != null && nbCompo != reducedGraph.getVertexCount()) {
+            if (reducedGraph != null && nbCompo != reducedGraph.getNodeCount()) {
                 reducedGraph = null;
             }
         }
@@ -200,7 +200,7 @@ public class AlgoConnectivity extends Thread {
             }
             NodeReducedData currentSCCNode = (NodeReducedData)component.get(scc_i);
             if (graph.getOutgoingEdges(currentSCCNode).size() == 0) {												//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
-            	vreader.setVertex(currentSCCNode);
+            	vreader.setNode(currentSCCNode);
                 vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
             }
         }

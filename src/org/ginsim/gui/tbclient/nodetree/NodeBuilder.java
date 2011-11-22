@@ -10,7 +10,7 @@ public class NodeBuilder extends DTreeNodeBuilder {
 	public NodeBuilder(boolean inTable) {
 		super(inTable);
 	}
-	public void addVertexNote(ImageIcon ic_off, Object o, ImageIcon ic_on) {
+	public void addNodeNote(ImageIcon ic_off, Object o, ImageIcon ic_on) {
 		currentElement = new NodeNote(currentElement, o, ic_off, ic_on, inTable);
 	}
 }

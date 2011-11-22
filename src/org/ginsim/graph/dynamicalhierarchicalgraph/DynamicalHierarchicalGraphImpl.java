@@ -145,10 +145,10 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
     	
     	Iterator<DynamicalHierarchicalNode> it = vertices.iterator();
 
-    	NodeAttributesReader vReader = getVertexAttributeReader();
+    	NodeAttributesReader vReader = getNodeAttributeReader();
         while (it.hasNext()) {
         	DynamicalHierarchicalNode vertex = (DynamicalHierarchicalNode)it.next();
-            vReader.setVertex(vertex);
+            vReader.setNode(vertex);
             out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
             out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
             out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");

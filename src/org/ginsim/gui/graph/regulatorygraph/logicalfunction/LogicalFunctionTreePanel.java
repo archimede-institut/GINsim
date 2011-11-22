@@ -201,7 +201,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
     tree.stopEditing();
     Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
     interactionList.fireTreeStructureChanged((TreeElement) interactionList.getRoot());
-    interactionList.refreshVertex();
+    interactionList.refreshNode();
     if (enu != null)
       while (enu.hasMoreElements()) {
         TreePath tp = (TreePath) enu.nextElement();
@@ -239,7 +239,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
         }
       }
       TreeInteractionsModel interactionsModel = (TreeInteractionsModel)tree.getModel();
-      interactionsModel.refreshVertex();
+      interactionsModel.refreshNode();
       interactionsModel.setRootInfos();
       interactionsModel.fireTreeStructureChanged((TreeElement)interactionsModel.getRoot());
       while (enu.hasMoreElements()) {
@@ -367,12 +367,12 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
       enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       for (int i = 0; i < functions.length; i++)
         if (((TreeValue) functions[i].getParent()).getValue() != value.getValue()) {
-          interactionList.addExpression(tree, (byte) value.getValue(), interactionList.getVertex(), functions[i].toString());
+          interactionList.addExpression(tree, (byte) value.getValue(), interactionList.getNode(), functions[i].toString());
           if (remove) functions[i].remove(false);
           interactionList.removeNullFunction((byte) value.getValue());
         }
       interactionList.fireTreeStructureChanged((TreeElement) tree.getPathForRow(0).getLastPathComponent());
-      interactionList.refreshVertex();
+      interactionList.refreshNode();
       while (enu.hasMoreElements()) {
         tp = (TreePath) enu.nextElement();
         tree.expandPath(tp);
@@ -402,7 +402,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
         interactionList.addValue((TreeValue) values[i]);
       }
       interactionList.fireTreeStructureChanged((TreeElement) tree.getPathForRow(0).getLastPathComponent());
-      interactionList.refreshVertex();
+      interactionList.refreshNode();
       while (enu.hasMoreElements()) {
         tp = (TreePath) enu.nextElement();
         tree.expandPath(tp);
@@ -431,7 +431,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
 //        }
 //      }
 //      interactionList.fireTreeStructureChanged((TreeElement) tree.getPathForRow(0).getLastPathComponent());
-//      interactionList.refreshVertex();
+//      interactionList.refreshNode();
 //      while (enu.hasMoreElements()) {
 //        tp = (TreePath) enu.nextElement();
 //        tree.expandPath(tp);
@@ -459,7 +459,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
       }
     }
     interactionList.fireTreeStructureChanged((TreeElement) tree.getPathForRow(0).getLastPathComponent());
-    interactionList.refreshVertex();
+    interactionList.refreshNode();
     while (enu.hasMoreElements()) {
       tp = (TreePath) enu.nextElement();
       tree.expandPath(tp);
@@ -476,7 +476,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
       if (remove) params[i].remove(false);
     }
     interactionList.fireTreeStructureChanged((TreeElement) tree.getPathForRow(0).getLastPathComponent());
-    interactionList.refreshVertex();
+    interactionList.refreshNode();
     while (enu.hasMoreElements()) {
       tp = (TreePath) enu.nextElement();
       tree.expandPath(tp);
@@ -528,7 +528,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
       lp.setEdges(((TreeParam) params[i]).getEdgeIndexes());
       v.addElement(lp);
     }
-    c = new FunctionsCreator((RegulatoryGraph) graph, v, interactionList.getVertex());
+    c = new FunctionsCreator((RegulatoryGraph) graph, v, interactionList.getNode());
 
     Hashtable h = c.doIt(false);
 
@@ -543,7 +543,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
         for (enu2 = v.elements(); enu2.hasMoreElements(); ) {
           s = (String) enu2.nextElement();
           try {
-            interactionList.addExpression(null, key.byteValue(), interactionList.getVertex(), s);
+            interactionList.addExpression(null, key.byteValue(), interactionList.getNode(), s);
           }
           catch (Exception ex) {
             ex.printStackTrace();
@@ -559,7 +559,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
         s = (String) enu2.nextElement();
         while (enu2.hasMoreElements()) s = s + " | (" + (String)enu2.nextElement() + ")";
         try {
-          interactionList.addExpression(null, key.byteValue(), interactionList.getVertex(), s);
+          interactionList.addExpression(null, key.byteValue(), interactionList.getNode(), s);
         }
         catch (Exception ex) {
           ex.printStackTrace();

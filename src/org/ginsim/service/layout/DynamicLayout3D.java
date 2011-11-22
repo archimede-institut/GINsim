@@ -35,22 +35,22 @@ public class DynamicLayout3D {
 			System.out.println("wrong type of graph for this layout");
 	    	return;
 	    }
-		vreader = graph.getVertexAttributeReader();
+		vreader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 		List nodeOrder = graph.getAssociatedGraph().getNodeOrder();
 	    byte[] maxValues = getMaxValues(nodeOrder);
         initColorPalette(maxValues.length);
 	    //move the nodes
 	    DynamicNode vertex = (DynamicNode)v;
-	    vreader.setVertex(vertex);
+	    vreader.setNode(vertex);
 	    stateWidth = vreader.getWidth()+MARGIN;
         initDecal(maxValues);
 	    
 	    do {
-	    	moveVertex(vertex, maxValues);
+	    	moveNode(vertex, maxValues);
 		    vertex = (DynamicNode)it.next();
 		} while (it.hasNext());
-    	moveVertex(vertex, maxValues);
+    	moveNode(vertex, maxValues);
     	
     	//move the edges
     	for (Edge edge: graph.getEdges()) {
@@ -64,8 +64,8 @@ public class DynamicLayout3D {
 	 * @param vertex
 	 * @param maxValues
 	 */
-	private void moveVertex(DynamicNode vertex, byte[] maxValues) {
-	    vreader.setVertex(vertex);
+	private void moveNode(DynamicNode vertex, byte[] maxValues) {
+	    vreader.setNode(vertex);
     	byte[] state = vertex.state;
   	
     	double left = MARGIN;
@@ -126,14 +126,14 @@ public class DynamicLayout3D {
      *   if the corresponding gene (according to the newNodeOrder) did not change between the vertices.
      *   otherwise its the absolute difference (1 normally)
      * 
-     * @param sourceVertex
-     * @param targetVertex
+     * @param sourceNode
+     * @param targetNode
      * @return
      */
-	private byte[] getDiffStates(DynamicNode sourceVertex, DynamicNode targetVertex) {
-		byte[] delta = new byte[sourceVertex.state.length];
+	private byte[] getDiffStates(DynamicNode sourceNode, DynamicNode targetNode) {
+		byte[] delta = new byte[sourceNode.state.length];
 		for (int i = 0; i < delta.length; i++) {
-			delta[i] = (byte) Math.abs(getState(sourceVertex.state,i) - getState(targetVertex.state,i));
+			delta[i] = (byte) Math.abs(getState(sourceNode.state,i) - getState(targetNode.state,i));
 		}
 		return delta;
 	}

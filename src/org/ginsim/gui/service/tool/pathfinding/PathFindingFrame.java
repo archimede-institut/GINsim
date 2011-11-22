@@ -355,7 +355,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			selector.initCache(path);
 		
 			cs.applySelectorOnEdges(selector, graph.getEdges(), graph.getEdgeAttributeReader());
-			cs.applySelectorOnNodes(selector, graph.getVertices(), graph.getVertexAttributeReader());
+			cs.applySelectorOnNodes(selector, graph.getVertices(), graph.getNodeAttributeReader());
 			colorizeButton.setText(Translator.getString("STR_undo_colorize"));
 			isColorized = true;
 		}
@@ -364,7 +364,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private void undoColorize() {
 		if (cs != null) {
 			cs.restoreAllEdges(graph.getEdgeAttributeReader());
-			cs.restoreAllNodes(graph.getVertexAttributeReader());
+			cs.restoreAllNodes(graph.getNodeAttributeReader());
 			colorizeButton.setText(Translator.getString("STR_do_colorize"));
 			isColorized = false;
 		}

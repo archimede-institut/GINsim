@@ -24,14 +24,14 @@ public class GraphicalAttributesStore {
 		
 		this.graph = graph;
 		this.ereader = graph.getEdgeAttributeReader();
-		this.vreader = graph.getVertexAttributeReader();
+		this.vreader = graph.getNodeAttributeReader();
 	}
 	
 	public void storeAll() {
         Iterator it = graph.getVertices().iterator();
         while (it.hasNext()) {
             Object vertex = it.next();
-            vreader.setVertex(vertex);
+            vreader.setNode(vertex);
             oldColors.put(vertex, new StoreColor(vreader));
 
             Collection<Edge> edges = graph.getOutgoingEdges(vertex);
@@ -50,15 +50,15 @@ public class GraphicalAttributesStore {
                 ereader.setEdge(obj);
                 ((StoreColor)oldColors.get(obj)).restore(ereader);
             } else {
-                vreader.setVertex(obj);
+                vreader.setNode(obj);
                 ((StoreColor)oldColors.get(obj)).restore(vreader);
             }
         }
         oldColors.clear();
 	}
 	
-	public void ensureStoreVertex(Object o) {
-		vreader.setVertex(o);
+	public void ensureStoreNode(Object o) {
+		vreader.setNode(o);
         if (!oldColors.containsKey(o)) {
         	oldColors.put(o, new StoreColor(vreader));
         }
@@ -72,7 +72,7 @@ public class GraphicalAttributesStore {
 	}
 	
 	public void restore(Object o) {
-		vreader.setVertex(o);
+		vreader.setNode(o);
         StoreColor oc = (StoreColor)oldColors.get(o);
         if (oc != null ) {
             oc.restore(ereader);

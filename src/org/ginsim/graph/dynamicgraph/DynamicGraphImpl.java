@@ -224,12 +224,12 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
     		nodes = getVertices();
     	}
     	
-    	NodeAttributesReader vReader = getVertexAttributeReader();
+    	NodeAttributesReader vReader = getNodeAttributeReader();
     	
         	switch (mode) {
 	    		case 1:
 	                for (DynamicNode node: nodes) {
-	                    vReader.setVertex(node);
+	                    vReader.setNode(node);
 	                    String svs = GinmlHelper.getShortNodeVS(vReader);
 	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
 	                    out.write(svs);
@@ -238,7 +238,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	    			break;
 				case 2:
 	                for (DynamicNode node: nodes) {
-	                    vReader.setVertex(node);
+	                    vReader.setNode(node);
 	                    String svs = GinmlHelper.getFullNodeVS(vReader);
 	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
 	                    out.write(svs);
@@ -262,8 +262,8 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	 * @param state the state we want to add
 	 * @return the new DynamicNode.
 	 */
-	private boolean addVertex( byte[] state) {
-		return addVertex( new DynamicNode(state));
+	private boolean addNode( byte[] state) {
+		return addNode( new DynamicNode(state));
 	}
 	
 	/**
@@ -308,13 +308,13 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 
         List ret = new ArrayList();
         Iterator it = otherGraph.getVertices().iterator();
-        NodeAttributesReader vReader = getVertexAttributeReader();
-        NodeAttributesReader cvreader = otherGraph.getVertexAttributeReader();
+        NodeAttributesReader vReader = getNodeAttributeReader();
+        NodeAttributesReader cvreader = otherGraph.getNodeAttributeReader();
         while (it.hasNext()) {
             DynamicNode vertex = (DynamicNode)it.next();
-            addVertex(vertex);
-            cvreader.setVertex(vertex);
-            vReader.setVertex(vertex);
+            addNode(vertex);
+            cvreader.setNode(vertex);
+            vReader.setNode(vertex);
             vReader.copyFrom(cvreader);
             vReader.refresh();
             ret.add(vertex);
@@ -361,7 +361,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
     	
         DynamicNode n = new DynamicNode(source);
         DynamicNode n2 = new DynamicNode(target);
-        if (containsVertex(n) && containsVertex(n2)) {
+        if (containsNode(n) && containsNode(n2)) {
             return getShortestPath(n, n2);
         }
         return null;
@@ -403,7 +403,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 //		return edgePanel;
 //	}
 //
-//	public GsParameterPanel getVertexAttributePanel() {
+//	public GsParameterPanel getNodeAttributePanel() {
 //	    if (vertexPanel == null) {
 //	        vertexPanel = new DynamicItemAttributePanel(this);
 //	    }

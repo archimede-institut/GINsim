@@ -239,13 +239,13 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 
 		colorPalette = ColorPalette.defaultPalette;
 		cs = new CascadingStyle(true);
-		NodeAttributesReader vreader = graph.getVertexAttributeReader();		
+		NodeAttributesReader vreader = graph.getNodeAttributeReader();		
 		int color_index = 2;
 		for (Iterator it = components.iterator(); it.hasNext();) {
 			NodeReducedData scc = (NodeReducedData) it.next();
 			if (scc.getType( graph) == NodeReducedData.SCC_TYPE_UNIQUE_NODE) {
 				Object node = scc.getContent().get(0);
-				vreader.setVertex(node);
+				vreader.setNode(node);
 				if (graph.getOutgoingEdges(node) == null || graph.getOutgoingEdges(node).size() == 0) {
 					cs.applyOnNode(new NodeStyle(colorPalette[1], NodeStyle.NULL_FOREGROUND, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE), node, vreader);
 				} else {
@@ -255,7 +255,7 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 			} else {
 				for (Iterator it2 = scc.getContent().iterator(); it2.hasNext();) {
 					Object node = (Object) it2.next();
-					vreader.setVertex(node);
+					vreader.setNode(node);
 					cs.applyOnNode(new NodeStyle(colorPalette[color_index], NodeStyle.NULL_FOREGROUND, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE), node, vreader);
 					vreader.refresh();
 				}
@@ -267,7 +267,7 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
  	}
 	
 	public void undoColorize() {
-		if (cs != null) cs.restoreAllNodes(graph.getVertexAttributeReader());
+		if (cs != null) cs.restoreAllNodes(graph.getNodeAttributeReader());
     	buttonColorize.setText(Translator.getString("STR_connectivity_colorize_currentGraph"));
     	isColored = false;
 	}

@@ -52,7 +52,7 @@ public class InteractionPanel extends AbstractParameterPanel
 
 	private static final long serialVersionUID = 8583991719735516132L;
 
-	private RegulatoryNode currentVertex = null;
+	private RegulatoryNode currentNode = null;
 
 	protected JTable jTable = null;
 	private JScrollPane jScrollPane = null;
@@ -198,14 +198,14 @@ public class InteractionPanel extends AbstractParameterPanel
      * @see org.ginsim.gui.shell.editpanel.AbstractParameterPanel#setEditedItem(java.lang.Object)
      */
     public void setEditedItem(Object obj) {
-			  if (currentVertex != null) {
+			  if (currentNode != null) {
             // apply pending changes
         }
         if (obj != null && obj instanceof RegulatoryNode) {
-            currentVertex = (RegulatoryNode)obj;
-						edgeList.setEdge(graph.getIncomingEdges(currentVertex));
-            interactionList.setNode(currentVertex);
-            cellRenderer.setVertex(currentVertex);
+            currentNode = (RegulatoryNode)obj;
+						edgeList.setEdge(graph.getIncomingEdges(currentNode));
+            interactionList.setNode(currentNode);
+            cellRenderer.setNode(currentNode);
             if (jTable.getSelectedRow() == -1) {
                 int i = interactionList.getRowCount();
                 jTable.getSelectionModel().setSelectionInterval(i - 1, i - 1);
@@ -531,14 +531,14 @@ public class InteractionPanel extends AbstractParameterPanel
       Vector v = new Vector();
       List interactions = ((TableInteractionsModel)jTable.getModel()).getInteractions();
 
-      TreeInteractionsModel interactionsModel = currentVertex.getInteractionsModel();
+      TreeInteractionsModel interactionsModel = currentNode.getInteractionsModel();
 			if (!comp) {
 				int[] sel = jTable.getSelectedRows();
 				for (int i = 0; i < sel.length; i++) v.addElement(interactions.get(sel[i]));
-				c = new FunctionsCreator(graph, v, currentVertex);
+				c = new FunctionsCreator(graph, v, currentNode);
 			}
 			else
-				c = new FunctionsCreator(graph, interactions, currentVertex);
+				c = new FunctionsCreator(graph, interactions, currentNode);
 
       Hashtable h = c.doIt(comp);
 
@@ -554,7 +554,7 @@ public class InteractionPanel extends AbstractParameterPanel
         	s = "(" + (String)enu2.nextElement() + ")";
         	while (enu2.hasMoreElements()) s = s + " | " + "(" + (String)enu2.nextElement() + ")";
         	try {
-        		interactionsModel.addExpression(null, key.byteValue(), currentVertex, s);
+        		interactionsModel.addExpression(null, key.byteValue(), currentNode, s);
         	}
         	catch (Exception ex) {
         		ex.printStackTrace();
@@ -564,7 +564,7 @@ public class InteractionPanel extends AbstractParameterPanel
         	while (enu2.hasMoreElements()) {
         		s = (String)enu2.nextElement();
         		try {
-        			interactionsModel.addExpression(null, key.byteValue(), currentVertex, s);
+        			interactionsModel.addExpression(null, key.byteValue(), currentNode, s);
         		}
         		catch (Exception ex) {
         			ex.printStackTrace();
@@ -602,7 +602,7 @@ class LogicalParameterCellRenderer extends DefaultTableCellRenderer {
 		this.graph = graph;
 	}
 
-	public void setVertex(RegulatoryNode vertex) {
+	public void setNode(RegulatoryNode vertex) {
 		this.vertex = vertex;
 	}
 

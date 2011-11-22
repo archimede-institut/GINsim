@@ -44,24 +44,24 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
 			DynamicNode v, v1, v2;
 			String id = (String)it.next();
-			v1 = (DynamicNode)g1m.getVertexByName(id);
-			v2 = (DynamicNode)g2m.getVertexByName(id);
+			v1 = (DynamicNode)g1m.getNodeByName(id);
+			v2 = (DynamicNode)g2m.getNodeByName(id);
 			//Check which graph own the vertex, set the appropriate color to it and if it is owned by both graph, compare its attributes.
 			if (v1 == null) {
 				log("The vertex "+id+" is specific to g2\n");
 				v = new DynamicNode(v2.state);
-				gm.addVertex(v);
-				mergeVertexAttributes(v, v2, null, gm.getVertexAttributeReader(), g2m.getVertexAttributeReader(), null, SPECIFIC_G2_COLOR);
+				gm.addNode(v);
+				mergeNodeAttributes(v, v2, null, gm.getNodeAttributeReader(), g2m.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
 			} else if (v2 == null) {
 				log("The vertex "+id+" is specific to g1\n");
 				v = new DynamicNode(v1.state);
-				gm.addVertex(v);
-				mergeVertexAttributes(v, v1, null, gm.getVertexAttributeReader(), g1m.getVertexAttributeReader(), null, SPECIFIC_G1_COLOR);
+				gm.addNode(v);
+				mergeNodeAttributes(v, v1, null, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
 			} else {
 				log("The vertex "+id+" is common to both g1 and g2\n");
 				v = new DynamicNode(v1.state);
-				gm.addVertex(v);
-				mergeVertexAttributes(v, v1, v2, gm.getVertexAttributeReader(), g1m.getVertexAttributeReader(), g2m.getVertexAttributeReader(), COMMON_COLOR);
+				gm.addNode(v);
+				mergeNodeAttributes(v, v1, v2, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), g2m.getNodeAttributeReader(), COMMON_COLOR);
 				//compareVertices(v ,v1, v2);
 			}
 		}
@@ -76,7 +76,7 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 	}
 
 	protected void addEdgesFromGraph( Graph gm_main, Graph gm_aux, String id, Color vcol, Color pcol, EdgeAttributesReader ereader) {
-		DynamicNode v = (DynamicNode) gm_main.getVertexByName(id);
+		DynamicNode v = (DynamicNode) gm_main.getNodeByName(id);
 		Edge<DynamicNode> e = null;
 		EdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
 		EdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
@@ -85,8 +85,8 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 			Collection<Edge<DynamicNode>> edges = gm_main.getOutgoingEdges(v);
 			for (Edge<DynamicNode> e1: edges) {
 				String tid = ((DynamicNode)e1.getTarget()).toString();
-				DynamicNode source = (DynamicNode) gm.getVertexByName(id);
-				DynamicNode target = (DynamicNode) gm.getVertexByName(tid);
+				DynamicNode source = (DynamicNode) gm.getNodeByName(id);
+				DynamicNode target = (DynamicNode) gm.getNodeByName(tid);
 				Edge<DynamicNode> e2 = gm.getEdge(source, target);
 				
 				if (e2 == null) //The edge doesn't not already exists.
@@ -95,11 +95,11 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 					continue;
 				
 				String comment = "This edge ";
-				if (vcol != COMMON_COLOR || !isCommonVertex(target)) { //The edge's vertices are specific to one graph therefore the edge is specific, and we add it with the right color.
+				if (vcol != COMMON_COLOR || !isCommonNode(target)) { //The edge's vertices are specific to one graph therefore the edge is specific, and we add it with the right color.
 					comment+= "is specific to "+(pcol == SPECIFIC_G1_COLOR ? "g1":"g2");
 					mergeEdgeAttributes(e, e1, null, pcol, ereader, e1reader, null);
 				} else {
-					e2 = gm_aux.getEdge(gm_aux.getVertexByName(id), gm_aux.getVertexByName(tid));
+					e2 = gm_aux.getEdge(gm_aux.getNodeByName(id), gm_aux.getNodeByName(tid));
 					if (e2 != null) {
 						comment+= "is common to both graphs";
 						mergeEdgeAttributes(e, e1, e2, vcol, ereader, e1reader, e2reader);

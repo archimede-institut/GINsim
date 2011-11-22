@@ -49,7 +49,7 @@ public class ValuePanel extends BooleanFunctionTreePanel implements ActionListen
     SpinnerNumberModel snm = new SpinnerNumberModel();
     snm.setValue(Integer.valueOf(treeElement.toString()));
     snm.setMinimum(new Integer(0));
-    snm.setMaximum(new Integer(((TreeInteractionsModel)tree.getModel()).getVertex().getMaxValue()));
+    snm.setMaximum(new Integer(((TreeInteractionsModel)tree.getModel()).getNode().getMaxValue()));
     snm.setStepSize(new Integer(1));
     treeElement.setProperty("value", Integer.valueOf(treeElement.toString()));
     spinner = new JSpinner(snm);
@@ -101,7 +101,7 @@ public class ValuePanel extends BooleanFunctionTreePanel implements ActionListen
   public void addButtonAction() {
     try {
       ((TreeInteractionsModel)tree.getModel()).addEmptyExpression((byte)((TreeValue)treeElement).getValue(),
-        ((TreeInteractionsModel)tree.getModel()).getVertex());
+        ((TreeInteractionsModel)tree.getModel()).getNode());
       ((TreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((TreeElement)tree.getModel().getRoot());
       treeElement.setProperty("null function", new Boolean(true));
     }
@@ -142,7 +142,7 @@ public class ValuePanel extends BooleanFunctionTreePanel implements ActionListen
 				spinner.setValue(new Integer(oldValue));
 			}
 		  } else {
-			model.refreshVertex();
+			model.refreshNode();
 		}
 	} else {
 		model.updateValue((byte)val, (byte)oldValue);

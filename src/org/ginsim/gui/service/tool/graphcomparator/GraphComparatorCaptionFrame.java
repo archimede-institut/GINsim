@@ -45,7 +45,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private JButton automaticRoutingButton;
 	
 	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, 1);
-	private static final NodeStyle clearVertexStyle = new NodeStyle(Color.white, Color.gray, 1, NodeStyle.NULL_SHAPE);
+	private static final NodeStyle clearNodeStyle = new NodeStyle(Color.white, Color.gray, 1, NodeStyle.NULL_SHAPE);
 	
 	public GraphComparatorCaptionFrame(Graph g, GraphComparator gc) {
         this.g = g;
@@ -274,7 +274,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	
     private void doColorize(JRadioButton source) {
     	HashMap styleMap = gc.getStyleMap();
-    	NodeAttributesReader vreader = g.getVertexAttributeReader();
+    	NodeAttributesReader vreader = g.getNodeAttributeReader();
     	EdgeAttributesReader ereader = g.getEdgeAttributeReader();
     	
     	for (Iterator it = styleMap.keySet().iterator(); it.hasNext();) {
@@ -310,11 +310,11 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 					cs.applyOnEdge(clearEdgeStyle, o, ereader);
 				}
 			} else { //vertex
-				vreader.setVertex(o);
+				vreader.setNode(o);
 				if (style != null) {
 					cs.applyOnNode((NodeStyle)style, o, vreader);
 				} else {
-					cs.applyOnNode(clearVertexStyle, o, vreader);
+					cs.applyOnNode(clearNodeStyle, o, vreader);
 				}
 			}
 		}

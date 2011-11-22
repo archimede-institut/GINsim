@@ -64,7 +64,7 @@ class ModelSimplifierAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if (graph.getVertexCount() < 1) {
+		if (graph.getNodeCount() < 1) {
             graph.addNotificationMessage(new NotificationMessage( (NotificationMessageHolder) graph, 
             		Translator.getString(graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
             		NotificationMessage.NOTIFICATION_WARNING));

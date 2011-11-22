@@ -26,15 +26,15 @@ public class STGSimulationHelper extends SimulationHelper {
 		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, params.nodeOrder);
 		stateTransitionGraph.setAssociatedGraph(regGraph);
 		
-        vreader = stateTransitionGraph.getVertexAttributeReader();
-	    vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
+        vreader = stateTransitionGraph.getNodeAttributeReader();
+	    vreader.setDefaultNodeSize(5+10*params.nodeOrder.size(), 25);
         // add some default comments to the state transition graph
         stateTransitionGraph.getAnnotation().setComment(params.getDescr()+"\n");
 	}
 
 	public boolean addNode(SimulationQueuedState item) {
 		node = new DynamicNode(item.state);
-		boolean isnew = stateTransitionGraph.addVertex(node);
+		boolean isnew = stateTransitionGraph.addNode(node);
 		if (item.previous != null) {
 			stateTransitionGraph.addEdge((DynamicNode)item.previous, node, item.multiple);
 		}

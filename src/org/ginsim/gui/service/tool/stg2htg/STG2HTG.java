@@ -86,7 +86,7 @@ public class STG2HTG extends AlgoConnectivity {
 		components = new ArrayList(sigma.size()+A.size());
 		createReducedGraph();
 		try {
-			createSCCGraphByOutgoingEdges(components.size(), components, reducedGraph, reducedGraph.getVertexAttributeReader());
+			createSCCGraphByOutgoingEdges(components.size(), components, reducedGraph, reducedGraph.getNodeAttributeReader());
 		} catch (InterruptedException e) {
 		}
 		return reducedGraph;
@@ -126,7 +126,7 @@ public class STG2HTG extends AlgoConnectivity {
 	
 	private void colorize() {
 		colors = ColorPalette.createColorPaletteByRange(sigma.size()+A.size());
-		NodeAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getNodeAttributeReader();
 		int color = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
 			HashSet key = (HashSet) it_sigma.next();
@@ -134,7 +134,7 @@ public class STG2HTG extends AlgoConnectivity {
 				NodeReducedData scc = (NodeReducedData) it_key.next();
 				for (Iterator it_scc = scc.getContent().iterator(); it_scc.hasNext();) {
 					Object vertex = (Object) it_scc.next();
-					vreader.setVertex(vertex);
+					vreader.setNode(vertex);
 					vreader.setBackgroundColor(colors[color]);
 					vreader.refresh();
 				}
@@ -145,7 +145,7 @@ public class STG2HTG extends AlgoConnectivity {
 			NodeReducedData scc = (NodeReducedData) it_sigma.next();
 			for (Iterator it_scc = scc.getContent().iterator(); it_scc.hasNext();) {
 				Object vertex = (Object) it_scc.next();
-				vreader.setVertex(vertex);
+				vreader.setNode(vertex);
 				vreader.setBackgroundColor(colors[color]);
 				vreader.setForegroundColor(Color.BLACK);
 				vreader.setBorder(2);
@@ -158,7 +158,7 @@ public class STG2HTG extends AlgoConnectivity {
 	private void createReducedGraph() {
 		
         reducedGraph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, graph);
-        NodeAttributesReader vreader = reducedGraph.getVertexAttributeReader();
+        NodeAttributesReader vreader = reducedGraph.getNodeAttributeReader();
         int i = 0;
 		for (Iterator it_sigma = sigma.keySet().iterator(); it_sigma.hasNext();) {
 			HashSet key = (HashSet) it_sigma.next();
@@ -174,9 +174,9 @@ public class STG2HTG extends AlgoConnectivity {
 				s = (DynamicNode) it.next();
 				System.out.println("\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
 			}
-			reducedGraph.addVertex(comp);
+			reducedGraph.addNode(comp);
 			components.add(comp);
-			vreader.setVertex(comp);
+			vreader.setNode(comp);
 			vreader.setBackgroundColor(colors[i]);
 			vreader.refresh();
 			i++;
@@ -196,9 +196,9 @@ public class STG2HTG extends AlgoConnectivity {
 					System.out.println("\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
 				}
 			}
-			reducedGraph.addVertex(comp);
+			reducedGraph.addNode(comp);
 			components.add(comp);
-			vreader.setVertex(comp);
+			vreader.setNode(comp);
 			vreader.setBackgroundColor(colors[i]);
 			vreader.refresh();
 			i++;

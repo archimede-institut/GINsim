@@ -92,7 +92,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 
 //    protected static final String zip_prefix = "GINsim-data/";
 
-//	protected GsVertexAttributesReader vReader;
+//	protected GsNodeAttributesReader vReader;
 //	protected GsEdgeAttributesReader eReader;
 
 //    private Map m_objects = null;
@@ -130,7 +130,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 //            GsEnv.registerGraph(this, saveFileName);
 //        }
 //        graphManager = new GsJgraphtGraphManager(this, mainFrame);
-//        vReader = graphManager.getVertexAttributesReader();
+//        vReader = graphManager.getNodeAttributesReader();
 //        eReader = graphManager.getEdgeAttributesReader();
 //    }
 
@@ -185,8 +185,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param param kind of vertex to create
      * @return the newly created vertex (or null if failed/inapropriate)
      */
-    // TODO Change to generic call of Vertex creation  from Graph and change position on the new node
-    abstract protected V doInteractiveAddVertex (int param);
+    // TODO Change to generic call of Node creation  from Graph and change position on the new node
+    abstract protected V doInteractiveAddNode (int param);
     
     
     /**
@@ -444,13 +444,13 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param y
      * @return the added vertex
      */
-    public Object interactiveAddVertex(int param, int x, int y) {
+    public Object interactiveAddNode(int param, int x, int y) {
         if (v_blockEdit != null) {
             return null;
         }
-        V obj = doInteractiveAddVertex(param);
+        V obj = doInteractiveAddNode(param);
         if (obj != null) {
-            graphManager.placeVertex(obj, x, y);
+            graphManager.placeNode(obj, x, y);
             fireGraphChange(CHANGE_VERTEXADDED, obj);
         }
         return obj;
@@ -482,8 +482,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      */
     // TODO Move 'fireGraphChange' call to AbstractGraphFrontend ?
     // yes, something like that
-    public void removeVertex(V obj) {
-        graphManager.removeVertex(obj);
+    public void removeNode(V obj) {
+        graphManager.removeNode(obj);
         fireGraphChange(CHANGE_VERTEXREMOVED, obj);
     }
 
@@ -499,7 +499,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @return a GsParameterPanel able to edit vertices of this graph or null if not applicable.
      */
     // TODO Move to GUI
-    public GsParameterPanel getVertexAttributePanel() {
+    public GsParameterPanel getNodeAttributePanel() {
     	return null;
     }
 
@@ -510,7 +510,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     }
     
     // TODO Move to GUI
-    public ObjectEditor getVertexEditor() {
+    public ObjectEditor getNodeEditor() {
     	return null;
     }
 
@@ -574,7 +574,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
      * @param newId
      * @throws GsException
      */
-    abstract public void changeVertexId(Object vertex, String newId) throws GsException;
+    abstract public void changeNodeId(Object vertex, String newId) throws GsException;
 
     /**
      * @param obj
@@ -890,7 +890,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
             }
             updateGraphNotificationMessage(this);
         }
-        vReader = graphManager.getVertexAttributesReader();
+        vReader = graphManager.getNodeAttributesReader();
     	eReader = graphManager.getEdgeAttributesReader();
         saved = true;
 	}
@@ -1187,7 +1187,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 //     * @return true is the graph is empty
 //     */
 //    public boolean isEmpty() {
-//        return !annoted && getAnnotation().isEmpty() && graphManager.getVertexCount() == 0;
+//        return !annoted && getAnnotation().isEmpty() && graphManager.getNodeCount() == 0;
 //    }
 
 //	/**
@@ -1451,7 +1451,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 		
 		Pattern pattern = Pattern.compile(regexp, Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
 		
-		for (Iterator it = getGraphManager().getVertexIterator(); it.hasNext();) {
+		for (Iterator it = getGraphManager().getNodeIterator(); it.hasNext();) {
 			Object vertex = (Object) it.next();
 			Matcher matcher = pattern.matcher(vertex.toString());
 			if (matcher.find()) {

@@ -110,7 +110,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * @param vertex
 	 * @return the created vertex
 	 */
-	boolean addVertex( V vertex);
+	boolean addNode( V vertex);
 
 	/**
 	 * Add an edge to this graph structure.
@@ -126,7 +126,7 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param vertex
      * @return true if the vertex was effectively removed
      */ 
-	boolean removeVertex( V vertex);
+	boolean removeNode( V vertex);
 
     /**
      * Remove an edge from the graph.
@@ -139,7 +139,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	/**
 	 * @return the number of vertex in this graph.
 	 */
-	int getVertexCount();
+	int getNodeCount();
 	
     
     /**
@@ -154,7 +154,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * @param id name of a vertex
 	 * @return the vertex corresponding to this unique id or null if not found.
 	 */
-	V getVertexByName( String id);
+	V getNodeByName( String id);
 	
     /**
      * Return the size of the node order
@@ -192,7 +192,7 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param vertex
      * @return true if the vertex is in the graph, false if not.
      */
-    boolean containsVertex(V vertex);
+    boolean containsNode(V vertex);
     
     
     /**

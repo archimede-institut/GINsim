@@ -162,12 +162,12 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         }
         // mark all vertices and followed edges
         DynamicNode vertex = path.get(0);
-        dynGas.ensureStoreVertex(vertex);
+        dynGas.ensureStoreNode(vertex);
         dynGas.vreader.setBackgroundColor(Color.BLUE);
         dynGas.vreader.refresh();
         for (int i=1 ; i<path.size() ; i++) {
             DynamicNode vertex2 = path.get(i);
-            dynGas.ensureStoreVertex(vertex2);
+            dynGas.ensureStoreNode(vertex2);
             dynGas.vreader.setBackgroundColor(Color.BLUE);
             dynGas.vreader.refresh();
 
@@ -188,7 +188,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
             Edge edge = (Edge)v_highlight.get(i);
             Object target = edge.getTarget();
             dynGas.ensureStoreEdge(edge);
-            dynGas.ensureStoreVertex(target);
+            dynGas.ensureStoreNode(target);
             dynGas.vreader.setBorder(NodeAttributesReader.BORDER_STRONG);
             dynGas.vreader.setForegroundColor(Color.RED);
             dynGas.vreader.refresh();

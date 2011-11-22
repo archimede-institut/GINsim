@@ -181,7 +181,7 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 		} else if (event != null && currentAction instanceof AddNodeAction) { 
 
 			AddNodeAction action = (AddNodeAction)currentAction;
-			action.addVertex(editManager, (int)event.getPoint().getX(), (int)event.getPoint().getY());
+			action.addNode(editManager, (int)event.getPoint().getX(), (int)event.getPoint().getY());
 		} else if (event != null && currentAction.getMode() == EditMode.EDGEPOINT) {
 
             CellHandle hd=jgraph.getUI().getHandle();

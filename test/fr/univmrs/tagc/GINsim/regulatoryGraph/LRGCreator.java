@@ -22,20 +22,20 @@ public class LRGCreator {
 	public static void main(String[] args) {
 		// create a simple graph
 		RegulatoryGraph lrg = GraphManager.getInstance().getNewGraph();
-		NodeAttributesReader vreader = lrg.getVertexAttributeReader();
+		NodeAttributesReader vreader = lrg.getNodeAttributeReader();
 		
 		// add a few vertices
 		RegulatoryNode g0, g1, g2;
-		g0 = lrg.addVertex();
-		g1 = lrg.addVertex();
-		g2 = lrg.addVertex();
+		g0 = lrg.addNode();
+		g1 = lrg.addNode();
+		g2 = lrg.addNode();
 		
 		// change their position
-		vreader.setVertex(g0);
+		vreader.setNode(g0);
 		vreader.setPos(0, 0);
-		vreader.setVertex(g1);
+		vreader.setNode(g1);
 		vreader.setPos(30, 0);
-		vreader.setVertex(g2);
+		vreader.setNode(g2);
 		vreader.setPos(0, 100);
 
 		// increase max value for g0

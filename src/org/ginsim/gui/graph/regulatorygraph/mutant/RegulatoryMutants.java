@@ -98,7 +98,7 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
             RegulatoryMutantDef m = (RegulatoryMutantDef)v_data.get(i);
             for (int j=0 ; j<m.getChanges().size() ; j++) {
                 RegulatoryMutantChange change = (RegulatoryMutantChange)m.getChange( j);
-                if (change.getVertex() == data) {
+                if (change.getNode() == data) {
                     m.removeChange( change);
                     v.add(m);
                 }
@@ -118,7 +118,7 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
             RegulatoryMutantDef m = (RegulatoryMutantDef)v_data.get(i);
             for (int j=0 ; j<m.getChanges().size() ; j++) {
                 RegulatoryMutantChange change = (RegulatoryMutantChange)m.getChange(j);
-                if (change.getVertex() == data) {
+                if (change.getNode() == data) {
                     // check that it is up to date
                     RegulatoryNode vertex = (RegulatoryNode)data;
                     if (change.getMax() > vertex.getMaxValue()) {

@@ -158,9 +158,9 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         if (edgeEditor == null) {
         	edgePanel = graph.getEdgeAttributePanel();
         }
-        vertexEditor = graph.getVertexEditor();
+        vertexEditor = graph.getNodeEditor();
         if (vertexEditor == null) {
-        	vertexPanel = graph.getVertexAttributePanel();
+        	vertexPanel = graph.getNodeAttributePanel();
         }
         setMapPanel(graph.getGraphManager().getGraphMapPanel(getGraphScrollPane()));
 
@@ -276,7 +276,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
         v_edge = event.getV_edge();
         v_vertex = event.getV_vertex();
 
-        if (event.getNbEdge() > 0 && event.getNbVertex() == 0) {
+        if (event.getNbEdge() > 0 && event.getNbNode() == 0) {
             // if multi-selection: force it on the graphic attribute panel otherwise let it free
             if (event.getNbEdge() == 1) {
                 cards.show(selectionEditPanel, "edge");
@@ -292,8 +292,8 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
                 graphicAttributePanel.setEditedObject(v_edge);
                 updateTabs(TabSelection.TAB_MULTIPLE);
             }
-        } else if (event.getNbEdge() == 0 && event.getNbVertex() > 0) {
-            if (event.getNbVertex() == 1) {
+        } else if (event.getNbEdge() == 0 && event.getNbNode() > 0) {
+            if (event.getNbNode() == 1) {
                 cards.show(selectionEditPanel, "vertex");
                 if (vertexEditor != null) {
                 	vertexEditor.setEditedObject(v_vertex.get(0));

@@ -25,7 +25,7 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 	 */
 	public GsCellViewFactory(GsJgraph jgraph, Graph<?, ?> g) {
 		this.edgeRenderer = new GsEdgeRenderer(jgraph, g.getEdgeAttributeReader());
-		this.rawNodeRenderer = new RawNodeRenderer(g.getVertexAttributeReader());
+		this.rawNodeRenderer = new RawNodeRenderer(g.getNodeAttributeReader());
 	}
 
 	public CellView createView(GraphModel model, Object cell) {
@@ -35,7 +35,7 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 		} else if (model.isEdge(cell)) {
 			view = createEdgeView(cell);
 		} else {
-			view = createRawVertexView(cell);
+			view = createRawNodeView(cell);
 		}
 		return view;
 	}
@@ -50,7 +50,7 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 		return new GsEdgeView(cell, edgeRenderer);
 	}
 
-	protected CellView createRawVertexView(Object cell) {
+	protected CellView createRawNodeView(Object cell) {
 		return new RawNodeView(cell, rawNodeRenderer);
 	}
 }

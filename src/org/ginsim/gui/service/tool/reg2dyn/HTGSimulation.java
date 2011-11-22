@@ -122,7 +122,7 @@ public class HTGSimulation extends Simulation {
 		
 		long time = System.currentTimeMillis();
 		this.htg = (HierarchicalTransitionGraph) helper.getDynamicGraph();
-		this.vreader = htg.getVertexAttributeReader();
+		this.vreader = htg.getNodeAttributeReader();
 		this.shouldCompactSCC = htg.areTransientCompacted();
 		this.regGraph = (RegulatoryGraph) helper.getRegulatoryGraph();
 		this.sigmaFactory = new HierarchicalSigmaSetFactory();
@@ -433,7 +433,7 @@ public class HTGSimulation extends Simulation {
 	 * @param hnode
 	 */
 	private void setHnodeGraphicalProperties(HierarchicalNode hnode) {
-		vreader.setVertex(hnode);
+		vreader.setNode(hnode);
 		switch (hnode.getType()) {
 		case HierarchicalNode.TYPE_STABLE_STATE:
 			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
@@ -470,7 +470,7 @@ public class HTGSimulation extends Simulation {
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			HierarchicalNode node = (HierarchicalNode) it.next();
 			node.updateSize();
-			htg.addVertex(node);
+			htg.addNode(node);
 			setHnodeGraphicalProperties(node);
 		}
 	}

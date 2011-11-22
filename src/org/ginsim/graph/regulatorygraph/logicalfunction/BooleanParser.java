@@ -61,7 +61,7 @@ public class BooleanParser extends TBooleanParser {
 //			}
 //			else if (o instanceof GsDirectedEdge) {
 //				e = (GsDirectedEdge) o;
-//				source = (RegulatoryNode)e.getSourceVertex();
+//				source = (RegulatoryNode)e.getSourceNode();
 //				v.add(source.getId() + "#1");
 //			}
 //			else if (o instanceof RegulatoryNode) {
@@ -184,7 +184,7 @@ public class BooleanParser extends TBooleanParser {
 						break;
 					}
 				}
-				if (source == null)	source = graph.addNewVertex(nodeID, null, (byte) 1);
+				if (source == null)	source = graph.addNewNode(nodeID, null, (byte) 1);
 
 				Edge edge = graph.getEdge(source, this.vertex);
 				if (edge == null) {

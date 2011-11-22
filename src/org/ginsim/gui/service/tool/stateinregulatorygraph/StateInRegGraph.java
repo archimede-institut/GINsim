@@ -49,7 +49,7 @@ public class StateInRegGraph {
 		cs = new CascadingStyle(false);  //Create a cs and save the current color manually
 		if (shouldStore) {
 			cs.storeAllEdges(regGraph.getEdges(), regGraph.getEdgeAttributeReader());
-			cs.storeAllNodes(nodeOrder, regGraph.getVertexAttributeReader());        	
+			cs.storeAllNodes(nodeOrder, regGraph.getNodeAttributeReader());        	
 		}
 		selector = new StateInRegGraphSelector(regGraph);		
 	}
@@ -60,7 +60,7 @@ public class StateInRegGraph {
 	public void restoreColorization() {
 		if (shouldStore) {
 			cs.restoreAllEdges(regGraph.getEdgeAttributeReader());  //Restore the original color of the regulatory graph
-			cs.restoreAllNodes(regGraph.getVertexAttributeReader());
+			cs.restoreAllNodes(regGraph.getNodeAttributeReader());
 		}
 	}
 
@@ -91,7 +91,7 @@ public class StateInRegGraph {
 	}
 
 	private void colorizeGraph() {
-		NodeAttributesReader vreader = regGraph.getVertexAttributeReader();
+		NodeAttributesReader vreader = regGraph.getNodeAttributeReader();
 		EdgeAttributesReader ereader = regGraph.getEdgeAttributeReader();
 
 		cs.restoreAllEdges(regGraph.getEdges(), ereader);
@@ -100,7 +100,7 @@ public class StateInRegGraph {
 			RegulatoryNode vertex = (RegulatoryNode) it.next();
 
 			// apply the vertex's colour
-			vreader.setVertex(vertex);
+			vreader.setNode(vertex);
 			cs.applyOnNode(selector, vertex, vreader);
 
 			// colorize edges

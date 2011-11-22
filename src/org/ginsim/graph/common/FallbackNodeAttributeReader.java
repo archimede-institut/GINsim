@@ -14,7 +14,7 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
 	private final GraphViewBackend backend;
     private Map dataMap = null;
     
-    private VertexVSdata vvsd;
+    private NodeVSdata vvsd;
     private Object vertex;
     
     /**
@@ -25,11 +25,11 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
         this.dataMap = map;
     }
 
-    public void setVertex(Object vertex) {
+    public void setNode(Object vertex) {
     	this.vertex = vertex;
-        vvsd = (VertexVSdata)dataMap.get(vertex);
+        vvsd = (NodeVSdata)dataMap.get(vertex);
         if (vvsd == null) {
-            vvsd = new VertexVSdata();
+            vvsd = new NodeVSdata();
             vvsd.bgcolor = bg;
             vvsd.fgcolor = fg;
             vvsd.border = border;
@@ -147,7 +147,7 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
     }
 
     
-    class VertexVSdata {
+    class NodeVSdata {
         protected int x, y, w, h;
         protected Color fgcolor;
         protected Color bgcolor;

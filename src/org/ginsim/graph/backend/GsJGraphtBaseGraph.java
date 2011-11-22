@@ -36,18 +36,18 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
     }
 
     @Override
-    public Set<E> getAllEdges(V sourceVertex, V targetVertex) {
+    public Set<E> getAllEdges(V sourceNode, V targetNode) {
         // no multiple edges here
         return null;
     }
 
     @Override
-    public E getEdge(V sourceVertex, V targetVertex) {
-        VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
+    public E getEdge(V sourceNode, V targetNode) {
+        VInfo<V,E> vinfo = m_vertices.get(sourceNode);
         if (vinfo == null) {
             return null;
         }
-        return vinfo.getOutgoing(targetVertex);
+        return vinfo.getOutgoing(targetNode);
     }
 
     @Override
@@ -56,31 +56,31 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
     }
 
     @Override
-    public E addEdge(V sourceVertex, V targetVertex) {
+    public E addEdge(V sourceNode, V targetNode) {
         // at the same time, check if vertices exists in graph AND replace them if necessary
-        VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
+        VInfo<V,E> vinfo = m_vertices.get(sourceNode);
         if (vinfo == null) {
             return null;
         }
         
         V src = vinfo.self;
-        vinfo = m_vertices.get(targetVertex);
+        vinfo = m_vertices.get(targetNode);
         if (vinfo == null) {
             return null;
         }
         // really create/add the edge
         E e = ef.createEdge( src, vinfo.self );
-        if (addEdge(sourceVertex, targetVertex, e)) {
+        if (addEdge(sourceNode, targetNode, e)) {
             return e;
         }
         return null;
     }
 
 	@Override
-	public boolean addEdge(V sourceVertex, V targetVertex, E e) {
-        VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
+	public boolean addEdge(V sourceNode, V targetNode, E e) {
+        VInfo<V,E> vinfo = m_vertices.get(sourceNode);
         if (vinfo.addOutgoing(e)) {
-            vinfo = m_vertices.get(targetVertex);
+            vinfo = m_vertices.get(targetNode);
             vinfo.addIncoming(e);
             edgeCount++;
             return true;
@@ -135,15 +135,15 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
     }
 
     @Override
-    public E removeEdge(V sourceVertex, V targetVertex) {
-        VInfo<V,E> vinfo = m_vertices.get(sourceVertex);
+    public E removeEdge(V sourceNode, V targetNode) {
+        VInfo<V,E> vinfo = m_vertices.get(sourceNode);
         if (vinfo == null) {
             return null;
         }
-        E e = vinfo.getOutgoing(targetVertex);
+        E e = vinfo.getOutgoing(targetNode);
         if (e != null) {
             vinfo.removeOutgoing(e);
-            m_vertices.get(targetVertex).removeIncoming(e);
+            m_vertices.get(targetNode).removeIncoming(e);
             edgeCount--;
         }
         return e;

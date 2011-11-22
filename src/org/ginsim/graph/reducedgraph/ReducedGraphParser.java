@@ -53,7 +53,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     	
     	this.graph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
     	this.map = map;
-		vareader = graph.getVertexAttributeReader();
+		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 		
 		try {
@@ -80,7 +80,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     	
     	this.graph = (ReducedGraph) graph;
     	this.map = map;
-		vareader = graph.getVertexAttributeReader();
+		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 
 		startParsing(file);
@@ -164,7 +164,7 @@ public class ReducedGraphParser extends GsXMLHelper {
                         pos = POS_VERTEX;
                         v_content = new Vector();
                         vertex = new NodeReducedData(id, v_content);
-                        graph.addVertex(vertex);
+                        graph.addNode(vertex);
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -208,7 +208,7 @@ public class ReducedGraphParser extends GsXMLHelper {
                     pos = POS_VERTEX_CONTENT;
                 } else if (vareader != null && qName.equals("nodevisualsetting")) {
                     pos = POS_VERTEX_VS;
-                    vareader.setVertex(vertex);
+                    vareader.setNode(vertex);
                 }
                 break; // POS_VERTEX
 

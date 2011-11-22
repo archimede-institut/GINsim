@@ -30,8 +30,8 @@ public class HTGSimulationHelper  extends SimulationHelper {
 		}
 		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, params.nodeOrder, mode);
 		htg.setAssociatedGraph(regGraph);
-		NodeAttributesReader vreader = htg.getVertexAttributeReader();
-		vreader.setDefaultVertexSize(5+10*params.nodeOrder.size(), 25);
+		NodeAttributesReader vreader = htg.getNodeAttributeReader();
+		vreader.setDefaultNodeSize(5+10*params.nodeOrder.size(), 25);
         htg.getAnnotation().setComment(params.getDescr()+"\n");
         arcs = new HashMap();
 	}

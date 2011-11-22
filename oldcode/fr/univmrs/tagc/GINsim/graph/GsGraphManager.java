@@ -34,7 +34,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
     private Map evsmap = null;
     private Map vvsmap = null;
     private GsEdgeAttributesReader fbEReader = null;
-    private GsVertexAttributesReader fbVReader = null;
+    private GsNodeAttributesReader fbVReader = null;
     private GsEventDispatcher eventDispatcher = new GsEventDispatcher(false);
 
     protected GsMainFrame mainFrame;
@@ -60,7 +60,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
      * @param vertex
      * @return the newly created vertex (or null if failed/inappropriate)
      */
-	abstract public boolean addVertex (V vertex);
+	abstract public boolean addNode (V vertex);
     /**
      * add the given vertex and place it.
      * 
@@ -68,7 +68,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
      * @param x
      * @param y
      */
-	abstract public void placeVertex (V vertex, int x, int y);
+	abstract public void placeNode (V vertex, int x, int y);
     /**
      * add an edge. The edge knows about its source and target vertices and
      * must have been created in advance (your Graph should provide the required help).
@@ -163,7 +163,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
      * show/hide vertex name on the display.
      * @param b
      */
-    abstract public void displayVertexName(boolean b);
+    abstract public void displayNodeName(boolean b);
     
     /**
      * undo last action.
@@ -183,7 +183,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
      * 
      * @param obj
      */
-    abstract public void removeVertex(V obj);
+    abstract public void removeNode(V obj);
     
     protected void vertexRemoved(V vertex) {
     	if (vvsmap != null) {
@@ -206,7 +206,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
     /**
      * @return an iterator to all vertices.
      */
-    abstract public Iterator<V> getVertexIterator();
+    abstract public Iterator<V> getNodeIterator();
     /**
      * @return an iterator to all edges.
      */
@@ -224,7 +224,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
     /**
      * @return an iterator to selected vertices.
      */
-	abstract public Iterator<V> getSelectedVertexIterator();
+	abstract public Iterator<V> getSelectedNodeIterator();
 
     
     /**
@@ -249,9 +249,9 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
     
     /**
      * @return an helper to read/change visual info on this graph's edges
-     * @see GsVertexAttributesReader
+     * @see GsNodeAttributesReader
      */
-    abstract public GsVertexAttributesReader getVertexAttributesReader();
+    abstract public GsNodeAttributesReader getNodeAttributesReader();
     /**
      * @return an helper to read/change visual info on this graph's vertices
      * @see GsEdgeAttributesReader
@@ -310,7 +310,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
 	/**
 	 * @return the number of vertex in this graph.
 	 */
-	abstract public int getVertexCount();
+	abstract public int getNodeCount();
 	
 	/**
 	 * set the mainFrame containing this graph.
@@ -323,8 +323,8 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
 	 * @return the vertex corresponding to this uniq id or null if not found.
 	 */
 	// TODO : Remove: Moved to JgraphtBackendImpl
-	public V getVertexByName(String id) {
-		Iterator<V> it = getVertexIterator();
+	public V getNodeByName(String id) {
+		Iterator<V> it = getNodeIterator();
 		while (it.hasNext()) {
 			V vertex = it.next();
 			if (id.equals(vertex.toString())) {
@@ -340,7 +340,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
 	 * 
 	 * @return an array of all vertices
 	 */
-	abstract public Object[] getVertexArray();
+	abstract public Object[] getNodeArray();
 	/**
 	 * @return true if this graphManager supports undo/redo
 	 */
@@ -359,7 +359,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
         return evsmap;
     }
     
-    protected Map getVertexVSMap() {
+    protected Map getNodeVSMap() {
         if (vvsmap == null) {
             vvsmap = new HashMap();
         }
@@ -378,9 +378,9 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
     /**
      * @return a generic vertexAttributeReader storing it's data to a local hashMap
      */
-    protected GsVertexAttributesReader getFallBackVReader() {
+    protected GsNodeAttributesReader getFallBackVReader() {
         if (fbVReader == null) {
-            fbVReader = new GsFallbackVertexAttributeReader(getVertexVSMap());
+            fbVReader = new GsFallbackNodeAttributeReader(getNodeVSMap());
         }
         return fbVReader;
     }
@@ -406,7 +406,7 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
      * @param vertex
      * @return true if this graph contains the vertex.
      */
-    public abstract boolean containsVertex(V vertex);
+    public abstract boolean containsNode(V vertex);
 
     /**
      * test if the graph contains a given edge.
@@ -436,5 +436,5 @@ abstract public class GsGraphManager<V,E extends Edge<V>> {
 	}
 	
 	abstract public Collection<E> getAllEdges();
-	abstract public Collection<V> getAllVertex();
+	abstract public Collection<V> getAllNode();
 }

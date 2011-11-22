@@ -168,8 +168,8 @@ public class TreeExpression extends TreeElement {
   }
   private void makeDNFString() throws Exception {
     ParamTree tr = functionsCreator.makeTree(1234);
-    BooleanParser parser = new BooleanParser(functionsCreator.getGraph().getIncomingEdges(functionsCreator.getCurrentVertex()));
-    parser.compile(userExpression, functionsCreator.getGraph(), functionsCreator.getCurrentVertex());
+    BooleanParser parser = new BooleanParser(functionsCreator.getGraph().getIncomingEdges(functionsCreator.getCurrentNode()));
+    parser.compile(userExpression, functionsCreator.getGraph(), functionsCreator.getCurrentNode());
     root = parser.getRoot();
     LogicalFunctionList functionList = (LogicalFunctionList)parser.eval();
     Vector params = parser.getParams(functionList.getData());

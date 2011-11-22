@@ -54,7 +54,7 @@ public abstract class GraphComparator<G extends Graph> {
 	/**
 	 * Indicates if a vertex corresponding to the id is common to both graphs.
 	 */
-	public boolean isCommonVertex(Object id) {
+	public boolean isCommonNode(Object id) {
 		return ((NodeStyle)((ItemStore)stylesMap.get(id)).v).background == COMMON_COLOR;
 	}
 	
@@ -79,7 +79,7 @@ public abstract class GraphComparator<G extends Graph> {
 		EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
 		for (Iterator it = verticesIdsSet.iterator(); it.hasNext();) { 		//For all edges
 			String id = (String) it.next();
-			Color col = ((NodeStyle)((ItemStore)stylesMap.get(gm.getVertexByName(id))).v).background;
+			Color col = ((NodeStyle)((ItemStore)stylesMap.get(gm.getNodeByName(id))).v).background;
 			
 			addEdgesFromGraph(g1m, g2m, id, col, SPECIFIC_G1_COLOR, ereader);
 			addEdgesFromGraph(g2m, g1m, id, col, SPECIFIC_G2_COLOR, ereader);
@@ -95,10 +95,10 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param vsourcereader a vertexAttributesReader for the old graph
 	 * @param col the color to apply to its background
 	 */
-	protected void mergeVertexAttributes(Object v, Object source, Object aux, NodeAttributesReader vreader, NodeAttributesReader vsourcereader, NodeAttributesReader vauxreader, Color col) {
-		vreader.setVertex(v);
+	protected void mergeNodeAttributes(Object v, Object source, Object aux, NodeAttributesReader vreader, NodeAttributesReader vsourcereader, NodeAttributesReader vauxreader, Color col) {
+		vreader.setNode(v);
 		if (source != null) {
-			vsourcereader.setVertex(source);
+			vsourcereader.setNode(source);
 			vreader.copyFrom(vsourcereader);
 		}
 		vreader.setBackgroundColor(col);
@@ -107,7 +107,7 @@ public abstract class GraphComparator<G extends Graph> {
 		if (col == SPECIFIC_G1_COLOR) stylesMap.put(v, new ItemStore(new NodeStyle(vsourcereader), null, new NodeStyle(vreader)));
 		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(v, new ItemStore(null, new NodeStyle(vsourcereader), new NodeStyle(vreader)));
 		else {
-			vauxreader.setVertex(aux);
+			vauxreader.setNode(aux);
 			stylesMap.put(v, new ItemStore(new NodeStyle(vsourcereader), new NodeStyle(vauxreader), new NodeStyle(vreader)));
 		}
 	}
@@ -152,7 +152,7 @@ public abstract class GraphComparator<G extends Graph> {
 		Graph gm1 = getG1();
 		for (Edge<?> e: (Collection<Edge>)gm.getEdges()) {
 			
-			Edge e1 = gm1.getEdge(gm1.getVertexByName(e.getSource().toString()), gm1.getVertexByName(e.getTarget().toString()));
+			Edge e1 = gm1.getEdge(gm1.getNodeByName(e.getSource().toString()), gm1.getNodeByName(e.getTarget().toString()));
 			if (e1 == null) {//The edge is (only or not) in the first graph. So its intermediary point are right.
 				EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
 				ereader.setEdge(e);

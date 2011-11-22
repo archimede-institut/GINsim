@@ -125,7 +125,7 @@ public final class SBMLXpathParser {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			vareader = graph.getVertexAttributeReader();
+			vareader = graph.getNodeAttributeReader();
 			ereader = graph.getEdgeAttributeReader();
 
 			Namespace namespace = Namespace.getNamespace("qual",
@@ -170,7 +170,7 @@ public final class SBMLXpathParser {
 								.getAttributeValue("maxLevel"));
 						
 						/** set a vertex with a species data **/
-						vertex = graph.addNewVertex(id, name, maxval);
+						vertex = graph.addNewNode(id, name, maxval);
 						vertex.getV_logicalParameters().setUpdateDup(false);
 
 						String s_basal = elcurrent.getAttributeValue("basevalue");
@@ -202,7 +202,7 @@ public final class SBMLXpathParser {
 			}
 			// TODO : REFACTORING ACTION
 			// The NodeOrder of a regulatory graph is now a List of RegulatoryNode
-			// Moreover the graph.addNewVertex already update the NodeOrder of the graph
+			// Moreover the graph.addNewNode already update the NodeOrder of the graph
 			// So the command below seems strange : remove it for the moment
 			// graph.setNodeOrder(v_nodeOrder);
 			
@@ -667,14 +667,14 @@ public final class SBMLXpathParser {
 		Vector<RegulatoryNode> v_order = new Vector<RegulatoryNode>();
 		String[] t_order = s_nodeOrder.split(" ");
 		for (int i = 0; i < t_order.length; i++) {
-			RegulatoryNode vertex = (RegulatoryNode) graph.getVertexByName(t_order[i]);
+			RegulatoryNode vertex = (RegulatoryNode) graph.getNodeByName(t_order[i]);
 			if (vertex == null) {
 				// ok = false;
 				break;
 			}
 			v_order.add(vertex);
 		}
-		if (v_order.size() != graph.getVertexCount()) {
+		if (v_order.size() != graph.getNodeCount()) {
 			// error
 			Tools.error("incoherent nodeOrder, not restoring it");
 		} else {
@@ -928,7 +928,7 @@ public final class SBMLXpathParser {
 			}
 			
 			/** To set a maxvalue for a regulatory vertex */
-			RegulatoryNode vertex = (RegulatoryNode) graph.getVertexByName(node);
+			RegulatoryNode vertex = (RegulatoryNode) graph.getNodeByName(node);
 			if( vertex != null) {
 				maxvalue = vertex.getMaxValue();
 			}			

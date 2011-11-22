@@ -100,7 +100,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	public GraphicAttributePanel(GraphGUI<?, ?, ?> gui) {
 		super(gui);
 		Graph graph = gui.getGraph();
-		vReader = graph.getVertexAttributeReader();
+		vReader = graph.getNodeAttributeReader();
 		eReader = graph.getEdgeAttributeReader();
 		initialize();
 		reload();
@@ -943,7 +943,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 				vertices = graph.getVertices();
 			}
 			for (Object vertex: vertices) {
-				vReader.setVertex(vertex);
+				vReader.setNode(vertex);
 				if (jCB_selectShape.isSelected()) {
 					vReader.setShape(jComboBox_shape.getSelectedIndex());
 				}
@@ -962,7 +962,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 				}
 				vReader.refresh();
 			}
-			vReader.setVertex(selected);
+			vReader.setNode(selected);
 			break;
 		}
 	}
@@ -988,19 +988,19 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		case VERTEXSELECTED:
 			refreshSize();
 			if (jCB_selectShape.isSelected()) {
-				vReader.setDefaultVertexShape(jComboBox_shape.getSelectedIndex());
+				vReader.setDefaultNodeShape(jComboBox_shape.getSelectedIndex());
 			}
 			if (jCB_selectForeground.isSelected()) {
-				vReader.setDefaultVertexForeground(jButton_fgcolor.getBackground());
+				vReader.setDefaultNodeForeground(jButton_fgcolor.getBackground());
 			}
 			if (jCB_selectBackground.isSelected()) {
-				vReader.setDefaultVertexBackground(jButton_bgcolor.getBackground());
+				vReader.setDefaultNodeBackground(jButton_bgcolor.getBackground());
 			}
 			if (jCB_selectSize.isSelected()) {
 				try {
 					int w = Integer.parseInt(jTF_width.getText());
 					int h = Integer.parseInt(jTF_height.getText());
-					vReader.setDefaultVertexSize(w, h);
+					vReader.setDefaultNodeSize(w, h);
 				} catch (NumberFormatException e) {}
 			}
 			break;
@@ -1110,7 +1110,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			cards.show(jP_attr,getJP_edge().getName());
 		} else {
 			whatIsSelected = VERTEXSELECTED;
-			vReader.setVertex(selected);
+			vReader.setNode(selected);
 			colorEnabled();
 			shapeEnabled();
 			sizeEnabled();

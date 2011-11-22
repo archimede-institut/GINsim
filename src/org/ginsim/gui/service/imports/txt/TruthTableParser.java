@@ -100,7 +100,7 @@ public final class TruthTableParser {
     	// add  vertices
     	RegulatoryNode [] G = new RegulatoryNode [n];
     	for (j=0; j<n; j++) {
-    		G[j] = model.addVertex();
+    		G[j] = model.addNode();
     	}	
 
     	

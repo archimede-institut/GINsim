@@ -24,14 +24,14 @@ public class LayoutService implements Service {
     
     public static void runLayout(int ref, Graph graph) throws GsException {
 		// first count nodes in each category
-		NodeAttributesReader vreader = graph.getVertexAttributeReader();
+		NodeAttributesReader vreader = graph.getNodeAttributeReader();
 		int nbRoot = 0;
 		int nbStables = 0;
 		int nbClassic = 0;
 		int maxHeight = 0;
 		int maxWidth = 0;
 		for (Object vertex: graph.getVertices()) {
-		    vreader.setVertex(vertex);
+		    vreader.setNode(vertex);
 		    int tmp = vreader.getHeight();
 		    maxHeight = (tmp > maxHeight) ? tmp : maxHeight;
 		    tmp = vreader.getWidth();
@@ -64,7 +64,7 @@ public class LayoutService implements Service {
 		// then rebrowse all nodes to do the actual placement
         if (inversed) {
             for (Object vertex: graph.getVertices()) {
-                vreader.setVertex(vertex);
+                vreader.setNode(vertex);
                 if (graph.getIncomingEdges(vertex).size() == 0) {
                     algo.placeNextStable();
                 } else if (graph.getOutgoingEdges(vertex).size() == 0) {
@@ -76,7 +76,7 @@ public class LayoutService implements Service {
             }
         } else {
             for (Object vertex: graph.getVertices()) {
-    		    vreader.setVertex(vertex);
+    		    vreader.setNode(vertex);
     		    if (graph.getIncomingEdges(vertex).size() == 0) {
     		        algo.placeNextRoot();
     		    } else if (graph.getOutgoingEdges(vertex).size() == 0) {

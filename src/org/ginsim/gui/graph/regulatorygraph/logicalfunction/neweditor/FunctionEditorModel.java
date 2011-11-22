@@ -29,7 +29,7 @@ public class FunctionEditorModel {
   public void init(TreeInteractionsModel m, FunctionPanel p) {
   	functionPanel = p;
   	oldExp = p.getCurrentText();
-  	Collection<RegulatoryMultiEdge> ed = m.getGraph().getIncomingEdges(m.getVertex());
+  	Collection<RegulatoryMultiEdge> ed = m.getGraph().getIncomingEdges(m.getNode());
     interactions.clear();
     for (RegulatoryMultiEdge me: ed) {
       interactions.addElement(me);

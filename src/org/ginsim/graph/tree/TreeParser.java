@@ -34,7 +34,7 @@ public abstract class TreeParser<V,E> {
 		clearTree();			//Remove all the treeNode from the current tree
 		init();					//Init the variables needed for the parsing
 		parseOmdd();			//Launch the correct parser depending on the mode.
-		updateVertexLayout();	//Refresh the position and style of the GsTreeNodes
+		updateNodeLayout();	//Refresh the position and style of the GsTreeNodes
 	}
 
 	public void setTree(Tree tree) {
@@ -53,8 +53,8 @@ public abstract class TreeParser<V,E> {
 	/**
 	 * Compute the layout for each node in this tree
 	 */
-	public void updateVertexLayout() {
-		NodeAttributesReader vreader = tree.getVertexAttributeReader();
+	public void updateNodeLayout() {
+		NodeAttributesReader vreader = tree.getNodeAttributeReader();
 		for (Iterator it = tree.getVertices().iterator(); it.hasNext();) {
 			TreeNode vertex = (TreeNode) it.next();
 			updateLayout(vreader, vertex);
@@ -65,14 +65,14 @@ public abstract class TreeParser<V,E> {
 	 * Remove all the vertices from the tree
 	 */
 	public void clearTree() {
-		Vector<TreeNode> tmp = new Vector( tree.getVertexCount());
+		Vector<TreeNode> tmp = new Vector( tree.getNodeCount());
 		for (Iterator<TreeNode> it = tree.getVertices().iterator(); it.hasNext();) {
 			TreeNode vertex = (TreeNode) it.next();
 			tmp.add(vertex);
 		}
 		for (Iterator it = tmp.iterator(); it.hasNext();) {
 			TreeNode vertex = (TreeNode) it.next();
-			tree.removeVertex(vertex);
+			tree.removeNode(vertex);
 		}
 	}	
 	

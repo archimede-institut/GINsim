@@ -7,12 +7,12 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import org.jgraph.graph.VertexRenderer;
+import org.jgraph.graph.NodeRenderer;
 /**
  *	ellipse shape for vertices.
  *	based on code from JGraph's website, adapted to draw a (sometimes stupid) border
  */
-class GsJgraphEllipseRenderer extends VertexRenderer {
+class GsJgraphEllipseRenderer extends NodeRenderer {
 	
 	private static final long serialVersionUID = 445658585547885554L;
 	private transient boolean isLabelDiplayed=true;

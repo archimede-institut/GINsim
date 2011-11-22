@@ -278,7 +278,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	}
 
 	@Override
-	public void selectVertex(V vertex) {
+	public void selectNode(V vertex) {
 		// FIXME: implement selection
 	}
 	@Override
@@ -336,9 +336,9 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void vertexToFront(boolean b) {
 //        // move all vertex to front;
-//        Object[] t = getVertexArray();
+//        Object[] t = getNodeArray();
 //        for (int i=0 ; i<t.length ; i++) {
-//            t[i] = m_jgAdapter.getVertexCell(t[i]);
+//            t[i] = m_jgAdapter.getNodeCell(t[i]);
 //        }
 //        if (b) {
 //            m_jgAdapter.toFront(t);

@@ -32,8 +32,8 @@ import fr.univmrs.tagc.GINsim.data.GsDirectedEdge;
 import fr.univmrs.tagc.GINsim.graph.GsEdgeAttributesReader;
 
 import fr.univmrs.tagc.GINsim.graph.GsGraphManager;
-import fr.univmrs.tagc.GINsim.graph.GsSelectedEdgeWithVertexIterator;
-import fr.univmrs.tagc.GINsim.graph.GsVertexAttributesReader;
+import fr.univmrs.tagc.GINsim.graph.GsSelectedEdgeWithNodeIterator;
+import fr.univmrs.tagc.GINsim.graph.GsNodeAttributesReader;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 
 /**
@@ -61,7 +61,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
     private static final int incX = 120;
     private static final int incY = 40;
     
-    private AttributeMap defaultVertexAttr;
+    private AttributeMap defaultNodeAttr;
     private AttributeMap defaultEdgeAttr;
 
     /**
@@ -91,10 +91,10 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
     }
 
     //TODO remove: moved to Graph
-    public boolean addVertex(V vertex) {
-        if (g.addVertex(vertex)) {
+    public boolean addNode(V vertex) {
+        if (g.addNode(vertex)) {
             if (visible) {
-                positionVertexAuto(vertex);
+                positionNodeAuto(vertex);
             }
             vertexCount++;
             return true;
@@ -105,8 +105,8 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
     /**
      * @param vertex
      */
-    private void positionVertexAuto(Object vertex) {
-        placeVertex(vertex, curX, curY);
+    private void positionNodeAuto(Object vertex) {
+        placeNode(vertex, curX, curY);
         curX += incX;
         if (curX > maxX) {
             curX = minX;
@@ -154,11 +154,11 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return true;
     }
 
-    public void placeVertex( Object vertex, int x, int y ) {
+    public void placeNode( Object vertex, int x, int y ) {
         if (!visible) {
 			return;
 		}
-        DefaultGraphCell cell   = m_jgAdapter.getVertexCell( vertex );
+        DefaultGraphCell cell   = m_jgAdapter.getNodeCell( vertex );
         AttributeMap     attr   = cell.getAttributes();
         Rectangle2D      bounds = GraphConstants.getBounds( attr );
 
@@ -207,7 +207,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
             if (o instanceof GsDirectedEdge) {
                 jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
             } else {
-                jgraph.addSelectionCell(m_jgAdapter.getVertexCell((V)o));
+                jgraph.addSelectionCell(m_jgAdapter.getNodeCell((V)o));
             }
         }
     }
@@ -222,7 +222,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
             if (o instanceof GsDirectedEdge) {
                 jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
             } else {
-                jgraph.addSelectionCell(m_jgAdapter.getVertexCell(o));
+                jgraph.addSelectionCell(m_jgAdapter.getNodeCell(o));
             }
         }
     }
@@ -233,9 +233,9 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
             return;
         }
         // move all vertex to front;
-        Object[] t = getVertexArray();
+        Object[] t = getNodeArray();
         for (int i=0 ; i<t.length ; i++) {
-            t[i] = m_jgAdapter.getVertexCell(t[i]);
+            t[i] = m_jgAdapter.getNodeCell(t[i]);
         }
         if (b) {
             m_jgAdapter.toFront(t);
@@ -300,10 +300,10 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 
     /**
      * show/hide vertex name: not applicable as they are always visible.
-     * @see fr.univmrs.tagc.GINsim.graph.GsGraphManager#displayVertexName(boolean)
+     * @see fr.univmrs.tagc.GINsim.graph.GsGraphManager#displayNodeName(boolean)
      */
     // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
-    public void displayVertexName(boolean b) {
+    public void displayNodeName(boolean b) {
     		// NOTHING
     }
     
@@ -335,14 +335,14 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 				    gsGraph.removeEdge((E)obj);
 				//else it's a node
 				} else {
-				    gsGraph.removeVertex((V)obj);
+				    gsGraph.removeNode((V)obj);
 				}
 			}
 		}
     }
 
-    public void removeVertex(V obj) {
-        g.removeVertex(obj);
+    public void removeNode(V obj) {
+        g.removeNode(obj);
         vertexCount--;
         vertexRemoved(obj);
     }
@@ -356,7 +356,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return gsGraph;
     }
 
-    public Iterator getVertexIterator() {
+    public Iterator getNodeIterator() {
         return g.vertexSet().iterator();
     }
 
@@ -366,7 +366,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 
 	public Iterator<E> getFullySelectedEdgeIterator() {
 		if (visible) {
-			return new GsSelectedEdgeWithVertexIterator(mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges());
+			return new GsSelectedEdgeWithNodeIterator(mainFrame.getSelectedVertices(), mainFrame.getSelectedEdges());
 		}
         return g.edgeSet().iterator();
 	}
@@ -377,7 +377,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return g.edgeSet().iterator();
 	}
 
-	public Iterator<V> getSelectedVertexIterator() {
+	public Iterator<V> getSelectedNodeIterator() {
 		if (visible) {
 			return mainFrame.getSelectedVertices().iterator();
 		}
@@ -438,9 +438,9 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         }        
     }
 
-    public GsVertexAttributesReader getVertexAttributesReader() {
+    public GsNodeAttributesReader getNodeAttributesReader() {
         if (visible) {
-            return new GsJgraphVertexAttribute(this);
+            return new GsJgraphNodeAttribute(this);
         }
         return getFallBackVReader();
     }
@@ -456,25 +456,25 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
      * @param vertex
      * @return the vertex's attributeMap
      */
-    public AttributeMap getVertexAttributesMap(Object vertex) {
-        return m_jgAdapter.getVertexCell( vertex ).getAttributes();
+    public AttributeMap getNodeAttributesMap(Object vertex) {
+        return m_jgAdapter.getNodeCell( vertex ).getAttributes();
     }
 
-    public int getVertexCount() {
+    public int getNodeCount() {
     		return vertexCount;
     }
 
 	public void setMainFrame(GsMainFrame m) {
 		mainFrame = m;
         if (mainFrame != null) {
-            defaultVertexAttr = JGraphModelAdapter.createDefaultVertexAttributes();
+            defaultNodeAttr = JGraphModelAdapter.createDefaultNodeAttributes();
             defaultEdgeAttr = JGraphModelAdapter.createDefaultEdgeAttributes(g);
             
 	        GsJgraphEdgeAttribute.applyDefault(defaultEdgeAttr);
-	        GsJgraphVertexAttribute.applyDefault(defaultVertexAttr);
+	        GsJgraphNodeAttribute.applyDefault(defaultNodeAttr);
 	        pedgerouting = new GsParallelEdgeRouting();
             
-            m_jgAdapter = new JGraphModelAdapter(g, defaultVertexAttr, defaultEdgeAttr);
+            m_jgAdapter = new JGraphModelAdapter(g, defaultNodeAttr, defaultEdgeAttr);
 	        jgraph = new GsJgraph( this );
 	        visible = true;
             rereadVS();
@@ -488,10 +488,10 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 		return defaultEdgeAttr;
 	}
 	/**
-	 * @return Returns the defaultVertexAttr.
+	 * @return Returns the defaultNodeAttr.
 	 */
-	public AttributeMap getDefaultVertexAttr() {
-		return defaultVertexAttr;
+	public AttributeMap getDefaultNodeAttr() {
+		return defaultNodeAttr;
 	}
 	/**
 	 * @return the jgrapht to jgraph model adapter
@@ -506,7 +506,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 		return pedgerouting;
 	}
 
-	public Object[] getVertexArray() {
+	public Object[] getNodeArray() {
 		return g.vertexSet().toArray();
 	}
 	/**
@@ -539,15 +539,15 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
                 ereader.setEdge(o);
                 ereader.copyFrom(fereader);
             }
-            vsdata = getVertexVSMap();
+            vsdata = getNodeVSMap();
             it = vsdata.keySet().iterator();
-            GsVertexAttributesReader fvreader = getFallBackVReader();
-            GsVertexAttributesReader vreader = getVertexAttributesReader();
+            GsNodeAttributesReader fvreader = getFallBackVReader();
+            GsNodeAttributesReader vreader = getNodeAttributesReader();
             
             while (it.hasNext()) {
                 Object o = it.next();
-                fvreader.setVertex(o);
-                vreader.setVertex(o);
+                fvreader.setNode(o);
+                vreader.setNode(o);
                 vreader.copyFrom(fvreader);
             }
         }
@@ -558,8 +558,8 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
         return DijkstraShortestPath.findPathBetween(g, source, target);
     }
 
-    public boolean containsVertex(V vertex) {
-        return g.containsVertex(vertex);
+    public boolean containsNode(V vertex) {
+        return g.containsNode(vertex);
     }
     
     public boolean containsEdge(V from, V to) {
@@ -596,7 +596,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 				jgraph.addSelectionCell(m_jgAdapter.getEdgeCell(getEdge(de.getSource(), de.getTarget())));
 			}
         } else {
-            jgraph.addSelectionCell(m_jgAdapter.getVertexCell(obj));
+            jgraph.addSelectionCell(m_jgAdapter.getNodeCell(obj));
         }
     }
     
@@ -612,7 +612,7 @@ public class GsJgraphtGraphManager<V,E extends GsDirectedEdge<V>> extends GsGrap
 		return g.edgeSet();
 	}
 
-	public Collection getAllVertex() {
+	public Collection getAllNode() {
 		return g.vertexSet();
 	}
 }

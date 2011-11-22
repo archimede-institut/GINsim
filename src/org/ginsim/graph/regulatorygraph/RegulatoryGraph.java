@@ -53,13 +53,13 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param max
      * @return the new vertex.
      */
-    public RegulatoryNode addNewVertex(String id, String name, byte max);
+    public RegulatoryNode addNewNode(String id, String name, byte max);
     
     /**
      * 
      * @return
      */
-    public RegulatoryNode addVertex();
+    public RegulatoryNode addNode();
     
     
     /**
@@ -124,7 +124,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param newId
      * @throws GsException
      */
-    public void changeVertexId(Object vertex, String newId) throws GsException;
+    public void changeNodeId(Object vertex, String newId) throws GsException;
     
     /**
      * 

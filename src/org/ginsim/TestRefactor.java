@@ -26,9 +26,9 @@ public class TestRefactor {
 		initGUI();
 		RegulatoryGraph lrg = GUIManager.getInstance().newFrame();
 
-		RegulatoryNode v1 = lrg.addVertex();
-		RegulatoryNode v2 = lrg.addVertex();
-		RegulatoryNode v3 = lrg.addVertex();
+		RegulatoryNode v1 = lrg.addNode();
+		RegulatoryNode v2 = lrg.addNode();
+		RegulatoryNode v3 = lrg.addNode();
 
 		lrg.addEdge(v1, v2, 1);
 		lrg.addEdge(v1, v3, -1);

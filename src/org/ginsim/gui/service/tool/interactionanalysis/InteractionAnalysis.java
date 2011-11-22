@@ -100,7 +100,7 @@ public class InteractionAnalysis {
 			mutant.apply(t_tree, g);
 		}
 		
-		node_to_position = new HashMap((int) (g.getVertexCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
+		node_to_position = new HashMap((int) (g.getNodeCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
 		int i = 0;
 		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {							//Build the map m
 			node_to_position.put(it.next(), Integer.valueOf(i++));
@@ -409,7 +409,7 @@ public class InteractionAnalysis {
 		dw.startDocument();
 		dw.openHeader(1, Translator.getString("STR_interactionAnalysis"), null);
 		dw.openParagraph(null);
-		dw.writeTextln("Analizing interactions of "+g.getGraphName()+" ("+g.getVertexCount()+" vertices)");
+		dw.writeTextln("Analizing interactions of "+g.getGraphName()+" ("+g.getNodeCount()+" vertices)");
 		dw.closeParagraph();		
 		
 		writeSummary(dw);
