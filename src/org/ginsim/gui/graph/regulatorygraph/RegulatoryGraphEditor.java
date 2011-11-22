@@ -123,17 +123,17 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 		return null;
 	}
 
-	public GraphEventCascade vertexAdded(RegulatoryNode data) {
+	public GraphEventCascade nodeAdded(RegulatoryNode data) {
 		refresh(true);
 		return null;
 	}
 
-	public GraphEventCascade vertexRemoved(RegulatoryNode data) {
+	public GraphEventCascade nodeRemoved(RegulatoryNode data) {
 		refresh(true);
 		return null;
 	}
 
-	public GraphEventCascade vertexUpdated(RegulatoryNode data) {
+	public GraphEventCascade nodeUpdated(RegulatoryNode data) {
 		refresh(true);
 		return null;
 	}

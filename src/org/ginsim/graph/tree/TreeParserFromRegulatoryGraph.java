@@ -31,7 +31,7 @@ public class TreeParserFromRegulatoryGraph extends TreeParserFromOmdd {
 	}
 	
 	/**
-	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial vertex, assuming regGraph is defined
+	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial node, assuming regGraph is defined
 	 * @param initialNode
 	 */
 	public void initRealDepth(RegulatoryNode initialNode) {

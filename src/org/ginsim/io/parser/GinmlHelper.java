@@ -22,7 +22,7 @@ public class GinmlHelper {
 
     /**
      * we are reading node visual settings from a ginml file, apply them on
-     * the current vertex.
+     * the current node.
      * 
      * @param vareader
      * @param qName

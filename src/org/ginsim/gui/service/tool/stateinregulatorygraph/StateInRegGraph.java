@@ -99,7 +99,7 @@ public class StateInRegGraph {
 		for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
 			RegulatoryNode vertex = (RegulatoryNode) it.next();
 
-			// apply the vertex's colour
+			// apply the node colour
 			vreader.setNode(vertex);
 			cs.applyOnNode(selector, vertex, vreader);
 

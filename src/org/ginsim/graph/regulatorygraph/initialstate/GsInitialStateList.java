@@ -70,7 +70,7 @@ public class GsInitialStateList implements GraphListener<RegulatoryNode, Regulat
 		return null;
 	}
 
-	public GraphEventCascade vertexAdded(RegulatoryNode data) {
+	public GraphEventCascade nodeAdded(RegulatoryNode data) {
 	    if (((RegulatoryNode)data).isInput()) {
             inputNodes.add(data);
         } else {
@@ -83,7 +83,7 @@ public class GsInitialStateList implements GraphListener<RegulatoryNode, Regulat
 		return null;
 	}
 
-	public GraphEventCascade vertexRemoved(RegulatoryNode data) {
+	public GraphEventCascade nodeRemoved(RegulatoryNode data) {
 	    // update lists
         inputNodes.remove(data);
         normalNodes.remove(data);
@@ -97,7 +97,7 @@ public class GsInitialStateList implements GraphListener<RegulatoryNode, Regulat
         return null;
 	}
 
-	public GraphEventCascade vertexUpdated(RegulatoryNode data) {
+	public GraphEventCascade nodeUpdated(RegulatoryNode data) {
         List l_changes = new ArrayList();
 	    // update lists
 	    if (data.isInput() ? normalNodes.contains(data) : inputNodes.contains(data)) {

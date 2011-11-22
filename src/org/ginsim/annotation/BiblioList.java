@@ -267,15 +267,15 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 		return null;
 	}
 
-	public GraphEventCascade vertexAdded(Object data) {
+	public GraphEventCascade nodeAdded(Object data) {
 		return null;
 	}
 
-	public GraphEventCascade vertexRemoved(Object data) {
+	public GraphEventCascade nodeRemoved(Object data) {
 		return null;
 	}
 
-	public GraphEventCascade vertexUpdated(Object data) {
+	public GraphEventCascade nodeUpdated(Object data) {
 		return null;
 	}
 }

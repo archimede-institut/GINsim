@@ -46,12 +46,12 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
     public List<RegulatoryNode> getNodeOrder();
     
     /**
-     * add a vertex from textual parameters (for the parser).
+     * add a node from textual parameters (for the parser).
      *
      * @param id
      * @param name
      * @param max
-     * @return the new vertex.
+     * @return the new node.
      */
     public RegulatoryNode addNewNode(String id, String name, byte max);
     
@@ -65,7 +65,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
     /**
      * 
      * @param newId
-     * @return True if a vertex of the graph has the given ID
+     * @return True if a node of the graph has the given ID
      */
     public boolean idExists(String newId);
     
@@ -120,11 +120,11 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
     
     /**
      * 
-     * @param vertex
+     * @param node
      * @param newId
      * @throws GsException
      */
-    public void changeNodeId(Object vertex, String newId) throws GsException;
+    public void changeNodeId(Object node, String newId) throws GsException;
     
     /**
      * 
@@ -134,20 +134,20 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
 	
 	
 	/**
-	 * Set a list of class dependent objects representing the order of vertex as defined by the model
+	 * Set a list of class dependent objects representing the order of node as defined by the model
 	 * 
-	 * @param list the list of objects representing the order of vertex as defined by the model
+	 * @param list the list of objects representing the order of node as defined by the model
 	 */
 	public void setNodeOrder( List<RegulatoryNode> list);
 	
 	
     /**
      * 
-     * @param vertex
+     * @param node
      * @param newMax
      * @param l_fixable
      * @param l_conflict
      */
-	public void canApplyNewMaxValue(RegulatoryNode vertex, byte newMax, List l_fixable, List l_conflict);
+	public void canApplyNewMaxValue(RegulatoryNode node, byte newMax, List l_fixable, List l_conflict);
     
 }

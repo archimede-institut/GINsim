@@ -9,13 +9,13 @@ import org.ginsim.graph.common.Edge;
 public interface GraphBackend<V, E extends Edge<V>> {
 
 	/**
-	 * Add a vertex to the graph.
-	 * The front-end graph is responsible for creating the vertex object and calling this method in the backend.
+	 * Add a node to the graph.
+	 * The front-end graph is responsible for creating the node object and calling this method in the backend.
 	 * 
-	 * @param vertex
+	 * @param node
 	 * @return
 	 */
-	public boolean addNodeInBackend (V vertex);
+	public boolean addNodeInBackend (V node);
 	
 	
 	/**
@@ -29,10 +29,10 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	
 	
     /**
-     * @param vertex
-     * @return true if the vertex is in the graph, false if not.
+     * @param node
+     * @return true if the node is in the graph, false if not.
      */
-    public boolean containsNode(V vertex);
+    public boolean containsNode(V node);
     
 	
     /**
@@ -45,9 +45,9 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	
 	
     /**
-     * remove a vertex from the graph.
-     * @param vertex
-     * @return true if the vertex was correctly removed, false if not.
+     * remove a node from the graph.
+     * @param node
+     * @return true if the node was correctly removed, false if not.
      */
 	public boolean removeNode(V node);
 
@@ -67,15 +67,15 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	
     
 	/**
-	 * Give access to the vertex named with the given name
+	 * Give access to the node named with the given name
 	 * 
-	 * @param id name of a vertex
-	 * @return the vertex corresponding to this unique id or null if not found.
+	 * @param id name of a node
+	 * @return the node corresponding to this unique id or null if not found.
 	 */
 	public V getNodeByName( String id);
     
 	/**
-	 * @return the number of vertex in this graph.
+	 * @return the number of node in this graph.
 	 */
 	public int getNodeCount();
 	
@@ -95,17 +95,17 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	
 	
     /**
-     * @param vertex
-     * @return incoming edges of the given vertex.
+     * @param node
+     * @return incoming edges of the given node.
      */
-    public Collection<E> getIncomingEdges(V vertex);
+    public Collection<E> getIncomingEdges(V node);
     
     
     /**
-     * @param vertex
-     * @return outgoing edges of the given vertex.
+     * @param node
+     * @return outgoing edges of the given node.
      */
-    public Collection<E> getOutgoingEdges(V vertex);
+    public Collection<E> getOutgoingEdges(V node);
     
     
 	/**
@@ -120,17 +120,17 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	/**
 	 * Find the shortest path between the two given vertices
 	 * 
-	 * @param source the vertex at the beginning of the searched path
-	 * @param target the vertex at the end of the searched path
+	 * @param source the node at the beginning of the searched path
+	 * @param target the node at the end of the searched path
 	 * @return the list of edges composing the shortest path
 	 */
 	List<E> getShortestPath( V source, V target);
 	
 	
 	/**
-	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * Return a list of set of node, each set containing a strongly connected component of the graph
 	 * 
-	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * @return a list of set of node, each set containing a strongly connected component of the graph
 	 */
 	List<Set<V>> getStronglyConnectedComponents();
 

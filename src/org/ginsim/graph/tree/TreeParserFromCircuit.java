@@ -72,7 +72,7 @@ public class TreeParserFromCircuit extends TreeParser {
 
 	
 	/**
-	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial vertex, assuming regGraph is defined
+	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial node, assuming regGraph is defined
 	 * @param root
 	 */
 	public void initRealDepth(OmsddNode root) {

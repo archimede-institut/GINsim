@@ -277,8 +277,8 @@ public class LogicalParameterList extends ArrayList {
 	}
 	
 	/**
-	 * Apply all the logical parameters from this list to the clone vertex (from the new graph)
-	 * @param clone the vertex from the new graph
+	 * Apply all the logical parameters from this list to the clone node (from the new graph)
+	 * @param clone the node from the new graph
 	 * @param copyMap a map of multi-edge from the old graph to the new one.
 	 */
 	public void applyNewGraph(RegulatoryNode clone, Map copyMap) {

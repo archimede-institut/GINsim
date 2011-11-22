@@ -32,15 +32,15 @@ public interface GraphModel<V,E extends Edge<V>> {
     static final int CHANGE_EDGEADDED = 0;
     /**  an edged has been removed */
     static final int CHANGE_EDGEREMOVED = 1;
-    /** a vertex has been added  */
+    /** a node has been added  */
     static final int CHANGE_VERTEXADDED = 2;
-    /**  a vertex has been removed */
+    /**  a node has been removed */
     static final int CHANGE_VERTEXREMOVED = 3;
     /**  an edge has been modified */
     static final int CHANGE_EDGEUPDATED = 4;
-    /**  a vertex has been modified */
+    /**  a node has been modified */
     static final int CHANGE_VERTEXUPDATED = 5;
-    /**  a vertex has been modified */
+    /**  a node has been modified */
     static final int CHANGE_MERGED = 6;
     /**  other kind of change */
     static final int CHANGE_METADATA = 7;
@@ -105,12 +105,12 @@ public interface GraphModel<V,E extends Edge<V>> {
 
 
 	/**
-	 * Add a vertex to this graph structure
+	 * Add a node to this graph structure
 	 * 
-	 * @param vertex
-	 * @return the created vertex
+	 * @param node
+	 * @return the created node
 	 */
-	boolean addNode( V vertex);
+	boolean addNode( V node);
 
 	/**
 	 * Add an edge to this graph structure.
@@ -121,12 +121,12 @@ public interface GraphModel<V,E extends Edge<V>> {
 	boolean addEdge( E edge);
 
     /**
-     * Remove a vertex from the graph.
+     * Remove a node from the graph.
      * 
-     * @param vertex
-     * @return true if the vertex was effectively removed
+     * @param node
+     * @return true if the node was effectively removed
      */ 
-	boolean removeNode( V vertex);
+	boolean removeNode( V node);
 
     /**
      * Remove an edge from the graph.
@@ -137,7 +137,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	boolean removeEdge( E edge);
 	
 	/**
-	 * @return the number of vertex in this graph.
+	 * @return the number of node in this graph.
 	 */
 	int getNodeCount();
 	
@@ -149,10 +149,10 @@ public interface GraphModel<V,E extends Edge<V>> {
     
     
 	/**
-	 * Give access to the vertex named with the given name
+	 * Give access to the node named with the given name
 	 * 
-	 * @param id name of a vertex
-	 * @return the vertex corresponding to this unique id or null if not found.
+	 * @param id name of a node
+	 * @return the node corresponding to this unique id or null if not found.
 	 */
 	V getNodeByName( String id);
 	
@@ -168,7 +168,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * Search the vertices with ID matching the given regular expression. 
 	 * Other kind of graph could overwrite this method. 
 	 * 
-	 * @param regexp the regular expression vertex ID must match to be selected
+	 * @param regexp the regular expression node ID must match to be selected
 	 * @return a Vector of vertices
 	 */
 	Vector<V> searchNodes( String regexp);
@@ -189,10 +189,10 @@ public interface GraphModel<V,E extends Edge<V>> {
 
 	
     /**
-     * @param vertex
-     * @return true if the vertex is in the graph, false if not.
+     * @param node
+     * @return true if the node is in the graph, false if not.
      */
-    boolean containsNode(V vertex);
+    boolean containsNode(V node);
     
     
     /**
@@ -204,24 +204,24 @@ public interface GraphModel<V,E extends Edge<V>> {
     
     
     /**
-     * @param vertex
-     * @return incoming edges of the given vertex.
+     * @param node
+     * @return incoming edges of the given node.
      */
-    Collection<E> getIncomingEdges(V vertex);
+    Collection<E> getIncomingEdges(V node);
     
     
     /**
-     * @param vertex
-     * @return outgoing edges of the given vertex.
+     * @param node
+     * @return outgoing edges of the given node.
      */
-    Collection<E> getOutgoingEdges(V vertex);
+    Collection<E> getOutgoingEdges(V node);
     
     
 	/**
 	 * Find the shortest path between the two given vertices
 	 * 
-	 * @param source the vertex at the beginning of the searched path
-	 * @param target the vertex at the end of the searched path
+	 * @param source the node at the beginning of the searched path
+	 * @param target the node at the end of the searched path
 	 * @return the list of edges composing the shortest path
 	 */
 	List<E> getShortestPath(V source, V target);
@@ -229,9 +229,9 @@ public interface GraphModel<V,E extends Edge<V>> {
 	
     
 	/**
-	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * Return a list of set of node, each set containing a strongly connected component of the graph
 	 * 
-	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * @return a list of set of node, each set containing a strongly connected component of the graph
 	 */
 	List<Set<V>> getStronglyConnectedComponents();
 
@@ -239,11 +239,11 @@ public interface GraphModel<V,E extends Edge<V>> {
     /**
      * Build a graph from the provided vertices and edges based on the current graph
      * 
-     * @param vertex the collection of vertices used to create the subgraph
+     * @param node the collection of vertices used to create the subgraph
      * @param edges the collection of edges used to create the subgraph
      * @return a Graph composed of the provided vertices and edges and based on the current graph
      */
-    Graph<V,E> getSubgraph( Collection<V> vertex, Collection<E> edges);
+    Graph<V,E> getSubgraph( Collection<V> node, Collection<E> edges);
     
     /**
      * Merge the provided graph with the current one

@@ -8,7 +8,7 @@ import org.ginsim.graph.common.NodeAttributesReader;
 
 
 /**
- * a vertex in a state transition graph (ie a possible state of the regulatory graph).
+ * a node in a state transition graph (ie a possible state of the regulatory graph).
  */
 public final class DynamicNode {
 	/** each int is the state of the corresponding gene in the regulatory graph (according to nodeOrder). */

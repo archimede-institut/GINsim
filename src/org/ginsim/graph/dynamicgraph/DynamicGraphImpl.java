@@ -114,9 +114,9 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	
     
 	/**
-	 * Set a list of String representing the order of vertex as defined by the model
+	 * Set a list of String representing the order of node as defined by the model
 	 * 
-	 * @param list the list of String representing the order of vertex as defined by the model
+	 * @param list the list of String representing the order of node as defined by the model
 	 */
 	@Override
 	public void setNodeOrder( List<NodeInfo> node_order){
@@ -258,7 +258,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	}
 
 	/**
-	 * add a vertex to this graph.
+	 * add a node to this graph.
 	 * @param state the state we want to add
 	 * @return the new DynamicNode.
 	 */

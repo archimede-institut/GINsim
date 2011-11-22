@@ -146,15 +146,15 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	
 	/**
-	 * Add a vertex to this graph structure
+	 * Add a node to this graph structure
 	 * 
-	 * @param vertex
-	 * @return the created vertex
+	 * @param node
+	 * @return the created node
 	 */
 	@Override
-	public boolean addNode( V vertex) {
+	public boolean addNode( V node) {
 		
-		return graphBackend.addNodeInBackend(vertex);
+		return graphBackend.addNodeInBackend(node);
 	}
 	
 	/**
@@ -170,15 +170,15 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 	
     /**
-     * Remove a vertex from the graph.
+     * Remove a node from the graph.
      * 
-     * @param vertex
-     * @return true if the vertex was effectively removed
+     * @param node
+     * @return true if the node was effectively removed
      */ 
 	@Override
-	public boolean removeNode(V vertex) {
+	public boolean removeNode(V node) {
 		
-		return graphBackend.removeNode(vertex);
+		return graphBackend.removeNode(node);
 	}
 
 	
@@ -205,7 +205,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	
 	/**
-	 * @return the number of vertex in this graph.
+	 * @return the number of node in this graph.
 	 */
 	@Override
 	public int getNodeCount() {
@@ -243,9 +243,9 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 
 	/**
-	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * Return a list of set of node, each set containing a strongly connected component of the graph
 	 * 
-	 * @return a list of set of vertex, each set containing a strongly connected component of the graph
+	 * @return a list of set of node, each set containing a strongly connected component of the graph
 	 */
 	@Override
 	public List<Set<V>> getStronglyConnectedComponents() {
@@ -253,10 +253,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 
 	/**
-	 * Give access to the vertex named with the given name
+	 * Give access to the node named with the given name
 	 * 
-	 * @param id name of a vertex
-	 * @return the vertex corresponding to this unique id or null if not found.
+	 * @param id name of a node
+	 * @return the node corresponding to this unique id or null if not found.
 	 */
 	@Override
 	public V getNodeByName( String id) {
@@ -278,7 +278,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * Search the vertices with ID matching the given regular expression. 
 	 * Other kind of graph could overwrite this method. 
 	 * 
-	 * @param regexp the regular expression vertex ID must match to be selected
+	 * @param regexp the regular expression node ID must match to be selected
 	 * @return a Vector of vertices
 	 */
 	public Vector<V> searchNodes( String regexp) {
@@ -299,12 +299,12 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	
     /**
-     * @param vertex
-     * @return true if the vertex is in the graph, false if not.
+     * @param node
+     * @return true if the node is in the graph, false if not.
      */
 	@Override
-    public boolean containsNode(V vertex) {
-        return graphBackend.containsNode(vertex);
+    public boolean containsNode(V node) {
+        return graphBackend.containsNode(node);
     }
     
 	
@@ -320,30 +320,30 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 
     /**
-     * @param vertex
-     * @return a Collection of the incoming edges of the given vertex.
+     * @param node
+     * @return a Collection of the incoming edges of the given node.
      */
 	@Override
-	public Collection<E> getIncomingEdges(V vertex) {
-		return graphBackend.getIncomingEdges(vertex);
+	public Collection<E> getIncomingEdges(V node) {
+		return graphBackend.getIncomingEdges(node);
 	}
 	
     
     /**
-     * @param vertex
-     * @return a Collection of the outgoing edges of the given vertex.
+     * @param node
+     * @return a Collection of the outgoing edges of the given node.
      */
 	@Override
-	public Collection<E> getOutgoingEdges(V vertex) {
-		return graphBackend.getOutgoingEdges(vertex);
+	public Collection<E> getOutgoingEdges(V node) {
+		return graphBackend.getOutgoingEdges(node);
 	}
 	
 	
 	/**
 	 * Find the shortest path between the two given vertices
 	 * 
-	 * @param source the vertex at the beginning of the searched path
-	 * @param target the vertex at the end of the searched path
+	 * @param source the node at the beginning of the searched path
+	 * @param target the node at the end of the searched path
 	 * @return the list of edges composing the shortest path
 	 */
 	@Override
@@ -408,12 +408,12 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * Specialized method that build the sub-graph corresponding to the given lists of vertices and edges
 	 * The returned graph contains clones of the given graph objects structured as they are in the current graph
 	 * 
-	 * @param vertex the list of vertex to include in the desired sub-graph
+	 * @param node the list of node to include in the desired sub-graph
 	 * @param edges the list of edges to include in the sub-graph
 	 * @return a Graph containing clones of initial vertices and edges structured as they are in the current graph
 	 */
 	@Override
-	public abstract Graph<V, E> getSubgraph(Collection<V> vertex, Collection<E> edges);
+	public abstract Graph<V, E> getSubgraph(Collection<V> node, Collection<E> edges);
     
     
 	
@@ -635,7 +635,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			break;
 		case CHANGE_VERTEXADDED:
 			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.vertexAdded((V) data);
+				GraphEventCascade gec = l.nodeAdded((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -643,7 +643,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			break;
         case CHANGE_VERTEXREMOVED:
 			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.vertexRemoved((V) data);
+				GraphEventCascade gec = l.nodeRemoved((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }
@@ -659,7 +659,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
             break;
         case CHANGE_VERTEXUPDATED:
 			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.vertexUpdated((V) data);
+				GraphEventCascade gec = l.nodeUpdated((V) data);
                 if (gec != null) {
                     l_cascade.add(gec);
                 }

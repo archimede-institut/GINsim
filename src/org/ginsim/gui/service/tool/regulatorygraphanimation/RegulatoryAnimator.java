@@ -142,7 +142,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         if (vertex == null) {
             return;
         }
-        // if path wasn't empty, check that this vertex can be added
+        // if path wasn't empty, check that this node can be added
         if (path.size() > 0 && dynGraph.getEdge(path.get(path.size()-1), vertex) == null) {
                return;
         }
@@ -202,7 +202,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
      * basically revert all color changes made on the dyngraph and eventually apply back
      * the first ones!
      * 
-     * @param index index of the last vertex to remove.
+     * @param index index of the last node to remove.
      */
     protected void revertPath(int index) {
         if (path.size() == 0 || index < 0 || index >= path.size()) {

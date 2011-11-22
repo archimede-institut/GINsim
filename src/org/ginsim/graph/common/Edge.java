@@ -7,18 +7,17 @@ package org.ginsim.graph.common;
  * 
  * @author Aurelien Naldi
  *
- * @param <V> the vertex type
+ * @param <V> the node type
  */
 public class Edge<V> implements ToolTipsable {
 
     protected final V source, target;
 
 	/**
-	 * create a directedEdge.
+	 * create a edge.
 	 *
-	 * @param source the source vertex.
-	 * @param target the target vertex.
-	 * @param obj data to attach to th edge.
+	 * @param source the source node.
+	 * @param target the target node.
 	 */
     public Edge(V source, V target) {
     	this.source = source;

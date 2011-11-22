@@ -60,13 +60,13 @@ public class DynamicLayout3D {
 	
 
 	/**
-	 * Move the vertex to its correct position.
-	 * @param vertex
+	 * Move the node to its correct position.
+	 * @param node
 	 * @param maxValues
 	 */
-	private void moveNode(DynamicNode vertex, byte[] maxValues) {
-	    vreader.setNode(vertex);
-    	byte[] state = vertex.state;
+	private void moveNode(DynamicNode node, byte[] maxValues) {
+	    vreader.setNode(node);
+    	byte[] state = node.state;
   	
     	double left = MARGIN;
     	double top = MARGIN;

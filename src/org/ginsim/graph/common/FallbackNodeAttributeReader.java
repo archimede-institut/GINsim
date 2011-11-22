@@ -7,7 +7,7 @@ import org.ginsim.graph.backend.GraphViewBackend;
 
 
 /**
- * a generic vertexAttributeReader storing data into a dedicated hashmap
+ * a generic nodeAttributeReader storing data into a dedicated hashmap
  */
 public class FallbackNodeAttributeReader extends NodeAttributesReader {
 
@@ -25,8 +25,8 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
         this.dataMap = map;
     }
 
-    public void setNode(Object vertex) {
-    	this.vertex = vertex;
+    public void setNode(Object node) {
+    	this.vertex = node;
         vvsd = (NodeVSdata)dataMap.get(vertex);
         if (vvsd == null) {
             vvsd = new NodeVSdata();

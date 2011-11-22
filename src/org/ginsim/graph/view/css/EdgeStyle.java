@@ -56,7 +56,7 @@ public class EdgeStyle implements Style {
 	
 	/**
 	 * A new style from the scratch
-	 * @param lineColor the lineColor color for the vertex
+	 * @param lineColor the lineColor color for the node
 	 * @param shape the shape for the line 
 	 * @param lineEnd the style for the end of the line 
 	 * 

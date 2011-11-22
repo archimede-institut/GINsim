@@ -115,19 +115,19 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			v2 = (RegulatoryNode)g2m.getNodeByName(id);
 			String comment = null;
 			
-			//Check which graph own the vertex, set the appropriate color to it and if it is owned by both graph, compare its attributes.
+			//Check which graph own the node, set the appropriate color to it and if it is owned by both graph, compare its attributes.
 			if (v1 == null) {
-				comment = "The vertex "+id+" is specific to "+g2.getGraphName()+"\n";
+				comment = "The node "+id+" is specific to "+g2.getGraphName()+"\n";
 				v = g.addNewNode(id, v2.getName(), v2.getMaxValue());
 				mergeNodeAttributes(v, v2, null, gm.getNodeAttributeReader(), g2m.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
 				setLogicalFunction(v, v2, g2);
 			} else if (v2 == null) {
-				comment = "The vertex "+id+" is specific to "+g1.getGraphName()+"\n";
+				comment = "The node "+id+" is specific to "+g1.getGraphName()+"\n";
 				v = g.addNewNode(id, v1.getName(), v1.getMaxValue());
 				mergeNodeAttributes(v, v1, null, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
 				setLogicalFunction(v, v1, g1);
 			} else {
-				comment = "The vertex "+id+" is common to both graphs\n";
+				comment = "The node "+id+" is common to both graphs\n";
 				v = g.addNewNode(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
 				Color[] color = {COMMON_COLOR};
 				comment += compareNodes(v ,v1, v2, color);
@@ -179,7 +179,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		EdgeAttributesReader e1reader = gm_main.getEdgeAttributeReader();
 		EdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 
-		//If v is a vertex from the studied graph, we look at its edges
+		//If v is a node from the studied graph, we look at its edges
 		RegulatoryNode source = (RegulatoryNode) gm.getNodeByName(id);
 		for (RegulatoryMultiEdge me1: ((RegulatoryGraph)gm_main).getOutgoingEdges(v)) {
 			String tid = me1.getTarget().getId();
@@ -245,7 +245,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 
 	
 	/**
-	 * Compare the logical function of vertex 'v1' and 'v2'.
+	 * Compare the logical function of node 'v1' and 'v2'.
 	 * @param v1 
 	 * @param v2
 	 */

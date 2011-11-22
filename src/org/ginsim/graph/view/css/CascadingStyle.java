@@ -100,7 +100,7 @@ public class CascadingStyle {
 	 *
 	 * @param selectors an ordered list of selector to apply on each nodes
 	 * @param nodes a collection of nodes to apply the selectors on
-	 * @param vreader a vertex AttributesReader
+	 * @param vreader a node AttributesReader
 	 */
 	public void applySelectorsOnNodes(List selectors, Collection nodes, NodeAttributesReader vreader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each nodes
@@ -142,7 +142,7 @@ public class CascadingStyle {
 	 *
 	 * @param sel the selector to apply on each nodes
 	 * @param edges a collection of nodes to apply the selectors on
-	 * @param vreader an vertex AttributesReader
+	 * @param vreader an node AttributesReader
 	 */
 	public void applySelectorOnNodes(Selector sel, Collection nodes, NodeAttributesReader vreader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each edge
@@ -166,7 +166,7 @@ public class CascadingStyle {
 	/**
 	 * Restore a node if it has been previously saved.
 	 * @param node
-	 * @param areader a vertex attributesReader (must be set to the right vertex)
+	 * @param areader a node attributesReader (must be set to the right vertex)
 	 */
 	public void restoreNode(Object node, NodeAttributesReader areader) {
 		((Style)old_nodes.get(node)).apply(areader);
@@ -186,7 +186,7 @@ public class CascadingStyle {
 
 	/**
 	 * Restore all the nodes previously saved.
-	 * @param areader a vertex attributesReader
+	 * @param areader a node attributesReader
 	 */
 	public void restoreAllNodes(NodeAttributesReader areader) {
 		for (Iterator it_nodes = old_nodes.keySet().iterator(); it_nodes.hasNext();) {
@@ -213,7 +213,7 @@ public class CascadingStyle {
 	/**
 	 * Restore all the nodes from the collection nodes.
 	 * @param nodes a collection of nodes to restore
-	 * @param areader a vertex attributesReader
+	 * @param areader a node attributesReader
 	 */
 	public void restoreAllNodes(Collection nodes, NodeAttributesReader areader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
@@ -227,7 +227,7 @@ public class CascadingStyle {
 	/**
 	 * store all the nodes from the collection nodes.
 	 * @param nodes a collection of nodes to store
-	 * @param areader a vertex attributesReader
+	 * @param areader a node attributesReader
 	 */
 	public void storeAllNodes(Collection nodes, NodeAttributesReader areader) {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
@@ -241,7 +241,7 @@ public class CascadingStyle {
 	/**
 	 * store all the nodes from the collection nodes.
 	 * @param nodes a collection of nodes to store
-	 * @param areader a vertex attributesReader
+	 * @param areader a node attributesReader
 	 */
 	public void storeAllEdges(Collection edges, EdgeAttributesReader areader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {

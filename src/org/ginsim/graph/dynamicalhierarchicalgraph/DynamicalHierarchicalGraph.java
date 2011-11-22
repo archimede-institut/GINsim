@@ -52,9 +52,9 @@ public interface DynamicalHierarchicalGraph extends Graph<DynamicalHierarchicalN
 	
 	
 	/**
-	 * Set a list of NodeInfo representing the order of vertex as defined by the model
+	 * Set a list of NodeInfo representing the order of node as defined by the model
 	 * 
-	 * @param list the list of nodeInfo representing the order of vertex as defined by the model
+	 * @param list the list of nodeInfo representing the order of node as defined by the model
 	 */
 	public void setNodeOrder( List<NodeInfo> node_order);
 }

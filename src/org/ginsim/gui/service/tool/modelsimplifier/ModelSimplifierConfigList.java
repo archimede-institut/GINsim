@@ -32,14 +32,14 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
         graph.addGraphListener(this);
     }
 
-    public GraphEventCascade vertexAdded(RegulatoryNode data) {
+    public GraphEventCascade nodeAdded(RegulatoryNode data) {
         return null;
     }
 	public GraphEventCascade graphMerged(Collection<RegulatoryNode> data) {
 		return null;
 	}
     
-    public GraphEventCascade vertexRemoved(RegulatoryNode data) {
+    public GraphEventCascade nodeRemoved(RegulatoryNode data) {
     	for (int i=0 ; i<v_data.size() ; i++) {
     		ModelSimplifierConfig cfg = (ModelSimplifierConfig)v_data.get(i);
     		cfg.m_removed.remove(data);
@@ -47,7 +47,7 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
         return null;
     }
 
-    public GraphEventCascade vertexUpdated(RegulatoryNode data) {
+    public GraphEventCascade nodeUpdated(RegulatoryNode data) {
     	return null;
     }
 

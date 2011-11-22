@@ -78,7 +78,7 @@ public class SVGExportService implements Service{
      * 
      * @param itNodes nodes iterator
      * @param itEdges edges iterator
-     * @param vreader vertex attribute reader
+     * @param vreader node attribute reader
      * @param ereader edge attribute reader
      * @return a integer array containing x,y max coordinates
      */

@@ -224,7 +224,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 	}
 
 	/**
-	 * @param vertex
+	 * 
 	 */
 	public void applyNewMaxValue(byte max) {
 		for (int i=0 ; i<edgecount ; i++) {
@@ -246,7 +246,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 	}
 	/**
 	 * @param index index of a sub edge.
-	 * @return the min value of the source vertex for which this sub edge is active
+	 * @return the min value of the source node for which this sub edge is active
 	 */
 	public byte getMin(int index) {
 		if (index >= edgecount) {
@@ -256,7 +256,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 	}
 	/**
 	 * @param index index of a sub edge.
-	 * @return the max value of the source vertex for which this sub edge is active
+	 * @return the max value of the source node for which this sub edge is active
 	 */
 	public byte getMax(int index) {
 		if (index >= edgecount) {

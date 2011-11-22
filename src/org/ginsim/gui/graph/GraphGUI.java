@@ -91,15 +91,15 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	boolean isEditAllowed();
 	
 	/**
-	 * reset selection and select a single vertex.
+	 * reset selection and select a single node.
 	 * 
-	 * @param vertex
+	 * @param node
 	 */
-	void selectNode(V vertex);
+	void selectNode(V node);
 	/**
 	 * reset selection and select a single edge.
 	 * 
-	 * @param vertex
+	 * @param edge
 	 */
 	void selectEdge(E edge);
 
@@ -109,12 +109,12 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	void selectionChanged();
 	
 //    /**
-//     * Move all vertex to front if boolean is true.
+//     * Move all nodes to front if boolean is true.
 //     * Remove vertices from front if boolean is false. 
 //     * 
 //     * @param b
 //     */
-//    public void vertexToFront(boolean b);
+//    public void nodeToFront(boolean b);
 //    
 
 }

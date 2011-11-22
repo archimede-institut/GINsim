@@ -201,8 +201,8 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
 	
 	/**
 	 * add an edge to this graph.
-	 * @param source source vertex of this edge.
-	 * @param target target vertex of this edge.
+	 * @param source source node of this edge.
+	 * @param target target node of this edge.
 	 */
     @Override
 	public void addEdge(NodeReducedData source, NodeReducedData target) {

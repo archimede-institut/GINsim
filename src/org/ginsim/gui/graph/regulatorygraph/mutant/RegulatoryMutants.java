@@ -89,10 +89,10 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
     public GraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
         return null;
     }
-    public GraphEventCascade vertexAdded(RegulatoryNode data) {
+    public GraphEventCascade nodeAdded(RegulatoryNode data) {
         return null;
     }
-    public GraphEventCascade vertexRemoved(RegulatoryNode data) {
+    public GraphEventCascade nodeRemoved(RegulatoryNode data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
             RegulatoryMutantDef m = (RegulatoryMutantDef)v_data.get(i);
@@ -112,7 +112,7 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
 	public GraphEventCascade graphMerged(Collection<RegulatoryNode> data) {
 		return null;
 	}
-    public GraphEventCascade vertexUpdated(RegulatoryNode data) {
+    public GraphEventCascade nodeUpdated(RegulatoryNode data) {
         Vector v = new Vector();
         for (int i=0 ; i<v_data.size() ; i++) {
             RegulatoryMutantDef m = (RegulatoryMutantDef)v_data.get(i);

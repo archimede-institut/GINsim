@@ -36,9 +36,9 @@ public interface DynamicGraph extends Graph<DynamicNode, Edge<DynamicNode>>, Gra
 	
 	
 	/**
-	 * Set a list of String representing the order of vertex as defined by the model
+	 * Set a list of String representing the order of node as defined by the model
 	 * 
-	 * @param list the list of String representing the order of vertex as defined by the model
+	 * @param list the list of String representing the order of node as defined by the model
 	 */
 	public void setNodeOrder( List<NodeInfo> node_order);
 	

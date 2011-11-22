@@ -52,14 +52,14 @@ public abstract class GraphComparator<G extends Graph> {
 	}
 	
 	/**
-	 * Indicates if a vertex corresponding to the id is common to both graphs.
+	 * Indicates if a node corresponding to the id is common to both graphs.
 	 */
 	public boolean isCommonNode(Object id) {
 		return ((NodeStyle)((ItemStore)stylesMap.get(id)).v).background == COMMON_COLOR;
 	}
 	
 	/**
-	 * Build the basic topology for the diff graph (vertex+edges) by calling others functions
+	 * Build the basic topology for the diff graph (node+edges) by calling others functions
 	 *  1) addNodesFromGraph on both graphs
 	 *  2) setNodesColor
 	 *  3) addEdgesFromGraph on each node on both graphs
@@ -87,12 +87,12 @@ public abstract class GraphComparator<G extends Graph> {
 	}
 
 	/**
-	 * Copy the vertex graphical attributes from the vertex source, to the newly created vertex v. The background color of the vertex is set to the parent color.
+	 * Copy the node graphical attributes from the node source, to the newly created node v. The background color of the node is set to the parent color.
 	 * 
-	 * @param v the vertex just created
-	 * @param source the vertex to copy from
-	 * @param vreader a vertexAttributesReader for the new graph
-	 * @param vsourcereader a vertexAttributesReader for the old graph
+	 * @param v the node just created
+	 * @param source the node to copy from
+	 * @param vreader a nodeAttributesReader for the new graph
+	 * @param vsourcereader a nodeAttributesReader for the old graph
 	 * @param col the color to apply to its background
 	 */
 	protected void mergeNodeAttributes(Object v, Object source, Object aux, NodeAttributesReader vreader, NodeAttributesReader vsourcereader, NodeAttributesReader vauxreader, Color col) {
@@ -164,24 +164,24 @@ public abstract class GraphComparator<G extends Graph> {
 	
 	/**
 	 * Add all the vertices from a graph to the verticeMap.
-	 * The key of the map should be the vertex ID
+	 * The key of the map should be the node ID
 	 * The value should be null for the moment.
 	 * @param gm the graph manager for the graph containing the vertices.
 	 */
 	abstract protected void addNodesFromGraph( Graph gm);
 
 	 /**
-	 * Set the value for the vertex to the right color in the verticeMap.
+	 * Set the value for the node to the right color in the verticeMap.
 	 */
 	abstract protected void setNodesColor() ;
 	
 	/**
-	 * Add the edges for one vertex from one graph to the merge graph.
+	 * Add the edges for one node from one graph to the merge graph.
 	 * 
 	 * @param gm the graph manager for the studied graph
 	 * @param gm_aux a graph manager for the other graph
-	 * @param id the vertex id's 
-	 * @param col the vertex color (parent)
+	 * @param id the node id's 
+	 * @param col the node color (parent)
 	 * @param pcol the color corresponding to the studied graph (gm).
 	 * @param ereader an edge attribute reader for the diff graph.
 	 * 

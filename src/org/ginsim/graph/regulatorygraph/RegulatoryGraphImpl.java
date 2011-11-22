@@ -87,9 +87,9 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	
     
 	/**
-	 * Set a list of class dependent objects representing the order of vertex as defined by the model
+	 * Set a list of class dependent objects representing the order of node as defined by the model
 	 * 
-	 * @param list the list of objects representing the order of vertex as defined by the model
+	 * @param list the list of objects representing the order of node as defined by the model
 	 */
     @Override
 	public void setNodeOrder( List<RegulatoryNode> list){
@@ -309,7 +309,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     /**
      * 
      * @param newId
-     * @return True if a vertex of the graph has the given ID
+     * @return True if a node of the graph has the given ID
      */
     @Override
     public boolean idExists(String newId) {
@@ -324,13 +324,13 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     
     /**
      * 
-     * @param vertex
+     * @param node
      * @param newId
      * @throws GsException
      */
     @Override
-    public void changeNodeId(Object vertex, String newId) throws GsException {
-        RegulatoryNode rvertex = (RegulatoryNode)vertex;
+    public void changeNodeId(Object node, String newId) throws GsException {
+        RegulatoryNode rvertex = (RegulatoryNode)node;
         if (newId.equals(rvertex.getId())) {
             return;
         }
@@ -381,12 +381,12 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
 
     /**
-     * add a vertex from textual parameters (for the parser).
+     * add a node from textual parameters (for the parser).
      *
      * @param id
      * @param name
      * @param max
-     * @return the new vertex.
+     * @return the new node.
      */
     @Override
     public RegulatoryNode addNewNode(String id, String name, byte max) {
@@ -461,14 +461,14 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
     /**
      * 
-     * @param vertex
+     * @param node
      * @param newMax
      * @param l_fixable
      * @param l_conflict
      */
     @Override
-	public void canApplyNewMaxValue(RegulatoryNode vertex, byte newMax, List l_fixable, List l_conflict) {
-		for (RegulatoryMultiEdge me: getOutgoingEdges(vertex)) {
+	public void canApplyNewMaxValue(RegulatoryNode node, byte newMax, List l_fixable, List l_conflict) {
+		for (RegulatoryMultiEdge me: getOutgoingEdges(node)) {
 			me.canApplyNewMaxValue(newMax, l_fixable, l_conflict);
 		}
 	}
@@ -540,22 +540,22 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     
     
     /**
-     * @param vertex
+     * @param node
      */
-    private void addNodeWithNewId(RegulatoryNode vertex) {
-        String id = vertex.getId();
+    private void addNodeWithNewId(RegulatoryNode node) {
+        String id = node.getId();
         if (getNodeByName(id) == null) {
-            addNode(vertex);
-            nodeOrder.add(vertex);
+            addNode(node);
+            nodeOrder.add(node);
             return;
         }
         int addon = 1;
         while ( getNodeByName(id+"_"+addon) != null) {
             addon++;
         }
-        vertex.setId(id+"_"+addon);
-        addNode(vertex);
-        nodeOrder.add(vertex);
+        node.setId(id+"_"+addon);
+        addNode(node);
+        nodeOrder.add(node);
     }
 
     @Override

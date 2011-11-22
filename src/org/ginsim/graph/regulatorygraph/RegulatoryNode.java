@@ -128,14 +128,14 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	}
 
 	/**
-	 * @return the id of this vertex.
+	 * @return the id of this node.
 	 */
 	public String getId() {
 	    return id;
 	}
 
 	/**
-	 * change the id of this vertex.
+	 * change the id of this node.
 	 * @param id the new id.
 	 */
 	public boolean setId(String id) {
@@ -237,7 +237,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
      * get the DAG representation of logical parameters.
      *
      * @param graph
-     * @return an OMDDNode representing logical parameters associated to this vertex.
+     * @return an OMDDNode representing logical parameters associated to this node.
      */
     public OMDDNode getTreeParameters(List<RegulatoryNode> nodeOrder) {
         OMDDNode root;

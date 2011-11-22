@@ -71,7 +71,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         return null;
     }
 
-    public GraphEventCascade vertexAdded(RegulatoryNode data) {
+    public GraphEventCascade nodeAdded(RegulatoryNode data) {
         // if needed, add it to the default priority class!
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
@@ -84,12 +84,12 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 
 	public GraphEventCascade graphMerged(Collection<RegulatoryNode> nodes) {
 		for (RegulatoryNode v: nodes) {
-			vertexAdded(v);
+			nodeAdded(v);
 		}
 		return null;
 	}
     
-    public GraphEventCascade vertexRemoved(RegulatoryNode data) {
+    public GraphEventCascade nodeRemoved(RegulatoryNode data) {
         // remove it from priority classes
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
@@ -100,7 +100,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         return null;
     }
 
-    public GraphEventCascade vertexUpdated(RegulatoryNode data) {
+    public GraphEventCascade nodeUpdated(RegulatoryNode data) {
     	return null;
     }
 

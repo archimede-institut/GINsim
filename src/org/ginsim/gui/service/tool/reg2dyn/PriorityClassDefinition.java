@@ -330,7 +330,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      * each int[] represent a priority class:
      *  - the very first int is the class' priority
      *  - the second int is the class' mode (sync or async)
-     *  - and all others are couples: index of vertex in the nodeOrder followed by transition filter.
+     *  - and all others are couples: index of node in the nodeOrder followed by transition filter.
      *    the "transition filter" is a bit hacky: add it to your transition (which should be either +1 or -1)
      *    and if the result is zero (0), then this transition shouldn't be followed.
      *

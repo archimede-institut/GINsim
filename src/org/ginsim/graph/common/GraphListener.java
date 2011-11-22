@@ -29,23 +29,23 @@ public interface GraphListener<V,E extends Edge<V>> {
     public GraphEventCascade edgeUpdated(E data);
 
     /**
-     * a vertex was added to the graph.
+     * a node was added to the graph.
      * @param data
      * @return an object to describe/undo cascade event
      */
-    public GraphEventCascade vertexAdded(V data);
+    public GraphEventCascade nodeAdded(V data);
     /**
-     * a vertex was removed from the graph.
+     * a node was removed from the graph.
      * @param data
      * @return an object to describe/undo cascade event
      */
-    public GraphEventCascade vertexRemoved(V data);
+    public GraphEventCascade nodeRemoved(V data);
     /**
-     * a vertex was updated.
+     * a node was updated.
      * @param data
      * @return an object to describe/undo cascade event
      */
-    public GraphEventCascade vertexUpdated(V data);
+    public GraphEventCascade nodeUpdated(V data);
     
     /**
      * the graph was merged with another one

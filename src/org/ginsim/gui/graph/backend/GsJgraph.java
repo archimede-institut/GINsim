@@ -68,7 +68,7 @@ public class GsJgraph extends JGraph {
     }
     
     /**
-     * always refuse to edit cells: cell editing is STUPID in jgraph: replaces the vertex with a string!
+     * always refuse to edit cells: cell editing is STUPID in jgraph: replaces the node with a string!
      * 
      * @see org.jgraph.JGraph#isCellEditable(java.lang.Object)
      */

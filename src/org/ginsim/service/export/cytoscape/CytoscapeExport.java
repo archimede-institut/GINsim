@@ -115,7 +115,7 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 		out.addTag("att", new String[] {"name", "GRAPH_VIEW_CENTER_Y", "label", "GRAPH_VIEW_CENTER_Y", "type", "real", "value", "0.0"});
 
 		
-		//vertex
+		//node
 		//We need a Hashtable to translate GINSim IDs into cytoscapes IDs.
 		Hashtable gs2cyt_Ids = new Hashtable(graph.getNodeCount());
 		

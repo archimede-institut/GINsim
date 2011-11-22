@@ -138,7 +138,7 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
     }
 
 
-    public GraphEventCascade vertexAdded(AV data) {
+    public GraphEventCascade nodeAdded(AV data) {
         setAssociatedGraph(null);
         return null;
     }
@@ -147,11 +147,11 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
         setAssociatedGraph(null);
 		return null;
 	}
-    public GraphEventCascade vertexUpdated(AV data) {
+    public GraphEventCascade nodeUpdated(AV data) {
         return null;
     }
 
-    public GraphEventCascade vertexRemoved(AV data) {
+    public GraphEventCascade nodeRemoved(AV data) {
         setAssociatedGraph(null);
         return null;
     }

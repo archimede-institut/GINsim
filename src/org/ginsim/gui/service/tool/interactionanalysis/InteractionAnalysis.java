@@ -81,7 +81,7 @@ public class InteractionAnalysis {
 	/**
 	 * Search all the non functional interactions in the graph 'g' and do some actions on them depending on the options (opt_*).
 	 * 
-	 * For each vertices, scan the reduced Omdd representation of the vertex logical function to know which vertices are effective (<=>present). If an edge source vertex incoming on this vertex is not in the Omdd, then its non functional.
+	 * For each vertices, scan the reduced Omdd representation of the node logical function to know which vertices are effective (<=>present). If an edge source vertex incoming on this vertex is not in the Omdd, then its non functional.
 	 * 
 	 */
 	private void run() {

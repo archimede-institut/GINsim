@@ -75,13 +75,13 @@ public class DynamicLayoutMultidimention {
     }
 	
 	/**
-	 * Move the vertex to its correct position.
-	 * @param vertex
+	 * Move the node to its correct position.
+	 * @param node
 	 * @param maxValues
 	 */
-	private void moveNode(DynamicNode vertex, byte[] maxValues) {
-	    vreader.setNode(vertex);
-    	byte[] state = vertex.state;
+	private void moveNode(DynamicNode node, byte[] maxValues) {
+	    vreader.setNode(node);
+    	byte[] state = node.state;
        	int x = 0;
     	int dx = 1;
     	for (int i = 0; i < pivot; i++) {

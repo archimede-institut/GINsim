@@ -48,17 +48,17 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 			v2 = (DynamicNode)g2m.getNodeByName(id);
 			//Check which graph own the vertex, set the appropriate color to it and if it is owned by both graph, compare its attributes.
 			if (v1 == null) {
-				log("The vertex "+id+" is specific to g2\n");
+				log("The node "+id+" is specific to g2\n");
 				v = new DynamicNode(v2.state);
 				gm.addNode(v);
 				mergeNodeAttributes(v, v2, null, gm.getNodeAttributeReader(), g2m.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
 			} else if (v2 == null) {
-				log("The vertex "+id+" is specific to g1\n");
+				log("The node "+id+" is specific to g1\n");
 				v = new DynamicNode(v1.state);
 				gm.addNode(v);
 				mergeNodeAttributes(v, v1, null, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
 			} else {
-				log("The vertex "+id+" is common to both g1 and g2\n");
+				log("The node "+id+" is common to both g1 and g2\n");
 				v = new DynamicNode(v1.state);
 				gm.addNode(v);
 				mergeNodeAttributes(v, v1, v2, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), g2m.getNodeAttributeReader(), COMMON_COLOR);

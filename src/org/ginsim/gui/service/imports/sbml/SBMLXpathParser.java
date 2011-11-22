@@ -169,7 +169,7 @@ public final class SBMLXpathParser {
 						byte maxval = (byte) Integer.parseInt(elcurrent
 								.getAttributeValue("maxLevel"));
 						
-						/** set a vertex with a species data **/
+						/** set a node with a species data **/
 						vertex = graph.addNewNode(id, name, maxval);
 						vertex.getV_logicalParameters().setUpdateDup(false);
 
@@ -190,7 +190,7 @@ public final class SBMLXpathParser {
 									graph);
 						}
 						
-						/** add this vertex in a vertex collection **/
+						/** add this node in a node collection **/
 						//values.put(vertex, new Hashtable());
 						values.put(vertex, new Hashtable<String, Vector<String>>());
 					} catch (NumberFormatException e) {
@@ -390,8 +390,8 @@ public final class SBMLXpathParser {
 	 * @param l_condition : a list of conditions for every transition 
 	 * @param function_term : an object that contains a list of conditions for every 
      *        <functionTerm> element of a <transition> tag (see the sbml file).
-	 * @param node_to_id : to identify a regulatory vertex target 
-	 * @param input_to_sign: a map that contains every regulatory vertex source and his sign. */
+	 * @param node_to_id : to identify a regulatory node target 
+	 * @param input_to_sign: a map that contains every regulatory node source and his sign. */
 	
 	private void createMutliEdges( FunctionTerm function_term, String node_to_id, HashMap<String, String> input_to_sign, RegulatoryGraph graph){		
 				
@@ -650,7 +650,7 @@ public final class SBMLXpathParser {
 	
 	
 	
-	/** To get vertex ID corresponding to the current <transition> element **/
+	/** To get node ID corresponding to the current <transition> element **/
 	public String getNodeId(String transId) {
 		String nodeName = null;
 		pattern = Pattern.compile("tr_(.*)");
@@ -887,7 +887,7 @@ public final class SBMLXpathParser {
 		/** The threshold value in this apply element. */
 		private int minvalue;
 		
-		/** The maxvalue of this <input> element (the regulatory vertex identified by the "node id"). */
+		/** The maxvalue of this <input> element (the regulatory node identified by the "node id"). */
 		private int maxvalue;
 
 		
@@ -900,7 +900,7 @@ public final class SBMLXpathParser {
 			this.maxvalue = 0;
 		}		
 
-		/** To create an Expression Object with the maxvalue of every regulatory vertex of the graph. 
+		/** To create an Expression Object with the maxvalue of every regulatory node of the graph. 
 		 * @param str : a String that contains a needed data for an expression
 		 * For instance : str = "G0<1", where G0 is a node id and. "<" is an operator and "1" is a threshold value*/
 		
@@ -927,7 +927,7 @@ public final class SBMLXpathParser {
 				}
 			}
 			
-			/** To set a maxvalue for a regulatory vertex */
+			/** To set a maxvalue for a regulatory node */
 			RegulatoryNode vertex = (RegulatoryNode) graph.getNodeByName(node);
 			if( vertex != null) {
 				maxvalue = vertex.getMaxValue();

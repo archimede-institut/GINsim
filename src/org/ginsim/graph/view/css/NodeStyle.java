@@ -11,7 +11,7 @@ import org.ginsim.graph.common.NodeAttributesReader;
 import fr.univmrs.tagc.common.Tools;
 
 /**
- * NodeStyle store some graphical attributes of a vertex
+ * NodeStyle store some graphical attributes of a node
  * Attributes : 
  *     - background : the color for the background = any Color
  *     - foreground : the color for the text and the border = any Color
@@ -53,8 +53,8 @@ public class NodeStyle implements Style {
 
 	/**
 	 * A new style from the scratch
-	 * @param background the background color for the vertex
-	 * @param foreground the foreground color for the vertex
+	 * @param background the background color for the node
+	 * @param foreground the foreground color for the node
 	 * @param border the style for the line 
 	 * @param shape the shape for the line 
 	 * 

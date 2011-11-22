@@ -77,15 +77,15 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     public static final int CHANGE_EDGEADDED = 0;
     /**  an edged has been removed */
     public static final int CHANGE_EDGEREMOVED = 1;
-    /** a vertex has been added  */
+    /** a node has been added  */
     public static final int CHANGE_VERTEXADDED = 2;
-    /**  a vertex has been removed */
+    /**  a node has been removed */
     public static final int CHANGE_VERTEXREMOVED = 3;
     /**  an edge has been modified */
-    public static final int CHANGE_EDGEUPDATED = 4;
-    /**  a vertex has been modified */
+    public node final int CHANGE_EDGEUPDATED = 4;
+    /**  a node has been modified */
     public static final int CHANGE_VERTEXUPDATED = 5;
-    /**  a vertex has been modified */
+    /**  a node has been modified */
     public static final int CHANGE_MERGED = 6;
     /**  other kind of change */
     public static final int CHANGE_METADATA = 7;
@@ -182,8 +182,8 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     
     
     /**
-     * @param param kind of vertex to create
-     * @return the newly created vertex (or null if failed/inapropriate)
+     * @param param kind of node to create
+     * @return the newly created node (or null if failed/inapropriate)
      */
     // TODO Change to generic call of Node creation  from Graph and change position on the new node
     abstract protected V doInteractiveAddNode (int param);
@@ -437,12 +437,12 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     }
 
     /**
-     * add a new vertex at the given position.
+     * add a new node at the given position.
      *
-     * @param param the kind of vertex to create.
+     * @param param the kind of node to create.
      * @param x
      * @param y
-     * @return the added vertex
+     * @return the added node
      */
     public Object interactiveAddNode(int param, int x, int y) {
         if (v_blockEdit != null) {
@@ -476,7 +476,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
     }
 
     /**
-     * remove a vertex from the graph.
+     * remove a node from the graph.
      *
      * @param obj
      */
@@ -567,10 +567,10 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
         return null;
     }
     /**
-     * set the id of the given vertex to the given new id.
+     * set the id of the given node to the given new id.
      * we have to avoid duplicates id in some kind of graphs.
      *
-     * @param vertex
+     * @param node
      * @param newId
      * @throws GsException
      */
@@ -939,7 +939,7 @@ public abstract class GsGraph<V,E extends GsDirectedEdge<V>> implements GsGraphL
 	 *
 	 * graph which aren't interactively editable should do nothing here.
 	 *
-	 * @param vertex the selected vertices
+	 * @param node the selected vertices
 	 * @param edges the selected edges
 	 *
 	 * @return the copied graph

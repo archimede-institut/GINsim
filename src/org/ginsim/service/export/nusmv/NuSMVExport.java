@@ -69,13 +69,13 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 		return new NuSMVExportConfigPanel(config);
 	}
 
+
 	/**
 	 * Gets the set of values of a given @see {@link RegulatoryNode}
 	 * 
-	 * @param vertex
-	 *            The vertex containing the values to be written.
-	 * @param m
-	 *            The map containing the initial values of all the vertexes.
+	 * @param t_vertex
+	 * @param input
+	 * @param mInitStates The map containing the initial values of all the nodes.
 	 * @return A string of values in the NuSMV format.
 	 */
 	private static String writeInitialState(RegulatoryNode[] t_vertex,
@@ -641,13 +641,13 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	 * @param t_regulators
 	 *            The name of each regulator.
 	 * @param t_vertex
-	 *            The set of vertexes.
+	 *            The set of nodes.
 	 * @param currindex
 	 *            The current index in the recursion.
 	 * @param visited
-	 *            A mark of visited vertexes.
+	 *            A mark of visited nodes.
 	 * @param alSorted
-	 *            The list of vertexes already sorted.
+	 *            The list of nodes already sorted.
 	 */
 	static private void topoSortVisit(
 			HashMap<String, ArrayList<String>> hmRegulators,
@@ -669,16 +669,16 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	}
 
 	/**
-	 * It creates an HashSet with the regulators of a given vertex given its
+	 * It creates an HashSet with the regulators of a given node given its
 	 * OMDD. It is used for the topological sort algorithm.
 	 * 
 	 * @param node
-	 *            The OMDD of a given vertex.
+	 *            The OMDD of a given node.
 	 * @param t_names
-	 *            The set of existing vertexes in the model.
+	 *            The set of existing nodes in the model.
 	 * @param t_cst
 	 *            Auxiliary variable to help navigate through the tree.
-	 * @return The set of regulator names of a given vertex.
+	 * @return The set of regulator names of a given node.
 	 */
 	static private HashSet<String> nodeRegulators(OMDDNode node,
 			RegulatoryNode[] t_names, int[] t_cst) {
@@ -698,7 +698,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	}
 
 	/**
-	 * Knows how to write the given logical function of a given vertex,
+	 * Knows how to write the given logical function of a given node,
 	 * specified by its OMDD, into a NuSMV case construct.
 	 * 
 	 * @param node
@@ -706,7 +706,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	 * @param out
 	 *            The Writer where the specification is to be written.
 	 * @param t_names
-	 *            The set of model vertexes.
+	 *            The set of model nodes.
 	 * @param t_cst
 	 *            Auxiliary variable to help navigate through the tree.
 	 * @throws IOException
