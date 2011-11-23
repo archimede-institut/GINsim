@@ -10,13 +10,16 @@ import org.ginsim.graph.common.EdgeAttributesReader;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.EdgeRenderer;
+import org.jgraph.graph.EdgeView;
 import org.jgraph.graph.GraphConstants;
+import org.jgraph.util.Bezier;
+import org.jgraph.util.Spline2D;
 
 public class GsEdgeRenderer extends EdgeRenderer {
 
 	private static final long serialVersionUID = 6746746786967887L;
 	private GsJgraph jgraph;
-	private final EdgeAttributesReader reader;
+	protected final EdgeAttributesReader reader;
 	
 	protected GsEdgeRenderer(GsJgraph jgraph, EdgeAttributesReader reader) {
 		this.jgraph = jgraph;
@@ -43,36 +46,4 @@ public class GsEdgeRenderer extends EdgeRenderer {
         return super.createLineEnd(size, style, src, dst);
     }
 
-	protected void installAttributes(CellView view) {
-		
-		if (view instanceof GsEdgeView) {
-			Edge<?> e = ((GsEdgeView)view).edge;
-			if (e == null) {
-				System.err.println("which edge?");
-				return;
-			}
-			reader.setEdge(e);
-			AttributeMap map = view.getAllAttributes();
-			
-			GraphConstants.setLineColor(map, reader.getLineColor());
-			float[] dash = reader.getDash();
-			if (dash != null) {
-				GraphConstants.setDashPattern(map, dash);
-			}
-			GraphConstants.setLineWidth(map, reader.getLineWidth());
-			List<?> points = reader.getPoints();
-			// FIXME: points are not really supported...
-			if (points == null) {
-				if (GraphConstants.getPoints(map) != null) {
-					reader.setPoints(GraphConstants.getPoints(map));
-					System.out.println("RESET points");
-				}
-			}
-			if (points != null) {
-				GraphConstants.setPoints(map, points);
-			}
-		}
-		
-		super.installAttributes(view);
-	}
 }
