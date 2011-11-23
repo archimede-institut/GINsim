@@ -41,7 +41,7 @@ public class FileCallBack {
 		recentMenu.removeAll();
 		for (String recent: recentFiles) {
 			// TODO: real recent action with better title
-			recentMenu.add(recent);
+			recentMenu.add(new OpenAction(recent));
 		}
 	}
 	
@@ -104,16 +104,26 @@ class NewAction extends AbstractAction {
 
 class OpenAction extends AbstractAction {
 	
+	private final String filename;
+	
 	public OpenAction() {
 		super("Open");
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, FrameActionManager.MASK));
+		this.filename = null;
+	}
+	
+	public OpenAction(String filename) {
+		super(filename);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, FrameActionManager.MASK));
+		this.filename = filename;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// FIXME: open action
-		System.out.println("TODO: select and open a new graph");
-		String path = FileSelectionHelper.selectOpenFilename(null);
+		String path = filename;
+		if (path == null) {
+			path = FileSelectionHelper.selectOpenFilename(null);
+		}
 		if (path != null) {
 			try {
 				Graph g = GraphManager.getInstance().open(path);

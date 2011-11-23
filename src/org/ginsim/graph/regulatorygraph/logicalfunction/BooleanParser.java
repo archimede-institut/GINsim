@@ -20,8 +20,8 @@ import fr.univmrs.tagc.common.Debugger;
 
 public class BooleanParser extends TBooleanParser {
 	private Hashtable operandList;
-	private static String returnClassName = "fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.LogicalFunctionList";
-	private static String operandClassName = "fr.univmrs.tagc.GINsim.regulatoryGraph.logicalfunction.BooleanGene";
+	private static String returnClassName = LogicalFunctionList.class.getName();
+	private static String operandClassName = BooleanGene.class.getName();
 	private Object[] allParams;
 	private RegulatoryGraph graph;
 	private RegulatoryNode vertex;
