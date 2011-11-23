@@ -29,8 +29,14 @@ public class FileSelectionHelper {
 		return selectSaveFilename(parent, null);
 	}
 	public static String selectSaveFilename( Frame parent, String extension) {
-		Debugger.log("TODO: save filechooser");
-		return null;
+		JFileChooser chooser = new JFileChooser();
+		chooser.showSaveDialog(parent);
+		// TODO: file filter and automatic extension
+		File f = chooser.getSelectedFile();
+		if (f == null) {
+			return null;
+		}
+		return f.getAbsolutePath();
 	}
 	
 	public static String selectOpenFilename( Frame parent) {
