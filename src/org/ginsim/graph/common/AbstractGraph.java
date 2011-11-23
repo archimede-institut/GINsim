@@ -571,7 +571,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 					r = ftmp.renameTo(f);
 				}
 				if (!r) {
-					addNotificationMessage(new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath())));
+					new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath()));
 				}
 			}
 		}

@@ -89,8 +89,6 @@ public class AlgoConnectivity extends Thread {
             time = 0;
 
             List component;
-            // TODO : REFACTORING ACTION
-            // TODO : change this test since graphModel is a Graph now
             Collection<Collection<?>> jcp = g.getStronglyConnectedComponents();
             nbCompo = jcp.size();
             component = new ArrayList();

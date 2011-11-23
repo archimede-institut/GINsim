@@ -142,6 +142,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
             b_view.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                 	
+                	// TODO : REFACTORING ACTION
                 	// FIXME: restore info panel for the dynamic graph
                 	
 //                	try{

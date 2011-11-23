@@ -63,8 +63,9 @@ public final class GinmlParser extends XMLHelper {
 		            arg_list[1] = attributes;
 		            arg_list[2] = s_dtd;
 		            arg_list[3] = s_filename;
-		            
-	            	realParser = (GsXMLHelper) parser_class.getConstructor( parameter_types).newInstance( arg_list);
+
+		            realParser = (GsXMLHelper) parser_class.getConstructor( parameter_types).newInstance( arg_list);
+	            	
 	            }
 	            else {
 	                throw new SAXException("Bad type of graph : " + s_class);
