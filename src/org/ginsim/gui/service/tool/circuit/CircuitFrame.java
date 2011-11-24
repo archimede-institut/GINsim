@@ -223,7 +223,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
     	List no = graph.getNodeOrder();
     	List l_func = (List)treemodel.m_parent.get(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONNAL]);
     	if (l_func == null) {
-    		System.out.println("no func...");
+    		Debugger.trace(" No func...");
     		return;
     	}
     	StringBuffer s = new StringBuffer("#!/usr/bin/env python\n"

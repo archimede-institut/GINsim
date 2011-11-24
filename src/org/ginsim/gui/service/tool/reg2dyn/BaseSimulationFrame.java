@@ -5,6 +5,7 @@ import java.awt.Insets;
 
 import org.ginsim.graph.common.Graph;
 
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 
 
@@ -34,6 +35,6 @@ public abstract class BaseSimulationFrame extends StackDialog implements Simulat
   }
 
     public void addStableState(SimulationQueuedState item) {
-        System.out.print("stable (depth "+item.depth+"): ");
+    	Debugger.trace("stable (depth "+item.depth+"): ");
     }
 }

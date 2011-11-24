@@ -115,7 +115,7 @@ public class Simulation extends Thread implements Runnable {
 				            }
 						}
 						if (maxnodes != 0 && nbnode >= maxnodes){
-						    System.out.println("maxnodes reached: " + maxnodes);
+							Debugger.error( "Maxnodes reached: " + maxnodes);
 						    throw new GsException(GsException.GRAVITY_NORMAL, (String)null);
 						}
 
@@ -139,10 +139,12 @@ public class Simulation extends Thread implements Runnable {
 						if (!updater.hasNext()) {
 							helper.setStable();
 							frame.addStableState(item);
+							String display = "";
 							for (int i=0 ; i<item.state.length ; i++ ) {
-								System.out.print(item.state[i]+" ");
+								display += item.state[i] + " ";
 							}
-							System.out.println();
+							display += "\n";
+							Debugger.trace( display, false); 
 						} else {
 							if (maxdepth == 0 || item.depth < maxdepth) {
 								while (updater.hasNext()) {
@@ -156,8 +158,11 @@ public class Simulation extends Thread implements Runnable {
 				}
 			}
 		} catch (GsException e) {
-			System.out.println("simulation was interrupted");
+			Debugger.error( "Simulation was interrupted");
+			Debugger.error( e);
 		} catch (OutOfMemoryError e) {
+			Debugger.error( "Out of Memory");
+			Debugger.error( e);
 		    Tools.error("Out Of Memory");
 		    return null;
 		} finally {

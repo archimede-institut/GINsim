@@ -6,6 +6,8 @@ import java.util.Vector;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 public class ParamTreeNode implements ParamTreeElement {
   private RegulatoryNode vertex;
@@ -36,9 +38,14 @@ public class ParamTreeNode implements ParamTreeElement {
     return sons[index];
   }
   public void print(int depth) {
-    for (int i = 0; i < (2 * depth); i++) System.out.print(" ");
-    System.out.println(vertex.getId());
-    for (int i = 0; i < sons.length; i++) sons[i].print(depth + 1);
+	  String result = "";
+    for (int i = 0; i < (2 * depth); i++){
+    	result += " ";
+    }
+    Debugger.trace( result + vertex.getId(), false);
+    for (int i = 0; i < sons.length; i++){
+    	sons[i].print(depth + 1);
+    }
   }
   public void addSon(ParamTreeElement el, int index) {
     sons[index] = el;

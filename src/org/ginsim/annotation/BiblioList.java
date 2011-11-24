@@ -34,6 +34,7 @@ import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -101,7 +102,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 	
 	public void addLinkToCurRef(String proto, String value) {
 		if (curRef == null) {
-			System.out.println("no current ref");
+			Debugger.error( "No current ref");
 			return;
 		}
 		curRef.addLink(proto, value);
@@ -397,7 +398,7 @@ class ReferencerParser extends XMLHelper {
 				if (f.exists()) {
 					bibList.addLinkToCurRef("file", curval);
 				} else {
-					System.out.println("  could not find file "+curval);
+					Debugger.error( "Could not find file : " + curval);
 				}
 				break;
 		}

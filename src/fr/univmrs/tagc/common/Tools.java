@@ -173,7 +173,7 @@ public class Tools {
 			f = new File(fileName);
 		}
 		if (!f.exists()) {
-			System.out.println("no such file");
+			Debugger.error( "No such file : " + fileName);
 			return false;
 		}
 		return openURI("file://" + fileName);
@@ -184,7 +184,8 @@ public class Tools {
 			Desktop.getDesktop().browse(new URI(uri));
 			return true;
 		} catch (Exception e) {
-			System.out.println("openURI failed: " + e);
+			Debugger.error( "OpenURI failed : " + uri);
+			Debugger.error( e);
 			return false;
 		}
 	}

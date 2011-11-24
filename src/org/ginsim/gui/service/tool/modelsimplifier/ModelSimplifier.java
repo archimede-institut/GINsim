@@ -40,6 +40,8 @@ import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 class RemovedInfo {
 	RegulatoryNode vertex;
@@ -136,7 +138,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				for (RemovedInfo ri: l_todo) {
 					m_removed.remove(ri.vertex);
 				}
-				System.out.println("Partial reduction result...");
+				Debugger.trace( "Partial reduction result...");
 			} else {
 				// it failed, trigger an error message
 				StringBuffer sb = new StringBuffer("Reduction failed.\n  Removed: ");
@@ -176,7 +178,7 @@ public class ModelSimplifier extends Thread implements Runnable {
      * @return the list of failed removals.
      */
     private List<RemovedInfo> remove_batch(List<RemovedInfo> l_todo) {
-		System.out.println("batch of removal...");
+    	Debugger.trace( "batch of removal...");
     	List<RemovedInfo> l_failed = new ArrayList<RemovedInfo>();
     	
 		for (RemovedInfo ri: l_todo) {

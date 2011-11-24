@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+import fr.univmrs.tagc.common.Debugger;
+
 public class TT_parser { // define a regulatory graph from a table describing a dynamics stored in a file 
 	// static type???? tableName; // the file identifier from the import function l'identificateur du fichier contenant la table
 
@@ -37,7 +39,7 @@ public class TT_parser { // define a regulatory graph from a table describing a 
 			StringTokenizer st = new StringTokenizer(entree.readLine());
 			L=(new Integer(st.nextToken())).intValue();// nb de lignes
 			n=(new Integer(st.nextToken())).intValue();// nb de composants
-			System.out.println("L="+L+" n="+n);		   
+			Debugger.trace ("L="+L+" n="+n);		   
 			table_gene=new byte[L][2*n];
 			i=0;
 			// read the remaining lines to fill the table
@@ -52,13 +54,15 @@ public class TT_parser { // define a regulatory graph from a table describing a 
 			}
 			entree.close();			
 			// to control... print the table
+			String display = "";
 			for ( i = 0; i < L; i++) {
 				for ( j = 0; j < 2*n; j++){
-					System.out.print(table_gene[i][j]+ " ");
+					display += table_gene[i][j]+ " ";
 				} 
-				System.out.println();
+				display += "\n";
 			}  
-			System.out.print("............\n");
+			display += "............\n";
+			Debugger.trace( display, false); 
 
 			// search the table to define the vector m containing the max value for each component
 
@@ -101,16 +105,16 @@ public class TT_parser { // define a regulatory graph from a table describing a 
 			for ( i=0 ; i<n ; i++) { // for each component, we want to determine its influence
 				for ( j=0 ; j<o[i] ; j++) {// pour chaque occurrence de serie de blocs
 					for(k=0 ; k<m[i] ; k++) {//sur toutes les valeurs de i
-						System.out.println("G" +i+ " at level "  +(k+1)+" has the following influences");
+						Debugger.trace( "G" +i+ " at level "  +(k+1)+" has the following influences");
 
 						L1=(k+j*(m[i]+1))*b[i]; // premiere ligne a parcourir de chaque bloc
 						for ( l=L1 ; l<L1+b[i] ; l++){ //parcours des lignes de chaque bloc
 							for( int u=n ; u<2*n ; u++){
 								if(table_gene[l][u]> table_gene[l+b[i]][u]) {
-									System.out.println("- G" +(u-n));	
+									Debugger.trace( "- G" +(u-n));	
 								}
 								else if (table_gene[l][u]< table_gene[l+b[i]][u]) {
-									System.out.println(  "+ G" +(u-n)); 
+									Debugger.trace(   "+ G" +(u-n)); 
 								}
 							}	
 						}

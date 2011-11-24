@@ -1,10 +1,13 @@
 package org.ginsim;
 
+import java.io.IOException;
+
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.AboutDialog;
 
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
@@ -24,6 +27,12 @@ public class TestRefactor {
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 
 		initGUI();
+		try{
+			Debugger.init( ".", 2, true);
+		}
+		catch( IOException io){
+			System.out.println("TestRefactor.main() : Unable to initialize the debugger");
+		}
 		RegulatoryGraph lrg = GUIManager.getInstance().newFrame();
 
 		RegulatoryNode v1 = lrg.addNode();
@@ -48,7 +57,6 @@ public class TestRefactor {
 		Class<?> cl = TestRefactor.class;
 		String clname = cl.getName().replace(".",	"/") + ".class";
 		String path = cl.getClassLoader().getResource(clname).toString();
-		System.out.println();
 	}
 
 }

@@ -4,6 +4,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import fr.univmrs.tagc.common.Debugger;
+
 public class ParamTreeLeafPattern extends ParamTreeLeaf {
   private String name = "";
   private Hashtable functions;
@@ -13,8 +15,11 @@ public class ParamTreeLeafPattern extends ParamTreeLeaf {
     functions = new Hashtable();
   }
   public void print(int depth) {
-    for (int i = 0; i < (2 * depth); i++) System.out.print(" ");
-    System.out.println(name);
+	  String result = "";
+	  for (int i = 0; i < (2 * depth); i++){
+		  result += " ";
+	  }
+	  Debugger.trace( result + name, false);
   }
   public String toString() {
     return name;

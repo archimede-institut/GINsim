@@ -147,10 +147,10 @@ public class HTGSimulation extends Simulation {
 			debug_o.println("Error : "+e.getMessage());
 			e.printStackTrace();
 		}
-		System.out.println("Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
+		Debugger.info("Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		addAllNodeTo();									// add all nodes to the graph
 		addAllEdgesTo();								// add all the edges to the graph
-		System.out.println("Graph created in : "+(System.currentTimeMillis()-time)+"ms");
+		Debugger.info( "Graph created in : "+(System.currentTimeMillis()-time)+"ms");
 		return helper.endSimulation();
 	}
 
