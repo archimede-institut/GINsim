@@ -4,15 +4,13 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.Map;
 
-import org.ginsim.graph.backend.GraphViewBackend;
-
 
 /**
  * a generic nodeAttributeReader storing data into a dedicated hashmap
  */
 public class FallbackNodeAttributeReader extends NodeAttributesReader {
 
-	private final GraphViewBackend backend;
+	private final AbstractGraph backend;
     private Map dataMap = null;
     
     private NodeVSdata vvsd;
@@ -21,7 +19,7 @@ public class FallbackNodeAttributeReader extends NodeAttributesReader {
     /**
      * @param map
      */
-    public FallbackNodeAttributeReader(GraphViewBackend backend, Map map) {
+    public FallbackNodeAttributeReader(AbstractGraph backend, Map map) {
     	this.backend = backend;
         this.dataMap = map;
     }

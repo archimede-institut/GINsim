@@ -5,8 +5,10 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -22,8 +24,9 @@ import org.ginsim.exception.GsException;
 
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
-import org.ginsim.graph.backend.GraphViewBackend;
+import org.ginsim.graph.backend.GraphViewListener;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
+import org.ginsim.graph.common.FallbackNodeAttributeReader.NodeVSdata;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 
@@ -32,7 +35,12 @@ import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E> {
 	
 	private final GraphBackend<V,E> graphBackend;
-	private final GraphViewBackend viewBackend;
+	
+	// view data
+	private GraphViewListener listener;
+    private Map<V,NodeVSdata> evsmap = null;
+    private Map vvsmap = null;
+
     
 	// The name of the graph
 	protected String graphName = "default_name";
@@ -77,7 +85,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	private AbstractGraph(GraphBackend<V, E> backend, boolean parsing) {
 		this.graphBackend = backend;
         this.isParsing = parsing;
-		viewBackend = graphBackend.getGraphViewBackend();
 	}
 	
 	
@@ -354,16 +361,50 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		return graphBackend.getShortestPath( source, target);
 	}
 	
+	/**
+	 * @return the place where local VS data is stored (create it if needed)
+	 * @see #hasFallBackVSData()
+	 */
+    private Map getEdgeVSMap() {
+        if (evsmap == null) {
+            evsmap = new HashMap();
+        }
+        return evsmap;
+    }
+    
+    private Map getNodeVSMap() {
+        if (vvsmap == null) {
+            vvsmap = new HashMap();
+        }
+        return vvsmap;
+    }
+
+	@Override
+	public void addViewListener(GraphViewListener listener) {
+		this.listener = listener;
+	}
 	
+	/**
+	 * Declare an object visual setting change
+	 * 
+	 * @param o
+	 */
+	public void refresh(Object o) {
+		// TODO: fire graph change?
+		if (listener != null) {
+			listener.refresh(o);
+		}
+	}
+
 	
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return viewBackend.getEdgeAttributeReader();
+		return new FallBackEdgeAttributeReader(this, getEdgeVSMap());
 	}
 	
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
-		return viewBackend.getNodeAttributeReader();
+		return new FallbackNodeAttributeReader(this, getNodeVSMap());
 	}
 	
 	

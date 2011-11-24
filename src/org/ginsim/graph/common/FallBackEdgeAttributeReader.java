@@ -4,15 +4,13 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.graph.backend.GraphViewBackend;
-
 
 /**
  * a generic edgeAttributeReader storing data into a dedicated hashmap
  */
 public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
 
-	private final GraphViewBackend backend;
+	private final AbstractGraph graph;
     private final Map dataMap;
     
     private float defaultsize = 1;
@@ -28,8 +26,8 @@ public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
     /**
      * @param dataMap
      */
-    public FallBackEdgeAttributeReader(GraphViewBackend backend, Map dataMap) {
-    	this.backend = backend;
+    public FallBackEdgeAttributeReader(AbstractGraph backend, Map dataMap) {
+    	this.graph = backend;
         this.dataMap = dataMap;
     }
     
@@ -93,7 +91,7 @@ public class FallBackEdgeAttributeReader extends EdgeAttributesReader {
 
     public void refresh() {
     	if (edge != null) {
-    		backend.refresh(edge);
+    		graph.refresh(edge);
     	}
     }
 

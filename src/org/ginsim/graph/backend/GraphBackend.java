@@ -109,15 +109,6 @@ public interface GraphBackend<V, E extends Edge<V>> {
     
     
 	/**
-	 * Grab the GraphViewBackend associated to this graph.
-	 * It provide access to all visual information: positions, sizes, colors...
-	 * 
-	 * @return the view of this graph.
-	 */
-	public GraphViewBackend getGraphViewBackend();
-
-
-	/**
 	 * Find the shortest path between the two given vertices
 	 * 
 	 * @param source the node at the beginning of the searched path

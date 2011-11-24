@@ -71,7 +71,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		jgraph.setEdgeLabelDisplayed(false);
 		jgraph.addGraphSelectionListener(this);
 		this.helper = helper;
-		backend.addViewListener(this);
+		g.addViewListener(this);
 		//backend.setGraphViewBackend(this);
 		
 		// create the action manager and marquee handler

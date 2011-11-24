@@ -3,6 +3,7 @@ package org.ginsim.graph.common;
 import java.util.Collection;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.backend.GraphViewListener;
 
 
 /**
@@ -51,4 +52,12 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * @param path
 	 */
 	void save(String path, Collection<V> nodes, Collection<E> edges) throws GsException;
+
+
+	/**
+	 * Add a listener for view change events.
+	 * Note: only one listener is supported: the GraphGUI
+	 * @param listener
+	 */
+	void addViewListener(GraphViewListener listener);
 }

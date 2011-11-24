@@ -15,12 +15,10 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	private static final long serialVersionUID = -7766943723639796018L;
 	
 	private AbstractGraph<V,E> frontend = null;
-	private final GraphViewBackend graphViewBackend;
 
 	public JgraphtBackendImpl() {
 		// FIXME: remove the edgeFactory (with better integration with the underlying graph)
 		super(new GsJGraphtBaseGraph<V, E>(new GsJgraphtEdgeFactory()));
-		graphViewBackend = new GraphViewBackendImpl();
 	}
 	
 	/**
@@ -131,15 +129,6 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
         return DijkstraShortestPath.findPathBetween( this, source, target);
     }
 
-	@Override
-	public GraphViewBackend getGraphViewBackend() {
-		return graphViewBackend;
-	}
-
-	public void addViewListener(GraphViewListener listener) {
-		getGraphViewBackend().addViewListener(listener);
-	}
-	
 	/**
 	 * Return a list of set of vertex, each set containing a strongly connected component of the graph
 	 * 
