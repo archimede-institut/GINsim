@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.graph;
+package org.ginsim.core;
 
 public interface GraphEventCascade {
 

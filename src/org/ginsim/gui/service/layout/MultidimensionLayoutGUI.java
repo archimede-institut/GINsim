@@ -121,7 +121,7 @@ public class MultidimensionLayoutGUI {
             	catch( GsException ge){
             		// TODO : REFACTORING ACTION
             		// TODO : Launch a message box to the user
-            		Debugger.log( "Unable to launch layout : " + ge);
+            		Debugger.debug( "Unable to launch layout : " + ge);
             	}
             }
         });

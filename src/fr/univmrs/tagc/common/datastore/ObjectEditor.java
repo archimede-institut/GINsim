@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.ginsim.gui.graph.GUIEditor;
 
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
 
 /**
@@ -67,7 +68,7 @@ public abstract class ObjectEditor<T> implements GUIEditor<T> {
 
 	public abstract Object getRawValue(int prop);
 	public void performAction(int prop) {
-		System.out.println("override this!");
+		Debugger.debug( "Override this!");
 	}
 	
 	@Override

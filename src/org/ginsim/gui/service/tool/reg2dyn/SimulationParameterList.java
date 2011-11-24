@@ -2,6 +2,7 @@ package org.ginsim.gui.service.tool.reg2dyn;
 
 import java.util.Collection;
 
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
@@ -13,7 +14,6 @@ import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.datastore.GenericListListener;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 

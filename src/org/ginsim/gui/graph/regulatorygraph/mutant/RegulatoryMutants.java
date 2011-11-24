@@ -24,6 +24,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.annotation.AnnotationPanel;
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
@@ -35,7 +36,6 @@ import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantChange;
 
 import org.ginsim.gui.service.tool.reg2dyn.RegulatoryMutantListener;
 
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.datastore.ValueList;
 import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;

@@ -55,8 +55,8 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 		try {
 			doExport(filename);
 		} catch (Exception e) {
-			Debugger.log("Error in export "+getID());
-			Debugger.log(e);
+			Debugger.debug("Error in export "+getID());
+			Debugger.debug(e);
 		}
 	}
 
@@ -68,7 +68,7 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 	public void actionPerformed(ActionEvent arg0) {
 		StackDialogHandler handler = getConfigPanel();
 		if (handler != null) {
-			Debugger.log("exports with config panel not yet supported");
+			Debugger.debug("exports with config panel not yet supported");
 			new HandledStackDialog(handler);
 		} else {
 			selectFile();

@@ -16,11 +16,11 @@ public class FileSelectionHelper {
 	// and store it in the option file
 	
 	public static Graph<?,?> open(String path) {
-		Debugger.log("TODO: open files");
+		Debugger.debug("TODO: open files");
 		return null;
 	}
 	public static Graph<?,?> open(String path, Map filter) {
-		Debugger.log("TODO: open filtered files");
+		Debugger.debug("TODO: open filtered files");
 		return null;
 	}
 	

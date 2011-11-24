@@ -57,7 +57,7 @@ class ConnectivityExtractAction extends ToolAction {
 		try {
 			s_ag = graph.getAssociatedGraphID();
 		} catch (GsException e) {
-			Debugger.log();
+			Debugger.debug();
 			return;
 		}
 		

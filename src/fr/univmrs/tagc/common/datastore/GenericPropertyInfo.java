@@ -83,7 +83,7 @@ public class GenericPropertyInfo {
 				try {
 					widget = (ObjectPropertyEditorUI)constructor.newInstance(args);
 				} catch (Exception e) {
-					Debugger.log("Constructor failed: " + constructor + " for " + args);
+					Debugger.debug("Constructor failed: " + constructor + " for " + args);
 					e.printStackTrace();
 				}
 			}
@@ -93,7 +93,7 @@ public class GenericPropertyInfo {
 			widget.setEditedProperty(this, panel);
 			editor.addListener(widget);
 		} else {
-			Debugger.log("how to deal with this: "+type + " --> " + cl);
+			Debugger.debug("how to deal with this: "+type + " --> " + cl);
 			for (Object o: editor.getArgs()) {
 				System.err.println("  "+o);
 			}

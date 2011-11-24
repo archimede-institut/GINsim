@@ -17,6 +17,7 @@ import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
@@ -33,7 +34,6 @@ import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.OpenHelper;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;

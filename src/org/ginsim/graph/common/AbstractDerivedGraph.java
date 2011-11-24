@@ -3,10 +3,10 @@ package org.ginsim.graph.common;
 import java.io.File;
 import java.util.Collection;
 
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 

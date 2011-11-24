@@ -149,7 +149,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void run() {
 		// TODO run export
-		Debugger.log("TODO: run export");
+		Debugger.debug("TODO: run export");
 	}
 }
 

@@ -237,7 +237,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			return true;
 		} catch (Exception e) {
 			// TODO: cleaner error
-			Debugger.log("save failed");
+			Debugger.debug("save failed");
 			e.printStackTrace();
 		}
 		return false;

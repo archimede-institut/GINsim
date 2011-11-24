@@ -88,7 +88,7 @@ public class Simulation extends Thread implements Runnable {
     	catch ( GsException ge) {
     		// TODO : REFACTORING ACTION
     		// TODO : Launch a message for user
-    		Debugger.log( "Unable to start Simulation");
+    		Debugger.debug( "Unable to start Simulation");
 		}
     }
 	public Graph do_simulation() throws GsException {

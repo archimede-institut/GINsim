@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.util.Collection;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -11,7 +12,6 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.datastore.GenericList;
 import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;

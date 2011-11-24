@@ -105,7 +105,7 @@ public class ServiceGUIManager{
 						}
 					}
 					catch( Throwable e){
-						Debugger.log( "Service '" + service.getClass().getName() + "' cannot provide Actions due to an exception: " + e);
+						Debugger.debug( "Service '" + service.getClass().getName() + "' cannot provide Actions due to an exception: " + e);
 					}
 				}
 			}
@@ -119,7 +119,7 @@ public class ServiceGUIManager{
 							result.addAll( service_actions);
 						}
 					} catch (Throwable e)  {
-						Debugger.log("Could not create actions for service: "+service);
+						Debugger.debug("Could not create actions for service: "+service);
 					}
 				}
 			}
