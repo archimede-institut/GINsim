@@ -571,7 +571,7 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void run() {
 		// FIXME: run export
-		Debugger.debug("TODO: run export");
+		Debugger.error( "TODO: run export");
 	}
 	
 	@Override

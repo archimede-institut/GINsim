@@ -332,7 +332,7 @@ class SBML3ExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void run() {
 		// TODO run export
-		Debugger.debug("Run export");
+		Debugger.error( "Run export");
 	}	
 }
 

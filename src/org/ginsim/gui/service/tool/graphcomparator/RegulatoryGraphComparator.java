@@ -208,8 +208,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 					}
 				}
 				catch( GsException gs_exception){
-					Debugger.debug( "Unable to create new edge between vertices '" + id + "' and '" + tid + "' : one of the vertex was not found in the graph");
-
+					Debugger.error( "Unable to create new edge between vertices '" + id + "' and '" + tid + "' : one of the vertex was not found in the graph");
+					Debugger.error( gs_exception);
 				}
 			}
 			

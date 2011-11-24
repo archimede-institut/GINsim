@@ -199,7 +199,8 @@ abstract public class StackDialog extends SimpleDialog {
                 	catch( GsException ge){
                 		// TODO : REFACTORING ACTION
                 		// TODO : Launch a message box to the user
-                		Debugger.debug( "Unable to execute the action" + ge);
+                		Debugger.error( "Unable to execute the action");
+                		Debugger.error( ge);
                 	}
                 }
             });

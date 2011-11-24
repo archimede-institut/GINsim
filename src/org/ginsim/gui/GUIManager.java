@@ -448,7 +448,7 @@ public class GUIManager {
 		}
 		
 		// FIXME: create a new WhatToDo frame
-		Debugger.debug("TODO: implement a new whattodo frame");
+		Debugger.error( "TODO: implement a new whattodo frame");
 	}
 
 }

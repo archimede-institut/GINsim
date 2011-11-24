@@ -124,7 +124,7 @@ public class GraphManager {
     	
     	GraphFactory<C> factory = graphFactories.get( graph_class);
     	if( factory == null) {
-    		Debugger.debug( "No declared factory for graph class " + graph_class);
+    		Debugger.error( "No declared factory for graph class : " + graph_class);
     		return null;
     	}
     	
@@ -166,10 +166,12 @@ public class GraphManager {
 	    		graph =(C) found_method.invoke( factory, args);
 	    	}
 			catch( InvocationTargetException ite){
-				Debugger.debug( "ITE -- Unable to create graph of class " + graph_class);
+				Debugger.error( "Unable to create graph of class " + graph_class);
+				Debugger.error( ite);
 			}
 			catch( IllegalAccessException iae){
-				Debugger.debug( "IAE -- Unable to create graph of class " + graph_class);
+				Debugger.error( "Unable to create graph of class " + graph_class);
+				Debugger.error( iae);
 			}
 			
 			registerGraph( graph);
@@ -401,7 +403,8 @@ public class GraphManager {
 				    }
 				}
 				catch( GsException ge){
-					Debugger.debug( "Unable to verify the associated graph of graph : " + other_graph.getGraphName());
+					Debugger.error( "Unable to verify the associated graph of graph : " + other_graph.getGraphName());
+					Debugger.error( ge);
 				}
 			}
 		}

@@ -38,7 +38,7 @@ public class TreeFactory implements GraphFactory<Tree> {
 	
     @Override
     public Tree create() {
-    	Debugger.debug("Tree factory not finished");
+    	Debugger.error( "Tree factory not finished");
         return null;
     }
     

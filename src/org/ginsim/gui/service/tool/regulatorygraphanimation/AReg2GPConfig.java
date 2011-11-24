@@ -339,7 +339,8 @@ public class AReg2GPConfig extends JDialog {
                 	catch( GsException ge){
                 		// TODO : REFACTORING ACTION
                 		// TODO : Launch a message box to the user
-                		Debugger.debug( "Unable to execute the Export : " + ge);
+                		Debugger.error( "Unable to execute the Export : ");
+                		Debugger.error( ge);
                 	}
                 }
             });

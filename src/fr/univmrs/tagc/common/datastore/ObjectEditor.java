@@ -68,7 +68,7 @@ public abstract class ObjectEditor<T> implements GUIEditor<T> {
 
 	public abstract Object getRawValue(int prop);
 	public void performAction(int prop) {
-		Debugger.debug( "Override this!");
+		Debugger.error( "Override this!");
 	}
 	
 	@Override

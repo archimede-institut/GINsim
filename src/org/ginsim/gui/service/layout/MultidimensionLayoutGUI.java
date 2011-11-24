@@ -30,6 +30,8 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.service.layout.DynamicLayoutMultidimention;
 
+import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
+
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -121,7 +123,8 @@ public class MultidimensionLayoutGUI {
             	catch( GsException ge){
             		// TODO : REFACTORING ACTION
             		// TODO : Launch a message box to the user
-            		Debugger.debug( "Unable to launch layout : " + ge);
+            		Debugger.error( "Unable to launch layout");
+            		Debugger.error( ge);
             	}
             }
         });

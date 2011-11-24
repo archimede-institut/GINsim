@@ -431,7 +431,8 @@ public final class SBMLXpathParser {
 							ereader.setEdge(edge.me);
 						}
 						catch (GsException gs_exception) {
-							Debugger.debug( "Unable to create new edge between vertices '" + node_from_id + "' and '" + node_to_id + "' : one of the vertex was not found in the graph");
+							Debugger.error( "Unable to create new edge between vertices '" + node_from_id + "' and '" + node_to_id + "' : one of the vertex was not found in the graph");
+							Debugger.error( gs_exception);
 						}
 					}
 				}

@@ -125,6 +125,6 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void run() {
 		// TODO: run the export
-		Debugger.debug("TODO: run the export");
+		Debugger.error( "TODO: run the export");
 	}
 }

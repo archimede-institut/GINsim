@@ -1,9 +1,8 @@
 package fr.univmrs.tagc.common;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -23,20 +22,19 @@ public class Debugger {
 	
 	// Logging verboseLevel : 0 = log; 1= trace; 2 = info
 	private static int verboseLevel = 0;
-	private static BufferedWriter logOut;
-	private static BufferedWriter traceOut;
-	private static BufferedWriter infoOut;
+	private static PrintWriter logOut;
+	private static PrintWriter traceOut;
+	private static PrintWriter infoOut;
 	
 	public static void init( String output_dir, int verbose) throws IOException{
 		
-		FileWriter log_fw = new FileWriter( output_dir + "/error.txt", true);
-		logOut = new BufferedWriter( log_fw);
+		logOut = new PrintWriter( output_dir + "/error.txt");
 		
-		FileWriter trace_fw = new FileWriter( output_dir + "/trace.txt", true);
-		traceOut = new BufferedWriter( trace_fw);
+		traceOut = new PrintWriter( output_dir + "/trace.txt");
 		
-		FileWriter info_fw = new FileWriter( output_dir + "/info.txt", true);
-		infoOut = new BufferedWriter( info_fw);
+		infoOut = new PrintWriter( output_dir + "/info.txt");
+		
+		setVerbose( verbose);
 	}
 	
 	/**
@@ -45,11 +43,14 @@ public class Debugger {
 	 * 
 	 * @param verbose
 	 */
-	public static void setVerbosity( int verbose){
+	public static void setVerbose( int verbose){
 		
 		if( verbose >=0 && verbose <= 2){
 			
 			verboseLevel = verbose;
+		}
+		else{
+			debug( "Incorrect value for verbose level : " + verboseLevel);
 		}
 	}
 	
@@ -60,15 +61,16 @@ public class Debugger {
 	 */
 	public static void error( Object msg){
 		
-		try{
-			logOut.write( msg.toString());
-			logOut.flush();
-			Debugger.info( msg);
-			Debugger.trace( msg);
+		if( msg instanceof Throwable){
+			logOut.write( getLineNumber()+":"+getClassName()+"#"+getMethodName()+"():: Exception :");
+			((Throwable) msg).printStackTrace( logOut);
 		}
-		catch( IOException io){
-			debug( "Unable to log : " + msg);
+		else{
+			logOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 		}
+		logOut.flush();
+		Debugger.info( msg);
+		Debugger.trace( msg);
 	}
 	
 	/**
@@ -78,15 +80,10 @@ public class Debugger {
 	 */
 	public static void info( Object msg){
 		
-		try{
-			if( verboseLevel >= 1){
-				infoOut.write( msg.toString());
-				infoOut.flush();
-				Debugger.trace( msg);
-			}
-		}
-		catch( IOException io){
-			debug( "Unable to info : " + msg);
+		if( verboseLevel >= 1){
+			infoOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+			infoOut.flush();
+			Debugger.trace( msg);
 		}
 	}
 	
@@ -97,18 +94,11 @@ public class Debugger {
 	 */
 	public static void trace( Object msg){
 		
-		try{
-			if( verboseLevel >= 2){
-				traceOut.write( msg.toString());
-				traceOut.flush();
-			}
-		}
-		catch( IOException io){
-			debug( "Unable to trace : " + msg);
+		if( verboseLevel >= 2){
+			traceOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+			traceOut.flush();
 		}
 	}
-	
-
 	
 	
 	/**

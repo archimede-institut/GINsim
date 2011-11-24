@@ -26,7 +26,7 @@ public class SimpleServiceGUI<A extends Action> implements ServiceGUI {
 					Action action = (Action)constructor.newInstance(graph);
 					actions.add(action);
 				} catch (Exception e) {
-					Debugger.debug(e);
+					Debugger.error( e);
 				}
 			}
 

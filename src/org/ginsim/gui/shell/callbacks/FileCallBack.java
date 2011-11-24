@@ -97,7 +97,8 @@ class NewAction extends AbstractAction {
 		try {
 			GUIManager.getInstance().newFrame();
 		} catch (Exception e) {
-			Debugger.debug("error creating the new frame");
+			Debugger.error(" Error creating the new frame");
+			Debugger.error( e);
 		}
 	}
 }

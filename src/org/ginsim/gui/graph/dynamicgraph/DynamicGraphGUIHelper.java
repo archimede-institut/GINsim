@@ -125,7 +125,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	        frame.setContentPane(scroll);
 	        frame.setVisible(true);
         } catch (Exception e) {
-        	Debugger.debug(e);
+        	Debugger.error(e);
         }
 	}
 	
