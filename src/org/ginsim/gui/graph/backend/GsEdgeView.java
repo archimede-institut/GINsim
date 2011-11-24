@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.ginsim.graph.common.Edge;
 import org.jgraph.graph.AttributeMap;
@@ -102,6 +101,21 @@ public class GsEdgeView extends EdgeView {
 		}
 		GraphConstants.setLineWidth(attributes, renderer.reader.getLineWidth());
 
+		
+		int lineEnd = GraphConstants.ARROW_CLASSIC;
+		switch (renderer.reader.getLineEnd()) {
+		case 0:
+			lineEnd = GraphConstants.ARROW_TECHNICAL;
+			break;
+		case 1:
+			lineEnd = GraphConstants.ARROW_LINE;
+			break;
+		case 2:
+			lineEnd = GraphConstants.ARROW_CIRCLE;
+			break;
+		}
+		GraphConstants.setLineEnd(attributes, lineEnd);
+		GraphConstants.setEndFill(attributes, true);
 		
 		return attributes;
 	}
