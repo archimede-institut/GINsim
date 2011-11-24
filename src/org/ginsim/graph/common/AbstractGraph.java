@@ -15,9 +15,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.core.notification.ErrorNotification;
+import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.notification.Notification;
 import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageHolder;
+
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
 import org.ginsim.graph.backend.GraphViewBackend;
@@ -27,7 +29,7 @@ import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 
 import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 
-abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>, NotificationMessageHolder {
+abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E> {
 	
 	private final GraphBackend<V,E> graphBackend;
 	private final GraphViewBackend viewBackend;
@@ -571,7 +573,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 					r = ftmp.renameTo(f);
 				}
 				if (!r) {
-					new NotificationMessage(this, new GsException(GsException.GRAVITY_ERROR, "renaming of the temporary file failed: "+ftmp.getAbsolutePath()));
+					new ErrorNotification( "Renaming of the temporary file failed: "+ftmp.getAbsolutePath());
 				}
 			}
 		}
@@ -700,20 +702,4 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     	}
     }
 
-
-	// ------------------- Notification messages ------------------------
-	// just dispatch them to a listener (most likely the mainframe)
-	
-	NotificationMessageHolder listener;
-	
-	public void addNotificationMessage(NotificationMessage message) {
-		if (listener != null) {
-			listener.addNotificationMessage(message);
-		}
-	}
-	public void deleteNotificationMessage(NotificationMessage message) {
-		if (listener != null) {
-			listener.deleteNotificationMessage(message);
-		}
-	}
 }

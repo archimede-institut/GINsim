@@ -8,9 +8,10 @@ import java.util.Vector;
 import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.WarningNotification;
 import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageHolder;
+
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.NodeAttributesReader;
@@ -67,7 +68,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 			}
     	}
         if (regGraph == null || dynGraph == null) {
-        	new NotificationMessage( (NotificationMessageHolder) dynGraph, "Could not start the animator", NotificationMessage.NOTIFICATION_WARNING);
+        	new WarningNotification( "Could not start the animator");
             return;
         }
         // let's start the animator

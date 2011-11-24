@@ -6,8 +6,9 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageHolder;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.WarningNotification;
+
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -45,9 +46,9 @@ public class Reg2DynServiceGUI implements ServiceGUI {
 //            return;
 //        }
 //        if (!(graph instanceof RegulatoryGraph) || graph.getNodeOrderSize() < 1) {
-//            graph.addNotificationMessage(new NotificationMessage(graph, 
+//            graph.addNotificationMessage(new Notification(graph, 
 //            		Translator.getString(graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
-//            		NotificationMessage.NOTIFICATION_WARNING));
+//            		Notification.NOTIFICATION_WARNING));
 //            return;
 //        }
 //		if (ref == 0 || ref == 1) {
@@ -98,7 +99,7 @@ class Reg2DynAction extends ToolAction {
 	public void actionPerformed(ActionEvent e) {
         
 		if ( graph.getNodeOrderSize() < 1) {
-            new NotificationMessage( (NotificationMessageHolder) graph, Translator.getString("STR_emptyGraph"), NotificationMessage.NOTIFICATION_WARNING);
+            new WarningNotification( Translator.getString("STR_emptyGraph"));
 
             return;
         }

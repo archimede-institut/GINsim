@@ -14,10 +14,13 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
+import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.exception.NotificationMessageHolder;
+
+
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
@@ -400,11 +403,20 @@ public final class RegulatoryParser extends GsXMLHelper {
     			}
     		}
     		if (m != null) {
-    			graph.addNotificationMessage(new NotificationMessage(graph,
-    					"inconsistency in some interactions",
-    					new InteractionInconsistencyAction(graph),
-    					m,
-    					NotificationMessage.NOTIFICATION_WARNING_LONG));
+    			
+    			NotificationResolution resolution = new NotificationResolution( new String[] {"View"}){
+    				
+    				public boolean perform( Graph graph, Object[] data, int index){
+	    				StackDialog d = new InteractionInconsistencyDialog( (Map) data[0],
+	    						graph,
+	    						"interactionInconststancy",
+	    						200, 150);
+	    				d.setVisible(true);
+	    				return true;
+    				}
+    			};
+    			
+    			new ResolvableWarningNotification( "inconsistency in some interactions", graph, new Object[] {m}, resolution);
     		}
     	}
 
@@ -497,13 +509,12 @@ public final class RegulatoryParser extends GsXMLHelper {
         BooleanParser tbp = new BooleanParser( graph.getIncomingEdges(vertex));
         TreeInteractionsModel interactionList = vertex.getInteractionsModel();
         if (!tbp.compile(exp, graph, vertex)) {
-        	InvalidFunctionNotificationAction a = new InvalidFunctionNotificationAction();
-        	Vector o = new Vector();
-        	o.addElement(new Short(val));
-        	o.addElement(vertex);
-        	o.addElement(exp);
-          graph.addNotificationMessage( new NotificationMessage(graph, "Invalid formula : " + exp,
-            a, o, NotificationMessage.NOTIFICATION_WARNING));
+        	Object[] data = new Object[3];
+        	data[0] = new Short(val);
+        	data[1] = vertex;
+        	data[2] = exp;
+        	
+        	new ResolvableWarningNotification( "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
         }
         else {
           interactionList.addExpression(val, vertex, tbp);
@@ -547,75 +558,6 @@ public final class RegulatoryParser extends GsXMLHelper {
     	
         return graph;
     }
-}
-
-class InteractionInconsistencyAction implements NotificationMessageAction {
-
-	private final RegulatoryGraph graph;
-	
-	public InteractionInconsistencyAction(RegulatoryGraph graph) {
-		this.graph = graph;
-	}
-	
-	public String[] getActionName() {
-		String t[] = { "view" };
-		return t;
-	}
-
-	public boolean perform( NotificationMessageHolder holder, Object data, int index) {
-		StackDialog d = new InteractionInconsistencyDialog((Map)data,
-				graph,
-				"interactionInconststancy",
-				200, 150);
-		d.setVisible(true);
-		return true;
-	}
-
-	public boolean timeout( NotificationMessageHolder holder, Object data) {
-		return true;
-	}
-}
-
-class InvalidFunctionNotificationAction implements NotificationMessageAction {
-	
-	public InvalidFunctionNotificationAction() {
-		super();
-	}
-	
-	public boolean timeout( NotificationMessageHolder graph, Object data) {
-		
-		return false;
-	}
-
-	public boolean perform( NotificationMessageHolder graph, Object data, int index) {
-		
-		Vector v = (Vector)data;
-		byte value = ((Short)v.elementAt(0)).byteValue();
-		RegulatoryNode vertex = (RegulatoryNode)v.elementAt(1);
-		String exp = (String)v.elementAt(2);
-		boolean ok = true;
-		switch (index) {
-		  case 0 :
-		  	try {
-		  	  TreeInteractionsModel interactionList = vertex.getInteractionsModel();
-		  	  TreeExpression texp = interactionList.addEmptyExpression(value, vertex);
-      	  texp.setText(exp);
-          texp.setProperty("invalid", new Boolean("true"));
-        }
-		  	catch (Exception ex) {
-		  		ex.printStackTrace();
-		  		ok = false;
-		  	}
-			  break;
-		  case 1 :
-		  	break;
-		}
-		return ok;
-	}
-	public String[] getActionName() {
-		String[] t = {"Keep function", "Discard function"};
-		return t;
-	}
 }
 
 class InteractionInconsistencyDialog extends StackDialog {

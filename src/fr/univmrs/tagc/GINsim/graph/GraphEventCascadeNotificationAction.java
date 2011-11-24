@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.exception.NotificationMessageHolder;
+
+
 
 import fr.univmrs.tagc.common.managerresources.Translator;
 

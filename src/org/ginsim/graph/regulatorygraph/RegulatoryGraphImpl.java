@@ -13,10 +13,10 @@ import java.util.Map;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.annotation.BiblioManager;
+import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.exception.NotificationMessageHolder;
+
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Edge;
@@ -92,10 +92,12 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	 * @param list the list of objects representing the order of node as defined by the model
 	 */
     @Override
-	public void setNodeOrder( List<RegulatoryNode> list){
-		
-		nodeOrder = list;
+    public void setNodeOrder( List<RegulatoryNode> nodeOrder) {
+    	
+		this.nodeOrder = nodeOrder;
 	}
+    
+    
 	
     
     /**
@@ -131,29 +133,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         }
         return null;
     }
-
-    /**
-     * Extracted from the method below, not sure it is really required..
-     */
-    class MEdgeNotificationAction implements NotificationMessageAction {
-    	
-		final String[] t_action = {"go"};
-		final Graph<?, ?> graph;
-		public MEdgeNotificationAction(RegulatoryGraph graph) {
-			this.graph = graph;
-		}
-		public boolean timeout( NotificationMessageHolder holder, Object data) {
-			return true;
-		}
-		public boolean perform( NotificationMessageHolder holder, Object data, int index) {
-			GUIManager.getInstance().getGraphGUI(graph).selectEdge((Edge<?>)data);
-			return true;
-		}
-		public String[] getActionName() {
-			return t_action;
-		}
-
-    }
     
     /**
      * Add a signed edge
@@ -167,12 +146,24 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, int sign) {
     	RegulatoryMultiEdge obj = getEdge(source, target);
     	if (obj != null) {
-    		NotificationMessageAction action = new MEdgeNotificationAction(this);
-	    	this.addNotificationMessage( new NotificationMessage(this,
-	    			Translator.getString("STR_usePanelToAddMoreEdges"),
-	    			action,
-	    			obj,
-	    			NotificationMessage.NOTIFICATION_WARNING));
+    		
+    		NotificationResolution resolution = new NotificationResolution(){
+    			
+    			public boolean perform( Graph graph, Object[] data, int index) {
+    				
+    				GUIManager.getInstance().getGraphGUI(graph).selectEdge((Edge<?>)data[0]);
+    				return true;
+    			}
+    			
+    			public String[] getOptionsName(){
+    				
+    				String[] t_option = {"Go"};
+    				return t_option;
+    			}
+    		};
+    		
+    		new ResolvableWarningNotification( "STR_usePanelToAddMoreEdges", this, new Object[] {obj}, resolution);
+    		
     		return obj;
     	}
     	if (sign < 0) {

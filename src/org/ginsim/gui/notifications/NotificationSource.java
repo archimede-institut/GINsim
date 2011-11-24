@@ -1,6 +1,6 @@
 package org.ginsim.gui.notifications;
 
-import org.ginsim.exception.NotificationMessage;
+import org.ginsim.core.notification.Notification;
 
 /**
  * 
@@ -8,7 +8,7 @@ import org.ginsim.exception.NotificationMessage;
  *
  */
 public interface NotificationSource {
-	public NotificationMessage getTopNotification();
+	public Notification getTopNotification();
 	public void closeNotification();
 
 }

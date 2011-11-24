@@ -13,10 +13,10 @@ import java.util.Map;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.annotation.BiblioManager;
+import org.ginsim.core.notification.Notification;
 import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.exception.NotificationMessageHolder;
+
+
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
@@ -36,7 +36,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 /**
  * The regulatory graph
  */
-public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEdge>, NotificationMessageHolder{
+public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEdge>{
 	
     /**
      * Return the node order

@@ -10,7 +10,7 @@ public class Timeout {
      * @param o
      * @param wait length of the timeout (milliseconds)
      */
-    public static void addTimeout(TimeoutObject o, long wait) {
+    public static void addTimeout( TimeoutObject o, long wait) {
         Thread t = new cl_runtimeout(o, wait);
         t.start();
     }

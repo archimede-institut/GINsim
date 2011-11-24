@@ -13,7 +13,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.ginsim.exception.NotificationMessage;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
+import org.ginsim.core.notification.resolvable.ResolvableNotification;
+import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
 
 
 /**
@@ -30,7 +33,7 @@ public class NotificationPanel extends JPanel {
     private JComboBox cNotificationAction = null;
     private JButton bNotificationAction = null;
     private JButton bNotificationAction2 = null;
-    private NotificationMessage notification = null;
+    private Notification notification = null;
 	
 
 	public NotificationPanel(NotificationSource source) {
@@ -90,14 +93,14 @@ public class NotificationPanel extends JPanel {
 	}
 
 	protected void notificationAction(int index) {
-		if (notification != null) {
+		if (notification != null && notification instanceof ResolvableNotification) {
             if (index == 0) {
                 if (cNotificationAction.isVisible()) {
-                    notification.performAction(cNotificationAction.getSelectedIndex());
+                    ((ResolvableNotification) notification).performResolution( cNotificationAction.getSelectedIndex());
                     return;
                 }
             }
-            notification.performAction(index);
+            ((ResolvableNotification) notification).performResolution(index);
 		}
 	}
 
@@ -107,16 +110,16 @@ public class NotificationPanel extends JPanel {
 			setVisible(false);
 		} else {
             switch (notification.getType()) {
-            case NotificationMessage.NOTIFICATION_INFO:
-            case NotificationMessage.NOTIFICATION_INFO_LONG:
+            case Notification.NOTIFICATION_INFO:
+            case Notification.NOTIFICATION_INFO_LONG:
                 setBackground(Color.CYAN);
                 break;
-            case NotificationMessage.NOTIFICATION_WARNING:
-            case NotificationMessage.NOTIFICATION_WARNING_LONG:
+            case Notification.NOTIFICATION_WARNING:
+            case Notification.NOTIFICATION_WARNING_LONG:
                 setBackground(Color.ORANGE);
                 break;
-            case NotificationMessage.NOTIFICATION_ERROR:
-            case NotificationMessage.NOTIFICATION_ERROR_LONG:
+            case Notification.NOTIFICATION_ERROR:
+            case Notification.NOTIFICATION_ERROR_LONG:
                 setBackground(Color.RED);
                 break;
 
@@ -127,7 +130,7 @@ public class NotificationPanel extends JPanel {
 
 			setVisible(true);
 			notificationMessage.setText(notification.toString());
-            String[] t_text = notification.getActionText();
+            String[] t_text = ((ResolvableNotification) notification).getOptionNames();
 			if (t_text != null && t_text.length > 0) {
                 bNotificationAction.setVisible(true);
                 if ( t_text.length == 1) {

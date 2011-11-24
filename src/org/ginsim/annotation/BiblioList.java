@@ -17,10 +17,13 @@ import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
+import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.exception.NotificationMessageHolder;
+
+
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
@@ -147,6 +150,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 			}
 		}
 	}
+	
 	public void addMissingRefWarning(String value) {
 		if (parsing) {
 			return;
@@ -166,31 +170,30 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 				}
 			}
 		}
-		NotificationMessageAction action = new NotificationMessageAction() {
-			String[] t = {Translator.getString("STR_addBib"), Translator.getString("STR_ignore")};
-			public boolean timeout(NotificationMessageHolder graph, Object data) {
-				return true;
-			}
 		
-			public boolean perform( NotificationMessageHolder graph, Object data, int index) {
+		NotificationResolution resolution = new NotificationResolution(){
+			
+			public boolean perform( Graph graph, Object[] data, int index){
+				
 				switch (index) {
-					case 0:
-						((BiblioList)data).addFile();
-						break;
-					case 1:
-						//((BiblioList)data).ignore();
-						break;
+				case 0:
+					((BiblioList)data[0]).addFile();
+					break;
+				case 1:
+					//((BiblioList)data[0]).ignore();
+					break;
 				}
 				return true;
 			}
-		
-			public String[] getActionName() {
+			
+			public String[] getOptionsName(){
+				
+				String[] t = { "STR_addBib", "STR_ignore"};
 				return t;
 			}
-		
 		};
 		
-		new NotificationMessage((NotificationMessageHolder)graph, Translator.getString("STR_noref"), action, this, NotificationMessage.NOTIFICATION_WARNING);
+		new ResolvableErrorNotification( "STR_noref", graph, new Object[] {this}, resolution);
 	}
 	
 	public String getLink(String proto, String value) {
@@ -225,25 +228,23 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 			}
 			endParsing();
 		} else {
-			NotificationMessageAction action = new NotificationMessageAction() {
-				String[] t = {Translator.getString("STR_purge")};
-				public boolean timeout(NotificationMessageHolder graph, Object data) {
+			
+			NotificationResolution resolution = new NotificationResolution(){
+				
+				public boolean perform( Graph graph, Object[] data, int index){
+					
+					((BiblioList)data[0]).removeFile((String) data[1]);
 					return true;
 				}
-			
-				public boolean perform(NotificationMessageHolder graph, Object data, int index) {
-					((BiblioList)((Object[])data)[0]).removeFile(((Object[])data)[1].toString());
-					return true;
-				}
-			
-				public String[] getActionName() {
+				
+				public String[] getOptionsName(){
+					
+					String[] t = {Translator.getString("STR_purge")};
 					return t;
 				}
-			
 			};
 			
-			new NotificationMessage((NotificationMessageHolder)graph, Translator.getString("STR_noBibFile"),
-					action, new Object[] {this, fileName}, NotificationMessage.NOTIFICATION_WARNING);
+			new ResolvableWarningNotification( "STR_noBibFile", graph, new Object[] {this, fileName}, resolution);
 		}
 	}
 	

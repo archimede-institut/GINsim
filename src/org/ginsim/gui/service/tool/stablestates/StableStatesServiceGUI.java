@@ -6,8 +6,9 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageHolder;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.WarningNotification;
+
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.ServiceGUI;
@@ -52,7 +53,7 @@ class StableStatesAction extends ToolAction {
 	public void actionPerformed(ActionEvent e) {
 		
     	if (graph.getNodeOrderSize() < 1) {
-            new NotificationMessage( (NotificationMessageHolder) graph, Translator.getString("STR_emptyGraph"), NotificationMessage.NOTIFICATION_WARNING);
+            new WarningNotification( Translator.getString("STR_emptyGraph"));
     		return;
     	}
 

@@ -8,9 +8,12 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.ginsim.annotation.Annotation;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.exception.NotificationMessageHolder;
+import org.ginsim.core.notification.ErrorNotification;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+
+
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.ToolTipsable;
@@ -22,6 +25,7 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.Tr
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.python.antlr.PythonParser.parameters_return;
 
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -109,15 +113,62 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	    		List l_conflict = new ArrayList();
 	    		List l_parameters = new ArrayList();
 			    if (!getInteractionsModel().isMaxCompatible(max)) {
-			    	graph.addNotificationMessage( new NotificationMessage(graph, "Max value (" + max + ") is inconsistent with some boolean function value.", NotificationMessage.NOTIFICATION_ERROR) );
+			    	new ErrorNotification( "Max value (" + max + ") is inconsistent with some boolean function value.");
 			    	return;
 			    }
 	    		graph.canApplyNewMaxValue(this, max, l_fixable, l_conflict);
 	    		v_logicalParameters.applyNewMaxValue(max, graph, l_parameters);
 	    		if (l_fixable.size() > 0 || l_conflict.size() > 0 || l_parameters.size() > 0) {
-	    			NotificationMessageAction action = new UpdateMaxBlockedAction(this, max, l_fixable, l_conflict, l_parameters);
-		    		graph.addNotificationMessage(new NotificationMessage(
-		    				graph, "max value decrease is blocked", action, null, NotificationMessage.NOTIFICATION_WARNING) );
+
+	    			// Define the options of the Notification Resolution
+	    			String[] option_names;
+	    			if (l_conflict.size() == 0) {
+	    				option_names = new String[2];
+	    				option_names[1] = "Fix";
+	    			} else {
+	    				option_names = new String[1];
+	    			}
+	    			option_names[0] = "Detail";
+	    			
+	    			// Create the notification resolution
+	    			NotificationResolution resolution = new NotificationResolution( option_names){
+	    				
+	    				public boolean perform( Graph graph, Object[] data, int index){
+	    					RegulatoryNode node = (RegulatoryNode) data[0];
+	    					byte max = (byte) ((Integer) data[1]).byteValue();
+	    					List conflict = (List) data[2];
+	    					List fixable = (List) data[3];
+	    					List parameters = (List) data[4];
+	    					
+	    					if (index == 1) {
+	    						if (conflict.size() > 0) {
+	    							return false;
+	    						}
+	    						Iterator it = fixable.iterator();
+	    						while (it.hasNext()) {
+	    							((RegulatoryMultiEdge)it.next()).applyNewMaxValue(max);
+	    						}
+	    						it = parameters.iterator();
+	    						while (it.hasNext()) {
+	    							((LogicalParameter)it.next()).setValue( max, (RegulatoryGraph) graph);
+	    						}
+	    						node.setMaxValue(max, (RegulatoryGraph) graph);
+	    						return true;
+	    					}
+	    					return true;
+	    				}
+	    			};
+	    			
+	    			// Create the Notification
+	    			Object[] data = new Object[5];
+	    			data[0] = this;
+	    			data[1] = new Integer( max);
+	    			data[2] = l_conflict;
+	    			data[3] = l_fixable;
+	    			data[4] = l_parameters;
+	    			
+	    			new ResolvableWarningNotification( "max value decrease is blocked", graph, data, resolution);
+	    			
 	    			return;
 	    		}
 	    	}
@@ -407,57 +458,3 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
     }
 }
 
-class UpdateMaxBlockedAction implements NotificationMessageAction {
-
-	String[] t_action;
-
-	RegulatoryNode vertex;
-	byte max;
-	List l_fixable, l_conflict, l_parameters;
-
-	public UpdateMaxBlockedAction(RegulatoryNode vertex,
-			byte max, List l_fixable, List l_conflict, List l_parameters) {
-		this.vertex = vertex;
-		this.max = max;
-		this.l_conflict = l_conflict;
-		this.l_fixable = l_fixable;
-		this.l_parameters = l_parameters;
-		if (l_conflict.size() == 0) {
-			t_action = new String[2];
-			t_action[1] = "Fix";
-		} else {
-			t_action = new String[1];
-		}
-		t_action[0] = "Detail";
-	}
-
-	public String[] getActionName() {
-		return t_action;
-	}
-
-	public boolean perform( NotificationMessageHolder holder, Object data, int index) {
-		RegulatoryGraph graph = (RegulatoryGraph)holder;
-		if (index == 1) {
-			if (l_conflict.size() > 0) {
-				return false;
-			}
-			Iterator it = l_fixable.iterator();
-			while (it.hasNext()) {
-				((RegulatoryMultiEdge)it.next()).applyNewMaxValue(max);
-			}
-			it = l_parameters.iterator();
-			while (it.hasNext()) {
-				((LogicalParameter)it.next()).setValue(max, graph);
-			}
-			vertex.setMaxValue(max, graph);
-			return true;
-		}
-
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	public boolean timeout( NotificationMessageHolder graph, Object data) {
-		return true;
-	}
-}

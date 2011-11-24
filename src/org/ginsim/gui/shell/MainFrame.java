@@ -15,7 +15,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
-import org.ginsim.exception.NotificationMessage;
+import org.ginsim.core.notification.Notification;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.notifications.NotificationPanel;
@@ -302,7 +302,7 @@ public class MainFrame extends Frame implements NotificationSource {
     }
 
 	@Override
-	public NotificationMessage getTopNotification() {
+	public Notification getTopNotification() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -13,7 +13,8 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.exception.NotificationMessage;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.WarningNotification;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -229,8 +230,7 @@ public class TreeInteractionsModel implements TreeModel {
 	public void addExpression(JTree tree, byte val, RegulatoryNode currentNode, String expression) throws Exception {
 		BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(currentNode), isAutoAddEnabled());
 		if (!tbp.compile(expression, graph, currentNode))
-			graph.addNotificationMessage(new NotificationMessage(graph, "invalid formula",
-					NotificationMessage.NOTIFICATION_WARNING));
+			new WarningNotification( "invalid formula");
 		else {
 			addExpression(val, currentNode, tbp);
 			fireTreeStructureChanged(root);
@@ -289,8 +289,7 @@ public class TreeInteractionsModel implements TreeModel {
 			}
 			BooleanParser parser = new BooleanParser(graph.getIncomingEdges(node), isAutoAddEnabled());
 			if (!parser.compile(newExp.trim(), graph, node)) {
-				graph.addNotificationMessage(new NotificationMessage(graph, "invalid formula : " + newExp,
-						NotificationMessage.NOTIFICATION_WARNING_LONG));
+				new WarningNotification( "invalid formula : " + newExp);
 				exp.clearChilds();
 				exp.setProperty("invalid", new Boolean(true));
 				return false;

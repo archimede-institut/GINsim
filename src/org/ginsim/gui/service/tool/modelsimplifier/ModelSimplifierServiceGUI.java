@@ -9,9 +9,10 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.WarningNotification;
 import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageHolder;
+
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
@@ -65,9 +66,7 @@ class ModelSimplifierAction extends ToolAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (graph.getNodeCount() < 1) {
-            graph.addNotificationMessage(new NotificationMessage( (NotificationMessageHolder) graph, 
-            		Translator.getString(graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"), 
-            		NotificationMessage.NOTIFICATION_WARNING));
+            new WarningNotification( graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph");
             return;
 		}
 

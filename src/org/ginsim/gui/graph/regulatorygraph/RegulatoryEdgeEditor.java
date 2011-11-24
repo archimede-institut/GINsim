@@ -3,12 +3,15 @@ package org.ginsim.gui.graph.regulatorygraph;
 import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 
+import javax.print.attribute.ResolutionSyntax;
 import javax.swing.Action;
 
 import org.ginsim.annotation.Annotation;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.exception.NotificationMessageHolder;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+
+
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -187,12 +190,32 @@ class EdgeList extends GenericList {
     
 	public int add(int position, int mode) {
 		if (mode == -1 || mode >= addOptions.size()) {
-			NotificationMessageAction notifAction = new AddEdgeNotificationAction(this);
-	    	graph.addNotificationMessage(new NotificationMessage(graph,
-	    			Translator.getString("STR_noMoreValueForInteraction"),
-	    			notifAction,
-	    			medge,
-	    			NotificationMessage.NOTIFICATION_WARNING));
+			
+			NotificationResolution resolution = new NotificationResolution(){
+				
+				public boolean perform( Graph graph, Object[] data, int index){
+					
+					RegulatoryMultiEdge medge = (RegulatoryMultiEdge)data[0];
+					EdgeList edge_list = (EdgeList) data[1];
+					
+					if (edge_list.medge == medge) {
+						RegulatoryNode vertex = medge.getSource();
+						vertex.setMaxValue((byte)(vertex.getMaxValue()+1), (RegulatoryGraph)graph);
+						edge_list.add();
+						return true;
+					}
+					return false;
+				}
+				
+				public String[] getOptionsName() {
+					
+					String[] t = {"Add value"};
+					return t;
+				}
+			};
+			
+			new ResolvableWarningNotification( "STR_noMoreValueForInteraction", graph, new Object[]{ medge, this}, resolution);
+			
 	    	return -1;
 		}
 		this.addEdge(((Integer)addOptions.get(mode)).intValue());
@@ -222,29 +245,5 @@ class EdgeList extends GenericList {
 		return false;
 	}
 	public void run(String filter, int startIndex, int row, int col) {
-	}
-}
-
-class AddEdgeNotificationAction implements NotificationMessageAction {
-	EdgeList edgeList;
-	AddEdgeNotificationAction(EdgeList edgeList) {
-		this.edgeList = edgeList;
-	}
-	public boolean timeout( NotificationMessageHolder graph, Object data) {
-		return true;
-	}
-
-	public boolean perform( NotificationMessageHolder graph, Object data, int index) {
-		if (edgeList.medge == data) {
-			RegulatoryNode vertex = ((RegulatoryMultiEdge)data).getSource();
-			vertex.setMaxValue((byte)(vertex.getMaxValue()+1), (RegulatoryGraph)graph);
-			edgeList.add();
-			return true;
-		}
-		return false;
-	}
-	public String[] getActionName() {
-		String[] t = {"add value"};
-		return t;
 	}
 }

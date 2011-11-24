@@ -19,10 +19,12 @@ import java.util.regex.Pattern;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
 import org.ginsim.exception.GsException;
-import org.ginsim.exception.NotificationMessage;
-import org.ginsim.exception.NotificationMessageAction;
-import org.ginsim.exception.NotificationMessageHolder;
+
+
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.EdgeAttributesReader;
@@ -721,14 +723,13 @@ public final class SBMLXpathParser {
 					vertex));
 			TreeInteractionsModel interactionList = vertex.getInteractionsModel();
 			if (!tbp.compile(exp, graph, vertex)) {
-				InvalidFunctionNotificationAction a = new InvalidFunctionNotificationAction();
-				Vector<Object> o = new Vector<Object>();
-				o.addElement(new Short(val));
-				o.addElement(vertex);
-				o.addElement(exp);
-				graph.addNotificationMessage(new NotificationMessage(graph,
-						"Invalid formula : " + exp, a, o,
-						NotificationMessage.NOTIFICATION_WARNING));				
+				
+	        	Object[] data = new Object[3];
+	        	data[0] = new Short(val);
+	        	data[1] = vertex;
+	        	data[2] = exp;
+	        	
+	        	new ResolvableWarningNotification( "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
 			} else {
 				interactionList.addExpression(val, vertex, tbp);
 			}
@@ -750,122 +751,82 @@ public final class SBMLXpathParser {
 	    return defValue;
 	}
 	
-	/**  **/
-	class InteractionInconsistencyAction implements NotificationMessageAction {
-		public String[] getActionName() {
-			String t[] = { "view" };
-			return t;
-		}
+    // TODO : REFACTORING ACTION
+    // TODO : Are the two classes below useful? 
+//	/**  **/
+//	class InteractionInconsistencyAction implements NotificationMessageAction {
+//		public String[] getActionName() {
+//			String t[] = { "view" };
+//			return t;
+//		}
+//
+//		public boolean perform( NotificationMessageHolder graph, Object data, int index) {
+//			
+//			StackDialog d = new InteractionInconsistencyDialog((Map) data, (Graph) graph,
+//					"interactionInconststancy", 200, 150);
+//			d.setVisible(true);
+//			return true;
+//		}
+//
+//		public boolean timeout( NotificationMessageHolder graph, Object data) {
+//			
+//			return true;
+//		}
+//		
+//	} // class InteractionInconsistencyAction
 
-		public boolean perform( NotificationMessageHolder graph, Object data, int index) {
-			
-			StackDialog d = new InteractionInconsistencyDialog((Map) data, (Graph) graph,
-					"interactionInconststancy", 200, 150);
-			d.setVisible(true);
-			return true;
-		}
-
-		public boolean timeout( NotificationMessageHolder graph, Object data) {
-			
-			return true;
-		}
-		
-	} // class InteractionInconsistencyAction
-
-	class InteractionInconsistencyDialog extends StackDialog {
-		private static final long serialVersionUID = 4607140440879983498L;
-
-		RegulatoryGraph graph;
-		Map m;
-		JPanel panel = null;
-
-		public InteractionInconsistencyDialog(Map m, Graph graph, String msg, int w, int h) {
-			
-			super( GUIManager.getInstance().getFrame( graph), msg, w, h);
-			this.graph = (RegulatoryGraph) graph;
-			this.m = m;
-			setMainPanel(getMainPanel());
-		}
-
-		private JPanel getMainPanel() {
-			if (panel == null) {
-				panel = new JPanel();
-				JTextArea txt = new JTextArea();
-				String s1 = "";
-				String s2 = "";
-				Iterator it = m.entrySet().iterator();
-				while (it.hasNext()) {
-					Entry entry = (Entry) it.next();
-					Entry e2 = (Entry) entry.getKey();
-					RegulatoryEdge edge = (RegulatoryEdge) e2.getKey();
-					byte oldmax = ((Integer) e2.getValue()).byteValue();
-					if (entry.getValue() == null) {
-						s1 += edge.getLongDetail(" ") + ": max should be "
-								+ (oldmax == -1 ? "max" : "" + oldmax) + "\n";
-					} else {
-						s2 += edge.getLongDetail(" ") + ": max was explicitely set to " + oldmax
-								+ "\n";
-					}
-				}
-				if (s1 != "") {
-					s1 = "potential problems:\n" + s1 + "\n\n";
-				}
-				if (s2 != "") {
-					s1 = s1 + "warnings only:\n" + s2;
-				}
-				txt.setText(s1);
-				txt.setEditable(false);
-				panel.add(txt);
-			}
-			return panel;
-		}
-
-		public void run() {
-			// TODO: propose some automatic corrections
-		}
-	} // class InteractionInconsistencyDialog
-	
-	class InvalidFunctionNotificationAction implements NotificationMessageAction {
-
-		public InvalidFunctionNotificationAction() {
-			super();
-		}
-
-		public boolean timeout( NotificationMessageHolder graph, Object data) {
-			
-			return false;
-		}
-
-		public boolean perform( NotificationMessageHolder graph, Object data, int index) {
-			Vector v = (Vector) data;
-			byte value = ((Short) v.elementAt(0)).byteValue();
-			RegulatoryNode vertex = (RegulatoryNode) v.elementAt(1);
-			String exp = (String) v.elementAt(2);
-			boolean ok = true;
-			switch (index) {
-			case 0:
-				try {
-					TreeInteractionsModel interactionList = vertex.getInteractionsModel();
-					TreeExpression texp = interactionList.addEmptyExpression(value, vertex);
-					texp.setText(exp);
-					texp.setProperty("invalid", new Boolean("true"));
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					ok = false;
-				}
-				break;
-			case 1:
-				break;
-			}
-			return ok;
-		}
-
-		public String[] getActionName() {
-			String[] t = { "Keep function", "Discard function" };
-			return t;
-		}
-		
-	} // class InvalidFunctionNotificationAction
+//	class InteractionInconsistencyDialog extends StackDialog {
+//		private static final long serialVersionUID = 4607140440879983498L;
+//
+//		RegulatoryGraph graph;
+//		Map m;
+//		JPanel panel = null;
+//
+//		public InteractionInconsistencyDialog(Map m, Graph graph, String msg, int w, int h) {
+//			
+//			super( GUIManager.getInstance().getFrame( graph), msg, w, h);
+//			this.graph = (RegulatoryGraph) graph;
+//			this.m = m;
+//			setMainPanel(getMainPanel());
+//		}
+//
+//		private JPanel getMainPanel() {
+//			if (panel == null) {
+//				panel = new JPanel();
+//				JTextArea txt = new JTextArea();
+//				String s1 = "";
+//				String s2 = "";
+//				Iterator it = m.entrySet().iterator();
+//				while (it.hasNext()) {
+//					Entry entry = (Entry) it.next();
+//					Entry e2 = (Entry) entry.getKey();
+//					RegulatoryEdge edge = (RegulatoryEdge) e2.getKey();
+//					byte oldmax = ((Integer) e2.getValue()).byteValue();
+//					if (entry.getValue() == null) {
+//						s1 += edge.getLongDetail(" ") + ": max should be "
+//								+ (oldmax == -1 ? "max" : "" + oldmax) + "\n";
+//					} else {
+//						s2 += edge.getLongDetail(" ") + ": max was explicitely set to " + oldmax
+//								+ "\n";
+//					}
+//				}
+//				if (s1 != "") {
+//					s1 = "potential problems:\n" + s1 + "\n\n";
+//				}
+//				if (s2 != "") {
+//					s1 = s1 + "warnings only:\n" + s2;
+//				}
+//				txt.setText(s1);
+//				txt.setEditable(false);
+//				panel.add(txt);
+//			}
+//			return panel;
+//		}
+//
+//		public void run() {
+//			// TODO: propose some automatic corrections
+//		}
+//	} // class InteractionInconsistencyDialog
 
 	
 	/** <p> An object Expression represent the contain of last "single" <apply> element.

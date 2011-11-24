@@ -430,7 +430,7 @@ public class GUIManager {
     	// FIXME: integrate error inside the main frame when possible
 //        if (main instanceof GsMainFrame) {
 //            Graph graph = ((GsMainFrame)main).getGraph();
-//            graph.addNotificationMessage(new NotificationMessage(graph, e));
+//            graph.addNotificationMessage(new Notification(graph, e));
 //            return;
 //        }
         Tools.error(e, main);
