@@ -84,8 +84,6 @@ public class Debugger {
 			logOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 		}
 		logOut.flush();
-		Debugger.info( msg);
-		Debugger.trace( msg);
 		
 		if( debugMode){
 			System.err.print( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
@@ -105,7 +103,9 @@ public class Debugger {
 		if( verboseLevel >= 1){
 			infoOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 			infoOut.flush();
-			Debugger.trace( msg);
+			if( debugMode){
+				System.out.print( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+			}
 		}
 	}
 	
@@ -134,14 +134,25 @@ public class Debugger {
 			if( !line_info){
 				traceOut.write( msg.toString());
 				traceOut.flush();
+				if( debugMode){
+					System.out.print( msg.toString());
+				}
 			}
 			else{
 				traceOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 				traceOut.flush();
+				if( debugMode){
+					System.out.print( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+				}
 			}
+
 		}
 		
 	}
+	
+	// *********************************************************************************
+	// **************************   DEBUGGING METHODS **********************************
+	// *********************************************************************************
 	
 	
 	/**
