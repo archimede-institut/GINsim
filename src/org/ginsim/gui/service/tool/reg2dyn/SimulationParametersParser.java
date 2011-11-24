@@ -15,6 +15,7 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
@@ -131,7 +132,7 @@ public class SimulationParametersParser extends XMLHelper {
                         param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
                         if (mutant == null) {
                             // TODO: report mutant not found
-                            System.out.println("mutant not found "+s+" ("+mutantList.getNbElements(null)+")");
+                        	Debugger.error( "Mutant not found "+s+" ("+mutantList.getNbElements(null)+")");
                         }
                     }
                 } else if (qName.equals("priorityClassList")) {

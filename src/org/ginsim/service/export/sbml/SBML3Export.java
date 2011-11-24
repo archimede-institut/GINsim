@@ -82,11 +82,11 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 	        for (int i=0 ; i<depth ; i++) {
 	        	int level = path[i][2];
 	        	if (path[i][0] > 0) {
-	        		System.out.println( "case GEQ");
+	        		Debugger.trace( "case GEQ");
 	        		writeConstraint("geq", level, path[i][0]);
 	        	}
 	        	if (path[i][1] < path[i][3]) {
-	        		System.out.println( "case LT");
+	        		Debugger.trace( "case LT");
 	        		writeConstraint("lt", level, path[i][1]);
 	        	}
 	        }

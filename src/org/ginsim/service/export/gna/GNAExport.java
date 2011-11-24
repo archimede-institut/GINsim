@@ -21,6 +21,8 @@ import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 /**
  * Encode a graph to GNA format.
@@ -124,7 +126,7 @@ class GNAExportAction extends ExportAction<RegulatoryGraph> {
 			out.write("max_"+id+"\n\n");
 		}
 		out.close();
-		System.out.println("gna export: done in "+(System.currentTimeMillis()-l)+"ms");
+		Debugger.info( "gna export: done in "+(System.currentTimeMillis()-l)+"ms");
 	}
 }
 

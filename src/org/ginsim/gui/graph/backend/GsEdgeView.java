@@ -16,6 +16,8 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 /**
  * a jgraph edge viewer
@@ -47,7 +49,7 @@ public class GsEdgeView extends EdgeView {
 	 * Sets the point at <code>index</code> to <code>p</code>.
 	 */
 	public void setPoint(int index, Point2D p) {
-		System.out.println("set point: "+index+" "+p);
+		Debugger.info( "Set point: "+index+" "+p);
 		super.setPoint(index, p);
 	}
 

@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import fr.univmrs.tagc.common.Debugger;
+
 public class HierarchicalSigmaSet {
 
 	/**
@@ -76,7 +78,7 @@ public class HierarchicalSigmaSet {
 	public List getSigmaImage() {
 		LinkedList path = new LinkedList();
 		if (this.parent == null) {
-			System.out.println(this+" appel sur la root ?");
+			Debugger.error( this + " appel sur la root ?");
 			return path;
 		}		
 		HierarchicalSigmaSet current = this;

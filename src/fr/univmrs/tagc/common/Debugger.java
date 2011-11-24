@@ -20,13 +20,23 @@ public class Debugger {
 	private static PrintStream debugOut = System.err;
 	private static int debugmask = 0;
 	
-	// Logging verboseLevel : 0 = log; 1= trace; 2 = info
+	// Logging verboseLevel : 0 = log; 1= info; 2 = trace
 	private static int verboseLevel = 0;
-	private static PrintWriter logOut;
-	private static PrintWriter traceOut;
-	private static PrintWriter infoOut;
 	
-	public static void init( String output_dir, int verbose) throws IOException{
+	private static boolean debugMode = false;
+	
+	private static PrintWriter logOut = null;
+	private static PrintWriter traceOut = null;
+	private static PrintWriter infoOut = null;
+	
+	/**
+	 * Initialize the manager
+	 * 
+	 * @param output_dir the dire where log files will be created
+	 * @param verbose the verbose level (0 = log; 1= info; 2 = trace)
+	 * @throws IOException
+	 */
+	public static void init( String output_dir, int verbose, boolean debug) throws IOException{
 		
 		logOut = new PrintWriter( output_dir + "/error.txt");
 		
@@ -35,11 +45,13 @@ public class Debugger {
 		infoOut = new PrintWriter( output_dir + "/info.txt");
 		
 		setVerbose( verbose);
+		
+		debugMode = debug;
 	}
 	
 	/**
 	 * Set the verbose level of the logs
-	 * 0 = log; 1= trace; 2 = info
+	 * 0 = log; 1= info; 2 = trace
 	 * 
 	 * @param verbose
 	 */
@@ -61,6 +73,9 @@ public class Debugger {
 	 */
 	public static void error( Object msg){
 		
+		if( logOut == null){
+			return;
+		}
 		if( msg instanceof Throwable){
 			logOut.write( getLineNumber()+":"+getClassName()+"#"+getMethodName()+"():: Exception :");
 			((Throwable) msg).printStackTrace( logOut);
@@ -71,6 +86,10 @@ public class Debugger {
 		logOut.flush();
 		Debugger.info( msg);
 		Debugger.trace( msg);
+		
+		if( debugMode){
+			System.err.print( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+		}
 	}
 	
 	/**
@@ -80,6 +99,9 @@ public class Debugger {
 	 */
 	public static void info( Object msg){
 		
+		if( infoOut == null){
+			return;
+		}
 		if( verboseLevel >= 1){
 			infoOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 			infoOut.flush();
@@ -94,10 +116,31 @@ public class Debugger {
 	 */
 	public static void trace( Object msg){
 		
-		if( verboseLevel >= 2){
-			traceOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
-			traceOut.flush();
+		Debugger.trace( msg, true);
+	}
+	
+	/**
+	 * Log a trace. The message is logged to the trace file only according the verbose level
+	 * 
+	 * @param msg the message to log
+	 */
+	public static void trace( Object msg, boolean line_info){
+		
+		if( traceOut == null){
+			return;
 		}
+		
+		if( verboseLevel >= 2){
+			if( !line_info){
+				traceOut.write( msg.toString());
+				traceOut.flush();
+			}
+			else{
+				traceOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+				traceOut.flush();
+			}
+		}
+		
 	}
 	
 	

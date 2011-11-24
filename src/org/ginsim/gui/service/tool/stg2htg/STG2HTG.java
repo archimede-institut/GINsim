@@ -21,6 +21,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.connectivity.AlgoConnectivity;
 
 import fr.univmrs.tagc.common.ColorPalette;
+import fr.univmrs.tagc.common.Debugger;
 
 /**
  * A class to find a path in any graph
@@ -81,7 +82,7 @@ public class STG2HTG extends AlgoConnectivity {
 			NodeReducedData b = (NodeReducedData) it_b.next();
 			sigma(b);
 		}
-		System.out.println(sigma);
+		Debugger.trace( "sigma = " + sigma);
 		colorize();
 		components = new ArrayList(sigma.size()+A.size());
 		createReducedGraph();
@@ -169,10 +170,10 @@ public class STG2HTG extends AlgoConnectivity {
 			}
 			DynamicNode s = (DynamicNode) ((NodeReducedData)content.get(0)).getContent().get(0);
 			ComponentNode comp = new ComponentNode("TT-"+s.getPatternString(this.graph), content, key);
-			System.out.println("TT-"+s.getPatternString(this.graph));
+			Debugger.trace( "TT-"+s.getPatternString(this.graph));
 			for (Iterator it = ((NodeReducedData)content.get(0)).getContent().iterator(); it.hasNext();) {
 				s = (DynamicNode) it.next();
-				System.out.println("\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
+				Debugger.trace( "\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
 			}
 			reducedGraph.addNode(comp);
 			components.add(comp);
@@ -190,10 +191,10 @@ public class STG2HTG extends AlgoConnectivity {
 				HashSet hs = new HashSet();
 				hs.add(scc);
 				comp = new ComponentNode(scc, hs, "CC-"+s.getPatternString(this.graph));
-				System.out.println("CC-"+s.getPatternString(this.graph));
+				Debugger.trace( "CC-"+s.getPatternString(this.graph));
 				for (Iterator it = scc.getContent().iterator(); it.hasNext();) {
 					s = (DynamicNode) it.next();
-					System.out.println("\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
+					Debugger.trace( "\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
 				}
 			}
 			reducedGraph.addNode(comp);

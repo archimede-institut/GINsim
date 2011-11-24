@@ -13,6 +13,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.gui.GUIManager;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 
 /**
@@ -79,14 +81,16 @@ public final class modelABC {
 			entree.close();			
 
 			// to control... print the table
+			String display = "";
 			for ( i = 0; i < L; i++) 
 			{
 				for ( j = 0; j < 2*n; j++)
 				{
-					System.out.print(table_gene[i][j]+ " ");
+					display += table_gene[i][j]+ " ";
 				} 
-				System.out.println();
-			}  
+				display += "\n";
+			}
+			Debugger.trace( display, false); 
 
 		} // close the try
 

@@ -14,6 +14,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.gui.GUIManager;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 public final class TruthTableParser {
 	
@@ -49,7 +51,7 @@ public final class TruthTableParser {
     		StringTokenizer st = new StringTokenizer(fileTable.readLine());
     		L=(new Integer(st.nextToken())).intValue();// number of lines
     		n=(new Integer(st.nextToken())).intValue();// number of components
-    		System.out.println("L="+L+" n="+n);		   
+    		Debugger.trace( "L="+L+" n="+n);		   
     		table_gene=new byte[L][2*n];
     		i=0;		        
 
@@ -68,14 +70,16 @@ public final class TruthTableParser {
     		fileTable.close();			
 
     		// to control... print the table
+    		String display = "";
     		for ( i = 0; i < L; i++) 
     		{
     			for ( j = 0; j < 2*n; j++)
     			{
-    				System.out.print(table_gene[i][j]+ " ");
+    				display += table_gene[i][j]+ " ";
     			} 
-    			System.out.println();
-    		}  
+    			display += "\n";
+    		} 
+    		Debugger.trace( display, false);
 
     	} // close the try
 

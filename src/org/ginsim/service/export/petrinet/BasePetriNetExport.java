@@ -11,6 +11,8 @@ import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 /**
  * Export a regulatory graph to petri net (shared methods).
@@ -182,7 +184,7 @@ public class BasePetriNetExport {
 				int priority = t_class[0];
 				for (int j=2 ; j<t_class.length ; j++) {
 					int index = t_class[j++];
-					System.out.println("priority of "+priority+" for "+index+" ("+t_class[j]+")");
+					Debugger.trace( "priority of "+priority+" for "+index+" ("+t_class[j]+")");
 					switch (t_class[j]) {
 						case 1:
 							t_priorities[index][0] = priority;

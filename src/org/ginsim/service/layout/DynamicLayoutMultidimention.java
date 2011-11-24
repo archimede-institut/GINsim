@@ -14,6 +14,8 @@ import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
+import fr.univmrs.tagc.common.Debugger;
+
 
 public class DynamicLayoutMultidimention {
     private static final int padx = 25;
@@ -47,7 +49,7 @@ public class DynamicLayoutMultidimention {
 		Iterator it = graph.getNodes().iterator();
 		Object v = it.next();
 	    if (v == null || !(v instanceof DynamicNode)) {
-			System.out.println("wrong type of graph for this layout");
+	    	Debugger.error( "Wrong type of graph for this layout");
 	    	return;
 	    }
 		vreader = graph.getNodeAttributeReader();

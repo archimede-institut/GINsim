@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.ginsim.exception.GsException;
+
+import fr.univmrs.tagc.common.Debugger;
+
 public class SimpleGenericList<T> extends GenericList<T> {
 	public List<T>		v_data;
 	protected String	prefix			= "name_";
@@ -261,13 +265,11 @@ public class SimpleGenericList<T> extends GenericList<T> {
 	}
 
 	protected T doCreate(String name, int mode) {
-		System.out.println("you should override this if you plan to use it");
-		new Exception().printStackTrace();
+		Debugger.error( new Exception("This method should be overrided"));
 		return null;
 	}
 	protected T doCreate(String name, int pos, int mode) {
-		System.out.println("you should override this if you plan to use it");
-		new Exception().printStackTrace();
+		Debugger.error( new Exception("This method should be overrided"));
 		return null;
 	}
 	protected T wrapCreate(String name, int pos, int mode) {
@@ -278,7 +280,7 @@ public class SimpleGenericList<T> extends GenericList<T> {
 	}
 
 	protected void doRun(int row, int col) {
-		System.out.println("you should override this if you plan to use it");
+		Debugger.error( new Exception("This method should be overrided"));
 		return;
 	}
 

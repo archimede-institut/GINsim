@@ -211,7 +211,7 @@ public class BooleanParser extends TBooleanParser {
 		} 
 		catch (Exception e) {
 			if (e instanceof GsException) {
-				System.out.println("working");
+				Debugger.trace( "Working");
 			}
 			e.printStackTrace();
 			return false;

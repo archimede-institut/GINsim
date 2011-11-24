@@ -354,8 +354,8 @@ public class GraphManager {
                 registerGraph( graph, file.getAbsolutePath());
                 return graph; 
             } catch (Exception e) {
-                System.out.println("error opening");
-                e.printStackTrace();
+            	Debugger.error( "Error while opening Graph : " + file.getPath());
+            	Debugger.error( e);
                 return null;
             }
         } catch (Exception e) {// opening as zip failed, try the old method instead
