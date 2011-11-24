@@ -464,10 +464,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	// ----------------------   SAVING METHODS -----------------------------------------------
 	
 	public void save(String save_path) throws GsException {
-		save(save_path, null, null, 0);
+		save(save_path, null, null, 2);
 	}
 	public void save(String save_path, Collection<V> vertices, Collection<E> edges) throws GsException {
-		save(save_path, vertices, edges, 0);
+		save(save_path, vertices, edges, 2);
 	}
 	/**
 	 * 
@@ -483,8 +483,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 */
 	private void save(String save_path, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException {
 
-		boolean selected = vertices == null || vertices.size() < getNodeCount();
-		if (!selected) {
+		if (vertices == null) {
 			vertices = getNodes();
 			edges = getEdges();
 		}

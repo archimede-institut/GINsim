@@ -250,9 +250,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	
     	Iterator<RegulatoryNode> it = vertices.iterator();
     	
-    	if ( mode >=0) {
-    	}
-
 		NodeAttributesReader vReader = getNodeAttributeReader(); 
     	
     	switch (mode) {
