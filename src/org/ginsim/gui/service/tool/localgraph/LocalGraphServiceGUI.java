@@ -39,7 +39,7 @@ public class LocalGraphServiceGUI implements ServiceGUI {
 			catch( GsException ge){
 	    		// TODO : REFACTORING ACTION
 	    		// TODO : Indicate the problem to the user?
-	    		Debugger.log( "Unable to add action for this graph since its associated graph was not retrieved" + ge);
+	    		Debugger.debug( "Unable to add action for this graph since its associated graph was not retrieved" + ge);
 			}
 		}
 		return actions;

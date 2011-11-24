@@ -17,6 +17,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.notification.ErrorNotification;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.Notification;
@@ -30,7 +31,6 @@ import org.ginsim.graph.common.FallbackNodeAttributeReader.NodeVSdata;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E> {
 	

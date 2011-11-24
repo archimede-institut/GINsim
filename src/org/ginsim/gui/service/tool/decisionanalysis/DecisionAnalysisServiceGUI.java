@@ -56,7 +56,7 @@ class DecisionAnalysisAction extends ToolAction {
 		catch( GsException ge){
     		// TODO : REFACTORING ACTION
     		// TODO : Launch a message box to the user
-    		Debugger.log( "Unable to execute the service" + ge);
+    		Debugger.debug( "Unable to execute the service" + ge);
 		}
 		//}
 	}

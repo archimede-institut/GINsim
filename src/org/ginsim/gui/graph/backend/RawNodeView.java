@@ -134,7 +134,7 @@ public class RawNodeView extends AbstractCellView implements CellView {
 
 	@Override
 	public CellViewRenderer getRenderer() {
-		Debugger.log("get renderer through abstractcellview method");
+		Debugger.debug("get renderer through abstractcellview method");
 		return null;
 	}
 }

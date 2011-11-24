@@ -2,7 +2,8 @@ package org.ginsim.graph.common;
 
 import java.util.Collection;
 
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
+import org.ginsim.core.GraphEventCascade;
+
 
 /**
  * listen graph events

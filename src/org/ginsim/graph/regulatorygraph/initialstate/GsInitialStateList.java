@@ -5,13 +5,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 
 public class GsInitialStateList implements GraphListener<RegulatoryNode, RegulatoryMultiEdge> {
 	RegulatoryGraph graph;

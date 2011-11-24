@@ -2,13 +2,13 @@ package org.ginsim.gui.service.tool.modelsimplifier;
 
 import java.util.Collection;
 
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
-import fr.univmrs.tagc.GINsim.graph.GraphEventCascade;
 import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 /**

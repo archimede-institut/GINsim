@@ -730,7 +730,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
 			CircuitDescrInTree cdit = (CircuitDescrInTree) it.next();
 			CircuitDescr cd = cdit.getCircuit();
 			OmsddNode[] context = cd.getContext();
-			Debugger.log_collection(context);
+			Debugger.debug_collection(context);
 			for (int i = 0; i < context.length; i++) {
 				OmsddNode o = context[i];
 				if (o != OmsddNode.FALSE) {

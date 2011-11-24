@@ -286,7 +286,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 	                            ereader.setEdge(edge.me);
                             }
                             catch (GsException e) {
-								Debugger.log( "Unable to create edge between nodes '" + from + "' and '" + to + "' : One of the node was not found in the graph");
+								Debugger.debug( "Unable to create edge between nodes '" + from + "' and '" + to + "' : One of the node was not found in the graph");
 							}
                         } catch (NumberFormatException e) { throw new SAXException("malformed interaction's parameters"); }
                     } else {
