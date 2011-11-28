@@ -137,13 +137,17 @@ public interface GraphModel<V,E extends Edge<V>> {
 	boolean removeEdge( E edge);
 	
 	/**
+	 * Return the number of node in this graph
+	 * 
 	 * @return the number of node in this graph.
 	 */
 	int getNodeCount();
 	
     
     /**
-     * @return a Collection of the graph vertices.
+     * Return the Collection of the graph nodes
+     * 
+     * @return a Collection of the graph nodes
      */
     Collection<V> getNodes();
     
