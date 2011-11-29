@@ -12,6 +12,7 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.svg.SVGExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -55,7 +56,15 @@ class ExportSVGAction extends ExportAction {
 
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
-		SVGExportService.exportSVG(graph, null, null, filename);
+		
+		SVGExportService service = ServiceManager.getManager().getService( SVGExportService.class);
+		
+		if( service != null){
+			service.run(graph, null, null, filename);
+		}
+		else{
+			throw new GsException( GsException.GRAVITY_ERROR, "No SVGExportService service available");
+		}
 	}
 }
 
