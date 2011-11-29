@@ -12,6 +12,7 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.biolayout.BioLayoutExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -56,6 +57,14 @@ class ExportBioLayoutAction extends ExportAction {
 
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
-		BioLayoutExportService.encode(graph, null, filename);
+		
+		BioLayoutExportService service = ServiceManager.getManager().getService( BioLayoutExportService.class);
+		
+		if( service != null){
+			service.run( graph, null, filename);
+		}
+		else{
+			throw new GsException( GsException.GRAVITY_ERROR, "No BioLayoutExportService service available");
+		}
 	}
 }
