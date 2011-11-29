@@ -6,9 +6,9 @@ public class ExceptionNotification extends ErrorNotification{
 
 	private Exception exception;
 	
-	public ExceptionNotification( String message, Exception exception) {
+	public ExceptionNotification( Graph graph, String message, Exception exception) {
 		
-		super( message);
+		super( graph, message);
 		this.exception = exception;
 	}
 	
@@ -16,4 +16,6 @@ public class ExceptionNotification extends ErrorNotification{
 		
 		return exception;
 	}
+	
+	
 }

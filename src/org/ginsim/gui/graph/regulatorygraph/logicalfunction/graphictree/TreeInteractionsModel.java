@@ -230,7 +230,7 @@ public class TreeInteractionsModel implements TreeModel {
 	public void addExpression(JTree tree, byte val, RegulatoryNode currentNode, String expression) throws Exception {
 		BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(currentNode), isAutoAddEnabled());
 		if (!tbp.compile(expression, graph, currentNode))
-			new WarningNotification( "invalid formula");
+			new WarningNotification( graph, "invalid formula");
 		else {
 			addExpression(val, currentNode, tbp);
 			fireTreeStructureChanged(root);
@@ -289,7 +289,7 @@ public class TreeInteractionsModel implements TreeModel {
 			}
 			BooleanParser parser = new BooleanParser(graph.getIncomingEdges(node), isAutoAddEnabled());
 			if (!parser.compile(newExp.trim(), graph, node)) {
-				new WarningNotification( "invalid formula : " + newExp);
+				new WarningNotification( graph, "invalid formula : " + newExp);
 				exp.clearChilds();
 				exp.setProperty("invalid", new Boolean(true));
 				return false;

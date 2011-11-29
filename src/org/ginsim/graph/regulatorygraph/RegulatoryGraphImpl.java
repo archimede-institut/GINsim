@@ -162,7 +162,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     			}
     		};
     		
-    		new ResolvableWarningNotification( "STR_usePanelToAddMoreEdges", this, new Object[] {obj}, resolution);
+    		new ResolvableWarningNotification( this, "STR_usePanelToAddMoreEdges", this, new Object[] {obj}, resolution);
     		
     		return obj;
     	}

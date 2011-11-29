@@ -6,15 +6,15 @@ import org.ginsim.graph.common.Graph;
 
 public class ResolvableErrorNotification extends ErrorNotification implements ResolvableNotification{
 
-	private Object[] data;
 	private Graph graph;
+	private Object[] data;
 	private NotificationResolution resolution;
 	
-	public ResolvableErrorNotification( String message, Graph graph, Object[] data, NotificationResolution resolution) {
+	public ResolvableErrorNotification( Object topic, String message, Graph graph, Object[] data, NotificationResolution resolution) {
 		
-		super( message);
-		this.data = data;
+		super( topic, message);
 		this.graph = graph;
+		this.data = data;
 		this.resolution = resolution;
 	}
 	

@@ -1,10 +1,14 @@
 package fr.univmrs.tagc.common;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * A simple helper class to log things in System.out or System.err
@@ -23,11 +27,15 @@ public class Debugger {
 	// Logging verboseLevel : 0 = log; 1= info; 2 = trace
 	private static int verboseLevel = 0;
 	
+	// Activate/unactivate the output of 'error', 'info' and 'trace' on the standard outputs (sys.err and sys.out)
 	private static boolean debugMode = false;
 	
-	private static PrintWriter logOut = null;
-	private static PrintWriter traceOut = null;
-	private static PrintWriter infoOut = null;
+	// PrintWriter of each log level
+	private static PrintWriter[] logout = null;
+	
+	// Path to the log files
+	private static String logDirPath = null;
+	private static String[] logPath = null;
 	
 	/**
 	 * Initialize the manager
@@ -38,11 +46,18 @@ public class Debugger {
 	 */
 	public static void init( String output_dir, int verbose, boolean debug) throws IOException{
 		
-		logOut = new PrintWriter( output_dir + "/error.txt");
+		logDirPath = output_dir;
 		
-		traceOut = new PrintWriter( output_dir + "/trace.txt");
+		logPath = new String[3];
+		logPath[0] = logDirPath + "\\error.txt";
+		logPath[1] = logDirPath + "\\info.txt";
+		logPath[2] = logDirPath + "\\trace.txt";
 		
-		infoOut = new PrintWriter( output_dir + "/info.txt");
+		logout = new PrintWriter[ logPath.length];
+		for( int i = 0; i < logPath.length; i++){
+			
+			logout[i] = new PrintWriter( logPath[i]);
+		}
 		
 		setVerbose( verbose);
 		
@@ -73,17 +88,20 @@ public class Debugger {
 	 */
 	public static void error( Object msg){
 		
-		if( logOut == null){
+		if( logout == null){
 			return;
 		}
+		
+		PrintWriter errorOut = logout[0];
+		
 		if( msg instanceof Throwable){
-			logOut.write( getLineNumber()+":"+getClassName()+"#"+getMethodName()+"():: Exception :");
-			((Throwable) msg).printStackTrace( logOut);
+			errorOut.write( getLineNumber()+":"+getClassName()+"#"+getMethodName()+"():: Exception :");
+			((Throwable) msg).printStackTrace( errorOut);
 		}
 		else{
-			logOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+			errorOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 		}
-		logOut.flush();
+		errorOut.flush();
 		
 		if( debugMode){
 			System.err.print( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
@@ -96,10 +114,14 @@ public class Debugger {
 	 * @param msg the message to log
 	 */
 	public static void info( Object msg){
+
 		
-		if( infoOut == null){
+		if( logout == null){
 			return;
 		}
+		
+		PrintWriter infoOut = logout[1];
+		
 		if( verboseLevel >= 1){
 			infoOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 			infoOut.flush();
@@ -125,10 +147,12 @@ public class Debugger {
 	 * @param msg the message to log
 	 */
 	public static void trace( Object msg, boolean line_info){
-		
-		if( traceOut == null){
+
+		if( logout == null){
 			return;
 		}
+		
+		PrintWriter traceOut = logout[3];
 		
 		if( verboseLevel >= 2){
 			if( !line_info){
@@ -146,6 +170,52 @@ public class Debugger {
 				}
 			}
 
+		}
+		
+	}
+	
+	/**
+	 * Produce a zip file containing the log files and returns the path to the file
+	 * 
+	 * @return the path to the logs zip file
+	 */
+	public static String deliverLogs(){
+		
+		// Create a buffer for reading the files
+		byte[] buf = new byte[1024];
+
+		try {
+		    // Create the ZIP file
+		    String outFilename = logDirPath + "\\logs.zip";
+		    ZipOutputStream out = new ZipOutputStream( new FileOutputStream(outFilename));
+
+		    // Compress the files
+		    for( int i = 0; i < logPath.length; i++) {
+		        FileInputStream in = new FileInputStream( logPath[i]);
+
+		        // Add ZIP entry to output stream.
+		        out.putNextEntry( new ZipEntry( logPath[i]));
+
+		        // Transfer bytes from the file to the ZIP file
+		        int len;
+		        while ((len = in.read(buf)) > 0) {
+		            out.write(buf, 0, len);
+		        }
+
+		        // Complete the entry
+		        out.closeEntry();
+		        in.close();
+		    }
+
+		    // Complete the ZIP file
+		    out.close();
+		    
+			return outFilename;
+			
+		} catch (IOException e) {
+			Debugger.error( "Unable to provide log zip file");
+			Debugger.error( e);
+			return null;
 		}
 		
 	}

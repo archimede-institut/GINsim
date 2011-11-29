@@ -214,7 +214,7 @@ class EdgeList extends GenericList {
 				}
 			};
 			
-			new ResolvableWarningNotification( "STR_noMoreValueForInteraction", graph, new Object[]{ medge, this}, resolution);
+			new ResolvableWarningNotification( this, "STR_noMoreValueForInteraction", graph, new Object[]{ medge, this}, resolution);
 			
 	    	return -1;
 		}

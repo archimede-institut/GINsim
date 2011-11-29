@@ -417,7 +417,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     				}
     			};
     			
-    			new ResolvableWarningNotification( "inconsistency in some interactions", graph, new Object[] {m}, resolution);
+    			new ResolvableWarningNotification( this, "inconsistency in some interactions", graph, new Object[] {m}, resolution);
     		}
     	}
 
@@ -515,7 +515,7 @@ public final class RegulatoryParser extends GsXMLHelper {
         	data[1] = vertex;
         	data[2] = exp;
         	
-        	new ResolvableWarningNotification( "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
+        	new ResolvableWarningNotification( this, "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
         }
         else {
           interactionList.addExpression(val, vertex, tbp);

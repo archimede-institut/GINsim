@@ -1,11 +1,10 @@
 package org.ginsim.core.notification;
 
-import org.ginsim.graph.common.Graph;
-
 public class WarningNotification extends Notification {
 
-	public WarningNotification( String message) {
+	public WarningNotification( Object topic, String message) {
 		
-		super( message, Notification.NOTIFICATION_WARNING);
+		super( topic, message, Notification.NOTIFICATION_WARNING);
 	}
+
 }

@@ -1,5 +1,7 @@
 package org.ginsim.core.notification;
 
+import org.ginsim.graph.common.Graph;
+
 import fr.univmrs.tagc.common.Timeout;
 import fr.univmrs.tagc.common.TimeoutObject;
 
@@ -7,8 +9,9 @@ import fr.univmrs.tagc.common.TimeoutObject;
  * A notification message
  *
  */
-public class Notification implements TimeoutObject {
+public abstract class Notification implements TimeoutObject {
 
+	protected Object topic;
 	private String message;
     private byte type;
     
@@ -28,12 +31,13 @@ public class Notification implements TimeoutObject {
     
     /**
      * 
-     * @param graph
-     * @param message
-     * @param type
+     * @param graph the Graph the notification is associated to 
+     * @param message the message of the notification
+     * @param type the type of the notification. See constants on Notification class.
      */
-    public Notification ( String message, byte type) {
+    public Notification ( Object topic, String message, byte type) {
     	
+    	this.topic = topic;
 		this.message = message;
         this.type = type;
         
@@ -68,6 +72,16 @@ public class Notification implements TimeoutObject {
         NotificationManager.getInstance().publish( this);
     }
 
+    /**
+     * Return the topic the notification is related to 
+     * 
+     * @return the topic the notification is related to 
+     */
+    public Object getTopic(){
+    	
+    	return this.topic;
+    }
+    
     /**
      * 
      * 

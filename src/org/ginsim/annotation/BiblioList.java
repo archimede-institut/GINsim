@@ -194,7 +194,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 			}
 		};
 		
-		new ResolvableErrorNotification( "STR_noref", graph, new Object[] {this}, resolution);
+		new ResolvableErrorNotification( graph, "STR_noref", graph, new Object[] {this}, resolution);
 	}
 	
 	public String getLink(String proto, String value) {
@@ -245,7 +245,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 				}
 			};
 			
-			new ResolvableWarningNotification( "STR_noBibFile", graph, new Object[] {this, fileName}, resolution);
+			new ResolvableWarningNotification( graph, "STR_noBibFile", graph, new Object[] {this, fileName}, resolution);
 		}
 	}
 	

@@ -113,7 +113,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	    		List l_conflict = new ArrayList();
 	    		List l_parameters = new ArrayList();
 			    if (!getInteractionsModel().isMaxCompatible(max)) {
-			    	new ErrorNotification( "Max value (" + max + ") is inconsistent with some boolean function value.");
+			    	new ErrorNotification( this, "Max value (" + max + ") is inconsistent with some boolean function value.");
 			    	return;
 			    }
 	    		graph.canApplyNewMaxValue(this, max, l_fixable, l_conflict);
@@ -167,7 +167,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	    			data[3] = l_fixable;
 	    			data[4] = l_parameters;
 	    			
-	    			new ResolvableWarningNotification( "max value decrease is blocked", graph, data, resolution);
+	    			new ResolvableWarningNotification( this, "max value decrease is blocked", graph, data, resolution);
 	    			
 	    			return;
 	    		}

@@ -34,24 +34,13 @@ public class NotificationManager {
 		return instance;
 	}
 	
-	
-	/**
-	 * Register a listener which subscribes to default topics
-	 * 
-	 * @param listener the NotificationListerner to register
-	 */
-	public void registerListener( NotificationListener listener){
-		
-		registerListener( listener, null);
-	}
-	
 	/**
 	 * Register a listener and subscribe it to the given topic
 	 * 
 	 * @param listener the NotificationListerner to register
 	 * @param topic the topic the listener subscribe to
 	 */
-	public void registerListener( NotificationListener listener, Class<Notification> topic){
+	public void registerListener( NotificationListener listener, Object topic){
 		
 		for( TopicsListener topic_listener : notificationListerners){
 			if( topic_listener.getListener() == listener){
@@ -101,11 +90,11 @@ public class NotificationManager {
 	private void publish( Notification message, boolean deletion){
 		
 		for( TopicsListener topic_listener : notificationListerners){
-			List<Class<?>> topics_listened = topic_listener.getTopics();
+			List<Object> topics_listened = topic_listener.getTopics();
 			
-			for( Class<?> topic_listened : topics_listened){
+			for( Object topic_listened : topics_listened){
 				try{
-					topic_listened.cast( message);
+					topic_listened.equals( message.getTopic());
 					if( !deletion){
 						topic_listener.getListener().receiveNotification( message);
 					}
@@ -129,15 +118,11 @@ public class NotificationManager {
 private class TopicsListener{
 	
 	private NotificationListener listener;
-	private List<Class<?>> topics;
+	private List<Object> topics;
 	
 	public TopicsListener( NotificationListener listener){
 		
 		this.listener = listener;
-		topics = new Vector<Class<?>>();
-		topics.add( ErrorNotification.class);
-		topics.add( WarningNotification.class);
-		topics.add( InformationNotification.class);
 	}
 	
 	/**
@@ -145,7 +130,7 @@ private class TopicsListener{
 	 * 
 	 * @param topic the topic to listen (class inheriting from Notification
 	 */
-	public void addTopic( Class<Notification> topic){
+	public void addTopic( Object topic){
 		
 		if( topics != null && !topics.contains( topic)){
 			topics.add( topic);
@@ -167,7 +152,7 @@ private class TopicsListener{
 	 * 
 	 * @return the list of topics the listener has subscribed to 
 	 */
-	public List<Class<?>> getTopics() {
+	public List<Object> getTopics() {
 		
 		return topics;
 	}

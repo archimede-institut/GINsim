@@ -6,16 +6,15 @@ import org.ginsim.graph.common.Graph;
 
 public class ResolvableWarningNotification extends WarningNotification  implements ResolvableNotification{
 
-	
 	private Object[] data;
 	private Graph graph;
 	private NotificationResolution resolution;
 	
-	public ResolvableWarningNotification( String message, Graph graph, Object[] data, NotificationResolution resolution) {
+	public ResolvableWarningNotification( Object topic, String message, Graph graph, Object[] data, NotificationResolution resolution) {
 		
-		super( message);
-		this.data = data;
+		super( topic, message);
 		this.graph = graph;
+		this.data = data;
 		this.resolution = resolution;
 	}
 	
