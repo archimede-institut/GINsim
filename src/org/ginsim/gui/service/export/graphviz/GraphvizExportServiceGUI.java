@@ -8,11 +8,13 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.graphviz.GraphvizExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -50,8 +52,10 @@ class ExportGraphVizAction extends ExportAction {
 	}
 
 	@Override
-	protected void doExport(String filename) throws GsException, IOException {
-		GraphvizExportService.encode(graph, null, null, filename);
+	protected void doExport(String filename) throws IOException {
+		 
+		GraphvizExportService service = ServiceManager.getManager().getService( GraphvizExportService.class);
+		service.run( graph, null, null, filename);
 	}
 
 	@Override
