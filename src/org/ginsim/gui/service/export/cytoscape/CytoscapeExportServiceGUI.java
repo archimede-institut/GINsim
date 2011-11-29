@@ -13,6 +13,8 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.service.Service;
+import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.cytoscape.CytoscapeExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -27,6 +29,7 @@ public class CytoscapeExportServiceGUI implements ServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
 			actions.add( new CytoscapeExportAction<Graph<?, ?>>( graph));
@@ -46,12 +49,18 @@ class CytoscapeExportAction<G extends Graph> extends ExportAction {
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"dot"}, "dot (graphviz) files");
 	
 	public CytoscapeExportAction(G graph) {
+		
 		super( graph, "STR_cytoscape", "STR_cytoscape_descr");
 	}
 
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
-		CytoscapeExportService.encode((RegulatoryGraph)graph, filename);
+		
+		CytoscapeExportService service = ServiceManager.getManager().getService( CytoscapeExportService.class);
+		
+		if( service != null){
+			service.run( (RegulatoryGraph)graph, filename);
+		}
 	}
 
 	@Override
