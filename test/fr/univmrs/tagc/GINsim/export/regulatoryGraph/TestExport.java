@@ -5,10 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.GinmlParser;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.export.cytoscape.CytoscapeExportService;
+import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
 import org.ginsim.service.export.gna.GNAMLExport;
 import org.ginsim.service.export.snakes.SnakesEncoder;
 
@@ -32,18 +32,27 @@ public class TestExport extends TestCase {
 		//export.doExport(filename);
 	}
 	public void testSNAKES() throws IOException {
-		SnakesEncoder export =  new SnakesEncoder(graph);
+		
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.py";
-		// TODO : REFACTORING ACTION
-		// TODO : Restore this test
-		//export.doExport(filename);
+		SnakesEncoder export =  new SnakesEncoder();
+		try{
+			export.encode( graph, filename);
+		}
+		catch( GsException exception){
+			super.fail( "Exception occured during testSnakes : " + exception);
+		}
 	}
 	public void testCytoscape() throws IOException {
-		CytoscapeExportService export =  new CytoscapeExportService();
+
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.xgmml";
-		
+		CytoscapeEncoder encoder = new CytoscapeEncoder();
+		try{
+			encoder.encode( graph, filename);
+		}
+		catch( GsException exception){
+			super.fail( "Exception occured during testCytoscape : " + exception);
+		}
 		super.fail("TODO: finish cytoscape export test");
-		// export.doExport(filename);
 	}
 	
 /*	public void testSbml() {
