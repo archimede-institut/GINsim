@@ -1,6 +1,8 @@
 package fr.univmrs.tagc.common;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -49,9 +51,9 @@ public class Debugger {
 		logDirPath = output_dir;
 		
 		logPath = new String[3];
-		logPath[0] = logDirPath + "\\error.txt";
-		logPath[1] = logDirPath + "\\info.txt";
-		logPath[2] = logDirPath + "\\trace.txt";
+		logPath[0] = new File( logDirPath, "error.txt").getPath();
+		logPath[1] = new File( logDirPath, "info.txt").getPath();
+		logPath[2] = new File( logDirPath, "trace.txt").getPath();
 		
 		logout = new PrintWriter[ logPath.length];
 		for( int i = 0; i < logPath.length; i++){
@@ -186,25 +188,30 @@ public class Debugger {
 
 		try {
 		    // Create the ZIP file
-		    String outFilename = logDirPath + "\\logs.zip";
+		    String outFilename = new File( logDirPath, "logs.zip").getPath();
 		    ZipOutputStream out = new ZipOutputStream( new FileOutputStream(outFilename));
 
 		    // Compress the files
 		    for( int i = 0; i < logPath.length; i++) {
-		        FileInputStream in = new FileInputStream( logPath[i]);
-
-		        // Add ZIP entry to output stream.
-		        out.putNextEntry( new ZipEntry( logPath[i]));
-
-		        // Transfer bytes from the file to the ZIP file
-		        int len;
-		        while ((len = in.read(buf)) > 0) {
-		            out.write(buf, 0, len);
-		        }
-
-		        // Complete the entry
-		        out.closeEntry();
-		        in.close();
+		    	try{
+			        FileInputStream in = new FileInputStream( logPath[i]);
+	
+			        // Add ZIP entry to output stream.
+			        out.putNextEntry( new ZipEntry( new File( logPath[i]).getName()));
+	
+			        // Transfer bytes from the file to the ZIP file
+			        int len;
+			        while ((len = in.read(buf)) > 0) {
+			            out.write(buf, 0, len);
+			        }
+	
+			        // Complete the entry
+			        out.closeEntry();
+			        in.close();
+		    	}
+		    	catch( FileNotFoundException fnfe){
+		    		// One of the log file is not found: it will not be added to the zip file
+		    	}
 		    }
 
 		    // Complete the ZIP file
