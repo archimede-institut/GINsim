@@ -1,4 +1,4 @@
-package org.ginsim.gui.service.export.cytoscape;
+package org.ginsim.gui.service.export.snakes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,24 +14,24 @@ import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
-import org.ginsim.service.export.cytoscape.CytoscapeExportService;
+import org.ginsim.service.export.snakes.SnakesExportService;
 import org.mangosdk.spi.ProviderFor;
 
 
 /**
- * CytoscapeExportServiceGUI is the GUI service exporting a regulatory graph into XGMML format.
- * 
+ * Export the logical functions from regulatory graphs to python for use with the Snakes python library.
+ * http://lacl.univ-paris12.fr/pommereau/soft/snakes/ 
  */
 @ProviderFor(ServiceGUI.class)
-@GUIFor(CytoscapeExportService.class)
-public class CytoscapeExportServiceGUI implements ServiceGUI {
+@GUIFor(SnakesExportService.class)
+public class SnakesExportServiceGUI implements ServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add( new CytoscapeExportAction<Graph<?, ?>>( graph));
+			actions.add( new SnakesExportAction<Graph<?, ?>>( graph));
 			return actions;
 		}
 		return null;
@@ -40,22 +40,22 @@ public class CytoscapeExportServiceGUI implements ServiceGUI {
 
 
 /**
- * Export to Cytoscape XGMMLfile Action
+ * Export to Snakes file Action
  *
  */
-class CytoscapeExportAction<G extends Graph> extends ExportAction {
+class SnakesExportAction<G extends Graph> extends ExportAction {
 	private static final long serialVersionUID = 7934695744239100292L;
 	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"dot"}, "dot (graphviz) files");
 	
-	public CytoscapeExportAction(G graph) {
+	public SnakesExportAction(G graph) {
 		
-		super( graph, "STR_cytoscape", "STR_cytoscape_descr");
+		super(graph, "STR_snakes", "STR_snakes_descr");
 	}
 
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
 		
-		CytoscapeExportService service = ServiceManager.getManager().getService( CytoscapeExportService.class);
+		SnakesExportService service = ServiceManager.getManager().getService( SnakesExportService.class);
 		
 		if( service != null){
 			service.run( (RegulatoryGraph)graph, filename);

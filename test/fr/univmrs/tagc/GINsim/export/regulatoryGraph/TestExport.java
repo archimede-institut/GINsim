@@ -9,8 +9,8 @@ import org.ginsim.graph.GinmlParser;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.export.cytoscape.CytoscapeExportService;
-import org.ginsim.service.export.exec.SnakesExport;
 import org.ginsim.service.export.gna.GNAMLExport;
+import org.ginsim.service.export.snakes.SnakesEncoder;
 
 import junit.framework.TestCase;
 import fr.univmrs.tagc.common.TestTools;
@@ -32,7 +32,7 @@ public class TestExport extends TestCase {
 		//export.doExport(filename);
 	}
 	public void testSNAKES() throws IOException {
-		SnakesExport export =  new SnakesExport(graph);
+		SnakesEncoder export =  new SnakesEncoder(graph);
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.py";
 		// TODO : REFACTORING ACTION
 		// TODO : Restore this test

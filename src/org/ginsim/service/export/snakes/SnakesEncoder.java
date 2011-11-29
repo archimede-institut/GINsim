@@ -1,4 +1,4 @@
-package org.ginsim.service.export.exec;
+package org.ginsim.service.export.snakes;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,12 +6,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.exception.GsException;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.service.common.ExportAction;
-import org.ginsim.gui.shell.GsFileFilter;
 
 
 
@@ -19,34 +18,28 @@ import org.ginsim.gui.shell.GsFileFilter;
  * Export the logical functions from regulatory graphs to python for use with the Snakes python library.
  * http://lacl.univ-paris12.fr/pommereau/soft/snakes/
  */
-public class SnakesExport extends ExportAction<RegulatoryGraph>  {
+public class SnakesEncoder {
 
-	private static final GsFileFilter ffilter = new GsFileFilter( new String[] { "py" }, "Python source files");
-	
-	private FileWriter out = null;
-	
-	public SnakesExport(RegulatoryGraph graph) {
-		super(graph, "STR_snakes", "STR_snakes_descr");
-	}
-	
-	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
-	}
-	
-	@Override
-	protected void doExport( String filename) throws IOException {
-		out = new FileWriter(filename);
+	/**
+	 * Encode the RegulatoryGraph graph into a file named filename
+	 * 
+	 * @param graph the RegulatoryGraph to encode
+	 * @param filename the name of the snakes file
+	 * @throws GsException
+	 * @throws IOException
+	 */
+	public void encode(RegulatoryGraph graph, String filename) throws GsException, IOException {
+		FileWriter out = new FileWriter(filename);
 		
 		//data
-		List nodeOrder = graph.getNodeOrder();
+		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
 		OMDDNode[] nodes = graph.getAllTrees(true);
 		
 		out.write("class Toy(Module):\n");
 		int [][] parcours = new int[nodeOrder.size()][4];
 		for (int node_i = 0; node_i < nodes.length; node_i++) {
 			//generate the argument list from incoming edges : a, b, _a, _b
-			RegulatoryNode current_node = (RegulatoryNode) nodeOrder.get(node_i);
+			RegulatoryNode current_node = nodeOrder.get(node_i);
 			Collection<RegulatoryMultiEdge> incomingEdges = graph.getIncomingEdges(current_node);
 			String current_node_name = getNodeNameForLevel(node_i, nodeOrder);
 			if (incomingEdges.size() == 0) {
@@ -81,7 +74,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 			out.write("    # specification of component \""+current_node_name+"\"\n");
 			out.write("    range_"+current_node_name+"=(0, "+current_node.getMaxValue()+")\n");
 			out.write("    def update_"+current_node_name+"(self, "+s+"):\n");
-			exploreNode(parcours, 0 ,nodes[node_i], nodeOrder);
+			exploreNode(parcours, 0 ,nodes[node_i], nodeOrder, out);
 			if (nodes[node_i].next != null) {//if it's not a leaf
 				out.write("        return 0\n\n");
 			} else {
@@ -93,7 +86,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 		out.close(); //Close filewriter
 	}
 	
-	protected void exploreNode(int[][] parcours, int deep, OMDDNode node, List nodeOrder) throws IOException {
+	protected void exploreNode(int[][] parcours, int deep, OMDDNode node, List<RegulatoryNode> nodeOrder, FileWriter out) throws IOException {
 		if (node.next == null) {
 			if (node.value > 0) {
 				String nodeName;
@@ -130,7 +123,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 			parcours[deep][1] = end;
 			parcours[deep][2] = node.level;
 			parcours[deep][3] = node.next.length;
-			exploreNode(parcours, deep+1, node.next[begin], nodeOrder);
+			exploreNode(parcours, deep+1, node.next[begin], nodeOrder, out);
 		}
 	}
 
@@ -140,7 +133,7 @@ public class SnakesExport extends ExportAction<RegulatoryGraph>  {
 	 * @param nodeOrder : The node order (in the graph)
 	 * @return the ID as string
 	 */
-	private String getNodeNameForLevel(int order, List nodeOrder) {
-		return ((RegulatoryNode) nodeOrder.get(order)).getId();
+	private String getNodeNameForLevel(int order, List<RegulatoryNode> nodeOrder) {
+		return nodeOrder.get(order).getId();
 	}
 }
