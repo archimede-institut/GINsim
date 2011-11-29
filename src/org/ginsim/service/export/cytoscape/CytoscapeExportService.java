@@ -3,26 +3,17 @@ package org.ginsim.service.export.cytoscape;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
-
-import javax.swing.Action;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
-import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.ExportAction;
-import org.ginsim.gui.service.common.StandaloneGUI;
-import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Tools;
@@ -35,52 +26,22 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
  * @version 1.0
  * february 2008 - april 2008
  * 
- *    TODO: extract a separated Service
  */
-@ProviderFor(ServiceGUI.class)
-@StandaloneGUI
-public class CytoscapeExport implements ServiceGUI {
+@ProviderFor(Service.class)
+public class CytoscapeExportService implements Service{
+	/**
+	 * Encode the RegulatoryGraph graph into a file named filename
+	 * @param graph the RegulatoryGraph to encode
+	 * @param filename the name of the xgmml file
+	 * @throws GsException
+	 * @throws IOException
+	 */
+	public static void encode(RegulatoryGraph graph, String filename) throws GsException, IOException {
+		FileWriter fout = new FileWriter(filename);
+		XMLWriter out = new XMLWriter(fout, null);
 
-	@Override
-	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
-			actions.add(new CytoscapeExportAction((RegulatoryGraph)graph));
-			return actions;
-		}
-		return null;
-	}
-	
-}
-
-class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
-	
-	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"xgmml"}, "Cytoscape graph files");
-
-	int EDGE_INHIBIT = 1;
-	int EDGE_ACTIVATE = 2;
-	int EDGE_UNDEFINED = 3;
-	RegulatoryMutants mlist = null;
-	FileWriter fout = null;
-	XMLWriter out = null;
-	
-	protected CytoscapeExportAction(RegulatoryGraph graph) {
-		super( graph, "STR_cytoscape", "STR_cytoscape_descr");
-	}
-
-	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
-	}
-
-	
-	protected void doExport( String filename) throws GsException, IOException {
-		
-		fout = new FileWriter(filename);
-		out = new XMLWriter(fout, null);
-				
 		//Header
-		out.write("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>");
+		//out.write("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>");
 		out.openTag("graph");
 		out.addAttr("label", graph.getGraphName());
 		out.addAttr("id", graph.getGraphName());
@@ -117,11 +78,11 @@ class CytoscapeExportAction extends ExportAction<RegulatoryGraph> {
 		
 		//node
 		//We need a Hashtable to translate GINSim IDs into cytoscapes IDs.
-		Hashtable gs2cyt_Ids = new Hashtable(graph.getNodeCount());
+		Hashtable<String, Integer> gs2cyt_Ids = new Hashtable<String, Integer>(graph.getNodeCount());
 		
 		int current_index_of_node_id = -graph.getNodeCount(); // The IDs goes from -vertexCount to -1
 		NodeAttributesReader vertexAttributeReader = graph.getNodeAttributeReader();
-		for (Iterator it=graph.getNodes().iterator() ; it.hasNext() ;) {
+		for (Iterator<RegulatoryNode> it=graph.getNodes().iterator() ; it.hasNext() ;) {
 			RegulatoryNode vertex = (RegulatoryNode)it.next();
 			
 			String name = vertex.getName();//The complete name (label) of the edge

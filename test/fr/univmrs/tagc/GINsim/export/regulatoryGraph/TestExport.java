@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.ginsim.graph.GinmlParser;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.export.cytoscape.CytoscapeExport;
+import org.ginsim.service.export.cytoscape.CytoscapeExportService;
 import org.ginsim.service.export.exec.SnakesExport;
 import org.ginsim.service.export.gna.GNAMLExport;
 
@@ -39,7 +39,7 @@ public class TestExport extends TestCase {
 		//export.doExport(filename);
 	}
 	public void testCytoscape() throws IOException {
-		CytoscapeExport export =  new CytoscapeExport();
+		CytoscapeExportService export =  new CytoscapeExportService();
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.xgmml";
 		
 		super.fail("TODO: finish cytoscape export test");
