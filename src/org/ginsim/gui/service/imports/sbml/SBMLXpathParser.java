@@ -730,7 +730,7 @@ public final class SBMLXpathParser {
 	        	data[1] = vertex;
 	        	data[2] = exp;
 	        	
-	        	new ResolvableWarningNotification( "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
+	        	new ResolvableWarningNotification( graph, "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
 			} else {
 				interactionList.addExpression(val, vertex, tbp);
 			}

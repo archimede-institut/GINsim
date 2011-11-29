@@ -66,7 +66,7 @@ class ModelSimplifierAction extends ToolAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (graph.getNodeCount() < 1) {
-            new WarningNotification( graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph");
+            new WarningNotification( graph, graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph");
             return;
 		}
 

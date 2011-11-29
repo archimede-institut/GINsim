@@ -68,7 +68,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 			}
     	}
         if (regGraph == null || dynGraph == null) {
-        	new WarningNotification( "Could not start the animator");
+        	new WarningNotification( null, "Could not start the animator");
             return;
         }
         // let's start the animator

@@ -99,7 +99,7 @@ class Reg2DynAction extends ToolAction {
 	public void actionPerformed(ActionEvent e) {
         
 		if ( graph.getNodeOrderSize() < 1) {
-            new WarningNotification( Translator.getString("STR_emptyGraph"));
+            new WarningNotification( graph, Translator.getString("STR_emptyGraph"));
 
             return;
         }
