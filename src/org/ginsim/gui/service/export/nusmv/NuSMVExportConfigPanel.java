@@ -1,4 +1,4 @@
-package org.ginsim.service.export.nusmv;
+package org.ginsim.gui.service.export.nusmv;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -30,6 +30,7 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.tool.reg2dyn.PrioritySelectionPanel;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.service.export.nusmv.NuSMVConfig;
 
 import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
@@ -38,7 +39,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
 public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = -7398674287463858306L;
 
-	private final NuSMVConfig cfg;
+	private final NuSMVConfig config;
 
 	private PrioritySelectionPanel priorityPanel = null;
 	private MutantSelectionPanel mutantPanel = null;
@@ -51,15 +52,17 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 	private JRadioButton jrbType2;
 
-	public NuSMVExportConfigPanel( NuSMVConfig config) {
-		this.cfg = config;
+	public NuSMVExportConfigPanel(NuSMVConfig config) {
+		this.config = config;
 	}
 
+	@Override
 	protected void init() {
 		setLayout(new BorderLayout());
 
 		JPanel jpTmp = new JPanel(new GridBagLayout());
-		mutantPanel = new MutantSelectionPanel( stack, cfg.graph, cfg.store);
+		mutantPanel = new MutantSelectionPanel(stack, config.getGraph(),
+				config.store);
 		GridBagConstraints cst = new GridBagConstraints();
 		cst.gridx = 0;
 		cst.gridy = 0;
@@ -67,9 +70,11 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 		cst.weightx = 0.5;
 		jpTmp.add(mutantPanel, cst);
 
-		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( this.cfg.graph, SimulationParametersManager.key, true);
-		priorityPanel = new PrioritySelectionPanel( stack, paramList.pcmanager);
-		priorityPanel.setStore(cfg.store, 1);
+		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager
+				.getInstance().getObject(config.getGraph(),
+						SimulationParametersManager.key, true);
+		priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
+		priorityPanel.setStore(config.store, 1);
 		cst = new GridBagConstraints();
 		cst.gridx = 1;
 		cst.gridy = 0;
@@ -85,8 +90,8 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 			}
 		});
 
-		initPanel = new InitialStatePanel( stack, cfg.graph, false);
-		initPanel.setParam(cfg);
+		initPanel = new InitialStatePanel(stack, config.getGraph(), false);
+		initPanel.setParam(config);
 		add(initPanel, BorderLayout.CENTER);
 		this.setMinimumSize(new Dimension(450, 320));
 
@@ -118,13 +123,13 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	}
 
 	public void changeUpdatePolicy() {
-		this.cfg.setUpdatePolicy();
+		this.config.setUpdatePolicy();
 	}
 
 	public void changeExportType() {
 		int type = (jrbType2.isSelected()) ? NuSMVConfig.CFG_INPUT_IVAR
 				: NuSMVConfig.CFG_INPUT_FRONZEN;
-		this.cfg.setExportType(type);
+		this.config.setExportType(type);
 	}
 
 	/**
@@ -149,7 +154,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void run() {
 		// TODO run export
-		Debugger.error( "TODO: run export");
+		Debugger.error("TODO: run export");
 	}
 }
 
@@ -318,7 +323,9 @@ class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 
 	GsNuSMVMutantModel(NuSMVConfig cfg) {
 		this.cfg = cfg;
-		this.listMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( cfg.graph, MutantListManager.key, true);
+		this.listMutants = (RegulatoryMutants) ObjectAssociationManager
+				.getInstance().getObject(cfg.getGraph(), MutantListManager.key,
+						true);
 	}
 
 	void setMutantList(RegulatoryMutants mutants) {

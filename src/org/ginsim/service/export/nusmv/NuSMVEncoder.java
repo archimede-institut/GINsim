@@ -1,7 +1,7 @@
 package org.ginsim.service.export.nusmv;
 
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,167 +14,69 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
 import org.ginsim.gui.service.tool.reg2dyn.Reg2dynPriorityClass;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
- * GINsim export plugin capable of encoding the working model into a NuSMV
- * specification. It currently uses NuSMV version 2.5.3.
- * <p>
- * It considers the use of priority classes for every model, whichever the
- * updating policy defined inside GINsim. If a given model considers priority
- * classes, it maps the corresponding classes. However, if a given model
- * considers an asynchronous (synchronous) updating policy, it creates an
- * equivalent mapping using priority classes, one class for each (all the)
- * variable(s).
- * </p>
+ * Exports a GINsim Regulatory graph into a NuSMV model description.
  * 
- * TODO: depends on StableStateService
+ * @author Pedro T. Monteiro
  */
-public class NuSMVExport extends ExportAction<RegulatoryGraph> {
-
-	private static final GsFileFilter ffilter = new GsFileFilter(new String[] { "smv" }, "NuSMV files");
-	
-	private NuSMVConfig config;
-	
-	public NuSMVExport(RegulatoryGraph graph) {
-		super( graph, "STR_NuSMVmodelChecker", "STR_NuSMVmodelChecker_descr");
-	}
-
-	@Override
-	public void doExport( String filename) throws IOException {
-		encode(graph, filename, config);
-	}
-
-	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
-	}
-
-	@Override
-	public StackDialogHandler getConfigPanel() {
-		return new NuSMVExportConfigPanel(config);
-	}
-
-
+public class NuSMVEncoder {
 	/**
-	 * Gets the set of values of a given @see {@link RegulatoryNode}
-	 * 
-	 * @param t_vertex
-	 * @param input
-	 * @param mInitStates The map containing the initial values of all the nodes.
-	 * @return A string of values in the NuSMV format.
-	 */
-	private static String writeInitialState(RegulatoryNode[] t_vertex,
-			boolean input,
-			Map<RegulatoryNode, List<Integer>> mInitStates) {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < t_vertex.length; i++) {
-			if (t_vertex[i].isInput() != input)
-				continue;
-			String s_init = "";
-			List<Integer> v = mInitStates.get(t_vertex[i]);
-			if (v != null && v.size() > 0) {
-				for (int j = 0; j < v.size(); j++) {
-					if (j > 0)
-						s_init += " | ";
-					s_init += t_vertex[i].getId() + "=" + v.get(j);
-				}
-			}
-			if (s_init.isEmpty()) {
-				sb.append("--  INIT ").append(t_vertex[i].getId())
-						.append(" = 0;\n");
-			} else {
-				sb.append("  INIT ").append(s_init).append(";\n");
-			}
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * Main method that knows how to export a given graph @see
-	 * {@link RegulatoryGraph} and write it to a specific file.
+	 * Export the graph to a SVG file
 	 * 
 	 * @param graph
-	 *            The graph object to be exported.
-	 * @param fileName
-	 *            The file name to be written.
-	 * @param config
-	 *            store with the configuration specified by the user in the GUI.
+	 *            the regulatory graph to export
+	 * @param nodes
+	 *            the list of nodes that must be exported
+	 * @param edges
+	 *            the list of edges that must be exported
+	 * @param out
+	 *            the writer receiving the encoded model description
 	 */
-	public static void encode(RegulatoryGraph graph, String fileName,
-			NuSMVConfig config) throws IOException{
+	public void write(NuSMVConfig config, Writer out)
+			throws IOException {
 
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG);
-		String date = dateformat.format(new Date());
-		FileWriter out = new FileWriter(fileName);
-		Iterator<InitialState> it = config.getInitialState().keySet()
-				.iterator();
-		Map<RegulatoryNode, List<Integer>> m_initstates;
-		if (it.hasNext()) {
-			m_initstates = it.next().getMap();
-		} else {
-			m_initstates = new HashMap<RegulatoryNode, List<Integer>>();
-		}
-		if (m_initstates == null) {
-			m_initstates = new HashMap<RegulatoryNode, List<Integer>>();
-		}
-		it = config.getInputState().keySet().iterator();
-		Map<RegulatoryNode, List<Integer>> m_initinputs;
-		if (it.hasNext()) {
-			m_initinputs = it.next().getMap();
-		} else {
-			m_initinputs = new HashMap<RegulatoryNode, List<Integer>>();
-		}
-		if (m_initinputs == null) {
-			m_initinputs = new HashMap<RegulatoryNode, List<Integer>>();
-		}
-
-		RegulatoryMutantDef mutant = (RegulatoryMutantDef) config.store
-				.getObject(0);
-		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
-		String[] t_regulators = new String[nodeOrder.size()];
-		int[] t_cst = new int[nodeOrder.size()];
-		boolean hasInputVars = false;
-		RegulatoryNode[] t_vertex = new RegulatoryNode[nodeOrder
-				.size()];
-		for (int i = 0; i < t_vertex.length; i++) {
-			RegulatoryNode vertex = nodeOrder.get(i);
-			t_vertex[i] = vertex;
-			t_regulators[i] = vertex.getId();
-			if (vertex.isInput())
-				hasInputVars = true;
-		}
-		OMDDNode[] t_tree = graph.getAllTrees(true);
-		if (mutant != null) {
-			mutant.apply(t_tree, graph);
-		}
-		boolean bType1 = (config.getExportType() == NuSMVConfig.CFG_INPUT_FRONZEN);
-
-		out.write("-- " + date + "\n");
+		out.write("-- " + dateformat.format(new Date()) + "\n");
 		out.write("-- GINsim implicit representation for NuSMV --\n");
 		out.write("-- NuSMV version 2.5.1 (or higher) required --\n");
 		out.write("-- ");
+
+		boolean bType1 = (config.getExportType() == NuSMVConfig.CFG_INPUT_FRONZEN);
 		if (bType1)
 			out.write(Translator.getString("STR_NuSMV_Type1"));
 		else
 			out.write(Translator.getString("STR_NuSMV_Type2"));
 		out.write("\n\nMODULE main\n");
 
+		// TODO: correct PCs when a subset has the same rank distinct from the
+		// rest
+		List<RegulatoryNode> nodeOrder = config.getGraph().getNodeOrder();
+		String[] t_regulators = new String[nodeOrder.size()];
+		RegulatoryNode[] t_vertex = new RegulatoryNode[nodeOrder.size()];
+		boolean hasInputVars = false;
+		for (int i = 0; i < t_vertex.length; i++) {
+			RegulatoryNode node = nodeOrder.get(i);
+			t_vertex[i] = node;
+			t_regulators[i] = node.getId();
+			if (node.isInput())
+				hasInputVars = true;
+		}
+
+		String sTmp;
+		int[][] iaTmp = null;
 		PriorityClassDefinition priorities = (PriorityClassDefinition) config.store
 				.getObject(1);
 		// classNum -> className
@@ -188,10 +90,6 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 		// varNum-> subClassName
 		TreeMap<Integer, String[]> tmVarNum2SubPcName = new TreeMap<Integer, String[]>();
 
-		String sTmp;
-		boolean bFirst;
-		int[][] iaTmp = null;
-
 		out.write("\nIVAR\n-- Simulation mode declaration --\n");
 		switch (config.getUpdatePolicy()) {
 		case NuSMVConfig.CFG_SYNC:
@@ -204,8 +102,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 				tmVarNum2PcNum.put(i, new Integer[] { 0, 1, 0 });
 			}
 			for (int i = 0; i < nodeOrder.size(); i++)
-				tmVarNum2SubPcName
-						.put(i, new String[] { null, sTmp, null });
+				tmVarNum2SubPcName.put(i, new String[] { null, sTmp, null });
 			out.write(sTmp + " };\n");
 			break;
 
@@ -234,20 +131,18 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 						sTmp += "_" + t_regulators[iaTmp[i][j]];
 						Integer[] aiSplits = (tmVarNum2PcNum
 								.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
-								.get(iaTmp[i][j])
-								: new Integer[] { 0, 0, 0 };
+								.get(iaTmp[i][j]) : new Integer[] { 0, 0, 0 };
 						aiSplits[iaTmp[i][j + 1] + 1] = i + 1;
 						tmVarNum2PcNum.put(iaTmp[i][j], aiSplits);
 						if (iaTmp[i][j + 1] != 0)
-							sTmp += (iaTmp[i][j + 1] == 1) ? "Plus"
-									: "Minus";
+							sTmp += (iaTmp[i][j + 1] == 1) ? "Plus" : "Minus";
 					}
 					out.write(sTmp);
 					for (int j = 2; j < iaTmp[i].length; j += 2) {
 						String[] saTmp = (tmVarNum2SubPcName
 								.containsKey(iaTmp[i][j])) ? tmVarNum2SubPcName
-								.get(iaTmp[i][j]) : new String[] { null,
-								null, null };
+								.get(iaTmp[i][j]) : new String[] { null, null,
+								null };
 						saTmp[iaTmp[i][j + 1] + 1] = sTmp;
 						tmVarNum2SubPcName.put(iaTmp[i][j], saTmp);
 					}
@@ -259,19 +154,17 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 							out.write(", ");
 						String sub = sTmp + "_" + t_regulators[iaTmp[i][j]];
 						if (iaTmp[i][j + 1] != 0)
-							sub += (iaTmp[i][j + 1] == 1) ? "Plus"
-									: "Minus";
+							sub += (iaTmp[i][j + 1] == 1) ? "Plus" : "Minus";
 						out.write(sub);
 						String[] saTmp = (tmVarNum2SubPcName
 								.containsKey(iaTmp[i][j])) ? tmVarNum2SubPcName
-								.get(iaTmp[i][j]) : new String[] { null,
-								null, null };
+								.get(iaTmp[i][j]) : new String[] { null, null,
+								null };
 						saTmp[iaTmp[i][j + 1] + 1] = sub;
 						tmVarNum2SubPcName.put(iaTmp[i][j], saTmp);
 						Integer[] aiSplits = (tmVarNum2PcNum
 								.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
-								.get(iaTmp[i][j])
-								: new Integer[] { 0, 0, 0 };
+								.get(iaTmp[i][j]) : new Integer[] { 0, 0, 0 };
 						aiSplits[iaTmp[i][j + 1] + 1] = i + 1;
 						tmVarNum2PcNum.put(iaTmp[i][j], aiSplits);
 					}
@@ -283,7 +176,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 
 		default:
 			out.write("-- Asynchronous\n  PCs : { ");
-			bFirst = true;
+			boolean bFirst = true;
 			for (int i = 0; i < t_vertex.length; i++) {
 				if (t_vertex[i].isInput())
 					continue;
@@ -301,10 +194,8 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 				if (t_vertex[i].isInput())
 					continue;
 				sTmp = "PC_c" + (i + 1) + "_" + t_regulators[i];
-				out.write("  PC_c" + (i + 1) + "_vars : { " + sTmp
-						+ " };\n");
-				tmVarNum2SubPcName
-						.put(i, new String[] { null, sTmp, null });
+				out.write("  PC_c" + (i + 1) + "_vars : { " + sTmp + " };\n");
+				tmVarNum2SubPcName.put(i, new String[] { null, sTmp, null });
 			}
 			break;
 		}
@@ -323,13 +214,12 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 				}
 			}
 		}
-
 		out.write("\nVAR");
 		// PCrank depends on the state variables
 		// Should therefore be declared after
 		// But after some tests
-		if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS
-				&& iaTmp != null && iaTmp.length > 1) {
+		if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS && iaTmp != null
+				&& iaTmp.length > 1) {
 			out.write("\n-- Priority definition\n");
 			out.write("  PCrank : { ");
 			int iLast = 0;
@@ -352,7 +242,16 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 			out.write(" };\n");
 		}
 
+		// Definition of the OMDD trees
+		OMDDNode[] t_tree = config.getGraph().getAllTrees(true);
+		RegulatoryMutantDef mutant = (RegulatoryMutantDef) config.store
+				.getObject(0);
+		if (mutant != null) {
+			mutant.apply(t_tree, config.getGraph());
+		}
+
 		// Topological sorting of the state variables
+		int[] t_cst = new int[nodeOrder.size()];
 		HashMap<String, ArrayList<String>> hmRegulators = new HashMap<String, ArrayList<String>>();
 		for (int i = 0; i < t_vertex.length; i++) {
 			for (int j = 0; j < t_cst.length; j++)
@@ -399,8 +298,8 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 		}
 
 		out.write("\nASSIGN");
-		if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS
-				&& iaTmp != null && iaTmp.length > 1) {
+		if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS && iaTmp != null
+				&& iaTmp.length > 1) {
 			if (tmPcRank2Name.size() > 1) {
 				out.write("\n-- Establishing priorities\n");
 				out.write("  PCrank :=\n    case\n");
@@ -511,15 +410,13 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 
 			if (bPlus) { // There's also a Minus transition
 				pc = aiSplits[0];
-				out.write("update_" + t_regulators[v]
-						+ "Minus_OK := (PCs = ");
+				out.write("update_" + t_regulators[v] + "Minus_OK := (PCs = ");
 				out.write(tmPcNum2Name.get(pc) + ") & (");
 				out.write(tmPcNum2Name.get(pc) + "_vars = ");
 				out.write(saSubName[0]);
 				if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS) {
 					out.write(") & (PCrank = ");
-					out.write((String) tmPcRank2Name.get(tmPcNum2Rank
-							.get(pc)));
+					out.write((String) tmPcRank2Name.get(tmPcNum2Rank.get(pc)));
 				}
 				out.write(");\n");
 			}
@@ -556,11 +453,12 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 			// OMDDs reordered [ stateVars inputVars]
 			OMDDNode[] tReordered = new OMDDNode[nodeOrder.size()];
 			for (int i = 0; i < nodeOrder.size(); i++) {
-				tReordered[i] = sortedVars.get(i)
-						.getTreeParameters(sortedVars).reduce();
+				tReordered[i] = sortedVars.get(i).getTreeParameters(sortedVars)
+						.reduce();
 			}
 
-			StableStateSearcher sss = ServiceManager.getManager().getService(StableStatesService.class).getSearcher(graph);
+			StableStateSearcher sss = ServiceManager.getManager()
+					.getService(StableStatesService.class).getSearcher(config.getGraph());
 			sss.setNodeOrder(sortedVars, tReordered);
 			sss.setPerturbation(mutant);
 			OMDDNode omdds = sss.getStables();
@@ -568,8 +466,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 			for (int i = 0; i < stateValues.length; i++)
 				stateValues[i] = -1;
 
-			out.write(writeStableStates(stateValues, omdds, orderStateVars,
-					0));
+			out.write(writeStableStates(stateValues, omdds, orderStateVars, 0));
 			out.write(";\n");
 		}
 
@@ -585,92 +482,49 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 		else
 			out.write("weakSS;\n");
 
+		// Initial States - State variables
+		Iterator<InitialState> it = config.getInitialState().keySet()
+				.iterator();
+		Map<RegulatoryNode, List<Integer>> m_initstates = null;
+		if (it.hasNext()) {
+			m_initstates = it.next().getMap();
+		}
+		if (m_initstates == null) {
+			m_initstates = new HashMap<RegulatoryNode, List<Integer>>();
+		}
 		// TODO: make use of the name given by the user
 		// referencing the atomic proposition
 		out.write("\n-- State variables initialization\n");
 		out.write(writeInitialState(t_vertex, false, m_initstates));
+		
+		// Initial States - Input variables
+		it = config.getInputState().keySet().iterator();
+		Map<RegulatoryNode, List<Integer>> m_initinputs;
+		if (it.hasNext()) {
+			m_initinputs = it.next().getMap();
+		} else {
+			m_initinputs = new HashMap<RegulatoryNode, List<Integer>>();
+		}
+		if (m_initinputs == null) {
+			m_initinputs = new HashMap<RegulatoryNode, List<Integer>>();
+		}
 		if (bType1 && hasInputVars) {
 			out.write("-- Input variables initialization\n");
 			out.write(writeInitialState(t_vertex, true, m_initinputs));
 		}
 
 		out.write("\n");
-		out.write("-- Property specification\n");
+		out.write("-- Property specification examples\n");
 		if (bType1)
 			out.write("-- SPEC !EF ( strongSS )\n");
 		else
 			out.write("-- SPEC AF ( weakSS )\n-- LTLSPEC G F ( weakSS )\n");
 
-		// Close main tags
-		out.close();
-	}
-
-	private static String writeStableStates(int[] stateValues, OMDDNode nodes,
-			List<RegulatoryNode> stateVars, int level) {
-		String sRet = "";
-		if (nodes.next == null) {
-			if (nodes.value == 1 && level > stateVars.size()) {
-				// we have a stable state:
-				sRet += "  | ";
-				for (int i = 0; i < stateVars.size(); i++) {
-					if (stateValues[i] == -1) continue;
-					if (i > 0)
-						sRet += " & ";
-					sRet += stateVars.get(i) + "=" + stateValues[i];
-				}
-				sRet += "\n";
-			}
-			return sRet;
-		}
-		for (int i = 0; i < nodes.next.length; i++) {
-			stateValues[nodes.level] = i;
-			sRet += writeStableStates(stateValues, nodes.next[i], stateVars,
-					level + 1);
-		}
-		stateValues[nodes.level] = -1;
-		return sRet;
 	}
 
 	/**
-	 * Implements a simple (recursive) topological sort for sorting, in
-	 * ascending order, the model variables by the number of regulators
-	 * affecting each one.
-	 * 
-	 * @param hmRegulators
-	 *            a String containing the set of regulators per variable.
-	 * @param t_regulators
-	 *            The name of each regulator.
-	 * @param t_vertex
-	 *            The set of nodes.
-	 * @param currindex
-	 *            The current index in the recursion.
-	 * @param visited
-	 *            A mark of visited nodes.
-	 * @param alSorted
-	 *            The list of nodes already sorted.
-	 */
-	static private void topoSortVisit(
-			HashMap<String, ArrayList<String>> hmRegulators,
-			String[] t_regulators, RegulatoryNode[] t_vertex,
-			int currindex, boolean[] visited, ArrayList<Integer> alSorted) {
-		if (visited[currindex])
-			return;
-		visited[currindex] = true;
-		String sReg = t_regulators[currindex];
-		for (int i = 0; i < t_vertex.length; i++) {
-			if (i == currindex)
-				continue;
-			ArrayList<String> alRegulators = hmRegulators.get(t_regulators[i]);
-			if (alRegulators.contains(sReg))
-				topoSortVisit(hmRegulators, t_regulators, t_vertex, i, visited,
-						alSorted);
-		}
-		alSorted.add(new Integer(currindex));
-	}
-
-	/**
-	 * It creates an HashSet with the regulators of a given node given its
-	 * OMDD. It is used for the topological sort algorithm.
+	 * It creates an HashSet with the regulators of a given node given its OMDD.
+	 * It is used for the topological sort algorithm.
 	 * 
 	 * @param node
 	 *            The OMDD of a given node.
@@ -680,7 +534,7 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	 *            Auxiliary variable to help navigate through the tree.
 	 * @return The set of regulator names of a given node.
 	 */
-	static private HashSet<String> nodeRegulators(OMDDNode node,
+	private HashSet<String> nodeRegulators(OMDDNode node,
 			RegulatoryNode[] t_names, int[] t_cst) {
 		HashSet<String> hs = new HashSet<String>();
 		if (node.next == null) {
@@ -698,8 +552,8 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	}
 
 	/**
-	 * Knows how to write the given logical function of a given node,
-	 * specified by its OMDD, into a NuSMV case construct.
+	 * Knows how to write the given logical function of a given node, specified
+	 * by its OMDD, into a NuSMV case construct.
 	 * 
 	 * @param node
 	 *            The OMDD to be written.
@@ -711,8 +565,8 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 	 *            Auxiliary variable to help navigate through the tree.
 	 * @throws IOException
 	 */
-	static private void node2SMV(OMDDNode node, FileWriter out,
-			RegulatoryNode[] t_names, int[] t_cst) throws IOException {
+	private void node2SMV(OMDDNode node, Writer out, RegulatoryNode[] t_names,
+			int[] t_cst) throws IOException {
 		if (node.next == null) // this is a leaf, write the constraint
 		{
 			String s = "";
@@ -735,5 +589,105 @@ public class NuSMVExport extends ExportAction<RegulatoryGraph> {
 			node2SMV(node.next[i], out, t_names, t_cst);
 		}
 		t_cst[node.level] = -1;
+	}
+
+	/**
+	 * Implements a simple (recursive) topological sort for sorting, in
+	 * ascending order, the model variables by the number of regulators
+	 * affecting each one.
+	 * 
+	 * @param hmRegulators
+	 *            a String containing the set of regulators per variable.
+	 * @param t_regulators
+	 *            The name of each regulator.
+	 * @param t_vertex
+	 *            The set of nodes.
+	 * @param currindex
+	 *            The current index in the recursion.
+	 * @param visited
+	 *            A mark of visited nodes.
+	 * @param alSorted
+	 *            The list of nodes already sorted.
+	 */
+	private void topoSortVisit(HashMap<String, ArrayList<String>> hmRegulators,
+			String[] t_regulators, RegulatoryNode[] t_vertex, int currindex,
+			boolean[] visited, ArrayList<Integer> alSorted) {
+		if (visited[currindex])
+			return;
+		visited[currindex] = true;
+		String sReg = t_regulators[currindex];
+		for (int i = 0; i < t_vertex.length; i++) {
+			if (i == currindex)
+				continue;
+			ArrayList<String> alRegulators = hmRegulators.get(t_regulators[i]);
+			if (alRegulators.contains(sReg))
+				topoSortVisit(hmRegulators, t_regulators, t_vertex, i, visited,
+						alSorted);
+		}
+		alSorted.add(new Integer(currindex));
+	}
+
+	/**
+	 * Gets the set of values of a given @see {@link RegulatoryNode}
+	 * 
+	 * @param t_vertex
+	 *            the array of regulatory nodes
+	 * @param bInput
+	 *            true (false) if writing the initialization of input (state)
+	 *            variables.
+	 * @param mInitStates
+	 *            The map containing the initial values of all the nodes.
+	 * @return A string of values in the NuSMV format.
+	 */
+	private String writeInitialState(RegulatoryNode[] t_vertex, boolean bInput,
+			Map<RegulatoryNode, List<Integer>> mInitStates) {
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < t_vertex.length; i++) {
+			if (t_vertex[i].isInput() != bInput)
+				continue;
+			String s_init = "";
+			List<Integer> v = mInitStates.get(t_vertex[i]);
+			if (v != null && v.size() > 0) {
+				for (int j = 0; j < v.size(); j++) {
+					if (j > 0)
+						s_init += " | ";
+					s_init += t_vertex[i].getId() + "=" + v.get(j);
+				}
+			}
+			if (s_init.isEmpty()) {
+				sb.append("--  INIT ").append(t_vertex[i].getId())
+						.append(" = 0;\n");
+			} else {
+				sb.append("  INIT ").append(s_init).append(";\n");
+			}
+		}
+		return sb.toString();
+	}
+
+	private String writeStableStates(int[] stateValues, OMDDNode nodes,
+			List<RegulatoryNode> stateVars, int level) {
+		String sRet = "";
+		if (nodes.next == null) {
+			if (nodes.value == 1 && level > stateVars.size()) {
+				// we have a stable state:
+				sRet += "  | ";
+				for (int i = 0; i < stateVars.size(); i++) {
+					if (stateValues[i] == -1)
+						continue;
+					if (i > 0)
+						sRet += " & ";
+					sRet += stateVars.get(i) + "=" + stateValues[i];
+				}
+				sRet += "\n";
+			}
+			return sRet;
+		}
+		for (int i = 0; i < nodes.next.length; i++) {
+			stateValues[nodes.level] = i;
+			sRet += writeStableStates(stateValues, nodes.next[i], stateVars,
+					level + 1);
+		}
+		stateValues[nodes.level] = -1;
+		return sRet;
 	}
 }

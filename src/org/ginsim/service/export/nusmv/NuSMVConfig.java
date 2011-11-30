@@ -18,11 +18,12 @@ public class NuSMVConfig implements InitialStateStore {
 	public static final int CFG_INPUT_FRONZEN = 10;
 	public static final int CFG_INPUT_IVAR = 11;
 
-	RegulatoryGraph graph;
-	Map m_initStates;
-	Map m_input;
+	private RegulatoryGraph graph;
+	private Map m_initStates;
+	private Map m_input;
+	
 	// Store has two objects: 0- Mutant & 1- PriorityClass
-	ObjectStore store = new ObjectStore(2);
+	public ObjectStore store = new ObjectStore(2);
 	public RegulatoryMutantDef mutant;
 	private int updatePolicy;
 	private int exportType;
@@ -70,6 +71,10 @@ public class NuSMVConfig implements InitialStateStore {
 
 	public Map getInputState() {
 		return m_input;
+	}
+	
+	public RegulatoryGraph getGraph() {
+		return graph;
 	}
 }
 
