@@ -24,7 +24,15 @@ public class HelpCallBack {
 		List<Action> actions = new ArrayList<Action>();
 		actions.add(new HelpAction());
 		actions.add(new AboutAction());
-		actions.add( new LogAction());
+		
+		return actions;
+	}
+	
+	public static List<Action> getSupportActions(){
+		
+		List<Action> actions = new ArrayList<Action>();
+		actions.add( new ProvideLogAction());
+		actions.add( new ToggleTraceAction());
 		
 		return actions;
 	}
@@ -60,8 +68,9 @@ class HelpAction extends AbstractAction {
  * @author spinelli
  *
  */
-class LogAction extends AbstractAction {
-	public LogAction() {
+class ProvideLogAction extends AbstractAction {
+	
+	public ProvideLogAction() {
 		super("Export logs");
 	}
 	
@@ -84,3 +93,31 @@ class LogAction extends AbstractAction {
 		}
 	}
 }
+
+/**
+ * This action permit to activate/unactivate the trace/info log levels
+ * 
+ * @author spinelli
+ *
+ */
+class ToggleTraceAction extends AbstractAction{
+	
+	public ToggleTraceAction() {
+		
+		super( Debugger.getVerboseLevel() ==0?"Enable Traces":"Disable Traces");
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		
+		if( Debugger.getVerboseLevel() == 0){
+			Debugger.setVerbose( 2);
+			putValue( Action.NAME, "Disable Traces");
+		}
+		else{
+			Debugger.setVerbose( 0);
+			putValue( Action.NAME, "Enable Traces");
+		}
+	}
+}
+

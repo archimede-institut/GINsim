@@ -82,6 +82,10 @@ public class MainFrameActionManager implements FrameActionManager {
 		
 		menu = new JMenu("Help");
 		fillMenu(menu, HelpCallBack.getActions());
+		menu.addSeparator();
+		JMenu support_menu = new JMenu( "Support");
+		menu.add( support_menu);
+		fillMenu( support_menu, HelpCallBack.getSupportActions());
 		menubar.add(menu);
 	}
 

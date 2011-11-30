@@ -84,6 +84,17 @@ public class Debugger {
 	}
 	
 	/**
+	 * Returns the verbose level actually set
+	 * 0 = log; 1= info; 2 = trace
+	 * 
+	 * @return the verbose level actually set
+	 */
+	public static int getVerboseLevel() {
+		
+		return verboseLevel;
+	}
+	
+	/**
 	 * Log an error. The message is logged to the error log file according the verbose level
 	 * 
 	 * @param msg the message to log
