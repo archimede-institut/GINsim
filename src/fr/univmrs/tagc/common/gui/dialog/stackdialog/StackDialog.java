@@ -16,6 +16,7 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
 import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.gui.dialog.DefaultDialogSize;
 import fr.univmrs.tagc.common.gui.dialog.SimpleDialog;
 import fr.univmrs.tagc.common.managerresources.Translator;
@@ -197,8 +198,7 @@ abstract public class StackDialog extends SimpleDialog {
                 		run();
                 	}
                 	catch( GsException ge){
-                		// TODO : REFACTORING ACTION
-                		// TODO : Launch a message box to the user
+                		Tools.error( "Unable to execute the action");
                 		Debugger.error( "Unable to execute the action");
                 		Debugger.error( ge);
                 	}

@@ -17,6 +17,7 @@ import org.ginsim.service.tool.decisionanalysis.DecisionAnalysisService;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.Tools;
 
 
 @ProviderFor( ServiceGUI.class)
@@ -54,8 +55,7 @@ class DecisionAnalysisAction extends ToolAction {
 			new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph);
 		}
 		catch( GsException ge){
-    		// TODO : REFACTORING ACTION
-    		// TODO : Launch a message box to the user
+    		Tools.error( "Unable to launch the analysis");
     		Debugger.error( "Unable to execute the service");
     		Debugger.error( ge);
 		}

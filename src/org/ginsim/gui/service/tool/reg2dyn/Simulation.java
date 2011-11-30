@@ -86,8 +86,7 @@ public class Simulation extends Thread implements Runnable {
     		frame.endSimu( do_simulation());
     	}
     	catch ( GsException ge) {
-    		// TODO : REFACTORING ACTION
-    		// TODO : Launch a message for user
+    		Tools.error( "Unable to launch the simulation");
     		Debugger.error( "Unable to start Simulation");
 		}
     }

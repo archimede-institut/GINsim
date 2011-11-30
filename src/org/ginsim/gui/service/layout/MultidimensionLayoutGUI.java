@@ -32,6 +32,7 @@ import org.ginsim.service.layout.DynamicLayoutMultidimention;
 
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.StockButton;
 
@@ -119,8 +120,7 @@ public class MultidimensionLayoutGUI {
             		run();
             	}
             	catch( GsException ge){
-            		// TODO : REFACTORING ACTION
-            		// TODO : Launch a message box to the user
+            		Tools.error( "Unable to launch layout");
             		Debugger.error( "Unable to launch layout");
             		Debugger.error( ge);
             	}
