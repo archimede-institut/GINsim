@@ -122,7 +122,7 @@ public class GraphManager {
     	
     	C graph = null;
     	
-    	GraphFactory<C> factory = graphFactories.get( graph_class);
+    	GraphFactory factory = graphFactories.get( graph_class);
     	if( factory == null) {
     		Debugger.error( "No declared factory for graph class : " + graph_class);
     		return null;
