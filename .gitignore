@@ -15,6 +15,7 @@ GINsim.app
 core/
 bak/
 testCase/tmp
+.factorypath
 
 # compressed files #
 ############
@@ -31,6 +32,9 @@ testCase/tmp
 *.log
 *.sql
 *.sqlite
+error.txt
+trace.txt
+info.txt
 
 # OS generated files #
 ######################
