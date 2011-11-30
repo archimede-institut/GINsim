@@ -12,6 +12,9 @@ import org.ginsim.graph.common.NodeAttributesReader;
 
 
 class RawNodeRenderer extends JLabel {
+
+	public static final int SW = 5;      // width of the selection mark
+	public static final int hSW = SW/2;  // half width of the selection mark
 	
 	private final NodeAttributesReader reader;
 	
@@ -35,6 +38,10 @@ class RawNodeRenderer extends JLabel {
 		
 		Rectangle rect = view.getBounds();
 		super.setBounds(rect.x, rect.y, rect.width, rect.height);
+		if (selected) {
+			super.setBounds(rect.x-hSW, rect.y-hSW, rect.width+SW, rect.height+SW);
+		} else {
+		}
 		reader.setNode(view.user);
 	}
 	
@@ -46,18 +53,24 @@ class RawNodeRenderer extends JLabel {
 	@Override
 	public void paint(Graphics g) {
 		// TODO: pick some other shape
-		Shape s = new Rectangle(getWidth()-1, getHeight()-1);
+		int w = getWidth()-1;
+		int h = getHeight()-1;
+		Shape s = new Rectangle(w, h);
 
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setColor(reader.getBackgroundColor());
 		g2d.fill(s);
+		g2d.setColor(reader.getForegroundColor());
+		g2d.draw(s);
+
 		if (selected) {
 			g2d.setColor(Color.red);
-		} else {
-			g2d.setColor(reader.getForegroundColor());
+			g2d.fillRect(0-hSW, 0-hSW, SW, SW);
+			g2d.fillRect(0-hSW, h-hSW, SW, SW);
+			g2d.fillRect(w-hSW, h-hSW, SW, SW);
+			g2d.fillRect(w-hSW, 0-hSW, SW, SW);
 		}
-		g2d.draw(s);
-		
+
 		super.paint(g);
 	}
 
