@@ -553,7 +553,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 				ftmp = File.createTempFile(f.getName(), null, f.getParentFile());
 				fileName = ftmp.getAbsolutePath();
 			} catch (Exception e) {
-				// TODO: introduce a clean permission checking
+				// TODO : REFACTORING ACTION
+				// TODO : introduce a clean permission checking
 				Debugger.error( "Could not use a tmp file in the same directory");
 				Debugger.error( e);
 				//       			ftmp = File.createTempFile(f.getName(), null);
@@ -616,7 +617,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 					r = ftmp.renameTo(f);
 				}
 				if (!r) {
-					new ErrorNotification( this, "Renaming of the temporary file failed: "+ftmp.getAbsolutePath());
+					new GsException( GsException.GRAVITY_ERROR, "Enable to save the file to chosen path : "+ftmp.getAbsolutePath());
 				}
 			}
 		}

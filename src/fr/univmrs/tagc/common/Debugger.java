@@ -84,7 +84,7 @@ public class Debugger {
 	}
 	
 	/**
-	 * Log an error. The message is logged to all the log files according the verbose level
+	 * Log an error. The message is logged to the error log file according the verbose level
 	 * 
 	 * @param msg the message to log
 	 */
@@ -111,7 +111,7 @@ public class Debugger {
 	}
 	
 	/**
-	 * Log an info. The message is logged to the info and trace files according the verbose level
+	 * Log an info. The message is logged to the info file according the verbose level
 	 * 
 	 * @param msg the message to log
 	 */
@@ -134,7 +134,7 @@ public class Debugger {
 	}
 	
 	/**
-	 * Log a trace. The message is logged to the trace file only according the verbose level
+	 * Log a trace. The message is logged to the trace file according the verbose level
 	 * 
 	 * @param msg the message to log
 	 */
@@ -144,9 +144,12 @@ public class Debugger {
 	}
 	
 	/**
-	 * Log a trace. The message is logged to the trace file only according the verbose level
+	 * Log a trace. The message is logged to the trace file only according the verbose level.
+	 * If lineInfo is false, the information on the class name, method name and line number that issued the log
+	 * are not traced to the file.
 	 * 
 	 * @param msg the message to log
+	 * @param line_info indicates if the information on the class name, method name and line number must be traced
 	 */
 	public static void trace( Object msg, boolean line_info){
 

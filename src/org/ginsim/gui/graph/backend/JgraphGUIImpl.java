@@ -40,6 +40,7 @@ import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
 import fr.univmrs.tagc.common.Debugger;
+import fr.univmrs.tagc.common.Tools;
 
 public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphSelectionListener, GraphViewListener {
 
@@ -236,8 +237,8 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			isSaved = true;
 			return true;
 		} catch (Exception e) {
-			// TODO: cleaner error
-			Debugger.error( "Save failed");
+			Tools.error( "Unable to save file. See logs for more details");
+			Debugger.error( "Unable to save file : " + savePath);
 			Debugger.error( e);
 		}
 		return false;
