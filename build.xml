@@ -4,7 +4,7 @@
 	<tstamp>
 		<format property="CURDATE" pattern="yyyy-MM-dd"/>
 	</tstamp>
-	<property name="baseversion" value="2.4"/>
+	<property name="baseversion" value="2.9"/>
 	<property name="version" value="${baseversion}_${CURDATE}" />
 
 	<!-- Compilation options -->
