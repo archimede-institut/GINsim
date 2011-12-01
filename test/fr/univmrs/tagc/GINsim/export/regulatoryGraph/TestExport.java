@@ -5,14 +5,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import junit.framework.TestCase;
+
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GinmlParser;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
-import org.ginsim.service.export.gna.GNAMLExport;
+import org.ginsim.service.export.gna.GNAExportService;
 import org.ginsim.service.export.snakes.SnakesEncoder;
 
-import junit.framework.TestCase;
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestExport extends TestCase {
@@ -25,11 +27,9 @@ public class TestExport extends TestCase {
 		this.graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);
 	}
 	public void testGNAML() throws IOException {
-		GNAMLExport export =  new GNAMLExport(graph);
+		GNAExportService export = ServiceManager.getManager().getService(GNAExportService.class);
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.gnaml";
-		// TODO : REFACTORING ACTION
-		// TODO : Restore this test
-		//export.doExport(filename);
+		export.run(graph, filename);
 	}
 	public void testSNAKES() throws IOException {
 		
