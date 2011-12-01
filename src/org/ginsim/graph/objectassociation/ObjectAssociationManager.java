@@ -54,26 +54,24 @@ public class ObjectAssociationManager {
      */
     public void registerObjectManager( Class graph_class, GraphAssociatedObjectManager manager) {
     	
-    	Class interface_class = getGraphInterface( graph_class);
-    	
-    	if( interface_class != null){
-    	
-	    	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
-	    	
-	    	if( specialized_managers != null){
-		    	for (int i=0 ; i<specialized_managers.size(); i++) {
-		    		if (((GraphAssociatedObjectManager)specialized_managers.get(i)).getObjectName().equals(manager.getObjectName())) {
-		    			return;
-		    		}            
-		    	}
-	    	}
-	    	else{
-	    		specialized_managers = new Vector<GraphAssociatedObjectManager>();
-	    		specializedObjectManagers.put( interface_class, specialized_managers);
-	    	}
-	    	
-	    	specialized_managers.add( manager);
+    	if( graph_class == null) {
+    		return;
     	}
+    	
+    	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( graph_class);
+    	
+    	if( specialized_managers == null){
+    		specialized_managers = new Vector<GraphAssociatedObjectManager>();
+    		specializedObjectManagers.put( graph_class, specialized_managers);
+    	}
+
+    	for (GraphAssociatedObjectManager m: specialized_managers) {
+    		if (m.getObjectName().equals(manager.getObjectName())) {
+    			return;
+    		}            
+    	}
+    	
+    	specialized_managers.add( manager);
     }
     
     
