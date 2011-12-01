@@ -1,6 +1,5 @@
 package org.ginsim.service.export.cytoscape;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,11 +27,8 @@ public class CytoscapeEncoder {
 	 * @throws IOException
 	 */
 	public void encode(RegulatoryGraph graph, String filename) throws GsException, IOException {
-		FileWriter fout = new FileWriter(filename);
-		XMLWriter out = new XMLWriter(fout, null);
+		XMLWriter out = new XMLWriter(filename, null);
 
-		//Header
-		//out.write("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>");
 		out.openTag("graph");
 		out.addAttr("label", graph.getGraphName());
 		out.addAttr("id", graph.getGraphName());
@@ -175,8 +171,7 @@ public class CytoscapeEncoder {
 			out.closeTag();//edge
 		}
 		
-		//End
-		out.closeTag();//graph
-		fout.close(); //Close filewriter
+		// End, close the writer
+		out.close();
 	}
 }

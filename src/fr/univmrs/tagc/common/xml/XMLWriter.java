@@ -1,5 +1,6 @@
 package fr.univmrs.tagc.common.xml;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * A helper to write well formed XML documents.
  */
 public class XMLWriter {
 
@@ -19,8 +20,21 @@ public class XMLWriter {
     private boolean inContent;
     private boolean indent;
     private StringBuffer buf = null;
-    
+
     /**
+     * Create a XMLWriter with the path to a file.
+     * 
+     * @param filename
+     * @param dtdFile
+     * @throws IOException
+     */
+    public XMLWriter(String filename, String dtdFile) throws IOException {
+    	this(new FileOutputStream(filename), dtdFile);
+	}
+
+    /**
+     * Create a XMLWriter with an existing Writer.
+     * Warning: the writer should use the right encoding, otherwise we may get into troubles.
      * 
      * @param out
      * @param dtdFile
@@ -29,18 +43,27 @@ public class XMLWriter {
     public XMLWriter(OutputStreamWriter out, String dtdFile) throws IOException {
         this(out,dtdFile,true);
     }
+    /**
+     * Create a XMLWriter with an output stream.
+     * It will create a Writer for this stream, using an UTF-8 encoding.
+     * 
+     * @param out
+     * @param dtdFile
+     * @throws IOException
+     */
     public XMLWriter(OutputStream out, String dtdFile) throws IOException {
         this(new OutputStreamWriter(out, "UTF-8"),dtdFile,true);
     }
 
     /**
+     * Create a XMLWriter with an existing Writer.
      * 
      * @param out
      * @param dtdFile
      * @param indent
      * @throws IOException
      */
-    public XMLWriter(OutputStreamWriter out, String dtdFile, boolean indent) throws IOException {
+    private XMLWriter(OutputStreamWriter out, String dtdFile, boolean indent) throws IOException {
         this.indent = indent;
         this.out = out;
         write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -48,7 +71,8 @@ public class XMLWriter {
             write("<!DOCTYPE gxl SYSTEM \""+dtdFile+"\">\n");
         }
     }
-    /**
+    
+	/**
      * ask to store the next calls into a string buffer.
      * Use <code>getBuffer()</code> to stop it and get the content of the buffer.
      * @throws IOException
@@ -297,5 +321,17 @@ public class XMLWriter {
             }
         }
         write(s);
+    }
+    
+    /**
+     * Close the writer: all open tags and the underlying outputstream.
+     * 
+     * @throws IOException
+     */
+    public void close() throws IOException {
+    	while (v_stack.size() > 0) {
+    		closeTag();
+    	}
+    	out.close();
     }
 }
