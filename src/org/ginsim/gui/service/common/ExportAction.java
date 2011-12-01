@@ -68,7 +68,6 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 	public void actionPerformed(ActionEvent arg0) {
 		StackDialogHandler handler = getConfigPanel();
 		if (handler != null) {
-			Debugger.error( " Exports with config panel not yet supported");
 			new HandledStackDialog(handler);
 		} else {
 			selectFile();

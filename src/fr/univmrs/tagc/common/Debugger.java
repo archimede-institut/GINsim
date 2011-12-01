@@ -108,16 +108,16 @@ public class Debugger {
 		PrintWriter errorOut = logout[0];
 		
 		if( msg instanceof Throwable){
-			errorOut.write( getLineNumber()+":"+getClassName()+"#"+getMethodName()+"():: Exception :");
+			errorOut.write( getLineNumber()+":"+getClassName()+"#"+getMethodName()+"():: Exception :" + "\n");
 			((Throwable) msg).printStackTrace( errorOut);
 		}
 		else{
-			errorOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+			errorOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString() + "\n");
 		}
 		errorOut.flush();
 		
 		if( debugMode){
-			System.err.print( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+			System.err.println( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 		}
 	}
 	
@@ -136,10 +136,10 @@ public class Debugger {
 		PrintWriter infoOut = logout[1];
 		
 		if( verboseLevel >= 1){
-			infoOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+			infoOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString() + "\n");
 			infoOut.flush();
 			if( debugMode){
-				System.out.print( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+				System.out.println( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 			}
 		}
 	}
@@ -179,10 +179,10 @@ public class Debugger {
 				}
 			}
 			else{
-				traceOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+				traceOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString() + "\n");
 				traceOut.flush();
 				if( debugMode){
-					System.out.print( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+					System.out.println( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
 				}
 			}
 
