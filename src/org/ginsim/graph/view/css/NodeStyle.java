@@ -150,9 +150,9 @@ public class NodeStyle implements Style {
 	 * @param lines
 	 * @return the new style
 	 * @throws PatternSyntaxException
-	 * @throws GsCSSSyntaxException if there is an error in the syntax
+	 * @throws CSSSyntaxException if there is an error in the syntax
 	 */
-	public static Style fromString(String []lines) throws PatternSyntaxException, GsCSSSyntaxException {
+	public static Style fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
 		Color background = NULL_BACKGROUND;
 		Color foreground = NULL_FOREGROUND;
 		int shape = NULL_SHAPE;
@@ -164,30 +164,30 @@ public class NodeStyle implements Style {
 			Matcher m = parserPattern.matcher(lines[i].trim());
 			String key = m.group(1).trim(), value = m.group(2).trim();
 			
-			if (m.groupCount() < 2) throw new GsCSSSyntaxException("Malformed line "+i+" : "+lines[i]+". Must be 'key: value;'");
+			if (m.groupCount() < 2) throw new CSSSyntaxException("Malformed line "+i+" : "+lines[i]+". Must be 'key: value;'");
 			if (key.equals(CSS_BACKGROUND)) {
 				try {
 					background = Tools.getColorFromCode(value);
 				} catch (NumberFormatException e) {
-					throw new GsCSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
+					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_FOREGROUND)) {
 				try {
 					foreground = Tools.getColorFromCode(value);
 				} catch (NumberFormatException e) {
-					throw new GsCSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
+					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_SHAPE)) {
 				if 		(value.equals(CSS_SHAPE_ELLIPSE)) 	shape = NodeAttributesReader.SHAPE_ELLIPSE;
 				else if (value.equals(CSS_SHAPE_RECTANGLE)) shape = NodeAttributesReader.SHAPE_RECTANGLE;
-				else throw new GsCSSSyntaxException("Unknown vertex shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_ELLIPSE+" or "+CSS_SHAPE_RECTANGLE);
+				else throw new CSSSyntaxException("Unknown vertex shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_ELLIPSE+" or "+CSS_SHAPE_RECTANGLE);
 			} else if (key.equals(CSS_BORDER)) {
 				if 		(value.equals(CSS_BORDER_SIMPLE)) 	border = NodeAttributesReader.BORDER_SIMPLE;
 				else if (value.equals(CSS_BORDER_RAISED)) 	border = NodeAttributesReader.BORDER_RAISED;
 				else if (value.equals(CSS_BORDER_STRONG)) 	border = NodeAttributesReader.BORDER_STRONG;
-				else throw new GsCSSSyntaxException("Unknown vertex border at line "+i+" : "+lines[i]+". Must be "+CSS_BORDER_SIMPLE+", "+CSS_BORDER_RAISED+" or "+CSS_BORDER_STRONG);
+				else throw new CSSSyntaxException("Unknown vertex border at line "+i+" : "+lines[i]+". Must be "+CSS_BORDER_SIMPLE+", "+CSS_BORDER_RAISED+" or "+CSS_BORDER_STRONG);
 			} else {
-				throw new GsCSSSyntaxException("Node has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);
+				throw new CSSSyntaxException("Node has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);
 			}
 		}
 		return new NodeStyle(background, foreground, border, shape);

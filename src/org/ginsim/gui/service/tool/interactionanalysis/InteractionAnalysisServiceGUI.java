@@ -24,19 +24,18 @@ public class InteractionAnalysisServiceGUI implements ServiceGUI {
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new InteractionAnalysisAction((RegulatoryGraph)graph));
+			actions.add(new InteractionAnalysisAction<RegulatoryGraph>((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
 	}
 }
 
-class InteractionAnalysisAction extends ToolAction {
-	
+class InteractionAnalysisAction<G extends Graph<?, ?>> extends ToolAction {
+	private static final long serialVersionUID = 216892824635448627L;
 	private final RegulatoryGraph graph;
 	
 	public InteractionAnalysisAction(RegulatoryGraph graph) {
-		
 		super("STR_interactionAnalysis");
 		this.graph = graph;
 	}

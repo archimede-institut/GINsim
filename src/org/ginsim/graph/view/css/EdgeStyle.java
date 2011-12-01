@@ -153,9 +153,9 @@ public class EdgeStyle implements Style {
 	 * @param lines
 	 * @return the new style
 	 * @throws PatternSyntaxException
-	 * @throws GsCSSSyntaxException if there is an error in the syntax
+	 * @throws CSSSyntaxException if there is an error in the syntax
 	 */
-	public static Style fromString(String []lines) throws PatternSyntaxException, GsCSSSyntaxException {
+	public static Style fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
 		Color lineColor = NULL_LINECOLOR;
 		int shape = NULL_SHAPE;
 		int lineEnd = NULL_LINEEND;
@@ -167,25 +167,25 @@ public class EdgeStyle implements Style {
 			Matcher m = parserPattern.matcher(lines[i].trim());
 			String key = m.group(1).trim(), value = m.group(2).trim();
 			
-			if (m.groupCount() < 2) throw new GsCSSSyntaxException("Malformed line "+i+" : "+lines[i]+". Must be 'key: value;'");
+			if (m.groupCount() < 2) throw new CSSSyntaxException("Malformed line "+i+" : "+lines[i]+". Must be 'key: value;'");
 			if (key.equals(CSS_LINECOLOR)) {
 				try {
 					lineColor = Tools.getColorFromCode(value);
 				} catch (NumberFormatException e) {
-					throw new GsCSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
+					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_SHAPE)) {
 				if 		(value.equals(CSS_SHAPE_CURVE)) 	shape = EdgeAttributesReader.STYLE_CURVE;
 				else if (value.equals(CSS_SHAPE_STRAIGHT)) 	shape = EdgeAttributesReader.STYLE_STRAIGHT;
-				else throw new GsCSSSyntaxException("Unknown edge shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_CURVE+" or "+CSS_SHAPE_STRAIGHT);
+				else throw new CSSSyntaxException("Unknown edge shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_CURVE+" or "+CSS_SHAPE_STRAIGHT);
 			} else if (key.equals(CSS_LINEEND)) {
 				if 		(value.equals(CSS_LINEEND_POSITIVE)) 	lineEnd = EdgeAttributesReader.ARROW_POSITIVE;
 				else if (value.equals(CSS_LINEEND_NEGATIVE)) 	lineEnd = EdgeAttributesReader.ARROW_NEGATIVE;
 				else if (value.equals(CSS_LINEEND_DOUBLE))	 	lineEnd = EdgeAttributesReader.ARROW_DOUBLE;
 				else if (value.equals(CSS_LINEEND_UNKNOWN)) 	lineEnd = EdgeAttributesReader.ARROW_UNKNOWN;
-				else throw new GsCSSSyntaxException("Unknown edge lineEnd at line "+i+" : "+lines[i]+". Must be "+CSS_LINEEND_POSITIVE+", "+CSS_LINEEND_NEGATIVE+", "+CSS_LINEEND_DOUBLE+" or "+CSS_LINEEND_UNKNOWN);
+				else throw new CSSSyntaxException("Unknown edge lineEnd at line "+i+" : "+lines[i]+". Must be "+CSS_LINEEND_POSITIVE+", "+CSS_LINEEND_NEGATIVE+", "+CSS_LINEEND_DOUBLE+" or "+CSS_LINEEND_UNKNOWN);
 			} else {
-				throw new GsCSSSyntaxException("Edge has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_LINECOLOR+", "+CSS_SHAPE+" or "+CSS_LINEEND);
+				throw new CSSSyntaxException("Edge has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_LINECOLOR+", "+CSS_SHAPE+" or "+CSS_LINEEND);
 			}
 		}
 		return new EdgeStyle(lineColor, lineEnd, shape, border);

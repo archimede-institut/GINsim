@@ -1,11 +1,10 @@
-package org.ginsim.gui.service.tool.interactionanalysis;
+package org.ginsim.service.tool.interactionanalysis;
 
 import java.awt.Color;
 import java.util.Map;
 
 import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Selector;
 import org.ginsim.graph.view.css.Style;
@@ -23,7 +22,7 @@ public class InteractionAnalysisSelector extends Selector {
 	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		EdgeAttributesReader.ARROW_NEGATIVE, EdgeStyle.NULL_SHAPE,  5);
 	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue, 	EdgeAttributesReader.ARROW_DOUBLE, EdgeStyle.NULL_SHAPE,  5);
 	
-	private Map cache = null;
+	private Map<RegulatoryMultiEdge, String> cache = null;
 
 	public InteractionAnalysisSelector() {
 		super(IDENTIFIER);
@@ -36,35 +35,26 @@ public class InteractionAnalysisSelector extends Selector {
 		addCategory(CAT_DUAL, (Style)STYLE_DUAL.clone());
 	}
 	
-	public boolean respondToNodes() {
-		return false;
-	}
-	
+	public boolean respondToNodes() {return false;}
+	public String getCategoryForNode(Object obj) {return null;} //Doesn't respond to, but must be overridden.
+
 	public String getCategoryForEdge(Object obj) {
 		Object res = cache.get(obj);
 		if (res == null) return CAT_NONFUNCTIONNAL; 
 		return (String) res;
 	}
 
-	public String getCategoryForNode(Object obj) {return null;} //Doesn't respond to, but must be overridden.
 	
-	public Map getCache() {
+	public Map<RegulatoryMultiEdge, String> getCache() {
 		return cache;
 	}
 	
-	public void setCache(Map cache) {
+	public void setCache(Map<RegulatoryMultiEdge, String> cache) {
 		this.cache = cache;
 	}
 	
-	public Map initCache(RegulatoryGraph g) {
-		this.cache = initCache(g, false, false, null);
-		return this.cache;
-	}
-	
-	public Map initCache(RegulatoryGraph g, boolean opt_annotate, boolean opt_verbose, RegulatoryMutantDef mutant) {
-		InteractionAnalysis fii = new InteractionAnalysis(g, opt_annotate, mutant);
-		this.cache = fii.getFunctionality();
-		return this.cache;
+	public void initCache(Map<RegulatoryMultiEdge, String> cache) {
+		this.cache = cache;
 	}
 	
 	public void flush() {

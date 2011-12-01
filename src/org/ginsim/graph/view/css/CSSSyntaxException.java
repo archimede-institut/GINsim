@@ -1,22 +1,22 @@
 package org.ginsim.graph.view.css;
 
-public class GsCSSSyntaxException extends Exception {
+public class CSSSyntaxException extends Exception {
 	private static final long serialVersionUID = -178881160709719504L;
 	private static String defaultMessage = "Error in the css syntax"; 
 
-	public GsCSSSyntaxException() {
+	public CSSSyntaxException() {
 		super(defaultMessage);
 	}
 
-	public GsCSSSyntaxException(String message) {
+	public CSSSyntaxException(String message) {
 		super(defaultMessage+" : "+message);
 	}
 
-	public GsCSSSyntaxException(Throwable cause) {
+	public CSSSyntaxException(Throwable cause) {
 		super(defaultMessage, cause);
 	}
 
-	public GsCSSSyntaxException(String message, Throwable cause) {
+	public CSSSyntaxException(String message, Throwable cause) {
 		super(defaultMessage+" : "+message, cause);
 	}
 
