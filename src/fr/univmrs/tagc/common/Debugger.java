@@ -108,16 +108,16 @@ public class Debugger {
 		PrintWriter errorOut = logout[0];
 		
 		if( msg instanceof Throwable){
-			errorOut.write( getLineNumber()+":"+getClassName()+"#"+getMethodName()+"():: Exception :" + "\n");
+			errorOut.write( getPosition()+" Exception :" + "\n");
 			((Throwable) msg).printStackTrace( errorOut);
 		}
 		else{
-			errorOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString() + "\n");
+			errorOut.write( getPosition()+msg.toString() + "\n");
 		}
 		errorOut.flush();
 		
 		if( debugMode){
-			System.err.println( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+			System.err.println( getPosition()+msg.toString());
 		}
 	}
 	
@@ -136,10 +136,10 @@ public class Debugger {
 		PrintWriter infoOut = logout[1];
 		
 		if( verboseLevel >= 1){
-			infoOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString() + "\n");
+			infoOut.write( getPosition()+msg.toString() + "\n");
 			infoOut.flush();
 			if( debugMode){
-				System.out.println( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+				System.out.println( getPosition()+msg.toString());
 			}
 		}
 	}
@@ -175,14 +175,14 @@ public class Debugger {
 				traceOut.write( msg.toString());
 				traceOut.flush();
 				if( debugMode){
-					System.out.print( msg.toString());
+					System.out.print( msg);
 				}
 			}
 			else{
-				traceOut.write( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString() + "\n");
+				traceOut.write( getPosition() + msg + "\n");
 				traceOut.flush();
 				if( debugMode){
-					System.out.println( getLineNumber()+":"+getClassName()+"."+getMethodName()+"():: "+msg.toString());
+					System.out.println( getPosition() + msg.toString());
 				}
 			}
 
@@ -251,14 +251,14 @@ public class Debugger {
 	 */
 	public static void debug() {
 		
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"()");
+		debugOut.println(getPosition());
 	}
 	/**
 	 * print the log in {@link System}.out and append msg to the end of the line
 	 * @param msg the message to append at the end of the line
 	 */
 	public static void debug(Object msg) {
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+		debugOut.println(getPosition()+msg);
 	}
 	/**
 	 * print the log in {@link System}.out and append msg to the end of the line if  mask match the debug mask
@@ -272,7 +272,7 @@ public class Debugger {
 	 * @param msg the message to append at the end of the line
 	 */
 	public static void debug(int msg) {
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+		debugOut.println(getPosition()+msg);
 	}
 	/**
 	 * print the log in {@link System}.out and append msg to the end of the line if  mask match the debug mask
@@ -286,7 +286,7 @@ public class Debugger {
 	 * @param msg the message to append at the end of the line
 	 */
 	public static void debug(boolean msg) {
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+		debugOut.println(getPosition()+msg);
 	}
 	/**
 	 * print the log in {@link System}.out and append msg to the end of the line if  mask match the debug mask
@@ -300,7 +300,7 @@ public class Debugger {
 	 * @param msg the message to append at the end of the line
 	 */
 	public static void debug(double msg) {
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+		debugOut.println(getPosition()+msg);
 	}
 	/**
 	 * print the log in {@link System}.out and append msg to the end of the line if  mask match the debug mask
@@ -314,7 +314,7 @@ public class Debugger {
 	 * @param msg the message to append at the end of the line
 	 */
 	public static void debug(long msg) {
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+msg);
+		debugOut.println(getPosition()+msg);
 	}
 	/**
 	 * print the log in {@link System}.out and append msg to the end of the line if  mask match the debug mask
@@ -329,14 +329,14 @@ public class Debugger {
 	 */
 	public static void debug_collection(Collection parents) {
 		if (parents.size() == 0) {
-			debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() []");
+			debugOut.println(getPosition()+"[]");
 			return;
 		}
 		StringBuffer s = new StringBuffer("[");
 		for (Iterator iterator = parents.iterator(); iterator.hasNext();) {
 			s.append(iterator.next()+", ");
 		}
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s.substring(0, s.length()-2)+"]");
+		debugOut.println(getPosition()+s.substring(0, s.length()-2)+"]");
 	}
 	/**
 	 * print the log in {@link System}.out and append the content of the collection to the end of the line if mask match the debug mask
@@ -353,7 +353,7 @@ public class Debugger {
 			s.append(parents[i]+", ");
 		}
 		s.append(parents[parents.length-1]+"]");
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s);
+		debugOut.println(getPosition()+s);
 	}
 	/**
 	 * print the log in {@link System}.out and append the content of the collection to the end of the line if mask match the debug mask
@@ -370,7 +370,7 @@ public class Debugger {
 			s.append(parents[i]+",");
 		}
 		s.append(parents[parents.length-1]+"]");
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s);
+		debugOut.println(getPosition()+s);
 	}
 	/**
 	 * print the log in {@link System}.out and append the content of the collection to the end of the line if mask match the debug mask
@@ -387,7 +387,7 @@ public class Debugger {
 			s.append(parents[i]+",");
 		}
 		s.append(parents[parents.length-1]+"]");
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s);
+		debugOut.println(getPosition()+s);
 	}
 	/**
 	 * print the log in {@link System}.out and append the content of the collection to the end of the line if mask match the debug mask
@@ -404,7 +404,7 @@ public class Debugger {
 			s.append(parents[i]+", ");
 		}
 		s.append(parents[parents.length-1]+"]");
-		debugOut.println(getLineNumber()+":"+getClassName()+"#"+getMethodName()+"() "+s);
+		debugOut.println(getPosition()+s);
 	}
 	/**
 	 * print the log in {@link System}.out and append the content of the collection to the end of the line if mask match the debug mask
@@ -436,19 +436,16 @@ public class Debugger {
 		debugOut.println(s+"\n");
 	}
 
-	private static int getLineNumber() {
-	    return Thread.currentThread().getStackTrace()[4].getLineNumber();
+	private static String getPosition() {
+		StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+		if (trace == null || trace.length < 4) {
+			return "[UNKNOWN POSITION]:: ";
+		}
+		
+		StackTraceElement pos = trace[3];
+		
+		return pos.getLineNumber() +": "+pos.getClassName() +"."+pos.getMethodName()+"():: ";
 	}
-
-	private static String getClassName() {
-		String clname = Thread.currentThread().getStackTrace()[4].getClassName();
-	    return clname.substring(clname.lastIndexOf('.')+1);
-	}
-
-	private static String getMethodName() {
-	    return Thread.currentThread().getStackTrace()[4].getMethodName();
-	}
-
 	/**
 	 * Give the mask of the log you want to display
 	 * @param debug the debug to set
