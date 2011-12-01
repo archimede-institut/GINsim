@@ -2,6 +2,7 @@ package org.ginsim.gui.service.export.petrinet;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,13 +58,18 @@ class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 	}
 
 	protected void doExport( String filename) {
-		// FIXME: call the right subformat to do the job
+		// call the selected export method to do the job
+		try {
+			config.format.export(config, filename);
+		} catch (IOException e) {
+			Debugger.error(e);
+		}
 	}
 
 	@Override
 	public StackDialogHandler getConfigPanel() {
 		config = new PNConfig(graph);
-		return new PNExportConfigPanel(config);
+		return new PNExportConfigPanel(config, this);
 	}
 
 	@Override
@@ -81,9 +87,11 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 
     private final PNConfig config;
 	private PrioritySelectionPanel priorityPanel = null;
+	private final PetriNetExportAction action;
 
-	protected PNExportConfigPanel ( PNConfig config) {
+	protected PNExportConfigPanel ( PNConfig config, PetriNetExportAction action) {
     	this.config = config;
+    	this.action = action;
 	}
 	
 	@Override
@@ -124,7 +132,6 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 
 	@Override
 	public void run() {
-		// TODO: run the export
-		Debugger.error( "TODO: run the export");
+		action.selectFile();
 	}
 }

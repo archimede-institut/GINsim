@@ -26,6 +26,7 @@ public class PetriNetExportPNML extends BasePetriNetExport {
 		super("xml", "PNML");
 	}
 
+	@Override
 	protected void doExport( PNConfig config, String filename) throws IOException{
 		RegulatoryGraph graph = config.graph;
 		List v_no = graph.getNodeOrder();

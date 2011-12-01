@@ -54,6 +54,7 @@ public class PetriNetExportINA extends BasePetriNetExport {
 	// FIXME: INA does not like PN with "useless" places. Such places should be removed (with a warning)
 	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
 
+	@Override
 	protected void doExport( PNConfig config, String filename) throws IOException {
         RegulatoryGraph graph = config.graph;
 

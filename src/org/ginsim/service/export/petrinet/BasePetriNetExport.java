@@ -1,5 +1,6 @@
 package org.ginsim.service.export.petrinet;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +42,7 @@ import fr.univmrs.tagc.common.Debugger;
  *      Networks</li>
  *</ul>
  */
-public class BasePetriNetExport {
+public abstract class BasePetriNetExport {
 
 	public static final List<BasePetriNetExport> FORMATS = new ArrayList<BasePetriNetExport>();
 	
@@ -219,6 +220,13 @@ public class BasePetriNetExport {
 //            }
         }
 		return t_markup;
+    }
+    
+    abstract protected void doExport( PNConfig config, String filename) throws IOException;
+    
+    public void export(PNConfig config, String filename) throws IOException {
+    	// TODO: share outputstream creation here
+    	doExport(config, filename);
     }
 }
 
