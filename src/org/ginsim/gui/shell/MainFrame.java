@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.PriorityQueue;
 
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -16,6 +17,7 @@ import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
 import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.notifications.NotificationPanel;
@@ -40,7 +42,7 @@ import fr.univmrs.tagc.common.widgets.SplitPane;
 
 
 
-public class MainFrame extends Frame implements NotificationSource {
+public class MainFrame extends Frame implements NotificationSource, NotificationListener {
 	private static final long serialVersionUID = 3002680535567580439L;
 	
     private JDialog secondaryFrame = null;
@@ -58,6 +60,7 @@ public class MainFrame extends Frame implements NotificationSource {
     private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
 
 	private NotificationPanel notificationPanel = new NotificationPanel(this);
+	private PriorityQueue<Notification> notificationList = new PriorityQueue<Notification>();  
 
 	private final FrameActionManager actionManager = new MainFrameActionManager();
 
@@ -303,12 +306,29 @@ public class MainFrame extends Frame implements NotificationSource {
 
 	@Override
 	public Notification getTopNotification() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return notificationList.poll();
 	}
 
 	@Override
 	public void closeNotification() {
-		// TODO Auto-generated method stub
+		// Nothing to do since the queue already removed the notification at the getTopNotification
+	}
+	
+	@Override
+	public void receiveNotification( Notification message) {
+		
+		if( message != null){
+			notificationList.add( message);
+		}
+	}
+	
+	@Override
+	public void deleteNotification( Notification message) {
+	
+		if( message != null){
+			notificationList.remove( message);
+		}
+		
 	}
 }
