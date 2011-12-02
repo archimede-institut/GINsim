@@ -195,8 +195,13 @@ public class GUIManager {
 	 * try to close all frames
 	 */
 	public void quit( ){
-		int nbobjects = graphToGUIObject.size();
-		for (Graph g: graphToGUIObject.keySet()) {
+		
+		// Construction of the Vector of graph is required to avoid the ConcurrentModificationException
+		// a loop on the graphToGUIObject.keySet() will generate due to the graphToGUIObject.remove( graph)
+		// call in the close() method
+		Vector<Graph> graph_list = new Vector<Graph>();
+		graph_list.addAll( graphToGUIObject.keySet());
+		for ( Graph g: graph_list) {
 			if (!close(g)) {
 				break;
 			}
