@@ -9,7 +9,7 @@ import fr.univmrs.tagc.common.TimeoutObject;
  * A notification message
  *
  */
-public abstract class Notification implements TimeoutObject {
+public abstract class Notification implements TimeoutObject, Comparable {
 
 	protected Object topic;
 	private String message;
@@ -100,6 +100,23 @@ public abstract class Notification implements TimeoutObject {
      */
     public byte getType() {
         return type;
+    }
+    
+    /**
+     * Compare the notification to the given object. If this object is a Notification, the comparison is made on the type 
+     * 
+     * @param obj the object to compare
+     * @return a negative value if the given notification is less important
+     * 		   a positive value if the given notification is more important
+     *         a zero if the two notification have the same importance or the given object is not a Notification
+     */
+    @Override
+    public int compareTo( Object obj) {
+    	
+    	if( obj instanceof Notification){
+    		return ((Notification) obj).getType() - this.type;
+    	}
+    	return 0;
     }
    
 }
