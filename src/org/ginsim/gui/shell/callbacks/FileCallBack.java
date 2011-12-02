@@ -64,6 +64,7 @@ public class FileCallBack {
 		menu.add(new JSeparator());
 		
 		menu.add(new SaveAction(g));
+		menu.add(new SaveAsAction(g));
 		menu.add(exportMenu);
 
 		menu.add(new JSeparator());
@@ -154,6 +155,27 @@ class SaveAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		save();
+	}
+}
+
+
+class SaveAsAction extends AbstractAction {
+	
+	private final Graph<?,?> g;
+	
+	public SaveAsAction(Graph<?,?> g) {
+		super("Save as...");
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, FrameActionManager.MASK));
+		this.g = g;
+	}
+	
+	public boolean saveAs() {
+		return GUIManager.getInstance().getGraphGUI(g).saveAs();
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		saveAs();
 	}
 }
 

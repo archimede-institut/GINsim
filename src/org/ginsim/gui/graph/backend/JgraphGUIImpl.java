@@ -249,13 +249,15 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	}
 
 	@Override
-	public void saveAs() {
+	public boolean saveAs() {
 		Frame frame = GUIManager.getInstance().getFrame(graph);
 		String filename = FileSelectionHelper.selectSaveFilename(frame);
 		if (filename != null) {
 			GraphManager.getInstance().registerGraph( graph, filename);
-			save();
+			return save();
 		}
+		
+		return false;
 	}
 
 	@Override

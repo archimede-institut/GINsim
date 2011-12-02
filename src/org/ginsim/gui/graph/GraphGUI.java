@@ -60,7 +60,7 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	/**
 	 * Pick a destination and save the graph.
 	 */
-	void saveAs();
+	boolean saveAs();
 
 	/**
 	 * Warn the listeners that the graph will be closed
