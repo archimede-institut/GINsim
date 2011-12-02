@@ -1,7 +1,5 @@
 package org.ginsim.utils;
 
-import java.awt.Component;
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,14 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-
-import javax.swing.JOptionPane;
 
 import org.ginsim.exception.GsException;
 
-import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.Tools;
 import fr.univmrs.tagc.common.managerresources.Translator;
 
