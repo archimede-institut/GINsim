@@ -7,12 +7,15 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.utils.IOUtils;
 
 import fr.univmrs.tagc.common.OptionStore;
 import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * A FileChooser with a proper filter for all the document supported
@@ -111,11 +114,15 @@ public class GenericDocumentFileChooser extends JFileChooser {
         	if (extension != null && ! filePath.endsWith(extension)) {
         		filePath += extension;
         	}
-            if (Tools.isFileWritable(filePath, parentWindow)) {               
-                Object[] v = new Object[2];
-                v[0] = new File(filePath);
-                v[1] = format;
-                return v;
+            if (IOUtils.isFileWritable(filePath)) {
+    			int a = JOptionPane.showConfirmDialog( parentWindow,
+    					Translator.getString("STR_question_overwrite"));
+    			if( a == JOptionPane.OK_OPTION){
+	                Object[] v = new Object[2];
+	                v[0] = new File(filePath);
+	                v[1] = format;
+	                return v;
+    			}
             }
         }
         return null;
@@ -148,11 +155,15 @@ public class GenericDocumentFileChooser extends JFileChooser {
         	if (extension != null && ! filePath.endsWith(extension)) {
         		filePath += extension;
         	}
-            if (Tools.isFileWritable(filePath, parentWindow)) {               
-                Object[] v = new Object[2];
-                v[0] = new File(filePath);
-                v[1] = format;
-                return v;
+            if (IOUtils.isFileWritable(filePath)) {  
+    			int a = JOptionPane.showConfirmDialog( parentWindow,
+    					Translator.getString("STR_question_overwrite"));
+    			if( a == JOptionPane.OK_OPTION){
+	                Object[] v = new Object[2];
+	                v[0] = new File(filePath);
+	                v[1] = format;
+	                return v;
+    			}
             }
         }
         return null;

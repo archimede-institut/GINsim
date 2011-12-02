@@ -35,8 +35,8 @@ public class Tools {
 
 	public final static int os;
 	public final static int SYS_UNKNOWN = 0;
-	public final static int SYS_LINUX = 1;
-	public final static int SYS_MACOSX = 2;
+	public final static int SYS_LINUX   = 1;
+	public final static int SYS_MACOSX  = 2;
 	public final static int SYS_WINDOWS = 3;
 
 	protected static Map<String, OpenHelper> m_helper = new HashMap<String, OpenHelper>();
@@ -69,6 +69,8 @@ public class Tools {
 	 *            - array of Object
 	 * @return N sorted
 	 */
+	// Moved to DataUtils
+	@Deprecated
 	public static Object[] decrease(int[] T, Object[] N) {
 		int i;
 		int key;
@@ -98,6 +100,8 @@ public class Tools {
 	 *            - array of Object
 	 * @return N sorted
 	 */
+	// Moved to DataUtils
+	@Deprecated
 	public static Object[] increase(int[] T, Object[] N) {
 		int i;
 		int key;
@@ -125,6 +129,8 @@ public class Tools {
 	 *            the string
 	 * @return true if it is a valid integer
 	 */
+	// Moved to DataUtils
+	@Deprecated
 	public static boolean isInteger(String s) {
 		try {
 			Integer.parseInt(s);
@@ -144,6 +150,8 @@ public class Tools {
 	 * @return String : a string representation.
 	 * 
 	 */
+	// Moved to DataUtils
+	@Deprecated
 	public static String getColorCode(Color color) {
 		return Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
 	}
@@ -155,6 +163,8 @@ public class Tools {
 	 *            the hexadecimal color code
 	 * @return the corresponding Color
 	 */
+	// Moved to DataUtils
+	@Deprecated
 	public static Color getColorFromCode(String code) throws NumberFormatException {
 		return Color.decode(code);
 	}
@@ -165,6 +175,8 @@ public class Tools {
 	 * @param fileName
 	 * @return true if it managed
 	 */
+	// Moved to GUIIOUtils
+	@Deprecated
 	public static boolean openFile(String fileName) {
 		File f;
 		if (fileName.startsWith("//localhost/")) {
@@ -179,6 +191,8 @@ public class Tools {
 		return openURI("file://" + fileName);
 	}
 
+	// Moved to GUIIOUtils
+	@Deprecated
 	public static boolean openURI(String uri) {
 		try {
 			Desktop.getDesktop().browse(new URI(uri));
@@ -214,6 +228,8 @@ public class Tools {
 	 * @throws GsException
 	 *             if an error occured
 	 */
+	// Moved to IOUtils
+	@Deprecated
 	public static boolean isFileWritable(String string, Component frame) throws GsException {
 		if (string == null || string.equals("")) {
 			return false;
@@ -264,7 +280,10 @@ public class Tools {
 	 * @param title
 	 * @return true if the user accepted
 	 */
+	// Moved to GUIMessageUtils
+	@Deprecated
 	public static boolean ask(String msg, String title) {
+		
 		int ret = JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.OK_CANCEL_OPTION);
 		return ret == JOptionPane.OK_OPTION;
 	}
@@ -274,6 +293,8 @@ public class Tools {
 	 * @param obj
 	 * @return the index of obj in the array t, or -1 if not found
 	 */
+	// Moved to DataUtils
+	@Deprecated
 	public static int arrayIndexOf(Object[] t, Object obj) {
 		if (obj == null) {
 			for (int i = 0; i < t.length; i++) {
@@ -296,6 +317,8 @@ public class Tools {
 	 * @param val
 	 * @return the index of val in the array t, or -1 if not found
 	 */
+	// Moved to DataUtils
+	@Deprecated
 	public static int arrayIndexOf(int[] t, int val) {
 		for (int i = 0; i < t.length; i++) {
 			if (t[i] == val) {
@@ -305,18 +328,26 @@ public class Tools {
 		return -1;
 	}
 
+	// Moved to DataUtils
+	@Deprecated
 	public static boolean isValidId(String id) {
 		return Pattern.compile("^[a-zA-Z0-9_-]+$").matcher(id).find();
 	}
 
+	// Moved to DataUtils
+	@Deprecated
 	public static int addMask(int value, int mask) {
 		return value - (value & mask) + mask;
 	}
 
+	// Moved to DataUtils
+	@Deprecated
 	public static int removeMask(int value, int mask) {
 		return value - (value & mask);
 	}
 
+	// Moved to DataUtils
+	@Deprecated
 	public static boolean hasMask(int value, int mask) {
 		return (value & mask) == mask;
 	}
@@ -327,6 +358,8 @@ public class Tools {
 	 * @param e
 	 * @param main
 	 */
+	// Moved to GUIMessageUtils
+	@Deprecated
 	public static void error(GsException e, Component main) {
 		int i = -1;
 		switch (e.getGravity()) {
@@ -351,9 +384,14 @@ public class Tools {
 	 * @param graph: graph to be used to find the parent frame
 	 * @param main
 	 */
+	// Moved to GUIMessageUtils
+	@Deprecated
 	public static void error(String s, Graph<?, ?> graph) {
 		error(s, GUIManager.getInstance().getFrame(graph));
 	}
+	
+	// Moved to GUIMessageUtils
+	@Deprecated
 	public static void error(String s) {
 		error(s, (Component)null);
 	}
@@ -363,6 +401,8 @@ public class Tools {
 	 * @param s
 	 * @param main
 	 */
+	// Moved to GUIMessageUtils
+	@Deprecated
 	public static void error(String s, Component main) {
 		if (HASGUI) {
 			JOptionPane.showMessageDialog(main, s + "\n", "error", JOptionPane.ERROR_MESSAGE);
@@ -371,6 +411,8 @@ public class Tools {
 		}
 	}
 
+	// Moved to IOUtils
+	@Deprecated
 	public static InputStream getStreamForPath(String path) throws IOException,
 			FileNotFoundException {
 		URL url = Tools.class.getResource(path);
@@ -380,12 +422,16 @@ public class Tools {
 		return new FileInputStream(path);
 	}
 
+	// Moved to IOUtils
+	@Deprecated
 	public static StringBuffer readFromFile(String file_path) throws IOException {
 		StringBuffer sb = new StringBuffer(1024);
 		readFromFile(file_path, sb);
 		return sb;
 	}
 
+	// Moved to IOUtils
+	@Deprecated
 	public static void readFromFile(String file_path, StringBuffer sb) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(file_path));
 		char[] buf = new char[1024];
