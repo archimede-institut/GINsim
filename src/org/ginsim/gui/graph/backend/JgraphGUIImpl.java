@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
+import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphViewListener;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.common.Edge;
@@ -58,7 +59,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     // saving memory
     // FIXME: listen for graph changes and set it as false when needed
     private boolean isSaved = false;
-    private String savePath = null;
     
     // TODO: should it be static, created later or what ?
     private ParallelEdgeRouting pedgerouting = new ParallelEdgeRouting();
@@ -225,6 +225,9 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
 	@Override
 	public boolean save() {
+		
+		String savePath = GraphManager.getInstance().getGraphPath( graph);
+		
 		if (savePath == null) {
 			isSaved = false;
 			saveAs();
@@ -250,7 +253,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		Frame frame = GUIManager.getInstance().getFrame(graph);
 		String filename = FileSelectionHelper.selectSaveFilename(frame);
 		if (filename != null) {
-			savePath = filename;
+			GraphManager.getInstance().registerGraph( graph, filename);
 			save();
 		}
 	}
