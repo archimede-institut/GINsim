@@ -161,7 +161,11 @@ public class GUIManager {
 		GUIObject o = graphToGUIObject.get(graph);
 		if (!o.graphGUI.isSaved()) {
 			// FIXME: better name
-			String name = "NAME HERE";
+			String name = GraphManager.getInstance().getGraphPath( graph);
+			if( name == null){
+				name = "NAME_HERE";
+			}
+			o.frame.toFront();
             int aw = JOptionPane.showConfirmDialog(o.frame, Translator.getString("STR_saveQuestion1")+ name +Translator.getString("STR_saveQuestion2"),
                     Translator.getString("STR_closeConfirm"),
                     JOptionPane.YES_NO_CANCEL_OPTION);
