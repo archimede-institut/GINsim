@@ -33,10 +33,20 @@ public class Tools {
 
 	public static final Integer IZ = new Integer(0);
 
+	//Moved To EnvUtils
+	@Deprecated
 	public final static int os;
+	//Moved To EnvUtils
+	@Deprecated
 	public final static int SYS_UNKNOWN = 0;
+	//Moved To EnvUtils
+	@Deprecated
 	public final static int SYS_LINUX   = 1;
+	//Moved To EnvUtils
+	@Deprecated
 	public final static int SYS_MACOSX  = 2;
+	//Moved To EnvUtils
+	@Deprecated
 	public final static int SYS_WINDOWS = 3;
 
 	protected static Map<String, OpenHelper> m_helper = new HashMap<String, OpenHelper>();
@@ -47,6 +57,7 @@ public class Tools {
 
 	public static boolean HASGUI = true;
 
+	//Moved To EnvUtils
 	static {
 		String os_name = System.getProperty("os.name").toLowerCase();
 		if (os_name.startsWith("windows")) {
