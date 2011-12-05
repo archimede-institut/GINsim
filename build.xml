@@ -17,12 +17,10 @@
 	<property name="build" location="./build"/>
 	<property name="dist" location="./dist"/>
 	<property name="lib.dir" value="../lib"/>
-	<property name="src.resources.ginsim" location="${src}/org/ginsim/gui/resources"/>
-	<property name="src.resources.jython" location="${src}/org/ginsim/gui/service/tool/jython/console"/>
-	<property name="src.resources.common" location="${src}/fr/univmrs/tagc/common/resources"/>
-	<property name="build.resources.ginsim" location="${build}/org/ginsim/gui/resources"/>
-	<property name="build.resources.jython" location="${build}/org/ginsim/gui/service/tool/jython/console"/>
-	<property name="build.resources.common" location="${build}/fr/univmrs/tagc/common/resources"/>
+	<property name="src.resources.ginsim" location="${src}/org/ginsim/gui/resource"/>
+	<property name="src.resources.jython" location="${src}/org/ginsim/servicegui/tool/jython/console"/>
+	<property name="build.resources.ginsim" location="${build}/org/ginsim/gui/resource"/>
+	<property name="build.resources.jython" location="${build}/org/ginsim/servicegui/tool/jython/console"/>
 
 	<property name="jar.name" value="${ant.project.name}-${version}.jar"/>
 	<property name="jar.file" value="${lib.dir}/../${jar.name}"/>
@@ -71,7 +69,6 @@
 		<tstamp/>
 		<!-- Create build and dist directory -->
 		<mkdir dir="${build}"/>
-		<mkdir dir="${build.resources.common}"/>
 		<mkdir dir="${build.resources.ginsim}"/>
 		<mkdir dir="${build.resources.jython}"/>
 		<mkdir dir="${dist}"/>
@@ -104,9 +101,6 @@
 		<!-- copy resources files -->
 		<copy todir="${build.resources.ginsim}">
 			<fileset dir="${src.resources.ginsim}"/>
-		</copy>
-		<copy todir="${build.resources.common}">
-			<fileset dir="${src.resources.common}"/>
 		</copy>
 		<copy todir="${build.resources.jython}">
 			<fileset dir="${src.resources.jython}"/>

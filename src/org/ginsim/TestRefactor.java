@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
@@ -45,20 +44,7 @@ public class TestRefactor {
          *  - give some help
          */
         for (int i = 0; i < args.length; i++) {
-        	if (args[i].equals("--lang")) {
-                if (args.length > i) {
-                    i++;
-                    String lang = args[i];
-                    if ("C".equals(lang)) {
-                        Translator.setLocale(Locale.ENGLISH);
-                    } else if ("FR".equals(lang)) {
-                        Translator.setLocale(Locale.FRENCH);
-                    }
-                } else {
-                    System.out.println(args[i]+": missing argument");
-                    return;
-                }
-            } else if (args[i].equals("--run")) {
+        	if (args[i].equals("-s")) {
                 if (args.length == i+1) {
                     System.out.println("Script mode requires a filename argument");
                     return;
@@ -68,23 +54,22 @@ public class TestRefactor {
                 GINsimPy.runJython(args[i]);
                 return;
             }
-            else if (args[i].startsWith("-")) {
-            	if (!args[i].equals("--help")) {
+            
+        	if (args[i].startsWith("-")) {
+            	if (!args[i].equals("-h")) {
                     System.out.println("Unknown option: "+args[i]);
             	}
                 System.out.println("avaible options");
-                System.out.println("\t--lang <lang>: choose the lang (avaible: C, FR)");
-                System.out.println("\t--run <file>: run \"script\" from <file> [TODO: pass other args to the script]");
-                System.out.println("\t--ginsimdir <dir>: define GINsim install dir");
-                System.out.println("\t--help: display this message");
+                System.out.println("\t-s <file>: run \"script\" from <file> [TODO: pass other args to the script]");
+                System.out.println("\t-h: display this message");
                 return;
+            }
+        	
+            File f = new File(args[i]);
+            if (f.exists()) {
+                open.add(args[i]);
             } else {
-                File f = new File(args[i]);
-                if (f.exists()) {
-                    open.add(args[i]);
-                } else {
-                	LogManager.error("Required file does not exist: " + f);
-                }
+            	LogManager.error("Required file does not exist: " + f);
             }
         }
 		
