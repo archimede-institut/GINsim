@@ -9,12 +9,13 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStatesIterator;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.reg2dyn.helpers.STGSimulationHelper;
 import org.ginsim.gui.service.tool.reg2dyn.helpers.SimulationHelper;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 /**
  * This is the main part of the simulation. It supports pluggable backends
@@ -86,8 +87,8 @@ public class Simulation extends Thread implements Runnable {
     		frame.endSimu( do_simulation());
     	}
     	catch ( GsException ge) {
-    		Tools.error( "Unable to launch the simulation");
-    		Debugger.error( "Unable to start Simulation");
+    		GUIMessageUtils.openErrorDialog( "Unable to launch the simulation");
+    		LogManager.error( "Unable to start Simulation");
 		}
     }
 	public Graph do_simulation() throws GsException {
@@ -114,7 +115,7 @@ public class Simulation extends Thread implements Runnable {
 				            }
 						}
 						if (maxnodes != 0 && nbnode >= maxnodes){
-							Debugger.error( "Maxnodes reached: " + maxnodes);
+							LogManager.error( "Maxnodes reached: " + maxnodes);
 						    throw new GsException(GsException.GRAVITY_NORMAL, (String)null);
 						}
 
@@ -143,7 +144,7 @@ public class Simulation extends Thread implements Runnable {
 								display += item.state[i] + " ";
 							}
 							display += "\n";
-							Debugger.trace( display, false); 
+							LogManager.trace( display, false); 
 						} else {
 							if (maxdepth == 0 || item.depth < maxdepth) {
 								while (updater.hasNext()) {
@@ -157,16 +158,16 @@ public class Simulation extends Thread implements Runnable {
 				}
 			}
 		} catch (GsException e) {
-			Debugger.error( "Simulation was interrupted");
-			Debugger.error( e);
+			LogManager.error( "Simulation was interrupted");
+			LogManager.error( e);
 		} catch (OutOfMemoryError e) {
-			Debugger.error( "Out of Memory");
-			Debugger.error( e);
-		    Tools.error("Out Of Memory");
+			LogManager.error( "Out of Memory");
+			LogManager.error( e);
+		    GUIMessageUtils.openErrorDialog("Out Of Memory");
 		    return null;
 		} finally {
 			if (maxDepthReached) {
-				Tools.error("Reached the max depth");
+				GUIMessageUtils.openErrorDialog("Reached the max depth");
 				//TODO: explain what happened and give some hints
 			}
 		}

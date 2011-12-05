@@ -5,10 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.ginsim.graph.common.AttributesReader;
-import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.view.AttributesReader;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.utils.DataUtils;
 
-import fr.univmrs.tagc.common.Tools;
+
 
 
 /**
@@ -123,7 +124,7 @@ public class EdgeStyle implements Style {
 		for (int i = 1; i < tabs_count; i++) {
 			tabs += "\t";
 		}
-		if (lineColor!= NULL_LINECOLOR) s += tabs+CSS_LINECOLOR+": "+Tools.getColorCode(lineColor)+"\n";
+		if (lineColor!= NULL_LINECOLOR) s += tabs+CSS_LINECOLOR+": "+DataUtils.getColorCode(lineColor)+"\n";
 		if (shape != NULL_SHAPE) s += tabs+CSS_SHAPE+": "+(shape == EdgeAttributesReader.STYLE_CURVE?CSS_SHAPE_CURVE:CSS_SHAPE_STRAIGHT)+"\n";
 		if (border != NULL_BORDER) s += tabs+CSS_BORDER+": "+border+"\n";
 		if (lineEnd != NULL_LINEEND) {
@@ -170,7 +171,7 @@ public class EdgeStyle implements Style {
 			if (m.groupCount() < 2) throw new CSSSyntaxException("Malformed line "+i+" : "+lines[i]+". Must be 'key: value;'");
 			if (key.equals(CSS_LINECOLOR)) {
 				try {
-					lineColor = Tools.getColorFromCode(value);
+					lineColor = DataUtils.getColorFromCode(value);
 				} catch (NumberFormatException e) {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}

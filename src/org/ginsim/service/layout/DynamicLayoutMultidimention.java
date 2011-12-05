@@ -8,13 +8,13 @@ import java.util.List;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 public class DynamicLayoutMultidimention {
@@ -49,7 +49,7 @@ public class DynamicLayoutMultidimention {
 		Iterator it = graph.getNodes().iterator();
 		Object v = it.next();
 	    if (v == null || !(v instanceof DynamicNode)) {
-	    	Debugger.error( "Wrong type of graph for this layout");
+	    	LogManager.error( "Wrong type of graph for this layout");
 	    	return;
 	    }
 		vreader = graph.getNodeAttributeReader();

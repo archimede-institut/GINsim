@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 import fr.univmrs.tagc.GINsim.graph.GsGinsimGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.gui.GsOpenAction;
-import fr.univmrs.tagc.common.Tools;
+
 import fr.univmrs.tagc.common.managerresources.ImageLoader;
 import fr.univmrs.tagc.common.managerresources.Translator;
 import fr.univmrs.tagc.common.widgets.AboutDialog;
@@ -114,7 +114,7 @@ public class GsMain {
                 
                 
 				try {
-	                InputStream is = Tools.getStreamForPath("/fr/univmrs/tagc/GINsim/jython/GINsim.py");
+	                InputStream is = IOUtils.getStreamForPath("/fr/univmrs/tagc/GINsim/jython/GINsim.py");
 	                pi.execfile(is, "GS.py");
 	                is.close();
 	                pi.exec("GINsim = GINsim()");

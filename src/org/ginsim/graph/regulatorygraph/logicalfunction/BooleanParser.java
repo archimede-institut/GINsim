@@ -15,8 +15,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.parser.TBooleanParser;
 import org.ginsim.graph.regulatorygraph.logicalfunction.parser.TBooleanTreeNode;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 public class BooleanParser extends TBooleanParser {
 	private Hashtable operandList;
@@ -193,8 +193,8 @@ public class BooleanParser extends TBooleanParser {
 						shouldReInit = true;
 					}
 					catch( GsException gs_exception){
-						Debugger.error( "Unable to create new edge between vertices '" + nodeID + "' and '" + this.vertex.getId() + "' : one of the vertex was not found in the graph");
-						Debugger.error( gs_exception);
+						LogManager.error( "Unable to create new edge between vertices '" + nodeID + "' and '" + this.vertex.getId() + "' : one of the vertex was not found in the graph");
+						LogManager.error( gs_exception);
 					}
 				}
 			}
@@ -211,7 +211,7 @@ public class BooleanParser extends TBooleanParser {
 		} 
 		catch (Exception e) {
 			if (e instanceof GsException) {
-				Debugger.trace( "Working");
+				LogManager.trace( "Working");
 			}
 			e.printStackTrace();
 			return false;

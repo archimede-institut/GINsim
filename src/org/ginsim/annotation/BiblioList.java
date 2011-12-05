@@ -28,16 +28,19 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphListener;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.GUIIOUtils;
+import org.ginsim.utils.log.LogManager;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
-import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.OpenHelper;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+import fr.univmrs.tagc.common.utils.IOUtils;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
@@ -102,7 +105,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 	
 	public void addLinkToCurRef(String proto, String value) {
 		if (curRef == null) {
-			Debugger.error( "No current ref");
+			LogManager.error( "No current ref");
 			return;
 		}
 		curRef.addLink(proto, value);
@@ -210,7 +213,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 		while (it.hasNext()) {
 			Entry e = (Entry)it.next();
 			if (!"file".equals(e.getKey())) {
-				return Tools.getLink(e.getKey(), e.getValue());
+				return IOUtils.getLink(e.getKey(), e.getValue());
 			}
 		}
 		return null;
@@ -291,13 +294,13 @@ class Ref {
 	}
 
 	public void open() {
-		if (links.containsKey("file") && Tools.open("file", links.get("file"))) {
+		if (links.containsKey("file") && GUIIOUtils.open("file", links.get("file"))) {
 			return;
 		}
 		Iterator it = links.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry e = (Entry)it.next();
-			if (Tools.open(e.getKey(), e.getValue())) {
+			if (GUIIOUtils.open(e.getKey(), e.getValue())) {
 				return;
 			}
 		}
@@ -347,9 +350,9 @@ class ReferencerParser extends XMLHelper {
 		try {
 			File f = new File(path);
 			baseDir = f.getParent();
-			startParsing(Tools.getStreamForPath(path), false);
+			startParsing(IOUtils.getStreamForPath(path), false);
 		} catch (Exception e) {
-			Tools.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e), null);
 		}
     }
     
@@ -398,7 +401,7 @@ class ReferencerParser extends XMLHelper {
 				if (f.exists()) {
 					bibList.addLinkToCurRef("file", curval);
 				} else {
-					Debugger.error( "Could not find file : " + curval);
+					LogManager.error( "Could not find file : " + curval);
 				}
 				break;
 		}
@@ -445,7 +448,7 @@ class BibTexParser {
 				}
 			}
 		} catch (Exception e) {
-			Tools.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e), null);
 		}
 	}
 }

@@ -35,11 +35,11 @@ import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementButton;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
 import org.ginsim.gui.tbclient.decotreetable.table.DecoTreeTable;
+import org.ginsim.gui.utils.widgets.GsButton;
+import org.ginsim.gui.utils.widgets.GsPanel;
 
 import tbrowser.data.TBProbe;
 import tbrowser.data.module.TBModuleData;
-import fr.univmrs.tagc.common.widgets.GsButton;
-import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class InteractionsPanel extends GsPanel implements ItemListener, ActionListener {
 	private static final long serialVersionUID = 6871206109510696996L;

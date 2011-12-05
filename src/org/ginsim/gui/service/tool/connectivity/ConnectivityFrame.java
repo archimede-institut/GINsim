@@ -11,18 +11,19 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.graph.view.css.NodeStyle;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.tool.connectivity.AlgoConnectivity;
 
 import fr.univmrs.tagc.common.ColorPalette;
 import fr.univmrs.tagc.common.ProgressListener;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 /**
  * config frame for the connectivity plugin.
@@ -54,7 +55,7 @@ public class ConnectivityFrame extends JDialog implements ProgressListener {
 		super(frame);
 		this.frame = frame;
 		if (graph == null) {
-			Tools.error("no graph", frame);
+			GUIMessageUtils.openErrorDialog("no graph", frame);
 		}
 		this.graph = graph;
 		initialize();

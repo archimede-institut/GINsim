@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
+import org.ginsim.gui.resource.Translator;
+
 
 /**
  * tableModel to configure gene state blockers

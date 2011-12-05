@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * descriptor for dynamic hierarchical graphs.

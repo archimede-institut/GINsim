@@ -11,13 +11,14 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.utils.DataUtils;
+import org.ginsim.utils.data.GenericList;
+import org.ginsim.utils.data.GenericPropertyInfo;
+import org.ginsim.utils.data.ObjectEditor;
+import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.datastore.GenericList;
-import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.common.datastore.ObjectEditor;
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
-import fr.univmrs.tagc.common.managerresources.Translator;
+
 
 
 public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener<RegulatoryNode, RegulatoryMultiEdge> {
@@ -71,7 +72,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 
 	public boolean isValidValue(int prop, String value) {
 		if (prop == PROP_ID) {
-			return Tools.isValidId(value);
+			return DataUtils.isValidId(value);
 		}
 		return false;
 	}

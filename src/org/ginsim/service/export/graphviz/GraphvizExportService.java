@@ -13,7 +13,7 @@ import org.ginsim.service.Service;
 import org.ginsim.service.export.Dotify;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Tools;
+
 
 /**
  * Encode a graph to graphviz format.

@@ -10,14 +10,15 @@ import java.util.Vector;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
+import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.connectivity.ConnectivityFrame;
+import org.ginsim.utils.DataUtils;
 
 import fr.univmrs.tagc.common.ProgressListener;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+
 
 /**
  * the class with the algorithms for strongest connected component
@@ -220,14 +221,14 @@ public class AlgoConnectivity extends Thread {
 		// compute the reverse graph of graphModel
         frame.setProgressText(S_SEARCH_CC+Translator.getString("STR_connectivity_reverse"));
 		//change the order of nodes in function of the higher postorder 
-		Object[] tAllNode = Tools.decrease(lastExploration,t_vertex);
+		Object[] tAllNode = DataUtils.decrease(lastExploration,t_vertex);
 	
 		// depth first search on the reverse graph
         frame.setProgressText(S_SEARCH_CC+Translator.getString("STR_connectivity_reverseDFS"));
 		depthSearch(tAllNode,g, true);
 		
 		// sort the arrays	
-		Tools.increase(firstExploration, tAllNode);		
+		DataUtils.increase(firstExploration, tAllNode);		
 		int end = 0;
 		//the list of all connected components
 		Vector components = new Vector(0);

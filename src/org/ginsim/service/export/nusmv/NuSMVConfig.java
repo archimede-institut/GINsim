@@ -7,8 +7,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
+import org.ginsim.utils.data.ObjectStore;
 
-import fr.univmrs.tagc.common.datastore.ObjectStore;
 
 public class NuSMVConfig implements InitialStateStore {
 

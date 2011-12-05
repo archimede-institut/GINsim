@@ -28,13 +28,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * panel to configure visual settings of the graph:

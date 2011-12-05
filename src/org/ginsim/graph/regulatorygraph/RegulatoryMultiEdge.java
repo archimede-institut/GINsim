@@ -6,8 +6,8 @@ import java.util.List;
 import org.ginsim.annotation.Annotation;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.common.ToolTipsable;
+import org.ginsim.graph.view.EdgeAttributesReader;
 
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;

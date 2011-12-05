@@ -21,11 +21,12 @@ import javax.swing.JTextArea;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.FileSelectionHelper;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 /**
  * Export a path in the state transition graph to gnuplot scripts.
@@ -338,9 +339,9 @@ public class AReg2GPConfig extends JDialog {
                 		export();
                 	}
                 	catch( GsException ge){
-                		Tools.error( "Unable to execute the export");
-                		Debugger.error( "Unable to execute the Export");
-                		Debugger.error( ge);
+                		GUIMessageUtils.openErrorDialog( "Unable to execute the export");
+                		LogManager.error( "Unable to execute the Export");
+                		LogManager.error( ge);
                 	}
                 }
             });

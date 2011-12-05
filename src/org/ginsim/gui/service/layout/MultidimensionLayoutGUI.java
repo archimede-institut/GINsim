@@ -28,13 +28,14 @@ import javax.swing.table.TableCellRenderer;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.widgets.StockButton;
 import org.ginsim.service.layout.DynamicLayoutMultidimention;
+import org.ginsim.utils.log.LogManager;
 
 import fr.univmrs.tagc.common.ColorPalette;
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StockButton;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public class MultidimensionLayoutGUI {
 
@@ -120,9 +121,9 @@ public class MultidimensionLayoutGUI {
             		run();
             	}
             	catch( GsException ge){
-            		Tools.error( "Unable to launch layout");
-            		Debugger.error( "Unable to launch layout");
-            		Debugger.error( ge);
+            		GUIMessageUtils.openErrorDialog( "Unable to launch layout");
+            		LogManager.error( "Unable to launch layout");
+            		LogManager.error( ge);
             	}
             }
         });
@@ -263,7 +264,7 @@ class MdLayoutTableModel extends AbstractTableModel {
             }
             selectionModel.addSelectionInterval(min, max);
         }
-        Debugger.trace( "up");
+        LogManager.trace( "up");
 	}
 	public void moveDown(JTable table) {
 		int[] index=table.getSelectedRows();
@@ -291,7 +292,7 @@ class MdLayoutTableModel extends AbstractTableModel {
             }
             selectionModel.addSelectionInterval(min, max);
         }
-        Debugger.trace( "down");
+        LogManager.trace( "down");
 	}
 
 	private void swapTableRow(int source, int target) {

@@ -7,13 +7,14 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.utils.DataUtils;
 
-import fr.univmrs.tagc.common.Tools;
+
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class CytoscapeEncoder {
@@ -92,8 +93,8 @@ public class CytoscapeEncoder {
 			out.addAttr("w", String.valueOf(vertexAttributeReader.getWidth()));
 			out.addAttr("h", String.valueOf(vertexAttributeReader.getHeight()));
 			out.addAttr("width", "1");
-			out.addAttr("outline", '#'+Tools.getColorCode(vertexAttributeReader.getForegroundColor()));
-			out.addAttr("fill", '#'+Tools.getColorCode(vertexAttributeReader.getBackgroundColor()));
+			out.addAttr("outline", '#'+DataUtils.getColorCode(vertexAttributeReader.getForegroundColor()));
+			out.addAttr("fill", '#'+DataUtils.getColorCode(vertexAttributeReader.getBackgroundColor()));
 			out.addAttr("y", String.valueOf(vertexAttributeReader.getY()));
 			out.addAttr("x", String.valueOf(vertexAttributeReader.getX()));
 			if (vertexAttributeReader.getShape() == NodeAttributesReader.SHAPE_RECTANGLE) {
@@ -151,15 +152,15 @@ public class CytoscapeEncoder {
 
 			out.openTag("graphics");
 			out.addAttr("width", String.valueOf((int)edgeAttributeReader.getLineWidth()));
-			out.addAttr("fill", '#'+Tools.getColorCode(edgeAttributeReader.getLineColor()));
+			out.addAttr("fill", '#'+DataUtils.getColorCode(edgeAttributeReader.getLineColor()));
 			out.openTag("att");
 			out.addAttr("name", "cytoscapeEdgeGraphicsAttributes");
 			out.addTag("att", new String[] {"name", "sourceArrow", "value", "0"});
 			out.addTag("att", new String[] {"name", "targetArrow", "value", edge_cyt_id});
 			out.addTag("att", new String[] {"name", "edgeLabelFont", "value", "Default-0-10"});
 			out.addTag("att", new String[] {"name", "edgeLineType", "value", "SOLID"});
-			out.addTag("att", new String[] {"name", "sourceArrowColor", "value", '#'+Tools.getColorCode(edgeAttributeReader.getLineColor())});
-			out.addTag("att", new String[] {"name", "targetArrowColor", "value", '#'+Tools.getColorCode(edgeAttributeReader.getLineColor())});
+			out.addTag("att", new String[] {"name", "sourceArrowColor", "value", '#'+DataUtils.getColorCode(edgeAttributeReader.getLineColor())});
+			out.addTag("att", new String[] {"name", "targetArrowColor", "value", '#'+DataUtils.getColorCode(edgeAttributeReader.getLineColor())});
 			if (edgeAttributeReader.getStyle() == EdgeAttributesReader.STYLE_STRAIGHT) {
 				out.addTag("att", new String[] {"name", "curved", "value", "STRAIGHT_LINES"});
 			} else {

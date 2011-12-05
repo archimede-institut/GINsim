@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 public class InitialStatesIterator implements Iterator {
@@ -66,7 +66,7 @@ class StatesIterator implements Iterator {
         }
         InitialState next = (InitialState)helperIterator.next();
         while (next == null && helperIterator.hasNext()) {
-        	Debugger.trace( "Next input is null");
+        	LogManager.trace( "Next input is null");
             next = (InitialState)helperIterator.next();
         }
         if (next != null) {

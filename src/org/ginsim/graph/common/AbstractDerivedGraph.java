@@ -6,8 +6,8 @@ import java.util.Collection;
 import org.ginsim.core.GraphEventCascade;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 
 abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Graph<AV, AE>, AV, AE extends Edge<AV>>

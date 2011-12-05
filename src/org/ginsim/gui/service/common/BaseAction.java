@@ -7,8 +7,9 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StockButton;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.widgets.StockButton;
+
 
 /**
  * this class is used for all actions, it will lookup for an internatiolized string

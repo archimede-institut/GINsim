@@ -19,12 +19,12 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
+import org.ginsim.utils.data.GenericList;
+import org.ginsim.utils.data.GenericPropertyInfo;
+import org.ginsim.utils.data.ObjectEditor;
 
-import fr.univmrs.tagc.common.datastore.GenericList;
-import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.common.datastore.ObjectEditor;
-import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> {
 

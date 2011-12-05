@@ -9,8 +9,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * This is the model behind the interaction editor

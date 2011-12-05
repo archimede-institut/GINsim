@@ -12,8 +12,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 
@@ -90,7 +90,7 @@ public final class modelABC {
 				} 
 				display += "\n";
 			}
-			Debugger.trace( display, false); 
+			LogManager.trace( display, false); 
 
 		} // close the try
 

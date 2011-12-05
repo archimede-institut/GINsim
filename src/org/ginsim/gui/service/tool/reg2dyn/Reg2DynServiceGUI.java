@@ -16,14 +16,14 @@ import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ToolAction;
+import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.service.tool.reg2dyn.Reg2DynService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.Frame;
 
 /**
  * main method for the reg2dyn plugin

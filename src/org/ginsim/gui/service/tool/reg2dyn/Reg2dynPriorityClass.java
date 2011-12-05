@@ -1,7 +1,7 @@
 package org.ginsim.gui.service.tool.reg2dyn;
 
-import fr.univmrs.tagc.common.datastore.MultiColObject;
-import fr.univmrs.tagc.common.datastore.NamedObject;
+import org.ginsim.utils.data.MultiColObject;
+import org.ginsim.utils.data.NamedObject;
 
 
 /**

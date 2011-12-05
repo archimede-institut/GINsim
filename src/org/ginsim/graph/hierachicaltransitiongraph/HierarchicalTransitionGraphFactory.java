@@ -6,9 +6,9 @@ import org.ginsim.graph.common.GraphFactory;
 import org.ginsim.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * descriptor for hierarchical transition graphs.

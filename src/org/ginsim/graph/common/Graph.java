@@ -4,6 +4,8 @@ import java.util.Collection;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.backend.GraphViewListener;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 
 
 /**

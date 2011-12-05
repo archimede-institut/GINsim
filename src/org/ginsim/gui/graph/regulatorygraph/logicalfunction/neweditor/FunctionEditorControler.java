@@ -18,8 +18,8 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.Tr
 import org.ginsim.graph.regulatorygraph.logicalfunction.neweditor.qmc.QMCThread;
 import org.ginsim.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
+import org.ginsim.gui.utils.widgets.GsButton;
 
-import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class FunctionEditorControler {
 	public static final int ADD_EMPTY_TERM = 1;

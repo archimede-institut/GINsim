@@ -4,9 +4,9 @@ import java.awt.Frame;
 import java.awt.Insets;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
 
 
 public abstract class BaseSimulationFrame extends StackDialog implements SimulationManager {
@@ -35,6 +35,6 @@ public abstract class BaseSimulationFrame extends StackDialog implements Simulat
   }
 
     public void addStableState(SimulationQueuedState item) {
-    	Debugger.trace("stable (depth "+item.depth+"): ");
+    	LogManager.trace("stable (depth "+item.depth+"): ");
     }
 }

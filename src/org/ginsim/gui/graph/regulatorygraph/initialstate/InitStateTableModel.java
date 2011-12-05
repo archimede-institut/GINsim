@@ -11,9 +11,9 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 /**
  * model for the initState table.

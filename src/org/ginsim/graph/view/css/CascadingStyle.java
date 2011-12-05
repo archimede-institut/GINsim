@@ -6,9 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.graph.common.AttributesReader;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.view.AttributesReader;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 
 
 public class CascadingStyle {

@@ -41,17 +41,18 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.tool.stablestates.StableTableModel;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
+
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
 import fr.univmrs.tagc.common.document.GenericDocumentFormat;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
+import fr.univmrs.tagc.common.utils.IOUtils;
 
 /**
  * GenericDocumentExport is a plugin to export the documentation of a model into multiples document format.
@@ -443,7 +444,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 			if (lnk.getHelper() != null) {
 				s_link = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());
 			} else {
-				s_link = Tools.getLink(lnk.getProto(), lnk.getValue());
+				s_link = IOUtils.getLink(lnk.getProto(), lnk.getValue());
 			}
 			if (s_link == null) {
 				doc.openListItem(null);
@@ -481,7 +482,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 	 */
 	private void setJavascript() throws IOException {
 		StringBuffer javascript = doc.getDocumentExtra("javascript");
-		InputStream stream = Tools.getStreamForPath("/fr/univmrs/tagc/GINsim/resources/makeStableStatesClickable.js");
+		InputStream stream = IOUtils.getStreamForPath("/fr/univmrs/tagc/GINsim/resources/makeStableStatesClickable.js");
 		BufferedReader in = new BufferedReader(new InputStreamReader(stream));
 		String s;
 		while ((s = in.readLine()) != null) {
@@ -571,7 +572,7 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void run() {
 		// FIXME: run export
-		Debugger.error( "TODO: run export");
+		LogManager.error( "TODO: run export");
 	}
 	
 	@Override

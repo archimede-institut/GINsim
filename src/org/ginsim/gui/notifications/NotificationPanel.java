@@ -102,6 +102,8 @@ public class NotificationPanel extends JPanel {
             }
             ((ResolvableNotification) notification).performResolution(index);
 		}
+		
+		updateNotificationMessage();
 	}
 
 	public synchronized void updateNotificationMessage() {

@@ -5,8 +5,8 @@ import java.awt.Dimension;
 
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 /**
  * basic info on a vertex of the state transition graph (ie state of the system)

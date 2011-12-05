@@ -13,9 +13,9 @@ import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.gui.utils.widgets.GsButton;
+import org.ginsim.gui.utils.widgets.GsPanel;
 
-import fr.univmrs.tagc.common.widgets.GsButton;
-import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class FunctionEditorDisplayPanel extends GsPanel implements ItemListener, ActionListener {
 	private static final long serialVersionUID = -945722071153537623L;

@@ -6,14 +6,15 @@ import java.util.Set;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNodeSet;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public class DynamicalHierarchicalSimulation extends Simulation {
 	
@@ -81,7 +82,7 @@ public class DynamicalHierarchicalSimulation extends Simulation {
 			debug_o.println("Error : "+e.getMessage());
             debug_o.println("simulation was interrupted");
 		} catch (OutOfMemoryError e) {
-		    Tools.error("Out Of Memory");
+		    GUIMessageUtils.openErrorDialog("Out Of Memory");
 		    return null;
 		} catch (Exception e) {
 			debug_o.println("Error : "+e.getMessage());

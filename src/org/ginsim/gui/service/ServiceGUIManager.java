@@ -14,8 +14,8 @@ import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.service.Service;
 import org.ginsim.service.ServiceManager;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 /**
@@ -105,8 +105,8 @@ public class ServiceGUIManager{
 						}
 					}
 					catch( Throwable e){
-						Debugger.error( "Service '" + service.getClass().getName() + "' cannot provide Actions due to an exception");
-						Debugger.error( e);
+						LogManager.error( "Service '" + service.getClass().getName() + "' cannot provide Actions due to an exception");
+						LogManager.error( e);
 					}
 				}
 			}
@@ -120,8 +120,8 @@ public class ServiceGUIManager{
 							result.addAll( service_actions);
 						}
 					} catch (Throwable e)  {
-						Debugger.error( "Could not create actions for service: "+service);
-						Debugger.error( e);
+						LogManager.error( "Could not create actions for service: "+service);
+						LogManager.error( e);
 					}
 				}
 			}

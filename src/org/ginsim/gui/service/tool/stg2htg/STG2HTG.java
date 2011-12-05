@@ -13,15 +13,15 @@ import java.util.Vector;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.connectivity.AlgoConnectivity;
+import org.ginsim.utils.log.LogManager;
 
 import fr.univmrs.tagc.common.ColorPalette;
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * A class to find a path in any graph
@@ -82,7 +82,7 @@ public class STG2HTG extends AlgoConnectivity {
 			NodeReducedData b = (NodeReducedData) it_b.next();
 			sigma(b);
 		}
-		Debugger.trace( "sigma = " + sigma);
+		LogManager.trace( "sigma = " + sigma);
 		colorize();
 		components = new ArrayList(sigma.size()+A.size());
 		createReducedGraph();
@@ -170,10 +170,10 @@ public class STG2HTG extends AlgoConnectivity {
 			}
 			DynamicNode s = (DynamicNode) ((NodeReducedData)content.get(0)).getContent().get(0);
 			ComponentNode comp = new ComponentNode("TT-"+s.getPatternString(this.graph), content, key);
-			Debugger.trace( "TT-"+s.getPatternString(this.graph));
+			LogManager.trace( "TT-"+s.getPatternString(this.graph));
 			for (Iterator it = ((NodeReducedData)content.get(0)).getContent().iterator(); it.hasNext();) {
 				s = (DynamicNode) it.next();
-				Debugger.trace( "\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
+				LogManager.trace( "\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
 			}
 			reducedGraph.addNode(comp);
 			components.add(comp);
@@ -191,10 +191,10 @@ public class STG2HTG extends AlgoConnectivity {
 				HashSet hs = new HashSet();
 				hs.add(scc);
 				comp = new ComponentNode(scc, hs, "CC-"+s.getPatternString(this.graph));
-				Debugger.trace( "CC-"+s.getPatternString(this.graph));
+				LogManager.trace( "CC-"+s.getPatternString(this.graph));
 				for (Iterator it = scc.getContent().iterator(); it.hasNext();) {
 					s = (DynamicNode) it.next();
-					Debugger.trace( "\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
+					LogManager.trace( "\t"+s.getPatternString(this.graph)+"\n\t"+s.toString());
 				}
 			}
 			reducedGraph.addNode(comp);

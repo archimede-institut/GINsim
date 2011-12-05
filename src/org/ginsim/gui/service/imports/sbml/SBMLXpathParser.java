@@ -27,8 +27,6 @@ import org.ginsim.exception.GsException;
 
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -37,8 +35,12 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.utils.log.LogManager;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -51,9 +53,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import JSci.io.MathMLParser;
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public final class SBMLXpathParser {
 	
@@ -431,8 +432,8 @@ public final class SBMLXpathParser {
 							ereader.setEdge(edge.me);
 						}
 						catch (GsException gs_exception) {
-							Debugger.error( "Unable to create new edge between vertices '" + node_from_id + "' and '" + node_to_id + "' : one of the vertex was not found in the graph");
-							Debugger.error( gs_exception);
+							LogManager.error( "Unable to create new edge between vertices '" + node_from_id + "' and '" + node_to_id + "' : one of the vertex was not found in the graph");
+							LogManager.error( gs_exception);
 						}
 					}
 				}
@@ -679,7 +680,7 @@ public final class SBMLXpathParser {
 		}
 		if (v_order.size() != graph.getNodeCount()) {
 			// error
-			Tools.error("incoherent nodeOrder, not restoring it");
+			GUIMessageUtils.openErrorDialog("incoherent nodeOrder, not restoring it");
 		} else {
 			graph.setNodeOrder(v_order);
 		}

@@ -37,19 +37,20 @@ import org.ginsim.graph.tree.TreeParserFromCircuit;
 import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.gui.utils.widgets.Label;
+import org.ginsim.gui.utils.widgets.treetable.AbstractTreeTableModel;
+import org.ginsim.gui.utils.widgets.treetable.JTreeTable;
+import org.ginsim.gui.utils.widgets.treetable.TreeTableModel;
+import org.ginsim.gui.utils.widgets.treetable.TreeTableModelAdapter;
 import org.ginsim.service.tool.connectivity.AlgoConnectivity;
+import org.ginsim.utils.data.ObjectStore;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.ProgressListener;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.Label;
-import fr.univmrs.tagc.common.widgets.treetable.AbstractTreeTableModel;
-import fr.univmrs.tagc.common.widgets.treetable.JTreeTable;
-import fr.univmrs.tagc.common.widgets.treetable.TreeTableModel;
-import fr.univmrs.tagc.common.widgets.treetable.TreeTableModelAdapter;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 /**
  * configuration/status frame for circuit search/analyse
@@ -99,7 +100,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
     public CircuitFrame(JFrame frame, Graph<?,?> graph) {
         super(frame, "display.circuit", 500, 300);
         if (graph == null || !(graph instanceof RegulatoryGraph)) {
-			Tools.error("no graph", frame);
+			GUIMessageUtils.openErrorDialog("no graph", frame);
 		}
         this.graph = (RegulatoryGraph) graph;
         initialize();
@@ -223,7 +224,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
     	List no = graph.getNodeOrder();
     	List l_func = (List)treemodel.m_parent.get(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONNAL]);
     	if (l_func == null) {
-    		Debugger.trace(" No func...");
+    		LogManager.trace(" No func...");
     		return;
     	}
     	StringBuffer s = new StringBuffer("#!/usr/bin/env python\n"
@@ -730,7 +731,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
 			CircuitDescrInTree cdit = (CircuitDescrInTree) it.next();
 			CircuitDescr cd = cdit.getCircuit();
 			OmsddNode[] context = cd.getContext();
-			Debugger.debug_collection(context);
+			LogManager.debug_collection(context);
 			for (int i = 0; i < context.length; i++) {
 				OmsddNode o = context[i];
 				if (o != OmsddNode.FALSE) {

@@ -8,8 +8,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 /**
@@ -76,7 +76,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 						dd_stable).reduce();
 			} else {
 				if (i%10 == 0) {
-					Debugger.trace("  "+i, false);
+					LogManager.trace("  "+i, false);
 				}
 				dd_stable = buildStableConditionFromParam(i, 
 						((RegulatoryNode)nodeOrder.get(i)).getMaxValue()+1,
@@ -308,13 +308,13 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 		if (stable.next == null) {
 			if (stable.value == 1) {
 				// we have a stable state:
-				Debugger.trace( "Stable: ");
+				LogManager.trace( "Stable: ");
 				String display = "";
 				for (int i=0 ; i<state.length ; i++) {
 					display += (state[i] != -1 ? ""+state[i] : "*") +" ";
 				}
 				display += "\n";
-				Debugger.trace( display, false); 
+				LogManager.trace( display, false); 
 			}
 			return;
 		}

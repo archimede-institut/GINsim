@@ -2,9 +2,9 @@ package org.ginsim.graph.reducedgraph;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.GraphFactory;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 /**

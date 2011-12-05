@@ -13,9 +13,9 @@ import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
+import org.ginsim.utils.data.GenericListListener;
+import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.datastore.GenericListListener;
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 /**
  * store all simulation parameters and offer a mean to access them.

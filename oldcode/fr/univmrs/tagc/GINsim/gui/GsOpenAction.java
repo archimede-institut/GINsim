@@ -21,7 +21,7 @@ import org.ginsim.gui.shell.MainFrame;
 import fr.univmrs.tagc.GINsim.graph.GsGraphDescriptor;
 import fr.univmrs.tagc.GINsim.graph.GsGraphOptionPanel;
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.Tools;
+
 import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
@@ -349,7 +349,7 @@ public class GsOpenAction extends BaseAction {
             		filename += extension;
             	}
         	}
-            if (Tools.isFileWritable(filename, frame)) {
+            if (IOUtils.isFileWritable(filename, frame)) {
                 return filename;
             }
         }

@@ -16,9 +16,9 @@ import org.ginsim.graph.tree.Tree;
 import org.ginsim.graph.tree.TreeParser;
 import org.ginsim.graph.tree.TreeParserFromCircuit;
 import org.ginsim.graph.tree.TreeParserFromRegulatoryGraph;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.circuit.FunctionalityContext;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * This action panel allow the user to select the

@@ -15,14 +15,14 @@ import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.reg2dyn.PrioritySelectionPanel;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.gui.utils.data.GenericListSelectionPanel;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
-import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class DecisionAnalysisFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7619253564236142617L;

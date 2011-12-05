@@ -3,8 +3,8 @@ package org.ginsim.service.tool.interactionanalysis;
 import java.awt.Color;
 import java.util.Map;
 
-import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.graph.view.EdgeAttributesReader;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Selector;
 import org.ginsim.graph.view.css.Style;

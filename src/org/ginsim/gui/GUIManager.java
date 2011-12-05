@@ -16,13 +16,14 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.GraphGUIHelperFactory;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.MainFrame;
+import org.ginsim.gui.utils.widgets.Frame;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.Frame;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public class GUIManager {
 
@@ -442,7 +443,7 @@ public class GUIManager {
 //            graph.addNotificationMessage(new Notification(graph, e));
 //            return;
 //        }
-        Tools.error(e, main);
+        GUIMessageUtils.openErrorDialog(e, main);
     }
 
 	public void whatToDoWithGraph(Graph<?, ?> newGraph, boolean b) {
@@ -457,7 +458,7 @@ public class GUIManager {
 		}
 		
 		// FIXME: create a new WhatToDo frame
-		Debugger.error( "TODO: implement a new whattodo frame");
+		LogManager.error( "TODO: implement a new whattodo frame");
 	}
 
 }

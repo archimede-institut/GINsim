@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 
 public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinition> {

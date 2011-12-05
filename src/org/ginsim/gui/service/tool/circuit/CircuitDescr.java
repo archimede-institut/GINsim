@@ -5,8 +5,8 @@ import java.util.Vector;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class CircuitDescr {
     /** vertices in this circuit */

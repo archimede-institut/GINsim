@@ -18,13 +18,14 @@ import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.utils.data.GenericListPanel;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.utils.data.GenericList;
+import org.ginsim.utils.data.GenericListListener;
+import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.datastore.GenericList;
-import fr.univmrs.tagc.common.datastore.GenericListListener;
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
-import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener {
 	private static final long	serialVersionUID	= 3618855894072951620L;
@@ -66,7 +67,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
     public void endSimu( Graph graph, Exception e) {
     	isRunning = false;
         if (null == graph) {
-            Tools.error(e.getMessage(), this.graph);
+            GUIMessageUtils.openErrorDialog(e.getMessage(), this.graph);
             brun.setEnabled(true);
         } else {
             GUIManager.getInstance().whatToDoWithGraph(this.graph, graph, false);

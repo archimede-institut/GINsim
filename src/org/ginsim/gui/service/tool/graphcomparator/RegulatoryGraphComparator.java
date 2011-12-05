@@ -12,16 +12,16 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.graph.view.EdgeAttributesReader;
 import org.ginsim.graph.view.css.NodeStyle;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * Compare 2 RegulatoryGraph
@@ -208,8 +208,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 					}
 				}
 				catch( GsException gs_exception){
-					Debugger.error( "Unable to create new edge between vertices '" + id + "' and '" + tid + "' : one of the vertex was not found in the graph");
-					Debugger.error( gs_exception);
+					LogManager.error( "Unable to create new edge between vertices '" + id + "' and '" + tid + "' : one of the vertex was not found in the graph");
+					LogManager.error( gs_exception);
 				}
 			}
 			

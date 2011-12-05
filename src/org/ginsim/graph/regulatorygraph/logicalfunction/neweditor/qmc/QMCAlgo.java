@@ -9,8 +9,8 @@ import java.util.Vector;
 import javax.swing.JProgressBar;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.gui.utils.widgets.GsButton;
 
-import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class QMCAlgo implements ActionListener {
 	private ParameterGroupS groups;

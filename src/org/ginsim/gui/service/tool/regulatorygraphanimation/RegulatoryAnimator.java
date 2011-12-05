@@ -14,10 +14,11 @@ import org.ginsim.exception.GsException;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.view.GraphicalAttributesStore;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
@@ -25,7 +26,6 @@ import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.service.tool.stateinregulatorygraph.StateInRegGraph;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
-import fr.univmrs.tagc.GINsim.graph.GraphicalAttributesStore;
 
 /**
  * Main class of the animator plugin.

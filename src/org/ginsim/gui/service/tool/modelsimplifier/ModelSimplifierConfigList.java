@@ -8,8 +8,8 @@ import org.ginsim.graph.common.GraphListener;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 
 /**
  * store all simplification parameters and offer a mean to access them.

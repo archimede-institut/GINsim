@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 
 
 /**

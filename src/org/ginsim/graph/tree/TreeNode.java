@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.service.export.Dotify;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 public class TreeNode implements Dotify {
 	public static long nextUid = 0;
@@ -139,7 +139,7 @@ public class TreeNode implements Dotify {
 	}
 	public TreeNode deepCopy( Tree gm) {
 		TreeNode self = new TreeNode(this);
-		Debugger.debug( self);
+		LogManager.debug( self);
 		gm.addNode(self);
 		for (Edge<TreeNode> e: (Collection<Edge<TreeNode>>) gm.getOutgoingEdges(this)) {
 			TreeNode target = e.getTarget().deepCopy( gm);

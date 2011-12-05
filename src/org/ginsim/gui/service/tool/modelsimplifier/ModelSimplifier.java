@@ -16,8 +16,6 @@ import java.util.Set;
 import org.ginsim.annotation.Annotation;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -31,6 +29,8 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
@@ -39,8 +39,8 @@ import org.ginsim.gui.service.tool.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 class RemovedInfo {
@@ -138,7 +138,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				for (RemovedInfo ri: l_todo) {
 					m_removed.remove(ri.vertex);
 				}
-				Debugger.trace( "Partial reduction result...");
+				LogManager.trace( "Partial reduction result...");
 			} else {
 				// it failed, trigger an error message
 				StringBuffer sb = new StringBuffer("Reduction failed.\n  Removed: ");
@@ -178,7 +178,7 @@ public class ModelSimplifier extends Thread implements Runnable {
      * @return the list of failed removals.
      */
     private List<RemovedInfo> remove_batch(List<RemovedInfo> l_todo) {
-    	Debugger.trace( "batch of removal...");
+    	LogManager.trace( "batch of removal...");
     	List<RemovedInfo> l_failed = new ArrayList<RemovedInfo>();
     	
 		for (RemovedInfo ri: l_todo) {

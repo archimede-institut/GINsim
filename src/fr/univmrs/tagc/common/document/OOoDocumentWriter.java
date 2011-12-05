@@ -15,7 +15,9 @@ import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 
-import fr.univmrs.tagc.common.Tools;
+import org.ginsim.utils.DataUtils;
+
+
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 
@@ -158,7 +160,7 @@ import fr.univmrs.tagc.common.xml.XMLWriter;
 
 	private String getStyleValue(String property, Object value) {
 		if (property.equals(DocumentStyle.COLOR)) {
-			return "#"+Tools.getColorCode((Color)value);
+			return "#"+DataUtils.getColorCode((Color)value);
 		} else if (property.equals(DocumentStyle.FONT_SIZE)) {
 			return value.toString()+"pt";
 		} else if (property.equals(DocumentStyle.HEIGHT)) {

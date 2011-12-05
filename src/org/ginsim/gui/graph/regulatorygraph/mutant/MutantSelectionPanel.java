@@ -2,12 +2,12 @@ package org.ginsim.gui.graph.regulatorygraph.mutant;
 
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.GenericListSelectionPanel;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.utils.data.GenericList;
+import org.ginsim.utils.data.ObjectStore;
 
-import fr.univmrs.tagc.common.datastore.GenericList;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class MutantSelectionPanel extends GenericListSelectionPanel {
 	private static final long serialVersionUID = 1213902700181873169L;

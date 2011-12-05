@@ -32,8 +32,8 @@ import org.ginsim.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * descriptor for regulatoryGraph.
@@ -124,7 +124,7 @@ public class GraphManager {
     	
     	GraphFactory factory = graphFactories.get( graph_class);
     	if( factory == null) {
-    		Debugger.error( "No declared factory for graph class : " + graph_class);
+    		LogManager.error( "No declared factory for graph class : " + graph_class);
     		return null;
     	}
     	
@@ -166,12 +166,12 @@ public class GraphManager {
 	    		graph =(C) found_method.invoke( factory, args);
 	    	}
 			catch( InvocationTargetException ite){
-				Debugger.error( "Unable to create graph of class " + graph_class);
-				Debugger.error( ite);
+				LogManager.error( "Unable to create graph of class " + graph_class);
+				LogManager.error( ite);
 			}
 			catch( IllegalAccessException iae){
-				Debugger.error( "Unable to create graph of class " + graph_class);
-				Debugger.error( iae);
+				LogManager.error( "Unable to create graph of class " + graph_class);
+				LogManager.error( iae);
 			}
 			
 			registerGraph( graph);
@@ -354,8 +354,8 @@ public class GraphManager {
                 registerGraph( graph, file.getAbsolutePath());
                 return graph; 
             } catch (Exception e) {
-            	Debugger.error( "Error while opening Graph : " + file.getPath());
-            	Debugger.error( e);
+            	LogManager.error( "Error while opening Graph : " + file.getPath());
+            	LogManager.error( e);
                 return null;
             }
         } catch (Exception e) {// opening as zip failed, try the old method instead
@@ -403,8 +403,8 @@ public class GraphManager {
 				    }
 				}
 				catch( GsException ge){
-					Debugger.error( "Unable to verify the associated graph of graph : " + other_graph.getGraphName());
-					Debugger.error( ge);
+					LogManager.error( "Unable to verify the associated graph of graph : " + other_graph.getGraphName());
+					LogManager.error( ge);
 				}
 			}
 		}

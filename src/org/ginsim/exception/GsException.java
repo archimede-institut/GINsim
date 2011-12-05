@@ -1,6 +1,6 @@
 package org.ginsim.exception;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
+import org.ginsim.gui.resource.Translator;
 
 /**
  * When something bad happen, a GsException must be raised.

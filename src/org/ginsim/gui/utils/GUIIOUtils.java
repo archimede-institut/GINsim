@@ -4,10 +4,24 @@ import java.awt.Desktop;
 import java.io.File;
 import java.net.URI;
 
-import fr.univmrs.tagc.common.Debugger;
+import org.ginsim.utils.log.LogManager;
+
+
+import fr.univmrs.tagc.common.OpenHelper;
+import fr.univmrs.tagc.common.utils.IOUtils;
 
 public class GUIIOUtils {
 
+	
+	public static boolean open(Object protocol, Object value) {
+		
+		OpenHelper helper = (OpenHelper) IOUtils.getHelper( protocol);
+		if (helper != null) {
+			return helper.open(protocol.toString(), value.toString());
+		}
+		return openURI(protocol + ":" + value);
+	}
+	
 	/**
 	 * Open a file at the given path
 	 * 
@@ -23,7 +37,7 @@ public class GUIIOUtils {
 			f = new File(filepath);
 		}
 		if (!f.exists()) {
-			Debugger.error( "No such file : " + filepath);
+			LogManager.error( "No such file : " + filepath);
 			return false;
 		}
 		return openURI("file://" + filepath);
@@ -40,8 +54,8 @@ public class GUIIOUtils {
 			Desktop.getDesktop().browse( new URI(uri));
 			return true;
 		} catch (Exception e) {
-			Debugger.error( "OpenURI failed : " + uri);
-			Debugger.error( e);
+			LogManager.error( "OpenURI failed : " + uri);
+			LogManager.error( e);
 			return false;
 		}
 	}

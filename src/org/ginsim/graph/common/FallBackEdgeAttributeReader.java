@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.graph.view.EdgeAttributesReader;
+
 
 /**
  * a generic edgeAttributeReader storing data into a dedicated hashmap

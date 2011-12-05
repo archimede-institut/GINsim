@@ -5,11 +5,13 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.utils.DataUtils;
 import org.xml.sax.Attributes;
 
-import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 /**
  * some help function to parse/write ginml files.
@@ -36,14 +38,14 @@ public class GinmlHelper {
         } 
         if (qName.equals("rect")) {
         	vareader.setShape(0);
-        	vareader.setBackgroundColor(Tools.getColorFromCode(attributes.getValue("backgroundColor")));
-        	vareader.setForegroundColor(Tools.getColorFromCode(attributes.getValue("foregroundColor")));
+        	vareader.setBackgroundColor(DataUtils.getColorFromCode(attributes.getValue("backgroundColor")));
+        	vareader.setForegroundColor(DataUtils.getColorFromCode(attributes.getValue("foregroundColor")));
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
         } else if (qName.equals("ellipse")) {
         	vareader.setShape(1);
-        	vareader.setBackgroundColor(Tools.getColorFromCode(attributes.getValue("backgroundColor")));
-        	vareader.setForegroundColor(Tools.getColorFromCode(attributes.getValue("foregroundColor")));
+        	vareader.setBackgroundColor(DataUtils.getColorFromCode(attributes.getValue("backgroundColor")));
+        	vareader.setForegroundColor(DataUtils.getColorFromCode(attributes.getValue("foregroundColor")));
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
         } 
@@ -60,7 +62,7 @@ public class GinmlHelper {
 	 */
 	public static void applyEdgeVisualSettings(EdgeAttributesReader ereader, String qName, Attributes attributes) {
 		if (qName.equals("polyline")) {
-			ereader.setLineColor(Tools.getColorFromCode(attributes.getValue("line_color")));
+			ereader.setLineColor(DataUtils.getColorFromCode(attributes.getValue("line_color")));
 			int i = EdgeAttributesReader.STYLE_STRAIGHT;
 			String s = attributes.getValue("line_style");
 			if (s.equals("curve") || s.equals("13") || s.equals("12") || s.equals("bezier") || s.equals("spline")) {
@@ -93,7 +95,7 @@ public class GinmlHelper {
     					}
     					ereader.setPoints(l);
     			    } catch (Exception e) {
-    			        Tools.error("invalid points");
+    			        GUIMessageUtils.openErrorDialog("invalid points");
     			    }
     			}
 			}
@@ -133,7 +135,7 @@ public class GinmlHelper {
         	    s = "straight";
         }
         svs += " line_style=\""+s+"\"";
-        svs += " line_color=\"#"+Tools.getColorCode(eReader.getLineColor())+"\"";
+        svs += " line_color=\"#"+DataUtils.getColorCode(eReader.getLineColor())+"\"";
         float[] pattern = eReader.getDash();
         if (pattern != null) {
             svs += " pattern=\"dash\"";
@@ -175,8 +177,8 @@ public class GinmlHelper {
 					"\" y=\""+vReader.getY()+
 					"\" width=\""+vReader.getWidth()+
 					"\" height=\""+vReader.getHeight()+
-					"\" backgroundColor=\"#"+ Tools.getColorCode(vReader.getBackgroundColor()) +
-					"\" foregroundColor=\"#"+Tools.getColorCode(vReader.getForegroundColor()) +
+					"\" backgroundColor=\"#"+ DataUtils.getColorCode(vReader.getBackgroundColor()) +
+					"\" foregroundColor=\"#"+DataUtils.getColorCode(vReader.getForegroundColor()) +
 					"\"/>\n";
         		break;
             case NodeAttributesReader.SHAPE_ELLIPSE:
@@ -184,8 +186,8 @@ public class GinmlHelper {
 				"\" y=\""+vReader.getY()+
 				"\" width=\""+vReader.getWidth()+
 				"\" height=\""+vReader.getHeight()+
-				"\" backgroundColor=\"#"+ Tools.getColorCode(vReader.getBackgroundColor()) +
-				"\" foregroundColor=\"#"+Tools.getColorCode(vReader.getForegroundColor()) +
+				"\" backgroundColor=\"#"+ DataUtils.getColorCode(vReader.getBackgroundColor()) +
+				"\" foregroundColor=\"#"+DataUtils.getColorCode(vReader.getForegroundColor()) +
 				"\"/>\n";
         		break;
         	default:

@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.utils.data.NamedObject;
 
-import fr.univmrs.tagc.common.datastore.NamedObject;
 
 public class InitialState implements NamedObject {
 	String name;

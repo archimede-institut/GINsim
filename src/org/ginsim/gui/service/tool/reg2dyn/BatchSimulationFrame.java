@@ -21,8 +21,8 @@ import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * frame to set up the simulation

@@ -5,9 +5,10 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.Vector;
 
+import org.ginsim.gui.resource.ImageLoader;
+
 import tbrowser.control.netbrowser.TBNetBrowser;
 import tbrowser.ihm.widget.TBButton;
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class TreeElementLink extends TreeElementDeco {
   protected URL url;

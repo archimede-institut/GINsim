@@ -30,11 +30,12 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public class PathFindingFrame extends StackDialog implements ActionListener, ResultHandler {
 	private static final long serialVersionUID = -7430762236435581864L;
@@ -244,10 +245,10 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			setProgressMax(graph.getNodes().size());
 		}
 		if (startTextField.getText().length() == 0) {
-			Tools.error(Translator.getString("STR_pathFinding_start")+" "+Translator.getString("STR_isempty"), this);
+			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_start")+" "+Translator.getString("STR_isempty"), this);
 			return;
 		} else if (endTextField.getText().length() == 0) {
-			Tools.error(Translator.getString("STR_pathFinding_end")+" "+Translator.getString("STR_isempty"), this);
+			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_end")+" "+Translator.getString("STR_isempty"), this);
 			return;
 		}
 		Object start = getNode(startTextField); 
@@ -329,15 +330,15 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		
 		Vector foundNodes = graph.searchNodes( textField.getText());
 		if (foundNodes == null) {
-			Tools.error(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
+			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
 			return null;
 		} else if (foundNodes.size() == 1) {
 			return foundNodes.get(0);
 		} else if (foundNodes.size() > 1) {
-			Tools.error(Translator.getString("STR_pathFinding_too_much_nodes")+textField.getText(), this);
+			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_too_much_nodes")+textField.getText(), this);
 			return null;
 		} else {
-			Tools.error(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
+			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
 			return null;
 		}
 	}

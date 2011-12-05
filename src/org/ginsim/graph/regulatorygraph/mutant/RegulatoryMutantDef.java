@@ -7,8 +7,8 @@ import org.ginsim.annotation.Annotation;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.utils.data.NamedObject;
 
-import fr.univmrs.tagc.common.datastore.NamedObject;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**

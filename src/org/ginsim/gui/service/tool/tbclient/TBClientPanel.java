@@ -32,10 +32,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.EdgeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.graph.view.EdgeAttributesReader;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Selector;
 import org.ginsim.gui.graph.GraphGUI;
@@ -47,6 +47,7 @@ import org.ginsim.gui.tbclient.genetree.GeneTreeCellRenderer;
 import org.ginsim.gui.tbclient.genetree.GeneTreeModel;
 import org.ginsim.gui.tbclient.genetree.TreeElement;
 import org.ginsim.gui.tbclient.genetree.TreeElementNode;
+import org.ginsim.gui.utils.widgets.GsPanel;
 
 import tbrowser.data.module.TBModule;
 import tbrowser.data.module.TBModuleData;
@@ -54,7 +55,6 @@ import tbrowser.data.module.TBModules;
 import tbrowser.ihm.widget.TBButton;
 import tbrowser.ihm.widget.TBPanel;
 import tbrowser.io.remote.client.TBClient;
-import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class TBClientPanel extends GsPanel implements GraphGUIListener, WindowListener {
 	private static final long serialVersionUID = 787313901857354026L;

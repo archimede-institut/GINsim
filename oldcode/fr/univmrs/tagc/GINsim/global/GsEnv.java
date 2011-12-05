@@ -23,7 +23,7 @@ import fr.univmrs.tagc.GINsim.gui.BaseMainFrame;
 import fr.univmrs.tagc.GINsim.gui.GsMainFrame;
 import fr.univmrs.tagc.GINsim.plugin.GsClassLoader;
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.Tools;
+
 import fr.univmrs.tagc.common.widgets.Frame;
 
 /**
@@ -261,7 +261,7 @@ public class GsEnv {
             graph.addNotificationMessage(new NotificationMessage(graph, e));
             return;
         }
-        Tools.error(e, main);
+        GUIMessageUtils.openErrorDialog(e, main);
     }
 
 	/**
@@ -352,7 +352,7 @@ public class GsEnv {
     }
 
 	public static void readConfig(String path) throws IOException, FileNotFoundException {
-		InputStream stream = Tools.getStreamForPath(path);
+		InputStream stream = IOUtils.getStreamForPath(path);
     	new ReadConfig().startParsing(stream, false);
 	}
 }

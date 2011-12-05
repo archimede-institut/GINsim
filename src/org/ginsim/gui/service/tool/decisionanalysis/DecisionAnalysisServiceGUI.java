@@ -14,10 +14,11 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.decisionanalysis.DecisionAnalysisService;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 
 @ProviderFor( ServiceGUI.class)
@@ -55,9 +56,9 @@ class DecisionAnalysisAction extends ToolAction {
 			new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph);
 		}
 		catch( GsException ge){
-    		Tools.error( "Unable to launch the analysis");
-    		Debugger.error( "Unable to execute the service");
-    		Debugger.error( ge);
+    		GUIMessageUtils.openErrorDialog( "Unable to launch the analysis");
+    		LogManager.error( "Unable to execute the service");
+    		LogManager.error( ge);
 		}
 		//}
 	}

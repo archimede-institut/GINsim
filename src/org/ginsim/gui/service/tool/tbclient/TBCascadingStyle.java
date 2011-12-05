@@ -1,7 +1,7 @@
 package org.ginsim.gui.service.tool.tbclient;
 
-import org.ginsim.graph.common.AttributesReader;
-import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.view.AttributesReader;
+import org.ginsim.graph.view.EdgeAttributesReader;
 import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.graph.view.css.EdgeStyle;
 

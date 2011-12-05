@@ -16,10 +16,10 @@ import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInte
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor.FunctionEditor;
 import org.ginsim.gui.graph.regulatorygraph.models.IncomingEdgeListModel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
+import org.ginsim.gui.utils.data.GenericPropertyHolder;
+import org.ginsim.utils.data.GenericPropertyInfo;
+import org.ginsim.utils.data.ObjectPropertyEditorUI;
 
-import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
-import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
 
 public class LogicalFunctionPanel extends AbstractParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {
 	private static final long serialVersionUID = -87854595177707062L;

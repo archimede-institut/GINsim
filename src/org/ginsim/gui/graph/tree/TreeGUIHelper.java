@@ -13,11 +13,11 @@ import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.widgets.Frame;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GraphGUIHelper.class)
 public class TreeGUIHelper implements GraphGUIHelper<Tree, TreeNode, Edge<TreeNode>> {

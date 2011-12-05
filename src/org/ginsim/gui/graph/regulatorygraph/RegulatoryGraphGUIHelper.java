@@ -6,10 +6,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.graph.AddEdgeAction;
 import org.ginsim.gui.graph.AddNodeAction;
 import org.ginsim.gui.graph.EditAction;

@@ -28,13 +28,14 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public class GraphComparatorFrame  extends AbstractStackDialogHandler implements ActionListener {
 
@@ -156,7 +157,7 @@ public class GraphComparatorFrame  extends AbstractStackDialogHandler implements
 			graphList.add(graph);
 			graphNames.put(name, graph);
 			if (graphNames.containsKey(graph)) {
-				Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_graphWithSameName"))+" : "+name, this.frame);
+				GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_graphWithSameName"))+" : "+name, this.frame);
 			}
 
 		}
@@ -188,10 +189,10 @@ public class GraphComparatorFrame  extends AbstractStackDialogHandler implements
 		int g_type= getGraphsType(g1, g2);
 		switch (g_type) {
 		case GRAPH_TYPE_UNCOMPATIBLE:
-			Tools.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_gcmp_graphFromDiffTypes")), this.frame);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_gcmp_graphFromDiffTypes")), this.frame);
 			return;
 		case GRAPH_TYPE_NULL:
-			Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_graphNull")), this.frame);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_graphNull")), this.frame);
 			return;
 		case GRAPH_TYPE_REGULATORY:
 			g = GraphManager.getInstance().getNewGraph();
@@ -209,7 +210,7 @@ public class GraphComparatorFrame  extends AbstractStackDialogHandler implements
 				}
 				gc = new DynamicGraphComparator(g1, g2, g);
 			} else {
-				Tools.error("The node orders are different, therefore the comparaison would surelly not make senses.");
+				GUIMessageUtils.openErrorDialog("The node orders are different, therefore the comparaison would surelly not make senses.");
 				stack.doClose();
 				return;
 			}
@@ -246,10 +247,10 @@ public class GraphComparatorFrame  extends AbstractStackDialogHandler implements
 				g = GraphManager.getInstance().open(new File(filepath.getText()));
 			}
 			catch( GsException ge){
-				Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_GraphNotOpened")), this.frame);
+				GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_GraphNotOpened")), this.frame);
 			}
 		} else if (index == 1) { //has choose blank element
-			Tools.error(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_blankComboBox")), this.frame);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_blankComboBox")), this.frame);
 		} else {
 			g = (Graph) graphList.get(index-2);
 		}

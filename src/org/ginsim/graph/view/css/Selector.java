@@ -5,11 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.AttributesReader;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.graph.view.AttributesReader;
 
 
 /**

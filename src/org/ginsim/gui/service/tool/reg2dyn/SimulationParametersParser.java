@@ -12,10 +12,10 @@ import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
+import org.ginsim.utils.log.LogManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.common.Debugger;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
@@ -132,7 +132,7 @@ public class SimulationParametersParser extends XMLHelper {
                         param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
                         if (mutant == null) {
                             // TODO: report mutant not found
-                        	Debugger.error( "Mutant not found "+s+" ("+mutantList.getNbElements(null)+")");
+                        	LogManager.error( "Mutant not found "+s+" ("+mutantList.getNbElements(null)+")");
                         }
                     }
                 } else if (qName.equals("priorityClassList")) {

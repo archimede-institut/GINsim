@@ -12,10 +12,10 @@ import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
+import org.ginsim.utils.data.NamedObject;
+import org.ginsim.utils.data.ObjectStore;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.datastore.NamedObject;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
@@ -272,7 +272,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
                     new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, 0);
                 }
             } else {
-                Debugger.error( "[BUG] complex pcdef not transposed in the reduced model");
+                LogManager.error( "[BUG] complex pcdef not transposed in the reduced model");
                 new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, 0);
             }
         }

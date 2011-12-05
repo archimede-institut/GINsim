@@ -1,10 +1,12 @@
 package org.ginsim.utils;
 
 import java.awt.Color;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 public class DataUtils {
 
+	public static final Integer IZ = new Integer(0);
 	
 	/**
 	 * Sort in ascending order the specified arrays T and N in the same time
@@ -61,57 +63,62 @@ public class DataUtils {
 		}
 		return N;
 	}
-
-	/**
-	 * Test if a string is a valid integer
-	 * 
-	 * @param s the string to test
-	 * @return true if the given string is a valid integer
-	 */
-	public static boolean isInteger(String s) {
-		
-		try {
-			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return false;
-		}
-		return true;
-	}
 	
 	/**
 	 * @param t
 	 * @param obj
 	 * @return the index of obj in the array t, or -1 if not found
 	 */
-	public static int arrayIndexOf(Object[] t, Object obj) {
-		if (obj == null) {
-			for (int i = 0; i < t.length; i++) {
-				if (t[i] == null) {
-					return i;
-				}
-			}
-			return -1;
-		}
-		for (int i = 0; i < t.length; i++) {
-			if (obj.equals(t[i])) {
-				return i;
-			}
-		}
-		return -1;
-	}
+	// TODO : REFACTORING ACTION
+	// TODO : Remove if not used 
+//	public static int arrayIndexOf(Object[] t, Object obj) {
+//		if (obj == null) {
+//			for (int i = 0; i < t.length; i++) {
+//				if (t[i] == null) {
+//					return i;
+//				}
+//			}
+//			return -1;
+//		}
+//		for (int i = 0; i < t.length; i++) {
+//			if (obj.equals(t[i])) {
+//				return i;
+//			}
+//		}
+//		return -1;
+//	}
 
 	/**
 	 * @param t
 	 * @param val
 	 * @return the index of val in the array t, or -1 if not found
 	 */
-	public static int arrayIndexOf(int[] t, int val) {
+	// TODO : REFACTORING ACTION
+	// TODO : Remove if not used 
+//	public static int arrayIndexOf(int[] t, int val) {
+//		for (int i = 0; i < t.length; i++) {
+//			if (t[i] == val) {
+//				return i;
+//			}
+//		}
+//		return -1;
+//	}
+	
+	
+	/**
+	 * Transform an array to a Vector
+	 * 
+	 * @param t the array we want to convert to vector
+	 * @return the new Vector
+	 */
+	public static Vector getVectorFromArray(Object[] t) {
+		
+		Vector vect = new Vector(t.length);
+
 		for (int i = 0; i < t.length; i++) {
-			if (t[i] == val) {
-				return i;
-			}
+			vect.add(t[i]);
 		}
-		return -1;
+		return vect;
 	}
 
 	/**

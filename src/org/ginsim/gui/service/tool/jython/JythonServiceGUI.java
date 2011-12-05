@@ -17,7 +17,9 @@ import org.mangosdk.spi.ProviderFor;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
-import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.utils.IOUtils;
+
+
 
 /**
  * main method for the reg2dyn plugin
@@ -60,7 +62,7 @@ class JythonConsole extends Thread {
 		String consolebase = "/" + JythonConsole.class.getPackage().getName().replace('.', '/')+"/console";
 		
 		
-        URL url = Tools.class.getResource(consolebase);
+        URL url = IOUtils.class.getResource(consolebase);
         
     	String path = url.getPath();
     	// if running from a jar, this looks like "file:path/to/file.jar!/fr/..../console"

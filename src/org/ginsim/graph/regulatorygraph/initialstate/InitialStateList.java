@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class InitialStateList extends SimpleGenericList {

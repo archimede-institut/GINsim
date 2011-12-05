@@ -7,8 +7,8 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 public class SimpleServiceGUI<A extends Action> implements ServiceGUI {
 
@@ -26,7 +26,7 @@ public class SimpleServiceGUI<A extends Action> implements ServiceGUI {
 					Action action = (Action)constructor.newInstance(graph);
 					actions.add(action);
 				} catch (Exception e) {
-					Debugger.error( e);
+					LogManager.error( e);
 				}
 			}
 

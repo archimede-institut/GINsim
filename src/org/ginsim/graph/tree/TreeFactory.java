@@ -1,9 +1,9 @@
 package org.ginsim.graph.tree;
 
 import org.ginsim.graph.common.GraphFactory;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 @ProviderFor( GraphFactory.class)
@@ -37,7 +37,7 @@ public class TreeFactory implements GraphFactory<Tree> {
      * This method MUST NOT be used, use create(TreeParser parser) instead
      */
     public Tree create() {
-    	Debugger.error( "Tree canot be instancied without a parser");
+    	LogManager.error( "Tree canot be instancied without a parser");
         return null;
     }
 

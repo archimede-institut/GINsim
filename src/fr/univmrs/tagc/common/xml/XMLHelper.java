@@ -15,6 +15,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.gui.resource.Translator;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -23,8 +24,9 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+import fr.univmrs.tagc.common.utils.IOUtils;
+
 
 abstract public class XMLHelper extends DefaultHandler implements EntityResolver {
 
@@ -100,7 +102,8 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	}
 
 	public void warning(SAXParseException e) throws SAXException {
-		Tools.error(new GsException(GsException.GRAVITY_NORMAL, e.getLocalizedMessage()
+		
+		GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_NORMAL, e.getLocalizedMessage()
 				+ "\nline: "+e.getLineNumber()
 				+ "\ncolumn: "+e.getColumnNumber()), null);
 	}
@@ -130,7 +133,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
         try {
             startParsing(new FileInputStream(file), b);
         } catch (FileNotFoundException e) {
-        	Tools.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+        	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e), null);
         }
     }
 
@@ -164,15 +167,15 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 			xr.setErrorHandler(this);
 			xr.parse(new InputSource(new InputStreamReader(is, "UTF-8")));
 		} catch (FileNotFoundException e) { 
-		    Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+		    GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		} catch (IOException e) {
-			Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		} catch (ParserConfigurationException e) {
-			Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		} catch (SAXParseException e) {
-			Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
         } catch (SAXException e) {
-        	Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+        	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
         }
     }
 
@@ -190,7 +193,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 		String path = (String)m_entities.get(systemId);
 		if (path != null) {
 			try {
-				InputSource is = new InputSource(Tools.getStreamForPath(path));
+				InputSource is = new InputSource(IOUtils.getStreamForPath(path));
 				is.setEncoding("UTF-8");
 				return is;
 			} catch (Exception e) {}

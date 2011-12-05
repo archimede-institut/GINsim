@@ -10,13 +10,14 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
 import org.ginsim.gui.graph.regulatorygraph.models.NodeMaxValueSpinModel;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
+import org.ginsim.gui.utils.data.models.SpinModel;
+import org.ginsim.utils.DataUtils;
+import org.ginsim.utils.data.GenericPropertyInfo;
+import org.ginsim.utils.data.ObjectEditor;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.common.datastore.ObjectEditor;
-import fr.univmrs.tagc.common.datastore.gui.GenericPropertyEditorPanel;
-import fr.univmrs.tagc.common.datastore.models.SpinModel;
-import fr.univmrs.tagc.common.managerresources.Translator;
+
 
 public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 
@@ -105,7 +106,7 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 		try {
 			switch (prop) {
 				case PROP_ID:
-					return Tools.isValidId(value) && !graph.idExists(value);
+					return DataUtils.isValidId(value) && !graph.idExists(value);
 				case PROP_NAME:
 					return true;
 			}

@@ -1,9 +1,9 @@
 package org.ginsim.core.notification;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.utils.timeout.Timeout;
+import org.ginsim.utils.timeout.TimeoutObject;
 
-import fr.univmrs.tagc.common.Timeout;
-import fr.univmrs.tagc.common.TimeoutObject;
 
 /**
  * A notification message

@@ -21,17 +21,18 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.graph.view.css.ColorizerPanel;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisAlgoResult;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisService;
+import org.ginsim.utils.data.ObjectStore;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
+
 import fr.univmrs.tagc.common.document.DocumentWriter;
 import fr.univmrs.tagc.common.document.GenericDocumentFileChooser;
 import fr.univmrs.tagc.common.document.GenericDocumentFormat;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 public class InteractionAnalysisFrame extends StackDialog implements ActionListener {
 	private JFrame frame;
@@ -128,7 +129,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
-				Tools.error("An error has occured while saving", this.frame);
+				GUIMessageUtils.openErrorDialog("An error has occured while saving", this.frame);
 			}
 		}
 	}

@@ -15,7 +15,8 @@ import javax.swing.tree.TreePath;
 import org.ginsim.annotation.AnnotationLink;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
-import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.utils.IOUtils;
+
 
 public class GeneTreeModel implements TreeModel {
   private AbstractTreeElement root;
@@ -68,7 +69,7 @@ public class GeneTreeModel implements TreeModel {
           tevn = new TreeElementNodeNote(tev, v2);
           al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
           tevn.setSelected(vertex.getAnnotation().containsLink(al));
-          tel = new TreeElementLink(tevn, new URL(Tools.getLink("entrez", field[3])), vertex);
+          tel = new TreeElementLink(tevn, new URL(IOUtils.getLink("entrez", field[3])), vertex);
           ten = new TreeElementNode(tel);
           ezNode = new TreeElementSelectable(ten, false, vertex, this);
           alNode = null;
@@ -91,7 +92,7 @@ public class GeneTreeModel implements TreeModel {
               al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
               tevn.setSelected(vertex.getAnnotation().containsLink(al));
               if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
-              huNode = new TreeElementLink(tevn, new URL(Tools.getLink("hugo", field[7])), vertex);
+              huNode = new TreeElementLink(tevn, new URL(IOUtils.getLink("hugo", field[7])), vertex);
               ezNode.addElement(huNode);
             }
             if (!field[6].equals("")) {
@@ -104,7 +105,7 @@ public class GeneTreeModel implements TreeModel {
               al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
               tevn.setSelected(vertex.getAnnotation().containsLink(al));
               if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
-              swNode = new TreeElementLink(tevn, new URL(Tools.getLink("swissprot", field[6])), vertex);
+              swNode = new TreeElementLink(tevn, new URL(IOUtils.getLink("swissprot", field[6])), vertex);
               ezNode.addElement(swNode);
             }
             if (!field[4].equals("")) {
@@ -119,7 +120,7 @@ public class GeneTreeModel implements TreeModel {
                 al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
                 tevn.setSelected(vertex.getAnnotation().containsLink(al));
                 if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
-                rsvNode = new TreeElementLink(tevn, new URL(Tools.getLink("refseq", sfield[j])), vertex);
+                rsvNode = new TreeElementLink(tevn, new URL(IOUtils.getLink("refseq", sfield[j])), vertex);
                 if (rsNode.indexOfChild(rsvNode) == -1) rsNode.addElement(rsvNode);
               }
               ezNode.addElement(rsNode);
@@ -136,7 +137,7 @@ public class GeneTreeModel implements TreeModel {
                 al = new AnnotationLink(tevn.toString(), vertex.getInteractionsModel().getGraph());
                 tevn.setSelected(vertex.getAnnotation().containsLink(al));
                 if (!ezSel) ezSel = vertex.getAnnotation().containsLink(al);
-                upvNode = new TreeElementLink(tevn, new URL(Tools.getLink("uniprot", sfield[j])), vertex);
+                upvNode = new TreeElementLink(tevn, new URL(IOUtils.getLink("uniprot", sfield[j])), vertex);
                 if (upNode.indexOfChild(upvNode) == -1) upNode.addElement(upvNode);
               }
               ezNode.addElement(upNode);

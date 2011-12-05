@@ -36,13 +36,13 @@ import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInte
 import org.ginsim.gui.graph.regulatorygraph.models.IncomingEdgeListModel;
 import org.ginsim.gui.graph.regulatorygraph.models.TableInteractionsModel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
+import org.ginsim.gui.utils.data.GenericPropertyHolder;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.gui.utils.widgets.SplitPane;
+import org.ginsim.gui.utils.widgets.StockButton;
+import org.ginsim.utils.data.GenericPropertyInfo;
+import org.ginsim.utils.data.ObjectPropertyEditorUI;
 
-import fr.univmrs.tagc.common.datastore.GenericPropertyInfo;
-import fr.univmrs.tagc.common.datastore.ObjectPropertyEditorUI;
-import fr.univmrs.tagc.common.datastore.gui.GenericPropertyHolder;
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
-import fr.univmrs.tagc.common.widgets.SplitPane;
-import fr.univmrs.tagc.common.widgets.StockButton;
 
 /**
  * Panel to edit interaction of a gene

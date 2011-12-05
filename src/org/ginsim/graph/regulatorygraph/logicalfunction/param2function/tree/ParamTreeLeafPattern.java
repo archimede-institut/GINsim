@@ -4,7 +4,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import fr.univmrs.tagc.common.Debugger;
+import org.ginsim.utils.log.LogManager;
+
 
 public class ParamTreeLeafPattern extends ParamTreeLeaf {
   private String name = "";
@@ -19,7 +20,7 @@ public class ParamTreeLeafPattern extends ParamTreeLeaf {
 	  for (int i = 0; i < (2 * depth); i++){
 		  result += " ";
 	  }
-	  Debugger.trace( result + name, false);
+	  LogManager.trace( result + name, false);
   }
   public String toString() {
     return name;

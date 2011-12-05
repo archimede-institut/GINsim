@@ -16,11 +16,14 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.ginsim.exception.GsException;
+import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.gui.utils.GUIIOUtils;
+import org.ginsim.gui.utils.widgets.Frame;
 import org.xml.sax.Attributes;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
-import fr.univmrs.tagc.common.widgets.Frame;
+
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+import fr.univmrs.tagc.common.utils.IOUtils;
 import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
@@ -175,7 +178,7 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 	 */
 	public void hyperlinkUpdate(HyperlinkEvent event) {
 		if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-			Tools.openURI(event.getDescription());
+			GUIIOUtils.openURI(event.getDescription());
 		}
 	}
 
@@ -234,9 +237,9 @@ class DOAPParser extends XMLHelper {
 		m_call = CALLMAP;
 		this.data = data;
 		try {
-			startParsing(Tools.getStreamForPath(path), false);
+			startParsing(IOUtils.getStreamForPath(path), false);
 		} catch (Exception e) {
-			Tools.error(new GsException(GsException.GRAVITY_ERROR, e), null);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e), null);
 		}
 	}
 	

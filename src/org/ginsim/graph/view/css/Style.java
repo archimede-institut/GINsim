@@ -1,6 +1,6 @@
 package org.ginsim.graph.view.css;
 
-import org.ginsim.graph.common.AttributesReader;
+import org.ginsim.graph.view.AttributesReader;
 
 /**
  * Style are dedicated to store some graphical attributes of graphical elements like node and edges

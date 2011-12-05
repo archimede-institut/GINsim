@@ -6,6 +6,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
+import org.ginsim.utils.log.LogManager;
 import org.jgraph.JGraph;
 import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.AttributeMap;
@@ -18,7 +19,6 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphContext;
 import org.jgraph.graph.GraphLayoutCache;
 
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * Cell view that will use data from the attribute readers to draw nodes.
@@ -134,7 +134,7 @@ public class RawNodeView extends AbstractCellView implements CellView {
 
 	@Override
 	public CellViewRenderer getRenderer() {
-		Debugger.error( "Get renderer through abstractcellview method");
+		LogManager.error( "Get renderer through abstractcellview method");
 		return null;
 	}
 }

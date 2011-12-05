@@ -26,6 +26,7 @@ import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
@@ -35,10 +36,9 @@ import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DecoTree;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable.JCB;
 import org.ginsim.gui.tbclient.decotreetable.table.DecoTreeTable;
+import org.ginsim.gui.utils.widgets.GsButton;
+import org.ginsim.gui.utils.widgets.GsPanel;
 
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
-import fr.univmrs.tagc.common.widgets.GsButton;
-import fr.univmrs.tagc.common.widgets.GsPanel;
 
 public class FunctionEditorEditPanel extends GsPanel implements ItemListener, ActionListener {
 	private static final long serialVersionUID = 7097954459263383619L;

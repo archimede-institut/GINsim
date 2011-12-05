@@ -7,9 +7,9 @@ import java.util.Map;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.utils.data.MultiColHelper;
+import org.ginsim.utils.data.NamedObject;
 
-import fr.univmrs.tagc.common.datastore.MultiColHelper;
-import fr.univmrs.tagc.common.datastore.NamedObject;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 

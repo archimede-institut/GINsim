@@ -14,8 +14,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-import fr.univmrs.tagc.common.gui.dialog.SimpleDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.dialog.SimpleDialog;
+
 
 /**
  * A small dialog to display a textarea with a close button.

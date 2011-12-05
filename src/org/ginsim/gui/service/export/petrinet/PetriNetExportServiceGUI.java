@@ -21,12 +21,12 @@ import org.ginsim.gui.service.tool.reg2dyn.PrioritySelectionPanel;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.export.petrinet.PNConfig;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 
 /**
  * GUI Action to export a LRG into Petri net
@@ -62,7 +62,7 @@ class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 		try {
 			config.format.export(config, filename);
 		} catch (IOException e) {
-			Debugger.error(e);
+			LogManager.error(e);
 		}
 	}
 

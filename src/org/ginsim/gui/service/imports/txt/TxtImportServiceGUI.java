@@ -14,9 +14,9 @@ import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.imports.txt.TxtImportService;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 @ProviderFor(ServiceGUI.class)
@@ -54,7 +54,7 @@ class TxtImportAction extends ImportAction {
 
 		// TODO ...
 		TruthTableParser parser = new TruthTableParser(filename);
-		Debugger.error( "Action to perform here : " + filename);
+		LogManager.error( "Action to perform here : " + filename);
 		//Graph newGraph = parser.getGraph();
 	}
 

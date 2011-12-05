@@ -13,12 +13,12 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.models.MaxSpinModel;
+import org.ginsim.gui.utils.data.models.MinMaxSpinModel;
+import org.ginsim.gui.utils.data.models.MinSpinModel;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
-import fr.univmrs.tagc.common.datastore.models.MaxSpinModel;
-import fr.univmrs.tagc.common.datastore.models.MinMaxSpinModel;
-import fr.univmrs.tagc.common.datastore.models.MinSpinModel;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 /**
  * configure the circuit-search.

@@ -10,8 +10,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.gui.utils.widgets.GsButton;
 
-import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class QMCThread extends Thread {
 	private boolean cnf;

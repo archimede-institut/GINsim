@@ -5,10 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.ginsim.graph.common.AttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.view.AttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.utils.DataUtils;
 
-import fr.univmrs.tagc.common.Tools;
+
 
 /**
  * NodeStyle store some graphical attributes of a node
@@ -122,8 +123,8 @@ public class NodeStyle implements Style {
 		for (int i = 1; i < tabs_count; i++) {
 			tabs += "\t";
 		}
-		if (background != NULL_BACKGROUND) s += tabs+CSS_BACKGROUND+": "+Tools.getColorCode(background)+"\n"; 
-		if (foreground != NULL_FOREGROUND) s += tabs+CSS_FOREGROUND+": "+Tools.getColorCode(foreground)+"\n";
+		if (background != NULL_BACKGROUND) s += tabs+CSS_BACKGROUND+": "+DataUtils.getColorCode(background)+"\n"; 
+		if (foreground != NULL_FOREGROUND) s += tabs+CSS_FOREGROUND+": "+DataUtils.getColorCode(foreground)+"\n";
 		if (border != NULL_BORDER) {
 			s += tabs+CSS_BORDER+": ";
 			switch (border) {
@@ -167,13 +168,13 @@ public class NodeStyle implements Style {
 			if (m.groupCount() < 2) throw new CSSSyntaxException("Malformed line "+i+" : "+lines[i]+". Must be 'key: value;'");
 			if (key.equals(CSS_BACKGROUND)) {
 				try {
-					background = Tools.getColorFromCode(value);
+					background = DataUtils.getColorFromCode(value);
 				} catch (NumberFormatException e) {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_FOREGROUND)) {
 				try {
-					foreground = Tools.getColorFromCode(value);
+					foreground = DataUtils.getColorFromCode(value);
 				} catch (NumberFormatException e) {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}

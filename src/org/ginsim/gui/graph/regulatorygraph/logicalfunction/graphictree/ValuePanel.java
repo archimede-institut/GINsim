@@ -24,9 +24,9 @@ import javax.swing.tree.TreePath;
 
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.gui.utils.widgets.GsButton;
 
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
-import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class ValuePanel extends BooleanFunctionTreePanel implements ActionListener, ChangeListener, MouseListener, MouseMotionListener {
   private static final long serialVersionUID = 207002545507075699L;

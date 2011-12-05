@@ -24,15 +24,15 @@ import javax.swing.JTextArea;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.graph.view.css.CascadingStyle;
 import org.ginsim.graph.view.css.EdgeStyle;
 import org.ginsim.graph.view.css.Style;
 import org.ginsim.graph.view.css.NodeStyle;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -3613649496687281647L;

@@ -15,8 +15,8 @@ import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class StableTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 3483674324331745743L;

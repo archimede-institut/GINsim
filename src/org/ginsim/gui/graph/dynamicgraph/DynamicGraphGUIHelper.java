@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.NodeInfo;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.GUIManager;
@@ -21,16 +22,15 @@ import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphEditor;
-import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.dynamicanalyser.DynamicItemAttributePanel;
 import org.ginsim.gui.service.tool.stablestates.StableTableModel;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.gui.utils.widgets.Frame;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
-import fr.univmrs.tagc.common.widgets.Frame;
 
 @ProviderFor( GraphGUIHelper.class)
 public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, DynamicNode, Edge<DynamicNode>> {
@@ -125,7 +125,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	        frame.setContentPane(scroll);
 	        frame.setVisible(true);
         } catch (Exception e) {
-        	Debugger.error(e);
+        	LogManager.error(e);
         }
 	}
 	
@@ -151,7 +151,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 //                	catch( GsException ge){
 //                		// TODO : REFACTORING ACTION
 //                		// TODO : Launch a message box to the user
-//                		Debugger.log( "Unable to get the stable states" + ge);
+//                		LogManager.log( "Unable to get the stable states" + ge);
 //                	}
                 }
             });

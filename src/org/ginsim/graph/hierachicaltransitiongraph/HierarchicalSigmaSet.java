@@ -6,7 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import fr.univmrs.tagc.common.Debugger;
+import org.ginsim.utils.log.LogManager;
+
 
 public class HierarchicalSigmaSet {
 
@@ -78,7 +79,7 @@ public class HierarchicalSigmaSet {
 	public List getSigmaImage() {
 		LinkedList path = new LinkedList();
 		if (this.parent == null) {
-			Debugger.error( this + " appel sur la root ?");
+			LogManager.error( this + " appel sur la root ?");
 			return path;
 		}		
 		HierarchicalSigmaSet current = this;

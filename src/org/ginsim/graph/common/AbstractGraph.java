@@ -30,8 +30,10 @@ import org.ginsim.graph.backend.JgraphtBackendImpl;
 import org.ginsim.graph.common.FallbackNodeAttributeReader.NodeVSdata;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E> {
@@ -555,8 +557,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			} catch (Exception e) {
 				// TODO : REFACTORING ACTION
 				// TODO : introduce a clean permission checking
-				Debugger.error( "Could not use a tmp file in the same directory");
-				Debugger.error( e);
+				LogManager.error( "Could not use a tmp file in the same directory");
+				LogManager.error( e);
 				//       			ftmp = File.createTempFile(f.getName(), null);
 				//       			fileName = ftmp.getAbsolutePath();
 			}

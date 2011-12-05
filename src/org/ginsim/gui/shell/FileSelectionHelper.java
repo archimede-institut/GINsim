@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 
 import org.ginsim.graph.common.Graph;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 public class FileSelectionHelper {
 
@@ -16,11 +16,11 @@ public class FileSelectionHelper {
 	// and store it in the option file
 	
 	public static Graph<?,?> open(String path) {
-		Debugger.error( "TODO: open files");
+		LogManager.error( "TODO: open files");
 		return null;
 	}
 	public static Graph<?,?> open(String path, Map filter) {
-		Debugger.error( "TODO: open filtered files");
+		LogManager.error( "TODO: open filtered files");
 		return null;
 	}
 	

@@ -20,13 +20,13 @@ import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.gui.utils.widgets.Label;
+import org.ginsim.gui.utils.widgets.StockButton;
 
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
-import fr.univmrs.tagc.common.widgets.Label;
-import fr.univmrs.tagc.common.widgets.StockButton;
 
 
 public class InitialStatePanel extends JPanel {

@@ -26,14 +26,15 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.GenericListPanel;
+import org.ginsim.gui.utils.data.GenericListSelectionPanel;
+import org.ginsim.gui.utils.widgets.SplitPane;
+import org.ginsim.utils.data.ObjectStore;
 
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.SplitPane;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 
 /**
@@ -346,7 +347,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	public void endSimu( Graph graph) {
 		isrunning = false;
 		if (null == graph) {
-			Tools.error("no graph generated", regGraphFrame);
+			GUIMessageUtils.openErrorDialog("no graph generated", regGraphFrame);
 		} else {
 			GUIManager.getInstance().whatToDoWithGraph( graph, true);
 		}

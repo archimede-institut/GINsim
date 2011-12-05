@@ -34,15 +34,15 @@ import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantChange;
 
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.reg2dyn.RegulatoryMutantListener;
+import org.ginsim.gui.utils.data.GenericListPanel;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.gui.utils.widgets.SplitPane;
+import org.ginsim.gui.utils.widgets.StockButton;
+import org.ginsim.utils.data.SimpleGenericList;
+import org.ginsim.utils.data.ValueList;
 
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
-import fr.univmrs.tagc.common.datastore.ValueList;
-import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
-import fr.univmrs.tagc.common.widgets.SplitPane;
-import fr.univmrs.tagc.common.widgets.StockButton;
 
 /**
  * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.

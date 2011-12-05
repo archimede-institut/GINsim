@@ -16,10 +16,11 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.localgraph.LocalGraphService;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( LocalGraphService.class)
@@ -38,9 +39,9 @@ public class LocalGraphServiceGUI implements ServiceGUI {
 				actions.add( new LocalGraphAction((DynamicGraph)graph));
 			}
 			catch( GsException ge){
-	    		Tools.error( "The Local Graph tool will not be available since the associated Regulatory graph was not found");
-	    		Debugger.error( "Unable to add action for this graph since its associated graph was not retrieved");
-	    		Debugger.error( ge);
+	    		GUIMessageUtils.openErrorDialog( "The Local Graph tool will not be available since the associated Regulatory graph was not found");
+	    		LogManager.error( "Unable to add action for this graph since its associated graph was not retrieved");
+	    		LogManager.error( ge);
 			}
 		}
 		return actions;

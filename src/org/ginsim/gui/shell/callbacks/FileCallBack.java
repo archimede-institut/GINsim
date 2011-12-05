@@ -16,8 +16,8 @@ import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * Callbacks for the "File" menu
@@ -98,8 +98,8 @@ class NewAction extends AbstractAction {
 		try {
 			GUIManager.getInstance().newFrame();
 		} catch (Exception e) {
-			Debugger.error(" Error creating the new frame");
-			Debugger.error( e);
+			LogManager.error(" Error creating the new frame");
+			LogManager.error( e);
 		}
 	}
 }

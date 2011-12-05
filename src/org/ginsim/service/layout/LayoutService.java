@@ -2,7 +2,7 @@ package org.ginsim.service.layout;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 

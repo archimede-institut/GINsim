@@ -3,7 +3,8 @@ package org.ginsim.graph.regulatorygraph.logicalfunction.param2function.tree;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import fr.univmrs.tagc.common.Debugger;
+import org.ginsim.utils.log.LogManager;
+
 
 public class ParamTreeLeafValue extends ParamTreeLeaf {
   private int value;
@@ -18,7 +19,7 @@ public class ParamTreeLeafValue extends ParamTreeLeaf {
 	  for (int i = 0; i < (2 * depth); i++){
 		  result += " ";
 	  }
-	  Debugger.trace( result + value, false);
+	  LogManager.trace( result + value, false);
   }
   
   public void setValue(Object v) {

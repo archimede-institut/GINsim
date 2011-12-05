@@ -16,11 +16,12 @@ import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
@@ -134,7 +135,7 @@ public class SBMLExportService implements Service{
             out.closeTag(); // sbml
             os.close();
 		} catch (IOException e) {
-			Tools.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
 		}
 	}
 

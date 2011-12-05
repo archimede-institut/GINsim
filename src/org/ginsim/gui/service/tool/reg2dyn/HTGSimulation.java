@@ -8,18 +8,19 @@ import java.util.Set;
 
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNodeSet;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalSigmaSet;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalSigmaSetFactory;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.reg2dyn.helpers.HTGSimulationHelper;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 
 /**
@@ -126,14 +127,14 @@ public class HTGSimulation extends Simulation {
 		this.shouldCompactSCC = htg.areTransientCompacted();
 		this.regGraph = (RegulatoryGraph) helper.getRegulatoryGraph();
 		this.sigmaFactory = new HierarchicalSigmaSetFactory();
-		Debugger.setDebug(debug);
+		LogManager.setDebug(debug);
 		
 //		try {
-//			Debugger.setOut(new PrintStream("/Users/duncan/Desktop/a.out"));
+//			LogManager.setOut(new PrintStream("/Users/duncan/Desktop/a.out"));
 //		} catch (FileNotFoundException e1) {
 //			e1.printStackTrace();
 //		}
-		Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"Begin algorithm with param, shouldCompactSCC:"+shouldCompactSCC);               						
+		LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"Begin algorithm with param, shouldCompactSCC:"+shouldCompactSCC);               						
 		ready = true;
 		try {
 			runSimulationOnInitialStates();									// run the simulation for each initial states
@@ -141,22 +142,22 @@ public class HTGSimulation extends Simulation {
 			debug_o.println("Error : "+e.getMessage());
             debug_o.println("simulation was interrupted");
 		} catch (OutOfMemoryError e) {
-		    Tools.error("Out Of Memory");
+		    GUIMessageUtils.openErrorDialog("Out Of Memory");
 		    return null;
 		} catch (Exception e) {
 			debug_o.println("Error : "+e.getMessage());
 			e.printStackTrace();
 		}
-		Debugger.info("Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
+		LogManager.info("Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		addAllNodeTo();									// add all nodes to the graph
 		addAllEdgesTo();								// add all the edges to the graph
-		Debugger.info( "Graph created in : "+(System.currentTimeMillis()-time)+"ms");
+		LogManager.info( "Graph created in : "+(System.currentTimeMillis()-time)+"ms");
 		return helper.endSimulation();
 	}
 
 
 
-	/* ****************** DEBUG AND Debugger.log STUFF**********/
+	/* ****************** DEBUG AND LogManager.log STUFF**********/
 
 	/**
 	 * The main entrance for the algorithm. Basically, initialize the main variables, and run the recursive explore function on every initial states
@@ -178,7 +179,7 @@ public class HTGSimulation extends Simulation {
 		while(initStatesIterator.hasNext()) { 																				//For each initial states
 			byte[] state = (byte[])initStatesIterator.next();																//  __state__ is the current initial state.
 			nbinitialstates++;
-			Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"New initial state :"+print_state(state));               						
+			LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"New initial state :"+print_state(state));               						
 			                                                                                        						
 			HierarchicalNode processed_hnode = nodeSet.getHNodeForState(state);											//  Search __state__ in the nodeSet
 			if (processed_hnode  == null) { 																				//  If the new state was not in the nodeSet, that is has not been processed
@@ -192,7 +193,7 @@ public class HTGSimulation extends Simulation {
 				max_depth_reached = -1;
 				explore(e, updater);                                                                                                 //    Call the recursive dunction explore() on __e__.
 			} else {
-				Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"\tAlready processed :"+processed_hnode.getUniqueId());
+				LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"\tAlready processed :"+processed_hnode.getUniqueId());
 			}
 		}
 
@@ -207,42 +208,42 @@ public class HTGSimulation extends Simulation {
 		
 		HTGSimulationQueueItem n = null;
 		log_tabdepth.append('\t');
-		Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"Exploring :"+e);
+		LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"Exploring :"+e);
 		index++;
 		depth++;
 		
 		queue.add(e);																										//Queueing the current state
-		Debugger.debug(DBG_QUEUE,log_tabdepth+"queue :"+queue);                                            							
-		Debugger.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"[label=\""+print_state(e.getState())+"/"+index+"\", rank=\""+index+"\"]");
-		Debugger.debug(DBG_DOT,"NODES::"+print_state(e.getState())+"/"+index);
+		LogManager.debug(DBG_QUEUE,log_tabdepth+"queue :"+queue);                                            							
+		LogManager.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"[label=\""+print_state(e.getState())+"/"+index+"\", rank=\""+index+"\"]");
+		LogManager.debug(DBG_DOT,"NODES::"+print_state(e.getState())+"/"+index);
 		int tmp_i_succ = 0;
 		while (e_updater.hasNext()) {																						//For each successors
 			byte[] n_state= ((SimulationQueuedState)e_updater.next()).state;												// n_state is the state of the successor
-			Debugger.debug(DBG_DOT,"EDGE::"+(++step)+" "+print_state(e.getState())+"/"+print_state(n_state));
+			LogManager.debug(DBG_DOT,"EDGE::"+(++step)+" "+print_state(e.getState())+"/"+print_state(n_state));
 			SimulationUpdater n_updater = getUpdaterForState(n_state);                          							
 			if (!n_updater.hasNext()) {																						// n_state has no child No child => stable state
 				processStableState(n_state);
-				Debugger.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=red]");                          							
+				LogManager.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=red]");                          							
 			} else {
-				Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"nextState :"+print_state(n_state));
+				LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"nextState :"+print_state(n_state));
 				n = getTripletInQueueForState(n_state);															   				//Search the state in the queue
 				if (n != null) {																				   				//If found
-					Debugger.debug(DBG_APPARTENANCETESTS,log_tabdepth+"in P :"+n);
+					LogManager.debug(DBG_APPARTENANCETESTS,log_tabdepth+"in P :"+n);
 					HTGSimulationQueueSCC newCycleItem = cycleFound(n, index-1, n.getLow_index());
 					e.setLow_index(Math.min(e.getLow_index(), newCycleItem.getLow_index()));												   				//  update the index
-					Debugger.debug(DBG_QUEUE,log_tabdepth+"\tqueue:"+queue);
-					Debugger.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=black]");                          							
+					LogManager.debug(DBG_QUEUE,log_tabdepth+"\tqueue:"+queue);
+					LogManager.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=black]");                          							
 				} else {																						   				//Else the state is not in the queue
-					Debugger.debug(DBG_APPARTENANCETESTS,log_tabdepth+"not in P"+queue);                         				   				 
+					LogManager.debug(DBG_APPARTENANCETESTS,log_tabdepth+"not in P"+queue);                         				   				 
 					HierarchicalNode n_hnode = nodeSet.getHNodeForState(n_state);								   				//  If it already processed (in the nodeSet)	
 					if (n_hnode != null) {                                                                         				
-						Debugger.debug(DBG_APPARTENANCETESTS,log_tabdepth+"in N :"+n_hnode.getUniqueId());                    				
-						Debugger.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=gray, style=dotted]");                          							
+						LogManager.debug(DBG_APPARTENANCETESTS,log_tabdepth+"in N :"+n_hnode.getUniqueId());                    				
+						LogManager.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=gray, style=dotted]");                          							
 					} else {																					   				//  Else
-						Debugger.debug(DBG_APPARTENANCETESTS,log_tabdepth+"not in N "+nodeSet);                     				   				 
+						LogManager.debug(DBG_APPARTENANCETESTS,log_tabdepth+"not in N "+nodeSet);                     				   				 
 						n = new HTGSimulationQueueState(n_state, index, index);						   				//     explore it
 						nbnode++;
-						Debugger.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=red]");                          							
+						LogManager.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"->"+print_state(n_state)+"[label=\""+(tmp_i_succ++)+"\", color=red]");                          							
 						n_hnode = explore((HTGSimulationQueueState) n, n_updater);																					//     update the index
 						e.setLow_index(Math.min(e.getLow_index(), n.getLow_index()));
 					}
@@ -250,7 +251,7 @@ public class HTGSimulation extends Simulation {
 			}
 
 		}
-		Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"Comparing indexes "+e);
+		LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"Comparing indexes "+e);
 		if (e.isCycle() || e.getIndex() == e.getLow_index()) {
 			HierarchicalNode hnode = buildSCC(e);
 			log_tabdepth.deleteCharAt(log_tabdepth.length()-1);
@@ -270,10 +271,10 @@ public class HTGSimulation extends Simulation {
 	 */
 	private HTGSimulationQueueSCC cycleFound(HTGSimulationQueueItem stopItemInQueue, int index, int low_index) {
 		if (stopItemInQueue.isCycle() && queue.getLast() == stopItemInQueue) {
-			Debugger.debug(DBG_MERGE,log_tabdepth+"\tCycle found, no merge to do, its already in the last cycle in the queue");
+			LogManager.debug(DBG_MERGE,log_tabdepth+"\tCycle found, no merge to do, its already in the last cycle in the queue");
 			return (HTGSimulationQueueSCC) stopItemInQueue;
 		}
-		Debugger.debug(DBG_QUEUE,log_tabdepth+"Cycle Found up to  "+stopItemInQueue);
+		LogManager.debug(DBG_QUEUE,log_tabdepth+"Cycle Found up to  "+stopItemInQueue);
 		HierarchicalNode cycle = new HierarchicalNode(childsCount);
 		cycle.setType(HierarchicalNode.TYPE_TRANSIENT_CYCLE);
 		HTGSimulationQueueSCC newCycleItem = new HTGSimulationQueueSCC(cycle, index, low_index);
@@ -282,9 +283,9 @@ public class HTGSimulation extends Simulation {
 		do {
 			n = (HTGSimulationQueueItem) queue.removeLast();
 			if (n.getLow_index() < low_index) low_index = n.getLow_index();
-			Debugger.debug(DBG_QUEUE,log_tabdepth+"\tunqueuing:"+queue);
+			LogManager.debug(DBG_QUEUE,log_tabdepth+"\tunqueuing:"+queue);
 			if (n.isCycle()) {
-				Debugger.debug(DBG_MERGE,log_tabdepth+"\t\tmerge cycle "+cycle+" and "+n);
+				LogManager.debug(DBG_MERGE,log_tabdepth+"\t\tmerge cycle "+cycle+" and "+n);
 				cycle.merge(((HTGSimulationQueueSCC)n).getSCC(), nodeSet, sigmaFactory, htg);		//Merge all the states of the SCC in the cycle
 			} else {
 				cycle.addState(((HTGSimulationQueueState)n).getState(), 1);
@@ -309,7 +310,7 @@ public class HTGSimulation extends Simulation {
 		boolean isCycle;
 		//Init the scc
 		if (inCycle != null) {
-			Debugger.debug(DBG_QUEUE,log_tabdepth+"\tthe state "+print_state(((HTGSimulationQueueState) e).getState())+" is in a cycle:"+inCycle+" queue:"+queue);
+			LogManager.debug(DBG_QUEUE,log_tabdepth+"\tthe state "+print_state(((HTGSimulationQueueState) e).getState())+" is in a cycle:"+inCycle+" queue:"+queue);
 			scc = inCycle;
 			isCycle = true;
 		} else {
@@ -319,7 +320,7 @@ public class HTGSimulation extends Simulation {
 			isCycle = false;
 		}
 		nodeSet.add(scc);
-		Debugger.debug(DBG_SIGMA,log_tabdepth+"\tnew scc:"+scc.toLongString());
+		LogManager.debug(DBG_SIGMA,log_tabdepth+"\tnew scc:"+scc.toLongString());
 
 		scc.addAllTheStatesInQueue();
 		scc.statesSet.reduce();
@@ -349,7 +350,7 @@ public class HTGSimulation extends Simulation {
 		if (shouldCompactSCC) {
 			sigma = sigmaFactory.endNewSigma();
 			scc.setSigma(sigma);
-			Debugger.debug(DBG_SIGMA,log_tabdepth+"\tsigma computed:"+sigma.pathToString());
+			LogManager.debug(DBG_SIGMA,log_tabdepth+"\tsigma computed:"+sigma.pathToString());
 
 		}
 		if (isCycle) {
@@ -360,13 +361,13 @@ public class HTGSimulation extends Simulation {
 			}
 		} else {
 			if (shouldCompactSCC) {
-				if (sigma.getUnrecoverable() != null) Debugger.debug(DBG_SIGMA,log_tabdepth+"set over unrecoverable "+sigma.getUnrecoverable());
+				if (sigma.getUnrecoverable() != null) LogManager.debug(DBG_SIGMA,log_tabdepth+"set over unrecoverable "+sigma.getUnrecoverable());
 				sigma.setUnrecoverable(scc, nodeSet, sigmaFactory, htg);
 			}
 		}
 		
 		queue.removeLast();
-		Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"ALL SCC = "+nodeSet);
+		LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"ALL SCC = "+nodeSet);
 		return scc;
 	}
 
@@ -381,14 +382,14 @@ public class HTGSimulation extends Simulation {
 	private HierarchicalNode processStableState(byte[] state) {
 		HierarchicalNode hnode = nodeSet.getHNodeForState(state);									//  If it already processed (in the nodeSet)	
 		if (hnode != null) {
-			Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"found stable state :"+print_state(state));
+			LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"found stable state :"+print_state(state));
 			return hnode;
 		}
 		index++;
 		nbnode++;
-		Debugger.debug(DBG_MAINLOOPS,log_tabdepth+"found NEW stable state :"+print_state(state));
-		Debugger.debug(DBG_DOT,"DOT::"+print_state(state)+"[label=\""+print_state(state)+"/"+index+"\",shape=\"rectangle\", rank=\""+index+"\"]");
-		Debugger.debug(DBG_DOT,"NODES::"+print_state(state)+"/"+index);
+		LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"found NEW stable state :"+print_state(state));
+		LogManager.debug(DBG_DOT,"DOT::"+print_state(state)+"[label=\""+print_state(state)+"/"+index+"\",shape=\"rectangle\", rank=\""+index+"\"]");
+		LogManager.debug(DBG_DOT,"NODES::"+print_state(state)+"/"+index);
 		hnode = new HierarchicalNode(childsCount);
 		hnode.addState(state, 1);
 		hnode.setType(HierarchicalNode.TYPE_STABLE_STATE);
@@ -396,7 +397,7 @@ public class HTGSimulation extends Simulation {
 			sigmaFactory.beginNewSigma();
 			sigmaFactory.addToNewSigma(hnode);
 			hnode.setSigma(sigmaFactory.endNewSigma());			
-			Debugger.debug(DBG_SIGMA,log_tabdepth+"\tsigma computed:"+hnode.getSigma().pathToString());
+			LogManager.debug(DBG_SIGMA,log_tabdepth+"\tsigma computed:"+hnode.getSigma().pathToString());
 		}
 		nodeSet.add(hnode);
 		return hnode;
@@ -479,29 +480,29 @@ public class HTGSimulation extends Simulation {
 	 * Add all the edges in the graph, and empty hnode.in and hnode.out
 	 */
 	private void addAllEdgesTo() {
-		Debugger.debug(DBG_POSTTREATMENT,"Adding all arcs to the graph...");
+		LogManager.debug(DBG_POSTTREATMENT,"Adding all arcs to the graph...");
 		int nbarc = 0;
 		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
 			HierarchicalNode from = (HierarchicalNode) it.next();
-			Debugger.debug(DBG_POSTTREATMENT,"\tto "+from);
+			LogManager.debug(DBG_POSTTREATMENT,"\tto "+from);
 			Set tos = from.getOut();
 			for (Iterator it2 = tos.iterator(); it2.hasNext();) {
 				HierarchicalNode to = (HierarchicalNode) it2.next();
 				Object b = htg.addEdge(from, to);
 				if (b != null) nbarc++;
-				Debugger.debug(DBG_POSTTREATMENT,"\tfrom "+to+" --- "+b);
+				LogManager.debug(DBG_POSTTREATMENT,"\tfrom "+to+" --- "+b);
 				
 			}
 			from.releaseEdges();
 		}
-		Debugger.debug(DBG_POSTTREATMENT," ("+nbarc+") done");
+		LogManager.debug(DBG_POSTTREATMENT," ("+nbarc+") done");
 		nodeSet.clear();
 	}
 
 
 	
 
-/* ****************** DEBUG AND Debugger.log STUFF**********/
+/* ****************** DEBUG AND LogManager.log STUFF**********/
 	
 	
 	private static String print_state(byte[] t) {

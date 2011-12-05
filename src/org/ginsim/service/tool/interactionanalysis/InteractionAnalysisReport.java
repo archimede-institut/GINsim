@@ -11,11 +11,12 @@ import java.util.Map;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.Tools;
+
 import fr.univmrs.tagc.common.document.DocumentStyle;
 import fr.univmrs.tagc.common.document.DocumentWriter;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.IOUtils;
 
 /**
  * A container class capable of exporting itself given a DocumentWriter
@@ -109,7 +110,7 @@ public class InteractionAnalysisReport {
 		
 		StringBuffer javascript = dw.getDocumentExtra("javascript");
 		if (javascript != null) {
-			javascript.append(Tools.readFromFile("src/org/ginsim/service/tool/interactionanalysis/interactionAnalysis.js"));
+			javascript.append(IOUtils.readFromFile("src/org/ginsim/service/tool/interactionanalysis/interactionAnalysis.js"));
 		}
 		
 		dw.startDocument();

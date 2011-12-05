@@ -24,11 +24,11 @@ import org.ginsim.graph.regulatorygraph.omdd.OMDDNodeBrowser;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
+import org.ginsim.utils.data.ObjectStore;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.datastore.ObjectStore;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
@@ -82,11 +82,11 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 	        for (int i=0 ; i<depth ; i++) {
 	        	int level = path[i][2];
 	        	if (path[i][0] > 0) {
-	        		Debugger.trace( "case GEQ");
+	        		LogManager.trace( "case GEQ");
 	        		writeConstraint("geq", level, path[i][0]);
 	        	}
 	        	if (path[i][1] < path[i][3]) {
-	        		Debugger.trace( "case LT");
+	        		LogManager.trace( "case LT");
 	        		writeConstraint("lt", level, path[i][1]);
 	        	}
 	        }
@@ -332,7 +332,7 @@ class SBML3ExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void run() {
 		// TODO run export
-		Debugger.error( "Run export");
+		LogManager.error( "Run export");
 	}	
 }
 

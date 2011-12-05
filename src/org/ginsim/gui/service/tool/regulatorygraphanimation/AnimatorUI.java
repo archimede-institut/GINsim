@@ -14,7 +14,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
+import org.ginsim.gui.resource.Translator;
+
 
 /**
  * UI for the animator plugin.

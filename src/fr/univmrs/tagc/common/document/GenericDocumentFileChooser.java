@@ -11,11 +11,12 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.utils.IOUtils;
+import org.ginsim.gui.resource.Translator;
 
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+import fr.univmrs.tagc.common.utils.IOUtils;
+
 
 /**
  * A FileChooser with a proper filter for all the document supported
@@ -30,7 +31,7 @@ import fr.univmrs.tagc.common.managerresources.Translator;
  *					<i>Your action here....</i>
  *				}
  *			} catch (Exception e1) {
- *				Tools.error("An error has occurred while saving", this.frame);
+ *				GUIMessageUtils.openErrorDialog("An error has occurred while saving", this.frame);
  *			}
  *
  */
@@ -82,7 +83,7 @@ public class GenericDocumentFileChooser extends JFileChooser {
 			GenericDocumentFileFilter filter = (GenericDocumentFileFilter)getFileFilter();
 			return filter.getFormat();
 		} catch (ClassCastException e) {
-			Tools.error("You must choose a valid extension", parentWindow);
+			GUIMessageUtils.openErrorDialog("You must choose a valid extension", parentWindow);
 			return null;
 		}
 	}

@@ -13,9 +13,9 @@ import javax.swing.JPanel;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class DynamicalHierarchicalSimplifierFrame extends StackDialog {
 	

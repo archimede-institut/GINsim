@@ -14,9 +14,9 @@ import javax.swing.tree.TreePath;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.gui.utils.widgets.GsButton;
 
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
-import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class RootPanel extends BooleanFunctionTreePanel implements ActionListener {
   private static final long serialVersionUID = -1866485315946504210L;

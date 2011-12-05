@@ -3,10 +3,11 @@ package org.ginsim.gui.service.tool.reg2dyn;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.common.datastore.gui.GenericListSelectionPanel;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.GenericListPanel;
+import org.ginsim.gui.utils.data.GenericListSelectionPanel;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+
 
 public class PrioritySelectionPanel extends GenericListSelectionPanel {
 	private static final long serialVersionUID = 1213902700181873169L;

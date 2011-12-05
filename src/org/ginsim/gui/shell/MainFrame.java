@@ -22,12 +22,12 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.editpanel.EditPanel;
+import org.ginsim.gui.utils.widgets.Frame;
+import org.ginsim.gui.utils.widgets.SplitPane;
 
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.Frame;
-import fr.univmrs.tagc.common.widgets.SplitPane;
 
 /**
  * GINsim's main frame shell.

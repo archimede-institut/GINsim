@@ -7,10 +7,10 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.HandledStackDialog;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 
 
 public abstract class ExportAction<G extends Graph> extends BaseAction {
@@ -55,8 +55,8 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 		try {
 			doExport(filename);
 		} catch (Exception e) {
-			Debugger.error("Error in export "+getID());
-			Debugger.error(e);
+			LogManager.error("Error in export "+getID());
+			LogManager.error(e);
 		}
 	}
 

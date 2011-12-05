@@ -13,8 +13,8 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 public final class TruthTableParser {
@@ -51,7 +51,7 @@ public final class TruthTableParser {
     		StringTokenizer st = new StringTokenizer(fileTable.readLine());
     		L=(new Integer(st.nextToken())).intValue();// number of lines
     		n=(new Integer(st.nextToken())).intValue();// number of components
-    		Debugger.trace( "L="+L+" n="+n);		   
+    		LogManager.trace( "L="+L+" n="+n);		   
     		table_gene=new byte[L][2*n];
     		i=0;		        
 
@@ -79,7 +79,7 @@ public final class TruthTableParser {
     			} 
     			display += "\n";
     		} 
-    		Debugger.trace( display, false);
+    		LogManager.trace( display, false);
 
     	} // close the try
 

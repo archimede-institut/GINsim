@@ -31,6 +31,7 @@ import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
+import org.ginsim.utils.log.LogManager;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
@@ -40,8 +41,8 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphSelectionListener, GraphViewListener {
 
@@ -240,9 +241,9 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			isSaved = true;
 			return true;
 		} catch (Exception e) {
-			Tools.error( "Unable to save file. See logs for more details");
-			Debugger.error( "Unable to save file : " + savePath);
-			Debugger.error( e);
+			GUIMessageUtils.openErrorDialog( "Unable to save file. See logs for more details");
+			LogManager.error( "Unable to save file : " + savePath);
+			LogManager.error( e);
 		}
 		return false;
 		

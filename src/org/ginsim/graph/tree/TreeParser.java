@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.graph.view.NodeAttributesReader;
 
-import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 public abstract class TreeParser {
 	public static final String PARAM_NODEORDER = "p_nodeOrder";
@@ -74,7 +75,7 @@ public abstract class TreeParser {
 	public Object getParameter(String key) {
 		Object value = this.parameters.get(key);
 		if (value == null) {
-			Tools.error("expected parameter '"+key+"' not found or null");
+			GUIMessageUtils.openErrorDialog("expected parameter '"+key+"' not found or null");
 		}
 		return value;
 	}

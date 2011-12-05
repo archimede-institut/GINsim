@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
 import java.util.List;
 
 import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.EdgeAttributesReader;
+import org.ginsim.graph.view.EdgeAttributesReader;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.EdgeRenderer;

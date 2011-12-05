@@ -11,9 +11,11 @@ import javax.swing.JDialog;
 
 import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.FileSelectionHelper;
+import org.ginsim.gui.utils.GUIIOUtils;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 /**
  * Here are the (few) callback for entry in the "help" menu
@@ -57,7 +59,7 @@ class HelpAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO: search for local help
-		Tools.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
+		GUIIOUtils.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
 		// GsEnv.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_docPathError")), null);
 	}
 }
@@ -77,19 +79,19 @@ class ProvideLogAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		
-		String log_zip_path = Debugger.deliverLogs();
+		String log_zip_path = LogManager.deliverLogs();
 		if( log_zip_path != null){
 			File zip_file = new File( log_zip_path);
 			String save_path = FileSelectionHelper.selectSaveFilename( null, ".zip");
 			if( save_path != null){
 				boolean result = zip_file.renameTo( new File( save_path));
 				if( !result){
-					Tools.error( "Unable to save the log ZIP file to selected path.");
+					GUIMessageUtils.openErrorDialog( "Unable to save the log ZIP file to selected path.");
 				}
 			}
 		}
 		else{
-			Tools.error( "Unable to build the log ZIP file. See logs for details.");
+			GUIMessageUtils.openErrorDialog( "Unable to build the log ZIP file. See logs for details.");
 		}
 	}
 }
@@ -104,18 +106,18 @@ class ToggleTraceAction extends AbstractAction{
 	
 	public ToggleTraceAction() {
 		
-		super( Debugger.getVerboseLevel() ==0?"Enable Traces":"Disable Traces");
+		super( LogManager.getVerboseLevel() ==0?"Enable Traces":"Disable Traces");
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		
-		if( Debugger.getVerboseLevel() == 0){
-			Debugger.setVerbose( 2);
+		if( LogManager.getVerboseLevel() == 0){
+			LogManager.setVerbose( 2);
 			putValue( Action.NAME, "Disable Traces");
 		}
 		else{
-			Debugger.setVerbose( 0);
+			LogManager.setVerbose( 0);
 			putValue( Action.NAME, "Enable Traces");
 		}
 	}

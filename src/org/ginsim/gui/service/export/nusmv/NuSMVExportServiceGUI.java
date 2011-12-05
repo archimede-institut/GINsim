@@ -13,12 +13,12 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
 import org.ginsim.service.export.nusmv.NuSMVExportService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialogHandler;
 
 /**
  * GUI Action to export a NuSMV model description

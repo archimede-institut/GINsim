@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.Map;
 
+import org.ginsim.graph.view.NodeAttributesReader;
+
 
 /**
  * a generic nodeAttributeReader storing data into a dedicated hashmap

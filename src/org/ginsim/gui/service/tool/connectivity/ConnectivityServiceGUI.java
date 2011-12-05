@@ -17,9 +17,9 @@ import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
+import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.Debugger;
 
 /**
  * register the connectivity service
@@ -57,7 +57,7 @@ class ConnectivityExtractAction extends ToolAction {
 		try {
 			s_ag = graph.getAssociatedGraphID();
 		} catch (GsException e) {
-			Debugger.debug();
+			LogManager.debug();
 			return;
 		}
 		

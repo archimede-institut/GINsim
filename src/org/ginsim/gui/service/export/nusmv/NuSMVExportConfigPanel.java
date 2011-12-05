@@ -27,14 +27,14 @@ import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.reg2dyn.PrioritySelectionPanel;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.service.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.AbstractStackDialogHandler;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = -7398674287463858306L;
@@ -154,7 +154,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void run() {
 		// TODO run export
-		Debugger.error("TODO: run export");
+		LogManager.error("TODO: run export");
 	}
 }
 

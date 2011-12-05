@@ -27,9 +27,9 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.Tr
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
+import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.gui.utils.widgets.GsButton;
 
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
-import fr.univmrs.tagc.common.widgets.GsButton;
 
 public class FunctionPanel extends BooleanFunctionTreePanel implements ActionListener, KeyListener, PropertyChangeListener, MouseListener {
   private static final long serialVersionUID = 8900639275182677150L;

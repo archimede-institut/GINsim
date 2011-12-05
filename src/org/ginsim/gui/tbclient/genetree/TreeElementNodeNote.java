@@ -5,9 +5,9 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.gui.resource.ImageLoader;
 
 import tbrowser.ihm.widget.TBToggleButton;
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
 
 public class TreeElementNodeNote extends TreeElementDeco {
   private TBToggleButton b;

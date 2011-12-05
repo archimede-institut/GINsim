@@ -5,9 +5,10 @@ import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.utils.data.models.SpinModel;
+import org.ginsim.utils.DataUtils;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.datastore.models.SpinModel;
+
 
 /**
  * model controlling spin buttons for base and max value of a RegulatoryNode
@@ -34,7 +35,7 @@ public class NodeMaxValueSpinModel extends SpinModel {
 
 	public Object getNextValue() {
 		if (graph == null || vertex == null) {
-			return Tools.IZ;
+			return DataUtils.IZ;
 		}
 		if (!gui.isEditAllowed()) {
 			return new Integer(vertex.getMaxValue());
@@ -46,7 +47,7 @@ public class NodeMaxValueSpinModel extends SpinModel {
 
 	public Object getPreviousValue() {
         if (graph == null || vertex == null) {
-            return Tools.IZ;
+            return DataUtils.IZ;
         }
 	    if (!gui.isEditAllowed()) {
 	        return new Integer(vertex.getMaxValue());
@@ -58,7 +59,7 @@ public class NodeMaxValueSpinModel extends SpinModel {
 
 	public Object getValue() {
         if (vertex == null) {
-            return Tools.IZ;
+            return DataUtils.IZ;
         }
         return new Integer(vertex.getMaxValue());
 	}

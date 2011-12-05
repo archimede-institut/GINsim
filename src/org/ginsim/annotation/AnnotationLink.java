@@ -5,10 +5,11 @@ import java.util.Map;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.gui.utils.GUIIOUtils;
+import org.ginsim.gui.utils.HttpHelper;
 
-import fr.univmrs.tagc.common.HttpHelper;
 import fr.univmrs.tagc.common.OpenHelper;
-import fr.univmrs.tagc.common.Tools;
+
 
 public class AnnotationLink {
 	
@@ -52,7 +53,7 @@ public class AnnotationLink {
 			return;
 		}
 		// no helper, use a generic open call
-		Tools.open(proto, value);
+		GUIIOUtils.open(proto, value);
 	}
 	
 	public String toString() {

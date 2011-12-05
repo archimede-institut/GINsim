@@ -23,23 +23,24 @@ import org.ginsim.exception.GsException;
 
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
 import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.io.parser.GinmlHelper;
 import org.ginsim.io.parser.GsXMLHelper;
+import org.ginsim.utils.log.LogManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
+
 
 /**
  * parses a ginml regulatory graph.
@@ -286,8 +287,8 @@ public final class RegulatoryParser extends GsXMLHelper {
 	                            ereader.setEdge(edge.me);
                             }
                             catch (GsException e) {
-								Debugger.error( "Unable to create edge between nodes '" + from + "' and '" + to + "' : One of the node was not found in the graph");
-								Debugger.error( e);
+								LogManager.error( "Unable to create edge between nodes '" + from + "' and '" + to + "' : One of the node was not found in the graph");
+								LogManager.error( e);
 							}
                         } catch (NumberFormatException e) { throw new SAXException("malformed interaction's parameters"); }
                     } else {
@@ -471,7 +472,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     		}
     		if (!ok || v_order.size() != graph.getNodeCount()) {
     			// error
-    			Tools.error("incoherent nodeOrder, not restoring it");
+    			GUIMessageUtils.openErrorDialog("incoherent nodeOrder, not restoring it");
     		} else {
     			graph.setNodeOrder(v_order);
     		}

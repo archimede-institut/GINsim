@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.utils.data.ObjectStore;
 
-import fr.univmrs.tagc.common.datastore.ObjectStore;
 
 public class PNConfig implements InitialStateStore {
 

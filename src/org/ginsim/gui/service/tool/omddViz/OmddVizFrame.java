@@ -23,9 +23,9 @@ import org.ginsim.graph.tree.TreeParser;
 import org.ginsim.graph.tree.TreeParserFromManualOmdd;
 import org.ginsim.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.StackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 public class OmddVizFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7619253564236142617L;

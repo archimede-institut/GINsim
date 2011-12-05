@@ -2,7 +2,8 @@ package org.ginsim.gui.graph;
 
 import javax.swing.ImageIcon;
 
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
+import org.ginsim.gui.resource.ImageLoader;
+
 
 /**
  * Minimalistic description of the available edit types for a Graph.

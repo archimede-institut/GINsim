@@ -3,9 +3,9 @@ package org.ginsim.gui.service.tool.decisionanalysis;
 import java.util.List;
 
 import org.ginsim.graph.common.Edge;
+import org.ginsim.graph.common.NodeInfo;
 import org.ginsim.graph.common.ToolTipsable;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.NodeInfo;
 
 
 /**

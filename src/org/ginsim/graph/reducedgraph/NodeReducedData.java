@@ -6,9 +6,10 @@ import java.util.Vector;
 
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.utils.DataUtils;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+
 
 /**
  * this object represents nodes in the reduced graph : the graph of strong connected components
@@ -66,7 +67,7 @@ public class NodeReducedData {
 	 */
 	public NodeReducedData (String id, String s_content) {
 		this.id = id;
-		content = Tools.getVectorFromArray(s_content.split(","));
+		content = DataUtils.getVectorFromArray(s_content.split(","));
 	}
 	
 	public String toString() {

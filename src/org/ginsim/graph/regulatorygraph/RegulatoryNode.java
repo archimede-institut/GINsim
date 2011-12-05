@@ -25,10 +25,11 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.Tr
 import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.utils.DataUtils;
 import org.python.antlr.PythonParser.parameters_return;
 
-import fr.univmrs.tagc.common.Tools;
-import fr.univmrs.tagc.common.managerresources.Translator;
+
 import fr.univmrs.tagc.common.xml.XMLWriter;
 import fr.univmrs.tagc.common.xml.XMLize;
 
@@ -190,7 +191,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 * @param id the new id.
 	 */
 	public boolean setId(String id) {
-		if (Tools.isValidId(id)) {
+		if (DataUtils.isValidId(id)) {
 			this.id = id;
 			return true;
 		}

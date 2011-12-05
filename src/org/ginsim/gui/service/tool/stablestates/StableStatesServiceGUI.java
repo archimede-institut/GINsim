@@ -11,14 +11,14 @@ import org.ginsim.core.notification.WarningNotification;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ToolAction;
+import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.gui.dialog.stackdialog.HandledStackDialog;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * Define the action for stableStates service

@@ -16,8 +16,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.EdgeAttributesReader;
-import org.ginsim.graph.common.NodeAttributesReader;
+import org.ginsim.graph.view.EdgeAttributesReader;
+import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -26,6 +26,8 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
+import fr.univmrs.tagc.common.utils.EnvUtils;
+import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
@@ -39,8 +41,8 @@ public class OptionStore extends DefaultHandler {
     private static String optionFile = null;
     
     static {
-    	switch (Tools.os) {
-		case Tools.SYS_MACOSX:
+    	switch (EnvUtils.os) {
+		case EnvUtils.SYS_MACOSX:
 	        optionFile = System.getProperty("user.home")+"/Library/Preferences/fr.univmrs.tagc.GINsim.xml";
 			break;
 		default:
@@ -62,18 +64,18 @@ public class OptionStore extends DefaultHandler {
                 FileReader r = new FileReader(f_option);
                 xr.parse(new InputSource(r));
             } catch (FileNotFoundException e) { 
-            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (IOException e) {
-            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (ParserConfigurationException e) {
-            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (SAXParseException e) {
-            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
+            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
             } catch (SAXException e) {
-            	Tools.error(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
+            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
             }
         }
     }

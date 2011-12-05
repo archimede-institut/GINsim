@@ -17,11 +17,11 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.GenericListPanel;
+import org.ginsim.gui.utils.widgets.StockButton;
+import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.datastore.SimpleGenericList;
-import fr.univmrs.tagc.common.datastore.gui.GenericListPanel;
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.StockButton;
 
 /**
  * configure priority classes.

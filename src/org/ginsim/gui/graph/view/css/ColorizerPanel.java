@@ -15,9 +15,9 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.view.css.Colorizer;
+import org.ginsim.gui.resource.Translator;
 
 import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 
 /**

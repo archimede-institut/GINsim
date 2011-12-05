@@ -12,7 +12,9 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
-import fr.univmrs.tagc.common.Tools;
+import org.ginsim.utils.DataUtils;
+
+
 import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
@@ -319,7 +321,7 @@ class ColorStyleWriter extends SimpleStyleWriter {
 		super(prefix, suffix);
 	}
 	public String getCSSStyle(Object value) {
-		return prefix+Tools.getColorCode((Color)value)+suffix;
+		return prefix+DataUtils.getColorCode((Color)value)+suffix;
 	}
 }
 

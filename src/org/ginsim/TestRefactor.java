@@ -10,11 +10,11 @@ import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.AboutDialog;
+import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.Debugger;
-import fr.univmrs.tagc.common.managerresources.ImageLoader;
-import fr.univmrs.tagc.common.managerresources.Translator;
 
 /**
  * Simple, stupid launcher to test the ongoing refactoring
@@ -80,7 +80,7 @@ public class TestRefactor {
                 if (f.exists()) {
                     open.add(args[i]);
                 } else {
-                	Debugger.error("Required file does not exist: " + f);
+                	LogManager.error("Required file does not exist: " + f);
                 }
             }
         }
@@ -94,7 +94,7 @@ public class TestRefactor {
 					Graph<?,?> g = GraphManager.getInstance().open(filename);
 					GUIManager.getInstance().newFrame(g);
 				} catch (GsException e) {
-					Debugger.error(e);
+					LogManager.error(e);
 				}
 			}
 		}
@@ -118,7 +118,7 @@ public class TestRefactor {
 		}
 		
 		try{
-			Debugger.init( basedir, 2, true);
+			LogManager.init( basedir, 2, true);
 		}
 		catch( IOException io){
 			System.out.println("TestRefactor.main() : Unable to initialize the debugger");

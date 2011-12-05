@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.graph.common.Edge;
+import org.ginsim.utils.log.LogManager;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.DefaultEdge;
@@ -15,7 +16,6 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
-import fr.univmrs.tagc.common.Debugger;
 
 
 /**
@@ -48,7 +48,7 @@ public class GsEdgeView extends EdgeView {
 	 * Sets the point at <code>index</code> to <code>p</code>.
 	 */
 	public void setPoint(int index, Point2D p) {
-		Debugger.info( "Set point: "+index+" "+p);
+		LogManager.info( "Set point: "+index+" "+p);
 		super.setPoint(index, p);
 	}
 

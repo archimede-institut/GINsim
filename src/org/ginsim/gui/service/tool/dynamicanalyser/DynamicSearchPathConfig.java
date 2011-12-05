@@ -27,10 +27,10 @@ import javax.swing.table.TableColumn;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.regulatorygraphanimation.AReg2GPConfig;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
-import fr.univmrs.tagc.common.managerresources.Translator;
-import fr.univmrs.tagc.common.widgets.EnhancedJTable;
 
 /**
  * UI to search a path in the dynamic graph.
