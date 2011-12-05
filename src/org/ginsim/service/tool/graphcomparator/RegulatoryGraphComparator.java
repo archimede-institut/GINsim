@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.graphcomparator;
+package org.ginsim.service.tool.graphcomparator;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -32,26 +32,24 @@ import org.ginsim.core.utils.log.LogManager;
 public class RegulatoryGraphComparator extends GraphComparator {
 	public static final Color COMMON_COLOR_DIFF_FUNCTIONS = new Color(0, 0, 255);
 	public static final Color COMMON_COLOR_DIFF_MAXVALUES = new Color(115, 194, 220);
-	private RegulatoryGraph g, g1, g2; //g is the graph merging g1 and g2, the graphs to compare.
 	/**
 	 * indicates if the node order of both graph is the same.
 	 */
 	private boolean sameNodeOrder;
-	private List logicalFunctionPending;
-	private Map meMap;
+	private List<RegulatoryNode[]> logicalFunctionPending;
+	private Map<RegulatoryMultiEdge, RegulatoryMultiEdge> meMap;
 
 	public RegulatoryGraphComparator( Graph g1,  Graph g2, Graph g) {
-		
+		super();
         if (g  == null || !(g  instanceof RegulatoryGraph))  return;
         if (g1 == null || !(g1 instanceof RegulatoryGraph))  return;
         if (g2 == null || !(g2 instanceof RegulatoryGraph))  return;
-       	this.g = (RegulatoryGraph)g; 
-       	this.g1 = (RegulatoryGraph)g1; 
-       	this.g2 = (RegulatoryGraph)g2;
-       	
-		g1m = g1; g2m = g2; gm = g;
-		stylesMap = new HashMap();
-		logicalFunctionPending = new ArrayList();
+        
+        this.graph_new = g;
+        this.graph_1 = g1;
+        this.graph_2 = g2;
+
+		logicalFunctionPending = new ArrayList<RegulatoryNode[]>();
 		
 		sameNodeOrder = compareNodeOrder();
 		if (!sameNodeOrder) {
@@ -61,7 +59,6 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			log(((RegulatoryGraph) g1).getNodeOrder()+"\n");
 			log(((RegulatoryGraph) g2).getNodeOrder()+"\n");
 		}
-		buildDiffGraph();
 	}
 	
 	public RegulatoryGraphComparator(RegulatoryGraph g1, RegulatoryGraph g2) {
@@ -69,70 +66,72 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	}
 	
 	public boolean isCommonNode(Object id) {
-		NodeStyle style = (NodeStyle)((ItemStore)stylesMap.get(id)).v;
+		NodeStyle style = (NodeStyle)((GraphComparatorStyleStore)stylesMap.get(id)).v;
 		return style.background != SPECIFIC_G1_COLOR && style.background != SPECIFIC_G2_COLOR;
 	}
 	
-	public void buildDiffGraph() {
-		super.buildDiffGraph();
+	public GraphComparatorResult buildDiffGraph() {
+		GraphComparatorResult result = super.buildDiffGraph();
 		
-		meMap = new HashMap();
-		EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
-		for (Iterator<RegulatoryMultiEdge> it = gm.getEdges().iterator(); it.hasNext();) {
-			RegulatoryMultiEdge me = it.next();
-			String sid = me.getSource().getId();
-			String tid = me.getTarget().getId();
+		meMap = new HashMap<RegulatoryMultiEdge, RegulatoryMultiEdge>();
+		EdgeAttributesReader new_ereader = graph_new.getEdgeAttributeReader();
+		for (Iterator<RegulatoryMultiEdge> it = graph_new.getEdges().iterator(); it.hasNext();) {
+			RegulatoryMultiEdge edge_new = it.next();
+			String sid = edge_new.getSource().getId();
+			String tid = edge_new.getTarget().getId();
 			
-			Edge e1 = g1m.getEdge(g1m.getNodeByName(sid), g1m.getNodeByName(tid));
-			Edge e2 = g2m.getEdge(g2m.getNodeByName(sid), g2m.getNodeByName(tid));
+			RegulatoryMultiEdge edge_1 = (RegulatoryMultiEdge) graph_1.getEdge(graph_1.getNodeByName(sid), graph_1.getNodeByName(tid));
+			RegulatoryMultiEdge edge_2 = (RegulatoryMultiEdge) graph_2.getEdge(graph_2.getNodeByName(sid), graph_2.getNodeByName(tid));
 			
-			String comment = "The edge "+me.toToolTip()+" ";
-			ereader.setEdge(me);
-			ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
-			Color col = ereader.getLineColor();
+			String comment = "The edge "+edge_new.toToolTip()+" ";
+			new_ereader.setEdge(edge_new);
+			new_ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
+			Color col = new_ereader.getLineColor();
 			if (col == SPECIFIC_G1_COLOR) comment+= "is specific to g1";
 			else if (col == SPECIFIC_G2_COLOR) comment+= "is specific to g2";
 			else comment+= "is common to both graphs";
-			int edgeCount = ((RegulatoryMultiEdge) me).getEdgeCount();
+			int edgeCount = ((RegulatoryMultiEdge) edge_new).getEdgeCount();
 			for (int j = 0; j < edgeCount; j++) {
-				((RegulatoryMultiEdge) me).getGsAnnotation(j).appendToComment(comment);
+				((RegulatoryMultiEdge) edge_new).getGsAnnotation(j).appendToComment(comment);
 			}
 			log(comment+"\n");
-			if (e1 != null && e2 != null) compareEdges((RegulatoryMultiEdge)e1, (RegulatoryMultiEdge)e2);
-			if (e1 != null) meMap.put(e1,me);
-			else if (e2 != null) meMap.put(e2,me);
+			if (edge_1 != null && edge_2 != null) compareEdges((RegulatoryMultiEdge)edge_1, (RegulatoryMultiEdge)edge_2);
+			if (edge_1 != null) meMap.put(edge_1,edge_new);
+			else if (edge_2 != null) meMap.put(edge_2,edge_new);
 		}
 		setAllLogicalFunctions();
 		meMap = null;
 		logicalFunctionPending = null;
+		
+		return result;
 	}
 	
 	protected void setNodesColor() {
-		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
+		for (Iterator<String> it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
 			RegulatoryNode v, v1, v2;
 			String id = (String)it.next();
-			v1 = (RegulatoryNode)g1m.getNodeByName(id);
-			v2 = (RegulatoryNode)g2m.getNodeByName(id);
+			v1 = (RegulatoryNode)graph_1.getNodeByName(id);
+			v2 = (RegulatoryNode)graph_2.getNodeByName(id);
 			String comment = null;
 			
 			//Check which graph own the node, set the appropriate color to it and if it is owned by both graph, compare its attributes.
 			if (v1 == null) {
-				comment = "The node "+id+" is specific to "+g2.getGraphName()+"\n";
-				v = g.addNewNode(id, v2.getName(), v2.getMaxValue());
-				mergeNodeAttributes(v, v2, null, gm.getNodeAttributeReader(), g2m.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
-				setLogicalFunction(v, v2, g2);
+				comment = "The node "+id+" is specific to "+graph_2.getGraphName()+"\n";
+				v = ((RegulatoryGraph)graph_new).addNewNode(id, v2.getName(), v2.getMaxValue());
+				mergeNodeAttributes(v, v2, null, graph_new.getNodeAttributeReader(), graph_2.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
+				setLogicalFunction(v, v2, graph_2);
 			} else if (v2 == null) {
-				comment = "The node "+id+" is specific to "+g1.getGraphName()+"\n";
-				v = g.addNewNode(id, v1.getName(), v1.getMaxValue());
-				mergeNodeAttributes(v, v1, null, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
-				setLogicalFunction(v, v1, g1);
+				comment = "The node "+id+" is specific to "+graph_1.getGraphName()+"\n";
+				v = ((RegulatoryGraph)graph_new).addNewNode(id, v1.getName(), v1.getMaxValue());
+				mergeNodeAttributes(v, v1, null, graph_new.getNodeAttributeReader(), graph_1.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
+				setLogicalFunction(v, v1, graph_1);
 			} else {
 				comment = "The node "+id+" is common to both graphs\n";
-				v = g.addNewNode(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
+				v = ((RegulatoryGraph)graph_new).addNewNode(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
 				Color[] color = {COMMON_COLOR};
 				comment += compareNodes(v ,v1, v2, color);
-				mergeNodeAttributes(v, v1, v2, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), g2m.getNodeAttributeReader(), color[0]);
-				setLogicalFunction(v, v1, g1);
+				mergeNodeAttributes(v, v1, v2, graph_new.getNodeAttributeReader(), graph_1.getNodeAttributeReader(), graph_2.getNodeAttributeReader(), color[0]);
+				setLogicalFunction(v, v1, graph_1);
 			}
 			Annotation gsa = v.getAnnotation();
 			if (v1 == null) {
@@ -157,7 +156,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		for (int i=0 ; i<nblinks ; i++) {
 			String link = a1.getLink(i);
 			if (!a.containsLink(link)) {
-				a.addLink(link, g);
+				a.addLink(link, graph_new);
 			}
 		}
 	}
@@ -180,12 +179,12 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		EdgeAttributesReader e2reader = gm_aux.getEdgeAttributeReader();
 
 		//If v is a node from the studied graph, we look at its edges
-		RegulatoryNode source = (RegulatoryNode) gm.getNodeByName(id);
+		RegulatoryNode source = (RegulatoryNode) graph_new.getNodeByName(id);
 		for (RegulatoryMultiEdge me1: ((RegulatoryGraph)gm_main).getOutgoingEdges(v)) {
 			String tid = me1.getTarget().getId();
-			RegulatoryNode target = (RegulatoryNode) gm.getNodeByName(tid);
+			RegulatoryNode target = (RegulatoryNode) graph_new.getNodeByName(tid);
 			
-			if (gm.getEdge(source, target) != null) {
+			if (graph_new.getEdge(source, target) != null) {
 				continue;
 			}
 
@@ -199,7 +198,7 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			
 			for (int i = 0; i < me1.getEdgeCount(); i++) {
 				try{
-					e = g.addNewEdge(id, tid, me1.getMin(i) , me1.getSign(i));
+					e = ((RegulatoryGraph)graph_new).addNewEdge(id, tid, me1.getMin(i) , me1.getSign(i));
 					Annotation gsa = e.me.getGsAnnotation(i);
 					e.me.getGsAnnotation(i).copyFrom(me1.getGsAnnotation(i));
 					if (me2 != null && me2.getEdgeCount() >= i) {
@@ -251,8 +250,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 */
 	private String compareLogicalFunction(RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
 		String comment = "";
-		OMDDNode omdd1 = v1.getTreeParameters(g1);
-		OMDDNode omdd2 = v2.getTreeParameters(g2);
+		OMDDNode omdd1 = v1.getTreeParameters(((RegulatoryGraph)graph_1));
+		OMDDNode omdd2 = v2.getTreeParameters(((RegulatoryGraph)graph_2));
 		if (!compareLogicalFunction(omdd1, omdd2)) {
 			comment = "   logical functions are differents : \n      "+omdd1+"\n      "+omdd2;
 			color[0] = COMMON_COLOR_DIFF_FUNCTIONS;
@@ -303,8 +302,8 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	 * Compare the node order from both g1 and g2 
 	 */
 	private boolean compareNodeOrder() {
-		String[] no1 = nodeOrderListToStringArray(g1.getNodeOrder());
-		String[] no2 = nodeOrderListToStringArray(g2.getNodeOrder());
+		String[] no1 = nodeOrderListToStringArray(((RegulatoryGraph)graph_1).getNodeOrder());
+		String[] no2 = nodeOrderListToStringArray(((RegulatoryGraph)graph_2).getNodeOrder());
 
 		int i1 = 0;//index for the current item in the list
 		int i2 = 0;
@@ -345,10 +344,10 @@ public class RegulatoryGraphComparator extends GraphComparator {
 		return -1; //Not found
 	}
 	
-	private String[] nodeOrderListToStringArray(List nodeOrder) {
+	private String[] nodeOrderListToStringArray(List<RegulatoryNode> nodeOrder) {
 		String[] s = new String[nodeOrder.size()];
 		int i = 0;
-		Iterator it = nodeOrder.iterator();
+		Iterator<RegulatoryNode> it = nodeOrder.iterator();
 		while (it.hasNext()) {
 			RegulatoryNode v = (RegulatoryNode) it.next();
 			s[i++] = v.getId();
@@ -365,14 +364,14 @@ public class RegulatoryGraphComparator extends GraphComparator {
 	
 	public Graph getDiffGraph() {
 		
-		return g;
+		return graph_new;
 	}
 	public Graph getG1() {
 		
-		return g1;
+		return graph_1;
 	}
 	public Graph getG2() {
 		
-		return g2;
+		return graph_2;
 	}
 }

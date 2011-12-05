@@ -41,12 +41,7 @@ class GraphComparatorAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        // TODO : REFACTORING ACTION
-		// TODO : what is ref? Is this test useful? Ref was set to 0 in the GsPluggableActionDescriptor definition in the getT_action
-		//if (ref == 0) {
-	           new GraphComparatorFrame( GUIManager.getInstance().getFrame( graph), graph);
-		//	}
-
+		new GraphComparatorFrame( GUIManager.getInstance().getFrame( graph), graph);
 	}
 	
 }

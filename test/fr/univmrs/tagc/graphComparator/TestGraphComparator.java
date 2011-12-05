@@ -12,9 +12,9 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.servicegui.tool.graphcomparator.DynamicGraphComparator;
-import org.ginsim.servicegui.tool.graphcomparator.GraphComparator;
-import org.ginsim.servicegui.tool.graphcomparator.RegulatoryGraphComparator;
+import org.ginsim.service.tool.graphcomparator.DynamicGraphComparator;
+import org.ginsim.service.tool.graphcomparator.GraphComparator;
+import org.ginsim.service.tool.graphcomparator.RegulatoryGraphComparator;
 
 /**
  * Compare two models.

@@ -1,15 +1,15 @@
-package org.ginsim.servicegui.tool.graphcomparator;
+package org.ginsim.service.tool.graphcomparator;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -21,47 +21,45 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
  * @since January 2009
  *
  */
-public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
+public class DynamicGraphComparator extends GraphComparator {
 	public DynamicGraphComparator( Graph g1, Graph g2, Graph g) {
+		super();
 	    if (g  == null || !(g  instanceof DynamicGraph))  return;
 	    if (g1 == null || !(g1 instanceof DynamicGraph))  return;
 	    if (g2 == null || !(g2 instanceof DynamicGraph))  return;
-		
-		this.g1m = (DynamicGraph)g1;
-		this.g2m = (DynamicGraph)g2;
-		this.gm = (DynamicGraph)g;
-		stylesMap = new HashMap();
-		buildDiffGraph();
+	     
+        this.graph_new = g;
+        this.graph_1 = g1;
+        this.graph_2 = g2;
 	}
 	
 	public DynamicGraphComparator( Graph g1, Graph g2) {
-		
 		this(g1, g2, GraphManager.getInstance().getNewGraph( DynamicGraph.class));
 	}
 
 
 	protected void setNodesColor() {
-		for (Iterator it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
+		for (Iterator<String> it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
 			DynamicNode v, v1, v2;
 			String id = (String)it.next();
-			v1 = (DynamicNode)g1m.getNodeByName(id);
-			v2 = (DynamicNode)g2m.getNodeByName(id);
+			v1 = (DynamicNode)graph_1.getNodeByName(id);
+			v2 = (DynamicNode)graph_2.getNodeByName(id);
 			//Check which graph own the vertex, set the appropriate color to it and if it is owned by both graph, compare its attributes.
 			if (v1 == null) {
 				log("The node "+id+" is specific to g2\n");
 				v = new DynamicNode(v2.state);
-				gm.addNode(v);
-				mergeNodeAttributes(v, v2, null, gm.getNodeAttributeReader(), g2m.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
+				graph_new.addNode(v);
+				mergeNodeAttributes(v, v2, null, graph_new.getNodeAttributeReader(), graph_2.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
 			} else if (v2 == null) {
 				log("The node "+id+" is specific to g1\n");
 				v = new DynamicNode(v1.state);
-				gm.addNode(v);
-				mergeNodeAttributes(v, v1, null, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
+				graph_new.addNode(v);
+				mergeNodeAttributes(v, v1, null, graph_new.getNodeAttributeReader(), graph_1.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
 			} else {
 				log("The node "+id+" is common to both g1 and g2\n");
 				v = new DynamicNode(v1.state);
-				gm.addNode(v);
-				mergeNodeAttributes(v, v1, v2, gm.getNodeAttributeReader(), g1m.getNodeAttributeReader(), g2m.getNodeAttributeReader(), COMMON_COLOR);
+				graph_new.addNode(v);
+				mergeNodeAttributes(v, v1, v2, graph_new.getNodeAttributeReader(), graph_1.getNodeAttributeReader(), graph_2.getNodeAttributeReader(), COMMON_COLOR);
 				//compareNodes(v ,v1, v2);
 			}
 		}
@@ -85,12 +83,12 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 			Collection<Edge<DynamicNode>> edges = gm_main.getOutgoingEdges(v);
 			for (Edge<DynamicNode> e1: edges) {
 				String tid = ((DynamicNode)e1.getTarget()).toString();
-				DynamicNode source = (DynamicNode) gm.getNodeByName(id);
-				DynamicNode target = (DynamicNode) gm.getNodeByName(tid);
-				Edge<DynamicNode> e2 = gm.getEdge(source, target);
+				DynamicNode source = (DynamicNode) graph_new.getNodeByName(id);
+				DynamicNode target = (DynamicNode) graph_new.getNodeByName(tid);
+				Edge<DynamicNode> e2 = graph_new.getEdge(source, target);
 				
 				if (e2 == null) //The edge doesn't not already exists.
-					e = gm.addEdge(v, e1.getTarget(), false);
+					e = ((DynamicGraph)graph_new).addEdge(v, e1.getTarget(), false);
 				else
 					continue;
 				
@@ -123,13 +121,13 @@ public class DynamicGraphComparator extends GraphComparator<DynamicGraph> {
 	 * @param g2 another graph (in any order)
 	 * @return a node order or null if incompatible.
 	 */
-	public static List getNodeOrder( DynamicGraph g1, DynamicGraph g2) {
-		List no1 = g1.getNodeOrder();
-		List no2 = g2.getNodeOrder();
-		List gNodeOrder = new ArrayList();
+	public static List<String> getNodeOrder( DynamicGraph g1, DynamicGraph g2) {
+		List<NodeInfo> no1 = g1.getNodeOrder();
+		List<NodeInfo> no2 = g2.getNodeOrder();
+		List<String> gNodeOrder = new ArrayList<String>();
 		
 		if (no1.size() == no2.size()) {
-			for (Iterator it1 = no1.iterator(), it2 = no2.iterator(); it1.hasNext();) {
+			for (Iterator<NodeInfo> it1 = no1.iterator(), it2 = no2.iterator(); it1.hasNext();) {
 				String v1 = it1.next().toString();
 				String v2 = it2.next().toString();
 				gNodeOrder.add(v1);

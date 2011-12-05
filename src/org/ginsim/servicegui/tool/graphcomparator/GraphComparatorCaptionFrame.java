@@ -32,6 +32,10 @@ import org.ginsim.core.graph.view.css.NodeStyle;
 import org.ginsim.core.graph.view.css.Style;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
+import org.ginsim.service.tool.graphcomparator.GraphComparator;
+import org.ginsim.service.tool.graphcomparator.GraphComparatorResult;
+import org.ginsim.service.tool.graphcomparator.GraphComparatorStyleStore;
+import org.ginsim.service.tool.graphcomparator.RegulatoryGraphComparator;
 
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {
@@ -40,16 +44,16 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private JPanel mainPanel;
 	private JTextArea resultsPane;
 	private JRadioButton diffColor, specG1Color, specG2Color, intersectColor, exclusionColor, fusionColor1, fusionColor2;
-	private GraphComparator gc;
 	private CascadingStyle cs;
 	private JButton automaticRoutingButton;
+	private GraphComparatorResult gcResult;
 	
 	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, 1);
 	private static final NodeStyle clearNodeStyle = new NodeStyle(Color.white, Color.gray, 1, NodeStyle.NULL_SHAPE);
 	
-	public GraphComparatorCaptionFrame(Graph g, GraphComparator gc) {
-        this.g = g;
-        this.gc = gc;
+	public GraphComparatorCaptionFrame(GraphComparatorResult gcResult) {
+        this.g = gcResult.getDiffGraph();
+        this.gcResult = gcResult;
         this.cs = new CascadingStyle(false);
 
         initialize();
@@ -105,7 +109,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		automaticRoutingButton = new JButton(Translator.getString("STR_gcmp_automaticRouting"));
 		automaticRoutingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-		    	gc.setEdgeAutomatingRouting();
+				gcResult.setEdgeAutomatingRouting();
 			}
 		});
 		mainPanel.add(automaticRoutingButton, c);
@@ -166,7 +170,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gc.g1m.getGraphName()), c);
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gcResult.getGraph1Name()), c);
 
 		//SPECIFIC_G2_COLOR
 		c.gridx = 0;
@@ -177,7 +181,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gc.g2m.getGraphName()), c);
+		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gcResult.getGraph2Name()), c);
 		
 		return captionPanel;
 	}
@@ -196,7 +200,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = c.weighty = 2.0;
 
-		resultsPane = new JTextArea(gc.getLog().toString());
+		resultsPane = new JTextArea(gcResult.getLog().toString());
         JScrollPane resultsScrollPane = new JScrollPane(resultsPane);
         resultsScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         resultPanel.add(resultsScrollPane, c);
@@ -216,12 +220,12 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	    diffColor.setSelected(true);
 	    radioPanel.add(diffColor);
 
-		name = Translator.getString("STR_gcmp_specificTo")+gc.g1m.getGraphName()+".";
+		name = Translator.getString("STR_gcmp_specificTo")+gcResult.getGraph1Name()+".";
 	    specG1Color = new JRadioButton(name);
 	    specG1Color.setActionCommand(name);
 	    radioPanel.add(specG1Color);
 
-		name = Translator.getString("STR_gcmp_specificTo")+gc.g2m.getGraphName()+".";
+		name = Translator.getString("STR_gcmp_specificTo")+gcResult.getGraph2Name()+".";
 	    specG2Color = new JRadioButton(name);
 	    specG2Color.setActionCommand(name);
 	    radioPanel.add(specG2Color);
@@ -273,14 +277,14 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	}
 	
     private void doColorize(JRadioButton source) {
-    	HashMap styleMap = gc.getStyleMap();
+    	HashMap<Object, GraphComparatorStyleStore> styleMap = gcResult.getStyleMap();
     	NodeAttributesReader vreader = g.getNodeAttributeReader();
     	EdgeAttributesReader ereader = g.getEdgeAttributeReader();
     	
-    	for (Iterator it = styleMap.keySet().iterator(); it.hasNext();) {
+    	for (Iterator<Object> it = styleMap.keySet().iterator(); it.hasNext();) {
 			Object o = it.next();
 			Style style = null;
-			ItemStore is = (ItemStore)styleMap.get(o);
+			GraphComparatorStyleStore is = (GraphComparatorStyleStore)styleMap.get(o);
 			if (source == diffColor) {
 				style = is.v;
 			} else if (source == specG1Color) {

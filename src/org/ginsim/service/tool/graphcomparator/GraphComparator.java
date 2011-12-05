@@ -1,21 +1,17 @@
-package org.ginsim.servicegui.tool.graphcomparator;
+package org.ginsim.service.tool.graphcomparator;
 
 import java.awt.Color;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.ginsim.core.exception.GsException;
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.GraphicalAttributesStore;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.css.EdgeStyle;
 import org.ginsim.core.graph.view.css.NodeStyle;
-import org.ginsim.core.graph.view.css.Style;
 
 
 /**
@@ -24,30 +20,34 @@ import org.ginsim.core.graph.view.css.Style;
  * @since January 2009
  *
  */
-public abstract class GraphComparator<G extends Graph> {
+public abstract class GraphComparator {
 	
-	protected G gm, g1m, g2m;
-	protected HashMap stylesMap;
-	protected Set verticesIdsSet;
+	public Graph graph_new;
+	public Graph graph_1;
+	public Graph graph_2;
+	protected HashMap<Object, GraphComparatorStyleStore> stylesMap;
+	protected Set<String> verticesIdsSet;
 	protected GraphicalAttributesStore g1gas, g2gas;
-	protected StringBuffer log;
 	
 	public static Color SPECIFIC_G1_COLOR = new Color(0, 255, 0); //green
 	public static Color SPECIFIC_G2_COLOR = new Color(255, 0, 0); //red
 	public static Color COMMON_COLOR = new Color(51, 153, 255);   //blue
+	private GraphComparatorResult result;
 
 	protected GraphComparator() {
-		verticesIdsSet = new HashSet();
-		log = new StringBuffer(2048);
+		verticesIdsSet = new HashSet<String>();
+		result = new GraphComparatorResult();
+        stylesMap = new HashMap<Object, GraphComparatorStyleStore>();
+        result.setStylesMap(stylesMap);
 	}
 
 	/**
 	 * Return an HashMap containing all the styles for all the elements (vertices and edges) from both graphs. 
-	 * With the IDs as a key and a ItemStore (private class) as value. 
+	 * With the IDs as a key and a GraphComparatorStyleStore (private class) as value. 
 	 * 
 	 * @return the stylesMap
 	 */	
-	public HashMap getStyleMap() {
+	public HashMap<Object, GraphComparatorStyleStore> getStyleMap() {
 		return stylesMap;
 	}
 	
@@ -55,7 +55,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * Indicates if a node corresponding to the id is common to both graphs.
 	 */
 	public boolean isCommonNode(Object id) {
-		return ((NodeStyle)((ItemStore)stylesMap.get(id)).v).background == COMMON_COLOR;
+		return ((NodeStyle)stylesMap.get(id).v).background == COMMON_COLOR;
 	}
 	
 	/**
@@ -64,26 +64,29 @@ public abstract class GraphComparator<G extends Graph> {
 	 *  2) setNodesColor
 	 *  3) addEdgesFromGraph on each node on both graphs
 	 */
-	public void buildDiffGraph() {
+	public GraphComparatorResult buildDiffGraph() {
 		log("Comparing graphs : \n");
 		setDiffGraphName();
 		log("\n");
-		addNodesFromGraph(g1m);
-		addNodesFromGraph(g2m);
+		addNodesFromGraph(graph_1);
+		addNodesFromGraph(graph_2);
 		
-		g1gas = new GraphicalAttributesStore(g1m);
-		g2gas = new GraphicalAttributesStore(g2m);
+		g1gas = new GraphicalAttributesStore(graph_1);
+		g2gas = new GraphicalAttributesStore(graph_2);
 		setNodesColor();
 		log("\n");
 		
-		EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
-		for (Iterator it = verticesIdsSet.iterator(); it.hasNext();) { 		//For all edges
-			String id = (String) it.next();
-			Color col = ((NodeStyle)((ItemStore)stylesMap.get(gm.getNodeByName(id))).v).background;
+		EdgeAttributesReader ereader = graph_new.getEdgeAttributeReader();
+		for (String id : verticesIdsSet) {
+			Color col = ((NodeStyle)stylesMap.get(graph_new.getNodeByName(id)).v).background;
 			
-			addEdgesFromGraph(g1m, g2m, id, col, SPECIFIC_G1_COLOR, ereader);
-			addEdgesFromGraph(g2m, g1m, id, col, SPECIFIC_G2_COLOR, ereader);
+			addEdgesFromGraph(graph_1, graph_2, id, col, SPECIFIC_G1_COLOR, ereader);
+			addEdgesFromGraph(graph_2, graph_1, id, col, SPECIFIC_G2_COLOR, ereader);
 		}
+		
+		result.setGraphs(graph_new, graph_1, graph_2);
+		
+		return result;
 	}
 
 	/**
@@ -104,11 +107,11 @@ public abstract class GraphComparator<G extends Graph> {
 		vreader.setBackgroundColor(col);
 		vreader.refresh();
 
-		if (col == SPECIFIC_G1_COLOR) stylesMap.put(v, new ItemStore(new NodeStyle(vsourcereader), null, new NodeStyle(vreader)));
-		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(v, new ItemStore(null, new NodeStyle(vsourcereader), new NodeStyle(vreader)));
+		if (col == SPECIFIC_G1_COLOR) stylesMap.put(v, new GraphComparatorStyleStore(new NodeStyle(vsourcereader), null, new NodeStyle(vreader)));
+		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(v, new GraphComparatorStyleStore(null, new NodeStyle(vsourcereader), new NodeStyle(vreader)));
 		else {
 			vauxreader.setNode(aux);
-			stylesMap.put(v, new ItemStore(new NodeStyle(vsourcereader), new NodeStyle(vauxreader), new NodeStyle(vreader)));
+			stylesMap.put(v, new GraphComparatorStyleStore(new NodeStyle(vsourcereader), new NodeStyle(vauxreader), new NodeStyle(vreader)));
 		}
 	}
 
@@ -128,11 +131,11 @@ public abstract class GraphComparator<G extends Graph> {
 		ereader.setLineColor(col);
 		ereader.refresh();			
 		
-		if (col == SPECIFIC_G1_COLOR) stylesMap.put(e, new ItemStore(new EdgeStyle(esourcereader), null, new EdgeStyle(ereader)));
-		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(e, new ItemStore(null, new EdgeStyle(esourcereader), new EdgeStyle(ereader)));
+		if (col == SPECIFIC_G1_COLOR) stylesMap.put(e, new GraphComparatorStyleStore(new EdgeStyle(esourcereader), null, new EdgeStyle(ereader)));
+		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(e, new GraphComparatorStyleStore(null, new EdgeStyle(esourcereader), new EdgeStyle(ereader)));
 		else {
 			eauxreader.setEdge(aux);
-			stylesMap.put(e, new ItemStore(new EdgeStyle(esourcereader), new EdgeStyle(eauxreader), new EdgeStyle(ereader)));
+			stylesMap.put(e, new GraphComparatorStyleStore(new EdgeStyle(esourcereader), new EdgeStyle(eauxreader), new EdgeStyle(ereader)));
 		}
 	}
 	/**
@@ -148,19 +151,6 @@ public abstract class GraphComparator<G extends Graph> {
 		} catch (GsException e) {} //Could not append normally, the g1 and g2 graph name can't be invalid at this point
 	}
 	
-	public void setEdgeAutomatingRouting() {
-		Graph gm1 = getG1();
-		for (Edge<?> e: (Collection<Edge>)gm.getEdges()) {
-			
-			Edge e1 = gm1.getEdge(gm1.getNodeByName(e.getSource().toString()), gm1.getNodeByName(e.getTarget().toString()));
-			if (e1 == null) {//The edge is (only or not) in the first graph. So its intermediary point are right.
-				EdgeAttributesReader ereader = gm.getEdgeAttributeReader();
-				ereader.setEdge(e);
-				ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
-				ereader.refresh();
-			}
-		}
-	}
 	
 	/**
 	 * Add all the vertices from a graph to the verticeMap.
@@ -192,24 +182,24 @@ public abstract class GraphComparator<G extends Graph> {
 	 * Return a merge graph colored to indicates vertices and edges parent graph.
 	 * @return the diff graph
 	 */
-	public G getDiffGraph() {
-		return gm;
+	public Graph getDiffGraph() {
+		return graph_new;
 	}
 
 	/**
 	 * Return the first graph to compare
 	 * @return the graph
 	 */
-	public G getG1() {
-		return g1m;
+	public Graph getG1() {
+		return graph_1;
 	}
 
 	/**
 	 * Return the second graph to compare
 	 * @return the graph
 	 */
-	public G getG2() {
-		return g2m;
+	public Graph getG2() {
+		return graph_2;
 	}
 	
 	/**
@@ -217,7 +207,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param s
 	 */
 	public void log(String s) {
-		log.append(s);
+		result.getLog().append(s);
 	}
 
 	/**
@@ -225,7 +215,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param l
 	 */
 	public void log(long l) {
-		log.append(l);
+		result.getLog().append(l);
 	}
 
 	/**
@@ -233,7 +223,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param i
 	 */
 	public void log(int i) {
-		log.append(i);
+		result.getLog().append(i);
 	}
 	
 	/**
@@ -241,7 +231,7 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param b
 	 */
 	public void log(boolean b) {
-		log.append(b);
+		result.getLog().append(b);
 	}
 	
 	/**
@@ -249,28 +239,8 @@ public abstract class GraphComparator<G extends Graph> {
 	 * @param o
 	 */
 	public void log(Object o) {
-		log.append(o);
+		result.getLog().append(o);
 	}
 
-	/**
-	 * get the content of the log
-	 */
-	public StringBuffer getLog() {
-		return log;
-	}
 
-}
-
-
-class ItemStore
-{
-	protected Style v1;
-	protected Style v2;
-	protected Style v;
-	
-	protected ItemStore(Style v1, Style v2, Style v) {
-		this.v1 = v1;
-		this.v2 = v2;
-		this.v = v;
-	}
 }
