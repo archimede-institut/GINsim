@@ -7,8 +7,8 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.utils.widgets.StockButton;
 
 
 /**
@@ -20,7 +20,7 @@ public abstract class BaseAction extends AbstractAction {
 
 	public static ImageIcon getIcon(String name) {
 		if (name != null && !"".equals(name)) {
-			URL url = StockButton.getURL(name);
+			URL url = ImageLoader.getImagePath(name);
 			if (url != null) {
 				return new ImageIcon(url);
 			}

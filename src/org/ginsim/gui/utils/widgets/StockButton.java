@@ -1,8 +1,6 @@
 package org.ginsim.gui.utils.widgets;
 
 import java.awt.Dimension;
-import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.swing.BorderFactory;
@@ -20,16 +18,6 @@ public class StockButton extends JButton {
 	static int w = 30;
 	static int h = 25;
 
-	private static String[] t_base = new String[2];
-	
-	static {
-		t_base[0] = "/fr/univmrs/tagc/common/resources/icons/actions/";
-		File f = new File("/usr/share/icons/Human/22x22/actions/");
-		if (f.exists()) {
-			t_base[1] = f.getAbsolutePath();
-		}
-	}
-	
 	public StockButton(String text, Icon icon) {
 		setAll(text, icon);
 	}
@@ -43,21 +31,8 @@ public class StockButton extends JButton {
 			setAll(null, ImageLoader.getImageIcon(text));
 		}
 	}
-	static public URL getURL(String name) {
-		String s_url = t_base[0]+name;
-        URL url = ImageLoader.class.getResource(s_url) ;
-        if (url == null) {
-        	File f = new File(s_url);
-        	if (f.exists()) {
-        		try {
-					url = new URL("file", "", f.getAbsolutePath());
-				} catch (MalformedURLException e) {}
-        	}
-        }
-        return url;
-	}
 	public void setStockIcon(String iconname) {
-		URL url = getURL(iconname);
+		URL url = ImageLoader.getImagePath(iconname);
 		if (url != null) {
 			setAll(null, new ImageIcon(url));
 		}

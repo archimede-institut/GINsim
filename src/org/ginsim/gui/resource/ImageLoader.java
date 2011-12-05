@@ -24,7 +24,8 @@ import java.awt.Image;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
@@ -38,7 +39,7 @@ public class ImageLoader {
 
 	/** contains string objects which respresents the search paths
 	 */	
-	protected static Stack searchPath = new Stack();
+	protected static List<String> searchPath = new ArrayList<String>();
 
 	/** Returns an Image from the same path.
 	 *  @param imageName An image name with the file extension
@@ -123,21 +124,7 @@ public class ImageLoader {
 	 */
 	public static void pushSearchPath(String path){
 		if (path != null) {
-			searchPath.push(path.endsWith("/") ? path : path+"/");
+			searchPath.add(path.endsWith("/") ? path : path+"/");
 		}
-	}
-
-	/** 
-	 * removes the searchpath at the specified index.
-	 * @param index
-	 */
-	public static void removeSearchPath(int index){
-		searchPath.remove(index);
-	}
-
-	/** pops the highest search path
-	 */
-	public static void popSearchPath(){
-		searchPath.pop() ;
 	}
 }

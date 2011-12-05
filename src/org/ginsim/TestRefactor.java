@@ -10,10 +10,7 @@ import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.notification.ErrorNotification;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.WarningNotification;
-import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
@@ -145,6 +142,7 @@ public class TestRefactor {
 	private static void initGUI() {
 		Translator.pushBundle("org.ginsim.gui.resource.messages");
 		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon");
+		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon/action");
 		AboutDialog.setDOAPFile("/org/ginsim/gui/resource/GINsim-about.rdf");
 	}
 
