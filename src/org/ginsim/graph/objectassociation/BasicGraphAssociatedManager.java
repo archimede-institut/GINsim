@@ -3,12 +3,12 @@ package org.ginsim.graph.objectassociation;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
-import fr.univmrs.tagc.common.xml.XMLize;
 
 
 public abstract class BasicGraphAssociatedManager implements

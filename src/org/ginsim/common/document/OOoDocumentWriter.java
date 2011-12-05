@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.document;
+package org.ginsim.common.document;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
@@ -15,10 +15,10 @@ import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.utils.DataUtils;
 
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 
 /**

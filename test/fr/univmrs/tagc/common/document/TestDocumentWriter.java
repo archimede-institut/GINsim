@@ -13,6 +13,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipException;
 
+import org.ginsim.common.document.DocumentStyle;
+import org.ginsim.common.document.DocumentWriter;
+import org.ginsim.common.document.LaTeXDocumentWriter;
+import org.ginsim.common.document.OOoDocumentWriter;
+import org.ginsim.common.document.XHTMLDocumentWriter;
+
 import junit.framework.TestCase;
 import fr.univmrs.tagc.common.TestTools;
 

@@ -2,6 +2,7 @@ package org.ginsim.gui.graph.backend;
 
 import java.awt.event.MouseEvent;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.ToolTipsable;
 import org.jgraph.JGraph;
@@ -10,7 +11,6 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * customize jgraph to our needs

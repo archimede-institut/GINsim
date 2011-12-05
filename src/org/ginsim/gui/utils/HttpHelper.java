@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.ginsim.common.OpenHelper;
+import org.ginsim.common.utils.IOUtils;
 
-import fr.univmrs.tagc.common.OpenHelper;
-import fr.univmrs.tagc.common.utils.IOUtils;
+
 
 
 public class HttpHelper implements OpenHelper {

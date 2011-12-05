@@ -8,10 +8,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.gui.graph.GraphOptionPanel;
 import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * offer save option for regulatory graphs 

@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphViewListener;
 import org.ginsim.graph.backend.JgraphtBackendImpl;
@@ -41,7 +42,6 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphSelectionListener, GraphViewListener {

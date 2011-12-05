@@ -4,11 +4,11 @@ import java.awt.Desktop;
 import java.io.File;
 import java.net.URI;
 
+import org.ginsim.common.OpenHelper;
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.utils.log.LogManager;
 
 
-import fr.univmrs.tagc.common.OpenHelper;
-import fr.univmrs.tagc.common.utils.IOUtils;
 
 public class GUIIOUtils {
 

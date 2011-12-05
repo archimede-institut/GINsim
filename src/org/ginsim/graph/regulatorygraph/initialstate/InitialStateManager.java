@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import org.ginsim.common.xml.XMLHelper;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
@@ -14,8 +16,6 @@ import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.common.xml.XMLHelper;
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class InitialStateManager implements GraphAssociatedObjectManager {
 

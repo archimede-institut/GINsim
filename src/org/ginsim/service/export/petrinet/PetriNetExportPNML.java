@@ -4,11 +4,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * Export a regulatory graph to Petri net (PNML format).

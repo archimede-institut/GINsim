@@ -26,6 +26,8 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import org.ginsim.common.ColorPalette;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.resource.Translator;
@@ -33,8 +35,6 @@ import org.ginsim.gui.utils.widgets.StockButton;
 import org.ginsim.service.layout.DynamicLayoutMultidimention;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.ColorPalette;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public class MultidimensionLayoutGUI {

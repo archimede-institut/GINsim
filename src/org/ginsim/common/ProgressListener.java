@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common;
+package org.ginsim.common;
 
 /**
  * listen for progress messages.

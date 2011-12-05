@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
@@ -13,7 +14,6 @@ import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public class DynamicalHierarchicalSimulation extends Simulation {

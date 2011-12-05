@@ -22,6 +22,10 @@ import javax.swing.event.ChangeListener;
 
 import org.ginsim.annotation.Annotation;
 import org.ginsim.annotation.AnnotationLink;
+import org.ginsim.common.document.DocumentStyle;
+import org.ginsim.common.document.DocumentWriter;
+import org.ginsim.common.document.GenericDocumentFormat;
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
@@ -49,10 +53,6 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.utils.log.LogManager;
 
 
-import fr.univmrs.tagc.common.document.DocumentStyle;
-import fr.univmrs.tagc.common.document.DocumentWriter;
-import fr.univmrs.tagc.common.document.GenericDocumentFormat;
-import fr.univmrs.tagc.common.utils.IOUtils;
 
 /**
  * GenericDocumentExport is a plugin to export the documentation of a model into multiples document format.

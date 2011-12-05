@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.common.ColorPalette;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.graph.view.EdgeAttributesReader;
 import org.ginsim.graph.view.NodeAttributesReader;
 
-import fr.univmrs.tagc.common.ColorPalette;
 
 public abstract class TreeParserFromOmdd extends TreeParser {
 	protected OMDDNode root;

@@ -22,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Graph;
@@ -33,8 +35,6 @@ import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
-import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public class GraphComparatorFrame  extends AbstractStackDialogHandler implements ActionListener {

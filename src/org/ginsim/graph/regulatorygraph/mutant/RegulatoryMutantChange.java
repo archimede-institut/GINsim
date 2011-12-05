@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.logicalfunction.BooleanParser;
@@ -13,7 +14,6 @@ import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionList;
 import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionListElement;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class RegulatoryMutantChange {
     RegulatoryNode vertex;

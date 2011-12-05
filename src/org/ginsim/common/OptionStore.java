@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common;
+package org.ginsim.common;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +15,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.ginsim.common.utils.EnvUtils;
+import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.view.EdgeAttributesReader;
 import org.ginsim.graph.view.NodeAttributesReader;
@@ -26,9 +29,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import fr.univmrs.tagc.common.utils.EnvUtils;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * handle options: remember them during the session, restore them when first called

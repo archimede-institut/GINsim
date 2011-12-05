@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.utils.data.GenericListListener;
 import org.ginsim.utils.data.NamedObject;
 import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
-import fr.univmrs.tagc.common.xml.XMLize;
 
 
 public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityClass> implements NamedObject, XMLize {

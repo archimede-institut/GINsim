@@ -5,6 +5,8 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.backend.GraphBackend;
@@ -21,8 +23,6 @@ import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public class GUIManager {

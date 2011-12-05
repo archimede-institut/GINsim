@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.document;
+package org.ginsim.common.document;
 
 import java.awt.Component;
 import java.io.File;
@@ -10,12 +10,12 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
-import fr.univmrs.tagc.common.utils.IOUtils;
 
 
 /**

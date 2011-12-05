@@ -17,6 +17,12 @@ import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
+import org.ginsim.common.OpenHelper;
+import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.IOUtils;
+import org.ginsim.common.xml.XMLHelper;
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
@@ -37,13 +43,7 @@ import bibtex.dom.BibtexAbstractValue;
 import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
-import fr.univmrs.tagc.common.OpenHelper;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
-import fr.univmrs.tagc.common.utils.IOUtils;
-import fr.univmrs.tagc.common.xml.XMLHelper;
-import fr.univmrs.tagc.common.xml.XMLWriter;
-import fr.univmrs.tagc.common.xml.XMLize;
 
 
 public class BiblioList implements XMLize, OpenHelper, GraphListener {

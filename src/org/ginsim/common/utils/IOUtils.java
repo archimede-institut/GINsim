@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.utils;
+package org.ginsim.common.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,10 +11,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.common.OpenHelper;
 import org.ginsim.exception.GsException;
 import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.OpenHelper;
 
 
 public class IOUtils {

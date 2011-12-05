@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
@@ -19,7 +20,6 @@ import org.ginsim.gui.utils.dialog.DefaultDialogSize;
 import org.ginsim.gui.utils.dialog.SimpleDialog;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 /**

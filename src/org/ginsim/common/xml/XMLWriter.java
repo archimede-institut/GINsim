@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.xml;
+package org.ginsim.common.xml;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

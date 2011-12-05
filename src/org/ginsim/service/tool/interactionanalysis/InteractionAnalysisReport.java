@@ -8,15 +8,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.document.DocumentStyle;
+import org.ginsim.common.document.DocumentWriter;
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.resource.Translator;
 
 
-import fr.univmrs.tagc.common.document.DocumentStyle;
-import fr.univmrs.tagc.common.document.DocumentWriter;
-import fr.univmrs.tagc.common.utils.IOUtils;
 
 /**
  * A container class capable of exporting itself given a DocumentWriter

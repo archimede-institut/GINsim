@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractDerivedGraph;
@@ -27,7 +28,6 @@ import org.ginsim.gui.resource.Translator;
 import org.ginsim.io.parser.GinmlHelper;
 import org.ginsim.utils.data.ObjectEditor;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Edge<DynamicNode>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> implements DynamicGraph{
 

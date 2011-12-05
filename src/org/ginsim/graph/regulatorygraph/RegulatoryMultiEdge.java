@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.List;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.common.ToolTipsable;
 import org.ginsim.graph.view.EdgeAttributesReader;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
-import fr.univmrs.tagc.common.xml.XMLize;
 
 /**
  * This edge object allows to have several edges from a vertex to another

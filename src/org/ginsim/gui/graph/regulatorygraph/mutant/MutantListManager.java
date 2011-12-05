@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
@@ -14,7 +15,6 @@ import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantParser;
 import org.ginsim.gui.GUIManager;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * Save/open simulation parameters along with the model.

@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.Vector;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.utils.data.NamedObject;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * store the definition of a mutant

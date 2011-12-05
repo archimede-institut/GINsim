@@ -13,6 +13,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -24,7 +25,6 @@ import org.ginsim.utils.data.GenericList;
 import org.ginsim.utils.data.GenericListListener;
 import org.ginsim.utils.data.SimpleGenericList;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener {

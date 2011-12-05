@@ -3,6 +3,8 @@ package fr.univmrs.tagc.common;
 import java.io.File;
 import java.io.IOException;
 
+import org.ginsim.common.TempDir;
+
 
 public class TestTools {
 

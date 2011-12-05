@@ -10,6 +10,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.ginsim.common.ColorPalette;
+import org.ginsim.common.ProgressListener;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.reducedgraph.ReducedGraph;
@@ -20,9 +23,6 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.tool.connectivity.AlgoConnectivity;
 
-import fr.univmrs.tagc.common.ColorPalette;
-import fr.univmrs.tagc.common.ProgressListener;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 /**

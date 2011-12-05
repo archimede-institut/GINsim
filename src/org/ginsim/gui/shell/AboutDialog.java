@@ -15,6 +15,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
+import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.IOUtils;
+import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.exception.GsException;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.utils.GUIIOUtils;
@@ -22,9 +25,6 @@ import org.ginsim.gui.utils.widgets.Frame;
 import org.xml.sax.Attributes;
 
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
-import fr.univmrs.tagc.common.utils.IOUtils;
-import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
  * "About dialog" for GINsim

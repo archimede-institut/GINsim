@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -14,7 +15,6 @@ import org.ginsim.gui.service.tool.reg2dyn.helpers.STGSimulationHelper;
 import org.ginsim.gui.service.tool.reg2dyn.helpers.SimulationHelper;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 /**

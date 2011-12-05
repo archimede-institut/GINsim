@@ -5,12 +5,12 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.view.EdgeAttributesReader;
 import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.utils.DataUtils;
 import org.xml.sax.Attributes;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 /**

@@ -3,12 +3,12 @@ package org.ginsim.annotation;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.common.OpenHelper;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.utils.GUIIOUtils;
 import org.ginsim.gui.utils.HttpHelper;
 
-import fr.univmrs.tagc.common.OpenHelper;
 
 
 public class AnnotationLink {

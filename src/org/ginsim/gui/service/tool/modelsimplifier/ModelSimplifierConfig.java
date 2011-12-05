@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.utils.data.MultiColHelper;
 import org.ginsim.utils.data.NamedObject;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
-import fr.univmrs.tagc.common.xml.XMLize;
 
 
 public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelper<RegulatoryNode> {

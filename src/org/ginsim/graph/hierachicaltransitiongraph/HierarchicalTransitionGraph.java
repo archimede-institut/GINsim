@@ -12,6 +12,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractDerivedGraph;
@@ -28,7 +29,6 @@ import org.ginsim.gui.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 import org.ginsim.io.parser.GinmlHelper;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /* SUMMARY
  * 

@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.notification.ErrorNotification;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
@@ -30,8 +32,6 @@ import org.ginsim.utils.DataUtils;
 import org.python.antlr.PythonParser.parameters_return;
 
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
-import fr.univmrs.tagc.common.xml.XMLize;
 
 /**
  * the Class in which we store biological data for vertices (genes).

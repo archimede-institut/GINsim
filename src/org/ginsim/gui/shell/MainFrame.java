@@ -16,6 +16,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.gui.GUIManager;
@@ -27,7 +28,6 @@ import org.ginsim.gui.shell.editpanel.EditPanel;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.gui.utils.widgets.SplitPane;
 
-import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * GINsim's main frame shell.

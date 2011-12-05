@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.xml;
+package org.ginsim.common.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,6 +14,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.gui.resource.Translator;
 import org.xml.sax.Attributes;
@@ -24,8 +26,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
-import fr.univmrs.tagc.common.utils.IOUtils;
 
 
 abstract public class XMLHelper extends DefaultHandler implements EntityResolver {

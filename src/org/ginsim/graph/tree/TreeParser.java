@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.view.NodeAttributesReader;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public abstract class TreeParser {

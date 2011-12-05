@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.annotation.BiblioManager;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.exception.GsException;
@@ -32,7 +33,6 @@ import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.io.parser.GinmlHelper;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
 	implements RegulatoryGraph{

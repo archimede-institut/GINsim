@@ -4,12 +4,12 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.common.xml.XMLHelper;
 
 /**
  * parses a ginml regulatory graph.

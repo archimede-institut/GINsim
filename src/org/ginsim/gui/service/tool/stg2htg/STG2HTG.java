@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.common.ColorPalette;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
@@ -21,7 +22,6 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.connectivity.AlgoConnectivity;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.ColorPalette;
 
 /**
  * A class to find a path in any graph

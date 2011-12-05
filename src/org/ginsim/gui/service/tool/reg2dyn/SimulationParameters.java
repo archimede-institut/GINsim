@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
@@ -16,8 +18,6 @@ import org.ginsim.utils.data.NamedObject;
 import org.ginsim.utils.data.ObjectStore;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
-import fr.univmrs.tagc.common.xml.XMLize;
 
 /**
  * remember, save and restore a simulation parameter.

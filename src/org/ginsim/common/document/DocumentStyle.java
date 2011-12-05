@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.document;
+package org.ginsim.common.document;
 
 import java.util.Hashtable;
 import java.util.Iterator;

@@ -55,7 +55,7 @@ Copyright 2003-2007 Apple, Inc., All Rights Reserved
 
 */
 
-package fr.univmrs.tagc.common;
+package org.ginsim.common;
 
 
 import java.lang.reflect.InvocationHandler;

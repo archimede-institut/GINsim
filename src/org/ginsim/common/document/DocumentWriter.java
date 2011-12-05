@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.document;
+package org.ginsim.common.document;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -51,7 +51,7 @@ import java.util.Map;
  * <b>New lines</b>
  * <p>To append a generic new line, use the newLine() function.<br>
  * When you subclass DocumentWriter, you can overwrite newLine() or simply set a new value for the NEW_LINE variable.</p>
- * @see fr.univmrs.tagc.common.document.DocumentStyle
+ * @see org.ginsim.common.document.DocumentStyle
  * 
  * @author Naldi Aurelien, Berenguier Duncan
  *

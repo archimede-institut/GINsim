@@ -25,6 +25,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.view.css.CascadingStyle;
@@ -34,7 +35,6 @@ import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public class PathFindingFrame extends StackDialog implements ActionListener, ResultHandler {

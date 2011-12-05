@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.graph.common.Graph;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
-import fr.univmrs.tagc.common.xml.XMLize;
 
 /**
  * Annotation for Gene : contains text and a list of url

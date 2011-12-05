@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common;
+package org.ginsim.common;
 
 
 public interface OpenHelper {

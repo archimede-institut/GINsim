@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
@@ -19,7 +20,6 @@ import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.reg2dyn.helpers.HTGSimulationHelper;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 

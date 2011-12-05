@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -29,7 +30,6 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.utils.data.ObjectStore;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * Export a regulatory graph to the SBML format.

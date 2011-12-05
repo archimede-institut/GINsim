@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * graphic info on an edge.

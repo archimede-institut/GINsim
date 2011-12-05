@@ -13,9 +13,9 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.annotation.AnnotationLink;
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 
-import fr.univmrs.tagc.common.utils.IOUtils;
 
 
 public class GeneTreeModel implements TreeModel {

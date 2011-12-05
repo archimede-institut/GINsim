@@ -5,7 +5,8 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JSplitPane;
 
-import fr.univmrs.tagc.common.OptionStore;
+import org.ginsim.common.OptionStore;
+
 
 
 public class SplitPane extends JSplitPane implements PropertyChangeListener {

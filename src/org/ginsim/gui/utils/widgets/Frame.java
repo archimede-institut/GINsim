@@ -2,7 +2,8 @@ package org.ginsim.gui.utils.widgets;
 
 import javax.swing.JFrame;
 
-import fr.univmrs.tagc.common.OptionStore;
+import org.ginsim.common.OptionStore;
+
 
 public abstract class Frame extends JFrame {
 	private static final long	serialVersionUID	= -9024470351150546630L;

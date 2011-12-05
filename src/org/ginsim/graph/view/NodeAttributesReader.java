@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.util.Vector;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.gui.resource.Translator;
 
-import fr.univmrs.tagc.common.OptionStore;
 
 /**
  * extract from graph graphic info on a vertex.

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.common.ProgressListener;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
@@ -17,7 +18,6 @@ import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.connectivity.ConnectivityFrame;
 import org.ginsim.utils.DataUtils;
 
-import fr.univmrs.tagc.common.ProgressListener;
 
 
 /**

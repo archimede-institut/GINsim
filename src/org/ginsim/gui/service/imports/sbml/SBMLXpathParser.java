@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
 import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
@@ -53,7 +54,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import JSci.io.MathMLParser;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 public final class SBMLXpathParser {

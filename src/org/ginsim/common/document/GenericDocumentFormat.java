@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.document;
+package org.ginsim.common.document;
 
 import java.util.ArrayList;
 import java.util.Iterator;

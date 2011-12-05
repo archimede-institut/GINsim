@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import org.ginsim.annotation.Annotation;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
 import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
@@ -39,7 +40,6 @@ import org.ginsim.utils.log.LogManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 /**

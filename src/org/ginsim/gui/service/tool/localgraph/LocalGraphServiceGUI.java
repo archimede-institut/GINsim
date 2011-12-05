@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
@@ -19,7 +20,6 @@ import org.ginsim.service.tool.localgraph.LocalGraphService;
 import org.ginsim.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 @ProviderFor( ServiceGUI.class)

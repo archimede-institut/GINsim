@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.xml.XMLHelper;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.WarningNotification;
 import org.ginsim.exception.GsException;
@@ -28,8 +30,6 @@ import org.mangosdk.spi.ProviderFor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import fr.univmrs.tagc.common.xml.XMLHelper;
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * main method for the model simplification plugin

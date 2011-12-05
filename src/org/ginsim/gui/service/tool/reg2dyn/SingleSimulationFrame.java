@@ -22,6 +22,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
@@ -32,8 +34,6 @@ import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.utils.data.ObjectStore;
 
-import fr.univmrs.tagc.common.OptionStore;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 

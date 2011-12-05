@@ -25,6 +25,8 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.ginsim.common.ProgressListener;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.reducedgraph.NodeReducedData;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -48,8 +50,6 @@ import org.ginsim.service.tool.connectivity.AlgoConnectivity;
 import org.ginsim.utils.data.ObjectStore;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.ProgressListener;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 
 /**

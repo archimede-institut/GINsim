@@ -11,6 +11,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
@@ -21,8 +23,6 @@ import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 /**
  * Export a regulatory graph to the SBML format.

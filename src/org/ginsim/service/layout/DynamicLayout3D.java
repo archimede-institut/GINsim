@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.common.ColorPalette;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.dynamicgraph.DynamicGraph;
@@ -13,7 +14,6 @@ import org.ginsim.graph.view.EdgeAttributesReader;
 import org.ginsim.graph.view.NodeAttributesReader;
 import org.ginsim.utils.log.LogManager;
 
-import fr.univmrs.tagc.common.ColorPalette;
 
 public class DynamicLayout3D {
 	private EdgeAttributesReader ereader;

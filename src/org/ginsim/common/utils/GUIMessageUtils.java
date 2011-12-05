@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.utils;
+package org.ginsim.common.utils;
 
 import java.awt.Component;
 

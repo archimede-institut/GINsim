@@ -13,6 +13,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.ginsim.common.document.DocumentWriter;
+import org.ginsim.common.document.GenericDocumentFileChooser;
+import org.ginsim.common.document.GenericDocumentFormat;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.graph.regulatorygraph.RegulatoryNode;
@@ -29,10 +33,6 @@ import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisService;
 import org.ginsim.utils.data.ObjectStore;
 
 
-import fr.univmrs.tagc.common.document.DocumentWriter;
-import fr.univmrs.tagc.common.document.GenericDocumentFileChooser;
-import fr.univmrs.tagc.common.document.GenericDocumentFormat;
-import fr.univmrs.tagc.common.utils.GUIMessageUtils;
 
 public class InteractionAnalysisFrame extends StackDialog implements ActionListener {
 	private JFrame frame;

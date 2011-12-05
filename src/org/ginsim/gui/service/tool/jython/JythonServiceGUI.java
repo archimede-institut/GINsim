@@ -9,6 +9,7 @@ import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ToolAction;
@@ -17,7 +18,6 @@ import org.mangosdk.spi.ProviderFor;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
-import fr.univmrs.tagc.common.utils.IOUtils;
 
 
 

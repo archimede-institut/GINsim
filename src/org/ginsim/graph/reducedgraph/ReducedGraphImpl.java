@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.exception.GsException;
 import org.ginsim.graph.GraphManager;
 import org.ginsim.graph.common.AbstractDerivedGraph;
@@ -23,7 +24,6 @@ import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.service.tool.connectivity.ReducedParameterPanel;
 import org.ginsim.io.parser.GinmlHelper;
 
-import fr.univmrs.tagc.common.xml.XMLWriter;
 
 public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
 	implements ReducedGraph{
