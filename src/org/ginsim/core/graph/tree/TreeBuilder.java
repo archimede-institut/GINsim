@@ -12,7 +12,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 
 
 
-public abstract class TreeParser {
+public abstract class TreeBuilder {
 	public static final String PARAM_NODEORDER = "p_nodeOrder";
 	protected Tree tree;
 	protected List<RegulatoryNode> nodeOrder;

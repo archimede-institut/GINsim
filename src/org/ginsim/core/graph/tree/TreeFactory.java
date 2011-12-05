@@ -34,19 +34,21 @@ public class TreeFactory implements GraphFactory<Tree> {
 	
     @Override
     /**
-     * This method MUST NOT be used, use create(TreeParser parser) instead
+     * This method MUST NOT be used, use create(TreeBuilder parser) instead
      */
     public Tree create() {
     	LogManager.error( "Tree canot be instancied without a parser");
         return null;
     }
 
-    public Tree create(TreeParser parser) {
+    public Tree create( TreeBuilder parser) {
+    	
         return new TreeImpl(parser);
     }
 
     @Override
     public Class getParser() {
+    	
     	return null; //There is no parser. Tree is only for viewing purposes
     }
 

@@ -40,13 +40,13 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	private int mode;
 	public TreeNode root = null;
 	private JPanel graphEditor = null;
-	private TreeParser parser;
+	private TreeBuilder parser;
 	
 	/**
 	 * Create a new Tree and link it to the parser.
 	 * @param parser the parser that will fill the tree.
 	 */
-	public TreeImpl(TreeParser parser) {
+	public TreeImpl(TreeBuilder parser) {
 		super();
 		this.parser = parser;
 		parser.setTree(this);
@@ -122,7 +122,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	}
 	
 	@Override
-	public TreeParser getParser() {
+	public TreeBuilder getParser() {
 		return parser; 
 	}
 

@@ -27,6 +27,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.ginsim.common.ProgressListener;
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -35,8 +36,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeImpl;
-import org.ginsim.core.graph.tree.TreeParser;
-import org.ginsim.core.graph.tree.TreeParserFromCircuit;
+import org.ginsim.core.graph.tree.TreeBuilder;
+import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
@@ -713,12 +714,12 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
      * if a context is selected in the treeTable, it will use it, else it will use a "random" context (the first in v_circuit)
      */
 	private void viewContext() {
-		TreeParser parser = new TreeParserFromCircuit();
-		Tree tree = new TreeImpl(parser);
+		TreeBuilder parser = new TreeBuilderFromCircuit();
+		Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
 			
-		parser.setParameter(TreeParser.PARAM_NODEORDER, graph.getNodeOrder());
-		parser.setParameter(TreeParserFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
-		parser.setParameter(TreeParserFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
+		parser.setParameter(TreeBuilder.PARAM_NODEORDER, graph.getNodeOrder());
+		parser.setParameter(TreeBuilderFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
+		parser.setParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
 		GUIManager.getInstance().newFrame(tree);
 	}
 	

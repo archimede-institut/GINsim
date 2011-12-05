@@ -13,9 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.ginsim.core.graph.tree.Tree;
-import org.ginsim.core.graph.tree.TreeParser;
-import org.ginsim.core.graph.tree.TreeParserFromCircuit;
-import org.ginsim.core.graph.tree.TreeParserFromRegulatoryGraph;
+import org.ginsim.core.graph.tree.TreeBuilder;
+import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
+import org.ginsim.core.graph.tree.TreeBuilderFromRegulatoryGraph;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.servicegui.tool.circuit.FunctionalityContext;
 
@@ -85,26 +85,26 @@ public class TreeActionPanel extends JPanel {
 		});
 		add(treeModeList, c);
 
-		TreeParser parser = tree.getParser();
-		if (parser instanceof TreeParserFromRegulatoryGraph) {
+		TreeBuilder parser = tree.getParser();
+		if (parser instanceof TreeBuilderFromRegulatoryGraph) {
 			c.gridx = 0;
 			c.gridy++;
 			add(new JLabel(Translator.getString("STR_treeviewer_tree_choose_gene")), c);
 			c.gridx++;
-			sourceList = new JComboBox(new Vector((List) parser.getParameter(TreeParser.PARAM_NODEORDER)));
-			sourceList.setSelectedIndex(((Integer)parser.getParameter(TreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX)).intValue());
+			sourceList = new JComboBox(new Vector((List) parser.getParameter(TreeBuilder.PARAM_NODEORDER)));
+			sourceList.setSelectedIndex(((Integer)parser.getParameter(TreeBuilderFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX)).intValue());
 			sourceList.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					selectionChange();
 				}
 			});
 			add(sourceList, c);
-		} else if (parser instanceof TreeParserFromCircuit) {
+		} else if (parser instanceof TreeBuilderFromCircuit) {
 			c.gridx = 0;
 			c.gridy++;
 			add(new JLabel(Translator.getString("STR_treeviewer_tree_choose_circuit")), c);
 			c.gridx++;
-			sourceList = new JComboBox((Vector)parser.getParameter(TreeParserFromCircuit.PARAM_ALLCONTEXTS));
+			sourceList = new JComboBox((Vector)parser.getParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS));
 			sourceList.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					selectionChange();
@@ -118,13 +118,13 @@ public class TreeActionPanel extends JPanel {
 		int treeMode = treeModeList.getSelectedIndex();
 		if (treeMode < 0 && treeMode > 2) treeMode = 0;
 		
-		if (tree.getParser() instanceof TreeParserFromRegulatoryGraph) {
+		if (tree.getParser() instanceof TreeBuilderFromRegulatoryGraph) {
 			Integer geneIndex = new Integer(sourceList.getSelectedIndex());
-			tree.getParser().setParameter(TreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, geneIndex);
-		} else if (tree.getParser() instanceof TreeParserFromCircuit) {
+			tree.getParser().setParameter(TreeBuilderFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, geneIndex);
+		} else if (tree.getParser() instanceof TreeBuilderFromCircuit) {
 			int contextIndex = sourceList.getSelectedIndex();
-			FunctionalityContext fcontext = (FunctionalityContext) ((List)tree.getParser().getParameter(TreeParserFromCircuit.PARAM_ALLCONTEXTS)).get(contextIndex);
-			tree.getParser().setParameter(TreeParserFromCircuit.PARAM_INITIALCIRCUITDESC, fcontext.getContext());
+			FunctionalityContext fcontext = (FunctionalityContext) ((List)tree.getParser().getParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS)).get(contextIndex);
+			tree.getParser().setParameter(TreeBuilderFromCircuit.PARAM_INITIALCIRCUITDESC, fcontext.getContext());
 		}
 		tree.getParser().run(treeMode);
 	}

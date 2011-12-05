@@ -15,13 +15,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeImpl;
-import org.ginsim.core.graph.tree.TreeParser;
-import org.ginsim.core.graph.tree.TreeParserFromManualOmdd;
+import org.ginsim.core.graph.tree.TreeBuilder;
+import org.ginsim.core.graph.tree.TreeBuilderFromManualOmdd;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -133,11 +134,11 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			}
 		} else if (e.getSource() == displayTreeButton) {
 			run();
-			TreeParser parser = new TreeParserFromManualOmdd();
-			Tree tree = new TreeImpl(parser);
+			TreeBuilder parser = new TreeBuilderFromManualOmdd();
+			Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
 				
-			parser.setParameter(TreeParserFromManualOmdd.PARAM_MANUALOMDD, resOmdd);
-			parser.setParameter(TreeParserFromManualOmdd.PARAM_NODEORDER, graph.getNodeOrder());
+			parser.setParameter(TreeBuilderFromManualOmdd.PARAM_MANUALOMDD, resOmdd);
+			parser.setParameter(TreeBuilderFromManualOmdd.PARAM_NODEORDER, graph.getNodeOrder());
 			parser.run(TreeImpl.MODE_DIAGRAM_WITH_MULTIPLE_LEAFS);
 			GUIManager.getInstance().newFrame(tree);
 

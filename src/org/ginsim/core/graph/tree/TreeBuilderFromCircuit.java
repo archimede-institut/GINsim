@@ -16,7 +16,7 @@ import org.ginsim.servicegui.tool.circuit.OmsddNode;
  * A treeParser for the context of functionality
  *
  */
-public class TreeParserFromCircuit extends TreeParser {
+public class TreeBuilderFromCircuit extends TreeBuilder {
 	protected final static int debug = 1;
 	
 	

@@ -8,13 +8,14 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeImpl;
-import org.ginsim.core.graph.tree.TreeParser;
-import org.ginsim.core.graph.tree.TreeParserFromRegulatoryGraph;
+import org.ginsim.core.graph.tree.TreeBuilder;
+import org.ginsim.core.graph.tree.TreeBuilderFromRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.service.tool.regulatoryfunctiontree.RegulatoryFunctionTreeService;
@@ -57,12 +58,12 @@ class RegulatoryFunctionTreeAction extends ToolAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		TreeParser parser = new TreeParserFromRegulatoryGraph();
-		Tree tree = new TreeImpl( parser);
+		TreeBuilder parser = new TreeBuilderFromRegulatoryGraph();
+		Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
 			
-		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
-		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_REGGRAPH, graph);
-		parser.setParameter(TreeParserFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, getSelectedNode( graph));
+		parser.setParameter(TreeBuilderFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
+		parser.setParameter(TreeBuilderFromRegulatoryGraph.PARAM_REGGRAPH, graph);
+		parser.setParameter(TreeBuilderFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, getSelectedNode( graph));
 		GUIManager.getInstance().newFrame(tree);
 	}
 	

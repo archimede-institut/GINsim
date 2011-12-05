@@ -12,7 +12,7 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
 
-public abstract class TreeParserFromOmdd extends TreeParser {
+public abstract class TreeBuilderFromOmdd extends TreeBuilder {
 	protected OMDDNode root;
 	
 	

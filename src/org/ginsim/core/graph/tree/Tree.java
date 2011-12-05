@@ -6,7 +6,7 @@ import org.ginsim.core.graph.common.Graph;
 public interface Tree extends Graph<TreeNode, Edge<TreeNode>>{
 	
 	
-	public TreeParser getParser();
+	public TreeBuilder getParser();
 	
 	
 	public void setMode(int treeMode);
