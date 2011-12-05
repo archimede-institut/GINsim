@@ -130,9 +130,9 @@ public class TestRefactor {
 	 * This method will only load all required resources, it will not create the first window.
 	 */
 	private static void initGUI() {
-		Translator.pushBundle("org.ginsim.gui.resources.messages");
-		ImageLoader.pushSearchPath("/org/ginsim/gui/resources/icons");
-		AboutDialog.setDOAPFile("/org/ginsim/gui/resources/GINsim-about.rdf");
+		Translator.pushBundle("org.ginsim.gui.resource.messages");
+		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon");
+		AboutDialog.setDOAPFile("/org/ginsim/gui/resource/GINsim-about.rdf");
 	}
 
 }

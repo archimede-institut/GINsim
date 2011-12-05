@@ -2,7 +2,6 @@ package org.ginsim.servicegui.export.sbml;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -33,6 +32,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( Service.class)
 public class SBMLExportService implements Service{
+	
 	/**
 	 * @param graph
 	 * @param fileName
