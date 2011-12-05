@@ -95,7 +95,7 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 
 		int last_real = -1;
 
-		Iterator it = nodeOrder.iterator();
+		Iterator<RegulatoryNode> it = nodeOrder.iterator();
 		for (int i = 0 ; it.hasNext() ; i++) {
 			RegulatoryNode v = (RegulatoryNode) it.next();
 			if (realDetph[i] != -2) {
@@ -171,9 +171,9 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 		int[] currentWidthPerDepth = new int[widthPerDepth.length];
 		tree.setRoot( (TreeNode) _createTreeFromOmdd(root, 0, null, 0, currentWidthPerDepth, tree.getEdgeAttributeReader()).get(0));
 	}
-	private List _createTreeFromOmdd(OMDDNode o, int lastLevel, TreeNode parent, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
+	private List<TreeNode> _createTreeFromOmdd(OMDDNode o, int lastLevel, TreeNode parent, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
 		TreeNode treeNode = null;
-		List parents = new ArrayList();
+		List<TreeNode> parents = new ArrayList<TreeNode>();
 		parents.add(parent);
 		int mult, last_real;
 		if (o.next == null) {
@@ -187,7 +187,7 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 					last_real = j;
 				}
 			}
-			for (Iterator it = parents.iterator(); it.hasNext();) {
+			for (Iterator<TreeNode> it = parents.iterator(); it.hasNext();) {
 				TreeNode p = (TreeNode) it.next();
 				if (mult > 1) {
 					for (int i = 0; i < widthPerDepth[last_real]; i++) {
@@ -206,7 +206,7 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 		
 		mult = 1;
 		last_real = 0;
-		List skippedParents = parents;
+		List<TreeNode> skippedParents = parents;
 		for (int j = lastLevel+1 ; j < o.level ; j++) { //For all the missing genes
 			if (realDetph[j] != -2) {
 				skippedParents = addChildren(j, mult, skippedParents, childIndex, currentWidthPerDepth, ereader);
@@ -214,7 +214,7 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 				last_real = j;
 			}
 		}
-		List currentNodes = new ArrayList();
+		List<TreeNode> currentNodes = new ArrayList<TreeNode>();
 		int nodeCountToCreate = 1;
 		if (mult > 1) nodeCountToCreate = widthPerDepth[last_real];
 		for (int k = 0; k < skippedParents.size(); k++) {
@@ -224,9 +224,9 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 				currentNodes.add(treeNode);
 		
 				for (int j = 0 ; j < o.next.length ; j++) { //For all the children
-			    	List childs = _createTreeFromOmdd(o.next[j], o.level, treeNode, j, currentWidthPerDepth, ereader);
+			    	List<TreeNode> childs = _createTreeFromOmdd(o.next[j], o.level, treeNode, j, currentWidthPerDepth, ereader);
 					if (childs != null) {
-						for (Iterator it2 = childs.iterator(); it2 .hasNext();) {
+						for (Iterator<TreeNode> it2 = childs.iterator(); it2 .hasNext();) {
 							TreeNode child = (TreeNode) it2.next();
 							linkNode(treeNode, child, j, ereader);
 							
@@ -252,14 +252,14 @@ public abstract class TreeParserFromOmdd extends TreeParser {
 	}
 
 
-	private List addChildren(int j, int mult, List parents, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
-		List newParents = new ArrayList(mult);
+	private List<TreeNode> addChildren(int j, int mult, List<TreeNode> parents, int childIndex, int[] currentWidthPerDepth, EdgeAttributesReader ereader) {
+		List<TreeNode> newParents = new ArrayList<TreeNode>(mult);
 		
 		while (realDetph[j] == -2 && j < max_depth) j++; //Get the child level
 		
 		String parentId = getNodeName(j);
 		
-		for (Iterator it = parents.iterator(); it.hasNext();) {
+		for (Iterator<TreeNode> it = parents.iterator(); it.hasNext();) {
 			TreeNode o  = (TreeNode) it.next();
 			for (int i = 0 ; i < mult ; i++) {
 				TreeNode treeNode = new TreeNode(parentId, j, ++currentWidthPerDepth[j], TreeNode.TYPE_BRANCH, TreeNode.SKIPPED);

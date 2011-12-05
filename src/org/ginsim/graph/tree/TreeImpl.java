@@ -2,20 +2,16 @@ package org.ginsim.graph.tree;
 
 import java.io.OutputStreamWriter;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JPanel;
 
-import org.ginsim.exception.GsException;
 import org.ginsim.graph.common.AbstractGraph;
 import org.ginsim.graph.common.Edge;
 import org.ginsim.graph.common.Graph;
 import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.service.tool.regulatorytreefunction.TreeActionPanel;
-import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 
 public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>> 
@@ -46,6 +42,10 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	private JPanel graphEditor = null;
 	private TreeParser parser;
 	
+	/**
+	 * Create a new Tree and link it to the parser.
+	 * @param parser the parser that will fill the tree.
+	 */
 	public TreeImpl(TreeParser parser) {
 		super();
 		this.parser = parser;
@@ -59,12 +59,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
      */
 	@Override
     public boolean containsNode(TreeNode node) {
-    	
-    	for (Iterator it = getNodes().iterator(); it.hasNext();) {
-    		TreeNode treeNode = (TreeNode) it.next();
-    		if (treeNode == node) return true;
-		}
-		return false;
+		return getNodes().contains(node);
 	}
     
 
@@ -112,7 +107,6 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 
 	@Override
 	public void setRoot( TreeNode root) {
-		
 		this.root = root;
 	}
 
@@ -129,16 +123,9 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	
 	@Override
 	public TreeParser getParser() {
-		
 		return parser; 
 	}
-	
-	private void setParser(TreeParser parser) {
-		
-		this.parser = parser; 
-		parser.setTree(this);
-	}
-	
+
 	
     /**
      * Return the size of the node order
@@ -147,26 +134,22 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
      */
     @Override
 	public int getNodeOrderSize(){
-		
-		return regGraph.getNodeOrderSize();
+    	return regGraph.getNodeOrderSize();
 	}
 
 	@Override
 	public void doSave(OutputStreamWriter osw, Collection<TreeNode> vertices,
 			Collection<Edge<TreeNode>> edges, int saveMode) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	protected List<?> doMerge(Graph<TreeNode, Edge<TreeNode>> graph) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Graph<TreeNode, Edge<TreeNode>> getSubgraph(
 			Collection<TreeNode> vertex, Collection<Edge<TreeNode>> edges) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

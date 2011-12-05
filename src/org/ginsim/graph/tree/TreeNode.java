@@ -58,7 +58,7 @@ public class TreeNode implements Dotify {
 	/**
 	 * Create a new TreeNode with a default value of -1
 	 * @param label
-	 * @param depth
+	 * @param depth the depth in the tree
 	 * @param width
 	 * @param type
 	 */
@@ -74,6 +74,10 @@ public class TreeNode implements Dotify {
 		this.value = value;
 	}
 	
+	/**
+	 * Create a new TreeNode by copying the values of the other TreeNode
+	 * @param other
+	 */
 	public TreeNode(TreeNode other) {
 		this.uid = nextUid++;
 		this.label = other.label;

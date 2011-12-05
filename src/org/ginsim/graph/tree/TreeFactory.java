@@ -5,25 +5,22 @@ import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.common.Debugger;
 
-/**
- * descriptor for dynamic hierarchical graphs.
- */
+
 @ProviderFor( GraphFactory.class)
 public class TreeFactory implements GraphFactory<Tree> {
 	
     private static TreeFactory instance = null;
 	
 	/**
-     * @return an instance of this graphDescriptor.
+	 * Return an instance of this TreeFactory.
+     * @return an instance of this TreeFactory.
      */
     public static TreeFactory getInstance() {
-    	
-        if (instance == null) {
-            instance = new TreeFactory();
+        if (TreeFactory.instance == null) {
+        	TreeFactory.instance = new TreeFactory();
         }
-        return instance;
+        return TreeFactory.instance;
     }
-
 
     @Override
     public String getGraphType() {
@@ -32,21 +29,25 @@ public class TreeFactory implements GraphFactory<Tree> {
     
     @Override
 	public Class<Tree> getGraphClass(){
-		
 		return Tree.class;
 	}
 	
     @Override
+    /**
+     * This method MUST NOT be used, use create(TreeParser parser) instead
+     */
     public Tree create() {
-    	Debugger.error( "Tree factory not finished");
+    	Debugger.error( "Tree canot be instancied without a parser");
         return null;
     }
-    
+
+    public Tree create(TreeParser parser) {
+        return new TreeImpl(parser);
+    }
 
     @Override
     public Class getParser() {
-    	
-    	return TreeParser.class;
+    	return null; //There is no parser. Tree is only for viewing purposes
     }
 
 }
