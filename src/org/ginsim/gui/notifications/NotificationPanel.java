@@ -103,13 +103,19 @@ public class NotificationPanel extends JPanel {
             ((ResolvableNotification) notification).performResolution(index);
 		}
 		
-		updateNotificationMessage();
+		_source.closeNotification();
+		
 	}
 
 	public synchronized void updateNotificationMessage() {
+		
+		// If the notification panel is visible, it means a notification is currently displayed
+		if( isVisible()){
+			return;
+		}
 		notification = _source.getTopNotification();
 		if (notification == null) {
-			setVisible(false);
+			return;
 		} else {
             switch (notification.getType()) {
             case Notification.NOTIFICATION_INFO:

@@ -60,7 +60,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
     private int mmapDivLocation = ((Integer)OptionStore.getOption("display.minimapSize", new Integer(100))).intValue();
 
 	private NotificationPanel notificationPanel = new NotificationPanel(this);
-	private PriorityQueue<Notification> notificationList = new PriorityQueue<Notification>();  
+	private final PriorityQueue<Notification> notificationList = new PriorityQueue<Notification>();  
 
 	private final FrameActionManager actionManager = new MainFrameActionManager();
 
@@ -165,11 +165,6 @@ public class MainFrame extends Frame implements NotificationSource, Notification
         } else {
         	secondarySplitPanel.setRightComponent(miniMapPanel);
         }
-	}
-
-    // FIXME: is this needed?
-	public synchronized void updateNotificationMessage() {
-		notificationPanel.updateNotificationMessage();
 	}
 
 	/**
@@ -293,41 +288,68 @@ public class MainFrame extends Frame implements NotificationSource, Notification
         }
     }
 
-    public boolean confirmCloseGraph() {
-    	// FIXME: show close confirmation dialog, save if needed ... 
-    	return true;
-    }
-
     
     private void fillGraphPane( Component view) {
     	
     	graphScrollPane.setViewportView( view);
     }
 
+    /**
+     * Return the most important notification (it is the head of the queue since the queue is ordered to 
+     * have the most urgent notification on top).
+     * 
+     */
 	@Override
 	public Notification getTopNotification() {
 		
-		return notificationList.poll();
+		Notification top_notification;
+		
+		synchronized( notificationList){
+			top_notification = notificationList.poll();
+		}
+		
+		return top_notification;
 	}
 
+	/**
+	 * Close the notification by set invisible the notification panel and ask it to test if a
+	 * other Notification is in the queue
+	 * 
+	 */
 	@Override
 	public void closeNotification() {
-		// Nothing to do since the queue already removed the notification at the getTopNotification
+		
+		notificationPanel.setVisible( false);
+		notificationPanel.updateNotificationMessage();
 	}
 	
+	/**
+	 * Receive a notification and add it to the notification queue
+	 * 
+	 * @param message the notification to add to the queue
+	 */
 	@Override
 	public void receiveNotification( Notification message) {
 		
-		if( message != null){
-			notificationList.add( message);
+		synchronized( notificationList){
+			if( message != null){
+				notificationList.add( message);
+			}
 		}
 	}
 	
+	/**
+	 * Remove the given notification from the queue
+	 * 
+	 * @param message the notification to remove
+	 */
 	@Override
 	public void deleteNotification( Notification message) {
 	
-		if( message != null){
-			notificationList.remove( message);
+		synchronized( notificationList){
+			if( message != null){
+				notificationList.remove( message);
+			}
 		}
 		
 	}
