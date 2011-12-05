@@ -32,7 +32,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
 	public static final int STRATEGY_HTG = 2;
 
 	public String name = "new_parameter";
-    public List nodeOrder;
+    public List<RegulatoryNode> nodeOrder;
 
     public int maxdepth;
     public int maxnodes;
