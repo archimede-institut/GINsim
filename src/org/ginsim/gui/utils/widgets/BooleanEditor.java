@@ -5,9 +5,9 @@ import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.ginsim.core.utils.data.GenericPropertyInfo;
+import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
-import org.ginsim.utils.data.GenericPropertyInfo;
-import org.ginsim.utils.data.ObjectPropertyEditorUI;
 
 
 

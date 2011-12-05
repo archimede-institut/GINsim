@@ -5,8 +5,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.graph.common.Edge;
-import org.ginsim.utils.log.LogManager;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.utils.log.LogManager;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellViewRenderer;
 import org.jgraph.graph.DefaultEdge;

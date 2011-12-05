@@ -6,8 +6,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 import fr.univmrs.tagc.common.TestTools;
 

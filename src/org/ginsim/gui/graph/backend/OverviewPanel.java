@@ -46,7 +46,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Graph;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphLayoutCacheEvent;
 import org.jgraph.event.GraphLayoutCacheListener;

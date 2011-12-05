@@ -1,7 +1,7 @@
 package org.ginsim.gui.graph;
 
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
 
 /**
  * Interface for objects which listen for Graph GUI events.

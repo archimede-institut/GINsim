@@ -11,14 +11,14 @@ import java.util.Map;
 import javax.swing.Action;
 import javax.swing.JPanel;
 
+import org.ginsim.core.utils.data.GenericList;
+import org.ginsim.core.utils.data.GenericNamedList;
+import org.ginsim.core.utils.data.GenericPropertyInfo;
+import org.ginsim.core.utils.data.ObjectEditor;
 import org.ginsim.gui.utils.data.models.MinMaxSpinModel;
 import org.ginsim.gui.utils.data.models.SpinModel;
 import org.ginsim.gui.utils.widgets.BooleanEditor;
 import org.ginsim.gui.utils.widgets.StatusTextField;
-import org.ginsim.utils.data.GenericList;
-import org.ginsim.utils.data.GenericNamedList;
-import org.ginsim.utils.data.GenericPropertyInfo;
-import org.ginsim.utils.data.ObjectEditor;
 
 
 /**

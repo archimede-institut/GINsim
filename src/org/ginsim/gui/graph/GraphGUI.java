@@ -5,8 +5,8 @@ import java.awt.Component;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
 
 /**
  * Deal with the GUI view of a graph: get a component, provide access to selected items and view options.

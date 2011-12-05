@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.exception.GsException;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 
 

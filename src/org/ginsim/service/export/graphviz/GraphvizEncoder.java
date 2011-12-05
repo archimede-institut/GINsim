@@ -6,8 +6,8 @@ import java.text.DateFormat;
 import java.util.Collection;
 import java.util.Date;
 
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.service.export.Dotify;
 
 public class GraphvizEncoder {

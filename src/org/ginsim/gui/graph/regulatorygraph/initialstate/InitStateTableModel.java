@@ -8,9 +8,9 @@ import java.util.Map;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 

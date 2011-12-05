@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.ginsim.exception.GsException;
-import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.AboutDialog;
-import org.ginsim.utils.log.LogManager;
 
 
 /**

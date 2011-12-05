@@ -1,6 +1,6 @@
 package org.ginsim.service.export.image;
 
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 

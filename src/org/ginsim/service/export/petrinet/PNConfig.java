@@ -3,9 +3,9 @@ package org.ginsim.service.export.petrinet;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
-import org.ginsim.utils.data.ObjectStore;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.utils.data.ObjectStore;
 
 
 public class PNConfig implements InitialStateStore {

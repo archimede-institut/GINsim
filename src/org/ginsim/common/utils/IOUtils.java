@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.common.OpenHelper;
-import org.ginsim.exception.GsException;
+import org.ginsim.core.exception.GsException;
 import org.ginsim.gui.resource.Translator;
 
 

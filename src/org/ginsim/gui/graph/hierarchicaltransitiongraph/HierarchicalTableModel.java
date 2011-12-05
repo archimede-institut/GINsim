@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 
 
 

@@ -2,7 +2,7 @@ package org.ginsim;
 
 import java.io.File;
 
-import org.ginsim.utils.log.LogManager;
+import org.ginsim.core.utils.log.LogManager;
 import org.python.util.PythonInterpreter;
 
 

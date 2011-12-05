@@ -2,11 +2,11 @@ package org.ginsim.service.tool.interactionanalysis;
 
 import java.util.Map;
 
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.view.EdgeAttributesReader;
-import org.ginsim.graph.view.css.Colorizer;
-import org.ginsim.graph.view.css.Selector;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.css.Colorizer;
+import org.ginsim.core.graph.view.css.Selector;
 
 public class InteractionAnalysisColorizer extends Colorizer {
 

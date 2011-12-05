@@ -13,7 +13,7 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.utils.DataUtils;
+import org.ginsim.core.utils.DataUtils;
 
 
 

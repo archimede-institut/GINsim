@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Vector;
 
 import org.ginsim.common.ProgressListener;
-import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.reducedgraph.NodeReducedData;
-import org.ginsim.graph.reducedgraph.ReducedGraph;
-import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.reducedgraph.NodeReducedData;
+import org.ginsim.core.graph.reducedgraph.ReducedGraph;
+import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.utils.DataUtils;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.service.tool.connectivity.ConnectivityFrame;
-import org.ginsim.utils.DataUtils;
+import org.ginsim.servicegui.tool.connectivity.ConnectivityFrame;
 
 
 

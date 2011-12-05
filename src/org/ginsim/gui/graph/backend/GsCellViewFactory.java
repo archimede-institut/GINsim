@@ -1,6 +1,6 @@
 package org.ginsim.gui.graph.backend;
 
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Graph;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.EdgeView;

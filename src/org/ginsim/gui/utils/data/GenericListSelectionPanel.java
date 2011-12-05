@@ -13,10 +13,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.core.utils.data.GenericList;
+import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.utils.data.GenericList;
-import org.ginsim.utils.data.ObjectStore;
 
 
 abstract public class GenericListSelectionPanel extends JPanel implements ActionListener {

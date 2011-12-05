@@ -22,8 +22,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.utils.widgets.GsButton;
 

@@ -5,16 +5,16 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.ginsim.exception.GsException;
-import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicgraph.DynamicGraph;
-import org.ginsim.graph.dynamicgraph.DynamicNode;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.gui.service.tool.graphcomparator.DynamicGraphComparator;
-import org.ginsim.gui.service.tool.graphcomparator.GraphComparator;
-import org.ginsim.gui.service.tool.graphcomparator.RegulatoryGraphComparator;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.core.graph.dynamicgraph.DynamicNode;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.servicegui.tool.graphcomparator.DynamicGraphComparator;
+import org.ginsim.servicegui.tool.graphcomparator.GraphComparator;
+import org.ginsim.servicegui.tool.graphcomparator.RegulatoryGraphComparator;
 
 /**
  * Compare two models.

@@ -1,8 +1,8 @@
 package org.ginsim.core.notification;
 
-import org.ginsim.graph.common.Graph;
-import org.ginsim.utils.timeout.Timeout;
-import org.ginsim.utils.timeout.TimeoutObject;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.utils.timeout.Timeout;
+import org.ginsim.core.utils.timeout.TimeoutObject;
 
 
 /**

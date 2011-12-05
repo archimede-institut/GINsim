@@ -6,7 +6,7 @@ import java.net.URI;
 
 import org.ginsim.common.OpenHelper;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.utils.log.LogManager;
+import org.ginsim.core.utils.log.LogManager;
 
 
 

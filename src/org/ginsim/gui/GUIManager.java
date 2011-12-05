@@ -7,13 +7,14 @@ import javax.swing.JOptionPane;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.exception.GsException;
-import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.backend.GraphBackend;
-import org.ginsim.graph.backend.JgraphtBackendImpl;
-import org.ginsim.graph.common.AbstractGraph;
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.backend.GraphBackend;
+import org.ginsim.core.graph.backend.JgraphtBackendImpl;
+import org.ginsim.core.graph.common.AbstractGraph;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.GraphGUIHelperFactory;
@@ -21,7 +22,6 @@ import org.ginsim.gui.graph.backend.JgraphGUIImpl;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.ginsim.utils.log.LogManager;
 
 
 

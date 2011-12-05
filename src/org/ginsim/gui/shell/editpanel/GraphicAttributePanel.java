@@ -27,10 +27,10 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.view.EdgeAttributesReader;
-import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.resource.Translator;

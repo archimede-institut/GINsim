@@ -32,17 +32,17 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 
+import org.ginsim.core.utils.data.GenericListListener;
+import org.ginsim.core.utils.data.GenericNamedList;
+import org.ginsim.core.utils.data.GenericNamedListCapabilities;
+import org.ginsim.core.utils.data.GenericPropertyInfo;
+import org.ginsim.core.utils.data.MultiColObject;
+import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.utils.widgets.ButtonPopup;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.gui.utils.widgets.StatusTextField;
 import org.ginsim.gui.utils.widgets.StockButton;
-import org.ginsim.utils.data.GenericListListener;
-import org.ginsim.utils.data.GenericNamedList;
-import org.ginsim.utils.data.GenericNamedListCapabilities;
-import org.ginsim.utils.data.GenericPropertyInfo;
-import org.ginsim.utils.data.MultiColObject;
-import org.ginsim.utils.data.ObjectPropertyEditorUI;
 
 
 /**

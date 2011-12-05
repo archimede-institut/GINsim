@@ -6,24 +6,24 @@ import java.util.ArrayList;
 import javax.print.attribute.ResolutionSyntax;
 import javax.swing.Action;
 
-import org.ginsim.annotation.Annotation;
+import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+import org.ginsim.core.utils.data.GenericList;
+import org.ginsim.core.utils.data.GenericPropertyInfo;
+import org.ginsim.core.utils.data.ObjectEditor;
 
 
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
-import org.ginsim.utils.data.GenericList;
-import org.ginsim.utils.data.GenericPropertyInfo;
-import org.ginsim.utils.data.ObjectEditor;
 
 
 public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> {

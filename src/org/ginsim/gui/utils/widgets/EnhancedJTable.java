@@ -22,9 +22,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import org.ginsim.core.utils.data.ValueList;
 import org.ginsim.gui.utils.data.TableActionListener;
 import org.ginsim.gui.utils.data.models.ValueListComboModel;
-import org.ginsim.utils.data.ValueList;
 
 
 /**

@@ -12,9 +12,9 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.annotation.AnnotationLink;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.annotation.AnnotationLink;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 
 

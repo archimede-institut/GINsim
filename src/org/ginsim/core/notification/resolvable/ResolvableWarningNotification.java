@@ -1,8 +1,8 @@
 package org.ginsim.core.notification.resolvable;
 
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.notification.WarningNotification;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
-import org.ginsim.graph.common.Graph;
 
 public class ResolvableWarningNotification extends WarningNotification  implements ResolvableNotification{
 

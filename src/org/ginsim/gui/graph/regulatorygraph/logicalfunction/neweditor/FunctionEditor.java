@@ -2,9 +2,9 @@ package org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor;
 
 import javax.swing.JTree;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 

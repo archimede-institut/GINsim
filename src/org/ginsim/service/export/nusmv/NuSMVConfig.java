@@ -3,11 +3,11 @@ package org.ginsim.service.export.nusmv;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
-import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
-import org.ginsim.utils.data.ObjectStore;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.utils.data.ObjectStore;
+import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
 
 
 public class NuSMVConfig implements InitialStateStore {

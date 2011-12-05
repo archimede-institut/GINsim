@@ -2,7 +2,7 @@ package org.ginsim.gui.utils.data.models;
 
 import javax.swing.DefaultComboBoxModel;
 
-import org.ginsim.utils.data.ValueList;
+import org.ginsim.core.utils.data.ValueList;
 
 
 

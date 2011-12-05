@@ -3,12 +3,12 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.gui.GUIManager;
 
 /**

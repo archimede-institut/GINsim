@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import javax.swing.AbstractListModel;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 
 
 

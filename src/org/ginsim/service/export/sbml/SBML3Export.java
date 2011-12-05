@@ -11,24 +11,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
-import org.ginsim.graph.regulatorygraph.omdd.OMDDBrowserListener;
-import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.graph.regulatorygraph.omdd.OMDDNodeBrowser;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDBrowserListener;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNodeBrowser;
+import org.ginsim.core.utils.data.ObjectStore;
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
-import org.ginsim.utils.data.ObjectStore;
-import org.ginsim.utils.log.LogManager;
+import org.ginsim.servicegui.common.ExportAction;
 
 
 /**

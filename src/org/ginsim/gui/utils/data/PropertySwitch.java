@@ -7,8 +7,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import org.ginsim.utils.data.GenericPropertyInfo;
-import org.ginsim.utils.data.ObjectPropertyEditorUI;
+import org.ginsim.core.utils.data.GenericPropertyInfo;
+import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 
 
 

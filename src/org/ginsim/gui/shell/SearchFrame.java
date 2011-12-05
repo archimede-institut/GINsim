@@ -18,9 +18,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
-import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
+import org.ginsim.core.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.resource.Translator;

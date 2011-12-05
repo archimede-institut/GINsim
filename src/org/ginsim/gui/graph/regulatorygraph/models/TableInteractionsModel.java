@@ -5,10 +5,10 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.gui.resource.Translator;
 
 

@@ -1,6 +1,6 @@
 package org.ginsim.gui.graph;
 
-import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 
 public abstract class AddNodeAction<V> extends EditAction {
 

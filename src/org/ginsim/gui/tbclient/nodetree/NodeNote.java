@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
 

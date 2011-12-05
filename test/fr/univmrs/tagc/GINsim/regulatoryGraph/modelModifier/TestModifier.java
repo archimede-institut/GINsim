@@ -2,12 +2,12 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
 import junit.framework.TestCase;
 
-import org.ginsim.exception.GsException;
-import org.ginsim.graph.GraphManager;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.service.tool.modelsimplifier.ModelSimplifier;
-import org.ginsim.gui.service.tool.modelsimplifier.ModelSimplifierConfig;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.servicegui.tool.modelsimplifier.ModelSimplifier;
+import org.ginsim.servicegui.tool.modelsimplifier.ModelSimplifierConfig;
 
 
 public class TestModifier extends TestCase {

@@ -3,20 +3,20 @@ package org.ginsim.gui.graph.regulatorygraph;
 import java.awt.GridBagConstraints;
 import java.util.Collection;
 
-import org.ginsim.annotation.Annotation;
 import org.ginsim.core.GraphEventCascade;
-import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.GraphListener;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.utils.DataUtils;
+import org.ginsim.core.utils.data.GenericList;
+import org.ginsim.core.utils.data.GenericPropertyInfo;
+import org.ginsim.core.utils.data.ObjectEditor;
+import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.utils.DataUtils;
-import org.ginsim.utils.data.GenericList;
-import org.ginsim.utils.data.GenericPropertyInfo;
-import org.ginsim.utils.data.ObjectEditor;
-import org.ginsim.utils.data.SimpleGenericList;
 
 
 

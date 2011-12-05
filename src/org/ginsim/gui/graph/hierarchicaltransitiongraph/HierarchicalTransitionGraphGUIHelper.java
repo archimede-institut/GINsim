@@ -5,18 +5,18 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
-import org.ginsim.graph.hierachicaltransitiongraph.HierarchicalNodeParameterPanel;
+import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNodeParameterPanel;
+import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.service.tool.decisionanalysis.DecisionOnEdge;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
+import org.ginsim.servicegui.tool.decisionanalysis.DecisionOnEdge;
 import org.mangosdk.spi.ProviderFor;
 
 

@@ -14,18 +14,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Label;
 import org.ginsim.gui.utils.widgets.StockButton;
+import org.ginsim.servicegui.tool.reg2dyn.SimulationParameterList;
 
 
 

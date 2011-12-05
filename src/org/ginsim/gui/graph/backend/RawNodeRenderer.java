@@ -8,7 +8,7 @@ import java.awt.Shape;
 
 import javax.swing.JLabel;
 
-import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 
 
 class RawNodeRenderer extends JLabel {

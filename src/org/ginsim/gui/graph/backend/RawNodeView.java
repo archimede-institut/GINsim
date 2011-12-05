@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
-import org.ginsim.utils.log.LogManager;
+import org.ginsim.core.utils.log.LogManager;
 import org.jgraph.JGraph;
 import org.jgraph.graph.AbstractCellView;
 import org.jgraph.graph.AttributeMap;

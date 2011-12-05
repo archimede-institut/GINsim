@@ -1,6 +1,6 @@
 package org.ginsim.service.layout;
 
-import org.ginsim.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 
 /**
  * level placement of nodes

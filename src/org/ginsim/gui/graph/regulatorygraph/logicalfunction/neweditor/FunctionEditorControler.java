@@ -9,14 +9,14 @@ import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
-import org.ginsim.graph.regulatorygraph.logicalfunction.neweditor.qmc.QMCThread;
-import org.ginsim.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.neweditor.qmc.QMCThread;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.gui.utils.widgets.GsButton;
 

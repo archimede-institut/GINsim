@@ -1,6 +1,6 @@
 package org.ginsim.gui.graph.regulatorygraph.logicalfunction;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.graph.regulatorygraph.models.TableInteractionsModel;
 
 

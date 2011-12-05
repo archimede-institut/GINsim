@@ -6,13 +6,13 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.objectassociation.GraphAssociatedObjectManager;
-import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantParser;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantParser;
 import org.ginsim.gui.GUIManager;
 
 

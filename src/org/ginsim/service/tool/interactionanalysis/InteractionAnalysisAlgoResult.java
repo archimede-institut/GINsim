@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.interactionanalysis;
 
-import org.ginsim.graph.view.css.Colorizer;
+import org.ginsim.core.graph.view.css.Colorizer;
 
 /**
  * This class is a simple container for the results of the algorithm :

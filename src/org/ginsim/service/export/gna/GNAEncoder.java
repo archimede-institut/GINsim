@@ -5,10 +5,10 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
-import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 /**
  * Exports a GINsim Regulatory graph into an old (non xml) GNA model

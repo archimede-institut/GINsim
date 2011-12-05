@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Hashtable;
 
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
 
 public class BiolayoutEncoder {
 

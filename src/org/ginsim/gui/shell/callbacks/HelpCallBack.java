@@ -10,10 +10,10 @@ import javax.swing.Action;
 import javax.swing.JDialog;
 
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.utils.GUIIOUtils;
-import org.ginsim.utils.log.LogManager;
 
 
 

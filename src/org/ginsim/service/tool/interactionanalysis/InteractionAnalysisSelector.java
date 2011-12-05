@@ -3,11 +3,11 @@ package org.ginsim.service.tool.interactionanalysis;
 import java.awt.Color;
 import java.util.Map;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.view.EdgeAttributesReader;
-import org.ginsim.graph.view.css.EdgeStyle;
-import org.ginsim.graph.view.css.Selector;
-import org.ginsim.graph.view.css.Style;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.css.EdgeStyle;
+import org.ginsim.core.graph.view.css.Selector;
+import org.ginsim.core.graph.view.css.Style;
 
 
 public class InteractionAnalysisSelector extends Selector {

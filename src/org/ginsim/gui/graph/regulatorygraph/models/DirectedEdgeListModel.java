@@ -2,7 +2,7 @@ package org.ginsim.gui.graph.regulatorygraph.models;
 
 import javax.swing.AbstractListModel;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 
 
 /**

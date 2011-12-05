@@ -23,25 +23,25 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.annotation.AnnotationPanel;
 import org.ginsim.core.GraphEventCascade;
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.GraphListener;
-import org.ginsim.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantChange;
+import org.ginsim.core.annotation.AnnotationPanel;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantChange;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.utils.data.SimpleGenericList;
+import org.ginsim.core.utils.data.ValueList;
 
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.service.tool.reg2dyn.RegulatoryMutantListener;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.gui.utils.widgets.StockButton;
-import org.ginsim.utils.data.SimpleGenericList;
-import org.ginsim.utils.data.ValueList;
+import org.ginsim.servicegui.tool.reg2dyn.RegulatoryMutantListener;
 
 
 /**

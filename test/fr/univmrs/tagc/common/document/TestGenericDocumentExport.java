@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.ginsim.graph.GinmlParser;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.GinmlParser;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.export.documentation.GenericDocumentExport;
 
 import fr.univmrs.tagc.common.TestTools;

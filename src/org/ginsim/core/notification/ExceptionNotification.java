@@ -1,6 +1,6 @@
 package org.ginsim.core.notification;
 
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Graph;
 
 public class ExceptionNotification extends ErrorNotification{
 

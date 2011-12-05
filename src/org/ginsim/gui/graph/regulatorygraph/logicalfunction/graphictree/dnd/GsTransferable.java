@@ -6,11 +6,11 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 
 
 public class GsTransferable implements Transferable {

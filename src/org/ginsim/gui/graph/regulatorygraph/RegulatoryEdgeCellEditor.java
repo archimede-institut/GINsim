@@ -6,8 +6,8 @@ import javax.swing.AbstractCellEditor;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
 
 public class RegulatoryEdgeCellEditor extends AbstractCellEditor implements TableCellEditor {

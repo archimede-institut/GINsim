@@ -2,9 +2,9 @@ package org.ginsim.service.tool.interactionanalysis;
 
 import java.util.List;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 

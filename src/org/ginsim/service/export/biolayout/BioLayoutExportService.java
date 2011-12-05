@@ -3,8 +3,8 @@ package org.ginsim.service.export.biolayout;
 import java.io.IOException;
 import java.util.Collection;
 
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 

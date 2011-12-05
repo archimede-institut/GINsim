@@ -4,8 +4,8 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
-import org.ginsim.exception.GsException;
-import org.ginsim.graph.common.Graph;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 
 public class GUIMessageUtils {

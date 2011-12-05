@@ -2,7 +2,7 @@ package org.ginsim.gui.utils.dialog.stackdialog;
 
 import java.awt.Frame;
 
-import org.ginsim.exception.GsException;
+import org.ginsim.core.exception.GsException;
 
 public class HandledStackDialog extends StackDialog {
 

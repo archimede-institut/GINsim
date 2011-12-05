@@ -3,8 +3,8 @@ package org.ginsim.gui.graph.backend;
 import java.awt.event.MouseEvent;
 
 import org.ginsim.common.OptionStore;
-import org.ginsim.graph.common.Graph;
-import org.ginsim.graph.common.ToolTipsable;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.ToolTipsable;
 import org.jgraph.JGraph;
 import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultGraphCell;

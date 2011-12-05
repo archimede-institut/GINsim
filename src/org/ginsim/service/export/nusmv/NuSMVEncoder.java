@@ -14,16 +14,16 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.service.tool.reg2dyn.PriorityClassDefinition;
-import org.ginsim.gui.service.tool.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
+import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
+import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClass;
 
 
 /**

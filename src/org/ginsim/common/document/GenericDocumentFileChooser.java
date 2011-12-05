@@ -13,7 +13,7 @@ import javax.swing.filechooser.FileFilter;
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.exception.GsException;
+import org.ginsim.core.exception.GsException;
 import org.ginsim.gui.resource.Translator;
 
 

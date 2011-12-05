@@ -24,14 +24,16 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.graph.common.AbstractGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryEdge;
-import org.ginsim.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.graph.regulatorygraph.logicalfunction.LogicalParameterList;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
-import org.ginsim.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
+import org.ginsim.core.graph.common.AbstractGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
+import org.ginsim.core.utils.data.GenericPropertyInfo;
+import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.gui.graph.regulatorygraph.models.IncomingEdgeListModel;
 import org.ginsim.gui.graph.regulatorygraph.models.TableInteractionsModel;
@@ -40,8 +42,6 @@ import org.ginsim.gui.utils.data.GenericPropertyHolder;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.gui.utils.widgets.StockButton;
-import org.ginsim.utils.data.GenericPropertyInfo;
-import org.ginsim.utils.data.ObjectPropertyEditorUI;
 
 
 /**

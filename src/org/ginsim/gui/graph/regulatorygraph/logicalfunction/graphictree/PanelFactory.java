@@ -4,8 +4,8 @@ import java.awt.Point;
 
 import javax.swing.JTree;
 
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
-import org.ginsim.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
 
 

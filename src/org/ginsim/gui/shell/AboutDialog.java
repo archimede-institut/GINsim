@@ -18,7 +18,7 @@ import javax.swing.event.HyperlinkListener;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.common.xml.XMLHelper;
-import org.ginsim.exception.GsException;
+import org.ginsim.core.exception.GsException;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.utils.GUIIOUtils;
 import org.ginsim.gui.utils.widgets.Frame;

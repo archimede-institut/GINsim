@@ -5,18 +5,18 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.graph.common.Edge;
-import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
-import org.ginsim.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
+import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
+import org.ginsim.core.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.service.tool.dynamicalhierarchicalsimplifier.DynamicalHierarchicalParameterPanel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
+import org.ginsim.servicegui.tool.dynamicalhierarchicalsimplifier.DynamicalHierarchicalParameterPanel;
 import org.mangosdk.spi.ProviderFor;
 
 
