@@ -2,21 +2,13 @@ package org.ginsim.service.tool.graphcomparator;
 
 import java.util.List;
 
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.core.notification.ErrorNotification;
-import org.ginsim.gui.GUIManager;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.Service;
-import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisAlgo;
-import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisAlgoResult;
-import org.ginsim.servicegui.tool.graphcomparator.GraphComparatorCaptionFrame;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( Service.class)
@@ -37,10 +29,10 @@ public class GraphComparatorService implements Service {
 
 		switch (g_type) {
 		case GRAPH_TYPE_UNCOMPATIBLE:
-			new ErrorNotification(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+			NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
 			return null;
 		case GRAPH_TYPE_NULL:
-			new ErrorNotification(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+			NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
 			return null;
 		case GRAPH_TYPE_REGULATORY:
 			g = GraphManager.getInstance().getNewGraph();
@@ -52,7 +44,7 @@ public class GraphComparatorService implements Service {
 				g = GraphManager.getInstance().getNewGraph( DynamicGraph.class, nodeOrder);
 				gc = new DynamicGraphComparator(g1, g2, g);
 			} else {
-				new ErrorNotification(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+				NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
 				return null;
 			}
 			break;

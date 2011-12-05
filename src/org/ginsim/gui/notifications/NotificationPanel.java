@@ -118,27 +118,32 @@ public class NotificationPanel extends JPanel {
 			return;
 		} else {
             switch (notification.getType()) {
-            case Notification.NOTIFICATION_INFO:
-            case Notification.NOTIFICATION_INFO_LONG:
-                setBackground(Color.CYAN);
+            	case Notification.NOTIFICATION_INFO:
+            	case Notification.NOTIFICATION_INFO_LONG:
+            		setBackground(Color.CYAN);
                 break;
-            case Notification.NOTIFICATION_WARNING:
-            case Notification.NOTIFICATION_WARNING_LONG:
-                setBackground(Color.ORANGE);
+            	case Notification.NOTIFICATION_WARNING:
+            	case Notification.NOTIFICATION_WARNING_LONG:
+            		setBackground(Color.ORANGE);
                 break;
-            case Notification.NOTIFICATION_ERROR:
-            case Notification.NOTIFICATION_ERROR_LONG:
-                setBackground(Color.RED);
+            	case Notification.NOTIFICATION_ERROR:
+            	case Notification.NOTIFICATION_ERROR_LONG:
+            		setBackground(Color.RED);
                 break;
-
             default:
-                setBackground(null);
+                setBackground( null);
                 break;
             }
 
 			setVisible(true);
 			notificationMessage.setText(notification.toString());
-            String[] t_text = ((ResolvableNotification) notification).getOptionNames();
+            String[] t_text = null;
+            if( notification instanceof ResolvableNotification){
+            	t_text = ((ResolvableNotification) notification).getOptionNames();
+            }
+            else{
+            	t_text = new String[0];
+            }
 			if (t_text != null && t_text.length > 0) {
                 bNotificationAction.setVisible(true);
                 if ( t_text.length == 1) {

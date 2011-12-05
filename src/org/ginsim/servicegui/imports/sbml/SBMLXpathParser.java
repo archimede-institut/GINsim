@@ -10,14 +10,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.exception.GsException;
@@ -30,18 +25,12 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.notification.Notification;
-import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
 import org.ginsim.core.utils.log.LogManager;
-
-
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -731,7 +720,7 @@ public final class SBMLXpathParser {
 	        	data[1] = vertex;
 	        	data[2] = exp;
 	        	
-	        	new ResolvableWarningNotification( graph, "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
+	        	NotificationManager.publishResolvableWarning( graph, "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
 			} else {
 				interactionList.addExpression(val, vertex, tbp);
 			}

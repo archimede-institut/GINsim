@@ -16,6 +16,7 @@ public class ResolvableErrorNotification extends ErrorNotification implements Re
 		this.graph = graph;
 		this.data = data;
 		this.resolution = resolution;
+		
 	}
 	
 	@Override

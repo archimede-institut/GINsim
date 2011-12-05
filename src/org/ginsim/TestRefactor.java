@@ -9,7 +9,12 @@ import java.util.Locale;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.ErrorNotification;
+import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.notification.WarningNotification;
+import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
+import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
@@ -88,7 +93,12 @@ public class TestRefactor {
 		
 		initGUI();
 		if (open.size() == 0) {
-			GUIManager.getInstance().newFrame();
+			RegulatoryGraph graph = GUIManager.getInstance().newFrame();
+			String[] options_names = new String[]{ "Option 1", "Option 2"};
+			NotificationResolution resolution = new NotificationResolution( options_names);
+			NotificationManager.publishResolvableError( graph, "Test Notification Error 1", graph, null, resolution);
+			NotificationManager.publishWarning( graph, "Test Notification Warning");
+			NotificationManager.publishError( graph, "Test Notification Error 2");
 		} else {
 			for (String filename: open) {
 				try {

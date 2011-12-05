@@ -69,7 +69,6 @@ public abstract class Notification implements TimeoutObject, Comparable {
             Timeout.addTimeout( this, timeout*1000);
         }
         
-        NotificationManager.getInstance().publish( this);
     }
 
     /**
@@ -88,7 +87,7 @@ public abstract class Notification implements TimeoutObject, Comparable {
      */
     public void timeout() {
 
-    	NotificationManager.getInstance().publishDeletion( this);
+    	NotificationManager.publishDeletion( this);
     }
 
 	public String toString() {
