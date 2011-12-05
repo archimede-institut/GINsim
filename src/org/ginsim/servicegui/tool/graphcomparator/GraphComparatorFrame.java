@@ -187,7 +187,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 
 		GraphComparatorService gcService = ServiceManager.getManager().getService( GraphComparatorService.class);
 		GraphComparatorResult gcResult = gcService.run(frame_graph, g1, g2);
-		if (gcResult.getDiffGraph() == null) {
+		if ( gcResult == null) {
 			cancel();
 			return;
 		}

@@ -336,6 +336,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 				notificationList.add( message);
 			}
 		}
+		notificationPanel.updateNotificationMessage();
 	}
 	
 	/**

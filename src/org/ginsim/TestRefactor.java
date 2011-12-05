@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.notification.ErrorNotification;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
@@ -93,11 +94,13 @@ public class TestRefactor {
 				try {
 					Graph<?,?> g = GraphManager.getInstance().open(filename);
 					GUIManager.getInstance().newFrame(g);
+
 				} catch (GsException e) {
 					LogManager.error(e);
 				}
 			}
 		}
+		
 	}
 
 	/**

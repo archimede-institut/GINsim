@@ -14,6 +14,7 @@ import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
@@ -77,6 +78,7 @@ public class GUIManager {
 			
 			graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
 			
+			NotificationManager.getInstance().registerListener( frame, graph);
 			return frame;
 		} catch (Exception e) {
 			error(new GsException(GsException.GRAVITY_ERROR, e), null);

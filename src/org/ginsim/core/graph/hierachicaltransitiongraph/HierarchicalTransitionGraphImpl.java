@@ -298,7 +298,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 			childsCount = new byte[nodeOrder.size()];
 			int i = 0;
 			for (NodeInfo v: nodeOrder) {
-				childsCount[i++] = (byte) (v.max+1);
+				childsCount[i++] = (byte) ( v.getMax()+1);
 			}			
 		}
 		return childsCount;
@@ -319,7 +319,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	private String stringNodeOrder() {
 		String s = "";
 		for (NodeInfo v: nodeOrder) {
-			s += v.name+":"+v.max+" ";
+			s += v.getNodeID() + ":" + v.getMax() + " ";
 		}
 		if (s.length() > 0) {
 			return s.substring(0, s.length()-1);

@@ -157,7 +157,7 @@ public final class DynamicalHierarchicalGraphImpl  extends AbstractDerivedGraph<
 	private String stringNodeOrder() {
 		String s = "";
 		for (NodeInfo v: nodeOrder) {
-			s += v.name+":"+v.max+" ";
+			s += v.getNodeID() + ":" + v.getMax() + " ";
 		}
 		if (s.length() > 0) {
 			return s.substring(0, s.length()-1);
