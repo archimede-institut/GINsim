@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -19,8 +20,8 @@ public class NuSMVConfig implements InitialStateStore {
 	public static final int CFG_INPUT_IVAR = 11;
 
 	private RegulatoryGraph graph;
-	private Map m_initStates;
-	private Map m_input;
+	private Map<InitialState, Object> m_initStates;
+	private Map<InitialState, Object> m_input;
 	
 	// Store has two objects: 0- Mutant & 1- PriorityClass
 	public ObjectStore store = new ObjectStore(2);
@@ -32,8 +33,8 @@ public class NuSMVConfig implements InitialStateStore {
 	 * @param graph
 	 */
 	public NuSMVConfig(RegulatoryGraph graph) {
-		m_initStates = new HashMap();
-		m_input = new HashMap();
+		m_initStates = new HashMap<InitialState, Object>();
+		m_input = new HashMap<InitialState, Object>();
 		this.graph = graph;
 		updatePolicy = CFG_ASYNC; // Default update policy
 		exportType = CFG_INPUT_FRONZEN; // Default export type
@@ -65,11 +66,11 @@ public class NuSMVConfig implements InitialStateStore {
 		return exportType;
 	}
 
-	public Map getInitialState() {
+	public Map<InitialState, Object> getInitialState() {
 		return m_initStates;
 	}
 
-	public Map getInputState() {
+	public Map<InitialState, Object> getInputState() {
 		return m_input;
 	}
 	

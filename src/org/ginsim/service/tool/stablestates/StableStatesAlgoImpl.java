@@ -21,12 +21,12 @@ import org.ginsim.core.utils.log.LogManager;
  * 
  * To improve performances, the individuals "stability" MDD are not built independently 
  * but immediately assembled.
- * The order in which they are considerd is also chosen to keep them small as long as possible.
+ * The order in which they are considered is also chosen to keep them small as long as possible.
  */
 public class StableStatesAlgoImpl implements StableStateSearcher {
 
 	private final RegulatoryGraph regGraph;
-	List nodeOrder;
+	List<RegulatoryNode> nodeOrder;
 	OMDDNode[] t_param;
 	OMDDNode dd_stable;
 	Perturbation mutant;
@@ -40,7 +40,6 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	int nbgene, nbremain;
 	
 	public StableStatesAlgoImpl( RegulatoryGraph regGraph) {
-		
 		this.regGraph = regGraph;
 		this.nodeOrder = regGraph.getNodeOrder();
 	}
@@ -51,8 +50,8 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	}
 	
 	@Override
-	public void setNodeOrder(List<RegulatoryNode> sortedVars, OMDDNode[] tReordered) {
-		throw new RuntimeException("Custom node order in stable state search needs love");
+	public void setNodeOrder(List<RegulatoryNode> sortedVars) {
+		this.nodeOrder = sortedVars;
 	}
 	
 	@Override
@@ -61,7 +60,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 			buildAdjTable();
 		}
 		
-		this.t_param = regGraph.getAllTrees(true);
+		this.t_param = regGraph.getAllTrees(nodeOrder, true);
 		if (mutant != null) {
 			mutant.apply(t_param, regGraph);
 		}
