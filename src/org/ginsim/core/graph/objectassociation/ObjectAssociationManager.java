@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.utils.IntrospectionUtils;
 
 
 public class ObjectAssociationManager {
@@ -92,7 +93,7 @@ public class ObjectAssociationManager {
      */
     public List<GraphAssociatedObjectManager> getObjectManagerList( Class graph_class) {
     	
-    	Class interface_class = getGraphInterface( graph_class);
+    	Class interface_class = IntrospectionUtils.getGraphInterface( graph_class);
     	
         return specializedObjectManagers.get( interface_class);
     }
@@ -125,7 +126,7 @@ public class ObjectAssociationManager {
      */
     public GraphAssociatedObjectManager getObjectManager( Class graph_class, Object key) {
     	
-    	Class interface_class = getGraphInterface( graph_class);
+    	Class interface_class = IntrospectionUtils.getGraphInterface( graph_class);
     	
     	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
     	
@@ -239,7 +240,7 @@ public class ObjectAssociationManager {
      */
     public boolean isObjectManagerRegistred( Class graph_class, String key) {
     	
-    	Class interface_class = getGraphInterface( graph_class);
+    	Class interface_class = IntrospectionUtils.getGraphInterface( graph_class);
     	
     	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
     	
@@ -254,51 +255,5 @@ public class ObjectAssociationManager {
         return false;
     }
    	
-	/**
-	 * Return the deeper interface that inherits from Graph interface
-	 * 
-	 * @param classe
-	 * @return
-	 */
-    private Class getGraphInterface( Class classe) {
 
-        Class[] interfaces = classe.getInterfaces();
-        if( interfaces.length != 0){
-	        for (int i = 0; i < interfaces.length; i++) {
-	            List<Class> all_interfaces = new ArrayList<Class>();
-	            all_interfaces.add( interfaces[i]);
-	            all_interfaces.addAll( getSuperInterfaces( interfaces[i]));
-	            if( all_interfaces.contains( Graph.class)){
-	            	return interfaces[i];
-	            }
-	        }
-        }
-
-    	Class super_class =  classe.getSuperclass();
-    	if( super_class != null){
-    		return getGraphInterface( super_class);
-    	}
-
-
-        return null;
-    }
-    
-    /**
-     * Return the list of all the interfaces (recursively) the given class implements
-     * 
-     * @param classe
-     * @return
-     */
-    private List<Class> getSuperInterfaces( Class classe) {
-
-        List<Class> allInterfaces = new ArrayList<Class>();
-
-        Class[] interfaces = classe.getInterfaces();
-        for (int i = 0; i < interfaces.length; i++) {
-            allInterfaces.add( interfaces[i]);
-            allInterfaces.addAll( getSuperInterfaces( interfaces[i]));
-        }
-
-        return allInterfaces;
-    }
 }
