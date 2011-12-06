@@ -16,6 +16,7 @@ import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
+import org.ginsim.servicegui.tool.regulatorytreefunction.TreeActionPanel;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -61,10 +62,10 @@ public class TreeGUIHelper implements GraphGUIHelper<Tree, TreeNode, Edge<TreeNo
 	}
 
 	@Override
-	public GUIEditor<Tree> getMainEditionPanel(Tree graph) {
-		// TODO update this edition panel
-		// return new TreeActionPanel(graph, parser);
-		return null;
+	public GUIEditor<Tree> getMainEditionPanel(Tree tree) {
+		TreeActionPanel treeActionPanel = new TreeActionPanel();
+		treeActionPanel.setEditedItem(tree);
+		return treeActionPanel;//tree, tree.getParser());
 	}
 
 	@Override

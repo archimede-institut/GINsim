@@ -4,14 +4,11 @@ import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.JPanel;
-
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.servicegui.tool.regulatorytreefunction.TreeActionPanel;
 
 
 public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>> 
@@ -20,6 +17,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
 	public final static int MODE_DIAGRAM = 1;
 	public final static int MODE_TREE = 2;
+	public static final TreeNode MINUS_ONE_NODE = new TreeNode("-1",-1, -1, TreeNode.TYPE_LEAF, (byte) -1);
 
 	/**
 	 * The tree pendant to OMDDNode.TERMINALS
@@ -39,7 +37,6 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	
 	private int mode;
 	public TreeNode root = null;
-	private JPanel graphEditor = null;
 	private TreeBuilder parser;
 	
 	/**
@@ -61,27 +58,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
     public boolean containsNode(TreeNode node) {
 		return getNodes().contains(node);
 	}
-    
-
-    // TODO : REFACTORING ACTION
-	// TODO : Does this method has to be moved to GUI side?
-	public JPanel getGraphParameterPanel() {
-        if (graphEditor == null) {
-            graphEditor = new TreeActionPanel(this, parser);
-		}
-		return graphEditor;	
-	}
-	
-	/* adding edge and node */
-//	/**
-//	 * add a node to this graph.
-//	 * @param node
-//	 */
-	// TODO REMOVE since it duplicates a method existing in AbstractGraphFrontend
-//	public boolean addNode(TreeNode node) {
-//		
-//		return graphManager.addNode(node);
-//	}
+ 
 	/**
 	 * add an edge between source and target
 	 * @param source

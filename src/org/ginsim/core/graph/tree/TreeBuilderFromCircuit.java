@@ -177,7 +177,8 @@ public class TreeBuilderFromCircuit extends TreeBuilder {
 				if (mult > 1) currentWidthPerDepth[max_depth] += mult-1;
 				tree.addNode(treeNode);
 			} else { // if (mode == MODE_DIAGRAM) {
-				treeNode = TreeImpl.leafs[o.value];
+				if (o.value == -1) treeNode =  TreeImpl.MINUS_ONE_NODE;
+				else treeNode = TreeImpl.leafs[o.value];
 				if (!tree.containsNode(treeNode)) {
 					tree.addNode(treeNode);
 				}
