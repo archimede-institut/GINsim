@@ -17,12 +17,18 @@
 	<property name="build" location="./build"/>
 	<property name="dist" location="./dist"/>
 	<property name="lib.dir" value="../lib"/>
-	<property name="src.resources.ginsim" location="${src}/org/ginsim/gui/resources"/>
+	<property name="src.resources.ginsim" location="${src}/org/ginsim/gui/resource"/>
+<<<<<<< HEAD
 	<property name="src.resources.jython" location="${src}/org/ginsim/gui/service/tool/jython/console"/>
 	<property name="src.resources.common" location="${src}/fr/univmrs/tagc/common/resources"/>
-	<property name="build.resources.ginsim" location="${build}/org/ginsim/gui/resources"/>
+	<property name="build.resources.ginsim" location="${build}/org/ginsim/gui/resource"/>
 	<property name="build.resources.jython" location="${build}/org/ginsim/gui/service/tool/jython/console"/>
 	<property name="build.resources.common" location="${build}/fr/univmrs/tagc/common/resources"/>
+=======
+	<property name="src.resources.jython" location="${src}/org/ginsim/servicegui/tool/jython/console"/>
+	<property name="build.resources.ginsim" location="${build}/org/ginsim/gui/resource"/>
+	<property name="build.resources.jython" location="${build}/org/ginsim/servicegui/tool/jython/console"/>
+>>>>>>> branch 'dev-refactor' of gitosis@192.168.52.30:ginsim-dev.git
 
 	<property name="jar.name" value="${ant.project.name}-${version}.jar"/>
 	<property name="jar.file" value="${lib.dir}/../${jar.name}"/>
@@ -71,7 +77,6 @@
 		<tstamp/>
 		<!-- Create build and dist directory -->
 		<mkdir dir="${build}"/>
-		<mkdir dir="${build.resources.common}"/>
 		<mkdir dir="${build.resources.ginsim}"/>
 		<mkdir dir="${build.resources.jython}"/>
 		<mkdir dir="${dist}"/>
@@ -105,9 +110,6 @@
 		<copy todir="${build.resources.ginsim}">
 			<fileset dir="${src.resources.ginsim}"/>
 		</copy>
-		<copy todir="${build.resources.common}">
-			<fileset dir="${src.resources.common}"/>
-		</copy>
 		<copy todir="${build.resources.jython}">
 			<fileset dir="${src.resources.jython}"/>
 		</copy>
@@ -120,7 +122,7 @@
 	</target>
 
 	<!-- ************************************************** -->
-	<!-- Generates GINsim jar file in ${dist} without libs  -->
+	<!-- Generates GINsim jar file without libs  -->
 	<!-- ************************************************** -->
 	<target name="jar" depends="compile"
 		description="Generates GINsim jar file in ${dist} witout ${lib.dir}">
@@ -137,7 +139,6 @@
 				<attribute name="Compilation-Date" value="${CURDATE}"/>
 			</manifest>
 		</jar>
-		<move todir="${dist}" file="${jar.file}"/>
 	</target>
 	
 	<!-- ************************************************** -->
@@ -271,7 +272,7 @@
 			version="${baseversion}"
 			build="${CURDATE}"
 			infostring="GINsim (Gene Interaction Network simulation) is a computer tool for the modeling and simulation of genetic regulatory networks. See http://gin.univ-mrs.fr/" 
-			icon="${src.resources.ginsim}/icons/GINsim.icns"
+			icon="${src.resources.ginsim}/icon/GINsim.icns"
 			>
 <!--
 			bundleid="fr.univmrs.tagc.GINsim"
@@ -290,9 +291,9 @@
 			<!-- Associate document types with this application -->
 			<!-- FIXME: add iconFile="${icons}/ginml.icns" -->
 			<documenttype name="GINML document" extensions="ginml" role="Editor"
-				iconFile="${src.resources.ginsim}/icons/GINsim.icns"/>
+				iconFile="${src.resources.ginsim}/icon/GINsim.icns"/>
 			<documenttype name="zGINML document" extensions="zginml" role="Editor"
-				iconFile="${src.resources.ginsim}/icons/GINsim.icns"/>
+				iconFile="${src.resources.ginsim}/icon/GINsim.icns"/>
 		</jarbundler>
 		<copy todir="${dist}/${ant.project.name}.app/Contents/Resources/Java/lib">
 			<fileset dir="${lib.dir}" includes="**/*.jar" />

@@ -4,12 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.notification.ErrorNotification;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
@@ -36,27 +37,13 @@ public class TestRefactor {
         List<String> open = new ArrayList<String>();
 
         /*
-         * parse args:
-         *  - run in script mode
-         *  - set ginsim dir
-         *  - choose locale
-         *  - give some help
+         * parse arguments:
+         *  - open files
+         *  - script mode
+         *  - help
          */
         for (int i = 0; i < args.length; i++) {
-        	if (args[i].equals("--lang")) {
-                if (args.length > i) {
-                    i++;
-                    String lang = args[i];
-                    if ("C".equals(lang)) {
-                        Translator.setLocale(Locale.ENGLISH);
-                    } else if ("FR".equals(lang)) {
-                        Translator.setLocale(Locale.FRENCH);
-                    }
-                } else {
-                    System.out.println(args[i]+": missing argument");
-                    return;
-                }
-            } else if (args[i].equals("--run")) {
+        	if (args[i].equals("-s")) {
                 if (args.length == i+1) {
                     System.out.println("Script mode requires a filename argument");
                     return;
@@ -66,29 +53,34 @@ public class TestRefactor {
                 GINsimPy.runJython(args[i]);
                 return;
             }
-            else if (args[i].startsWith("-")) {
-            	if (!args[i].equals("--help")) {
+            
+        	if (args[i].startsWith("-")) {
+            	if (!args[i].equals("-h")) {
                     System.out.println("Unknown option: "+args[i]);
             	}
-                System.out.println("avaible options");
-                System.out.println("\t--lang <lang>: choose the lang (avaible: C, FR)");
-                System.out.println("\t--run <file>: run \"script\" from <file> [TODO: pass other args to the script]");
-                System.out.println("\t--ginsimdir <dir>: define GINsim install dir");
-                System.out.println("\t--help: display this message");
+                System.out.println("available options:");
+                System.out.println("\t-s <file>: run \"script\" from <file> [TODO: script arguments]");
+                System.out.println("\t-h: display this message");
                 return;
+            }
+        	
+            File f = new File(args[i]);
+            if (f.exists()) {
+                open.add(args[i]);
             } else {
-                File f = new File(args[i]);
-                if (f.exists()) {
-                    open.add(args[i]);
-                } else {
-                	LogManager.error("Required file does not exist: " + f);
-                }
+            	LogManager.error("Required file does not exist: " + f);
             }
         }
 		
 		initGUI();
 		if (open.size() == 0) {
-			GUIManager.getInstance().newFrame();
+			RegulatoryGraph graph = GUIManager.getInstance().newFrame();
+			String[] options_names = new String[]{ "Option 1", "Option 2"};
+			// Test of Notifications
+//			NotificationResolution resolution = new NotificationResolution( options_names);
+//			NotificationManager.publishResolvableError( graph, "Test Notification Error 1", graph, null, resolution);
+//			NotificationManager.publishWarning( graph, "Test Notification Warning");
+//			NotificationManager.publishError( graph, "Test Notification Error 2");
 		} else {
 			for (String filename: open) {
 				try {
@@ -135,6 +127,7 @@ public class TestRefactor {
 	private static void initGUI() {
 		Translator.pushBundle("org.ginsim.gui.resource.messages");
 		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon");
+		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon/action");
 		AboutDialog.setDOAPFile("/org/ginsim/gui/resource/GINsim-about.rdf");
 	}
 

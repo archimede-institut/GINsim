@@ -4,34 +4,38 @@ import java.util.List;
 
 /**
  * Default implementation of <code>GsValueInList</code>.
- * This implementation uses a Vector to store the possible values.
+ * This implementation uses a List to store the possible values.
  */
-public class ValueList {
-    private List v_values;
+public class ValueList<T> {
+    private List<T> values;
     private int selected;
     private String s_none;
-    
+
+    public ValueList(List<T> values) {
+    	this(values, 0);
+    }
+
     /**
      * @param v_values
      * @param selected
      */
-    public ValueList(List v_values, int selected) {
-        this(v_values, selected, "");
+    public ValueList(List<T> values, int selected) {
+        this(values, selected, "");
     }
     /**
      * @param v_values
      * @param s_none
      */
-    public ValueList(List v_values, String s_none) {
-        this(v_values, -1, s_none);
+    public ValueList(List<T> values, String s_none) {
+        this(values, -1, s_none);
     }
     /**
      * @param v_values
      * @param selected
      * @param s_none
      */
-    public ValueList(List v_values, int selected, String s_none) {
-        this.v_values = v_values;
+    public ValueList(List<T> values, int selected, String s_none) {
+        this.values = values;
         this.selected = selected;
         this.s_none = s_none;
     }
@@ -40,8 +44,8 @@ public class ValueList {
      * @param selected
      * @param s_none
      */
-    public void reset(List v_values, int selected, String s_none) {
-        this.v_values = v_values;
+    public void reset(List<T> values, int selected, String s_none) {
+        this.values = values;
         this.selected = selected;
         this.s_none = s_none;
     }
@@ -50,7 +54,7 @@ public class ValueList {
         if (selected == -1) {
             return s_none;
         }
-        return v_values.get(selected).toString();
+        return values.get(selected).toString();
     }
     /**
      * @return the index of the selected value, or -1 if none/empty
@@ -68,20 +72,20 @@ public class ValueList {
      * @return the number of values
      */
     public int size() {
-        return v_values.size();
+        return values.size();
     }
     /**
      * @param index
      * @return the corresponding value
      */
-    public Object get(int index) {
-        if (index < 0 || index >= v_values.size()) {
+    public T get(int index) {
+        if (index < 0 || index >= values.size()) {
             return null;
         }
-        return v_values.get(index);
+        return values.get(index);
     }
     
     public int indexOf(Object anObject) {
-        return v_values.indexOf(anObject);
+        return values.indexOf(anObject);
     }
 }

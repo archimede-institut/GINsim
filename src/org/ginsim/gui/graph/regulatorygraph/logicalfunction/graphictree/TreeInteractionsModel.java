@@ -28,8 +28,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanTreeNode;
-import org.ginsim.core.notification.Notification;
-import org.ginsim.core.notification.WarningNotification;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionTreePanel;
 
@@ -230,7 +229,7 @@ public class TreeInteractionsModel implements TreeModel {
 	public void addExpression(JTree tree, byte val, RegulatoryNode currentNode, String expression) throws Exception {
 		BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(currentNode), isAutoAddEnabled());
 		if (!tbp.compile(expression, graph, currentNode))
-			new WarningNotification( graph, "invalid formula");
+			NotificationManager.publishWarning( graph, "invalid formula");
 		else {
 			addExpression(val, currentNode, tbp);
 			fireTreeStructureChanged(root);
@@ -289,7 +288,7 @@ public class TreeInteractionsModel implements TreeModel {
 			}
 			BooleanParser parser = new BooleanParser(graph.getIncomingEdges(node), isAutoAddEnabled());
 			if (!parser.compile(newExp.trim(), graph, node)) {
-				new WarningNotification( graph, "invalid formula : " + newExp);
+				NotificationManager.publishWarning( graph, "invalid formula : " + newExp);
 				exp.clearChilds();
 				exp.setProperty("invalid", new Boolean(true));
 				return false;

@@ -25,9 +25,8 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
-
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.resource.Translator;
@@ -162,7 +161,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     			}
     		};
     		
-    		new ResolvableWarningNotification( this, "STR_usePanelToAddMoreEdges", this, new Object[] {obj}, resolution);
+    		NotificationManager.publishResolvableWarning( this, "STR_usePanelToAddMoreEdges", this, new Object[] {obj}, resolution);
     		
     		return obj;
     	}
@@ -631,10 +630,24 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      */
     @Override
     public OMDDNode[] getAllTrees(boolean focal) {
-        OMDDNode[] t_tree = new OMDDNode[nodeOrder.size()];
-        for (int i=0 ; i<nodeOrder.size() ; i++) {
-        	RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
-            t_tree[i] = vertex.getTreeParameters(nodeOrder);
+    	return getAllTrees(null, focal);
+    }
+    
+    /**
+     * Computes the tree representing the logical parameters, receiving an optional node ordering
+     * (otherwise uses the one already defined in the regulatory graph)
+     * 
+     * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
+     * @return a tree representation of logical parameters
+     */
+    @Override
+    public OMDDNode[] getAllTrees(List<RegulatoryNode> tmpNodeOrder, boolean focal) {
+    	if (tmpNodeOrder == null)
+    		tmpNodeOrder = nodeOrder;
+        OMDDNode[] t_tree = new OMDDNode[tmpNodeOrder.size()];
+        for (int i = 0; i < tmpNodeOrder.size(); i++) {
+        	RegulatoryNode vertex = (RegulatoryNode)tmpNodeOrder.get(i);
+            t_tree[i] = vertex.getTreeParameters(tmpNodeOrder);
             if (!focal) {
             	// FIXME: does non-focal tree works correctly ??????
             	t_tree[i] = t_tree[i].buildNonFocalTree(i, vertex.getMaxValue()+1).reduce();

@@ -313,6 +313,28 @@ public class XMLWriter {
      * @throws IOException 
      */
     public void addFormatedContent(String s, boolean b) throws IOException {
+    	addLongContent(s, b, false);
+    }
+
+    /**
+     * add a complex "text child", it will be enclosed into CDATA markers
+     * @param s
+     * @param b if true, then the file might get indented
+     * @throws IOException 
+     */
+    public void addComplexContent(String s, boolean b) throws IOException {
+    	addLongContent(s, b, true);
+    }
+
+    /**
+     * Common implementation for formatted and complex content.
+     * 
+     * @param s
+     * @param b
+     * @param cdata
+     * @throws IOException
+     */
+    private void addLongContent(String s, boolean b, boolean cdata) throws IOException {
         if (inTag) {
             write(">");
             inTag = false;
@@ -320,7 +342,13 @@ public class XMLWriter {
                 write("\n");
             }
         }
+        if (cdata) {
+        	write("<![CDATA[");
+        }
         write(s);
+        if (cdata) {
+        	write("]]>");
+        }
     }
     
     /**

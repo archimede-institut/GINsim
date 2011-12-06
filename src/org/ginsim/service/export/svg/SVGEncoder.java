@@ -183,7 +183,7 @@ public class SVGEncoder {
     private void writeEdge(FileWriter out, Rectangle2D box1, Rectangle2D box2, EdgeAttributesReader ereader, Map markers) throws IOException {
         String color = "#"+DataUtils.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
-        String marker = addMarker(out, markers, ereader.getLineEnd(), color, true, w);
+        String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
         out.write("    <path " +
                 " stroke=\""+color+"\""+
                 " stroke-width=\""+w*2+"\""+
@@ -340,66 +340,30 @@ public class SVGEncoder {
      * @return the id of the corresponding marker
      * @throws IOException
      */
-    private String addMarker(FileWriter out, Map m_marker, int markerType, String color, boolean fill, float stroke) throws IOException {
-        String id = "Marker_"+markerType+"_"+color.substring(1)+"_"+fill+"_"+stroke;
-        if (!m_marker.containsKey(id)) {
-	        out.write("  <defs>\n");
-	        double v,w;
-            float offset = stroke/2;
-            switch (markerType) {
-	        	case EdgeAttributesReader.ARROW_NEGATIVE:
-	        	    v = stroke<3 ? 5 : 1.8*stroke;
-	                out.write("    <marker\n"+
-	                        "      markerWidth=\"2\""+
-	                        "      markerHeight=\""+stroke*v+"\""+
-	                        "      markerUnits=\"strokeWidth\"" +
-	                        "      viewBox=\"-"+stroke+" -"+stroke+" "+stroke+" "+stroke+"\"" +
-	  	                    "      id=\""+id+"\"" +
-	  	                    "      orient=\"auto\">\n" +
-	  	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
-	        	    out.write("stroke-width=\""+stroke+"\" d=\"M 0 -"+stroke+" L 0 "+stroke+" z\"/>\n");
-			        break;
-	        	case EdgeAttributesReader.ARROW_UNKNOWN:
-                    v = stroke<3 ? 4 : 1.5*stroke;
-                    out.write("    <marker\n"+
-                            "      markerWidth=\"2\""+
-                            "      markerHeight=\"4\""+
-                            "      markerUnits=\"strokeWidth\"" +
-	                        "      viewBox=\"-0 0 2 2\"" +
-      	                    "      id=\""+id+"\"" +
-      	                    "      orient=\"auto\">\n" +
-      	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
-			        out.write("d=\"M -4,0 a2,2 -30 1,0 0,-0.1\"/>\n");
-			        break;
-                case EdgeAttributesReader.ARROW_DOUBLE:
-                    v = stroke<3 ? 4 : 1.5*stroke;
-                    out.write("    <marker\n"+
-                            "      markerWidth=\"2\""+
-                            "      markerHeight=\"4\""+
-                            "      markerUnits=\"strokeWidth\"" +
-	                        "      viewBox=\"-0 0 2 2\"" +
-     	                    "      id=\""+id+"\"" +
-      	                    "      orient=\"auto\">\n" +
-      	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
-                 out.write("d=\"M -7 -"+v+" L -7 "+v+"  -7 0 -5 0 -5 -3 L 0 0 L -5 3 -5 0 z\"/>\n");
-                   break;
-            	default:
-                    v = (stroke<3 ? 6 : 2.2*stroke) - offset;
-            	    w = stroke<3 ? 4.5 : 1.3*stroke;
-                    out.write("    <marker\n"+
-                            "      markerWidth=\"2\""+
-                            "      markerHeight=\"4\""+
-                            "      markerUnits=\"strokeWidth\"" +
-	                        "      viewBox=\"-0 0 2 2\"" +
-     	                    "      id=\""+id+"\"" +
-      	                    "      orient=\"auto\">\n" +
-      	                    "      <path stroke=\""+color+"\" fill=\""+color+"\" ");
-			        out.write("d=\"M -"+v+" -"+w+" L "+offset+" 0 L -"+v+" "+w+" L -"+0.2*v+" 0 z\"/>\n");
-           }
-	        out.write("    </marker>\n");
-	        out.write("  </defs>\n");
-	        m_marker.put(id, null);
-        }
-        return id;
-    }
+	private String addMarker(FileWriter out, Map m_marker, int markerType, String color,
+			boolean fill) throws IOException {
+		String id = "Marker_" + markerType + "_" + color.substring(1) + "_" + fill;
+		if (!m_marker.containsKey(id)) {
+			out.write("  <defs>\n");
+			out.write("    <marker id=\"" + id + "\" viewBox=\"-7 -7 12 15\" orient=\"auto\" markerHeight=\"5\" markerWidth=\"5\">\n"
+					+ "      <path stroke=\"" + color + "\" fill=\"" + color + "\" ");
+			switch (markerType) {
+			case EdgeAttributesReader.ARROW_NEGATIVE:
+				out.write("d=\"M -1 -7 L 1 -7 L 1 7 L -1 7 z\"/>\n");
+				break;
+			case EdgeAttributesReader.ARROW_UNKNOWN:
+				out.write("d=\"M -3 -1 C  7,-15 7,15 -3,1\"/>\n");
+				break;
+			case EdgeAttributesReader.ARROW_DOUBLE:
+				out.write("d=\"M -3 -7 L 3 0 L -3 7 z  M -6 -7 L -5 -7 L -5 7 L -6 7 z\"/>\n");
+				break;
+			default:
+				out.write("d=\"M -5 -7 L 3 0 L -5 7 L -2 0 z\"/>\n");
+			}
+			out.write("    </marker>\n");
+			out.write("  </defs>\n");
+			m_marker.put(id, null);
+		}
+		return id;
+	}
 }

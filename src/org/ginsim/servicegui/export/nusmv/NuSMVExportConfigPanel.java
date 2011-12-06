@@ -35,11 +35,11 @@ import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 import org.ginsim.servicegui.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.servicegui.tool.reg2dyn.SimulationParametersManager;
 
-
 public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = -7398674287463858306L;
 
 	private final NuSMVConfig config;
+	private final NuSMVExportAction action;
 
 	private PrioritySelectionPanel priorityPanel = null;
 	private MutantSelectionPanel mutantPanel = null;
@@ -52,8 +52,9 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 	private JRadioButton jrbType2;
 
-	public NuSMVExportConfigPanel(NuSMVConfig config) {
+	public NuSMVExportConfigPanel(NuSMVConfig config, NuSMVExportAction action) {
 		this.config = config;
+		this.action = action;
 	}
 
 	@Override
@@ -153,8 +154,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 	@Override
 	public void run() {
-		// TODO run export
-		LogManager.error("TODO: run export");
+		action.selectFile();
 	}
 }
 

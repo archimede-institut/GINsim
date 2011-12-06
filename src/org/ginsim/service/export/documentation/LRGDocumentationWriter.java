@@ -1,7 +1,5 @@
 package org.ginsim.service.export.documentation;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.swing.JCheckBox;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
-import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.annotation.AnnotationLink;
@@ -32,24 +25,17 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
-import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
-import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
-import org.ginsim.servicegui.common.ExportAction;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 
 
@@ -61,38 +47,26 @@ import org.ginsim.servicegui.tool.stablestates.StableTableModel;
  * 
  * @see DocumentWriter
  */
-public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
+public class LRGDocumentationWriter {
 
-	private DocumentExportConfig config;
-	protected DocumentWriter doc = null;
-	protected Class documentWriterClass;
+	private DocumentWriter doc;
 
-	private RegulatoryGraph graph;
+	private final RegulatoryGraph graph;
 	private List nodeOrder;
 	private int len;
+
+	private DocumentExportConfig config;
 	
-    public GenericDocumentExport(RegulatoryGraph graph) {
-    	super(graph, "STR_Generic", "STR_Generic_descr");
+    public LRGDocumentationWriter(RegulatoryGraph graph) throws IOException {
+    	this.graph = graph;
     }
 
-	public StackDialogHandler getConfigPanel() {
-		config = new DocumentExportConfig();
-		return new GDExportConfigPanel( graph, config);
-	}
+	public void export( DocumentExportConfig config, String filename) throws IOException {
 
-	@Override
-	protected void doExport( String filename) throws IOException {
-		try {
-			this.doc = (DocumentWriter) documentWriterClass.newInstance();
-			this.doc.setOutput(new File(filename));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		run();
-	}
-
-	
-	protected synchronized void run() throws IOException {
+		this.config = config;
+		this.doc = config.format.getWriter();
+		
+		doc.setOutput(new File(filename));
 		nodeOrder = graph.getNodeOrder();
 		len = nodeOrder.size();
 		setDocumentProperties();
@@ -482,7 +456,7 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 	 */
 	private void setJavascript() throws IOException {
 		StringBuffer javascript = doc.getDocumentExtra("javascript");
-		InputStream stream = IOUtils.getStreamForPath("/fr/univmrs/tagc/GINsim/resources/makeStableStatesClickable.js");
+		InputStream stream = IOUtils.getStreamForPath("/org/ginsim/gui/resource/makeStableStatesClickable.js");
 		BufferedReader in = new BufferedReader(new InputStreamReader(stream));
 		String s;
 		while ((s = in.readLine()) != null) {
@@ -514,122 +488,5 @@ public class GenericDocumentExport extends ExportAction<RegulatoryGraph> {
 				//DocumentWriter.META_KEYWORDS,
 				DocumentWriter.META_TITLE, graph.getGraphName()
 		});
-	}
-
-	@Override
-	protected GsFileFilter getFileFilter() {
-		// TODO: add the format to the specific config object
-		return config.format.ffilter;
-	}
-  		
-
-}
-
-class DocumentExportConfig implements InitialStateStore {
-    Map m_init = new HashMap();
-    Map m_input = new HashMap();
-
-	boolean exportInitStates = true;
-	boolean exportMutants = true;
-	boolean searchStableStates = true;
-	boolean putComment = true;
-	
-	GenericDocumentFormat format = getSubFormat().get(0);
-	
-	// set to true to avoid generating redundant things for multicellular models
-	boolean multicellular = false;
-	
-    public Map getInitialState() {
-        return m_init;
-    }
-    public Map getInputState() {
-        return m_input;
-    }
-	
-    /**
-     * get a vector of all the GenericDocumentFormat the genericDocument can use.
-     */
-	public List<GenericDocumentFormat> getSubFormat() {
-		return GenericDocumentFormat.getAllFormats();
-	}
-}
-
-class GDExportConfigPanel extends AbstractStackDialogHandler {
-    private static final long serialVersionUID = 9043565812912568136L;
-    
-    protected final DocumentExportConfig cfg;
-	private final RegulatoryGraph graph;
-
-	JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
-
-    
-	protected GDExportConfigPanel ( RegulatoryGraph graph, DocumentExportConfig config) {
-		this.cfg = config;
-		this.graph = graph;
-		
-	}
-	
-	@Override
-	public void run() {
-		// FIXME: run export
-		LogManager.error( "TODO: run export");
-	}
-	
-	@Override
-	protected void init() {
-    	InitialStatePanel initPanel = new InitialStatePanel(stack, graph, false);
-    	initPanel.setParam(cfg);
-
-    	setLayout(new GridBagLayout());
-    	GridBagConstraints c = new GridBagConstraints();
-        c.gridx = c.gridy = 0;
-        c.weightx = c.weighty = 1;
-        c.fill = GridBagConstraints.BOTH;
-        add(initPanel, c);
-        
-        c.weightx = c.weighty = 0;
-        ChangeListener listener = new MyListener();
-
-        cb_stable = new JCheckBox("stable");
-        cb_stable.addChangeListener(listener);
-        cb_stable.setSelected(cfg.searchStableStates);
-        c.gridy++;
-        add(cb_stable, c);
-        cb_init = new JCheckBox("initial states");
-        cb_init.addChangeListener(listener);
-        cb_init.setSelected(cfg.exportInitStates);
-        c.gridy++;
-        add(cb_init, c);
-        cb_mutants = new JCheckBox("mutants");
-        cb_mutants.addChangeListener(listener);
-        cb_mutants.setSelected(cfg.exportMutants);
-        c.gridy++;
-        add(cb_mutants, c);
-        cb_multicellular = new JCheckBox("multicellular");
-        cb_multicellular.addChangeListener(listener);
-        cb_multicellular.setSelected(cfg.multicellular);
-        c.gridy++;
-        add(cb_multicellular, c);
-        cb_comment = new JCheckBox("comments");
-        cb_comment.addChangeListener(listener);
-        cb_comment.setSelected(cfg.putComment);
-        c.gridy++;
-        add(cb_comment, c);
-    }
-	class MyListener implements ChangeListener {
-        public void stateChanged(ChangeEvent e) {
-            JCheckBox src = (JCheckBox)e.getSource();
-            if (src == cb_stable) {
-                cfg.searchStableStates = src.isSelected();
-            } else if (src == cb_comment) {
-                cfg.putComment = src.isSelected();
-            } else if (src == cb_multicellular) {
-                cfg.multicellular = src.isSelected();
-            } else if (src == cb_init) {
-                cfg.exportInitStates = src.isSelected();
-            } else if (src == cb_mutants) {
-                cfg.exportMutants = src.isSelected();
-            }
-        }
 	}
 }

@@ -6,7 +6,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.notification.ErrorNotification;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
@@ -37,10 +37,10 @@ public class GraphComparatorService implements Service {
 
 		switch (g_type) {
 		case GRAPH_TYPE_UNCOMPATIBLE:
-			new ErrorNotification(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+			NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
 			return null;
 		case GRAPH_TYPE_NULL:
-			new ErrorNotification(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+			NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
 			return null;
 		case GRAPH_TYPE_REGULATORY:
 			graph_new = GraphManager.getInstance().getNewGraph();
@@ -52,7 +52,7 @@ public class GraphComparatorService implements Service {
 				graph_new = GraphManager.getInstance().getNewGraph( DynamicGraph.class, nodeOrder);
 				graphComparator = new DynamicGraphComparator(graph_1, graph_2, graph_new);
 			} else {
-				new ErrorNotification(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+				NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
 				return null;
 			}
 			break;

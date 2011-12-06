@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.shell.GsFileFilter;
 
 
@@ -36,7 +37,7 @@ public class GenericDocumentFormat {
 	/**
 	 * The documentWriter to instanciates to write a document of this type (eg. XHTMLDocumentWriter)
 	 */
-	public final Class documentWriterClass;
+	public final Class<? extends DocumentWriter> documentWriterClass;
 		
 	/**
 	 * Define a new generic document format.
@@ -51,6 +52,20 @@ public class GenericDocumentFormat {
 		this.id = id;
 		this.ffilter = new GsFileFilter(extensionArray, filterDescr);
 		this.defaultExtension = extensionArray[0];
+	}
+	
+	public DocumentWriter getWriter() {
+		if (documentWriterClass == null) {
+			return null;
+		}
+		
+		try {
+			return documentWriterClass.newInstance();
+		} catch (Exception e) {
+			LogManager.error("Could not create Document Writer: "+ documentWriterClass);
+			LogManager.error(e);
+			return null;
+		}
 	}
 	
 	public static GenericDocumentFormat getFormatById(String id) {

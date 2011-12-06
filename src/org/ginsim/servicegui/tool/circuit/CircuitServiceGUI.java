@@ -8,9 +8,7 @@ import javax.swing.Action;
 
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.notification.Notification;
-import org.ginsim.core.notification.WarningNotification;
-
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.tool.circuit.CircuitService;
@@ -53,7 +51,7 @@ class CircuitAction extends ToolAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
         if (graph.getNodeOrderSize() < 1) {
-            new WarningNotification( graph, Translator.getString("STR_emptyGraph"));
+            NotificationManager.publishWarning( graph, Translator.getString("STR_emptyGraph"));
             return;
         }
 

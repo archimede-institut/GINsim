@@ -1,14 +1,12 @@
 package org.ginsim.core.notification;
 
-import org.ginsim.core.graph.common.Graph;
-
 public class ExceptionNotification extends ErrorNotification{
 
 	private Exception exception;
 	
-	public ExceptionNotification( Graph graph, String message, Exception exception) {
+	public ExceptionNotification( Object topic, String message, Exception exception) {
 		
-		super( graph, message);
+		super( topic, message);
 		this.exception = exception;
 	}
 	

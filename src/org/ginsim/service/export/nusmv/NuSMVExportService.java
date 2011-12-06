@@ -17,6 +17,7 @@ import org.mangosdk.spi.ProviderFor;
  * equivalent mapping using priority classes, one class for each (all the)
  * variable(s).
  * </p>
+ * @author Pedro T. Monteiro
  */
 @ProviderFor(Service.class)
 public class NuSMVExportService implements Service {

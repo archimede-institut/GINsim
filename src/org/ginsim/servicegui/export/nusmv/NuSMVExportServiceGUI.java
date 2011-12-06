@@ -64,7 +64,7 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 	@Override
 	public StackDialogHandler getConfigPanel() {
 		config = new NuSMVConfig(graph);
-		return new NuSMVExportConfigPanel(config);
+		return new NuSMVExportConfigPanel(config, this);
 	}
 
 	@Override

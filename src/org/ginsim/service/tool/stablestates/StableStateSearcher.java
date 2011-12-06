@@ -13,5 +13,5 @@ public interface StableStateSearcher {
 	
 	OMDDNode getStables();
 
-	void setNodeOrder(List<RegulatoryNode> sortedVars, OMDDNode[] tReordered);
+	void setNodeOrder(List<RegulatoryNode> sortedVars);
 }

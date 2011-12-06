@@ -25,7 +25,6 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
 import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClass;
 
-
 /**
  * Exports a GINsim Regulatory graph into a NuSMV model description.
  * 
@@ -44,8 +43,7 @@ public class NuSMVEncoder {
 	 * @param out
 	 *            the writer receiving the encoded model description
 	 */
-	public void write(NuSMVConfig config, Writer out)
-			throws IOException {
+	public void write(NuSMVConfig config, Writer out) throws IOException {
 
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG);
@@ -422,53 +420,8 @@ public class NuSMVEncoder {
 			}
 		}
 
-		out.write("\nstrongSS := ");
-		boolean bIsFirst = true;
-		for (int v = 0; v < t_vertex.length; v++) {
-			if (t_vertex[v].isInput())
-				continue;
-			if (!bIsFirst) {
-				out.write(" & ");
-			}
-			out.write(t_regulators[v] + "_std");
-			bIsFirst = false;
-		}
-		out.write(";\n");
-
-		if (!bType1) {
-			out.write("\nweakSS := FALSE\n");
-			// -- Computing Weak Stable States for compacted STG (type 2) --
-			List<RegulatoryNode> sortedVars = new ArrayList<RegulatoryNode>();
-			List<RegulatoryNode> orderStateVars = new ArrayList<RegulatoryNode>();
-			List<RegulatoryNode> orderInputVars = new ArrayList<RegulatoryNode>();
-			for (int i = 0; i < nodeOrder.size(); i++) {
-				if (nodeOrder.get(i).isInput())
-					orderInputVars.add(nodeOrder.get(i));
-				else {
-					orderStateVars.add(nodeOrder.get(i));
-					sortedVars.add(nodeOrder.get(i));
-				}
-			}
-			sortedVars.addAll(orderInputVars);
-			// OMDDs reordered [ stateVars inputVars]
-			OMDDNode[] tReordered = new OMDDNode[nodeOrder.size()];
-			for (int i = 0; i < nodeOrder.size(); i++) {
-				tReordered[i] = sortedVars.get(i).getTreeParameters(sortedVars)
-						.reduce();
-			}
-
-			StableStateSearcher sss = ServiceManager.getManager()
-					.getService(StableStatesService.class).getSearcher(config.getGraph());
-			sss.setNodeOrder(sortedVars, tReordered);
-			sss.setPerturbation(mutant);
-			OMDDNode omdds = sss.getStables();
-			int[] stateValues = new int[sortedVars.size()];
-			for (int i = 0; i < stateValues.length; i++)
-				stateValues[i] = -1;
-
-			out.write(writeStableStates(stateValues, omdds, orderStateVars, 0));
-			out.write(";\n");
-		}
+		// Write StrongSSs. If Type2 write also WeakSSs
+		out.write(writeStableStates(nodeOrder, mutant, config, !bType1));
 
 		out.write("\nTRANS\n");
 		for (int i = 0; i < t_vertex.length; i++) {
@@ -477,40 +430,26 @@ public class NuSMVEncoder {
 			out.write("next(" + t_regulators[i] + ") != ");
 			out.write(t_regulators[i] + " |\n");
 		}
-		if (bType1)
-			out.write("strongSS;\n");
-		else
-			out.write("weakSS;\n");
+		out.write("strongSS | weakSS;\n");
 
+		Iterator<InitialState> it;
+		Map<RegulatoryNode, List<Integer>> m_states;
 		// Initial States - State variables
-		Iterator<InitialState> it = config.getInitialState().keySet()
-				.iterator();
-		Map<RegulatoryNode, List<Integer>> m_initstates = null;
-		if (it.hasNext()) {
-			m_initstates = it.next().getMap();
-		}
-		if (m_initstates == null) {
-			m_initstates = new HashMap<RegulatoryNode, List<Integer>>();
-		}
+		it = config.getInitialState().keySet().iterator();
+		m_states = (it.hasNext()) ? it.next().getMap()
+				: new HashMap<RegulatoryNode, List<Integer>>();
 		// TODO: make use of the name given by the user
 		// referencing the atomic proposition
 		out.write("\n-- State variables initialization\n");
-		out.write(writeInitialState(t_vertex, false, m_initstates));
-		
+		out.write(writeInitialState(t_vertex, false, m_states));
+
 		// Initial States - Input variables
-		it = config.getInputState().keySet().iterator();
-		Map<RegulatoryNode, List<Integer>> m_initinputs;
-		if (it.hasNext()) {
-			m_initinputs = it.next().getMap();
-		} else {
-			m_initinputs = new HashMap<RegulatoryNode, List<Integer>>();
-		}
-		if (m_initinputs == null) {
-			m_initinputs = new HashMap<RegulatoryNode, List<Integer>>();
-		}
 		if (bType1 && hasInputVars) {
+			it = config.getInputState().keySet().iterator();
+			m_states = (it.hasNext()) ? it.next().getMap()
+					: new HashMap<RegulatoryNode, List<Integer>>();
 			out.write("-- Input variables initialization\n");
-			out.write(writeInitialState(t_vertex, true, m_initinputs));
+			out.write(writeInitialState(t_vertex, true, m_states));
 		}
 
 		out.write("\n");
@@ -664,13 +603,52 @@ public class NuSMVEncoder {
 		return sb.toString();
 	}
 
-	private String writeStableStates(int[] stateValues, OMDDNode nodes,
+	private String writeStableStates(List<RegulatoryNode> origOrder,
+			RegulatoryMutantDef mutant, NuSMVConfig config, boolean bWeakSS) {
+		List<RegulatoryNode> sortedVars = new ArrayList<RegulatoryNode>();
+		List<RegulatoryNode> orderStateVars = new ArrayList<RegulatoryNode>();
+		List<RegulatoryNode> orderInputVars = new ArrayList<RegulatoryNode>();
+		for (int i = 0; i < origOrder.size(); i++) {
+			if (origOrder.get(i).isInput())
+				orderInputVars.add(origOrder.get(i));
+			else {
+				orderStateVars.add(origOrder.get(i));
+				sortedVars.add(origOrder.get(i));
+			}
+		} // reordered [ stateVar1 ... stateVarN inputVar1 ... inputVarN ]
+		sortedVars.addAll(orderInputVars);
+
+		StableStateSearcher sss = ServiceManager.getManager()
+				.getService(StableStatesService.class)
+				.getSearcher(config.getGraph());
+		sss.setNodeOrder(sortedVars);
+		sss.setPerturbation(mutant);
+		OMDDNode omdds = sss.getStables();
+
+		int[] stateValues = new int[sortedVars.size()];
+		for (int i = 0; i < stateValues.length; i++)
+			stateValues[i] = -1;
+		String sRet = "\nweakSS := ";
+		if (bWeakSS) {
+			sRet += writeSSs(false, stateValues, omdds, orderStateVars, 0);
+		} else {
+			sRet += "\n  FALSE";
+		}
+		sRet += ";\nstrongSS := ";
+		String sTmp = writeSSs(true, stateValues, omdds, orderStateVars, 0);
+		sRet += (sTmp.isEmpty()) ? "\n  FALSE" : sTmp;
+		return sRet + ";\n";
+	}
+
+	private String writeSSs(boolean bStrong, int[] stateValues, OMDDNode nodes,
 			List<RegulatoryNode> stateVars, int level) {
 		String sRet = "";
 		if (nodes.next == null) {
-			if (nodes.value == 1 && level > stateVars.size()) {
+			if (nodes.value == 1
+					&& (bStrong && level == stateVars.size() || !bStrong
+							&& level > stateVars.size())) {
 				// we have a stable state:
-				sRet += "  | ";
+				sRet += "\n  | ";
 				for (int i = 0; i < stateVars.size(); i++) {
 					if (stateValues[i] == -1)
 						continue;
@@ -678,13 +656,12 @@ public class NuSMVEncoder {
 						sRet += " & ";
 					sRet += stateVars.get(i) + "=" + stateValues[i];
 				}
-				sRet += "\n";
 			}
 			return sRet;
 		}
 		for (int i = 0; i < nodes.next.length; i++) {
 			stateValues[nodes.level] = i;
-			sRet += writeStableStates(stateValues, nodes.next[i], stateVars,
+			sRet += writeSSs(bStrong, stateValues, nodes.next[i], stateVars,
 					level + 1);
 		}
 		stateValues[nodes.level] = -1;

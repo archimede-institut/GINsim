@@ -21,10 +21,9 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.notification.ErrorNotification;
-import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.DataUtils;
-
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.gui.resource.Translator;
 
@@ -111,7 +110,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	    		List l_conflict = new ArrayList();
 	    		List l_parameters = new ArrayList();
 			    if (!getInteractionsModel().isMaxCompatible(max)) {
-			    	new ErrorNotification( this, "Max value (" + max + ") is inconsistent with some boolean function value.");
+			    	NotificationManager.publishError( this, "Max value (" + max + ") is inconsistent with some boolean function value.");
 			    	return;
 			    }
 	    		graph.canApplyNewMaxValue(this, max, l_fixable, l_conflict);
@@ -165,7 +164,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	    			data[3] = l_fixable;
 	    			data[4] = l_parameters;
 	    			
-	    			new ResolvableWarningNotification( this, "max value decrease is blocked", graph, data, resolution);
+	    			NotificationManager.publishResolvableWarning( this, "max value decrease is blocked", graph, data, resolution);
 	    			
 	    			return;
 	    		}

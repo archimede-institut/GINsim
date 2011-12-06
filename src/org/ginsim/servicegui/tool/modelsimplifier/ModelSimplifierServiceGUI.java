@@ -17,11 +17,8 @@ import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.notification.Notification;
-import org.ginsim.core.notification.WarningNotification;
-
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.ginsim.servicegui.ServiceGUI;
 import org.ginsim.servicegui.common.GUIFor;
@@ -66,7 +63,7 @@ class ModelSimplifierAction extends ToolAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (graph.getNodeCount() < 1) {
-            new WarningNotification( graph, graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph");
+            NotificationManager.publishWarning( graph, graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph");
             return;
 		}
 

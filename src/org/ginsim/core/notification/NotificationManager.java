@@ -3,6 +3,11 @@ package org.ginsim.core.notification;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
+import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+
 
 
 
@@ -25,7 +30,7 @@ public class NotificationManager {
 	 * 
 	 * @return the manager instance
 	 */
-	public static NotificationManager getInstance(){
+	private static NotificationManager getInstance(){
 		
 		if( instance == null){
 			instance = new NotificationManager();
@@ -35,12 +40,23 @@ public class NotificationManager {
 	}
 	
 	/**
+	 * Register a listener and subscribe it to the given topic (static call)
+	 * 
+	 * @param listener the NotificationListerner to register
+	 * @param topic the topic the listener subscribe to
+	 */
+	public static void registerListener( NotificationListener listener, Object topic){
+		
+		getInstance().register( listener, topic);
+	}
+	
+	/**
 	 * Register a listener and subscribe it to the given topic
 	 * 
 	 * @param listener the NotificationListerner to register
 	 * @param topic the topic the listener subscribe to
 	 */
-	public void registerListener( NotificationListener listener, Object topic){
+	private void register( NotificationListener listener, Object topic){
 		
 		for( TopicsListener topic_listener : notificationListerners){
 			if( topic_listener.getListener() == listener){
@@ -51,7 +67,95 @@ public class NotificationManager {
 		
 		TopicsListener topic_listener = new TopicsListener( listener);
 		topic_listener.addTopic( topic);
+		notificationListerners.add( topic_listener);
 	}
+	
+	/**
+	 * Publish an error message
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 */
+	public static void publishError( Object topic, String message){
+		
+		if( topic != null && message != null){
+			getInstance().publish( new ErrorNotification( topic, message));
+		}
+	}
+	
+	/**
+	 * Publish a Java exception 
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 * @param exception the Exception to publish
+	 */
+	public static void publishException( Object topic, String message, Exception exception){
+		
+		if( topic != null && message != null){
+			getInstance().publish( new ExceptionNotification( topic, message, exception));
+		}
+	}
+	
+	/**
+	 * Publish a warning message
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 */
+	public static void publishWarning( Object topic, String message){
+		
+		if( topic != null && message != null){
+			getInstance().publish( new WarningNotification( topic, message));
+		}
+	}
+	
+	/**
+	 * Publish an information message
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 */
+	public static void publishInformation( Object topic, String message){
+		
+		if( topic != null && message != null){
+			getInstance().publish( new InformationNotification( topic, message));
+		}
+	}
+	
+	/**
+	 * Publish an error message with its resolution options 
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 * @param graph the graph concerned by the notification
+	 * @param data the data required for the 
+	 * @param resolution the NotificationResolution containing the resolution options
+	 */
+	public static void publishResolvableError( Object topic, String message, Graph graph, Object[] data, NotificationResolution resolution){
+		
+		if( topic != null && message != null){
+			getInstance().publish( new ResolvableErrorNotification( topic, message, graph, data, resolution));
+		}
+	}
+	
+	
+	/**
+	 * Publish a warning message with its resolution options 
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 * @param graph the graph concerned by the notification
+	 * @param data the data required for the 
+	 * @param resolution the NotificationResolution containing the resolution options
+	 */
+	public static void publishResolvableWarning( Object topic, String message, Graph graph, Object[] data, NotificationResolution resolution){
+		
+		if( topic != null && message != null){
+			getInstance().publish( new ResolvableWarningNotification( topic, message, graph, data, resolution));
+		}
+	}
+	
 	
 	/**
 	 * Publish a notification so NotificationListerner that were registered and
@@ -59,7 +163,7 @@ public class NotificationManager {
 	 * 
 	 * @param message the Notification to publish
 	 */
-	public void publish( Notification message){
+	private void publish( Notification message){
 		
 		publish( message, false);
 	}
@@ -71,9 +175,9 @@ public class NotificationManager {
 	 * 
 	 * @param message the Notification to remove
 	 */
-	public void publishDeletion( Notification message){
+	public static void publishDeletion( Notification message){
 		
-		publish( message, true);
+		getInstance().publish( message, true);
 	}
 	
 	/**
@@ -123,6 +227,7 @@ private class TopicsListener{
 	public TopicsListener( NotificationListener listener){
 		
 		this.listener = listener;
+		topics = new Vector<Object>();
 	}
 	
 	/**
@@ -132,7 +237,7 @@ private class TopicsListener{
 	 */
 	public void addTopic( Object topic){
 		
-		if( topics != null && !topics.contains( topic)){
+		if( topic != null && !topics.contains( topic)){
 			topics.add( topic);
 		}
 	}
@@ -155,6 +260,12 @@ private class TopicsListener{
 	public List<Object> getTopics() {
 		
 		return topics;
+	}
+	
+	@Override
+	public String toString() {
+		
+		return "Notificationlistener : " + listener + "->" + topics;
 	}
 }
 

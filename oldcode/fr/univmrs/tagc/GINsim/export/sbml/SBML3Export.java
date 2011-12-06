@@ -42,7 +42,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 	public static final String L3_QUALI_URL = "http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models";
 	private static final GsFileFilter ffilter = new GsFileFilter( new String[] { "sbml" }, "SBML files");
 
-	private SBML3Config config = null;
+	private SBMLQualConfig config = null;
     List<RegulatoryNode> v_no;
     int len;
     OMDDNode[] t_tree;
@@ -65,7 +65,7 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 	
 	@Override
 	public StackDialogHandler getConfigPanel( ) {
-		config = new SBML3Config();
+//		config = new SBMLQualConfig();
 		return new SBML3ExportConfigPanel( graph, config);				
 	}
     
@@ -303,10 +303,10 @@ public class SBML3Export extends ExportAction<RegulatoryGraph> implements OMDDBr
 class SBML3ExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = 9043565812912568136L;
 	
-	private final SBML3Config config;
+	private final SBMLQualConfig config;
 	private final RegulatoryGraph graph;
 	
-	protected SBML3ExportConfigPanel( RegulatoryGraph graph, SBML3Config config) {
+	protected SBML3ExportConfigPanel( RegulatoryGraph graph, SBMLQualConfig config) {
 		super();
 		setLayout(new GridBagLayout());
 		this.config = config;
@@ -337,16 +337,4 @@ class SBML3ExportConfigPanel extends AbstractStackDialogHandler {
 }
 
  
-class SBML3Config implements InitialStateStore {
-	Map m_init = new HashMap();
-	Map m_input = new HashMap();
-	ObjectStore store = new ObjectStore(2);
 
-	public Map getInitialState() {
-		return m_init;
-	}
-
-	public Map getInputState() {
-		return m_input;
-	}	
-}
