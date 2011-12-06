@@ -372,7 +372,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	}
 
     /**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#doMerge(fr.univmrs.tagc.GINsim.graph.GsGraph)
 	 * 
 	 * not used for this kind of graph: it has no meaning
      */

@@ -7,12 +7,20 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 
+/**
+ * Contains the result of the comparison of two graphs graph_1 and graph_2 and the 
+ * proper methods to handle the display of theses results
+ *
+ */
 public class GraphComparatorResult {
 	private Graph graph_new, graph_1, graph_2;
 	private StringBuffer log;
 	private HashMap<Object, GraphComparatorStyleStore> stylesMap;
 
-	public GraphComparatorResult() {
+	/**
+	 * Create a new result
+	 */
+	protected GraphComparatorResult() {
 		log = new StringBuffer(2048);
 	}
 	
@@ -67,9 +75,17 @@ public class GraphComparatorResult {
 		return log;
 	}
 
+	/**
+	 * Get the name of the first graph
+	 * @return the name of the first graph
+	 */
 	public String getGraph1Name() {
 		return graph_1.getGraphName();
 	}
+	/**
+	 * Get the name of the second graph
+	 * @return the name of the second graph
+	 */
 	public String getGraph2Name() {
 		return graph_2.getGraphName();
 	}

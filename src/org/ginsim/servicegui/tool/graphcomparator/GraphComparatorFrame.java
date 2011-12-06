@@ -1,7 +1,6 @@
 package org.ginsim.servicegui.tool.graphcomparator;
 
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -20,6 +19,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import org.ginsim.common.OptionStore;
@@ -27,14 +27,12 @@ import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.gui.utils.widgets.SeparatorComboBox;
 import org.ginsim.service.ServiceManager;
-import org.ginsim.service.tool.graphcomparator.GraphComparator;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorResult;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorService;
 
@@ -53,7 +51,6 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 	private JCheckBox displayGraphCheckBox;
 	private JPanel mainPanel;
 
-	private String[] comboBoxEntries = null;
 	private List graphList = null;//List Of GsGrahp
 	private boolean opt_display_graph;
 
@@ -84,7 +81,6 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			c.ipadx = 10;
 			mainPanel.add(new JLabel(Translator.getString("STR_gcmp_ask")), c);
 	
-			int openerGraphIndex = comboBoxItems();
 			c.gridy++;
 			c.ipadx = 0;
 			c.gridwidth = 1;
@@ -94,8 +90,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			mainPanel.add(new JLabel("Graph 1 : "), c);
 	
 			c.gridx = 1;
-			g1_modelComboBox = new JComboBox(comboBoxEntries);
-			g1_modelComboBox.setSelectedIndex(openerGraphIndex);
+			g1_modelComboBox = initComboBox();
 			mainPanel.add(g1_modelComboBox, c);
 	
 			c.gridx = 2;
@@ -113,8 +108,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			mainPanel.add(new JLabel("Graph 2 : "), c);
 	
 			c.gridx = 1;
-			g2_modelComboBox = new JComboBox(comboBoxEntries);
-			g2_modelComboBox.setSelectedIndex(openerGraphIndex);
+			g2_modelComboBox = initComboBox();
 			mainPanel.add(g2_modelComboBox, c);
 	
 			c.gridx = 2;
@@ -139,10 +133,10 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		return mainPanel;
 	}
 
-	private int comboBoxItems() {
-		comboBoxEntries = new String[GraphManager.getInstance().getAllGraphs().size()+2];
-		comboBoxEntries[0] = Translator.getString("STR_gcmp_from_file")+" :";
-		comboBoxEntries[1] = " ";
+	private JComboBox initComboBox() {
+		SeparatorComboBox comboBox = new SeparatorComboBox();
+		comboBox.addItem(Translator.getString("STR_gcmp_from_file")+" :");
+		comboBox.addItem(new JSeparator());
 		graphList = new ArrayList(GraphManager.getInstance().getAllGraphs().size());
 		HashMap graphNames = new HashMap();
 		int indexToSelect = 0;
@@ -153,7 +147,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			Graph graph = (Graph) it.next();
 			String name = graph.getGraphName();
 			if (graph == this.frame_graph) indexToSelect = i; 
-			comboBoxEntries[i++] = name;
+			comboBox.addItem(name);
 			graphList.add(graph);
 			graphNames.put(name, graph);
 			if (graphNames.containsKey(graph)) {
@@ -161,8 +155,9 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			}
 
 		}
-
-		return indexToSelect;
+		comboBox.setSelectedIndex(indexToSelect);
+		return comboBox;
+		
 	}
 
 	public void actionPerformed(ActionEvent e) {
