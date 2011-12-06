@@ -56,7 +56,7 @@
 		<graph name="dynamicalHierarchicalGraph" 	mainClass="fr.univmrs.tagc.GINsim.dynamicalHierachicalGraph.GsDynamicalHierarchicalGraphDescriptor" load="true"/>
 	</listOfGraphType>
 
-	<imagePath 		path="/fr/univmrs/tagc/GINsim/resources/icons"/>
-	<messagesPath 	path="fr.univmrs.tagc.GINsim.resources.messages"/>
-	<doap 			path="/fr/univmrs/tagc/GINsim/resources/GINsim-about.rdf"/>
+	<imagePath 		path="/fr/univmrs/tagc/GINsim/resource/icon"/>
+	<messagesPath 	path="fr.univmrs.tagc.GINsim.resource.messages"/>
+	<doap 			path="/fr/univmrs/tagc/GINsim/resource/GINsim-about.rdf"/>
 </GINsim-addon>

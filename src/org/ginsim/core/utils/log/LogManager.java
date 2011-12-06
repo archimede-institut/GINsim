@@ -108,7 +108,7 @@ public class LogManager {
 		PrintWriter errorOut = logout[0];
 		
 		if( msg instanceof Throwable){
-			errorOut.write( getPosition()+" Exception :" + "\n");
+			errorOut.write( getPosition()+" Exception is :" + "\n");
 			((Throwable) msg).printStackTrace( errorOut);
 		}
 		else{

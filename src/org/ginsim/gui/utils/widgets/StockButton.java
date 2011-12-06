@@ -23,7 +23,7 @@ public class StockButton extends JButton {
 	private static String[] t_base = new String[2];
 	
 	static {
-		t_base[0] = "/fr/univmrs/tagc/common/resources/icons/actions/";
+		t_base[0] = "/fr/univmrs/tagc/common/resource/icon/action/";
 		File f = new File("/usr/share/icons/Human/22x22/actions/");
 		if (f.exists()) {
 			t_base[1] = f.getAbsolutePath();
