@@ -117,7 +117,12 @@ public class LogManager {
 		errorOut.flush();
 		
 		if( debugMode){
-			System.err.println( getPosition()+msg.toString());
+			if( msg instanceof Throwable){
+				((Throwable) msg).printStackTrace();
+			}
+			else{
+				System.err.println( getPosition()+msg.toString());
+			}
 		}
 	}
 	

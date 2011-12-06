@@ -1,5 +1,6 @@
 package org.ginsim.service.export.sbml;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -248,15 +249,23 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
 	}
 	
 	/**
-	 * gets filename without extension
-	 **/
-	// gets filename without extension
-		public String getPrevFilename(String fullPath) {  
-			char pathSeparator = '/';
-			char extensionSeparator = '.';
-		    int dot = fullPath.lastIndexOf(extensionSeparator);
-			int sep = fullPath.lastIndexOf(pathSeparator);
-			String realName= fullPath.substring(sep + 1, dot);
-			return realName;	
-		    }
+	 * Return the name of the file in the given path without any extensions
+	 * 
+	 * @param full_path the path of the file
+	 * @return the name of the file in the given path without any extensions
+	 */
+	public String getPrevFilename(String full_path) {
+	
+		// Retrieve the name of the file
+		File file = new File( full_path);
+		String real_name = file.getName();
+		
+		// Check if it exists an extension an remove it if so
+		int index_dot = real_name.lastIndexOf( '.');
+		if( index_dot >=0){
+			real_name = real_name.substring(0, index_dot);
+		}
+		
+		return real_name;	
+	    }
 }
