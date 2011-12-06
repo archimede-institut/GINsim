@@ -76,10 +76,11 @@ public class TestRefactor {
 		if (open.size() == 0) {
 			RegulatoryGraph graph = GUIManager.getInstance().newFrame();
 			String[] options_names = new String[]{ "Option 1", "Option 2"};
-			NotificationResolution resolution = new NotificationResolution( options_names);
-			NotificationManager.publishResolvableError( graph, "Test Notification Error 1", graph, null, resolution);
-			NotificationManager.publishWarning( graph, "Test Notification Warning");
-			NotificationManager.publishError( graph, "Test Notification Error 2");
+			// Test of Notifications
+//			NotificationResolution resolution = new NotificationResolution( options_names);
+//			NotificationManager.publishResolvableError( graph, "Test Notification Error 1", graph, null, resolution);
+//			NotificationManager.publishWarning( graph, "Test Notification Warning");
+//			NotificationManager.publishError( graph, "Test Notification Error 2");
 		} else {
 			for (String filename: open) {
 				try {
