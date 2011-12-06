@@ -108,7 +108,16 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @return a tree representation of logical parameters
      */
     public OMDDNode[] getAllTrees(boolean focal);
-    
+
+    /**
+     * Computes the tree representing the logical parameters, receiving an optional node ordering
+     * (otherwise uses the one already defined in the regulatory graph)
+     *  
+     * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
+     * @return a tree representation of logical parameters
+     */
+    public OMDDNode[] getAllTrees(List<RegulatoryNode> nodeOrder, boolean focal);
+
     
     /**
      * 
