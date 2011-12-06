@@ -3,15 +3,12 @@ package org.ginsim.servicegui.export.documentation;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
-import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
@@ -24,13 +21,7 @@ public class LRGDocumentationAction  extends ExportAction<RegulatoryGraph> {
 
 	private final LRGDocumentationService service;
 	private DocumentExportConfig config;
-	protected DocumentWriter doc = null;
-	protected Class documentWriterClass;
 
-	private RegulatoryGraph graph;
-	private List nodeOrder;
-	private int len;
-	
     public LRGDocumentationAction(RegulatoryGraph graph, LRGDocumentationService service) {
     	super(graph, "STR_Generic", "STR_Generic_descr");
     	this.service = service;
@@ -38,7 +29,7 @@ public class LRGDocumentationAction  extends ExportAction<RegulatoryGraph> {
 
 	public StackDialogHandler getConfigPanel() {
 		config = new DocumentExportConfig();
-		return new GDExportConfigPanel( graph, config);
+		return new GDExportConfigPanel( graph, config, this);
 	}
 
 	@Override
@@ -48,7 +39,6 @@ public class LRGDocumentationAction  extends ExportAction<RegulatoryGraph> {
 
 	@Override
 	protected GsFileFilter getFileFilter() {
-		// TODO: add the format to the specific config object
 		return config.format.ffilter;
 	}
 }
@@ -57,21 +47,21 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
     private static final long serialVersionUID = 9043565812912568136L;
     
     protected final DocumentExportConfig cfg;
+    private final LRGDocumentationAction action;
 	private final RegulatoryGraph graph;
 
 	JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
 
     
-	protected GDExportConfigPanel ( RegulatoryGraph graph, DocumentExportConfig config) {
+	protected GDExportConfigPanel ( RegulatoryGraph graph, DocumentExportConfig config, LRGDocumentationAction action) {
 		this.cfg = config;
 		this.graph = graph;
-		
+		this.action = action;
 	}
 	
 	@Override
 	public void run() {
-		// FIXME: run export
-		LogManager.error( "TODO: run export");
+		action.selectFile();
 	}
 	
 	@Override

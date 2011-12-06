@@ -16,7 +16,6 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.utils.DataUtils;
 
 
-
 /**
  * XHTMLDocumentWriter is a backend to write xHTML
  * 
@@ -53,12 +52,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		xmlw = new XMLWriter(writer, null);
 	
         if (documentProperties.get(PROP_SUBDOCUMENT) == null) {
-		
-    		writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-    					+"<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\"\n"
-    					+"   \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n");
-    		writer.flush();
-    		
+
     		xmlw.openTag("html");
     		xmlw.addAttr("xmlns", "http://www.w3.org/1999/xhtml");
     		xmlw.addAttr("xml:lang", "en");
@@ -87,7 +81,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
     		if (javascript.length() > 0) {
     			xmlw.openTag("script");
     			xmlw.addAttr("type", "text/javascript");
-    			xmlw.addFormatedContent(javascript.toString(), false);
+    			xmlw.addComplexContent(javascript.toString(), true);
     			xmlw.closeTag();
     		}
     		
