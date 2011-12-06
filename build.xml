@@ -114,7 +114,7 @@
 	</target>
 
 	<!-- ************************************************** -->
-	<!-- Generates GINsim jar file in ${dist} without libs  -->
+	<!-- Generates GINsim jar file without libs  -->
 	<!-- ************************************************** -->
 	<target name="jar" depends="compile"
 		description="Generates GINsim jar file in ${dist} witout ${lib.dir}">
@@ -131,7 +131,6 @@
 				<attribute name="Compilation-Date" value="${CURDATE}"/>
 			</manifest>
 		</jar>
-		<move todir="${dist}" file="${jar.file}"/>
 	</target>
 	
 	<!-- ************************************************** -->

@@ -37,11 +37,10 @@ public class TestRefactor {
         List<String> open = new ArrayList<String>();
 
         /*
-         * parse args:
-         *  - run in script mode
-         *  - set ginsim dir
-         *  - choose locale
-         *  - give some help
+         * parse arguments:
+         *  - open files
+         *  - script mode
+         *  - help
          */
         for (int i = 0; i < args.length; i++) {
         	if (args[i].equals("-s")) {
@@ -59,8 +58,8 @@ public class TestRefactor {
             	if (!args[i].equals("-h")) {
                     System.out.println("Unknown option: "+args[i]);
             	}
-                System.out.println("avaible options");
-                System.out.println("\t-s <file>: run \"script\" from <file> [TODO: pass other args to the script]");
+                System.out.println("available options:");
+                System.out.println("\t-s <file>: run \"script\" from <file> [TODO: script arguments]");
                 System.out.println("\t-h: display this message");
                 return;
             }
