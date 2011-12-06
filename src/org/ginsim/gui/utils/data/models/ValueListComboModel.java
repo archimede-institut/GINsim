@@ -5,7 +5,6 @@ import javax.swing.DefaultComboBoxModel;
 import org.ginsim.core.utils.data.ValueList;
 
 
-
 public class ValueListComboModel extends DefaultComboBoxModel {
     private static final long serialVersionUID = -8553547226168566527L;
     
@@ -14,7 +13,7 @@ public class ValueListComboModel extends DefaultComboBoxModel {
     public ValueListComboModel() {
     }
     
-    ValueListComboModel(ValueList data) {
+    public ValueListComboModel(ValueList data) {
         this.data = data;
     }
     

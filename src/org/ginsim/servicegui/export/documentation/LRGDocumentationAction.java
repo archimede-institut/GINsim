@@ -5,12 +5,14 @@ import java.awt.GridBagLayout;
 import java.io.IOException;
 
 import javax.swing.JCheckBox;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.JComboBox;
 
+import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.utils.data.ValueList;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.data.models.ValueListComboModel;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.export.documentation.DocumentExportConfig;
@@ -52,15 +54,26 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
 
 	JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
 
+	ValueList<GenericDocumentFormat> format;
     
 	protected GDExportConfigPanel ( RegulatoryGraph graph, DocumentExportConfig config, LRGDocumentationAction action) {
 		this.cfg = config;
 		this.graph = graph;
 		this.action = action;
+		format = new ValueList<GenericDocumentFormat>(config.getSubFormat());
 	}
 	
 	@Override
 	public void run() {
+		// read the current status
+        cfg.searchStableStates = cb_stable.isSelected();
+        cfg.putComment = cb_comment.isSelected();
+        cfg.multicellular = cb_multicellular.isSelected();
+        cfg.exportInitStates = cb_init.isSelected();
+        cfg.exportMutants = cb_mutants.isSelected();
+
+        cfg.format = format.get(format.getSelectedIndex());
+        
 		action.selectFile();
 	}
 	
@@ -72,53 +85,37 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
     	setLayout(new GridBagLayout());
     	GridBagConstraints c = new GridBagConstraints();
         c.gridx = c.gridy = 0;
+        JComboBox combo_format = new JComboBox(new ValueListComboModel(format));
+        add(combo_format, c);
+        
+        
+        c.gridy++;
         c.weightx = c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
         add(initPanel, c);
         
         c.weightx = c.weighty = 0;
-        ChangeListener listener = new MyListener();
 
         cb_stable = new JCheckBox("stable");
-        cb_stable.addChangeListener(listener);
         cb_stable.setSelected(cfg.searchStableStates);
         c.gridy++;
         add(cb_stable, c);
         cb_init = new JCheckBox("initial states");
-        cb_init.addChangeListener(listener);
         cb_init.setSelected(cfg.exportInitStates);
         c.gridy++;
         add(cb_init, c);
         cb_mutants = new JCheckBox("mutants");
-        cb_mutants.addChangeListener(listener);
         cb_mutants.setSelected(cfg.exportMutants);
         c.gridy++;
         add(cb_mutants, c);
         cb_multicellular = new JCheckBox("multicellular");
-        cb_multicellular.addChangeListener(listener);
         cb_multicellular.setSelected(cfg.multicellular);
         c.gridy++;
         add(cb_multicellular, c);
         cb_comment = new JCheckBox("comments");
-        cb_comment.addChangeListener(listener);
         cb_comment.setSelected(cfg.putComment);
         c.gridy++;
         add(cb_comment, c);
     }
-	class MyListener implements ChangeListener {
-        public void stateChanged(ChangeEvent e) {
-            JCheckBox src = (JCheckBox)e.getSource();
-            if (src == cb_stable) {
-                cfg.searchStableStates = src.isSelected();
-            } else if (src == cb_comment) {
-                cfg.putComment = src.isSelected();
-            } else if (src == cb_multicellular) {
-                cfg.multicellular = src.isSelected();
-            } else if (src == cb_init) {
-                cfg.exportInitStates = src.isSelected();
-            } else if (src == cb_mutants) {
-                cfg.exportMutants = src.isSelected();
-            }
-        }
-	}
+	
 }
