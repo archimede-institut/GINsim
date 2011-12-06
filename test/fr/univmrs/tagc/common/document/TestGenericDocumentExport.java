@@ -9,7 +9,8 @@ import junit.framework.TestCase;
 
 import org.ginsim.core.graph.GinmlParser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.export.documentation.GenericDocumentExport;
+import org.ginsim.service.ServiceManager;
+import org.ginsim.service.export.documentation.LRGDocumentationService;
 
 import fr.univmrs.tagc.common.TestTools;
 
@@ -23,7 +24,7 @@ public class TestGenericDocumentExport extends TestCase {
 		this.graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);
 	}
 	public void testGenericDocument() throws IOException {
-		GenericDocumentExport export =  new GenericDocumentExport(graph);
+		LRGDocumentationService export =  ServiceManager.get(LRGDocumentationService.class);
 		String filename = tmpDir.getAbsolutePath()+File.separator+"tmp/graph.html";
 		
 		// TODO: extract a separate service for the export, then use it

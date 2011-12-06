@@ -36,10 +36,8 @@ import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
-import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.GraphConstants;
 import org.jgrapht.ext.JGraphModelAdapter;
 
 
@@ -61,9 +59,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     // FIXME: listen for graph changes and set it as false when needed
     private boolean isSaved = false;
     
-    // TODO: should it be static, created later or what ?
-    private ParallelEdgeRouting pedgerouting = new ParallelEdgeRouting();
-
 	public JgraphGUIImpl(G g, JgraphtBackendImpl<V, E> backend, GraphGUIHelper<G,V,E> helper) {
 		this.graph = g;
 		this.backend = backend;
@@ -193,32 +188,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		return editActionManager;
 	}
 	
-	/**
-	 * Update edge routing upon removal (in case of cycle between 2 nodes.
-	 * 
-	 * Note: this was in the removeEdge() method of the jgraphtgraphmanager
-	 * TODO: call this upon edge removal
-	 * 
-	 * @param source
-	 * @param target
-	 */
-    public void edgeRemoved(E edge) {
-		DefaultEdge de = m_jgAdapter.getEdgeCell(edge);
-		if ( edge != null && GraphConstants.getRouting(de.getAttributes()) == pedgerouting) {
-			AttributeMap attr = de.getAttributes();
-		    de.getAttributes().remove(GraphConstants.ROUTING);
-	        List l = GraphConstants.getPoints(attr);
-            if (l != null) {
-                while ( l.size() > 2) {
-                    l.remove(1);
-                }
-                GraphConstants.setPoints(attr, l);
-            }
-
-			m_jgAdapter.cellsChanged(new Object[] {de});
-		}
-    }
-
 	@Override
 	public boolean isSaved() {
 		return isSaved;
