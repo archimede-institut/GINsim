@@ -26,10 +26,21 @@ public class FileSelectionHelper {
 	
 	
 	public static String selectSaveFilename( Frame parent) {
-		return selectSaveFilename(parent, null);
+		return selectSaveFilename(parent, (GsFileFilter) null);
 	}
-	public static String selectSaveFilename( Frame parent, String extension) {
+	
+	public static String selectSaveFilename( Frame parent, String[] extensions, String description){
+		
+		GsFileFilter file_filter = new GsFileFilter(extensions, description);
+		return selectSaveFilename( parent, file_filter);
+	}
+	
+	public static String selectSaveFilename( Frame parent, GsFileFilter file_filter) {
 		JFileChooser chooser = new JFileChooser();
+		if( file_filter != null){
+			System.out.println("FileSelectionHelper.selectSaveFilename() : file filter  " + file_filter.getDescription());
+			chooser.setFileFilter( file_filter);
+		}
 		chooser.showSaveDialog(parent);
 		// TODO: file filter and automatic extension
 		File f = chooser.getSelectedFile();
@@ -40,11 +51,21 @@ public class FileSelectionHelper {
 	}
 	
 	public static String selectOpenFilename( Frame parent) {
-		return selectOpenFilename(parent, null);
+		return selectOpenFilename(parent, (GsFileFilter) null);
 	}
-	public static String selectOpenFilename( Frame parent, String extension) {
+	
+	public static String selectOpenFilename( Frame parent, String[] extensions, String description){
+		
+		GsFileFilter file_filter = new GsFileFilter( extensions, description);
+		return selectOpenFilename( parent, file_filter);
+	}
+	
+	public static String selectOpenFilename( Frame parent, GsFileFilter file_filter) {
 		// TODO: remember path and so on
 		JFileChooser chooser = new JFileChooser();
+		if( file_filter != null){
+			chooser.setFileFilter( file_filter);
+		}
 		chooser.showOpenDialog(parent);
 		File f = chooser.getSelectedFile();
 		if (f == null) {

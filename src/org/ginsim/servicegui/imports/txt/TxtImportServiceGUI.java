@@ -42,14 +42,12 @@ class TxtImportAction extends ImportAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		GsFileFilter ffilter = new GsFileFilter();
-		String extension = null;
 		String filename;
 
 		ffilter.setExtensionList(new String[] { "txt" }, "TXT files");
-		extension = ".txt";
 
 		// we should add a better way to select a file for import
-		filename = FileSelectionHelper.selectOpenFilename( GUIManager.getInstance().getFrame( graph));
+		filename = FileSelectionHelper.selectOpenFilename( GUIManager.getInstance().getFrame( graph), ffilter);
 
 		// TODO ...
 		TruthTableParser parser = new TruthTableParser(filename);

@@ -32,6 +32,7 @@ import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
+import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
@@ -221,7 +222,9 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	@Override
 	public boolean saveAs() {
 		Frame frame = GUIManager.getInstance().getFrame(graph);
-		String filename = FileSelectionHelper.selectSaveFilename(frame);
+		GsFileFilter ffilter = new GsFileFilter();
+		ffilter.setExtensionList(new String[] { "ginml", "zginml" }, "GINsim files");
+		String filename = FileSelectionHelper.selectSaveFilename(frame, ffilter);
 		if (filename != null) {
 			GraphManager.getInstance().registerGraph( graph, filename);
 			return save();

@@ -17,6 +17,7 @@ import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
+import org.ginsim.gui.shell.GsFileFilter;
 
 
 /**
@@ -124,7 +125,9 @@ class OpenAction extends AbstractAction {
 	public void actionPerformed(ActionEvent arg0) {
 		String path = filename;
 		if (path == null) {
-			path = FileSelectionHelper.selectOpenFilename(null);
+			GsFileFilter ffilter = new GsFileFilter();
+			ffilter.setExtensionList(new String[] { "ginml", "zginml" }, "GINsim files");
+			path = FileSelectionHelper.selectOpenFilename( null, ffilter);
 		}
 		if (path != null) {
 			try {

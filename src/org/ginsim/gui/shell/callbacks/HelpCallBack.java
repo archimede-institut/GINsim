@@ -82,7 +82,7 @@ class ProvideLogAction extends AbstractAction {
 		String log_zip_path = LogManager.deliverLogs();
 		if( log_zip_path != null){
 			File zip_file = new File( log_zip_path);
-			String save_path = FileSelectionHelper.selectSaveFilename( null, ".zip");
+			String save_path = FileSelectionHelper.selectSaveFilename( null, new String[]{".zip"}, "Zip files");
 			if( save_path != null){
 				boolean result = zip_file.renameTo( new File( save_path));
 				if( !result){

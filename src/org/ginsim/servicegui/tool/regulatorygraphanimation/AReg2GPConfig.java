@@ -140,7 +140,7 @@ public class AReg2GPConfig extends JDialog {
 		}
 	    String gnuplotsFilename;
         
-        gnuplotsFilename  = FileSelectionHelper.selectSaveFilename( null, ".gnuplot");
+        gnuplotsFilename  = FileSelectionHelper.selectSaveFilename( null, new String[]{".gnuplot"}, "Gnuplot files");
 	    if (gnuplotsFilename == null) {
 	        return;
 	    }

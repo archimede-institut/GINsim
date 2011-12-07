@@ -50,17 +50,14 @@ class SBMLImportAction extends ImportAction {
 	public void actionPerformed(ActionEvent e) {
 		
 		GsFileFilter ffilter = new GsFileFilter();
-		String extension = null;
 		String filename;
 
-		ffilter.setExtensionList(new String[] { "xml" }, "SBML files");
-		// extension = ".sbml";
-		extension = ".xml";
+		ffilter.setExtensionList(new String[] { "sbml" }, "SBML files");
 
 		Frame frame = GUIManager.getInstance().getFrame( graph);
 		
 		// we should add a better way to select a file for import
-		filename = FileSelectionHelper.selectOpenFilename( frame);
+		filename = FileSelectionHelper.selectOpenFilename( frame, ffilter);
 		if (filename == null) {
 			return;
 		}

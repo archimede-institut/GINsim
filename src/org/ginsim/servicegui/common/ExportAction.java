@@ -48,7 +48,7 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 	 */
 	public void selectFile() {
 		// TODO: restore file filters
-		String filename = FileSelectionHelper.selectSaveFilename(null);
+		String filename = FileSelectionHelper.selectSaveFilename( null, getFileFilter());
 		if (filename == null) {
 			return;
 		}
