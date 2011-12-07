@@ -25,14 +25,7 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 	public DecisionOnEdge(HierarchicalNode source, HierarchicalNode target, List<NodeInfo> nodeOrder) {
 		super(source, target);
         this.nodeOrder = nodeOrder;
-		// FIXME: new constructor for en empty decision, see init method below
 	}
-
-    // FIXME: do we need this constructor? it would have to define source and target
-//	public DecisionOnEdge(int geneCount, List<RegulatoryNode> nodeOrder) {
-//        this.genesUpdated = new int[geneCount];
-//        this.nodeOrder = nodeOrder;
-//    }
 
 	/**
 	 * Initialize a new label
@@ -70,7 +63,6 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 	 */
 	public String toString() {
 		if (genesUpdated == null) {
-			// FIXME: label for "empty" edges ?
 			return "";
 		}
 		StringBuffer s = new StringBuffer();
@@ -79,17 +71,17 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 			case CHANGE_NONE: break;
 			case CHANGE_DECREASE: 
 				if (s.length() > 0) s.append(' ');
-				s.append(nodeOrder.get(i));
+				s.append(nodeOrder.get(i).getNodeID());
 				s.append('-');
 				break;
 			case CHANGE_INCREASE: 
 				if (s.length() > 0) s.append(' ');
-				s.append(nodeOrder.get(i));
+				s.append(nodeOrder.get(i).getNodeID());
 				s.append('+');
 				break;
 			case CHANGE_BOTH: 
 				if (s.length() > 0) s.append(' ');
-				s.append(nodeOrder.get(i));
+				s.append(nodeOrder.get(i).getNodeID());
 				s.append('x');
 				break;
 			}

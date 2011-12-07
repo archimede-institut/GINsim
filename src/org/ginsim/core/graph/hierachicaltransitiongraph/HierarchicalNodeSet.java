@@ -15,13 +15,12 @@ import java.util.Iterator;
  *
  * <p><i>The java 1.5 definition should be HierarchicalNodeSet&lt;HierarchicalNode&gt;</i></p>
  */
-public class HierarchicalNodeSet extends HashSet {
+public class HierarchicalNodeSet extends HashSet<HierarchicalNode> {
 	private static final long serialVersionUID = -6542206623359579872L;
 	
 	private int hashCode = 0;
 	public HierarchicalNodeSet() {
 		super();
-		buildHashCode(); //FIXME: Should no be here, because it is called before any elements are added
 	}
 	
 	/**
@@ -38,8 +37,8 @@ public class HierarchicalNodeSet extends HashSet {
 	public HierarchicalNode getHNodeForState(byte[] state) {
 		HierarchicalNode hnode = null;
 		boolean found = false;
-		for (Iterator it = iterator(); it.hasNext();) {
-			hnode = (HierarchicalNode) it.next();
+		for (Iterator<HierarchicalNode> it = iterator(); it.hasNext();) {
+			hnode = it.next();
 			if (hnode != null && hnode.contains(state)) {
 				found = true;
 				break;
@@ -47,6 +46,12 @@ public class HierarchicalNodeSet extends HashSet {
 		}
 		if (!found) return null;
 		return hnode;
+	}
+	
+	@Override
+	public boolean add(HierarchicalNode e) {
+		hashCode += e.getUniqueId();
+		return super.add(e);
 	}
 	
 	public int hashCode() {
@@ -58,16 +63,14 @@ public class HierarchicalNodeSet extends HashSet {
 	 */
 	public void buildHashCode() {
 		hashCode = 0;
-		for (Iterator it = iterator(); it.hasNext();) {
-			HierarchicalNode node = (HierarchicalNode) it.next();
+		for (HierarchicalNode node : this) {
 			hashCode += node.getUniqueId();
 		}
 	}
 	
 	public String toString() {
 		StringBuffer s = new StringBuffer();
-		for (Iterator iterator = this.iterator(); iterator.hasNext();) {
-			HierarchicalNode node = (HierarchicalNode) iterator.next();
+		for (HierarchicalNode node : this) {
 			s.append(node+"{"+node.getSigma()+"};");
 		}
 		return s.toString();

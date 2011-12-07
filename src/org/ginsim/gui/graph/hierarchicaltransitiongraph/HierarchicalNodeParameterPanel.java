@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.hierachicaltransitiongraph;
+package org.ginsim.gui.graph.hierarchicaltransitiongraph;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -9,13 +9,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.gui.graph.hierarchicaltransitiongraph.HierarchicalCellRenderer;
-import org.ginsim.gui.graph.hierarchicaltransitiongraph.HierarchicalTableModel;
+import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 
-public class HierarchicalNodeParameterPanel extends AbstractParameterPanel {
+public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<HierarchicalNode> {
 		private static final long serialVersionUID = 3342245591953494375L;
 
 		private HierarchicalNode node;
@@ -44,7 +43,8 @@ public class HierarchicalNodeParameterPanel extends AbstractParameterPanel {
 		/*
 		 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
 		 */
-		public void setEditedItem(Object obj) {
+		@Override
+		public void setEditedItem(HierarchicalNode obj) {
 			if (obj instanceof HierarchicalNode) {
 				node = (HierarchicalNode)obj;
 				((HierarchicalTableModel)getJTable().getModel()).setContent(node);

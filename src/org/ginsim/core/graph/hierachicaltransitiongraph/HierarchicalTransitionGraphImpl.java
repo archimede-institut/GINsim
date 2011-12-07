@@ -23,11 +23,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.gui.graph.hierarchicaltransitiongraph.HierarchicalEdgeParameterPanel;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 import org.ginsim.servicegui.tool.decisionanalysis.DecisionOnEdge;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
 
 
 public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
@@ -51,10 +48,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
 	private byte[] childsCount = null;
-	private HierarchicalNodeParameterPanel vertexPanel = null;
 	private long saveEdgeId;
-	private SimulationParameters simulationParameters;
-	private HierarchicalEdgeParameterPanel edgePanel;
 
 	
 /* **************** CONSTRUCTORS ************/	
@@ -151,25 +145,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	}
 
 		
-		
-/* **************** PANELS ************/	
-		
-    
-	public AbstractParameterPanel getEdgeAttributePanel() {
-	    if (edgePanel == null) {
-	    	edgePanel  = new HierarchicalEdgeParameterPanel(this);
-	    }
-		return edgePanel;
-	}
-
-	public AbstractParameterPanel getNodeAttributePanel() {
-	    if (vertexPanel == null) {
-	        vertexPanel  = new HierarchicalNodeParameterPanel(this);
-	    }
-		return vertexPanel;
-	}
-	
-		
 /* **************** SAVE ************/	
 		
 	/**
@@ -240,44 +215,41 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 		
 /* **************** NODE SEARCH ************/
 	
-	// TODO : REFACTORING ACTION
-	// TODO : The renaming of "Vertices" to "Nodes" has generate a collision between this method (originally named searchNodes)
-	// and the one in AbstractGraph, originaly named searchVertices. However, this method seems to be unused (private and no
-	 // local call) : do we have to keep it?
-//	private Vector searchNodes(String regexp) {
-//		Vector v = new Vector();
-//		
-//		StringBuffer s = new StringBuffer();
-//		for (int i = 0; i < regexp.length(); i++) {
-//			char c = regexp.charAt(i);
-//			if (c == '\\') {
-//				s.append(regexp.charAt(++i));
-//			} else if (c == '*') {
-//				s.append("[0-9\\*]");
-//			} else if (c == '0' || (c >= '1' && c <= '9')){
-//				s.append("["+c+"\\*]");
-//			} else if (c == ' ' || c == '\t') {
-//				//pass
-//			} else {
-//				s.append(c);
-//			}
-//		}
-//		Pattern pattern = Pattern.compile(s.toString(), Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
-//		Matcher matcher = pattern.matcher("");
-//		
-//		for (Iterator it = this.getNodes().iterator(); it.hasNext();) {
-//			HierarchicalNode vertex = (HierarchicalNode) it.next();
-//			matcher.reset(vertex.statesToString());
-//			if (matcher.find()) {
-//				v.add(vertex);
-//			}
-//		}
-//		return v;
-//	}
+	@Override
+	public Vector<HierarchicalNode> searchNodes(String regexp) {
+		Vector<HierarchicalNode> v = new Vector<HierarchicalNode>();
+		
+		StringBuffer s = new StringBuffer();
+		for (int i = 0; i < regexp.length(); i++) {
+			char c = regexp.charAt(i);
+			if (c == '\\') {
+				s.append(regexp.charAt(++i));
+			} else if (c == '*') {
+				s.append("[0-9\\*]");
+			} else if (c == '0' || (c >= '1' && c <= '9')){
+				s.append("["+c+"\\*]");
+			} else if (c == ' ' || c == '\t') {
+				//pass
+			} else {
+				s.append(c);
+			}
+		}
+		Pattern pattern = Pattern.compile(s.toString(), Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher("");
+		
+		for (Iterator<HierarchicalNode> it = this.getNodes().iterator(); it.hasNext();) {
+			HierarchicalNode vertex = (HierarchicalNode) it.next();
+			matcher.reset(vertex.statesToString());
+			if (matcher.find()) {
+				v.add(vertex);
+			}
+		}
+		return v;
+	}
 	
 	@Override
 	public HierarchicalNode getNodeForState(byte[] state) {
-		for (Iterator it = this.getNodes().iterator(); it.hasNext();) {
+		for (Iterator<HierarchicalNode> it = this.getNodes().iterator(); it.hasNext();) {
 			HierarchicalNode v = (HierarchicalNode) it.next();
 			if (v.contains(state)) return v;
 		}

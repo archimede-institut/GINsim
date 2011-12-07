@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNodeParameterPanel;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
@@ -64,7 +63,6 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<Hier
 
 	@Override
 	public GUIEditor<HierarchicalTransitionGraph> getMainEditionPanel( HierarchicalTransitionGraph graph) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -97,7 +95,6 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<Hier
 
 	@Override
 	public List<EditAction> getEditActions(HierarchicalTransitionGraph graph) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

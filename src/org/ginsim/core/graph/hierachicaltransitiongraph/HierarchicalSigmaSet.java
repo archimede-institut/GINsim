@@ -19,7 +19,7 @@ public class HierarchicalSigmaSet {
 	/**
 	 * Map&lt;HierarchicalNode, HierarchicalSigmaSet&gt;
 	 */
-	private Map children;
+	private Map<HierarchicalNode, HierarchicalSigmaSet> children;
 	
 	private HierarchicalNode label;
 	
@@ -39,7 +39,7 @@ public class HierarchicalSigmaSet {
  	
  	public HierarchicalSigmaSet addChild(HierarchicalNode label) {
  		if (children == null) {
- 			children = new HashMap();
+ 			children = new HashMap<HierarchicalNode, HierarchicalSigmaSet>();
  		}
  		HierarchicalSigmaSet child = (HierarchicalSigmaSet) children.get(label);
  		if (child == null) {
@@ -59,7 +59,7 @@ public class HierarchicalSigmaSet {
 	 * @param nodeSet 
 	 * @param htg 
 	 */
-	public void setUnrecoverable(HierarchicalNode unrecoverable, Collection nodeSet, HierarchicalSigmaSetFactory sigmaSetFactory, HierarchicalTransitionGraph htg) {
+	public void setUnrecoverable(HierarchicalNode unrecoverable, Collection<HierarchicalNode> nodeSet, HierarchicalSigmaSetFactory sigmaSetFactory, HierarchicalTransitionGraph htg) {
 		if (this.unrecoverable != null) {
 			this.unrecoverable.merge(unrecoverable, nodeSet, sigmaSetFactory, htg);
 			this.unrecoverable.statesSet.reduce();
@@ -76,8 +76,8 @@ public class HierarchicalSigmaSet {
 		return unrecoverable;
 	}
 	
-	public List getSigmaImage() {
-		LinkedList path = new LinkedList();
+	public List<HierarchicalNode> getSigmaImage() {
+		LinkedList<HierarchicalNode> path = new LinkedList<HierarchicalNode>();
 		if (this.parent == null) {
 			LogManager.error( this + " appel sur la root ?");
 			return path;
