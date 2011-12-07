@@ -38,7 +38,6 @@ public class FileSelectionHelper {
 	public static String selectSaveFilename( Frame parent, GsFileFilter file_filter) {
 		JFileChooser chooser = new JFileChooser();
 		if( file_filter != null){
-			System.out.println("FileSelectionHelper.selectSaveFilename() : file filter  " + file_filter.getDescription());
 			chooser.setFileFilter( file_filter);
 		}
 		chooser.showSaveDialog(parent);
