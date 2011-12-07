@@ -29,6 +29,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
@@ -308,23 +309,25 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 							h = (Hashtable)v.lastElement();
 							v = (Vector)v.firstElement();
 							enu = v.elements();
-							System.err.println("*** " + gene1 + " " + gene2);
+							LogManager.trace( "*** " + gene1 + " " + gene2);
 							while (enu.hasMoreElements()) {
 								mod = (String)enu.nextElement();
-								System.err.println("    " + mod);
+								LogManager.trace( "    " + mod);
 								d = (TBModuleData)clientPanel.getClient().getModuleData(mod);
 								probes = d.getProbes();
 								data = d.getData();
 								for (int k = 0; k < probes.size(); k++) {
 									symb = ((TBProbe)probes.elementAt(i)).getGene().getSymbol().toLowerCase();
-									if (k == 0) System.err.println(symb);
+									if (k == 0){
+										LogManager.trace( symb, false);
+									}
 									if (symb.equalsIgnoreCase(gene1) || symb.equalsIgnoreCase(gene2)) {
 										System.err.print("    " + symb + " ");
 										for (int l = 0; l < d.getSamples().size(); l++) {
 											f = data[k][l];
 											if (l < 10) System.err.print(f + " ");
 										}
-										System.err.println("");
+										LogManager.trace( "", false);
 									}
 								}
 							}

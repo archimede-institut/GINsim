@@ -445,7 +445,10 @@ public class GUIManager {
 
 	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parentGraph, boolean b) {
 		
-		if (new_graph != null && new_graph.getNodeOrderSize() < 21) {
+		// TODO : REFACTORING ACTION
+		// Why does this limit of 21 node exist?
+		//if (new_graph != null && new_graph.getNodeOrderSize() < 21) {
+		if( new_graph != null && new_graph.getNodeCount() < 1000){
 			newFrame( new_graph);
 			return;
 		}

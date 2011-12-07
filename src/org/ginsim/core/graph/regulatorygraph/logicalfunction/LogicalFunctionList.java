@@ -45,10 +45,10 @@ public class LogicalFunctionList implements TBooleanData {
     return v2;
   }
 
-  public void print() {
-    Iterator it = getAsStringVector().iterator();
-    while (it.hasNext()) {
-		System.err.println(it.next());
-	}
-  }
+//  public void print() {
+//    Iterator it = getAsStringVector().iterator();
+//    while (it.hasNext()) {
+//		System.err.println(it.next());
+//	}
+//  }
 }

@@ -17,7 +17,7 @@ public class GINsimPy {
 	public static void runJython(String filename) {
         File f = new File(filename);
         if (!f.exists()) {
-            System.out.println("No such script: "+filename);
+            LogManager.error( "No such script: "+filename);
         	return;
         }
 

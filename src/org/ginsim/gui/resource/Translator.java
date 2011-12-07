@@ -27,6 +27,8 @@ import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.Vector;
 
+import org.ginsim.core.utils.log.LogManager;
+
 /** 
  * Contains ResourceBundle objects.
  * The first (deepest) bundle is the Graphpad bundle.
@@ -117,7 +119,7 @@ public class Translator {
 			return defaultBundle.getString(sKey);
 		} catch (MissingResourceException mrex) {
 			if (logNotFoundResources) {
-				System.err.println("Resource for the following key not found:" + sKey);
+				LogManager.error( "Resource for the following key not found:" + sKey);
 			}
 			return sKey;
 		}
@@ -170,7 +172,7 @@ public class Translator {
 			return defaultBundle.getString(sKey);
 		} catch (MissingResourceException mrex) {
 			if (logNotFoundResources) {
-				System.err.println("Resource for the following key not found:" + sKey);
+				LogManager.error("Resource for the following key not found:" + sKey);
 			}
 			return null;
 		}

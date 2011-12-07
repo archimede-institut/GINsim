@@ -96,7 +96,7 @@ public class GenericPropertyInfo {
 		} else {
 			LogManager.debug( "how to deal with this: "+type + " --> " + cl);
 			for (Object o: editor.getArgs()) {
-				System.err.println("  "+o);
+				LogManager.debug("  "+o);
 			}
 		}
 	}

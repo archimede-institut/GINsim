@@ -18,9 +18,6 @@ public class SBMLImportService implements Service {
 		SBMLXpathParser parser = new SBMLXpathParser(filename);
 		Graph new_graph = parser.getGraph();
 		
-		System.out.println("SBMLImportService.run() : Nb nodes  = " + new_graph.getNodes().size());
-		System.out.println("SBMLImportService.run() : Nb edges  = " + new_graph.getEdges().size());
-		
 		return new_graph;
 	}
 }

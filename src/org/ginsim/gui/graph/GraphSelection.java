@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
 /**
@@ -98,10 +99,10 @@ public class GraphSelection<V, E extends Edge<V>> {
 
 	
 	
-	
+	// TODO : REFACTORING ACTION
 	// TODO: add methods to change the selection
 	public void selectNodes(List l) {
-		System.err.println("Select vertices not implemented");
+		LogManager.error("Select vertices not implemented");
 	}
 	
 	

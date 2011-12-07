@@ -15,6 +15,8 @@ import javax.swing.JToolBar;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import org.ginsim.core.utils.log.LogManager;
+
 
 /**
  * Manage the available interactive edition action.
@@ -88,7 +90,7 @@ public class EditActionManager {
 	 */
 	public void actionPerformed(EditAction action) {
 		if (action != selectedAction) {
-			System.err.println("Did we just perform a non-selected edit action?");
+			LogManager.error( "Did we just perform a non-selected edit action?");
 			return;
 		}
 		if (!locked) {

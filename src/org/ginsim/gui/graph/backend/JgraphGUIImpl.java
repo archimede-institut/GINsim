@@ -358,7 +358,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			} else if (o instanceof DefaultGraphCell) {
 				nodes.add((V)((DefaultGraphCell)o).getUserObject());
 			} else {
-				System.err.println("Could not detect the selection: " + o);
+				LogManager.error("Could not detect the selection: " + o);
 			}
 		}
 
