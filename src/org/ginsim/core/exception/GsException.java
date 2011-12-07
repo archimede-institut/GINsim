@@ -18,7 +18,7 @@ public class GsException extends Exception {
     
     private int gravity;
     private String message;
-    private Exception e = null;
+    private Exception exception = null;
     
     /**
      * create a GsException.
@@ -29,6 +29,14 @@ public class GsException extends Exception {
         this.gravity = gravity;
         this.message = message;
     }
+    
+    public GsException( String message, Exception excep){
+    	
+    	this.gravity = GRAVITY_ERROR;
+    	this.message = message;
+    	this.exception = excep;
+    }
+    
     /**
      * create a GsException.
      * @param gravity the gravity level of the exception
@@ -36,7 +44,7 @@ public class GsException extends Exception {
      */
     public GsException (int gravity, Exception e) {
         this.gravity = gravity;
-        this.e = e;
+        this.exception = e;
     }
     /**
      * get the gravity of the error, this should be one of
@@ -52,8 +60,8 @@ public class GsException extends Exception {
      * @see java.lang.Throwable#getMessage()
      */
     public String getMessage() {
-        if (e != null) {
-            return e.getLocalizedMessage();
+        if (exception != null) {
+            return exception.getLocalizedMessage();
         }
         return message;
     }

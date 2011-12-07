@@ -103,7 +103,7 @@ class ModelSimplifierConfigManager implements GraphAssociatedObjectManager {
             }
             out.closeTag();
         } catch (IOException e) {
-            GUIManager.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+            new GsException( "STR_unableToSave", e);
         }
     }
 

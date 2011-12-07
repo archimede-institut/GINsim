@@ -179,12 +179,12 @@ public class ReducedGraphParser extends GsXMLHelper {
                     }
                 } else if (qName.equals("graph")) {
             			if (!"reduced".equals(attributes.getValue("class"))) {
-            				throw new SAXException("Not a reduced graph");
+            				throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_NotReducedGraph"));
             			}
             			try {
 							graph.setGraphName(attributes.getValue("id"));
 						} catch (GsException e) {
-							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "Invalid Graph name"));
+							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "STR_InvalidGraphName"));
 						}
                 } else if (qName.equals("link")) {
                     graph.setAssociatedGraphID(attributes.getValue("xlink:href"));

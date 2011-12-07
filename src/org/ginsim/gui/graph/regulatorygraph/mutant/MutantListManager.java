@@ -31,7 +31,7 @@ public class MutantListManager implements
         return parser.getParameters();
     }
 
-    public void doSave(OutputStreamWriter os, Graph graph) {
+    public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
     	
         RegulatoryMutants lMutant = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, key, false);
         List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
@@ -47,7 +47,7 @@ public class MutantListManager implements
             }
             out.closeTag();
         } catch (IOException e) {
-            GUIManager.getInstance().error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+            throw new GsException( "STR_unableToSave", e);
         }
     }
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
@@ -76,7 +77,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 			htg.setNodeOrder(nodeOrder);
 			htg.setChildsCount(childCount);
 		} catch (NumberFormatException e) {
-			GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
+			throw new GsException( GsException.GRAVITY_ERROR, e);
 		}
 	}
 
@@ -205,12 +206,12 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                     }
                 } else if (qName.equals("graph")) {
             			if (!"hierarchicalTransitionGraph".equals(attributes.getValue("class"))) {
-            				throw new SAXException("not a hierarchicalTransitionGraph");
+            				throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_HTG_NotHierarchicalTransitionGraph"));
             			}
             			try {
-							htg.setGraphName(attributes.getValue("id"));
+							htg.setGraphName( attributes.getValue("id"));
 						} catch (GsException e) {
-							GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "STR_InvalidGraphName"));
 						}
 						try {
 							String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
@@ -224,11 +225,15 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 							htg.setNodeOrder(nodeOrder);
 							htg.setChildsCount(childCount);
 						} catch (NumberFormatException e) {
-							GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalid node order"), null);
+							throw new SAXException( new GsException( "STR_InvalidNodeOrder", e));
 						}
 						int mode = Integer.parseInt(attributes.getValue("iscompact"));
-						if (mode != 1 && mode != 2) GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalid mode (HTG or SCC)"), null);
-						else htg.setMode(mode);
+						if (mode != 1 && mode != 2){
+							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "STR_HTG_InvalidModeHTGorSCC"));
+						}
+						else{
+							htg.setMode(mode);
+						}
                 } else if (qName.equals("link")) {
                     htg.setAssociatedGraphID(attributes.getValue("xlink:href"));
                 }

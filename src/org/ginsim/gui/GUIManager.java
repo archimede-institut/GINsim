@@ -81,10 +81,11 @@ public class GUIManager {
 			NotificationManager.getManager().registerListener( frame, graph);
 			return frame;
 		} catch (Exception e) {
-			error(new GsException(GsException.GRAVITY_ERROR, e), null);
-			e.printStackTrace();
+			GUIMessageUtils.openErrorDialog( "STR_unableToOpen");
+			LogManager.error( "Unable to open graph");
+			LogManager.error( e);
+			return null;
 		}
-		return null;
 	}
 	
 	
@@ -437,16 +438,6 @@ public class GUIManager {
 	    }
 		
 	}
-
-    public static void error(GsException e, Frame main) {
-    	// FIXME: integrate error inside the main frame when possible
-//        if (main instanceof GsMainFrame) {
-//            Graph graph = ((GsMainFrame)main).getGraph();
-//            graph.addNotificationMessage(new Notification(graph, e));
-//            return;
-//        }
-        GUIMessageUtils.openErrorDialog(e, main);
-    }
 
 	public void whatToDoWithGraph(Graph<?, ?> new_graph, boolean b) {
 		whatToDoWithGraph( new_graph, null, b);

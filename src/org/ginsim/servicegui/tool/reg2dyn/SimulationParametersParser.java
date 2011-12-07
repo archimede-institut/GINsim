@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.ginsim.common.xml.XMLHelper;
+import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -63,11 +64,11 @@ public class SimulationParametersParser extends XMLHelper {
                 if (qName.equals("simulationParameters")) {
                     t_order = attributes.getValue("nodeOrder").trim().split(" ");
                     if (t_order.length != nodeOrder.size()) {
-                        throw new SAXException("bad number of genes");
+                        throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_REG2DYN_BadNumberGenes"));
                     }
                     for (int i=0 ; i<t_order.length ; i++) {
                         if (!t_order[i].equals(nodeOrder.get(i).toString())) {
-                            throw new SAXException("wrong node order");
+                            throw new SAXException(new GsException( GsException.GRAVITY_ERROR, "STR_InvalidNodeOrder"));
                         }
                     }
                 } else if (qName.equals("parameter")) {

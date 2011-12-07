@@ -38,10 +38,10 @@ public class LayoutServiceGUI implements ServiceGUI {
 }
 
 enum LayoutType {
-	LEVEL("Level layout", LayoutService.LEVEL),
-	LEVEL_INV("Inversed level layout", LayoutService.LEVEL_INV),
-	RING("Ring layout", LayoutService.RING),
-	RING_INV("Inverser ring layout", LayoutService.RING_INV);
+	LEVEL("STR_level_placement", LayoutService.LEVEL),
+	LEVEL_INV("STR_level_placement_inv", LayoutService.LEVEL_INV),
+	RING("STR_ring_placement", LayoutService.RING),
+	RING_INV("STR_ring_placement_inv", LayoutService.RING_INV);
 	
 	public final String name;
 	public final int key;

@@ -175,12 +175,12 @@ public final class DynamicParser extends GsXMLHelper {
                     }
                 } else if (qName.equals("graph")) {
             			if (!"dynamical".equals(attributes.getValue("class"))) {
-            				throw new SAXException("not a dynamical graph");
+            				throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_DG_NotDynamicalGraph"));
             			}
             			try {
 							graph.setGraphName(attributes.getValue("id"));
 						} catch (GsException e) {
-							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"));
+							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "STR_InvalidGraphName"));
 						}
             			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
             			Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);

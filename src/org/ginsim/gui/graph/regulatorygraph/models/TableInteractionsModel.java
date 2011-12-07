@@ -116,7 +116,12 @@ public class TableInteractionsModel extends AbstractTableModel {
 				value = ((Integer) aValue).intValue();
 			}
 			if (aValue instanceof String) {
-				value = Integer.parseInt((String) aValue);
+				try{
+					value = Integer.parseInt((String) aValue);
+				}
+				catch( NumberFormatException nfe){
+					value = 0;
+				}
 			}
 			if (value <= node.getMaxValue() && value >= 0) {
 				interactions.setParameterValue(rowIndex, value, graph);
