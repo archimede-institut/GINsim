@@ -124,7 +124,7 @@ public class StatesSet {
 	 * @param states, a <b>List&lt;byte[]&gt;</b> of states to add
 	 * @param status their corresponding status
 	 */
-	public void addStates(List states) {
+	public void addStates(List<byte[]> states) {
 		if (root == null) {
 			root = OMDDNode.multi_or(states, childsCount);
 			size = states.size();
@@ -389,8 +389,8 @@ public class StatesSet {
 	 * Note the order in the list is relative to the omdd structure.
 	 * @return a list made of all the states as schemata (using *)
 	 */
-	public List statesToSchemaList() {
-		List v = new LinkedList();
+	public List<byte[]> statesToSchemaList() {
+		List<byte[]> v = new LinkedList<byte[]>();
 		byte[] t = new byte[childsCount.length];
 		statesToSchemaList(root, v, t, -1);	
 		return v;
@@ -402,12 +402,12 @@ public class StatesSet {
 	 * Note the order in the list is relative to the omdd structure.
 	 * @return a list made of all the states as schemata (using *)
 	 */
-	public void statesToSchemaList(List v) {
+	public void statesToSchemaList(List<byte[]> v) {
 		byte[] t = new byte[childsCount.length];
 		statesToSchemaList(root, v, t, -1);	
 	}
 	
-	private void statesToSchemaList(OMDDNode omdd, List v, byte[] t, int last_depth) {
+	private void statesToSchemaList(OMDDNode omdd, List<byte[]> v, byte[] t, int last_depth) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return;
         	for (int i = last_depth+1; i < childsCount.length; i++) {
@@ -427,8 +427,8 @@ public class StatesSet {
 
 	}
 	
-	public List statesToFullList() {
-		List v = new LinkedList();
+	public List<byte[]> statesToFullList() {
+		List<byte[]> v = new LinkedList<byte[]>();
 		byte[] t = new byte[childsCount.length];
 		statesToFullList(root, v, t, -1);	
 		return v;
@@ -439,12 +439,12 @@ public class StatesSet {
 	 * Note the order in the list is relative to the omdd structure.
 	 * @return a list made of all the states as schemata (using *)
 	 */
-	public void statesToFullList(List v) {
+	public void statesToFullList(List<byte[]> v) {
 		byte[] t = new byte[childsCount.length];
 		statesToFullList(root, v, t, -1);	
 	}
 	
-	private void statesToFullList(OMDDNode omdd, List v, byte[] t, int last_depth) {
+	private void statesToFullList(OMDDNode omdd, List<byte[]> v, byte[] t, int last_depth) {
         if (omdd.next == null) {
         	if (omdd.value == 0) return;
             statesToList_leaf(omdd, v, t, last_depth+1);
@@ -455,7 +455,7 @@ public class StatesSet {
  
 	}
 	
-	private void statesToFullList_inner(OMDDNode omdd, List v, byte[] t, int depth, int limit_depth) {
+	private void statesToFullList_inner(OMDDNode omdd, List<byte[]> v, byte[] t, int depth, int limit_depth) {
 		if (depth == limit_depth) {
 	        for (int i = 0 ; i < omdd.next.length ; i++) {
 		    	t[omdd.level] = (byte) i;
@@ -469,7 +469,7 @@ public class StatesSet {
 		}
 	}
 
-	private void statesToList_leaf(OMDDNode omdd, List v, byte[] t, int depth) {
+	private void statesToList_leaf(OMDDNode omdd, List<byte[]> v, byte[] t, int depth) {
 		if (depth == childsCount.length) {
 			v.add(t.clone());
 			return;

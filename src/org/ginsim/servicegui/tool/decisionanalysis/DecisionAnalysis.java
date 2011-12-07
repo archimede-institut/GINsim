@@ -1,6 +1,6 @@
 package org.ginsim.servicegui.tool.decisionanalysis;
 
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,18 +35,11 @@ public class DecisionAnalysis extends Thread {
 		this.geneCount = htg.getNodeOrderSize();
 	}
 
-	public void run( List selected_vertices) {
-		
-		// No more used
-		//List<RegulatoryNode> nodeOrder = htg.getNodeOrder();
+	public void run( Collection<HierarchicalNode> selected_vertices) {
 		
 		//Iterate on the selected vertex or all of them f node are selected
-		Iterator<HierarchicalNode> it = selected_vertices.iterator();
-		if (! it.hasNext()) {
-			it = htg.getNodes().iterator();
-		}
-		for (; it.hasNext();) {
-			HierarchicalNode source = it.next();
+		if (selected_vertices == null) selected_vertices = htg.getNodes();
+		for (HierarchicalNode source : selected_vertices) {
 			List<byte[]> state_list = new LinkedList<byte[]>();
 			source.statesSet.statesToFullList(state_list);
 			for (byte[] source_state: state_list) {

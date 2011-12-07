@@ -1,7 +1,6 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -9,11 +8,11 @@ public class HierarchicalSigmaSetFactory {
 	
 	private HierarchicalSigmaSet root;
 	
-	private SortedSet tmpSet;
+	private SortedSet<HierarchicalNode> tmpSet;
 	
 	public HierarchicalSigmaSetFactory() {
 		this.root = new HierarchicalSigmaSet(null, null);
-		this.tmpSet = new TreeSet();
+		this.tmpSet = new TreeSet<HierarchicalNode>();
 	}
 
 	public void beginNewSigma() {
@@ -24,14 +23,13 @@ public class HierarchicalSigmaSetFactory {
 		tmpSet.add(label);
 	}
 
-	public void addAllToNewSigma(Collection labels) {
+	public void addAllToNewSigma(Collection<HierarchicalNode> labels) {
 		tmpSet.addAll(labels);
 	}
 
 	public HierarchicalSigmaSet endNewSigma() {
 		HierarchicalSigmaSet parent = root;
-		for (Iterator it = tmpSet.iterator(); it.hasNext();) {
-			HierarchicalNode label = (HierarchicalNode) it.next();
+		for (HierarchicalNode label : tmpSet) {
 			parent = parent.addChild(label);
 		}
 		return parent;

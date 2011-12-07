@@ -13,7 +13,7 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGr
 public class HierarchicalTableModel extends AbstractTableModel {
 		private static final long serialVersionUID = 2922634659695976653L;
 		
-		private List content = null;
+		private List<byte[]> content = null;
 		private int colCount;
 		
 		private HierarchicalTransitionGraph htg;
@@ -62,7 +62,7 @@ public class HierarchicalTableModel extends AbstractTableModel {
 		 */	
 		public String getColumnName(int column) {
 			
-			return htg.getNodeOrder().get(column).toString();
+			return htg.getNodeOrder().get(column).getNodeID();
 		}
 
 		public void setContent(HierarchicalNode hnode) {

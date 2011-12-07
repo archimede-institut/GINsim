@@ -38,7 +38,7 @@ public class DecisionAnalysisServiceGUI implements ServiceGUI {
 
 
 class DecisionAnalysisAction extends ToolAction {
-
+	private static final long serialVersionUID = -2719039497869822805L;
 	private final HierarchicalTransitionGraph graph;
 	
 	public DecisionAnalysisAction( HierarchicalTransitionGraph graph) {

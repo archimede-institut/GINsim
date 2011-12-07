@@ -879,7 +879,7 @@ public class OMDDNode {
 	 * @param nodes a list of state (byte[])
 	 * @return an OMDDNode
 	 */
-	public static OMDDNode multi_or(List states, byte[] childsCount)  {
+	public static OMDDNode multi_or(List<byte[]> states, byte[] childsCount)  {
 		if (states == null || states.size() == 0) {
 			return OMDDNode.TERMINALS[0];
 		}
@@ -888,7 +888,7 @@ public class OMDDNode {
 		}
 
 		int[] nbnexts = new int[childsCount[0]];
-		for (Iterator it = states.iterator(); it.hasNext();) {
+		for (Iterator<byte[]> it = states.iterator(); it.hasNext();) {
 			byte[] state = (byte[]) it.next();
 			nbnexts[state[0]]++;
 		}
@@ -896,7 +896,7 @@ public class OMDDNode {
 		for (byte value=0 ; value<next.length ; value++) {
 			byte[][] next_states = new byte[nbnexts[value]][];
 			int c = 0;
-			for (Iterator it = states.iterator(); it.hasNext();) {
+			for (Iterator<byte[]> it = states.iterator(); it.hasNext();) {
 				byte[] state = (byte[]) it.next();
 				if (state[0] == value) {
 					next_states[c++] = state;

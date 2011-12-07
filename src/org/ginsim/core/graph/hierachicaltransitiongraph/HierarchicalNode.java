@@ -34,7 +34,7 @@ import org.xml.sax.SAXException;
  * 
  *
  */
-public class HierarchicalNode implements Comparable, Dotify {
+public class HierarchicalNode implements Comparable<Object>, Dotify {
 
 	public static final byte TYPE_TRANSIENT_COMPONENT = 0;
 	public static final byte TYPE_TRANSIENT_CYCLE = 1;
@@ -87,7 +87,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 	/**
 	 * A list of states (byte[]) that are processing currently, and to add later.
 	 */
-	private List statePile = null;
+	private List<byte[]> statePile = null;
 	
 //	/**
 //	 * Count of processed states in this node (a node is processed when all its childs are processed.
@@ -109,8 +109,8 @@ public class HierarchicalNode implements Comparable, Dotify {
 	 * An array such that childsCount[i] indicates the maxValue of the i-th gene
 	 */
 	private byte[] childsCount;
-	private Set out;
-	private Set in;
+	private Set<HierarchicalNode> out;
+	private Set<HierarchicalNode> in;
 
 	
 /* **************** CONSTRUCTORS ************/	
@@ -125,8 +125,8 @@ public class HierarchicalNode implements Comparable, Dotify {
 		this.uid = nextId++;
 		this.type = TYPE_TRANSIENT_COMPONENT;
 		this.childsCount = childsCount;
-		this.in = new HashSet();
-		this.out = new HashSet();
+		this.in = new HashSet<HierarchicalNode>();
+		this.out = new HashSet<HierarchicalNode>();
 	}
 	
 /* **************** PILE ************/	
@@ -150,7 +150,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 	 * @param state the state to add
 	 */
 	public void addStateToThePile(byte[] state) {
-		if (statePile == null) statePile = new LinkedList();
+		if (statePile == null) statePile = new LinkedList<byte[]>();
 		statePile.add(state);
 	}
 	
@@ -176,7 +176,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 	 */
 	public boolean contains(byte [] state) {
 		if (statePile != null) { //First search the state in the Pile
-			for (Iterator it = statePile.iterator(); it.hasNext();) {
+			for (Iterator<byte[]> it = statePile.iterator(); it.hasNext();) {
 				byte[] stateInPile = (byte[]) it.next();
 				boolean found = true;
 				for (int i = 0; i < stateInPile.length; i++) {
@@ -205,7 +205,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 	 * @param nodeSet 
 	 * @param htg 
 	 */
-	public void merge(HierarchicalNode slaveNode, Collection nodeSet, HierarchicalSigmaSetFactory sigmaSetFactory, HierarchicalTransitionGraph htg) {
+	public void merge(HierarchicalNode slaveNode, Collection<HierarchicalNode> nodeSet, HierarchicalSigmaSetFactory sigmaSetFactory, HierarchicalTransitionGraph htg) {
 		if (slaveNode == this) return;
 		nodeSet.remove(slaveNode);												//Make slaveNode a slaveNode !
 		if (this.statesSet != null) {
@@ -232,7 +232,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 		
 		
 		if (slaveNode.getOut() != null) {
-			for (Iterator it = slaveNode.getOut().iterator(); it.hasNext();) {
+			for (Iterator<HierarchicalNode> it = slaveNode.getOut().iterator(); it.hasNext();) {
 				HierarchicalNode to = (HierarchicalNode) it.next();
 				if (!to.equals(this)) {
 					this.addEdgeTo(to);
@@ -241,7 +241,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 			}			
 		}
 		if (slaveNode.getIn() != null) {
-			for (Iterator it = slaveNode.getIn().iterator(); it.hasNext();) {
+			for (Iterator<HierarchicalNode> it = slaveNode.getIn().iterator(); it.hasNext();) {
 				HierarchicalNode from = (HierarchicalNode) it.next();
 				if (!from.equals(this)) {
 					from.addEdgeTo(this);
@@ -296,28 +296,28 @@ public class HierarchicalNode implements Comparable, Dotify {
 	/**
 	 * @param out the out to set
 	 */
-	public void setOut(Set out) {
+	public void setOut(Set<HierarchicalNode> out) {
 		this.out = out;
 	}
 
 	/**
 	 * @return the out
 	 */
-	public Set getOut() {
+	public Set<HierarchicalNode> getOut() {
 		return out;
 	}
 
 	/**
 	 * @param in the in to set
 	 */
-	public void setIn(Set in) {
+	public void setIn(Set<HierarchicalNode> in) {
 		this.in = in;
 	}
 
 	/**
 	 * @return the in
 	 */
-	public Set getIn() {
+	public Set<HierarchicalNode> getIn() {
 		return in;
 	}
 
@@ -370,7 +370,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 		}
 		if (size == 1) {
 			StringBuffer s = new StringBuffer();
-			byte[] t = (byte[]) ((List)statesToList()).get(0);
+			byte[] t = (byte[]) ((List<byte[]>)statesToList()).get(0);
 			for (int i = 0; i < t.length; i++) {
 				s.append(String.valueOf(t[i]).charAt(0));
 			}
@@ -382,7 +382,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 		String name = "";
 		if (size == 1) {
 			StringBuffer s = new StringBuffer();
-			byte[] t = (byte[]) ((List)statesToList()).get(0);
+			byte[] t = ((List<byte[]>)statesToList()).get(0);
 			for (int i = 0; i < t.length; i++) {
 				s.append(String.valueOf(t[i]).charAt(0));
 			}
@@ -407,7 +407,7 @@ public class HierarchicalNode implements Comparable, Dotify {
 	public String statesToString(boolean addValue) {
 		StringBuffer res = new StringBuffer();
 		if (statePile != null) {
-			for (Iterator it = statePile.iterator(); it.hasNext();) {
+			for (Iterator<byte[]> it = statePile.iterator(); it.hasNext();) {
 				byte[] stateInPile = (byte[]) it.next();
 				for (int i = 0; i < stateInPile.length; i++) {
 					res.append(stateInPile[i]);
@@ -430,9 +430,9 @@ public class HierarchicalNode implements Comparable, Dotify {
 	 * Note the order in the list is relative to the omdd structure.
 	 * @return a list made of all the states as schemata (using *)
 	 */
-	public List statesToList() {
+	public List<byte[]> statesToList() {
 		addAllTheStatesInQueue();
-		List v = new LinkedList();
+		List<byte[]> v = new LinkedList<byte[]>();
 		statesSet.statesToSchemaList(v);
 		return v;
 	}

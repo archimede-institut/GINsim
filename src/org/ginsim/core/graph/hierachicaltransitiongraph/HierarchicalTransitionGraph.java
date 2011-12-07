@@ -1,45 +1,15 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.exception.GsException;
-import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphAssociation;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 import org.ginsim.servicegui.tool.decisionanalysis.DecisionOnEdge;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
 
-
-/* SUMMARY
- * 
- * **************** CONSTRUCTORS ************/	
-/* **************** EDITION OF VERTEX AND EDGE ************/	
-/* **************** SPECIFIC ACTIONS & CO ************/	
-/* **************** PANELS ************/	
-/* **************** SAVE ************/	
-/* **************** NODE SEARCH ************/
-/* **************** GETTER AND SETTERS ************/
-/* **************** UNIMPLEMENTED METHODS ************/
 
 public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, DecisionOnEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 

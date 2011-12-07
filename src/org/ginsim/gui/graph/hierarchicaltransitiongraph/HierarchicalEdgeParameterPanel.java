@@ -10,7 +10,7 @@ import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 import org.ginsim.servicegui.tool.decisionanalysis.DecisionOnEdge;
 
 
-public class HierarchicalEdgeParameterPanel  extends AbstractParameterPanel {
+public class HierarchicalEdgeParameterPanel  extends AbstractParameterPanel<DecisionOnEdge> {
 	private static final long serialVersionUID = 3342245591953494375L;
 
 
@@ -31,7 +31,8 @@ public class HierarchicalEdgeParameterPanel  extends AbstractParameterPanel {
 	/*
 	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
 	 */
-	public void setEditedItem(Object obj) {
+	@Override
+	public void setEditedItem(DecisionOnEdge obj) {
 		if (obj != null && obj instanceof DecisionOnEdge) {
 			DecisionOnEdge decisions = (DecisionOnEdge)obj;
 			typeLabel.setText(decisions.toString());
