@@ -3,10 +3,7 @@ package org.ginsim.core.graph.dynamicgraph;
 import java.util.List;
 
 import org.ginsim.core.graph.common.GraphFactory;
-import org.ginsim.core.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraph;
-import org.ginsim.core.graph.dynamicalhierarchicalgraph.DynamicalHierarchicalGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
 
