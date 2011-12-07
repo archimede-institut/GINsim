@@ -448,18 +448,19 @@ public class GUIManager {
         GUIMessageUtils.openErrorDialog(e, main);
     }
 
-	public void whatToDoWithGraph(Graph<?, ?> newGraph, boolean b) {
-		whatToDoWithGraph(newGraph, null, b);
+	public void whatToDoWithGraph(Graph<?, ?> new_graph, boolean b) {
+		whatToDoWithGraph( new_graph, null, b);
 	}
 
-	public void whatToDoWithGraph(Graph<?, ?> newGraph, Graph<?,?> parentGraph, boolean b) {
+	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parentGraph, boolean b) {
 		
-		if (newGraph.getNodeOrderSize() < 21) {
-			newFrame(newGraph);
+		if (new_graph != null && new_graph.getNodeOrderSize() < 21) {
+			newFrame( new_graph);
 			return;
 		}
 		
-		// FIXME: create a new WhatToDo frame
+		// TODO : REFACTORING ACTION
+		// TODO : create a new WhatToDo frame
 		LogManager.error( "TODO: implement a new whattodo frame");
 	}
 

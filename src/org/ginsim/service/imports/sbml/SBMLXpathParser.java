@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.imports.sbml;
+package org.ginsim.service.imports.sbml;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

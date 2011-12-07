@@ -12,6 +12,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
+import org.ginsim.service.ServiceManager;
 import org.ginsim.service.imports.sbml.SBMLImportService;
 import org.ginsim.servicegui.ServiceGUI;
 import org.ginsim.servicegui.common.GUIFor;
@@ -59,12 +60,14 @@ class SBMLImportAction extends ImportAction {
 		Frame frame = GUIManager.getInstance().getFrame( graph);
 		
 		// we should add a better way to select a file for import
-		filename = FileSelectionHelper.selectSaveFilename( frame);
+		filename = FileSelectionHelper.selectOpenFilename( frame);
 		if (filename == null) {
 			return;
 		}
-		SBMLXpathParser parser = new SBMLXpathParser(filename);
-		Graph newGraph = parser.getGraph();
-		GUIManager.getInstance().whatToDoWithGraph(newGraph, true);
+		
+		SBMLImportService service = ServiceManager.getManager().getService( SBMLImportService.class);
+		Graph new_graph = service.run( filename);
+		
+		GUIManager.getInstance().whatToDoWithGraph (new_graph, true);
 	}
 }
