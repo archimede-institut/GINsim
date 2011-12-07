@@ -5,20 +5,29 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 
-
+/**
+ * This class is the central class of the register/publish design pattern applied to Notifications
+ * This manager receive registration from object that have to receive Notification on specific topics
+ * It receive also all the Notification and distribute them to listening objects according to the Notification Topic 
+ * 
+ * @author spinelli
+ *
+ */
 
 
 public class NotificationManager {
 
+	// The static instance of the manager
 	private static NotificationManager instance;
 	
+	// List of the registered listeners
 	private List<TopicsListener> notificationListerners;
+	// List of the memorized notifications (boolean is the publich/delete mode)
 	private HashMap<Notification, Boolean> memorizedNotifications;
 	
 	/**
@@ -216,11 +225,9 @@ public class NotificationManager {
 				List<Object> topics_listened = topic_listener.getTopics();
 				if( topics_listened.contains( message.getTopic())){
 					if( !deletion){
-						System.out.println("NotificationManager.publish() : ====> Published");
 						topic_listener.getListener().receiveNotification( message);
 					}
 					else{
-						System.out.println("NotificationManager.publish() : ====> Removed");
 						topic_listener.getListener().deleteNotification( message);
 					}
 					managed = true;
