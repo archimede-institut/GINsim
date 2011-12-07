@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.xml.sax.SAXException;
 
@@ -577,7 +578,7 @@ public class StatesSet {
 			reduce();
 			updateSize();
 		} catch (ParseException e) {
-			throw new SAXException(e);
+			throw new SAXException( new GsException( "STR_ParsingError", e));
 		}
 		
 	}

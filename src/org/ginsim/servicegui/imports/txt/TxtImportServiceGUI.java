@@ -18,7 +18,6 @@ import org.ginsim.servicegui.common.ImportAction;
 import org.mangosdk.spi.ProviderFor;
 
 
-
 @ProviderFor(ServiceGUI.class)
 @GUIFor( TxtImportService.class)
 public class TxtImportServiceGUI implements ServiceGUI {

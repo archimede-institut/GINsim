@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -48,7 +49,7 @@ class TBAction extends ToolAction {
 		// TODO : REFACTORING ACTION
 		// TODO: The TBrowser.getInstance was written in the plugin creator.. is this the right place to put it?
 
-		GUIManager.error(new GsException(GsException.GRAVITY_INFO, "TB client disabled"), GUIManager.getInstance().getFrame(graph));
+		GUIMessageUtils.openErrorDialog( new GsException(GsException.GRAVITY_INFO, "TB client disabled"), GUIManager.getInstance().getFrame(graph));
 
 //		TBrowser.getInstance();
 //		if (!((BaseMainFrame) frame).removeTab("TBrowser")) {

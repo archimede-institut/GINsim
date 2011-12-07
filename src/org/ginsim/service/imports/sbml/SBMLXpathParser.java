@@ -49,7 +49,7 @@ public final class SBMLXpathParser {
 	
 	/** Creates a new instance of SbmlXpathParser */
 	private RegulatoryGraph graph;
-	protected File _FilePath;
+	protected File filePath;
 	private String s_nodeOrder = "";
 	private RegulatoryNode vertex = null;
 	public RegulatoryEdge edge = null;
@@ -68,7 +68,7 @@ public final class SBMLXpathParser {
 
 	public SBMLXpathParser(String filename) {
 
-		this._FilePath = new File(filename);
+		this.filePath = new File(filename);
 		this.graph = GraphManager.getInstance().getNewGraph();
 		values = new Hashtable<RegulatoryNode, Hashtable<String, Vector<String>>>();
 		initialize();
@@ -86,7 +86,7 @@ public final class SBMLXpathParser {
 		try {
 			/** create a SAXBuilder instance */
 			SAXBuilder sxb = new SAXBuilder();
-			document = sxb.build(_FilePath);
+			document = sxb.build(filePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JDOMException e) {
@@ -110,13 +110,10 @@ public final class SBMLXpathParser {
 			/** add this namespace (namespace1) from xpath namespace list **/ 		 
 			xpa1.addNamespace(namespace1);
 			
-			/** Retrieve the model ID (graph name)  **/			
-			String modelName = xpa1.valueOf(racine);
-			try {
-				GraphManager.getInstance().registerGraph( graph, modelName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			// Retrieve the model ID of the graph and set the name of the graph with it
+			String model_name = xpa1.valueOf(racine);
+			graph.setGraphName( model_name);
+			
 			vareader = graph.getNodeAttributeReader();
 			ereader = graph.getEdgeAttributeReader();
 
@@ -183,7 +180,6 @@ public final class SBMLXpathParser {
 						}
 						
 						/** add this node in a node collection **/
-						//values.put(vertex, new Hashtable());
 						values.put(vertex, new Hashtable<String, Vector<String>>());
 					} catch (NumberFormatException e) {
 						throw new JDOMException("mal formed node's parameter");// TODO:
@@ -299,13 +295,13 @@ public final class SBMLXpathParser {
 		if (!values.isEmpty()) {
 			parseBooleanFunctions();
 		}
-		@SuppressWarnings("unchecked")
+		
 		Iterator<RegulatoryNode> it = graph.getNodeOrder().iterator();
 		while (it.hasNext()) {
 			RegulatoryNode vertex = it.next();
 			vertex.getV_logicalParameters().cleanupDup();
 		}
-	} // void parse(File _FilePath)
+	} // void parse(File filePath)
 	
 	/** This function allows to obtain a string which
 	 *  contain a logical function of every <functionTerm> element 
@@ -339,7 +335,7 @@ public final class SBMLXpathParser {
 	 **/
 	
 	public FunctionTerm deal(Element root) throws SAXException, IOException {
-		@SuppressWarnings("unchecked")
+
 		List<Element> rootConv = root.getChildren();
 		Element math = rootConv.get(0);
 		XMLOutputter outputer = new XMLOutputter(Format.getPrettyFormat());
@@ -374,6 +370,8 @@ public final class SBMLXpathParser {
 			}			
 		 }
 		 
+		 System.out.println("SBMLXpathParser.deal() : Functionterm = " + function);
+		 
 		return function;
 	}
 	
@@ -386,7 +384,9 @@ public final class SBMLXpathParser {
 	 * @param input_to_sign: a map that contains every regulatory node source and his sign. */
 	
 	private void createMutliEdges( FunctionTerm function_term, String node_to_id, HashMap<String, String> input_to_sign, RegulatoryGraph graph){		
-				
+		
+		System.out.println("SBMLXpathParser.createMutliEdges() : Entering edges creation");
+		
 		List<Condition> l_condition = function_term.getConditionList();
 		Iterator<Condition> it_cond = l_condition.iterator();
 		while( it_cond.hasNext()){
@@ -415,6 +415,7 @@ public final class SBMLXpathParser {
 					if( index >= 0 && index < exp.length()-1) {
 						byte threshold = (byte) Integer.parseInt( exp.substring( index+1));
 						try{
+							System.out.println("SBMLXpathParser.createMutliEdges() : Adding edges from '" + node_from_id + "' to '" + node_to_id +"'");
 							edge = graph.addNewEdge( node_from_id, node_to_id, threshold, sign);
 							m_edges.put(sign_code, edge);
 							edge.me.rescanSign(graph);

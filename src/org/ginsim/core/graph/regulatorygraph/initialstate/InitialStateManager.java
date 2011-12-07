@@ -28,7 +28,7 @@ public class InitialStateManager implements GraphAssociatedObjectManager {
         return parser.getParameters();
     }
 
-    public void doSave(OutputStreamWriter os, Graph graph) {
+    public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
         GsInitialStateList imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, key, true);
         List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (imanager == null || imanager.isEmpty() || nodeOrder == null || nodeOrder.size() == 0) {
@@ -41,7 +41,7 @@ public class InitialStateManager implements GraphAssociatedObjectManager {
             imanager.getInputConfigs().toXML(out, "input");
             out.closeTag();
         } catch (IOException e) {
-            GUIManager.error(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+            throw new GsException( "STR_unableToSave", e);
         }
     }
 

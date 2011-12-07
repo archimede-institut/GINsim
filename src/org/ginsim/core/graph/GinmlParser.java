@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.ginsim.common.xml.XMLHelper;
+import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;
@@ -68,20 +69,20 @@ public final class GinmlParser extends XMLHelper {
 	            	
 	            }
 	            else {
-	                throw new SAXException("Bad type of graph : " + s_class);
+	                throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_noSuchGraphType"));
 	            }
         	}
         	catch( NoSuchMethodException nsme){
-        		throw new SAXException( nsme);
+        		throw new SAXException( new GsException( "STR_NoAvailableParser", nsme));
         	}
         	catch( InvocationTargetException ite){
-        		throw new SAXException( ite);
+        		throw new SAXException( new GsException( "STR_NoAvailableParser", ite));
         	}
         	catch( IllegalAccessException iae){
-        		throw new SAXException( iae);
+        		throw new SAXException( new GsException( "STR_NoAvailableParser", iae));
         	}
         	catch( InstantiationException ie){
-        		throw new SAXException( ie);
+        		throw new SAXException( new GsException( "STR_NoAvailableParser", ie));
         	}
 
             xr.setContentHandler(realParser);

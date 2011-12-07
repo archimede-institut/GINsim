@@ -222,13 +222,13 @@ public final class RegulatoryParser extends GsXMLHelper {
             case POS_OUTSIDE:
                 if (qName.equals("graph")) {
                     if (!"regulatory".equals(attributes.getValue("class"))) {
-                        throw new SAXException("not a regulatory graph");
+                        throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_LRG_NotRegulatoryGraph"));
                     }
                     s_nodeOrder = attributes.getValue("nodeorder");
                     try {
                         graph.setGraphName(attributes.getValue("id"));
                     } catch (GsException e) {
-                        GUIManager.error(new GsException(GsException.GRAVITY_ERROR, "invalidGraphName"), null);
+                        throw new SAXException( new GsException( "STR_InvalidGraphName", e));
                     }
                 }
                 pos = POS_OUT;
@@ -255,7 +255,9 @@ public final class RegulatoryParser extends GsXMLHelper {
                         	    vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"), graph);
                         	}
                             values.put(vertex, new Hashtable());
-                        } catch (NumberFormatException e) { throw new SAXException("malformed node's parameters"); }
+                        } catch (NumberFormatException e) { 
+                        	throw new SAXException( new GsException( "STR_LRG_MalformedNodeParameters", e)); 
+                        }
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -286,7 +288,9 @@ public final class RegulatoryParser extends GsXMLHelper {
 								LogManager.error( "Unable to create edge between nodes '" + from + "' and '" + to + "' : One of the node was not found in the graph");
 								LogManager.error( e);
 							}
-                        } catch (NumberFormatException e) { throw new SAXException("malformed interaction's parameters"); }
+                        } catch (NumberFormatException e) { 
+                        	throw new SAXException( new GsException( "STR_LRG_MalformedInteractionParameters", e)); 
+                        }
                     } else {
                         pos = POS_FILTERED;
                     }
