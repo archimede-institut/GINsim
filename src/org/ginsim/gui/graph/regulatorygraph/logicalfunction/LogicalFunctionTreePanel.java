@@ -173,6 +173,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
       dragSource = DragSource.getDefaultDragSource();
       GlassPane glasspanel = null;
       if (this.frame instanceof MainFrame) {
+    	  // TODO : REFACTORING ACTION
     	  // FIXME: get the Glass panel from the main frame
       }
       dropListener = new DropListener(this, glasspanel);
