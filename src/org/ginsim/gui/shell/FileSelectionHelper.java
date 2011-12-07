@@ -11,19 +11,6 @@ import org.ginsim.core.utils.log.LogManager;
 
 
 public class FileSelectionHelper {
-
-	// TODO: remember previous path
-	// and store it in the option file
-	
-	public static Graph<?,?> open(String path) {
-		LogManager.error( "TODO: open files");
-		return null;
-	}
-	public static Graph<?,?> open(String path, Map filter) {
-		LogManager.error( "TODO: open filtered files");
-		return null;
-	}
-	
 	
 	public static String selectSaveFilename( Frame parent) {
 		return selectSaveFilename(parent, (GsFileFilter) null);
