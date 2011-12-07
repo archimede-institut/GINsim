@@ -1,8 +1,11 @@
 package org.ginsim.core.notification;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
@@ -16,6 +19,7 @@ public class NotificationManager {
 	private static NotificationManager instance;
 	
 	private List<TopicsListener> notificationListerners;
+	private HashMap<Notification, Boolean> memorizedNotifications;
 	
 	/**
 	 * Default constructor
@@ -23,6 +27,7 @@ public class NotificationManager {
 	public NotificationManager(){
 		
 		notificationListerners = new Vector<TopicsListener>();
+		memorizedNotifications = new HashMap<Notification, Boolean>();
 	}
 	
 	/**
@@ -30,7 +35,7 @@ public class NotificationManager {
 	 * 
 	 * @return the manager instance
 	 */
-	private static NotificationManager getInstance(){
+	public static NotificationManager getManager(){
 		
 		if( instance == null){
 			instance = new NotificationManager();
@@ -39,16 +44,6 @@ public class NotificationManager {
 		return instance;
 	}
 	
-	/**
-	 * Register a listener and subscribe it to the given topic (static call)
-	 * 
-	 * @param listener the NotificationListerner to register
-	 * @param topic the topic the listener subscribe to
-	 */
-	public static void registerListener( NotificationListener listener, Object topic){
-		
-		getInstance().register( listener, topic);
-	}
 	
 	/**
 	 * Register a listener and subscribe it to the given topic
@@ -56,18 +51,28 @@ public class NotificationManager {
 	 * @param listener the NotificationListerner to register
 	 * @param topic the topic the listener subscribe to
 	 */
-	private void register( NotificationListener listener, Object topic){
-		
-		for( TopicsListener topic_listener : notificationListerners){
-			if( topic_listener.getListener() == listener){
+	public void registerListener( NotificationListener listener, Object topic){
+				
+		TopicsListener topic_listener = null;
+		synchronized( notificationListerners){
+			
+			// Check if the listener already exists
+			for( TopicsListener current_topic_listener : notificationListerners){
+				if( current_topic_listener.getListener() == listener){
+					topic_listener = current_topic_listener;
+					topic_listener.addTopic( topic);
+					break;
+				}
+			}
+			
+			// If the listener does not exist create it and add it the topic
+			if( topic_listener == null){
+				topic_listener = new TopicsListener( listener);
 				topic_listener.addTopic( topic);
-				return;
+				notificationListerners.add( topic_listener);
 			}
 		}
-		
-		TopicsListener topic_listener = new TopicsListener( listener);
-		topic_listener.addTopic( topic);
-		notificationListerners.add( topic_listener);
+		publishMemorizedNotifications( topic_listener);
 	}
 	
 	/**
@@ -79,7 +84,7 @@ public class NotificationManager {
 	public static void publishError( Object topic, String message){
 		
 		if( topic != null && message != null){
-			getInstance().publish( new ErrorNotification( topic, message));
+			getManager().publish( new ErrorNotification( topic, message));
 		}
 	}
 	
@@ -93,7 +98,7 @@ public class NotificationManager {
 	public static void publishException( Object topic, String message, Exception exception){
 		
 		if( topic != null && message != null){
-			getInstance().publish( new ExceptionNotification( topic, message, exception));
+			getManager().publish( new ExceptionNotification( topic, message, exception));
 		}
 	}
 	
@@ -106,7 +111,7 @@ public class NotificationManager {
 	public static void publishWarning( Object topic, String message){
 		
 		if( topic != null && message != null){
-			getInstance().publish( new WarningNotification( topic, message));
+			getManager().publish( new WarningNotification( topic, message));
 		}
 	}
 	
@@ -119,7 +124,7 @@ public class NotificationManager {
 	public static void publishInformation( Object topic, String message){
 		
 		if( topic != null && message != null){
-			getInstance().publish( new InformationNotification( topic, message));
+			getManager().publish( new InformationNotification( topic, message));
 		}
 	}
 	
@@ -135,7 +140,7 @@ public class NotificationManager {
 	public static void publishResolvableError( Object topic, String message, Graph graph, Object[] data, NotificationResolution resolution){
 		
 		if( topic != null && message != null){
-			getInstance().publish( new ResolvableErrorNotification( topic, message, graph, data, resolution));
+			getManager().publish( new ResolvableErrorNotification( topic, message, graph, data, resolution));
 		}
 	}
 	
@@ -152,7 +157,7 @@ public class NotificationManager {
 	public static void publishResolvableWarning( Object topic, String message, Graph graph, Object[] data, NotificationResolution resolution){
 		
 		if( topic != null && message != null){
-			getInstance().publish( new ResolvableWarningNotification( topic, message, graph, data, resolution));
+			getManager().publish( new ResolvableWarningNotification( topic, message, graph, data, resolution));
 		}
 	}
 	
@@ -175,9 +180,18 @@ public class NotificationManager {
 	 * 
 	 * @param message the Notification to remove
 	 */
-	public static void publishDeletion( Notification message){
+	public void publishDeletion( Notification message){
 		
-		getInstance().publish( message, true);
+		// If the message to remove has been memorized, simply remove it from the list
+		synchronized ( memorizedNotifications) {
+			if( memorizedNotifications.containsKey( message)){
+				memorizedNotifications.remove( message);
+				return;
+			}
+		}
+		
+		// If the message was not memorized, publish the deletion request
+		getManager().publish( message, true);
 	}
 	
 	/**
@@ -193,27 +207,63 @@ public class NotificationManager {
 	 */
 	private void publish( Notification message, boolean deletion){
 		
-		for( TopicsListener topic_listener : notificationListerners){
+		synchronized( notificationListerners){
+			// Parse the registered listeners
+			boolean managed= false;
+			for( TopicsListener topic_listener : notificationListerners){
+
+				// Test if the Notification topic is part of the listener topics
+				List<Object> topics_listened = topic_listener.getTopics();
+				if( topics_listened.contains( message.getTopic())){
+					if( !deletion){
+						System.out.println("NotificationManager.publish() : ====> Published");
+						topic_listener.getListener().receiveNotification( message);
+					}
+					else{
+						System.out.println("NotificationManager.publish() : ====> Removed");
+						topic_listener.getListener().deleteNotification( message);
+					}
+					managed = true;
+				}
+			}
+			// If no listener matched the topic, the Notification is memorized
+			if( !managed){
+				synchronized( memorizedNotifications){
+					memorizedNotifications.put( message, deletion);
+				}
+			}
+		}
+
+	}
+
+
+	/**
+	 * Try to publish the memorized notifications to the given listener
+	 * 
+	 * @param topic_listener the listener to which the memorized notification are sent if required
+	 */
+	private void publishMemorizedNotifications( TopicsListener topic_listener){
+		
+		synchronized( memorizedNotifications){
 			List<Object> topics_listened = topic_listener.getTopics();
-			
-			for( Object topic_listened : topics_listened){
-				try{
-					topic_listened.equals( message.getTopic());
+			// Parse the memorized Notifications
+			for( Iterator<Notification> message_ite = memorizedNotifications.keySet().iterator(); message_ite.hasNext();){
+				Notification message = message_ite.next();
+				// if the Notification concerns a topic listened by the listener, publish it 
+				if( topics_listened.contains( message.getTopic())){
+					boolean deletion = memorizedNotifications.get( message);
 					if( !deletion){
 						topic_listener.getListener().receiveNotification( message);
 					}
 					else{
 						topic_listener.getListener().deleteNotification( message);
 					}
-					break;
-				}
-				catch( ClassCastException cce){
+					message_ite.remove();
 				}
 			}
 		}
 	}
-
-
+	
 /**
  * 
  * 

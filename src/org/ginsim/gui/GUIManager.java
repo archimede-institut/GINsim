@@ -78,7 +78,7 @@ public class GUIManager {
 			
 			graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
 			
-			NotificationManager.registerListener( frame, graph);
+			NotificationManager.getManager().registerListener( frame, graph);
 			return frame;
 		} catch (Exception e) {
 			error(new GsException(GsException.GRAVITY_ERROR, e), null);

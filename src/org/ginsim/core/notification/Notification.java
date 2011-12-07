@@ -81,13 +81,18 @@ public abstract class Notification implements TimeoutObject, Comparable {
     	return this.topic;
     }
     
+    public String getMessage() {
+    	
+		return message;
+	}
+    
     /**
      * 
      * 
      */
     public void timeout() {
 
-    	NotificationManager.publishDeletion( this);
+    	NotificationManager.getManager().publishDeletion( this);
     }
 
 	public String toString() {
