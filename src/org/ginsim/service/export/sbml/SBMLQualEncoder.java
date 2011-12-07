@@ -215,11 +215,9 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
 	        for (int i=0 ; i<depth ; i++) {
 	        	int level = path[i][2];
 	        	if (path[i][0] > 0) {
-	        		LogManager.trace( "case GEQ");
 	        		writeConstraint("geq", level, path[i][0]);
 	        	}
 	        	if (path[i][1] < path[i][3]) {
-	        		LogManager.trace( "case LT");
 	        		writeConstraint("lt", level, path[i][1]);
 	        	}
 	        }

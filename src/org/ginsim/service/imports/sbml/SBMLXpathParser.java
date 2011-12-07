@@ -233,6 +233,8 @@ public final class SBMLXpathParser {
 					Element output = outputElemList.get(0); // output element
 					String qualSpecies = output.getAttributeValue("qualitativeSpecies");
 					
+					createEdges( intput_to_sign, qualSpecies);
+					
 					/** retrieve the lits of function terms **/
 					Element listOfFunctionTerm = transChildren.get(2);
 					@SuppressWarnings("unchecked")
@@ -264,7 +266,7 @@ public final class SBMLXpathParser {
 						fctResultLevel = function_term_element.getAttributeValue("resultLevel");
 						FunctionTerm function_term = deal( function_term_element);
 						if( function_term != null) {
-							createMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
+							addEdgesToMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
 							v_function.addElement( function_term.getLogicalFunction());
 						}
 			
@@ -370,22 +372,55 @@ public final class SBMLXpathParser {
 			}			
 		 }
 		 
-		 System.out.println("SBMLXpathParser.deal() : Functionterm = " + function);
-		 
 		return function;
 	}
 	
+	/**
+	 * Create a new RegulatoryMultiEdge between the given output node and the given input nodes
+	 * 
+	 * @param input_node_names the list of the name of the on,put node (with the edge sign)
+	 * @param output_node_name the name of the output node
+	 */
+	private void createEdges( HashMap<String, String> input_node_names, String output_node_name){
+		
+		RegulatoryNode output_node = graph.getNodeByName( output_node_name);
+		
+		if( output_node != null){
+			for( String input_node_name : input_node_names.keySet()){
+				
+				RegulatoryNode input_node = graph.getNodeByName( input_node_name);
+				if( input_node != null){
+					String sign_code = input_node_names.get( input_node_name);
+					int sign;
+					if ( "SBO:0000020".equals(sign_code)){
+						sign = -1;
+					}
+					else if ( "SBO:0000459".equals(sign_code)){
+						sign = 1;
+					}
+					else{
+						sign = 0;
+					}	
+					
+					RegulatoryMultiEdge new_me = graph.addEdge( input_node, output_node, sign);
+					
+					if( new_me != null){
+						new_me.rescanSign( graph);
+					}
+				}
+			}
+		}
+	}
 	
-	/** Creating all edges and multiEdges of graph 
+	
+	/** Creating the multiEdges described in the given Functionterm 
 	 * @param l_condition : a list of conditions for every transition 
 	 * @param function_term : an object that contains a list of conditions for every 
      *        <functionTerm> element of a <transition> tag (see the sbml file).
 	 * @param node_to_id : to identify a regulatory node target 
 	 * @param input_to_sign: a map that contains every regulatory node source and his sign. */
 	
-	private void createMutliEdges( FunctionTerm function_term, String node_to_id, HashMap<String, String> input_to_sign, RegulatoryGraph graph){		
-		
-		System.out.println("SBMLXpathParser.createMutliEdges() : Entering edges creation");
+	private void addEdgesToMutliEdges( FunctionTerm function_term, String node_to_id, HashMap<String, String> input_to_sign, RegulatoryGraph graph){		
 		
 		List<Condition> l_condition = function_term.getConditionList();
 		Iterator<Condition> it_cond = l_condition.iterator();
@@ -415,7 +450,6 @@ public final class SBMLXpathParser {
 					if( index >= 0 && index < exp.length()-1) {
 						byte threshold = (byte) Integer.parseInt( exp.substring( index+1));
 						try{
-							System.out.println("SBMLXpathParser.createMutliEdges() : Adding edges from '" + node_from_id + "' to '" + node_to_id +"'");
 							edge = graph.addNewEdge( node_from_id, node_to_id, threshold, sign);
 							m_edges.put(sign_code, edge);
 							edge.me.rescanSign(graph);
