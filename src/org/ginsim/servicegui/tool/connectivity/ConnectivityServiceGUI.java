@@ -1,12 +1,15 @@
 package org.ginsim.servicegui.tool.connectivity;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
@@ -64,10 +67,17 @@ class ConnectivityExtractAction extends ToolAction {
         if (s_ag != null) {
         	List<NodeReducedData> selected = GUIManager.getInstance().getGraphGUI(graph).getSelection().getSelectedNodes();
         	
-	        Graph subgraph = FileSelectionHelper.open( s_ag, graph.getSelectedMap(selected));
-	        if (subgraph != null) {
-	            GUIManager.getInstance().whatToDoWithGraph( subgraph, graph, true);
-	        }
+        	try{
+		        Graph subgraph = GraphManager.getInstance().open( graph.getSelectedMap(selected), new File( s_ag));
+		        if (subgraph != null) {
+		            GUIManager.getInstance().whatToDoWithGraph( subgraph, graph, true);
+		        }
+        	}
+        	catch( GsException gse){
+        		LogManager.error( "Unable to execute the action");
+        		LogManager.error(gse);
+        		GUIMessageUtils.openErrorDialog( "STR_connectivity_UnableToExecuteAssociatedGraphNull");
+        	}
         }
 	}
 }

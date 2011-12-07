@@ -2,15 +2,12 @@ package org.ginsim.gui.shell;
 
 import java.awt.Frame;
 import java.io.File;
-import java.util.Map;
 
 import javax.swing.JFileChooser;
 
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.log.LogManager;
-
 
 public class FileSelectionHelper {
+	
 	
 	public static String selectSaveFilename( Frame parent) {
 		return selectSaveFilename(parent, (GsFileFilter) null);
