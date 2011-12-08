@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.stateinregulatorygraph;
+package org.ginsim.servicegui.tool.regulatorygraphanimation;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import org.ginsim.core.graph.view.css.Selector;
  * The color of a gene vary from white to green depending on level/level_max
  *
  */
-public class StateInRegGraphSelector extends Selector {
+public class RegulatoryAnimatorSelector extends Selector {
 	public static final String IDENTIFIER = "animator";
 
 	public static final String CAT_EDGE_ON	 = "on";
@@ -48,7 +48,7 @@ public class StateInRegGraphSelector extends Selector {
 
 	private Map<RegulatoryNode, Integer> nodeToOrder;
 
-	public StateInRegGraphSelector(RegulatoryGraph g) {
+	public RegulatoryAnimatorSelector(RegulatoryGraph g) {
 		super(IDENTIFIER);
 		this.nodeToOrder = new HashMap<RegulatoryNode, Integer>(g.getNodeOrderSize()*2);
 		int i = 0;

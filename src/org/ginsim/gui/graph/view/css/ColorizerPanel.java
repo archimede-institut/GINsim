@@ -41,7 +41,7 @@ public class ColorizerPanel extends JPanel {
 	
 	private static String OPTION_STORE_INITIAL_COLORIZATION = ".colorizer.initial_colorization";
 	
-	private Colorizer colorizer;
+	protected Colorizer colorizer;
 	private String storeUserChoicePrefix;
 	private boolean addInitialColorizationCheckbox;
 
@@ -140,7 +140,7 @@ public class ColorizerPanel extends JPanel {
 	/**
 	 * Perform the colorization of the graph, update the button name accordingly
 	 */
-	private void doColorize() {
+	protected void doColorize() {
 		colorizer.doColorize(graph);
 		colorizeButton.setText(Translator.getString("STR_colorizer_undo_colorize"));
 		isColored = true;
@@ -149,7 +149,7 @@ public class ColorizerPanel extends JPanel {
 	/**
 	 * Cancel the colorization of the graph, update the button name accordingly
 	 */
-	private void undoColorize() {
+	protected void undoColorize() {
 		colorizer.undoColorize(graph);
 		colorizeButton.setText(Translator.getString("STR_colorizer_do_colorize"));
 		isColored = false;
@@ -159,7 +159,7 @@ public class ColorizerPanel extends JPanel {
 	 * Indicates if the initialColorizationCheckbox is checked or not
 	 * @return the state of the initialColorizationCheckbox
 	 */
-	private boolean shouldColorizeInitially() {
+	protected boolean shouldColorizeInitially() {
 		return addInitialColorizationCheckbox && initialColorizationCheckbox.isSelected();
 	}
 
@@ -173,9 +173,18 @@ public class ColorizerPanel extends JPanel {
 			undoColorize();
 		}
 		this.colorizer = colorizer;
+		runIsFinished();
+	}
+	
+	/**
+	 * Enable the colorizeButton. If initialColorizationCheckbox is
+	 * used and checked, then the colorization is launched.
+	 */
+	public void runIsFinished() {
 		colorizeButton.setEnabled(true);
 		if (shouldColorizeInitially()) doColorize();
 	}
+	
 	
 	/**
 	 * If the graph is still colored, ask the user if he wants to restore the original 
