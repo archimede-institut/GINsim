@@ -75,12 +75,7 @@ public class Reg2DynServiceGUI implements ServiceGUI {
 		
 		if( graph instanceof RegulatoryGraph){
 			List<Action> actions = new ArrayList<Action>();
-			ToolAction action = new Reg2DynAction( (RegulatoryGraph) graph);
-			if( graph.getNodeCount() >= 21){
-				action.setEnabled( false);
-				action.putValue( Action.SHORT_DESCRIPTION, "Unable to compute the State Transition Graph - Too many nodes" );
-			}
-			actions.add( action);
+			actions.add( new Reg2DynAction( (RegulatoryGraph) graph));
 			return actions;
 		}
 		return null;
