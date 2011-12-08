@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.GsFileFilter;
@@ -54,9 +55,11 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 		}
 		try {
 			doExport(filename);
+			NotificationManager.publishInformation( graph, "Export finished");
 		} catch (Exception e) {
 			LogManager.error("Error in export "+getID());
 			LogManager.error(e);
+			NotificationManager.publishError( graph, "Export failed: " + e.getLocalizedMessage() + ". See logs for details");
 		}
 	}
 
