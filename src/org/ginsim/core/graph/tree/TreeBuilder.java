@@ -9,6 +9,7 @@ import java.util.Vector;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.utils.log.LogManager;
 
 
 
@@ -27,10 +28,15 @@ public abstract class TreeBuilder {
 		tree.setMode(treeMode);
 		this.nodeOrder = (List<RegulatoryNode>) getParameter(PARAM_NODEORDER);
 		
+		LogManager.info("Clearing the tree");
 		clearTree();			//Remove all the treeNode from the current tree
+		LogManager.info("Pretreatment");
 		init();					//Init the variables needed for the parsing
+		LogManager.info("Parsing the tree");
 		parseOmdd();			//Launch the correct parser depending on the mode.
+		LogManager.info("Updating the graphical attributes of the tree, and refreshing the GUI");
 		updateNodeLayout();	//Refresh the position and style of the GsTreeNodes
+		LogManager.info("Tree constructed");
 	}
 
 	public void setTree(Tree tree) {

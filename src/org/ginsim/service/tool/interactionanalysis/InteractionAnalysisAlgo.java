@@ -12,6 +12,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.utils.log.LogManager;
 
 /**
  * 
@@ -54,10 +55,11 @@ public class InteractionAnalysisAlgo {
 		int [] small_node_order_level; //The node order in the omdd.
 		RegulatoryNode [] small_node_order_vertex; //The node order in the omdd.
 
-		
 		//Preparing the logical function for the right mutant
+		LogManager.info("Getting the logical functions");
 		OMDDNode[] t_tree =  regGraph.getAllTrees(true);
 		if (mutant != null) {
+			LogManager.info("Preparing the mutants");
 			mutant.apply(t_tree, regGraph);
 		}
 		
@@ -68,8 +70,10 @@ public class InteractionAnalysisAlgo {
 		for (RegulatoryNode node : regGraph.getNodeOrder()) {	//Build the map m
 			node_to_position.put(node, Integer.valueOf(i++));
 		}
-				
+		
 		//Initializing the results of the algorithm
+		
+		LogManager.info("Preparing the report");
 		InteractionAnalysisReport report =  new InteractionAnalysisReport();
 		
 		Map<RegulatoryMultiEdge, String> functionalityMap = new HashMap<RegulatoryMultiEdge, String>();
@@ -87,6 +91,7 @@ public class InteractionAnalysisAlgo {
 			if (target.isInput() || (selectedNodes != null && !selectedNodes.contains(target))) { 	//skip the inputs or unselected nodes
 			    continue;
 			}
+			LogManager.info("Computing "+target.getId());
 			Collection<RegulatoryMultiEdge> l = regGraph.getIncomingEdges(target);											//  get the list l of incoming edges
 			OMDDNode omdd = t_tree[i];
 			
@@ -141,6 +146,7 @@ public class InteractionAnalysisAlgo {
 		}
 				
 		report.timeSpent = new Date().getTime()-before;
+		LogManager.info("Done in "+report.timeSpent+"ms");
 		return algoResult;
 	}
 

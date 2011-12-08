@@ -28,7 +28,7 @@ public class Simulation extends Thread implements Runnable {
 
 	protected SimulationManager frame;
 	protected int maxnodes, maxdepth;
-	protected Iterator initStatesIterator;
+	protected Iterator<byte[]> initStatesIterator;
 	protected SimulationHelper helper;
 	protected SimulationUpdater updater;
 

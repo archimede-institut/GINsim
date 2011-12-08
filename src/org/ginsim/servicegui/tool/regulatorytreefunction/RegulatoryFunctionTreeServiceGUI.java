@@ -13,7 +13,6 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.tree.Tree;
-import org.ginsim.core.graph.tree.TreeImpl;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
@@ -42,6 +41,7 @@ public class RegulatoryFunctionTreeServiceGUI implements ServiceGUI {
 }
 
 class RegulatoryFunctionTreeAction extends ToolAction {
+	private static final long serialVersionUID = 1040657167135212807L;
 
 	private static final Integer ZERO = new Integer(0);
 	
@@ -82,7 +82,7 @@ class RegulatoryFunctionTreeAction extends ToolAction {
 			return ZERO;
 		}
 		int i = 0;
-		for (Iterator it2 = regGraph.getNodeOrder().iterator(); it2.hasNext(); i++) {
+		for (Iterator<RegulatoryNode> it2 = regGraph.getNodeOrder().iterator(); it2.hasNext(); i++) {
 			RegulatoryNode v = (RegulatoryNode) it2.next();
 			if (v.equals(selectedNode)) {
 				return new Integer(i);
