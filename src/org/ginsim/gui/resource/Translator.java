@@ -125,6 +125,22 @@ public class Translator {
 		}
 	}
 
+	/**
+	 * Return the String array of key translations of the given String array
+	 * 
+	 * @param keys the array of string to translate
+	 * @return the String array of key translations of the given String array
+	 */
+	public static String[] getStrings( String[] keys){
+		
+		String[] translated = new String[ keys.length];
+		for( int i = 0 ; i < keys.length; i++){
+			translated[i] = getString( keys[i]);
+		}
+		
+		return translated;
+	}
+	
 	/** 
 	 * get the localized String for the key. If
 	 * the String wasn't found the method will return

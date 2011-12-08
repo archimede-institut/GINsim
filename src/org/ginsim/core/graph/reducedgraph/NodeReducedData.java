@@ -144,9 +144,9 @@ public class NodeReducedData {
 	public String getTypeName( Graph gm) {
 		
 		switch (getType(gm)) {
-			case SCC_TYPE_UNIQUE_NODE: 		return Translator.getString("STR_connectivity_unique_node"); 
-			case SCC_TYPE_SIMPLE_CYCLE: 	return Translator.getString("STR_connectivity_simple_cycle");
-			case SCC_TYPE_COMPLEX_COMPONENT:return Translator.getString("STR_connectivity_complex_component");
+			case SCC_TYPE_UNIQUE_NODE: 		return "STR_connectivity_unique_node"; 
+			case SCC_TYPE_SIMPLE_CYCLE: 	return "STR_connectivity_simple_cycle";
+			case SCC_TYPE_COMPLEX_COMPONENT:return "STR_connectivity_complex_component";
 		}
 		return null; //Useless, but eclipse want it.
 	}

@@ -244,7 +244,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 				
 				public String[] getOptionsName(){
 					
-					String[] t = {Translator.getString("STR_purge")};
+					String[] t = { "STR_purge"};
 					return t;
 				}
 			};

@@ -1,5 +1,7 @@
 package org.ginsim.core.exception;
 
+import java.util.Vector;
+
 import org.ginsim.gui.resource.Translator;
 
 /**
@@ -17,8 +19,8 @@ public class GsException extends Exception {
     public static final int GRAVITY_ERROR = 2;
     
     private int gravity;
-    private String message;
-    private Exception exception = null;
+    private Vector<String> message;
+    private Exception exception;
     
     /**
      * create a GsException.
@@ -26,14 +28,18 @@ public class GsException extends Exception {
      * @param message the error message
      */
     public GsException (int gravity, String message) {
+    	
         this.gravity = gravity;
-        this.message = message;
+        this.message = new Vector<String>();
+        this.message.add( message);
+        this.exception = null;
     }
     
     public GsException( String message, Exception excep){
     	
     	this.gravity = GRAVITY_ERROR;
-    	this.message = message;
+    	this.message = new Vector<String>();
+    	this.message.add( message);
     	this.exception = excep;
     }
     
@@ -44,8 +50,20 @@ public class GsException extends Exception {
      */
     public GsException (int gravity, Exception e) {
         this.gravity = gravity;
+        this.message = new Vector<String>();
         this.exception = e;
     }
+    
+    public GsException( int gravity, String[] messages){
+    	
+        this.gravity = gravity;
+        this.message = new Vector<String>();
+        for( String text : messages){
+        	this.message.add( text);
+        }
+        this.exception = null;
+    }
+    
     /**
      * get the gravity of the error, this should be one of
      * GRAVITY_INFO, GRAVITY_NORMAL or GRAVITY_ERROR.
@@ -60,19 +78,36 @@ public class GsException extends Exception {
      * @see java.lang.Throwable#getMessage()
      */
     public String getMessage() {
+    	
+    	String result = "";
+    	
+    	if( message != null){
+    		for( String text : message){
+    			result += Translator.getString( text) + ":";
+    		}
+    		result += "\n";
+    	}
         if (exception != null) {
-            return exception.getLocalizedMessage();
+        	result += "Exception is : " + Translator.getString(exception.getLocalizedMessage());
         }
-        return message;
+        else{
+        	// Remove the last ":" from the string
+        	result = result.substring(0, result.length()-1);
+        }
+        
+        return result;
     }
     /**
      * get a title for the error window.
      * @return a title (for the error message)
      */
     public String getTitle() {
+    	
         return Translator.getString("STR_error_occured");
     }
+    
 	public void addMessage(String message) {
-		this.message += "\n"+message;
+		
+		this.message.add( message);
 	}
 }

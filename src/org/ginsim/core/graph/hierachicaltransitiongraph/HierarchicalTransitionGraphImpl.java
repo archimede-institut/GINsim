@@ -183,7 +183,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	  		out.write("\t</graph>\n");
 	  		out.write("</gxl>\n");
         } catch (IOException e) {
-            throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_unableToSave")+": " +e.getMessage());
+            throw new GsException( "STR_unableToSave", e);
         }
 	}
 	
