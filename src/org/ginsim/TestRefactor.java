@@ -76,11 +76,11 @@ public class TestRefactor {
 		if (open.size() == 0) {
 			RegulatoryGraph graph = GUIManager.getInstance().newFrame();
 			// Test of Notifications
-			String[] options_names = new String[]{ "STR_OK", "STR_cancel"};
-			NotificationResolution resolution = new NotificationResolution( options_names);
-			NotificationManager.publishResolvableError( graph, "STR_unableToOpen", graph, null, resolution);
-			NotificationManager.publishWarning( graph, "STR_unableToSave");
-			NotificationManager.publishError( graph, "STR_wantToStop_title");
+//			String[] options_names = new String[]{ "STR_OK", "STR_cancel"};
+//			NotificationResolution resolution = new NotificationResolution( options_names);
+//			NotificationManager.publishResolvableError( graph, "STR_unableToOpen", graph, null, resolution);
+//			NotificationManager.publishWarning( graph, "STR_unableToSave");
+//			NotificationManager.publishError( graph, "STR_wantToStop_title");
 		} else {
 			for (String filename: open) {
 				try {
