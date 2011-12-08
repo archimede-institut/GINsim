@@ -264,7 +264,6 @@ class MdLayoutTableModel extends AbstractTableModel {
             }
             selectionModel.addSelectionInterval(min, max);
         }
-        LogManager.trace( "up");
 	}
 	public void moveDown(JTable table) {
 		int[] index=table.getSelectedRows();
@@ -292,7 +291,6 @@ class MdLayoutTableModel extends AbstractTableModel {
             }
             selectionModel.addSelectionInterval(min, max);
         }
-        LogManager.trace( "down");
 	}
 
 	private void swapTableRow(int source, int target) {
