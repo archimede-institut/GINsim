@@ -23,7 +23,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.gui.utils.data.ObjectEditor;
 
 
 public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Edge<DynamicNode>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> implements DynamicGraph{
@@ -34,7 +33,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
 
 	protected List v_stables = null;
-    private ObjectEditor graphEditor = null;
     private float[] dashpattern = null;
 
     private List<NodeInfo> nodeOrder;

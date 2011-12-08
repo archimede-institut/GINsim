@@ -12,6 +12,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantListener;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.SimpleGenericList;

@@ -19,12 +19,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.core.annotation.AnnotationPanel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.utils.data.ValueList;
+import org.ginsim.gui.annotation.AnnotationPanel;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;

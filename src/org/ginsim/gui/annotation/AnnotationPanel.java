@@ -1,4 +1,4 @@
-package org.ginsim.core.annotation;
+package org.ginsim.gui.annotation;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -12,6 +12,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.utils.data.SimpleGenericList;
