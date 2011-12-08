@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -21,6 +20,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.resource.Translator;
@@ -39,7 +39,7 @@ import org.ginsim.servicegui.tool.stablestates.StableTableModel;
  * Display a JTabbedPane that contains different TabComponantProvidingAState having a method to get a state
  *
  */
-public class StateInRegGraphFrame extends StackDialog implements ActionListener {
+public class StateInRegGraphFrame extends StackDialog {
 	private static final long serialVersionUID = -5576209151262677441L;
 
 	//private JFrame frame;
@@ -48,17 +48,13 @@ public class StateInRegGraphFrame extends StackDialog implements ActionListener 
 	private Container mainPanel;
 	private JTabbedPane tabbedPane;
 
-	private JButton colorizeButton;
-	private boolean isColorized = false;
-
-	private StateInRegGraph sirg;
+	private StateInRegGraphColorizerPanel colorizerPanel;
 
 
 	public StateInRegGraphFrame(JFrame frame, Graph graph) {
 		super(frame, "stateInRegGraph", 420, 260);
 		//this.frame = frame;
 		this.regGraph = (RegulatoryGraph) graph;
-		sirg = new StateInRegGraph(this.regGraph);
 		setMainPanel(getMainPanel());
 	}
 
@@ -97,45 +93,22 @@ public class StateInRegGraphFrame extends StackDialog implements ActionListener 
 			c.gridy++;
 			c.ipady = 0;
 			c.fill = GridBagConstraints.CENTER;
-			colorizeButton = new JButton(Translator.getString("STR_undo_colorize"));
-			colorizeButton.setEnabled(false);
-			mainPanel.add(colorizeButton, c);
-			colorizeButton.addActionListener(this);
+			colorizerPanel = new StateInRegGraphColorizerPanel("stateInRegGraph.", regGraph);
+			colorizerPanel.setColorizer(new Colorizer(new StateInRegGraphSelector(regGraph)));
+		    mainPanel.add(colorizerPanel, c);
 		}
 		return mainPanel;
 	}
 
 	protected void run() {
-		if (!isColorized) {
-			isColorized = true;
-			colorizeButton.setEnabled(true);
-			sirg.restoreColorization();
-		}
-		sirg.colorizeGraph(((TabComponantProvidingAState)tabbedPane.getSelectedComponent()).getState());
-	}
-
-
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == colorizeButton) {
-			if (isColorized) {
-				undoColorize();
-			}
-		}
-	}
-
-	private void undoColorize() {
-		if (sirg != null) {
-			isColorized = false;
-			colorizeButton.setEnabled(false);
-			sirg.restoreColorization();
-		}
+		byte[] state = ((TabComponantProvidingAState)tabbedPane.getSelectedComponent()).getState();
+		colorizerPanel.setState(state);
+		colorizerPanel.runIsFinished();
 	}
 
 	public void cancel() {
-		if (isColorized) {
-			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
-			if (res == JOptionPane.OK_OPTION) sirg.restoreColorization();
-			else if (res == JOptionPane.CANCEL_OPTION) return;			
+		if (!colorizerPanel.frameIsClosing()) {
+				return;
 		}
 		super.cancel();
 	}

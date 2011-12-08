@@ -64,5 +64,9 @@ public class Colorizer {
 		if (selector.respondToEdges()) cs.restoreAllEdges(graph.getEdgeAttributeReader());
 		if (selector.respondToNodes()) cs.restoreAllNodes(graph.getNodeAttributeReader());
 	}
+
+	public Selector getSelector() {
+		return selector;
+	}
 		
 }
