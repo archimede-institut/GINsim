@@ -15,6 +15,7 @@ import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.shell.GsFileFilter;
 
 
 
@@ -57,8 +58,7 @@ public class GenericDocumentFileChooser extends JFileChooser {
 		super(curDir);
 		for (Iterator it = formats.iterator(); it.hasNext();) {
 			GenericDocumentFormat format = (GenericDocumentFormat) it.next();
-			GenericDocumentFileFilter filter = new GenericDocumentFileFilter();
-			filter.setExtensionList(format);
+			GsFileFilter filter = new GsFileFilter(format);
 			addChoosableFileFilter(filter);			
 		}
 	}
@@ -66,8 +66,7 @@ public class GenericDocumentFileChooser extends JFileChooser {
 	private void initFilter() {
 		for (Iterator it = GenericDocumentFormat.getAllFormats().iterator(); it.hasNext();) {
 			GenericDocumentFormat format = (GenericDocumentFormat) it.next();
-			GenericDocumentFileFilter filter = new GenericDocumentFileFilter();
-			filter.setExtensionList(format);
+			GsFileFilter filter = new GsFileFilter(format);
 			addChoosableFileFilter(filter);			
 		}
 	}
@@ -79,13 +78,9 @@ public class GenericDocumentFileChooser extends JFileChooser {
 	 * @return the format or null
 	 */
 	public GenericDocumentFormat getSelectedFormat(Component parentWindow) {
-		try {
-			GenericDocumentFileFilter filter = (GenericDocumentFileFilter)getFileFilter();
-			return filter.getFormat();
-		} catch (ClassCastException e) {
-			GUIMessageUtils.openErrorDialog("You must choose a valid extension", parentWindow);
-			return null;
-		}
+		// FIXME: fix the generic file chooser
+		GUIMessageUtils.openErrorDialog("TODO: filechooser including format selection", parentWindow);
+		return null;
 	}
 	
 	/**
@@ -111,7 +106,7 @@ public class GenericDocumentFileChooser extends JFileChooser {
     			return null;
     		}
         	String filePath = jfc.getSelectedFile().getPath();
-        	String extension = "."+format.defaultExtension;
+        	String extension = "."+format.extension;
         	if (extension != null && ! filePath.endsWith(extension)) {
         		filePath += extension;
         	}
@@ -152,7 +147,7 @@ public class GenericDocumentFileChooser extends JFileChooser {
     			return null;
     		}
         	String filePath = jfc.getSelectedFile().getPath();
-        	String extension = "."+format.defaultExtension;
+        	String extension = "."+format.extension;
         	if (extension != null && ! filePath.endsWith(extension)) {
         		filePath += extension;
         	}
@@ -193,42 +188,4 @@ public class GenericDocumentFileChooser extends JFileChooser {
 	      return new GenericDocumentFileChooser(curDir, formats);
 	   }
 
-}
-
-/**
- * A simple file filter working with a GenericDocumentFormat
- *
- */
-class GenericDocumentFileFilter extends FileFilter {
-	private GenericDocumentFormat format;
-
-	public void setExtensionList(GenericDocumentFormat format) {
-		this.format = format;
-	}
-
-	/**
-     *Accept all directories and files with the good extension.
-	 * @param f
-	 * @return true if the file is accepted
-     */
-    public boolean accept(File f) {
-        if (f.isDirectory()) {
-            return true;
-        }
-
-        String extension = f.getName().substring(f.getName().lastIndexOf(".")+1,f.getName().length());
-        
-        if (format.ffilter == null) {
-        		return true;
-        }
-        return format.ffilter.accept(f);
-    }
-
-    public String getDescription() {
-        return format.ffilter.getDescription();
-    }
-    
-    public GenericDocumentFormat getFormat() {
-    	return format;
-    }
 }

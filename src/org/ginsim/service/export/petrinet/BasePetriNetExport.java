@@ -1,7 +1,6 @@
 package org.ginsim.service.export.petrinet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -44,14 +43,6 @@ import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
  */
 public abstract class BasePetriNetExport {
 
-	public static final List<BasePetriNetExport> FORMATS = new ArrayList<BasePetriNetExport>();
-	
-	static {
-		FORMATS.add(new PetriNetExportINA());
-		FORMATS.add(new PetriNetExportPNML());
-		FORMATS.add(new PetriNetExportAPNN());
-	}
-	
 	// TODO: make extension data available
 	
 	private final String extension;

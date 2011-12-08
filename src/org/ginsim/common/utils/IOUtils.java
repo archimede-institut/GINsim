@@ -16,7 +16,6 @@ import org.ginsim.core.exception.GsException;
 import org.ginsim.gui.resource.Translator;
 
 
-
 public class IOUtils {
 
 	protected static Map<String, OpenHelper> m_helper = new HashMap<String, OpenHelper>();
