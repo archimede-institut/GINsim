@@ -141,6 +141,24 @@ public class Translator {
 		return translated;
 	}
 	
+	/**
+	 * Return the string composed by replacing the "%s" string in the given key by the given params
+	 * 
+	 * @param key
+	 * @param params
+	 * @return
+	 */
+	public static String getString( String key, String... params){
+		
+		String result = getString( key);
+		
+		for( String param : params){
+			result = result.replaceFirst( "%s", param);
+		}
+		
+		return result;
+	}
+	
 	/** 
 	 * get the localized String for the key. If
 	 * the String wasn't found the method will return

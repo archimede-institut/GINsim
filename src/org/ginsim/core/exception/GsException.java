@@ -103,7 +103,7 @@ public class GsException extends Exception {
      */
     public String getTitle() {
     	
-        return Translator.getString("STR_error_occured");
+        return Translator.getString("STR_error");
     }
     
 	public void addMessage(String message) {

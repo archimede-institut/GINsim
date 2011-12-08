@@ -170,7 +170,7 @@ public class GUIManager {
 				name = "NAME_HERE";
 			}
 			o.frame.toFront();
-            int aw = JOptionPane.showConfirmDialog(o.frame, Translator.getString("STR_saveQuestion1")+ name +Translator.getString("STR_saveQuestion2"),
+            int aw = JOptionPane.showConfirmDialog(o.frame, Translator.getString("STR_saveQuestion", name),
                     Translator.getString("STR_closeConfirm"),
                     JOptionPane.YES_NO_CANCEL_OPTION);
             switch (aw) {

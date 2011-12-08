@@ -15,6 +15,7 @@ import org.ginsim.gui.graph.AddNodeAction;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.mangosdk.spi.ProviderFor;
 
@@ -52,7 +53,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 
 	@Override
 	public String getEditingTabLabel( RegulatoryGraph graph) {
-		return "STR_modelAttribute";
+		return Translator.getString( "STR_modelAttribute");
 	}
 
 	@Override

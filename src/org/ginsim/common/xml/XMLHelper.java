@@ -82,7 +82,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	    }
         Object[] t = {Translator.getString("STR_stop"), Translator.getString("STR_goOn"), Translator.getString("STR_ignoreNext")};
 	    int ret = JOptionPane.showOptionDialog(null, 
-                Translator.getString("STR_errorOccured")+"\n\n"+
+                Translator.getString("STR_errorOccured")+":\n\n"+
 	            e.getLocalizedMessage()+"\n"
 				+ "\nline: "+e.getLineNumber()
 				+ "\ncolumn: "+e.getColumnNumber()+"\n"+
