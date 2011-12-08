@@ -10,8 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.filechooser.FileFilter;
-
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.BiblioManager;
 import org.ginsim.core.exception.GsException;
@@ -21,6 +19,7 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -28,9 +27,6 @@ import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.shell.GsFileFilter;
 
 
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
@@ -458,12 +454,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		for (RegulatoryMultiEdge me: getOutgoingEdges(node)) {
 			me.canApplyNewMaxValue(newMax, l_fixable, l_conflict);
 		}
-	}
-
-	protected FileFilter doGetFileFilter() {
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] {"zginml", "ginml"}, "(z)ginml files");
-		return ffilter;
 	}
 
 	private String stringNodeOrder() {

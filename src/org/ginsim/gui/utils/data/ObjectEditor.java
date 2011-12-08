@@ -1,4 +1,4 @@
-package org.ginsim.core.utils.data;
+package org.ginsim.gui.utils.data;
 
 import java.awt.Component;
 import java.util.ArrayList;
@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.GUIEditor;
-import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
 
 
 /**

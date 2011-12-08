@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +15,6 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.AbstractGraph;
@@ -32,7 +29,6 @@ import org.ginsim.core.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.shell.GsFileFilter;
 
 
 /**
@@ -44,8 +40,6 @@ public class GraphManager {
     private HashMap<Class<Graph>, GraphFactory> graphFactories = new HashMap<Class<Graph>, GraphFactory>();
     private HashMap<Graph, String> graphFilepath = new HashMap<Graph, String>();
     
-    private GsFileFilter ffilter;
-
     public String getGraphType() {
         return "regulatory";
     }
@@ -372,14 +366,6 @@ public class GraphManager {
         }
     }
     
-	public FileFilter getFileFilter() {
-		if (ffilter == null) {
-			ffilter = new GsFileFilter();
-			ffilter.setExtensionList(new String[] {"ginml", "zginml"}, "(z)ginml files");
-		}
-		return ffilter;
-	}
-	
 	/**
 	 * Remove all the server side association to the graph
 	 * 
@@ -409,6 +395,5 @@ public class GraphManager {
 			}
 		}
 	}
-
 
 }

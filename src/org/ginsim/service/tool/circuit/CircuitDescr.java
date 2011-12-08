@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.circuit;
+package org.ginsim.service.tool.circuit;
 import java.util.List;
 import java.util.Vector;
 
@@ -14,12 +14,12 @@ public class CircuitDescr {
     /** GsRegulatoryMultiEdges in this circuit */
     public RegulatoryMultiEdge[] t_me;
 
-    protected static final int FALSE = 0;
-    protected static final int ALL = 1;
-    protected static final int FUNCTIONNAL = 2;
-    protected static final int POSITIVE = 3;
-    protected static final int NEGATIVE = 4;
-    protected static final int DUAL = 5;
+    public static final int FALSE = 0;
+    public static final int ALL = 1;
+    public static final int FUNCTIONAL = 2;
+    public static final int POSITIVE = 3;
+    public static final int NEGATIVE = 4;
+    public static final int DUAL = 5;
     
     public static final String[] SIGN_NAME = {
     	Translator.getString("STR_not-functional"),
@@ -30,23 +30,23 @@ public class CircuitDescr {
     	Translator.getString("STR_dual")};
     
     // data on all subcircuits
-    protected OmsddNode[] t_context;
-    protected long[][] t_mark;
-    protected int[][] t_sub;
+    public OmsddNode[] t_context;
+    public long[][] t_mark;
+    public int[][] t_sub;
     
     // which sub circuits go in which category ?
-    Vector v_positive = null;
-    Vector v_negative = null;
-    Vector v_dual = null;
-    Vector v_all = new Vector();
-    Vector v_functionnal = null;
+    public Vector v_positive = null;
+    public Vector v_negative = null;
+    public Vector v_dual = null;
+    public Vector v_all = new Vector();
+    public Vector v_functionnal = null;
     
     // to iterate through "subcircuits"
     private int[] t_pos;
     private int[] t_posMax;
 
-    long score;
-    int sign;
+    public long score;
+    public int sign;
 
     /**
      * print the circuit in a nice order.

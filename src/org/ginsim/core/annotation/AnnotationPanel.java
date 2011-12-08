@@ -14,11 +14,11 @@ import javax.swing.event.TableModelListener;
 
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectPropertyEditorUI;
 
 /**
  * Panel to edit annotations

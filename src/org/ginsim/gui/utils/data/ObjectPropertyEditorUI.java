@@ -1,6 +1,5 @@
-package org.ginsim.core.utils.data;
+package org.ginsim.gui.utils.data;
 
-import org.ginsim.gui.utils.data.GenericPropertyHolder;
 
 public interface ObjectPropertyEditorUI {
 	void refresh(boolean force);

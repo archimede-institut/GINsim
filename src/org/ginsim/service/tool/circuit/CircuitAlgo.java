@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.circuit;
+package org.ginsim.service.tool.circuit;
 
 import java.util.HashMap;
 import java.util.List;

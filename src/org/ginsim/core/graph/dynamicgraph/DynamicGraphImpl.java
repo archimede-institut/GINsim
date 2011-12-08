@@ -23,10 +23,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.core.utils.data.ObjectEditor;
-import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
-import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphEditor;
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.ObjectEditor;
 
 
 public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Edge<DynamicNode>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> implements DynamicGraph{
@@ -35,7 +32,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";
 	
 	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
-	private RegulatoryGraphOptionPanel optionPanel;
 
 	protected List v_stables = null;
     private ObjectEditor graphEditor = null;
@@ -339,15 +335,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
     public Graph getSubgraph(Collection vertex, Collection edges) {
         // no copy for state transition graphs
         return null;
-    }
-
-
-    public ObjectEditor getGraphEditor() {
-		if (graphEditor == null) {
-			graphEditor = new RegulatoryGraphEditor();
-			graphEditor.setEditedItem(this);
-		}
-		return graphEditor;
     }
 
     /**

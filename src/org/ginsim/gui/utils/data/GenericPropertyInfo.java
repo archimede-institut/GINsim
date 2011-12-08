@@ -1,12 +1,10 @@
-package org.ginsim.core.utils.data;
+package org.ginsim.gui.utils.data;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
-import org.ginsim.gui.utils.data.GenericPropertyHolder;
 
 
 /**

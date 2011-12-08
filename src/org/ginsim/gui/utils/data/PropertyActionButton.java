@@ -7,8 +7,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 
 
 public class PropertyActionButton extends JButton 

@@ -49,6 +49,11 @@ import org.ginsim.gui.utils.widgets.treetable.AbstractTreeTableModel;
 import org.ginsim.gui.utils.widgets.treetable.JTreeTable;
 import org.ginsim.gui.utils.widgets.treetable.TreeTableModel;
 import org.ginsim.gui.utils.widgets.treetable.TreeTableModelAdapter;
+import org.ginsim.service.tool.circuit.CircuitAlgo;
+import org.ginsim.service.tool.circuit.CircuitDescr;
+import org.ginsim.service.tool.circuit.CircuitDescrInTree;
+import org.ginsim.service.tool.circuit.FunctionalityContext;
+import org.ginsim.service.tool.circuit.OmsddNode;
 import org.ginsim.service.tool.connectivity.AlgoConnectivity;
 
 
@@ -223,7 +228,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
     
     protected void pyExport() {
     	List no = graph.getNodeOrder();
-    	List l_func = (List)treemodel.m_parent.get(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONNAL]);
+    	List l_func = (List)treemodel.m_parent.get(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL]);
     	if (l_func == null) {
     		LogManager.trace(" No func...");
     		return;
@@ -613,7 +618,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
                 case CircuitDescr.ALL:
                     index = 0;
                     break;
-                case CircuitDescr.FUNCTIONNAL:
+                case CircuitDescr.FUNCTIONAL:
                     index = ((CircuitDescrInTree)cdtree.getCircuit().v_functionnal.get(0)).key;
                     break;
                 case CircuitDescr.POSITIVE:
@@ -818,7 +823,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
                 m_parent.put(v_circuit.get(i), cdescr.v_all);
             }
             if (cdescr.v_functionnal != null) {
-                cdtree = new CircuitDescrInTree(cdescr, true, CircuitDescr.FUNCTIONNAL);
+                cdtree = new CircuitDescrInTree(cdescr, true, CircuitDescr.FUNCTIONAL);
                 placeCircuit(v_functionnal, cdtree);
                 if (cdescr.v_functionnal.size() > 1) {
                     m_parent.put(cdtree, cdescr.v_functionnal);
@@ -847,8 +852,8 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
             }
         }
         if (v_functionnal.size() > 0) {
-            v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONNAL]);
-            m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONNAL], v_functionnal);
+            v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL]);
+            m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL], v_functionnal);
             if (v_positive.size() > 0) {
                 v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.POSITIVE]);
                 m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.POSITIVE], v_positive);
@@ -956,7 +961,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
 	                    case CircuitDescr.ALL:
 	                        index = 0;
 	                        break;
-	                    case CircuitDescr.FUNCTIONNAL:
+	                    case CircuitDescr.FUNCTIONAL:
 	                        index = ((CircuitDescrInTree)cdtree.getCircuit().v_functionnal.get(0)).key;
 	                        break;
 	                    case CircuitDescr.POSITIVE:

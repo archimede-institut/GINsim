@@ -30,7 +30,6 @@ import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.xml.sax.Attributes;

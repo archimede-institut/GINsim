@@ -9,9 +9,9 @@ import java.awt.event.KeyListener;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectPropertyEditorUI;
 
 
 

@@ -2,7 +2,6 @@ package org.ginsim.gui.utils.data;
 
 import java.awt.Component;
 
-import org.ginsim.core.utils.data.GenericPropertyInfo;
 
 
 public interface GenericPropertyHolder {

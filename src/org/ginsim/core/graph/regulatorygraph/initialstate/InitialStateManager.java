@@ -12,7 +12,6 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

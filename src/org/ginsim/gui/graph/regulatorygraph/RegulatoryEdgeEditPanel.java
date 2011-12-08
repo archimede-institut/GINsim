@@ -14,10 +14,10 @@ import javax.swing.JSpinner;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectPropertyEditorUI;
 
 
 

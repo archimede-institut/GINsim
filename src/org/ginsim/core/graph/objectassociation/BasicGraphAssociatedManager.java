@@ -7,7 +7,6 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.gui.GUIManager;
 
 
 

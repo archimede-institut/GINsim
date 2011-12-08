@@ -12,11 +12,11 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.DataUtils;
 import org.ginsim.core.utils.data.GenericList;
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectEditor;
 import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectEditor;
 
 
 

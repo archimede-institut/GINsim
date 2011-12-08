@@ -9,7 +9,7 @@ import org.ginsim.common.ColorPalette;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.servicegui.tool.circuit.OmsddNode;
+import org.ginsim.service.tool.circuit.OmsddNode;
 
 
 /**

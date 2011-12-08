@@ -21,8 +21,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.servicegui.tool.connectivity.ReducedParameterPanel;
 
 
 public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
@@ -30,9 +28,6 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
 
 	public static final String GRAPH_ZIP_NAME = "connectedComponent.ginml";
 	
-	private ReducedParameterPanel parameterPanel = null;
-
-    
 	/**
 	 * @param parent
 	 */

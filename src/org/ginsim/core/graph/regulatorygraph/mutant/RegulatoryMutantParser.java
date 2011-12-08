@@ -8,8 +8,6 @@ import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.xml.sax.Attributes;
 
 

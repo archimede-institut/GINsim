@@ -22,12 +22,12 @@ import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
-import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.nusmv.NuSMVConfig;

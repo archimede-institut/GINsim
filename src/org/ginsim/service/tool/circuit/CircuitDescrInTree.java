@@ -1,11 +1,11 @@
-package org.ginsim.servicegui.tool.circuit;
+package org.ginsim.service.tool.circuit;
 
 public class CircuitDescrInTree {
     private CircuitDescr circuit;
-    protected boolean summary;
-    protected int key;
+    public boolean summary;
+    public int key;
     
-    protected CircuitDescrInTree(CircuitDescr cdescr, boolean summary, int key) {
+    public CircuitDescrInTree(CircuitDescr cdescr, boolean summary, int key) {
         this.setCircuit(cdescr);
         this.key = key;
         this.summary = summary;
@@ -27,7 +27,7 @@ public class CircuitDescrInTree {
             		nbChild = 1;
             	}
                 break;
-            case CircuitDescr.FUNCTIONNAL:
+            case CircuitDescr.FUNCTIONAL:
             	nbChild = getCircuit().v_functionnal.size();
             	o = getCircuit().v_functionnal.get(0);
                 break;
@@ -78,7 +78,7 @@ public class CircuitDescrInTree {
         return s;
     }
 
-    protected long getScore() {
+    public long getScore() {
         if (summary) {
             return getCircuit().score;
         }
