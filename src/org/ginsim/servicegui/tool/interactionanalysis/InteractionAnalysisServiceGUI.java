@@ -29,6 +29,11 @@ public class InteractionAnalysisServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_INFO + 1;
+	}
 }
 
 class InteractionAnalysisAction<G extends Graph<?, ?>> extends ToolAction {

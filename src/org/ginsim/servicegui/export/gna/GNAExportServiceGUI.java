@@ -34,6 +34,11 @@ public class GNAExportServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_ANALYSIS + 3;
+	}
 }
 
 /**

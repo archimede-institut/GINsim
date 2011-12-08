@@ -31,7 +31,12 @@ public class DynamicAnalyserServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
-	
+
+	@Override
+	public int getWeight() {
+		return W_INFO + 12;
+	}
+
 }
 
 class DynamicAnalyserAction extends ToolAction {

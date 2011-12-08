@@ -32,6 +32,11 @@ public class StateInRegulatoryGraphServiceGUI implements ServiceGUI {
 		return null;
 	}
 
+
+	@Override
+	public int getWeight() {
+		return W_INFO + 2;
+	}
 }
 
 class StateInRegulatoryGraphAction extends ToolAction {

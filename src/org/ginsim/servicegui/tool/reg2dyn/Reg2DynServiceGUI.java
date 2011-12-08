@@ -80,6 +80,11 @@ public class Reg2DynServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_MAIN + 1;
+	}
 }
 
 

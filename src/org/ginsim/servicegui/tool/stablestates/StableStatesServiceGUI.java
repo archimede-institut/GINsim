@@ -35,6 +35,11 @@ public class StableStatesServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_ANALYSIS + 1;
+	}
 }
 
 class StableStatesAction extends ToolAction {

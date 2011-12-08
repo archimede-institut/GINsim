@@ -38,6 +38,10 @@ public class RegulatoryFunctionTreeServiceGUI implements ServiceGUI {
 		return null;
 	}
 
+	@Override
+	public int getWeight() {
+		return W_INFO + 2;
+	}
 }
 
 class RegulatoryFunctionTreeAction extends ToolAction {

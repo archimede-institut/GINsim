@@ -28,6 +28,11 @@ public class TxtImportServiceGUI implements ServiceGUI {
 		actions.add( new TxtImportAction( graph));
 		return actions;
 	}
+	@Override
+	public int getWeight() {
+		return W_MANIPULATION + 2;
+	}
+
 }
 
 class TxtImportAction extends ImportAction {

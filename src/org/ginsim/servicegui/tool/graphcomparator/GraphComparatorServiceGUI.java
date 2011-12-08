@@ -27,6 +27,10 @@ public class GraphComparatorServiceGUI implements ServiceGUI{
 
 	}
 
+	@Override
+	public int getWeight() {
+		return W_GENERIC + 5;
+	}
 }
 
 class GraphComparatorAction extends ToolAction {

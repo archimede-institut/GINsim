@@ -18,7 +18,6 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.ginsim.servicegui.ServiceGUI;
 import org.ginsim.servicegui.common.GUIFor;
@@ -49,6 +48,11 @@ public class ModelSimplifierServiceGUI implements ServiceGUI {
 			return actions;
 		}
 		return null;
+	}
+
+	@Override
+	public int getWeight() {
+		return W_MANIPULATION;
 	}
 }
 

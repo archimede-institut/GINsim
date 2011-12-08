@@ -36,6 +36,11 @@ public class CytoscapeExportServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_MANIPULATION + 7;
+	}
 }
 
 

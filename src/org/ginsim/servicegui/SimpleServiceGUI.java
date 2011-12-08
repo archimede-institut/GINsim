@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.utils.IntrospectionUtils;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.service.Service;
@@ -20,9 +19,11 @@ public class SimpleServiceGUI<S extends Service> implements ServiceGUI {
 
 	private final Class<? extends Action> actionClass;
 	private final S service;
+	private final int weight;
 	
-	public SimpleServiceGUI(Class<? extends Action> actionClass) {
+	public SimpleServiceGUI(Class<? extends Action> actionClass, int weight) {
 		this.actionClass = actionClass;
+		this.weight = weight;
 		
 		GUIFor backend = getClass().getAnnotation(GUIFor.class);
 		if (backend == null) {
@@ -33,6 +34,12 @@ public class SimpleServiceGUI<S extends Service> implements ServiceGUI {
 				LogManager.error("Could not retrieve backend service: "+ backend.value());
 			}
 		}
+	}
+
+
+	@Override
+	public int getWeight() {
+		return weight;
 	}
 
 	@Override

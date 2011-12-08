@@ -27,6 +27,11 @@ public class OmddVizServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_INFO + 3;
+	}
 }
 
 class OMDDVizAction extends ToolAction {

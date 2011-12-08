@@ -32,6 +32,11 @@ public class ImageExportServiceGUI implements ServiceGUI {
 
 		return actions;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_GENERIC + 4;
+	}
 }
 
 

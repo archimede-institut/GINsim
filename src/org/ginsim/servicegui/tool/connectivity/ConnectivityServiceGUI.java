@@ -15,7 +15,6 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
 import org.ginsim.servicegui.ServiceGUI;
 import org.ginsim.servicegui.common.GUIFor;
@@ -41,6 +40,11 @@ public class ConnectivityServiceGUI implements ServiceGUI {
 		}
 		
 		return actions;
+	}
+
+	@Override
+	public int getWeight() {
+		return W_GENERIC;
 	}
 }
 

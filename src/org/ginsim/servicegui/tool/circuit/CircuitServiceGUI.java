@@ -36,6 +36,11 @@ public class CircuitServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_ANALYSIS + 1;
+	}
 }
 
 class CircuitAction extends ToolAction {

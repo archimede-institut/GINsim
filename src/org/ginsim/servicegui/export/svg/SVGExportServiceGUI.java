@@ -32,6 +32,11 @@ public class SVGExportServiceGUI implements ServiceGUI {
 		actions.add( new ExportSVGAction( graph));
 		return actions;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_GENERIC + 5;
+	}
 }
 
 

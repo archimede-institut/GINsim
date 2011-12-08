@@ -33,6 +33,11 @@ public class RegulatoryGraphAnimationServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_MAIN + 2;
+	}
 }
 
 class AnimRegGraphAction extends ToolAction {

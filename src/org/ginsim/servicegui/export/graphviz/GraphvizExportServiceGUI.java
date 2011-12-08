@@ -1,14 +1,11 @@
 package org.ginsim.servicegui.export.graphviz;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.core.exception.GsException;
-import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
@@ -33,6 +30,11 @@ public class GraphvizExportServiceGUI implements ServiceGUI {
 		List<Action> actions = new ArrayList<Action>();
 		actions.add( new ExportGraphVizAction( graph));
 		return actions;
+	}
+
+	@Override
+	public int getWeight() {
+		return W_GENERIC + 1;
 	}
 }
 
