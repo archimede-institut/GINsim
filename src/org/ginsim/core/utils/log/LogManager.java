@@ -173,7 +173,7 @@ public class LogManager {
 			return;
 		}
 		
-		PrintWriter traceOut = logout[3];
+		PrintWriter traceOut = logout[2];
 		
 		if( verboseLevel >= 2){
 			if( !line_info){
